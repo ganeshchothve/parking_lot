@@ -28,24 +28,24 @@
       <h2><%= t('helpers.show.link_name', model: User.human_attribute_name(@user.role)) %></h2>
     </div>
     <div class="box-content br-rd-bl-4 bg-white">
-      <div class="form-group pd-box">
+      <div class="mb-3 pd-box">
         <h5><%= @user.name %></h5>
       </div>
       <div class="row pd-box">
         <div class="col-md-4">
-          <div class="form-group">
+          <div class="mb-3">
             <label class="small text-muted"><%= User.human_attribute_name('eamil') %></label>
             <div><%= @user.email %></div>
           </div>
         </div>
         <div class="col-md-4">
-          <div class="form-group">
+          <div class="mb-3">
             <label class="small text-muted"><%= User.human_attribute_name('phone') %></label>
             <div><%= @user.phone %></div>
           </div>
         </div>
         <div class="col-md-4">
-          <div class="form-group">
+          <div class="mb-3">
             <label class="small text-muted"><%= t("mongoid.attributes.user.confirmed_at") %></label>
             <div><%= @user.confirmed? ? "Yes (at #{l(@user.confirmed_at)})" : "No" %></div>
           </div>
@@ -53,13 +53,13 @@
       </div>
       <div class="row pd-box">
         <div class="col-md-4">
-          <div class="form-group">
+          <div class="mb-3">
             <label class="small text-muted"><%= t("mongoid.attributes.user.manager_role") %></label>
             <div><%= User.human_attribute_name("role.#{@user.manager_role || 'direct'}") %></div>
           </div>
         </div>
         <div class="col-md-4">
-          <div class="form-group">
+          <div class="mb-3">
             <label class="small text-muted"><%= User.human_attribute_name('manager_id') %></label>
             <div><%= @user.manager_name || '' %></div>
           </div>

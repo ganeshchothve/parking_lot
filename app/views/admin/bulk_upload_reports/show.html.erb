@@ -9,19 +9,19 @@
           <div class="box-content br-rd-bl-4 bg-white br-1 py-2 px-2">
             <div class="row pd-box">
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label>Bulk Upload Type</label>
                     <div> <%= t("mongoid.attributes.bulk_upload_report.#{@bulk_upload_report.asset.try(:document_type)}") %> </div>
                   </div>
                 </div>
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label>File Uploaded By</label>
                     <div> <%= @bulk_upload_report.uploaded_by.name %> </div>
                   </div>
                 </div>
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label>File</label>
                     <div><%= link_to @bulk_upload_report.asset.try(:file_name), @bulk_upload_report.asset.try(:file).try(:url), class: "primary" %></div>
                   </div>

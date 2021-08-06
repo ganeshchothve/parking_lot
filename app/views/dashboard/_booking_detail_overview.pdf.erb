@@ -15,7 +15,7 @@
   <div class="card-body">
     <div class="row">
       <div class="col-md-4">
-        <div class="form-group">
+        <div class="mb-3">
           <label>Name</label>
           <div>
             <%= booking_detail.name %>
@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="form-group">
+        <div class="mb-3">
           <label>Tower</label>
           <div>
             <%= booking_detail.project_unit.project_tower_name %>
@@ -32,7 +32,7 @@
       </div>
       <% unless params[:action] == 'quotation' %>
         <div class="col-md-4">
-          <div class="form-group">
+          <div class="mb-3">
             <label>Status</label>
             <div>
               <%= BookingDetail.human_attribute_name("status.#{booking_detail.status}") %>
@@ -43,7 +43,7 @@
     </div>
     <div class="row">
       <div class="col-md-4">
-        <div class="form-group">
+        <div class="mb-3">
           <label>Beds / Baths</label>
           <div>
             <%= booking_detail.project_unit.bedrooms %> / <%= booking_detail.project_unit.bathrooms %>
@@ -51,7 +51,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="form-group">
+        <div class="mb-3">
           <label>Carpet</label>
           <div>
             <%= booking_detail.project_unit.carpet %> <%= current_client.area_unit %>
@@ -60,7 +60,7 @@
       </div>
       <% if current_user.role?('superadmin') %>
         <div class="col-md-4">
-          <div class="form-group">
+          <div class="mb-3">
             <label>Saleable</label>
             <div>
               <%= booking_detail.project_unit.saleable %> <%= current_client.area_unit %>
@@ -72,7 +72,7 @@
     <div class="row">
       <% if current_user.role?('superadmin') %>
         <div class="col-md-4">
-          <div class="form-group">
+          <div class="mb-3">
             <label>Effective Rate</label>
             <div>
               <%= number_to_indian_currency(booking_detail.project_unit.effective_rate) %> <%= current_client.area_unit %>
@@ -81,7 +81,7 @@
         </div>
       <% end %>
       <div class="col-md-4">
-        <div class="form-group">
+        <div class="mb-3">
           <label>Agreement Price</label>
           <div>
             <%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %>
@@ -89,7 +89,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="form-group">
+        <div class="mb-3">
           <label>All Inclusive Price</label>
           <div>
             <%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %>
@@ -98,7 +98,7 @@
       </div>
 
       <div class="col-md-4">
-        <div class="form-group">
+        <div class="mb-3">
           <label>Phase</label>
           <div>
             <%= booking_detail.project_unit.phase_name %>
@@ -110,7 +110,7 @@
       <div class="row">
         <% if booking_detail.sync_logs.present? %>
           <div class="col-md-4">
-            <div class="form-group">
+            <div class="mb-3">
             <label>Last Synced At:</label>
               <div>
                 <% if booking_detail.present? %>
@@ -124,7 +124,7 @@
             </div>
           </div>
           <div class="col-md-4">
-            <div class="form-group">
+            <div class="mb-3">
             <label>Last Sync Log Status:</label>
               <div>
                 <% if booking_detail.present? %>
@@ -143,7 +143,7 @@
     <% if %w[ hold swapped canceled ].exclude?(booking_detail.status)  %>
       <div class="row">
         <div class="col-md-4">
-          <div class="form-group">
+          <div class="mb-3">
             <label>Amount Paid</label>
             <div>
               <%= number_to_indian_currency(booking_detail.total_amount_paid) %>
@@ -152,7 +152,7 @@
           </div>
         </div>
         <div class="col-md-4">
-          <div class="form-group">
+          <div class="mb-3">
             <label>Pending Balance</label>
             <div>
               <%= number_to_indian_currency(booking_detail.pending_balance({strict: true})) %>

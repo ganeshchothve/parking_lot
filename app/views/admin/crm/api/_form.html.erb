@@ -9,19 +9,19 @@
       <div class="modal-body">
         <div class = 'row'>
           <div class = 'col-12'>
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :resource_class, class: 'label-required' %>
               <%= f.select :resource_class, Crm::Api::RESOURCE_CLASS.collect{|x| [x, x]}, {prompt: true, selected: @api.resource_class}, class: 'selectize', required: 'required' %>
             </div>
           </div>
           <div class = 'col-12'>
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :path, class: 'label-required' %>
               <%= f.text_field :path, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, @api]).editable_field?("path") %>
             </div>
           </div>
           <div class = 'col-12'>
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :request_payload %>
               <%= f.text_area :request_payload, rows: 10, autofocus: true, class: "form-control h-auto", disabled: !policy([:admin, @api]).editable_field?("request_payload") %>
             </div>

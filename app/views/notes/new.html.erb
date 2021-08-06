@@ -7,7 +7,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :note, class: 'label-required' %>
           <%= f.text_area :note, autofocus: true, class: "form-control", required: 'required', disabled: (policy([current_user_role_group, @note]).editable_field?("note") ? false : true) %>
         </div>

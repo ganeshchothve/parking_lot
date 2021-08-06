@@ -66,7 +66,7 @@ module Presenters
 
     def self.get_column key, value
       "<div class='col-3'>
-        <div class='form-group'>
+        <div class='mb-3'>
           <label>#{key.to_s.titleize}</label>
           <div>#{value.is_a?(Array) ? value.to_sentence : (value.is_a?(String) ? value.to_s.titleize : value)}</div>
         </div>

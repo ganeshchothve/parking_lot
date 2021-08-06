@@ -1,4 +1,4 @@
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :logo, class: '' %>
   <%= f.file_field :logo, class: 'btn pl-0 file-input', disabled: !policy([:admin, @project]).editable_field?("logo") %>
   <% if @project.logo.present? %>
@@ -8,7 +8,7 @@
   <% end %>
   <hr/>
 </div>
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :mobile_logo, class: '' %>
   <%= f.file_field :mobile_logo, class: 'btn pl-0 file-input', disabled: !policy([:admin, @project]).editable_field?("mobile_logo") %>
   <% if @project.mobile_logo.present? %>
@@ -18,7 +18,7 @@
   <% end %>
   <hr/>
 </div>
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :cover_photo, class: '' %>
   <%= f.file_field :cover_photo, class: 'btn pl-0 file-input', disabled: !policy([:admin, @project]).editable_field?("cover_photo") %>
   <% if @project.cover_photo.present? %>
@@ -28,7 +28,7 @@
   <% end %>
   <hr/>
 </div>
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :mobile_cover_photo, class: '' %>
   <%= f.file_field :mobile_cover_photo, class: 'btn pl-0 file-input', disabled: !policy([:admin, @project]).editable_field?("mobile_cover_photo") %>
   <% if @project.mobile_cover_photo.present? %>

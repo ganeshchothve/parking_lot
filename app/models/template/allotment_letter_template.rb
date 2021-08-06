@@ -13,7 +13,7 @@ class Template::AllotmentLetterTemplate < Template
       <div class="card-body">
         <div class="row">
           <div class="col-md-4">
-            <div class="form-group">
+            <div class="mb-3">
               <label>Name</label>
               <div>
                 <%= self.name %>
@@ -21,7 +21,7 @@ class Template::AllotmentLetterTemplate < Template
             </div>
           </div>
           <div class="col-md-4">
-            <div class="form-group">
+            <div class="mb-3">
               <label>Tower</label>
               <div>
                 <%= self.project_unit.project_tower_name %>
@@ -29,7 +29,7 @@ class Template::AllotmentLetterTemplate < Template
             </div>
           </div>
           <div class="col-md-4">
-            <div class="form-group">
+            <div class="mb-3">
               <label>Status</label>
               <div>
                 <%= BookingDetail.human_attribute_name("status.#{self.status}") %>
@@ -39,7 +39,7 @@ class Template::AllotmentLetterTemplate < Template
         </div>
         <div class="row">
           <div class="col-md-4">
-            <div class="form-group">
+            <div class="mb-3">
               <label>Beds / Baths</label>
               <div>
                 <%= self.project_unit.bedrooms %> / <%= self.project_unit.bathrooms %>
@@ -47,7 +47,7 @@ class Template::AllotmentLetterTemplate < Template
             </div>
           </div>
           <div class="col-md-4">
-            <div class="form-group">
+            <div class="mb-3">
               <label>Carpet</label>
               <div>
                 <%= self.project_unit.carpet %> <%= current_client.area_unit %>
@@ -55,7 +55,7 @@ class Template::AllotmentLetterTemplate < Template
             </div>
           </div>
           <div class="col-md-4">
-            <div class="form-group">
+            <div class="mb-3">
               <label>Saleable</label>
               <div>
                 <%= self.project_unit.saleable %> <%= current_client.area_unit %>
@@ -65,7 +65,7 @@ class Template::AllotmentLetterTemplate < Template
         </div>
         <div class="row">
           <div class="col-md-4">
-            <div class="form-group">
+            <div class="mb-3">
               <label>Effective Rate</label>
               <div>
                 <%= number_to_indian_currency(self.project_unit.effective_rate) %> <%= current_client.area_unit %>
@@ -73,7 +73,7 @@ class Template::AllotmentLetterTemplate < Template
             </div>
           </div>
           <div class="col-md-4">
-            <div class="form-group">
+            <div class="mb-3">
               <label>Agreement Price</label>
               <div>
                 <%= number_to_indian_currency(self.project_unit.agreement_price) %>

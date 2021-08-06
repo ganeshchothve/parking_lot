@@ -7,44 +7,44 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body theme-form">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :name, class: 'label-required' %>
           <%= f.text_field :name, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, @scheme]).editable_field?("name") %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :project_id, class: 'label-required' %>
           <%= f.select :project_id, options_for_select(Project.all.collect{|p| [p.name, p.id ]}, (f.object.new_record? ? Project.first.id : f.object.project_id)) , {prompt: true}, class: 'selectize project_select', required: 'required', disabled: !policy([:admin, @scheme]).editable_field?("project_id") %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :project_tower_id, class: 'label-required' %>
           <%= f.select :project_tower_id, ProjectTower.all.collect{|pt| [pt.name, pt.id ]} , {prompt: true}, class: 'selectize project_tower_select', required: 'required', disabled: !policy([:admin, @scheme]).editable_field?("project_tower_id"), data: { url: admin_project_towers_path } %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :user_role, class: 'control-label' %>
           <%= f.select :user_role, User.available_roles(current_client).select{|role| User.buyer_roles(current_client).include?(role)}.collect{|x| [ t("mongois.attributes.user/role.#{x}"), x] }, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @scheme]).editable_field?("user_role") %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :user, class: 'control-label' %>
           <%= f.select :user_ids, options_from_collection_for_select(User.where(role: 'user'), "id", "ds_name", f.object.user_ids), {prompt: true}, multiple: "multiple", class: "selectize-remote", data: { url: admin_users_path, params: {fltrs: {role: {"$eq": 'user' } } } } %>
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :can_be_applied_by, class: '' %>
           <%= f.select :can_be_applied_by, filter_user_role_options, {prompt: true}, class: 'selectize', multiple: "multiple", disabled: !policy([:admin, @scheme]).editable_field?("can_be_applied_by") %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :default_for_users, class: 'control-label' %>
           <%= f.select :default_for_user_ids, options_from_collection_for_select(User.where(role: 'channel_partner'), "id", "ds_name", f.object.default_for_user_ids), {prompt: true}, multiple: "multiple", class: "selectize-remote", data: { url: admin_users_path, params: {fltrs: {role: {"$eq": 'channel_partner' } } } } %>
         </div>
         <div class="row">
           <div class="col-md-6">
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :payment_schedule_template_id, class: 'label-required' %>
               <%= f.select :payment_schedule_template_id, ::Template::PaymentScheduleTemplate.where(booking_portal_client_id: current_client.id).collect{|x| [x.name, x.id]}, {}, class: "selectize", disabled: !policy([:admin, @scheme]).editable_field?("payment_schedule_template_id") %>
             </div>
           </div>
           <div class="col-md-6">
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :cost_sheet_template_id, class: 'label-required' %>
               <%= f.select :cost_sheet_template_id, ::Template::CostSheetTemplate.where(booking_portal_client_id: current_client.id).collect{|x| [x.name, x.id]}, {}, class: "selectize", disabled: !policy([:admin, @scheme]).editable_field?("cost_sheet_template_id") %>
             </div>
@@ -61,24 +61,24 @@
             <% end %>
             <div class="row">
               <div class="col-md-6">
-                <div class="form-group">
+                <div class="mb-3">
                   <%= adj.label :name, class: 'label-required' %>
                   <%= adj.text_field :name, class: "form-control", required: 'required', disabled: !editable_payment_adjustment %>
                 </div>
               </div>
               <div class="col-md-6">
-                <div class="form-group">
+                <div class="mb-3">
                   <%= adj.label :field, class: 'label-required' %>
                   <%= adj.select :field, Scheme::FIELDS.collect{|sf| [t("mongoid.attributes.payment_adjustment/field.#{sf}"), sf]}, {prompt: true}, class: 'selectize-tags', disabled: !editable_payment_adjustment %>
                 </div>
               </div>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
               <%= adj.label :absolute_value, class: 'label-required' %>
               <%= adj.number_field :absolute_value, class: "form-control", disabled: !editable_payment_adjustment %>
               <p class="small text-muted">Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)</p>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
               <%= adj.label :formula, class: 'label-required' %>
               <%= adj.text_field :formula, class: "form-control", disabled: !editable_payment_adjustment %>
               <p class="small text-muted">Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)</p>
@@ -86,7 +86,7 @@
           <% end %>
         </div>
         <% if policy([:admin, @scheme]).editable_field?("event") %>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :status, class: 'label-required' %>
             <%
               events = @scheme.aasm.events(permitted: true).collect{|x| x.name.to_s}

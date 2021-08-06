@@ -11,7 +11,7 @@
             <% if @requires_password %>
               <%= f.input :password, autofocus: true, tabindex: "1", required: true %>
               <%= f.input :password_confirmation, tabindex: "2", required: true %>
-              <div class="form-group">
+              <div class="mb-3">
                 <%= f.submit "Activate", class: 'btn btn-primary' %>
               </div>
             <% end %>

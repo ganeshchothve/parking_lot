@@ -6,7 +6,7 @@
   <%= f.fields_for :third_party_references do |tpr_form| %>
     <%= tpr_form.hidden_field :crm_id %>
     <div class='col-md-12'>
-      <div class='form-group'>
+      <div class='mb-3'>
         <%= label_tag Crm::Base.where(id: tpr_form.object.crm_id).first.try(:name) || 'CRM' %>
         <%= tpr_form.text_field :reference_id, class: 'form-control' %>
       </div>

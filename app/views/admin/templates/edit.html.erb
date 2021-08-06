@@ -7,23 +7,23 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :name %>
           <div><%= t("templates.#{@template.name}") rescue @template._type.split("::").last %></div>
         </div>
         <% if @template.is_a?(::Template::EmailTemplate) %>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :subject %>
             <%= f.text_field :subject, class: 'form-control' %>
           </div>
         <% end %>
 
         <% if @template.is_a?(::Template::SmsTemplate) %>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :dlt_temp_id %>
             <%= f.text_field :dlt_temp_id, class: 'form-control' %>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :dlt_tag_id %>
             <%= f.text_field :dlt_tag_id, class: 'form-control' %>
           </div>
@@ -36,13 +36,13 @@
               <%= adj.link_to_remove icon("far", "times-circle") %>
               <div class="row">
                 <div class="col-md-6">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <%= adj.label :number, class: 'label-required' %>
                     <%= adj.number_field :number, class: "form-control", required: 'required', disabled: !editable_template_variable %>
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <%= adj.label :content %>
                     <%= adj.text_field :content, class: "form-control", disabled: !editable_template_variable %>
                   </div>

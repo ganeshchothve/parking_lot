@@ -2,13 +2,13 @@
   <%= form_tag payment_mode_chart_admin_receipts_path, method: "get", remote: true, id: "receipt_barchart_filter" do %>
     <div class="filter-content">
       <div class="row">
-        <div class="form-group col-12">
+        <div class="mb-3 col-12">
           <%= label_tag "payments", Receipt.model_name.human(count: 3), class: "control-label float-left" %>
           <%= select_tag "payments", options_for_select(["all", "attached_payments", "direct_payments"].map{|payments| [t("mongoid.attributes.dashboard/filters.payments.#{payments}"), payments]}, params[:payments]), class: "selectize"%>
         </div>
       </div>
       <div class="row">
-        <div class="form-group col-12">
+        <div class="mb-3 col-12">
           <%= label_tag "status", Receipt.human_attribute_name('status'), class: "control-label float-left" %>
           <%= select_tag "status", options_for_select(Receipt::STATUSES.map{|status| [t("mongoid.attributes.receipt/status.#{status}"), status]}, @statuses ), class: "selectize", multiple: true %>
         </div>

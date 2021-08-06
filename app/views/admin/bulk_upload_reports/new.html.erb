@@ -19,7 +19,7 @@
                 </div>
                 <% if adj.object.new_record? %>
                   <div class="col-2">
-                    <div class="form-group">
+                    <div class="mb-3">
                       <div class="btn btn-primary fileinput-button pull-right">
                         <span>Upload</span>
                         <%= adj.file_field :file, class: "btn btn-primary fileupload", accept: '.csv' %>

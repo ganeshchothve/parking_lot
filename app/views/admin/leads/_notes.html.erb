@@ -19,14 +19,14 @@
           <div class="row m-3">
             <% if notes.blank? %>
               <div class="col-md-12">
-                <div class="form-group">
+                <div class="mb-3">
                   No records.
                 </div>
               </div>
             <% else %>
               <% notes.each_with_index do |remark, i| %>
                 <div class="col-md-12">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <%= "#{i + 1}. " + remark['note']['content'] %>
                   </div>
                 </div>

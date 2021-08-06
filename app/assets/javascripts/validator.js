@@ -1,9 +1,9 @@
 $.validator.setDefaults({
   highlight: function(element) {
-    $(element).closest('.form-group').addClass('has-error');
+    $(element).closest('.mb-3').addClass('has-error');
   },
   unhighlight: function(element) {
-    $(element).closest('.form-group').removeClass('has-error');
+    $(element).closest('.mb-3').removeClass('has-error');
   },
   errorElement: 'span',
   errorClass: 'help-block',
@@ -13,7 +13,7 @@ $.validator.setDefaults({
     } else if(element.parent().hasClass("selectize-input")) {
       error.insertAfter(element.closest(".selectize-control"));
     } else if(element.hasClass("array-field")) {
-      error.insertAfter(element.closest(".form-group").find(".array-field-wrapper"));
+      error.insertAfter(element.closest(".mb-3").find(".array-field-wrapper"));
     } else if(element.parent().hasClass("intl-tel-input")) {
       error.insertAfter(element.closest(".intl-tel-input"));
     } else {
@@ -42,7 +42,7 @@ $(document).ready(function(){
       window.onbeforeunload = null;
     }
     _.each($form.find("select.selectized"), function(el){
-      var $grp = $(el).closest(".form-group");
+      var $grp = $(el).closest(".mb-3");
       var required = $grp.find(".selectize-input input").attr("required");
       required = required || $grp.hasClass("has-error");
       if(required){
@@ -57,9 +57,9 @@ $(document).ready(function(){
         }
       }
     });
-    $(".form-group.has-error").closest(".panel-collapse").collapse('show');
+    $(".mb-3.has-error").closest(".panel-collapse").collapse('show');
     if(!valid){
-      var $div = $form.find('.form-group.has-error:first')
+      var $div = $form.find('.mb-3.has-error:first')
       if($div.length > 0){
         $div.find('input,select,textarea').focus();
         $('html, body').animate({

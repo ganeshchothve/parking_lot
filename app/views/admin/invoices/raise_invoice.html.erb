@@ -10,20 +10,20 @@
 
       <div class="modal-body">
         <%= f.hidden_field :event, value: :raise %>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :number, class: 'label-required' %>
           <%= f.text_field :number, autofocus: true, required: 'required', class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("number") %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :amount, class: '' %>
           <%= f.number_field :amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("amount") %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :gst_amount, class: '' %>
           <%= f.number_field :gst_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("gst_amount") %>
         </div>
         <% if @invoice.rejected? %>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :rejection_reason, class: '' %>
             <% if policy([:admin, @invoice]).editable_field?("rejection_reason") %>
               <%= f.text_area :rejection_reason, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("rejection_reason") %>
@@ -31,7 +31,7 @@
               <p><%= f.object.rejection_reason %></p>
             <% end%>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :comments, class: '' %>
             <% if policy([:admin, @invoice]).editable_field?("comments") %>
               <%= f.text_area :comments, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("comments") %>

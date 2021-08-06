@@ -7,7 +7,7 @@
   <%= form_tag admin_user_requests_path(request_type: @associated_class.model_name.element), method: "get", id: "user_request_search_form" do %>
     <div class="filter-content modal-body ps-0 pe-0 theme-form">
       <div class="row">
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.user_request.name_email_phone'), class: "control-label" %>
           <%
             if params[:fltrs].present? && params[:fltrs][:user_id].present?
@@ -16,28 +16,28 @@
           %>
           <%= select_tag "fltrs[user_id]", options_for_select((params[:fltrs].present? && params[:fltrs][:user_id].present?) ? [[user.ds_name, user.id]] : []), {class: "selectize-remote", data: {params: {fltrs: {role: User.buyer_roles(current_client)}}, url: admin_users_path }} %>
         </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
           <%= label_tag "fltrs", t('mongoid.attributes.user_request._type'), class: "control-label" %>
           <%= select_tag "fltrs[_type]", options_for_select(::UserRequest.descendants.collect{|x| [x.to_s.split('::').last, x]}, params.dig(:fltrs, :_type) || " "), {prompt: '', class: "selectize"} %>
         </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.user_request.project_id'), class: "control-label" %>
           <%= select_tag "fltrs[project_id]", options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: "Select", class: "selectize"} %>
         </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.user_request.status'), class: "control-label" %>
           <%= select_tag "fltrs[status]", options_for_select(UserRequest::STATUS.collect{|urs| [t("mongoid.attributes.user_request/status.#{urs}"), urs ]}, params.dig(:fltrs, :status) || " "), {prompt: '', class: "selectize"} %>
         </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.user_request.requestable_type'), class: "control-label" %>
           <%= select_tag "fltrs[requestable_type]", options_for_select(UserRequest.distinct(:requestable_type), params.dig(:fltrs, :requestable_type) || " "), {prompt: '', class: "selectize"} %>
         </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12 requestable BookingDetail d-none">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12 requestable BookingDetail d-none">
           <%= label_tag "fltrs","Booking", class: "control-label", id: 'requestable_label' %>
           <%= select_tag "fltrs[booking_detail_id]", options_for_select(filter_booking_detail_options( params.dig(:fltrs, :booking_detail_id)), params.dig(:fltrs, :booking_detail_id) ), {prompt: "Select", class: "selectize-remote", data: { url: admin_booking_details_path }} %>
         </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12 requestable Receipt d-none">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12 requestable Receipt d-none">
           <%= label_tag "fltrs","Receipt", class: "control-label", id: 'requestable_label' %>
           <%= select_tag "fltrs[receipt_id]", options_for_select(filter_receipts_options(params.dig(:fltrs, :receipt_id) ), params.dig(:fltrs, :receipt_id)), {prompt: "Select", class: "selectize-remote", data: { url: admin_receipts_path }} %>
         </div>

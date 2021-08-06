@@ -74,13 +74,13 @@
                   <div class="inner-info">
                     <h2 class="title"><%= link_to project.name, admin_project_path(project) %></h2>
                     <p class="devl-name"><%= project.developer_name %></p>
-                    <p class="location"><i class="fa fa-map-marker-alt fill-primary me-2"></i>Khar West, Mumbai</p>
+                    <p class="location"><i class="fa fa-map-marker-alt fill-primary me-2"></i><%= project.micro_market %>, <%= project.city %></p>
                     <p class="prjt-event">1 New event <span>76 Partners have signed up</span></p>
                     <p class="prjt-date">( May 26th 2020, 12.30 pm IST )</p>
                   </div>
                   <div class="prjt-date-info">
                     <div class="inner-date">
-                      <p>31st Dec, 2020</p>
+                      <p><%= project.launched_on.strftime('%d %b, %Y') rescue "-" %></p>
                       <span>Launch Date</span>
                     </div>
                   </div>

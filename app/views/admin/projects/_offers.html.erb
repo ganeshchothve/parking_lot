@@ -11,19 +11,19 @@
         <%= sf.link_to_remove icon("far", "times-circle") %>
       </div>
     <% end %>
-    <div class="form-group">
+    <div class="mb-3">
       <%= sf.label :category, class: 'label-required' %>
       <%= sf.select :category, Offer::CATEGORIES.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: !editable_offers %>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
       <%= sf.label :provided_by, class: 'label-required' %>
       <%= sf.select :provided_by, Offer::PROVIDED_BY.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: !editable_offers %>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
       <%= sf.label :short_description, class: 'label-required' %>
       <%= sf.text_field :short_description, class:'form-control', required: 'required', disabled: !editable_offers %>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
       <%= sf.label :description, class: 'label-required' %>
       <%= sf.text_area :description, class:'form-control summernote', required: 'required', disabled: !editable_offers %>
     </div>

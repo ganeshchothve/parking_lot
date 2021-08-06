@@ -27,19 +27,19 @@
     <div class="col-md-6">
       <div class="card h-100">
         <div class="card-body">
-          <div class="form-group">
+          <div class="mb-3">
             <label class="small text-muted">Paid By:</label>
             <div><%= @receipt.primary_user_kyc.name %></div>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <label class="small text-muted">Email:</label>
             <div><%= @receipt.primary_user_kyc.email %></div>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <label class="small text-muted">Phone:</label>
             <div><%= @receipt.primary_user_kyc.phone %></div>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <label class="small text-muted">PAN Number:</label>
             <div><%= @receipt.primary_user_kyc.pan_number %></div>
           </div>
@@ -51,18 +51,18 @@
     <div class="box-card h-100">
       <div class="box-content br-rd-bl-4 bg-white h-100">
         <div class="pd-box">
-          <div class="form-group">
+          <div class="mb-3">
             <label>Paid To:</label>
             <div><%= current_client.registration_name %></div>
           </div>
           <% if current_client.cin_number.present? %>
-            <div class="form-group">
+            <div class="mb-3">
               <label>CIN Number:</label>
               <div><%= current_client.cin_number %></div>
             </div>
           <% end %>
           <% if current_client.address.present? %>
-            <div class="form-group">
+            <div class="mb-3">
               <label>Address: </label>
               <div><%= current_client.address.to_sentence %></div>
             </div>

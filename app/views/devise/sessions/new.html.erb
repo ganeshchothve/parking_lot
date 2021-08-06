@@ -15,21 +15,21 @@ end %>
             <%= get_view_erb(template) %>
           <% end %>
           <%= simple_form_for(resource, as: resource_name, url: users_otp_path, method: :post, authenticity_token: true, remote: true, html: { novalidate: false, class: "validate-form #{otp_signin_class}", id: 'otp_user_form', data: { type: :json }, autocomplete: 'off' }) do |f| %>
-            <div class="form-group">
+            <div class="mb-3">
               <!-- <%= f.label :Phone_Number %> -->
               <%= f.phone_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.phone'), id: 'user_login_phone', autocomplete: false %>
             </div>
 
-            <div class="form-group" hidden>
+            <div class="mb-3" hidden>
               <%= f.label :login_otp %>
               <%= f.number_field :login_otp, class: 'form-control', maxlength: resource_class.otp_length, minlength: resource_class.otp_length, autocomplete: false %>
             </div>
         <!-- <span class="or-note"><span>OR</span></span>
-        <div class="form-group">
+        <div class="mb-3">
           <label>Email ID</label>
           <input type="texts" name="">
         </div> -->
-        <div class="form-group pt-3 pb-3">
+        <div class="mb-3 pt-3 pb-3">
           <%= f.submit t('sessions.new.otp_submit'), class: 'sign-in-btn cp-btn btn',  data:{event_category: 'Section', event_action: 'Click', event_name: t('sessions.new.otp_submit') } %>
           <!-- <input type="submit" name="" class="cp-btn btn" value="Get OTP"> -->
         </div>
@@ -54,11 +54,11 @@ end %>
 
 <!--           <%= simple_form_for(resource, as: resource_name, url: users_otp_path, method: :post, authenticity_token: true, remote: true, html: { novalidate: false, class: "validate-form #{otp_signin_class}", id: 'otp_user_form', data: { type: :json }, autocomplete: 'off' }) do |f| %>
 
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.phone_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.phone'), id: 'user_login_phone', autocomplete: false %>
             </div>
 
-            <div class="form-group" hidden>
+            <div class="mb-3" hidden>
               <%= f.label :login_otp %>
               <%= f.number_field :login_otp, class: 'form-control', maxlength: resource_class.otp_length, minlength: resource_class.otp_length, autocomplete: false %>
             </div>
@@ -75,17 +75,17 @@ end %>
 
           <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'validate-form ' + username_signin_class, id: "standard_login_form", autocomplete: 'off' }) do |f| %>
             <% if current_client.preferred_login == "phone" %>
-              <div class="form-group">
+              <div class="mb-3">
                 <%= f.label :phone %>
                 <%= f.phone_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.phone'), id: 'user_login_phone', autocomplete: false %>
               </div>
             <% else %>
-              <div class="form-group">
+              <div class="mb-3">
                 <%= f.label :email %>
                 <%= f.email_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.email'), autocomplete: false %>
               </div>
             <% end %>
-            <div class="form-group" id='public_key' data-value="<%= @public_key %>" >
+            <div class="mb-3" id='public_key' data-value="<%= @public_key %>" >
               <%= f.label :password %>
               <%= f.password_field :password, autocomplete: false, class: 'form-control', placeholder: t('mongoid.attributes.user.password'), data: { encrypt: true } %>
             </div>

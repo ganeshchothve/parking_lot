@@ -5,15 +5,15 @@
   </div>
   <%= form_tag buyer_booking_details_path, method: "get", id: "scheme_search_form" do %>
     <div class="filter-content row">
-      <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+      <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
         <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.name'), class: "control-label" %>
         <%= select_tag "fltrs[name]", options_for_select(BookingDetail.where(user_id: current_user.id).collect(&:name).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:name] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
-      <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+      <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
         <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.status'), class: "control-label" %>
         <%= select_tag "fltrs[status]", options_for_select(BookingDetail.aasm.states.collect(&:name).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
       </div>
-      <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+      <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
         <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.project_tower_id'), class: "control-label" %>
         <%= select_tag "fltrs[project_tower_id]", options_for_select(ProjectTower.all.map{|f| [f.name, f.id]}, (params[:fltrs].present? ? params[:fltrs][:project_tower] : "")), {prompt: "Select", class: "selectize"} %>
       </div>

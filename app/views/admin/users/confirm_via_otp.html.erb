@@ -13,7 +13,7 @@
             <div class="alert alert-primary">
               You are confirming account on behalf of <%= @user.name %>. We have sent an <%= I18n.t("global.otp") %> to the user, you will need to ask for the latest one. <%= I18n.t("global.otp") %>s are not valid for more than 15 mins.
             </div>
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :login_otp, class: 'label-required' %>
               <%= f.text_field :login_otp, class: 'form-control', autofocus: true, required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("login_otp") ? false : true) %>
             </div>

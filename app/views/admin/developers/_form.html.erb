@@ -16,11 +16,11 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :name, class: 'label-required' %>
             <%= f.text_field :name, class: 'form-control', autofocus: true, required: 'required', disabled: !policy([:admin, developer]).editable_field?("name") %>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :selldo_id, class: 'label-required' %>
             <%= f.text_field :selldo_id, class: 'form-control', autofocus: true, required: 'required', disabled: !policy([:admin, developer]).editable_field?("selldo_id") %>
           </div>

@@ -1,6 +1,6 @@
 <div class='row'>
   <div class='col-md-4'>
-    <div class='form-group mb-0'>
+    <div class='mb-3 mb-0'>
       <%= label_tag 'incentive_deduction', 'Incentive Deduction', class: 'control-label' %>
     </div>
   </div>
@@ -9,13 +9,13 @@
   <div class="box-content br-rd-bl-4 bg-white px-3 pt-3">
     <div class='row'>
       <div class='col-md-4 col-sm-4 col-xs-12'>
-        <div class='form-group'>
+        <div class='mb-3'>
           <%= label_tag 'amount', 'Amount', class: 'control-label' %>
           <p id='deduction-amount' data-amount='<%= incentive_deduction.amount %>'><%= number_to_indian_currency(incentive_deduction.amount) %></p>
         </div>
       </div>
       <div class='offset-md-1 col-md-3 col-sm-4 col-xs-12'>
-        <div class='form-group'>
+        <div class='mb-3'>
           <%= label_tag 'assets', 'Proof of Approval', class: 'control-label' %>
           <%  if incentive_deduction.assets.count > 1 %>
             <%= link_to 'Open proofs in new tab', admin_invoice_path(incentive_deduction.invoice, 'remote-state': assetables_path(assetable_type: incentive_deduction.class.model_name.i18n_key.to_s, assetable_id: incentive_deduction.id)), target: '_blank' %>
@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class='col-md-4 col-sm-4 col-xs-12'>
-        <div class='form-group text-md-right'>
+        <div class='mb-3 text-md-right'>
           <%= label_tag 'status', 'Status', class: 'control-label' %>
           <p><%= t("mongoid.attributes.incentive_deduction/status.#{incentive_deduction.status}") %></p>
           <% if incentive_deduction.pending_approval? %>

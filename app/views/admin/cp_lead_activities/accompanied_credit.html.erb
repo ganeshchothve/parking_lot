@@ -12,7 +12,7 @@
           <%= hidden_field_tag(:validity_period, '30') %>
           <div class="row">
             <div class="col-md-6">
-              <div class="form-group position-relative">
+              <div class="mb-3 position-relative">
                 <label class="label-required">Site Visit Conducted On</label>
                 <% date = (f.object.sitevisit_date.present? ? Time.zone.parse(f.object.sitevisit_date).strftime("%d/%m/%Y") : Date.current.strftime("%d/%m/%Y")) %>
                 <%= f.text_field :sitevisit_date, class: 'form-control datepicker', type:'text', data: {"default-date": date, "max-date": Date.current.strftime("%d/%m/%Y")}, value: date, disabled: !policy(@cp_lead_activity).editable_field?("sitevisit_date"), required: true %>

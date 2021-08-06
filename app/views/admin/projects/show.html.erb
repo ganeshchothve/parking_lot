@@ -1,5 +1,5 @@
 <% project_labels = t('mongoid.attributes.project') %>
-<!--<section class="project my-4 mb-4">
+<section class="project my-4 mb-4">
   <div class="container project-overview p-0">
     <div class="box-card">
       <div class="box-header bg-gradient br-rd-tr-4">
@@ -17,7 +17,7 @@
         <div class="row">
           <% %w( name micro_market city registration_name rera_registration_no project_size total_buildings total_units gst_number cin_number ).each do |field| %>
             <div class="col-md-4 mt-3">
-              <div class="form-group">
+              <div class="mb-3">
                 <label class="small text-muted"><%= project_labels[field.to_sym] %></label>
                 <div><%= @project.send(field) || '-' %></div>
               </div>
@@ -25,7 +25,7 @@
           <% end %>
           <% %w( project_type category project_segment ).each do |field| %>
             <div class="col-md-4 mt-3">
-              <div class="form-group">
+              <div class="mb-3">
                 <label class="small text-muted"><%= project_labels[field.to_sym] %></label>
                 <div><%= @project.send(field)&.titleize || '-' %></div>
               </div>
@@ -33,44 +33,44 @@
           <% end %>
           <% %w( possession launched_on ).each do |field| %>
             <div class="col-md-4 mt-3">
-              <div class="form-group">
+              <div class="mb-3">
                 <label class="small text-muted"><%= project_labels[field.to_sym] %></label>
                 <div><%= @project.send(field)&.strftime('%m/%Y') || '-' %></div>
               </div>
             </div>
           <% end %>
           <div class="col-md-4 mt-3">
-            <div class="form-group">
+            <div class="mb-3">
               <label class="small text-muted"><%= project_labels[:developer_name] %></label>
               <div><%= @project.developer_name || '-' %></div>
             </div>
           </div>
           <div class="col-md-4 mt-3">
-            <div class="form-group">
+            <div class="mb-3">
               <label class="small text-muted"><%= project_labels[:is_active] %></label>
               <div><%= @project.is_active? ? 'Yes' : 'No' %></div>
             </div>
           </div>
           <div class="col-md-4 mt-3">
-            <div class="form-group">
+            <div class="mb-3">
               <label class="small text-muted"><%= project_labels[:website_link] %></label>
               <div><%= @project.website_link? ? link_to('Website', @project.website_link, target: '_blank') : '-' %></div>
             </div>
           </div>
           <div class="col-md-4 mt-3">
-            <div class="form-group">
+            <div class="mb-3">
               <label class="small text-muted"><%= project_labels[:configurations] %></label>
               <div><%= @project.configurations.join(', ') || '-'  %></div>
             </div>
           </div>
           <div class="col-md-8 mt-3">
-            <div class="form-group">
+            <div class="mb-3">
               <label class="small text-muted"><%= project_labels[:address] %></label>
               <div><%= @project.address.try(:to_sentence) %></div>
             </div>
           </div>
         </div>
-        <div class="form-group mt-3">
+        <div class="mb-3 mt-3">
           <label class="small text-muted"><%= project_labels[:amenities] %></label>
           <ul>
               <% @project.amenities.each do |type| %>
@@ -80,7 +80,7 @@
               <% end %>
           </ul>
         </div>
-        <div class="form-group mt-5">
+        <div class="mb-3 mt-5">
           <label class="small text-muted"><%= project_labels[:approved_banks] %></label>
           <ul>
               <% @project.approved_banks.each do |type| %>
@@ -114,19 +114,19 @@
           <% offers.each do |offer| %>
             <div class="row">
               <div class="col-md-4 mt-3">
-                <div class="form-group">
+                <div class="mb-3">
                   <label class="small text-muted"><%= project_labels[:offer_category] %></label>
                   <div><%= offer.category.titleize %></div>
                 </div>
               </div>
               <div class="col-md-8 mt-3">
-                <div class="form-group">
+                <div class="mb-3">
                   <label class="small text-muted"><%= project_labels[:offer_short_description] %></label>
                   <div><%= offer.short_description %></div>
                 </div>
               </div>
               <div class="col-md-12 mt-3">
-                <div class="form-group">
+                <div class="mb-3">
                   <label class="small text-muted"><%= project_labels[:offer_description] %></label>
                   <div><%= offer.description.html_safe %></div>
                 </div>
@@ -145,19 +145,19 @@
         <% @project.timeline_updates.each do |timeline_update| %>
           <div class="row">
             <div class="col-md-4 mt-3">
-              <div class="form-group">
+              <div class="mb-3">
                 <label class="small text-muted"><%= project_labels[:timeline_update_date] %></label>
                 <div><%= timeline_update.date %></div>
               </div>
             </div>
             <div class="col-md-4 mt-3">
-              <div class="form-group">
+              <div class="mb-3">
                 <label class="small text-muted"><%= project_labels[:timeline_update_name] %></label>
                 <div><%= timeline_update.name %></div>
               </div>
             </div>
             <div class="col-md-4 mt-3">
-              <div class="form-group">
+              <div class="mb-3">
                 <label class="small text-muted"><%= project_labels[:timeline_update_description] %></label>
                 <div><%= timeline_update.description.html_safe %></div>
               </div>
@@ -176,11 +176,11 @@
         <% @project.incentive_schemes.group_by{|x| x.category}.each do |group, incentive_schemes| %>
           <h4><%= group.titleize %> <%= project_labels[:incentive_schemes] %></h4>
           <% incentive_schemes.each do |incentive_scheme| %>
-            <div class="form-group">
+            <div class="mb-3">
               <label class="small text-muted"><%= project_labels[:incentive_scheme_short_description] %></label>
               <div><%= incentive_scheme.name %></div>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
               <label class="small text-muted"><%= project_labels[:incentive_scheme_description] %></label>
               <div><%= incentive_scheme.description.html_safe %></div>
             </div>
@@ -191,7 +191,7 @@
     </div>
   </div>
 </section>
-<br/><br/><br/>-->
+<br/><br/><br/>
 
 <section class="prjt-details-sec">
     <div class="px-3">
@@ -200,13 +200,19 @@
                 <div class="prjt-inner-box">
                     <div class="prjt-details-header col-12 float-start bt-br">
                         <div class="col-6 float-start text-start">
-                            <h1>Oberoi Sky City</h1>
+                            <h1><%= @project.name || '-' %></h1>
                             <p class="prjt-devlprs mb-2"><%= @project.developer_name || '-' %></p>
-                            <p class="prjt-location"><i class="fa fa-map-marker-alt me-2"></i>Goregoan West, Mumbai</p>
+                            <p class="prjt-location"><i class="fa fa-map-marker-alt me-2"></i><%= @project.micro_market || '-' %></p>
                         </div>
-                        <div class="col-6 float-end text-end pt-3">
+                        <div class="col-6 float-end text-end pt-2">
+                        <div class="dropdown show d-inline">
+                            <a class="btn table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                                <%= render "#{current_user_role_group}/projects/links", project: @project %>
+                            </div>
+                        </div>
                             <a href="javascript:;" class="prjt-lauchbook"><i class="fa fa-lock fill-theme me-3"></i>Launchbook</a>
-                            <div class="prjt-share-save pt-4">
+                            <div class="prjt-share-save pt-3 pb-2">
                                 <a href="javascript:;" class="share-location me-3"><i class="fa fa-share-alt fill-theme me-2"></i>Share location</a>
                                 <a href="javascript:;" class="prjt-save"><i class="fa fa-heart fill-theme me-2"></i>Save</a>
                             </div>
@@ -215,25 +221,15 @@
                     <div class="prjt-gallery pb-3 col-12 float-start">
                         <div class="prjt-gallery-inner">
                             <ul>
-                                <li>
-                                    <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-fluid">
+                            <% @assets = @project.assets.where(document_type: "images") %>
+                            <% @assets[0..5].each_with_index do |asset, index|%>
+                                <li class="<%= (@assets.size > 5 && index == 5) ? "more-img" : "" %>">
+                                     <img src="<%= asset.file.url %>" class="img-fluid">
+                                     <% if (@assets.size > 5 && index == 5) %>
+                                     <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal"><p>+ <%= @assets.size - 6 %></p></a>
+                                     <% end %> 
                                 </li>
-                                <li>
-                                    <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-fluid">
-                                </li>
-                                <li>
-                                    <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-fluid">
-                                </li>
-                                <li>
-                                    <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-fluid">
-                                </li>
-                                <li>
-                                    <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-fluid">
-                                </li>
-                                <li class="more-img">
-                                    <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-fluid">
-                                    <p>+ 12</p>
-                                </li>
+                            <% end %>
                             </ul>
                         </div>
                     </div>
@@ -282,11 +278,11 @@
                                         </p>
                                         <p>
                                             <span>Possession Date</span>
-                                            23rd Jan, 2020
+                                            <%= @project.possession.strftime('%d %b, %Y') || '-' %>
                                         </p>
                                     </div>
                                     <div class="col-7 ps-3 overview-desc float-end">
-                                        <p>Oberoi Realty presents Sky City at Borivali, a design revelation offering masterfully crafted homes. Sky City offers thoughtfully chosen amenities, grand design aesthetics, beautifully carved out landscapes and acres of open spaces where residents can mingle with a discerning community and soak in the finest luxury.</p>
+                                        <p><%= @project.description || '-' %></p>
                                     </div>
                                 </div>
                             </div>
@@ -336,17 +332,22 @@
                                         <div class="prjt-configure-list">
                                             <h2>Select Type</h2>
                                             <div class="tower-type tab-link nav nav-tabs border-bottom-0" role="tablist">
-                                                <a href="javascript:;" class="nav-item nav-link active" data-bs-toggle="tab" data-bs-target="#type-bhk-1" role="tab">1 BHK | (1034 sq.ft)</a>
-                                                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#type-bhk-11" role="tab">1 BHK | (1427 sq.ft)</a>
-                                                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#type-bhk-2" role="tab">2 BHK | (1427 sq.ft)</a>
+                                            <% @project.project_units[0..4].each_with_index do | uc, index | %>
+                                                <a href="javascript:;" class="nav-item nav-link <%= (index == 0) ? "active" : "" %>" data-bs-toggle="tab" data-bs-target="#floor_<%= uc.unit_configuration_name %>" role="tab"><%= uc.unit_configuration_name %> | (<%= uc.saleable %> sq.ft)</a>
+                                            <% end %>
+                                                <!--<a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#type-bhk-11" role="tab">1 BHK | (1427 sq.ft)</a>
+                                                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#type-bhk-2" role="tab">2 BHK | (1427 sq.ft)</a>-->
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-12 float-start configration-tab">
                                         <div class="tab-content br-1 br-rd-8 py-1">
-                                            <div class="tab-pane fade show active" id="type-bhk-1" role="tabpanel">
+                                        <% @project.project_units[0..4].each_with_index do | uc, index | %>
+                                            <div class="tab-pane fade show <%= (index == 0) ? "active" : "" %>" id="floor_<%= uc.unit_configuration_name %>" role="tabpanel">
                                                 <div class="col-5 float-start">
-                                                    <img src="<%= asset_path 'apartment-plan.png' %>" class="plan-img img-fluid">
+                                                    <% uc.assets.each do | img| %>
+                                                    <img src="<%= img.file.url %>" class="plan-img img-fluid">
+                                                    <% end %>
                                                     <p class="ps-2"><i class="fa fa-eye me-2"></i>220 Interests</p>
                                                 </div>
                                                 <div class="col-7 float-end">
@@ -354,12 +355,12 @@
                                                         <div class="left-info col-12 float-start pb-2">
                                                             <span><i class="fa fa-building"></i></span>
                                                             <div class="prjt-info">
-                                                                <p>Tower Casa Uno</p>
-                                                                <span>26 Floors | 2 Apartments per floor</span>
+                                                                <p><%= uc.project_tower_name %></p>
+                                                                <span><%= uc.floor %> Floors | 2 Apartments per floor</span>
                                                             </div>
                                                         </div>
                                                         <div class="col-6 float-start">
-                                                            <p class="prjt-short-info">1 BHK (1034 sq.ft) ₹ 93,00,000</p>
+                                                            <p class="prjt-short-info"><%= uc.unit_configuration_name %> (<%= uc.saleable %> sq.ft) ₹ <%= uc.all_inclusive_price %></p>
                                                         </div>
                                                         <div class="col-6 float-end">
                                                             <a href="javascript:;" class="cost-sheet-btn float-end">View Cost Sheet</a>
@@ -389,96 +390,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="tab-pane fade" id="type-bhk-11" role="tabpanel">
-                                                <div class="col-5 float-start">
-                                                    <img src="<%= asset_path 'apartment-plan.png' %>" class="plan-img img-fluid">
-                                                    <p class="ps-2"><i class="fa fa-eye me-2"></i>220 Interests</p>
-                                                </div>
-                                                <div class="col-7 float-end">
-                                                    <div class="prjt-config-info mt-3 pe-3">
-                                                        <div class="left-info col-12 float-start pb-2">
-                                                            <span><i class="fa fa-building"></i></span>
-                                                            <div class="prjt-info">
-                                                                <p>Tower Casa Uno</p>
-                                                                <span>26 Floors | 2 Apartments per floor</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-6 float-start">
-                                                            <p class="prjt-short-info">1 BHK (1427 sq.ft) ₹ 1,03,00,000</p>
-                                                        </div>
-                                                        <div class="col-6 float-end">
-                                                            <a href="javascript:;" class="cost-sheet-btn float-end">View Cost Sheet</a>
-                                                        </div>
-                                                        <div class="col-12 bt-bt mt-3 float-start pt-2">
-                                                            <div class="col-6 float-start">
-                                                                <p class="points-list-title">Uniques Selling Points</p>
-                                                            </div>
-                                                            <div class="col-6 float-end">
-                                                                <a href="javascript:;" class="float-end view-all-btn">View All</a>
-                                                            </div>
-                                                            <ul class="points-list col-12 float-start">
-                                                                <li>
-                                                                    <p>26 Floors | 2 Apartments per floor</p>
-                                                                </li>
-                                                                <li>
-                                                                    <p>26 Floors | 2 Apartments per floor</p>
-                                                                </li>
-                                                                <li>
-                                                                    <p>26 Floors | 2 Apartments per floor</p>
-                                                                </li>
-                                                                <li>
-                                                                    <p>26 Floors | 2 Apartments per floor</p>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="tab-pane fade" id="type-bhk-2" role="tabpanel">
-                                                <div class="col-5 float-start">
-                                                    <img src="<%= asset_path 'apartment-plan.png' %>" class="plan-img img-fluid">
-                                                    <p class="ps-2"><i class="fa fa-eye me-2"></i>220 Interests</p>
-                                                </div>
-                                                <div class="col-7 float-end">
-                                                    <div class="prjt-config-info mt-3 pe-3">
-                                                        <div class="left-info col-12 float-start pb-2">
-                                                            <span><i class="fa fa-building"></i></span>
-                                                            <div class="prjt-info">
-                                                                <p>Tower Casa Uno</p>
-                                                                <span>26 Floors | 2 Apartments per floor</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-6 float-start">
-                                                            <p class="prjt-short-info">2 BHK (1427 sq.ft) ₹ 1,20,00,000</p>
-                                                        </div>
-                                                        <div class="col-6 float-end">
-                                                            <a href="javascript:;" class="cost-sheet-btn float-end">View Cost Sheet</a>
-                                                        </div>
-                                                        <div class="col-12 bt-bt mt-3 float-start pt-2">
-                                                            <div class="col-6 float-start">
-                                                                <p class="points-list-title">Uniques Selling Points</p>
-                                                            </div>
-                                                            <div class="col-6 float-end">
-                                                                <a href="javascript:;" class="float-end view-all-btn">View All</a>
-                                                            </div>
-                                                            <ul class="points-list col-12 float-start">
-                                                                <li>
-                                                                    <p>26 Floors | 2 Apartments per floor</p>
-                                                                </li>
-                                                                <li>
-                                                                    <p>26 Floors | 2 Apartments per floor</p>
-                                                                </li>
-                                                                <li>
-                                                                    <p>26 Floors | 2 Apartments per floor</p>
-                                                                </li>
-                                                                <li>
-                                                                    <p>26 Floors | 2 Apartments per floor</p>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <% end %>
                                         </div>
                                     </div>
                                 </div>
@@ -494,29 +406,20 @@
                                             <h2>Gallery</h2>
                                             <div class="prjt-gallery-inner">
                                                 <ul>
-                                                    <li>
-                                                        <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-fluid">
-                                                    </li>
-                                                    <li>
-                                                        <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-fluid">
-                                                    </li>
-                                                    <li>
-                                                        <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-fluid">
-                                                    </li>
-                                                    <li>
-                                                        <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-fluid">
-                                                    </li>
-                                                    <li>
-                                                        <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-fluid">
-                                                    </li>
-                                                    <li class="more-img">
-                                                        <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-fluid">
-                                                        <p>+ 12</p>
-                                                    </li>
+                                                    <% @assets = @project.assets.where(document_type: "images") %>
+                                                    <% @assets[0..5].each_with_index do |asset, index|%>
+                                                        <li class="<%= (@assets.size > 5 && index == 5) ? "more-img" : "" %>">
+                                                            <img src="<%= asset.file.url %>" class="img-fluid">
+                                                            <% if (@assets.size > 5 && index == 5) %>
+                                                                <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal"><p>+ <%= @assets.size - 6 %></p></a>
+                                                            <% end %> 
+                                                        </li>
+                                                    <% end %>
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
+                                    
                                     <div class="col-12 mb-3 float-start">
                                         <div class="prjt-gallery">
                                             <h2>Video</h2>
@@ -552,58 +455,40 @@
                                         <div class="prjt-gallery">
                                             <h2>Documents</h2>
                                             <ul class="documents-list">
-                                                <li>
-                                                    <div class="docs-wrap">
-                                                        <div class="docs-icon">
-                                                            <img src="<%= asset_path 'pdf-icon.png' %>" class="img-fluid">
-                                                        </div>
-                                                        <div class="docs-info">
-                                                            <span>Home overvi..</span>
-                                                            <span class="video-download">
-                                                                <i class="fa fa-download"></i>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="docs-wrap">
-                                                        <div class="docs-icon">
-                                                            <img src="<%= asset_path 'docs-icon.png' %>" class="img-fluid">
-                                                        </div>
-                                                        <div class="docs-info">
-                                                            <span>Floor Plan</span>
-                                                            <span class="video-download">
-                                                                <i class="fa fa-download"></i>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="docs-wrap">
-                                                        <div class="docs-icon">
-                                                            <img src="<%= asset_path 'excel-icon.png' %>" class="img-fluid">
-                                                        </div>
-                                                        <div class="docs-info">
-                                                            <span>Booking Details</span>
-                                                            <span class="video-download">
-                                                                <i class="fa fa-download"></i>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="docs-wrap">
-                                                      <div class="docs-icon">
-                                                          <img src="<%= asset_path 'ppt-icon.png' %>" class="img-fluid">
-                                                        </div>
-                                                        <div class="docs-info">
-                                                            <span>Floor Plan</span>
-                                                            <span class="video-download">
-                                                                <i class="fa fa-download"></i>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </li>
+                                                <% @assets = @project.assets.where(document_type: "document") %>
+                                                    <% @assets.each_with_index do |asset, index|%>
+                                                    <%
+                                                    mime_type = asset.file.content_type 
+                                                    case mime_type
+                                                    when "application/pdf"
+                                                    filetype = "pdf"
+                                                    when "application/doc"
+                                                    filetype = "docs"
+                                                    when /^excel/
+                                                    filetype = "excel"
+                                                    when /^ppt/
+                                                    filetype = "ppt"
+                                                    else
+                                                    filetype = "pdf"
+                                                    end
+                                                    %>
+                                                        <li>
+                                                            <div class="docs-wrap">
+                                                                <div class="docs-icon">
+                                                                   <a href="<%= asset.file.url %>" target="_blank"> <img src='<%= asset_path "#{filetype}-icon.png" %>' class="img-fluid"></a>
+                                                                </div>
+                                                                <div class="docs-info">
+                                                                    <span>Home overvi..</span>
+                                                                    <span class="video-download">
+                                                                    <a href="<%= asset.file.url %>" target="_blank">
+                                                                        <i class="fa fa-download"></i>
+                                                                        </a>
+                                                                    </span>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    <% end %>
                                             </ul>
                                         </div>
                                     </div>
@@ -625,62 +510,16 @@
                                     <div class="col-12">
                                         <div class="amenities-list">
                                             <ul class="">
-                                                <li>
+                                                <% @project.amenities.each do |type| %>
+                                                    <li class="amenity_<%= type %>">
                                                     <div class="amenities-wrap">
                                                         <span>
-                                                            <img src="<%= asset_path 'cp-ex-feat-01.svg' %>">
+                                                            <img src='<%= asset_path "amenities/amenity-#{type.gsub("_", "-")}.svg" %>'>
                                                         </span>
-                                                        <p>Security</p>
+                                                    <p><%= type.titleize %></p>
                                                     </div>
-                                                </li>
-                                                <li>
-                                                    <div class="amenities-wrap">
-                                                        <span>
-                                                            <img src="<%= asset_path 'cp-ex-feat-01.svg' %>">
-                                                        </span>
-                                                        <p>24/7 Water Supply</p>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="amenities-wrap">
-                                                        <span>
-                                                            <img src="<%= asset_path 'cp-ex-feat-01.svg' %>">
-                                                        </span>
-                                                        <p>Chemists</p>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="amenities-wrap">
-                                                        <span>
-                                                            <img src="<%= asset_path 'cp-ex-feat-01.svg' %>">
-                                                        </span>
-                                                        <p>Generator Backup</p>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="amenities-wrap">
-                                                        <span>
-                                                            <img src="<%= asset_path 'cp-ex-feat-01.svg' %>">
-                                                        </span>
-                                                        <p>General Stores</p>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="amenities-wrap">
-                                                        <span>
-                                                            <img src="<%= asset_path 'cp-ex-feat-01.svg' %>">
-                                                        </span>
-                                                        <p>Hotels</p>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="amenities-wrap">
-                                                        <span>
-                                                            <img src="<%= asset_path 'cp-ex-feat-01.svg' %>">
-                                                        </span>
-                                                        <p>Stadium</p>
-                                                    </div>
-                                                </li>
+                                                    </li>
+                                                <% end %>
                                             </ul>
                                         </div>
                                     </div>
@@ -695,32 +534,12 @@
                                         <div class="specifications-tab-wrap">
                                             <p>Your desire to stand apart, is closer than you think! Live in trendy homes that have been smartly designed; just for you! Smaller passages and larger rooms. Because we know you spend 98% more time in your rooms than in the passages.</p>
                                             <div class="row mt-4 specification-list">
+                                            <% @project.specifications.each do |spec| %>
                                                 <div class="col-lg-6 mb-3">
-                                                    <h3>STRUCTURE</h3>
-                                                    <p>Earthquake Resistant</p>
-                                                    <p>Internal Gypsum Finish Plaster, External Sand Finish Plaster</p>
+                                                <h3><%= spec.category.titleize %></h3>
+                                                <p><%= spec.description.html_safe %></p>
                                                 </div>
-                                                <div class="col-lg-6 mb-3">
-                                                    <h3>PAINTING</h3>
-                                                    <p>Premium Quality Internal Paint</p>
-                                                    <p>Semi Acrylic External Paint</p>
-                                                </div>
-                                                <div class="col-lg-6 mb-3">
-                                                    <h3>FLOORING</h3>
-                                                    <p>2*2 Vitrified Tiles</p>
-                                                    <p>Antiskid Wooden Finish Tiles in Terrace</p>
-                                                    <p>Toilets-Designer Glazed Tiles, Anti-Tiles for Flooring</p>
-                                                    <p>Solar Water Heater</p>
-                                                    <p>2*2 Wooden Finish Vitrified Tiles in Bedrooms</p>
-                                                </div>
-                                                <div class="col-lg-6 mb-3">
-                                                    <h3>TOILETS</h3>
-                                                    <p>Designer Glazed Dado Tiles, Antiskid Tiles for Flooring</p>
-                                                    <p>Provision for Exhaust Fan in Toilets</p>
-                                                    <p>Provision For Solar and Geyser in Master Toilet</p>
-                                                    <p>Branded Sanitary Ware</p>
-                                                    <p>Good Quality CP Fittings</p>
-                                                </div>
+                                              <% end %>                                                
                                             </div>
                                         </div>
                                     </div>
@@ -1002,3 +821,32 @@
         </div>
     </div>
 </section>
+<div class="modal fade" tabindex="-1" id="galleryModal" aria-labelledby="galleryModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="gallerySlider" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                        <% @assets = @project.assets.where(document_type: "images") %>
+                        <% @assets[0..5].each_with_index do |asset, index|%>
+                            <div class="carousel-item <%= (index == 0) ? "active" : "" %>">
+                                <img src="<%= asset.file.url %>" class="d-block w-100 img-fluid" alt="">
+                            </div>
+                        <% end %>                                                                
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#gallerySlider" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#gallerySlider" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

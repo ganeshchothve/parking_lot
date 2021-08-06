@@ -1,14 +1,14 @@
 <div class="row ">
 
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :area_unit, class: 'label-required' %>
       <%= f.text_field :area_unit, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("area_unit") ? false : true) %>
     </div>
   </div>
 
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :cancellation_amount, class: 'label-required' %>
       <%= f.text_field :cancellation_amount, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("cancellation_amount") ? false : true) %>
     </div>
@@ -18,7 +18,7 @@
 <div class="row">
   <div class="col-md-6">
     <% if policy([:admin, @client]).editable_field?("enable_direct_payment") %>
-    <div class="form-group direct-payment">
+    <div class="mb-3 direct-payment">
       <%= f.label :enable_direct_payment %><br/>
       <div class="form-check form-check-inline">
         <%= f.radio_button :enable_direct_payment, true, class: "form-check-input" %>
@@ -32,7 +32,7 @@
     <% end %>
   </div>
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :payment_gateway, class: 'label-required' %>
       <%= f.select :payment_gateway, Client::PAYMENT_GATEWAYS.collect{|x| [ Client.human_attribute_name("payment_gateway.#{x}"), x] }, {}, class: 'selectize', required: 'required', disabled: (policy([:admin, @client]).editable_field?("payment_gateway") ? false : true) %>
     </div>
@@ -41,7 +41,7 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :enable_actual_inventory %><br/>
       <%= f.select :enable_actual_inventory, User.available_roles(@client).collect{|x| [ User.human_attribute_name("role.#{x}"), x]}, {}, class: 'selectize', multiple: true, disabled: !policy(f.object).editable_field?("enable_actual_inventory") %>
       <!-- TODO: throwing error on resolving conflict  -->
@@ -51,7 +51,7 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :enable_live_inventory %><br/>
       <%= f.select :enable_live_inventory, User.available_roles(@client).collect{|x| [ User.human_attribute_name("role.#{x}"), x]}, {}, class: 'selectize', multiple: true, disabled: !policy(f.object).editable_field?("enable_live_inventory") %>
     </div>
@@ -60,13 +60,13 @@
 
 <div class="row">
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :blocking_days, class: 'label-required' %>
       <%= f.number_field :blocking_days, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("blocking_days") ? false : true), min: 0, max: 30 %>
     </div>
   </div>
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :holding_minutes, class: 'label-required' %>
       <%= f.text_field :holding_minutes, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("holding_minutes") ? false : true), min: 0, max: 30 %>
     </div>
@@ -75,7 +75,7 @@
 
 <div class="row">
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :enable_company_users %><br/>
       <div class="form-check form-check-inline">
         <%= f.radio_button :enable_company_users, true, class: "form-check-input" %>
@@ -91,7 +91,7 @@
 
 <div class="row">
   <div class="col-md-6">
-    <div class="form-group depend-direct-payment">
+    <div class="mb-3 depend-direct-payment">
       <%= f.label :enable_payment_with_kyc %><br/>
       <div class="form-check form-check-inline">
         <%= f.radio_button :enable_payment_with_kyc, true, class: "form-check-input" %>
@@ -104,7 +104,7 @@
     </div>
   </div>
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :enable_booking_with_kyc %><br/>
       <div class="form-check form-check-inline">
         <%= f.radio_button :enable_booking_with_kyc, true, class: "form-check-input" %>
@@ -120,13 +120,13 @@
 
 <div class="row">
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :allowed_bookings_per_user, class: 'label-required' %>
       <%= f.number_field :allowed_bookings_per_user, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("allowed_bookings_per_user") ? false : true), min: 0 %>
     </div>
   </div>
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :allow_multiple_bookings_per_user_kyc, class: 'label-required' %><br/>
       <div class="form-check form-check-inline">
         <%= f.radio_button :allow_multiple_bookings_per_user_kyc, true, class: "form-check-input" %>
@@ -143,7 +143,7 @@
 
 <div class="row">
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :blocking_amount, class: 'label-required' %>
       <%= f.number_field :blocking_amount, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("blocking_amount") ? false : true), min: 0 %>
     </div>
@@ -151,7 +151,7 @@
 
   <div class="col-md-6">
     <% if policy([:admin, @client]).editable_field?("enable_channel_partners") %>
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :enable_channel_partners %><br/>
       <div class="form-check form-check-inline">
         <%= f.radio_button :enable_channel_partners, true, class: "form-check-input" %>
@@ -165,7 +165,7 @@
     <% end %>
   </div>
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :incentive_calculation, class: 'label-required' %>
       <%= f.select :incentive_calculation, Client::INCENTIVE_CALCULATION.collect{|x| [x,x]}, {}, class: 'selectize', multiple: true, required: 'required', disabled: (policy([:admin, @client]).editable_field?("incentive_calculation") ? false : true) %>
     </div>
