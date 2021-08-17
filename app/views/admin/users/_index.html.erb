@@ -1,95 +1,120 @@
-<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
-  <thead class="th-default">
-    <thead>
-      <tr class="bg-gradient-cd white">
-        <th><%= User.human_attribute_name('name_email_phone') %></th>
-        <% if selldo_config_base.present? || Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).present? %>
-          <th><%= User.human_attribute_name('lead_id') %></th>
-        <% end %>
-        <th><%= Receipt.model_name.human %></th>
-        <th><%= User.human_attribute_name('role') %></th>
-        <th><%= User.human_attribute_name('status') %></th>
-        <% if policy([current_user_role_group, User.new]).show_lead_tagging? %>
-          <th><%= t('mongoid.attributes.user.iris_confirmation') %></th>
-        <% end %>
-        <th class="text-right"><%= t('global.action', count: 3) %></th>
-      </tr>
-    </thead>
-  </thead>
-  <tbody>
-    <% users.each do |user| %>
-      <tr>
-        <td data-title="Name">
-          <span class="d-block">
-            <% if policy([ current_user_role_group, user]).show? %>
-              <%= link_to user.name, [current_user_role_group, user ], class: "primary" %>
-            <% else %>
-              <%= user.name %>
-            <% end %>
-            <% if user.temporarily_blocked? %>
-              <i class="fa fa-circle red" aria-hidden="true"></i>
-            <% end %>
-          </span>
-          <% if user.email.present? %>
-            <span class="email-icon small d-block mt-1">
-              <%= user.email || "" %>
-            </span>
-          <% end %>
-          <% if user.phone.present? %>
-            <span class="phone-icon small d-block mt-1">
-              <%= user.phone || "" %>
-            </span>
-          <% end %>
-        </td>
+<section class="mt-0">
+  <div class="px-0">
+    <div class="row g-0">
+        <div class="col-lg-12 p-0">
+          <% users.each do |user| %>
+          <div class="white rounded-3 float-start wd-100 mt-4 shadow-sm position-relative">
+            <div class="float-start wd-100">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <div class="inner-info">
+                    <div class="text-center float-start letter-sort-nm bg-primary-light">
+                      <span class="position-absolute top-50 start-50 translate-middle primary fn-24 font-medium">SM</span>
+                    </div>
+                    <div class="ps-3 py-3 float-start">
+                    <h2 class="fn-18 font-normal">
+                      <% if policy([ current_user_role_group, user]).show? %>
+                      <%= link_to user.name, [current_user_role_group, user ], class: "primary" %>
+                      <% else %>
+                      <%= user.name %>
+                      <% end %>
+                      <% if user.temporarily_blocked? %>
+                      <i class="fa fa-circle danger" aria-hidden="true"></i>
+                      <% end %>
+                    </h2>
+                    <% if user.email.present? %>
+                    <p class="fn-14 mt-1 mb-1">
+                      <i class="fa fa-envelope fill-theme-light me-2"></i><%= user.email || "" %>
+                    </p>
+                    <% end %>
+                    <% if user.phone.present? %>
+                    <p class="fn-14 mt-1 mb-0">
+                      <i class="fa fa-phone-alt fill-theme-light me-2"></i><%= user.phone || "" %>
+                    </p>
+                    <% end %>
+                  </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="row ht-inner-col-150">
+                  <% if selldo_config_base.present? || Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).present? %>                  
+                  <div class="col border-start py-3 px-3 wd-150 position-relative">
+                    <div class="position-absolute top-50 start-50 translate-middle w-75">
+                      <p class="font-medium fn-14 mb-0"><%= user.lead_id %></p>
+                      <p class="fn-12"><%= User.human_attribute_name('lead_id') %></p>
+                    </div>        
+                  </div>          
+                  <% end %>
 
-        <% if selldo_config_base.present? || Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).present? %>
-          <td data-title="Sell.Do Lead Id"><span><%= user.lead_id %></span></td>
-        <% end %>
+                    <div class="col border-start py-3 px-3 wd-150 position-relative">
+                      <div class="position-absolute top-50 start-50 translate-middle w-75">
+                      <p class="font-medium fn-14 mb-0"><%= t("global.boolean.#{user.is_payment_done? }") %></p>
+                      <p class="fn-12 mb-0"><%= Receipt.model_name.human %></p>
+                      </div>
+                    </div>
+                    <div class="col border-start py-3 px-3 wd-150 ht-100 position-relative">
+                      <div class="position-absolute top-50 start-50 translate-middle w-75">
+                      <p class="font-medium fn-14 mb-0"><%= User.human_attribute_name("role.#{user.role}") %>
+                        <% if user.role?('channel_partner') && user.tier_id.present? %>
+                        ( <%= user.tier.try(:name) || "" %> )
+                        <% end %>                       
+                      </p>
+                      <p class="fn-12 mb-0"><%= User.human_attribute_name('role') %></p>
+                      
+                    </div>
+                    </div>
+                    <div class="col border-start py-3 px-3 pe-5 wd-150 ht-100 position-relative">
+                      <div class="position-absolute top-50 start-50 translate-middle w-75">
+                      <p class="font-medium fn-14 mb-0">
+                        <%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %></p>
+                      <p class="fn-12 mb-0"><%= User.human_attribute_name('status') %></p>
+                    </div>
+                    </div>
 
-        <td data-title="payments">
-          <span><%= t("global.boolean.#{user.is_payment_done? }") %></span>
-        </td>
-
-        <td data-title="Role">
-          <span><%= User.human_attribute_name("role.#{user.role}") %></span>
-          <% if user.role?('channel_partner') && user.tier_id.present? %>
-            <br/>
-            <span> Tier: <%= user.tier.try(:name) || "" %> </span>
-          <% end %>
-        </td>
-
-        <td data-title="Status">
-          <span><%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %></span>
-        </td>
-
-        <% if policy([current_user_role_group, user]).show_lead_tagging? %>
-          <td data-title="<%= t('mongoid.attributes.user.iris_confirmation') %>">
-            <% if user.buyer? %>
-              <span><%= t("mongoid.attributes.user/iris_confirmation.#{user.iris_confirmation?}.temporarily_blocked.#{user.temporarily_blocked?}") %></span>
-            <% else %>
-              -
-            <% end %>
-          </td>
-        <% end %>
-        <td>
-          <div class="dropdown show text-right">
-            <a class="btn table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-              <%= render "#{current_user_role_group}/users/links", user: user %>
+                  <% if policy([current_user_role_group, user]).show_lead_tagging? %>
+                  <div class="col border-start py-3 px-3  pe-5 wd-150 ht-100 position-relative">
+                    <div class="position-absolute top-50 start-50 translate-middle w-75">
+                      <p class="font-medium fn-14 mb-0"><%= t('mongoid.attributes.user.iris_confirmation') %></p>
+                      <% if user.buyer? %>
+                      <p class="fn-12 mb-0">
+                        <%= t("mongoid.attributes.user/iris_confirmation.#{user.iris_confirmation?}.temporarily_blocked.#{user.temporarily_blocked?}") %>
+                      </p>
+                      <% else %>
+                      <p class="fn-12 mb-0">-</p>
+                      <% end %>
+                    </div>
+                  </div>
+                  <% end %>
+                  </div>
+                </div>
+            </div>
+            </div>
+            <div class="position-absolute custom-top-10 custom-end-20">
+              <div class="dropdown">
+                <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-ellipsis-v primary" aria-hidden="true"></i></a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                  <%= render "#{current_user_role_group}/users/links", user: user %>
+                </div>
+              </div>
             </div>
           </div>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-<div class="col-lg-12 py-3 white mb-2 px-2">
-  <div class="row">
-  <div class="col-lg-6">
-    <p class="table-entry">Showing 1 - 5 of <%= @users.total_entries %> items</p>
-  </div>
-  <div class="col-lg-6 table-pagination">
-     <%= will_paginate users, list_classes: %w(pagination justify-content-end) %>
-  </div>
-</div>
-</div>
+            
+            <% end %>
+          </div>
+
+        <!----------- Pagination ---------->
+        <div class="col-lg-12 py-3 white mb-2 px-3 mt-3 shadow-sm">
+          <div class="row">
+            <div class="col-lg-6 pt-2">
+              <p class="table-entry mb-0">Showing 1 - 5 of <%= @users.total_entries %> items</p>
+            </div>
+            <div class="col-lg-6 table-pagination">
+              <%= will_paginate users, list_classes: %w(pagination justify-content-end) %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>

@@ -469,7 +469,7 @@ select.form-control{
 				a{
 					padding: 13px 0 12px 15px;
 				    display: block;
-				    font-size: 12px;
+				    font-size: 14px;
 				    color: #fff;
 				    text-decoration: none;
 				    border-left: 4px solid $theme-txt-color;
@@ -635,6 +635,10 @@ select.form-control{
 	margin-top: 110px;
 	margin-left: 160px;
 	width: calc(100% - 160px);
+	@media screen and (max-width: 1024px){
+		width: 100%;
+		margin-left: 0;
+	}
 }
 
 /********************* Project Details ************/
@@ -1352,6 +1356,14 @@ select.form-control{
 		}
 	}
 }
+@mixin inputSearchIcon {
+	background-repeat: no-repeat;
+	background-image: url("search.svg");
+    background-position-x: 96%;
+    background-position-y: 10px;
+    background-size: 18px;
+	color: #8B95A7;
+}
 .filter-search{
 	display: inline-block;
 	vertical-align: top;
@@ -1359,8 +1371,10 @@ select.form-control{
 		height: 40px;
 		border-radius: 4px;
 		border: 1px solid #E6E6E6;
-		padding: 10px;
+		padding: 10px 30px 10px 10px;
 		width: 100%;
+		font-weight: 400;
+		@include inputSearchIcon;
 	}
 }
 .filter-popup,.filter-sort{
@@ -1375,11 +1389,7 @@ select.form-control{
 	text-align: center;
 }
 .input-search-icon{
-	background-repeat: no-repeat;
-	background-image: url("search.svg");
-    background-position-x: 96%;
-    background-position-y: 10px;
-    background-size: 18px;
+	@include inputSearchIcon;
 }
 .filter-sort-list select{
 	background-color: #EBEDF3;
@@ -3049,9 +3059,12 @@ table .dropdown-menu.show{
 		margin-bottom: 0px;
 	}
 	.page-item{
+		&:first-child a, &:last-child a{
+			font-size: 28px;
+		}
 		.page-link{
 			border: 0px;
-			font-size: 15px;
+			font-size: 16px;
 			font-weight: 500;
 			color: $theme-txt-color;
 			letter-spacing: 0.42px;
@@ -3273,4 +3286,33 @@ table .dropdown-menu.show{
 		top: 28px;
 		z-index: 0;
 	}
+}
+.wd-150{
+	min-width: 150px;
+	height: auto;
+    max-width: fit-content;
+}
+.custom-top-10{
+ top:10px;
+} 
+.custom-end-20{
+	right: 20px;
+}
+.ht-inner-col-150{
+	.col{
+		min-height: 115px;
+	}
+}
+.letter-sort-nm{
+    width: 100px;
+    height: 115px;
+    border-radius: 4px 0 0 4px;
+    caption-side: bottom;
+    position: relative;
+	span{
+		letter-spacing: 2px;
+	}
+}
+.col-lg-wd {
+    width: 347px;
 }
