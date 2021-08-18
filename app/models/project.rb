@@ -141,6 +141,7 @@ class Project
   has_many :offers
   has_many :incentive_schemes
   has_many :timeline_updates
+  has_many :token_types
 
   validates :name, presence: true
   validates_uniqueness_of :name, :rera_registration_no, allow_blank: true
