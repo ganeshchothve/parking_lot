@@ -1368,7 +1368,7 @@ select.form-control{
 	display: inline-block;
 	vertical-align: top;
 	input{
-		height: 40px;
+		height: 42px;
 		border-radius: 4px;
 		border: 1px solid #E6E6E6;
 		padding: 10px 30px 10px 10px;
@@ -1381,11 +1381,11 @@ select.form-control{
 	vertical-align: top;
 	display: inline-block;
 	width: 40px;
-	height: 40px;
+	height: 42px;
 	background-color: #EBEDF3;
 	margin-left: 10px;
 	border-radius: 4px;
-	padding: 8px 5px;
+	padding: 10px 5px;
 	text-align: center;
 }
 .input-search-icon{
@@ -2988,7 +2988,9 @@ table .dropdown-menu.show{
     border-bottom: 1px solid #f1f1f1;
 	}
 }
-
+.modal-remote-form-link{
+	height: 40px;
+}
 /********************** Apartment Filter Popup *******************/
 .filter-box {
     position: fixed;
@@ -3004,6 +3006,7 @@ table .dropdown-menu.show{
 .select-btn{
 	background-color: transparent;
     border: none;
+	height: 40px;
 }
 @mixin tableLightTitle{
 	font-size: 12px;

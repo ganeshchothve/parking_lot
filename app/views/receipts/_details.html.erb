@@ -69,7 +69,7 @@
   <td data-title=<%= t('mongoid.attributes.receipt.token_number') %> >
     <span class="col-title"><%= receipt.try(:token_number) ? receipt.get_token_number : '--' %></span></td>
   <td data-title=<%= t('mongoid.attributes.receipt.status') %> >
-    <span class="col-title"><%= t("mongoid.attributes.receipt/status.#{receipt.status}") %></span></td>
+    <span class="col-title"><i class="fa fa-circle success me-2 fa-xs"></i><%= t("mongoid.attributes.receipt/status.#{receipt.status}") %></span></td>
   <td data-title=<%= t('mongoid.attributes.receipt.total_amount') %> >
     <span class="col-title"><%= number_to_indian_currency(receipt.total_amount.round) %></span></td>
   <td>

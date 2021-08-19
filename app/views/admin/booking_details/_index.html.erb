@@ -34,7 +34,7 @@
           <span class="col-title"><%= booking_detail.bedrooms %> / <%= booking_detail.bathrooms %></span></td>
 
         <td data-title=<%= t('mongoid.attributes.booking_detail.status') %> >
-          <span class="col-title"><%= BookingDetail.human_attribute_name("status.#{booking_detail.status}") %></span></td>
+          <span class="col-title"><i class="fa fa-circle success me-2 fa-xs"></i><%= BookingDetail.human_attribute_name("status.#{booking_detail.status}") %></span></td>
 
         <td data-title="<%= t('mongoid.attributes.booking_detail.agreement_price') %>" >
           <span class="col-title">

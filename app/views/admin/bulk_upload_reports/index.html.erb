@@ -1,5 +1,5 @@
-<section class="mb-5">
-  <div class="container">
+<section class="mb-5 mt-3">
+  <div class="px-4">
     <div class="row">
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-title pt-1">
@@ -12,7 +12,7 @@
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-btn-set float-end pb-2 text-end">
           <% if (Admin::BulkUploadReportPolicy.new(current_user, BulkUploadReport.new)).bulk_upload? %>
-            <%= link_to "New Bulk Upload", admin_bulk_upload_reports_path('remote-state': new_admin_bulk_upload_report_path), class: 'btn-primary fn-400 btn' %>
+            <%= link_to "New Bulk Upload", admin_bulk_upload_reports_path('remote-state': new_admin_bulk_upload_report_path), class: 'border rounded px-3 py-2 primary border-primary' %>
           <% end %>
         </div>
       </div>
