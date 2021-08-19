@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(resource_or_scope)
     ApplicationLog.user_log(current_user.id, 'sign_in', RequestStore.store[:logging])
-    stored_location_for(resource_or_scope) || dashboard_path
+    home_path(current_user)
   end
 
   def after_sign_out_path_for(resource_or_scope)
@@ -35,7 +35,11 @@ class ApplicationController < ActionController::Base
 
   def home_path(current_user)
     if current_user
-      return dashboard_path
+      if current_user.buyer? && params[:controller] == 'local_devise/sessions'
+        buyer_select_project_path
+      else
+        stored_location_for(current_user) || dashboard_path
+      end
     else
       return root_path
     end

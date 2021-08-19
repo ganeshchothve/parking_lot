@@ -1,20 +1,11 @@
 class Buyer::ReceiptsController < BuyerController
   include ReceiptsConcern
+
   before_action :set_lead, except: [:index, :show, :resend_success]
   before_action :set_receipt, except: [:index, :new, :create]
+  around_action :apply_policy_scope, only: :index
 
   layout :set_layout
-
-  # GET /buyer/leads/:lead_id/receipts
-  def index
-    authorize([:buyer, Receipt])
-
-    @receipts = current_user.receipts.build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
-    respond_to do |format|
-      format.json { render json: @receipts.as_json(methods: [:name]) }
-      format.html
-    end
-  end
 
   # GET /buyer/receipts/export
   # Defined in ReceiptsConcern
@@ -75,12 +66,13 @@ class Buyer::ReceiptsController < BuyerController
   private
 
   def set_lead
-    @lead = Lead.where(_id: params[:lead_id]).first
+    @lead = current_user.selected_lead
     redirect_to dashboard_path, alert: 'Lead Not found', status: 404 if @lead.blank?
   end
 
   def set_receipt
-    @receipt = current_user.receipts.where(_id: params[:id]).first
+    lead = current_user.selected_lead
+    @receipt = lead.receipts.where(_id: params[:id]).first
     redirect_to dashboard_path, alert: 'No receipts found', status: 404 if @receipt.blank?
   end
 
