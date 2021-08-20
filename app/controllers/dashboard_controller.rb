@@ -3,12 +3,13 @@ class DashboardController < ApplicationController
   include BillingTeamDashboardConcern
   include ChannelPartnerDashboardConcern
   before_action :authenticate_user!, only: [:index, :documents]
+  before_action :set_lead, only: :index, if: proc { current_user.buyer? }
+
   layout :set_layout
 
   def index
     authorize :dashboard, :index?
     @project_units = current_user.project_units
-    @receipts = current_user.receipts.paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
       format.json { render json: { message: 'Logged In' }, status: 200 }
       format.html {}
@@ -60,6 +61,14 @@ class DashboardController < ApplicationController
       SelldoLeadUpdater.perform_async(current_user.id.to_s, {stage: 'project_info'}) if current_user.buyer? && current_user.receipts.count == 0
     else
       redirect_to dashboard_path, alert: 'Brochure is not available'
+    end
+  end
+
+  private
+
+  def set_lead
+    unless @lead = current_user.selected_lead
+      redirect_to welcome_path, alert: t('controller.application.set_current_client')
     end
   end
 end

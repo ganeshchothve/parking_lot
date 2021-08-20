@@ -1148,6 +1148,9 @@ en:
         link_name: 'Activate'
       token_de_init:
         link_name: 'Deactivate'
+    home:
+      select_project:
+        link_name: 'Switch Project'
     cp_lead_activities:
       index:
         link_name: 'Lead Activities'
