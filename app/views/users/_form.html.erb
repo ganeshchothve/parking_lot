@@ -1,5 +1,5 @@
 <%= form_for [:buyer, user], remote: true, local: true, html: { class: "modal-remote-form validate-form", data: { "resource-type" => t('global.user'), type: "json"} } do |f| %>
-  <div class="modal-body">
+  <div class="modal-body theme-form">
     <div class="row">
       <div class="col-md-6">
         <div class="mb-3">
@@ -43,7 +43,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-footer">
+  <div class="modal-footer text-end">
     <%= f.submit "Save", class: 'btn btn-primary' %>
   </div>
 <% end %>

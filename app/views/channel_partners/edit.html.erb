@@ -6,10 +6,10 @@
         <h3 class="title"><%= t("controller.channel_partners.#{action_name}.link_name") %></h3>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body theme-form">
         <%= render "form_fields", {form: form} %>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer text-end">
         <%= form.submit "Save", class: "btn btn-primary" %>
       </div>
     </div>

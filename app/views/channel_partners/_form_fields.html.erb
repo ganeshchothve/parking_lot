@@ -42,7 +42,7 @@
 
 <div class="row">
   <div class="col-md-6">
-    <%= form.input :nri, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: { disabled: !policy([:admin, @channel_partner]).editable_field?("nri") } %>
+    <%= form.input :nri, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: {class: 'wd-22', disabled: !policy([:admin, @channel_partner]).editable_field?("nri") } %>
   </div>
   <div class="col-md-6">
     <%= form.input :team_size, collection: (1..200).to_a.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("team_size"), as: :select, prompt: :translate %>
@@ -51,7 +51,7 @@
 
 <div class="row">
   <div class="col-md-6">
-    <%= form.input :rera_applicable, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: { disabled: !policy([:admin, @channel_partner]).editable_field?("rera_applicable") } %>
+    <%= form.input :rera_applicable, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: {class: 'wd-22', disabled: !policy([:admin, @channel_partner]).editable_field?("rera_applicable") } %>
   </div>
   <div class="col-md-6">
     <%= form.input :rera_id, disabled: !policy([:admin, @channel_partner]).editable_field?("rera_id") %>
@@ -60,7 +60,7 @@
 
 <div class="row">
   <div class="col-md-6">
-    <%= form.input :gst_applicable, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: { disabled: !policy([:admin, @channel_partner]).editable_field?("gst_applicable") } %>
+    <%= form.input :gst_applicable, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: {class: 'wd-22', disabled: !policy([:admin, @channel_partner]).editable_field?("gst_applicable") } %>
   </div>
   <div class="col-md-6">
     <%= form.input :gstin_number, disabled: !policy([:admin, @channel_partner]).editable_field?("gstin_number") %>
@@ -69,6 +69,7 @@
 
 <div class="row">
   <div class="col-md-6">
+  <!-- Remove form-control class in select field and selectize  -->
     <%= form.input :expertise, collection: ChannelPartner::EXPERTISE.collect{|x| [x.titleize, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("expertise"), as: :select, prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
   </div>
   <div class="col-md-6">
@@ -91,9 +92,11 @@
 
 <div class="row">
   <div class="col-md-12">
+  <!-- Remove form-control class in select field and selectize  -->
     <%= form.input :developers_worked_for, collection: ChannelPartner::DEVELOPERS.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("developers_worked_for"), prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
   </div>
   <div class="col-md-12">
+  <!-- Remove form-control class in select field and selectize  -->
     <%= form.input :interested_services, collection: ChannelPartner::SERVICES.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("interested_services"), prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
   </div>
 </div>
@@ -131,7 +134,8 @@
 <% if policy([:admin, @channel_partner]).editable_field?("address_attributes") %>
   <div class="box-card mt-3">
     <div class="box-header bg-gradient br-rd-tr-4">
-      <h2><strong>Address</strong></h2>
+      <h5>Address</h5>
+      <hr/>
     </div>
     <div class="box-content br-rd-bl-4 bg-white p-0 pt-1">
       <div class="mb-3">

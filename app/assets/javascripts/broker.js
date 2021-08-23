@@ -144,6 +144,9 @@ $(document).ready(function(){
     // }
   });
 
+
+
+
 var header = $("body");
 $(window).scroll(function(){
   var windowScroll = $(window).scrollTop();

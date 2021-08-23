@@ -8,7 +8,7 @@
           </h3>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body theme-form">
           <div class="row">
             <div class="col-md-6">
               <div class="mb-3">
@@ -92,12 +92,12 @@
                 <div class="mb-3">
                   <%= f.label :is_active %>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :is_active, true, class: "form-check-input" %>
-                    <%= f.label :is_active, "Yes", class: "form-check-label" %>
+                    <%= f.radio_button :is_active, true, class: "form-check-input wd-22" %>
+                    <%= f.label :is_active, "Yes", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :is_active, false, class: "form-check-input" %>
-                    <%= f.label :is_active, "No", class: "form-check-label" %>
+                    <%= f.radio_button :is_active, false, class: "form-check-input wd-22" %>
+                    <%= f.label :is_active, "No", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
               </div>
@@ -118,12 +118,12 @@
                 <div class="mb-3">
                   <%= f.label :enable_live_inventory %>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :enable_live_inventory, true, class: "form-check-input" %>
-                    <%= f.label :enable_live_inventory, "Yes", class: "form-check-label" %>
+                    <%= f.radio_button :enable_live_inventory, true, class: "form-check-input wd-22" %>
+                    <%= f.label :enable_live_inventory, "Yes", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :enable_live_inventory, false, class: "form-check-input" %>
-                    <%= f.label :enable_live_inventory, "No", class: "form-check-label" %>
+                    <%= f.radio_button :enable_live_inventory, false, class: "form-check-input wd-22" %>
+                    <%= f.label :enable_live_inventory, "No", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
               </div>
@@ -144,8 +144,8 @@
             <%= render 'admin/crm/shared/third_party_references_form', f: f %>
           <% end %>
         </div>
-        <div class="modal-footer">
-          <%= f.submit "Save", class: 'btn btn-primary' %>
+        <div class="modal-footer theme-end">
+          <%= f.submit "Save", class: 'btn btn-primary float-end' %>
         </div>
       </div>
     </div>
