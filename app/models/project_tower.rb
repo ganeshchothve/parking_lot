@@ -26,7 +26,6 @@ class ProjectTower
   field :completion_date, type: Date
   field :project_tower_status, type: String
   field :selldo_id, type: String
-  field :project_id, type: String
   field :completed_floor, type: Integer
   field :project_tower_stage, type: String
 
