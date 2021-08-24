@@ -280,16 +280,28 @@ module DashboardDataProvider
   end
 
   # new (according to new ui)
-  def self.available_inventory
-    ProjectUnit.where(status: 'available').count
+  def self.available_inventory(project = nil)
+    if project.present?
+      project.project_units.where(status: 'available').count
+    else  
+      ProjectUnit.where(status: 'available').count
+    end
   end
 
-  def self.minimum_agreement_price
-    ProjectUnit.gt(all_inclusive_price: 0).distinct(:all_inclusive_price).min
+  def self.minimum_agreement_price(project = nil)
+    if project.present?
+      project.project_units.gt(all_inclusive_price: 0).distinct(:all_inclusive_price).min
+    else
+      ProjectUnit.gt(all_inclusive_price: 0).distinct(:all_inclusive_price).min
+    end
   end
 
-  def self.configurations
-    ProjectUnit.distinct(:unit_configuration_name).sample(3)
+  def self.configurations(project = nil)
+    if project.present?
+      project.project_units.distinct(:unit_configuration_name).sample(3)
+    else
+      ProjectUnit.distinct(:unit_configuration_name).sample(3)
+    end
   end
 
   def self.total_buyers(current_user, params={})
