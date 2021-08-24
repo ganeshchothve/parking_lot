@@ -16,8 +16,11 @@ class Admin::ReceiptsController < AdminController
   #
   # GET "/admin/leads/:lead_id/receipts/new"
   def new
+    @amount_hash = {}
+    @lead.project.token_types.all.select{|tt| tt.incrementor_exists?}.map { |x| @amount_hash[x.id.to_s] = x.token_amount }
+
     @receipt = Receipt.new(
-      creator: current_user, user: @lead.user, lead: @lead, project_id: @lead.project_id, payment_mode: 'cheque',
+      creator: current_user, user: @lead.user, lead: @lead, project_id: @lead.project_id, payment_mode: 'cheque', payment_type: 'token',
       total_amount: current_client.blocking_amount
     )
     authorize([:admin, @receipt])

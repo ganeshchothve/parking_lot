@@ -168,6 +168,9 @@ en:
       project:
         one: Project
         other: Projects
+      token_type:
+        one: Token Type
+        other: Token Types
       developer:
         one: Developer
         other: Developers
@@ -483,6 +486,13 @@ en:
         incentive_scheme_short_description: "What's the Opportunity"
         incentive_scheme_description: Full Incentive Scheme Text
         incentive_schemes: 'Earning Opportunities'
+        total_units: 'Total Units'
+      token_type:
+        name: Name
+        token_prefix: Token Prefix
+        token_amount: Token Amount
+        token_seed: Token Seed
+        status: Status
 
       cost:
         name: "Name"
@@ -1127,6 +1137,17 @@ en:
           custom_dates: 'Custom Dates'
 
   controller:
+    token_types:
+      index:
+        link_name: 'Token Types'
+      new:
+        header: 'New Token Type'
+      edit:
+        header: 'Edit Token Type'
+      token_init:
+        link_name: 'Activate'
+      token_de_init:
+        link_name: 'Deactivate'
     home:
       select_project:
         link_name: 'Switch Project'

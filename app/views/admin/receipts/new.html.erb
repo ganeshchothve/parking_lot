@@ -19,6 +19,10 @@
 </div>
 <%= javascript_tag do %>
   $(document).ready(function(){
+    var amount_hash = <%= raw @amount_hash.to_json %>;
+    $('#receipt_token_type').change(function(){
+      $('#receipt_total_amount').val(amount_hash[$(this).val()])
+    });
     $('#receipt_form [name="agree"]').change(function(){
       if($(this).is(":checked")){
         $('#receipt_form [type="submit"]').removeAttr("disabled");

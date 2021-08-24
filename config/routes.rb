@@ -158,6 +158,13 @@ Rails.application.routes.draw do
     resources :projects, except: [:destroy] do
       get :collaterals, on: :member
       get :collaterals, on: :collection
+
+      resources :token_types, except: [:destroy, :show], controller: 'projects/token_types' do
+        member do
+          get :token_init
+          get :token_de_init
+        end
+      end
     end
     resources :project_towers, only: [:index]
     resources :project_units, only: [:index, :show, :edit, :update] do

@@ -38,6 +38,7 @@ class Buyer::ReceiptPolicy < ReceiptPolicy
 
   def permitted_attributes(params = {})
     attributes = super
+    attributes += [:token_type, :payment_type]
     attributes += [:booking_detail_id] if user.buyer?
     attributes.uniq
   end
