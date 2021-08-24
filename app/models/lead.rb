@@ -200,7 +200,7 @@ class Lead
     if hold_booking_detail.present? && hold_booking_detail.search
       self.payment_link = url.checkout_user_search_path(hold_booking_detail.search)
     else
-      self.payment_link = url.dashboard_url("remote-state": url.new_buyer_lead_receipt_path(self), user_email: user.email, user_token: user.authentication_token)
+      self.payment_link = url.dashboard_url("remote-state": url.new_buyer_receipt_path, user_email: user.email, user_token: user.authentication_token)
     end
     #
     # Send email with payment link
