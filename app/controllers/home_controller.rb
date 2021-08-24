@@ -98,7 +98,7 @@ class HomeController < ApplicationController
                 @user.confirm #auto confirm user account
                 @lead.assign_attributes(selldo_lead_registration_date: params.dig(:lead_details, :lead_created_at))
 
-                cp_lead_activity = CpLeadActivityRegister.create_cp_lead_object(@lead, current_user, params[:lead_details]) if current_user.role?("channel_partner")
+                cp_lead_activity = CpLeadActivityRegister.create_cp_lead_object(@lead, current_user, (params[:lead_details] || {})) if current_user.role?("channel_partner")
 
                 if @lead.save
                   if cp_lead_activity.present?
