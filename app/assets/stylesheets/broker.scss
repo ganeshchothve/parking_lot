@@ -52,6 +52,18 @@ $font-bold: 700;
 .success{
 	color: $success;
 }
+.status_raised, .status_inactive{
+	color: $primary!important;
+}
+.status_pending_approval, .status_draft, .status_blocked, .status_pending{
+	color: $warning;
+}
+.status_rejected, .status_not_confirmed{
+	color: $danger;
+}
+.status_approved, .status_paid, .status_confirmed, .status_confirmed_booked, .status_active{
+	color: $success;
+}
 .fill-primary path{
 	fill: $primary;
 }
@@ -3018,10 +3030,11 @@ table .dropdown-menu.show{
 	height: 40px;
 }
 @mixin tableLightTitle{
-	font-size: 12px;
+	font-size: 14px;
 	line-height: 23px;
-	color: #687790;
+	color: #3F5275;
 	letter-spacing: 0.33px;
+	font-weight: 500;
 }
 
 .table{
@@ -3031,7 +3044,7 @@ table .dropdown-menu.show{
 	}
 	tbody{
 		td{
-			font-size: 12px;
+			font-size: 14px;
 			color: $theme-txt-color;
 			letter-spacing: 0.33px;
 			line-height: 18px;

@@ -1,92 +1,77 @@
-<section class="mt-0">
-  <div class="px-0">
-    <div class="row g-0">
-      <div class="col-lg-12 p-0">
-        <% invoices.each do |invoice| %>
-        <div class="white rounded-3 float-start wd-100 mt-4 shadow-sm position-relative">
-          <div class="float-start wd-100">
-            <div class="d-flex justify-content-between">
-              <div>
-                <div class="inner-info">
-                  <div class="text-center float-start letter-sort-nm bg-primary-light">
-                    <span class="position-absolute top-50 start-50 translate-middle primary fn-24 font-medium">SM</span>
-                  </div>
-                  <div class="ps-3 py-3 pb-0 float-start">
-                    <p class="mb-0"><span class="text-muted mb-0"><%= t('mongoid.attributes.invoice.number') %>: </span><%= invoice.try(:number) %></p>
-                    <h2 class="fn-18 font-normal mb-0">
-                      <%= link_to invoice.booking_detail.name, [current_user_role_group, invoice.booking_detail], class: "primary" %>
-                    </h2>
-                    <div class='small'>
-                      <span><%= invoice.project_name %></span>
-                      <% unless current_user.role?('channel_partner') %>
-                      <br><span><%= link_to_if policy([current_user_role_group, invoice.manager]).index?, invoice.manager_name, [:admin, invoice.manager], class: "primary" %></span>
-                      <% end %>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div class="row ht-inner-col-150">
-                  
-                  <div class="col border-start py-3 px-3 pe-5 col-lg-wd ht-100 position-relative">
-                    <div class="position-absolute top-50 start-50 translate-middle px-3 w-100">
-                      <div class="font-medium fn-14 mb-0">
-                        <span class="col-title">
-                          <%= number_to_indian_currency(invoice.amount) %></span><br>
-                        <% if invoice.status.in?(%w(approved paid)) && invoice.net_amount.present? %>
-                        <div class='small row'>
-                          <span class="col-8 title"><%= t('mongoid.attributes.invoice.net_amount') %>:</span>
-                          <span class="col-4"><strong><%= number_to_indian_currency(invoice.net_amount) %></strong></span></span>
-                        </div>
-                        <% end %>
-                      </div>
-                      <p class="fn-12 mb-0"><%= t('mongoid.attributes.invoice.amount') %></p>
-                    </div>
-                  </div>
-
-                  <div class="col border-start py-3 px-3 pe-5 col-lg-wd ht-100 position-relative">
-                    <div class="position-absolute top-50 start-50 translate-middle px-3 w-100">
-                      <div class="font-medium fn-14 mb-0">
-                        <span class="col-title">
-                          <%= t("mongoid.attributes.invoice/status.#{invoice.status}") %></span>
-                        <% if invoice.rejected? %>
-                        <div class='small row'>
-                          <span class='break-word col-6 title'>Reason:</span><span class="col-6"> <%= invoice.rejection_reason %></span>
-                        </div>
-                        </div>
-                        <% end %>
-                        <% if deduction = invoice.incentive_deduction.presence %>
-                        <div class='small row'>
-                          <span class="col-6 title"><%= IncentiveDeduction.model_name.human %>:</span>
-                          <span class="col-6"> <strong><%= number_to_indian_currency(deduction.amount) %></strong>
-                            (<%= t("mongoid.attributes.incentive_deduction/status.#{deduction.status}") %>)</span></span>
-                        </div>
-                        <% end %>
-                      </div>
-                      <p class="fn-12 mb-0"><%= t('mongoid.attributes.invoice.status') %></p>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </div>
+<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
+  <thead class="th-default">
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= t('mongoid.attributes.invoice.number') %></th>
+        <th>Walk In</th>
+        <th><%= Invoice.model_name.human %> Project</th>
+        <!--<th><%#= IncentiveScheme.model_name.human %> Details</th> -->
+        <th><%= t('mongoid.attributes.invoice.amount') %></th>
+        <th><%= t('mongoid.attributes.invoice.status') %></th>
+        <th class="text-right"> <%= t('global.action', count: 3) %></th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+    <% invoices.each do |invoice| %>
+      <tr>
+        <td><span class="col-title"><%= invoice.try(:number) %></span></td>
+        <td><span class="col-title"><% unless current_user.role?('channel_partner') %><%= link_to_if policy([current_user_role_group, invoice.manager]).index?, invoice.manager_name, [:admin, invoice.manager], class: "primary" %><% end %></span></td>
+        <td>
+          <%= link_to invoice.booking_detail.name, [current_user_role_group, invoice.booking_detail], class: "primary" %>
+          <div class='small d-inline-block'> <span class="mx-2">| </span>
+            <span><%= invoice.project_name %></span>
           </div>
-          <div class="position-absolute custom-top-10 custom-end-20">
-            <div class="dropdown">
-              <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
-                <i class="fa fa-ellipsis-v primary" aria-hidden="true"></i></a>
-              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                <%= render 'admin/invoices/links', invoice: invoice %>
-              </div>
-            </div>
+        </td>
+        <!--
+        <td>
+          <%#= link_to_if policy([current_user_role_group, IncentiveScheme]).index?, invoice.incentive_scheme.name.try(:titleize), [:admin, :invoices, {'remote-state': edit_admin_incentive_scheme_path(invoice.incentive_scheme)}] %>
+          <div class='small'>
+            <span><%#= Ladder.model_name.human %> - Stage <%#= invoice.ladder_stage %></span><br>
+            <%# if adj = invoice.incentive_scheme.ladders.where(stage: invoice.ladder_stage).first.try(:payment_adjustment).presence %>
+              <%# if adj.absolute_value.blank? && adj.formula.present? %>
+                <span><%#= formula_to_human(adj.formula) %><span>
+              <%# else %>
+                <span><strong><%#= number_to_indian_currency(adj.absolute_value) %></strong></span>
+              <%# end %>
+            <%# end %>
           </div>
-        </div>
-
-        <% end %>
-      </div>
-
-
-    </div>
-  </div>
-</section>
+        </td>
+        -->
+        <td>
+          <span class="col-title">
+          <%= number_to_indian_currency(invoice.amount) %></span>
+          <!--
+          <% if invoice.status.in?(%w(approved paid)) && invoice.net_amount.present? %>
+            <div class='small row'>
+              <span class="col-6 title"><%= t('mongoid.attributes.invoice.net_amount') %>:</span><span class="col-6"> <strong><%= number_to_indian_currency(invoice.net_amount) %></strong></span></span>
+            </div>
+          <% end %>-->
+        </td>
+        <td>
+          <span class="col-title">
+          <i class='fa fa-circle fa-xs status_<%= t("mongoid.attributes.invoice/status.#{invoice.status}").downcase %> me-2'></i><%= t("mongoid.attributes.invoice/status.#{invoice.status}") %></span>
+         <!-- <% if invoice.rejected? %>
+            <div class='small row'>
+              <span class='break-word col-6 title'>Reason:</span><span class="col-6"> <%= invoice.rejection_reason %></span></div>
+               </div>
+          <% end %>
+          <% if deduction = invoice.incentive_deduction.presence %>
+            <div class='small row'>
+              <span class="col-6 title"><%= IncentiveDeduction.model_name.human %>:</span>
+              <span class="col-6"> <strong><%= number_to_indian_currency(deduction.amount) %></strong> (<%= t("mongoid.attributes.incentive_deduction/status.#{deduction.status}") %>)</span></span>
+            </div>
+          <% end %>-->
+        </td>
+        <td>
+          <div class="dropdown show text-right">
+            <a class="btn table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+              <%= render 'admin/invoices/links', invoice: invoice %>
+              </div>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

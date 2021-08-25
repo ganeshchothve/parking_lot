@@ -5,12 +5,7 @@
     <% else %>
       <%= receipt.lead.name %>
     <% end %>
-    <div class="small mt-1">
-        <span class="title">
-        <%= t('mongoid.attributes.receipt.project_id') %>:</span> 
-        <%= receipt.project_name %>
-    </div>
-    <div class="small mt-1">
+    <!--<div class="small mt-1">
         <span class="title">
         <%= t('mongoid.attributes.receipt.created_by')%>: </span>
         <%= receipt.creator.try(:name) %>
@@ -22,13 +17,14 @@
          <%= receipt.lead.manager_name %>
        </div>
       <% end %>
-    </div>
+    </div>-->
   </td>
   <td data-title=<%= t('mongoid.attributes.receipt.receipt_id') %> >
-    <span class="col-title">
+  <%= receipt.project_name %>
+   <!-- <span class="col-title">
     <%= ["pending", 'clearance_pending'].include?(receipt.status) ?  t('global.not_generated') : receipt.receipt_id %>
-  </span>
-    <div class="small muted">
+  </span>-->
+    <!--<div class="small muted">
       <div class="col-title">
         <%= receipt.booking_detail.present? ? "#{BookingDetail.model_name.human}: #{receipt.booking_detail.name}" : 'Direct Payment' %>
       </div>
@@ -64,7 +60,7 @@
       <% end %>
       <div class="row"><div class="col-6 title"> <%= t('mongoid.attributes.receipt.payment_mode')%> :</div>
       <div class="col-6"> <%= t("receipt.payment_mode.#{receipt.payment_mode}")%></div></div>
-    </div>
+    </div>-->
   </td>
   <td data-title=<%= t('mongoid.attributes.receipt.token_number') %> >
     <span class="col-title"><%= receipt.try(:token_number) ? receipt.get_token_number : '--' %></span></td>
