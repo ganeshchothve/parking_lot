@@ -33,7 +33,7 @@ client = Client.first || Client.new(
   preferred_login: "phone",
   sms_provider_username: "amuramarketing",
   sms_provider_password: "aJ_Z-1j4",
-  enable_actual_inventory: ['admin'],
+  enable_actual_inventory: ['superadmin'],
   enable_channel_partners: false,
   enable_company_users: true,
   remote_logo_url: "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png",
@@ -57,24 +57,10 @@ else
   client.update(attrs) if attrs.present?
 end
 
-project_name = ENV['project_name'].presence || 'Amura Towers'
-project = Project.where(name: project_name).first || Project.new(
-  name: project_name,
-  remote_logo_url: "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png",
-  rera_registration_no: (ENV['rera_no'].presence || "RERA-AMURA-123"),
-  booking_portal_client: client
-)
-
-if project && project.new_record?
-  project.save
-else
-  attrs = {}
-  attrs[:name] = ENV['project_name'] if ENV['project_name'].present?
-  attrs[:rera_registration_no] = ENV['rera_no'] if ENV['rera_no'].present?
-
-  project.update(attrs) if attrs.present?
+developer = Developer.where(name: client.name, booking_portal_client_id: client.id).first
+if developer.blank?
+  developer = Developer.create(name: client.name,booking_portal_client_id: client.id)
 end
-
 
 if User.count.zero?
   number = 1000000000
@@ -91,4 +77,24 @@ if User.count.zero?
       end
     end
   end
+end
+
+project_name = ENV['project_name'].presence || 'Amura Towers'
+project = Project.where(name: project_name).first || Project.new(
+  name: project_name,
+  remote_logo_url: "https://image4.owler.com/logo/amura_owler_20160227_194208_large.png",
+  rera_registration_no: (ENV['rera_no'].presence || "RERA-AMURA-123"),
+  booking_portal_client: client,
+  developer: developer,
+  creator: User.where(role: 'superadmin').first
+)
+
+if project && project.new_record?
+  project.save
+else
+  attrs = {}
+  attrs[:name] = ENV['project_name'] if ENV['project_name'].present?
+  attrs[:rera_registration_no] = ENV['rera_no'] if ENV['rera_no'].present?
+
+  project.update(attrs) if attrs.present?
 end
