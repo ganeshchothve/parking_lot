@@ -144,7 +144,7 @@ class Receipt
   validates :payment_gateway, inclusion: { in: PaymentGatewayService::Default.allowed_payment_gateways }, allow_blank: true, if: proc { |receipt| receipt.payment_mode == 'online' }
   # validates :tracking_id, length: { in: 5..15 }, presence: true, if: proc { |receipt| receipt.status == 'success' && receipt.payment_mode != 'online' }
   # validates :comments, presence: true, if: proc { |receipt| receipt.status == 'failed' && receipt.payment_mode != 'online' }
-  validates :erp_id, uniqueness: {message: '^Receipt with Erp Id: %{value} already exists'}, allow_blank: true
+  validates :erp_id, uniqueness: {scope: :project_id, message: '^Receipt with Erp Id: %{value} already exists'}, allow_blank: true
   # validate :tracking_id_processed_on_only_on_success, if: proc { |record| record.status != 'cancelled' }
   validate :processed_on_greater_than_issued_date
   # validate :issued_date_when_offline_payment, if: proc { |record| %w[online cheque].exclude?(record.payment_mode) && issued_date.present? }

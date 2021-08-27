@@ -46,6 +46,7 @@ module BulkUpload
           if count.zero?
             user = User.new(attrs)
             if user.save
+              user.confirm #auto confirm user account
               create_lead(user, row, lead_attrs)
             else
               (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push(*user.errors.full_messages.map { |x| "User: #{x}" })).uniq
