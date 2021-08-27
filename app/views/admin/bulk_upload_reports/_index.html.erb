@@ -4,6 +4,7 @@
     <thead class="th-default">
       <tr class="bg-gradient-cd white">
         <th><%= labels["uploaded_by_id"] %></th>
+        <th><%= labels["project_id"] %></th>
         <th><%= labels["total_rows"] %></th>
         <th><%= labels["success_count"] %></th>
         <th><%= labels["failure_count"] %></th>
@@ -17,6 +18,9 @@
         <td>
           <%= bulk_upload_report.uploaded_by.name %>
           <div class="small"><%= "On: #{bulk_upload_report.created_at.in_time_zone("Mumbai").strftime("%d/%m/%y %I:%M %p")}"%></div>
+        </td>
+        <td>
+          <%= bulk_upload_report.project.try(:name) %>
         </td>
         <td>
           <%= bulk_upload_report.total_rows %>
