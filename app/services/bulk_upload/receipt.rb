@@ -1,12 +1,12 @@
 module BulkUpload
-  class Receipts < Base
+  class Receipt < Base
     def initialize(bulk_upload_report)
       super(bulk_upload_report)
-      @correct_headers = ['ERP Id', 'Selldo Lead Id', 'Phone', 'Email', 'Payment Mode', 'Payment Type', 'Cheque Number / Transaction Identifier', 'Issuing Bank', 'Branch', 'Date of Issuance', 'Total Amount', 'Status', 'Date of Clearance', 'Slot Date', 'Time Slot']
+      @correct_headers = ['ERP Id', 'Selldo Lead Id', 'Phone', 'Email', 'Payment Mode', 'Payment Type', 'Token Type', 'Cheque Number / Transaction Identifier', 'Issuing Bank', 'Branch', 'Date of Issuance', 'Total Amount', 'Status', 'Date of Clearance', 'Slot Date', 'Time Slot']
     end
 
     def process_csv(csv)
-      if bur.project_id.present?
+      if project = bur.project.presence
         modes = {
           'Cheque' => 'cheque',
           'RTGS' => 'rtgs',
@@ -15,7 +15,7 @@ module BulkUpload
           'NEFT' => 'neft',
           'Online' => 'online'
         }
-        status = {
+        statuses = {
           'Pending' => 'pending',
           'Clearance Pending' => 'clearance_pending',
           'Success' => 'success',
@@ -57,20 +57,24 @@ module BulkUpload
                 attrs = {}
                 attrs[:lead_id] = lead.id
                 attrs[:user_id] = user.id
-                if issued_date = row.field(9).to_s.strip.presence
+                attrs[:project_id] = project.id
+                attrs[:creator_id] = bur.uploaded_by.id
+                attrs[:erp_id] = erp_id
+
+                if issued_date = row.field(10).to_s.strip.presence
                   begin
                     attrs[:issued_date] = Date.strptime(issued_date, '%d-%b-%y')
                   rescue ArgumentError => e
-                    (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push("#{row.headers.fetch(9)}: Invalid Date Format")).uniq
+                    (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push("#{row.headers.fetch(10)}: Invalid Date Format")).uniq
                     bur.failure_count += 1
                     next
                   end
                 end
-                if processed_on = row.field(12).to_s.strip.presence
+                if processed_on = row.field(13).to_s.strip.presence
                   begin
                     attrs[:processed_on] = Date.strptime(processed_on, '%d-%b-%y')
                   rescue ArgumentError => e
-                    (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push("#{row.headers.fetch(12)}: Invalid Date Format")).uniq
+                    (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push("#{row.headers.fetch(13)}: Invalid Date Format")).uniq
                     bur.failure_count += 1
                     next
                   end
@@ -81,6 +85,7 @@ module BulkUpload
                 else
                   (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push('Invalid Payment mode')).uniq
                   bur.failure_count += 1
+                  next
                 end
                 _payment_type = row.field(5).to_s.strip
                 if _payment_type && (payment_type = payment_types[_payment_type].presence)
@@ -88,44 +93,54 @@ module BulkUpload
                 else
                   (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push('Invalid Payment type')).uniq
                   bur.failure_count += 1
+                  next
                 end
-                _status = row.field(11).to_s.strip
-                if _status && (status = payment_types[_status].presence)
+                _token_type = row.field(6).to_s.strip
+                if _token_type && token_type = project.token_types.where(name: _token_type).all.select{|tt| tt.incrementor_exists?}.first
+                  attrs[:token_type_id] = token_type.id
+                else
+                  (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push('Active Token Type not found')).uniq
+                  bur.failure_count += 1
+                  next
+                end
+                _status = row.field(12).to_s.strip
+                if _status && (status = statuses[_status].presence)
                   attrs[:status] = status
                 else
                   (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push('Invalid Payment status')).uniq
                   bur.failure_count += 1
+                  next
                 end
-                attrs[:payment_identifier] = row.field(6).to_s.strip if row.field(6).to_s.strip.present?
-                attrs[:issuing_bank] = row.field(7).to_s.strip if row.field(7).to_s.strip.present?
-                attrs[:issuing_bank_branch] = row.field(8).to_s.strip if row.field(8).to_s.strip.present?
-                attrs[:total_amount] = row.field(10).to_s.strip if row.field(10).to_s.strip.present?
+                attrs[:payment_identifier] = row.field(7).to_s.strip if row.field(7).to_s.strip.present?
+                attrs[:issuing_bank] = row.field(8).to_s.strip if row.field(8).to_s.strip.present?
+                attrs[:issuing_bank_branch] = row.field(9).to_s.strip if row.field(9).to_s.strip.present?
+                attrs[:total_amount] = row.field(11).to_s.strip if row.field(11).to_s.strip.present?
 
                 #time slot
                 time_slot_attrs = {}
-                if slot_date = row.field(13).to_s.strip.presence
+                if slot_date = row.field(14).to_s.strip.presence
                   begin
-                    time_slot_attrs[:slot_date] = Date.strptime(slot_date, '%d-%b-%y')
+                    time_slot_attrs[:date] = Date.strptime(slot_date, '%d-%b-%y')
                   rescue ArgumentError => e
-                    (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push("#{row.headers.fetch(13)}: Invalid Date Format")).uniq
+                    (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push("#{row.headers.fetch(14)}: Invalid Date Format")).uniq
                     bur.failure_count += 1
                     next
                   end
                 end
-                if time_slot = row.field(14).to_s.strip.presence
+                if time_slot = row.field(15).to_s.strip.presence
                   begin
                     start_time, end_time = time_slot.split(' - ')
-                    time_slot_attrs[:start_time] = Time.use_zone(user.time_zone) { Time.zone.parse(start_time, slot_date) }
-                    time_slot_attrs[:end_time] = Time.use_zone(user.time_zone) { Time.zone.parse(end_time, slot_date) }
+                    time_slot_attrs[:start_time] = Time.use_zone(user.time_zone) { Time.zone.parse(start_time, time_slot_attrs[:date]) }
+                    time_slot_attrs[:end_time] = Time.use_zone(user.time_zone) { Time.zone.parse(end_time, time_slot_attrs[:date]) }
                   rescue StandardError => e
-                    (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push("#{row.headers.fetch(14)}: #{e.message}")).uniq
+                    (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push("#{row.headers.fetch(15)}: #{e.message}")).uniq
                     bur.failure_count += 1
                     next
                   end
                 end
                 attrs[:time_slot_attributes] = time_slot_attrs
 
-                receipt = Receipt.new(attrs)
+                receipt = ::Receipt.new(attrs)
                 if receipt.save
                   bur.success_count += 1
                 else

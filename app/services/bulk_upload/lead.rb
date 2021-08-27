@@ -1,5 +1,5 @@
 module BulkUpload
-  class Leads < Base
+  class Lead < Base
     def initialize(bulk_upload_report)
       super(bulk_upload_report)
       @correct_headers = ["Selldo Lead Id", "First Name", "Last Name", "Phone", "Email"]
@@ -28,7 +28,7 @@ module BulkUpload
 
           query << {lead_id: row.field(0).to_s.strip} if row.field(0).to_s.strip.present?
 
-          if count = User.or(query).count > 1
+          if (count = User.or(query).count) > 1
             (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push("More than 1 users exist with this Selldo lead id/ phone/ email")).uniq
             bur.failure_count += 1
             next
@@ -36,8 +36,8 @@ module BulkUpload
 
           attrs = {}
           attrs[:lead_id] = row.field(0).to_s.strip
-          attrs[:first_name] = row.fields(1).to_s.strip
-          attrs[:last_name] = row.fields(2).to_s.strip
+          attrs[:first_name] = row.field(1).to_s.strip
+          attrs[:last_name] = row.field(2).to_s.strip
           attrs[:email] = email if email.present?
           attrs[:phone] = phone if phone.present?
           lead_attrs = attrs.clone

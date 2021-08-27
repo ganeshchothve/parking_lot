@@ -10,10 +10,11 @@ module TimeSlotGeneration
     increments :token_number, auto: false, scope: proc { "p#{project_id}_t#{token_type_id}" }
 
     # Associations
-    belongs_to :token_type
+    belongs_to :token_type, optional: true
 
     # Validations
     validates :token_number, uniqueness: {scope: [:project_id, :token_type_id]}, allow_nil: true
+    validates :token_type_id, presence: true, if: proc { direct_payment? }
 
     # Callbacks
     before_save :assign_token_number

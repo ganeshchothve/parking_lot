@@ -23,6 +23,6 @@ class BulkUploadReport
 
   def asset_presence
     self.errors.add :base, 'File cannot be blank' if self.asset.try(:file).blank?
-    self.errors.add :project_id, 'cannot be blank' if self.asset.try(:document_type).try(:in?, PROJECT_SCOPED)
+    self.errors.add :project_id, 'cannot be blank' if self.asset.try(:document_type).try(:in?, PROJECT_SCOPED) && self.project_id.blank?
   end
 end
