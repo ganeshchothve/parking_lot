@@ -17,7 +17,7 @@ module TimeSlotGeneration
     validates :token_type_id, presence: true, if: proc { direct_payment? }
 
     # Callbacks
-    before_save :assign_token_number
+    before_save :assign_token_number, if: proc { direct_payment? }
     before_update :finalise_time_slot
 
     # Associations
