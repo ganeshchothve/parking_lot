@@ -12,7 +12,7 @@
         <% if policy([current_user_role_group, User.new]).show_lead_tagging? %>
           <th><%= t('mongoid.attributes.user.iris_confirmation') %></th>
         <% end %>
-        <th class="text-right"><%= t('global.action', count: 3) %></th>
+        <th class="text-right" style="width:20px;"></th>
       </tr>
     </thead>
   </thead>
@@ -20,9 +20,9 @@
     <% users.each do |user| %>
       <tr>
         <td data-title="Name">
-          <span class="d--inline-block">
+          <span class="d--inline-block me-2">
             <% if policy([ current_user_role_group, user]).show? %>
-              <%= link_to user.name, [current_user_role_group, user ], class: "primary fn-14" %>
+              <%= link_to user.name, [current_user_role_group, user ], class: "theme-txt-color fn-14" %>
             <% else %>
               <%= user.name %>
             <% end %>
@@ -84,7 +84,7 @@
 <div class="col-lg-12 py-3 white mb-2 px-2">
   <div class="row">
   <div class="col-lg-6">
-    <p class="table-entry">Showing 1 - 5 of <%= @users.total_entries %> items</p>
+    <p class="table-entry">Showing 1 - 5 of <%= users.total_entries %> items</p>
   </div>
   <div class="col-lg-6 table-pagination">
      <%= will_paginate users, list_classes: %w(pagination justify-content-end) %>

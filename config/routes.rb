@@ -407,6 +407,8 @@ Rails.application.routes.draw do
   get 'broker/cp-campaign-8', to: 'broker#cp_campaign_8'
   get 'broker/cp-campaign-9', to: 'broker#cp_campaign_9'
   get 'broker/cp-campaign-10', to: 'broker#cp_campaign_10'
+  get 'broker/cp-campaign-11', to: 'broker#cp_campaign_11'
+  get 'broker/cp-campaign-12', to: 'broker#cp_campaign_12'
   #Broker Campaign Manager
   get 'broker/cp-campaign-manager-1', to: 'broker#cp_campaign_manager_1'
 

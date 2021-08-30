@@ -17,7 +17,7 @@ $theme-txt-color: #2E384D;
 $font-normal: 400;
 $font-medium: 500;
 $font-bold: 700;
-
+$txt-drk-b-lt: #3F5275;
 .bg-success{
 	background-color: $success;
 }
@@ -163,6 +163,18 @@ a{
 }
 .wd-22{
 	width: 22px!important;
+}
+.me-12{
+	margin-right: 12px;
+}
+.theme-light-bg{
+	background-color: #F8FBFF;
+}
+.txt-light-gray{
+	color:#687790;
+}
+.txt-drk-b-lt{
+	color:$txt-drk-b-lt;
 }
 /************* Dashboard*********************/
 .sec-title{
@@ -349,7 +361,7 @@ select.form-control{
 }
 .announcement-list{
 	.event-title{
-		color: #3F5275;
+		color: $txt-drk-b-lt;
 		font-weight: 500;
 		font-size: 12px;
 		letter-spacing: 0.33px;
@@ -363,7 +375,7 @@ select.form-control{
 		letter-spacing: 0.39px;
 	}
 	.event-time{
-		color: #3F5275;
+		color: $txt-drk-b-lt;
 		font-weight: 500;
 	}
 }
@@ -2272,7 +2284,7 @@ select.form-control{
 
 			}
 			.prjt-lauchbook{
-				color: #3F5275;
+				color: $txt-drk-b-lt;
 				font-size: 15px;
 				line-height: 18px;
 				letter-spacing: 0.27px;
@@ -3032,7 +3044,7 @@ table .dropdown-menu.show{
 @mixin tableLightTitle{
 	font-size: 14px;
 	line-height: 23px;
-	color: #3F5275;
+	color: $txt-drk-b-lt;
 	letter-spacing: 0.33px;
 	font-weight: 500;
 }
@@ -3076,8 +3088,11 @@ table .dropdown-menu.show{
 .table-entry{
 	@include LightTitle14;
 }
-.white{
+.bg-white{
 	background-color: $bg-white;
+}
+.white{
+	color: $bg-white;
 }
 .table-pagination{
 	ul{
@@ -3272,12 +3287,15 @@ table .dropdown-menu.show{
 	border-radius: 100%;
 	position: relative;
 	display: block;
+	position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 	&:after{
 		content: '';
 		position: absolute;
 		width: 6px;
 		height: 6px;
-		background-color: #3F5275;
+		background-color: $txt-drk-b-lt;
 		border-radius: 100%;
 		top: 50%;
 		left: 50%;
@@ -3287,15 +3305,21 @@ table .dropdown-menu.show{
 }
 .dotted-line{
 	position: relative;
+	p{
+		position: relative;
+	}
 	&:after{
 		position: absolute;
 		border-right: 1px dashed gray;
 		content: '';
 		width: 1px;
 		height: 100%;
-		left: calc(50% + 2px);
+		left: 50%;
 		transform: translateX(-50%);
 		top: 0;
+	}
+	&.no-dotted:after{
+		display: none;
 	}
 }
 .dashed-hr-line{

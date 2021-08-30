@@ -28,7 +28,7 @@
                       <% end %>
                       <% if lead.manager_id? && current_user.role.in?(%w(admin superadmin)) %>
                         <p class="fn-14 mt-1 mb-0">
-                          <%= "#{t('mongoid.attributes.lead.manager_id')} : #{link_to lead.manager_name, [current_user_role_group, lead.manager], class: 'primary'}".html_safe %>
+                          <%= "#{t('mongoid.attributes.lead.manager_id')} : #{link_to lead.manager_name, [current_user_role_group, lead.manager], class: 'theme-txt-color'}".html_safe %>
                         </p>
                       <% end %>
                     </div>
@@ -37,7 +37,7 @@
                       <div class="dropdown d-inline-block">
                         <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown"
                           aria-haspopup="true" aria-expanded="false">
-                          <i class="fa fa-ellipsis-v primary" aria-hidden="true"></i></a>
+                          <i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                           <%= render "#{current_user_role_group}/leads/links", lead: lead %>
                         </div>
@@ -53,9 +53,9 @@
                   </div>
                   <div class="inner-info">
                     <div class="pe-3 py-3  d-flex justify-content-end">
-                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i class='fa fa-<%= t("global.boolean.#{lead.is_blocking_amount_paid? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_blocking_amount_paid? }") == "Yes" ? "success" : "danger" %> me-2 fa-lg'></i><%= t('mongoid.attributes.lead.blocking_amount_paid') %></p>
-                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i class='fa fa-<%= t("global.boolean.#{lead.is_booking_price_paid? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_booking_price_paid? }") == "Yes" ? "success" : "danger" %> me-2 fa-lg'></i><%= t('mongoid.attributes.lead.payment_done') %></p>
-                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i class='fa fa-<%= t("global.boolean.#{lead.is_registration_done? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_registration_done? }") == "Yes" ? "success" : "danger" %> me-2 fa-lg'></i><%= t('mongoid.attributes.lead.registration_done') %></p>
+                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_blocking_amount_paid? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_blocking_amount_paid? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.blocking_amount_paid') %></p>
+                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_booking_price_paid? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_booking_price_paid? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.payment_done') %></p>
+                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_registration_done? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_registration_done? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.registration_done') %></p>
                       
                     </div>
                   </div>

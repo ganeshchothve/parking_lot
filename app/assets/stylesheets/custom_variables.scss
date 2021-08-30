@@ -4,9 +4,10 @@
 // override bootstrap varialbes start
 // $font-size-base: 1.125rem;
 $bg-white: #fff;
+$white: #fff;
 $body-bg: #fefefe;
 $body-color: #495057;
-$primary: #97B350;
+$primary: #006DEE;
 $success: #56b654;
 $info: #00BCD4;
 $warning: #FFC107;
@@ -25,7 +26,9 @@ $modal-backdrop-bg: #5a6775;
 
 $table-bg: #fff;
 $table-th-font-weight: 500;
-
+$border-radius: 6px;
+$popover-header-bg: #F8FBFF;
+$popover-arrow-color:$popover-header-bg;
 .fw-medium{
     font-weight: 500;
 }

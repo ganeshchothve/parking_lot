@@ -1,7 +1,7 @@
 <tr>
   <td data-title=<%= Lead.model_name.human %> >
     <% if policy([current_user_role_group, receipt.lead]).show? %>
-      <%= link_to receipt.lead.name, [current_user_role_group, receipt.lead], class: "primary" %>
+      <%= link_to receipt.lead.name, [current_user_role_group, receipt.lead], class: "theme-txt-color" %>
     <% else %>
       <%= receipt.lead.name %>
     <% end %>
@@ -70,7 +70,7 @@
     <span class="col-title"><%= number_to_indian_currency(receipt.total_amount.round) %></span></td>
   <td>
     <div class="dropdown show text-right">
-    <a class="btn table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
+    <a class="btn table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v theme-txt-color" aria-hidden="true"></i></a>
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
         <%= link_to t('controller.receipts.print.link_name'), [current_user_role_group, receipt], target:"_blank", class: 'dropdown-item print-btn', data: { event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
         <% if policy([current_user_role_group, UserRequest::Cancellation.new(lead_id: receipt.lead_id, requestable: receipt)]).new? %>
