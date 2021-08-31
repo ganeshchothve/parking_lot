@@ -68,7 +68,7 @@ module DatabaseSeeds
 
       # To render projects section card on user dashboard
       if Template::UITemplate.where(name: 'project_units/_section').blank?
-        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'project_units/_section', content: '
+        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'project_units/_section', content: <<-'INACTIVE_CP'
         <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 my-4 no-pd">
           <div class="box-card">
             <div class="box-header bg-gradient-cd br-rd-tr-4">
@@ -97,7 +97,9 @@ module DatabaseSeeds
               </div>
             </div>
           </div>
-        </div>' })
+        </div>
+         INACTIVE_CP
+        })
       end
 
       if Template::UITemplate.where(name: 'index/inactive_channel_partner').blank?
