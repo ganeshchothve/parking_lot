@@ -79,19 +79,20 @@ module DatabaseSeeds
             <div class="project-slider1">
               <div>
                 <div class="box-content br-rd-bl-4 bg-white text-center">
-                  <h3 class="title"><%= current_project.name %></h3>
+                  <h3 class="title"><%= current_user.selected_project.name %></h3>
                   <p class="sort-desc col-lg-6 col-xs-12 col-md-6 col-sm-12 offset-md-3 offset-lg-3"><%= t("dashboard.user.projects.sub_heading") %></p>
                   <ul class="prjt-info br-rd-4">
-                    <li><span><%= t("dashboard.user.titles.available_inventory") %></span><p><%= DashboardDataProvider.available_inventory %></p></li>
-                    <li><span><%= t("mongoid.attributes.search.starting_price") %></span><p><%= number_to_indian_currency(DashboardDataProvider.minimum_agreement_price) %></p></li>
-                    <li><span><%= t("mongoid.attributes.project_unit.configuration") %></span><p><%= DashboardDataProvider.configurations.to_sentence(last_word_connector: " & ") %></p></li>
+                    <li><span><%= t("dashboard.user.titles.available_inventory") %></span><p><%= DashboardDataProvider.available_inventory(current_user.selected_project) %></p></li>
+                    <li><span><%= t("mongoid.attributes.search.starting_price") %></span><p><%= number_to_indian_currency(DashboardDataProvider.minimum_agreement_price(current_user.selected_project)) %></p></li>
+                    <li><span><%= t("mongoid.attributes.project_unit.configuration") %></span><p><%= DashboardDataProvider.configurations(current_user.selected_project).to_sentence(last_word_connector: " & ") %></p></li>
                   </ul>
-                  <% if current_client.brochure.present? %>
+                  <% brochure = current_user.selected_project.assets.where(document_type: 'brochure').first %>
+                  <% if brochure.present? %>
                     <ul class="prjt-link">
-                      <li><%= link_to t("dashboard.user.titles.download_brochure"), download_brochure_path, class: "text-uppercase" %></li>
+                      <li><%= link_to t("dashboard.user.titles.download_brochure"), brochure.file.url, target: "_blank", class: "text-uppercase" %></li>
                     </ul>
                   <% end %>
-                  <%= link_to "Visit Website >", current_client.website_link, target: "_blank", class: "large-btn bg-light-blue display-block fn-500 center-block text-uppercase" %>
+                  <%= link_to "Visit Website >", current_user.selected_project.website_link, target: "_blank", class: "large-btn bg-light-blue display-block fn-500 center-block text-uppercase" %>
                 </div>
               </div>
             </div>
