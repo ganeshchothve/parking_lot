@@ -21,8 +21,16 @@ module BulkUpload
         attrs[:pan_number] = row.field(5).to_s.strip
         attrs[:aadhaar] = row.field(6).to_s.strip
         attrs[:rera_id] = row.field(7).to_s.strip
-        manager = User.where(phone: row.field(8).to_s.strip).first if row.field(8).to_s.strip.present?
-        attrs[:manager_id] = manager.id if manager
+        if m_phone = row.field(8).to_s.strip.presence
+          _manager_phone = Phonelib.parse(m_phone)
+          manager_phone = (_manager_phone.country_code == '91' && _manager_phone.sanitized.length == 10 ? "+91#{_manager_phone.sanitized}" : "+#{_manager_phone.sanitized}")
+          manager = User.where(phone: manager_phone, role: "cp_admin").first if manager_phone.present?
+          if manager
+            attrs[:manager_id] = manager.id
+          else
+            (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push("Channel partner Manager not found with Phone no: #{m_phone}")).uniq
+          end
+        end
         attrs[:interested_services] = ['Lead Management']
 
         cp = ::ChannelPartner.new(attrs)
