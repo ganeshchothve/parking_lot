@@ -18,7 +18,7 @@ module TimeSlotGeneration
 
     # Callbacks
     before_save :assign_token_number, if: proc { direct_payment? }
-    before_update :finalise_time_slot
+    #before_update :finalise_time_slot
 
     # Associations
     embeds_one :time_slot
@@ -40,7 +40,7 @@ module TimeSlotGeneration
           end while Receipt.where(token_number: token_number, project_id: project_id, token_type_id: token_type_id).any?
 
           self.token_prefix = token_type.token_prefix
-          self.time_slot = calculate_time_slot if current_client.enable_slot_generation?
+          #self.time_slot = calculate_time_slot if current_client.enable_slot_generation?
           # for reference, if the token has been made blank by the admin.
           self[:_token_number] = token_number
         end
