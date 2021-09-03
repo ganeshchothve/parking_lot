@@ -1,0 +1,25 @@
+<section class="auth login-page pb-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="login-form-wrapper pt-5">
+          <%= form_tag(select_project_path, id: 'select_project_form') do %>
+            <div class='form-group'>
+              <%= select_tag 'selected_lead_id', options_from_collection_for_select(@leads, "id", "project_name", current_user.selected_lead_id), prompt: "Select Project to Log in", autofocus: true, class: "selectize" %>
+            </div>
+
+            <div class="form-group">
+              <button class="btn btn-primary" type="submit">Submit</button>
+              <%= link_to t('sign_out', scope: "devise"), destroy_session_path(current_user), class: "btn btn-secondary", method: :delete %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#select_project_form"));
+  });
+<% end %>

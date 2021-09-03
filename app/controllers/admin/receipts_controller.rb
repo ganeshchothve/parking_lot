@@ -5,21 +5,6 @@ class Admin::ReceiptsController < AdminController
   before_action :set_receipt, only: %w[edit update show resend_success edit_token_number update_token_number]
   around_action :apply_policy_scope, only: :index
 
-  #
-  # This index action for Admin users where Admin can view all receipts.
-  #
-  #
-  # @return [{},{}] records with array of Hashes.
-  # GET /admin/receipts
-  def index
-    authorize([:admin, Receipt])
-    @receipts = Receipt.build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
-    respond_to do |format|
-      format.json { render json: @receipts.as_json(methods: [:name]) }
-      format.html
-    end
-  end
-
   # GET /admin/receipts/export
   # Defined in ReceiptsConcern
 
@@ -31,8 +16,11 @@ class Admin::ReceiptsController < AdminController
   #
   # GET "/admin/leads/:lead_id/receipts/new"
   def new
+    @amount_hash = {}
+    @lead.project.token_types.all.select{|tt| tt.incrementor_exists?}.map { |x| @amount_hash[x.id.to_s] = x.token_amount }
+
     @receipt = Receipt.new(
-      creator: current_user, user: @lead.user, lead: @lead, project_id: @lead.project_id, payment_mode: 'cheque',
+      creator: current_user, user: @lead.user, lead: @lead, project_id: @lead.project_id, payment_mode: 'cheque', payment_type: 'token',
       total_amount: current_client.blocking_amount
     )
     authorize([:admin, @receipt])
@@ -153,13 +141,6 @@ class Admin::ReceiptsController < AdminController
   def set_lead
     @lead = Lead.where(_id: params[:lead_id]).first
     redirect_to dashboard_path, alert: 'Lead Not found', status: 404 if @lead.blank?
-  end
-
-  def apply_policy_scope
-    custom_scope = Receipt.all.where(Receipt.user_based_scope(current_user))
-    Receipt.with_scope(policy_scope(custom_scope)) do
-      yield
-    end
   end
 
   def set_receipt

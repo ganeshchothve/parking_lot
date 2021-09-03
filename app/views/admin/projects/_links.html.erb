@@ -4,6 +4,7 @@
 <% if policy([:admin, project]).edit? %>
   <%= link_to t('helpers.edit.link_name', model: Project.model_name.human), edit_admin_project_path(project), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
+<%= link_to TokenType.model_name.human(count: 2), admin_project_token_types_path(project), class: 'dropdown-item' %>
 <% if policy([:admin, IncentiveScheme]).index? %>
   <%= link_to IncentiveScheme.model_name.human(count: 2), admin_incentive_schemes_path(fltrs: {project_id: project.id.to_s}), class: 'dropdown-item' %>
 <% end %>

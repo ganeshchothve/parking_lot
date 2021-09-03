@@ -148,6 +148,7 @@ class User
   belongs_to :channel_partner, optional: true
   belongs_to :confirmed_by, class_name: 'User', optional: true
   belongs_to :tier, optional: true  # for associating channel partner users with different tiers.
+  belongs_to :selected_lead, class_name: 'Lead', optional: true
   has_many :leads
   has_many :receipts
   has_many :project_units
@@ -188,7 +189,7 @@ class User
   # validates :rera_id, presence: true, if: proc { |user| user.role?('channel_partner') } #TO-DO Done for Runwal to revert for generic
   validates :rera_id, uniqueness: true, allow_blank: true
   validates :role, inclusion: { in: proc { |user| User.available_roles(user.booking_portal_client) } }
-  validates :lead_id, uniqueness: true, presence: true, if: proc { |user| user.buyer? }, allow_blank: true
+  validates :lead_id, uniqueness: true, if: proc { |user| user.buyer? }, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :manager_change_reason_present?
   validate :password_complexity
@@ -255,6 +256,11 @@ class User
   end
   ADMIN_ROLES.each do |admin_roles|
     scope admin_roles, ->{ where(role: admin_roles )}
+  end
+
+
+  def selected_project
+    self.selected_lead.try(:project)
   end
 
   def phone_or_email_required
@@ -493,9 +499,9 @@ class User
     # send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
     devise_mailer.new.send(:devise_sms, self, :confirmation_instructions)
 
-    if email.present? || unconfirmed_email.present?
-      email_template = Template::EmailTemplate.where(name: "#{role}_confirmation_instructions").first
-      email_template = Template::EmailTemplate.find_by(name: "user_confirmation_instructions") if email_template.blank?
+    email_template = Template::EmailTemplate.where(name: "#{role}_confirmation_instructions").first
+    email_template = Template::EmailTemplate.find_by(name: "user_confirmation_instructions") if email_template.blank?
+    if email_template.is_active? && (email.present? || unconfirmed_email.present?)
       attrs = {
         booking_portal_client_id: booking_portal_client_id,
         subject: email_template.parsed_subject(self),
@@ -507,7 +513,7 @@ class User
       }
       attrs[:to] = [ unconfirmed_email ] if pending_reconfirmation?
       email = Email.create!(attrs)
-      email.sent! if email_template.is_active?
+      email.sent!
     end
   end
 

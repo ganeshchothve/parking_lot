@@ -72,12 +72,24 @@
 
 <% if policy([current_user_role_group, @receipt]).editable_field?("payment_type") %>
   <div class="row">
-    <div class="col-md-6">
-      <div class="mb-3">
-        <%= f.label :payment_type, class: 'label-required' %>
-        <%= f.select :payment_type, Receipt::PAYMENT_TYPES.collect{ |x| [t("receipts.payment_types.#{x}"), x]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+    <% if @receipt.payment_type == 'token' %>
+      <%= f.hidden_field :payment_type %>
+      <% if policy([current_user_role_group, @receipt]).editable_field?("token_type") %>
+        <div class="col-md-6">
+          <div class="form-group">
+            <%= f.label :token_type, class: 'label-required' %>
+            <%= f.select :token_type, @receipt.project.token_types.all.select{|tt| tt.incrementor_exists?}.collect{ |x| [x.name, x.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="col-md-6">
+        <div class="form-group">
+          <%= f.label :payment_type, class: 'label-required' %>
+          <%= f.select :payment_type, Receipt::PAYMENT_TYPES.reject{|x| x == 'token'}.collect{ |x| [t("receipts.payment_types.#{x}"), x]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+        </div>
       </div>
-    </div>
+    <% end %>
   </div>
 <% end %>
 

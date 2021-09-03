@@ -25,6 +25,7 @@ class ProjectUnit
   field :auto_release_on, type: Date
   field :held_on, type: DateTime
   field :base_rate, type: Float
+  field :new_base_rate, type: Float
 
   # These fields majorly are pulled from sell.do and may be used on the UI
   field :developer_name, type: String
@@ -35,6 +36,7 @@ class ProjectUnit
   field :selldo_id, type: String
 
   field :floor_rise, type: Float
+  field :new_floor_rise, type: Float
   field :floor, type: Integer
 
   field :floor_order, type: Integer
@@ -46,6 +48,7 @@ class ProjectUnit
   field :type, type: String
   field :unit_facing_direction, type: String
   field :blocking_amount, type: Integer, default: 30_000
+  field :new_blocking_amount, type: Integer
   field :comments,type: String
 
   attr_accessor :processing_user_request, :processing_swap_request

@@ -1,14 +1,14 @@
 # TODO: replace all messages & flash messages
 class Buyer::UserKycsController < BuyerController
   include UserKycsConcern
-  before_action :set_user
+  before_action :set_lead
   before_action :set_user_kyc, only: %i[show edit update destroy]
   around_action :apply_policy_scope
   before_action :authorize_resource, except: %i[create]
 
   layout :set_layout
 
-  # set_user, set_user_kyc and apply_policy_scope are defined in UserKycsConcern
+  # set_lead, set_user_kyc and apply_policy_scope are defined in UserKycsConcern
 
   # index defined in UserKycsConcern
   # GET /buyer/user_kycs
@@ -37,7 +37,7 @@ class Buyer::UserKycsController < BuyerController
     if params[:action] == 'index'
       authorize [:buyer, UserKyc]
     elsif params[:action] == 'new'
-      authorize [:buyer, UserKyc.new(user: @user)]
+      authorize [:buyer, UserKyc.new(user: @lead.user, lead: @lead)]
     else
       authorize [:buyer, @user_kyc]
     end

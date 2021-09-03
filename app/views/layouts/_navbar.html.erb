@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top fixed-top">
     <div class="container no-pd">
       <%= link_to (current_client.logo.present? ? (image_tag current_client.logo.url, alt: "Logo") : "IRIS"), dashboard_path, class: 'navbar-brand'%>
-      <% if user_signed_in? %>
+      <% if user_signed_in? && params[:action] != 'select_project' %>
         <%= render "layouts/navbar/#{current_user_role_group}" %>
       <% else %>
         <div class="text-right">

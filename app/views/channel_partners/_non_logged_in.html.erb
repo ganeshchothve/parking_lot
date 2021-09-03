@@ -11,7 +11,7 @@
       <a class="home-banner-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Join Now">Join Now</a>
     </div>
   </div>
-  <div class="scroll-down-btn" data-event-category="Section" data-event-action="Click" data-event-name="Scroll Down">Scroll Down</div>
+  <div class="scroll-down-btn scroll-sec" rel="join-broker-network" data-event-category="Section" data-event-action="Click" data-event-name="Scroll Down">Scroll Down</div>
 </section>
 <section class="join-broker-presenting-common-section slide lazy" data-src="<%= asset_path 'join-broker-presenting-common-image.png' %>">
 
@@ -57,7 +57,6 @@
             </div>
           </div>
         </div>
-
         <div class="clearfix"></div>
         <div class="col-app-12 join-broker-network-statics text-center snd-jbns">
         </div> -->
@@ -274,11 +273,11 @@
     <div class="container">
       <h2 class="section-heading cgreen ps-4">Projects</h2>
       <div class="existing-projects-content">
-        <div class="existing-projects-head-wrapper col-12 row">
+        <div class="existing-projects-head-wrapper col-12 row pe-0">
           <div class="existing-projects-head-left col-6 col-app-xs-12 ps-4">
             <h3>Existing Projects (12)</h3>
           </div>
-          <div class="existing-projects-head-right col-6 filter-wrapper col-app-xs-12 row">
+          <div class="existing-projects-head-right col-6 filter-wrapper col-app-xs-12 row  pe-0">
             <div class="col-6 col-app-xs-12">
               <div class="filter-category">Location</div>
               <select class="city">
@@ -294,7 +293,7 @@
                 <option value="chakan">Chakan</option>
               </select>
             </div>
-            <div class="col-6 col-app-xs-12">
+            <div class="col-6 col-app-xs-12 pe-0">
               <div class="filter-category">Configuration</div>
               <select class="type">
                 <option value="all">Select..</option>
@@ -306,14 +305,14 @@
           </div>
         </div>
         <div class="property-load-section property-hide row">
-          <div class="property-item col-4" data-city="chinchwad" data-type="2bhk">
+          <div class="property-item col-4 2bhk 3bhk" data-city="chinchwad" data-type="2bhk">
             <div class="property-item-inner">
               <div class="property-item-image">
                 <img src="<%= asset_path 'empire-square.jpg' %>" class="img-full lazy">
               </div>
               <div class="property-item-details">
                 <div class="property-name cgreen f700">Empire Square</div>
-                <div class="property-configuration">2 bhk from 99 lakhs (All incl.)</div>
+                <div class="property-configuration">2 bhk & 3 bhk from 99 lakhs & 1.5 cr (All incl.)</div>
                 <div class="property-location">Location: Chinchwad</div>
                 <div class="property-btn-wrapper">
                   <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
@@ -321,22 +320,7 @@
               </div>              
             </div>
           </div>
-          <div class="property-item col-4" data-city="chinchwad" data-type="3bhk">
-            <div class="property-item-inner">
-              <div class="property-item-image">
-                <img src="<%= asset_path 'empire-square.jpg' %>" class="img-full lazy">
-              </div>
-              <div class="property-item-details">
-                <div class="property-name cgreen f700">Empire Square</div>
-                <div class="property-configuration">3 bhk from 1.5 cr (All incl.)</div>
-                <div class="property-location">Location: Chinchwad</div>
-                <div class="property-btn-wrapper">
-                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
-                </div>
-              </div>              
-            </div>
-          </div>
-          <div class="property-item col-4" data-city="wakad" data-type="2bhk">
+          <div class="property-item col-4 2bhk" data-city="wakad" data-type="2bhk">
             <div class="property-item-inner">
               <div class="property-item-image">
                 <img src="<%= asset_path 'Sukhwani-skylines.jpg' %>" class="img-full lazy">
@@ -351,14 +335,14 @@
               </div>              
             </div>
           </div>
-          <div class="property-item col-4" data-city="ravet" data-type="2bhk">
+          <div class="property-item col-4 2bhk 3bhk" data-city="ravet" data-type="2bhk">
             <div class="property-item-inner">
               <div class="property-item-image">
                 <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-full lazy">
               </div>
               <div class="property-item-details">
                 <div class="property-name cgreen f700">Celestial City</div>
-                <div class="property-configuration">2 bhk from 65 lakhs (All incl.)</div>
+                <div class="property-configuration">2 bhk & 3 bhk from 65 lakhs & 85 lakhs (All incl.)</div>
                 <div class="property-location">Location: Ravet</div>
                 <div class="property-btn-wrapper">
                   <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
@@ -366,22 +350,7 @@
               </div>              
             </div>
           </div>
-          <div class="property-item col-4" data-city="ravet" data-type="3bhk">
-            <div class="property-item-inner">
-              <div class="property-item-image">
-                <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-full lazy">
-              </div>
-              <div class="property-item-details">
-                <div class="property-name cgreen f700">Celestial City</div>
-                <div class="property-configuration">3 from bhk 85 lakhs (All incl.)</div>
-                <div class="property-location">Location: Ravet</div>
-                <div class="property-btn-wrapper">
-                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
-                </div>
-              </div>              
-            </div>
-          </div>
-          <div class="property-item col-4" data-city="ravet" data-type="2bhk">
+          <div class="property-item col-4 2bhk" data-city="ravet" data-type="2bhk">
             <div class="property-item-inner">
               <div class="property-item-image">
                 <img src="<%= asset_path 'Sukhwani-artize.jpg' %>" class="img-full lazy">
@@ -396,14 +365,14 @@
               </div>              
             </div>
           </div>
-          <div class="property-item col-4" data-city="manaslake" data-type="2bhk">
+          <div class="property-item col-4 2bhk 3bhk" data-city="manaslake" data-type="2bhk">
             <div class="property-item-inner">
               <div class="property-item-image">
                 <img src="<%= asset_path 'Sommet.jpg' %>" class="img-full lazy">
               </div>
               <div class="property-item-details">
                 <div class="property-name cgreen f700">Sommet</div>
-                <div class="property-configuration">2 bhk from 50.99 lakhs (All incl.)</div>
+                <div class="property-configuration">2 bhk & 3 bhk from 50.99 lakhs & 70.99 lakhs (All incl.)</div>
                 <div class="property-location">Location: Manaslake</div>
                 <div class="property-btn-wrapper">
                   <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
@@ -411,29 +380,14 @@
               </div>              
             </div>
           </div>
-          <div class="property-item col-4" data-city="manaslake" data-type="3bhk">
-            <div class="property-item-inner">
-              <div class="property-item-image">
-                <img src="<%= asset_path 'Sommet.jpg' %>" class="img-full lazy">
-              </div>
-              <div class="property-item-details">
-                <div class="property-name cgreen f700">Sommet</div>
-                <div class="property-configuration">3 bhk from 70.99 lakhs (All incl.)</div>
-                <div class="property-location">Location: Manaslake</div>
-                <div class="property-btn-wrapper">
-                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
-                </div>
-              </div>              
-            </div>
-          </div>
-          <div class="property-item col-4" data-city="akurdi" data-type="2bhk">
+          <div class="property-item col-4 2bhk 3bhk" data-city="akurdi" data-type="2bhk">
             <div class="property-item-inner">
               <div class="property-item-image">
                 <img src="<%= asset_path 'Aishwaryam.jpg' %>" class="img-full lazy">
               </div>
               <div class="property-item-details">
                 <div class="property-name cgreen f700">Aishwaryam Comfort Gold</div>
-                <div class="property-configuration">2 bhk from 73.8 lakhs (All incl.)</div>
+                <div class="property-configuration">2 bhk & 3 bhk from 73.8 lakhs & 83.15 lakhs (All incl.)</div>
                 <div class="property-location">Location: Akurdi</div>
                 <div class="property-btn-wrapper">
                   <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
@@ -441,29 +395,14 @@
               </div>              
             </div>
           </div>
-          <div class="property-item col-4" data-city="akurdi" data-type="3bhk">
-            <div class="property-item-inner">
-              <div class="property-item-image">
-                <img src="<%= asset_path 'Aishwaryam.jpg' %>" class="img-full lazy">
-              </div>
-              <div class="property-item-details">
-                <div class="property-name cgreen f700">Aishwaryam Comfort Gold</div>
-                <div class="property-configuration">3 bhk from 83.15 lakhs (All incl.)</div>
-                <div class="property-location">Location: Akurdi</div>
-                <div class="property-btn-wrapper">
-                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
-                </div>
-              </div>              
-            </div>
-          </div>
-          <div class="property-item col-4" data-city="spine-road" data-type="2bhk">
+          <div class="property-item col-4 2bhk 3bhk" data-city="spine-road" data-type="2bhk">
             <div class="property-item-inner">
               <div class="property-item-image">
                 <img src="<%= asset_path 'Vission-exotica.jpg' %>" class="img-full lazy">
               </div>
               <div class="property-item-details">
                 <div class="property-name cgreen f700">Vission Exotica / Codename Exotica</div>
-                <div class="property-configuration">2 bhk from 63 lakhs (All incl.)</div>
+                <div class="property-configuration">2 bhk & 3 bhk from 63 lakhs & 86 lakhs (All incl.)</div>
                 <div class="property-location">Location: Spine road</div>
                 <div class="property-btn-wrapper">
                   <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
@@ -471,22 +410,7 @@
               </div>              
             </div>
           </div>
-          <div class="property-item col-4" data-city="spine-road" data-type="3bhk">
-            <div class="property-item-inner">
-              <div class="property-item-image">
-                <img src="<%= asset_path 'Vission-exotica.jpg' %>" class="img-full lazy">
-              </div>
-              <div class="property-item-details">
-                <div class="property-name cgreen f700">Vission Exotica / Codename Exotica</div>
-                <div class="property-configuration">3 bhk from 86 lakhs (All incl.)</div>
-                <div class="property-location">Location: Spine road</div>
-                <div class="property-btn-wrapper">
-                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
-                </div>
-              </div>              
-            </div>
-          </div>
-          <div class="property-item col-4" data-city="nibm" data-type="2bhk">
+          <div class="property-item col-4 2bhk" data-city="nibm" data-type="2bhk">
             <div class="property-item-inner">
               <div class="property-item-image">
                 <img src="<%= asset_path 'Vertical-Alcinia.jpg' %>" class="img-full lazy">
@@ -497,88 +421,40 @@
                 <div class="property-location">Location: NIBM</div>
                 <div class="property-btn-wrapper">
                   <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
-                  <a href="javascript:;" class="property-share-btn" data-event-category="Section" data-event-action="Click" data-event-name="Share">
-                    <img data-src="<%= asset_path 'share.svg'%>" class="lazy" data-event-category="Section" data-event-action="Click" data-event-name="Share"/>
-                  </a>
                 </div>
               </div>              
             </div>
           </div>
-          <div class="property-item col-4" data-city="wagholi" data-type="2bhk">
+          <div class="property-item col-4 1bhk 2bhk 3bhk" data-city="wagholi" data-type="2bhk">
             <div class="property-item-inner">
               <div class="property-item-image">
                 <img src="<%= asset_path 'periwinkle.jpg' %>" class="img-full lazy">
               </div>
               <div class="property-item-details">
                 <div class="property-name cgreen f700">Periwinkle</div>
-                <div class="property-configuration">2 bhk from 27 lakhs (All incl.)</div>
+                <div class="property-configuration">1 bhk, 2 bhk & 3bhk from 32 lakhs, 50 Lacs & 68 lakhs (All Incl.)</div>
                 <div class="property-location">Location: Wagholi</div>
                 <div class="property-btn-wrapper">
                   <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
                 </div>
               </div>              
             </div>
-          </div>   
-          <div class="property-item col-4" data-city="wagholi" data-type="3bhk">
-            <div class="property-item-inner">
-              <div class="property-item-image">
-                <img src="<%= asset_path 'periwinkle.jpg' %>" class="img-full lazy">
-              </div>
-              <div class="property-item-details">
-                <div class="property-name cgreen f700">Periwinkle</div>
-                <div class="property-configuration">3 bhk from Rs. 67 Lacs (All Incl.)</div>
-                <div class="property-location">Location: Wagholi</div>
-                <div class="property-btn-wrapper">
-                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
-                </div>
-              </div>              
-            </div>
-          </div>  
-          <div class="property-item col-4" data-city="wagholi" data-type="1bhk">
-            <div class="property-item-inner">
-              <div class="property-item-image">
-                <img src="<%= asset_path 'periwinkle.jpg' %>" class="img-full lazy">
-              </div>
-              <div class="property-item-details">
-                <div class="property-name cgreen f700">Periwinkle</div>
-                <div class="property-configuration">1 bhk from Rs. 32 Lacs (All Incl.)</div>
-                <div class="property-location">Location: Wagholi</div>
-                <div class="property-btn-wrapper">
-                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
-                </div>
-              </div>              
-            </div>
-          </div>         
-          <div class="property-item col-4" data-city="chakan" data-type="2bhk">
+          </div>           
+          <div class="property-item col-4 1bhk 2bhk" data-city="chakan" data-type="2bhk">
             <div class="property-item-inner">
               <div class="property-item-image">
                 <img src="<%= asset_path 'JMBliss.jpg' %>" class="img-full lazy">
               </div>
               <div class="property-item-details">
                 <div class="property-name cgreen f700">JM Bliss</div>
-                <div class="property-configuration">2 bhk from 41.5 lakhs (All incl.)</div>
+                <div class="property-configuration">1 bhk & 2 bhk from 26.6 lakhs & 41.5 Lakhs (All incl.)</div>
                 <div class="property-location">Location: Chakan</div>
                 <div class="property-btn-wrapper">
                   <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
                 </div>
               </div>              
             </div>
-          </div>   
-          <div class="property-item col-4" data-city="chakan" data-type="1bhk">
-            <div class="property-item-inner">
-              <div class="property-item-image">
-                <img src="<%= asset_path 'JMBliss.jpg' %>" class="img-full lazy">
-              </div>
-              <div class="property-item-details">
-                <div class="property-name cgreen f700">JM Bliss</div>
-                <div class="property-configuration">1 bhk from 26.6 lakhs (All incl.)</div>
-                <div class="property-location">Location: Chakan</div>
-                <div class="property-btn-wrapper">
-                  <a href="javascript:;" class="property-enquiry-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Enquire Now">Enquire Now</a>
-                </div>
-              </div>              
-            </div>
-          </div>   
+          </div>    
 
         </div>
         <div class="load-more-btn-wrapper text-center">

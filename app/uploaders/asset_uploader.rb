@@ -21,7 +21,7 @@ class AssetUploader < CarrierWave::Uploader::Base
   end
 
   def content_type_whitelist
-    ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg', 'text/csv']
+    ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg', 'text/csv', 'application/vnd.ms-excel', 'application/octet-stream']
   end
 
   def extension_white_list

@@ -137,14 +137,14 @@ class Receipt
   validates :payment_mode, inclusion: { in: proc { Receipt.available_payment_modes.collect { |x| x[:id] } } }, allow_blank: true
   validates :payment_type, inclusion: { in: Receipt::PAYMENT_TYPES }, if: proc { |receipt| receipt.payment_type.present? }
   # non mandatory fields
-  validates :issuing_bank, :issuing_bank_branch, name: true, allow_blank: true
+  #validates :issuing_bank, :issuing_bank_branch, name: true, allow_blank: true
   # validates :payment_identifier, length: { in: 3..25 }, format: { without: /[^A-Za-z0-9_-]/, message: "can contain only alpha-numaric with '_' and '-' "}, if: proc { |receipt| receipt.offline? && receipt.payment_identifier.present? }
   # validates :processed_on, presence: true, if: proc { |receipt| %i[success clearance_pending available_for_refund].include?(receipt.status) }
   # validates :payment_gateway, presence: true, if: proc { |receipt| receipt.payment_mode == 'online' }
   validates :payment_gateway, inclusion: { in: PaymentGatewayService::Default.allowed_payment_gateways }, allow_blank: true, if: proc { |receipt| receipt.payment_mode == 'online' }
   # validates :tracking_id, length: { in: 5..15 }, presence: true, if: proc { |receipt| receipt.status == 'success' && receipt.payment_mode != 'online' }
   # validates :comments, presence: true, if: proc { |receipt| receipt.status == 'failed' && receipt.payment_mode != 'online' }
-  validates :erp_id, uniqueness: true, allow_blank: true
+  validates :erp_id, uniqueness: {scope: :project_id, message: '^Receipt with Erp Id: %{value} already exists'}, allow_blank: true
   # validate :tracking_id_processed_on_only_on_success, if: proc { |record| record.status != 'cancelled' }
   validate :processed_on_greater_than_issued_date
   # validate :issued_date_when_offline_payment, if: proc { |record| %w[online cheque].exclude?(record.payment_mode) && issued_date.present? }
@@ -272,11 +272,11 @@ class Receipt
     end
 
     custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
-    custom_scope = { user_id: user.id } if user.buyer?
+    custom_scope = { user_id: user.id, lead_id: user.selected_lead_id } if user.buyer?
 
     custom_scope[:booking_detail_id] = params[:booking_detail_id] if params[:booking_detail_id].present?
 
-    unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
+    unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
       project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
       custom_scope.merge!({project_id: {"$in": project_ids}})
     end
@@ -324,8 +324,11 @@ class Receipt
     if (total_amount || 0) <= 0
       errors.add :total_amount, 'cannot be less than or equal to 0'
     else
-      blocking_amount = user.booking_portal_client.blocking_amount
+      blocking_amount = token_type.token_amount if direct_payment?
+      blocking_amount = project.blocking_amount if blocking_amount.blank?
+      blocking_amount = user.booking_portal_client.blocking_amount if blocking_amount.blank?
       blocking_amount = project_unit.blocking_amount if booking_detail_id.present?
+
       if (direct_payment? || blocking_payment?) && total_amount < blocking_amount && !booking_detail.try(:swapping?)
         errors.add :total_amount, "cannot be less than blocking amount #{blocking_amount}"
       end
