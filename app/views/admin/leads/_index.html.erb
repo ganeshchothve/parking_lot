@@ -1,86 +1,92 @@
 <section class="mt-0">
   <div class="px-0">
     <div class="row g-0">
-        <div class="col-lg-12 p-0">
-          <% leads.each do |lead| %>
-          <div class="white rounded-3 float-start wd-100 mt-4 shadow-sm position-relative">
-            <div class="float-start wd-100">
-              <div class="">
-                <div>
-                  <div class="inner-info d-flex justify-content-between">
-                    <div class="ps-3 py-3">
-                      <h2 class="fn-16 font-medium d-inline-block mb-0 theme-txt-color me-2">
-                        <% if policy([ current_user_role_group, lead]).show? %>
-                          <%= link_to lead.name, [current_user_role_group, lead ], class: "font-medium theme-txt-color" %>
-                        <% else %>
-                          <%= lead.name %>
-                        <% end %>
-                      </h2>
-                      <% if lead.email.present? %>
-                      <span class="email-icon small d-inline-block mt-1 fn-16" data-bs-toggle="popover" title="Popover title" data-bs-content="<%= lead.email || '' %>">
-                        <i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i>
-                      </span>
+      <div class="col-lg-12 p-0">
+        <% leads.each do |lead| %>
+        <div class="bg-white rounded-3 float-start wd-100 mt-4 shadow-sm position-relative">
+          <div class="float-start wd-100">
+            <div class="">
+              <div>
+                <div class="inner-info d-flex justify-content-between">
+                  <div class="ps-3 py-3">
+                    <h2 class="fn-16 font-medium d-inline-block mb-0 theme-txt-color me-2">
+                      <% if policy([ current_user_role_group, lead]).show? %>
+                      <%= link_to lead.name, [current_user_role_group, lead ], class: "font-medium theme-txt-color" %>
+                      <% else %>
+                      <%= lead.name %>
                       <% end %>
-                      <% if lead.phone.present? %>
-                      <span class="phone-icon small d-inline-block mt-1 fn-16" data-bs-container="body" data-bs-placement="bottom" data-bs-toggle="popover" title="Popover title" data-bs-content="<%= lead.phone || '' %>">
-                        <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i>
-                      </span>
-                      <% end %>
-                      <% if lead.manager_id? && current_user.role.in?(%w(admin superadmin)) %>
-                        <p class="fn-14 mt-1 mb-0">
-                          <%= "#{t('mongoid.attributes.lead.manager_id')} : #{link_to lead.manager_name, [current_user_role_group, lead.manager], class: 'theme-txt-color'}".html_safe %>
-                        </p>
-                      <% end %>
-                    </div>
-                    <div class="pe-3 py-3">
-                      <p class="font-medium fn-12 mb-0 d-inline-block"><i class="fa fa-circle info me-2 fa-sm"></i><%= lead.lead_stage || '-' %></p>
-                      <div class="dropdown d-inline-block">
-                        <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown"
-                          aria-haspopup="true" aria-expanded="false">
-                          <i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                          <%= render "#{current_user_role_group}/leads/links", lead: lead %>
-                        </div>
+                    </h2>
+                    <% if lead.email.present? %>
+                    <a href="javascript:;" class="email-icon small d-inline-block mt-1 fn-16" data-bs-toggle="popover" data-bs-container="body" data-bs-placement="bottom"
+                      title="Email" data-bs-content="<%= lead.email || '' %>">
+                      <i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i>
+                  </a>
+                    <% end %>
+                    <% if lead.phone.present? %>
+                    <a href="javascript:;" class="phone-icon small d-inline-block mt-1 fn-16" data-bs-container="body"
+                      data-bs-placement="bottom" data-bs-toggle="popover" title="Phone no"
+                      data-bs-content="<%= lead.phone || '' %>">
+                      <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i>
+                </a>
+                    <% end %>
+                    <% if lead.manager_id? && current_user.role.in?(%w(admin superadmin)) %>
+                    <p class="fn-14 mt-1 mb-0">
+                      <%= "#{t('mongoid.attributes.lead.manager_id')} : #{link_to lead.manager_name, [current_user_role_group, lead.manager], class: 'theme-txt-color'}".html_safe %>
+                    </p>
+                    <% end %>
+                  </div>
+                  <div class="pe-3 py-3">
+                    <p class="font-medium fn-12 mb-0 d-inline-block"><i
+                        class="fa fa-circle info me-2 fa-sm"></i><%= lead.lead_stage || '-' %></p>
+                    <div class="dropdown d-inline-block">
+                      <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        <i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
+                      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                        <%= render "#{current_user_role_group}/leads/links", lead: lead %>
                       </div>
                     </div>
                   </div>
-                  <div class="border-bottom col-12"></div>
                 </div>
-                <div class="d-flex justify-content-between">
-                  <div class="ps-3 py-3">
-                    <!-- <p><%= lead.lead_stage || '-' %></p> -->
-                    <p class="mb-0 theme-txt-color"><%= lead.project_name %></p>
-                  </div>
-                  <div class="inner-info">
-                    <div class="pe-3 py-3  d-flex justify-content-end">
-                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_blocking_amount_paid? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_blocking_amount_paid? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.blocking_amount_paid') %></p>
-                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_booking_price_paid? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_booking_price_paid? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.payment_done') %></p>
-                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_registration_done? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_registration_done? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.registration_done') %></p>
-                      
-                    </div>
-                  </div>
+                <div class="border-bottom col-12"></div>
+              </div>
+              <div class="d-flex justify-content-between">
+                <div class="ps-3 py-3">
+                  <!-- <p><%= lead.lead_stage || '-' %></p> -->
+                  <p class="mb-0 theme-txt-color"><%= lead.project_name %></p>
                 </div>
-            </div>
-            </div>
-            <div class="position-absolute custom-top-10 custom-end-20">
-              
-            </div>
-          </div>
-            
-            <% end %>
-          </div>
+                <div class="inner-info">
+                  <div class="pe-3 py-3  d-flex justify-content-end">
+                    <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i
+                        class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_blocking_amount_paid? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_blocking_amount_paid? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.blocking_amount_paid') %>
+                    </p>
+                    <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i
+                        class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_booking_price_paid? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_booking_price_paid? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.payment_done') %>
+                    </p>
+                    <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i
+                        class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_registration_done? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_registration_done? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.registration_done') %>
+                    </p>
 
-        <!----------- Pagination ---------->
-        <div class="col-lg-12 py-3 white mb-2 px-3 mt-3 shadow-sm">
-          <div class="row">
-            <div class="col-lg-6 pt-2">
-              <p class="table-entry mb-0">Showing 1 - 5 of <%= @leads.total_entries %> items</p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="col-lg-6 table-pagination">
-              <%= will_paginate leads, list_classes: %w(pagination justify-content-end) %>
-            </div>
+          </div>
+        </div>
+        <% end %>
+      </div>
+
+      <!----------- Pagination ---------->
+      <div class="col-lg-12 py-3 bg-white mb-2 px-3 mt-3 shadow-sm">
+        <div class="row">
+          <div class="col-lg-6 pt-2">
+            <p class="table-entry mb-0">Showing 1 - 5 of <%= @leads.total_entries %> items</p>
+          </div>
+          <div class="col-lg-6 table-pagination">
+            <%= will_paginate leads, list_classes: %w(pagination justify-content-end) %>
           </div>
         </div>
       </div>
     </div>
+  </div>
 </section>
