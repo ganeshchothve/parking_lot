@@ -2,7 +2,7 @@ class BulkUploadReport
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  DOCUMENT_TYPES = %w(receipts_status_update user_requests_status_update project_units_update inventory_upload leads receipts channel_partners)# channel_partner_manager_change)
+  DOCUMENT_TYPES = %w(receipts_status_update user_requests_status_update project_units_update inventory_upload leads receipts channel_partners time_slots_update channel_partner_manager_change)
   PROJECT_SCOPED = %w(leads receipts)
 
   field :total_rows, type: Integer, default: 0

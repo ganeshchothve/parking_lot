@@ -1124,6 +1124,7 @@ en:
         receipts: 'Payments Import'
         channel_partners: 'Channel Partners Import'
         channel_partner_manager_change: 'Channel Partner Manager Change'
+        time_slots_update: 'Time Slots Bulk Update'
 
       bulk_upload_report/help_text:
         receipts_status_update_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
@@ -1134,6 +1135,7 @@ en:
         receipts_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
         channel_partners_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
         channel_partner_manager_change_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
+        time_slots_update_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
 
       dashboard/filters:
         payments:
