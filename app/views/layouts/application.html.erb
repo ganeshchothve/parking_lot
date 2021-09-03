@@ -40,12 +40,12 @@
     <% elsif action_name.in?(%w(generate_booking_detail_form generate_invoice)) %>
       <%= yield %>
     <% else %>
-      <%= render "layouts/navbar_v2"%>
+      <%= render "layouts/navbar"%>
       <main class="page-wrapper">
         <%= yield %>
       </main>
-      <%= render "layouts/gamification_v2" %>
-      <%= render "layouts/navbar_footer_afterlogin_v2"%>
+      <%= render "layouts/gamification" %>
+      <%= render "layouts/navbar_footer_afterlogin"%>
     <% end %>
     <%= render 'layouts/partials/google_code' %>
     <% if current_user.role == 'channel_partner' %>
