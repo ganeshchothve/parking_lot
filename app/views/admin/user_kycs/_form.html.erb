@@ -1,7 +1,7 @@
 <%= simple_form_for(@user_kyc, local: true, url: url, remote: true, html: { novalidate: false, class: 'modal-remote-form validate-form', data: { 'resource-type': UserKyc.model_name.human, type: :json }, id: 'user_kyc_form' } ) do |f| %>
   <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
     <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
+      <div class="modal-content theme-form">
         <div class="modal-header bg-gradient-cd white">
           <h3 class="title">
             <%= t("helpers.#{action_name}.link_name", model: UserKyc.model_name.human) %>
@@ -35,7 +35,7 @@
             </div>
             <div class="col-md-6">
               <div class="row">
-                <%= f.input :budget, wrapper_html: { class: "col-md-6" } %>
+                <%= f.input :budget, wrapper_html: { class: "" } %>
               </div>
             </div>
           </div>
@@ -110,14 +110,14 @@
               </div>
               <div class="card-body">
                 <div class="mb-3">
-                  <%= f.label :nri %><br />
+                  <%= f.label :nri %>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :nri, true, class: "form-check-input" %>
-                    <%= f.label :nri, "Yes", class: "form-check-label" %>
+                    <%= f.radio_button :nri, true, class: "form-check-input wd-22" %>
+                    <%= f.label :nri, "Yes", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :nri, false, class: "form-check-input" %>
-                    <%= f.label :nri, "No", class: "form-check-label" %>
+                    <%= f.radio_button :nri, false, class: "form-check-input wd-22" %>
+                    <%= f.label :nri, "No", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
                 <div class="mb-3 nri-fields">
@@ -125,14 +125,14 @@
                   <%= f.text_field :oci, class: 'form-control' %>
                 </div>
                 <div class="mb-3 nri-fields">
-                  <%= f.label :poa %><br />
+                  <%= f.label :poa %>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :poa, true, class: "form-check-input" %>
-                    <%= f.label :poa, "Yes", class: "form-check-label" %>
+                    <%= f.radio_button :poa, true, class: "form-check-input wd-22" %>
+                    <%= f.label :poa, "Yes", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :poa, false, class: "form-check-input" %>
-                    <%= f.label :poa, "No", class: "form-check-label" %>
+                    <%= f.radio_button :poa, false, class: "form-check-input wd-22" %>
+                    <%= f.label :poa, "No", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
                 <div class="nri-fields">
@@ -153,14 +153,14 @@
               </div>
               <div class="card-body">
                 <div class="mb-3">
-                  <%= f.label :is_company %><br />
+                  <%= f.label :is_company %>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :is_company, true, class: "form-check-input" %>
-                    <%= f.label :is_company, "Yes", class: "form-check-label" %>
+                    <%= f.radio_button :is_company, true, class: "form-check-input wd-22" %>
+                    <%= f.label :is_company, "Yes", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :is_company, false, class: "form-check-input" %>
-                    <%= f.label :is_company, "No", class: "form-check-label" %>
+                    <%= f.radio_button :is_company, false, class: "form-check-input wd-22" %>
+                    <%= f.label :is_company, "No", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
                 <div class="mb-3 company-fields">
@@ -190,14 +190,14 @@
               </div>
               <div class="card-body">
                 <div class="mb-3">
-                  <%= f.label :existing_customer %><br />
+                  <%= f.label :existing_customer %>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :existing_customer, true, class: "form-check-input" %>
-                    <%= f.label :existing_customer, "Yes", class: "form-check-label" %>
+                    <%= f.radio_button :existing_customer, true, class: "form-check-input wd-22" %>
+                    <%= f.label :existing_customer, "Yes", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :existing_customer, false, class: "form-check-input" %>
-                    <%= f.label :existing_customer, "No", class: "form-check-label" %>
+                    <%= f.radio_button :existing_customer, false, class: "form-check-input wd-22" %>
+                    <%= f.label :existing_customer, "No", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
                 <div class="mb-3 customer-fields">
