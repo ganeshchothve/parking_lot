@@ -48,6 +48,7 @@ Rails.application.routes.draw do
   get '/s/:code', to: 'shortened_urls#redirect_to_url'
 
   namespace :admin do
+    resources :campaigns, except: [:destroy]
     resources :meetings, except: [:destroy]
     resources :api_logs, only: [:index]
     resources :cp_lead_activities do
@@ -326,6 +327,7 @@ Rails.application.routes.draw do
   end
 
   namespace :buyer do
+    resources :campaigns, only: [:index, :show]
     resources :meetings, only: [:index, :update, :show]
     resources :schemes, only: [:index]
 

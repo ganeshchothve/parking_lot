@@ -1,0 +1,14 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :source, class: 'control-label' %>
+      <%= f.select :source, Campaign.sources.collect{|x| [x[:text], x[:id]]}, {}, prompt: :translate, class: 'form-control selectize', required: true %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :total_budget, class: 'control-label' %>
+      <%= f.number_field :total_budget, class: 'form-control', required: true %>
+    </div>
+  </div>
+</div>
