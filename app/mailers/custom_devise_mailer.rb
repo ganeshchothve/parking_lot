@@ -24,22 +24,22 @@ module Devise::Mailers::Helpers
     begin
       if action.to_s == "confirmation_instructions"
         if record.buyer? && record.manager_role?("channel_partner")
-          template_id = Template::SmsTemplate.find_by(name: "user_registered_by_channel_partner").id
+          template = Template::SmsTemplate.find_by(name: "user_registered_by_channel_partner").first
         else
-          template_id = Template::SmsTemplate.where(name: "#{record.role}_user_registered").first&.id
-          template_id = Template::SmsTemplate.find_by(name: "user_registered").id if template_id.blank?
+          template = Template::SmsTemplate.where(name: "#{record.role}_user_registered").first
+          template = Template::SmsTemplate.find_by(name: "user_registered").first if template.blank?
         end
       elsif action.to_s == "resend_confirmation_instructions"
-        template_id = Template::SmsTemplate.find_by(name: "user_registered").id
+        template = Template::SmsTemplate.find_by(name: "user_registered").first
       else
         # GENERICTODO : Will work once we get urls to start working in templates
-        # template_id = Template::SmsTemplate.find_by(name: "devise_#{action}").id
+        # template = Template::SmsTemplate.find_by(name: "devise_#{action}").id
       end
-      if template_id && record.booking_portal_client.sms_enabled?
+      if template && template.is_active? && record.booking_portal_client.sms_enabled?
         Sms.create!(
           booking_portal_client_id: record.booking_portal_client_id,
           recipient_id: record.id,
-          sms_template_id: template_id,
+          sms_template_id: template.id,
           triggered_by_id: record.id,
           triggered_by_type: record.class.to_s
         )

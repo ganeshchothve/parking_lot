@@ -10,14 +10,15 @@ module TimeSlotGeneration
     increments :token_number, auto: false, scope: proc { "p#{project_id}_t#{token_type_id}" }
 
     # Associations
-    belongs_to :token_type
+    belongs_to :token_type, optional: true
 
     # Validations
     validates :token_number, uniqueness: {scope: [:project_id, :token_type_id]}, allow_nil: true
+    validates :token_type_id, presence: true, if: proc { direct_payment? }
 
     # Callbacks
-    before_save :assign_token_number
-    before_update :finalise_time_slot
+    before_save :assign_token_number, if: proc { direct_payment? }
+    #before_update :finalise_time_slot
 
     # Associations
     embeds_one :time_slot
@@ -39,7 +40,7 @@ module TimeSlotGeneration
           end while Receipt.where(token_number: token_number, project_id: project_id, token_type_id: token_type_id).any?
 
           self.token_prefix = token_type.token_prefix
-          self.time_slot = calculate_time_slot if current_client.enable_slot_generation?
+          #self.time_slot = calculate_time_slot if current_client.enable_slot_generation?
           # for reference, if the token has been made blank by the admin.
           self[:_token_number] = token_number
         end

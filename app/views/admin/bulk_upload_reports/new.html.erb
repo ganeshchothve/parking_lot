@@ -8,14 +8,14 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <%= form_for @bulk_upload_report, url: admin_bulk_upload_reports_path, html: {id: 'bulk_upload_report_form', class: 'bulk_upload_report_form'} do |f| %>
+      <%= simple_form_for @bulk_upload_report, url: admin_bulk_upload_reports_path, html: {id: 'bulk_upload_report_form', class: 'bulk_upload_report_form'} do |f| %>
         <div class="modal-body">
           <%= f.fields_for :asset, @bulk_upload_report.build_asset do |adj| %>
             <div class="new_asset">
               <div class="row mb-4">
                 <div class="col-10">
                   <% options = assetable_document_types(assetable) %>
-                  <%= adj.select :document_type, options_for_select(options, options.first[1]), {}, {prompt: "Select", class: "selectize", required: 'required'} %>
+                  <%= adj.select :document_type, options_for_select(options, options.first[1]), {}, {prompt: "Select", class: "selectize document_type", required: 'required'} %>
                   <div class = "text-muted small pb-2"></div>
                   <div class = "text-muted small"><div class="help_text"></div></div>
                 </div>
@@ -32,6 +32,11 @@
               </div>
             </div>
           <% end %>
+          <div class='row bur-project-select hide'>
+            <div class='col-12'>
+              <%= f.input :project_id, collection: Project.all.collect{|p| [p.name, p.id]}, disabled: !policy([:admin, @bulk_upload_report]).editable_field?("project_id"), as: :select, prompt: :translate, input_html: { class: ' selectize' } %>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <%= f.submit "Submit", id: "save", class: "btn btn-primary" %>
@@ -47,15 +52,21 @@
     var helpText = <%= raw t("mongoid.attributes.#{assetable.model_name.element}/help_text").to_json %>
     var sampleFileUrls = <%= raw current_client.assets.where(asset_type: /_sample\z/).inject({}) {|json, asset| json[asset.asset_type] = asset.file.url; json; }.to_json %>
 
-    if(!$(".selectize").last().hasClass("selectize-dropdown")){
-      $(".selectize").last().selectize();
-    }
+    FormInitializer.init($("#bulk_upload_report_form"));
 
-    var currentType = $('select.selectize').val();
-    $('select.selectize').on("change", function(){
+    var currentType = $('.document_type.selectize').val();
+    $('.document_type.selectize').on("change", function(){
       var formData = {"document_type": $(this).val()}
       $(this).closest('.new_asset').find(".fileupload").data('form-data', formData)
+
       currentType = $(this).val();
+
+      if(_.includes(<%= raw BulkUploadReport::PROJECT_SCOPED %>, currentType)) {
+        $('.bur-project-select').show();
+      } else {
+        $('.bur-project-select').hide();
+      }
+
       $('.help_text').html("<b>" + types[currentType] + "</b></br>" + helpText[currentType + "_html"].replace('%{url}', sampleFileUrls[currentType + '_sample']))
     }).trigger('change');
 

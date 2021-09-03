@@ -15,7 +15,7 @@
       </li>
     <% end %>
 
-    <% if policy([:buyer, Receipt.new(user: current_user)]).new? %>
+    <% if policy([:buyer, Receipt.new(user: current_user, lead: current_user.selected_lead)]).new? %>
       <li class="nav-item">
         <%= active_link_to t('controller.receipts.new.link_name'), new_buyer_receipt_path(lead_id: current_user.selected_lead_id), active: :inclusive, class: 'nav-link modal-remote-form-link' %>
       </li>
