@@ -1,0 +1,2 @@
+class TokenTypePolicy < ApplicationPolicy
+end

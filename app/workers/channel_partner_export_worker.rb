@@ -20,6 +20,7 @@ class ChannelPartnerExportWorker
 
   def self.get_column_names
     [
+      "ID (Used for Bulk Upload)",
       "Name",
       "Email",
       "Phone",
@@ -32,6 +33,7 @@ class ChannelPartnerExportWorker
 
   def self.get_channel_partner_row(channel_partner)
     [
+      channel_partner.id.to_s,
       channel_partner.name,
       channel_partner.email,
       channel_partner.phone,

@@ -27,7 +27,7 @@ module UserKycsConcern
   # This is the create action for admin, users, called after new.
   #
   def create
-    @user_kyc = UserKyc.new(permitted_attributes([current_user_role_group, UserKyc.new(user: @lead.user, lead: @lead) ]))
+    @user_kyc = @lead.user_kycs.build(permitted_attributes([current_user_role_group, UserKyc.new(user: @lead.user, lead: @lead) ]))
     set_user_creator
     authorize [current_user_role_group, @user_kyc]
     respond_to do |format|
@@ -65,7 +65,9 @@ module UserKycsConcern
   private
 
   def set_lead
-    @lead = (params[:lead_id].present? ? Lead.find(params[:lead_id]) : current_user)
+    unless @lead = (params[:lead_id].present? ? Lead.find(params[:lead_id]) : current_user.selected_lead)
+      redirect_to dashboard_path, alert: t('controller.application.set_current_client')
+    end
   end
 
   def set_user_kyc

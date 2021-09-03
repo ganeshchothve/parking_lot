@@ -1,47 +1,35 @@
+<!--
 <div class="row">
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :slot_start_date %>
-      <% date = (f.object.slot_start_date.present? ? user_local_time(f.object.slot_start_date).strftime("%d/%m/%Y") : "") %>
-      <%= f.text_field :slot_start_date, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date, disabled: !policy([:admin, @client]).editable_field?("slot_start_date") %>
+    <%#= f.label :slot_start_date %>
+    <%# date = (f.object.slot_start_date.present? ? user_local_time(f.object.slot_start_date).strftime("%d/%m/%Y") : "") %>
+    <%#= f.text_field :slot_start_date, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date, disabled: !policy([:admin, @client]).editable_field?("slot_start_date") %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :duration_in_minutes, class: 'label-required' %>
-      <%= f.number_field :duration, class: 'form-control', disabled: !policy([:admin, @client]).editable_field?("duration"), min: 1 %>
+      <%#= f.label :duration_in_minutes, class: 'label-required' %>
+      <%#= f.number_field :duration, class: 'form-control', disabled: !policy([:admin, @client]).editable_field?("duration"), min: 1 %>
     </div>
   </div>
   <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :start_time %>
-      <%= f.text_field :start_time, class: 'form-control timepicker', value: (f.object.start_time.present? ? user_local_time(@client.start_time).strftime("%I:%M %p") : ''), disabled: !policy([:admin, @client]).editable_field?("start_time") %>
-    </div>
+    <%#= f.label :start_time %><br>
+      <%#= f.text_field :start_time, class: 'form-control timepicker', value: (f.object.start_time.present? ? user_local_time(@client.start_time).strftime("%I:%M %p") : ''), disabled: !policy([:admin, @client]).editable_field?("start_time") %>
+  </div>
+  <div class="col-md-6">
+    <%#= f.label :end_time %><br>
+    <%#= f.text_field :end_time, class: 'form-control timepicker', value: (f.object.end_time.present? ? user_local_time(@client.end_time).strftime("%I:%M %p") : ''), disabled: !policy([:admin, @client]).editable_field?("end_time") %>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :end_time %>
-      <%= f.text_field :end_time, class: 'form-control timepicker', value: (f.object.end_time.present? ? user_local_time(@client.end_time).strftime("%I:%M %p") : ''), disabled: !policy([:admin, @client]).editable_field?("end_time") %>
+      <%#= f.label :capacity, class: 'label-required' %>
+      <%#= f.number_field :capacity, class: 'form-control', disabled: !policy([:admin, @client]).editable_field?("capacity"), min: 1 %>
     </div>
   </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :token_number_prefix %>
-      <%= f.text_field :token_number_prefix, class: 'form-control', disabled: !policy([:admin, @client]).editable_field?("token_number_prefix") %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :token_number_seed %>
-      <%= f.number_field :token_number_seed, class: 'form-control', disabled: !policy([:admin, @client]).editable_field?("token_number_seed") %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :capacity, class: 'label-required' %>
-      <%= f.number_field :capacity, class: 'form-control', disabled: !policy([:admin, @client]).editable_field?("capacity"), min: 1 %>
-    </div>
-  </div>
+</div>
+-->
+<div class="row">
   <div class="col-md-12">
     <div class="mb-3">
       <div class="form-check form-check-inline">

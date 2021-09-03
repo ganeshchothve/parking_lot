@@ -36,7 +36,7 @@ class ChannelPartnersController < ApplicationController
   def create
     @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
     @channel_partner.assign_attributes(srd: cookies[:srd]) if cookies[:srd].present?
-    layout = (current_user.present? ? 'devise' : false)
+    layout = (current_user.present? ? 'devise' : 'landing_page')
 
     respond_to do |format|
       if @channel_partner.save

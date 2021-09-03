@@ -18,9 +18,9 @@ $(document).ready(function () {
         'height': (window_wt <= 768) ? (window_ht - 46) : window_ht
     });
 
-    $('.scroll-down-btn').click(function () {
+    $('.scroll-sec').click(function() {
         $('html, body').animate({
-            scrollTop: $('#join-broker-network').offset().top - 60
+            scrollTop: $('#'+$(this).attr('rel')).offset().top - 60
         }, 'slow');
     });
 
@@ -229,3 +229,16 @@ $(document).ready(function () {
     });
 
 });
+
+// Redirect section 
+// set timeout onDomReady 
+$(function() { 
+    setTimeout(delayedFragmentTargetOffset, 500); 
+}); 
+// add scroll offset to fragment target (if there is one) 
+function delayedFragmentTargetOffset(){ 
+    var offset = $(':target').offset(); 
+    if(offset){ var scrollto = offset.top - 60; // minus fixed header height 
+    $('html, body').animate({scrollTop:scrollto}, 2000); 
+    } 
+}

@@ -32,6 +32,6 @@ class Admin::BulkUploadReportPolicy < BulkUploadReportPolicy
   end
 
   def permitted_attributes
-    attributes = [asset_attributes: AssetPolicy.new(user, (record.asset || Asset.new) ).permitted_attributes]
+    attributes = [:project_id, asset_attributes: AssetPolicy.new(user, (record.asset || Asset.new) ).permitted_attributes]
   end
 end
