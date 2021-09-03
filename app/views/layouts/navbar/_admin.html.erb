@@ -1,15 +1,18 @@
-<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#iris_menu" aria-controls="iris_menu" aria-expanded="false" aria-label="MENU">
-  <span class="navbar-toggler-icon"></span>
-</button>
-<div class="collapse navbar-collapse float-right" id="iris_menu">
-  <ul class="navbar-nav ml-auto nowrap">
-    <% if policy(:dashboard).index? %>
+<header>
+  <div class="header-leftbar">
+    <div class="leftbar-wrap">
+      <div class="header-logo">
+        <a href="javascript:;"><img src="<%=  asset_path 'launchpad-banner-logo.svg' %>" class="img-fluid"></a>
+      </div>
+      <div class="header-menu">
+        <ul class="list-unstyled">
+                <% if policy(:dashboard).index? %>
       <% if ["admin","superadmin"].include?(current_user.role) %>
 
         <li class="nav-item d-none d-lg-block">
           <div class="dropdown">
-            <%= active_link_to t('controller.dashboard.index.link_name'), "javascript:;", active: :exclusive, class: "nav-link dropdown-toggle pl-0 pr-0", data: {toggle: 'dropdown'} %>
-            <div class="dropdown-menu dropdown-menu-right menu-top">
+            <%= active_link_to t('controller.dashboard.index.link_name'), "javascript:;", active: :exclusive, class: "nav-link dropdown-toggle pl-0 pr-0", data: {toggle: 'dropdown'}, id: "dropdownMenuLeft", "data-bs-toggle": "dropdown", "aria-expanded": "false" %>
+            <div class="dropdown-menu dropdown-menu-right menu-top" aria-labelledby="dropdownMenuLeft">
               <%= link_to t('controller.dashboard.index.link_name'), dashboard_path(params: {role: current_user.role}), class: "dropdown-item" %>
               <%= link_to t('controller.dashboard.index.billing_team_link_name'), dashboard_path(params: {role: "billing_team"}), class: "dropdown-item" %>
               <%= link_to t('controller.dashboard.index.cp_admin_link_name'), dashboard_path(params: {role: "cp_admin"}), class: "dropdown-item" %>
@@ -79,15 +82,17 @@
     <% end %>
 
     <% if policy([:admin, ChannelPartner]).index? %>
+    <li class="nav-item">
       <%= active_link_to t('controller.channel_partners.index.link_name'), channel_partners_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+    </li>
     <% end %>
 
     <% if current_user.role == 'channel_partner' %>
       <% channel_partner = current_user.associated_channel_partner %>
       <li class="nav-item d-none d-lg-block">
         <div class="dropdown">
-          <%= active_link_to t('global.channel_partner_application'), "javascript:;", class: "nav-link dropdown-toggle pl-0 pr-0", data: {toggle: 'dropdown'} %>
-          <div class="dropdown-menu dropdown-menu-right menu-top">
+          <%= active_link_to t('global.channel_partner_application'), "javascript:;", class: "nav-link dropdown-toggle", data: {toggle: 'dropdown'}, id: "dropdownMenuLeft1", "data-bs-toggle": "dropdown", "aria-expanded": "false" %>
+          <div class="dropdown-menu dropdown-menu-right menu-top"  aria-labelledby="dropdownMenuLeft1">
               <% if Admin::ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
                 <%= link_to t('helpers.edit.link_name', model: ChannelPartner.model_name.human), edit_channel_partner_path(channel_partner), class: 'modal-remote-form-link dropdown-item' %>
               <% end %>
@@ -101,16 +106,51 @@
 
     <%= render 'layouts/navbar/custom_links' %>
 
-    <li class="nav-item user-dropdown dropdown">
-      <img src="<%= asset_path 'user-alt-black.svg' %>" alt="User Info">
-      <a class="nav-link dropdown-toggle display-inline mx-0 px-0" href="javascript:;" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <%= t('welcome', name: current_user.first_name ) %>
-      </a>
-      <div class="dropdown-menu user-menu-top" aria-labelledby="navbarDropdown">
-        <%= link_to t('controller.users.profile.link_name', role: User.human_attribute_name("role.#{current_user.role}")), edit_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
-        <%= link_to t('controller.users.change_password.link_name'), update_password_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
-        <%= link_to t('sign_out', scope: "devise"), destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
-      </div>
+      <% if current_user %>
+    <li class="lang-menu nav-item">
+          <div class="btn-group dropdown d-lg-block">
+            <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownLang" href="javascript:;">
+              <%= t("language.#{params[:locale] || I18n.default_locale }", default: "language.en")%>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right menu-top"  aria-labelledby="dropdownLang">
+              <% ['en', 'mr'].each do |language| %>
+                <%= link_to t("language.#{language}"), url_for(params.permit!.merge(locale: language) ), class: 'dropdown-item' %>
+              <% end %>
+            </div>
+          </div>
     </li>
-  </ul>
+    <% end %>
+      </ul>
+    </div>
+  </div>
 </div>
+<div class="header-topbar">
+    <div class="header-inner">
+        <div class="float-start">
+            <h1 class="page-title">Dashboard</h1>
+        </div>
+        <div class="d-sm-inline-block float-end">
+            <div class="header-search d-sm-inline-block">
+                <a href="javascript:;" class="header-search-icon"><span class="icon-search"></span></a>
+            </div>
+            <div class="header-notify d-sm-inline-block px-4">
+                <a href="javascript:;"><i class="fa fa-bell fill-black"></i><span class="notify-no">45</span></a>
+            </div>
+            <div class="header-add-new d-sm-inline-block px-3">
+                <a href="javascript:;"><i class="fa fa-plus-square fill-primary wd-24 ht-24"></i></a>
+            </div>
+            <div class="account-menu d-sm-inline-block dropdown">
+                <a href="javascript:;" class="dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="user-first-ltr">JW</span>
+                    <span class="user-name"><%= t('welcome', name: current_user.first_name ) %></span>
+                </a>
+                <div class="dropdown-menu user-menu-top" aria-labelledby="navbarDropdown">
+                <%= link_to t('controller.users.profile.link_name', role: User.human_attribute_name("role.#{current_user.role}")), edit_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
+                <%= link_to t('controller.users.change_password.link_name'), update_password_admin_user_path(current_user), class: "dropdown-item modal-remote-form-link" %>
+                <%= link_to t('sign_out', scope: "devise"), destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+</header>

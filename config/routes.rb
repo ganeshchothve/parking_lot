@@ -389,31 +389,6 @@ Rails.application.routes.draw do
     end
   end
 
-  #broker routes for New HTML design
-  get 'broker/home', to: 'broker#index'
-  get 'broker/project-details', to: 'broker#project_details'
-  get 'broker/project-details-new', to: 'broker#project_details_new'
-  get 'broker/project', to: 'broker#project'
-  get 'broker/project', to: 'broker#project'
-  get 'broker/terms-and-conditions', to: 'broker#terms_and_conditions'
-  get 'broker/privacy-policy', to: 'broker#privacy_policy'
-  get 'broker/cp-enquiryform', to: 'broker#cp_enquiryform'
-  get 'broker/cp-page', to: 'broker#cp_page'
-  get 'broker/cp-campaign-1', to: 'broker#cp_campaign_1'
-  get 'broker/cp-campaign-2', to: 'broker#cp_campaign_2'
-  get 'broker/cp-campaign-3', to: 'broker#cp_campaign_3'
-  get 'broker/cp-campaign-4', to: 'broker#cp_campaign_4'
-  get 'broker/cp-campaign-5', to: 'broker#cp_campaign_5'
-  get 'broker/cp-campaign-6', to: 'broker#cp_campaign_6'
-  get 'broker/cp-campaign-7', to: 'broker#cp_campaign_7'
-  get 'broker/cp-campaign-8', to: 'broker#cp_campaign_8'
-  get 'broker/cp-campaign-9', to: 'broker#cp_campaign_9'
-  get 'broker/cp-campaign-10', to: 'broker#cp_campaign_10'
-  get 'broker/cp-campaign-11', to: 'broker#cp_campaign_11'
-  get 'broker/cp-campaign-12', to: 'broker#cp_campaign_12'
-  #Broker Campaign Manager
-  get 'broker/cp-campaign-manager-1', to: 'broker#cp_campaign_manager_1'
-
   match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
   match '/sell_do/site_visit_updated', to: "api/sell_do/leads#site_visit_updated", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
