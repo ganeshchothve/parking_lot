@@ -54,7 +54,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_layout
-    devise_controller? ? 'devise_v2' : 'application_v2'
+    devise_controller? ? 'devise' : 'application'
   end
 
   private

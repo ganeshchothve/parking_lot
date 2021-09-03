@@ -36,29 +36,26 @@
         </td>
         <td>
           <div class="dropdown show text-right">
-            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
               <% if policy([:admin, bulk_upload_report]).show? %>
                 <%= link_to 'Show', admin_bulk_upload_report_path(bulk_upload_report), class: 'dropdown-item' %>
               <% end %>
-              </div>
-            </div>
+             </div>
           </div>
-        </div>
-            <% end %>
-          </div>
-
-          <!----------- Pagination ---------->
-          <div class="col-lg-12 py-3 white mb-2 px-3 mt-3 shadow-sm">
-            <div class="row">
-              <div class="col-lg-6 pt-2">
-                <p class="table-entry mb-0">Showing 1 - 5 of <%= @bulk_upload_reports.total_entries %> items</p>
-              </div>
-              <div class="col-lg-6 table-pagination">
-                <%= will_paginate bulk_upload_reports, list_classes: %w(pagination justify-content-end) %>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-</section>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<div class="col-lg-12 py-3 white mb-2 px-2">
+  <div class="row">
+  <div class="col-lg-6">
+    <p class="table-entry">Showing 1 - 5 of <%= @bulk_upload_reports.total_entries %> items</p>
+  </div>
+  <div class="col-lg-6 table-pagination">
+     <%= will_paginate bulk_upload_reports, list_classes: %w(pagination justify-content-end) %>
+  </div>
+</div>
+</div> 

@@ -1,14 +1,14 @@
 <!--
 <div class="row">
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
     <%#= f.label :slot_start_date %>
     <%# date = (f.object.slot_start_date.present? ? user_local_time(f.object.slot_start_date).strftime("%d/%m/%Y") : "") %>
     <%#= f.text_field :slot_start_date, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date, disabled: !policy([:admin, @client]).editable_field?("slot_start_date") %>
     </div>
   </div>
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%#= f.label :duration_in_minutes, class: 'label-required' %>
       <%#= f.number_field :duration, class: 'form-control', disabled: !policy([:admin, @client]).editable_field?("duration"), min: 1 %>
     </div>
@@ -22,7 +22,7 @@
     <%#= f.text_field :end_time, class: 'form-control timepicker', value: (f.object.end_time.present? ? user_local_time(@client.end_time).strftime("%I:%M %p") : ''), disabled: !policy([:admin, @client]).editable_field?("end_time") %>
   </div>
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%#= f.label :capacity, class: 'label-required' %>
       <%#= f.number_field :capacity, class: 'form-control', disabled: !policy([:admin, @client]).editable_field?("capacity"), min: 1 %>
     </div>

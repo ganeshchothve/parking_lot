@@ -4,7 +4,7 @@
     <title><%= current_client.name %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <%= csrf_meta_tags %>
-    <%= stylesheet_link_tag 'dashboard', media: 'all' %>
+    <%= stylesheet_link_tag 'dashboard_v2', media: 'all' %>
     <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,700,900&amp;display=swap" rel="stylesheet">
     <%= javascript_include_tag 'dashboard' %>
 
@@ -40,12 +40,12 @@
     <% elsif action_name.in?(%w(generate_booking_detail_form generate_invoice)) %>
       <%= yield %>
     <% else %>
-      <%= render "layouts/navbar"%>
-      <div class="mt-5">
+      <%= render "layouts/navbar_v2"%>
+      <main class="page-wrapper">
         <%= yield %>
-      </div>
-      <%= render "layouts/gamification" %>
-      <%= render "layouts/navbar_footer"%>
+      </main>
+      <%= render "layouts/gamification_v2" %>
+      <%= render "layouts/navbar_footer_afterlogin_v2"%>
     <% end %>
     <%= render 'layouts/partials/google_code' %>
     <% if current_user.role == 'channel_partner' %>
