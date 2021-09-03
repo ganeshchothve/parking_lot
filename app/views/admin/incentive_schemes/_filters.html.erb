@@ -1,44 +1,44 @@
-<div class="filter-inner">
-  <div class="filter-header">
-    <span class="title">Filter</span>
-    <a href="javascript:;" class="close-filter-btn">&times;</a>
+<div class="filter-inner modal-content ps-2 pe-2 fixed-header-footer">
+    <div class="modal-header filter-header">
+  <h5 class="modal-title title">Filter</h5>
+  <a href="javascript:;" class="close-filter-btn btn-close"></a>
   </div>
   <%= form_tag admin_incentive_schemes_path, method: "get", id: "incentive_scheme_search_form" do %>
-    <div class="filter-content">
+    <div class="filter-content modal-body ps-0 pe-0">
       <div class="row">
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", IncentiveScheme.model_name.human, class: "control-label" %>
           <%= text_field_tag "fltrs[name]", params.dig(:fltrs, :name), class: 'form-control' %>
         </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.incentive_scheme.status'), class: "control-label" %>
           <%= select_tag "fltrs[status]", options_for_select(IncentiveScheme.aasm.states.collect(&:name).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
         </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.incentive_scheme.ladder_strategy'), class: "control-label" %>
           <%= select_tag "fltrs[ladder_strategy]", options_for_select(IncentiveScheme::STRATEGY.map{|strategy| [strategy.titleize, strategy] }, params.dig(:fltrs, :ladder_strategy)), {prompt: "Select", class: "selectize"} %>
         </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
         <%= label_tag "fltrs[project_id]", t('mongoid.attributes.project_unit.project_id'), class: "control-label" %>
         <%= select_tag "fltrs[project_id]", options_for_select(Project.where(Project.user_based_scope(current_user)).all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: 'Select', class: "selectize project_select"} %>
       </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", ProjectTower.model_name.human, class: "control-label" %>
           <%= select_tag "fltrs[project_tower_id]", options_for_select(filter_project_tower_options, params.dig(:fltrs, :project_tower_id).present? ? params[:fltrs][:project_tower_id] : ''), {prompt: (params.dig(:fltrs, :project_id).present? ? "Select" : 'Select Project first'), class: "selectize project_tower_select", data: { url: admin_project_towers_path }} %>
         </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.incentive_scheme.tier_id'), class: "control-label" %>
           <%= select_tag "fltrs[tier_id]", options_for_select(Tier.all.map{|tier| [tier.name, tier.id] }, params.dig(:fltrs, :tier_id)), {prompt: "Select", class: "selectize"} %>
         </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.incentive_scheme.date_range') %>
           <%= text_field_tag "fltrs[date_range]", (params.dig(:fltrs, :date_range).present? ? params[:fltrs][:date_range] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
         </div>
       </div>
     </div>
-    <div class="filter-footer">
-      <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
-      <button type="button" class="f-cancel-btn db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+    <div class="filter-footer modal-footer text-end">
+      <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
+      <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
     </div>
   <% end %>
 </div>

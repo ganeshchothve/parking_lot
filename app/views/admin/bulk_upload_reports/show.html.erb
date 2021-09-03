@@ -1,28 +1,29 @@
-<div class="container mb-5">
-  <div class="row justify-content-center">
-      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 p-0">
+<section class="mb-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
         <div class="box-card">
           <div class="box-header bg-gradient br-rd-tr-4">
             <h2 class="">File Uploaded By : <%= @bulk_upload_report.uploaded_by.name %></h2>
           </div>
-          <div class="box-content br-rd-bl-4 bg-white br-1 py-0">
+          <div class="box-content br-rd-bl-4 bg-white br-1 py-2 px-2">
             <div class="row pd-box">
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label>Bulk Upload Type</label>
                     <div> <%= t("mongoid.attributes.bulk_upload_report.#{@bulk_upload_report.asset.try(:document_type)}") %> </div>
                   </div>
                 </div>
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label>File Uploaded By</label>
                     <div> <%= @bulk_upload_report.uploaded_by.name %> </div>
                   </div>
                 </div>
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label>File</label>
-                    <div><%= link_to @bulk_upload_report.asset.try(:file_name), @bulk_upload_report.asset.try(:file).try(:url) %></div>
+                    <div><%= link_to @bulk_upload_report.asset.try(:file_name), @bulk_upload_report.asset.try(:file).try(:url), class: "primary" %></div>
                   </div>
                 </div>
             </div>
@@ -31,22 +32,18 @@
       </div>
   </div>
 </div>
+</section>
 <section class="upload-errors my-4">
   <div class="container">
     <div class="row">
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 p-0 cursor-pointer" data-toggle="collapse" href="#collapseUploadErrors" role="button" aria-expanded="true" aria-controls="collapseUploadErrors">
+      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd cursor-pointer" data-bs-toggle="collapse" href="#collapseUploadErrors" role="button" aria-expanded="true" aria-controls="collapseUploadErrors">
         <div class="table-title pt-1">
           <h2 class="title text-dark">
             <%= UploadError.model_name.human(count: @bulk_upload_report.upload_errors.count )%>
           </h2>
         </div>
       </div>
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 p-0">
-        <div class="table-btn-set float-right">
-          <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400 mb-3"><%= t('global.total')%> : <%= @bulk_upload_report.upload_errors.count %></button>
-        </div>
-      </div>
-      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 p-0 collapse show" id="collapseUploadErrors">
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd collapse show" id="collapseUploadErrors">
         <%= render 'admin/upload_errors/index', {upload_errors: @bulk_upload_report.upload_errors.paginate(page: params[:page] || 1, per_page: params[:per_page])} %>
       </div>
     </div>

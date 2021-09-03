@@ -29,7 +29,7 @@
         <td data-title=<%= t('mongoid.attributes.user_kyc.pan_number') %> ><%= user_kyc.pan_number %></td>
         <td>
           <div class="dropdown show text-right">
-          <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+          <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
               <% if current_user.buyer? && Buyer::UserKycPolicy.new(current_user, user_kyc).edit? %>
                 <%= link_to t('helpers.edit.link_name', model: UserKyc.model_name.human), edit_buyer_user_kyc_path(user_kyc), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit User KYC'} %>

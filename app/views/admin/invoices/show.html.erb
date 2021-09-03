@@ -10,20 +10,20 @@
             <% invoice_labels = t("mongoid.attributes.invoice").with_indifferent_access %>
             <div class="row">
               <div class="col-md-4">
-                <div class="form-group">
+                <div class="mb-3">
                   <label class="small text-muted"><%= invoice_labels[:project_id] %></label>
                   <div><%= @invoice.project.name %></div>
                 </div>
               </div>
               <div class="col-md-4">
-                <div class="form-group">
+                <div class="mb-3">
                   <label class="small text-muted"><%= invoice_labels[:booking_detail_id] %></label>
                   <div><%= link_to @invoice.booking_detail.name, [current_user_role_group, @invoice.booking_detail] %></div>
                 </div>
               </div>
               <% unless current_user.role?('channel_partner') %>
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label class="small text-muted"><%= ChannelPartner.model_name.human %></label>
                     <div><%= link_to_if policy([current_user_role_group, @invoice.manager]).index?, @invoice.manager_name, [:admin, @invoice.manager] %></div>
                   </div>
@@ -31,13 +31,13 @@
               <% end %>
               <!--
               <div class="col-md-4">
-                <div class="form-group">
+                <div class="mb-3">
                   <label class="small text-muted"><%#= invoice_labels[:incentive_scheme_id] %></label>
                   <div><%#= @invoice.incentive_scheme.name %></div>
                 </div>
               </div>
               <div class="col-md-4">
-                <div class="form-group">
+                <div class="mb-3">
                   <label class="small text-muted"><%#= invoice_labels[:ladder_stage] %></label>
                   <div>
                     <span class='mr-2'><%#= @invoice.ladder_stage %></span>
@@ -53,14 +53,14 @@
               </div>
               -->
               <div class="col-md-4">
-                <div class="form-group">
+                <div class="mb-3">
                   <label class="small text-muted"><%= invoice_labels[:status] %></label>
                   <div><%= t("mongoid.attributes.invoice/status.#{@invoice.status}") %></div>
                 </div>
               </div>
               <% if @invoice.raised_date.present? %>
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label class="small text-muted"><%= invoice_labels[:raised_date] %></label>
                     <div><%= @invoice.raised_date.in_time_zone(current_user.time_zone).strftime('%d/%m/%Y %H:%M') %></div>
                   </div>
@@ -68,7 +68,7 @@
               <% end %>
               <% if @invoice.processing_date.present? %>
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label class="small text-muted"><%= invoice_labels[:processing_date] %></label>
                     <div><%= @invoice.processing_date.in_time_zone(current_user.time_zone).strftime('%d/%m/%Y %H:%M') %></div>
                   </div>
@@ -76,7 +76,7 @@
               <% end %>
               <% if @invoice.approved_date.present? %>
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label class="small text-muted"><%= invoice_labels[:approved_date] %></label>
                     <div><%= @invoice.approved_date.in_time_zone(current_user.time_zone).strftime('%d/%m/%Y %H:%M') %></div>
                   </div>
@@ -84,7 +84,7 @@
               <% end %>
               <% if @invoice.rejection_reason.present? %>
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label class="small text-muted"><%= invoice_labels[:rejection_reason] %></label>
                     <div class='break-word'><%= @invoice.rejection_reason %></div>
                   </div>
@@ -92,7 +92,7 @@
               <% end %>
               <% if @invoice.comments.present? %>
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label class="small text-muted"><%= invoice_labels[:comments] %></label>
                     <div class='break-word'><%= @invoice.comments %></div>
                   </div>
@@ -107,37 +107,37 @@
               <h4><%= invoice_labels[:cheque_detail] %></h4>
               <div class="row">
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label class="small text-muted"><%= cheque_labels[:total_amount] %></label>
                     <div class='break-word'><%= number_to_indian_currency(cheque_detail.total_amount) %></div>
                   </div>
                 </div>
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label class="small text-muted"><%= cheque_labels[:issuing_bank] %></label>
                     <div class='break-word'><%= cheque_detail.issuing_bank %></div>
                   </div>
                 </div>
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label class="small text-muted"><%= cheque_labels[:issuing_bank_branch] %></label>
                     <div class='break-word'><%= cheque_detail.issuing_bank_branch %></div>
                   </div>
                 </div>
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label class="small text-muted"><%= cheque_labels[:issued_date] %></label>
                     <div class='break-word'><%= cheque_detail.issued_date.in_time_zone(current_user.time_zone).strftime('%d/%m/%Y %H:%M') rescue '' %></div>
                   </div>
                 </div>
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label class="small text-muted"><%= cheque_labels[:handover_date] %></label>
                     <div class='break-word'><%= cheque_detail.handover_date.in_time_zone(current_user.time_zone).strftime('%d/%m/%Y %H:%M') rescue '' %></div>
                   </div>
                 </div>
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label class="small text-muted"><%= cheque_labels[:payment_identifier] %></label>
                     <div class='break-word'><%= cheque_detail.payment_identifier %></div>
                   </div>
@@ -148,20 +148,20 @@
             <h4>Amount</h4>
             <div class='row'>
               <div class="col-md-4">
-                <div class="form-group">
+                <div class="mb-3">
                   <label class="small text-muted"><%= invoice_labels[:amount] %></label>
                   <div><%= number_to_indian_currency(@invoice.amount) %></div>
                 </div>
               </div>
               <div class="col-md-4">
-                <div class="form-group">
+                <div class="mb-3">
                   <label class="small text-muted"><%= invoice_labels[:gst_amount] %></label>
                   <div><%= number_to_indian_currency(@invoice.gst_amount) %></div>
                 </div>
               </div>
               <% if @invoice.payment_adjustment.present? %>
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label class="small text-muted">Adjustment</label>
                     <div><%= number_to_indian_currency(@invoice.payment_adjustment.try(:absolute_value).to_f) %></div>
                   </div>
@@ -169,7 +169,7 @@
               <% end %>
               <% if @invoice.incentive_deduction.present? && @invoice.incentive_deduction.approved? %>
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label class="small text-muted"><%= t('mongoid.attributes.incentive_deduction.amount') %></label>
                     <div><%= number_to_indian_currency(@invoice.incentive_deduction.try(:amount).to_f) %></div>
                   </div>
@@ -177,7 +177,7 @@
               <% end %>
               <% if @invoice.status.in?(%w(approved paid)) && @invoice.net_amount.present? %>
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label class="small text-muted"><%= invoice_labels[:net_amount] %></label>
                     <div><%= number_to_indian_currency(@invoice.net_amount) %></div>
                   </div>

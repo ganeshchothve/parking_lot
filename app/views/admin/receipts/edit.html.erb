@@ -3,9 +3,7 @@
     <div class="modal-content">
       <div class="modal-header bg-gradient-cd white">
         <h3 class="title "> <%= t('helpers.edit.link_name', model: Receipt.model_name.human )%></h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" class="white">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <%= form_for [:admin, @receipt.lead, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.receipt'), type: :json} } do |f| %>

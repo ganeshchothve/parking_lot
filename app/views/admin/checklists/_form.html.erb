@@ -4,30 +4,28 @@
     <div class="modal-content">
       <div class="modal-header bg-gradient-cd white">
         <h3 class="title"><%= t("controller.checklists.#{action_name}.link_name") %></h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" class="white">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body theme-form">
         <%= f.fields_for :checklists, @checklist do |checklist| %>
           <div class = 'row'>
             <div class = 'col-6'>
-              <div class="form-group">
+              <div class="mb-3">
                 <%= checklist.label :name, class: 'label-required' %>
                 <%= checklist.text_field :name, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, @checklist]).editable_field?("name") %>
               </div>
             </div>
             <div class = 'col-6'>
-              <div class="form-group">
+              <div class="mb-3">
                 <%= checklist.label :key, class: 'label-required' %>
                 <%= checklist.text_field :key, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, @checklist]).editable_field?("key") %>
-                <div class = 'small'><%= t('checklists.form.key_helptext')%></div>
+                <div class = 'small fn-12'><%= t('checklists.form.key_helptext')%></div>
               </div>
             </div>
           </div>
           <div class = 'row'>
             <div class = 'col-12'>
-              <div class="form-group">
+              <div class="mb-3">
                 <%= checklist.label :description, class: 'control-label' %>
                 <%= checklist.text_field :description, autofocus: true, class: "form-control", disabled: !policy([:admin, @checklist]).editable_field?("description") %>
               </div>
@@ -35,13 +33,13 @@
           </div>
           <div class = 'row'>
             <div class = 'col-6'>
-              <div class="form-group">
+              <div class="mb-3">
                 <%= checklist.label :tracked_by, class: 'label-required' %>
                 <%= checklist.select :tracked_by, options_for_select(Checklist::TRACKED_BY.collect {|x| [x.titleize, x]}, checklist.object.tracked_by), {prompt: 'Select'}, class: 'selectize', required: 'required', disabled: !policy([:admin, @checklist]).editable_field?("tracked_by") %>
               </div>
             </div>
             <div class = 'col-6'>
-              <div class="form-group">
+              <div class="mb-3">
                 <%= checklist.label :order, class: 'label-required' %>
                 <%= checklist.number_field :order, class: 'form-control', required: 'required', disabled: !policy([:admin, @checklist]).editable_field?("order"), min: 1, max: 100 %>
               </div>
@@ -49,7 +47,7 @@
           </div>
         <% end %>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer text-end">
         <%= f.submit "Save", class: "btn btn-primary" %>
       </div>
     </div>

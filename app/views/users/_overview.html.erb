@@ -4,7 +4,7 @@
       <div class="box-header bg-gradient br-rd-tr-4">
         <h2 class="icon-set icon-users-white"><%= t('controller.users.show.header') %></h2>
         <div class="dropdown text-center float-right">
-          <a class="btn dropdown-toggle table-dropdown-btn white-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+          <a class="btn dropdown-toggle table-dropdown-btn white-clr" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
           <div class="dropdown-menu dropdown-menu-right">
             <%= render "#{current_user_role_group}/users/links", user: user %>
           </div>

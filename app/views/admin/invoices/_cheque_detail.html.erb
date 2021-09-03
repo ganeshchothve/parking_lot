@@ -1,5 +1,5 @@
 <hr/>
-<div class="form-group mb-0">
+<div class="mb-3 mb-0">
   <%= label_tag :cheque_detail, t('mongoid.attributes.invoice.cheque_detail') %>
 </div>
 <div class="card mb-3">
@@ -9,14 +9,14 @@
     <%= f.hidden_field :creator_id, value: current_user.id %>
     <div class="row">
       <div class="col-md-6">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :issuing_bank, class: '' %>
           <%= f.text_field :issuing_bank, class: 'form-control', disabled: !editable_cheque_detail %>
         </div>
       </div>
 
       <div class="col-md-6">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :issuing_bank_branch, class: '' %>
           <%= f.text_field :issuing_bank_branch, class: 'form-control', disabled: !editable_cheque_detail %>
         </div>
@@ -25,13 +25,13 @@
 
     <div class="row">
       <div class="col-md-6">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :issued_date, class: '' %>
           <%= f.text_field :issued_date, class: 'form-control datepicker', "data-default-date": (f.object.issued_date.present? ? f.object.issued_date.strftime("%d/%m/%Y") : ''), value: (f.object.issued_date.present? ? f.object.issued_date.strftime("%d/%m/%Y") : ''), disabled: !editable_cheque_detail %>
         </div>
       </div>
       <div class="col-md-6">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :handover_date, class: '' %>
           <%= f.text_field :handover_date, class: 'form-control datepicker', "data-default-date": (f.object.handover_date.present? ? f.object.handover_date.strftime("%d/%m/%Y") : ''), value: (f.object.handover_date.present? ? f.object.handover_date.strftime("%d/%m/%Y") : ''), disabled: !editable_cheque_detail %>
         </div>
@@ -40,13 +40,13 @@
 
     <div class="row">
       <div class="col-md-6">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :payment_identifier, class: '' %>
           <%= f.text_field :payment_identifier, class: 'form-control', disabled: !editable_cheque_detail %>
         </div>
       </div>
       <div class='col-md-6'>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :total_amount, class: '' %>
           <% unless editable_cheque_detail %>
             <h5><%= number_to_indian_currency(f.object.total_amount) %></h5>

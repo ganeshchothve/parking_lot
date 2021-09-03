@@ -41,11 +41,11 @@
       <%= yield %>
     <% else %>
       <%= render "layouts/navbar_v2"%>
-      <div class="mt-5">
+      <main class="page-wrapper">
         <%= yield %>
-      </div>
+      </main>
       <%= render "layouts/gamification_v2" %>
-      <%= render "layouts/navbar_footer_v2"%>
+      <%= render "layouts/navbar_footer_afterlogin_v2"%>
     <% end %>
     <%= render 'layouts/partials/google_code' %>
     <% if current_user.role == 'channel_partner' %>

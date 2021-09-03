@@ -1,7 +1,7 @@
 <section class="notes my-4 mb-4">
   <div class="container">
     <div class="row">
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 p-0 cursor-pointer" data-toggle="collapse" href="#collapseCpLeadNotes" role="button" aria-expanded="false" aria-controls="collapseCpLeadNotes">
+      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 p-0 cursor-pointer" data-bs-toggle="collapse" href="#collapseCpLeadNotes" role="button" aria-expanded="false" aria-controls="collapseCpLeadNotes">
         <div class="table-title pt-1">
           <h2 class="title text-dark icon-set icon-file-contract-black">
             Remarks From SellDo
@@ -19,14 +19,14 @@
           <div class="row m-3">
             <% if notes.blank? %>
               <div class="col-md-12">
-                <div class="form-group">
+                <div class="mb-3">
                   No records.
                 </div>
               </div>
             <% else %>
               <% notes.each_with_index do |remark, i| %>
                 <div class="col-md-12">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <%= "#{i + 1}. " + remark['note']['content'] %>
                   </div>
                 </div>

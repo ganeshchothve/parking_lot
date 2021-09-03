@@ -12,7 +12,7 @@
       <%= f.input :category, collection: current_client.general_user_request_categories.collect{|x| [x, x]}, disabled: !policy([:admin, @user_request]).editable_field?("category"), prompt: :translate, as: :select, input_html: {class: 'selectize'} %>
     </div>
   <% else %>
-    <div class="form-group">
+    <div class="mb-3">
       <label class="form-control-label" for="user_request_general_category">Category</label>
       <div><%= @user_request.category %></div>
     </div>
@@ -43,7 +43,7 @@
   <% end %>
   <% if policy([:admin, @user_request]).editable_field?("due_date") %>
     <div class="col-md-6">
-      <div class="form-group">
+      <div class="mb-3">
         <%= f.label :due_date, class: 'form-control-label optional' %>
         <%= f.text_field :due_date, class: 'form-control datepicker', "data-min-date": (f.object.due_date.present? && f.object.due_date < Date.today) ? f.object.due_date.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), disabled: !policy([:admin, @user_request]).editable_field?("due_date"), value: f.object.due_date.present? ? f.object.due_date.strftime("%d/%m/%Y") : nil %>
       </div>

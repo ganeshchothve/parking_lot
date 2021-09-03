@@ -1,4 +1,4 @@
-<div class="form-group">
+<div class="mb-3">
   <% unless @incentive_deduction.new_record? %>
     <%= f.label :number %>
     <p><%= @incentive_deduction.number %></p>
@@ -6,17 +6,17 @@
   <%= f.label :amount, class: 'label-required' %>
   <%= f.number_field :amount, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, incentive_deduction]).editable_field?("amount") || action_name == 'show', max: incentive_deduction.invoice.amount, min: 1 %>
 </div>
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :comments, class: 'label-required' %>
   <%= f.text_area :comments, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, incentive_deduction]).editable_field?("comments") || action_name == 'show' %>
 </div>
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :status, class: 'control-label label-required' %>
   <% events = available_events(incentive_deduction) %>
   <%= f.select :event, options_for_select(events.collect{|x| [t("mongoid.attributes.incentive_deduction/status.#{x}"), x]}, incentive_deduction.status), {prompt: t("mongoid.attributes.incentive_deduction/status.#{incentive_deduction.status}")}, class: 'selectize', required: 'required', disabled: !policy([:admin, incentive_deduction]).editable_field?("event") || action_name == 'show' %>
 </div>
 <% if action_name == 'show' %>
-  <div class='form-group'>
+  <div class='mb-3'>
     <%= f.label :creator, class: 'control-label' %>
     <span><%= f.object.creator.name %></span>
   </div>
@@ -45,7 +45,7 @@
   <% if action_name != 'show' && policy([ current_user_role_group, Asset.new(assetable: incentive_deduction)]).create? %>
     <div class="row">
       <div class="col-md-6">
-        <div class="form-group">
+        <div class="mb-3">
           <div class="btn btn-primary fileinput-button pull-right">
             <input type="file" name="files[]" class="btn btn-primary fileupload fileupload_single" data-extensions="<%= allowed_file_extensions('AssetUploader', incentive_deduction) %>" data-url="<%= assetables_path(assetable_type: incentive_deduction.class.model_name.i18n_key.to_s, assetable_id: incentive_deduction.id) %>" multiple=true data-target='.files-container-single' <%= policy([ current_user_role_group, Asset.new(assetable: incentive_deduction)]).create? ? "" : "disabled=disabled" %> data-klass = 'Asset' data-field_name = 'file' data-label='Upload Proof' />
           </div>

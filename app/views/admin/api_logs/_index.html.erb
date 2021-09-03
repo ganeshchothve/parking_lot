@@ -1,4 +1,4 @@
-<table class='table my-customer-table responsive-tbl'>
+<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
   <thead class="th-default">
     <thead>
       <tr class="bg-gradient-cd white">
@@ -13,20 +13,27 @@
   <tbody>
     <% api_logs.each do |api_log| %>
       <tr>
-        <td><%= api_log.request %></td>
-        <td><%= api_log.request_url %></td>
-        <td>
+        <td class="text-break"><%= api_log.request %></td>
+        <td class="text-break"><%= api_log.request_url %></td>
+        <td class="text-break">
           <% if api_log.response_type.present? %>
             <small><strong>Response Type:</strong> <%= api_log.response_type %></small><br>
           <% end %>
           <%= api_log.response %>
         </td>
-        <td><%= api_log.status %></td>
+        <td><i class="fa fa-circle fill-success me-2 fa-xs"></i><%= api_log.status %></td>
         <td><%= api_log.message %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
-<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pb-2">
-  <%= will_paginate api_logs, list_classes: %w(pagination justify-content-center) %>
+<div class="col-lg-12 py-3 white mb-2 px-2">
+  <div class="row">
+    <div class="col-lg-6">
+      <p class="table-entry">Showing 1 - 5 of <%= @api_logs.total_entries %> items</p>
+    </div>
+    <div class="col-lg-6 table-pagination">
+       <%= will_paginate api_logs, list_classes: %w(pagination justify-content-end) %>
+    </div>
+  </div>
 </div>

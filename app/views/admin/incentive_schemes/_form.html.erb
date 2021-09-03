@@ -1,61 +1,59 @@
 <%= nested_form_for([:admin, @incentive_scheme], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['incentive_schemes'], "data-type": "json", id: 'incentive_scheme_form'}) do |f| %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
 
       <div class="modal-header bg-gradient-cd white">
         <h3 class="title"><%= t("controller.incentive_schemes.#{action_name}.link_name") %></h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" class="white">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
-      <div class="modal-body">
-        <div class="form-group">
+      <div class="modal-body theme-form">
+        <div class="mb-3">
           <%= f.label :name, class: 'label-required' %>
           <%= f.text_field :name, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, @incentive_scheme]).editable_field?("name") %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :description, class: 'label-required' %>
           <%= f.text_area :description, autofocus: true, class: "form-control summernote", required: 'required', disabled: !policy([:admin, @incentive_scheme]).editable_field?("description") %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :category, class: 'label-required' %>
           <%= f.select :category, IncentiveScheme::CATEGORIES.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: (policy([current_user_role_group, @incentive_scheme]).editable_field?("category") ? false : true) %>
         </div>
         <% unless f.object.default? %>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :project_id, class: 'label-required' %>
             <%= f.select :project_id, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|pt| [pt.name, pt.id ]}, (f.object.new_record? ? Project.first.id : f.object.project_id)), {prompt: true}, required: 'required', class: 'selectize project_select', disabled: !policy([:admin, @incentive_scheme]).editable_field?("project_id") %>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :project_tower_id %>
             <%= f.select :project_tower_id, ProjectTower.all.collect{|pt| [pt.name, pt.id ]}, {prompt: true}, class: 'selectize project_tower_select', disabled: !policy([:admin, @incentive_scheme]).editable_field?("project_tower_id"), data: { url: admin_project_towers_path } %>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :tier_id %>
             <%= f.select :tier_id, Tier.all.collect{|tier| [tier.name, tier.id ]}, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @incentive_scheme]).editable_field?("tier_id") %>
           </div>
           <div class='row'>
             <div class='col-md-6'>
-              <div class="form-group">
+              <div class="mb-3">
                 <%= f.label :starts_on, class: (f.object.default? ? '' : 'label-required') %>
                 <%= f.text_field :starts_on, class: 'form-control datepicker', required: (f.object.default? ? false : 'required'), "data-min-date": (f.object.starts_on.present? && f.object.starts_on < Date.today) ? f.object.starts_on.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), disabled: !policy([:admin, @incentive_scheme]).editable_field?("starts_on"), value: f.object.starts_on.present? ? f.object.starts_on.strftime("%d/%m/%Y") : nil %>
               </div>
             </div>
             <div class='col-md-6'>
-              <div class="form-group">
+              <div class="mb-3">
                 <%= f.label :ends_on, class: (f.object.default? ? '' : 'label-required') %>
                 <%= f.text_field :ends_on, class: 'form-control datepicker', required: (f.object.default? ? false : 'required'), "data-min-date": (f.object.ends_on.present? && f.object.ends_on < Date.today) ? f.object.ends_on.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), disabled: !policy([:admin, @incentive_scheme]).editable_field?("ends_on"), value: f.object.ends_on.present? ? f.object.ends_on.strftime("%d/%m/%Y") : nil %>
               </div>
             </div>
           </div>
         <% end %>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :ladder_strategy, class: 'label-required' %>
           <%= f.select :ladder_strategy, IncentiveScheme::STRATEGY.collect {|x| [x.titleize, x]}, {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @incentive_scheme]).editable_field?("ladder_strategy") %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <% if f.object.new_record? %>
             <%= f.hidden_field :event, value: 'draft' %>
           <% else %>
@@ -66,7 +64,7 @@
             <%= f.select :event, options_for_select(statuses.collect{|rec| [t("mongoid.attributes.incentive_scheme/status.#{rec.to_s}"), rec.to_s]}, @incentive_scheme.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @incentive_scheme]).editable_field?("event") %>
           <% end %>
         </div>
-        <div class="ladders">
+        <div class="ladders mt-3">
           <% editable_ladders = policy([:admin, @incentive_scheme]).editable_field?("ladders_attributes")%>
           <% if editable_ladders %>
             <div class='text-right'>
@@ -74,31 +72,31 @@
             </div>
           <% end %>
           <%= f.fields_for :ladders do |lad|%>
-            <h4>Ladder - Stage <span class='stage'><%= lad.object.stage %></span>
+            <h5 class="mt-3">Ladder - Stage <span class='stage'><%= lad.object.stage %></span>
               <% if editable_ladders %>
                 <span class='pl-2 text-right'>
                   <%= lad.link_to_remove icon("far", "times-circle") %>
                 </span>
               <% end %>
-            </h4>
+            </h6>
             <hr>
             <div class='row'>
               <%= lad.hidden_field :stage, class: 'stage' %>
               <div class='col-md-6'>
-                <div class="form-group">
+                <div class="mb-3">
                   <%= lad.label :start_value, class: 'label-required' %>
                   <%= lad.number_field :start_value, class:'form-control', required: 'required', disabled: !editable_ladders %>
                 </div>
               </div>
               <div class='col-md-6'>
-                <div class="form-group">
+                <div class="mb-3">
                   <%= lad.label :end_value, class: '' %>
                   <%= lad.number_field :end_value, class:'form-control', disabled: !editable_ladders %>
                 </div>
               </div>
               <!--
               <div class='col-md-12'>
-                <div class="form-group">
+                <div class="mb-3">
                   <%#= lad.label :inclusive, class: 'label-required' %>
                   <div class="form-check form-check-inline">
                     <%#= lad.radio_button :inclusive, true, required: 'required', class: "form-check-input" %>
@@ -114,16 +112,16 @@
             </div>
             <div class="payment-adjustment">
               <%= lad.fields_for :payment_adjustment do |adj|%>
-                <h5>Incentive Calculation</h5>
+                <h6 class="mt-3">Incentive Calculation</h6>
                 <div class="row">
                   <div class="col-md-12">
-                    <div class="form-group">
+                    <div class="mb-3">
                       <%= adj.label :absolute_value, class: '' %>
                       <%= adj.number_field :absolute_value, class: "form-control", disabled: !editable_ladders %>
                     </div>
                   </div>
                   <div class="col-md-12">
-                    <div class="form-group">
+                    <div class="mb-3">
                       <%= adj.label :formula, class: '' %>
                       <%= adj.text_field :formula, class: "form-control", disabled: !editable_ladders %>
                       <p class="small text-muted">This will be evaluated in the context of resource (which can be a Booking, Payment, etc)</p>
@@ -137,7 +135,7 @@
         </div>
       </div>
 
-      <div class="modal-footer">
+      <div class="modal-footer text-end">
         <%= f.submit "Save", class: "btn btn-primary" %>
       </div>
 

@@ -6,38 +6,37 @@
   end
 %>
 <%= nested_form_for project, url: _url, remote: true, local: true, html: { novalidate: false, id: "project_form", class: "modal-remote-form validate-form", data: { 'resource-type': Project.model_name.human, type: :json } } do |f| %>
-  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal fade right fixed-header-footer" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-header bg-gradient-cd white">
           <h3 class="title">
             <%= t('helpers.edit.link_name', model: Project.model_name.human)%>
           </h3>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true" class="white">&times;</span>
+          <button type="button" class="close btn-close" data-bs-dismiss="modal" aria-label="Close">
           </button>
         </div>
         <div class="modal-body">
           <nav>
-            <div class="nav nav-tabs" role="tablist">
-              <a class="nav-item nav-link active" data-toggle="tab" href="#nav-project-basic" role="tab">Basic Details</a>
-              <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-specifications" role="tab">Specs</a>
-              <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-offers" role="tab">Offers</a>
-              <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-timeline" role="tab">Timeline</a>
-              <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-pages" role="tab">Content Pages</a>
-              <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-logos" role="tab">Images & Docs</a>
+            <div class="nav nav-tabs theme-tab" role="tablist">
+              <a class="nav-item nav-link active" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-basic" role="tab">Basic Details</a>
+              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-specifications" role="tab">Specs</a>
+              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-offers" role="tab">Offers</a>
+              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-timeline" role="tab">Timeline</a>
+              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-pages" role="tab">Content Pages</a>
+              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-logos" role="tab">Images & Docs</a>
               <% if current_user.role?(:superadmin) %>
-                <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-integrations" role="tab">Integrations</a>
-                <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-bookings" role="tab">Bookings</a>
-                <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-contacts" role="tab">Notifications</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-integrations" role="tab">Integrations</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-bookings" role="tab">Bookings</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-contacts" role="tab">Notifications</a>
                 <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
-                  <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-crm-ids" role="tab">CRM</a>
+                  <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-crm-ids" role="tab">CRM</a>
                 <% end %>
               <% end %>
             </div>
           </nav>
         <div class="mt-3"></div>
-          <div class="tab-content">
+          <div class="tab-content theme-form">
             <div class="tab-pane fade show active" id="nav-project-basic" role="tabpanel">
               <%= render 'admin/projects/basic', f: f, project: project %>
             </div>

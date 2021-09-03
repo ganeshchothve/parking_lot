@@ -2,13 +2,13 @@
   <p><%= t('controller.booking_details.receipts.show.disclaimer')%></p>
   <div class="row">
     <div class="col-md-4">
-      <div class="form-group">
+      <div class="mb-3">
         <label class="small"><%= t('mongoid.models.project_unit', count: 1) %></label>
         <div><%= booking_detail.name %></div>
       </div>
     </div>
     <div class="col-md-4">
-      <div class="form-group">
+      <div class="mb-3">
         <label class="small">
           <%= t('mongoid.attributes.booking_detail.agreement_price')%>
         </label>
@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="col-md-4">
-      <div class="form-group">
+      <div class="mb-3">
         <label class="small">
           <%= t('mongoid.attributes.booking_detail.all_inclusive_price') %>
         </label>
@@ -26,13 +26,13 @@
   </div>
   <div class="row">
     <div class="col-md-6">
-      <div class="form-group">
+      <div class="mb-3">
         <label class="small"><%= t('mongoid.attributes.booking_detail.total_amount_paid')%></label>
         <div><%= number_to_indian_currency(booking_detail.total_amount_paid.round) %></div>
       </div>
     </div>
     <div class="col-md-6">
-      <div class="form-group">
+      <div class="mb-3">
         <label class="small"><%= t('mongoid.attributes.booking_detail.booking_pending_amount')%></label>
         <div><%= number_to_indian_currency(booking_detail.pending_balance.round) %></div>
       </div>

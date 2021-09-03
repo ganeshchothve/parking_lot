@@ -5,86 +5,100 @@ else
   otp_signin_class = "d-none"
   username_signin_class = ""
 end %>
-
-<section class="auth login-page pb-5">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="login-form-wrapper pt-5">
-
-          <% template = ::Template::UITemplate.where(name: 'devise/sessions/new').first %>
-          <% if template.present? %>
-            <%= get_view_erb(template) %>
-          <% end %>
-
-          <%= simple_form_for(resource, as: resource_name, url: users_otp_path, method: :post, authenticity_token: true, remote: true, html: { novalidate: false, class: "validate-form #{otp_signin_class}", id: 'otp_user_form', data: { type: :json }, autocomplete: 'off' }) do |f| %>
-
-            <div class="form-group">
+<div class="mt-5 pt-5"></div>
+<section class="cp-login-otp-sec mt-5 <%= otp_signin_class %>" id="otp_user_section">
+  <div class="cp-login-otp-wrap">
+    <h2 class="px-4 pt-3 pb-3">Log In</h2>
+    <p  class="px-4 pt-3 pb-1 font-weight-medium">Sign in using OTP (One Time Password)</p>
+    <div class="cp-signup-form-wrap px-4 cp-form-wrap">
+      <% template = ::Template::UITemplate.where(name: 'devise/sessions/new').first %>
+          <%# if template.present? %>
+            <%#= get_view_erb(template) %>
+          <%# end %>
+          <%= simple_form_for(resource, as: resource_name, url: users_otp_path, method: :post, authenticity_token: true, remote: true, html: { novalidate: false, class: "validate-form #{}", id: 'otp_user_form', data: { type: :json }, autocomplete: 'off' }) do |f| %>
+            <div class="mb-3">
+              <%= f.label :Phone_Number %>
               <%= f.phone_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.phone'), id: 'user_login_phone', autocomplete: false %>
             </div>
 
-            <div class="form-group" hidden>
+            <div class="mb-3" hidden>
               <%= f.label :login_otp %>
               <%= f.number_field :login_otp, class: 'form-control', maxlength: resource_class.otp_length, minlength: resource_class.otp_length, autocomplete: false %>
             </div>
-
-            <div class="signin-btn col-lg-12 pl-0 pr-0 pt-3 pb-3">
-              <%= f.submit t('sessions.new.otp_submit'), class: 'sign-in-btn',  data:{event_category: 'Section', event_action: 'Click', event_name: t('sessions.new.otp_submit') } %>
-            </div>
-            <div class="d-none">
-              <a href="javascript:;" class="a-style opacity-5 resend-otp small pt-3" data-resend-time="<%= User.otp_resend_wait_time %>", data-max-limit="<%= User.otp_resend_max_limit %>" data-counter=0><%= t('sessions.new.otp_resend') %></a>
-            </div>
-            <a href="javascript:;" class="a-style opacity-5 toggle_signin_form d-block d-md-inline pr-0" data-target="#standard_login_form"><%= t('sessions.new.login_with_password_link') %></a>
-          <% end %>
-
-
-          <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'validate-form ' + username_signin_class, id: "standard_login_form", autocomplete: 'off' }) do |f| %>
+        <!-- <span class="or-note"><span>OR</span></span>
+        <div class="mb-3">
+          <label>Email ID</label>
+          <input type="texts" name="">
+        </div> -->
+        <div class="mb-3 pt-3 pb-3">
+          <%= f.submit t('sessions.new.otp_submit'), class: 'sign-in-btn cp-btn btn',  data:{event_category: 'Section', event_action: 'Click', event_name: t('sessions.new.otp_submit') } %>
+        </div>
+      <% end %>
+    </div>
+    <div class="signin-footer text-center">
+      <a href="javascript:;" class="a-style opacity-5 toggle_signin_form d-block d-md-inline pr-0" data-target="#standard_login_section"><%= t('sessions.new.login_with_password_link') %></a>
+    </div>
+  </div>
+</section>
+<section class="auth login-page cp-login-email-sec mt-5 <%= username_signin_class %>" id="standard_login_section">
+  <div class="cp-login-email-wrap">
+		<h2 class="px-4 pt-3 pb-3">Log In</h2>
+		<p  class="px-4 pt-3 pb-1 font-weight-medium">Sign in using email and password</p>
+        <div class="cp-signup-form-wrap cp-form-wrap px-4">
+          <%# template = ::Template::UITemplate.where(name: 'devise/sessions/new').first %>
+          <%# if template.present? %>
+            <%#= get_view_erb(template) %>
+          <%# end %>
+          
+          <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'validate-form ', id: "standard_login_form", autocomplete: 'off' }) do |f| %>
             <% if current_client.preferred_login == "phone" %>
-              <div class="form-group">
+              <div class="mb-3">
                 <%= f.label :phone %>
                 <%= f.phone_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.phone'), id: 'user_login_phone', autocomplete: false %>
               </div>
             <% else %>
-              <div class="form-group">
+              <div class="mb-3">
                 <%= f.label :email %>
                 <%= f.email_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.email'), autocomplete: false %>
               </div>
             <% end %>
-            <div class="form-group" id='public_key' data-value="<%= @public_key %>" >
+            <div class="mb-1" id='public_key' data-value="<%= @public_key %>" >
               <%= f.label :password %>
               <%= f.password_field :password, autocomplete: false, class: 'form-control', placeholder: t('mongoid.attributes.user.password'), data: { encrypt: true } %>
+            </div>
+            <div class="mb-2">
+            <%=render "devise/shared/links" %>
             </div>
             <% if devise_mapping.rememberable? -%>
               <div class="radioStyle col-lg-12">
                   <%= f.check_box :remember_me %>
-                  <%= f.label :remember_me, t("mongoid.attributes.user.remember_me").html_safe %>
+                  <%= f.label :remember_me, t("mongoid.attributes.user.remember_me").html_safe, class: 'small' %>
               </div>
             <% end -%>
-            <div class="signin-btn col-lg-12 pl-0 pr-0 pt-4 pb-3">
-              <%= f.submit t("sessions.new.sign_in"), class: 'sign-in-btn',  data:{event_category: 'Section', event_action: 'Click', event_name: 'Log In'} %>
+            
+            <div class="mt-3">
+              <%= f.submit t("sessions.new.sign_in"), class: 'sign-in-btn btn btn-primary d-block m-auto',  data:{event_category: 'Section', event_action: 'Click', event_name: 'Log In'} %>
             </div>
-            <% if current_client.sms_enabled? %>
-              <a href="javascript:;" class="a-style opacity-5 toggle_signin_form d-block d-md-inline pr-0" data-target="#otp_user_form"><%= t('sessions.new.login_with_otp_link') %></a>
-            <% end %>
-          <% end %>
-          <%=render "devise/shared/links" %>
-          <div class="signup-btn-set mt-4">
+          <% end %>          
+          
+        </div>
+        <div class="signin-footer text-center mt-4">
+        <% if current_client.sms_enabled? %>
+          <a href="javascript:;" class="a-style opacity-5 toggle_signin_form d-block d-md-inline pr-0" data-target="#otp_user_section"><%= t('sessions.new.login_with_otp_link') %></a>
+        <% end %>
+        <div class="signup-btn-set mt-2">
             <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
-              <div class="p-style opacity-5"><%= t("registrations.pre_text") %></div><%= link_to t("registrations.new.sign_up"), new_channel_partner_path, data:{event_category: 'Section', event_action: 'Click', event_name: 'Sign up'}, class: "p-style fn-500" %><br/>
+              <div class="p-style opacity-5 d-inline-block"> <%= t("registrations.pre_text") %> </div><%= link_to t("registrations.new.sign_up"), new_channel_partner_path, data:{event_category: 'Section', event_action: 'Click', event_name: 'Sign up'}, class: "p-style fn-500 d-inline-block ms-2" %>
             <% end -%>
           </div>
         </div>
-      </div>
-      <div class="col-md-6 auth-image" style="<%= login_image %>">
-      </div>
-    </div>
   </div>
 </section>
 
 <%= javascript_tag do %>
   $(document).ready(function(){
 
-    $('section.login-page').css('height', $( window ).height() - $('section.login-page').offset().top );
+    //$('section.login-page').css('height', $( window ).height() - $('section.login-page').offset().top );
 
     <% if params[:login].present? && current_client.preferred_login == "phone" && params[:force].to_s == "true" %>
     $("#otp_user_form").submit();

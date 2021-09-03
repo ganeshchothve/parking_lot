@@ -1,41 +1,76 @@
 <tr>
   <td data-title=<%= Lead.model_name.human %> >
     <% if policy([current_user_role_group, receipt.lead]).show? %>
-      <%= link_to receipt.lead.name, [current_user_role_group, receipt.lead] %>
+      <%= link_to receipt.lead.name, [current_user_role_group, receipt.lead], class: "theme-txt-color" %>
     <% else %>
       <%= receipt.lead.name %>
     <% end %>
-    <div class="small">
-      <%= t('mongoid.attributes.receipt.project_id') %>: <%= receipt.project_name %><br/>
-      <%= t('mongoid.attributes.receipt.created_by')%>: <%= receipt.creator.try(:name) %><br/>
-      <% if receipt.lead.manager_id.present? && current_user.role != "channel_partner" %>
-        <%= t('mongoid.attributes.lead.manager_id') %>: <%= receipt.lead.manager_name %><br/>
-      <% end %>
+    <!--<div class="small mt-1">
+        <span class="title">
+        <%= t('mongoid.attributes.receipt.created_by')%>: </span>
+        <%= receipt.creator.try(:name) %>
     </div>
+      <% if receipt.lead.manager_id.present? && current_user.role != "channel_partner" %>
+      <div class="small mt-1">
+        <span class="title">
+        <%= t('mongoid.attributes.lead.manager_id') %>:</span>
+         <%= receipt.lead.manager_name %>
+       </div>
+      <% end %>
+    </div>-->
   </td>
   <td data-title=<%= t('mongoid.attributes.receipt.receipt_id') %> >
+  <%= receipt.project_name %>
+   <!-- <span class="col-title">
     <%= ["pending", 'clearance_pending'].include?(receipt.status) ?  t('global.not_generated') : receipt.receipt_id %>
-    <div class="small muted">
-      <div>
+  </span>-->
+    <!--<div class="small muted">
+      <div class="col-title">
         <%= receipt.booking_detail.present? ? "#{BookingDetail.model_name.human}: #{receipt.booking_detail.name}" : 'Direct Payment' %>
       </div>
       <% if receipt.online? %>
-        <div> <%= t('mongoid.attributes.receipt.payment_identifier')%> : <%= receipt.payment_identifier %></div>
-        <div> <%= t('mongoid.attributes.receipt.processed_on')%>:<%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %></div>
+        <div class="row"> 
+          <div class="col-6 title"><%= t('mongoid.attributes.receipt.payment_identifier')%> :</div>
+          <div class="col-6"> 
+            <%= receipt.payment_identifier %>
+            </div>
+          </div>
+        <div class="row"> 
+          <div class="col-6 title"><%= t('mongoid.attributes.receipt.processed_on')%>:
+          </div>
+            <div class="col-6"><%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %>
+            </div>
+          </div>
       <% else %>
-        <div> <%= t('mongoid.attributes.receipt.issuing_bank')%>: <%= receipt.issuing_bank %> </br> <%= t('mongoid.attributes.receipt.issuing_bank_branch')%>: <%= receipt.issuing_bank_branch %></div>
-        <div><%= t('mongoid.attributes.receipt.issued_date')%>: <%= receipt.issued_date.present? ? receipt.issued_date.strftime("%d/%m/%Y") : "-" %></div>
-        <div> <%= t('mongoid.attributes.receipt.processed_on')%>: <%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %></div>
+        <div class="row"> 
+          <div class="col-6 title"><%= t('mongoid.attributes.receipt.issuing_bank')%>:
+          </div>
+          <div class="col-6"> <%= receipt.issuing_bank %> </br> <%= t('mongoid.attributes.receipt.issuing_bank_branch')%>: <%= receipt.issuing_bank_branch %></div>
+        </div>
+        <div class="row">
+          <div class="col-6 title"><%= t('mongoid.attributes.receipt.issued_date')%>:
+          </div>
+          <div class="col-6"> <%= receipt.issued_date.present? ? receipt.issued_date.strftime("%d/%m/%Y") : "-" %></div>
+        </div>
+        <div class="row"> 
+          <div class="col-6 title"><%= t('mongoid.attributes.receipt.processed_on')%>:
+          </div>
+          <div class="col-6"> <%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %></div>
+        </div>
       <% end %>
-      <div> <%= t('mongoid.attributes.receipt.payment_mode')%> : <%= t("receipt.payment_mode.#{receipt.payment_mode}")%></div>
-    </div>
+      <div class="row"><div class="col-6 title"> <%= t('mongoid.attributes.receipt.payment_mode')%> :</div>
+      <div class="col-6"> <%= t("receipt.payment_mode.#{receipt.payment_mode}")%></div></div>
+    </div>-->
   </td>
-  <td data-title=<%= t('mongoid.attributes.receipt.token_number') %> ><%= receipt.try(:token_number) ? receipt.get_token_number : '--' %></td>
-  <td data-title=<%= t('mongoid.attributes.receipt.status') %> ><%= t("mongoid.attributes.receipt/status.#{receipt.status}") %></td>
-  <td data-title=<%= t('mongoid.attributes.receipt.total_amount') %> ><%= number_to_indian_currency(receipt.total_amount.round) %></td>
+  <td data-title=<%= t('mongoid.attributes.receipt.token_number') %> >
+    <span class="col-title"><%= receipt.try(:token_number) ? receipt.get_token_number : '--' %></span></td>
+  <td data-title=<%= t('mongoid.attributes.receipt.status') %> >
+    <span class="col-title"><i class="fa fa-circle success me-2 fa-xs"></i><%= t("mongoid.attributes.receipt/status.#{receipt.status}") %></span></td>
+  <td data-title=<%= t('mongoid.attributes.receipt.total_amount') %> >
+    <span class="col-title"><%= number_to_indian_currency(receipt.total_amount.round) %></span></td>
   <td>
     <div class="dropdown show text-right">
-    <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+    <a class="btn table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v theme-txt-color" aria-hidden="true"></i></a>
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
         <%= link_to t('controller.receipts.print.link_name'), [current_user_role_group, receipt], target:"_blank", class: 'dropdown-item print-btn', data: { event_category: 'Section', event_action: 'Click', event_name: 'Print'} %>
         <% if policy([current_user_role_group, UserRequest::Cancellation.new(lead_id: receipt.lead_id, requestable: receipt)]).new? %>

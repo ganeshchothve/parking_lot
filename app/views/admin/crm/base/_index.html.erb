@@ -1,36 +1,55 @@
-<table class='table my-customer-table responsive-tbl'>
-  <thead class="th-default">
-    <thead>
-      <tr class="bg-gradient-cd white">
-        <th><%= t('mongoid.attributes.crm.base.name') %></th>
-        <th><%= t('mongoid.attributes.crm.base.domain') %></th>
-        <th class="text-right">Actions</th>
-      </tr>
-    </thead>
-  </thead>
-  <tbody>
-    <% crms.each do |crm| %>
-      <tr>
-        <td>
-          <%= crm.name %>
-        </td>
-        <td>
-          <%= crm.domain %>
-        </td>
-        <td>
-          <div class="dropdown show text-right">
-            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-              <%= link_to t('helpers.edit.link_name', model: Crm::Base.model_name.human), edit_admin_crm_base_path(crm), class: 'modal-remote-form-link dropdown-item' %>
+<section class="mt-0">
+  <div class="px-0">
+    <div class="row g-0">
+      <div class="col-lg-12 p-0">
+        <% crms.each do |crm| %>
+        <div class="white rounded-3 float-start wd-100 mt-4 shadow-sm position-relative">
+          <div class="float-start wd-100">
+            <div class="d-flex justify-content-between">
+              <div>
+                <div class="inner-info">
+                  <div class="text-center float-start letter-sort-nm bg-primary-light">
+                    <span class="position-absolute top-50 start-50 translate-middle primary fn-24 font-medium">SM</span>
+                  </div>
+                  <div class="ps-3 py-3 float-start">
+                    <p class="font-medium fn-14 mb-0">
+                      <%= crm.name %>
+                    </p>
+                    <p class="fn-12 mb-0"><%= t('mongoid.attributes.crm.base.name') %></p>
+                    <p class="font-medium fn-14 mb-0 mt-2"> <%= crm.domain %></p>
+                      <p class="fn-12 mb-0"><%= t('mongoid.attributes.crm.base.domain') %></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="position-absolute custom-top-10 custom-end-20">
+            <div class="dropdown">
+              <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                <i class="fa fa-ellipsis-v primary" aria-hidden="true"></i></a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                <%= link_to t('helpers.edit.link_name', model: Crm::Base.model_name.human), edit_admin_crm_base_path(crm), class: 'modal-remote-form-link dropdown-item' %>
               <%= link_to t('helpers.show.link_name', model: Crm::Base.model_name.human), admin_crm_base_path(crm), class: ' dropdown-item' %>
               <%= link_to t('controller.accounts.destroy.link_name'), admin_crm_base_path(crm), class: 'dropdown-item', method: :delete, data: {confirm: "Are you sure?"} %>
-           </div>
+              </div>
+            </div>
+          </div>
         </div>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pb-2">
-  <%= will_paginate crms, list_classes: %w(pagination justify-content-center) %>
-</div>
+            <% end %>
+          </div>
+
+          <!----------- Pagination ---------->
+          <div class="col-lg-12 py-3 white mb-2 px-3 mt-3 shadow-sm">
+            <div class="row">
+              <div class="col-lg-6 pt-2">
+                <p class="table-entry mb-0">Showing 1 - 5 of <%= @crms.total_entries %> items</p>
+              </div>
+              <div class="col-lg-6 table-pagination">
+                <%= will_paginate crms, list_classes: %w(pagination justify-content-end) %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</section>

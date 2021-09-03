@@ -1,7 +1,6 @@
-<div class="form-group">
-  <%= f.label :logo, class: '' %><br/>
-  <%= f.file_field :logo, class: 'btn pl-0', disabled: !policy([:admin, @project]).editable_field?("logo") %>
-  <br/>
+<div class="mb-3">
+  <%= f.label :logo, class: '' %>
+  <%= f.file_field :logo, class: 'btn pl-0 file-input', disabled: !policy([:admin, @project]).editable_field?("logo") %>
   <% if @project.logo.present? %>
     <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
       <img src="<%= @project.logo.url %>" style="max-height: 100%; max-width:100%;" />
@@ -9,10 +8,9 @@
   <% end %>
   <hr/>
 </div>
-<div class="form-group">
-  <%= f.label :mobile_logo, class: '' %><br/>
-  <%= f.file_field :mobile_logo, class: 'btn pl-0', disabled: !policy([:admin, @project]).editable_field?("mobile_logo") %>
-  <br/>
+<div class="mb-3">
+  <%= f.label :mobile_logo, class: '' %>
+  <%= f.file_field :mobile_logo, class: 'btn pl-0 file-input', disabled: !policy([:admin, @project]).editable_field?("mobile_logo") %>
   <% if @project.mobile_logo.present? %>
     <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
       <img src="<%= @project.mobile_logo.url %>" style="max-height: 100%; max-width:100%;" />
@@ -20,10 +18,9 @@
   <% end %>
   <hr/>
 </div>
-<div class="form-group">
-  <%= f.label :cover_photo, class: '' %><br/>
-  <%= f.file_field :cover_photo, class: 'btn pl-0', disabled: !policy([:admin, @project]).editable_field?("cover_photo") %>
-  <br/>
+<div class="mb-3">
+  <%= f.label :cover_photo, class: '' %>
+  <%= f.file_field :cover_photo, class: 'btn pl-0 file-input', disabled: !policy([:admin, @project]).editable_field?("cover_photo") %>
   <% if @project.cover_photo.present? %>
     <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
       <img src="<%= @project.cover_photo.url %>" style="max-height: 100%; max-width:100%;" />
@@ -31,10 +28,9 @@
   <% end %>
   <hr/>
 </div>
-<div class="form-group">
-  <%= f.label :mobile_cover_photo, class: '' %><br/>
-  <%= f.file_field :mobile_cover_photo, class: 'btn pl-0', disabled: !policy([:admin, @project]).editable_field?("mobile_cover_photo") %>
-  <br/>
+<div class="mb-3">
+  <%= f.label :mobile_cover_photo, class: '' %>
+  <%= f.file_field :mobile_cover_photo, class: 'btn pl-0 file-input', disabled: !policy([:admin, @project]).editable_field?("mobile_cover_photo") %>
   <% if @project.mobile_cover_photo.present? %>
     <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
       <img src="<%= @project.mobile_cover_photo.url %>" style="max-height: 100%; max-width:100%;" />

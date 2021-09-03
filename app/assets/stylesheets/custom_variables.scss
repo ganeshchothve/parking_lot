@@ -3,9 +3,11 @@
 
 // override bootstrap varialbes start
 // $font-size-base: 1.125rem;
+$bg-white: #fff;
+$white: #fff;
 $body-bg: #fefefe;
 $body-color: #495057;
-$primary: #97B350;
+$primary: #006DEE;
 $success: #56b654;
 $info: #00BCD4;
 $warning: #FFC107;
@@ -21,3 +23,18 @@ $breadcrumb-divider: "\f3d3";
 $modal-backdrop-opacity: 0.9 !default;
 $modal-backdrop-bg: #5a6775;
 // override bootstrap varialbes end
+
+$table-bg: #fff;
+$table-th-font-weight: 500;
+$border-radius: 6px;
+$popover-header-bg: #F8FBFF;
+$popover-arrow-color:$popover-header-bg;
+.fw-medium{
+    font-weight: 500;
+}
+.fn-12{
+    font-size: 12px!important;
+}
+.bg-secondary-light{
+    background: #EBEEF2 0% 0% no-repeat padding-box;
+}

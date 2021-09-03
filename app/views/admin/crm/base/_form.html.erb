@@ -1,56 +1,54 @@
 <%= form_for([:admin, @crm], url: url, local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": Crm::Base.model_name.human(count: 2), "data-type": "json", id: 'crm_base_form'}) do |f| %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header bg-gradient-cd white">
         <h3 class="title"><%= t("helpers.#{action_name}.link_name", model: Crm::Base.model_name.human) %></h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" class="white">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body theme-form">
         <div class = 'row'>
           <div class = 'col-12'>
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :name, class: 'label-required' %>
               <%= f.text_field :name, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, @crm]).editable_field?("name") %>
             </div>
           </div>
           <div class = 'col-12'>
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :domain, class: 'label-required' %>
               <%= f.text_field :domain, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, @crm]).editable_field?("domain") %>
             </div>
           </div>
           <div class = 'col-12'>
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :request_headers %>
               <%= f.text_field :request_headers, autofocus: true, class: "form-control", disabled: !policy([:admin, @crm]).editable_field?("request_headers") %>
             </div>
           </div>
           <div class = 'col-12'>
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :request_payload %>
               <%= f.text_area :request_payload, autofocus: true, class: "form-control", disabled: !policy([:admin, @crm]).editable_field?("request_payload") %>
             </div>
           </div>
           <div class = 'col-12'>
-            <div class="form-group">
-              <div class="form-check form-check-inline">
-                <%= f.check_box :oauth2_authentication, class: "form-check-label" %>
-                <%= f.label :oauth2_authentication, class: "form-check-label ml-1" %>
+            <div class="mb-3">
+              <div class="form-check-inline mt-2">
+                <%= f.check_box :oauth2_authentication, class: "form-check-label align-middle", style: "width:20px;height:20px;" %>
+                <%= f.label :oauth2_authentication, class: "form-check-label ml-1 d-inline align-middle" %>
               </div>
             </div>
           </div>
           <div class = "col-12">
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :user, class: 'control-label' %>
               <%= f.select :user_id, options_from_collection_for_select(User.where(role: 'admin'), "id", "ds_name", f.object.user_id), {prompt: 'Select'}, class: "selectize-remote", data: { url: admin_users_path, params: {fltrs: {role: 'admin' } } } %>
             </div>
           </div>
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer text-end">
         <%= f.submit "Save", class: "btn btn-primary" %>
       </div>
     </div>

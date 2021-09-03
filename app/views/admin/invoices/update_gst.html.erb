@@ -5,21 +5,19 @@
 
       <div class="modal-header bg-gradient-cd white">
         <h3 class="title"><%= t("controller.invoices.update_gst.link_name") %></h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" class="white">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
       <div class="modal-body">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :amount, class: '' %>
           <%= f.number_field :amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("amount") %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :gst_amount, class: '' %>
           <%= f.number_field :gst_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("gst_amount") %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :net_amount, "#{t('mongoid.attributes.invoice.net_amount')} (includes approved deductions & adjustments, if any)" %>
           <p class='net-amount'><%= @invoice.net_amount %></p>
         </div>

@@ -1,4 +1,4 @@
-<table class='table my-customer-table responsive-tbl'>
+<!--<table class='table my-customer-table responsive-tbl'>
   <thead class="th-default">
     <thead>
       <tr class="bg-gradient-cd white">
@@ -27,7 +27,7 @@
         </td>
         <td>
           <div class="dropdown show text-right">
-            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
               <%= render "#{current_user_role_group}/projects/links", project: project %>
             </div>
@@ -37,6 +37,119 @@
     <% end %>
   </tbody>
 </table>
-<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pb-2">
-  <%= will_paginate projects, list_classes: %w(pagination justify-content-center) %>
+-->
+
+
+
+<section class="mt-3">
+    <div class="px-4">
+        <div class="row">
+          <div class="col-lg-12 row">
+            <div class="col-lg-8 filter-set">
+              <a href="javascript:;" class="filter-link active">All (<%= global_labels[:projects] %><%= @projects.total_entries %>)</a>
+              <a href="javascript:;" class="filter-link">Newly Launched (32)<span class="notify"></span></a>
+              <a href="javascript:;" class="filter-link">Pre Launch (47)<span class="notify"></span></a>
+              <a href="javascript:;" class="filter-link">Interested Projects (12)</a>
+            </div>
+            <div class="col-lg-4 text-end px-0">
+              <div class="filter-search">
+                <input type="text" name="" placeholder="Search projects">
+              </div>
+              <div class="filter-popup">
+                <a href="javascript:;"><i class="fa fa-filter fill-theme"></i></a>
+              </div>
+              <div class="filter-sort">
+                <a href="javascript:;"><i class="fa fa-sort-amount-up fill-theme"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-12 project-listing">
+              <% projects.each do |project| %>
+              <div class="single-prjt-list mt-4">
+                <div class="prjt-thumb">
+                  <div class="prjt-thumb-inner" style="background-image: url('<%= asset_path 'search-home-img.png' %>')"></div>
+                </div>
+                <div class="project-inner-info">
+                  <div class="inner-info">
+                    <h2 class="title"><%= link_to project.name, admin_project_path(project) %></h2>
+                    <p class="devl-name"><%= project.developer_name %></p>
+                    <p class="location"><i class="fa fa-map-marker-alt fill-primary me-2"></i><%= project.micro_market %>, <%= project.city %></p>
+                    <p class="prjt-event">1 New event <span>76 Partners have signed up</span></p>
+                    <p class="prjt-date">( May 26th 2020, 12.30 pm IST )</p>
+                  </div>
+                  <div class="prjt-date-info">
+                    <div class="inner-date">
+                      <p><%= project.launched_on.strftime('%d %b, %Y') rescue "-" %></p>
+                      <span>Launch Date</span>
+                    </div>
+                  </div>
+                  <div class="prjt-stats">
+                    <div class="prjt-inner-stats">
+                      <p>24 <span>Walk Ins</span><a href="javascript:;" class="prjt-add">ADD</a></p>
+                      <p>34 <span>Bookings</span><a href="javascript:;" class="prjt-add">ADD</a></p>
+                      <p>18 <span>Registrations</span><a href="javascript:;" class="prjt-add">ADD</a></p>
+                    </div>
+                    <div class="prjt-meets">
+                      <a href="javascript:;" class="meets-devlpr-link"  data-bs-toggle="modal" data-bs-target="#googleMeetModal"><i class="fa fa-calendar-alt fill-primary me-2"></i>Meet Developers</a>
+                      <a href="javascript:;" class="add-wishlist"><i class="fa fa-heart fill-danger ms-3 me-3"></i></a>
+                      <div class="prjt-menu-top float-md-right">
+                        <div class="dropdown">
+                           <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">        
+                           <i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
+                           <div class="dropdown-menu dropdown-menu-right"  aria-labelledby="dropdownMenuLink">
+                              <%= render "#{current_user_role_group}/projects/links", project: project %>
+                           </div>
+                        </div>
+                     </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <% end %>
+            </div>
+          </div>
+
+          <!----------- Pagination ---------->
+          <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pb-2">
+            <%= will_paginate projects, list_classes: %w(pagination justify-content-center) %>
+          </div>
+        </div>
+    </div>  
+</section>
+
+<div class="modal fade googleMeet-modal" id="googleMeetModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-8">
+            <h3>Pre Launch Event</h3>
+            <p>Dream Emerald by Chandak Developers</p>
+          </div>
+          <div class="col-lg-4">
+            <img src="<%= asset_path 'Google_Meet.png' %>" class="google-meet-logo">
+          </div>
+          <div class="col-lg-12">
+            <h3>5th May 2020, 12.30 pm IST</h3>
+            <p>Join us! To celebrate the opening for Dream Emerald's 22nd Skyscraper, This Wednesday May 5, 2022 at 10:30am – 11:30am IST</p>
+          </div>
+        </div>  
+        
+      </div>
+      <div class="modal-footer col-lg-12">
+        <div class="row">
+          <div class="col-lg-8 px-0">
+            <div class="model-footer text-start">
+              <p class="mb-0 pt-1"><i class="fa fa-heart fill-danger"></i> 76 Partners are interested in attending this meeting</p>
+            </div>
+        </div>
+        <div class="col-lg-4 text-end px-0">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Sign Up</button>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
 </div>

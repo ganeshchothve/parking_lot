@@ -1,75 +1,75 @@
-<div class="filter-inner">
-  <div class="filter-header">
-    <span class="title">Filter</span>
-    <a href="javascript:;" class="close-filter-btn">&times;</a>
+<div class="filter-inner modal-content ps-2 pe-2 fixed-header-footer">
+  <div class="modal-header filter-header">  
+  <h5 class="modal-title title">Filter</h5>
+    <a href="javascript:;" class="close-filter-btn btn-close"></a>
   </div>
 
   <%= form_tag admin_booking_details_path, method: "get", id: "booking_detail_search_form" do %>
-    <div class="filter-content">
+    <div class="filter-content modal-body ps-0 pe-0">
       <div class="row">
         <% if !current_user.role.in?(User::CHANNEL_PARTNER_USERS) && policy([current_user_role_group, User]).index? %>
-          <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.user.name_email_phone'), class: "control-label" %>
             <%= select_tag "fltrs[user_id]", options_for_select(filter_user_options), { class: "selectize-remote", data: { url: admin_users_path, params: { fltrs: { role: ::User::BUYER_ROLES }} }} %>
           </div>
         <% end %>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.lead.name_email_phone'), class: "control-label" %>
           <%= select_tag "fltrs[lead_id]", options_for_select(filter_lead_options), { class: "selectize-remote", data: { url: admin_leads_path }} %>
         </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", BookingDetail.model_name.human, class: "control-label" %>
           <%= select_tag "fltrs[id]", options_for_select(filter_booking_detail_options), {class: "selectize-remote", data: {url: admin_booking_details_path }} %>
         </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.status'), class: "control-label" %>
           <%= select_tag "fltrs[status]", options_for_select(BookingDetail.user_based_available_statuses(current_user).collect{|x| [ t("mongoid.attributes.booking_detail/status.#{x}"), x.to_s]}, (params.dig(:fltrs, :status) || "")), {prompt: "Select", class: "selectize"} %>
         </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.project_unit.project_id'), class: "control-label" %>
           <%= select_tag "fltrs[project_id]", options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: 'Select', class: "selectize project_select"} %>
         </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", ProjectTower.model_name.human, class: "control-label" %>
           <%= select_tag "fltrs[project_tower_id]", options_for_select(filter_project_tower_options, params.dig(:fltrs, :project_tower_id).present? ? params[:fltrs][:project_tower_id] : ''), {prompt: (params.dig(:fltrs, :project_id).present? ? "Select" : 'Select Project first'), class: "selectize project_tower_select", data: { url: admin_project_towers_path }} %>
         </div>
         <% unless current_user.role?('channel_partner') %>
-          <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
             <%= label_tag "fltrs", ChannelPartner.model_name.human, class: "control-label" %>
             <%= select_tag "fltrs[manager_id]", options_for_select(filter_manager_options), { class: "selectize-remote", data: { url: admin_users_path, params: { fltrs: { role: 'channel_partner' } } } } %>
           </div>
         <% end %>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.booked_on'), class: "control-label" %>
           <%= text_field_tag "fltrs[booked_on]", (params[:fltrs].present? ? params[:fltrs][:booked_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
         </div>
         <!--
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%#= label_tag "fltrs", IncentiveScheme.model_name.human, class: "control-label" %>
           <%#= select_tag "fltrs[incentive_scheme_id]", options_for_select(filter_incentive_scheme_options), {class: "selectize-remote", data: { url: admin_incentive_schemes_path }} %>
         </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%#= label_tag "fltrs", t('mongoid.attributes.booking_detail.ladder_stage'), class: "control-label" %>
           <%#= select_tag "fltrs[ladder_stage]", options_for_select(IncentiveScheme.distinct(:"ladders.stage"), params.dig(:fltrs, :ladder_stage).present? ? params[:fltrs][:ladder_stage] : ''), {class: "selectize", prompt: 'Select'} %>
         </div>
         -->
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.tasks_pending'), class: "control-label" %>
           <%= select_tag "fltrs[tasks_pending]", options_for_select(current_client.checklists.collect{|x| [x.name, x.key]}, params.dig(:fltrs, :tasks_pending)), prompt: '', class: "selectize" %>
         </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.tasks_completed'), class: "control-label" %>
           <%= select_tag "fltrs[tasks_completed]", options_for_select(current_client.checklists.collect{|x| [x.name, x.key]}, params.dig(:fltrs, :tasks_completed)), prompt: '', class: "selectize" %>
         </div>
-        <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.tasks_completed_tracked_by'), class: "control-label" %>
           <%= select_tag "fltrs[tasks_completed_tracked_by]", options_for_select(Checklist::TRACKED_BY.collect{|x| [x.titleize, x]}, params.dig(:fltrs, :tasks_completed_tracked_by)), prompt: '', class: "selectize" %>
         </div>
       </div>
     </div>
-    <div class="filter-footer">
-      <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
-      <button type="button" class="f-cancel-btn db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+    <div class="filter-footer modal-footer text-end">
+      <%= submit_tag :Apply, class: "btn btn-primary f-save-btn db-small-btn bg-light-blue fn-500 float-end" %>
+      <button type="button" class="btn btn-secondary f-cancel-btn float-end">Cancel</button>
     </div>
   <% end %>
 </div>

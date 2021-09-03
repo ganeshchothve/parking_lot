@@ -26,7 +26,7 @@
               <%= form_tag billing_team_dashboard_path, method: "get", remote: true, id: "billing_team_dashboard_filter" do %>
                 <div class="filter-content">
                   <div class="row">
-                    <div class="form-group col-12">
+                    <div class="mb-3 col-12">
                       <%= label_tag "dates", "Dates", class: "control-label float-left" %>
                       <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-start-date": start_date || '', "data-end-date": end_date || '', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
                     </div>

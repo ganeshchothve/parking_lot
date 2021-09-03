@@ -2,8 +2,8 @@
 <% url = Rails.application.routes.url_helpers %>
 var OtpBasedLogin = (function(){
   var handleSendOtpSuccess = function(elem, data){
-    $(elem).find('[name="user[login]"]').closest(".form-group").attr("hidden", "hidden");
-    $(elem).find('[name="user[login_otp]"]').closest(".form-group").removeAttr("hidden");
+    $(elem).find('[name="user[login]"]').closest(".mb-3").attr("hidden", "hidden");
+    $(elem).find('[name="user[login_otp]"]').closest(".mb-3").removeAttr("hidden");
     $(elem).find('[name="user[login_otp]"]').focus();
     $(elem).find('.resend-otp').parent().removeClass("d-none");
     $(elem).find('.resend-otp').attr("disabled", "disabled");
@@ -45,7 +45,7 @@ var OtpBasedLogin = (function(){
 
     $(".toggle_signin_form").click(function(e){
       var target = $(e.currentTarget).data("target");
-      $("form").addClass("d-none");
+      $("section").addClass("d-none");
       $(target).removeClass("d-none");
     })
 

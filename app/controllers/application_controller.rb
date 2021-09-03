@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_layout
-    devise_controller? ? 'devise_v2' : 'application'
+    devise_controller? ? 'devise_v2' : 'application_v2'
   end
 
   private
@@ -174,9 +174,7 @@ class ApplicationController < ActionController::Base
                 <div class="modal-content">
                   <div class="modal-header bg-gradient-cd white">
                     <h3 class="title">' + params[:controller].titleize + '</h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true" class="white">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">' + alert + '</div>
                   <div class="modal-footer"></div>

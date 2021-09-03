@@ -7,10 +7,10 @@
       <p class="p-0 m-0"><%= t('controller.searches.towers.hint')%></p>
       <% if @search.previous_step.present? && @search.crossed_step('towers') %>
         <%= form_for [:lead, @search], html: {class: 'validate-form'} do |f| %>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.hidden_field :step, value: "towers" %>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.submit "Change", class: "small position-absolute step-change-btn" %>
           </div>
         <% end %>

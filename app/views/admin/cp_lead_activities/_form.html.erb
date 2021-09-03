@@ -6,20 +6,18 @@
           <h3 class="title">
             <%= t("helpers.#{action_name}.link_name", model: CpLeadActivity.model_name.human) %>
             </h3>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true" class="white">&times;</span>
-          </button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="row">
             <div class="col-md-6">
-              <div class="form-group">
+              <div class="mb-3">
                 <%= f.label :sitevisit_status, class: 'control-label' %>
                 <%= f.select :sitevisit_status, CpLeadActivity::SITEVISIT_STATUS.collect{|x| [x.titleize, x] }, {prompt: "Select"}, class: 'selectize', disabled: !policy(@cp_lead_activity).editable_field?("sitevisit_status") %>
               </div>
             </div>
             <div class="col-md-6">
-              <div class="form-group position-relative">
+              <div class="mb-3 position-relative">
                 <%= f.label :sitevisit_date %>
                 <% date = (f.object.sitevisit_date.present? ? Date.parse(f.object.sitevisit_date).strftime("%d/%m/%Y") : "") %>
                 <%= f.text_field :sitevisit_date, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date, disabled: !policy(@cp_lead_activity).editable_field?("sitevisit_date") %>
@@ -32,7 +30,7 @@
               <%= f.select :count_status, CpLeadActivity::COUNT_STATUS.collect{|x| [x.titleize, x] }, {prompt: "Select"}, class: 'selectize', disabled: !policy(@cp_lead_activity).editable_field?("count_status") %>
             </div>
             <div class="col-md-6">
-              <div class="form-group position-relative">
+              <div class="mb-3 position-relative">
                 <%= f.label :expiry_date %>
                 <% date = (f.object.expiry_date.present? ? f.object.expiry_date.strftime("%d/%m/%Y") : "") %>
                 <%= f.text_field :expiry_date, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date, disabled: !policy(@cp_lead_activity).editable_field?("expiry_date") %>
