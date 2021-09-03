@@ -22,6 +22,7 @@ class ProjectUnitExportWorker
     [
       "ID (Used for Bulk Upload)",
       "Unit Name",
+      "ERP Id",
       "Unit Type",
       "Type of Apartment",
       "Sell.Do Lead ID",
@@ -52,6 +53,7 @@ class ProjectUnitExportWorker
     [
       project_unit.id.to_s,
       project_unit.name,
+      project_unit.erp_id,
       project_unit.unit_configuration_name,
       project_unit.bedrooms,
       (project_unit.user.lead_id rescue "N/A"),

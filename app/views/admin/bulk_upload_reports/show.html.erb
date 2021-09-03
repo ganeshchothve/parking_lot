@@ -13,6 +13,14 @@
                     <div> <%= t("mongoid.attributes.bulk_upload_report.#{@bulk_upload_report.asset.try(:document_type)}") %> </div>
                   </div>
                 </div>
+                <% if @bulk_upload_report.project.present? %>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Project</label>
+                      <div> <%= @bulk_upload_report.project.name %> </div>
+                    </div>
+                  </div>
+                <% end %>
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>File Uploaded By</label>

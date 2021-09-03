@@ -9,6 +9,7 @@ class Cost
   field :key, type: String
   field :formula, type: String
   field :absolute_value, type: Float
+  field :new_absolute_value, type: Float
   field :category, type: String
   field :order, type: Integer
 

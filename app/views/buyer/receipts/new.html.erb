@@ -11,7 +11,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <%= form_for [:buyer, @lead, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.receipt'), type: :json} } do |f| %>
+        <%= form_for [:buyer, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.receipt'), type: :json} } do |f| %>
           <%= render 'admin/booking_details/receipts/form', f: f, direct_payment: true %>
         <% end %>
       </div>
@@ -20,6 +20,10 @@
 </div>
 <%= javascript_tag do %>
   $(document).ready(function(){
+    var amount_hash = <%= raw @amount_hash.to_json %>;
+    $('#receipt_token_type').change(function(){
+      $('#receipt_total_amount').val(amount_hash[$(this).val()])
+    });
     $('#receipt_form [name="agree"]').change(function(){
       if($(this).is(":checked")){
         $('#receipt_form [type="submit"]').removeAttr("disabled");

@@ -7,7 +7,7 @@ class Buyer::BookingDetailsController < BuyerController
   before_action :authorize_resource, except: [:index]
 
   def index
-    # authorize [:buyer, BookingDetail]
+    authorize [:buyer, BookingDetail]
     @booking_details = BookingDetail.build_criteria params
     @booking_details = @booking_details.paginate(page: params[:page] || 1, per_page: params[:per_page])
   end

@@ -27,6 +27,21 @@ class HomeController < ApplicationController
     render layout: 'landing_page'
   end
 
+  def select_project
+    if current_user.leads.count == 1
+      current_user.update(selected_lead: current_user.leads.first)
+      redirect_to home_path(current_user)
+    else
+      if request.method == 'POST'
+        current_user.selected_lead_id = params[:selected_lead_id]
+        current_user.save
+        redirect_to home_path(current_user)
+      else
+        @leads = current_user.leads.all
+        render layout: 'devise'
+      end
+    end
+  end
 
   def register
     @resource = User.new
@@ -83,7 +98,7 @@ class HomeController < ApplicationController
                 @user.confirm #auto confirm user account
                 @lead.assign_attributes(selldo_lead_registration_date: params.dig(:lead_details, :lead_created_at))
 
-                cp_lead_activity = CpLeadActivityRegister.create_cp_lead_object(@lead, current_user, params[:lead_details]) if current_user.role?("channel_partner")
+                cp_lead_activity = CpLeadActivityRegister.create_cp_lead_object(@lead, current_user, (params[:lead_details] || {})) if current_user.role?("channel_partner")
 
                 if @lead.save
                   if cp_lead_activity.present?

@@ -78,6 +78,9 @@
     <div class="site-visit-wrapper">
     <div id="close"  data-event-category="Section" data-event-action="Click" data-event-name="Close">&times;</div>
       <%= simple_form_for(@channel_partner, local: true, html: { id: 'channel_partner_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %>
+        <% if params[:action] == 'create' && @channel_partner.errors[:base].present? %>
+          <p class='alert alert-danger'><%= @channel_partner.errors[:base].to_sentence %></p>
+        <% end %>
         <%= render "channel_partners/short_form_fields", {form: form} %>
         <div class="signin-btn pl-0 pr-0 pb-4">
           <%= form.submit "Register", class: "green-btn sign-in-btn", data: { disable_with: "Please wait..." } %>

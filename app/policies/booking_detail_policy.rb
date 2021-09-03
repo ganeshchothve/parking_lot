@@ -26,7 +26,7 @@ class BookingDetailPolicy < ApplicationPolicy
   private
 
   def only_single_unit_can_hold!
-    return true if record.user.booking_details.where(status: 'hold').nin(_id: record.id).count.zero?
+    return true if record.lead.booking_details.where(status: 'hold').nin(_id: record.id).count.zero?
     @condition = 'hold_single_unit'
     false
   end

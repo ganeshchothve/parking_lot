@@ -6,4 +6,18 @@ class ProjectUnitObserver < Mongoid::Observer
       project_unit.booking_price = (project_unit.agreement_price * project_unit.booking_price_percent_of_agreement_price).round
     end
   end
+
+  def before_save project_unit
+    if project_unit.status == 'available'
+      project_unit.floor_rise = project_unit.new_floor_rise if project_unit.new_floor_rise.present? && (project_unit.status_changed? || project_unit.new_floor_rise_changed?)
+      project_unit.base_rate = project_unit.new_base_rate if project_unit.new_base_rate.present? && (project_unit.status_changed? || project_unit.new_base_rate_changed?)
+      project_unit.blocking_amount = project_unit.new_blocking_amount if project_unit.new_blocking_amount.present? && (project_unit.status_changed? || project_unit.new_blocking_amount_changed?)
+      project_unit.costs.where(new_absolute_value: {"$ne": nil}, formula: {'$in': ['', nil]}).each do |cost|
+        cost.assign_attributes(absolute_value: cost.new_absolute_value) if cost.new_absolute_value.present? && (project_unit.status_changed? || cost.new_absolute_value_changed?)
+      end
+      project_unit.data.where(new_absolute_value: {"$ne": nil}, formula: {'$in': ['', nil]}).each do |_data|
+        _data.assign_attributes(absolute_value: _data.new_absolute_value) if _data.new_absolute_value.present? && (project_unit.status_changed? || _data.new_absolute_value_changed?)
+      end
+    end
+  end
 end

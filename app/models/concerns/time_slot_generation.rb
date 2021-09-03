@@ -1,21 +1,24 @@
 module TimeSlotGeneration
   extend ActiveSupport::Concern
   include ApplicationHelper
+
   included do
-
-
     # Fields
     field :token_number, type: Integer
     field :token_prefix, type: String
 
-    increments :token_number, seed: 300, auto: false
+    increments :token_number, auto: false, scope: proc { "p#{project_id}_t#{token_type_id}" }
+
+    # Associations
+    belongs_to :token_type, optional: true
 
     # Validations
-    validates :token_number, uniqueness: true, allow_nil: true
+    validates :token_number, uniqueness: {scope: [:project_id, :token_type_id]}, allow_nil: true
+    validates :token_type_id, presence: true, if: proc { direct_payment? }
 
     # Callbacks
-    before_save :assign_token_number
-    before_update :finalise_time_slot
+    before_save :assign_token_number, if: proc { direct_payment? }
+    #before_update :finalise_time_slot
 
     # Associations
     embeds_one :time_slot
@@ -23,22 +26,28 @@ module TimeSlotGeneration
   end
 
   def assign_token_number
-    # Checks to handle following case:
-    #   receipt is in clearance_pending & token number is assigned.
-    #   admin made it blank afterwards & saved it.
-    #   receipt goes in success from clearance_pending, then in this case do not assign token again as it was intentionally kept blank by admin. He can assign new token again if he wants.
-    #   :_token_number is an internal dynamic field kept for reference to know if the token number is being assigned for the first time or it was made blank after assigning on receipt.
-    if token_number_changed? || (status_changed? && status.in?(%w(clearance_pending success)) && !(self[:_token_number].present? && token_number.blank?))
-      # Case when token number is made blank after its assigned, do not assign token again in this case as it is intentionally kept blank by admin.
-      if !(token_number_changed? && token_number_was.present? && token_number.blank?) && (token_number.blank? && is_eligible_for_token_number_assignment?)
-        begin
-          increment!(:token_number, { seed: (current_client.token_number_seed || Receipt.incrementing_fields.dig(:token_number, :seed)) })
-          self.token_prefix = current_client.token_number_prefix
-        end while Receipt.where(token_number: token_number).any?
-        self.time_slot = calculate_time_slot if current_client.enable_slot_generation?
-        # for reference, if the token has been made blank by the admin.
-        self[:_token_number] = token_number
+    if token_type.incrementor_exists?
+      # Checks to handle following case:
+      #   receipt is in clearance_pending & token number is assigned.
+      #   admin made it blank afterwards & saved it.
+      #   receipt goes in success from clearance_pending, then in this case do not assign token again as it was intentionally kept blank by admin. He can assign new token again if he wants.
+      #   :_token_number is an internal dynamic field kept for reference to know if the token number is being assigned for the first time or it was made blank after assigning on receipt.
+      if token_number_changed? || (status_changed? && status.in?(%w(clearance_pending success)) && !(self[:_token_number].present? && token_number.blank?))
+        # Case when token number is made blank after its assigned, do not assign token again in this case as it is intentionally kept blank by admin.
+        if !(token_number_changed? && token_number_was.present? && token_number.blank?) && (token_number.blank? && is_eligible_for_token_number_assignment?)
+          begin
+            assign!(:token_number)
+          end while Receipt.where(token_number: token_number, project_id: project_id, token_type_id: token_type_id).any?
+
+          self.token_prefix = token_type.token_prefix
+          #self.time_slot = calculate_time_slot if current_client.enable_slot_generation?
+          # for reference, if the token has been made blank by the admin.
+          self[:_token_number] = token_number
+        end
       end
+    else
+      errors.add(:token_type, "#{token_type.name} is not activated")
+      throw(:abort)
     end
   end
 

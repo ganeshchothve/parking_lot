@@ -55,7 +55,7 @@ module BulkUpload
 
           project = Project.where(name: project_name).first
           unless project.present?
-            project = Project.new(rera_registration_no: rera_registration_no, name: project_name, client_id: client_id, booking_portal_client_id: booking_portal_client.id)
+            project = Project.new(rera_registration_no: rera_registration_no, name: project_name, booking_portal_client_id: booking_portal_client.id, creator: bur.uploaded_by)
             unless project.save
               (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push(*project.errors.full_messages.map{|er| "Project: " + er })).uniq
               bur.failure_count += 1 if bur.upload_errors.where(row: row.fields).present?
