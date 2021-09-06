@@ -6,7 +6,7 @@
   <%= link_to t('helpers.show.link_name', model: BookingDetail.model_name.human ), buyer_booking_detail_path( booking_detail), class: 'dropdown-item' %>
 <% end %>
 
-<% if policy([:buyer, Receipt.new(user: current_user, booking_detail: booking_detail)]).new? %>
+<% if policy([:buyer, Receipt.new(user: current_user, booking_detail: booking_detail, lead: current_user.selected_lead)]).new? %>
   <%= link_to t('controller.booking_details.receipts.new.link_name'), new_buyer_booking_detail_receipt_path(booking_detail_id: booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 

@@ -40,6 +40,11 @@
         <!-- receipts -->
         <div class="separate-line container"></div>
         <%= render 'receipts/section', receipts: @receipts %>
+
+        <% if policy([:admin, TimeSlot]).index? %>
+          <div class="separate-line container"></div>
+          <%= render 'receipts/time_slot_section', lead: @lead %>
+        <% end %>
       <% end %>
 
       <!-- Note Summary -->

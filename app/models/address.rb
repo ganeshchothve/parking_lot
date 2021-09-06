@@ -44,6 +44,10 @@ class Address
     str.present? ? str : "-"
   end
 
+  def to_s
+    to_sentence
+  end
+
   def check_presence
     errors.add(:base, 'address is invalid') unless as_json(only: [:address1, :city, :state, :country, :zip]).values.all?(&:present?) || one_line_address.present?
   end

@@ -1,0 +1,6 @@
+<% if @campaign.persisted?
+    _url = admin_campaign_path(@campaign)
+  else
+    _url = admin_campaigns_path
+  end %>
+<%= render 'form', campaign: @campaign, url: _url %>

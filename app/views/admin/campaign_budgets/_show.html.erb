@@ -1,0 +1,14 @@
+<table class='table my-customer-table responsive-tbl'>
+  <thead class="th-default">
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= t('mongoid.attributes.campaign_budget.source') %></th>
+        <th><%= t('mongoid.attributes.campaign_budget.total_budget') %></th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+    <td><%= Campaign.sources.find{|x| x[:id] == campaign_budget.source }[:text] %></td>
+    <td><%= campaign_budget.total_budget %></td>
+  </tbody>
+</table>
