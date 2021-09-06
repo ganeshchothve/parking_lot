@@ -8,7 +8,7 @@
     <% schemes.sort {|x, y| x.ends_on > y.ends_on ? -1 : 1}.each_with_index do |scheme, idx| %>
       <div class="card">
         <div class="box-header bg-gradient-cd br-rd-tr-4 cursor-pointer" id="headingOne" data-toggle="collapse" data-target="#collapse-<%= scheme.id %>" aria-expanded="true" aria-controls="collapse-<%= scheme.id %>">
-          <h5 class="mb-0 white">
+          <h5 class="mb-0 bg-white">
             <%= scheme.name.titleize %> <!--<span class='ml-3 small'><%#= project %></span>-->
             <div class='small float-md-right'><%= "#{scheme.starts_on.strftime('%d %b %Y')} - #{scheme.ends_on.strftime('%d %b %Y')}" %></div>
           </h5>

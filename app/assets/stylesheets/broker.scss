@@ -2228,7 +2228,7 @@ select.form-control{
     font-size: 14px;
 	line-height: 22px;;
 	}
-	.mb-3 input,.selectize-input, textarea, select{
+	.mb-3 input, textarea, select{
 		height: 36px;
 	}
 	input.form-check-input{
@@ -2949,11 +2949,11 @@ body.fixed-subheader .prjt-menu{
 		&.user-menu-top{
 			top: 78px;
 			margin-left: 0;
-			padding: 0px;
+			padding: 0px;			
 			a{
-				padding: 10px 27px;
+				padding: 7px 15px;
+				white-space: break-spaces;
 			}
-
 		}
 		img{
 			width: 14px;
@@ -3245,7 +3245,13 @@ table .dropdown-menu.show{
     background-size: contain;
     transition: transform 0.2s ease-in-out;
 	position: absolute;
-    left: 20px;
+    left: 12px;
+    background-size: 118% 126%;
+    transform: rotate(-90deg);
+    background-position: -3px -5px;
+    padding: 0;
+    width: 27px;
+    height: 27px;
 }
 .accordion-button:not(.collapsed){
 	color: inherit;
