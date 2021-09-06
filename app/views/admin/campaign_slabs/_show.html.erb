@@ -1,0 +1,16 @@
+<table class='table my-customer-table responsive-tbl'>
+  <thead class="th-default">
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= t('mongoid.attributes.campaign_slab.name') %></th>
+        <th><%= t('mongoid.attributes.campaign_slab.minimum_investment_amount') %></th>
+        <th><%= t('mongoid.attributes.campaign_slab.recommended') %></th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+    <td><%= campaign_slab.name %></td>
+    <td><%= campaign_slab.minimum_investment_amount %></td>
+    <td><%= campaign_slab.recommended ? 'Yes' : 'No' %></td>
+  </tbody>
+</table>

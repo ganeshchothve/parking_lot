@@ -205,6 +205,9 @@ en:
       meeting:
         one: Event
         other: Events
+      campaign:
+        one: Campaign
+        other: Campaigns
       user_request/cancellation:
         one: Cancellation
         other: Cancellations
@@ -935,6 +938,34 @@ en:
         min_budget: 'Min. Budget (Rs.)'
         max_budget: 'Max. Budget (Rs.)'
         budget: 'Budget (Rs.)'
+      campaign:
+          name: 'Campaign Name'
+          description: 'About this Campaign'
+          campaign_manager: 'Campaign Manager'
+          about_campaign_manager: 'About the Campaign Manager'
+          terms_and_conditions: 'Terms & Conditions'
+          campaign_slab_offer_text: 'Offer'
+          campaign_slab_offer_percentage: 'Offer Percentage'
+          campaign_slab_offer_amount: 'Offer Amount (Rs.)'
+          campaign_id: 'Campaign ID'
+          total_budget: 'Total Campaign Budget (Rs.)'
+          total_invested_amount: 'Total Invested Amount (Rs.)'
+          start_date: 'Campaign Start Date'
+          end_date: 'Campaign End Date'
+          campaign_type: 'Type'
+          status: 'Status'
+          estimated_cost_per_lead: 'Estimated Cost per Lead (Rs.)'
+          sources: 'Target Ad Platforms'
+          projects: 'Related Projects'
+          project_ids: 'Related Projects'
+          target_areas: 'Target Areas (Micro-markets)'
+          focus: 'Campaign Focus'
+          campaign_budgets: 'Media Plan'
+          campaign_slabs: 'Campaign Slabs'
+          interested_campaigns: 'Campaigns you are interested in'
+          assets: 'Related Marketing Collateral'
+          meetings: 'Related Events'
+          faqs: 'FAQs'
       meeting:
         topic: Topic
         meeting_details: Topic & Agenda
@@ -1177,6 +1208,9 @@ en:
     meetings:
       index:
         link_name: 'Events'
+    campaigns:
+      index:
+        link_name: 'Campaigns'
     crms:
       index:
         link_name: 'CRM Integration'

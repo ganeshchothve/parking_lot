@@ -141,6 +141,7 @@ class Project
   has_many :offers
   has_many :incentive_schemes
   has_many :timeline_updates
+  has_and_belongs_to_many :campaigns
   has_many :token_types
 
   validates :name, presence: true
