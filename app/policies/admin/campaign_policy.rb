@@ -20,7 +20,7 @@ class Admin::CampaignPolicy < CampaignPolicy
   end
 
   def update?
-    new? || (show? && record.status == 'scheduled')
+    new?
   end
 
   def permitted_attributes(_params = {})

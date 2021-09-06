@@ -338,7 +338,6 @@ Rails.application.routes.draw do
   end
 
   namespace :buyer do
-    resources :campaigns, only: [:index, :show]
     resources :meetings, only: [:index, :update, :show]
     resources :schemes, only: [:index]
 
