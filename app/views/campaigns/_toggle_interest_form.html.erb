@@ -1,0 +1,32 @@
+<%
+  reload ||= false
+  if current_user.buyer? && Buyer::MeetingPolicy.new(current_user, meeting).update?
+    url = buyer_meeting_path(meeting, reload: reload)
+  elsif Admin::MeetingPolicy.new(current_user, meeting).update?
+    url = admin_meeting_path(meeting, reload: reload)
+  end
+%>
+<% if policy([current_user_role_group, meeting]).editable_field?("toggle_participant_id") && url.present? %>
+  <%
+    message = ''
+    if meeting.participant?(current_user)
+      if meeting.participant_ids.count == 1
+        message = "You are interested in attending this #{t('mongoid.models.meeting.one')}"
+      else
+        message = "You and #{meeting.participant_ids.count - 1} others are interested in attending this #{t('mongoid.models.meeting.one')}"
+      end
+    elsif meeting.participant_ids.blank?
+      message = "New Event! Be the first to show interest"
+    else
+      message = "#{meeting.participant_ids.count} are interested in attending this #{t('mongoid.models.meeting.one')}"
+    end
+  %>
+  <%= simple_form_for(meeting, local: true, url: url, remote: true, html: { class: 'toggle_interest_form', novalidate: false, type: :json } ) do |f| %>
+    <%= message %><br/>
+    <% link_name = meeting.participant?(current_user) ? t('helpers.not_interested.link_name') : t('helpers.show_interest.link_name') %>
+    <% toggle_with = meeting.participant?(current_user) ? t('helpers.show_interest.link_name') : t('helpers.not_interested.link_name') %>
+
+    <%= f.hidden_field :toggle_participant_id, disabled: !policy([current_user_role_group, meeting]).editable_field?("toggle_participant_id"), value: current_user.id.to_s %>
+    <%= f.submit link_name, class: defined?(link_class) ? link_class : 'btn btn-primary btn-sm', data: {toggle: toggle_with, link_name: link_name} %>
+  <% end %>
+<% end %>

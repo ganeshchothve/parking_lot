@@ -10,6 +10,7 @@ class Lead
   extend ApplicationHelper
 
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
+  DOCUMENT_TYPES = []
 
   field :first_name, type: String, default: ''
   field :last_name, type: String, default: ''

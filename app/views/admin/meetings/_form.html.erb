@@ -41,6 +41,11 @@
             <%= f.select :project_id, Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", disabled: (policy([current_user_role_group, meeting]).editable_field?("project_id") ? false : true) %>
           </div>
 
+          <div class="form-group">
+            <%= f.label :campaign_id %>
+            <%= f.select :campaign_id, Campaign.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", disabled: (policy([current_user_role_group, meeting]).editable_field?("campaign_id") ? false : true) %>
+          </div>
+
           <div class="row">
             <div class="col-md-6">
               <div class="mb-3">

@@ -1,0 +1,168 @@
+<%= nested_form_for(campaign, local: true, url: url, remote: true, html: { novalidate: false, class: 'modal-remote-form validate-form', data: { 'resource-type': Campaign.model_name.human, type: :json }, id: 'campaign_form' } ) do |f| %>
+  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-gradient-cd white">
+          <h3 class="title">
+            <%= t("helpers.#{action_name}.link_name", model: Campaign.model_name.human) %>
+            </h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" class="white">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <nav>
+            <div class="nav nav-tabs" role="tablist">
+              <a class="nav-item nav-link active" data-toggle="tab" href="#nav-campaigns-basic" role="tab">Basic Details</a>
+              <% if policy([:admin, campaign]).editable_field?("campaign_slabs_attributes") %>
+                <a class="nav-item nav-link" data-toggle="tab" href="#nav-campaigns-slabs" role="tab">Slabs</a>
+              <% end %>
+              <% if policy([:admin, campaign]).editable_field?("campaign_budgets_attributes") %>
+                <a class="nav-item nav-link" data-toggle="tab" href="#nav-campaigns-budgets" role="tab">Budgets</a>
+              <% end %>
+            </div>
+          </nav>
+          <div class="mt-3"></div>
+          <div class="tab-content">
+            <div class="tab-pane fade show active" id="nav-campaigns-basic" role="tabpanel">
+              <div class="form-group">
+                <%= f.label :name, class: 'label-required control-label' %>
+                <%= f.text_field :name, required: true, disabled: !policy([current_user_role_group, campaign]).editable_field?("name"), class: 'form-control' %>
+              </div>
+              <div class="form-group">
+                <%= f.label :description, class: 'label-required control-label' %>
+                <%= f.text_area :description, required: true, disabled: !policy([current_user_role_group, campaign]).editable_field?("description"), class: 'form-control' %>
+              </div>
+              <div class="form-group">
+                <%= f.label :about_campaign_manager, class: 'label-required control-label' %>
+                <%= f.text_area :about_campaign_manager, required: true, disabled: !policy([current_user_role_group, campaign]).editable_field?("about_campaign_manager"), class: 'form-control' %>
+              </div>
+              <div class="form-group">
+                <%= f.label :terms_and_conditions, class: 'label-required control-label' %>
+                <%= f.text_area :terms_and_conditions, required: true, disabled: !policy([current_user_role_group, campaign]).editable_field?("terms_and_conditions"), class: 'form-control' %>
+              </div>
+              <% if policy([current_user_role_group, campaign]).editable_field?("event") %>
+                <% statuses = available_campaign_statuses(campaign) %>
+                <% if statuses.present? %>
+                  <div class="form-group">
+                    <%= f.label :status, class: '' %>
+                    <%= f.select :event, statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, {prompt: :Select}, class: 'selectize' %>
+                  </div>
+                <% end %>
+              <% end %>
+              <% if policy([current_user_role_group, campaign]).editable_field?("campaign_type") %>
+                <div class="form-group">
+                  <%= f.label :campaign_type, class: 'label-required control-label' %>
+                  <%= f.select :campaign_type, Campaign.campaign_types.collect{|rec| [rec[:text], rec[:id]]}, {prompt: :Select}, class: 'selectize form-control' %>
+                </div>
+              <% end %>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :start_date, class: 'control-label label-required' %>
+                    <%= f.text_field :start_date, class: 'form-control datepicker', required: true, "data-min-date": (f.object.start_date.present? && f.object.start_date < Date.today) ? f.object.start_date.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), disabled: !policy([:admin, campaign]).editable_field?("start_date"), value: f.object.start_date.present? ? f.object.start_date.strftime("%d/%m/%Y") : nil %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :end_date, class: 'control-label label-required' %>
+                    <%= f.text_field :end_date, class: 'form-control datepicker', required: true, "data-min-date": (f.object.end_date.present? && f.object.end_date < Date.today) ? f.object.end_date.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), disabled: !policy([:admin, campaign]).editable_field?("end_date"), value: f.object.end_date.present? ? f.object.end_date.strftime("%d/%m/%Y") : nil %>
+                  </div>
+                </div>
+              </div>
+              <% if policy([current_user_role_group, campaign]).editable_field?("focus") %>
+              <div class="form-group">
+                <%= f.label :focus, class: 'control-label' %>
+                <% Campaign.focuses.each do |focus| %>
+                  <div class="form-check form-check-inline">
+                    <%= f.radio_button :focus, focus[:id], class: "label-required form-check-input" %>
+                    <%= f.label :focus, focus[:text], class: "form-check-label" %>
+                  </div>
+                <% end %>
+              </div>
+              <% end %>
+              <div class="form-group">
+                <%= f.label :project_ids, class: 'label-required control-label' %>
+                <%= f.select :project_ids, Project.all.collect{|p| [p.name, p.id]}, {}, disabled: !policy([:admin, campaign]).editable_field?("project_ids"), prompt: :translate, class: 'form-control selectize', multiple: true %>
+              </div>
+              <div class="form-group">
+                <%= f.label :target_areas, class: 'control-label' %>
+                <%= f.select :target_areas, (campaign.target_areas.present? ? campaign.target_areas.collect{|x| [x, x]} : []), {}, disabled: !policy([:admin, campaign]).editable_field?("target_areas"), prompt: :translate, class: 'form-control selectize', multiple: true, data: {create: true} %>
+              </div>
+              <div class="form-group">
+                <%= f.label :campaign_manager_id, class: 'label-required control-label' %>
+                <%= f.select :campaign_manager_id, User.all.collect{|p| [p.name, p.id]}, {}, disabled: !policy([:admin, campaign]).editable_field?("campaign_manager_id"), prompt: :translate, class: 'form-control selectize' %>
+              </div>
+              <div class="form-group">
+                <%= f.label :total_budget, class: 'label-required control-label' %>
+                <%= f.number_field :total_budget, disabled: !policy([current_user_role_group, campaign]).editable_field?("total_budget"), required: true, class: 'form-control' %>
+              </div>
+              <div class="form-group">
+                <%= f.label :estimated_cost_per_lead, class: 'label-required control-label' %>
+                <%= f.number_field :estimated_cost_per_lead, required: true, disabled: !policy([current_user_role_group, campaign]).editable_field?("estimated_cost_per_lead"), class: 'form-control' %>
+              </div>
+            </div>
+            <% if policy([:admin, campaign]).editable_field?("campaign_slabs_attributes") %>
+              <div class="tab-pane fade" id="nav-campaigns-slabs" role="tabpanel">
+                <% campaign.campaign_slabs.build if campaign.campaign_slabs.blank? %>
+                <div id="campaign_slabs_container">
+                  <%= f.link_to_add "Add Slab", :campaign_slabs, :data => { :target => "#campaign_slabs_container" }, class: 'btn btn-secondary btn-sm float-right' %>
+                  <br clear="all" />
+                  <div class="mt-3"></div>
+                  <%= f.fields_for :campaign_slabs do |campaign_slabs_form| %>
+                    <%= render "admin/campaign_slabs/form_fields", f: campaign_slabs_form %>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+            <% if policy([:admin, campaign]).editable_field?("campaign_budgets_attributes") %>
+              <div class="tab-pane fade" id="nav-campaigns-budgets" role="tabpanel">
+                <% campaign.campaign_budgets.build if campaign.campaign_budgets.blank? %>
+                <div id="campaign_budgets_container">
+                  <%= f.link_to_add "Add Media", :campaign_budgets, :data => { :target => "#campaign_budgets_container" }, class: 'btn btn-secondary btn-sm float-right' %>
+                  <br clear="all" />
+                  <div class="mt-3"></div>
+                  <%= f.fields_for :campaign_budgets do |campaign_budgets_form| %>
+                    <%= render "admin/campaign_budgets/form_fields", f: campaign_budgets_form %>
+                  <% end %>
+                </div>
+              </div>
+              <% end %>
+          </div>
+          <div class="py-4"></div>
+        </div>
+        <div class="modal-footer">
+          <%= f.submit "Save", class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+<script>
+  $(document).ready(function(){
+    let $form = $("#campaign_form")
+    FormInitializer.init($form);
+    $form.find('[name="campaign[focus]"]').change(function(){
+      var $project_ids = $form.find('[name="campaign[project_ids][]"]');
+      var $target_areas = $form.find('[name="campaign[target_areas][]"]');
+      if($(this).is(':checked')){
+        if($(this).val() == 'project_based'){
+          $project_ids.attr('required', 'required');
+          $project_ids.closest("div.form-group").show();
+          $target_areas.removeAttr('required');
+          $target_areas.closest("div.form-group").hide();
+        }else{
+          $target_areas.attr('required', 'required');
+          $target_areas.closest("div.form-group").show();
+          $project_ids.removeAttr('required');
+          $project_ids.closest("div.form-group").hide();
+        }
+      }
+    });
+    <% if campaign.new_record? %>
+      $form.find('[name="campaign[focus]"]:first').attr('checked', 'checked');
+    <% end %>
+    $form.find('[name="campaign[focus]"]').trigger("change");
+  });
+</script>
