@@ -6,6 +6,7 @@ class Project
   include CrmIntegration
   include ApplicationHelper
   extend ApplicationHelper
+  include ProjectOnboardingOnSelldo
 
   # Add different types of documents which are uploaded on client
   DOCUMENT_TYPES = %w[document brochure certificate unit_selection_filter_image sales_presentation images].freeze
@@ -23,8 +24,8 @@ class Project
   field :category, type: String
   field :project_segment, type: String
   field :possession, type: Date
-  field :lat, type: String
-  field :lng, type: String
+  field :lat, type: String, default: '100'
+  field :lng, type: String, default: '100'
   field :is_active,type: Boolean, default: true
   field :area_price_data, type: Array, default: []
   field :configurations, type: Array, default: []
@@ -136,6 +137,7 @@ class Project
   has_many :smses, class_name: 'Sms'
   has_many :whatsapps, class_name: 'Whatsapp'
   has_many :assets, as: :assetable
+  has_many :notes, as: :notable
   has_many :receipts
   has_many :specifications
   has_many :offers

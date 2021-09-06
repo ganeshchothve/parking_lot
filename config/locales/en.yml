@@ -1387,6 +1387,8 @@ en:
     projects:
       index:
         link_name: 'Projects'
+      sync_on_selldo:
+        link_name: 'Sync on Sell.do'
 
     project_units:
       send_cost_sheet_and_payment_schedule:

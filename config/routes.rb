@@ -158,6 +158,7 @@ Rails.application.routes.draw do
     resources :projects, except: [:destroy] do
       get :collaterals, on: :member
       get :collaterals, on: :collection
+      post :sync_on_selldo, on: :member
 
       resources :token_types, except: [:destroy, :show], controller: 'projects/token_types' do
         member do
