@@ -27,7 +27,6 @@
 //= require otp_based_login
 //= require amura
 //= require plugins/jsencrypt
-//= require highcharts
 
 
 // Highcharts.chart('total_brokerage', {

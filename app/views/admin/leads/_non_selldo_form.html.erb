@@ -8,7 +8,7 @@
           </h3>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body theme-form">
           <div class="row">
             <div class="col-md-6">
               <%= f.input :first_name, required: true, autofocus: true, disabled: !policy([:admin, @lead]).editable_field?("first_name"), input_html: { name: 'first_name' } %>
@@ -16,8 +16,6 @@
             <div class="col-md-6">
               <%= f.input :last_name, required: true, autofocus: true, disabled: !policy([:admin, @lead]).editable_field?("last_name"), input_html: { name: 'last_name' } %>
             </div>
-          </div>
-          <div class="row">
             <div class="col-md-6">
               <%= f.input :email, required: true, disabled: !policy([:admin, @lead]).editable_field?("email"), input_html: { class: 'email', name: 'email' } %>
             </div>
