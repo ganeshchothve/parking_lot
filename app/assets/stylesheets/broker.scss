@@ -2948,7 +2948,6 @@ body.fixed-subheader .prjt-menu{
 		}
 		&.user-menu-top{
 			top: 78px;
-			width: 100%;
 			margin-left: 0;
 			padding: 0px;
 			a{
@@ -3241,7 +3240,7 @@ table .dropdown-menu.show{
     border-top: 2px dotted #afafaf;
 }
 .theme-accordation .accordion-button::after {
-    background-image: url(caret-right.svg);
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
     background-repeat: no-repeat;
     background-size: contain;
     transition: transform 0.2s ease-in-out;
@@ -3253,7 +3252,7 @@ table .dropdown-menu.show{
 	background-color: inherit;
 }
 .theme-accordation .accordion-button:not(.collapsed)::after {
-    background-image: url(caret-down.svg);
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
     transform: rotate(0);
 }
 .theme-accordation .accordion-button{
