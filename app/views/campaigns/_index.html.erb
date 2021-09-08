@@ -1,0 +1,73 @@
+<table class='table my-customer-table responsive-tbl'>
+  <thead class="th-default">
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= t('mongoid.attributes.campaign.name') %></th>
+        <th><%= t('mongoid.attributes.campaign.projects') %></th>
+        <th><%= t('mongoid.attributes.campaign.start_date') %></th>
+        <th><%= t('mongoid.attributes.campaign.total_budget') %></th>
+        <th class="text-right"><%= t('global.action', count: 3) %></th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+    <% campaigns.each do |campaign| %>
+      <tr>
+        <td data-title=<%= t('mongoid.attributes.campaign.name') %>>
+          <% if current_user.buyer? && Buyer::CampaignPolicy.new(current_user, campaign).show? %>
+            <%= link_to campaign.name, buyer_campaign_path(campaign) %>
+          <% elsif Admin::CampaignPolicy.new(current_user, campaign).show? %>
+            <%= link_to campaign.name, admin_campaign_path(campaign) %>
+          <% end %>
+          <br/>
+          <%= Campaign.statuses.find{|x| x[:id] == campaign.status}['text'] %>
+        </td>
+        <td>
+          <% if campaign.projects.present? %>
+            <% campaign.projects.each do |project| %>
+              <%= project.name %>,<%= project.developer_name %>, <%= project.address.to_s %>
+              <hr/>
+            <% end %>
+          <% else %>
+            -
+          <% end %>
+        </td>
+        <td>
+          <%
+            start_date_str = if campaign.start_date.future?
+              "#{(campaign.start_date - Date.today).to_i} days to start"
+            elsif campaign.status == 'live' || campaign.status == 'paused'
+              "Started #{campaign.start_date}"
+            else
+              "#{campaign.start_date}"
+            end
+          %>
+          <%= start_date_str %>
+        </td>
+        <td>
+          <%= campaign.total_invested_amount %><br/>
+          <%= campaign.total_budget %>
+        </td>
+        <td>
+          <div class="dropdown show text-right">
+            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="javascript:;" role="button" data-toggle="dropdown"><span></span><span></span><span></span></a>
+            <div class="dropdown-menu dropdown-menu-right">
+            <% if current_user.buyer? && Buyer::CampaignPolicy.new(current_user, campaign).edit? %>
+              <%= link_to t('helpers.edit.link_name', model: Campaign.model_name.human), edit_buyer_campaign_path(campaign), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit Campaign'} %>
+            <% elsif Admin::CampaignPolicy.new(current_user, campaign).edit? %>
+              <%= link_to t('helpers.edit.link_name', model: Campaign.model_name.human), edit_admin_campaign_path(campaign), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit Campaign'} %>
+            <% end %>
+            <% if current_user.buyer? && Buyer::CampaignPolicy.new(current_user, campaign).show? %>
+              <%= link_to t('helpers.show.link_name', model: Campaign.model_name.human), buyer_campaign_path(campaign), class: 'dropdown-item', data:{event_category: 'Section', event_action: 'Click', event_name: 'Campaign details'} %>
+            <% elsif Admin::CampaignPolicy.new(current_user, campaign).show? %>
+              <%= link_to t('helpers.show.link_name', model: Campaign.model_name.human), admin_campaign_path(campaign), class: 'dropdown-item', data:{event_category: 'Section', event_action: 'Click', event_name: 'Campaign details'} %>
+            <% end %>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">
+  <%= will_paginate campaigns, list_classes: %w(pagination justify-content-center) %>
+</div>

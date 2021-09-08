@@ -21,6 +21,7 @@ class Meeting
   field :broadcast, type: Boolean, default: false
 
   belongs_to :project, optional: true
+  belongs_to :campaign, optional: true
   belongs_to :creator, class_name: 'User'
   has_and_belongs_to_many :participants, class_name: 'User'
 
@@ -64,6 +65,7 @@ class Meeting
     custom_scope = {}
     custom_scope[:roles] = {'$in': [user.role] }  unless user.role == 'superadmin' || user.role == 'admin'
     custom_scope[:project_id] = params[:project_id] if params[:project_id].present?
+    custom_scope[:campaign_id] = params[:campaign_id] if params[:campaign_id].present?
     custom_scope[:status] = {'$in': ['scheduled', 'completed'] } if %w[crm sales_admin sales channel_partner gre billing_team user employee_user management_user].include?(user.role)
     custom_scope[:project_id] = user.selected_project_id if user.selected_project_id.present?
     custom_scope

@@ -29,7 +29,7 @@ class Admin::MeetingPolicy < MeetingPolicy
   def permitted_attributes(_params = {})
     attributes = super + [:event]
     attributes += [:scheduled_on, roles: []]  if record.new_record? || ['scheduled', 'draft'].include?(record.status)
-    attributes += [:provider, :provider_url, :project_id, :topic, :meeting_type, :duration, :agenda, :duration, :broadcast] if record.new_record? || record.status == 'draft'
+    attributes += [:provider, :provider_url, :campaign_id, :project_id, :topic, :meeting_type, :duration, :agenda, :duration, :broadcast] if record.new_record? || record.status == 'draft'
     attributes
   end
 end

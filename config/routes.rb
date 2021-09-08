@@ -49,6 +49,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :customer_searches, except: :destroy
+    resources :campaigns, except: [:destroy]
     resources :meetings, except: [:destroy]
     resources :api_logs, only: [:index]
     resources :cp_lead_activities do
