@@ -1633,9 +1633,8 @@ en:
       exports:
         link_name: '%{name} Exports'
       move_to_next_state:
-        user:
-          queued: "%{name} moved to sales queue successfully"
-          dropoff: '%{name} dropped off successfully'
+        queued: "%{name} moved to sales queue successfully"
+        dropoff: '%{name} dropped off successfully'
 
     user_kycs:
       index:

@@ -93,6 +93,18 @@ class Admin::LeadsController < AdminController
     end
   end
 
+  def move_to_next_state
+    respond_to do |format|
+      if @lead.move_to_next_state!(params[:status])
+        format.html{ redirect_to request.referrer || dashboard_url, notice: I18n.t("controller.leads.move_to_next_state.#{@lead.status}", name: @lead.name.titleize) }
+        format.json { render json: { message: I18n.t("controller.leads.move_to_next_state.#{@lead.status}", name: @lead.name.titleize) }, status: :ok }
+      else
+        format.html{ redirect_to request.referrer || dashboard_url, alert: @lead.errors.full_messages.uniq }
+        format.json { render json: { errors: @lead.errors.full_messages.uniq }, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
   def set_lead
     @lead = if params[:crm_client_id].present? && params[:id].present?

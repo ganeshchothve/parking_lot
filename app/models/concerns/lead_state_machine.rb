@@ -119,7 +119,7 @@ module LeadStateMachine
 
     def move_to_next_state!(status)
       if self.respond_to?("may_#{status}?") && self.send("may_#{status}?")
-        self.aasm((buyer? ? :customer : :sales)).fire!(status.to_sym)
+        self.aasm(:customer).fire!(status.to_sym)
       else
         self.errors.add(:base, 'Invalid transition')
       end
