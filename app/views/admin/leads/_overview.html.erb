@@ -58,6 +58,22 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
+            <label><%= t("mongoid.attributes.lead.queue_number") %></label>
+            <div>
+              <%= lead.queue_number.presence || '-' %>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label><%= t("mongoid.attributes.lead.customer_status") %></label>
+            <div>
+              <%= lead.customer_status.presence || '-' %>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
             <label class="small text-muted"><%= t('mongoid.attributes.lead.registered_at') %></label>
             <div><%= lead.registered_at.present? ? (lead.registered_at.strftime("%d/%m/%Y") rescue '-') : (lead.created_at.strftime("%d/%m/%Y") rescue '-') %></div>
           </div>

@@ -275,6 +275,18 @@ module DatabaseSeeds
           </div>
         </div>' })
       end
+
+      if Template::UITemplate.where(name: 'sales_dashboard', project_id: project_id).blank?
+        Template::UITemplate.create({ booking_portal_client_id: client_id, project_id: project_id, subject_class: 'View', name: 'sales_dashboard', content: '<section class=" mt-4">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-12 mt-5">
+                  <h2 class="sec-title after-line">Project Highlights</h2>
+              </div>
+            </div>
+          </div>
+        </section>' })
+      end
     end
   end
 end

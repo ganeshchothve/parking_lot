@@ -1,0 +1,14 @@
+<% @lead = Lead.where(closing_manager_id: current_user.id).in(customer_status: %w(engaged payment_done)).first %>
+<div class="container">
+  <%= render "dashboard/index/partials/user_search", lead_id: @lead.try(:id) %>
+  <div id="get-started">
+    <div class='row mt-5'>
+      <div class='col-md-12'><div class="alert alert-success mb-2">Begin Virtual Walkthrough below</div></div>
+    </div>
+  </div>
+</div>
+
+<% template = ::Template::UITemplate.where(name: 'sales_dashboard', project_id: current_user.selected_project_id).first %>
+<% if template.present? %>
+  <%= get_view_erb(template) %>
+<% end %>

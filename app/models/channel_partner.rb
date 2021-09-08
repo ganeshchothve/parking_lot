@@ -107,7 +107,7 @@ class ChannelPartner
 
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: { with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A' }, allow_blank: true
-  validates :first_name, :last_name, name: true, allow_blank: true
+  #validates :first_name, :last_name, name: true, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :user_based_uniqueness
 

@@ -9,12 +9,13 @@ class User
   include CrmIntegration
   extend FilterByCriteria
   extend ApplicationHelper
+  include SalesUserStateMachine
 
   # Constants
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   ALLOWED_UTM_KEYS = %i[utm_campaign utm_source utm_sub_source utm_content utm_medium utm_term]
   BUYER_ROLES = %w[user employee_user management_user]
-  ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre billing_team]
+  ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre billing_team team_lead]
   ALL_PROJECT_ACCESS = %w[superadmin admin cp cp_admin]
   CHANNEL_PARTNER_USERS = %w[cp cp_admin channel_partner]
   SALES_USER = %w[sales sales_admin]
@@ -149,6 +150,7 @@ class User
   belongs_to :confirmed_by, class_name: 'User', optional: true
   belongs_to :tier, optional: true  # for associating channel partner users with different tiers.
   belongs_to :selected_lead, class_name: 'Lead', optional: true
+  belongs_to :selected_project, class_name: 'Project', optional: true
   has_many :leads
   has_many :receipts
   has_many :project_units
@@ -205,6 +207,7 @@ class User
   scope :buyers, -> { where(role: {'$in' => BUYER_ROLES } )}
   scope :filter_by_lead_id, ->(lead_id) { where(lead_id: lead_id) }
   scope :filter_by_userwise_project_ids, ->(user) { self.in(project_ids: user.project_ids) if user.try(:project_ids).present? }
+  scope :filter_by_sales_status, ->(*sales_status){ where(sales_status: { '$in': sales_status }) }
 
   scope :filter_by_created_by, ->(_created_by) do
     if _created_by == 'direct'
@@ -258,10 +261,6 @@ class User
     scope admin_roles, ->{ where(role: admin_roles )}
   end
 
-
-  def selected_project
-    self.selected_lead.try(:project)
-  end
 
   def phone_or_email_required
     errors.add(:base, 'Email or Phone is required')
@@ -618,7 +617,7 @@ class User
       elsif user.role?('sales_admin')
         custom_scope = { "$or": [{ role: { "$in": User.buyer_roles(user.booking_portal_client) } }, { role: 'sales' }, { role: 'channel_partner' }] }
       elsif user.role?('sales')
-        custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) } }
+        custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) }, project_ids: user.selected_project_id }
       elsif user.role?('cp_admin')
         # Removing access to customer accounts for cp/cp_admin, as lead conflict will now work on lead's model & they will have access to their leads.
         #cp_ids = User.where(manager_id: user.id).distinct(:id)
@@ -630,6 +629,8 @@ class User
         custom_scope = { role: 'channel_partner' }
       elsif user.role?('admin')
         custom_scope = { role: { "$ne": 'superadmin' } }
+      elsif user.role?('team_lead')
+        custom_scope = { role: 'sales', project_ids: user.selected_project_id }
       end
       custom_scope
     end

@@ -16,6 +16,14 @@
   <%= link_to t('controller.receipts.new.link_name'), new_admin_lead_receipt_path(lead), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
+<% if policy([:admin, lead]).move_to_next_state? %>
+  <% if lead.may_queued? %>
+    <%= link_to 'Move to Sales Queue', move_to_next_state_admin_lead_path(lead, status: 'queued', format: :json), method: 'patch', remote: true, data: { disable_with: 'Queueing...' }, class: "dropdown-item queued move-to-next-state" %>
+  <% elsif lead.may_dropoff? %>
+    <%= link_to 'Drop Customer', move_to_next_state_admin_lead_path(lead, status: 'dropoff', format: :json), method: 'patch', remote: true, data: { confirm: 'Are you sure?', disable_with: 'Dropping...' }, class: 'dropdown-item dropoff move-to-next-state' %>
+  <% end %>
+<% end %>
+
 <%# if policy([:admin, Crm::Base.new()]).choose_crm? && Crm::Api.where(resource_class: 'User').present? %>
   <%#= link_to t('controller.crms.choose_crm.link_name'), choose_crm_admin_crm_base_index_path(resource_id: user.id, resource_class: user.class), class: "dropdown-item " %>
 <%# end %>
@@ -59,4 +67,14 @@
   <% %w(add_note schedule_site_visit schedule_followup).each do |task| %>
     <%= link_to t("selldo.links.#{task}"), "#{ENV_CONFIG['selldo']['base_url']}/client/0/#{lead.project.selldo_default_search_list_id}/#{lead.lead_id}/f/#{task.camelcase}", target: '_blank', class: 'dropdown-item' %>
   <% end %>
+<% end %>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $('a.queued, a.dropoff').on('ajax:success', function(event) {
+      setTimeout(function() {
+        window.location.reload();
+      }, 3000);
+    });
+  });
 <% end %>

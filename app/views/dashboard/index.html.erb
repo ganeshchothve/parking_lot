@@ -14,12 +14,18 @@
       <%= render 'dashboard/index/user' %>
     <% elsif current_user.role?('channel_partner') %>
       <%= render 'dashboard/index/channel_partner' %>
-    <% elsif ['admin', 'sales'].include?(current_user.role) %>
+    <% elsif ['admin'].include?(current_user.role) %>
       <%= render 'dashboard/index/admin' %>
+    <% elsif ['sales'].include?(current_user.role) %>
+      <%= render 'dashboard/index/sales' %>
     <% elsif current_user.role?('billing_team') %>
       <%= render 'dashboard/index/billing_team' %>
+    <% elsif current_user.role?('team_lead') %>
+      <%= render 'dashboard/index/team_lead' %>
     <% elsif ['cp_admin', 'cp'].include?(current_user.role) %>
       <%= render 'dashboard/index/cp_admin' %>
+    <% elsif ['gre'].include?(current_user.role) %>
+      <%= render 'dashboard/index/gre' %>
     <% elsif DashboardPolicy.new(current_user, :dashboard).admin_dashboard? %>
       <%= render 'dashboard/index/crm' %>
     <% end %>

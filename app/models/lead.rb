@@ -1,3 +1,4 @@
+require 'autoinc'
 class Lead
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -8,6 +9,7 @@ class Lead
   include InsertionStringMethods
   extend FilterByCriteria
   extend ApplicationHelper
+  include LeadStateMachine
 
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   DOCUMENT_TYPES = []
@@ -36,15 +38,21 @@ class Lead
   field :iris_confirmation, type: Boolean, default: false
   field :lead_id, type: String #TO DO - Change name to selldo_id and use it throughout the system in place of lead_id on user.
   field :remarks, type: Array, default: [] # used to store the last five notes
+  # used for dump latest queue_number or revisit queue number from sitevisit
+  field :queue_number, type: Integer
 
   attr_accessor :payment_link
 
+  embeds_many :state_transitions
   belongs_to :user
   belongs_to :manager, class_name: 'User', optional: true
+  belongs_to :closing_manager, class_name: 'User', optional: true
   belongs_to :project
   has_many :receipts
   has_many :searches
   has_many :site_visits
+  # this field used for track current sitevisit
+  belongs_to :current_site_visit, class_name: 'SiteVisit', optional: true
   has_many :booking_details
   has_many :user_requests
   has_many :user_kycs
@@ -78,6 +86,7 @@ class Lead
   end
 
   scope :filter_by__id, ->(_id) { where(_id: _id) }
+  scope :filter_by_lead_id, ->(lead_id) { where(lead_id: lead_id) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
   scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }
   scope :filter_by_user_id, ->(user_id) { where(user_id: user_id) }
@@ -85,6 +94,8 @@ class Lead
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
   scope :filter_by_stage, ->(stage) { where(stage: stage) }
+  scope :filter_by_customer_status, ->(*customer_status){ where(customer_status: { '$in': customer_status }) }
+  scope :filter_by_queue_number, ->(queue_number){ where(queue_number: queue_number) }
 
   scope :filter_by_receipts, ->(receipts) do
     lead_ids = Receipt.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).distinct(:lead_id)
@@ -241,6 +252,14 @@ class Lead
     end
   end
 
+  def arrived_sitevist
+    site_visits.where(status: 'arrived', _id: self.current_site_visit_id).order(created_at: :desc).first
+  end
+
+  def is_revisit?
+    self.site_visits.where(status: "conducted").present?
+  end
+
   class << self
 
     def user_based_scope(user, params = {})
@@ -265,8 +284,7 @@ class Lead
       custom_scope = { user_id: user.id } if user.buyer?
 
       unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
-        project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
-        custom_scope.merge!({project_id: {"$in": project_ids}})
+        custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
       end
       custom_scope
     end

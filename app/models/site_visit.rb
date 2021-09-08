@@ -7,6 +7,8 @@ class SiteVisit
   include CrmIntegration
   include InsertionStringMethods
   extend FilterByCriteria
+  include Mongoid::Autoinc
+  include QueueNumberAssignment
 
   belongs_to :project
   belongs_to :lead
@@ -17,6 +19,10 @@ class SiteVisit
   field :status, type: String, default: 'scheduled'
   field :conducted_on, type: DateTime
   field :site_visit_type, type: String, default: 'visit'
+  field :selldo_id, type: String
+  field :is_revisit, type: Boolean
+  field :cp_code, type: String
+  field :sales_id, type: BSON::ObjectId
 
   scope :filter_by_status, ->(_status) { where(status: { '$in' => _status }) }
   scope :filter_by_site_visit_type, ->(_status) { where(status: { '$in' => _site_visit_type }) }

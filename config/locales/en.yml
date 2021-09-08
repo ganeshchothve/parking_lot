@@ -1022,6 +1022,7 @@ en:
         cp_admin: 'Channel Partner Head'
         cp: 'Channel Partner Manager'
         channel_partner: 'Channel Partner'
+        team_lead: 'Team Lead'
         billing_team: 'Billing Team'
         management_user: 'Management User'
         employee_user: 'Employee'
@@ -1043,6 +1044,9 @@ en:
         lead_validity_period: 'Lead Validity Period'
         selldo_lead_registration_date: 'Sell Do Lead Registration Date'
         selldo_lead_stage: 'SellDo Lead Stage'
+        queue_number: 'Queue No.'
+        customer_status: 'Queue Status'
+        search_by_name: 'Name/ Email/ Phone'
 
       cp_lead_activity:
         lead_id: 'Lead Id'
@@ -1149,6 +1153,8 @@ en:
           custom_dates: 'Custom Dates'
 
   controller:
+    customer_searches:
+      set_customer_search_missing: 'Customer Search not found.'
     token_types:
       index:
         link_name: 'Token Types'
@@ -1570,6 +1576,11 @@ en:
       leads:
         link_name: 'Show Leads'
       send_payment_link: 'Payment link sent to user'
+      move_to_next_state:
+        sales:
+          break: '%{name} is on break'
+          available: '%{name} is available'
+          not_available: '%{name} is not available'
 
     interested_projects:
       set_interested_project_missing: 'Interested Project not found'
@@ -1587,6 +1598,10 @@ en:
         header: 'Edit Lead'
       exports:
         link_name: '%{name} Exports'
+      move_to_next_state:
+        user:
+          queued: "%{name} moved to sales queue successfully"
+          dropoff: '%{name} dropped off successfully'
 
     user_kycs:
       index:
@@ -1653,6 +1668,44 @@ en:
       almost_x_years:
         one: 'almost year'
         other: '%{count} Years'
+      short:
+        about_x_hours:
+          one: 'about 1 hr'
+          other: 'about %{count} hrs'
+        about_x_months:
+          one: 'about 1 mo'
+          other: 'about %{count} mos'
+        about_x_years:
+          one: 'about 1 yr'
+          other: 'about %{count} yrs'
+        almost_x_years:
+          one: '~ 1 yr'
+          other: '~ %{count} yrs'
+        half_a_minute: 'half a min'
+        less_than_x_seconds:
+          one: '< 1 sec'
+          other: '< %{count} secs'
+        less_than_x_minutes:
+          one: '< 1 min'
+          other: '< %{count} mins'
+        over_x_years:
+          one: '> 1 yr'
+          other: '> %{count} yrs'
+        x_seconds:
+          one: '1 sec'
+          other: "%{count} secs"
+        x_minutes:
+          one: '1 min'
+          other: "%{count} mins"
+        x_days:
+          one: '1 day'
+          other: "%{count} days"
+        x_months:
+          one: '1 mo'
+          other: "%{count} mos"
+        x_years:
+          one: '1 yr'
+          other: "%{count} yrs"
 
   users:
     account_confirmed: 'Account Confirmed'

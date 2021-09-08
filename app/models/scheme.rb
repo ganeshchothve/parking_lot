@@ -97,10 +97,7 @@ class Scheme
   def self.user_based_scope(user, params = {})
     custom_scope = {}
     unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
-      if user.project_ids.present?
-        project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
-        custom_scope.merge!({project_id: {"$in": project_ids}})
-      end
+      custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
     end
     custom_scope
   end

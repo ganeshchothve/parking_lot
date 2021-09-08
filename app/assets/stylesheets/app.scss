@@ -691,3 +691,350 @@ h6{
     height: auto !important;
   }
 }
+
+//******** Team Lead Css *************
+//
+.user-list-wrapper{
+  #queued-users-list {
+    height: 410px;
+    overflow-y: scroll;
+  }
+  .clear-search{
+    position: absolute;
+    right: 30px;
+  }
+  ul{
+    padding: 0;
+    li{
+      list-style: none;
+      .user-list-inner{
+        background-color: #fff;
+        border: 1px solid #d8d8d8;
+        border-radius: 6px;
+        margin-bottom: 7px;
+        float: left;
+        width: 100%;
+        .user-name{
+          display: block;
+          padding: 10px 20px;
+          float: left;
+          width: 100%;
+          border-bottom: 1px solid #e0e0e0;
+          p{
+            float: left;
+            margin-bottom: 0px;
+            font-size: 16px;
+            color: gray;
+            font-weight: 300;
+            width: 195px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            .customer-status {
+              font-size: 11px;
+            }
+          }
+          .dropdown {
+            float: right;
+          }
+        }
+        .user-extr-info{
+          float: left;
+          width: 100%;
+          padding: 15px 20px;
+          .user-site-visit, .user-queue-no{
+            float: left;
+            width: 50%;
+            p{
+              margin-bottom: 0px;
+              font-size: 12px;
+              color: gray;
+              font-weight: 500;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.sales-users {
+  height: 370px;
+  overflow-y: scroll;
+}
+.sales-team-inner {
+  height: 100%;
+  background-color: #fff;
+  border: 1px solid #d8d8d8;
+  border-radius: 4px;
+  padding: 25px;
+  h2.title{
+    font-size: 20px;
+    font-weight: 300;
+    color: #000000;
+    display: inline-block;
+  }
+  ul.sales-team-status {
+    list-style: none;
+    text-align: right;
+    padding:0px;
+    li{
+      display: inline-block;
+      padding-left: 40px;
+      position: relative;
+      p{
+        a.active {
+          text-decoration: underline;
+        }
+        &:before{
+          content: '';
+          position: absolute;
+          width: 11px;
+          height: 11px;
+          border-radius: 100%;
+          left: 18px;
+          top: 4px;
+        }
+        &.available:before{
+          background-color: #5fb300;
+        }
+        &.not_available:before, &.engaged:before{
+          background-color: #f04732;
+        }
+        &.break:before{
+          background-color: #fec431;
+        }
+      }
+    }
+  }
+  .sales-team-box{
+    background-color: #f0f2fa;
+    border-radius: 5px;
+    border: 1px solid #e4e4e4;
+    padding: 12px 0;
+    float: left;
+    width: 100%;
+    margin-bottom: 20px;
+    position: relative;
+    .sales-name-prefix {
+      height: 40px;
+      margin: 0 auto;
+      width: 40px;
+      background-color: $primary;
+      border-radius: 100%;
+      text-align: center;
+      font-size: 18px;
+      color: #fff;
+      line-height: 45px;
+      text-transform: uppercase;
+    }
+    .sales-name {
+      font-size: 19px;
+      text-align: center;
+      font-weight: 400;
+      margin: 7px 0;
+      width: 90%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .sales-info {
+      border-top: 1px solid #e0e0e0;
+      padding: 15px 12px 0 12px;
+      float: left;
+      width: 100%;
+      margin-top: 7px;
+      .user-site-visit,.user-queue-no {
+        float: left;
+        width: 50%;
+        p {
+          margin-bottom: 0px;
+          font-size: 11px;
+          color: #9c9c9c;
+          font-weight: 500;
+        }
+        span {
+          font-weight: 500;
+        }
+      }
+    }
+    &.curnt-status:before{
+      content: '';
+      position: absolute;
+      width: 11px;
+      height: 11px;
+      border-radius: 100%;
+      right: 10px;
+      top: 10px;
+    }
+    &.available:before{
+      background-color: #5fb300;
+    }
+    &.not_available:before, &.engaged:before{
+      background-color: #f04732;
+    }
+    &.break:before{
+      background-color: #fec431;
+    }
+  }
+}
+
+.dragover {
+  background-color: #e4e4e4 !important;
+}
+
+
+// Gre dashboard flow CSS
+//
+.gre-dashboard-step{
+  text-align: center;
+  .step-result{
+    height: 100px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border: solid 1px #eff0f5;
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 14px;
+    position:relative;
+    span{
+      color: #b0bac9;
+      font-weight: 500;
+      line-height: 1.67;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+    .step-change-btn{
+      right: 2px;
+      background-color: #56b654;
+      border: 1px solid #56b654;
+      top: 2px;
+      color: #fff;
+      box-shadow: 1px 1px 15px grey;
+      text-transform: uppercase;
+      padding: 2px 7px 1px;
+      border-radius: 25px;
+      line-height: 18px;
+    }
+    p{
+      font-size: 12px;
+      color: #b0bac9;
+      line-height: 15px;
+    }
+    .number{
+      font-width: 50px;
+      display: block;
+      margin: 0 auto 5px;
+      font-height: 31px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    .icon{
+      width: 50px;
+      display: block;
+      margin: 0 auto 5px;
+      height: 31px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      &.icon-1{
+        background-image: asset-url('search-gray.svg');
+      }
+      &.icon-2{
+        background-image: asset-url('building-gray.svg');
+      }
+      &.icon-3{
+        background-image: asset-url('city-gray.svg');
+      }
+      &.icon-4{
+        background-image: asset-url('file-invoice-gray.svg');
+      }
+    }
+    &.active{
+      border: solid 2px #56b654;
+      span{
+        color: #56b654;
+      }
+      p{
+        color: #56b654;
+      }
+      .icon{
+        &.icon-1{
+          background-image: asset-url('search-blue.svg');
+        }
+        &.icon-2{
+          background-image: asset-url('building-blue1.svg');
+        }
+        &.icon-3{
+          background-image: asset-url('city-blue.svg');
+        }
+        &.icon-4{
+          background-image: asset-url('file-invoice-blue.svg');
+        }
+      }
+    }
+  }
+}
+.gre-cust-details{
+  list-style: none;
+  padding: 0px;
+  li {
+    width: 20%;
+    float: left;
+    text-align: left;
+    @media screen and (max-width: 992px){
+      width: 25%;
+    }
+    @media screen and (max-width: 767px){
+        width: 50%;
+      }
+    span {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.9px;
+      color: #b0bac9;
+      display: block;
+      margin: 20px 0px 10px;
+    }
+    p {
+      font-size: 14px;
+      line-height: 1.43;
+      color: #2e384d;
+      margin: 0;
+    }
+    &:first-of-type, &:nth-child(2){
+      width: 15%;
+      @media screen and (max-width: 992px){
+        width: 25%;
+      }
+      @media screen and (max-width: 767px){
+        width: 50%;
+      }
+    }
+    &:nth-child(3){
+      width: 30%;
+      @media screen and (max-width: 992px){
+        width: 50%;
+      }
+      @media screen and (max-width: 767px){
+        width: 100%;
+      }
+    }
+  }
+}
+.checkin-gre{
+  .otp-btn{
+    background-color: #a9a8af;
+    color: #000;
+    height: 38px;
+    width: 95px;
+    border-radius: 4px;
+    letter-spacing: 0.3px;
+    outline: none;
+    line-height: 28px;
+    border: 0px;
+  }
+  .agree-check span{
+    width: 150px;
+  }
+}
