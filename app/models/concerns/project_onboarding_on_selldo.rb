@@ -14,8 +14,10 @@ module ProjectOnboardingOnSelldo
     create_custom_field('partner code', 'lead', errors)
     create_custom_field('partner code', 'site_visit', errors)
 
-    website_api_client = create_api_client('IRIS with campaign response', 'website', true, errors)
-    updator_api_client = create_api_client('IRIS without campaign response', 'updator', false, errors)
+    website_api_client = get_api_clients('IRIS with campaign response', errors).try(:[], 'results')&.first&.presence
+    website_api_client = create_api_client('IRIS with campaign response', 'website', true, errors) unless website_api_client
+    updator_api_client = get_api_clients('IRIS without campaign response', errors).try(:[], 'results')&.first&.presence
+    updator_api_client = create_api_client('IRIS without campaign response', 'updator', false, errors) unless updator_api_client
 
     if website_api_client
       self.set(selldo_api_key: website_api_client['api_key'])
@@ -75,6 +77,7 @@ module ProjectOnboardingOnSelldo
   end
 
   private
+
   def base_params
     {
       "user_token": ENV_CONFIG.dig(:selldo, :user_token),
@@ -314,6 +317,26 @@ module ProjectOnboardingOnSelldo
       end
     rescue => e
       puts e.message
+      return nil
+    end
+  end
+
+  def get_api_clients name, errors
+    url = URI("#{BASE_URL}/client/api_clients.json?#{base_params.to_param}&name=#{name}")
+    https = Net::HTTP.new(url.host, url.port)
+    https.use_ssl = true
+    request = Net::HTTP::Get.new(url)
+    request["Content-Type"] = "application/json"
+    begin
+      response = https.request(request)
+      if response.code == '200' || response.code == '201'
+        return JSON.parse(response.body)
+      else
+        errors << "Fetch API Clients - ERRMSG: #{response.body}"
+        return nil
+      end
+    rescue => e
+      errors << "Fetch API Clients - ERRMSG: #{e.message}"
       return nil
     end
   end
