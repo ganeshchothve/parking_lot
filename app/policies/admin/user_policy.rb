@@ -86,6 +86,18 @@ class Admin::UserPolicy < UserPolicy
     true
   end
 
+  def search_by?
+    user.role.in?(%w(team_lead))
+  end
+
+  def move_to_next_state?
+    (user.role?('team_lead') && (record.buyer? || record.role?('sales'))) ||
+      user.role?('sales') && (
+        (record.buyer? && record.may_dropoff? && (record.closing_manager_id == user.id)) ||
+        (!record.is_a?(Lead) && record.role?('sales') && (record.may_break? || record.may_available?))
+      )
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     attributes += [:is_active] if record.persisted? && record.id != user.id
@@ -102,7 +114,7 @@ class Admin::UserPolicy < UserPolicy
     attributes += [:rera_id] if record.role?('channel_partner')
     attributes += [:premium, :tier_id] if record.role?('channel_partner') && user.role?('admin')
     attributes += [:role] if %w[superadmin admin].include?(user.role)
-    attributes += [project_ids: []] if %w[admin superadmin].include?(user.role) && record.role.in?(%w(billing_team sales sales_admin gre crm))
+    attributes += [project_ids: []] if %w[admin superadmin].include?(user.role) && record.role.in?(%w(billing_team sales sales_admin gre crm team_lead))
     if %w[superadmin admin sales_admin].include?(user.role)
       attributes += [:erp_id]
       attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]

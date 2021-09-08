@@ -202,15 +202,24 @@ FormInitializer = (function(){
       create: false,
       preload: ( _.isNull($(selector).data("preload")) || _.isUndefined($(selector).data("preload")) ) ? 'focus' : $(selector).data("preload") ,
       load: function(query, callback){
-        var queryObj = JSON.parse(query);
+        var queryObj = {};
+        if(!_.isEmpty(query)){
+          var queryObj = JSON.parse(query);
+        }
         $.ajax({
           url: options["url"],
           type: 'GET',
           dataType: 'json',
           data: _.merge(remote_selectize_data(this.$input), queryObj, {fltrs: {search: queryObj.search}}),
           error: function(one, two, three){
-            if(typeof callback == 'function'){
-              callback();
+            if(two == 'parsererror' && one.getResponseHeader('content-type').includes('text/javascript')){
+              if(typeof $(selector).data('error-function') == 'function'){
+                $(selector).data('error-function')(one);
+              }
+            } else {
+              if(typeof callback == 'function'){
+                callback();
+              }
             }
           },
           success: function(data, type, options){
@@ -219,6 +228,16 @@ FormInitializer = (function(){
             }
           }
         });
+      },
+      onLoad: ((typeof $(selector).data('onload') == 'function') ? $(selector).data('onload') : null),
+      onType: ((typeof $(selector).data('ontype') == 'function') ? $(selector).data('ontype') : function(value) {
+        this.$input.data('params', this.$input.data('params') || {});
+        this.$input.data('params').search = value;
+      }),
+      onBlur: function() {
+        if(this.$input.data('params')){
+          delete this.$input.data('params').search;
+        }
       },
     });
   };

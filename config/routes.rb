@@ -48,6 +48,7 @@ Rails.application.routes.draw do
   get '/s/:code', to: 'shortened_urls#redirect_to_url'
 
   namespace :admin do
+    resources :customer_searches, except: :destroy
     resources :campaigns, except: [:destroy]
     resources :meetings, except: [:destroy]
     resources :api_logs, only: [:index]
@@ -159,6 +160,7 @@ Rails.application.routes.draw do
     resources :projects, except: [:destroy] do
       get :collaterals, on: :member
       get :collaterals, on: :collection
+      post :sync_on_selldo, on: :member
 
       resources :token_types, except: [:destroy, :show], controller: 'projects/token_types' do
         member do
@@ -195,10 +197,13 @@ Rails.application.routes.draw do
     resources :leads, only: [:index, :show, :edit, :update, :new] do
       collection do
         get :export
+        get :search_by
       end
       member do
         get 'sync_notes'
         get :send_payment_link
+        patch :assign_sales
+        patch :move_to_next_state
       end
       resources :site_visits, only: [:new, :create, :index]
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
@@ -249,6 +254,7 @@ Rails.application.routes.draw do
         get :block_lead
         patch :unblock_lead
         patch :reactivate_account
+        patch :move_to_next_state
       end
 
       collection do
@@ -256,6 +262,7 @@ Rails.application.routes.draw do
         get :export
         get :portal_stage_chart
         get :channel_partner_performance
+        get :search_by
       end
 
       match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]

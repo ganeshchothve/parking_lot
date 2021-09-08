@@ -93,6 +93,18 @@ class Admin::ProjectsController < AdminController
     render layout: false
   end
 
+  def sync_on_selldo
+    errors = @project.sync_on_selldo
+    respond_to do |format|
+      unless errors.present?
+        format.html { redirect_to request.referrer || admin_projects_path, notice: 'Project synced on Sell.do successfully' }
+      else
+        Note.create(notable: @project, note: "Sell.do Sync Errors</br>" + errors.to_sentence, creator: current_user)
+        format.html { redirect_to request.referrer || admin_projects_path, alert: 'Project was unable to sync due to some errors. Please check notes for details' }
+      end
+    end
+  end
+
   private
 
   def set_project

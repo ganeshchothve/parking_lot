@@ -52,6 +52,7 @@
 //= require site
 //= require chart.min
 //= require chartjs-plugin-colorschemes
+//= require mobile_drag_drop/index.min
 
 
 $.ajaxSetup({
@@ -74,4 +75,18 @@ $(document).ready(function(){
   $('.print').on('click', function(){
     window.print();
   })
+
+  $('body').on('ajax:success', 'a.move-to-next-state', function(event) {
+    if(typeof event.detail[0] == 'object' && event.detail[0].message != undefined) {
+      Amura.global_success_handler(event.detail[0].message);
+    }
+  });
+  $('body').on('ajax:error', 'a.move-to-next-state', function(event) {
+    if(typeof event.detail[0] == 'object' && event.detail[0].errors != undefined) {
+      Amura.global_error_handler(event.detail[0].errors);
+    }
+  });
+  $('body').on('ajax:complete', 'a.move-to-next-state', function(event) {
+    $(event.currentTarget).parents('.dropdown').find('.dropdown-toggle').dropdown('toggle');
+  });
 });

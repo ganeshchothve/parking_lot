@@ -9,6 +9,7 @@ class DashboardController < ApplicationController
 
   def index
     authorize :dashboard, :index?
+    @customer_search = CustomerSearch.new if current_user.role == 'gre'
     @project_units = current_user.project_units
     respond_to do |format|
       format.json { render json: { message: 'Logged In' }, status: 200 }

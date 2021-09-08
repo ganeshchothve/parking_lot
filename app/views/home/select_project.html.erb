@@ -5,7 +5,11 @@
         <div class="login-form-wrapper pt-5">
           <%= form_tag(select_project_path, id: 'select_project_form') do %>
             <div class='form-group'>
-              <%= select_tag 'selected_lead_id', options_from_collection_for_select(@leads, "id", "project_name", current_user.selected_lead_id), prompt: "Select Project to Log in", autofocus: true, class: "selectize" %>
+              <% if current_user.buyer? %>
+                <%= select_tag 'selected_lead_id', options_from_collection_for_select(@leads, "id", "project_name", current_user.selected_lead_id), prompt: "Select Project to Log in", autofocus: true, class: "selectize" %>
+              <% elsif !current_user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner)) %>
+                <%= select_tag 'selected_project_id', options_from_collection_for_select(@projects, "id", "name", current_user.selected_project_id), prompt: "Select Project to Log in", autofocus: true, class: "selectize" %>
+              <% end %>
             </div>
 
             <div class="form-group">

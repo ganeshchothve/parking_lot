@@ -1,0 +1,24 @@
+<% customer = Lead.where(closing_manager_id: sales.id).in(customer_status: %w(engaged payment_done)).first %>
+<div class="sales-team-box curnt-status <%= sales.sales_status %>">
+  <div class="sales-name-prefix"><%= "#{sales.first_name[0]}#{sales.last_name[0]}" %></div>
+  <div class="sales-name mx-2" title="<%= sales.name.try(:titleize) %>"><%= link_to sales.name.try(:titleize), admin_user_path(sales) %></div>
+  <div class="sales-info">
+    <div class="user-site-visit">
+      <p><%= t("mongoid.attributes.user.queue_number") %></p>
+      <span><%= customer.try(:queue_number) || '-' %></span>
+    </div>
+    <div class="user-queue-no">
+      <p>With</p>
+      <% if customer %>
+        <%= customer.name %>
+        </br>
+        <% status_log = customer.state_transitions.where(status: 'engaged', sitevisit_id: customer.current_site_visit_id).first %>
+        <% unless action_name == 'sales_board' %>
+          <span><%= distance_of_time_in_words_to_now(status_log.enter_time, scope: 'datetime.distance_in_words.short') %></span>
+        <% end %>
+      <% else %>
+        <span>-</span>
+      <% end %>
+    </div>
+  </div>
+</div>
