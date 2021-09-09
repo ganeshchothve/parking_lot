@@ -174,7 +174,7 @@ module DatabaseSeeds
                 <!-- <p class="white text-center fn-14 fn-500">Fill your KYC form for proceed further</p> -->
                 <div class="row">
                   <div class="col">
-                    <%= link_to "Add Customer", new_admin_user_path(role: "user"), class: "large-btn black-bg display-block fn-500 center-block show-kyc modal-remote-form-link" %>
+                    <%= link_to "Add Customer", new_admin_lead_path, class: "large-btn black-bg display-block fn-500 center-block show-kyc modal-remote-form-link" %>
                   </div>
                 </div>
               </div>

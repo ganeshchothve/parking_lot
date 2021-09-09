@@ -114,12 +114,12 @@ class ProjectUnit
     "#{project_tower_name} | #{name} | #{bedrooms} BHK"
   end
 
-  def make_available
+  def make_available lead=nil
     self.status = 'available' if available_for == 'user'
     self.status = 'employee' if available_for == 'employee'
     self.status = 'management' if available_for == 'management'
     # GENERICTODO: self.base_rate = upgraded rate based on timely upgrades
-    SelldoLeadUpdater.perform_async(user_id.to_s, {stage: 'hold_payment_dropoff'})
+    SelldoLeadUpdater.perform_async(lead.id.to_s, {stage: 'hold_payment_dropoff'}) if lead.present?
   end
 
   def valid_status?

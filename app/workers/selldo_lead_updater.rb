@@ -3,49 +3,93 @@ class SelldoLeadUpdater
   include Sidekiq::Worker
   include ApplicationHelper
 
-  def perform(user_id, op_hash={})
+  def perform(lead_id, op_hash={})
     return false if Rails.env.test?
-    user = User.where(id: user_id).first
-    return false if !user || user.role != 'channel_partner'
-    op_hash = op_hash.with_indifferent_access
-    default_op_hash = { 'action' => 'add_portal_stage_and_token_number' }
-    op_hash = default_op_hash.merge(op_hash)
-    operation = op_hash.delete 'action'
-    self.send(operation, user, op_hash) if self.respond_to?(operation)
-  end
+    lead = Lead.where(id: lead_id).first || User.where(id: lead_id).first
+    return false unless lead
 
-  def add_portal_stage_and_token_number(user, payload={})
-    return false if payload.blank?
-    stage = payload['stage']
-    options = payload['options']
-
-    priority = PortalStagePriority.where(role: user.role).collect{|x| [x.stage, x.priority]}.to_h
-    if stage.present? && priority[stage].present?
-      if user.portal_stages.empty?
-        user.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
-      elsif user.portal_stage.priority.to_i <= priority[stage].to_i
-        user.portal_stages.where(stage:  stage).present? ? user.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : user.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
-      end
-      if stage == 'payment_done' && options.try(:[], 'token_number').present?
-        token_numbers = user.receipts.in(status: %w(success clearance_pending)).distinct(:token_number)
-      end
-
-      params = { portal_stage: stage }
-      params[:token_number] = token_numbers if token_numbers.present?
-      custom_hash = {lead: params}
-      sell_do(user, custom_hash)
+    if lead.is_a?(User) && lead.role?('channel_partner')
+      cp_user = lead
+      op_hash = op_hash.with_indifferent_access
+      operation = op_hash.delete 'action'
+      self.send(operation, cp_user, op_hash) if self.respond_to?(operation)
     else
-      user.portal_stage
+      op_hash = op_hash.with_indifferent_access
+      default_op_hash = { 'action' => 'add_portal_stage_and_token_number' }
+      op_hash = default_op_hash.merge(op_hash)
+      operation = op_hash.delete 'action'
+      self.send(operation, lead, op_hash) if self.respond_to?(operation)
     end
   end
 
-  def add_campaign_response(user, payload={})
+  def add_cp_portal_stage(user, payload={})
+    return false if payload.blank?
+    stage = payload['stage']
+    selldo_api_key = payload['selldo_api_key']
+    selldo_client_id = payload['selldo_client_id']
+
+    priority = PortalStagePriority.where(role: user.role).collect{|x| [x.stage, x.priority]}.to_h
+    if stage.present? && priority[stage].present?
+      if lead.portal_stages.empty?
+        lead.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
+      elsif lead.portal_stage.priority.to_i <= priority[stage].to_i
+        lead.portal_stages.where(stage:  stage).present? ? lead.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : lead.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
+      end
+      params = { portal_stage: stage }
+      custom_hash = {lead: params}
+    else
+      user.portal_stage
+    end
+
+    selldo_base_url = ENV_CONFIG['selldo']['base_url'].chomp('/')
+    if selldo_base_url.present? && selldo_api_key.present? && selldo_client_id.present?
+      params = {
+        api_key: selldo_api_key,
+        client_id: selldo_client_id,
+      }
+      params = params.merge(data)
+      url = selldo_base_url + "/client/leads/#{user.lead_id}.json"
+
+      Rails.logger.info "[SelldoLeadUpdater][CPPortalStage][INFO][Params] #{params}"
+      Rails.logger.info "[SelldoLeadUpdater][CPPortalStage][INFO][POST] #{url}"
+
+      RestClient.put(url, params)
+    end
+  end
+
+  def add_portal_stage_and_token_number(lead, payload={})
+    return false if payload.blank?
+    stage = payload['stage']
+    token_number = payload['token_number']
+
+    priority = PortalStagePriority.where(role: 'user').collect{|x| [x.stage, x.priority]}.to_h
+    if stage.present? && priority[stage].present?
+      if lead.portal_stages.empty?
+        lead.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
+      elsif lead.portal_stage.priority.to_i <= priority[stage].to_i
+        lead.portal_stages.where(stage:  stage).present? ? lead.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : lead.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
+      end
+      if stage == 'payment_done' && token_number.present?
+        token_numbers = lead.receipts.in(status: %w(success clearance_pending)).distinct(:token_number)
+      end
+
+      params = { portal_stage: stage }
+      params[:token_number] = token_numbers.join(',') if token_numbers.present?
+      custom_hash = {lead: params}
+      sell_do(lead, custom_hash)
+    else
+      lead.portal_stage
+    end
+  end
+
+  def add_campaign_response(lead, payload={})
+    selldo_base_url = ENV_CONFIG['selldo']['base_url'].chomp('/')
     if payload.present?
       params = {
         sell_do: {
           form: {
             lead: {
-              phone: user.phone
+              phone: lead.phone
             }
           }
         }
@@ -53,30 +97,66 @@ class SelldoLeadUpdater
       params[:sell_do][:form][:lead][:source] = payload['source'] if payload['source'].present?
       params[:sell_do][:form][:lead][:sub_source] = payload['sub_source'] if payload['sub_source'].present?
       params[:sell_do][:form][:lead][:project_id] = payload['project_id'] if payload['project_id'].present?
-      if payload['api_key'].present? && user.buyer?
+      if payload['api_key'].present? && selldo_base_url.present?
         params.merge!({ api_key: payload['api_key'] })
         puts params
-        RestClient.post(ENV_CONFIG['selldo']['base_url'] + "/api/leads/create.json", params)
+        RestClient.post(selldo_base_url + "/api/leads/create.json", params)
       end
     else
       puts payload
     end
   end
 
-  def sell_do(user, data={})
-    MixpanelPusherWorker.perform_async(user.mixpanel_id, stage, {}) if current_client.mixpanel_token.present?
-    if current_client.selldo_api_key.present? && user.lead_id.present?
+  def sell_do(lead, data={})
+    MixpanelPusherWorker.perform_async(lead.mixpanel_id, stage, {}) if current_client.mixpanel_token.present?
+
+    selldo_base_url = ENV_CONFIG['selldo']['base_url'].chomp('/')
+    if selldo_base_url.present? && lead.lead_id.present? && lead.project.selldo_api_key.present?
       params = {
-        api_key: current_client.selldo_api_key,
-        client_id: current_client.selldo_client_id,
+        api_key: lead.project.selldo_api_key,
+        client_id: lead.project.selldo_client_id,
       }
       params = params.merge(data)
-      url = ENV_CONFIG['selldo']['base_url'] + "/client/leads/#{user.lead_id}.json"
+      url = selldo_base_url + "/client/leads/#{lead.lead_id}.json"
 
-      Rails.logger.info "[SelldoLeadUpdater][INFO][Params] #{params}"
-      Rails.logger.info "[SelldoLeadUpdater][INFO][POST] #{url}"
+      Rails.logger.info "[SelldoLeadUpdater][LeadPortalStage][INFO][Params] #{params}"
+      Rails.logger.info "[SelldoLeadUpdater][LeadPortalStage][INFO][POST] #{url}"
 
       RestClient.put(url, params)
+    end
+  end
+
+  def add_secondary_sales(lead, payload={})
+    selldo_base_url = ENV_CONFIG['selldo']['base_url'].chomp('/')
+    if selldo_base_url.present? && lead.project.selldo_api_key.present? && lead.project.selldo_client_id?
+      if lead.lead_id.present? && payload['secondary_sale_ids'].present?
+        params = {
+          api_key: lead.project.selldo_api_key,
+          client_id: lead.project.selldo_client_id,
+          lead: {
+            add_secondary_sale_ids: payload['secondary_sale_ids']
+          }
+        }
+        puts params
+        RestClient.put("#{selldo_base_url}/client/leads/#{lead.lead_id.to_s}.json", params)
+      end
+    end
+  end
+
+  def reassign_lead(lead, payload)
+    selldo_base_url = ENV_CONFIG['selldo']['base_url'].chomp('/')
+    if selldo_base_url.present? && lead.project.selldo_api_key.present? && lead.project.selldo_client_id?
+      if lead.lead_id.present? && payload['sales_id'].present?
+        params = {
+          api_key: lead.project.selldo_api_key,
+          client_id: lead.project.selldo_client_id,
+          lead: {
+            sales_id: payload['sales_id']
+          }
+        }
+        puts params
+        r = RestClient.put("#{selldo_base_url}/client/leads/#{lead.lead_id.to_s}.json", params)
+      end
     end
   end
 end

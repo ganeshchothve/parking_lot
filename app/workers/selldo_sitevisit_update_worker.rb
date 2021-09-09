@@ -40,14 +40,14 @@ class SelldoSitevisitUpdateWorker
         # data = RestClient.put("https://v2.sell.do/client/leads/x/site_visits/#{sitevisit.selldo_id}.json", params)
         # response = JSON.parse(data)
       else #if cp_code.present?
-        if (project = sitevisit.project) && project.selldo_api_key.present? && project.selldo_client_id.present? && project.selldo_project_id.present?
+        if (project = sitevisit.project) && project.selldo_api_key.present? && project.selldo_client_id.present? && project.selldo_id.present?
           params = {
             api_key: sitevisit.project.selldo_api_key,
             client_id: sitevisit.project.selldo_client_id,
             # user_email: current_user.email,
             "site_visit":
             {
-              project_id: sitevisit.project.selldo_project_id,
+              project_id: sitevisit.project.selldo_id,
               scheduled_on: sitevisit.scheduled_on.to_s,
               sitevisit_type: "visit",
               agenda: "",

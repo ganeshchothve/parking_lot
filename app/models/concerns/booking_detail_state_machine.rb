@@ -356,13 +356,13 @@ module BookingDetailStateMachine
     def release_project_unit!
       project_unit.make_available
       project_unit.save(validate: false)
-      SelldoLeadUpdater.perform_async(user_id, {stage: 'cancelled'})
+      SelldoLeadUpdater.perform_async(lead_id.to_s, {stage: 'cancelled'})
 
     end
 
     def update_selldo!
       if project_unit && project_unit.booking_portal_client.selldo_api_key.present?
-        SelldoLeadUpdater.perform_async(user_id, {stage: status})
+        SelldoLeadUpdater.perform_async(lead_id.to_s, {stage: status})
       end
     end
 

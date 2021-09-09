@@ -11,6 +11,7 @@ module ProjectOnboardingOnSelldo
   def sync_on_selldo
     errors = []
     create_custom_field('portal stage', 'lead', errors)
+    create_custom_field('token number', 'lead', errors)
     create_custom_field('partner code', 'lead', errors)
     create_custom_field('partner code', 'site_visit', errors)
 

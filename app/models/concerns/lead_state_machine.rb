@@ -95,7 +95,7 @@ module LeadStateMachine
       sales = User.where(id: sales_id.to_s).first
       if self.update(closing_manager_id: sales_id.to_s)
         return_val = sales.assign_customer!
-        SelldoLeadUpdater.perform_async(self.id.to_s, {action: 'reassign_lead', sales_id: sales.selldo_uid})
+        SelldoLeadUpdater.perform_async(self.id.to_s, {action: 'reassign_lead', sales_id: sales.selldo_uid}) if sales.selldo_uid.present?
         return_val
       end
     end

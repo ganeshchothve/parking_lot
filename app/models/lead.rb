@@ -14,6 +14,8 @@ class Lead
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   DOCUMENT_TYPES = []
 
+  attr_accessor :payment_link
+
   field :first_name, type: String, default: ''
   field :last_name, type: String, default: ''
   field :email, type: String, default: ''
@@ -31,7 +33,6 @@ class Lead
   field :lead_status, type: String
   field :lead_lost_date, type: String
   field :sitevisit_status, type: String # synced from sell.do
-  #field :sitevisit_date, type: String # synced from the sell.do
   field :selldo_lead_registration_date, type: String
   # Casa fields end
   #
@@ -41,9 +42,8 @@ class Lead
   # used for dump latest queue_number or revisit queue number from sitevisit
   field :queue_number, type: Integer
 
-  attr_accessor :payment_link
-
   embeds_many :state_transitions
+  embeds_many :portal_stages
   belongs_to :user
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :closing_manager, class_name: 'User', optional: true
@@ -68,6 +68,8 @@ class Lead
   #has_many :received_smses, class_name: 'Sms', inverse_of: :recipient
   #has_many :received_whatsapps, class_name: 'Whatsapp', inverse_of: :recipient
 
+  accepts_nested_attributes_for :portal_stages, reject_if: :all_blank
+
   validates_uniqueness_of :user, scope: [:stage, :project_id], message: 'already exists with same stage'
   validates :first_name, presence: true
   validates :first_name, :last_name, name: true, allow_blank: true
@@ -80,10 +82,6 @@ class Lead
   delegate :name, to: :project, prefix: true, allow_nil: true
   delegate :name, :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
   delegate :role, :role?, to: :user, prefix: true, allow_nil: true
-
-  def phone_or_email_required
-    errors.add(:base, 'Email or Phone is required')
-  end
 
   scope :filter_by__id, ->(_id) { where(_id: _id) }
   scope :filter_by_lead_id, ->(lead_id) { where(lead_id: lead_id) }
@@ -141,8 +139,16 @@ class Lead
     end
   end
 
+  def phone_or_email_required
+    errors.add(:base, 'Email or Phone is required')
+  end
+
   def first_booking_detail
     self.booking_details.in(status: BookingDetail::BOOKING_STAGES).order(created_at: :asc).first
+  end
+
+  def portal_stage
+    portal_stages.desc(:updated_at).first
   end
 
   def unattached_blocking_receipt(blocking_amount = nil)

@@ -11,7 +11,9 @@ class ChannelPartnerObserver < Mongoid::Observer
       end
     end
 
-    SelldoLeadUpdater.perform_async(user.id.to_s, {stage: channel_partner.status})
+    if (selldo_api_key = user&.booking_portal_client&.selldo_api_key.presence) && (selldo_client_id = user&.booking_portal_client&.selldo_client_id.presence)
+      SelldoLeadUpdater.perform_async(user.id.to_s, {stage: channel_partner.status, action: 'add_cp_portal_stage', selldo_api_key: selldo_api_key, selldo_client_id: selldo_client_id})
+    end
 
     template = Template::EmailTemplate.where(name: "channel_partner_created").first
     recipients = []
