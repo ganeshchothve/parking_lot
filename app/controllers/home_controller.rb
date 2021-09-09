@@ -54,7 +54,8 @@ class HomeController < ApplicationController
           current_user.save
           redirect_to home_path(current_user)
         else
-          @projects = Project.in(id: current_user.project_ids)
+          project_ids = current_user.project_ids.map {|x| BSON::ObjectId(x) }
+          @projects = Project.where(_id: {'$in': project_ids}).all
           render layout: 'devise'
         end
       end

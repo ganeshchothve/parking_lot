@@ -74,6 +74,14 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
+            <label><%= t("mongoid.attributes.lead.portal_stage") %></label>
+            <div>
+              <%= lead.portal_stage&.stage || '-' %>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
             <label class="small text-muted"><%= t('mongoid.attributes.lead.registered_at') %></label>
             <div><%= lead.registered_at.present? ? (lead.registered_at.strftime("%d/%m/%Y") rescue '-') : (lead.created_at.strftime("%d/%m/%Y") rescue '-') %></div>
           </div>
