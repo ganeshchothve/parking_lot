@@ -7,6 +7,6 @@ class PortalStage
   field :priority, type: Integer
 
   # Associations
-  embedded_in :user
+  embedded_in :lead
 
 end

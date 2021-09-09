@@ -528,19 +528,19 @@ class User
     self.selldo_access_token = oauth_data.credentials.token if oauth_data
   end
 
-  def push_srd_to_selldo
-    _selldo_api_key = Client.selldo_api_clients.dig(:website, :api_key)
+  #def push_srd_to_selldo
+  #  _selldo_api_key = Client.selldo_api_clients.dig(:website, :api_key)
 
-    if self.manager_id.present? && _selldo_api_key.present?
-      campaign_resp = if self.manager_role?('channel_partner')
-        { srd: self.booking_portal_client.selldo_cp_srd, sub_source: self.manager_name }
-      elsif self.manager.role.in?((ADMIN_ROLES - %w(channel_partner)))
-        { srd: self.booking_portal_client.selldo_default_srd, sub_source: self.manager_name }
-      end
+  #  if self.manager_id.present? && _selldo_api_key.present?
+  #    campaign_resp = if self.manager_role?('channel_partner')
+  #      { srd: self.booking_portal_client.selldo_cp_srd, sub_source: self.manager_name }
+  #    elsif self.manager.role.in?((ADMIN_ROLES - %w(channel_partner)))
+  #      { srd: self.booking_portal_client.selldo_default_srd, sub_source: self.manager_name }
+  #    end
 
-      SelldoLeadUpdater.perform_async(self.id, { action: 'add_campaign_response', api_key: _selldo_api_key }.merge(campaign_resp))
-    end
-  end
+  #    SelldoLeadUpdater.perform_async(self.id, { action: 'add_campaign_response', api_key: _selldo_api_key }.merge(campaign_resp))
+  #  end
+  #end
 
   # Class Methods
   class << self

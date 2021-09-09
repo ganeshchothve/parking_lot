@@ -124,6 +124,8 @@ class HomeController < ApplicationController
                 end
 
                 if @lead.save
+                  SelldoLeadUpdater.perform_async(@lead.id, {stage: 'registered'})
+                  SelldoLeadUpdater.perform_async(@lead.id, {stage: 'confirmed'})
                   if cp_lead_activity.present?
                     if cp_lead_activity.save
                       update_customer_search_to_sitevisit if @customer_search.present?

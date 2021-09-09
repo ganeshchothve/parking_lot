@@ -59,8 +59,8 @@ module ChannelPartnerStateMachine
     end
 
     def update_selldo!
-      if self.associated_user&.booking_portal_client&.selldo_api_key.present?
-        SelldoLeadUpdater.perform_async(self.associated_user_id.to_s, {stage: self.status})
+      if (selldo_api_key = self.associated_user&.booking_portal_client&.selldo_api_key.presence) && (selldo_client_id = self.associated_user&.booking_portal_client&.selldo_client_id.presence)
+        SelldoLeadUpdater.perform_async(self.associated_user_id.to_s, {stage: self.status, action: 'add_cp_portal_stage', selldo_api_key: selldo_api_key, selldo_client_id: selldo_client_id})
       end
     end
   end
