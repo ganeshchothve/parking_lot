@@ -10,10 +10,11 @@ module ProjectOnboardingOnSelldo
 
   def sync_on_selldo
     errors = []
-    create_custom_field('portal stage', 'lead', errors)
-    create_custom_field('token number', 'lead', errors)
-    create_custom_field('partner code', 'lead', errors)
-    create_custom_field('partner code', 'site_visit', errors)
+    custom_fields = get_custom_fields(errors)
+    create_custom_field('portal stage', 'lead', errors) unless custom_fields.find {|x| x['name'] == 'custom_portal_stage', x['class_type'] == 'lead'}
+    create_custom_field('token number', 'lead', errors unless custom_fields.find {|x| x['name'] == 'custom_token_number', x['class_type'] == 'lead'})
+    create_custom_field('partner code', 'lead', errors unless custom_fields.find {|x| x['name'] == 'custom_partner_code', x['class_type'] == 'lead'})
+    create_custom_field('partner code', 'site_visit', errors unless custom_fields.find {|x| x['name'] == 'custom_portal_stage', x['class_type'] == 'lead'})
 
     website_api_client = get_api_clients('IRIS with campaign response', errors).try(:[], 'results')&.first&.presence
     website_api_client = create_api_client('IRIS with campaign response', 'website', true, errors) unless website_api_client
@@ -66,11 +67,13 @@ module ProjectOnboardingOnSelldo
           port = Rails.application.config.action_mailer.default_url_options[:port].to_i
           host = (port == 443 ? 'https://' : 'http://') + host
 
-          create_workflow("Site Visit Scheduled to IRIS", "sitevisit_scheduled", "site_visit#project_id", project['_id'], "SiteVisit", "#{host.chomp('/')}/sell_do/sitevisit_scheduled")
+          create_workflow("Site Visit Scheduled to IRIS", "sitevisit_scheduled", "site_visit#project_id", project['_id'], "SiteVisit", "#{host.chomp('/')}/sell_do/#{project['_id']}/site_visit_created")
 
-          create_workflow("Site Visit Conducted to IRIS", "sitevisit_conducted", "site_visit#project_id", project['_id'], "SiteVisit", "#{host.chomp('/')}/sell_do/sitevisit_conducted")
+          create_workflow("Site Visit Conducted to IRIS", "sitevisit_conducted", "site_visit#project_id", project['_id'], "SiteVisit", "#{host.chomp('/')}/sell_do/#{project['_id']}/site_visit_updated")
 
-          create_workflow("New lead Created to IRIS", "new_lead", "lead_meta_info#project_ids", project['_id'], "LeadMetaInfo", "#{host.chomp('/')}/sell_do/lead_created")
+          create_workflow("New lead Created to IRIS", "new_lead", "lead_meta_info#project_ids", project['_id'], "LeadMetaInfo", "#{host.chomp('/')}/sell_do/#{project['_id']}/lead_created")
+
+          #create_workflow("Lead Updated to IRIS", "lead_updated", "lead_meta_info#project_ids", project['_id'], "LeadMetaInfo", "#{host.chomp('/')}/sell_do/#{project['_id']}/lead_updated")
         end
       end
     end
@@ -318,6 +321,26 @@ module ProjectOnboardingOnSelldo
       end
     rescue => e
       puts e.message
+      return nil
+    end
+  end
+
+  def get_custom_fields errors
+    url = URI("#{BASE_URL}/client/configuration/custom_fields.json?#{base_params.to_param}")
+    https = Net::HTTP.new(url.host, url.port)
+    https.use_ssl = true
+    request = Net::HTTP::Get.new(url)
+    request["Content-Type"] = "application/json"
+    begin
+      response = https.request(request)
+      if response.code == '200' || response.code == '201'
+        return JSON.parse(response.body)
+      else
+        errors << "Fetch Custom Fields - ERRMSG: #{response.body}"
+        return nil
+      end
+    rescue => e
+      errors << "Fetch Custom Fields - ERRMSG: #{e.message}"
       return nil
     end
   end

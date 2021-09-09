@@ -35,7 +35,7 @@ class SelldoLeadUpdater
       elsif lead.portal_stage.priority.to_i <= priority[stage].to_i
         lead.portal_stages.where(stage:  stage).present? ? lead.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : lead.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
       end
-      params = { portal_stage: stage }
+      params = { custom_portal_stage: stage }
       custom_hash = {lead: params}
     else
       user.portal_stage
@@ -70,11 +70,11 @@ class SelldoLeadUpdater
         lead.portal_stages.where(stage:  stage).present? ? lead.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : lead.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
       end
       if stage == 'payment_done' && token_number.present?
-        token_numbers = lead.receipts.in(status: %w(success clearance_pending)).distinct(:token_number)
+        token_numbers = lead.receipts.in(status: %w(success clearance_pending)).nin(token_number: ['', nil]).all.map(&:get_token_number)
       end
 
-      params = { portal_stage: stage }
-      params[:token_number] = token_numbers.join(',') if token_numbers.present?
+      params = { custom_portal_stage: stage }
+      params[:custom_token_number] = token_numbers.join(',') if token_numbers.present?
       custom_hash = {lead: params}
       sell_do(lead, custom_hash)
     else
