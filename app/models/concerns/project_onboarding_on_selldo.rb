@@ -11,10 +11,10 @@ module ProjectOnboardingOnSelldo
   def sync_on_selldo
     errors = []
     custom_fields = get_custom_fields(errors)
-    create_custom_field('portal stage', 'lead', errors) unless custom_fields.find {|x| x['name'] == 'custom_portal_stage', x['class_type'] == 'lead'}
-    create_custom_field('token number', 'lead', errors unless custom_fields.find {|x| x['name'] == 'custom_token_number', x['class_type'] == 'lead'})
-    create_custom_field('partner code', 'lead', errors unless custom_fields.find {|x| x['name'] == 'custom_partner_code', x['class_type'] == 'lead'})
-    create_custom_field('partner code', 'site_visit', errors unless custom_fields.find {|x| x['name'] == 'custom_portal_stage', x['class_type'] == 'lead'})
+    create_custom_field('portal stage', 'lead', errors) unless custom_fields.find {|x| x['name'] == 'custom_portal_stage' && x['class_type'] == 'lead'}
+    create_custom_field('token number', 'lead', errors) unless custom_fields.find {|x| x['name'] == 'custom_token_number' && x['class_type'] == 'lead'}
+    create_custom_field('partner code', 'lead', errors) unless custom_fields.find {|x| x['name'] == 'custom_partner_code' && x['class_type'] == 'lead'}
+    create_custom_field('partner code', 'site_visit', errors) unless custom_fields.find {|x| x['name'] == 'custom_portal_stage' && x['class_type'] == 'lead'}
 
     website_api_client = get_api_clients('IRIS with campaign response', errors).try(:[], 'results')&.first&.presence
     website_api_client = create_api_client('IRIS with campaign response', 'website', true, errors) unless website_api_client
