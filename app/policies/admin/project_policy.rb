@@ -26,7 +26,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def sync_on_selldo?
-    user.role?('superadmin') && record.valid? && record.selldo_client_id.present?
+    user.role?('superadmin') && record.valid? && record.selldo_client_id.present? && ENV_CONFIG.dig(:selldo, :user_token).present? && ENV_CONFIG.dig(:selldo, :user_email).present?
   end
 
   def collaterals?

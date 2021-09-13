@@ -99,8 +99,13 @@ class Admin::ProjectsController < AdminController
       unless errors.present?
         format.html { redirect_to request.referrer || admin_projects_path, notice: 'Project synced on Sell.do successfully' }
       else
-        Note.create(notable: @project, note: "Sell.do Sync Errors</br>" + errors.to_sentence, creator: current_user)
-        format.html { redirect_to request.referrer || admin_projects_path, alert: 'Project was unable to sync due to some errors. Please check notes for details' }
+        if errors&.is_a?(Array)
+          Note.create(notable: @project, note: "Sell.do Sync Errors</br>" + errors.to_sentence, creator: current_user)
+          err_msg = 'Project was unable to sync due to some errors. Please check notes for details'
+        elsif errors&.is_a?(String)
+          err_msg = errors
+        end
+        format.html { redirect_to request.referrer || admin_projects_path, alert: err_msg}
       end
     end
   end

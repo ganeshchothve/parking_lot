@@ -9,75 +9,80 @@ module ProjectOnboardingOnSelldo
   end
 
   def sync_on_selldo
-    errors = []
-    custom_fields = get_custom_fields(errors)
-    create_custom_field('portal stage', 'lead', errors) unless custom_fields.find {|x| x['name'] == 'custom_portal_stage' && x['class_type'] == 'lead'}
-    create_custom_field('token number', 'lead', errors) unless custom_fields.find {|x| x['name'] == 'custom_token_number' && x['class_type'] == 'lead'}
-    create_custom_field('partner code', 'lead', errors) unless custom_fields.find {|x| x['name'] == 'custom_partner_code' && x['class_type'] == 'lead'}
-    create_custom_field('partner code', 'site_visit', errors) unless custom_fields.find {|x| x['name'] == 'custom_portal_stage' && x['class_type'] == 'lead'}
+    if base_params[:'user_token'].present? && base_params[:'user_email'].present?
+      errors = []
+      custom_fields = get_custom_fields(errors)
+      create_custom_field('portal stage', 'lead', errors) unless custom_fields&.find {|x| x['name'] == 'custom_portal_stage' && x['class_type'] == 'lead'}
+      create_custom_field('token number', 'lead', errors) unless custom_fields&.find {|x| x['name'] == 'custom_token_number' && x['class_type'] == 'lead'}
+      create_custom_field('partner code', 'lead', errors) unless custom_fields&.find {|x| x['name'] == 'custom_partner_code' && x['class_type'] == 'lead'}
+      create_custom_field('partner code', 'site_visit', errors) unless custom_fields&.find {|x| x['name'] == 'custom_portal_stage' && x['class_type'] == 'lead'}
 
-    website_api_client = get_api_clients('IRIS with campaign response', errors).try(:[], 'results')&.first&.presence
-    website_api_client = create_api_client('IRIS with campaign response', 'website', true, errors) unless website_api_client
-    updator_api_client = get_api_clients('IRIS without campaign response', errors).try(:[], 'results')&.first&.presence
-    updator_api_client = create_api_client('IRIS without campaign response', 'updator', false, errors) unless updator_api_client
+      website_api_client = get_api_clients('IRIS with campaign response', errors).try(:[], 'results')&.first&.presence
+      website_api_client = create_api_client('IRIS with campaign response', 'website', true, errors) unless website_api_client
+      updator_api_client = get_api_clients('IRIS without campaign response', errors).try(:[], 'results')&.first&.presence
+      updator_api_client = create_api_client('IRIS without campaign response', 'updator', false, errors) unless updator_api_client
 
-    if website_api_client
-      self.set(selldo_api_key: website_api_client['api_key'])
-    end
+      if website_api_client
+        self.set(selldo_api_key: website_api_client['api_key'])
+      end
 
-    campaigns = get_campaigns(errors)
-    if campaigns
-      organic_campaign_id = campaigns['results'].find{|x| x['name'] == 'organic'}['_id']
-      cp_campaign_id = campaigns['results'].find{|x| x['name'] == 'channel_partner'}['_id']
-      sales_id = get_sales(errors)['results'].first['_id'] rescue nil
-      if sales_id.present?
-        address = {
-          address1: self.address.try(:address1),
-          address2: self.address.try(:address2),
-          state: self.address.try(:state),
-          country: self.address.try(:country),
-          city: self.address.try(:city),
-          zip: self.address.try(:zip),
-          micro_market: self.micro_market,
-          lat: self.lat,
-          lng: self.lng,
-        }
-        # TODO: Replace Project name & other details
-        project = create_project(self.name, nil, sales_id, 'possession', address, errors)
+      campaigns = get_campaigns(errors)
+      if campaigns
+        organic_campaign_id = campaigns['results'].find{|x| x['name'] == 'organic'}['_id']
+        cp_campaign_id = campaigns['results'].find{|x| x['name'] == 'channel_partner'}['_id']
+        sales_id = get_sales(errors)['results'].first['_id'] rescue nil
+        if sales_id.present?
+          address = {
+            address1: self.address.try(:address1),
+            address2: self.address.try(:address2),
+            state: self.address.try(:state),
+            country: self.address.try(:country),
+            city: self.address.try(:city),
+            zip: self.address.try(:zip),
+            micro_market: self.micro_market,
+            lat: self.lat,
+            lng: self.lng,
+          }
+          # TODO: Replace Project name & other details
+          project = get_project(self.name, errors).try(:[], 'results')&.first&.presence
+          project = create_project(self.name, nil, sales_id, 'possession', address, errors) unless project
 
-        if project.present?
-          self.set(selldo_id: project['_id'])
+          if project.present?
+            self.set(selldo_id: project['_id'])
 
-          # TODO: Replace broker with iris
-          if website_api_client.present?
-            cp_srd = create_srd(cp_campaign_id, website_api_client, 'iris', '', project['_id'], errors)
-            if cp_srd
-              self.set(selldo_cp_srd: cp_srd['_id'])
+            # TODO: Replace broker with iris
+            if website_api_client.present?
+              cp_srd = create_srd(cp_campaign_id, website_api_client, 'iris', '', project['_id'], errors)
+              if cp_srd
+                self.set(selldo_cp_srd: cp_srd['_id'])
+              end
+              organic_srd = create_srd(organic_campaign_id, website_api_client, 'iris', '', project['_id'], errors)
+              if organic_srd
+                self.set(selldo_default_srd: organic_srd['_id'])
+              end
+            else
+              errors << 'Website API Client not present'
             end
-            organic_srd = create_srd(organic_campaign_id, website_api_client, 'iris', '', project['_id'], errors)
-            if organic_srd
-              self.set(selldo_default_srd: organic_srd['_id'])
-            end
-          else
-            errors << 'Website API Client not present'
+
+            url = Rails.application.routes.url_helpers
+            host = Rails.application.config.action_mailer.default_url_options[:host]
+            port = Rails.application.config.action_mailer.default_url_options[:port].to_i
+            host = (port == 443 ? 'https://' : 'http://') + host
+
+            create_workflow("Site Visit Scheduled to IRIS", "sitevisit_scheduled", "site_visit#project_id", project['_id'], "SiteVisit", "#{host.chomp('/')}/sell_do/#{project['_id']}/site_visit_created")
+
+            create_workflow("Site Visit Conducted to IRIS", "sitevisit_conducted", "site_visit#project_id", project['_id'], "SiteVisit", "#{host.chomp('/')}/sell_do/#{project['_id']}/site_visit_updated")
+
+            create_workflow("New lead Created to IRIS", "new_lead", "lead_meta_info#project_ids", project['_id'], "LeadMetaInfo", "#{host.chomp('/')}/sell_do/#{project['_id']}/lead_created")
+
+            #create_workflow("Lead Updated to IRIS", "lead_updated", "lead_meta_info#project_ids", project['_id'], "LeadMetaInfo", "#{host.chomp('/')}/sell_do/#{project['_id']}/lead_updated")
           end
-
-          url = Rails.application.routes.url_helpers
-          host = Rails.application.config.action_mailer.default_url_options[:host]
-          port = Rails.application.config.action_mailer.default_url_options[:port].to_i
-          host = (port == 443 ? 'https://' : 'http://') + host
-
-          create_workflow("Site Visit Scheduled to IRIS", "sitevisit_scheduled", "site_visit#project_id", project['_id'], "SiteVisit", "#{host.chomp('/')}/sell_do/#{project['_id']}/site_visit_created")
-
-          create_workflow("Site Visit Conducted to IRIS", "sitevisit_conducted", "site_visit#project_id", project['_id'], "SiteVisit", "#{host.chomp('/')}/sell_do/#{project['_id']}/site_visit_updated")
-
-          create_workflow("New lead Created to IRIS", "new_lead", "lead_meta_info#project_ids", project['_id'], "LeadMetaInfo", "#{host.chomp('/')}/sell_do/#{project['_id']}/lead_created")
-
-          #create_workflow("Lead Updated to IRIS", "lead_updated", "lead_meta_info#project_ids", project['_id'], "LeadMetaInfo", "#{host.chomp('/')}/sell_do/#{project['_id']}/lead_updated")
         end
       end
+      errors
+    else
+      'Selldo credentials are not configured for syncing'
     end
-    errors
   end
 
   private
@@ -205,6 +210,26 @@ module ProjectOnboardingOnSelldo
       end
     rescue => e
       puts e.message
+      return nil
+    end
+  end
+
+  def get_project name, errors
+    url = URI("#{BASE_URL}/client/projects.json?#{base_params.to_param}&name=#{name}")
+    https = Net::HTTP.new(url.host, url.port)
+    https.use_ssl = true
+    request = Net::HTTP::Get.new(url)
+    request["Content-Type"] = "application/json"
+    begin
+      response = https.request(request)
+      if response.code == '200' || response.code == '201'
+        return JSON.parse(response.body)
+      else
+        errors << "Fetch Project - ERRMSG: #{response.body}"
+        return nil
+      end
+    rescue => e
+      errors << "Fetch Project - ERRMSG: #{e.message}"
       return nil
     end
   end
