@@ -169,7 +169,7 @@ class HomeController < ApplicationController
   end
 
   def update_customer_search_to_sitevisit
-    @customer_search.update(customer: @user, step: 'sitevisit')
+    @customer_search.update(customer: @lead, step: 'sitevisit')
     response.set_header('location',admin_customer_search_url(@customer_search))
   end
 
