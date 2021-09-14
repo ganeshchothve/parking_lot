@@ -53,7 +53,7 @@ module BulkUpload
               bur.failure_count += 1
             end
           else
-            create_lead(user, row, lead_attrs)
+            create_lead(User.or(query).first, row, lead_attrs)
           end
         end
       else

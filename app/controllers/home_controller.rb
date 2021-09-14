@@ -3,7 +3,7 @@ class HomeController < ApplicationController
   include LeadsHelper
 
   skip_before_action :set_current_client, only: :welcome
-  before_action :set_project, :set_user, :set_lead, only: :check_and_register
+  before_action :set_project, :set_user, :set_lead, :set_customer_search, only: :check_and_register
 
   def index
   end
@@ -28,17 +28,36 @@ class HomeController < ApplicationController
   end
 
   def select_project
-    if current_user.leads.count == 1
-      current_user.update(selected_lead: current_user.leads.first)
-      redirect_to home_path(current_user)
-    else
-      if request.method == 'POST'
-        current_user.selected_lead_id = params[:selected_lead_id]
-        current_user.save
+    if current_user.buyer?
+      if current_user.leads.count == 1
+        current_user.update(selected_lead: (lead = current_user.leads.first), selected_project: lead.project)
         redirect_to home_path(current_user)
       else
-        @leads = current_user.leads.all
-        render layout: 'devise'
+        if request.method == 'POST'
+          current_user.selected_lead_id = params[:selected_lead_id]
+          lead = Lead.where(id: params[:selected_lead_id]).first
+          current_user.selected_project_id = lead.project if lead
+          current_user.save
+          redirect_to home_path(current_user)
+        else
+          @leads = current_user.leads.all
+          render layout: 'devise'
+        end
+      end
+    elsif !current_user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
+      if current_user.project_ids.count == 1
+        current_user.update(selected_project_id: current_user.project_ids.first)
+        redirect_to home_path(current_user)
+      else
+        if request.method == 'POST'
+          current_user.selected_project_id = params[:selected_project_id]
+          current_user.save
+          redirect_to home_path(current_user)
+        else
+          project_ids = current_user.project_ids.map {|x| BSON::ObjectId(x) }
+          @projects = Project.where(_id: {'$in': project_ids}).all
+          render layout: 'devise'
+        end
       end
     end
   end
@@ -74,7 +93,7 @@ class HomeController < ApplicationController
 
           if @project.present?
             @user = User.new(booking_portal_client_id: current_client.id, email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name']) unless @user.present?
-            @lead = @user.leads.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], project_id: @project.id)
+            @lead = @user.leads.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], project_id: @project.id, manager_id: params[:manager_id])
 
             # Push lead first to sell.do & upon getting successful response, save it in IRIS. Same flow as when were using sell.do form for lead registration.
             crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
@@ -98,16 +117,25 @@ class HomeController < ApplicationController
                 @user.confirm #auto confirm user account
                 @lead.assign_attributes(selldo_lead_registration_date: params.dig(:lead_details, :lead_created_at))
 
-                cp_lead_activity = CpLeadActivityRegister.create_cp_lead_object(@lead, current_user, (params[:lead_details] || {})) if current_user.role?("channel_partner")
+                if current_user.role?("channel_partner")
+                  cp_lead_activity = CpLeadActivityRegister.create_cp_lead_object(@lead, current_user, (params[:lead_details] || {}))
+                elsif params[:manager_id].present?
+                  cp_user = User.all.channel_partner.where(id: params[:manager_id]).first
+                  cp_lead_activity = CpLeadActivityRegister.create_cp_lead_object(@lead, cp_user, (params[:lead_details] || {})) if cp_user
+                end
 
                 if @lead.save
+                  SelldoLeadUpdater.perform_async(@lead.id, {stage: 'registered'})
+                  SelldoLeadUpdater.perform_async(@lead.id, {stage: 'confirmed'})
                   if cp_lead_activity.present?
                     if cp_lead_activity.save
+                      update_customer_search_to_sitevisit if @customer_search.present?
                       format.json { render json: {lead: @lead, success: "Lead created successfully"}, status: :created }
                     else
                       format.json { render json: {errors: 'Something went wrong while adding lead. Please contact support'}, status: :unprocessable_entity }
                     end
                   else
+                    update_customer_search_to_sitevisit if @customer_search.present?
                     format.json { render json: {lead: @lead, success: "Lead created successfully"}, status: :created }
                   end
                 else
@@ -135,6 +163,15 @@ class HomeController < ApplicationController
   #     format.json { render json: { errors: 'There was some error while fetching lead data from Sell.Do. Please contact administrator.', status: :unprocessable_entity } } && return if @is_interested_for_project == 'error'
   #   end
   # end
+
+  def set_customer_search
+    @customer_search = CustomerSearch.where(id: params[:customer_search_id]).first if params[:customer_search_id].present?
+  end
+
+  def update_customer_search_to_sitevisit
+    @customer_search.update(customer: @user, step: 'sitevisit')
+    response.set_header('location',admin_customer_search_url(@customer_search))
+  end
 
   def get_query
     query = []

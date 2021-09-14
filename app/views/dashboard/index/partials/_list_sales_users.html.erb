@@ -1,0 +1,23 @@
+<div class="row">
+  <div class="col-xs-12 col-lg-3 col-md-12 col-sm-12">
+    <h2 class="title"><%= active_link_to 'Sales Team', search_by_admin_users_path(fltrs: {role: 'sales', sort: 'sales_status.asc'}, element: '#sales-users-list', template: 'dashboard/index/partials/list_sales_users', per_page: 50, format: :js), remote: true, active: { fltrs: { 'role' => 'sales', 'sort' => 'sales_status.asc' } } %></h2>
+  </div>
+  <div class="col-xs-12 col-lg-9 col-md-12 col-sm-12 pull-right">
+    <ul class="sales-team-status mb-0">
+      <li><p class="available"><%= active_link_to 'Available', search_by_admin_users_path(fltrs: {role: 'sales', sales_status: 'available'}, element: '#sales-users-list', template: 'dashboard/index/partials/list_sales_users', per_page: 50, format: :js), remote: true, active: { fltrs: { 'role' => 'sales', 'sales_status' => 'available' } } %></p></li>
+      <li><p class="not_available"><%= active_link_to 'Busy | Not Available', search_by_admin_users_path(fltrs: {role: 'sales', sales_status: ['not_available', 'engaged']}, element: '#sales-users-list', template: 'dashboard/index/partials/list_sales_users', per_page: 50, format: :js), remote: true, active: { fltrs: { 'role' => 'sales', 'sales_status' => ['not_available', 'engaged']} } %></p></li>
+      <li><p class="break"><%= active_link_to 'Break', search_by_admin_users_path(fltrs: {role: 'sales', sales_status: 'break'}, element: '#sales-users-list', template: 'dashboard/index/partials/list_sales_users', per_page: 50, format: :js), remote: true, active: { fltrs: { 'role' => 'sales', 'sales_status' => 'break' } } %></p></li>
+    </ul>
+  </div>
+</div>
+<div class="row sales-users">
+  <% if users.present? %>
+    <% users.each do |sales| %>
+      <div class="col-lg-4 col-xs-12 col-sm-6 col-md-6 sales-box" id="<%= sales.id.to_s %>">
+        <%= render 'dashboard/index/partials/sales_box', sales: sales %>
+      </div>
+    <% end %>
+  <% else %>
+    <p>No Users found </p>
+  <% end %>
+</div>

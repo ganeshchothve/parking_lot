@@ -1,7 +1,8 @@
 class Admin::LeadsController < AdminController
   before_action :authenticate_user!
-  before_action :set_lead, except: %i[index new export]
+  before_action :set_lead, except: %i[index new export search_by]
   before_action :authorize_resource
+  before_action :set_sales_user, only: :assign_sales
   around_action :apply_policy_scope, only: %i[index]
 
   def new
@@ -71,7 +72,39 @@ class Admin::LeadsController < AdminController
       end
     end
   end
-  
+
+  # GET /admin/leads/search_by
+  #
+  def search_by
+    @leads = Lead.unscoped.build_criteria params
+    @leads = @leads.paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
+  end
+
+  def assign_sales
+    if @lead.may_assign_sales?(params[:sales_id])
+      if @lead.assign_manager(params[:sales_id])
+        @lead.current_site_visit&.set(sales_id: params[:sales_id])
+        flash.now[:notice] = "#{@lead.name} assigned to sales #{@sales.name}"
+      else
+        flash.now[:alert] = "Not able to assign #{@lead.name} to sales"
+      end
+    else
+      flash.now[:alert] = "Not able to assign #{@lead.name} to sales"
+    end
+  end
+
+  def move_to_next_state
+    respond_to do |format|
+      if @lead.move_to_next_state!(params[:status])
+        format.html{ redirect_to request.referrer || dashboard_url, notice: I18n.t("controller.leads.move_to_next_state.#{@lead.status}", name: @lead.name.titleize) }
+        format.json { render json: { message: I18n.t("controller.leads.move_to_next_state.#{@lead.status}", name: @lead.name.titleize) }, status: :ok }
+      else
+        format.html{ redirect_to request.referrer || dashboard_url, alert: @lead.errors.full_messages.uniq }
+        format.json { render json: { errors: @lead.errors.full_messages.uniq }, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
   def set_lead
     @lead = if params[:crm_client_id].present? && params[:id].present?
@@ -87,8 +120,16 @@ class Admin::LeadsController < AdminController
     Lead.where("third_party_references.crm_id": _crm.try(:id), "third_party_references.reference_id": reference_id ).first
   end
 
+  def set_sales_user
+    @sales = User.where(id: params[:sales_id], role: 'sales').first
+    unless @sales
+      flash.now[:alert] = 'Sales user not found'
+      render 'assign_sales'
+    end
+  end
+
   def authorize_resource
-    if %w[index new export].include?(params[:action])
+    if %w[index new export search_by].include?(params[:action])
       authorize [current_user_role_group, Lead]
     else
       authorize [current_user_role_group, @lead]

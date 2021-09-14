@@ -1,0 +1,10 @@
+<% unless alert %>
+  $('#<%= @lead.id.to_s %>').parent('li').remove();
+  $("#<%= params[:sales_id] %>").html("<%= j (render partial: 'dashboard/index/partials/sales_box', :locals => {:sales => @sales.reload } ) %>");
+  <% if notice %>
+    Amura.global_success_handler("<%= notice %>");
+  <% end %>
+<% else %>
+  var alert = <%= raw alert.to_json %>
+  Amura.global_error_handler(alert);
+<% end %>

@@ -114,12 +114,12 @@ class ProjectUnit
     "#{project_tower_name} | #{name} | #{bedrooms} BHK"
   end
 
-  def make_available
+  def make_available lead=nil
     self.status = 'available' if available_for == 'user'
     self.status = 'employee' if available_for == 'employee'
     self.status = 'management' if available_for == 'management'
     # GENERICTODO: self.base_rate = upgraded rate based on timely upgrades
-    SelldoLeadUpdater.perform_async(user_id.to_s, {stage: 'hold_payment_dropoff'})
+    SelldoLeadUpdater.perform_async(lead.id.to_s, {stage: 'hold_payment_dropoff'}) if lead.present?
   end
 
   def valid_status?
@@ -322,8 +322,7 @@ class ProjectUnit
   def self.user_based_scope(user, params = {})
     custom_scope = {}
     unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
-      project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
-      custom_scope.merge!({project_id: {"$in": project_ids}})
+      custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
     end
     custom_scope
   end

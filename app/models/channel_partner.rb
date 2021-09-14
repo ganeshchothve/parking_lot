@@ -24,7 +24,7 @@ class ChannelPartner
   SOURCE = ['Internal CP', 'External CP']
   REGION = ['Chennai', 'Bangalore', 'Coimbatore', 'NRI']
 
-  SHORT_FORM = %i(first_name last_name email phone company_name rera_applicable status interested_services)
+  SHORT_FORM = %i(first_name last_name company_name rera_applicable status interested_services)
   FULL_FORM = SHORT_FORM.clone + %i(team_size gst_applicable nri)
 
   field :title, type: String
@@ -90,6 +90,7 @@ class ChannelPartner
 
   validates *SHORT_FORM, presence: true
   validates *FULL_FORM, presence: true, on: :submit_for_approval
+  validate :phone_or_email_required, if: proc { |cp| cp.phone.blank? && cp.email.blank? }
   validates :pan_number, presence: true, unless: :nri?, on: :submit_for_approval
   validates :rera_id, presence: true, if: :rera_applicable?
   validates :gstin_number, presence: true, if: :gst_applicable?
@@ -107,7 +108,7 @@ class ChannelPartner
 
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: { with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A' }, allow_blank: true
-  validates :first_name, :last_name, name: true, allow_blank: true
+  #validates :first_name, :last_name, name: true, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :user_based_uniqueness
 
@@ -121,6 +122,10 @@ class ChannelPartner
   accepts_nested_attributes_for :bank_detail, :address
 
   delegate :name, :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
+
+  def phone_or_email_required
+    errors.add(:base, 'Email or Phone is required')
+  end
 
   def self.available_statuses
     [

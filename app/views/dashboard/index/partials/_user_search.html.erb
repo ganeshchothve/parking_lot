@@ -1,0 +1,55 @@
+<div class="card h-100 search-customer-card">
+  <div class='card-header m-0 px-4'>
+    Search <%= global_labels[:customer] %> By
+  </div>
+  <div class="card-body">
+    <% url = search_by_admin_leads_path %>
+    <%= form_tag url, method: "get", id: "lead_search_form", remote: true do %>
+      <div class = "row" >
+        <%= hidden_field_tag :element, '#users' %>
+        <%= hidden_field_tag :template, 'index' %>
+        <div class = 'col-sm-5'>
+          <div class="form-group">
+            <label for="">Name / Email / Phone</label>
+            <% if lead_id.present? %>
+              <%= select_tag "fltrs[_id]", options_for_select(([ [Lead.where(id: lead_id).first.try(:ds_name), lead_id] ]), lead_id ), prompt: "#{t('mongoid.attributes.lead.search_by_name')}", class: "selectize-remote", data: {url: admin_leads_path } %>
+            <% else %>
+              <%= select_tag "fltrs[_id]", options_for_select((params.dig(:fltrs, :_id).present? ? [ [Lead.where(id: params.dig(:fltrs, :_id)).first.try(:ds_name), params.dig(:fltrs, :_id)] ] : []), (params[:fltrs].present? ? params[:fltrs][:_id] : [])), prompt: "#{t('mongoid.attributes.lead.search_by_name')}", class: "selectize-remote", data: {url: admin_leads_path } %>
+            <% end %>
+          </div>
+        </div>
+        <div class ='col-sm-1 pt-2 text-center'>
+          <p class="or-txt">OR</p>
+        </div>
+        <div class = 'col-sm-5'>
+          <div class="form-group">
+            <label for="">EOI Number</label>
+            <%= select_tag "fltrs[token_number]",  options_for_select(Receipt.all.distinct(:token_number), (params[:fltrs].present? ? params[:fltrs][:token_number] : "")), prompt: "#{t('mongoid.attributes.receipt.token_number')}", class: "selectize" %>
+          </div>
+        </div>
+        <div class = 'col-sm-1'>
+          <div class="form-group float-right mt-2">
+            <%= submit_tag :Apply, class: "btn apply-btn" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <div id = 'users'>
+    </div>
+  </div>
+</div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    var $form = $('#lead_search_form');
+    FormInitializer.init($form);
+    var userId = $form.find('[name="fltrs[_id]"]').val();
+    if(!_.isEmpty(userId)){
+      $form.submit();
+    }
+
+    // $('#get-started').hide();
+    // $('#user_search_form').on('ajax:success', function() {
+    //   $('#get-started').show();
+    // });
+  });
+<% end %>

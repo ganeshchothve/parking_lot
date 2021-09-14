@@ -1,0 +1,104 @@
+<section class="team_lead">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 col-xs-6 col-md-6 col-sm-6 no-pd">
+        <div class="table-title pt-2 pb-3">
+          <img class="float-left mr-2" width=20 src="<%= asset_path 'user-black.svg' %>" alt="Team Lead">
+          <h4 class="title"><%= current_user.name.try(:titleize) %> <small>(Team Lead)</small></h4>
+        </div>
+      </div>
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="box-card relative">
+          <div class="row">
+            <div class="col-lg-3 col-sm-12 col-md-4 col-xs-12 user-list-wrapper">
+              <div class="search-user mb-2">
+                <%= select_tag :search_user, "", prompt: 'Search User by Queue No.', class: 'selectize-remote', autofocus: true, remote: true, data: { url: search_by_admin_leads_path, params: { fltrs: { customer_status: 'queued', sort: 'queue_number.asc' }, element: '#queued-users-list', template: 'dashboard/index/partials/list_queued_users' }, preload: true } %>
+              </div>
+              <div id='queued-users-list'></div>
+            </div>
+            <div class="col-lg-9 col-sm-12 col-md-8 col-xs-12 sales-team-list-wrapper">
+              <div class="sales-team-inner" id='sales-users-list'>
+                <%= render 'dashboard/index/partials/list_sales_users', users: User.unscoped.where(role: 'sales').asc(:sales_status) %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    var onType = function(value) {
+      this.$input.data('params').fltrs.queue_number = value;
+    };
+    var ajaxFunc = function(xhr) {
+      if(xhr.status == 200){
+        eval(xhr.responseText);
+        var $select = $('#search_user');
+        var selectize = $select.selectize()[0].selectize;
+        var $control = selectize.$control;
+        if($select.data('params').fltrs.queue_number && $control.find('.clear-search').length == 0){
+          $control.append("<small class='clear-search'><a class='float-right' href='javascript;'>Clear Search</a></small>");
+        }
+      }
+    };
+    $('#search_user').data('ontype', onType);
+    $('#search_user').data('error-function', ajaxFunc);
+    FormInitializer.init($('.team_lead'));
+
+    $('.team_lead').on('click', '.clear-search', function(event) {
+      event.preventDefault();
+      var $select = $('#search_user');
+      delete $select.data('params').fltrs.queue_number;
+      var selectize = $select.selectize()[0].selectize;
+      selectize.load(function(callback) { selectize.settings.load.apply(selectize, ['', callback]) });
+      selectize.setTextboxValue();
+      $('.team_lead').find('.clear-search').remove();
+    });
+
+    // Drag & drop for assigning customer to sales
+    $('.team_lead').on('dragstart', '.user-list-inner', function(event) {
+      event.originalEvent.dataTransfer.setData('customer_id', event.currentTarget.id);
+    });
+    $('.team_lead').on('dragover dragenter', '.sales-team-box.available', function(event) {
+      event.preventDefault();
+      $(event.currentTarget).addClass('dragover');
+    });
+    $('.team_lead').on('dragleave', '.sales-team-box.available', function(event) {
+      event.preventDefault();
+      $(event.currentTarget).removeClass('dragover');
+    });
+    $('.team_lead').on('drop', '.sales-team-box.available', function(event) {
+      event.preventDefault();
+      var customerId = event.originalEvent.dataTransfer.getData('customer_id');
+      var salesId = $(event.currentTarget).parent('.sales-box').attr('id');
+
+      $.ajax({
+        url: '/admin/leads/' + customerId + '/assign_sales',
+        type: 'PATCH',
+        dataType: 'script',
+        data: { sales_id: salesId },
+        beforeSend: $.blockUI,
+        error: function(xhr, status, error){
+          console.log(status + ': ' + error);
+        },
+        success: function(data, type, options){
+        },
+        complete: function(data, status, xhr){
+          $(event.currentTarget).removeClass('dragover');
+          $.unblockUI();
+        }
+      });
+    });
+
+    $('.team_lead').on('ajax:success', 'a.dropoff', function(event) {
+      if($('.team_lead').find('.clear-search').length == 0) {
+        $('.team_lead').append("<small class='clear-search d-none'><a href='javascript;'>Clear Search</a></small>");
+      }
+      $('.clear-search').trigger('click');
+    });
+
+  });
+<% end %>

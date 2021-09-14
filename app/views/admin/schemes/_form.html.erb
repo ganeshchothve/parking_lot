@@ -40,13 +40,13 @@
           <div class="col-md-6">
             <div class="mb-3">
               <%= f.label :payment_schedule_template_id, class: 'label-required' %>
-              <%= f.select :payment_schedule_template_id, ::Template::PaymentScheduleTemplate.where(booking_portal_client_id: current_client.id).collect{|x| [x.name, x.id]}, {}, class: "selectize", disabled: !policy([:admin, @scheme]).editable_field?("payment_schedule_template_id") %>
+              <%= f.select :payment_schedule_template_id, ::Template::PaymentScheduleTemplate.where(booking_portal_client_id: current_client.id).collect{|x| [x.name, x.id]}, {}, class: "selectize", required: 'required', disabled: !policy([:admin, @scheme]).editable_field?("payment_schedule_template_id") %>
             </div>
           </div>
           <div class="col-md-6">
             <div class="mb-3">
               <%= f.label :cost_sheet_template_id, class: 'label-required' %>
-              <%= f.select :cost_sheet_template_id, ::Template::CostSheetTemplate.where(booking_portal_client_id: current_client.id).collect{|x| [x.name, x.id]}, {}, class: "selectize", disabled: !policy([:admin, @scheme]).editable_field?("cost_sheet_template_id") %>
+              <%= f.select :cost_sheet_template_id, ::Template::CostSheetTemplate.where(booking_portal_client_id: current_client.id).collect{|x| [x.name, x.id]}, {}, class: "selectize", required: 'required', disabled: !policy([:admin, @scheme]).editable_field?("cost_sheet_template_id") %>
             </div>
           </div>
         </div>
@@ -115,5 +115,67 @@ $(document).ready(function(){
     $("#scheme_user_ids").data('params', filter)
   });
   FormInitializer.init($("#scheme_form"));
+  $('.project_select').on('change', function(e){
+    var projectId = $(this).val();
+    var $paymentScheduleId = $('#scheme_payment_schedule_template_id').selectize();
+    var $costSheetId = $('#scheme_cost_sheet_template_id').selectize();
+    if(!_.isEmpty(projectId)) {
+      // Fetch Payment Schedule Templates
+      $.ajax({
+        url: "/admin/client/templates",
+        data: {
+          fltrs: {
+            project_id: projectId,
+            _type: "Template::PaymentScheduleTemplate"
+          }
+        },
+        type: "get",
+        dataType: "json",
+        success: function(data){
+          var $paymentScheduleIdSelectize = $paymentScheduleId[0].selectize;
+          $paymentScheduleIdSelectize.setValue('');
+          $paymentScheduleIdSelectize.clearOptions();
+          var options = _.map(data, function(d) { return { value: d._id, text: d.name } });
+          $paymentScheduleIdSelectize.addOption(options)
+          $paymentScheduleIdSelectize.refreshOptions(false);
+          var _paymentScheduleId = '<%= @scheme.payment_schedule_template_id %>';
+          if(!_.isEmpty(_paymentScheduleId)){
+            $paymentScheduleIdSelectize.addItem(_paymentScheduleId, true);
+          }
+        },
+        error: function(){
+          Amura.global_error_handler("Error in fetching the project payment schedules...")
+        }
+      });
+
+      // Fetch Costsheet Templates
+      $.ajax({
+        url: "/admin/client/templates",
+        data: {
+          fltrs: {
+            project_id: projectId,
+            _type: "Template::CostSheetTemplate"
+          }
+        },
+        type: "get",
+        dataType: "json",
+        success: function(data){
+          var $costSheetIdSelectize = $costSheetId[0].selectize;
+          $costSheetIdSelectize.setValue('');
+          $costSheetIdSelectize.clearOptions();
+          var options = _.map(data, function(d) { return { value: d._id, text: d.name } });
+          $costSheetIdSelectize.addOption(options)
+          $costSheetIdSelectize.refreshOptions(false);
+          var _costSheetId = '<%= @scheme.cost_sheet_template_id.to_s %>';
+          if(!_.isEmpty(_costSheetId)){
+            $costSheetIdSelectize.addItem(_costSheetId, true);
+          }
+        },
+        error: function(){
+          Amura.global_error_handler("Error in fetching the project cost sheet templates...")
+        }
+      });
+    }
+  }).trigger('change');
 });
 <% end %>
