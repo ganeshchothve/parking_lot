@@ -3,9 +3,6 @@
     <thead>
       <tr class="bg-gradient-cd white">
         <th><%= User.human_attribute_name('name_email_phone') %></th>
-        <% if selldo_config_base.present? || Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).present? %>
-          <th><%= User.human_attribute_name('lead_id') %></th>
-        <% end %>
         <th><%= Receipt.model_name.human %></th>
         <th><%= User.human_attribute_name('role') %></th>
         <th><%= User.human_attribute_name('status') %></th>
@@ -41,10 +38,6 @@
             </span>
           <% end %>
         </td>
-
-        <% if selldo_config_base.present? || Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).present? %>
-          <td data-title="Sell.Do Lead Id"><span><%= user.lead_id %></span></td>
-        <% end %>
 
         <td data-title="payments">
           <span><%= t("global.boolean.#{user.is_payment_done? }") %></span>

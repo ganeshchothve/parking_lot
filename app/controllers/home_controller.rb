@@ -102,7 +102,6 @@ class HomeController < ApplicationController
               selldo_api.execute(@lead)
               api_log = ApiLog.where(resource_id: @lead.id).first
               if resp = api_log.response.try(:first).presence
-                @user.lead_id = resp['sell_do_lead_id'] if @user.lead_id.blank?
                 params[:lead_details] = resp['selldo_lead_details']
                 #
                 # Don't create lead if it exists in sell.do when lead conflicts is disabled.

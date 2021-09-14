@@ -1072,6 +1072,7 @@ en:
         blocking_amount_paid: 'Booking Amount Paid'
         registration_done: 'Registration Done'
         stage: 'Stage'
+        lead_id: 'Lead Id'
         lead_validity_period: 'Lead Validity Period'
         selldo_lead_registration_date: 'Sell Do Lead Registration Date'
         selldo_lead_stage: 'SellDo Lead Stage'

@@ -3,6 +3,9 @@
     <thead>
       <tr class="bg-gradient-cd white">
         <th><%= User.human_attribute_name('name_email_phone') %></th>
+        <% if Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).present? %>
+          <th><%= Lead.human_attribute_name('lead_id') %></th>
+        <% end %>
         <th><%= t('mongoid.attributes.lead.stage') %></th>
         <th><%= Lead.human_attribute_name('project_id') %></th>
         <th><%= t('mongoid.attributes.lead.blocking_amount_paid') %></th>
@@ -39,6 +42,11 @@
             </small>
           <% end %>
         </td>
+
+        <% if Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).present? %>
+          <td data-title="<%= t('mongoid.attributes.lead.lead_id') %>"><span><%= lead.lead_id %></span></td>
+        <% end %>
+
         <td data-title="<%= t('mongoid.attributes.lead.stage') %>"><span><%= lead.lead_stage || '-' %></span></td>
 
         <td data-title="<%= Lead.human_attribute_name('project_id') %>"><span><%= lead.project_name %></span></td>

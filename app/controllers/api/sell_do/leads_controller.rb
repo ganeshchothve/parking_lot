@@ -1,13 +1,13 @@
 # consumes workflow api for leads from sell.do
 class Api::SellDo::LeadsController < Api::SellDoController
   before_action :set_crm, :set_project
-  before_action :set_user, only: [:lead_created]
+  before_action :create_user, only: [:lead_created]
   before_action :set_lead, except: [:lead_created]
   before_action :set_site_visit, only: [:site_visit_updated]
 
   def lead_created
     respond_to do |format|
-      @lead = @user.leads.new(email: @user.email, phone: @user.phone, first_name: @user.first_name, last_name: @user.last_name, project_id: @project.id, third_party_references_attributes: [{crm_id: @crm.id, reference_id: params[:lead_id]}])
+      @lead = @user.leads.new(lead_create_attributes)
       if @lead.save
         format.json { render json: @lead }
       else
@@ -93,6 +93,21 @@ class Api::SellDo::LeadsController < Api::SellDoController
     @user = @lead.user
   end
 
+  def lead_create_attributes
+    {
+      email: @user.email,
+      phone: @user.phone,
+      first_name: @user.first_name,
+      last_name: @user.last_name,
+      project_id: @project.id,
+      lead_stage: params.dig(:payload, :stage),
+      third_party_references_attributes: [{
+        crm_id: @crm.id,
+        reference_id: params[:lead_id]
+      }]
+    }
+  end
+
   def lead_update_attributes
     {
       lead_stage: params.dig(:payload, :stage)
@@ -133,12 +148,15 @@ class Api::SellDo::LeadsController < Api::SellDoController
     attrs
   end
 
-  def set_user
-    if params[:lead_id].present?
-      @user = User.where(lead_id: params[:lead_id].to_s).first
+  def create_user
+    if (email = params.dig(:lead, :email).presence) || (phone = params.dig(:lead, :phone).presence)
+      query = []
+      query << { phone: phone } if phone.present?
+      query << { email: email } if email.present?
+      @user = User.or(query).first
       if @user.blank?
         phone = Phonelib.parse(params[:lead][:phone]).to_s
-        @user = User.new(booking_portal_client_id: @project.booking_portal_client_id, email: params[:lead][:email], phone: phone, first_name: params[:lead][:first_name], last_name: params[:lead][:last_name], lead_id: params[:lead_id])
+        @user = User.new(booking_portal_client_id: @project.booking_portal_client_id, email: params[:lead][:email], phone: phone, first_name: params[:lead][:first_name], last_name: params[:lead][:last_name])
         @user.first_name = "Customer" if @user.first_name.blank?
         @user.last_name = '' if @user.last_name.nil?
         @user[:skip_email_confirmation] = true

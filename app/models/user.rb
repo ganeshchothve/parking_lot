@@ -205,7 +205,6 @@ class User
 
   scope :filter_by_role_nin, ->(_role) { _role.is_a?(Array) ? where( role: { "$nin": _role } ) : where(role: _role.as_json) }
   scope :buyers, -> { where(role: {'$in' => BUYER_ROLES } )}
-  scope :filter_by_lead_id, ->(lead_id) { where(lead_id: lead_id) }
   scope :filter_by_userwise_project_ids, ->(user) { self.in(project_ids: user.project_ids) if user.try(:project_ids).present? }
   scope :filter_by_sales_status, ->(*sales_status){ where(sales_status: { '$in': sales_status }) }
 
