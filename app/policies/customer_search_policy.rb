@@ -1,0 +1,2 @@
+class CustomerSearchPolicy < ApplicationPolicy
+end

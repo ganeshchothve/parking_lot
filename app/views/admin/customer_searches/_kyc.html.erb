@@ -1,0 +1,34 @@
+<div class="row justify-content-center">
+  <div class="col-md-11">
+    <div class="card h-100">
+      <div class = 'card-header'>
+        User KYC
+      </div>
+      <div class="card-body">
+        <% if @user_kyc.persisted?
+          _url = admin_user_user_kyc_path(@customer_search.customer, @user_kyc)
+        else
+          _url = admin_user_user_kycs_path(@customer_search.customer)
+        end %>
+        <%= form_for(@user_kyc, local: true, remote: true, url: _url, html: { class: 'validate-form', "data-resource-type": global_labels['user_kycs'], 'data-type': 'json', id: 'user_kyc_form'}) do |f| %>
+          <%= render 'admin/user_kycs/short_form_fields', f: f %>
+          <%= f.hidden_field :customer_search_id, value: @customer_search.id %>
+          <%= f.submit "Save", class: "btn btn-primary float-right submit" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $(document).on("ajax:success", '#user_kyc_form', function(evt, data, status, xhr){
+      window.location = window.location;
+      Amura.global_success_handler(evt.detail[0]["notice"])
+    });
+    $(document).on("ajax:error", '#user_kyc_form', function(evt, data, status, xhr){
+      Amura.global_error_handler(evt.detail[0].errors)
+    });
+    FormInitializer.init($("#user_kyc_form"));
+  });
+<% end %>

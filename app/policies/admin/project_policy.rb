@@ -25,6 +25,10 @@ class Admin::ProjectPolicy < ProjectPolicy
     update?
   end
 
+  def sync_on_selldo?
+    user.role?('superadmin') && record.valid? && record.selldo_client_id.present?
+  end
+
   def collaterals?
     valid = true
     valid = false if user.role?('channel_partner') && !interested_project_present?

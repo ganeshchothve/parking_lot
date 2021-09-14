@@ -1,0 +1,38 @@
+<div class="row justify-content-center">
+  <div class="col-md-11">
+    <div class="card h-100">
+      <div class = 'card-header'>
+        Site Visit Details
+      </div>
+      <div class="card-body">
+        <%= form_for [:admin, @customer_search], html: {id: "change_to_customer", class: "validate-form", "data-resource-type": global_labels['user'], "data-type": "json"} do |f| %>
+          <% f.hidden_field :step, value: 'completed' %>
+          <% if sitevisits = @customer_search.customer.site_visits.where(status: {"$in": %w[scheduled pending]}, scheduled_on: (DateTime.current.beginning_of_day..DateTime.current.end_of_day)).presence %>
+            <div class="form-group">
+              <%= label_tag :sitevisit_id %><br/>
+              <%= select_tag :sitevisit_id, options_for_select(sitevisits.collect{|rec| ["#{rec.scheduled_on.in_time_zone("Mumbai").strftime("%d/%m/%Y - %l:%M %P")} - #{rec.cp_code ||'no channel partner'}", rec.id]}), {prompt: "Select", class: "selectize"} %>
+            </div>
+          <% else %>
+            <p>Schedule a sitevisit at - <%= DateTime.now.in_time_zone("Mumbai").strftime("%d/%m/%Y - %l:%M %P") %></p>
+            <!--
+            <%#= label_tag :cp_code, "CP Code" %>
+            <%#
+              customer = @customer_search.customer
+              is_blocked = false #(customer.temporarily_blocked || customer.permanently_blocked?)
+            %>
+            <%#= text_field_tag :cp_code, (is_blocked ? customer.manager.try(:channel_partner).try(:cp_portal_id) : '')  , { class: 'form-control', autofocus: true, readonly: is_blocked } %>
+            -->
+            <%= hidden_field_tag :sitevisit_datetime, value: DateTime.now %>
+          <% end %>
+          <div class="mt-3"></div>
+          <%= f.submit "Mark as arrived", class: "btn btn-primary float-right" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  $("#sitevisit_id").selectize()
+});
+<% end %>

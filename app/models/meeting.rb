@@ -67,7 +67,7 @@ class Meeting
     custom_scope[:project_id] = params[:project_id] if params[:project_id].present?
     custom_scope[:campaign_id] = params[:campaign_id] if params[:campaign_id].present?
     custom_scope[:status] = {'$in': ['scheduled', 'completed'] } if %w[crm sales_admin sales channel_partner gre billing_team user employee_user management_user].include?(user.role)
-    custom_scope[:project_id] = user.selected_project.try(:id) if user.buyer?
+    custom_scope[:project_id] = user.selected_project_id if user.selected_project_id.present?
     custom_scope
   end
 

@@ -1,5 +1,5 @@
 <div class="mb-3">
-  <% _params = {fltrs: { project_tower: booking_detail.project_unit.project_tower_id, can_be_applied_by: current_user.role, user_role: booking_detail.user.role, user_id: booking_detail.user_id, status: 'approved' } } %>
+  <% _params = {fltrs: { project_id: booking_detail.project_id, project_tower_id: booking_detail.project_unit.project_tower_id, can_be_applied_by: current_user.role, user_role: booking_detail.user.role, user_id: booking_detail.user_id, status: 'approved' } } %>
   <% if booking_detail.lead && booking_detail.lead.manager_role?('channel_partner') %>
     <% _params[:fltrs].delete :can_be_applied_by %>
     <% _params[:fltrs][:can_be_applied_by_role] = booking_detail.lead.manager_role %>

@@ -71,8 +71,7 @@ class UserRequest
       custom_scope[:_type] = 'UserRequest::General' unless current_client.enable_actual_inventory?(user)
 
       unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
-        project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
-        custom_scope.merge!({project_id: {"$in": project_ids}})
+        custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
       end
       custom_scope
     end

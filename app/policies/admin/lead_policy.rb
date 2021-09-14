@@ -23,7 +23,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def edit?
-    user.role.in?(%w(superadmin admin))
+    user.role.in?(%w(superadmin admin gre))
   end
 
   def update?
@@ -50,10 +50,26 @@ class Admin::LeadPolicy < LeadPolicy
     record.user.confirmed?
   end
 
+  def search_by?
+    user.role.in?(%w(sales team_lead))
+  end
+
+  def assign_sales?
+    user.role.in?(%w(team_lead))
+  end
+
+  def move_to_next_state?
+    (user.role?('team_lead') && (record.is_a?(Lead) || record.role?('sales'))) ||
+      user.role?('sales') && (
+        (record.is_a?(Lead) && record.may_dropoff? && (record.closing_manager_id == user.id)) ||
+        (!record.is_a?(Lead) && record.role?('sales') && (record.may_break? || record.may_available?))
+      )
+  end
+
   def permitted_attributes(params = {})
     attributes = super || []
     attributes += [:first_name, :last_name, :email, :phone, :project_id] if record.new_record?
-    if user.role.in?(%w(superadmin admin))
+    if user.role.in?(%w(superadmin admin gre))
       attributes += [:manager_id, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
     end
     attributes.uniq

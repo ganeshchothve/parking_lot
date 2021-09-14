@@ -1,7 +1,7 @@
 class Admin::UsersController < AdminController
   include UsersConcern
   before_action :authenticate_user!
-  before_action :set_user, except: %i[index export new create portal_stage_chart channel_partner_performance]
+  before_action :set_user, except: %i[index export new create portal_stage_chart channel_partner_performance search_by]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: %i[index export]
 
@@ -74,7 +74,7 @@ class Admin::UsersController < AdminController
     respond_to do |format|
       format.html do
         if @user.save
-          SelldoLeadUpdater.perform_async(@user.id, {stage: 'confirmed'})
+          SelldoLeadUpdater.perform_async(@user.leads.first&.id, {stage: 'confirmed'})
           email_template = ::Template::EmailTemplate.find_by(name: "account_confirmation")
           email = Email.create!({
             booking_portal_client_id: @user.booking_portal_client_id,
@@ -221,6 +221,25 @@ class Admin::UsersController < AdminController
     end
     @walkins = Lead.where(manager_id: @user.id).filter_by_created_at(dates).group_by{|p| p.project_id}
     @bookings = BookingDetail.booking_stages.where(manager_id: @user.id).filter_by_created_at(dates).group_by{|p| p.project_id}
+  end
+
+  # GET /admin/users/search_by
+  #
+  def search_by
+    @users = User.unscoped.build_criteria params
+    @users = @users.paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
+  end
+
+  def move_to_next_state
+    respond_to do |format|
+      if @user.move_to_next_state!(params[:status])
+        format.html{ redirect_to request.referrer || dashboard_url, notice: I18n.t("controller.users.move_to_next_state.#{@user.role}.#{@user.status}", name: @user.name.titleize) }
+        format.json { render json: { message: I18n.t("controller.users.move_to_next_state.#{@user.role}.#{@user.status}", name: @user.name.titleize) }, status: :ok }
+      else
+        format.html{ redirect_to request.referrer || dashboard_url, alert: @user.errors.full_messages.uniq }
+        format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
+      end
+    end
   end
 
   private

@@ -1,0 +1,12 @@
+<div class="col-lg-3 col-xs-12 col-sm-12 col-md-6">
+  <div class="step-result <%= (@customer_search.crossed_step("kyc") || @customer_search.step == 'kyc') ? 'active': ''%>">
+    <i class="icon icon-3"></i>
+    <span>KYC & Other Details</span>
+    <% if @customer_search.crossed_step("kyc") %>
+      <%= form_for [:admin, @customer_search], html: {id: "change_to_kyc", class: "validate-form", "data-resource-type": global_labels['user'], "data-type": "json"} do |f| %>
+      <%= f.hidden_field :step, value: "kyc" %>
+      <%= link_to 'Change', "", :onclick => "$('#change_to_kyc').submit()", class: "small position-absolute", style: "right:10px; top:0;", disabled: 'disabled' %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

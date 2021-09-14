@@ -1,0 +1,9 @@
+<div class="col-lg-4 col-xs-12 col-sm-12 col-md-6">
+  <div class="active step-result">
+    <i class="icon icon-1"></i>
+    <span>Search</span>
+    <% if @customer_search.crossed_step("search") %>
+      <%= link_to "Change", new_admin_customer_search_path, class: "small position-absolute", style: "right:10px; top:0;" %>
+    <% end %>
+  </div>
+</div>

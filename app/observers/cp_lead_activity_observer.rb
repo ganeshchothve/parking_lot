@@ -5,6 +5,7 @@ class CpLeadActivityObserver < Mongoid::Observer
 
   def before_create cp_lead_activity
     lead = cp_lead_activity.lead
+    lead.manager_id = cp_lead_activity.user_id
     lead.referenced_manager_ids << cp_lead_activity.user_id
     lead.referenced_manager_ids.uniq!
     lead.save

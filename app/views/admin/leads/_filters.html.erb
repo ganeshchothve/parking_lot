@@ -46,6 +46,10 @@
           <%= label_tag "fltrs", t('mongoid.attributes.user.created_at') %>
           <%= text_field_tag "fltrs[created_at]", (params.dig(:fltrs, :created_at).present? ? params[:fltrs][:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
         </div>
+        <div class="form-group">
+          <%= label_tag "fltrs", 'queue no.', class: "control-label" %>
+          <%= number_field_tag "fltrs[queue_number]", (params.dig(:fltrs, :queue_number).present? ? params[:fltrs][:queue_number] : ""), class: "form-control" %>
+        </div>
       </div>
     </div>
     <div class="filter-footer modal-footer text-end">

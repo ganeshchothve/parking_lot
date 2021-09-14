@@ -1,0 +1,42 @@
+<ul>
+  <% leads.each do |user| %>
+    <li>
+      <div class="user-list-inner" id="<%= user.id.to_s %>" draggable=true>
+        <div class="user-name">
+          <p class="pull-left" title="<%= user.name.try(:titleize) %>">
+            <%= link_to user.name.try(:titleize), admin_user_path(user) %></br>
+            <small class='customer-status text-uppercase'><%#= user.portal_stage.try(:stage).try(:titleize) %></small>
+          </p>
+          <div class="dropdown text-left pull-right">
+            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+              <%= link_to 'Drop', move_to_next_state_admin_user_path(user.id, status: 'dropoff', format: :json), method: 'patch', remote: true, data: { confirm: 'Are you sure?', disable_with: 'Dropping...'  }, class: 'dropdown-item dropoff move-to-next-state' %>
+            </div>
+          </div>
+        </div>
+        <div class="user-extr-info">
+          <div class="user-queue-no">
+            <p><%= (user.is_revisit? ? t("mongoid.attributes.user.revisit_queue_number") : t("mongoid.attributes.user.queue_number")) %></p>
+            <span><%= user.queue_number %></span>
+          </div>
+          <div class="user-site-visit">
+            <p>Wait Time</p>
+            <% status_log = user.state_transitions.where(status: user.customer_status, sitevisit_id: user.current_site_visit_id).first %>
+            <span><%= distance_of_time_in_words_to_now(status_log.try(:enter_time) || Time.now, scope: 'datetime.distance_in_words.short') %></span>
+          </div>
+          <% sitevisit = user.site_visits.where(_id: user.current_site_visit_id).desc(:created_at).last %>
+          <% if sitevisit.present? %>
+            <div class="user-site-visit">
+              <p>Last Sitevisit date</p>
+              <span><%= sitevisit.scheduled_on.in_time_zone("Mumbai").strftime("%d/%m/%Y - %l:%M %P") %></span>
+            </div>
+            <div class="user-site-visit">
+              <p>Last Sitevisit status</p>
+              <span><%= sitevisit.status.titleize %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </li>
+  <% end %>
+</ul>
