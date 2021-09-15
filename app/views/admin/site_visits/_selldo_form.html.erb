@@ -109,7 +109,10 @@ var calendar_booking_slots_fetch_success = function(data){
         html += '<div class="time-item"><a href="javascript:;" class="time-item-selector" data-value="' + data.date.format("DD/MM/YYYY")  + ' ' + slots[i] + '">' + actual_slot_text + ' - ' + next_slot_text + '</a><a href="javascript:;" class="time-item-confirm" style="display:none;">Confirm</a></div>';
     }
     }else{
-    html += '<div class="title">No slots available.</div>';
+      html += '<div class="title">No slots available.</div>';
+      if(typeof data.message !== 'undefined'){
+        Amura.global_error_handler(data.message);
+      }
     }
     $(data.container).find('.time-list').html(html);
     $(data.container).find(".time-item a.time-item-selector").off("click");
