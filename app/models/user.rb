@@ -427,7 +427,7 @@ class User
   def name
     str = "#{first_name} #{last_name}"
     if role?('channel_partner')
-      cp = ChannelPartner.where(associated_user_id: id).first
+      cp = self.channel_partner
       str += " (#{cp.company_name})" if cp.present? && cp.company_name.present?
     end
     str
