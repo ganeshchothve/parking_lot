@@ -67,16 +67,16 @@ class Admin::CustomerSearchesController < AdminController
   private
 
   def send_notification
-    template = ::Template::SmsTemplate.where(name: "queue_number_notice").first
-    customer = @customer_search.customer
-    if template && customer
+    lead = @customer_search.customer
+    if lead
+      template = ::Template::SmsTemplate.where(name: "queue_number_notice", project_id: lead.project_id).first
       sms = Sms.create!(
-        booking_portal_client_id: customer.booking_portal_client_id,
-        recipient_id: customer.id,
+        booking_portal_client_id: lead.user.booking_portal_client_id,
+        recipient_id: lead.id,
         sms_template_id: template.id,
-        triggered_by_id: customer.id,
-        triggered_by_type: customer.class.to_s
-      )
+        triggered_by_id: lead.id,
+        triggered_by_type: lead.class.to_s
+      ) if template
     end
   end
 

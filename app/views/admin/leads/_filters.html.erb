@@ -16,6 +16,12 @@
           <%= label_tag "fltrs", t('mongoid.attributes.lead.name_email_phone') %>
           <%= select_tag "fltrs[_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: { url: admin_leads_path } } %>
         </div>
+        <% if Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).present? %>
+          <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
+            <%= label_tag "fltrs", t('mongoid.attributes.lead.lead_id') %>
+            <%= number_field_tag "fltrs[lead_id]", (params[:fltrs].present? ? params[:fltrs][:lead_id] : ""), class: "form-control" %>
+          </div>
+        <% end %>
         <div class="form-group col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.lead.stage') %>
           <%= select_tag "fltrs[stage]", options_for_select(Lead.nin(stage: [nil, '']).distinct(:stage), (params[:fltrs].present? ? params[:fltrs][:stage] : "")), { prompt: 'Select', class: "selectize" } %>

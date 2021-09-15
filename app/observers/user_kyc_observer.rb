@@ -8,9 +8,10 @@ class UserKycObserver < Mongoid::Observer
   end
 
   def after_create user_kyc
-    user = user_kyc.lead.user
-    SelldoLeadUpdater.perform_async(lead_id.to_s, {stage: 'kyc_done'})
-    template = Template::EmailTemplate.where(name: "user_kyc_added", project_id: user_kyc.lead.project_id).first
+    lead = user_kyc.lead
+    user = lead.user
+    SelldoLeadUpdater.perform_async(lead.id.to_s, {stage: 'kyc_done'})
+    template = Template::EmailTemplate.where(name: "user_kyc_added", project_id: lead.project_id).first
     if user.booking_portal_client.email_enabled? && template.present?
       email = Email.create!({
         booking_portal_client_id: user.booking_portal_client_id,
@@ -22,7 +23,7 @@ class UserKycObserver < Mongoid::Observer
         triggered_by_type: user_kyc.class.to_s
       })
       email.sent!
-      PaymentReminderWorker.perform_at(Time.now + 1.hour, {user_id: user.id, project_id: user_kyc.lead.project_id}) if user.receipts.blank?
+      PaymentReminderWorker.perform_at(Time.now + 1.hour, {user_id: user.id, project_id: lead.project_id}) if lead.receipts.blank?
     end
   end
 end

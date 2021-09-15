@@ -102,7 +102,6 @@ class HomeController < ApplicationController
               selldo_api.execute(@lead)
               api_log = ApiLog.where(resource_id: @lead.id).first
               if resp = api_log.response.try(:first).presence
-                @user.lead_id = resp['sell_do_lead_id'] if @user.lead_id.blank?
                 params[:lead_details] = resp['selldo_lead_details']
                 #
                 # Don't create lead if it exists in sell.do when lead conflicts is disabled.
@@ -169,7 +168,7 @@ class HomeController < ApplicationController
   end
 
   def update_customer_search_to_sitevisit
-    @customer_search.update(customer: @user, step: 'sitevisit')
+    @customer_search.update(customer: @lead, step: 'sitevisit')
     response.set_header('location',admin_customer_search_url(@customer_search))
   end
 

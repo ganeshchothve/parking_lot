@@ -16,7 +16,7 @@ class Scheme
   field :payment_schedule_template_id, type: BSON::ObjectId
   field :cost_sheet_template_id, type: BSON::ObjectId
   field :default, type: Boolean
-  field :can_be_applied_by, type: Array
+  field :can_be_applied_by, type: Array, default: %w(superadmin admin sales_admin sales crm channel_partner cp cp_admin)
 
   scope :filter_by_name, ->(name) { where(name: ::Regexp.new(::Regexp.escape(name), 'i')) }
   scope :filter_by_can_be_applied_by, ->(user_role) do
