@@ -23,7 +23,7 @@ module CrmIntegration
   module ClassMethods
 
     def reference_resource_exists?(crm_id, reference_id)
-      where("third_party_references.crm_id": crm_id, "third_party_references.reference_id": reference_id).present?
+      all.where("third_party_references.crm_id": crm_id, "third_party_references.reference_id": reference_id).present?
     end
 
   end

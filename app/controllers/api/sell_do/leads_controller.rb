@@ -52,11 +52,15 @@ class Api::SellDo::LeadsController < Api::SellDoController
   def site_visit_created
     respond_to do |format|
       if params.dig(:payload, :_id).present?
-        @site_visit = SiteVisit.new(site_visit_attributes)
-        if @site_visit.save
-          format.json { render json: @site_visit }
+        unless SiteVisit.reference_resource_exists?(@crm.id, params.dig(:payload, :_id))
+          @site_visit = SiteVisit.new(site_visit_attributes)
+          if @site_visit.save
+            format.json { render json: @site_visit }
+          else
+            format.json { render json: {errors: @site_visit.errors.full_messages}, status: 200 }
+          end
         else
-          format.json { render json: {errors: @site_visit.errors.full_messages}, status: 200 }
+          format.json { render json: {errors: 'SiteVisit already exists'}, status: 200 }
         end
       else
         format.json { render json: {errors: 'SiteVisit Id is missing from params'}, status: 200 }
@@ -143,7 +147,7 @@ class Api::SellDo::LeadsController < Api::SellDoController
     when 'sitevisit_rescheduled'
       attrs[:scheduled_on] = DateTime.parse(params.dig(:payload, :scheduled_on)) rescue nil
     when 'sitevisit_conducted'
-      attrs[:conducted_on] = DateTime.parse(params.dig(:payload, :conducted_on)) rescue nil
+      attrs[:conducted_on] = DateTime.parse(params.dig(:payload, :sv_conducted_on)) rescue nil
     end
     attrs
   end

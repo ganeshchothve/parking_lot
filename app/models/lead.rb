@@ -70,7 +70,7 @@ class Lead
 
   accepts_nested_attributes_for :portal_stages, reject_if: :all_blank
 
-  validates_uniqueness_of :user, scope: [:stage, :project_id], message: 'already exists with same stage'
+  validates_uniqueness_of :user, scope: :project_id, message: 'already exists for this project'
   validates :first_name, presence: true
   validates :first_name, :last_name, name: true, allow_blank: true
   # validate :phone_or_email_required, if: proc { |user| user.phone.blank? && user.email.blank? }
