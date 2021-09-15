@@ -26,12 +26,12 @@ module CustomerSearchConcern
 
   def search_for_customer
     if params[:lead_id].present?
-      customer = Lead.filter_by_lead_id(params[:lead_id]).first
+      customer = Lead.where(Lead.user_based_scope(current_user, params)).filter_by_lead_id(params[:lead_id]).first
     elsif params[:token_number].present?
-      receipt = Receipt.filter_by_token_number(params[:token_number]).first
+      receipt = Receipt.where(Receipt.user_based_scope(current_user, params)).filter_by_token_number(params[:token_number]).first
       customer = receipt.lead if receipt.present?
     elsif params[:_id].present?
-      customer = Lead.filter_by__id(params[:_id]).first
+      customer = Lead.where(Lead.user_based_scope(current_user, params)).filter_by__id(params[:_id]).first
     end
     if customer.present?
       @customer_search.assign_attributes(customer_id: customer.id)

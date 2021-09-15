@@ -92,7 +92,7 @@ class Api::SellDo::LeadsController < Api::SellDoController
   end
 
   def set_lead
-    @lead = Lead.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:lead_id]).first
+    @lead = Lead.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:lead_id].to_s).first
     render json: { errors: ["Lead with lead_id '#{params[:lead_id]}' not found"] } and return unless @lead
     @user = @lead.user
   end
@@ -160,10 +160,10 @@ class Api::SellDo::LeadsController < Api::SellDoController
       @user = User.or(query).first
       if @user.blank?
         phone = Phonelib.parse(params[:lead][:phone]).to_s
-        @user = User.new(booking_portal_client_id: @project.booking_portal_client_id, email: params[:lead][:email], phone: phone, first_name: params[:lead][:first_name], last_name: params[:lead][:last_name])
+        @user = User.new(booking_portal_client_id: @project.booking_portal_client_id, email: params[:lead][:email], phone: phone, first_name: params[:lead][:first_name], last_name: params[:lead][:last_name], is_active: false)
         @user.first_name = "Customer" if @user.first_name.blank?
         @user.last_name = '' if @user.last_name.nil?
-        @user[:skip_email_confirmation] = true
+        @user.skip_confirmation! # TODO: Remove this when customer login needs to be given
         unless @user.save
           respond_to do |format|
             format.json { render json: {errors: @user.errors.full_messages}, status: 200 }

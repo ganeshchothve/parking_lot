@@ -40,24 +40,6 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="small text-muted"><%= t('mongoid.attributes.lead.sitevisit_date') %></label>
-            <div><%= lead.sitevisit_date.try(:strftime, "%d/%m/%Y") || '-' %></div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="small text-muted"><%= t('mongoid.attributes.lead.revisit_count') %></label>
-            <div><%= lead.revisit_count || '-' %></div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="small text-muted"><%= t('mongoid.attributes.lead.last_revisit_date') %></label>
-            <div><%= lead.last_revisit_date.try(:strftime, "%d/%m/%Y") || '-' %></div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
             <label><%= t("mongoid.attributes.lead.queue_number") %></label>
             <div>
               <%= lead.queue_number.presence || '-' %>

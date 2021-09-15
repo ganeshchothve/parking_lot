@@ -92,7 +92,10 @@ class HomeController < ApplicationController
           end
 
           if @project.present?
-            @user = User.new(booking_portal_client_id: current_client.id, email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name']) unless @user.present?
+            unless @user.present?
+              @user = User.new(booking_portal_client_id: current_client.id, email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], is_active: false)
+              @user.skip_confirmation! # TODO: Remove this when customer login needs to be given
+            end
             @lead = @user.leads.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], project_id: @project.id, manager_id: params[:manager_id])
 
             # Push lead first to sell.do & upon getting successful response, save it in IRIS. Same flow as when were using sell.do form for lead registration.
@@ -113,7 +116,6 @@ class HomeController < ApplicationController
 
             if selldo_api.blank? || (api_log.present? && api_log.status == 'Success')
               if @user.save && (selldo_config_base.blank? || @project.save)
-                @user.confirm #auto confirm user account
                 @lead.assign_attributes(selldo_lead_registration_date: params.dig(:lead_details, :lead_created_at))
 
                 if current_user.role?("channel_partner")

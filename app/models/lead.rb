@@ -200,7 +200,7 @@ class Lead
   end
 
   def ds_name
-    "#{name} (#{project_name})"
+    "#{name} - #{email} - #{phone} (#{project_name})"
   end
 
   def active_cp_lead_activities
