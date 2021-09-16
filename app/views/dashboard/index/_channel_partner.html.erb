@@ -49,14 +49,14 @@
         <div class = "row">
           <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
             <div class="table-title pt-4">
-              <img src="<%= asset_path 'chart-line.svg' %>" alt="user icon"> <h1 class="title"><%= t('dashboard.channel_partner.titles.leads') %></h1>
+              <h1 class="title"><i class="fa fa-chart-bar fa-sm me-2"></i><%= t('dashboard.channel_partner.titles.leads') %></h1>
             </div>
           </div>
           <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-md-3 no-pd">
-            <div class="table-btn-set float-md-right pt-md-3">
-              <button class="db-filter-btn white fn-500" type="button">
-                <i class="icon-set icon-filter-light-blue"></i>
-              </button>
+            <div class="table-btn-set float-md-end pt-md-3">
+               <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
+                  <i class="fa fa-filter fill-theme"></i>
+                </button>
             </div>
           </div>
           <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
@@ -100,25 +100,24 @@
         <div class = "row">
           <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
             <div class="table-title pt-4">
-              <h1 class="title icon-set icon-building-black">Project Wise Summary</h1>
+              <h1 class="title fn-18"><i class="fa fa-building theme-fill fa-sm me-2"></i>Project Wise Summary</h1>
             </div>
           </div>
           <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-md-3 no-pd">
-            <div class="table-btn-set float-md-right pt-md-3">
-              <button class="db-filter-btn white fn-500" type="button">
-                <i class="icon-set icon-filter-light-blue"></i>
-              </button>
+            <div class="table-btn-set float-md-end pt-md-3">
+               <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
+                  <i class="fa fa-filter fill-theme"></i>
+                </button>
             </div>
           </div>
           <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-            <div class="filter-box">
-              <div class="filter-inner">
-                <div class="filter-header">
-                  <span class="title">Filter</span>
-                  <a href="javascript:;" class="close-filter-btn">&times;</a>
-                </div>
+            <div class="filter-box modal-content px-3 fixed-header-footer">
+                  <div class="filter-header modal-header">
+                <h5 class="modal-title title">Filter</h5>
+                    <a href="javascript:;" class="close-filter-btn btn-close"></a>
+                  </div>
                 <%= form_tag project_wise_summary_path, method: "get", remote: true, id: "project_wise_summary_filter" do %>
-                  <div class="filter-content">
+                  <div class="filter-content  modal-body ps-0 pe-0 theme-form">
                     <div class="row">
                       <div class="mb-3 col-12">
                         <%= label_tag "dates", "Dates", class: "control-label float-left" %>
@@ -126,12 +125,11 @@
                       </div>
                     </div>
                   </div>
-                  <div class="filter-footer">
-                    <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right close-filter-btn" %>
-                    <button type="button" class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+                  <div class="filter-footer  modal-footer text-end">
+                    <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                    <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
                   </div>
                 <% end %>
-              </div>
             </div>
           </div>
         </div>
@@ -204,25 +202,24 @@
             <div class = "row">
               <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
                 <div class="table-title pt-4">
-                  <img src="<%= asset_path 'rupee-black.svg' %>" alt="Documents" class="wd-10"><h1 class="title"><%= t('dashboard.channel_partner.incentive_plan_started.heading') %></h1>
+                  <h1 class="title fn-18"><i class="fa fa-rupee-sign theme-fill fa-sm me-2"></i><%= t('dashboard.channel_partner.incentive_plan_started.heading') %></h1>
                 </div>
               </div>
               <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-md-3 no-pd">
-                <div class="table-btn-set float-md-right pt-md-3">
-                  <button class="db-filter-btn white fn-500" type="button">
-                    <i class="icon-set icon-filter-light-blue"></i>
-                  </button>
-                </div>
+                <div class="table-btn-set float-md-end pt-md-3">
+                <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
+                  <i class="fa fa-filter fill-theme"></i>
+                </button>
+              </div>
               </div>
               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-                <div class="filter-box">
-                  <div class="filter-inner">
-                    <div class="filter-header">
-                      <span class="title">Filter</span>
-                      <a href="javascript:;" class="close-filter-btn">&times;</a>
-                    </div>
+                <div class="filter-box modal-content px-3 fixed-header-footer">
+                  <div class="filter-header modal-header">
+                    <h5 class="modal-title title">Filter</h5>
+                    <a href="javascript:;" class="close-filter-btn btn-close"></a>
+                  </div>
                     <%= form_tag incentive_plans_started_path, method: "get", remote: true, id: "incentive_plans_started_filter" do %>
-                      <div class="filter-content">
+                      <div class="filter-content  modal-body ps-0 pe-0 theme-form">
                         <div class="row">
                           <div class="mb-3 col-12">
                             <%= label_tag :project_ids, "Projects", class: "control-label float-left" %>
@@ -230,12 +227,11 @@
                           </div>
                         </div>
                       </div>
-                      <div class="filter-footer">
-                        <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right close-filter-btn" %>
-                        <button type="button" class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+                      <div class="filter-footer  modal-footer text-end">
+                        <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                        <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
                       </div>
                     <% end %>
-                  </div>
                 </div>
               </div>
             </div>
@@ -251,25 +247,24 @@
           <div class = "row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
               <div class="table-title pt-4">
-                <img src="<%= asset_path 'rupee-black.svg' %>" alt="Documents" class="wd-10"><h1 class="title"><%= t('dashboard.channel_partner.incentive_plan.heading') %> (Last 6 months)</h1>
+                <h1 class="title fn-18"><i class="fa fa-rupee-sign theme-fill fa-sm me-2"></i><%= t('dashboard.channel_partner.incentive_plan.heading') %> (Last 6 months)</h1>
               </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-md-3 no-pd">
-              <div class="table-btn-set float-md-right pt-md-3">
-                <button class="db-filter-btn white fn-500" type="button">
-                  <i class="icon-set icon-filter-light-blue"></i>
+              <div class="table-btn-set float-md-end pt-md-3">
+                <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
+                  <i class="fa fa-filter fill-theme"></i>
                 </button>
               </div>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-              <div class="filter-box">
-                <div class="filter-inner">
-                  <div class="filter-header">
-                    <span class="title">Filter</span>
-                    <a href="javascript:;" class="close-filter-btn">&times;</a>
+              <div class="filter-box modal-content px-3 fixed-header-footer">
+                  <div class="filter-header modal-header">
+                    <h5 class="modal-title title">Filter</h5>
+                    <a href="javascript:;" class="close-filter-btn btn-close"></a>
                   </div>
                   <%= form_tag incentive_plans_summary_path, method: "get", remote: true, id: "incentive_plans_summary_filter" do %>
-                    <div class="filter-content">
+                    <div class="filter-content  modal-body ps-0 pe-0 theme-form">
                       <div class="row">
                         <div class="mb-3 col-12">
                           <%= label_tag "dates", "Dates", class: "control-label float-left" %>
@@ -283,12 +278,11 @@
                         -->
                       </div>
                     </div>
-                    <div class="filter-footer">
-                      <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right close-filter-btn" %>
-                      <button type="button" class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+                    <div class="filter-footer  modal-footer text-end">
+                      <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                      <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
                     </div>
                   <% end %>
-                </div>
               </div>
             </div>
           </div>

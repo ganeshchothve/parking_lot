@@ -71,7 +71,7 @@ class Admin::CustomerSearchesController < AdminController
     customer = @customer_search.customer
     if template && customer
       sms = Sms.create!(
-        booking_portal_client_id: customer.booking_portal_client_id,
+        booking_portal_client_id: customer.user.booking_portal_client_id,
         recipient_id: customer.id,
         sms_template_id: template.id,
         triggered_by_id: customer.id,
