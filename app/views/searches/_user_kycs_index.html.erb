@@ -58,9 +58,9 @@
     <tr>
       <td colspan='6'>
         <% if current_user.buyer? %>
-          <%= link_to "Add #{global_labels['user_kyc']}", new_buyer_user_kyc_path, class: 'btn next-btn primary white modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+          <%= link_to "Add #{global_labels['user_kyc']}", new_buyer_user_kyc_path, class: 'btn next-btn primary white modal-remote-form-link fn-12 h-auto', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
         <% else %>
-          <%= link_to "Add #{global_labels['user_kyc']}", new_admin_lead_user_kyc_path(@lead), class: 'btn next-btn bg-primary white modal-remote-form-link px-3', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+          <%= link_to "Add #{global_labels['user_kyc']}", new_admin_lead_user_kyc_path(@lead), class: 'btn next-btn bg-primary white modal-remote-form-link px-3 fn-12 h-auto', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
         <% end %>
       </td>
     </tr>

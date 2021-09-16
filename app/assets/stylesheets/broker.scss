@@ -14,12 +14,18 @@ $info: #00BCD4;
 $success: #28A645;
 $font-family-base: "Rubik", sans-serif;
 $theme-txt-color: #2E384D;
+$font-light: 300;
 $font-normal: 400;
 $font-medium: 500;
 $font-bold: 700;
 $txt-drk-b-lt: #3F5275;
 .bg-success{
 	background-color: $success;
+}
+.btn:hover{
+	&.bg-primary{
+		color:$white;
+	}
 }
 .bg-primary-light{
 	background-color: rgba(0,109,238,0.10);
@@ -119,17 +125,20 @@ a{
 .theme-txt-color{
 	color: $theme-txt-color;
 }
+.font-light{
+	font-weight: $font-light!important;
+}
 .font-normal{
-	font-weight: $font-normal;
+	font-weight: $font-normal!important;
 }
 .font-medium{
-	font-weight: $font-medium;
+	font-weight: $font-medium!important;
 }
 .font-bold{
-	font-weight: $font-bold;
+	font-weight: $font-bold!important;
 }
 .txt-light-blue{
-	color: #4F6383;
+	color: #4F6383!important;
 }
 .wd-24{
 	width: 24px!important;
@@ -172,7 +181,7 @@ a{
 	background-color: #F8FBFF;
 }
 .txt-light-gray{
-	color:#687790;
+	color:#687790!important;
 }
 .txt-drk-b-lt{
 	color:$txt-drk-b-lt;
@@ -2740,18 +2749,7 @@ select.form-control{
 		}
 	}
 	.step-tab-content{
-		box-shadow: 0px 3px 6px #00000014;
-		border: 0.5px solid #0000001A;
-		border-radius: 8px;
 		.step-tab-inner{
-			h2{
-				color: $theme-txt-color;
-				font-size: 24px;
-				line-height: 36px;
-				letter-spacing: 0.67px;
-				font-weight: 400;
-				border-bottom: 1px solid #0000001A;
-			}
 			.cp-form-wrap{
 				.mb-3{
 					margin-bottom: 20px;
