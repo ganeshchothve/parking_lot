@@ -76,16 +76,18 @@
       </div>
 
       <!----------- Pagination ---------->
+      <% if leads.is_a? WillPaginate::Collection %>
       <div class="col-lg-12 py-3 bg-white mb-2 px-3 mt-3 shadow-sm">
         <div class="row">
           <div class="col-lg-6 pt-2">
-            <p class="table-entry mb-0">Showing 1 - 5 of <%= leads.total_entries %> items</p>
+            <p class="table-entry mb-0"><%= page_entries_info leads %></p>
           </div>
           <div class="col-lg-6 table-pagination">
             <%= will_paginate leads, list_classes: %w(pagination justify-content-end) %>
           </div>
         </div>
       </div>
+      <% end %>
     </div>
   </div>
 </section>

@@ -122,37 +122,79 @@ $(document).ready(function () {
       labels: ["Brahma Suncity 100 Customers", "Bhankti Elegance 66 Customers", "Padma Shree Housing Society 56 Customers","Ellite Homes 80 Customers"],
       datasets: [{
         label: 'Open',
-        categoryPercentage: 0.25,
+        categoryPercentage: 0.32,
         data: [15, 85, 45, 3, 14],
         backgroundColor: Amura.chart_colors.light_blue,
-        hoverBackgroundColor: "rgba(50,90,100,1)"
+        fill: false
       }, {
         label: 'Walk Ins',
-        categoryPercentage: 0.25,
+        categoryPercentage: 0.32,
         data: [23, 55, 74, 4, 90],
         backgroundColor: Amura.chart_colors.light_purple,
-        hoverBackgroundColor: "rgba(140,85,100,1)"
+        fill: false
       }, {
         label: 'Bookings',
-        categoryPercentage: 0.25,
+        categoryPercentage: 0.32,
         data: [38, 53, 46, 84, 93],
         backgroundColor: Amura.chart_colors.light_red,
-        hoverBackgroundColor: "rgba(46,185,235,1)"
+        fill: false
       }, {
         label: '9.9% Paid',
-        categoryPercentage: 0.25,
+        categoryPercentage: 0.32,
         data: [38, 53, 46, 84, 93],
         backgroundColor: Amura.chart_colors.light_yellow,
-        hoverBackgroundColor: "rgba(46,185,235,1)"
+        fill: false
       }, {
         label: 'Registrations',
-        categoryPercentage: 0.25,
+        categoryPercentage: 0.32,
         data: [38, 53, 46, 84, 93],
         backgroundColor: Amura.chart_colors.light_cyan,
-        hoverBackgroundColor: "rgba(46,185,235,1)"
+        fill: false
       }]
     },
 
     options: barOptions_stacked,
+  });
+  var ctx1 = document.getElementById("total_brokerage_Chart");
+  var total_brokerage_Chart = new Chart(ctx1, {
+    type: 'bar',
+    data: {
+      labels: ["Oct 2020", "Nov 2020", "Dec 2020"],
+      datasets: [{
+        label: 'Paid',
+        categoryPercentage: 0.2,
+        data: [15, 85, 40],
+        backgroundColor: Amura.chart_colors.green
+      }, {
+        label: 'Pending',
+        categoryPercentage: 0.2,
+        data: [23, 55, 90],
+        backgroundColor: Amura.chart_colors.light_green
+      }]
+    },
+
+    options: {
+      indexAxis: 'x',
+    scales: {
+      x: {
+        stacked: true,
+        grid: {
+          display: false
+        }
+      },
+      y: {
+        ticks: {
+          mirror: true,
+          labelOffset: -20,
+          padding: 10
+        },
+        stacked: true,
+        
+      }
+    },
+    pointLabelFontFamily: "Quadon Extra Bold",
+    scaleFontFamily: "Quadon Extra Bold",
+    maintainAspectRatio: false
+    }
   });
 });
