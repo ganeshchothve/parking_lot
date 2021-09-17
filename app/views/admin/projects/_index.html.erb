@@ -74,9 +74,10 @@
                   <div class="inner-info">
                     <h2 class="title"><%= link_to project.name, admin_project_path(project) %></h2>
                     <p class="devl-name"><%= project.developer_name %></p>
-                    <p class="location"><i class="fa fa-map-marker-alt fill-primary me-2"></i><%= project.micro_market %>, <%= project.city %></p>
-                    <p class="prjt-event">1 New event <span>76 Partners have signed up</span></p>
-                    <p class="prjt-date">( May 26th 2020, 12.30 pm IST )</p>
+                    <% if project.micro_market.present? && project.city.present? %>
+                      <p class="location"><i class="fa fa-map-marker-alt fill-primary me-2"></i><%= project.micro_market %>, <%= project.city %></p>
+                    <% end %>
+                    <p class="prjt-event"><%= (meetings = Meeting.where(project_id: project.id, status: 'scheduled').presence)&.count || 'No' %> New event <%= meetings.present? ? "<span>#{meetings.first&.scheduled_on&.strftime('%b %e %Y, %I:%M%p %Z')}</span>".html_safe : '' %></p>
                   </div>
                   <div class="prjt-date-info">
                     <div class="inner-date">
@@ -128,7 +129,7 @@
             <p>Dream Emerald by Chandak Developers</p>
           </div>
           <div class="col-lg-4">
-            <img src="<%= asset_path 'Google_Meet.png' %>" class="google-meet-logo">
+            <img src="<%= asset_path 'google_meet.png' %>" class="google-meet-logo">
           </div>
           <div class="col-lg-12">
             <h3>5th May 2020, 12.30 pm IST</h3>

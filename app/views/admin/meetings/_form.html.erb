@@ -77,7 +77,7 @@
           <% end %>
 
           <div class="mb-3">
-            <%= f.input :broadcast, disabled: !policy([current_user_role_group, meeting]).editable_field?("broadcast"), as: :boolean %>
+            <%= f.input :broadcast, disabled: !policy([current_user_role_group, meeting]).editable_field?("broadcast"), as: :boolean, input_html: {class: 'w-auto'} %>
           </div>
         </div>
 
