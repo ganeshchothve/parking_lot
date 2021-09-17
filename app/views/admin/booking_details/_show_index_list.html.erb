@@ -1,0 +1,67 @@
+<% booking_details.each do |booking_detail| %>
+<div class="row ps-3">
+  <div class="col-12">
+    <div class="card p-0">
+      <div class="card-header bg-white p-0">
+        <div class="d-flex justify-content-between p-3">
+          <% if %w[ hold swapped cancelled ].exclude?(booking_detail.status)  %>
+          <p class="fn-14 font-medium mb-0 pt-1"><span class="txt-light-gray">Blocked
+              On:</span> <%= booking_detail.project_unit.blocked_on.try(:strftime, '%b %d, %Y') %></p>
+          <% end %>
+          <div>
+            <p class="fn-14 mb-0 d-inline-block">
+              <i
+                class="fa fa-circle status_<%= BookingDetail.human_attribute_name("status.#{booking_detail.status}").downcase.gsub(' ', '_') %> me-2 fa-xs"></i><%= BookingDetail.human_attribute_name("status.#{booking_detail.status}") %>
+            </p>
+            <div class="dropdown show text-right d-inline-block">
+              <a class="btn table-dropdown-btn black-clr py-0" href="#" role="button" id="dropdownMenuLink"
+                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v"
+                  aria-hidden="true"></i></a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                <%= render "#{current_user_role_group}/booking_details/links", booking_detail: booking_detail, link_name: '' %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <h3 class="fn-16 font-medium txt-drk-b-lt"><%= booking_detail.project.name %>, Tower
+          <%= booking_detail.project_unit.project_tower_name %>, Flat no.
+          <%= link_to booking_detail.name, [current_user_role_group, booking_detail], class: "theme-txt-color"  %>, <%= booking_detail.project_unit.floor.ordinalize %> Floor</h3>
+        <p class="fn-14"><%= booking_detail.bedrooms %> BHK · <%= "#{booking_detail.project_unit.carpet} #{booking_detail.project.area_unit}" %></p>
+        <div class="col-8 row">
+          <div class="col-6">
+            <p class="fn-12 font-medium mb-0 txt-light-gray">
+              <%= t('mongoid.attributes.booking_detail.agreement_price') %></p>
+            <p class="fn-14"><%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %></p>
+          </div>
+          <div class="col-6">
+            <p class="fn-12 font-medium mb-0 txt-light-gray">
+              <%= t('mongoid.attributes.booking_detail.all_inclusive_price') %></p>
+            <p class="fn-14"><%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %></p>
+          </div>
+          <div class="col-6">
+            <p class="fn-12 font-medium mb-0 txt-light-gray"><%= t('mongoid.attributes.booking_detail.paid_amount') %>
+            </p>
+            <p class="fn-14"><%= number_to_indian_currency(booking_detail.total_amount_paid) %></p>
+          </div>
+          <div class="col-6">
+            <p class="fn-12 font-medium mb-0 txt-light-gray">
+              <%= t('mongoid.attributes.booking_detail.booking_pending_amount') %>
+            </p>
+            <p class="fn-14"><%= number_to_indian_currency(booking_detail.pending_balance.to_i) %></p>
+          </div>
+          <div class="col-6">
+            <p class="fn-12 font-medium mb-0 txt-light-gray">
+              <%= t('mongoid.attributes.booking_detail.registration_done') %>
+            </p>
+            <p class="fn-14"><i
+                class='fa fn-16 fa-<%= booking_detail.is_registration_done? ? 'Yes' : 'No' == "Yes" ? "check" : "times" %> fill-<%= booking_detail.is_registration_done? ? 'Yes' : 'No' == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= booking_detail.is_registration_done? ? 'Yes' : 'No' %>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>

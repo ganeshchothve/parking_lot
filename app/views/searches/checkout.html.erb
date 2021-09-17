@@ -1,20 +1,20 @@
 <section class="checkout-sec my-4 mb-5">
-  <div class="container">
+  <div class="px-3">
     <div class="row">
-      <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 bg-white br-rd-4 br-1 mb-5">
+      <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 bg-white border br-1 mb-5">
         <div class="row mb-5">
           <div class="col-lg-4 col-xs-12 col-sm-12 col-md-12 pt-3">
-            <div class="left-info bg-gradient br-rd-4">
+            <div class="left-info bg-primary br-rd-4 p-4 text-center">
               <% template = ::Template::UITemplate.where(name: 'searches/checkout').first %>
               <% if template.present? %>
                 <%= get_view_erb(template) %>
               <% end %>
-              <div class="payment-timer jquery-countdown-container white" id="held-until-countdown"></div>
+              <div class="payment-timer jquery-countdown-container white fs-1 font-medium" id="held-until-countdown"></div>
             </div>
-            <div class="form-sec-title pl-0"><%= Scheme.model_name.human %></div>
+            <div class="form-sec-title pl-0 fn-24 py-3"><%= Scheme.model_name.human %></div>
             <%= nested_form_for([ current_user_role_group, @booking_detail, @booking_detail_scheme], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['schemes'], "data-type": "json", id: 'scheme_form'}) do |f| %>
                 <%= render 'booking_detail_schemes/form', booking_detail_scheme: @booking_detail_scheme, booking_detail: @booking_detail, f: f %>
-                <%= f.submit "Apply", class: "save-kyc-btn fn-12 fn-300" %>
+                <%= f.submit "Apply", class: "save-kyc-btn fn-12 fn-300 bg-primary border-primary white rounded p-1 px-3 shadow-none" %>
               <% end %>
           </div>
           <div class="col-lg-8 col-xs-12 col-sm-12 col-md-12 br-l-1 px-0 pb-3">

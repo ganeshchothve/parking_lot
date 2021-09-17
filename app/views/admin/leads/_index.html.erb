@@ -36,7 +36,7 @@
                     <% end %>
                   </div>
                   <div class="pe-3 py-3">
-                    <p class="font-medium fn-12 mb-0 d-inline-block"><i
+                    <p class="font-medium fn-12 mb-0 d-inline-block me-2"><i
                         class="fa fa-circle info me-2 fa-sm"></i><%= lead.lead_stage || '-' %></p>
                     <div class="dropdown d-inline-block">
                       <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -79,7 +79,7 @@
       <div class="col-lg-12 py-3 bg-white mb-2 px-3 mt-3 shadow-sm">
         <div class="row">
           <div class="col-lg-6 pt-2">
-            <p class="table-entry mb-0">Showing 1 - 5 of <%= @leads.total_entries %> items</p>
+            <p class="table-entry mb-0">Showing 1 - 5 of <%= leads.total_entries %> items</p>
           </div>
           <div class="col-lg-6 table-pagination">
             <%= will_paginate leads, list_classes: %w(pagination justify-content-end) %>

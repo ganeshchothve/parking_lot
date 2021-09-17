@@ -1,56 +1,78 @@
-<section class="my-customer my-4 mb-5">
-  <div class="container">
+<section class="my-customer my-4">
+  <div class="px-3 mx-3">
     <div class="row">
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
-        <div class="table-title">
-          <h1 class="title icon-set icon-search-black icon-bs-15">
-            <%= t('controller.searches.new.header')%>
-          </h1>
-            <% unless current_user.buyer? %>
-              </br><small class="help-text fn-14 fn-500"> <%= t('controller.searches.new.booking_hint', name: @lead.name) %> </small>
-            <% end %>
+      <div class="card shadow-sm rounded px-0">
+        <div class="card-header bg-white pb-0">
+          <div class="p-2 py-3">
+            <h2 class="fn-24 theme-txt-color font-normal mb-4">Create Booking</h2>
+            <div class="d-flex justify-content-start">
+              <p class="fn-16 theme-txt-color mb-0"><i class="fa fa-check-circle me-2 fill-success"></i>Filter Project</p>
+              <p class="wd-22 border-top border-2 mt-2 mx-3 mb-0"></p>
+              <p class="fn-16 txt-light-blue mb-0"><i class="fa fa-check-circle me-2 fill-theme"></i>Choose Tower</p>
+              <p class="wd-22 border-top border-2 mt-2 mx-3 mb-0"></p>
+              <p class="fn-16 txt-light-blue mb-0"><i class="fa fa-check-circle me-2 fill-theme"></i>Choose Apartment</p>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
-        <div class="table-btn-set float-right pb-3">
-
-        </div>
-      </div>
-
-      <div class="separate-line"></div>
-
-      <div class="mt-5 mb-2 col-lg-12 col-xs-12 col-sm-12 col-md-12">
-        <div class="row">
-          <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 no-pd text-center">
-            <% if SearchPolicy.new(current_user, Search.new(lead_id: @lead.id)).three_d? %>
-                <div class="card h-100">
-                  <div class="card-body text-center">
-                    <h5 class="mb-3">Book in 3D View</h5>
-                    <%
-                      if current_user.buyer?
-                        url = three_d_user_searches_path
-                      else
-                        url = three_d_admin_lead_searches_path(@lead)
-                      end
-                    %>
-                    <%= link_to (image_tag("3d-building.jpg", class: "img-fluid")).html_safe, url %>
+        <div class="card-body">
+          <div class="card text-dark bg-light border border-white mb-3">
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-8">
+                      <h5 class="card-title mb-1 font-normal fn-20">34 Park Estate</h5>
+                      <p class="card-text">Lodha Builders</p>
+                      <p><i class="fas fa-map-marker-alt fill-primary"></i> Khar West, Mumbai</p>
+                    </div>
+                    <div class="col text-end">
+                      <% if SearchPolicy.new(current_user, Search.new(lead_id: @lead.id)).three_d? %>
+                      <div class="card h-100">
+                        <div class="card-body text-center">
+                          <h5 class="mb-3">Book in 3D View</h5>
+                          <%
+                              if current_user.buyer?
+                                url = three_d_user_searches_path
+                              else
+                                url = three_d_admin_lead_searches_path(@lead)
+                              end
+                          %>
+                          <%= link_to (image_tag("3d-building.jpg", class: "rounded img-fluid", width: 160, height: 87)).html_safe, url %>
+                        </div>
+                      </div>
+                      <% else %>
+                      <!--<%# <div class="" width="160" height="87" style="background-image:url('<%= client_asset_image_url('unit_selection_filter_image') || 'search-home-img.png' %>'); height:87px;width:160px"></div> %>-->
+                      <%= image_tag project_asset_image_url(@lead.project, 'unit_selection_filter_image') || 'search-home-img.png', class: 'rounded', width: 160, height: 87 %>
+                      <% end %>
+                    </div>
                   </div>
                 </div>
-            <% else %>
-              <%= image_tag project_asset_image_url(@lead.project, 'unit_selection_filter_image') || 'search-home-img.png', class: 'rounded img-fluid', width: 400, height: 400 %>
-            <% end %>
-          </div>
-
-          <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 no-pd mb-5">
-            <div class="search-home-form">
-              <%= form_for @search, url: search_next_step_url, html: {class: 'validate-form', id: "search_form"} do |f| %>
-                <%= render "form_fields", {f: f, data: @data} %>
-                <div class="mb-3">
-                  <%= f.submit "Search", class: "btn btn-primary" %>
-                </div>
-              <% end %>
+                <%# <div class="col-md-6">
+                  <div class="shadow-none p-3 bg-white rounded">
+                    <p class="fn-14 theme-txt-color font-medium mb-2">Has a Site Visit been conducted <span
+                        class="text-danger">*</span></p>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
+                        value="option1">
+                      <label class="form-check-label" for="inlineRadio1">Yes</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
+                        value="option2">
+                      <label class="form-check-label" for="inlineRadio2">No</label>
+                    </div>
+                  </div>
+                </div> %>
+              </div>
             </div>
+          </div>
+          <div class="row g-3">
+            <%= form_for @search, url: search_next_step_url, html: {class: 'validate-form row theme-form', id: "search_form"} do |f| %>
+            <%= render "form_fields", {f: f, data: @data} %>
+            <div class="mb-3">
+              <%= f.submit "Search", class: "theme-btn btn-primary px-3 py-1 d-inline-block w-auto" %>
+            </div>
+            <% end %>
           </div>
         </div>
       </div>
@@ -59,6 +81,6 @@
 </section>
 <%= javascript_tag do %>
 $(document).ready(function(){
-  FormInitializer.init($("#search_form"));
+FormInitializer.init($("#search_form"));
 });
 <% end %>

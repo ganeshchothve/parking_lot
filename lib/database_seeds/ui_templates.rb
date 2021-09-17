@@ -15,7 +15,7 @@ module DatabaseSeeds
       # To render card on user dashboard
       if Template::UITemplate.where(name: 'users/_welcome').blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'users/_welcome', content: '
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bg-gradient">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bg-primary">
           <div class="box-content">
             <h1 class="wc-title white text-center">Welcome <%= current_user.name %></h1>
             <% if current_user.receipts.present? && !current_client.enable_actual_inventory?(current_user) %>
@@ -104,7 +104,7 @@ module DatabaseSeeds
 
       if Template::UITemplate.where(name: 'index/inactive_channel_partner').blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'index/inactive_channel_partner', content: <<-'INACTIVE_CP'
-          <div class="col-lg-12 col-xs-12 bg-gradient-cd br-rd-8 col-md-12 col-sm-12">
+          <div class="col-lg-12 col-xs-12 bg-primary br-rd-8 col-md-12 col-sm-12">
             <img src="<%= asset_path 'quality-tag.png' %>" alt="user icon" class="quality-tag">
             <div class="row">
               <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12 offset-lg-2">
@@ -113,11 +113,11 @@ module DatabaseSeeds
                   <p class="white text-center fn-300 fn-18">Follow these quick steps and get your account approved to start adding leads<br> and earn amazing benefits</p>
                   <ul class="step-booking">
                     <li class="light-blue">
-                      <span> <%= image_tag "file-invoice-lightblue.svg", alt: "Fill Details" %> </span>
+                      <span> <%= image_tag "file-invoice.svg", alt: "Fill Details" %> </span>
                       <%= link_to_if Admin::ChannelPartnerPolicy.new(current_user, channel_partner).edit?, '<span class="light-blue">Fill Details</span>'.html_safe, edit_channel_partner_path(channel_partner), class: 'modal-remote-form-link' %>
                     </li>
                     <li class="light-blue">
-                      <span><%= image_tag "file-kycs-lightblue.svg" %></span>
+                      <span><%= image_tag "file-kycs.svg" %></span>
                       <%= link_to_if policy([ current_user_role_group, Asset.new(assetable: channel_partner)]).index?, '<span class="light-blue">Upload Documents</span>'.html_safe, assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'modal-remote-form-link' %>
                     </li>
                     <li class="light-blue">
@@ -151,7 +151,7 @@ module DatabaseSeeds
 
       if Template::UITemplate.where(name: 'index/_channel_partner').blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'index/_channel_partner', content: '
-        <div class="col-lg-12 col-xs-12 bg-gradient-cd br-rd-8 col-md-12 col-sm-12">
+        <div class="col-lg-12 col-xs-12 bg-primary br-rd-8 col-md-12 col-sm-12">
           <img src="<%= asset_path \'quality-tag.png\' %>" alt="user icon" class="quality-tag">
           <div class="row">
             <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12 offset-lg-2">
@@ -161,14 +161,14 @@ module DatabaseSeeds
                 <ul class="step-booking">
                   <li class="light-blue">
                     <span>
-                      <%= image_tag "file-invoice-lightblue.svg", alt: "Add customer" %>
+                      <%= image_tag "file-invoice.svg", alt: "Add customer" %>
                     </span>Add Customers
                   </li>
                   <li class="light-blue">
-                    <span><%= image_tag "rupee-lightblue.svg" %></span>Pay Remaining Amount
+                    <span><%= image_tag "rupee.svg" %></span>Pay Remaining Amount
                   </li>
                   <li class="light-blue">
-                    <span><%= image_tag "building-lightblue.svg" %></span><%= BookingDetail.model_name.human %>
+                    <span><%= image_tag "building.svg" %></span><%= BookingDetail.model_name.human %>
                   </li>
                 </ul>
                 <!-- <p class="white text-center fn-14 fn-500">Fill your KYC form for proceed further</p> -->
@@ -186,7 +186,7 @@ module DatabaseSeeds
       # To render card on sales & admin dashboard
       if Template::UITemplate.where(name: 'dashboard/index/_admin').blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'dashboard/index/_admin', content: '
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bg-gradient">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bg-primary">
           <div class="box-content">
             <h1 class="wc-title white text-center">Welcome <%= current_user.name %> </h1>
             <p class="white text-center fn-300 fn-18">Welcome to the Online Booking Portal, Please follow the steps below to complete the project walkthrough with your Customer.</p>
