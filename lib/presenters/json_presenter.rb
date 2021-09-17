@@ -28,7 +28,7 @@ module Presenters
     def self.create_table header, arr
       card = get_table_card(header) + "<table class='table my-customer-table responsive-tbl'><thead class='th-default'>"
       card_end_tag = "</table></div></div></div>"
-      card += "<tr class='bg-gradient-cd white'>"
+      card += "<tr class='bg-primary white'>"
       index = 0
       keys = arr.first.keys[0..4] 
       keys.each do |key|

@@ -2,14 +2,14 @@
   <div class="box-card relative table-responsive" id="dashboard_project_wise_invoice_summary">
     <table class="table my-customer-table responsive-tbl mb-0">
       <thead class="th-default">
-        <tr class="bg-gradient-cd white">
-          <th rowspan='2' class='th-border-right'><%= Project.model_name.human %></th>
-          <th colspan='3' class='text-center'>No. of <%= Invoice.model_name.human(count:2) %></th>
+        <tr class="bg-primary white">
+          <th rowspan='2' class='border-end bg-primary white'><%= Project.model_name.human %></th>
+          <th colspan='3' class='text-center bg-primary white'>No. of <%= Invoice.model_name.human(count:2) %></th>
         </tr>
-        <tr class="bg-gradient-cd white text-center">
-          <th><%= t('mongoid.attributes.invoice/status.pending_approval') %></th>
-          <th><%= t('mongoid.attributes.invoice/status.approved') %></th>
-          <th><%= t('mongoid.attributes.invoice/status.rejected') %></th>
+        <tr class="bg-primary white text-center">
+          <th class="bg-primary white"><%= t('mongoid.attributes.invoice/status.pending_approval') %></th>
+          <th class="bg-primary white"><%= t('mongoid.attributes.invoice/status.approved') %></th>
+          <th class="bg-primary white"><%= t('mongoid.attributes.invoice/status.rejected') %></th>
         </tr>
       </thead>
       <tbody class='text-md-center'>
@@ -35,11 +35,11 @@
   <div class="box-card relative table-responsive" id="dashboard_project_wise_invoice_summary">
     <table class="table my-customer-table responsive-tbl mb-0">
       <thead class="th-default">
-        <tr class="bg-gradient-cd white">
+        <tr class="bg-primary white">
           <th rowspan='2' class='th-border-right'><%= Project.model_name.human %></th>
           <th colspan='2' class='text-center'>Total <%= t('mongoid.attributes.invoice.amount') %></th>
         </tr>
-        <tr class="bg-gradient-cd white text-center">
+        <tr class="bg-primary white text-center">
           <th><%= "#{t('mongoid.attributes.invoice/status.pending_approval')} (#{t('mongoid.attributes.invoice.amount')})" %></th>
           <th><%= "#{t('mongoid.attributes.invoice/status.approved')} (#{t('mongoid.attributes.invoice.net_amount')})" %></th>
         </tr>

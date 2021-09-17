@@ -145,7 +145,7 @@ var dialog = renderer.create('<div class="modal" aria-hidden="false" tabindex="-
         '<div class="modal-dialog">',
         '  <div class="modal-content">',
         (options.title
-            ? '    <div class="modal-header bg-gradient-cd white">' +
+            ? '    <div class="modal-header bg-primary white">' +
                 '      <h4 class="title">' + options.title + '</h4>' +
                 '      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
                 '    </div>' : ''),

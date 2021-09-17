@@ -2,7 +2,7 @@
 //= require_self
 
 var aArray = [];
-$(document).ready(function(){
+$(document).ready(function () {
 
   var wn_width = $(window).width();
   var wn_height = $(window).height();
@@ -23,46 +23,47 @@ $(document).ready(function(){
     prevText: '<'
   });
 
-    $('body').on('click', '.theme-tab a', function(options) {
-  
-      var opts = { delayTime: 300 };
-      options = options || {};
-      opts = $.extend(opts, options);
-      // return this.each(function() {
-        $(this).on('click', function(event) {
-              event.preventDefault();
-              var sum = 0;
-              $(this).prevAll().each(function() { sum += $(this).width(); });
-              var get = document.getElementsByClassName('theme-tab').scrollWidth;
-              var dist = sum - ($(this).parent().width() - $(this).width()) / 2;
-              if (dist < 0) {
-                  dist = 0;
-              }
-              else if(dist+sum > get){
-                dist = get-sum+dist+dist;
-              }
-              $(this).parent().animate({
-                      scrollLeft: dist
-                  },
-                  opts['delayTime']);
-          });
-      // });
+  $('body').on('click', '.theme-tab a', function (options) {
+
+    var opts = {
+      delayTime: 300
+    };
+    options = options || {};
+    opts = $.extend(opts, options);
+    // return this.each(function() {
+    $(this).on('click', function (event) {
+      event.preventDefault();
+      var sum = 0;
+      $(this).prevAll().each(function () {
+        sum += $(this).width();
+      });
+      var get = document.getElementsByClassName('theme-tab').scrollWidth;
+      var dist = sum - ($(this).parent().width() - $(this).width()) / 2;
+      if (dist < 0) {
+        dist = 0;
+      } else if (dist + sum > get) {
+        dist = get - sum + dist + dist;
+      }
+      $(this).parent().animate({
+          scrollLeft: dist
+        },
+        opts['delayTime']);
+    });
+    // });
   });
 
-  $('.db-filter-btn').click(function(){
-    if($(this).parents('.box-card').length){
+  $('.db-filter-btn').click(function () {
+    if ($(this).parents('.box-card').length) {
       $(this).parents('.box-card').find('.filter-box').slideToggle('slow')
-    }
-    else{
+    } else {
       // for index pages
       $('.filter-box').slideToggle('slow');
     }
   });
-  $('body').on('click', '.f-cancel-btn, .close-filter-btn', function(){
-    if($(this).parents('.box-card').length){
+  $('body').on('click', '.f-cancel-btn, .close-filter-btn', function () {
+    if ($(this).parents('.box-card').length) {
       $(this).parents('.box-card').find('.filter-box').slideToggle('slow')
-    }
-    else{
+    } else {
       // for index pages
       $('.filter-box').slideToggle('slow');
     }
@@ -74,16 +75,126 @@ $(document).ready(function(){
     scroll_cost = $('#apartment').outerHeight(true) + 20;
     scroll_payment = $('#apartment').outerHeight(true) + $('#cost-sheet').height() + 40;
 
-    if(curnt_id == 'apartment'){
-      $('.scroll-fixed-height').animate({ scrollTop: 0 },1000);
+    if (curnt_id == 'apartment') {
+      $('.scroll-fixed-height').animate({
+        scrollTop: 0
+      }, 1000);
     }
-    if(curnt_id == 'cost-sheet'){
-      $('.scroll-fixed-height').animate({ scrollTop: scroll_cost },1000);
+    if (curnt_id == 'cost-sheet') {
+      $('.scroll-fixed-height').animate({
+        scrollTop: scroll_cost
+      }, 1000);
     }
-    if(curnt_id == 'payment-schedule'){
-      $('.scroll-fixed-height').animate({ scrollTop: scroll_payment },1000);
+    if (curnt_id == 'payment-schedule') {
+      $('.scroll-fixed-height').animate({
+        scrollTop: scroll_payment
+      }, 1000);
     }
 
   });
+  var barOptions_stacked = {
+    indexAxis: 'y',
+    scales: {
+      x: {
+        stacked: true
+      },
+      y: {
+        ticks: {
+          mirror: true,
+          labelOffset: -20,
+          padding: 10
+        },
+        stacked: true,
+        grid: {
+          display: false
+        }
+      }
+    },
+    pointLabelFontFamily: "Quadon Extra Bold",
+    scaleFontFamily: "Quadon Extra Bold",
+    maintainAspectRatio: false
+  };
+
+  var ctx = document.getElementById("myChart");
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ["Brahma Suncity 100 Customers", "Bhankti Elegance 66 Customers", "Padma Shree Housing Society 56 Customers","Ellite Homes 80 Customers"],
+      datasets: [{
+        label: 'Open',
+        categoryPercentage: 0.32,
+        data: [15, 85, 45, 3, 14],
+        backgroundColor: Amura.chart_colors.light_blue,
+        fill: false
+      }, {
+        label: 'Walk Ins',
+        categoryPercentage: 0.32,
+        data: [23, 55, 74, 4, 90],
+        backgroundColor: Amura.chart_colors.light_purple,
+        fill: false
+      }, {
+        label: 'Bookings',
+        categoryPercentage: 0.32,
+        data: [38, 53, 46, 84, 93],
+        backgroundColor: Amura.chart_colors.light_red,
+        fill: false
+      }, {
+        label: '9.9% Paid',
+        categoryPercentage: 0.32,
+        data: [38, 53, 46, 84, 93],
+        backgroundColor: Amura.chart_colors.light_yellow,
+        fill: false
+      }, {
+        label: 'Registrations',
+        categoryPercentage: 0.32,
+        data: [38, 53, 46, 84, 93],
+        backgroundColor: Amura.chart_colors.light_cyan,
+        fill: false
+      }]
+    },
+
+    options: barOptions_stacked,
+  });
+  var ctx1 = document.getElementById("total_brokerage_Chart");
+  var total_brokerage_Chart = new Chart(ctx1, {
+    type: 'bar',
+    data: {
+      labels: ["Oct 2020", "Nov 2020", "Dec 2020"],
+      datasets: [{
+        label: 'Paid',
+        categoryPercentage: 0.2,
+        data: [15, 85, 40],
+        backgroundColor: Amura.chart_colors.green
+      }, {
+        label: 'Pending',
+        categoryPercentage: 0.2,
+        data: [23, 55, 90],
+        backgroundColor: Amura.chart_colors.light_green
+      }]
+    },
+
+    options: {
+      indexAxis: 'x',
+    scales: {
+      x: {
+        stacked: true,
+        grid: {
+          display: false
+        }
+      },
+      y: {
+        ticks: {
+          mirror: true,
+          labelOffset: -20,
+          padding: 10
+        },
+        stacked: true,
+        
+      }
+    },
+    pointLabelFontFamily: "Quadon Extra Bold",
+    scaleFontFamily: "Quadon Extra Bold",
+    maintainAspectRatio: false
+    }
+  });
 });
-      
