@@ -28,83 +28,56 @@
 //= require amura
 //= require plugins/jsencrypt
 
-
-// Highcharts.chart('total_brokerage', {
-
-//   chart: {
-//     type: 'column'
-//   },
-
-//   title: {
-//     text: 'Total fruit consumption, grouped by gender'
-//   },
-
-//   xAxis: {
-//     categories: ['Oct 2020', 'Nov 2020', 'Dec 2020']
-//   },
-
-//   yAxis: {
-//     allowDecimals: false,
-//     min: 0,
-//     title: {
-//       text: 'Number of fruits'
-//     }
-//   },
-
-//   tooltip: {
-//     formatter: function () {
-//       return '<b>' + this.x + '</b><br/>' +
-//         this.series.name + ': ' + this.y + '<br/>' +
-//         'Total: ' + this.point.stackTotal;
-//     }
-//   },
-
-//   plotOptions: {
-//     column: {
-//       stacking: 'normal'
-//     }
-//   },
-
-//   series: [{
-//     name: 'Paid',
-//     data: [5, 3, 4, 7, 2]
-//   }, {
-//     name: 'Pending',
-//     data: [3, 4, 4, 2, 5]
-//   }]
-// });
-// Highcharts.chart('total_brokerage', {
-//   chart: {
-//     type: 'column'
-//   },
-//   title: {
-//     text: 'Stacked bar chart'
-//   },
-//   xAxis: {
-//     categories: ['Oct 2020', 'Nov 2020', 'Dec 2020']
-//   },
-//   yAxis: {
-//     min: 0,
-//     title: {
-//       text: 'Total fruit consumption'
-//     }
-//   },
-//   legend: {
-//     reversed: true
-//   },
-//   plotOptions: {
-//     series: {
-//       stacking: 'normal'
-//     }
-//   },
-//   series: [{
-//     name: 'Paid',
-//     data: [5, 3, 4, 7, 2]
-//   }, {
-//     name: 'Pending',
-//     data: [2, 2, 3, 2, 1]
-//   }]
-// });
+var ctx = document.getElementById('myChart');
+var myChart = new Chart(ctx, {  ​
+  type: 'bar',
+  data: {
+    labels: ['Brahma Suncity 100 Customers', 'Bhankti Elegance 66 Customers', 'Padma Shree Housing Society 56 Customers'],
+    datasets: [
+      {
+        label: '',
+        data: 5,
+        backgroundColor: Amura.chart_colors.light_orange,
+      },
+      {
+        label: '',
+        data: 28,
+        backgroundColor: Amura.chart_colors.light_orange,
+      },
+      {
+        label: '',
+        data: 50,
+        backgroundColor: Amura.chart_colors.light_orange,
+      },
+    ]
+  },
+  options: {
+    indexAxis: 'x',
+    plugins: {
+      title: {
+        display: false,
+        text: ''
+      }​,
+    }​,
+    responsive: true,
+    scales: {
+      x: {
+        stacked: true
+      }​,
+      y: {
+        ticks: {
+          mirror: true,
+          labelOffset: -25,
+          padding: 10
+        }​,
+        stacked: true,
+        grid: {
+          display: false
+        }​
+      }​
+    }​
+  }​
+}​);
 var window_wt = $(window).width();
 var window_ht = $(window).height();
 $(document).ready(function () {

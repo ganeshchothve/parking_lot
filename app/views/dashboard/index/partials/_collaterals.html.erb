@@ -1,81 +1,77 @@
-<section class="user-db-sec-5 device-pd">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-        <div class="row">
-          <div class="box-card col-lg-12 col-md-12 col-sm-12 col-xs-12 collaterals">
-            <div class="box-header bg-primary rounded-top">
-              <h2><i class="fa fa-folder fn-sm fill-white me-2"></i>Collaterals</h2>
-              <%= link_to("View All", collaterals_admin_projects_path, class: 'view-all-btn modal-remote-form-link') %>
-            </div>
-            <div class="box-content br-rd-bl-4 bg-white">
-              <% Project.unscoped.nin(id: current_user.interested_projects.in(status: %w(subscribed approved)).pluck(:project_id)).each do |project| %>
-                <div class="card project-card">
-                  <% if project.logo.present? %>
-                    <img src="<%= project.logo_url %>" class="card-img-top" alt="<%= project.name %> Logo">
-                  <% end %>
-                  <div class="card-body">
-                    <h5 class="card-title"><%= project.name %></h5>
-                    <p class="card-text">
-                      <%= project.developer_name %><br/>
-                      <%= project.description %><br/>
-                      <%= project.configurations.to_sentence %><br/>
-                    </p>
-                    <% brochure = project.assets.where(document_type: 'brochure').first %>
-                    <% if brochure.present? %>
-                      <%= link_to 'Brochure', brochure.file.url, class: 'btn btn-secondary btn-sm', target: '_blank' %>
-                    <% end %>
-                    <% if project.website_link.present? %>
-                      <%= link_to 'Website', project.website_link, class: 'btn btn-secondary btn-sm', target: '_blank' %>
-                    <% end %>
-                    <%= link_to 'Subscribe', admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'btn btn-secondary btn-sm my-2' %>
-                  </div>
-                </div>
-              <% end %>
-
-              <% current_user.interested_projects.in(status: %w(subscribed approved)).each do |interested_project| %>
-                <% project = interested_project.project %>
-                <div class="card project-card">
-                  <% if project.logo.present? %>
-                    <img src="<%= project.logo_url %>" class="card-img-top" alt="<%= project.name %> Logo">
-                  <% end %>
-                  <div class="card-body">
-                    <h5 class="card-title"><%= project.name %></h5>
-                    <p class="card-text">
-                      <%= project.developer_name %><br/>
-                      <%= project.description %><br/>
-                      <%= project.configurations.to_sentence %><br/>
-                    </p>
-                    <% if policy([:admin, Lead.new(project_id: project.id)]).new? %>
-                      <%= link_to t('helpers.new.link_name', model: Lead.model_name.human), new_admin_lead_path(project_id: project.id), class: 'btn btn-primary btn-sm modal-remote-form-link' %>
-                    <% end %>
-                    <% brochure = project.assets.where(document_type: 'brochure').first %>
-                    <% if brochure.present? %>
-                      <%= link_to 'Brochure', brochure.file.url, class: 'btn btn-secondary btn-sm', target: '_blank' %>
-                    <% end %>
-                    <% if project.website_link.present? %>
-                      <%= link_to 'Website', project.website_link, class: 'btn btn-secondary btn-sm', target: '_blank' %>
-                    <% end %>
-                    <% sales_presentation = project.assets.where(document_type: 'sales_presentation').first %>
-                    <% if sales_presentation.present? %>
-                      <%= link_to 'Sales presentation', sales_presentation.file.url, class: 'btn btn-secondary btn-sm', target: '_blank' %>
-                    <% end %>
-                    <% if policy([:admin, project]).collaterals? %>
-                      <%= link_to 'Other Collateral', collaterals_admin_project_path(project), class: 'btn btn-secondary btn-sm modal-remote-form-link' %>
-                    <% end %>
-                    <% if interested_project.subscribed? %>
-                      <%= link_to 'Pending Approval', '#', class: 'btn btn-secondary btn-sm disabled my-2' %>
-                    <% elsif interested_project.approved? %>
-                      <%= link_to 'Subscribed', '#', class: 'btn btn-secondary btn-sm disabled my-2' %>
-                    <% end %>
-                  </div>
-                </div>
-              <% end %>
-              <br clear='all' />
+<div class="row">
+  <div class="col-lg-12 mt-1 mb-3">
+    <h2 class="sec-title float-start">Newly Launched</h2>
+    <%= link_to("View All", admin_projects_path, class: 'view-all-btn theme-txt-color float-end') %>
+  </div>
+  <% Project.unscoped.nin(id: current_user.interested_projects.in(status: %w(subscribed approved)).pluck(:project_id)).each do |project| %>
+  <div class="col-lg-4">
+    <div class="project-wrap br-rd-8 card-shadow mb-4">
+      <div class="project-list row">
+        <div class="project-img">
+          <img src="<%= project.cover_photo %>" class="img-fluid w-100 rounded-top" alt="<%= project.name %> Logo">
+          <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i><%= project.category %></p>
+        </div>
+        <div class="project-info">
+          <div class="project-info-inner">
+            <h2 class="prjt-title"><%= project.name %></h2>
+            <p class="prjt-devlprs"><%= project.developer_name %></p>
+            <p class="prjt-location"><i
+                class="fa fa-map-marker-alt fill-white"></i><%= "#{project.micro_market}, #{project.city} " %>
+            </p>
+          </div>
+          <div class="project-info-outer px-3">
+            <div class="row">
+              <div class="col-lg-1 ps-0 pe-0">
+                <i class="fa fa-fire fill-danger"></i>
+              </div>
+              <div class="col-lg-11 pe-2 ps-3">
+                <p class="list-txt project-deal mb-2">Hot Deal</p>
+                <p class="list-txt project-desc mb-0">error</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</section>
+  <% end %>
+</div>
+
+<div class="row mt-4 mb-5">
+  <div class="col-lg-12 mt-5 mb-3">
+    <h2 class="sec-title">Interested Projects</h2>
+  </div>
+  <% current_user.interested_projects.in(status: %w(subscribed approved)).each do |interested_project| %>
+  <% project = interested_project.project %>
+  <div class="col-lg-4">
+    <div class="project-wrap br-rd-8 card-shadow mb-4">
+      <div class="project-list row">
+        <div class="project-img">
+          <img src="<%= project.cover_photo %>" class="img-fluid w-100 rounded-top" alt="<%= project.name %> Logo">
+          <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i><%= project.category %></p>
+        </div>
+        <div class="project-info">
+          <div class="project-info-inner">
+            <h2 class="prjt-title"><%= project.name %></h2>
+            <p class="prjt-devlprs"><%= project.developer_name %></p>
+            <p class="prjt-location"><i
+                class="fa fa-map-marker-alt fill-white"></i><%= "#{project.micro_market}, #{project.city} " %>
+            </p>
+          </div>
+          <div class="project-info-outer px-3">
+            <div class="row">
+              <div class="col-lg-1 ps-0 pe-0">
+                <i class="fa fa-fire fill-danger"></i>
+              </div>
+              <div class="col-lg-11 pe-2 ps-3">
+                <p class="list-txt project-deal mb-2">Hot Deal</p>
+                <p class="list-txt project-desc mb-0">error</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% end %>
+</div>

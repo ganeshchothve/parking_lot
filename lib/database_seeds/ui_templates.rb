@@ -71,7 +71,7 @@ module DatabaseSeeds
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'project_units/_section', content: <<-'INACTIVE_CP'
         <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 my-4 no-pd">
           <div class="box-card">
-            <div class="box-header bg-gradient-cd br-rd-tr-4">
+            <div class="box-header bg-primary br-rd-tr-4">
               <h2 class="title icon-set icon-building-white">
                 <%= Project.model_name.human %>
               </h2>

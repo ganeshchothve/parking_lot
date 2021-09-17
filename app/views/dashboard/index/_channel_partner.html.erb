@@ -1,526 +1,336 @@
 <section class="mt-3">
-    <div class="px-4">
-        <div class="row">
-            <div class="col-lg-9">
-                <div class="row mb-3">
-                    <div class="col-lg-6">
-                        <h2 class="sec-title">Welcome Jamison,</h2>
-                    </div>
-                    <div class="col-lg-6 text-end">
-                        <select class="h3 mb-0 font-weight-medium f-20 form-control d-sm-inline-block">
-                            <option>Quater</option>
-                            <option>Monthly</option>
-                            <option>Year</option>
-                        </select>
-                        <div class="quater-list d-sm-inline-block ms-2">
-                            <a href="#" class="d-sm-inline-block btn btn-sm pull-right bg-white mr-1 font-medium br-gray-1 br-rd-4 txt-light-blue">Q4 (Oct 1 - Dec 31)</a>
-                        </div>
-                        <div class="quater-year d-sm-inline-block ms-2">
-                            <a href="#" class="d-sm-inline-block btn btn-sm pull-right bg-white mr-1 font-medium br-gray-1 br-rd-4 txt-light-blue">2020</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xl-12 col-lg-12">
-                        <div class="row">
-
-                        	<!-- Charts ---------->
-                            <div class="col-lg-8">
-                                <div class="card mb-4 br-rd-8 card-shadow no-br">
-                                    <div id="total_brokerage"></div>
-                                </div>
-                            </div>
-
-                            <!-- Payments ---------->
-                            <div class="col-lg-4">
-                                <div class="payment-detls fix-ht">
-                                    <div class="card br-rd-8 card-shadow  no-br">
-                                        <div class="px-3 row">
-                                            <div class="col-md-6 pt-3">
-                                                <h2 class="sec-title mb-0">Payments</h2>
-                                            </div>
-                                            <div class="col-md-6 pt-3 text-end">
-                                                <a href="javascript:;" class="btn-link font-medium">View All</a>
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        <div class="mt-2 payment-list px-3">
-                                            <h4>October, 2020</h4>
-                                            <ul class="list-unstyled">
-                                                <li>
-                                                    <div class="payment-wrap">
-                                                        <p class="date mb-0">Dec 23rd, 2020</p>
-                                                        <p class="payment-user-name mb-0">Niharika Aswani</p>
-                                                        <p class="devloper-name mb-0">Vedanta Developers</p>
-                                                        <p class="payment-amount mb-0 d-sm-inline-block">₹ 34000</p>
-                                                        <p class="payment-status success-status mb-0 d-sm-inline-block mt-1 float-end">Paid</p>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="payment-wrap">
-                                                        <p class="date mb-0">Dec 23rd, 2020</p>
-                                                        <p class="payment-user-name mb-0">Niharika Aswani</p>
-                                                        <p class="devloper-name mb-0">Vedanta Developers</p>
-                                                        <p class="payment-amount mb-0 d-sm-inline-block">₹ 34000</p>
-                                                        <p class="payment-status pending-status mb-0 d-sm-inline-block mt-1 float-end">Pending</p>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                            <h4>November, 2020</h4>
-                                            <ul>
-                                                <li>
-                                                    <div class="payment-wrap">
-                                                        <p class="date mb-0">Dec 23rd, 2020</p>
-                                                        <p class="payment-user-name mb-0">Niharika Aswani</p>
-                                                        <p class="devloper-name mb-0">Vedanta Developers</p>
-                                                        <p class="payment-amount mb-0 d-sm-inline-block">₹ 34000</p>
-                                                        <p class="payment-status cancel-status mb-0 d-sm-inline-block mt-1 float-end">Cancel</p>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="payment-wrap">
-                                                        <p class="date mb-0">Dec 23rd, 2020</p>
-                                                        <p class="payment-user-name mb-0">Niharika Aswani</p>
-                                                        <p class="devloper-name mb-0">Vedanta Developers</p>
-                                                        <p class="payment-amount mb-0 d-sm-inline-block">₹ 34000</p>
-                                                        <p class="payment-status pending-status mb-0 d-sm-inline-block mt-1 float-end">Pending</p>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Newly Launched ---------->
-
-                <div class="row">
-                    <div class="col-lg-12 mt-1 mb-3">
-                        <h2 class="sec-title">Newly Launched</h2>
-                    </div>
-                	<div class="col-lg-4">
-                		<div class="project-wrap br-rd-8 card-shadow">
-                			<div class="project-list row">
-                				<div class="project-img">
-                					<img src="<%= asset_path 'project-item-image.jpg' %>" class="img-fluid">
-                					<p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i>Just Launch</p>
-                				</div>
-                				<div class="project-info">
-                					<div class="project-info-inner">
-                						<h2 class="prjt-title">34 Park Estate</h2>
-                						<p class="prjt-devlprs">Embassy Developers</p>
-                						<p class="prjt-location"><i class="fa fa-map-marker-alt fill-white"></i>Khar West, Mumbai</p>
-                					</div>
-                                    <div class="project-info-outer px-3">
-                                        <div class="row">
-                                            <div class="col-lg-1 ps-0 pe-0">
-                                                <i class="fa fa-fire fill-danger"></i>
-                                            </div>
-                                            <div class="col-lg-11 pe-2 ps-3">
-                                                <p class="list-txt project-deal mb-2">Hot Deal</p>
-                                                <p class="list-txt project-desc mb-0">2.5% Brokerage incentive on bookings made within the first week of the launch date</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                				</div>
-                			</div>
-                		</div>
-                	</div>
-
-                    <div class="col-lg-4">
-                        <div class="project-wrap br-rd-8 card-shadow">
-                            <div class="project-list row">
-                                <div class="project-img">
-                                    <img src="<%= asset_path 'project-item-image.jpg' %>" class="img-fluid">
-                                    <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i>Just Launch</p>
-                                </div>
-                                <div class="project-info">
-                                    <div class="project-info-inner">
-                                        <h2 class="prjt-title">34 Park Estate</h2>
-                                        <p class="prjt-devlprs">Embassy Developers</p>
-                                        <p class="prjt-location"><i class="fa fa-map-marker-alt fill-white"></i>Khar West, Mumbai</p>
-                                    </div>
-                                    <div class="project-info-outer px-3">
-                                        <div class="row">
-                                            <div class="col-lg-1 ps-0 pe-0">
-                                                <i class="fa fa-fire fill-danger"></i>
-                                            </div>
-                                            <div class="col-lg-11 pe-2 ps-3">
-                                                <p class="list-txt project-deal mb-2">Hot Deal</p>
-                                                <p class="list-txt project-desc mb-0">2.5% Brokerage incentive on bookings made within the first week of the launch date</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4">
-                        <div class="project-wrap br-rd-8 card-shadow">
-                            <div class="project-list row">
-                                <div class="project-img">
-                                    <img src="<%= asset_path 'project-item-image.jpg' %>" class="img-fluid">
-                                    <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i>Just Launch</p>
-                                </div>
-                                <div class="project-info">
-                                    <div class="project-info-inner">
-                                        <h2 class="prjt-title">34 Park Estate</h2>
-                                        <p class="prjt-devlprs">Embassy Developers</p>
-                                        <p class="prjt-location"><i class="fa fa-map-marker-alt fill-white"></i>Khar West, Mumbai</p>
-                                    </div>
-                                    <div class="project-info-outer px-3">
-                                        <div class="row">
-                                            <div class="col-lg-1 ps-0 pe-0">
-                                                <i class="fa fa-fire fill-warning"></i>
-                                            </div>
-                                            <div class="col-lg-11 pe-2 ps-3">
-                                                <p class="list-txt project-deal mb-2">Deal</p>
-                                                <p class="list-txt project-desc mb-0">1% Brokerage incentive on bookings, post the first launch week up to the 3rd month</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row mt-4 mb-5">
-                    <div class="col-lg-12 mt-5 mb-3">
-                        <h2 class="sec-title">Interested Projects</h2>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="project-wrap br-rd-8 card-shadow">
-                            <div class="project-list row">
-                                <div class="project-img">
-                                    <img src="<%= asset_path 'project-item-image.jpg' %>" class="img-fluid">
-                                    <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i>Just Launch</p>
-                                </div>
-                                <div class="project-info">
-                                    <div class="project-info-inner">
-                                        <h2 class="prjt-title">34 Park Estate</h2>
-                                        <p class="prjt-devlprs">Embassy Developers</p>
-                                        <p class="prjt-location"><i class="fa fa-map-marker-alt fill-white"></i>Khar West, Mumbai</p>
-                                    </div>
-                                    <div class="project-info-outer px-3">
-                                        <div class="row">
-                                            <div class="col-lg-1 ps-0 pe-0">
-                                                <i class="fa fa-fire fill-danger"></i>
-                                            </div>
-                                            <div class="col-lg-11 pe-2 ps-3">
-                                                <p class="list-txt project-deal mb-2">Hot Deal</p>
-                                                <p class="list-txt project-desc mb-0">2.5% Brokerage incentive on bookings made within the first week of the launch date</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4">
-                        <div class="project-wrap br-rd-8 card-shadow">
-                            <div class="project-list row">
-                                <div class="project-img">
-                                    <img src="<%= asset_path 'project-item-image.jpg' %>" class="img-fluid">
-                                    <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i>Just Launch</p>
-                                </div>
-                                <div class="project-info">
-                                    <div class="project-info-inner">
-                                        <h2 class="prjt-title">34 Park Estate</h2>
-                                        <p class="prjt-devlprs">Embassy Developers</p>
-                                        <p class="prjt-location"><i class="fa fa-map-marker-alt fill-white"></i>Khar West, Mumbai</p>
-                                    </div>
-                                    <div class="project-info-outer px-3">
-                                        <div class="row">
-                                            <div class="col-lg-1 ps-0 pe-0">
-                                                <i class="fa fa-fire fill-danger"></i>
-                                            </div>
-                                            <div class="col-lg-11 pe-2 ps-3">
-                                                <p class="list-txt project-deal mb-2">Hot Deal</p>
-                                                <p class="list-txt project-desc mb-0">2.5% Brokerage incentive on bookings made within the first week of the launch date</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4">
-                        <div class="project-wrap br-rd-8 card-shadow">
-                            <div class="project-list row">
-                                <div class="project-img">
-                                    <img src="<%= asset_path 'project-item-image.jpg' %>" class="img-fluid">
-                                    <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i>Just Launch</p>
-                                </div>
-                                <div class="project-info">
-                                    <div class="project-info-inner">
-                                        <h2 class="prjt-title">34 Park Estate</h2>
-                                        <p class="prjt-devlprs">Embassy Developers</p>
-                                        <p class="prjt-location"><i class="fa fa-map-marker-alt fill-white"></i>Khar West, Mumbai</p>
-                                    </div>
-                                    <div class="project-info-outer px-3">
-                                        <div class="row">
-                                            <div class="col-lg-1 ps-0 pe-0">
-                                                <i class="fa fa-fire fill-danger"></i>
-                                            </div>
-                                            <div class="col-lg-11 pe-2 ps-3">
-                                                <p class="list-txt project-deal mb-2">Hot Deal</p>
-                                                <p class="list-txt project-desc mb-0">2.5% Brokerage incentive on bookings made within the first week of the launch date</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+  <div class="px-4">
+    <div class="row">
+      <div class="col-lg-9">
+        <div class="row mb-3">
+          <div class="col-lg-6">
+            <h2 class="sec-title">Welcome Jamison,</h2>
+          </div>
+          <div class="col-lg-6 text-end">
+            <select class="h3 mb-0 font-weight-medium f-20 form-control d-sm-inline-block">
+              <option>Quater</option>
+              <option>Monthly</option>
+              <option>Year</option>
+            </select>
+            <div class="quater-list d-sm-inline-block ms-2">
+              <a href="#"
+                class="d-sm-inline-block btn btn-sm pull-right bg-white mr-1 font-medium br-gray-1 br-rd-4 txt-light-blue">Q4
+                (Oct 1 - Dec 31)</a>
             </div>
-            <div class="col-lg-3">
-            	<!-- Events ---------->
-            	<div class="card br-rd-8 card-shadow no-br">
-                    <div class="">
-                        <div class="col-md-12 pt-3 px-3">
-                            <h2 class="sec-title mb-0">Upcoming Events</h2>
-                        </div>
-                        <hr>
-                        <ul class="upcoming-events-list list-unstyled cmn-list">
-                        	<li class="px-3">
-                        		<div class="list-wrap row">
-                        			<div class="col-lg-2">
-                        				<i class="fa fa-calendar-alt fill-primary"></i>
-                        			</div>
-                        			<div class="col-lg-10">
-                        				<p class="list-txt event-title mb-0">Pre Launch Event</p>
-                        				<p class="list-txt event-time mb-0">5th May 2020, 12.30 pm IST</p>
-                        			</div>
-                        		</div>
-                        	</li>
-                        	<li class="px-3">
-                        		<div class="list-wrap row">
-                        			<div class="col-lg-2">
-                        				<i class="fa fa-calendar-alt fill-primary"></i>
-                        			</div>
-                        			<div class="col-lg-10">
-                        				<p class="list-txt event-title mb-0">Launch Event</p>
-                        				<p class="list-txt event-time mb-0">31st Dec 2020, 12.30 pm IST</p>
-                        			</div>
-                        		</div>
-                        	</li>
-                        </ul>
-                    </div>
-                </div>
-
-
-				<!----Announcements------------>
-				<div class="card br-rd-8 card-shadow no-br mt-3">
-                    <div class="">
-                        <div class="col-md-12 pt-3 px-3">
-                            <h2 class="sec-title mb-0">Announcements</h2>
-                        </div>
-                        <hr>
-                        <ul class="announcement-list list-unstyled cmn-list">
-                        	<li class="px-3">
-                        		<div class="list-wrap row">
-                        			<div class="col-lg-2">
-                        				<i class="fa fa-rocket fill-warning fa-sm"></i>
-                        			</div>
-                        			<div class="col-lg-10">
-                        				<p class="list-txt event-title mb-0">New Launch</p>
-                        				<p class="list-txt event-info mb-0">Embassy Developers has just launched a new project, Brahma Towers in Lavassa.</p>
-                        				<p class="list-txt event-time mb-0">On May 23rd, 2020</p>
-                        			</div>
-                        		</div>
-                        	</li>
-                        	<li class="px-3">
-                        		<div class="list-wrap row">
-                        			<div class="col-lg-2">
-                        				<i class="fa fa-calendar-week fill-primary fa-sm"></i>
-                        			</div>
-                        			<div class="col-lg-10">
-                        				<p class="list-txt event-title mb-0">Events</p>
-                        				<p class="list-txt event-info mb-0">New plans for projects from Lodha builders in Pune on 24th Dec 2020</p>
-                        				<p class="list-txt event-time mb-0">On May 23rd, 2020</p>
-                        			</div>
-                        		</div>
-                        	</li>
-                        	<li class="px-3">
-                        		<div class="list-wrap row">
-                        			<div class="col-lg-2">
-                        				<i class="fa fa-exclamation-triangle fill-danger fa-sm"></i>
-                        			</div>
-                        			<div class="col-lg-10">
-                        				<p class="list-txt event-title mb-0">Brokerage Alert</p>
-                        				<p class="list-txt event-info mb-0">2.5% Brokerage incentive on bookings made within the first week of the launch date</p>
-                        				<p class="list-txt event-time mb-0">Till May 23rd, 2020</p>
-                        			</div>
-                        		</div>
-                        	</li>
-                        	<li class="px-3">
-                        		<div class="list-wrap row">
-                        			<div class="col-lg-2">
-                        				<i class="fa fa-calendar-week fill-primary fa-sm"></i>
-                        			</div>
-                        			<div class="col-lg-10">
-                        				<p class="list-txt event-title mb-0">Events</p>
-                        				<p class="list-txt event-info mb-0">New plans for projects from Lodha builders in Pune on 24th Dec 2020</p>
-                        				<p class="list-txt event-time mb-0">On May 23rd, 2020</p>
-                        			</div>
-                        		</div>
-                        	</li>
-                        </ul>
-                    </div>
-                </div>
-
+            <div class="quater-year d-sm-inline-block ms-2">
+              <a href="#"
+                class="d-sm-inline-block btn btn-sm pull-right bg-white mr-1 font-medium br-gray-1 br-rd-4 txt-light-blue">2020</a>
             </div>
+          </div>
+          <div class="col-lg-12">
+            <div class="py-2 bg-white rounded-3">
+              <div class="border-bottom px-4 py-2">
+              <h3 class="font-medium fn-20 theme-txt-color">Project wise Overview</h3>
+              <p class="fn-14 text-light-blue mb-0">982 Projects Available</p>
+              </div>
+              <div class="row">
+                <div class="col-lg-4">
+                  <div class="p-4">
+                  <select class="h3 mb-0 font-weight-medium f-20 form-control d-sm-inline-block">
+                    <option>All Projects (982)</option>
+                    <option>Monthly</option>
+                    <option>Year</option>
+                  </select>
+                  </div>
+                </div>
+                <div class="col-lg-8">
+                  <canvas id="myChart" width="650" height="300"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+        <div class="row">
+          <div class="col-xl-12 col-lg-12">
+            <div class="row">
+
+              <!-- Charts ---------->
+              <div class="col-lg-8">
+                <div class="card mb-4 br-rd-8 card-shadow no-br">
+                  <div id="total_brokerage"></div>
+                </div>
+              </div>
+
+              <!-- Payments ---------->
+              <div class="col-lg-4">
+                <div class="payment-detls fix-ht">
+                  <div class="card br-rd-8 card-shadow  no-br">
+                    <div class="px-3 row">
+                      <div class="col-md-6 pt-3">
+                        <h2 class="sec-title mb-0">Payments</h2>
+                      </div>
+                      <div class="col-md-6 pt-3 text-end">
+                        <a href="javascript:;" class="btn-link font-medium">View All</a>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="mt-2 payment-list px-3">
+                      <h4>October, 2020</h4>
+                      <ul class="list-unstyled">
+                        <li>
+                          <div class="payment-wrap">
+                            <p class="date mb-0">Dec 23rd, 2020</p>
+                            <p class="payment-user-name mb-0">Niharika Aswani</p>
+                            <p class="devloper-name mb-0">Vedanta Developers</p>
+                            <p class="payment-amount mb-0 d-sm-inline-block">₹ 34000</p>
+                            <p class="payment-status success-status mb-0 d-sm-inline-block mt-1 float-end">Paid</p>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="payment-wrap">
+                            <p class="date mb-0">Dec 23rd, 2020</p>
+                            <p class="payment-user-name mb-0">Niharika Aswani</p>
+                            <p class="devloper-name mb-0">Vedanta Developers</p>
+                            <p class="payment-amount mb-0 d-sm-inline-block">₹ 34000</p>
+                            <p class="payment-status pending-status mb-0 d-sm-inline-block mt-1 float-end">Pending</p>
+                          </div>
+                        </li>
+                      </ul>
+                      <h4>November, 2020</h4>
+                      <ul>
+                        <li>
+                          <div class="payment-wrap">
+                            <p class="date mb-0">Dec 23rd, 2020</p>
+                            <p class="payment-user-name mb-0">Niharika Aswani</p>
+                            <p class="devloper-name mb-0">Vedanta Developers</p>
+                            <p class="payment-amount mb-0 d-sm-inline-block">₹ 34000</p>
+                            <p class="payment-status cancel-status mb-0 d-sm-inline-block mt-1 float-end">Cancel</p>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="payment-wrap">
+                            <p class="date mb-0">Dec 23rd, 2020</p>
+                            <p class="payment-user-name mb-0">Niharika Aswani</p>
+                            <p class="devloper-name mb-0">Vedanta Developers</p>
+                            <p class="payment-amount mb-0 d-sm-inline-block">₹ 34000</p>
+                            <p class="payment-status pending-status mb-0 d-sm-inline-block mt-1 float-end">Pending</p>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Newly Launched ---------->
+        <%= render 'dashboard/index/partials/collaterals' %>
+
+
+      </div>
+      <div class="col-lg-3">
+        <!-- Events ---------->
+        <div class="card br-rd-8 card-shadow no-br">
+          <div class="">
+            <div class="col-md-12 pt-3 px-3">
+              <h2 class="sec-title mb-0">Upcoming Events</h2>
+            </div>
+            <hr>
+            <ul class="upcoming-events-list list-unstyled cmn-list">
+              <li class="px-3">
+                <div class="list-wrap row">
+                  <div class="col-lg-2">
+                    <i class="fa fa-calendar-alt fill-primary"></i>
+                  </div>
+                  <div class="col-lg-10">
+                    <p class="list-txt event-title mb-0">Pre Launch Event</p>
+                    <p class="list-txt event-time mb-0">5th May 2020, 12.30 pm IST</p>
+                  </div>
+                </div>
+              </li>
+              <li class="px-3">
+                <div class="list-wrap row">
+                  <div class="col-lg-2">
+                    <i class="fa fa-calendar-alt fill-primary"></i>
+                  </div>
+                  <div class="col-lg-10">
+                    <p class="list-txt event-title mb-0">Launch Event</p>
+                    <p class="list-txt event-time mb-0">31st Dec 2020, 12.30 pm IST</p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+
+        <!----Announcements------------>
+        <div class="card br-rd-8 card-shadow no-br mt-3">
+          <div class="">
+            <div class="col-md-12 pt-3 px-3">
+              <h2 class="sec-title mb-0">Announcements</h2>
+            </div>
+            <hr>
+            <ul class="announcement-list list-unstyled cmn-list">
+              <li class="px-3">
+                <div class="list-wrap row">
+                  <div class="col-lg-2">
+                    <i class="fa fa-rocket fill-warning fa-sm"></i>
+                  </div>
+                  <div class="col-lg-10">
+                    <p class="list-txt event-title mb-0">New Launch</p>
+                    <p class="list-txt event-info mb-0">Embassy Developers has just launched a new project, Brahma
+                      Towers in Lavassa.</p>
+                    <p class="list-txt event-time mb-0">On May 23rd, 2020</p>
+                  </div>
+                </div>
+              </li>
+              <li class="px-3">
+                <div class="list-wrap row">
+                  <div class="col-lg-2">
+                    <i class="fa fa-calendar-week fill-primary fa-sm"></i>
+                  </div>
+                  <div class="col-lg-10">
+                    <p class="list-txt event-title mb-0">Events</p>
+                    <p class="list-txt event-info mb-0">New plans for projects from Lodha builders in Pune on 24th Dec
+                      2020</p>
+                    <p class="list-txt event-time mb-0">On May 23rd, 2020</p>
+                  </div>
+                </div>
+              </li>
+              <li class="px-3">
+                <div class="list-wrap row">
+                  <div class="col-lg-2">
+                    <i class="fa fa-exclamation-triangle fill-danger fa-sm"></i>
+                  </div>
+                  <div class="col-lg-10">
+                    <p class="list-txt event-title mb-0">Brokerage Alert</p>
+                    <p class="list-txt event-info mb-0">2.5% Brokerage incentive on bookings made within the first week
+                      of the launch date</p>
+                    <p class="list-txt event-time mb-0">Till May 23rd, 2020</p>
+                  </div>
+                </div>
+              </li>
+              <li class="px-3">
+                <div class="list-wrap row">
+                  <div class="col-lg-2">
+                    <i class="fa fa-calendar-week fill-primary fa-sm"></i>
+                  </div>
+                  <div class="col-lg-10">
+                    <p class="list-txt event-title mb-0">Events</p>
+                    <p class="list-txt event-info mb-0">New plans for projects from Lodha builders in Pune on 24th Dec
+                      2020</p>
+                    <p class="list-txt event-time mb-0">On May 23rd, 2020</p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
 </section>
+
 <% date = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") %>
 <% start_date, end_date = date.split(' - ') %>
 <% channel_partner = current_user.associated_channel_partner %>
 <% @channel_partner = channel_partner%>
 <% if current_user.active_channel_partner? %>
-  <section class="first-sec welcome-box">
-    <div class="container">
-      <div class="row">
-        <% template = ::Template::UITemplate.where(name: 'index/_channel_partner').first %>
-        <% if template.present? %>
-          <%= get_view_erb(template) %>
-        <% end %>
-      </div>
-    </div>
-  </section>
 
-  <!-- Leads -->
-  <!--
-  <section class="leads-list device-pd mt-3">
-    <div class="container">
-      <%# cp_lead_activities = CpLeadActivity.where(user_id: current_user.id, expiry_date: { '$gte': Date.today }).paginate(page: 1) %>
+<section class="user-db-sec-5 device-pd">
+  <div class="container">
+    <div class='box-card'>
       <div class="row">
-        <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
-          <div class="table-title pt-1">
-            <h1 class="title icon-set icon-key-black">
-              Lead Activities
-            </h1>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
+          <div class="table-title pt-4">
+            <h1 class="title"><i
+                class="fa fa-chart-bar fa-sm me-2"></i><%= t('dashboard.channel_partner.titles.leads') %></h1>
           </div>
         </div>
-        <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
-          <div class="table-btn-set float-right pb-3">
-            <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%#= t('global.total')%> : <%#= cp_lead_activities.total_entries %></button>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-md-3 no-pd">
+          <div class="table-btn-set float-md-end pt-md-3">
+            <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
+              <i class="fa fa-filter fill-theme"></i>
+            </button>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="box-card relative">
-          <%#= render 'admin/cp_lead_activities/index', cp_lead_activities: cp_lead_activities %>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
+          <div class="filter-box">
+            <div class="filter-inner">
+              <div class="filter-header">
+                <span class="title">Filter</span>
+                <a href="javascript:;" class="close-filter-btn">&times;</a>
+              </div>
+              <%= form_tag channel_partner_dashboard_counts_path, method: "get", remote: true, id: "channel_partner_dashboard_counts_filter" do %>
+              <div class="filter-content">
+                <div class="row">
+                  <div class="mb-3 col-12">
+                    <%= label_tag "dates", "Dates", class: "control-label float-left" %>
+                    <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
+                  </div>
+                  <div class="mb-3 col-12">
+                    <%= label_tag :project_ids, "Projects", class: "control-label float-left" %>
+                    <%= select_tag :project_ids, options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
+                  </div>
+                </div>
+              </div>
+              <div class="filter-footer">
+                <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right close-filter-btn" %>
+                <button type="button"
+                  class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+              </div>
+              <% end %>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </section>
-  -->
-  
-  <!-- Collaterals -->
-  <%= render 'dashboard/index/partials/collaterals' %>
-  <section class="user-db-sec-5 device-pd">
-    <div class="container">
-      <div class='box-card'>
-        <div class = "row">
-          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
-            <div class="table-title pt-4">
-              <h1 class="title"><i class="fa fa-chart-bar fa-sm me-2"></i><%= t('dashboard.channel_partner.titles.leads') %></h1>
-            </div>
+  </div>
+</section>
+<!-- <div id="channel_partner_dashboard_counts">
+</div> -->
+
+<section class="user-db-sec-5 device-pd">
+  <div class="container">
+    <div class='box-card'>
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
+          <div class="table-title pt-4">
+            <h1 class="title fn-18"><i class="fa fa-building theme-fill fa-sm me-2"></i>Project Wise Summary</h1>
           </div>
-          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-md-3 no-pd">
-            <div class="table-btn-set float-md-end pt-md-3">
-               <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
-                  <i class="fa fa-filter fill-theme"></i>
-                </button>
-            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-md-3 no-pd">
+          <div class="table-btn-set float-md-end pt-md-3">
+            <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
+              <i class="fa fa-filter fill-theme"></i>
+            </button>
           </div>
-          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-            <div class="filter-box">
-              <div class="filter-inner">
-                <div class="filter-header">
-                  <span class="title">Filter</span>
-                  <a href="javascript:;" class="close-filter-btn">&times;</a>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
+          <div class="filter-box modal-content px-3 fixed-header-footer">
+            <div class="filter-header modal-header">
+              <h5 class="modal-title title">Filter</h5>
+              <a href="javascript:;" class="close-filter-btn btn-close"></a>
+            </div>
+            <%= form_tag project_wise_summary_path, method: "get", remote: true, id: "project_wise_summary_filter" do %>
+            <div class="filter-content  modal-body ps-0 pe-0 theme-form">
+              <div class="row">
+                <div class="mb-3 col-12">
+                  <%= label_tag "dates", "Dates", class: "control-label float-left" %>
+                  <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
                 </div>
-                <%= form_tag channel_partner_dashboard_counts_path, method: "get", remote: true, id: "channel_partner_dashboard_counts_filter" do %>
-                  <div class="filter-content">
-                    <div class="row">
-                      <div class="mb-3 col-12">
-                        <%= label_tag "dates", "Dates", class: "control-label float-left" %>
-                        <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
-                      </div>
-                      <div class="mb-3 col-12">
-                        <%= label_tag :project_ids, "Projects", class: "control-label float-left" %>
-                        <%= select_tag :project_ids, options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="filter-footer">
-                    <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right close-filter-btn" %>
-                    <button type="button" class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
-                  </div>
-                <% end %>
               </div>
             </div>
+            <div class="filter-footer  modal-footer text-end">
+              <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
+              <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+            </div>
+            <% end %>
           </div>
         </div>
       </div>
+      <div class="row" id="project_wise_summary"></div>
     </div>
-  </section>
-  <div id = "channel_partner_dashboard_counts">
   </div>
-
-  <section class="user-db-sec-5 device-pd">
-    <div class="container">
-      <div class='box-card'>
-        <div class = "row">
-          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
-            <div class="table-title pt-4">
-              <h1 class="title fn-18"><i class="fa fa-building theme-fill fa-sm me-2"></i>Project Wise Summary</h1>
-            </div>
-          </div>
-          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-md-3 no-pd">
-            <div class="table-btn-set float-md-end pt-md-3">
-               <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
-                  <i class="fa fa-filter fill-theme"></i>
-                </button>
-            </div>
-          </div>
-          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-            <div class="filter-box modal-content px-3 fixed-header-footer">
-                  <div class="filter-header modal-header">
-                <h5 class="modal-title title">Filter</h5>
-                    <a href="javascript:;" class="close-filter-btn btn-close"></a>
-                  </div>
-                <%= form_tag project_wise_summary_path, method: "get", remote: true, id: "project_wise_summary_filter" do %>
-                  <div class="filter-content  modal-body ps-0 pe-0 theme-form">
-                    <div class="row">
-                      <div class="mb-3 col-12">
-                        <%= label_tag "dates", "Dates", class: "control-label float-left" %>
-                        <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="filter-footer  modal-footer text-end">
-                    <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-                    <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
-                  </div>
-                <% end %>
-            </div>
-          </div>
-        </div>
-        <div class="row" id = "project_wise_summary"></div>
-      </div>
-    </div>
-  </section>
+</section>
 <!--
   <section class="user-db-sec-5 device-pd">
     <div class="container">
@@ -528,7 +338,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
           <div class="row">
             <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5 referrals">
-              <div class="box-header bg-gradient-cd br-rd-tr-4">
+              <div class="box-header bg-primary br-rd-tr-4">
               <h2><img src="<%# asset_path 'users-white.svg' %>"  alt="Refer a Friend" class="wd-20"><%# t('dashboard.channel_partner.refer_a_channel_partner.heading') %></h2>
               </div>
               <div class="box-content br-rd-bl-4 bg-white fix-ht">
@@ -541,7 +351,7 @@
               </div>
             </div>
             <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5">
-              <div class="box-header bg-gradient-cd br-rd-tr-4">
+              <div class="box-header bg-primary br-rd-tr-4">
                 <h2><img src="<%# asset_path 'leaderboard-white.svg' %>" alt="Documents" class="wd-16">Leaderboard</h2>
                 <a href="javascript:;" class="view-all-btn">View All > </a>
               </div>
@@ -578,217 +388,223 @@
     </div>
   </section>
 -->
-  <div class='mb-5 pb-5'>
-    <% if current_user.booking_portal_client.incentive_calculation_type?('calculated') %>
-      <section class="user-db-sec-6 device-pd">
-        <div class="container">
-          <div class='box-card'>
-            <div class = "row">
-              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
-                <div class="table-title pt-4">
-                  <h1 class="title fn-18"><i class="fa fa-rupee-sign theme-fill fa-sm me-2"></i><%= t('dashboard.channel_partner.incentive_plan_started.heading') %></h1>
-                </div>
-              </div>
-              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-md-3 no-pd">
-                <div class="table-btn-set float-md-end pt-md-3">
-                <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
-                  <i class="fa fa-filter fill-theme"></i>
-                </button>
-              </div>
-              </div>
-              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-                <div class="filter-box modal-content px-3 fixed-header-footer">
-                  <div class="filter-header modal-header">
-                    <h5 class="modal-title title">Filter</h5>
-                    <a href="javascript:;" class="close-filter-btn btn-close"></a>
-                  </div>
-                    <%= form_tag incentive_plans_started_path, method: "get", remote: true, id: "incentive_plans_started_filter" do %>
-                      <div class="filter-content  modal-body ps-0 pe-0 theme-form">
-                        <div class="row">
-                          <div class="mb-3 col-12">
-                            <%= label_tag :project_ids, "Projects", class: "control-label float-left" %>
-                            <%= select_tag :project_ids, options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="filter-footer  modal-footer text-end">
-                        <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-                        <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
-                      </div>
-                    <% end %>
-                </div>
-              </div>
+<div class='mb-5 pb-5'>
+  <% if current_user.booking_portal_client.incentive_calculation_type?('calculated') %>
+  <section class="user-db-sec-6 device-pd">
+    <div class="container">
+      <div class='box-card'>
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
+            <div class="table-title pt-4">
+              <h1 class="title fn-18"><i
+                  class="fa fa-rupee-sign theme-fill fa-sm me-2"></i><%= t('dashboard.channel_partner.incentive_plan_started.heading') %>
+              </h1>
             </div>
-            <div class="row" id = "incentive_plans_started"></div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-md-3 no-pd">
+            <div class="table-btn-set float-md-end pt-md-3">
+              <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
+                <i class="fa fa-filter fill-theme"></i>
+              </button>
+            </div>
+          </div>
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
+            <div class="filter-box modal-content px-3 fixed-header-footer">
+              <div class="filter-header modal-header">
+                <h5 class="modal-title title">Filter</h5>
+                <a href="javascript:;" class="close-filter-btn btn-close"></a>
+              </div>
+              <%= form_tag incentive_plans_started_path, method: "get", remote: true, id: "incentive_plans_started_filter" do %>
+              <div class="filter-content  modal-body ps-0 pe-0 theme-form">
+                <div class="row">
+                  <div class="mb-3 col-12">
+                    <%= label_tag :project_ids, "Projects", class: "control-label float-left" %>
+                    <%= select_tag :project_ids, options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
+                  </div>
+                </div>
+              </div>
+              <div class="filter-footer  modal-footer text-end">
+                <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+              </div>
+              <% end %>
+            </div>
           </div>
         </div>
-      </section>
-    <% end %>
+        <div class="row" id="incentive_plans_started"></div>
+      </div>
+    </div>
+  </section>
+  <% end %>
 
-    <section class="user-db-sec-6 device-pd">
-      <div class="container">
-        <div class='box-card'>
-          <div class = "row">
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
-              <div class="table-title pt-4">
-                <h1 class="title fn-18"><i class="fa fa-rupee-sign theme-fill fa-sm me-2"></i><%= t('dashboard.channel_partner.incentive_plan.heading') %> (Last 6 months)</h1>
-              </div>
+  <section class="user-db-sec-6 device-pd">
+    <div class="container">
+      <div class='box-card'>
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
+            <div class="table-title pt-4">
+              <h1 class="title fn-18"><i
+                  class="fa fa-rupee-sign theme-fill fa-sm me-2"></i><%= t('dashboard.channel_partner.incentive_plan.heading') %>
+                (Last 6 months)</h1>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-md-3 no-pd">
-              <div class="table-btn-set float-md-end pt-md-3">
-                <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
-                  <i class="fa fa-filter fill-theme"></i>
-                </button>
-              </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-md-3 no-pd">
+            <div class="table-btn-set float-md-end pt-md-3">
+              <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
+                <i class="fa fa-filter fill-theme"></i>
+              </button>
             </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-              <div class="filter-box modal-content px-3 fixed-header-footer">
-                  <div class="filter-header modal-header">
-                    <h5 class="modal-title title">Filter</h5>
-                    <a href="javascript:;" class="close-filter-btn btn-close"></a>
+          </div>
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
+            <div class="filter-box modal-content px-3 fixed-header-footer">
+              <div class="filter-header modal-header">
+                <h5 class="modal-title title">Filter</h5>
+                <a href="javascript:;" class="close-filter-btn btn-close"></a>
+              </div>
+              <%= form_tag incentive_plans_summary_path, method: "get", remote: true, id: "incentive_plans_summary_filter" do %>
+              <div class="filter-content  modal-body ps-0 pe-0 theme-form">
+                <div class="row">
+                  <div class="mb-3 col-12">
+                    <%= label_tag "dates", "Dates", class: "control-label float-left" %>
+                    <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-start-date": start_date || '', "data-end-date": end_date || '', "data-auto-update": true, "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
                   </div>
-                  <%= form_tag incentive_plans_summary_path, method: "get", remote: true, id: "incentive_plans_summary_filter" do %>
-                    <div class="filter-content  modal-body ps-0 pe-0 theme-form">
-                      <div class="row">
-                        <div class="mb-3 col-12">
-                          <%= label_tag "dates", "Dates", class: "control-label float-left" %>
-                          <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-start-date": start_date || '', "data-end-date": end_date || '', "data-auto-update": true, "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
-                        </div>
-                        <!--
+                  <!--
                         <div class="mb-3 col-12">
                           <%#= label_tag :project_ids, "Projects", class: "control-label float-left" %>
                           <%#= select_tag :project_ids, options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
                         </div>
                         -->
-                      </div>
-                    </div>
-                    <div class="filter-footer  modal-footer text-end">
-                      <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-                      <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
-                    </div>
-                  <% end %>
+                </div>
               </div>
+              <div class="filter-footer  modal-footer text-end">
+                <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+              </div>
+              <% end %>
             </div>
           </div>
-          <div class="row" id = "incentive_plans_summary"></div>
         </div>
+        <div class="row" id="incentive_plans_summary"></div>
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
+</div>
 
-  <%= javascript_tag do %>
-    $(document).ready(function(){
-      FormInitializer.init($("#project_wise_summary_filter"));
-      FormInitializer.init($("#incentive_plans_started_filter"));
-      FormInitializer.init($("#incentive_plans_summary_filter"));
-      FormInitializer.init($("#channel_partner_dashboard_counts_filter"));
-      $.ajax({
-        url: "/dashboard/project_wise_summary",
-        type: "get"
-      });
-      $.ajax({
-        url: "/dashboard/incentive_plans_started",
-        type: "get"
-      });
-      $.ajax({
-        url: "/dashboard/incentive_plans_summary",
-        type: "get"
-      });
-      $.ajax({
-        url: "/dashboard/channel_partner_dashboard_counts",
-        type: "get"
-      });
-    });
-  <% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+FormInitializer.init($("#project_wise_summary_filter"));
+FormInitializer.init($("#incentive_plans_started_filter"));
+FormInitializer.init($("#incentive_plans_summary_filter"));
+FormInitializer.init($("#channel_partner_dashboard_counts_filter"));
+$.ajax({
+url: "/dashboard/project_wise_summary",
+type: "get"
+});
+$.ajax({
+url: "/dashboard/incentive_plans_started",
+type: "get"
+});
+$.ajax({
+url: "/dashboard/incentive_plans_summary",
+type: "get"
+});
+$.ajax({
+url: "/dashboard/channel_partner_dashboard_counts",
+type: "get"
+});
+});
+<% end %>
 <% else %>
 
 <section class="cp-register-sec mt-5">
-	<div class="col-lg-12">
-		<div class="cp-reg-header pt-5 px-4 pb-5 col-lg-12">
-			<h1 class="sec-title">Complete Registration</h1>
-			<%# <a href="javascript:;" class="skip-step-btn pe-3">Skip for now</a> %>
-		</div>
-		<div class="col-lg-12">
-		<div class="cp-step-list px-4 pt-3 col-lg-12">
-			<ul class="nav nav-tabs">
-				<li class="nav-item">
-					<a href="javascript:;" class="step-done nav-link active border-0" data-bs-toggle="tab" data-bs-target="#step-1" type="button" role="tab">
-						<div class="step-inner">
-							<span>1</span>
-							<p>Personal Info</p>
-						</div>
-					</a>
-				</li>
-				<li>
-					<a href="javascript:;" class="step-done nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-2" type="button" role="tab">
-          <div class="step-inner">
-							<span>2</span>
-							<p>Company Details</p>
-						</div>
-					</a>
-				</li>
-				<li>
-					<a href="javascript:;" class="nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-3" type="button" role="tab">
-						<div class="step-inner">
-							<span>3</span>
-							<p>Questionaire</p>
-						</div>
-					</a>
-				</li>
-				<li>
-					<a href="javascript:;" class="nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-4" type="button" role="tab">
-						<div class="step-inner">
-							<span>4</span>
-							<p>Upload Documents</p>
-						</div>
-					</a>
-				</li>
-			</ul>
-		</div>
-	</div>
-		<div class="col-lg-12 px-4 pb-3">
-    <%= simple_form_for(channel_partner, local: true, remote: true, html: {"data-resource-type": global_labels['channel_partner'], "data-type": "json", id: 'channel_partner_form', class: 'modal-remote-form validate-form theme-form tab-content'}) do |form| %>
-			<div class="step-tab-content tab-pane fade show active shadow-sm border rounded-top" role="tabpanel" id="step-1">
-				<div class="step-tab-inner">
-					<h2 class="px-4 py-4 mb-3 border-bottom text-theme-color fn-24 font-light">Personal Info</h2>
+  <div class="col-lg-12">
+    <div class="cp-reg-header pt-5 px-4 pb-5 col-lg-12">
+      <h1 class="sec-title">Complete Registration</h1>
+      <%# <a href="javascript:;" class="skip-step-btn pe-3">Skip for now</a> %>
+    </div>
+    <div class="col-lg-12">
+      <div class="cp-step-list px-4 pt-3 col-lg-12">
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a href="javascript:;" class="step-done nav-link active border-0" data-bs-toggle="tab"
+              data-bs-target="#step-1" type="button" role="tab">
+              <div class="step-inner">
+                <span>1</span>
+                <p>Personal Info</p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:;" class="step-done nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-2"
+              type="button" role="tab">
+              <div class="step-inner">
+                <span>2</span>
+                <p>Company Details</p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:;" class="nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-3" type="button"
+              role="tab">
+              <div class="step-inner">
+                <span>3</span>
+                <p>Questionaire</p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:;" class="nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-4" type="button"
+              role="tab">
+              <div class="step-inner">
+                <span>4</span>
+                <p>Upload Documents</p>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-lg-12 px-4 pb-3">
+      <%= simple_form_for(channel_partner, local: true, remote: true, html: {"data-resource-type": global_labels['channel_partner'], "data-type": "json", id: 'channel_partner_form', class: 'modal-remote-form validate-form theme-form tab-content'}) do |form| %>
+      <div class="step-tab-content tab-pane fade show active shadow-sm border rounded-top" role="tabpanel" id="step-1">
+        <div class="step-tab-inner">
+          <h2 class="px-4 py-4 mb-3 border-bottom text-theme-color fn-24 font-light">Personal Info</h2>
           <div class="cp-form-wrap px-4 pt-2 mb-5">
             <%= render "channel_partners/personal_fields", {form: form} %>
-            </div>
-				</div>	
-			</div>
-       
-			<div class="step-tab-content tab-pane fade shadow-sm border rounded-top" role="tabpanel" id="step-2">
-				<div class="step-tab-inner">
-					<h2 class="px-4 py-4 mb-3 border-bottom text-theme-color fn-24 font-light">Company Details</h2>
-					<div class="cp-form-wrap px-4 pt-2 mb-5">
-						<%= render "channel_partners/company_fields", {form: form} %>			
-					</div>
-				</div>	
-			</div>
-			<div class="step-tab-content tab-pane fade shadow-sm border rounded-top" role="tabpanel" id="step-3">
-				<div class="step-tab-inner">
-					<h2 class="px-4 py-4 mb-3 border-bottom text-theme-color fn-24 font-light">Questionaire</h2>
-					<div class="cp-form-wrap px-4 pt-2 mb-5">
-						<%= render "channel_partners/questionaire_fields", {form: form} %>				
-					</div>
-				</div>	
-			</div>
-			<div class="step-tab-content tab-pane fade shadow-sm border rounded-top" role="tabpanel" id="step-4">
-				<div class="step-tab-inner">
-					<h2 class="px-4 py-4 mb-3 border-bottom text-theme-color fn-24 font-light">Upload Documents</h2>
-            
-				</div>	
-			</div>
-      <div class="cp-form-wrap shadow-sm border rounded-bottom px-4 py-4 shadow-top-none">
-          <div class="col-lg-12 form-footer px-0 text-end">
-            <%= form.submit "Save", class: "btn bg-primary white me-3 d-inline-block px-4 font-medium w-auto" %>
           </div>
+        </div>
+      </div>
+
+      <div class="step-tab-content tab-pane fade shadow-sm border rounded-top" role="tabpanel" id="step-2">
+        <div class="step-tab-inner">
+          <h2 class="px-4 py-4 mb-3 border-bottom text-theme-color fn-24 font-light">Company Details</h2>
+          <div class="cp-form-wrap px-4 pt-2 mb-5">
+            <%= render "channel_partners/company_fields", {form: form} %>
+          </div>
+        </div>
+      </div>
+      <div class="step-tab-content tab-pane fade shadow-sm border rounded-top" role="tabpanel" id="step-3">
+        <div class="step-tab-inner">
+          <h2 class="px-4 py-4 mb-3 border-bottom text-theme-color fn-24 font-light">Questionaire</h2>
+          <div class="cp-form-wrap px-4 pt-2 mb-5">
+            <%= render "channel_partners/questionaire_fields", {form: form} %>
+          </div>
+        </div>
+      </div>
+      <div class="step-tab-content tab-pane fade shadow-sm border rounded-top" role="tabpanel" id="step-4">
+        <div class="step-tab-inner">
+          <h2 class="px-4 py-4 mb-3 border-bottom text-theme-color fn-24 font-light">Upload Documents</h2>
+
+        </div>
+      </div>
+      <div class="cp-form-wrap shadow-sm border rounded-bottom px-4 py-4 shadow-top-none">
+        <div class="col-lg-12 form-footer px-0 text-end">
+          <%= form.submit "Save", class: "btn bg-primary white me-3 d-inline-block px-4 font-medium w-auto" %>
+        </div>
       </div>
       <% end %>
 
-		</div>
-	</div>
+    </div>
+  </div>
 </section>
 <% end %>
-
-
