@@ -1,14 +1,31 @@
 # consumes workflow api for leads from sell.do
 class Api::SellDo::LeadsController < Api::SellDoController
-  before_action :set_user, except: [:site_visit_updated]
-  before_action :set_crm, :set_lead, :set_site_visit, only: [:site_visit_updated]
+  before_action :set_crm, :set_project
+  before_action :create_user, only: [:lead_created]
+  before_action :set_lead, except: [:lead_created]
+  before_action :set_site_visit, only: [:site_visit_updated]
 
   def lead_created
     respond_to do |format|
-      if @user.save
-        format.json { render json: @user }
+      @lead = @user.leads.new(lead_create_attributes)
+      if @lead.save
+        format.json { render json: @lead }
       else
-        format.json { render json: {errors: @user.errors.full_messages.uniq} }
+        format.json { render json: {errors: @lead.errors.full_messages.uniq} }
+      end
+    end
+  rescue => e
+    respond_to do |format|
+      format.json { render json: { status: 'error', message: e.message }, status: 200 }
+    end
+  end
+
+  def lead_updated
+    respond_to do |format|
+      if @lead.update(lead_update_attributes)
+        format.json { render json: @lead }
+      else
+        format.json { render json: {errors: @lead.errors.full_messages.uniq} }
       end
     end
   rescue => e
@@ -32,9 +49,28 @@ class Api::SellDo::LeadsController < Api::SellDoController
     end
   end
 
+  def site_visit_created
+    respond_to do |format|
+      if params.dig(:payload, :_id).present?
+        unless SiteVisit.reference_resource_exists?(@crm.id, params.dig(:payload, :_id))
+          @site_visit = SiteVisit.new(site_visit_attributes)
+          if @site_visit.save
+            format.json { render json: @site_visit }
+          else
+            format.json { render json: {errors: @site_visit.errors.full_messages}, status: 200 }
+          end
+        else
+          format.json { render json: {errors: 'SiteVisit already exists'}, status: 200 }
+        end
+      else
+        format.json { render json: {errors: 'SiteVisit Id is missing from params'}, status: 200 }
+      end
+    end
+  end
+
   def site_visit_updated
     respond_to do |format|
-      @site_visit.assign_attributes(site_visit_permitted_attributes)
+      @site_visit.assign_attributes(site_visit_update_attributes)
       if @site_visit.save
         format.json { render json: @site_visit }
       else
@@ -45,15 +81,55 @@ class Api::SellDo::LeadsController < Api::SellDoController
 
   private
 
+  def set_project
+    @project = Project.where(selldo_id: params[:project_id]).first
+    render json: { errors: ["Project not found"] } and return unless @project
+  end
+
   def set_crm
     @crm = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
     render json: { errors: ["Sell.do CRM integration not available"] } and return unless @crm
   end
 
   def set_lead
-    @lead = Lead.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:lead_id]).first
+    @lead = Lead.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:lead_id].to_s).first
     render json: { errors: ["Lead with lead_id '#{params[:lead_id]}' not found"] } and return unless @lead
     @user = @lead.user
+  end
+
+  def lead_create_attributes
+    {
+      email: @user.email,
+      phone: @user.phone,
+      first_name: @user.first_name,
+      last_name: @user.last_name,
+      project_id: @project.id,
+      lead_stage: params.dig(:payload, :stage),
+      third_party_references_attributes: [{
+        crm_id: @crm.id,
+        reference_id: params[:lead_id]
+      }]
+    }
+  end
+
+  def lead_update_attributes
+    {
+      lead_stage: params.dig(:payload, :stage)
+    }
+  end
+
+  def site_visit_attributes
+    {
+      lead_id: @lead.id,
+      project_id: @lead.project_id,
+      user_id: @lead.user_id,
+      creator: @crm.user,
+      scheduled_on: (DateTime.parse(params.dig(:payload, :scheduled_on)) rescue nil),
+      third_party_references_attributes: [{
+        crm_id: @crm.id,
+        reference_id: params.dig('payload', '_id')
+      }]
+    }
   end
 
   def set_site_visit
@@ -65,26 +141,34 @@ class Api::SellDo::LeadsController < Api::SellDoController
     end
   end
 
-  def site_visit_permitted_attributes
+  def site_visit_update_attributes
     attrs = {status: params.dig(:payload, :status)}
     case params[:event].to_s
     when 'sitevisit_rescheduled'
       attrs[:scheduled_on] = DateTime.parse(params.dig(:payload, :scheduled_on)) rescue nil
     when 'sitevisit_conducted'
-      attrs[:conducted_on] = DateTime.parse(params.dig(:payload, :conducted_on)) rescue nil
+      attrs[:conducted_on] = DateTime.parse(params.dig(:payload, :sv_conducted_on)) rescue nil
     end
     attrs
   end
 
-  def set_user
-    if params[:lead_id].present?
-      @user = User.where(lead_id: params[:lead_id].to_s).first
+  def create_user
+    if (email = params.dig(:lead, :email).presence) || (phone = params.dig(:lead, :phone).presence)
+      query = []
+      query << { phone: phone } if phone.present?
+      query << { email: email } if email.present?
+      @user = User.or(query).first
       if @user.blank?
         phone = Phonelib.parse(params[:lead][:phone]).to_s
-        @user = User.new(booking_portal_client_id: current_client.id, email: params[:lead][:email], phone: phone, first_name: params[:lead][:first_name], last_name: params[:lead][:last_name], lead_id: params[:lead_id])
+        @user = User.new(booking_portal_client_id: @project.booking_portal_client_id, email: params[:lead][:email], phone: phone, first_name: params[:lead][:first_name], last_name: params[:lead][:last_name], is_active: false)
         @user.first_name = "Customer" if @user.first_name.blank?
         @user.last_name = '' if @user.last_name.nil?
-        @user[:skip_email_confirmation] = true
+        @user.skip_confirmation! # TODO: Remove this when customer login needs to be given
+        unless @user.save
+          respond_to do |format|
+            format.json { render json: {errors: @user.errors.full_messages}, status: 200 }
+          end
+        end
       end
     else
       respond_to do |format|

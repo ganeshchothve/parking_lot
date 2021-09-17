@@ -4,13 +4,13 @@
       <div class="user-list-inner" id="<%= user.id.to_s %>" draggable=true>
         <div class="user-name">
           <p class="pull-left" title="<%= user.name.try(:titleize) %>">
-            <%= link_to user.name.try(:titleize), admin_user_path(user) %></br>
+            <%= link_to user.name.try(:titleize), admin_lead_path(user) %></br>
             <small class='customer-status text-uppercase'><%#= user.portal_stage.try(:stage).try(:titleize) %></small>
           </p>
           <div class="dropdown text-left pull-right">
-            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-              <%= link_to 'Drop', move_to_next_state_admin_user_path(user.id, status: 'dropoff', format: :json), method: 'patch', remote: true, data: { confirm: 'Are you sure?', disable_with: 'Dropping...'  }, class: 'dropdown-item dropoff move-to-next-state' %>
+              <%= link_to 'Drop', move_to_next_state_admin_lead_path(user.id, status: 'dropoff', format: :json), method: 'patch', remote: true, data: { confirm: 'Are you sure?', disable_with: 'Dropping...'  }, class: 'dropdown-item dropoff move-to-next-state' %>
             </div>
           </div>
         </div>

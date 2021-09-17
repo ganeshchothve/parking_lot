@@ -87,9 +87,9 @@ class Api::V1::LeadsController < ApisController
     unless @user = User.or(check_and_build_query_for_finding_user).first
       @user = User.new(user_create_params)
       @user.assign_attributes(is_active: false) # Ruwnal Specific. TODO: Remove this for generic
+      @user.skip_confirmation! # TODO: Remove this when customer login needs to be given
       if @user.save
         @user.update_external_ids(user_third_party_reference_params, @crm.id) if user_third_party_reference_params
-        @user.confirm # Runwal Specific. TODO: Remove this for generic & follow devise confirmation flow
       else
         render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity
       end

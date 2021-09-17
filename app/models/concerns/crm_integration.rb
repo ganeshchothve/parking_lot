@@ -2,7 +2,7 @@ module CrmIntegration
   extend ActiveSupport::Concern
 
   included do
-    embeds_many :third_party_references, as: :reference_model
+    embeds_many :third_party_references, as: :reference_model, after_add: :update_references
 
     accepts_nested_attributes_for :third_party_references, reject_if: proc { |attributes| attributes['reference_id'].blank? }
   end
@@ -16,10 +16,14 @@ module CrmIntegration
     tpr.save
   end
 
+  def update_references(tpr)
+    tpr.update_references
+  end
+
   module ClassMethods
 
     def reference_resource_exists?(crm_id, reference_id)
-      where("third_party_references.crm_id": crm_id, "third_party_references.reference_id": reference_id).present?
+      all.where("third_party_references.crm_id": crm_id, "third_party_references.reference_id": reference_id).present?
     end
 
   end

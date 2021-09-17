@@ -31,18 +31,18 @@
                         <div class="card-body text-center">
                           <h5 class="mb-3">Book in 3D View</h5>
                           <%
-                      if current_user.buyer?
-                        url = three_d_user_searches_path
-                      else
-                        url = three_d_admin_lead_searches_path(@lead)
-                      end
-                    %>
+                              if current_user.buyer?
+                                url = three_d_user_searches_path
+                              else
+                                url = three_d_admin_lead_searches_path(@lead)
+                              end
+                          %>
                           <%= link_to (image_tag("3d-building.jpg", class: "rounded img-fluid", width: 160, height: 87)).html_safe, url %>
                         </div>
                       </div>
                       <% else %>
                       <!--<%# <div class="" width="160" height="87" style="background-image:url('<%= client_asset_image_url('unit_selection_filter_image') || 'search-home-img.png' %>'); height:87px;width:160px"></div> %>-->
-                      <%= image_tag client_asset_image_url('unit_selection_filter_image') || 'search-home-img.png', class: 'rounded', width: 160, height: 87 %>
+                      <%= image_tag project_asset_image_url(@lead.project, 'unit_selection_filter_image') || 'search-home-img.png', class: 'rounded', width: 160, height: 87 %>
                       <% end %>
                     </div>
                   </div>
