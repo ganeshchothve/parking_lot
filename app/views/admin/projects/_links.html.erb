@@ -8,6 +8,7 @@
   <%= link_to t('controller.projects.sync_on_selldo.link_name'), sync_on_selldo_admin_project_path(project), method: :post, class: 'dropdown-item' %>
 <% end %>
 <%= link_to TokenType.model_name.human(count: 2), admin_project_token_types_path(project), class: 'dropdown-item' %>
+<%= link_to TimeSlot.model_name.human(count: 2), admin_project_time_slots_path(project), class: 'dropdown-item' %>
 <% if policy([:admin, IncentiveScheme]).index? %>
   <%= link_to IncentiveScheme.model_name.human(count: 2), admin_incentive_schemes_path(fltrs: {project_id: project.id.to_s}), class: 'dropdown-item' %>
 <% end %>

@@ -21,8 +21,7 @@ module TimeSlotGeneration
     #before_update :finalise_time_slot
 
     # Associations
-    embeds_one :time_slot
-    accepts_nested_attributes_for :time_slot, reject_if: :all_blank
+    belongs_to :time_slot
   end
 
   def assign_token_number

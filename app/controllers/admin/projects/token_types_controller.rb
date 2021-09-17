@@ -20,7 +20,7 @@ class Admin::Projects::TokenTypesController < AdminController
   #
   # This new action for Admin users is called after new.
   #
-  # PATCH /admin/projects/:project_id/token_types
+  # GET /admin/projects/:project_id/token_types
   #
   def new
     @token_type = @project.token_types.build
@@ -30,16 +30,13 @@ class Admin::Projects::TokenTypesController < AdminController
   #
   # This edit action for Admin users is called after edit.
   #
-  # PATCH /admin/projects/:project_id/token_types
+  # GET /admin/projects/:project_id/token_types/:id
   #
   def edit
     render layout: false
   end
 
-  #
-  # This update action for Admin users is called after edit.
-  #
-  # PATCH /admin/projects/:project_id/token_types/:id
+  # POST /admin/projects/:project_id/token_types/:id
   #
   def create
     @token_type = @project.token_types.build

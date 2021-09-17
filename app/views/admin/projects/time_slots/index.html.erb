@@ -1,0 +1,21 @@
+<div class="container mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-7">
+              <% if policy([current_user_role_group, TimeSlot.new]).new? %>
+                <%= link_to "Add #{global_labels['time_slot']}", new_admin_project_time_slot_path, class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add Event'} %>
+              <% end %>
+            </div>
+            <div class="col-md-5 text-md-right">
+              <h6 class="mt-2">Total <%= global_labels[:time_slots] %>: <%= @time_slots.total_entries %></h6>
+            </div>
+          </div>
+          <%= render 'index', {time_slots: @time_slots} %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

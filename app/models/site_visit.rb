@@ -14,6 +14,7 @@ class SiteVisit
   belongs_to :lead
   belongs_to :user
   belongs_to :creator, class_name: 'User'
+  belongs_to :time_slot, optional: true
 
   field :scheduled_on, type: DateTime
   field :status, type: String, default: 'scheduled'
@@ -37,6 +38,7 @@ class SiteVisit
   validates :scheduled_on, :status, :site_visit_type, presence: true
   validates :conducted_on, presence: true, if: Proc.new { |sv| sv.status == 'conducted' }
   validate :existing_scheduled_sv, on: :create
+  validates :time_slot, presence: true, if: Proc.new { |sv| sv.site_visit_type == 'token_slot' }
 
   def self.statuses
     [

@@ -1,0 +1,46 @@
+<%= form_for [:admin, @project, @time_slot], remote: true, html: { class: 'modal-remote-form validate-form time_slot_form', data: { 'resource-type': TimeSlot.model_name.human(count: 1), type: :json } } do |f| %>
+  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-gradient-cd white">
+          <h3 class="title">
+            <%= t("controller.time_slots.#{action_name}.header") %>
+          </h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" class="white">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class='row'>
+            <div class="form-group col-12">
+              <%= f.label :date, class: 'label-required' %>
+              <%= f.text_field :date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.date.present? ? f.object.date.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), "data-min-date": f.object.date.present? ? f.object.date.strftime('%d/%m/%Y') : Date.today.strftime('%d/%m/%Y'), disabled: !policy([current_user_role_group, @time_slot]).editable_field?("date"), value: f.object.date.present? ? f.object.date.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y") %>
+            </div>
+          </div>
+          <div class='row'>
+            <div class="form-group col-6">
+              <%= f.label :start_time, class: 'label-required' %>
+              <%= f.text_field :start_time, class: 'form-control datetimepicker', required: 'required', "data-default-date": f.object.start_time.present? ? f.object.start_time.strftime("%I:%M %p") : Time.now.strftime("%I:%M %p"), "data-min-date": f.object.start_time.present? ? f.object.start_time.strftime('%I:%M %p') : Time.now.strftime("%I:%M %p"), 'data-format': 'LT', 'data-stepping': 30, disabled: !policy([current_user_role_group, @time_slot]).editable_field?("start_time"), value: f.object.start_time.present? ? f.object.start_time.strftime("%I:%M %p") : Time.now.strftime("%I:%M %p") %>
+            </div>
+            <div class="form-group col-6">
+              <%= f.label :end_time, class: 'label-required' %>
+              <%= f.text_field :end_time, class: 'form-control datetimepicker', required: 'required', "data-default-date": f.object.end_time.present? ? f.object.end_time.strftime("%I:%M %p") : Time.now.advance(hours: 1).strftime("%I:%M %p"), "data-min-date": f.object.end_time.present? ? f.object.end_time.strftime('%I:%M %p') : Time.now.strftime('%I:%M %p'), 'data-format': 'LT', 'data-stepping': 30, disabled: !policy([current_user_role_group, @time_slot]).editable_field?("end_time"), value: f.object.end_time.present? ? f.object.end_time.strftime("%I:%M %p") : Time.now.advance(hours: 1).strftime("%I:%M %p") %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= f.label :capacity, class: 'label-required' %>
+            <%= f.number_field :capacity, autofocus: true, class: "form-control", required: 'required', disabled: !(policy([:admin, @time_slot]).editable_field?("capacity")) %>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <%= f.submit class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($(".time_slot_form"));
+});
+<% end %>

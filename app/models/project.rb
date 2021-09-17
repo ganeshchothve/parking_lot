@@ -145,6 +145,7 @@ class Project
   has_many :timeline_updates
   has_and_belongs_to_many :campaigns
   has_many :token_types
+  has_many :time_slots
 
   validates :name, presence: true
   validates_uniqueness_of :name, :rera_registration_no, allow_blank: true
