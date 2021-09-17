@@ -397,8 +397,10 @@ Rails.application.routes.draw do
     end
   end
 
-  match '/sell_do/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
-  match '/sell_do/site_visit_updated', to: "api/sell_do/leads#site_visit_updated", via: [:get, :post]
+  match '/sell_do/:project_id/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
+  match '/sell_do/:project_id/lead_updated', to: "api/sell_do/leads#lead_updated", via: [:get, :post]
+  match '/sell_do/:project_id/site_visit_created', to: "api/sell_do/leads#site_visit_created", via: [:get, :post]
+  match '/sell_do/:project_id/site_visit_updated', to: "api/sell_do/leads#site_visit_updated", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
   match '/zoho/download', to: "api/zoho/assets#download", via: [:get, :post]
 

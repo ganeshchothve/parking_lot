@@ -205,7 +205,6 @@ class User
 
   scope :filter_by_role_nin, ->(_role) { _role.is_a?(Array) ? where( role: { "$nin": _role } ) : where(role: _role.as_json) }
   scope :buyers, -> { where(role: {'$in' => BUYER_ROLES } )}
-  scope :filter_by_lead_id, ->(lead_id) { where(lead_id: lead_id) }
   scope :filter_by_userwise_project_ids, ->(user) { self.in(project_ids: user.project_ids) if user.try(:project_ids).present? }
   scope :filter_by_sales_status, ->(*sales_status){ where(sales_status: { '$in': sales_status }) }
 
@@ -428,7 +427,7 @@ class User
   def name
     str = "#{first_name} #{last_name}"
     if role?('channel_partner')
-      cp = ChannelPartner.where(associated_user_id: id).first
+      cp = self.channel_partner
       str += " (#{cp.company_name})" if cp.present? && cp.company_name.present?
     end
     str
@@ -617,7 +616,7 @@ class User
       elsif user.role?('sales_admin')
         custom_scope = { "$or": [{ role: { "$in": User.buyer_roles(user.booking_portal_client) } }, { role: 'sales' }, { role: 'channel_partner' }] }
       elsif user.role?('sales')
-        custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) }, project_ids: user.selected_project_id }
+        custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) }, project_ids: user.selected_project_id.to_s }
       elsif user.role?('cp_admin')
         # Removing access to customer accounts for cp/cp_admin, as lead conflict will now work on lead's model & they will have access to their leads.
         #cp_ids = User.where(manager_id: user.id).distinct(:id)
@@ -630,7 +629,7 @@ class User
       elsif user.role?('admin')
         custom_scope = { role: { "$ne": 'superadmin' } }
       elsif user.role?('team_lead')
-        custom_scope = { role: 'sales', project_ids: user.selected_project_id }
+        custom_scope = { role: 'sales', project_ids: user.selected_project_id.to_s }
       end
       custom_scope
     end
