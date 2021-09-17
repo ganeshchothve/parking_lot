@@ -25,7 +25,8 @@ class Admin::TimeSlotPolicy < TimeSlotPolicy
 
   def permitted_attributes params={}
     attrs = super
-    attrs += [:date, :start_time, :end_time, :capacity] if record.allotted.blank? || record.allotted&.zero?
+    attrs += [:date, :start_time, :end_time] if record.allotted.blank? || record.allotted&.zero?
+    attrs += [:capacity]
     attrs
   end
 

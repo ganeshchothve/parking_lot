@@ -62,6 +62,6 @@ module TimeSlotGeneration
   end
 
   def fetch_time_slot
-    project.time_slots.to_a.sort_by {|x| DateTime.parse(x.start_time_to_s)}.first
+    project.time_slots.reject {|ts| ts.allotted.to_i >= ts.capacity.to_i}.to_a.sort_by {|ts| DateTime.parse(ts.start_time_to_s)}.first
   end
 end
