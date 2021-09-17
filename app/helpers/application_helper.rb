@@ -46,6 +46,15 @@ module ApplicationHelper
     end
   end
 
+  def project_asset_image_url(project, document_type = nil)
+    if project && document_type
+      image = project.assets.where(document_type: document_type).first
+      if image
+        image.file.try(:url)
+      end
+    end
+  end
+
   def float_to_int (x)
     Float(x)
     i, f = x.to_i, x.to_f

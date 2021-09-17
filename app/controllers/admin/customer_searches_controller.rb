@@ -72,7 +72,7 @@ class Admin::CustomerSearchesController < AdminController
       template = ::Template::SmsTemplate.where(name: "queue_number_notice", project_id: lead.project_id).first
       sms = Sms.create!(
         booking_portal_client_id: lead.user.booking_portal_client_id,
-        recipient_id: lead.id,
+        to: [lead.phone],
         sms_template_id: template.id,
         triggered_by_id: lead.id,
         triggered_by_type: lead.class.to_s
