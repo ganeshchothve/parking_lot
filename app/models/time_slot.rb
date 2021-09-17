@@ -21,7 +21,7 @@ class TimeSlot
 
   # Associations
   belongs_to :project
-  has_many :receipt
+  has_many :receipts
 
   # Methods
   def check_start_time
@@ -36,7 +36,15 @@ class TimeSlot
     errors.add(:base, 'Cannot delete allotted slots') unless allotted.to_i.zero?
   end
 
-  def to_s
-    "#{date.in_time_zone('Mumbai').strftime('%d/%m/%Y')} #{start_time.in_time_zone('Mumbai').strftime('%I:%M %p')} - #{end_time.in_time_zone('Mumbai').strftime('%I:%M %p')}"
+  def to_s(time_zone=nil)
+    "#{date.in_time_zone(time_zone || 'Mumbai').strftime('%d/%m/%Y')} #{start_time.in_time_zone(time_zone || 'Mumbai').strftime('%I:%M %p')} - #{end_time.in_time_zone(time_zone || 'Mumbai').strftime('%I:%M %p')}"
+  end
+
+  def start_time_to_s(time_zone=nil)
+    "#{date.in_time_zone(time_zone || 'Mumbai').strftime('%d/%m/%Y')} #{start_time.in_time_zone(time_zone || 'Mumbai').strftime('%I:%M %p')}"
+  end
+
+  def end_time_to_s(time_zone=nil)
+    "#{date.in_time_zone(time_zone || 'Mumbai').strftime('%d/%m/%Y')} #{end_time.in_time_zone(time_zone || 'Mumbai').strftime('%I:%M %p')}"
   end
 end

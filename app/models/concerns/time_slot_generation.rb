@@ -18,10 +18,9 @@ module TimeSlotGeneration
 
     # Callbacks
     before_save :assign_token_number, if: proc { direct_payment? }
-    #before_update :finalise_time_slot
 
     # Associations
-    belongs_to :time_slot
+    belongs_to :time_slot, optional: true
   end
 
   def assign_token_number
@@ -39,7 +38,7 @@ module TimeSlotGeneration
           end while Receipt.where(token_number: token_number, project_id: project_id, token_type_id: token_type_id).any?
 
           self.token_prefix = token_type.token_prefix
-          #self.time_slot = calculate_time_slot if current_client.enable_slot_generation?
+          self.time_slot = fetch_time_slot if project.enable_slot_generation?
           # for reference, if the token has been made blank by the admin.
           self[:_token_number] = token_number
         end
@@ -59,42 +58,10 @@ module TimeSlotGeneration
   end
 
   def set_time_slot
-    self.set(time_slot: calculate_time_slot) if token_number
+    self.update(time_slot: fetch_time_slot) if token_number && time_slot_id.blank?
   end
 
-  def calculate_time_slot
-    slots_per_day = ((current_client.end_time - current_client.start_time) / 60).to_i / current_client.duration
-    slot_number = (token_number - 1) / current_client.capacity
-    date = current_client.slot_start_date + (slot_number / slots_per_day).days
-    slot_start_time = current_client.start_time + ((slot_number % slots_per_day) * current_client.duration).minutes
-    date = Time.zone.parse(date.strftime('%Y-%m-%d') + ' ' + slot_start_time.to_s(:time))
-    slot = TimeSlot.new(date: date, start_time: date, end_time: date + current_client.duration.minutes)
-  end
-
-  def update_time_slot
-    slot = calculate_time_slot
-    if slot.start_time < Time.zone.now # if time slot date is in the past
-      errors.add(:token_number, 'Time Slot for this token number is in the past.')
-      throw(:abort)
-    else
-      self.time_slot = slot
-    end
-  end
-
-  def finalise_time_slot
-    self.time_slot = nil if token_number_changed? && token_number.blank?
-
-    if is_eligible_for_token_number_assignment?
-      if current_client.enable_slot_generation?
-        if token_number_changed?
-          update_time_slot if token_number.present? && !(status_changed? && status_was == 'pending' && status == 'clearance_pending') # Don't run for the first time when token is assigned by the system.
-        else
-          self.time_slot = calculate_time_slot if time_slot.blank? && token_number.present?
-        end
-      end
-    elsif token_number_changed? && token_number.present?
-      errors.add(:base, "Receipt not eligible for applying token number")
-      throw(:abort)
-    end
+  def fetch_time_slot
+    project.time_slots.to_a.sort_by {|x| DateTime.parse(x.start_time_to_s)}.first
   end
 end

@@ -91,6 +91,8 @@ class Project
   field :gtm_tag, type: String
   field :gst_number, type: String
   field :enable_daily_reports, type: Hash, default: {"payments_report": false}
+  field :enable_slot_generation, type: Boolean, default: false
+
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
     <div class="mt-3"></div>'
