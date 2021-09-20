@@ -29,7 +29,7 @@
 //= require plugins/jsencrypt
 
 var ctx = document.getElementById('myChart');
-var myChart = new Chart(ctx, {  ​
+var myChart = new Chart(ctx, {
   type: 'bar',
   data: {
     labels: ['Brahma Suncity 100 Customers', 'Bhankti Elegance 66 Customers', 'Padma Shree Housing Society 56 Customers'],
@@ -57,27 +57,27 @@ var myChart = new Chart(ctx, {  ​
       title: {
         display: false,
         text: ''
-      }​,
-    }​,
+      }
+    },
     responsive: true,
     scales: {
       x: {
         stacked: true
-      }​,
+      },
       y: {
         ticks: {
           mirror: true,
           labelOffset: -25,
           padding: 10
-        }​,
+        },
         stacked: true,
         grid: {
           display: false
-        }​
-      }​
-    }​
-  }​
-}​);
+        }
+      }
+    }
+  }
+});
 var window_wt = $(window).width();
 var window_ht = $(window).height();
 $(document).ready(function () {
