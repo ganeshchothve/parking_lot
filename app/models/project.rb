@@ -7,6 +7,7 @@ class Project
   include ApplicationHelper
   extend ApplicationHelper
   include ProjectOnboardingOnSelldo
+  extend FilterByCriteria
 
   # Add different types of documents which are uploaded on client
   DOCUMENT_TYPES = %w[document brochure certificate unit_selection_filter_image sales_presentation images].freeze
@@ -154,6 +155,10 @@ class Project
   accepts_nested_attributes_for :specifications, :offers, :timeline_updates, :address, allow_destroy: true
 
   default_scope -> { where(is_active: true)}
+
+  scope :filter_by__id, ->(_id) { all.in(_id: (_id.is_a?(Array) ? _id : [_id])) }
+  scope :filter_by_category, ->(category) { where(category: category) }
+  scope :filter_by_user_interested_projects, ->(user_id) { all.in(id: InterestedProject.where(user_id: user_id).in(status: %w(subscribed approved)).distinct(:project_id)) }
 
   def unit_configurations
     UnitConfiguration.where(data_attributes: {"$elemMatch" => {"n" => "project_id", "v" => self.selldo_id}})

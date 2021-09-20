@@ -22,7 +22,7 @@
         <%= render 'users/section', users: users, name: User.model_name.human(count: users.total_entries ) %>
       <% end %>
 
-      <% if @user.role?('channel_partner') %>
+      <% if policy([current_user_role_group, InterestedProject]).index? %>
         <%= render 'users/interested_projects' %>
       <% end %>
 

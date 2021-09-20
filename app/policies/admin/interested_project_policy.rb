@@ -1,4 +1,7 @@
 class Admin::InterestedProjectPolicy < InterestedProjectPolicy
+  def index?
+    create?
+  end
 
   def create?
     user.role?('channel_partner')

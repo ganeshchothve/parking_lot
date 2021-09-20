@@ -48,7 +48,7 @@ en:
     accompanied_credit:
       link_name: '%{model}'
     show_interest:
-      link_name: 'I am Interested'
+      link_name: 'Sign Up'
     not_interested:
       link_name: 'Mark not Interested'
     show:
