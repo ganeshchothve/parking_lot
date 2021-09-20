@@ -1,3 +1,4 @@
+# Used in Invoice & Incentive Deduction
 require 'autoinc'
 module NumberIncrementor
   extend ActiveSupport::Concern
