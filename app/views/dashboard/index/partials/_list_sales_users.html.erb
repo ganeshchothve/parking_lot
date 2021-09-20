@@ -1,23 +1,43 @@
-<div class="row">
-  <div class="col-xs-12 col-lg-3 col-md-12 col-sm-12">
-    <h2 class="title"><%= active_link_to 'Sales Team', search_by_admin_users_path(fltrs: {role: 'sales', sort: 'sales_status.asc'}, element: '#sales-users-list', template: 'dashboard/index/partials/list_sales_users', per_page: 50, format: :js), remote: true, active: { fltrs: { 'role' => 'sales', 'sort' => 'sales_status.asc' } } %></h2>
-  </div>
-  <div class="col-xs-12 col-lg-9 col-md-12 col-sm-12 pull-right">
-    <ul class="sales-team-status mb-0">
-      <li><p class="available"><%= active_link_to 'Available', search_by_admin_users_path(fltrs: {role: 'sales', sales_status: 'available'}, element: '#sales-users-list', template: 'dashboard/index/partials/list_sales_users', per_page: 50, format: :js), remote: true, active: { fltrs: { 'role' => 'sales', 'sales_status' => 'available' } } %></p></li>
-      <li><p class="not_available"><%= active_link_to 'Busy | Not Available', search_by_admin_users_path(fltrs: {role: 'sales', sales_status: ['not_available', 'engaged']}, element: '#sales-users-list', template: 'dashboard/index/partials/list_sales_users', per_page: 50, format: :js), remote: true, active: { fltrs: { 'role' => 'sales', 'sales_status' => ['not_available', 'engaged']} } %></p></li>
-      <li><p class="break"><%= active_link_to 'Break', search_by_admin_users_path(fltrs: {role: 'sales', sales_status: 'break'}, element: '#sales-users-list', template: 'dashboard/index/partials/list_sales_users', per_page: 50, format: :js), remote: true, active: { fltrs: { 'role' => 'sales', 'sales_status' => 'break' } } %></p></li>
-    </ul>
-  </div>
-</div>
-<div class="row sales-users">
-  <% if users.present? %>
-    <% users.each do |sales| %>
-      <div class="col-lg-4 col-xs-12 col-sm-6 col-md-6 sales-box" id="<%= sales.id.to_s %>">
-        <%= render 'dashboard/index/partials/sales_box', sales: sales %>
+<div class="card">
+  <div class="card-header bg-white">
+    <div class="d-flex justify-content-between ">
+      <div class="">
+        <h2 class="mb-0 mt-0 lh-1">
+          <%= active_link_to 'Sales Team', search_by_admin_users_path(fltrs: {role: 'sales', sort: 'sales_status.asc'}, element: '#sales-users-list', template: 'dashboard/index/partials/list_sales_users', per_page: 50, format: :js), remote: true, active: { fltrs: { 'role' => 'sales', 'sort' => 'sales_status.asc' } } , class: 'theme-txt-color fn-20' %>
+        </h2>
       </div>
-    <% end %>
-  <% else %>
-    <p>No Users found </p>
+      <div class="">
+        <ul class="sales-team-status mb-0 d-flex justify-content-end list-unstyled mt-2 pb-1">
+          <li class="me-4">
+            <p class="available mb-0"><i
+                class="fa fa-circle fill-success fn-12 me-2"></i><%= active_link_to 'Available', search_by_admin_users_path(fltrs: {role: 'sales', sales_status: 'available'}, element: '#sales-users-list', template: 'dashboard/index/partials/list_sales_users', per_page: 50, format: :js), remote: true, active: { fltrs: { 'role' => 'sales', 'sales_status' => 'available' } } %>
+            </p>
+          </li>
+          <li class="me-4">
+            <p class="not_available mb-0"><i
+                class="fa fa-circle fill-danger fn-12 me-2"></i><%= active_link_to 'Busy | Not Available', search_by_admin_users_path(fltrs: {role: 'sales', sales_status: ['not_available', 'engaged']}, element: '#sales-users-list', template: 'dashboard/index/partials/list_sales_users', per_page: 50, format: :js), remote: true, active: { fltrs: { 'role' => 'sales', 'sales_status' => ['not_available', 'engaged']} } %>
+            </p>
+          </li>
+          <li class="">
+            <p class="break mb-0"><i
+                class="fa fa-circle fill-warning fn-12 me-2"></i><%= active_link_to 'Break', search_by_admin_users_path(fltrs: {role: 'sales', sales_status: 'break'}, element: '#sales-users-list', template: 'dashboard/index/partials/list_sales_users', per_page: 50, format: :js), remote: true, active: { fltrs: { 'role' => 'sales', 'sales_status' => 'break' } } %>
+            </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+  <div class="row sales-users">
+  <% if users.present? %>
+  <% users.each do |sales| %>
+  <div class="col-lg-4 col-xs-12 col-sm-6 col-md-6 sales-box" id="<%= sales.id.to_s %>">
+    <%= render 'dashboard/index/partials/sales_box', sales: sales %>
+  </div>
   <% end %>
+  <% else %>
+  <p>No Users found </p>
+  <% end %>
+</div>
+  </div>
 </div>

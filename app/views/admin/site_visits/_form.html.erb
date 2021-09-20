@@ -2,7 +2,7 @@
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-        <div class="modal-header bg-primary white">
+        <div class="modal-header">
             <h3 class="title">
                 <% action_name = @site_visit.new_record? ? 'new' : 'edit' %>
                 <%= t("helpers.#{action_name}.link_name", model: SiteVisit.model_name.human) %>
@@ -36,7 +36,7 @@
 
             </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer text-end">
             <%= f.submit "Save", class: "btn btn-primary" %>
         </div>
     </div>
