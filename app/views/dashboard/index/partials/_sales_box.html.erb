@@ -1,24 +1,39 @@
 <% customer = Lead.where(closing_manager_id: sales.id).in(customer_status: %w(engaged payment_done)).first %>
-<div class="sales-team-box curnt-status <%= sales.sales_status %>">
-  <div class="sales-name-prefix"><%= "#{sales.first_name[0]}#{sales.last_name[0]}" %></div>
-  <div class="sales-name mx-2" title="<%= sales.name.try(:titleize) %>"><%= link_to sales.name.try(:titleize), admin_user_path(sales) %></div>
-  <div class="sales-info">
-    <div class="user-site-visit">
-      <p><%= t("mongoid.attributes.user.queue_number") %></p>
-      <span><%= customer.try(:queue_number) || '-' %></span>
+<div class="card mb-3">
+  <div class="sales-team-box curnt-status <%= sales.sales_status %>">
+    <div class="card-header pt-3">
+      <div class="d-flex justify-content-start align-items-center">
+        <div class="sales-name-prefix bg-primary rounded-circle p-2 d-inline-block white">
+          <%= "#{sales.first_name[0]}#{sales.last_name[0]}" %>
+        </div>
+        <div class="sales-name mx-3" title="<%= sales.name.try(:titleize) %>">
+          <%= link_to sales.name.try(:titleize), admin_user_path(sales), class: ' theme-txt-color' %></div>
+      </div>
+      <i class="fa fa-circle fill-<%= sales.sales_status %> fn-14 position-absolute top-0 end-0 mt-2 me-2"></i>
     </div>
-    <div class="user-queue-no">
-      <p>With</p>
-      <% if customer %>
-        <%= customer.name %>
-        </br>
-        <% status_log = customer.state_transitions.where(status: 'engaged', sitevisit_id: customer.current_site_visit_id).first %>
-        <% unless action_name == 'sales_board' %>
-          <span><%= distance_of_time_in_words_to_now(status_log.enter_time, scope: 'datetime.distance_in_words.short') %></span>
-        <% end %>
-      <% else %>
-        <span>-</span>
-      <% end %>
-    </div>
+    <div class="sales-info card-body">
+      <div class="row">
+        <div class="user-queue-no col-lg-12">
+          <p class="fn-14 txt-light-blue mb-0"><span>With</span> 
+          <% if customer %>
+            <span class="badge rounded-pill bg-danger ms-2 align-top"><%= customer.try(:queue_number) || '-' %>
+              <span class="visually-hidden">Queue Number</span>
+              </span>
+          <% end %>
+          </p>
+          
+          <% if customer %>
+          <span class="theme-txt-color fn-16 d-block text-truncate"><%= customer.name %></span>
+          <% status_log = customer.state_transitions.where(status: 'engaged', sitevisit_id: customer.current_site_visit_id).first %>
+          <% unless action_name == 'sales_board' %>
+          <span
+            class="theme-txt-color fn-16 mb-2 d-block"><%= distance_of_time_in_words_to_now(status_log.enter_time, scope: 'datetime.distance_in_words.short') %></span>
+          <% end %>
+          <% else %>
+          <span class="theme-txt-color fn-16 mb-2 d-block">-</span>
+          <% end %>
+        </div>
+      </div>
+    </div>    
   </div>
 </div>

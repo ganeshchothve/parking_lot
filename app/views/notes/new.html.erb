@@ -2,7 +2,7 @@
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header bg-primary white">
+      <div class="modal-header">
         <h3 class="title"> <%= t('controller.notes.new.header') %> </h3>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -12,7 +12,7 @@
           <%= f.text_area :note, autofocus: true, class: "form-control", required: 'required', disabled: (policy([current_user_role_group, @note]).editable_field?("note") ? false : true) %>
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer text-end">
         <%= f.submit "Add #{global_labels['note']}", class: "btn btn-primary" %>
       </div>
     </div>

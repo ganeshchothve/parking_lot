@@ -1,2 +1,23 @@
-<%= render 'render_tabs' %>
-<%= render "admin/customer_searches/#{@customer_search.step}" %>
+<div class="mt-4">
+    <div class="px-3 col-lg-8 m-auto">
+        <div class="card shadow-sm rounded px-0 bg-white mb-5">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card-header bg-white pb-0">
+                        <div class="p-2 py-3">
+                            <h2 class="fn-24 theme-txt-color font-normal mb-4">Customer Site Visit</h2>
+                            <%= render 'render_tabs' %>
+                        </div>
+                    </div>
+                    <div class="card-body bg-white p-0">
+                        <div class="card text-dark bg-light border border-white mb-3">
+                            <div class="card-body bg-white">
+                                <%= render "admin/customer_searches/#{@customer_search.step}" %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

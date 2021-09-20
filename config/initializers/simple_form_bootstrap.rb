@@ -49,7 +49,7 @@ SimpleForm.setup do |config|
   # vertical forms
   #
   # vertical default_wrapper
-  config.wrappers :vertical_form, tag: 'div', class: 'mb-3', error_class: 'mb-3-invalid', valid_class: 'mb-3-valid' do |b|
+  config.wrappers :vertical_form, tag: 'div', class: 'mb-3 position-relative', error_class: 'mb-3-invalid', valid_class: 'mb-3-valid' do |b|
     b.use :html5
     b.use :placeholder
     b.optional :maxlength
@@ -58,7 +58,7 @@ SimpleForm.setup do |config|
     b.optional :min_max
     b.optional :readonly
     b.use :label, class: 'form-control-label'
-    b.use :input, class: 'form-control', error_class: 'is-invalid', valid_class: 'is-valid'
+    b.use :input, class: '', error_class: 'is-invalid', valid_class: 'is-valid'
     b.use :full_error, wrap_with: { tag: 'div', class: 'invalid-feedback' }
     b.use :hint, wrap_with: { tag: 'small', class: 'form-text text-muted' }
   end
@@ -118,7 +118,7 @@ SimpleForm.setup do |config|
     b.optional :readonly
     b.use :label, class: 'form-control-label'
     b.wrapper tag: 'div', class: 'd-flex flex-row justify-content-between align-items-center' do |ba|
-      ba.use :input, class: 'form-control mx-1', error_class: 'is-invalid', valid_class: 'is-valid'
+      ba.use :input, class: 'mx-1', error_class: 'is-invalid', valid_class: 'is-valid'
     end
     b.use :full_error, wrap_with: { tag: 'div', class: 'invalid-feedback d-block' }
     b.use :hint, wrap_with: { tag: 'small', class: 'form-text text-muted' }
@@ -140,7 +140,7 @@ SimpleForm.setup do |config|
   # horizontal forms
   #
   # horizontal default_wrapper
-  config.wrappers :horizontal_form, tag: 'div', class: 'mb-3 row', error_class: 'mb-3-invalid', valid_class: 'mb-3-valid' do |b|
+  config.wrappers :horizontal_form, tag: 'div', class: 'mb-3 row position-relative', error_class: 'mb-3-invalid', valid_class: 'mb-3-valid' do |b|
     b.use :html5
     b.use :placeholder
     b.optional :maxlength
@@ -150,7 +150,7 @@ SimpleForm.setup do |config|
     b.optional :readonly
     b.use :label, class: 'col-sm-3 col-form-label'
     b.wrapper :grid_wrapper, tag: 'div', class: 'col-sm-9' do |ba|
-      ba.use :input, class: 'form-control', error_class: 'is-invalid', valid_class: 'is-valid'
+      ba.use :input, class: '', error_class: 'is-invalid', valid_class: 'is-valid'
       ba.use :full_error, wrap_with: { tag: 'div', class: 'invalid-feedback' }
       ba.use :hint, wrap_with: { tag: 'small', class: 'form-text text-muted' }
     end
@@ -219,7 +219,7 @@ SimpleForm.setup do |config|
     b.use :label, class: 'col-sm-3 control-label'
     b.wrapper :grid_wrapper, tag: 'div', class: 'col-sm-9' do |ba|
       ba.wrapper tag: 'div', class: 'd-flex flex-row justify-content-between align-items-center' do |bb|
-        bb.use :input, class: 'form-control mx-1', error_class: 'is-invalid', valid_class: 'is-valid'
+        bb.use :input, class: 'mx-1', error_class: 'is-invalid', valid_class: 'is-valid'
       end
       ba.use :full_error, wrap_with: { tag: 'div', class: 'invalid-feedback d-block' }
       ba.use :hint, wrap_with: { tag: 'small', class: 'form-text text-muted' }
@@ -244,7 +244,7 @@ SimpleForm.setup do |config|
   # inline forms
   #
   # inline default_wrapper
-  config.wrappers :inline_form, tag: 'span', error_class: 'mb-3-invalid', valid_class: 'mb-3-valid' do |b|
+  config.wrappers :inline_form, tag: 'span', error_class: 'mb-3-invalid position-relative', valid_class: 'mb-3-valid' do |b|
     b.use :html5
     b.use :placeholder
     b.optional :maxlength
@@ -254,7 +254,7 @@ SimpleForm.setup do |config|
     b.optional :readonly
     b.use :label, class: 'sr-only'
 
-    b.use :input, class: 'form-control', error_class: 'is-invalid', valid_class: 'is-valid'
+    b.use :input, class: '', error_class: 'is-invalid', valid_class: 'is-valid'
     b.use :error, wrap_with: { tag: 'div', class: 'invalid-feedback' }
     b.optional :hint, wrap_with: { tag: 'small', class: 'form-text text-muted' }
   end
@@ -384,7 +384,7 @@ SimpleForm.setup do |config|
   # Floating Labels form
   #
   # floating labels default_wrapper
-  config.wrappers :floating_labels_form, tag: 'div', class: 'form-label-group', error_class: 'mb-3-invalid', valid_class: 'mb-3-valid' do |b|
+  config.wrappers :floating_labels_form, tag: 'div', class: 'form-label-group position-relative', error_class: 'mb-3-invalid', valid_class: 'mb-3-valid' do |b|
     b.use :html5
     b.use :placeholder
     b.optional :maxlength
@@ -392,7 +392,7 @@ SimpleForm.setup do |config|
     b.optional :pattern
     b.optional :min_max
     b.optional :readonly
-    b.use :input, class: 'form-control', error_class: 'is-invalid', valid_class: 'is-valid'
+    b.use :input, class: '', error_class: 'is-invalid', valid_class: 'is-valid'
     b.use :label, class: 'form-control-label'
     b.use :full_error, wrap_with: { tag: 'div', class: 'invalid-feedback' }
     b.use :hint, wrap_with: { tag: 'small', class: 'form-text text-muted' }

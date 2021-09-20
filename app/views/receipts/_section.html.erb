@@ -1,29 +1,12 @@
-<section class="receipts my-4">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 p-0 cursor-pointer" data-toggle="collapse" href="#collapseReceipts" role="button" aria-expanded="false" aria-controls="collapseReceipts">
-        <div class="table-title pt-1">
-          <h2 class="title text-dark icon-set icon-rupee-black">
-            <%= Receipt.model_name.human(count: receipts.total_entries )%>
-          </h2>
-        </div>
-      </div>
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 p-0">
-        <div class="table-btn-set float-right">
-          <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400 mb-3"><%= t('global.total')%> : <%= receipts.total_entries %></button>
-        </div>
-      </div>
-      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 p-0 collapse" id="collapseReceipts">
-        <%= render '/receipts/index', receipts: receipts %>
-      </div>
-    </div>
-  </div>
-</section>
+<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12">
+  <%= render '/receipts/index', receipts: receipts %>
+</div>
+</div>
 <%= javascript_tag do %>
-  $(document).ready(function(){
-    var count = <%= receipts.total_entries %>
-    if(count != 0){
-      $('#collapseReceipts').collapse('show')
-    }
-  });
+$(document).ready(function(){
+var count = <%= receipts.total_entries %>
+if(count != 0){
+$('#collapseReceipts').collapse('show')
+}
+});
 <% end %>

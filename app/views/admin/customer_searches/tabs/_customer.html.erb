@@ -1,12 +1,12 @@
-<div class="col-lg-4 col-xs-12 col-sm-12 col-md-6">
-    <div class="step-result <%= (@customer_search.crossed_step("customer") || @customer_search.step == 'customer') ? 'active': ''%>">
-        <i class="icon icon-2"></i>
-        <span>Customer Details</span>
-        <% if @customer_search.crossed_step("customer") %>
-            <%= form_for [:admin, @customer_search], html: {id: "change_to_customer", class: "validate-form", "data-resource-type": global_labels['user'], "data-type": "json"} do |f| %>
-            <%= f.hidden_field :step, value: "customer" %>
-            <%= link_to 'Change', "", :onclick => "$('#change_to_customer').submit()", class: "small position-absolute", style: "right:10px; top:0;", disabled: 'disabled' %>
-            <% end %>
-        <% end %>
-    </div>
-</div>
+<p class="wd-22 border-top border-2 mt-2 mx-3 mb-0"></p>
+<p class="fn-16 <%= (@customer_search.crossed_step("customer") || @customer_search.step == 'customer') ? 'theme-txt-color': 'txt-light-blue'%> mb-0"><i class="fa fa-check-circle me-2 fill-<%= (@customer_search.crossed_step("customer") || @customer_search.step == 'customer') ? 'success': 'theme'%>"></i>
+<% if @customer_search.crossed_step("customer") %>
+    <%= form_for [:admin, @customer_search], html: {id: "change_to_customer", class: "validate-form", "data-resource-type": global_labels['user'], "data-type": "json"} do |f| %>
+        <%= f.hidden_field :step, value: "customer" %>
+        <%= link_to 'Customer Details', "", :onclick => "$('#change_to_customer').submit()", class: "theme-txt-color", disabled: 'disabled' %>
+    <% end %>   
+<% else %>
+Customer Details
+<% end %>
+</p>
+    
