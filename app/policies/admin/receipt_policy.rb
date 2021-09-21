@@ -71,6 +71,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
     end
     attributes += [:erp_id] if %w[admin sales_admin].include?(user.role)
     attributes += [:token_number] if %w[admin superadmin sales_admin sales gre].include?(user.role)
+    attributes += [:time_slot_id] if record.persisted?
     attributes.uniq
   end
 

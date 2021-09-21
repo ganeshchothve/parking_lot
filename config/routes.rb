@@ -168,6 +168,8 @@ Rails.application.routes.draw do
           get :token_de_init
         end
       end
+
+      resources :time_slots, controller: 'projects/time_slots'
     end
     resources :project_towers, only: [:index]
     resources :project_units, only: [:index, :show, :edit, :update] do

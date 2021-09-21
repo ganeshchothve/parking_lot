@@ -171,6 +171,9 @@ en:
       token_type:
         one: Token Type
         other: Token Types
+      time_slot:
+        one: Time Slot
+        other: Time Slots
       developer:
         one: Developer
         other: Developers
@@ -498,6 +501,14 @@ en:
         token_amount: Token Amount
         token_seed: Token Seed
         status: Status
+
+      time_slot:
+        number: ID
+        date: Slot Date
+        start_time: Start Time
+        end_time: End Time
+        capacity: Slot Capacity
+        allotted: Tokens Allotted
 
       cost:
         name: "Name"
@@ -1199,6 +1210,16 @@ en:
         link_name: 'Activate'
       token_de_init:
         link_name: 'Deactivate'
+    time_slots:
+      index:
+        link_name: 'Time Slots'
+      new:
+        header: 'New Time Slot'
+      edit:
+        header: 'Edit Time Slot'
+        link_name: 'Edit Slot'
+      destroy:
+        link_name: 'Delete Slot'
     home:
       select_project:
         link_name: 'Switch Project'
