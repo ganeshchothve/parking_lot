@@ -74,18 +74,10 @@ class Template::ReceiptTemplate < Template
                <td>Token Number</td>
                <td class="text-right"><%= self.try(:token_number) ? self.get_token_number : "--" %></td>
              </tr>
-             <% if current_client.enable_slot_generation? && self.try(:time_slot) %>
+             <% if project.enable_slot_generation? && self.try(:time_slot) %>
                <tr>
-                 <td>Time Slot Date</td>
-                 <td class="text-right"><%= self.time_slot.date.in_time_zone(self.user.time_zone).strftime("%d/%m/%Y") %></td>
-               </tr>
-               <tr>
-                 <td>Start Time</td>
-                 <td class="text-right"><%= self.time_slot.start_time.in_time_zone(self.user.time_zone).strftime("%I:%M %p") %></td>
-               </tr>
-               <tr>
-                 <td>End Time</td>
-                 <td class="text-right"><%= self.time_slot.end_time.in_time_zone(self.user.time_zone).strftime("%I:%M %p") %></td>
+                 <td>Time Slot</td>
+                 <td class="text-right"><%= self.time_slot.to_s(user.time_zone) %></td>
                </tr>
                <tr>
                  <td>Time Zone</td>

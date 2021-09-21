@@ -96,14 +96,17 @@ FormInitializer = (function(){
     $(selector).find(".date_validation").datetimepicker(Iris.utils.datepickerOptions);
     $(selector).find('.datetimepicker').each(function(){
       var datepickerOptions = _.clone(Iris.utils.datetimepickerOptions);
+      if($(this).data("format")){
+        datepickerOptions.format = $(this).data("format");
+      }
       if($(this).data("minDate")){
-        datepickerOptions.minDate = moment($(this).data("minDate"), "DD/MM/YYYY")
+        datepickerOptions.minDate = moment($(this).data("minDate"), datepickerOptions.format)
       }
       if($(this).data("maxDate")){
-        datepickerOptions.maxDate = moment($(this).data("maxDate"), "DD/MM/YYYY")
+        datepickerOptions.maxDate = moment($(this).data("maxDate"), datepickerOptions.format)
       }
       if($(this).data("defaultDate")){
-        datepickerOptions.defaultDate = moment($(this).data("defaultDate"), "DD/MM/YYYY");
+        datepickerOptions.defaultDate = moment($(this).data("defaultDate"), datepickerOptions.format);
       }
       if($(this).data("inline")){
         datepickerOptions.inline = $(this).data("inline");
@@ -113,9 +116,6 @@ FormInitializer = (function(){
       }
       if($(this).data("useCurrent")){
         datepickerOptions.useCurrent = $(this).data("useCurrent");
-      }
-      if($(this).data("format")){
-        datepickerOptions.format = $(this).data("format");
       }
       if($(this).data("stepping")){
         datepickerOptions.stepping = $(this).data("stepping");

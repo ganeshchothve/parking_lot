@@ -108,8 +108,7 @@
                 </div>
                 <% end %>
 
-                <% if @user.role?('channel_partner') %>
-
+                <% if policy([current_user_role_group, InterestedProject]).index? %>
                 <div class="accordion-item border-end-0 border-start-0">
                   <h2 class="accordion-header d-flex justify-content-between" id="headingInterestedPrjt">
                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"

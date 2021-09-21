@@ -51,5 +51,6 @@ Iris.utils.datetimepickerOptions = {
     today: 'fa fa-screenshot',
     clear: 'fa fa-trash',
     close: 'fa fa-remove'
-  }
+  },
+  format: 'DD/MM/YYYY'
 };

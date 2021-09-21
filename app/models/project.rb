@@ -7,6 +7,7 @@ class Project
   include ApplicationHelper
   extend ApplicationHelper
   include ProjectOnboardingOnSelldo
+  extend FilterByCriteria
 
   # Add different types of documents which are uploaded on client
   DOCUMENT_TYPES = %w[document brochure certificate unit_selection_filter_image sales_presentation images].freeze
@@ -91,6 +92,8 @@ class Project
   field :gtm_tag, type: String
   field :gst_number, type: String
   field :enable_daily_reports, type: Hash, default: {"payments_report": false}
+  field :enable_slot_generation, type: Boolean, default: false
+
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
     <div class="mt-3"></div>'
@@ -145,6 +148,7 @@ class Project
   has_many :timeline_updates
   has_and_belongs_to_many :campaigns
   has_many :token_types
+  has_many :time_slots
 
   validates :name, presence: true
   validates_uniqueness_of :name, :rera_registration_no, allow_blank: true
@@ -154,6 +158,10 @@ class Project
   accepts_nested_attributes_for :specifications, :offers, :timeline_updates, :address, allow_destroy: true
 
   default_scope -> { where(is_active: true)}
+
+  scope :filter_by__id, ->(_id) { all.in(_id: (_id.is_a?(Array) ? _id : [_id])) }
+  scope :filter_by_category, ->(category) { where(category: category) }
+  scope :filter_by_user_interested_projects, ->(user_id) { all.in(id: InterestedProject.where(user_id: user_id).in(status: %w(subscribed approved)).distinct(:project_id)) }
 
   def unit_configurations
     UnitConfiguration.where(data_attributes: {"$elemMatch" => {"n" => "project_id", "v" => self.selldo_id}})

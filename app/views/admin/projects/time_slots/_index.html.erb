@@ -1,0 +1,55 @@
+<table class='table my-customer-table responsive-tbl'>
+  <thead class="th-default">
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= t('mongoid.attributes.time_slot.number') %></th>
+        <th><%= t('mongoid.attributes.time_slot.date') %></th>
+        <th><%= t('mongoid.attributes.time_slot.start_time') %></th>
+        <th><%= t('mongoid.attributes.time_slot.end_time') %></th>
+        <th><%= t('mongoid.attributes.time_slot.capacity') %></th>
+        <th><%= t('mongoid.attributes.time_slot.allotted') %></th>
+        <th class="text-right"> <%= t('global.action', count: 2) %></th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+    <% time_slots.each do |time_slot| %>
+      <tr>
+        <td data-title=<%= t('mongoid.attributes.time_slot.number') %> >
+          <%= time_slot.number %>
+        </td>
+        <td data-title=<%= t('mongoid.attributes.time_slot.date') %> >
+          <%= time_slot.date.strftime('%d/%m/%Y') %>
+        </td>
+        <td data-title=<%= t('mongoid.attributes.time_slot.start_time') %> >
+          <%= time_slot.start_time.strftime('%I:%M %p (%Z)') %>
+        </td>
+        <td data-title=<%= t('mongoid.attributes.time_slot.end_time') %> >
+          <%= time_slot.end_time.strftime('%I:%M %p (%Z)') %>
+        </td>
+        <td data-title=<%= t('mongoid.attributes.time_slot.capacity') %> >
+          <%= time_slot.capacity %>
+        </td>
+        <td data-title=<%= t('mongoid.attributes.time_slot.allotted') %> >
+          <%= time_slot.allotted %>
+        </td>
+        <td>
+          <div class="dropdown show text-right">
+            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+              <% if policy([:admin, time_slot]).edit? %>
+                <%= link_to t('controller.time_slots.edit.link_name'), edit_admin_project_time_slot_path(time_slot.project, time_slot), class: 'dropdown-item modal-remote-form-link' %>
+              <% end %>
+              <% if policy([:admin, time_slot]).destroy? %>
+                <%= link_to t('controller.time_slots.destroy.link_name'), admin_project_time_slot_path(time_slot.project, time_slot), method: :delete, class: 'dropdown-item modal-remote-form-link' %>
+              <% end %>
+            </div>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pb-2">
+  <%= will_paginate time_slots, list_classes: %w(pagination justify-content-center) %>
+</div>
