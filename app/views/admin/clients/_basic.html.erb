@@ -33,7 +33,7 @@
     <div class="mb-3">
       <%= f.label :cp_disclaimer %>
       <%= f.text_area :cp_disclaimer, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("cp_disclaimer") ? false : true) %>
-      <%= f.label :cp_disclaimer_sort%>
+      <%= f.label :cp_disclaimer_sort, class: 'txt-light-blue font-normal' %>
     </div>
   </div>
   <div class="col-md-6">

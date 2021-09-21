@@ -1,14 +1,14 @@
 <section class="my-4 mb-4 mt-3">
   <div class="px-4">
     <div class="row">
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 p-0 cursor-pointer" data-bs-toggle="collapse" href="#collapseCrm" role="button" aria-expanded="false" aria-controls="collapseCrm">
+      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12">
         <div class="table-title pt-1">
           <h2 class="title text-dark icon-set icon-home-black">
             Get Details from <%= Crm::Base.model_name.human(count: 1) %>
           </h2>
         </div>
       </div>
-      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 p-0 collapse" id="collapseCrm">
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12">
         <%= render "admin/crm/base/choose_crm", crms: Crm::Base.where(id: {"$in": apis.distinct(:base_id)}), apis: apis, resource: resource %>
       </div>
     </div>

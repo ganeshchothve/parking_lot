@@ -51,8 +51,16 @@
     <% end %>
   </tbody>
 </table>
-<% if site_visits.respond_to?(:total_pages) %>
-<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2 mb-4">
-  <%= will_paginate site_visits, list_classes: %w(pagination justify-content-center) %>
-</div>
-<% end %>
+
+<div class="col-lg-12 py-3 bg-white mb-2 px-3 mt-3 shadow-sm">
+        <div class="row">
+          <div class="col-lg-6 pt-2">
+            <p class="table-entry mb-0"></p>
+          </div>
+          <% if site_visits.respond_to?(:total_pages) %>
+          <div class="col-lg-6 table-pagination">            
+            <%= will_paginate site_visits, list_classes: %w(pagination justify-content-end) %>
+          </div>
+          <% end %>
+        </div>
+      </div>

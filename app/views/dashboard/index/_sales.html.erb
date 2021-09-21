@@ -1,5 +1,5 @@
 <% @lead = Lead.where(closing_manager_id: current_user.id).in(customer_status: %w(engaged payment_done)).first %>
-<div class="container">
+<div class="px-4">
   <%= render "dashboard/index/partials/user_search", lead_id: @lead.try(:id) %>
   <div id="get-started">
     <div class='row mt-5'>

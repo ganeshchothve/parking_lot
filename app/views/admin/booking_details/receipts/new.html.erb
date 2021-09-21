@@ -1,11 +1,11 @@
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header bg-primary white">
+      <div class="modal-header">
         <h3 class="title"> <%= t('controller.booking_details.receipts.new.link_name')%></h3>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body theme-form">
         <%= render 'details', receipt: @receipt, booking_detail: @booking_detail %>
         <%= form_for [:admin, @lead, @booking_detail, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.receipt'), type: :json} } do |f| %>
           <%= render 'form', f: f %>

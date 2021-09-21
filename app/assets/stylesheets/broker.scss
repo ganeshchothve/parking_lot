@@ -198,6 +198,64 @@ a{
     left: 0;
     font-weight: 300;
 }
+.page-loading{
+	border: 0px solid #fff!important;
+    padding: 30px!important;
+}
+.load-dotted {
+    position: absolute;
+    height: 10px;
+    width: 84px;
+    top: 58px;
+    overflow: hidden;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.load-dotted > i {
+    position: absolute;
+    height: 4px;
+    width: 4px;
+    border-radius: 50%;
+    -webkit-animation: wait 4s infinite;
+    -moz-animation: wait 4s infinite;
+    -o-animation: wait 4s infinite;
+    animation: wait 4s infinite;
+}
+.load-dotted > i:nth-of-type(1) {
+    left: -28px;
+    background: $primary;
+}
+.load-dotted > i:nth-of-type(2) {
+    left: -21px;
+    -webkit-animation-delay: 0.8s;
+    animation-delay: 0.8s;
+    background:$danger;
+}
+
+@-webkit-keyframes wait {
+    0%   { left: -7px  }
+    30%  { left: 52px  }
+    60%  { left: 22px  }
+    100% { left: 100px }
+}
+@-moz-keyframes wait {
+    0%   { left: -7px  }
+    30%  { left: 52px  }
+    60%  { left: 22px  }
+    100% { left: 100px }
+}
+@-o-keyframes wait {
+    0%   { left: -7px  }
+    30%  { left: 52px  }
+    60%  { left: 22px  }
+    100% { left: 100px }
+}
+@keyframes wait {
+    0%   { left: -7px  }
+    30%  { left: 52px  }
+    60%  { left: 22px  }
+    100% { left: 100px }
+}
 #gamification-container{
 	position: fixed;
 	width: auto;
@@ -2900,16 +2958,17 @@ select.form-control{
 		border: 0.5px solid #949494;
 		box-shadow: none;
 		overflow: auto;
-		padding: 0px 8px;
-
+		padding: 0px 8px!important;
 		overflow: hidden;
-		height: 36px;
+		height: auto;
+		input{
+			position: relative!important;
+		}
 		.item{
-	    	vertical-align: middle;
-
-			position: absolute;
-			top: 50%;
-			transform: translateY(-50%);
+	    	// vertical-align: middle;
+			// position: absolute;
+			// top: 50%;
+			// transform: translateY(-50%);
 		}
 	}
 	.intl-tel-input{
@@ -3716,6 +3775,7 @@ table .dropdown-menu.show{
 	letter-spacing: 0.33px;
 	font-weight: 500;
 	border-bottom-color: #e5e5e5!important;
+	padding: 13px 15px;
 }
 
 .table{
@@ -3733,6 +3793,7 @@ table .dropdown-menu.show{
 			letter-spacing: 0.33px;
 			line-height: 18px;
 			vertical-align: middle;
+			padding: 13px 15px;
 			.title{
 				@include tableLightTitle;
 				line-height: 14px;

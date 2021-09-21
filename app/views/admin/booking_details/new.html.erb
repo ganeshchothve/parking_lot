@@ -2,7 +2,7 @@
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header bg-primary white">
+      <div class="modal-header">
         <h3 class="title"><%= t('controller.booking_details.new.header') %></h3>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -24,7 +24,7 @@
           <%= f.select :project_unit_id, options_from_collection_for_select(ProjectUnit.where(_id: f.object.project_unit_id), 'id', 'first_name', f.object.project_unit_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_project_units_path, params: { status: 'available', fltrs: { project_tower_id: '-' } } }%>
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer text-end">
         <%= f.submit "Submit", class: "btn btn-primary" %>
       </div>
     </div>

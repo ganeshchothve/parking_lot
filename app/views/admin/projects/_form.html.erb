@@ -9,7 +9,7 @@
   <div class="modal fade right fixed-header-footer" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
-        <div class="modal-header bg-primary white">
+        <div class="modal-header">
           <h3 class="title">
             <%= t('helpers.edit.link_name', model: Project.model_name.human)%>
           </h3>
@@ -73,7 +73,7 @@
             <% end %>
           </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer text-end">
           <%= f.submit "Save", class: 'btn btn-primary' %>
         </div>
       </div>
