@@ -3,40 +3,41 @@
     <thead>
       <tr class="bg-primary white">
         <th><%= t('mongoid.attributes.scheme.name') %></th>
+        <th><%= t('mongoid.attributes.scheme.created_by')%></th>
+        <th><%= t('mongoid.attributes.scheme.approved_by') %></th>
         <th><%= t('mongoid.attributes.scheme.status') %></th>
-        <th><%= t('global.action', count: 3) %></th>
+        <th class="wd-22"></th>
       </tr>
     </thead>
   </thead>
   <tbody>
     <% schemes.each do |scheme| %>
-      <tr>
-        <td data-title=<%= t('mongoid.attributes.scheme.name') %> >
-          <%= link_to scheme.name, [current_user_role_group, scheme], class: "primary col-title" %>
-          <div class="small mt-1">
-            <span class="title"><%= t('mongoid.attributes.scheme.created_by')%> :</span>
-            <%= scheme.created_by_name || '-' %>
-          </div>
-          <div class="small mt-1">
-            <span class="title"><%= t('mongoid.attributes.scheme.approved_by') %> :</span>
-            <%= scheme.approved_by.present? ? "#{scheme.approved_by_name} at #{scheme.approved_at.present? ? l(scheme.approved_at.in_time_zone(current_user.time_zone)) : '-'}".html_safe : '-' %>
-          </div>
-        </td>
-        <td data-title=<%= t('mongoid.attributes.scheme.status') %> ><%= t("mongoid.attributes.scheme/status.#{scheme.status}") %></td>
-        <td>
-          <%= render "#{current_user_role_group}/schemes/links", scheme: scheme, color: 'black' %>
-        </td>
-      </tr>
+    <tr>
+      <td data-title=<%= t('mongoid.attributes.scheme.name') %>>
+        <%= link_to scheme.name, [current_user_role_group, scheme], class: "theme-txt-color col-title" %>
+      </td>
+      <td data-title=<%= t('mongoid.attributes.scheme.name') %>>
+          <%= scheme.created_by_name || '-' %>
+      </td>
+      <td data-title=<%= t('mongoid.attributes.scheme.name') %>>
+          <%= scheme.approved_by.present? ? "#{scheme.approved_by_name} at #{scheme.approved_at.present? ? l(scheme.approved_at.in_time_zone(current_user.time_zone)) : '-'}".html_safe : '-' %>
+      </td>
+      <td data-title=<%= t('mongoid.attributes.scheme.status') %>>
+        <%= t("mongoid.attributes.scheme/status.#{scheme.status}") %></td>
+      <td>
+        <%= render "#{current_user_role_group}/schemes/links", scheme: scheme, color: 'black' %>
+      </td>
+    </tr>
     <% end %>
   </tbody>
 </table>
-<div class="col-lg-12 py-3 white mb-2 px-2">
+<div class="col-lg-12 py-3 bg-white mb-2 px-2">
   <div class="row">
-  <div class="col-lg-6">
-    <p class="table-entry">Showing 1 - 5 of <%= @schemes.total_entries %> items</p>
+    <div class="col-lg-6">
+      <p class="table-entry mb-0 ps-2 pt-2"><%= page_entries_info schemes %></p>
+    </div>
+    <div class="col-lg-6 table-pagination">
+      <%= will_paginate schemes, list_classes: %w(pagination justify-content-end) %>
+    </div>
   </div>
-  <div class="col-lg-6 table-pagination">
-     <%= will_paginate schemes, list_classes: %w(pagination justify-content-center) %>
-  </div>
-</div>
 </div>

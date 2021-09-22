@@ -27,13 +27,13 @@
     <% end %>
   </tbody>
 </table>
-<div class="col-lg-12 py-3 white mb-2 px-2">
+<div class="col-lg-12 py-3 bg-white mb-2 px-2">
   <div class="row">
     <div class="col-lg-6">
-      <p class="table-entry">Showing 1 - 5 of <%= @api_logs.total_entries %> items</p>
+      <p class="table-entry mb-0 ps-2 pt-2"><%= page_entries_info api_logs %></p>
     </div>
     <div class="col-lg-6 table-pagination">
-       <%= will_paginate api_logs, list_classes: %w(pagination justify-content-end) %>
+      <%= will_paginate api_logs, list_classes: %w(pagination justify-content-end) %>
     </div>
   </div>
 </div>

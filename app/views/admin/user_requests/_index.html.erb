@@ -3,10 +3,10 @@
     <% labels = t('mongoid.attributes.user_request').with_indifferent_access %>
       <thead>
         <tr class="bg-primary white">
-          <th style="width:40%"><%= labels['details'] %></th>
-          <th style="width:30%"><%= labels["request_details"] %></th>
-          <th style="width:20%"><%= labels['status'] %></th>
-          <th class="text-right">Actions</th>
+          <th><%= labels['details'] %></th>
+          <th><%= labels["request_details"] %></th>
+          <th><%= labels['status'] %></th>
+          <th class="text-right wd-22"></th>
         </tr>
       </thead>
   </thead>
@@ -15,27 +15,27 @@
       <tr>
         <td data-title=<%= labels['details'] %> style="width:40%">
           <% if !current_user.buyer? && policy([:admin, user_request]).show? && !(params[:controller] == 'admin/user_requests' && params[:action] == 'show') %>
-            <%= link_to "#{user_request.class.model_name.element.titleize} Request", admin_user_request_path(request_type: user_request.class.model_name.element, id: user_request.id), class: "primary" %>
+            <%= link_to "#{user_request.class.model_name.element.titleize} Request", admin_user_request_path(request_type: user_request.class.model_name.element, id: user_request.id), class: "theme-txt-color" %>
           <% end %>
           <% if user_request.requestable_id.present? %>
             <div class="small mt-1">
-              <span class="title"><%= t("user_requests.requestable_type.#{user_request.requestable_type}") %>:</span> <%= user_request.requestable.try(:name) || '-' %>
+              <span class=""><%= t("user_requests.requestable_type.#{user_request.requestable_type}") %>:</span> <%= user_request.requestable.try(:name) || '-' %>
             </div>
           <% end %>
           <% if user_request.is_a?(UserRequest::General) %>
             <% if ['superadmin', 'admin', 'crm'].include?(current_user.role) %>
               <div class="small mt-1">
-                <span class="title"><%= t("user_requests.requestable_type.department")  %>: </span><%= user_request.department.try(:titleize) || '-' %>
+                <span class=""><%= t("user_requests.requestable_type.department")  %>: </span><%= user_request.department.try(:titleize) || '-' %>
               </div>
             <% end %>
             <% if ['superadmin', 'admin', 'crm'].include?(current_user.role) %>
               <div class="small mt-1">
-                <span class="title"><%= t("user_requests.requestable_type.priority")  %>:</span> <%= user_request.priority.try(:titleize) || '-' %>
+                <span class=""><%= t("user_requests.requestable_type.priority")  %>:</span> <%= user_request.priority.try(:titleize) || '-' %>
               </div>
             <% end %>
             <% if ['superadmin', 'admin', 'crm'].include?(current_user.role) %>
               <div class="small mt-1">
-                <span class="title"><%= t("user_requests.requestable_type.due_date")  %>:</span> <%= user_request.due_date.try(:in_time_zone, current_user.time_zone).try(:strftime, '%d/%m/%Y') || '-' %>
+                <span class=""><%= t("user_requests.requestable_type.due_date")  %>:</span> <%= user_request.due_date.try(:in_time_zone, current_user.time_zone).try(:strftime, '%d/%m/%Y') || '-' %>
               </div>
             <% end %>
           <% end %>
@@ -43,20 +43,20 @@
         <td data-title= <%= t('mongoid.attributes.user_request.request_details') %> >
           <% if user_request.lead_id.present? %>
             <% if Admin::LeadPolicy.new(current_user, user_request.lead).show? %>
-              <%= link_to user_request.lead.name, [current_user_role_group, user_request.lead], class: "primary" %>
+              <%= link_to user_request.lead.name, [current_user_role_group, user_request.lead], class: "theme-txt-color" %>
             <% else %>
               <%= user_request.lead.name %>
             <% end %>
           <% else %>
             <% if Admin::UserPolicy.new(current_user, user_request.user).show? %>
-              <%= link_to user_request.user.name, [current_user_role_group, user_request.user], class: "primary" %>
+              <%= link_to user_request.user.name, [current_user_role_group, user_request.user], class: "theme-txt-color" %>
             <% else %>
               <%= user_request.user.name %>
             <% end %>
           <% end %>
           <% if user_request.project_id.present? %>
             <div class="small" style="line-height:18px;">
-              <span class="title"><%= Project.model_name.human %> :</span>
+              <span class=""><%= Project.model_name.human %> :</span>
               <%= user_request.project_name %>
             </div>
           <% end %>
@@ -64,11 +64,11 @@
         <td data-title=<%= labels['status'] %> >
           <%= t("mongoid.attributes.user_request/status.#{user_request.status}") %>
           <div class="text-muted small" style="line-height:18px;">
-            <span class="title"><%= labels[:created_at] %>:</span> <%= l(user_request.created_at.in_time_zone(current_user.time_zone)) %>
+            <span class=""><%= labels[:created_at] %>:</span> <%= l(user_request.created_at.in_time_zone(current_user.time_zone)) %>
           </div>
           <% if user_request.resolved_at.present? %>
             <div class="text-muted small" style="line-height:18px;">
-              <span class="title"><%= labels[:resolved_at] %>:</span> <%= l(user_request.resolved_at.in_time_zone(current_user.time_zone)) %>
+              <span class=""><%= labels[:resolved_at] %>:</span> <%= l(user_request.resolved_at.in_time_zone(current_user.time_zone)) %>
             </div>
           <% end %>
         </td>
@@ -84,13 +84,13 @@
     <% end %>
   </tbody>
 </table>
-<div class="col-lg-12 py-3 white mb-2 px-2">
+<div class="col-lg-12 py-3 bg-white mb-2 px-2">
   <div class="row">
-  <div class="col-lg-6">
-    <p class="table-entry">Showing 1 - 5 of <%= @user_requests.total_entries %> items</p>
+    <div class="col-lg-6">
+      <p class="table-entry mb-0 ps-2 pt-2"><%= page_entries_info user_requests %></p>
+    </div>
+    <div class="col-lg-6 table-pagination">
+      <%= will_paginate user_requests, list_classes: %w(pagination justify-content-end) %>
+    </div>
   </div>
-  <div class="col-lg-6 table-pagination">
-     <%= will_paginate user_requests, list_classes: %w(pagination justify-content-end) %>
-  </div>
-</div>
 </div>

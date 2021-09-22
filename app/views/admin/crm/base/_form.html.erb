@@ -2,7 +2,7 @@
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
-      <div class="modal-header bg-primary white">
+      <div class="modal-header">
         <h3 class="title"><%= t("helpers.#{action_name}.link_name", model: Crm::Base.model_name.human) %></h3>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -35,8 +35,8 @@
           <div class = 'col-12'>
             <div class="mb-3">
               <div class="form-check-inline mt-2">
-                <%= f.check_box :oauth2_authentication, class: "form-check-label align-middle", style: "width:20px;height:20px;" %>
-                <%= f.label :oauth2_authentication, class: "form-check-label ml-1 d-inline align-middle" %>
+                <%= f.check_box :oauth2_authentication, class: "form-check-label wd-22", style: "width:20px;height:20px;" %>
+                <%= f.label :oauth2_authentication, class: "form-check-label ms-1 d-inline-block align-middle" %>
               </div>
             </div>
           </div>

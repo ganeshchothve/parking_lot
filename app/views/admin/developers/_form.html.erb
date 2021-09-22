@@ -9,7 +9,7 @@
   <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
-        <div class="modal-header bg-primary white">
+        <div class="modal-header">
           <h3 class="title">
             <%= t('helpers.edit.link_name', model: Developer.model_name.human)%>
           </h3>
@@ -25,7 +25,7 @@
             <%= f.text_field :selldo_id, class: 'form-control', autofocus: true, required: 'required', disabled: !policy([:admin, developer]).editable_field?("selldo_id") %>
           </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer text-end">
           <%= f.submit "Save", class: 'btn btn-primary' %>
         </div>
       </div>

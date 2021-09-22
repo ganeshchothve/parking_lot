@@ -56,25 +56,24 @@
               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                 <% if policy([:admin, checklist]).edit? %>
                 <%= link_to 'Edit', edit_admin_checklist_path(checklist), class: 'dropdown-item modal-remote-form-link' %>
-              <% end %>
+                <% end %>
               </div>
             </div>
           </div>
         </div>
-            <% end %>
-          </div>
+        <% end %>
+      </div>
 
-          <!----------- Pagination ---------->
-          <div class="col-lg-12 py-3 white mb-2 px-3 mt-3 shadow-sm">
-            <div class="row">
-              <div class="col-lg-6 pt-2">
-                <p class="table-entry mb-0">Showing 1 - 5 of <%= @checklists.total_entries %> items</p>
-              </div>
-              <div class="col-lg-6 table-pagination">
-                <%= will_paginate checklists, list_classes: %w(pagination justify-content-center) %>
-              </div>
-            </div>
+      <div class="col-lg-12 py-3 bg-white mb-2 px-2">
+        <div class="row">
+          <div class="col-lg-6">
+            <p class="table-entry mb-0 ps-2 pt-2"><%= page_entries_info checklists %></p>
+          </div>
+          <div class="col-lg-6 table-pagination">
+            <%= will_paginate checklists, list_classes: %w(pagination justify-content-end) %>
           </div>
         </div>
       </div>
+    </div>
+  </div>
 </section>

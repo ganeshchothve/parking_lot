@@ -3677,7 +3677,9 @@ body.fixed-subheader .prjt-menu{
 		&.user-menu-top{
 			top: 78px;
 			margin-left: 0;
-			padding: 0px;			
+			padding: 0px;		
+			right: 0px;
+			left: inherit;	
 			a{
 				padding: 7px 15px;
 				white-space: break-spaces;
@@ -3745,7 +3747,10 @@ body.fixed-subheader .prjt-menu{
 }
 table .dropdown-menu.show{
 	.dropdown-item{
-    border-bottom: 1px solid #f1f1f1;
+    	border-bottom: 1px solid #f1f1f1;
+		&:last-child{
+			border-bottom: 0px solid;
+		}
 	}
 }
 .modal-remote-form-link{
@@ -3806,15 +3811,16 @@ table .dropdown-menu.show{
 				color: $theme-txt-color;
 			}
 			.dropdown{
-				a{
-					padding-top:0;
-					padding-bottom:0;
-				}
+				// a{
+				// 	padding-top:0;
+				// 	padding-bottom:0;
+				// }
 			}
 		}
 	}
 }
 .dropdown-menu{
+	padding: 0rem 0;
 	.dropdown-item{
 		height: auto;
 		@include tableLightTitle;

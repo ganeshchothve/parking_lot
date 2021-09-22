@@ -5,7 +5,7 @@
         <div class="table-btn-set float-end pb-3 text-end">
           <div class="new-menu display-initial" >
             <% if policy([:admin, Crm::Base]).new? %>
-              <%= link_to t('helpers.new.link_name', model: Crm::Base.model_name.human), new_admin_crm_base_path, class: 'border rounded px-3 py-2 primary border-primary' %>
+              <%= link_to t('helpers.new.link_name', model: Crm::Base.model_name.human), new_admin_crm_base_path, class: 'border rounded px-3 py-2 px-3 border-primary white bg-primary rounded py-2 ms-2 modal-remote-form-link btn' %>
             <% end %>
           </div>
         </div>

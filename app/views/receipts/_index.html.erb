@@ -4,6 +4,7 @@
       <tr class="bg-primary white">
         <th><%= Lead.model_name.human %></th>
         <th><%= t('mongoid.attributes.receipt.project') %></th>
+        <th><%= t('mongoid.attributes.receipt.receipt_id') %></th>
         <th><%= t('mongoid.attributes.receipt.token_number')%></th>
         <th><%= t('mongoid.attributes.receipt.status') %></th>
         <th><%= t('mongoid.attributes.receipt.total_amount') %></th>
@@ -20,7 +21,7 @@
 <div class="col-lg-12 py-3 white mb-2 px-2">
   <div class="row">
     <div class="col-lg-6">
-      <p class="table-entry">Showing 1 - 5 of <%= @receipts.total_entries %> items</p>
+      <p class="table-entry mb-0 ps-2 pt-2"><%= page_entries_info receipts %></p>
     </div>
     <div class="col-lg-6 table-pagination">
       <%= will_paginate receipts, list_classes: %w(pagination justify-content-end) %>

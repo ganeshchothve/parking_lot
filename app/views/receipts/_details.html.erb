@@ -5,62 +5,14 @@
     <% else %>
       <%= receipt.lead.name %>
     <% end %>
-    <!--<div class="small mt-1">
-        <span class="title">
-        <%= t('mongoid.attributes.receipt.created_by')%>: </span>
-        <%= receipt.creator.try(:name) %>
-    </div>
-      <% if receipt.lead.manager_id.present? && current_user.role != "channel_partner" %>
-      <div class="small mt-1">
-        <span class="title">
-        <%= t('mongoid.attributes.lead.manager_id') %>:</span>
-         <%= receipt.lead.manager_name %>
-       </div>
-      <% end %>
-    </div>-->
   </td>
   <td data-title=<%= t('mongoid.attributes.receipt.project') %> >
   <%= receipt.project_name %>
-   <!-- <span class="col-title">
+  </td>
+   <td data-title=<%= t('mongoid.attributes.receipt.receipt_id') %> >
+   <span class="col-title">
     <%= ["pending", 'clearance_pending'].include?(receipt.status) ?  t('global.not_generated') : receipt.receipt_id %>
-  </span>-->
-    <!--<div class="small muted">
-      <div class="col-title">
-        <%= receipt.booking_detail.present? ? "#{BookingDetail.model_name.human}: #{receipt.booking_detail.name}" : 'Direct Payment' %>
-      </div>
-      <% if receipt.online? %>
-        <div class="row"> 
-          <div class="col-6 title"><%= t('mongoid.attributes.receipt.payment_identifier')%> :</div>
-          <div class="col-6"> 
-            <%= receipt.payment_identifier %>
-            </div>
-          </div>
-        <div class="row"> 
-          <div class="col-6 title"><%= t('mongoid.attributes.receipt.processed_on')%>:
-          </div>
-            <div class="col-6"><%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %>
-            </div>
-          </div>
-      <% else %>
-        <div class="row"> 
-          <div class="col-6 title"><%= t('mongoid.attributes.receipt.issuing_bank')%>:
-          </div>
-          <div class="col-6"> <%= receipt.issuing_bank %> </br> <%= t('mongoid.attributes.receipt.issuing_bank_branch')%>: <%= receipt.issuing_bank_branch %></div>
-        </div>
-        <div class="row">
-          <div class="col-6 title"><%= t('mongoid.attributes.receipt.issued_date')%>:
-          </div>
-          <div class="col-6"> <%= receipt.issued_date.present? ? receipt.issued_date.strftime("%d/%m/%Y") : "-" %></div>
-        </div>
-        <div class="row"> 
-          <div class="col-6 title"><%= t('mongoid.attributes.receipt.processed_on')%>:
-          </div>
-          <div class="col-6"> <%= receipt.processed_on.present? ? l(receipt.processed_on) : "-" %></div>
-        </div>
-      <% end %>
-      <div class="row"><div class="col-6 title"> <%= t('mongoid.attributes.receipt.payment_mode')%> :</div>
-      <div class="col-6"> <%= t("receipt.payment_mode.#{receipt.payment_mode}")%></div></div>
-    </div>-->
+  </span>
   </td>
   <td data-title=<%= t('mongoid.attributes.receipt.token_number') %> >
     <span class="col-title"><%= receipt.try(:token_number) ? receipt.get_token_number : '--' %></span></td>

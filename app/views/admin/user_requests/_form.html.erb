@@ -2,11 +2,11 @@
   <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <div class="modal-header bg-primary white">
+        <div class="modal-header">
           <h3 class="title"><%= t("controller.user_requests.#{@user_request.class.model_name.element}.#{action_name}.header") %></h3>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body theme-form">
           <% begin %>
             <%= render "admin/user_requests/#{@user_request.class.model_name.element}", f: f %>
             <hr/>
@@ -22,7 +22,7 @@
                 <%= f.select :event, @user_request.aasm.events.reject { |event| event.name.to_s == f.object.status.to_s }.map {|x| [t("mongoid.attributes.user_request/status.#{x.name}"), x.name] }, { prompt: t("mongoid.attributes.user_request/status.#{f.object.status}") }, class: 'selectize', required: "required" %>
               <% end %>
             <% else %>
-              <h4><%= t("mongoid.attributes.user_request/status.#{f.object.status}") %></h4>
+              <h4 class="fn-18 theme-txt-color"><%= t("mongoid.attributes.user_request/status.#{f.object.status}") %></h4>
             <% end %>
           </div>
           <% if @user_request.status == "failed" %>
@@ -67,7 +67,7 @@
             </div>
           <% end %>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer text-end">
           <%= f.submit "Submit", class: 'btn btn-primary', disabled: ((@user_request.new_record? && @user_request.is_a?(UserRequest::Cancellation)) ? true : false), id: "submit_request", data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
         </div>
       </div>

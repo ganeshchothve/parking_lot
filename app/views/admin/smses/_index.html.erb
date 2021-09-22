@@ -5,10 +5,10 @@
           <% unless current_user.buyer? %>
             <th><%= t('mongoid.attributes.sms.to') %></th>
           <% end %>
-          <td> <%= t('mongoid.attributes.sms.content') %> </td>
+          <th> <%= t('mongoid.attributes.sms.content') %> </th>
           <th> <%= t('mongoid.attributes.sms.status') %></th>
           <th> <%= t('mongoid.attributes.sms.sent_on') %></th>
-          <th class="text-right"><%= t('global.action', count: 3) %></th>
+          <th class="text-right wd-22"></th>
         </tr>
       </thead>
   </thead>
@@ -18,7 +18,7 @@
           <% unless current_user.buyer? %>
             <td  data-title=<%= t('mongoid.attributes.sms.to') %> >
               <% sms.to.each do |s| %>
-                <%= link_to s,"javascript:;", data: {toggle: "modal", target: "#sms_show_#{sms.id.to_s}"}, class: "primary" %>
+                <%= link_to s,"javascript:;", data: {toggle: "modal", target: "#sms_show_#{sms.id.to_s}"}, class: "theme-txt-color" %>
               <% end %>
             </td>
           <% end %>
@@ -55,13 +55,13 @@
       <% end %>
   </tbody>
 </table>
-<div class="col-lg-12 py-3 white mb-2 px-2">
+<div class="col-lg-12 py-3 bg-white mb-2 px-2">
   <div class="row">
-  <div class="col-lg-6">
-    <p class="table-entry">Showing 1 - 5 of <%= @smses.total_entries %> items</p>
+    <div class="col-lg-6">
+      <p class="table-entry mb-0 ps-2 pt-2"><%= page_entries_info smses %></p>
+    </div>
+    <div class="col-lg-6 table-pagination">
+      <%= will_paginate @smses, list_classes: %w(pagination justify-content-end) %>
+    </div>
   </div>
-  <div class="col-lg-6 table-pagination">
-     <%= will_paginate @smses, list_classes: %w(pagination justify-content-center) %>
-  </div>
-</div>
 </div>

@@ -2,7 +2,7 @@
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
-      <div class="modal-header bg-primary white">
+      <div class="modal-header">
         <h3 class="title"><%= t("controller.schemes.#{action_name}.link_name") %></h3>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -53,11 +53,11 @@
         <div class="payment-adjustments">
           <% editable_payment_adjustment = policy([:admin, @scheme]).editable_field?("payment_adjustments_attributes")%>
           <% if editable_payment_adjustment %>
-            <%= f.link_to_add "Add", :payment_adjustments, :data => { :target => ".payment-adjustments" }, class: "btn btn-primary" %>
+            <%= f.link_to_add "Add", :payment_adjustments, :data => { :target => ".payment-adjustments" }, class: "btn btn-primary d-inline-block" %>
           <% end %>
           <%= f.fields_for :payment_adjustments do |adj|%>
             <% if editable_payment_adjustment %>
-              <%= adj.link_to_remove icon("far", "times-circle") %>
+              <%= adj.link_to_remove icon("far", "times-circle d-inline-block") %>
             <% end %>
             <div class="row">
               <div class="col-md-6">

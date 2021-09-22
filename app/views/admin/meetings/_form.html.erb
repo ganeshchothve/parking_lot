@@ -2,7 +2,7 @@
   <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
-        <div class="modal-header bg-primary white">
+        <div class="modal-header">
           <h3 class="title">
             <%= t("helpers.#{action_name}.link_name", model: Meeting.model_name.human) %>
             </h3>
@@ -41,7 +41,7 @@
             <%= f.select :project_id, Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", disabled: (policy([current_user_role_group, meeting]).editable_field?("project_id") ? false : true) %>
           </div>
 
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :campaign_id %>
             <%= f.select :campaign_id, Campaign.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", disabled: (policy([current_user_role_group, meeting]).editable_field?("campaign_id") ? false : true) %>
           </div>
