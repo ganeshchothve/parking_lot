@@ -50,14 +50,6 @@
 <% end %>
 <%= javascript_tag do %>
   $(document).ready(function(){
-    $("#client_form").submit(function(){
-      slot_start = moment($("#client_slot_start_date").val()+ ' '+$("#client_start_time").val(), 'DD/MM/YYYY h:mm:ss a')._d
-      st = moment($("#client_start_time").val(), 'h:mm:ss a')._d
-      et = moment($("#client_end_time").val(), 'h:mm:ss a')._d
-      $("#client_start_time").val(st);
-      $("#client_end_time").val(et);
-      $("#client_slot_start_date").val(slot_start);
-    });
     if($('#client_enable_direct_payment_false').is(':checked')){
       $('.depend-direct-payment').find('input, radio_button').attr('disabled', 'disabled');
     }
