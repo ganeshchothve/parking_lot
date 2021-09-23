@@ -503,6 +503,7 @@ en:
         incentive_scheme_description: Full Incentive Scheme Text
         incentive_schemes: 'Earning Opportunities'
         total_units: 'Total Units'
+        embed_map_tag: 'Embed Map Tag (iframe)'
       token_type:
         name: Name
         token_prefix: Token Prefix

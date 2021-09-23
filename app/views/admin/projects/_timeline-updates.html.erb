@@ -21,7 +21,7 @@
     </div>
     <div class="mb-3">
       <%= sf.label :date, class: 'label-required' %>
-      <%= sf.text_field :date, class: 'form-control datepicker', required: true, "data-max-date": Date.today.strftime("%d/%m/%Y"), disabled: !editable_timeline_updates, value: sf.object.date.present? ? sf.object.date.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y") %>
+      <%= sf.text_field :date, class: 'form-control datepicker', required: true, disabled: !editable_timeline_updates, value: sf.object.date.present? ? sf.object.date.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y") %>
     </div>
   <% end %>
   <hr>
