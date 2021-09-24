@@ -87,7 +87,7 @@
                                     <div class="col-5 overview-left float-start">
                                         <p>
                                             <span>Configuration</span>
-                                            <%= DashboardDataProvider.configurations(@project).to_sentence %> Flats <%= @project.project_towers.present? ? "| #{@project.project_units.min(:saleable).round} - #{@project.project_units.max(:saleable).round} sqft" : '' %>
+                                            <%= DashboardDataProvider.configurations(@project).to_sentence %> Flats <%= @project.project_towers.present? ? "| #{@project.project_units.min(:saleable)&.round} - #{@project.project_units.max(:saleable)&.round} sqft" : '' %>
                                         </p>
                                         <% if @project.project_units.count > 0 %>
                                           <p>
