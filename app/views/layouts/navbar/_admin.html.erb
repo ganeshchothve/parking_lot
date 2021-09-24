@@ -5,17 +5,17 @@
         <%= link_to((image_tag 'launchpad-banner-logo.svg', class: 'img-fluid'), dashboard_path) %>
       </div>
       <div class="header-menu">
-        <ul class="list-unstyled">
+        <ul class="list-unstyled ">
           <% if policy(:dashboard).index? %>
             <% if ["admin","superadmin"].include?(current_user.role) %>
 
-              <li class="nav-item d-none d-lg-block">
-                <div class="dropdown">
-                  <%= active_link_to t('controller.dashboard.index.link_name'), "javascript:;", active: :exclusive, class: "nav-link dropdown-toggle pl-0 pr-0", data: {toggle: 'dropdown'}, id: "dropdownMenuLeft", "data-bs-toggle": "dropdown", "aria-expanded": "false" %>
-                  <div class="dropdown-menu dropdown-menu-right menu-top" aria-labelledby="dropdownMenuLeft">
-                    <%= link_to t('controller.dashboard.index.link_name'), dashboard_path(params: {role: current_user.role}), class: "dropdown-item" %>
-                    <%= link_to t('controller.dashboard.index.billing_team_link_name'), dashboard_path(params: {role: "billing_team"}), class: "dropdown-item" %>
-                    <%= link_to t('controller.dashboard.index.cp_admin_link_name'), dashboard_path(params: {role: "cp_admin"}), class: "dropdown-item" %>
+              <li class="nav-item d-none d-lg-block accordion">
+                <div class="accordion-item bg-menu rounded-none border-0 dropdown">
+                  <%= active_link_to t('controller.dashboard.index.link_name'), "javascript:;", active: :exclusive, class: "nav-link pl-0 pr-0 dropdown-toggle", data: {toggle: 'dropdown'}, id: "dropdownMenuLeft", "data-bs-toggle": "collapse", "data-bs-target":"#dashboardMenu", "aria-expanded": "false" %>
+                  <div id="dashboardMenu" class="accordion-collapse collapse" aria-labelledby="dropdownMenuLeft">
+                    <%= link_to t('controller.dashboard.index.link_name'), dashboard_path(params: {role: current_user.role}), class: "" %>
+                    <%= link_to t('controller.dashboard.index.billing_team_link_name'), dashboard_path(params: {role: "billing_team"}), class: "" %>
+                    <%= link_to t('controller.dashboard.index.cp_admin_link_name'), dashboard_path(params: {role: "cp_admin"}), class: "" %>
                   </div>
                 </div>
               </li>
@@ -92,15 +92,15 @@
 
           <% if current_user.role == 'channel_partner' %>
             <% channel_partner = current_user.associated_channel_partner %>
-            <li class="nav-item d-none d-lg-block">
-              <div class="dropdown">
-                <%= active_link_to t('global.channel_partner_application'), "javascript:;", class: "nav-link dropdown-toggle", data: {toggle: 'dropdown'}, id: "dropdownMenuLeft1", "data-bs-toggle": "dropdown", "aria-expanded": "false" %>
-                <div class="dropdown-menu dropdown-menu-right menu-top"  aria-labelledby="dropdownMenuLeft1">
+              <li class="nav-item d-none d-lg-block accordion">
+                <div class="accordion-item bg-menu rounded-none border-0 dropdown">
+                <%= active_link_to t('global.channel_partner_application'), "javascript:;", class: "nav-link dropdown-toggle", data: {toggle: 'dropdown'}, id: "dropdownMenuLeft1", "data-bs-toggle": "collapse", "data-bs-target":"#dashboardCP", "aria-expanded": "false" %>
+                <div id="dashboardCP" class="accordion-collapse collapse"  aria-labelledby="dropdownMenuLeft1">
                   <% if Admin::ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
-                    <%= link_to t('helpers.edit.link_name', model: ChannelPartner.model_name.human), edit_channel_partner_path(channel_partner), class: 'modal-remote-form-link dropdown-item' %>
+                    <%= link_to t('helpers.edit.link_name', model: ChannelPartner.model_name.human), edit_channel_partner_path(channel_partner), class: 'modal-remote-form-link' %>
                   <% end %>
                   <% if policy([ current_user_role_group, Asset.new(assetable: channel_partner)]).index? %>
-                    <%= link_to t('controller.assets.index.link_name'), assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'modal-remote-form-link dropdown-item' %>
+                    <%= link_to t('controller.assets.index.link_name'), assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'modal-remote-form-link' %>
                   <% end %>
                 </div>
               </div>

@@ -31,11 +31,11 @@
             <div class="modal fade right fixed-header-footer" role="dialog" id="sms_show_<%=sms.id.to_s %>">
               <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
-                  <div class="modal-header bg-primary white">
+                  <div class="modal-header">
                     <div class="title">SMS</div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
-                  <div class="modal-body">
+                  <div class="modal-body theme-form">
                     <% @sms = Sms.find(sms.id) %>
                     <%=render "admin/smses/show",{sms: @sms} %>
                   </div>
@@ -44,7 +44,7 @@
             </div>
           </td>
           <td>
-          <div class="dropdown show text-right">
+          <div class="dropdown show text-end">
           <a class="btn table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
               <%= link_to t("controller.smses.show.link_name"), "javascript:;", data: {toggle: "modal", target: "#sms_show_#{sms.id.to_s}"}, class: 'dropdown-item' %>

@@ -3,12 +3,12 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
 
-      <div class="modal-header bg-primary white">
+      <div class="modal-header">
         <h3 class="title"><%= t("controller.invoices.#{action_name}.link_name") %></h3>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
-      <div class="modal-body">
+      <div class="modal-body theme-form">
         <% if (incentive_deduction = @invoice.incentive_deduction.presence) %>
           <%= render 'admin/invoices/incentive_deduction', incentive_deduction: incentive_deduction %>
         <% end %>
@@ -77,7 +77,7 @@
         <% end %>
       </div>
 
-      <div class="modal-footer">
+      <div class="modal-footer text-end">
         <%= f.submit "Save", class: "btn btn-primary" %>
       </div>
 
