@@ -3753,9 +3753,6 @@ table .dropdown-menu.show{
 		}
 	}
 }
-.modal-remote-form-link{
-	height: 40px;
-}
 /********************** Apartment Filter Popup *******************/
 .filter-box {
     position: fixed;
@@ -4118,4 +4115,8 @@ table .dropdown-menu.show{
 }
 .col-lg-wd {
     width: 347px;
+}
+
+.dragover {
+  background-color: #e4e4e4 !important;
 }

@@ -37,7 +37,7 @@
                   </div>
                   <div class="pe-3 py-3">
                     <p class="font-medium fn-12 mb-0 d-inline-block me-2"><i
-                        class="fa fa-circle info me-2 fa-sm"></i><%= lead.lead_stage || '-' %></p>
+                        class="fa fa-circle info me-2 fa-sm"></i><%= lead.lead_stage&.titleize || '-' %></p>
                     <div class="dropdown d-inline-block">
                       <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">

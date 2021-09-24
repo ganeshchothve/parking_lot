@@ -210,7 +210,7 @@ FormInitializer = (function(){
           url: options["url"],
           type: 'GET',
           dataType: 'json',
-          data: _.merge(remote_selectize_data(this.$input), queryObj, {fltrs: {search: queryObj.search}}),
+          data: remote_selectize_data(this.$input),
           error: function(one, two, three){
             if(two == 'parsererror' && one.getResponseHeader('content-type').includes('text/javascript')){
               if(typeof $(selector).data('error-function') == 'function'){

@@ -36,7 +36,7 @@ var colors = [
 <% @data = { projects: @stage_wise_leads.values.map(&:keys).flatten.uniq, stage_data: @stage_wise_leads } %>
 var dataset = <%= raw(@data[:stage_data].each_with_index.map do |(k, v), i|
   {
-    label: k.titleize,
+    label: (k&.titleize || 'Incoming'),
     categoryPercentage: (0.07 * @data[:projects].length),
     data: @data[:projects].collect { |p_name| v[p_name] || 0 },
     fill: false
