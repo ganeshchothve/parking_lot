@@ -15,9 +15,9 @@
 
                   </div>
                   <div class="pe-3 py-3">
-                    <a href="javascript:;"
-                      class="border rounded py-1 px-2 me-2 txt-light-blue d-inline-block fn-14 font-medium">Raise
-                      Brokerage Invoice</a>
+                    <% if booking_detail.incentive_eligible? && policy([:admin, Invoice.new]).new? %>
+                      <%= link_to t('controller.invoices.new.link_name'), new_admin_booking_detail_invoice_path(booking_detail), class: 'modal-remote-form-link border rounded py-1 px-2 me-2 txt-light-blue d-inline-block fn-14 font-medium' %>
+                    <% end %>
                     <div class="dropdown d-inline-block">
                       <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">

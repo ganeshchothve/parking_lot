@@ -87,6 +87,25 @@ module ChannelPartnerDashboardConcern
     @all_schemes = IncentiveScheme.build_criteria(fltrs: {date_range: dates, project_ids: project_ids, status: 'approved'}).in(tier_id: [nil, '', current_user.tier_id])
   end
 
+  def project_wise_leads
+    dates = params[:dates]
+    if dates.present?
+      start_date, end_date = dates.split(" - ")
+      options = {
+        matcher: {
+          created_at: {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day }
+        }
+      }
+    else
+      options = {}
+    end
+    @projects_leads = DashboardDataProvider.project_wise_leads_count(current_user, options)
+    project_ids = @projects_leads['project_wise']&.sort {|x, y| y.last.try(:[], 'count').to_i <=> x.last.try(:[], 'count').to_i}.first(4)&.collect{|x| x&.first} || []
+    options[:matcher] ||= {}
+    options[:matcher].merge!({ project_id: { '$in': project_ids } })
+    @stage_wise_leads = DashboardDataProvider.lead_stage_project_wise_leads_count(current_user, options)
+  end
+
   private
 
   def get_labels(data)

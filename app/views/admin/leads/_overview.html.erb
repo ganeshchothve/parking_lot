@@ -11,7 +11,7 @@
         <div class="col-md-3">
           <div class="mb-3">
             <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.stage') %></label>
-<p class="fn-14 theme-txt-color mb-0"><%= lead.lead_stage || '-' %></p>
+<p class="fn-14 theme-txt-color mb-0"><%= lead.lead_stage&.titleize || '-' %></p>
           </div>
         </div>
         <div class="col-md-3">

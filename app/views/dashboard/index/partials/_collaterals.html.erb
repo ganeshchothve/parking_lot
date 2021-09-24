@@ -53,9 +53,9 @@
         <div class="project-info">
           <div class="project-info-inner">
             <h2 class="prjt-title"><%= project.name %></h2>
-            <p class="prjt-devlprs"><%= project.developer_name %></p>
+            <p class="prjt-devlprs"><%= project.developer_name || '-' %></p>
             <p class="prjt-location"><i
-                class="fa fa-map-marker-alt fill-white"></i><%= "#{project.micro_market}, #{project.city} " %>
+                class="fa fa-map-marker-alt fill-white"></i><%= "#{project.micro_market.present? ? project.micro_market + ', ': ''}#{project.city}" %>
             </p>
           </div>
           <div class="project-info-outer px-3">

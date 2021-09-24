@@ -12,6 +12,7 @@
           <div class="col-lg-6">
             <h2 class="sec-title">Welcome Jamison,</h2>
           </div>
+          <!--
           <div class="col-lg-6 text-end">
             <select class="h3 mb-0 font-weight-medium f-20 form-control d-sm-inline-block">
               <option>Quater</option>
@@ -27,6 +28,7 @@
                 class="d-sm-inline-block btn btn-sm pull-right bg-white mr-1 font-medium br-gray-1 br-rd-4 txt-light-blue">2020</a>
             </div>
           </div>
+          -->
           <div class="col-lg-12">
             <div class="py-2 bg-white rounded-3">
               <div class="border-bottom px-4 py-2">
@@ -42,7 +44,7 @@
                   </div>
                 </div>
                 <div class="col-lg-8">
-                  <canvas id="myChart" width="650" height="300"></canvas>
+                  <canvas id="stage_wise_bar_chart" width="650" height="300"></canvas>
                 </div>
               </div>
             </div>
@@ -66,10 +68,10 @@
                 <div class="payment-detls fix-ht">
                   <div class="card br-rd-8 card-shadow  no-br">
                     <div class="px-3 row">
-                      <div class="col-md-6 pt-3">
+                      <div class="col-md-7 pt-3">
                         <h2 class="sec-title mb-0">Payments</h2>
                       </div>
-                      <div class="col-md-6 pt-3 text-end">
+                      <div class="col-md-5 pt-3 text-end">
                         <a href="javascript:;" class="btn-link font-medium">View All</a>
                       </div>
                     </div>
@@ -138,35 +140,38 @@
               <h2 class="sec-title mb-0">Upcoming Events</h2>
             </div>
             <hr>
+            <% meetings = Meeting.where(Meeting.user_based_scope(current_user)) %>
             <ul class="upcoming-events-list list-unstyled cmn-list">
-              <li class="px-3">
-                <div class="list-wrap row">
-                  <div class="col-lg-2">
-                    <i class="fa fa-calendar-alt fill-primary"></i>
+              <% if meetings.present? %>
+                <% meetings.each do |meeting| %>
+                  <li class="px-3">
+                    <div class="list-wrap row">
+                      <div class="col-lg-2">
+                        <i class="fa fa-calendar-alt fill-primary"></i>
+                      </div>
+                      <div class="col-lg-10">
+                        <p class="list-txt event-title mb-0"><%= meeting.topic %></p>
+                        <p class="list-txt event-time mb-0"><%= "#{meeting.scheduled_on&.strftime('%e %b %Y')}#{meeting.scheduled_on&.to_time&.in_time_zone(current_user.time_zone)&.strftime(', %I:%M%p %Z')}".html_safe %></p>
+                      </div>
+                    </div>
+                  </li>
+                <% end %>
+              <% else %>
+                <li class="px-3">
+                  <div class="list-wrap row">
+                    <div class="col-lg-12">
+                      <p class="list-txt event-title mb-0">No New event</p>
+                    </div>
                   </div>
-                  <div class="col-lg-10">
-                    <p class="list-txt event-title mb-0">Pre Launch Event</p>
-                    <p class="list-txt event-time mb-0">5th May 2020, 12.30 pm IST</p>
-                  </div>
-                </div>
-              </li>
-              <li class="px-3">
-                <div class="list-wrap row">
-                  <div class="col-lg-2">
-                    <i class="fa fa-calendar-alt fill-primary"></i>
-                  </div>
-                  <div class="col-lg-10">
-                    <p class="list-txt event-title mb-0">Launch Event</p>
-                    <p class="list-txt event-time mb-0">31st Dec 2020, 12.30 pm IST</p>
-                  </div>
-                </div>
-              </li>
+                </li>
+              <% end %>
             </ul>
           </div>
         </div>
 
 
         <!----Announcements------------>
+        <!--
         <div class="card br-rd-8 card-shadow no-br mt-3">
           <div class="">
             <div class="col-md-12 pt-3 px-3">
@@ -229,119 +234,15 @@
             </ul>
           </div>
         </div>
+        -->
 
       </div>
     </div>
 </section>
-
 <%= javascript_tag do %>
-
-  $(document).ready(function(){
-    var barOptions_stacked = {
-      indexAxis: 'y',
-      scales: {
-        x: {
-          stacked: true
-        },
-        y: {
-          ticks: {
-            mirror: true,
-            labelOffset: -20,
-            padding: 10
-          },
-          stacked: true,
-          grid: {
-            display: false
-          }
-        }
-      },
-      pointLabelFontFamily: "Quadon Extra Bold",
-      scaleFontFamily: "Quadon Extra Bold",
-      maintainAspectRatio: false
-    };
-
-    var ctx = document.getElementById("myChart");
-    var myChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ["Brahma Suncity 100 Customers", "Bhankti Elegance 66 Customers", "Padma Shree Housing Society 56 Customers","Ellite Homes 80 Customers"],
-        datasets: [{
-          label: 'Open',
-          categoryPercentage: 0.32,
-          data: [15, 85, 45, 3, 14],
-          backgroundColor: Amura.chart_colors.light_blue,
-          fill: false
-        }, {
-          label: 'Walk Ins',
-          categoryPercentage: 0.32,
-          data: [23, 55, 74, 4, 90],
-          backgroundColor: Amura.chart_colors.light_purple,
-          fill: false
-        }, {
-          label: 'Bookings',
-          categoryPercentage: 0.32,
-          data: [38, 53, 46, 84, 93],
-          backgroundColor: Amura.chart_colors.light_red,
-          fill: false
-        }, {
-          label: '9.9% Paid',
-          categoryPercentage: 0.32,
-          data: [38, 53, 46, 84, 93],
-          backgroundColor: Amura.chart_colors.light_yellow,
-          fill: false
-        }, {
-          label: 'Registrations',
-          categoryPercentage: 0.32,
-          data: [38, 53, 46, 84, 93],
-          backgroundColor: Amura.chart_colors.light_cyan,
-          fill: false
-        }]
-      },
-
-      options: barOptions_stacked,
-    });
-    var ctx1 = document.getElementById("total_brokerage_Chart");
-    var total_brokerage_Chart = new Chart(ctx1, {
-      type: 'bar',
-      data: {
-        labels: ["Oct 2020", "Nov 2020", "Dec 2020"],
-        datasets: [{
-          label: 'Paid',
-          categoryPercentage: 0.2,
-          data: [15, 85, 40],
-          backgroundColor: Amura.chart_colors.green
-        }, {
-          label: 'Pending',
-          categoryPercentage: 0.2,
-          data: [23, 55, 90],
-          backgroundColor: Amura.chart_colors.light_green
-        }]
-      },
-
-      options: {
-        indexAxis: 'x',
-      scales: {
-        x: {
-          stacked: true,
-          grid: {
-            display: false
-          }
-        },
-        y: {
-          ticks: {
-            mirror: true,
-            labelOffset: -20,
-            padding: 10
-          },
-          stacked: true,
-          
-        }
-      },
-      pointLabelFontFamily: "Quadon Extra Bold",
-      scaleFontFamily: "Quadon Extra Bold",
-      maintainAspectRatio: false
-      }
-    });
+  $.ajax({
+    url: '/dashboard/project_wise_leads',
+    type: 'get'
   });
 <% end %>
 <% else %>

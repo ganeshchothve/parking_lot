@@ -39,7 +39,7 @@
         var selectize = $select.selectize()[0].selectize;
         var $control = selectize.$control;
         if($select.data('params').fltrs.queue_number && $control.find('.clear-search').length == 0){
-          $control.append("<small class='clear-search'><a class='float-right' href='javascript;'>Clear Search</a></small>");
+          $control.append("<small class='clear-search float-end me-4'><a href='javascript;'><i class='fa fa-times-circle fn-14 theme-fill'></i></a></small>");
         }
       }
     };
@@ -72,7 +72,7 @@
     $('.team_lead').on('drop', '.sales-team-box.available', function(event) {
       event.preventDefault();
       var customerId = event.originalEvent.dataTransfer.getData('customer_id');
-      var salesId = $(event.currentTarget).parent('.sales-box').attr('id');
+      var salesId = $(event.currentTarget).closest('.sales-box').attr('id');
 
       $.ajax({
         url: '/admin/leads/' + customerId + '/assign_sales',
