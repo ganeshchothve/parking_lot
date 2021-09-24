@@ -1,11 +1,11 @@
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header bg-primary white">
+      <div class="modal-header">
         <h3 class="title"><%= @project.try(:name) || "All #{t('mongoid.attributes.project.assets')}" %></h3>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body theme-form">
         <nav>
           <div class="nav nav-tabs" role="tablist">
             <% Project::DOCUMENT_TYPES.reject {|x| x == 'unit_selection_filter_image'}.each_with_index do |doc_type, idx| %>

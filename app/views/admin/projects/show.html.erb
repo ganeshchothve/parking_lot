@@ -137,7 +137,7 @@
                                         </div>
                                     </div>
                                     <% if @project.embed_map_tag.present? %>
-                                      <div class="col-6  float-end">
+                                      <div class="col-6  float-end embed-map">
                                         <%= @project.embed_map_tag.html_safe %>
                                       </div>
                                     <% end %>
@@ -156,7 +156,7 @@
                                             <h2>Select Type</h2>
                                             <div class="tower-type tab-link nav nav-tabs border-bottom-0" role="tablist">
                                               <% @project.project_units.group_by{ |pu| pu.unit_configuration_name }.each_with_index do | (uc, units), index | %>
-                                                <a href="javascript:;" class="nav-item nav-link <%= (index == 0) ? "active" : "" %>" data-bs-toggle="tab" data-bs-target="#floor_<%= uc %>" role="tab"><%= uc %> | (<%= units.first&.saleable %> sq.ft)</a>
+                                                <a href="javascript:;" class="nav-item nav-link mb-1 <%= (index == 0) ? "active" : "" %>" data-bs-toggle="tab" data-bs-target="#floor_<%= uc.gsub(/[()\s]*/, '').underscore %>" role="tab"><%= uc %> | (<%= units.first&.saleable %> sq.ft)</a>
                                             <% end %>
                                                 <!--<a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#type-bhk-11" role="tab">1 BHK | (1427 sq.ft)</a>
                                                 <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#type-bhk-2" role="tab">2 BHK | (1427 sq.ft)</a>-->
@@ -167,7 +167,7 @@
                                         <div class="tab-content br-1 br-rd-8 py-1">
                                         <% @project.project_units.group_by{ |pu| pu.unit_configuration_name }.each_with_index do | (uc, units), index | %>
                                           <% unit = units.first %>
-                                            <div class="tab-pane fade show <%= (index == 0) ? "active" : "" %>" id="floor_<%= uc %>" role="tabpanel">
+                                            <div class="tab-pane fade show <%= (index == 0) ? "active" : "" %>" id="floor_<%= uc.gsub(/[()\s]*/, '').underscore %>" role="tabpanel">
                                                 <div class="col-5 float-start">
                                                     <% unit&.assets&.each do | img| %>
                                                       <img src="<%= img.file.url %>" class="plan-img img-fluid">
@@ -184,7 +184,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-6 float-start">
-                                                            <p class="prjt-short-info"><%= uc %> (<%= unit.saleable %> sq.ft) ₹ <%= unit.all_inclusive_price %></p>
+                                                            <p class="prjt-short-info"><%= uc %> (<%= unit.saleable %> sq.ft) <%= number_to_inr(unit.all_inclusive_price) %></p>
                                                         </div>
                                                         <% avl_unit = units.find {|x| x.status == 'available'} %>
                                                         <% if avl_unit %>
@@ -513,7 +513,7 @@
                         <div class="project-wrap br-rd-8 card-shadow">
                             <div class="project-list row">
                                 <div class="project-img">
-                                    <img src="<%= project.cover_photo&.url || (asset_path 'project-item-image.jpg') %>" class="img-fluid">
+                                    <div class="project-img-thumb" style="background-image:url(<%= project.cover_photo&.url || (asset_path 'project-item-image.jpg') %>)"></div>
                                     <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i><%= project.category&.titleize || 'Just Launch' %></p>
                                 </div>
                                 <div class="project-info">
@@ -645,3 +645,16 @@
         </div>
     </div>
 </div>
+<%= javascript_tag do %>
+ var header = $("body");
+  $(window).scroll(function () {
+    var windowScroll = $(window).scrollTop();
+    var menuScroll = $('.prjt-menu').offset().top - 80;
+    if (windowScroll >= menuScroll) {
+      header.addClass("fixed-subheader");
+    }
+    if (windowScroll <= 225) {
+      header.removeClass("fixed-subheader");
+    }
+  });
+<% end %>

@@ -1,48 +1,49 @@
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header bg-primary white">
+      <div class="modal-header">
         <h3 class="title"> <%= t('helpers.new.link_name', model: Referral.model_name.human) %></h3>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body theme-form">
 
         <%= form_for [:buyer, @referral], local: true, remote: true, html: { class: 'modal-remote-form validate-form', data: { 'resource-type': t('global.referral'), type: :json }, id: "referral_form" } do |f| %>
 
-          <div class="row">
-            <div class="col-md-6">
-              <div class="mb-3">
-                <%= f.label :first_name, class: 'label-required' %>
-                <%= f.text_field :first_name, class: 'form-control', autofocus: true, required: true %>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <%= f.label :last_name, class: 'label-required' %>
-                <%= f.text_field :last_name, class: 'form-control', autofocus: true, required: true %>
-              </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <%= f.label :first_name, class: 'label-required' %>
+              <%= f.text_field :first_name, class: 'form-control', autofocus: true, required: true %>
             </div>
           </div>
-
-          <div class="mb-3">
-            <%= f.label :email, class: 'label-required' %>
-            <%= f.email_field :email, class: "form-field form-control", required: 'required' %>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <%= f.label :last_name, class: 'label-required' %>
+              <%= f.text_field :last_name, class: 'form-control', autofocus: true, required: true %>
+            </div>
           </div>
+        </div>
 
-          <div class="mb-3">
-            <%= f.label :phone, class: 'label-required' %>
-            <%= f.phone_field :phone, class: 'form-control phone', required: true, autocomplete: :false, placeholder: 'Phone' %>
-          </div>
+        <div class="mb-3">
+          <%= f.label :email, class: 'label-required' %>
+          <%= f.email_field :email, class: "form-field form-control", required: 'required' %>
+        </div>
 
-          <%= f.submit class: 'btn btn-primary nav-btn' %>
+        <div class="mb-3">
+          <%= f.label :phone, class: 'label-required' %>
+          <%= f.phone_field :phone, class: 'form-control phone', required: true, autocomplete: :false, placeholder: 'Phone' %>
+        </div>
+      </div>
+      <div class="modal-footer text-end">
+        <%= f.submit class: 'btn btn-primary nav-btn' %>
         <% end %>
       </div>
     </div>
   </div>
 </div>
 <%= javascript_tag do %>
-  $(document).ready(function(){
-    FormInitializer.init($('#referral_form'));
-  });
+$(document).ready(function(){
+FormInitializer.init($('#referral_form'));
+});
 <% end %>

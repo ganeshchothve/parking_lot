@@ -68,8 +68,8 @@
   <div class="col-md-12">
     <div class="form-group">
       <div class="form-check form-check-inline">
-        <%= f.check_box :enable_slot_generation, {:class => "form-check-input", :disabled => !policy([:admin, @project]).editable_field?("enable_slot_generation") }, "Yes", "No" %><br>
-        <%= f.label :enable_slot_generation %>
+        <%= f.check_box :enable_slot_generation, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("enable_slot_generation") }, "Yes", "No" %>
+        <%= f.label :enable_slot_generation, class: "form-check-label d-inline-block ms-2" %>
       </div>
     </div>
   </div>

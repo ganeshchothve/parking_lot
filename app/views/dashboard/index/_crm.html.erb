@@ -2,8 +2,8 @@
   <div class="row">
     <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
       <div class="box-card shadow rounded">
-        <div class="box-header bg-primary br-rd-tr-4 rounded-top px-2">
-          <h4 class="white pre text-center fn-18 mb-0"><%= User.human_attribute_name("role.user", count: 3) %></h4>
+        <div class="box-header bg-primary br-rd-tr-4 rounded-top px-2  position-relative">
+          <h4 class="white pre text-center fn-18 mb-0  position-absolute top-50 start-50 translate-middle wd-100"><%= User.human_attribute_name("role.user", count: 3) %></h4>
         </div>
         <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
           <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.customer_count %></span>
@@ -12,8 +12,8 @@
     </div>
     <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
       <div class="box-card shadow rounded">
-        <div class="box-header bg-primary br-rd-tr-4 rounded-top">
-          <h4 class="white pre text-center fn-18 mb-0"><%= ChannelPartner.model_name.human(count: 3) %></h4>
+        <div class="box-header bg-primary br-rd-tr-4 rounded-top  position-relative">
+          <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle wd-100"><%= ChannelPartner.model_name.human(count: 3) %></h4>
         </div>
         <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
           <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.channel_partner_count %></span>
@@ -22,8 +22,8 @@
     </div>
     <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
       <div class="box-card shadow rounded">
-        <div class="box-header bg-primary br-rd-tr-4 rounded-top">
-          <h4 class="white pre text-center fn-18 mb-0"><%= ProjectUnit.model_name.human(count: 3) %></h4>
+        <div class="box-header bg-primary br-rd-tr-4 rounded-top position-relative">
+          <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle"><%= ProjectUnit.model_name.human(count: 3) %></h4>
         </div>
         <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
           <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.sold_project_units_count %> / <%= DashboardData::AdminDataProvider.all_project_units_count %></span>
@@ -32,8 +32,8 @@
     </div>
     <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
       <div class="box-card shadow rounded">
-        <div class="box-header bg-primary br-rd-tr-4 rounded-top">
-          <h4 class="white pre text-center fn-18 mb-0"><%= UserRequest.model_name.human(count: 3) %></h4>
+        <div class="box-header bg-primary br-rd-tr-4 rounded-top position-relative">
+          <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle wd-100"><%= UserRequest.model_name.human(count: 3) %></h4>
         </div>
         <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
           <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.open_user_requests %></span>
@@ -42,8 +42,8 @@
     </div>
     <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
       <div class="box-card shadow rounded">
-        <div class="box-header bg-primary br-rd-tr-4 rounded-top">
-          <h4 class="white pre text-center fn-18 mb-0"><%= Receipt.model_name.human(count: 3) %></h4>
+        <div class="box-header bg-primary br-rd-tr-4 rounded-top position-relative">
+          <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle"><%= Receipt.model_name.human(count: 3) %></h4>
         </div>
         <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
           <span title="<%= Receipt.human_attribute_name("payment_mode.online") %>">
@@ -63,8 +63,8 @@
     </div>
     <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
       <div class="box-card shadow rounded">
-        <div class="box-header bg-primary br-rd-tr-4 rounded-top">
-          <h4 class="white pre text-center fn-18 mb-0"><%= Scheme.model_name.human(count: 3) %></h4>
+        <div class="box-header bg-primary br-rd-tr-4 rounded-top position-relative">
+          <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle"><%= Scheme.model_name.human(count: 3) %></h4>
         </div>
         <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
           <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.active_schemes %></span>

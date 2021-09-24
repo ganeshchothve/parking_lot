@@ -2,20 +2,20 @@
   <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <div class="modal-header bg-primary white">
+        <div class="modal-header">
           <h3 class="title">
             <%= t("helpers.#{action_name}.link_name", model: InterestedProject.model_name.human) %>
             </h3>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body theme-form">
           <div class="mb-3">
             <%= f.label :status, class: 'control-label' %>
             <% statuses = available_statuses(@interested_project) %>
             <%= f.select :event, options_for_select(statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, @interested_project.status), {prompt: t("mongoid.attributes.interested_project/status.#{@interested_project.status}")}, class: 'selectize', required: 'required', disabled: !policy([current_user_role_group, @interested_project]).editable_field?("event") %>
           </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer text-end">
           <%= f.submit "Save", class: "btn btn-primary" %>
         </div>
       </div>

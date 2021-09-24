@@ -2,12 +2,10 @@
 //= require_self
 
 var aArray = [];
+var wn_width = $(window).width();
+var wn_height = $(window).height();
+var wind_height = $('.header').outerHeight();
 $(document).ready(function () {
-
-  var wn_width = $(window).width();
-  var wn_height = $(window).height();
-  var wind_height = $('.header').outerHeight();
-
   $(".project-slider").bxSlider({
     mode: 'fade',
     infiniteLoop: true,
@@ -35,17 +33,6 @@ $(document).ready(function () {
       $(this).removeClass('hide-pwd').addClass('show-pwd')
       $(this).children().removeClass('fa-eye').addClass('fa-eye-slash');
     }
-  }); 
-  $('.prjt-menu a').on("click", function () {
-    console.log('click');
-    // if (!$(this).hasClass('extLink')) {
-    var href = $(this).attr("rel");
-    var gap = 110;
-
-    $('html,body').animate({
-      scrollTop: $("#" + href).offset().top - gap
-    });
-    // }
   });
   var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
   var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -59,17 +46,7 @@ $(document).ready(function () {
   // var popover = new bootstrap.Popover(document.querySelector('.popover-dismiss'), {
   //   trigger: 'focus'
   // })
-  var header = $("body");
-  $(window).scroll(function () {
-    var windowScroll = $(window).scrollTop();
-    var menuScroll = $('.prjt-menu').offset().top - 80;
-    if (windowScroll >= menuScroll) {
-      header.addClass("fixed-subheader");
-    }
-    if (windowScroll <= 225) {
-      header.removeClass("fixed-subheader");
-    }
-  });
+ 
   $('body').on('click', '.theme-tab a', function (options) {
 
     var opts = {
@@ -138,5 +115,60 @@ $(document).ready(function () {
       }, 1000);
     }
 
+  });
+
+  var childrenSelector = $(".prjt-menu a");
+  var aChildren = $(".prjt-menu a"); // find the a children of the list items
+  if (wn_width <= 700)
+    var gap = 60; // $(".header-wrapper").outerHeight(); //Navigation height
+  else
+    var gap = 70;
+  var aArray = []; // create the empty aArray
+  for (var i = 0; i < childrenSelector.length; i++) {
+    var aChild = aChildren[i];
+    if (!$(aChild).hasClass('extLink')) {
+      if ($(aChild).attr('rel')) {
+        var ahref = $(aChild).attr('rel');
+        aArray.push(ahref);
+      }
+    }
+  }
+  //On Scroll - Add class active to active tab
+  $(window).scroll(function () {
+    var windowPos = $(window).scrollTop(); // get the offset of the window from the top of page
+    var windowHeight = $(window).height(); // get the height of the window
+    var docHeight = $(document).height();
+    for (i = 0; i < aArray.length; i++) {
+      var theID = aArray[i];
+      var divPos = $("#" + theID).offset().top; // get the offset of the div from the top of page
+      var divHeight = $("#" + theID).outerHeight(); // get the height of the div in question
+      if (windowPos >= (divPos - gap) && windowPos < ((divPos - gap) + divHeight)) {
+        if (!$("a[rel='" + theID + "']").hasClass("active")) {
+          $("a[rel='" + theID + "']").addClass("active");
+        }
+      } else {
+        $("a[rel='" + theID + "']").removeClass("active");
+      }
+    }
+
+    //If document has scrolled to the end. Add active class to the last navigation menu
+    if (windowPos + windowHeight == docHeight) {
+      if (!$(".prjt-menu a:not(.extLink):last-child").hasClass("active")) {
+        var navActiveCurrent = $(".active").attr("rel");
+        $("a[rel='" + navActiveCurrent + "']").removeClass("active");
+        $(".prjt-menu a:not(.extLink):last-child").addClass("active");
+      }
+    }
+  });
+  $('.prjt-menu a').on("click", function () {
+    console.log('click')
+    if (!$(this).hasClass('extLink')) {
+      var href = $(this).attr("rel");
+      var gap = 120;
+
+      $('html,body').animate({
+        scrollTop: $("#" + href).offset().top - gap
+      }, 1000);
+    }
   });
 });

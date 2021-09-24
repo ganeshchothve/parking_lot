@@ -4,7 +4,7 @@
 <% @channel_partner = channel_partner%>
 
 <% if current_user.active_channel_partner? %>
-<section class="mt-3">
+<section class="mt-3" id="channel-partner-dashboard">
   <div class="px-4">
     <div class="row">
       <div class="col-lg-9">
@@ -20,9 +20,8 @@
               <option>Year</option>
             </select>
             <div class="quater-list d-sm-inline-block ms-2">
-              <a href="#"
-                class="d-sm-inline-block btn btn-sm pull-right bg-white mr-1 font-medium br-gray-1 br-rd-4 txt-light-blue">Q4
-                (Oct 1 - Dec 31)</a>
+              <input type="text"
+                class="d-sm-inline-block btn btn-sm pull-right bg-white mr-1 font-medium br-gray-1 br-rd-4 txt-light-blue daterangefilter" value="<%= "#{Date.today.strftime('%d/%m/%y')} - #{Date.today.advance(days:1).strftime('%d/%m/%y')}" %>">
             </div>
             <div class="quater-year d-sm-inline-block ms-2">
               <a href="#"
@@ -69,10 +68,10 @@
                 <div class="payment-detls fix-ht">
                   <div class="card br-rd-8 card-shadow  no-br">
                     <div class="px-3 row">
-                      <div class="col-md-6 pt-3">
+                      <div class="col-md-7 pt-3">
                         <h2 class="sec-title mb-0">Payments</h2>
                       </div>
-                      <div class="col-md-6 pt-3 text-end">
+                      <div class="col-md-5 pt-3 text-end">
                         <a href="javascript:;" class="btn-link font-medium">View All</a>
                       </div>
                     </div>

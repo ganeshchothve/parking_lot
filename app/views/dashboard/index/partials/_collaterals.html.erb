@@ -8,7 +8,7 @@
     <div class="project-wrap br-rd-8 card-shadow mb-4">
       <div class="project-list row">
         <div class="project-img">
-          <img src="<%= project.cover_photo %>" class="img-fluid w-100 rounded-top" alt="<%= project.name %> Logo">
+          <div class="project-img-thumb" style="background-image:url(<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>)"></div>
           <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i><%= project.category %></p>
         </div>
         <div class="project-info">
@@ -47,15 +47,15 @@
     <div class="project-wrap br-rd-8 card-shadow mb-4">
       <div class="project-list row">
         <div class="project-img">
-          <img src="<%= project.cover_photo %>" class="img-fluid w-100 rounded-top" alt="<%= project.name %> Logo">
+        <div class="project-img-thumb" style="background-image:url(<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>)"></div>
           <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i><%= project.category %></p>
         </div>
         <div class="project-info">
           <div class="project-info-inner">
             <h2 class="prjt-title"><%= project.name %></h2>
-            <p class="prjt-devlprs"><%= project.developer_name %></p>
+            <p class="prjt-devlprs"><%= project.developer_name || '-' %></p>
             <p class="prjt-location"><i
-                class="fa fa-map-marker-alt fill-white"></i><%= "#{project.micro_market}, #{project.city} " %>
+                class="fa fa-map-marker-alt fill-white"></i><%= "#{project.micro_market.present? ? project.micro_market + ', ': ''}#{project.city}" %>
             </p>
           </div>
           <div class="project-info-outer px-3">

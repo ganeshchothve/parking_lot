@@ -2,13 +2,13 @@
   <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content theme-form">
-        <div class="modal-header bg-primary white">
+        <div class="modal-header">
           <h3 class="title">
             <%= t("helpers.#{action_name}.link_name", model: UserKyc.model_name.human) %>
             </h3>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body theme-form">
           <div class="row">
             <%= f.input :salutation, collection: UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, prompt: :translate, required: true, wrapper_html: { class: 'col-md-2' } %>
 

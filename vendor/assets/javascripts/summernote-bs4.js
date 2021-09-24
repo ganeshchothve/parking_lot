@@ -145,13 +145,13 @@ var dialog = renderer.create('<div class="modal" aria-hidden="false" tabindex="-
         '<div class="modal-dialog">',
         '  <div class="modal-content">',
         (options.title
-            ? '    <div class="modal-header bg-primary white">' +
+            ? '    <div class="modal-header">' +
                 '      <h4 class="title">' + options.title + '</h4>' +
                 '      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
                 '    </div>' : ''),
-        '    <div class="modal-body">' + options.body + '</div>',
+        '    <div class="modal-body  theme-form">' + options.body + '</div>',
         (options.footer
-            ? '    <div class="modal-footer">' + options.footer + '</div>' : ''),
+            ? '    <div class="modal-footer text-end">' + options.footer + '</div>' : ''),
         '  </div>',
         '</div>'
     ].join(''));

@@ -2,11 +2,11 @@
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header bg-primary white">
+        <div class="modal-header">
         <h3 class="title"><%= "#{@api.base.name} - #{t("mongoid.attributes.crm.api.resource_classes.#{@resource.class}")} (#{@resource.resource_name})"%></h3>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body theme-form">
         <% if @response.blank? || !@response.respond_to?(:html_safe) %>
           <%= t("controller.crms.show_response.error") %>
         <% else %>

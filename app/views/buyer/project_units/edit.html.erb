@@ -3,19 +3,19 @@
     <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-          <div class="modal-header bg-primary white">
+          <div class="modal-header">
             <h3 class="title">
                 <%= t('helpers.edit.link_name', model: ProjectUnit.model_name.human) %>
             </h3>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
         </button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body theme-form">
             <nav>
               <div class="nav nav-tabs" role="tablist">
-                <a class="nav-item nav-link active" data-toggle="tab" href="#nav-project-unit-basic" role="tab">Basic Details</a>
+                <a class="nav-item nav-link active" data-bs-toggle="tab" href="#nav-project-unit-basic" role="tab">Basic Details</a>
                 <% if policy([:buyer, @project_unit]).editable_field?("data_attributes") %>
-                  <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-unit-data" role="tab">Data</a>
+                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-project-unit-data" role="tab">Data</a>
                 <% end %>
               </div>
             </nav>
@@ -36,7 +36,7 @@
               <% end %>
             </div>
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer text-end">
             <%= f.submit "Submit", class: 'btn btn-primary' %>
           </div>
         </div>

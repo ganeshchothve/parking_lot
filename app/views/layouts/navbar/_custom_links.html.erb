@@ -10,10 +10,10 @@
 <% end %>
 
 <% if links.present? %>
-  <li class="nav-item d-none d-lg-block">
-    <div class="dropdown">
-      <%= active_link_to t('global.custom'), "javascript:;", active: [CustomPolicy.custom_methods.map{|x| 'admin/'+x}, ['index']], class: "nav-link dropdown-toggle", data: {toggle: 'dropdown'},  id: "dropdownMenuLeft3", "data-bs-toggle": "dropdown", "aria-expanded": "false" %>
-      <div class="dropdown-menu dropdown-menu-right menu-top bottom-menu" aria-labelledby="dropdownMenuLeft3">
+  <li class="nav-item d-none d-lg-block accordion">
+                <div class="accordion-item bg-menu rounded-none border-0 dropdown">
+      <%= active_link_to t('global.custom'), "javascript:;", active: [CustomPolicy.custom_methods.map{|x| 'admin/'+x}, ['index']], class: "nav-link dropdown-toggle", data: {toggle: 'dropdown'},  id: "dropdownMenuLeft3", "data-bs-toggle": "collapse", "data-bs-target":"#dashboardMore", "aria-expanded": "false" %>
+      <div id="dashboardMore" class="accordion-collapse collapse" aria-labelledby="dropdownMenuLeft3">
         <% links.each do |link| %>
           <%= active_link_to link[:name], link[:link], class: "dropdown-item" %>
         <% end %>
