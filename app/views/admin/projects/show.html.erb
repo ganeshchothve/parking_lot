@@ -1,4 +1,6 @@
 <% project_labels = t('mongoid.attributes.project') %>
+<% interest_access = policy([current_user_role_group, InterestedProject]).index? %>
+<% interest = current_user.interested_projects.in(status: %w(subscribed approved)).where(project_id: @project.id).presence %>
 <section class="prjt-details-sec">
     <div class="px-3">
         <div class="row">
@@ -17,10 +19,19 @@
                                 <%= render "#{current_user_role_group}/projects/links", project: @project %>
                             </div>
                         </div>
-                            <a href="javascript:;" class="prjt-lauchbook"><i class="fa fa-lock fill-theme me-3"></i>Launchbook</a>
+                        <%= link_to_if (launchbook_url = @project.assets.where(document_type: 'sales_presentation').first&.file&.url&.presence), '<i class="fa fa-lock fill-theme me-3"></i>Launchbook'.html_safe, launchbook_url, class: 'prjt-lauchbook', target:'_blank' do |name|
+                            link_to(name, 'javascript:;', class: 'prjt-lauchbook')
+                          end
+                        %>
                             <div class="prjt-share-save pt-3 pb-2">
                                 <a href="javascript:;" class="share-location me-3"><i class="fa fa-share-alt fill-theme me-2"></i>Share location</a>
-                                <a href="javascript:;" class="prjt-save"><i class="fa fa-heart fill-theme me-2"></i>Save</a>
+                                <% if interest_access %>
+                                  <a href="javascript:;" class="prjt-save"></a>
+                                  <%= link_to_unless interest.present?, '<i class="fa fa-heart fill-theme me-2"></i>Save'.html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: @project.id, event: 'subscribe'}), class: 'prjt-save' do |name|
+                                    '<i class="fa fa-heart fill-danger me-2"></i>'.html_safe
+                                  end
+                                  %>
+                                <% end %>
                             </div>
                         </div>
                     </div>
@@ -76,19 +87,21 @@
                                     <div class="col-5 overview-left float-start">
                                         <p>
                                             <span>Configuration</span>
-                                            1 & 2 BHK Flats | 1034 - 1427 sqft
+                                            <%= DashboardDataProvider.configurations(@project).to_sentence %> Flats <%= @project.project_towers.present? ? "| #{@project.project_units.min(:saleable).round} - #{@project.project_units.max(:saleable).round} sqft" : '' %>
                                         </p>
-                                        <p>
-                                            <span>Property Value</span>
-                                            99.3 L - 4.4 Cr
-                                        </p>
+                                        <% if @project.project_units.count > 0 %>
+                                          <p>
+                                              <span>Property Value</span>
+                                              <%= @project.project_units.gt(all_inclusive_price: 0).min(:all_inclusive_price).to_s.match(/(\d+)\d{5}/).try(:captures).try(:first) %> L - <%= @project.project_units.gt(all_inclusive_price: 0).max(:all_inclusive_price).to_s.match(/(\d+)\d{5}/).try(:captures).try(:first) %> L
+                                          </p>
+                                        <% end %>
                                         <p>
                                             <span>Possession Date</span>
                                             <%= @project.possession.present? ? @project.possession.strftime('%d %b, %Y') :  '-' %>
                                         </p>
                                     </div>
                                     <div class="col-7 ps-3 overview-desc float-end">
-                                        <p><%= @project.description || '-' %></p>
+                                        <p><%= @project.description&.html_safe %></p>
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +113,7 @@
                                 <div class="tab-body col-12 float-start pt-3">
                                     <div class="col-6 float-start">
                                         <div class="location-list">
-                                            <p><i class="fa fa-map-marker-alt me-2"></i>Goregoan West, Mumbai</p>
+                                          <p><i class="fa fa-map-marker-alt me-2"></i><%= "#{@project.micro_market}, #{@project.city}" %></p>
                                             <ul>
                                                 <li>
                                                     <p><span>0.2 km</span> Upcoming Mall And Theatre</p>
@@ -123,23 +136,27 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="col-6  float-end">
-                                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15069.598151176102!2d72.8612272!3d19.2214116!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb2ecac9beb577d5!2sSky%20City%20by%20Oberoi%20Realty!5e0!3m2!1sen!2sin!4v1625217784455!5m2!1sen!2sin" width="300" height="250" style="border:0;" allowfullscreen="" loading="lazy" class="float-end"></iframe>
-                                    </div>
+                                    <% if @project.embed_map_tag.present? %>
+                                      <div class="col-6  float-end">
+                                        <%= @project.embed_map_tag.html_safe %>
+                                      </div>
+                                    <% end %>
                                 </div>
                             </div>
                             <div class="prjt-desc-tab col-12 pt-4 float-start" id="tab-configure">
                                 <div class="tab-header col-12 float-start">
                                     <h2 class="tab-title float-start">Configurations</h2>
+                                    <!--
                                     <p class="float-end">EMI's starting at <strong>₹ 25,000</strong> /month</p>
+                                    -->
                                 </div>
                                 <div class="tab-body col-12 float-start">
                                     <div class="col-12">
                                         <div class="prjt-configure-list">
                                             <h2>Select Type</h2>
                                             <div class="tower-type tab-link nav nav-tabs border-bottom-0" role="tablist">
-                                            <% @project.project_units[0..4].each_with_index do | uc, index | %>
-                                                <a href="javascript:;" class="nav-item nav-link <%= (index == 0) ? "active" : "" %>" data-bs-toggle="tab" data-bs-target="#floor_<%= uc.unit_configuration_name %>" role="tab"><%= uc.unit_configuration_name %> | (<%= uc.saleable %> sq.ft)</a>
+                                              <% @project.project_units.group_by{ |pu| pu.unit_configuration_name }.each_with_index do | (uc, units), index | %>
+                                                <a href="javascript:;" class="nav-item nav-link <%= (index == 0) ? "active" : "" %>" data-bs-toggle="tab" data-bs-target="#floor_<%= uc %>" role="tab"><%= uc %> | (<%= units.first&.saleable %> sq.ft)</a>
                                             <% end %>
                                                 <!--<a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#type-bhk-11" role="tab">1 BHK | (1427 sq.ft)</a>
                                                 <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#type-bhk-2" role="tab">2 BHK | (1427 sq.ft)</a>-->
@@ -148,11 +165,12 @@
                                     </div>
                                     <div class="col-12 float-start configration-tab">
                                         <div class="tab-content br-1 br-rd-8 py-1">
-                                        <% @project.project_units[0..4].each_with_index do | uc, index | %>
-                                            <div class="tab-pane fade show <%= (index == 0) ? "active" : "" %>" id="floor_<%= uc.unit_configuration_name %>" role="tabpanel">
+                                        <% @project.project_units.group_by{ |pu| pu.unit_configuration_name }.each_with_index do | (uc, units), index | %>
+                                          <% unit = units.first %>
+                                            <div class="tab-pane fade show <%= (index == 0) ? "active" : "" %>" id="floor_<%= uc %>" role="tabpanel">
                                                 <div class="col-5 float-start">
-                                                    <% uc.assets.each do | img| %>
-                                                    <img src="<%= img.file.url %>" class="plan-img img-fluid">
+                                                    <% unit&.assets&.each do | img| %>
+                                                      <img src="<%= img.file.url %>" class="plan-img img-fluid">
                                                     <% end %>
                                                     <p class="ps-2"><i class="fa fa-eye me-2"></i>220 Interests</p>
                                                 </div>
@@ -161,16 +179,19 @@
                                                         <div class="left-info col-12 float-start pb-2">
                                                             <span><i class="fa fa-building"></i></span>
                                                             <div class="prjt-info">
-                                                                <p><%= uc.project_tower_name %></p>
-                                                                <span><%= uc.floor %> Floors | 2 Apartments per floor</span>
+                                                                <p><%= unit.project_tower_name %></p>
+                                                                <span><%= units.collect(&:floor).max %> Floors | <%= units.map(&:floor_order).uniq.count %> Apartments per floor</span>
                                                             </div>
                                                         </div>
                                                         <div class="col-6 float-start">
-                                                            <p class="prjt-short-info"><%= uc.unit_configuration_name %> (<%= uc.saleable %> sq.ft) ₹ <%= uc.all_inclusive_price %></p>
+                                                            <p class="prjt-short-info"><%= uc %> (<%= unit.saleable %> sq.ft) ₹ <%= unit.all_inclusive_price %></p>
                                                         </div>
-                                                        <div class="col-6 float-end">
-                                                            <a href="javascript:;" class="cost-sheet-btn float-end">View Cost Sheet</a>
-                                                        </div>
+                                                        <% avl_unit = units.find {|x| x.status == 'available'} %>
+                                                        <% if avl_unit %>
+                                                          <div class="col-6 float-end">
+                                                              <%= link_to 'View Cost Sheet', quotation_admin_project_unit_path(avl_unit, layout: false), class: 'cost-sheet-btn float-end modal-remote-form-link', style: 'height: auto' %>
+                                                          </div>
+                                                        <% end %>
                                                         <div class="col-12 bt-bt mt-3 float-start pt-2">
                                                             <div class="col-6 float-start">
                                                                 <p class="points-list-title">Uniques Selling Points</p>
@@ -284,7 +305,7 @@
                                                                    <a href="<%= asset.file.url %>" target="_blank"> <img src='<%= asset_path "#{filetype}-icon.png" %>' class="img-fluid"></a>
                                                                 </div>
                                                                 <div class="docs-info">
-                                                                    <span>Home overvi..</span>
+                                                                    <span><%= asset.file_name %></span>
                                                                     <span class="video-download">
                                                                     <a href="<%= asset.file.url %>" target="_blank">
                                                                         <i class="fa fa-download"></i>
@@ -320,7 +341,7 @@
                                                     <li class="amenity_<%= type %>">
                                                     <div class="amenities-wrap">
                                                         <span>
-                                                            <%# <img src='<%= asset_path "amenities/amenity-#{type.gsub("_", "-")}.svg" %>'> %>
+                                                          <!-- <img src='<%#= asset_path "amenities/amenity-#{type.gsub("_", "-")}.svg" %> -->
                                                         </span>
                                                     <p><%= type.titleize %></p>
                                                     </div>
@@ -343,47 +364,41 @@
                                             <% @project.specifications.each do |spec| %>
                                                 <div class="col-lg-6 mb-3">
                                                 <h3><%= spec.category.titleize %></h3>
-                                                <p><%= spec.description.html_safe %></p>
+                                                <p><%= spec.description&.html_safe %></p>
                                                 </div>
-                                              <% end %>                                                
+                                              <% end %>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <% @project.timeline_updates.present? %>
                             <div class="prjt-desc-tab col-12 bt-bt float-start" id="tab-timeline">
                                 <div class="tab-header col-12 float-start pb-3">
                                     <h2 class="tab-title">Project Timeline</h2>
                                 </div>
                                 <div class="tab-body pb-5">
+                                  <% if @project.timeline_updates.present? %>
                                     <div class="col-12 float-start pb-2">
                                         <div class="prjt-current-status position-relative pb-5">
                                             <div class="line">
                                                 <span class="inner-line"></span>
                                             </div>
                                             <div class="current-status-tooltip">
-                                                <p>Current Status: Ongoing</p>
+                                              <p>Current Status: <%= @project.category %></p>
                                             </div>
-                                            <div class="prjt-start">
+                                            <% tu_count = @project.timeline_updates.count %>
+                                            <% @project.timeline_updates.asc(:date).each_with_index do |tu, index| %>
+                                              <div class="prjt-<%= index.zero? ? 'start' : (index == tu_count-1 ? 'end' : 'status')%>">
                                                 <p>
-                                                    <span>Feb 2019</span>
-                                                    <span>Started</span>
+                                                <span><%= tu.date.strftime('%b %Y') %></span>
+                                                <span><%= tu.name %></span>
                                                 </p>
-                                            </div>
-                                            <div class="prjt-status">
-                                                <p>
-                                                    <span>Jan 2022</span>
-                                                    <span>Under Construction</span>
-                                                </p>
-                                            </div>
-                                            <div class="prjt-end">
-                                                <p>
-                                                    <span>Jun 2023</span>
-                                                    <span>Possession</span>
-                                                </p>
-                                            </div>
+                                              </div>
+                                            <% end %>
                                         </div>
                                     </div>
+                                  <% end %>
                                 </div>
                               </div>
                               <div class="prjt-desc-tab col-12 bt-bt float-start" id="">
@@ -427,6 +442,7 @@
                     </div>
                 </div>
                 <!-- Newly Launched ---------->
+                <!--
                 <div class="row">
                     <div class="col-lg-12 mt-5 mb-3">
                         <h2 class="sec-title">Similar Projects to Embassy Developers</h2>
@@ -435,8 +451,8 @@
                         <div class="project-wrap br-rd-8 card-shadow">
                             <div class="project-list row">
                                 <div class="project-img col-lg-4">
-                                    <img src="<%= asset_path 'project-item-image.jpg' %>" class="img-fluid">
-                                    <!-- <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i>Just Launch</p> -->
+                                    <img src="<%#= asset_path 'project-item-image.jpg' %>" class="img-fluid">
+                                    <%# <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i>Just Launch</p> %>
                                 </div>
                                 <div class="project-info col-lg-8">
                                     <div class="project-info-inner">
@@ -462,8 +478,8 @@
                         <div class="project-wrap br-rd-8 card-shadow">
                             <div class="project-list row">
                                 <div class="project-img col-lg-4">
-                                    <img src="<%= asset_path 'project-item-image.jpg' %>" class="img-fluid">
-                                    <!-- <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i>Just Launch</p> -->
+                                    <img src="<%#= asset_path 'project-item-image.jpg' %>" class="img-fluid">
+                                    <%# <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i>Just Launch</p> %>
                                 </div>
                                 <div class="project-info col-lg-8">
                                     <div class="project-info-inner">
@@ -486,22 +502,25 @@
                         </div>
                     </div>
                 </div>
+                -->
+                <% if Project.ne(id: @project.id).where(developer_id: @project.developer_id).present? %>
                 <div class="row mb-5">
                     <div class="col-lg-12 mt-5 mb-3">
-                        <h2 class="sec-title">Other projects by Embassy</h2>
+                      <h2 class="sec-title">Other projects by <%= @project.developer_name %></h2>
                     </div>
+                    <% Project.ne(id: @project.id).where(developer_id: @project.developer_id).sample(2).each do |project| %>
                     <div class="col-lg-6">
                         <div class="project-wrap br-rd-8 card-shadow">
                             <div class="project-list row">
                                 <div class="project-img">
-                                    <img src="<%= asset_path 'project-item-image.jpg' %>" class="img-fluid">
-                                    <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i>Just Launch</p>
+                                    <img src="<%= project.cover_photo&.url || (asset_path 'project-item-image.jpg') %>" class="img-fluid">
+                                    <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i><%= project.category&.titleize || 'Just Launch' %></p>
                                 </div>
                                 <div class="project-info">
                                     <div class="project-info-inner">
-                                        <h2 class="prjt-title">34 Park Estate</h2>
-                                        <p class="prjt-devlprs">Embassy Developers</p>
-                                        <p class="prjt-location"><i class="fa fa-map-marker-alt fill-white"></i>Khar West, Mumbai</p>
+                                      <h2 class="prjt-title"><%= project.name %></h2>
+                                      <p class="prjt-devlprs"><%= project.developer_name %></p>
+                                      <p class="prjt-location"><i class="fa fa-map-marker-alt fill-white"></i><%= "#{project.micro_market}, #{project.city}" %></p>
                                     </div>
                                     <div class="project-info-outer px-3">
                                         <div class="row">
@@ -510,7 +529,7 @@
                                             </div>
                                             <div class="col-lg-11 pe-2 ps-3">
                                                 <p class="list-txt project-deal mb-2">Hot Deal</p>
-                                                <p class="list-txt project-desc mb-0">2.5% Brokerage incentive on bookings made within the first week of the launch date</p>
+                                                <!-- <p class="list-txt project-desc mb-0">2.5% Brokerage incentive on bookings made within the first week of the launch date</p> -->
                                             </div>
                                         </div>
                                     </div>
@@ -518,35 +537,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="project-wrap br-rd-8 card-shadow">
-                            <div class="project-list row">
-                                <div class="project-img">
-                                    <img src="<%= asset_path 'project-item-image.jpg' %>" class="img-fluid">
-                                    <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i>Just Launch</p>
-                                </div>
-                                <div class="project-info">
-                                    <div class="project-info-inner">
-                                        <h2 class="prjt-title">34 Park Estate</h2>
-                                        <p class="prjt-devlprs">Embassy Developers</p>
-                                        <p class="prjt-location"><i class="fa fa-map-marker-alt fill-white"></i>Khar West, Mumbai</p>
-                                    </div>
-                                    <div class="project-info-outer px-3">
-                                        <div class="row">
-                                            <div class="col-lg-1 ps-0 pe-0">
-                                                <i class="fa fa-fire fill-danger"></i>
-                                            </div>
-                                            <div class="col-lg-11 pe-2 ps-3">
-                                                <p class="list-txt project-deal mb-2">Hot Deal</p>
-                                                <p class="list-txt project-desc mb-0">2.5% Brokerage incentive on bookings made within the first week of the launch date</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <% end %>
                 </div>
+                <% end %>
             </div>
             <div class="col-lg-4 prjt-right-panel px-3 mt-2">
                 <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card">
@@ -582,47 +575,43 @@
                                 </li>
                             </ul>
                             <div class="right-box-footer py-3">
-                                <p class="mt-2">24 partners are interested</p>
-                                <a href="javascript:;" class="btn-primary theme-btn float-end mb-3">I am interested!</a>
+                              <p class="mt-2"><%= InterestedProject.in(status: %w(subscribed approved)).where(project_id: @project.id).count %> partners are interested</p>
+
+                                <% if interest_access %>
+                                  <% unless interest %>
+                                    <%= link_to "I am interested!", admin_user_interested_projects_path(current_user, interested_project: {project_id: @project.id, event: 'subscribe'}), method: :post, class: 'btn-primary theme-btn float-end mb-3' %>
+                                  <% end %>
+                                <% end %>
                             </div>
                         </div>
                     </div>
                 </div>
+                <% if @project.offers.present? %>
                 <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card">
                     <div class="row">
                         <div class="col-md-12 pt-3 px-4">
                             <h3 class="card-title">Customers offers</h3>
                             <ul class="project-list list-unstyled row mb-0 pb-1">
+                              <% @project.offers.each do |offer| %>
                                 <li class="px-3">
                                     <div class="list-wrap row">
                                         <div class="col-lg-12">
-                                            <p class="list-title mt-2">From Launchpad</p>
+                                          <p class="list-title mt-2">From <%= offer.provided_by&.titleize %></p>
                                         </div>
                                         <div class="col-lg-1">
                                             <i class="fa fa-badge-percent fill-success fa-sm"></i>
                                         </div>
                                         <div class="col-lg-11">
-                                            <p class="list-txt mb-0">Flat 3.5% off on properties booked between the Mar 28, 2021 to Apr 1, 2020</p>
+                                          <p class="list-txt mb-0"><%= offer.short_description %></p>
                                         </div>
                                     </div>
                                 </li>
-                                <li class="px-3">
-                                    <div class="list-wrap row">
-                                        <div class="col-lg-12">
-                                            <p class="list-title mt-2">From Developers</p>
-                                        </div>
-                                        <div class="col-lg-1">
-                                            <i class="fa fa-badge-percent fill-success fa-sm"></i>
-                                        </div>
-                                        <div class="col-lg-11">
-                                            <p class="list-txt mb-0">Flat 3.5% off on properties booked between the Mar 28, 2021 to Apr 1, 2020</p>
-                                        </div>
-                                    </div>
-                                </li>
+                              <% end %>
                             </ul>
                         </div>
                     </div>
                 </div>
+                <% end %>
             </div>
         </div>
     </div>

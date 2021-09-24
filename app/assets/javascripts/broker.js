@@ -28,56 +28,6 @@
 //= require amura
 //= require plugins/jsencrypt
 
-var ctx = document.getElementById('myChart');
-var myChart = new Chart(ctx, {
-  type: 'bar',
-  data: {
-    labels: ['Brahma Suncity 100 Customers', 'Bhankti Elegance 66 Customers', 'Padma Shree Housing Society 56 Customers'],
-    datasets: [
-      {
-        label: '',
-        data: 5,
-        backgroundColor: Amura.chart_colors.light_orange,
-      },
-      {
-        label: '',
-        data: 28,
-        backgroundColor: Amura.chart_colors.light_orange,
-      },
-      {
-        label: '',
-        data: 50,
-        backgroundColor: Amura.chart_colors.light_orange,
-      },
-    ]
-  },
-  options: {
-    indexAxis: 'x',
-    plugins: {
-      title: {
-        display: false,
-        text: ''
-      }
-    },
-    responsive: true,
-    scales: {
-      x: {
-        stacked: true
-      },
-      y: {
-        ticks: {
-          mirror: true,
-          labelOffset: -25,
-          padding: 10
-        },
-        stacked: true,
-        grid: {
-          display: false
-        }
-      }
-    }
-  }
-});
 var window_wt = $(window).width();
 var window_ht = $(window).height();
 $(document).ready(function () {

@@ -10,7 +10,9 @@
 <% if policy([:admin, TokenType]).index? %>
   <%= link_to TokenType.model_name.human(count: 2), admin_project_token_types_path(project), class: 'dropdown-item' %>
 <% end %>
-<%= link_to TimeSlot.model_name.human(count: 2), admin_project_time_slots_path(project), class: 'dropdown-item' %>
+<% if policy([:admin, TimeSlot]).index? %>
+  <%= link_to TimeSlot.model_name.human(count: 2), admin_project_time_slots_path(project), class: 'dropdown-item' %>
+<% end %>
 <% if policy([:admin, IncentiveScheme]).index? %>
   <%= link_to IncentiveScheme.model_name.human(count: 2), admin_incentive_schemes_path(fltrs: {project_id: project.id.to_s}), class: 'dropdown-item' %>
 <% end %>

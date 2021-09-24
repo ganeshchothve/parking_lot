@@ -197,39 +197,38 @@
   </div>
 </div>
 <%= javascript_tag do %>
-var units =
-<%= raw @units.to_json(methods: [:all_inclusive_price, :calculated_costs, :calculated_data, :calculated_costs]) %>;
-var assets = <%= raw Asset.in(assetable_id: @units.pluck(:id)).to_json %>
+  var units =
+  <%= raw @units.to_json(methods: [:all_inclusive_price, :calculated_costs, :calculated_data, :calculated_costs]) %>;
+  var assets = <%= raw Asset.in(assetable_id: @units.pluck(:id)).to_json %>
 
-$(document).on('click', '[data-jquery-selector="unit-card"]', function(){
-var unit_id = $(this).data("unit-id");
-$('[data-jquery-selector="unit-card"]').removeClass("selected-aprt");
-$(this).addClass("selected-aprt");
-$("#project_unit_id").val(unit_id);
-$('.next-btn').removeAttr('disabled')
-var unit = _.find(units, function(u){ return u._id == unit_id });
-var unit_assets = _.filter(assets, function(a){return a.assetable_id == unit_id});
-showUnitData(unit, unit_assets);
-let leadId = <%= raw @search.lead_id.to_json %>
-let currentUserRoleGroup = <%= raw current_user_role_group.to_json %>
-if(currentUserRoleGroup == "buyer"){
-$(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/project_units/"+ unit_id + "/quotation?layout=false");
-}else{
-$(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/leads/"+ leadId +"/project_units/" + unit_id +
-"/quotation?layout=false");
-}
-});
-$('#floorPlanImage').on('shown.bs.modal', function(){
-$('.zoom').smoothZoom({
-width: '100%',
-height :'100%',
-pan_BUTTONS_SHOW: "YES",
-pan_LIMIT_BOUNDARY: "YES",
-button_SIZE: 15,
-button_ALIGN: "top right",
-zoom_MAX: 300,
-border_TRANSPARENCY: 0,
-button_ICON_IMAGE: "<%= asset_path('icons.png') %>"
-});
-});
+  $(document).on('click', '[data-jquery-selector="unit-card"]', function(){
+    var unit_id = $(this).data("unit-id");
+    $('[data-jquery-selector="unit-card"]').removeClass("selected-aprt");
+    $(this).addClass("selected-aprt");
+    $("#project_unit_id").val(unit_id);
+    $('.next-btn').removeAttr('disabled')
+    var unit = _.find(units, function(u){ return u._id == unit_id });
+    var unit_assets = _.filter(assets, function(a){return a.assetable_id == unit_id});
+    showUnitData(unit, unit_assets);
+    let leadId = <%= raw @search.lead_id.to_json %>
+    let currentUserRoleGroup = <%= raw current_user_role_group.to_json %>
+    if(currentUserRoleGroup == "buyer"){
+      $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/project_units/"+ unit_id + "/quotation?layout=false");
+    }else{
+      $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/leads/"+ leadId +"/project_units/" + unit_id + "/quotation?layout=false");
+    }
+  });
+  $('#floorPlanImage').on('shown.bs.modal', function(){
+    $('.zoom').smoothZoom({
+      width: '100%',
+      height :'100%',
+      pan_BUTTONS_SHOW: "YES",
+      pan_LIMIT_BOUNDARY: "YES",
+      button_SIZE: 15,
+      button_ALIGN: "top right",
+      zoom_MAX: 300,
+      border_TRANSPARENCY: 0,
+      button_ICON_IMAGE: "<%= asset_path('icons.png') %>"
+    });
+  });
 <% end %>

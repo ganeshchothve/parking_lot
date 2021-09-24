@@ -118,6 +118,7 @@ class ChannelPartner
 
   validates :gstin_number, format: { with: /\A([0]{1}[1-9]{1}|[1-2]{1}[0-9]{1}|[3]{1}[0-7]{1})([a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[zZ]{1}[0-9a-zA-Z]{1})+\z/i, message: 'is not valid format' }, allow_blank: true
   validates :rera_id, format: { with: /\A([A-Za-z])\d{11}\z/i, message: 'is not valid format' }, allow_blank: true
+  validate :docs_required_for_approval, on: :submit_for_approval
 
   accepts_nested_attributes_for :bank_detail, :address
 
@@ -175,6 +176,17 @@ class ChannelPartner
     doc_types << 'rera_certificate' if self.rera_applicable?
     doc_types << 'gst_certificate' if self.gst_applicable?
     doc_types
+  end
+
+  def docs_required_for_approval
+    docs_required = []
+    self.doc_types.each do |dt|
+      docs_required << dt unless self.assets.where(document_type: dt).present?
+    end
+    if docs_required.present?
+      docs_msg = docs_required.collect {|x| I18n.t("mongoid.attributes.channel_partner/file_types.#{x}")}.to_sentence
+      self.errors.add(:base, "Please upload #{docs_msg}")
+    end
   end
 
   private

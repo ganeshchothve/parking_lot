@@ -140,6 +140,12 @@
       <%= f.text_field :cin_number, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("cin_number") %>
     </div>
   </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :embed_map_tag, class: '' %>
+      <%= f.text_field :embed_map_tag, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("embed_map_tag") %>
+    </div>
+  </div>
 </div>
 <div class="card mt-3">
   <div class="card-header">
