@@ -110,6 +110,19 @@ class SelldoLeadUpdater
     end
   end
 
+  def add_slot_details(lead, payload={})
+    if payload.present?
+      params = {not_clear_custom_fields: true}
+      params['custom_slot_details'] = payload['slot_details'] if payload['slot_details'].present?
+      params['custom_slot_status'] = payload['slot_status'] if payload['slot_status'].present?
+
+      if params.present?
+        custom_hash = {lead: params}
+        sell_do(lead, custom_hash)
+      end
+    end
+  end
+
   def sell_do(lead, data={})
     MixpanelPusherWorker.perform_async(lead.mixpanel_id, stage, {}) if current_client.mixpanel_token.present?
 

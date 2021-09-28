@@ -2,7 +2,7 @@ module BulkUpload
   class Receipt < Base
     def initialize(bulk_upload_report)
       super(bulk_upload_report)
-      @correct_headers = ['ERP Id', 'Selldo Lead Id', 'Phone', 'Email', 'Payment Mode', 'Payment Type', 'Token Type', 'Cheque Number / Transaction Identifier', 'Issuing Bank', 'Branch', 'Date of Issuance', 'Total Amount', 'Status', 'Date of Clearance', 'Slot Date', 'Time Slot']
+      @correct_headers = ['ERP Id', 'Selldo Lead Id', 'Phone', 'Email', 'Payment Mode', 'Payment Type', 'Token Type', 'Cheque Number / Transaction Identifier', 'Issuing Bank', 'Branch', 'Date of Issuance', 'Total Amount', 'Status', 'Date of Clearance', 'Time Slot Id']
     end
 
     def process_csv(csv)
@@ -117,28 +117,15 @@ module BulkUpload
                 attrs[:total_amount] = row.field(11).to_s.strip if row.field(11).to_s.strip.present?
 
                 #time slot
-                time_slot_attrs = {}
-                if slot_date = row.field(14).to_s.strip.presence
-                  begin
-                    time_slot_attrs[:date] = Date.strptime(slot_date, '%d-%b-%y')
-                  rescue ArgumentError => e
-                    (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push("#{row.headers.fetch(14)}: Invalid Date Format")).uniq
+                if time_slot_id = row.field(14).to_s.strip.presence
+                  if time_slot = project.time_slots.where(number: time_slot_id).first.presence
+                    attrs[:time_slot_id] = time_slot.id
+                  else
+                    (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push("#{row.headers.fetch(14)}: #{time_slot_id} not found")).uniq
                     bur.failure_count += 1
                     next
                   end
                 end
-                if time_slot = row.field(15).to_s.strip.presence
-                  begin
-                    start_time, end_time = time_slot.split(' - ')
-                    time_slot_attrs[:start_time] = Time.use_zone(user.time_zone) { Time.zone.parse(start_time, time_slot_attrs[:date]) }
-                    time_slot_attrs[:end_time] = Time.use_zone(user.time_zone) { Time.zone.parse(end_time, time_slot_attrs[:date]) }
-                  rescue StandardError => e
-                    (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push("#{row.headers.fetch(15)}: #{e.message}")).uniq
-                    bur.failure_count += 1
-                    next
-                  end
-                end
-                attrs[:time_slot_attributes] = time_slot_attrs
 
                 receipt = ::Receipt.new(attrs)
                 if receipt.save

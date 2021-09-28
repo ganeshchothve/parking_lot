@@ -172,7 +172,6 @@ module BookingDetailStateMachine
     # Updating blocked date of project_unit to today and  auto_release_on will be changed to blocking_days more from current auto_release_on.
     def after_blocked_event
       _lead = lead
-      _lead.closing_manager_id = created_by_id if status == 'blocked' && _lead.closing_manager_id.blank?
       _lead.booking_done!
       _project_unit = project_unit
       _project_unit.blocked_on = Date.today
@@ -361,6 +360,7 @@ module BookingDetailStateMachine
 
     def update_selldo!
       SelldoLeadUpdater.perform_async(lead_id.to_s, {stage: status})
+      SelldoLeadUpdater.perform_async(lead_id.to_s, {action: 'add_slot_details', slot_status: 'booked'})
     end
 
   end

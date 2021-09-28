@@ -93,6 +93,17 @@ class SiteVisit
     self.save
   end
 
+  def slot_status
+    case status.to_s
+    when 'scheduled', 'pending'
+      'assigned'
+    when 'missed'
+      'missed'
+    when 'conducted'
+      'visited'
+    end
+  end
+
   private
   def existing_scheduled_sv
     self.errors.add :base, 'One Scheduled Site Visit Already Exists' if SiteVisit.where(lead_id: lead_id, status: 'scheduled').present?
