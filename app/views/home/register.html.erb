@@ -8,7 +8,7 @@
           <% if template.present? %>
             <%= get_view_erb(template, check_active: true) %>
           <% end %>
-          <%= simple_form_for @lead, url: check_and_register_path, remote: true, local: true, html: { class: "modal-remote-form validate-form", "data-resource-type": global_labels['lead'], "data-type": "json" } do |f| %>
+          <%= simple_form_for @lead, url: check_and_register_path, remote: true, local: true, html: { class: "modal-remote-form validate-form theme-form", "data-resource-type": global_labels['lead'], "data-type": "json" } do |f| %>
             <%= render 'admin/leads/non_selldo_form_fields', f: f, lead: @lead %>
             <%= submit_tag "Submit", class: 'btn btn-primary' %>
           <% end %>
