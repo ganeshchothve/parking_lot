@@ -3,7 +3,9 @@
     <div class="col-lg-12">
       <div class="card-header bg-white pb-0">
         <div class="p-2 py-3">
-          <h2 class="fn-24 theme-txt-color font-normal mb-4">Create Booking</h2>
+          <h2 class="fn-24 theme-txt-color font-normal">Create Booking</h2>
+            <p class="fn-16 theme-txt-color mb-4"><%= t('controller.searches.new.booking_hint', name: @lead.name) %></p>
+            
           <div class="d-flex justify-content-start">
             <p class="fn-16 theme-txt-color mb-0"><i class="fa fa-check-circle me-2 fill-success"></i>
               <%= link_to t('global.filter_project'), edit_search_path, class: "modal-remote-form-link theme-txt-color step-change-btn" %>

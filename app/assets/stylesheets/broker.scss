@@ -802,7 +802,7 @@ a{
 
 .result-list{
 	&.active, &.active .card-footer{
-		background-color: #F9FAFC!important;
+		background-color: #e6e6e6!important;
 	}
 }
 
@@ -2329,6 +2329,7 @@ select.form-control{
 	.book-box-info{
 		list-style: none;
 		padding:0px;
+		text-align: center;
 		li{
 			display: inline-block;
 			margin: 0px 5px;
@@ -2355,6 +2356,7 @@ select.form-control{
 		list-style: none;
 		padding:0px;
 		margin-bottom: 7px;
+		text-align: center;
 		li{
 			display: inline-block;
 			margin: 0px 0px;
@@ -2377,7 +2379,9 @@ select.form-control{
 		position: relative;
 		margin: 0 auto;
 		display: block;
-		padding: 15px 0px;
+		padding: 15px 0px;    
+		text-align: center;
+		width: fit-content;
 		.floor-number{
 			position: absolute;
 			left: -20px;
@@ -2429,6 +2433,18 @@ select.form-control{
 	position: relative;
 	top: -40px;
 	padding-left: 20px;
+}
+.bookings.scroll-fixed-height {
+    height: 82vh;
+    overflow-y: auto;
+}
+.checkout-menu-list{
+	a{
+		cursor: pointer;
+	}
+	a.active{
+		color: $primary;
+	}
 }
 /*************** CP **************/
 .cp-signup-sec{
@@ -2987,16 +3003,18 @@ select.form-control{
     margin-bottom: 5px;
 	}
 	input, select, textarea{
-		border: 0.5px solid #949494;
+	border: 0.5px solid #949494;
     border-radius: 4px;    
     padding: 8px 10px;
     width: 100%;
     font-size: 14px;
 	line-height: 22px;
-	background-color: #fff;
 	}
 	.mb-3 input, textarea, select{
 		height: 36px;
+	}
+	select, textarea{
+		background-color: #fff;
 	}
 	input.form-check-input{
 		height: auto;
