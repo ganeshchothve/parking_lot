@@ -1192,6 +1192,14 @@ select.form-control{
 					top: inherit;
 				    	bottom: 0px
 				}
+				.accordion-item{
+					.accordion-collapse{
+						background-color: rgba(62,72,92,0.61);
+						a{
+							padding: 10px 0px 10px 30px;
+						}
+					}
+				}
 			}
 		}
 	}

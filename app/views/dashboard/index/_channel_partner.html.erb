@@ -131,9 +131,9 @@
 
 
       </div>
-      <div class="col-lg-3">
+      <div class="col-lg-3 mt-2 pt-1">
         <!-- Events ---------->
-        <div class="card br-rd-8 card-shadow no-br">
+        <div class="card br-rd-8 card-shadow no-br mt-4">
           <div class="">
             <div class="col-md-12 pt-3 px-3">
               <h2 class="sec-title mb-0">Upcoming Events</h2>
@@ -355,14 +355,14 @@ type: 'get'
           </div>
         </div>
       </div>
-      <div class="cp-form-wrap shadow-sm border rounded-bottom px-4 py-4 shadow-top-none">
+      <div class="cp-form-wrap shadow-sm border rounded-bottom px-4 py-4 shadow-top-none text-end">
         <div class='form-footer px-0 text-start d-inline-block'>
-          <%= form.submit "Save", class: "btn bg-primary white me-3 d-inline-block px-4 font-medium w-auto" %>
+          <%= form.submit "Save", class: "btn bg-secondary white me-3 d-inline-block px-4 py-2 font-medium w-auto" %>
         </div>
-        <div class="form-footer px-0 float-end d-inline-block">
+        <div class="form-footer px-0  d-inline-block">
           <% if policy([current_user_role_group, channel_partner]).change_state? %>
           <% if policy([current_user_role_group, channel_partner]).editable_field?('event') %>
-          <%= link_to "<span class='btn bg-primary white px-4 d-inline-block font-medium w-auto fn-14'>#{channel_partner.rejected? ? 'Re-' : ''}Submit for Approval</span>".html_safe, change_state_channel_partner_path(channel_partner, {channel_partner: {event: 'submit_for_approval'}}), method: :post, class: 'modal-remote-form-link' %>
+          <%= link_to "<span class='btn bg-primary white px-4 d-inline-block py-2 font-medium w-auto fn-14'>#{channel_partner.rejected? ? 'Re-' : ''}Submit for Approval</span>".html_safe, change_state_channel_partner_path(channel_partner, {channel_partner: {event: 'submit_for_approval'}}), method: :post, class: 'modal-remote-form-link' %>
           <% end %>
           <% elsif channel_partner.pending? %>
           <div style='padding: 8px 10px;'>Sent for Approval</div>
