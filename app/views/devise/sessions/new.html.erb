@@ -93,8 +93,8 @@ end %>
 
     //$('section.login-page').css('height', $( window ).height() - $('section.login-page').offset().top );
 
-    <% if params[:login].present? && current_client.preferred_login == "phone" && params[:force].to_s == "true" %>
-    $("#otp_user_form").submit();
+    <% if params.dig(:user, :login).present? && current_client.preferred_login == "phone" && params[:force].to_s == "true" %>
+      $("#otp_user_form").find('input[type="submit"]').click();
     <% end %>
     OtpBasedLogin.init();
     $('form').submit(function( event ) {

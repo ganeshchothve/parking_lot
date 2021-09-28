@@ -5,6 +5,7 @@ class LeadObserver < Mongoid::Observer
   end
 
   def after_create lead
+    lead.third_party_references.each(&:update_references)
     lead.send_create_notification
   end
 

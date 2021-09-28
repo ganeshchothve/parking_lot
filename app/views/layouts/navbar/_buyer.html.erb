@@ -9,7 +9,7 @@
       </li>
     <% end %>
 
-    <% if policy([:buyer, BookingDetail.new(user: current_user, project_unit: ProjectUnit.new(status: 'available', user: current_user))]).hold? %>
+    <% if policy([:buyer, BookingDetail.new(user: current_user, lead: current_user.selected_lead, project_unit: ProjectUnit.new(status: 'available', user: current_user, lead: current_user.selected_lead))]).hold? %>
       <li class="nav-item">
         <%= active_link_to t('controller.searches.towers.link_name'), new_search_path, active: :inclusive, class: "nav-link" %>
       </li>

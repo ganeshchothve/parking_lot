@@ -13,7 +13,7 @@ class Admin::LeadPolicy < LeadPolicy
 
   def new?
     valid = true
-    valid = false if user.role?('channel_partner') && !interested_project_present?
+    valid = false if user.present? && user.role?('channel_partner') && !interested_project_present?
     @condition = 'project_not_subscribed' unless valid
     valid
   end
@@ -69,7 +69,7 @@ class Admin::LeadPolicy < LeadPolicy
   def permitted_attributes(params = {})
     attributes = super || []
     attributes += [:first_name, :last_name, :email, :phone, :project_id] if record.new_record?
-    if user.role.in?(%w(superadmin admin gre))
+    if user.present? && user.role.in?(%w(superadmin admin gre))
       attributes += [:manager_id, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
     end
     attributes.uniq

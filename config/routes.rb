@@ -305,7 +305,7 @@ Rails.application.routes.draw do
   post 'select_project', to: 'home#select_project', as: :select_project
 
   scope :custom do
-    match :inventory, to: 'custom#inventory', as: :custom_inventory, via: [:get]
+    match 'inventory/:id', to: 'custom#inventory', as: :custom_inventory, via: [:get]
   end
 
   scope :dashboard do

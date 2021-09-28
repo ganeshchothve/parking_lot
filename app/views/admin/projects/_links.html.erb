@@ -16,6 +16,12 @@
 <% if policy([:admin, IncentiveScheme]).index? %>
   <%= link_to IncentiveScheme.model_name.human(count: 2), admin_incentive_schemes_path(fltrs: {project_id: project.id.to_s}), class: 'dropdown-item' %>
 <% end %>
+<% if policy([:admin, ::Template]).index? %>
+  <%= link_to(t('helpers.show.link_name', model: ::Template.model_name.human), admin_client_templates_path(fltrs: {project_id: project.id}), class: 'dropdown-item') %>
+<% end %>
+<% if policy(:custom).inventory? %>
+  <%= link_to(t('controller.inventory.index.link_name'), custom_inventory_path(id: project.id), class: 'dropdown-item') %>
+<% end %>
 <% if policy([:admin, ProjectUnit]).index? %>
   <%= link_to ProjectUnit.model_name.human(count: 2), admin_project_units_path(fltrs: {project_id: project.id.to_s}), class: 'dropdown-item' %>
 <% end %>

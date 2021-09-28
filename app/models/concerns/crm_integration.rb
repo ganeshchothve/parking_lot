@@ -13,7 +13,7 @@ module CrmIntegration
   def update_external_ids(ids, crm_id)
     tpr = self.third_party_references.where(crm_id: crm_id).first || self.third_party_references.build(crm_id: crm_id)
     tpr.assign_attributes(ids)
-    tpr.save
+    tpr.save if self.persisted?
   end
 
   def update_references(tpr)

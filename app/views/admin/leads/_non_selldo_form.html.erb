@@ -9,7 +9,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body theme-form">
-          <%= render 'non_selldo_form_fields', f: f, lead: @lead %>
+          <%= render 'admin/leads/non_selldo_form_fields', f: f, lead: @lead %>
         </div>
         <div class="modal-footer text-end">
           <%= submit_tag "Save", class: 'btn btn-primary' %>

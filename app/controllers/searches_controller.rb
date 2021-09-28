@@ -195,9 +195,9 @@ class SearchesController < ApplicationController
   end
 
   def set_lead
-    #if current_user.buyer?
-    #  @user = current_user
-    if params[:lead_id].present?
+    if current_user.buyer?
+      @lead = current_user.selected_lead
+    elsif params[:lead_id].present?
       @lead = Lead.where(id: params[:lead_id]).first
     elsif @search.present? && @search.lead_id.present?
       @lead = @search.lead
