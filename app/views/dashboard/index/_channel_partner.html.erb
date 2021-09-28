@@ -32,15 +32,15 @@
           <div class="col-lg-12">
             <div class="py-2 bg-white rounded-3">
               <div class="border-bottom px-4 py-2">
-              <h3 class="font-medium fn-20 theme-txt-color">Project wise Overview</h3>
-              <p class="fn-14 text-light-blue mb-0"><%= Project.count %> Projects Available</p>
+                <h3 class="font-medium fn-20 theme-txt-color">Project wise Overview</h3>
+                <p class="fn-14 text-light-blue mb-0"><%= Project.count %> Projects Available</p>
               </div>
               <div class="row">
                 <div class="col-lg-4">
                   <div class="p-4">
-                  <select class="h3 mb-0 font-weight-medium f-20 form-control d-sm-inline-block">
-                    <option>All Projects (<%= Project.count %>)</option>
-                  </select>
+                    <select class="h3 mb-0 font-weight-medium f-20 form-control d-sm-inline-block">
+                      <option>All Projects (<%= Project.count %>)</option>
+                    </select>
                   </div>
                 </div>
                 <div class="col-lg-8">
@@ -127,8 +127,7 @@
           </div>
         </div>
 
-        <!-- Newly Launched ---------->
-        <%= render 'dashboard/index/partials/collaterals' %>
+        
 
 
       </div>
@@ -143,27 +142,29 @@
             <% meetings = Meeting.where(Meeting.user_based_scope(current_user)) %>
             <ul class="upcoming-events-list list-unstyled cmn-list">
               <% if meetings.present? %>
-                <% meetings.each do |meeting| %>
-                  <li class="px-3">
-                    <div class="list-wrap row">
-                      <div class="col-lg-2">
-                        <i class="fa fa-calendar-alt fill-primary"></i>
-                      </div>
-                      <div class="col-lg-10">
-                        <p class="list-txt event-title mb-0"><%= meeting.topic %></p>
-                        <p class="list-txt event-time mb-0"><%= "#{meeting.scheduled_on&.strftime('%e %b %Y')}#{meeting.scheduled_on&.to_time&.in_time_zone(current_user.time_zone)&.strftime(', %I:%M%p %Z')}".html_safe %></p>
-                      </div>
-                    </div>
-                  </li>
-                <% end %>
-              <% else %>
-                <li class="px-3">
-                  <div class="list-wrap row">
-                    <div class="col-lg-12">
-                      <p class="list-txt event-title mb-0">No New event</p>
-                    </div>
+              <% meetings.each do |meeting| %>
+              <li class="px-3">
+                <div class="list-wrap row">
+                  <div class="col-lg-2">
+                    <i class="fa fa-calendar-alt fill-primary"></i>
                   </div>
-                </li>
+                  <div class="col-lg-10">
+                    <p class="list-txt event-title mb-0"><%= meeting.topic %></p>
+                    <p class="list-txt event-time mb-0">
+                      <%= "#{meeting.scheduled_on&.strftime('%e %b %Y')}#{meeting.scheduled_on&.to_time&.in_time_zone(current_user.time_zone)&.strftime(', %I:%M%p %Z')}".html_safe %>
+                    </p>
+                  </div>
+                </div>
+              </li>
+              <% end %>
+              <% else %>
+              <li class="px-3">
+                <div class="list-wrap row">
+                  <div class="col-lg-12">
+                    <p class="list-txt event-title mb-0">No New event</p>
+                  </div>
+                </div>
+              </li>
               <% end %>
             </ul>
           </div>
@@ -240,14 +241,38 @@
     </div>
 </section>
 <%= javascript_tag do %>
-  $.ajax({
-    url: '/dashboard/project_wise_leads',
-    type: 'get'
-  });
+$.ajax({
+url: '/dashboard/project_wise_leads',
+type: 'get'
+});
 <% end %>
 <% else %>
-
-<section class="cp-register-sec mt-5">
+<section class="after-register-sec mt-5">
+  <div class=" px-4">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="app-review float-start wd-100">
+          <h1 class="notify-title float-start wd-100">Your application is under review</h1>
+          <p class="notify-desc float-start mb-0">We will notify you via email on the status of your application</p>
+          <p class="notify-desc float-end pe-3 mb-0"><i class="fa far fa-hourglass me-2"></i>10hrs : 48 mins left</p>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="app-review app-reject float-start wd-100">
+          <h1 class="notify-title float-start mb-0 col-12">Your application has been rejected</h1>
+          <div class="fn-12 col-12">
+            <p class="mb-0">Reason:</p>
+            <div class="error-reason">
+              <p>· Incomplete address filled in form: Shantivanam, Flat no 17, Manuel Gonsalves Road, Santacruz west</p>
+            </div>
+          </div>
+          <a href="javascript:;" class="notify-btn float-start p-2 px-3 mb-0 bg-white">Resubmit Application</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="cp-register-sec mt-3">
   <div class="col-lg-12">
     <div class="cp-reg-header pt-5 px-4 pb-5 col-lg-12">
       <h1 class="sec-title">Complete Registration</h1>
@@ -275,8 +300,8 @@
             </a>
           </li>
           <li>
-            <a href="javascript:;" class="step-done nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-3" type="button"
-              role="tab">
+            <a href="javascript:;" class="step-done nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-3"
+              type="button" role="tab">
               <div class="step-inner">
                 <span>3</span>
                 <p>Questionaire</p>
@@ -284,8 +309,8 @@
             </a>
           </li>
           <li>
-            <a href="javascript:;" class="step-done nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-4" type="button"
-              role="tab">
+            <a href="javascript:;" class="step-done nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-4"
+              type="button" role="tab">
               <div class="step-inner">
                 <span>4</span>
                 <p>Upload Documents</p>
@@ -336,11 +361,11 @@
         </div>
         <div class="form-footer px-0 float-end d-inline-block">
           <% if policy([current_user_role_group, channel_partner]).change_state? %>
-            <% if policy([current_user_role_group, channel_partner]).editable_field?('event') %>
-              <%= link_to "<span class='btn bg-primary white px-4 d-inline-block font-medium w-auto fn-14'>#{channel_partner.rejected? ? 'Re-' : ''}Submit for Approval</span>".html_safe, change_state_channel_partner_path(channel_partner, {channel_partner: {event: 'submit_for_approval'}}), method: :post, class: 'modal-remote-form-link' %>
-            <% end %>
+          <% if policy([current_user_role_group, channel_partner]).editable_field?('event') %>
+          <%= link_to "<span class='btn bg-primary white px-4 d-inline-block font-medium w-auto fn-14'>#{channel_partner.rejected? ? 'Re-' : ''}Submit for Approval</span>".html_safe, change_state_channel_partner_path(channel_partner, {channel_partner: {event: 'submit_for_approval'}}), method: :post, class: 'modal-remote-form-link' %>
+          <% end %>
           <% elsif channel_partner.pending? %>
-            <div style='padding: 8px 10px;'>Sent for Approval</div>
+          <div style='padding: 8px 10px;'>Sent for Approval</div>
           <% end %>
         </div>
       </div>
@@ -350,16 +375,100 @@
 </section>
 <% end %>
 <%= javascript_tag do %>
-  $(document).ready(function(){
-    FormInitializer.init($("#new_channel_partner_form"));
-    $('#new_channel_partner_form').on('ajax:error', function(event) {
-      if(typeof event.detail[0] == 'object' && event.detail[0].errors != undefined) {
-        Amura.global_error_handler(event.detail[0].errors);
-      }
-    });
-    $('#new_channel_partner_form').on("ajax:success", function(event, two, three){
-      Amura.global_success_handler("Details updated successfully");
-      window.location = window.location;
-    });
-  });
+$(document).ready(function(){
+FormInitializer.init($("#new_channel_partner_form"));
+$('#new_channel_partner_form').on('ajax:error', function(event) {
+if(typeof event.detail[0] == 'object' && event.detail[0].errors != undefined) {
+Amura.global_error_handler(event.detail[0].errors);
+}
+});
+$('#new_channel_partner_form').on("ajax:success", function(event, two, three){
+Amura.global_success_handler("Details updated successfully");
+window.location = window.location;
+});
+});
 <% end %>
+<section class="after-register-sec mt-0">
+  <div class="px-4">
+    <div class="row">
+      <div class="col-lg-12 mt-4 mb-4">
+        <div class="app-features">
+          <div class="row px-3 py-3">
+            <div class="col-lg-12">
+              <h2 class="pb-4">Why you would love launchpad</h2>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-01.svg' %>">
+              </span>
+              <p>Early access to<br> new launches</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-02.svg' %>">
+              </span>
+              <p>Chance to work with<br> Pune’s biggest developers</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-03.svg' %>">
+              </span>
+              <p>Leads at discounted<br> prices</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-04.svg' %>">
+              </span>
+              <p>CRM training<br> & support</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-05.svg' %>">
+              </span>
+              <p>Marketing support<br> & assets</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-06.svg' %>">
+              </span>
+              <p>Timely payments to<br> streamline cash flows</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-07.svg' %>">
+              </span>
+              <p>Fully automated<br> EOI process</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-09.svg' %>">
+              </span>
+              <p>Complete<br> transparency</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-08.svg' %>">
+              </span>
+              <p>Online inventory<br> selection, KYC & bookings</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-10.svg' %>">
+              </span>
+              <p>Unique online<br> broker profile</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-11.svg' %>">
+              </span>
+              <p>Performance-based<br> broker ratings</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- Newly Launched ---------->
+<%= render 'dashboard/index/partials/collaterals' %>
+  </div>
+</section>
