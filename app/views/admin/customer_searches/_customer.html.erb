@@ -1,1 +1,5 @@
-<%= render template: 'admin/leads/new' %>
+<% if selldo_config_base.present? %>
+  <%= render 'admin/leads/selldo_form' %>
+<% else %>
+  <%= render 'non_selldo_form' %>
+<% end %>
