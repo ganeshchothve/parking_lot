@@ -361,6 +361,7 @@ module BookingDetailStateMachine
 
     def update_selldo!
       SelldoLeadUpdater.perform_async(lead_id.to_s, {stage: status})
+      SelldoLeadUpdater.perform_async(lead_id.to_s, {action: 'add_slot_details', slot_status: 'booked'})
     end
 
   end
