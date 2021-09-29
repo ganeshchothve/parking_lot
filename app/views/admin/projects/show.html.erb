@@ -27,7 +27,7 @@
                                 <a href="javascript:;" class="share-location me-3"><i class="fa fa-share-alt fill-theme me-2"></i>Share location</a>
                                 <% if interest_access %>
                                   <a href="javascript:;" class="prjt-save"></a>
-                                  <%= link_to_unless interest.present?, '<i class="fa fa-heart fill-theme me-2"></i>Save'.html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: @project.id, event: 'subscribe'}), class: 'prjt-save' do |name|
+                                  <%= link_to_unless interest.present?, '<i class="fa fa-heart fill-theme me-2"></i>Save'.html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: @project.id, event: 'subscribe'}), method: :post, class: 'prjt-save' do |name|
                                     '<i class="fa fa-heart fill-danger me-2"></i>'.html_safe
                                   end
                                   %>

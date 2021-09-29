@@ -28,7 +28,7 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   end
 
   def change_state?
-    ['inactive', 'rejected'].include?(record.status) && user.role == 'channel_partner' && record.may_submit_for_approval?
+    ['inactive', 'rejected'].include?(record.status) && user.role == 'channel_partner'# && record.may_submit_for_approval?
   end
 
   def permitted_attributes(_params = {})

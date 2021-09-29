@@ -100,7 +100,7 @@ module ChannelPartnerDashboardConcern
       options = {}
     end
     @projects_leads = DashboardDataProvider.project_wise_leads_count(current_user, options)
-    project_ids = @projects_leads['project_wise']&.sort {|x, y| y.last.try(:[], 'count').to_i <=> x.last.try(:[], 'count').to_i}.first(4)&.collect{|x| x&.first} || []
+    project_ids = @projects_leads.try(:[], 'project_wise')&.sort {|x, y| y.last.try(:[], 'count').to_i <=> x.last.try(:[], 'count').to_i}&.first(4)&.collect{|x| x&.first} || []
     options[:matcher] ||= {}
     options[:matcher].merge!({ project_id: { '$in': project_ids } })
     @stage_wise_leads = DashboardDataProvider.lead_stage_project_wise_leads_count(current_user, options)

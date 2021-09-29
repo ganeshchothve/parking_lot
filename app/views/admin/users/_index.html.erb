@@ -49,9 +49,11 @@
                 </div>
                 <div class="inner-info">
                   <div class="pe-3 py-3  d-flex justify-content-end">
-                    <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i
-                        class='fa fn-16 fa-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t("global.boolean.#{user.is_payment_done? }") %>
-                    </p>
+                    <% if user.buyer? %>
+                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i
+                          class='fa fn-16 fa-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= user.is_payment_done? ? 'Payment Done' : 'Payment Pending' %>
+                      </p>
+                    <% end %>
                     <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i
                         class='fa fn-16 fa-<%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") == "Confirmed" ? "check" : "times" %> fill-<%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") == "Confirmed" ? "success" : "danger" %> me-12 fa-lg'></i><%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %>
                     </p>

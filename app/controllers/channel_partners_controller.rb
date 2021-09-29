@@ -55,7 +55,7 @@ class ChannelPartnersController < ApplicationController
     authorize([:admin, @channel_partner])
     @channel_partner.assign_attributes(permitted_attributes([:admin, @channel_partner]))
     respond_to do |format|
-      if (params.dig(:channel_partner, :event).present? ? @channel_partner.send("#{params.dig(:channel_partner, :event)}!") : @channel_partner.save(context: :submit_for_approval))
+      if (params.dig(:channel_partner, :event).present? ? @channel_partner.send("#{params.dig(:channel_partner, :event)}!") : @channel_partner.save)
         format.html { redirect_to (request.referer || channel_partners_path), notice: 'Channel Partner was successfully updated.' }
         format.json { render json: @channel_partner }
       else
@@ -69,6 +69,7 @@ class ChannelPartnersController < ApplicationController
     respond_to do |format|
       if params.dig(:channel_partner, :event).present? && @channel_partner.send("#{params.dig(:channel_partner, :event)}!")
         format.html { redirect_to request.referer, notice: t("controller.channel_partners.status_message.#{@channel_partner.status}") }
+        format.json { render json: @channel_partner }
       else
         format.html { redirect_to request.referer, alert: (@channel_partner.errors.full_messages.uniq.presence || 'Something went wrong') }
         format.json { render json: { errors: (@channel_partner.errors.full_messages.uniq.presence || 'Something went wrong') }, status: :unprocessable_entity }
