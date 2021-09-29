@@ -1,6 +1,6 @@
 class MeetingPolicy < ApplicationPolicy
   def index?
-    true
+    user.active_channel_partner?
   end
 
   def permitted_attributes(_params = {})

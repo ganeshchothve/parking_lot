@@ -9,24 +9,22 @@
       <div class="project-list row">
         <div class="project-img">
           <div class="project-img-thumb" style="background-image:url(<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>)"></div>
-          <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i><%= project.category %></p>
+          <% if project.category.present? && project.category != 'completed' %>
+            <p class="img-tag bg-danger"><%= project.category&.titleize %></p>
+          <% end %>
         </div>
         <div class="project-info">
           <div class="project-info-inner">
-            <h2 class="prjt-title"><%= project.name %></h2>
-            <p class="prjt-devlprs"><%= project.developer_name %></p>
+            <h2 class="prjt-title"><%= link_to_if current_user.active_channel_partner?, project.name, admin_project_path(project), class: 'text-white' %></h2>
+            <p class="prjt-devlprs"><%= project.developer_name || '-' %></p>
             <p class="prjt-location"><i
-                class="fa fa-map-marker-alt fill-white"></i><%= "#{project.micro_market}, #{project.city} " %>
+                class="fa fa-map-marker-alt fill-white"></i><%= "#{project.micro_market.present? ? project.micro_market&.titleize + ', ': ''}#{project.city&.titleize}".presence || '-' %>
             </p>
           </div>
           <div class="project-info-outer px-3">
             <div class="row">
-              <div class="col-lg-1 ps-0 pe-0">
-                <i class="fa fa-fire fill-danger"></i>
-              </div>
               <div class="col-lg-11 pe-2 ps-3">
-                <p class="list-txt project-deal mb-2">Hot Deal</p>
-                <p class="list-txt project-desc mb-0">error</p>
+                <div class="list-txt project-desc mb-0"><%= project.description&.html_safe %></div>
               </div>
             </div>
           </div>
@@ -37,6 +35,7 @@
   <% end %>
 </div>
 
+<% if current_user.interested_projects.in(status: %w(subscribed approved)).present? %>
 <div class="row mt-4 mb-5">
   <div class="col-lg-12 mt-5 mb-3">
     <h2 class="sec-title">Interested Projects</h2>
@@ -48,24 +47,22 @@
       <div class="project-list row">
         <div class="project-img">
         <div class="project-img-thumb" style="background-image:url(<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>)"></div>
-          <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i><%= project.category %></p>
+          <% if project.category.present? && project.category != 'completed' %>
+            <p class="img-tag bg-danger"><%= project.category&.titleize %></p>
+          <% end %>
         </div>
         <div class="project-info">
           <div class="project-info-inner">
             <h2 class="prjt-title"><%= project.name %></h2>
             <p class="prjt-devlprs"><%= project.developer_name || '-' %></p>
             <p class="prjt-location"><i
-                class="fa fa-map-marker-alt fill-white"></i><%= "#{project.micro_market.present? ? project.micro_market + ', ': ''}#{project.city}" %>
+                class="fa fa-map-marker-alt fill-white"></i><%= "#{project.micro_market.present? ? project.micro_market&.titleize + ', ': ''}#{project.city&.titleize}".presence || '-' %>
             </p>
           </div>
           <div class="project-info-outer px-3">
             <div class="row">
-              <div class="col-lg-1 ps-0 pe-0">
-                <i class="fa fa-fire fill-danger"></i>
-              </div>
               <div class="col-lg-11 pe-2 ps-3">
-                <p class="list-txt project-deal mb-2">Hot Deal</p>
-                <p class="list-txt project-desc mb-0">error</p>
+                <div class="list-txt project-desc mb-0"><%= project.description&.html_safe %></div>
               </div>
             </div>
           </div>
@@ -75,3 +72,4 @@
   </div>
   <% end %>
 </div>
+<% end %>

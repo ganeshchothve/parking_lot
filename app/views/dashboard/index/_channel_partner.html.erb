@@ -10,7 +10,7 @@
       <div class="col-lg-9">
         <div class="row mb-3">
           <div class="col-lg-6">
-            <h2 class="sec-title">Welcome Jamison,</h2>
+            <h2 class="sec-title">Welcome <%= @channel_partner.name %>,</h2>
           </div>
           <!--
           <div class="col-lg-6 text-end">
@@ -36,6 +36,7 @@
                 <p class="fn-14 text-light-blue mb-0"><%= Project.count %> Projects Available</p>
               </div>
               <div class="row">
+                <!--
                 <div class="col-lg-4">
                   <div class="p-4">
                     <select class="h3 mb-0 font-weight-medium f-20 form-control d-sm-inline-block">
@@ -43,18 +44,19 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-lg-8">
+                -->
+                <div class="col-lg-12">
                   <canvas id="stage_wise_bar_chart" width="650" height="300"></canvas>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <!--
         <div class="row">
           <div class="col-xl-12 col-lg-12">
             <div class="row">
 
-              <!-- Charts ---------->
               <div class="col-lg-8">
                 <div class="card mb-4 br-rd-8 card-shadow no-br">
                   <div id="total_brokerage">
@@ -63,7 +65,6 @@
                 </div>
               </div>
 
-              <!-- Payments ---------->
               <div class="col-lg-4">
                 <div class="payment-detls fix-ht">
                   <div class="card br-rd-8 card-shadow  no-br">
@@ -126,10 +127,7 @@
             </div>
           </div>
         </div>
-
-        
-
-
+        -->
       </div>
       <div class="col-lg-3 mt-2 pt-1">
         <!-- Events ---------->
@@ -241,12 +239,12 @@
     </div>
 </section>
 <%= javascript_tag do %>
-$.ajax({
-url: '/dashboard/project_wise_leads',
-type: 'get'
-});
+  $.ajax({
+    url: '/dashboard/project_wise_leads',
+    type: 'get'
+  });
 <% end %>
-<% else %>
+<% elsif @channel_partner.pending? %>
 <section class="after-register-sec mt-5">
   <div class=" px-4">
     <div class="row">
@@ -254,24 +252,31 @@ type: 'get'
         <div class="app-review float-start wd-100">
           <h1 class="notify-title float-start wd-100">Your application is under review</h1>
           <p class="notify-desc float-start mb-0">We will notify you via email on the status of your application</p>
-          <p class="notify-desc float-end pe-3 mb-0"><i class="fa far fa-hourglass me-2"></i>10hrs : 48 mins left</p>
-        </div>
-      </div>
-      <div class="col-lg-12">
-        <div class="app-review app-reject float-start wd-100">
-          <h1 class="notify-title float-start mb-0 col-12">Your application has been rejected</h1>
-          <div class="fn-12 col-12">
-            <p class="mb-0">Reason:</p>
-            <div class="error-reason">
-              <p>· Incomplete address filled in form: Shantivanam, Flat no 17, Manuel Gonsalves Road, Santacruz west</p>
-            </div>
-          </div>
-          <a href="javascript:;" class="notify-btn float-start p-2 px-3 mb-0 bg-white">Resubmit Application</a>
         </div>
       </div>
     </div>
   </div>
 </section>
+<% else %>
+  <% if @channel_partner.rejected? %>
+    <section class="after-register-sec mt-5">
+      <div class=" px-4">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="app-review app-reject float-start wd-100">
+              <h1 class="notify-title float-start mb-0 col-12">Your application has been rejected</h1>
+              <div class="fn-12 col-12">
+                <p class="mb-0">Reason:</p>
+                <div class="error-reason">
+                  <%= @channel_partner.status_change_reason %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  <% end %>
 <section class="cp-register-sec mt-3">
   <div class="col-lg-12">
     <div class="cp-reg-header pt-5 px-4 pb-5 col-lg-12">
@@ -357,15 +362,12 @@ type: 'get'
       </div>
       <div class="cp-form-wrap shadow-sm border rounded-bottom px-4 py-4 shadow-top-none text-end">
         <div class='form-footer px-0 text-start d-inline-block'>
-          <%= form.submit "Save", class: "btn bg-secondary white me-3 d-inline-block px-4 py-2 font-medium w-auto" %>
+          <%= form.submit "Save", class: "btn btn-primary white me-3 d-inline-block px-4 py-2 font-medium w-auto", id: 'cp-form-submit' %>
         </div>
-        <div class="form-footer px-0  d-inline-block">
-          <% if policy([current_user_role_group, channel_partner]).change_state? %>
-          <% if policy([current_user_role_group, channel_partner]).editable_field?('event') %>
-          <%= link_to "<span class='btn bg-primary white px-4 d-inline-block py-2 font-medium w-auto fn-14'>#{channel_partner.rejected? ? 'Re-' : ''}Submit for Approval</span>".html_safe, change_state_channel_partner_path(channel_partner, {channel_partner: {event: 'submit_for_approval'}}), method: :post, class: 'modal-remote-form-link' %>
-          <% end %>
-          <% elsif channel_partner.pending? %>
-          <div style='padding: 8px 10px;'>Sent for Approval</div>
+        <div class="form-footer px-0 d-inline-block d-none">
+          <% if policy([current_user_role_group, channel_partner]).change_state? && policy([current_user_role_group, channel_partner]).editable_field?('event') %>
+            <% link_name = "#{channel_partner.rejected? ? 'Resubmit Application' : 'Submit Application'}" %>
+            <%= link_to link_name, change_state_channel_partner_path(channel_partner, {channel_partner: {event: 'submit_for_approval'}}), method: :post, remote: true, data: {type: 'json', 'disable-with': link_name}, id: 'cp-form-change-state', class: 'btn bg-primary white px-4 d-inline-block py-2 font-medium w-auto fn-14' %>
           <% end %>
         </div>
       </div>
@@ -375,18 +377,39 @@ type: 'get'
 </section>
 <% end %>
 <%= javascript_tag do %>
-$(document).ready(function(){
-FormInitializer.init($("#new_channel_partner_form"));
-$('#new_channel_partner_form').on('ajax:error', function(event) {
-if(typeof event.detail[0] == 'object' && event.detail[0].errors != undefined) {
-Amura.global_error_handler(event.detail[0].errors);
-}
-});
-$('#new_channel_partner_form').on("ajax:success", function(event, two, three){
-Amura.global_success_handler("Details updated successfully");
-window.location = window.location;
-});
-});
+  $(document).ready(function(){
+    FormInitializer.init($("#new_channel_partner_form"));
+    $('#new_channel_partner_form').on('ajax:error', function(event) {
+      if(typeof event.detail[0] == 'object' && event.detail[0].errors != undefined) {
+        Amura.global_error_handler(event.detail[0].errors);
+      }
+    });
+    $('#new_channel_partner_form').on("ajax:success", function(event, two, three){
+      if(typeof event.detail[0] == 'object' && event.detail[0].status == 'pending') {
+        Amura.global_success_handler("Application submitted successfully");
+        setTimeout(function() {
+          window.location = window.location;
+        }, 3000);
+      } else {
+        Amura.global_success_handler("Details updated successfully");
+      }
+    });
+
+    $('a[data-bs-toggle="tab"]').on('show.bs.tab', function (event) {
+      var $tab = $(event.target);
+      if($tab.data('bs-target') == '#step-4') {
+        $('.form-footer').find('#cp-form-submit').val('Save Draft');
+        $('.form-footer').find('#cp-form-submit').removeClass('btn-primary');
+        $('.form-footer').find('#cp-form-submit').addClass('bg-secondary');
+        $('.form-footer').find('#cp-form-change-state').closest('.form-footer').removeClass('d-none');
+      } else {
+        $('.form-footer').find('#cp-form-submit').val('Save');
+        $('.form-footer').find('#cp-form-submit').removeClass('bg-secondary');
+        $('.form-footer').find('#cp-form-submit').addClass('btn-primary');
+        $('.form-footer').find('#cp-form-change-state').closest('.form-footer').addClass('d-none');
+      }
+    })
+  });
 <% end %>
 <section class="after-register-sec mt-0">
   <div class="px-4">
@@ -467,8 +490,7 @@ window.location = window.location;
         </div>
       </div>
     </div>
-
-<!-- Newly Launched ---------->
-<%= render 'dashboard/index/partials/collaterals' %>
+    <!-- Newly Launched ---------->
+    <%= render 'dashboard/index/partials/collaterals' %>
   </div>
 </section>

@@ -304,6 +304,8 @@ Rails.application.routes.draw do
   get 'buyer/projects', to: 'home#select_project', as: :buyer_select_project
   post 'select_project', to: 'home#select_project', as: :select_project
 
+  get 'signed_up/:user_id', to: 'home#signed_up', as: :signed_up
+
   scope :custom do
     match 'inventory/:id', to: 'custom#inventory', as: :custom_inventory, via: [:get]
   end

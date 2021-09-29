@@ -1,8 +1,8 @@
 class Admin::UsersController < AdminController
   include UsersConcern
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: :resend_confirmation_instructions
   before_action :set_user, except: %i[index export new create portal_stage_chart channel_partner_performance search_by]
-  before_action :authorize_resource
+  before_action :authorize_resource, except: :resend_confirmation_instructions
   around_action :apply_policy_scope, only: %i[index export]
 
   layout :set_layout
@@ -47,10 +47,10 @@ class Admin::UsersController < AdminController
     respond_to do |format|
       if @user.resend_confirmation_instructions
         flash[:notice] = 'Confirmation instructions sent successfully.'
-        format.html { redirect_to admin_users_path }
+        format.html { redirect_to request.referer || admin_users_path }
       else
         flash[:error] = "Couldn't send confirmation instructions."
-        format.html { redirect_to admin_users_path }
+        format.html { redirect_to request.referer || admin_users_path }
       end
     end
   end
