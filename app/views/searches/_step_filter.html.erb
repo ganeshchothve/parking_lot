@@ -57,7 +57,11 @@
       </div>
     </div>
     <div class="col-lg-6 text-end">
-      <img src="<%= asset_path 'booking-floor.png' %>" class="img-fluid wd-100">
+      <a data-bs-toggle="modal" data-bs-target="#towerImage" href="javascript:;" class="tower_image_container" style="display:none;">
+        <img class="img-fluid wd-100" data-placeholder="tower_image" />
+        <br/>
+        <span class='me-2 fn-14 theme-txt-color'>Click to view details</span>
+      </a><br/>
     </div>
     <div class="col-lg-12">
       <div class="border-top px-3 mt-3">
@@ -76,24 +80,35 @@
     </div>
   </div>
 </div>
+<div class="modal fade" role="dialog" id="towerImage">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" data-placeholder="gallery_tower_images">
+      </div>
+    </div>
+  </div>
+</div>
 <%= javascript_tag do %>
-$(document).ready(function(){
-var towers = <%= raw @towers.to_json(include: [:assets]) %>;
-_.each(towers, function(tower) {
-Gamification.gamifyTowerSelection(tower, $('#' + tower.project_tower_id + ' [data-placeholder="gamification"]'));
-});
-$('.result-list').click(function(e) {
-$('.result-list').removeClass('active')
-$(this).addClass('active')
-$("#project_tower_id").val($(this).attr('id'));
-var $form = $(".edit_search_form");
-var tower_id = $(this).attr('id')
-$form.find('[name="search[project_tower_id]"]').val(tower_id);
-$form.find('input[type="submit"]').removeAttr("disabled");
-var tower = _.find(towers, function(u){ return u.project_tower_id == tower_id });
-showTowerData(tower);
-});
-$('.extra-pad').css('padding-top', $('.result-list').outerHeight()/2);
-$('.result-list').eq(0).click();
-});
+  $(document).ready(function(){
+    var towers = <%= raw @towers.to_json(include: [:assets]) %>;
+    _.each(towers, function(tower) {
+      Gamification.gamifyTowerSelection(tower, $('#' + tower.project_tower_id + ' [data-placeholder="gamification"]'));
+    });
+    $('.result-list').click(function(e) {
+      $('.result-list').removeClass('active')
+      $(this).addClass('active')
+      $("#project_tower_id").val($(this).attr('id'));
+      var $form = $(".edit_search_form");
+      var tower_id = $(this).attr('id')
+      $form.find('[name="search[project_tower_id]"]').val(tower_id);
+      $form.find('input[type="submit"]').removeAttr("disabled");
+      var tower = _.find(towers, function(u){ return u.project_tower_id == tower_id });
+      showTowerData(tower);
+    });
+    $('.extra-pad').css('padding-top', $('.result-list').outerHeight()/2);
+    $('.result-list').eq(0).click();
+  });
 <% end %>

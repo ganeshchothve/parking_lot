@@ -240,8 +240,23 @@ en:
         zero: Brokerage Deduction
         one: Brokerage Deduction
         other: Brokerage Deductions
+      unit_configuration:
+        one: Unit Configuration
+        other: Unit Configurations
 
     attributes:
+      unit_configuration:
+        name: Name
+        project_id: Project
+        saleable: Saleable
+        carpet: Carpet
+        base_rate: Base Rate
+      unit_configuration/file_types:
+        floor_plan: 'Floor Plan'
+        image: 'Unit Image'
+      unit_configuration/help_text:
+        floor_plan_html: '<ul><li>Floor Plans images</li></ul>'
+        image_html: '<ul><li>Other Unit images</li></ul>'
       interested_project:
         project_id: Project
         user_id: User

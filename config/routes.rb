@@ -162,13 +162,13 @@ Rails.application.routes.draw do
       get :collaterals, on: :collection
       post :sync_on_selldo, on: :member
 
+      resources :unit_configurations, only: [:index, :edit, :update], controller: 'projects/unit_configurations'
       resources :token_types, except: [:destroy, :show], controller: 'projects/token_types' do
         member do
           get :token_init
           get :token_de_init
         end
       end
-
       resources :time_slots, controller: 'projects/time_slots'
     end
     resources :project_towers, only: [:index]

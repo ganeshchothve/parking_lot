@@ -298,9 +298,9 @@ module DashboardDataProvider
 
   def self.configurations(project = nil)
     if project.present?
-      project.project_units.distinct(:unit_configuration_name).sample(3)
+      project.unit_configurations.collect(&:name)&.uniq&.sample(3)
     else
-      ProjectUnit.distinct(:unit_configuration_name).sample(3)
+      UnitConfiguration.all.collect(&:name)&.uniq&.sample(3)
     end
   end
 

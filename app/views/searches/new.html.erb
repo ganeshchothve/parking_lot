@@ -22,9 +22,9 @@
                 <div class="col-md-12">
                   <div class="row">
                     <div class="col-8">
-                      <h5 class="card-title mb-1 font-normal fn-20">34 Park Estate</h5>
-                      <p class="card-text">Lodha Builders</p>
-                      <p><i class="fas fa-map-marker-alt fill-primary"></i> Khar West, Mumbai</p>
+                      <h5 class="card-title mb-1 font-normal fn-20"><%= @lead.project.name %></h5>
+                      <p class="card-text"><%= @lead.project.developer_name %></p>
+                      <p><i class="fas fa-map-marker-alt fill-primary me-2"></i><%= "#{@lead.project.micro_market.present? ? @lead.project.micro_market&.titleize + ', ': ''}#{@lead.project.city&.titleize}".presence || '-' %></p>
                     </div>
                     <div class="col-4 text-end">
                       <% if SearchPolicy.new(current_user, Search.new(lead_id: @lead.id)).three_d? %>

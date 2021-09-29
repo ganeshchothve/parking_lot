@@ -24,7 +24,7 @@
                           end
                         %>
                             <div class="prjt-share-save pt-3 pb-2">
-                                <a href="javascript:;" class="share-location me-3"><i class="fa fa-share-alt fill-theme me-2"></i>Share location</a>
+                              <!--<a href="javascript:;" class="share-location me-3"><i class="fa fa-share-alt fill-theme me-2"></i>Share location</a>-->
                                 <% if interest_access %>
                                   <a href="javascript:;" class="prjt-save"></a>
                                   <%= link_to_unless interest.present?, '<i class="fa fa-heart fill-theme me-2"></i>Save'.html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: @project.id, event: 'subscribe'}), method: :post, class: 'prjt-save' do |name|
@@ -89,12 +89,12 @@
                                     <div class="col-5 overview-left float-start">
                                         <p>
                                             <span>Configuration</span>
-                                            <%= DashboardDataProvider.configurations(@project).to_sentence %> Flats <%= @project.project_towers.present? ? "| #{@project.project_units.min(:saleable)&.round} - #{@project.project_units.max(:saleable)&.round} sqft" : '' %>
+                                            <%= DashboardDataProvider.configurations(@project).to_sentence %> Flats <%= @project.project_towers.present? ? "| #{@project.project_units.min(:saleable)&.round} - #{@project.project_units.max(:saleable)&.round} #{@project.area_unit}" : '' %>
                                         </p>
                                         <% if @project.project_units.count > 0 %>
                                           <p>
                                               <span>Property Value</span>
-                                              <%= @project.project_units.gt(all_inclusive_price: 0).min(:all_inclusive_price).to_s.match(/(\d+)\d{5}/).try(:captures).try(:first) %> L - <%= @project.project_units.gt(all_inclusive_price: 0).max(:all_inclusive_price).to_s.match(/(\d+)\d{5}/).try(:captures).try(:first) %> L
+                                              <%= number_to_inr(@project.project_units.gt(all_inclusive_price: 0).min(:all_inclusive_price)) %> - <%= number_to_inr(@project.project_units.gt(all_inclusive_price: 0).max(:all_inclusive_price)) %>
                                           </p>
                                         <% end %>
                                         <p>
@@ -110,12 +110,14 @@
                             <div class="prjt-desc-tab bt-br col-12 pt-4 pb-4 float-start" id="tab-location">
                                 <div class="tab-header col-12 float-start">
                                     <h2 class="tab-title float-start">Location</h2>
-                                    <a href="javascript:;" class="location-share float-end"><i class="fa fa-share-alt fill-primary me-2"></i>Share location</a>
+                                    <!--<a href="javascript:;" class="location-share float-end"><i class="fa fa-share-alt fill-primary me-2"></i>Share location</a>-->
                                 </div>
                                 <div class="tab-body col-12 float-start pt-3">
                                     <div class="col-6 float-start">
                                         <div class="location-list">
+                                          <p><%= @project.address&.to_sentence %></p>
                                           <p><i class="fa fa-map-marker-alt me-2"></i><%= "#{@project.micro_market}, #{@project.city}" %></p>
+                                          <!--
                                             <ul>
                                                 <li>
                                                     <p><span>0.2 km</span> Upcoming Mall And Theatre</p>
@@ -136,6 +138,7 @@
                                                     <p><span>0.2 km</span> Upcoming Mall And Theatre</p>
                                                 </li>
                                             </ul>
+                                          -->
                                         </div>
                                     </div>
                                     <% if @project.embed_map_tag.present? %>
@@ -157,24 +160,23 @@
                                         <div class="prjt-configure-list">
                                             <h2>Select Type</h2>
                                             <div class="tower-type tab-link nav nav-tabs border-bottom-0" role="tablist">
-                                              <% @project.project_units.group_by{ |pu| pu.unit_configuration_name }.each_with_index do | (uc, units), index | %>
-                                                <a href="javascript:;" class="nav-item nav-link mb-1 <%= (index == 0) ? "active" : "" %>" data-bs-toggle="tab" data-bs-target="#floor_<%= uc.gsub(/[()\s]*/, '').underscore %>" role="tab"><%= uc %> | (<%= units.first&.saleable %> sq.ft)</a>
+                                              <% @project.unit_configurations.each_with_index do | uc, index | %>
+                                                <a href="javascript:;" class="nav-item nav-link mb-1 <%= (index == 0) ? "active" : "" %>" data-bs-toggle="tab" data-bs-target="#floor_<%= uc.name.gsub(/[()\s]*/, '').underscore + uc.saleable.to_i.to_s %>" role="tab"><%= uc.name %> | (<%= uc.saleable %> sq.ft)</a>
                                             <% end %>
-                                                <!--<a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#type-bhk-11" role="tab">1 BHK | (1427 sq.ft)</a>
-                                                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#type-bhk-2" role="tab">2 BHK | (1427 sq.ft)</a>-->
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-12 float-start configration-tab">
-                                        <div class="tab-content br-1 br-rd-8 py-1">
-                                        <% @project.project_units.group_by{ |pu| pu.unit_configuration_name }.each_with_index do | (uc, units), index | %>
-                                          <% unit = units.first %>
-                                            <div class="tab-pane fade show <%= (index == 0) ? "active" : "" %>" id="floor_<%= uc.gsub(/[()\s]*/, '').underscore %>" role="tabpanel">
+                                        <div class="tab-content br-1 br-rd-8 py-1 wd-100">
+                                        <% @project.unit_configurations.each_with_index do | uc, index | %>
+                                          <% units = uc.project_units %>
+                                          <% unit = units&.first %>
+                                            <div class="tab-pane fade show <%= (index == 0) ? "active" : "" %>" id="floor_<%= uc.name&.gsub(/[()\s]*/, '').underscore + uc.saleable.to_i.to_s %>" role="tabpanel">
                                                 <div class="col-5 float-start">
-                                                    <% unit&.assets&.each do | img| %>
-                                                      <img src="<%= img.file.url %>" class="plan-img img-fluid">
-                                                    <% end %>
-                                                    <p class="ps-2"><i class="fa fa-eye me-2"></i>220 Interests</p>
+                                                  <% if url = uc.assets.first&.file&.url&.presence %>
+                                                    <img src="<%= url %>" class="plan-img img-fluid">
+                                                  <% end %>
+                                                    <!--<p class="ps-2"><i class="fa fa-eye me-2"></i>220 Interests</p>-->
                                                 </div>
                                                 <div class="col-7 float-end">
                                                     <div class="prjt-config-info mt-3 pe-3">
@@ -186,14 +188,15 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-6 float-start">
-                                                            <p class="prjt-short-info"><%= uc %> (<%= unit.saleable %> sq.ft) <%= number_to_inr(unit.all_inclusive_price) %></p>
+                                                            <p class="prjt-short-info"><%= uc.name %> (<%= uc.saleable %> sq.ft) <%= number_to_inr(unit.all_inclusive_price) %></p>
                                                         </div>
-                                                        <% avl_unit = units.find {|x| x.status == 'available'} %>
+                                                        <% avl_unit = units.where(status: 'available').first.presence %>
                                                         <% if avl_unit %>
                                                           <div class="col-6 float-end">
                                                               <%= link_to 'View Cost Sheet', quotation_admin_project_unit_path(avl_unit, layout: false), class: 'cost-sheet-btn float-end modal-remote-form-link', style: 'height: auto' %>
                                                           </div>
                                                         <% end %>
+                                                        <!--
                                                         <div class="col-12 bt-bt mt-3 float-start pt-2">
                                                             <div class="col-6 float-start">
                                                                 <p class="points-list-title">Uniques Selling Points</p>
@@ -216,6 +219,7 @@
                                                                 </li>
                                                             </ul>
                                                         </div>
+                                                        -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -227,7 +231,7 @@
                             <div class="prjt-desc-tab col-12 bt-bt float-start" id="tab-collaterals">
                                 <div class="tab-header col-12 float-start">
                                     <h2 class="tab-title float-start">Collaterals</h2>
-                                    <a href="javascript:;" class="location-share float-end mt-2"><i class="fa fa-share-alt fill-primary me-2"></i>Share collaterals</a>
+                                    <!-- <a href="javascript:;" class="location-share float-end mt-2"><i class="fa fa-share-alt fill-primary me-2"></i>Share collaterals</a>-->
                                 </div>
                                 <div class="tab-body">
                                     <div class="col-12 mb-3 float-start">
@@ -249,6 +253,7 @@
                                         </div>
                                     </div>
                                     
+                                    <!--
                                     <div class="col-12 mb-3 float-start">
                                         <div class="prjt-gallery">
                                             <h2>Video</h2>
@@ -280,6 +285,7 @@
                                             </ul>
                                         </div>
                                     </div>
+                                    -->
                                     <div class="col-12 mb-3 float-start">
                                         <div class="prjt-gallery">
                                             <h2>Documents</h2>
@@ -326,14 +332,14 @@
                             <div class="prjt-desc-tab col-12 bt-bt float-start" id="tab-amenities">
                                 <div class="tab-header col-12 float-start">
                                     <h2 class="tab-title float-start">Amenities</h2>
-                                    <p class="drop-amenities float-end">
+                                    <!--<p class="drop-amenities float-end">
                                         <span>Now Showing:</span>
                                         <select class="form-control d-inline me-1">
                                             <option>All Amenities</option>
                                             <option>Amenities</option>
                                             <option>Amenities</option>
                                         </select>
-                                    </p>
+                                    </p>-->
                                 </div>
                                 <div class="tab-body">
                                     <div class="col-12">
@@ -374,7 +380,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <% @project.timeline_updates.present? %>
+                            <% if @project.timeline_updates.present? %>
                             <div class="prjt-desc-tab col-12 bt-bt float-start" id="tab-timeline">
                                 <div class="tab-header col-12 float-start pb-3">
                                     <h2 class="tab-title">Project Timeline</h2>
@@ -403,6 +409,7 @@
                                   <% end %>
                                 </div>
                               </div>
+                              <!--
                               <div class="prjt-desc-tab col-12 bt-bt float-start" id="">
                                 <div class="tab-footer pt-2 col-10 mx-auto">
                                     <div class="prjt-progress col-12 float-start">
@@ -439,7 +446,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                              </div>-->
+                            <% end %>
                         </div>
                     </div>
                 </div>
@@ -526,11 +534,8 @@
                                     </div>
                                     <div class="project-info-outer px-3">
                                         <div class="row">
-                                            <div class="col-lg-1 ps-0 pe-0">
-                                                <i class="fa fa-fire fill-danger"></i>
-                                            </div>
-                                            <div class="col-lg-11 pe-2 ps-3">
-                                                <p class="list-txt project-deal mb-2">Hot Deal</p>
+                                            <div class="col-lg-12 pe-2 ps-3">
+                                              <div class="list-txt project-desc mb-0"><%= project.description&.html_safe %></div>
                                                 <!-- <p class="list-txt project-desc mb-0">2.5% Brokerage incentive on bookings made within the first week of the launch date</p> -->
                                             </div>
                                         </div>
@@ -544,6 +549,7 @@
                 <% end %>
             </div>
             <div class="col-lg-4 prjt-right-panel px-3 mt-2">
+              <!--
                 <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card">
                     <div class="row">
                         <div class="col-md-12 pt-3 px-4">
@@ -588,6 +594,7 @@
                         </div>
                     </div>
                 </div>
+              -->
                 <% if @project.offers.present? %>
                 <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card">
                     <div class="row">
@@ -633,7 +640,7 @@
                             <div class="carousel-item <%= (index == 0) ? "active" : "" %>">
                                 <img src="<%= asset.file.url %>" class="d-block w-100 img-fluid" alt="">
                             </div>
-                        <% end %>                                                                
+                        <% end %>
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#gallerySlider" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>

@@ -8,7 +8,7 @@ module BulkUpload
 
     def process_csv(csv)
       booking_portal_client = bur.client
-      client_id = booking_portal_client.selldo_client_id
+      #client_id = booking_portal_client.selldo_client_id
 
       developer = Developer.where(name: booking_portal_client.name, booking_portal_client_id: booking_portal_client.id).first
       if developer.blank?
@@ -65,7 +65,7 @@ module BulkUpload
 
           project_tower = ProjectTower.where(name: project_tower_name).where(project_id: project.id).first
           unless project_tower.present?
-            project_tower = ProjectTower.new(name: project_tower_name, project_id: project.id, client_id: client_id, total_floors: 1)
+            project_tower = ProjectTower.new(name: project_tower_name, project_id: project.id, total_floors: 1)
             unless project_tower.save
               (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push(*project_tower.errors.full_messages.map{|er| "ProjectTower: " + er })).uniq
               bur.failure_count += 1 if bur.upload_errors.where(row: row.fields).present?
@@ -73,9 +73,9 @@ module BulkUpload
             end
           end
 
-          unit_configuration = UnitConfiguration.where(name: unit_configuration_name).where(project_id: project.id).where(project_tower_id: project_tower.id).first
+          unit_configuration = UnitConfiguration.where(name: unit_configuration_name).where(project_id: project.id).first
           unless unit_configuration.present?
-            unit_configuration = UnitConfiguration.new(name: unit_configuration_name, project_id: project.id, project_tower_id: project_tower.id, client_id: client_id, saleable: saleable.to_f, carpet: carpet.to_f, base_rate: base_rate.to_f)
+            unit_configuration = UnitConfiguration.new(name: unit_configuration_name, project_id: project.id, project_tower_id: project_tower.id, saleable: saleable.to_f, carpet: carpet.to_f, base_rate: base_rate.to_f)
             unless unit_configuration.save
               (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push(*unit_configuration.errors.full_messages.map{ |er| "Unit Configuration: " + er })).uniq
               bur.failure_count += 1 if bur.upload_errors.where(row: row.fields).present?

@@ -150,6 +150,7 @@ class Project
   has_and_belongs_to_many :campaigns
   has_many :token_types
   has_many :time_slots
+  has_many :unit_configurations
 
   validates :name, presence: true
   validates_uniqueness_of :name, :rera_registration_no, allow_blank: true
@@ -164,9 +165,9 @@ class Project
   scope :filter_by_category, ->(category) { where(category: category) }
   scope :filter_by_user_interested_projects, ->(user_id) { all.in(id: InterestedProject.where(user_id: user_id).in(status: %w(subscribed approved)).distinct(:project_id)) }
 
-  def unit_configurations
-    UnitConfiguration.where(data_attributes: {"$elemMatch" => {"n" => "project_id", "v" => self.selldo_id}})
-  end
+  #def unit_configurations
+  #  UnitConfiguration.where(data_attributes: {"$elemMatch" => {"n" => "project_id", "v" => self.selldo_id}})
+  #end
 
   def compute_area_price
     self.area_price_data = []

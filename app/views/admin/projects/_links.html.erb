@@ -7,6 +7,9 @@
 <% if policy([:admin, project]).sync_on_selldo? %>
   <%= link_to t('controller.projects.sync_on_selldo.link_name'), sync_on_selldo_admin_project_path(project), method: :post, class: 'dropdown-item' %>
 <% end %>
+<% if policy([:admin, UnitConfiguration]).index? %>
+  <%= link_to UnitConfiguration.model_name.human(count: 2), admin_project_unit_configurations_path(project), class: 'dropdown-item' %>
+<% end %>
 <% if policy([:admin, TokenType]).index? %>
   <%= link_to TokenType.model_name.human(count: 2), admin_project_token_types_path(project), class: 'dropdown-item' %>
 <% end %>
