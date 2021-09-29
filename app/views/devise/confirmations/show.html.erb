@@ -1,10 +1,15 @@
 <div class="mt-5 pt-5"></div>
-<section class="cp-login-otp-sec mt-5" id="otp_user_section">
+<div class="cp-email-verify">
+  <div class="email-notify  col-lg-4 mg-auto">
+    <p><em>Email Verified</em> <i class="fa fas fa-check"></i></p>
+  </div>
+</div>
+<section class="cp-login-otp-sec col-lg-4 mg-auto" id="otp_user_section">
   <div class="cp-login-otp-wrap">
     <h2 class="px-4 pt-3 pb-3">Create Password</h2>
     <p  class="px-4 pt-3 pb-1 font-weight-medium">Please choose a password of your choice and confirm your account</p>
     <div class="cp-signup-form-wrap px-4 cp-form-wrap">
-      <%= simple_form_for(resource, as: resource_name, url: update_user_confirmation_path, method: :put, html: { novalidate: false, class: 'validate-form pb-5', id: 'activation-form', role: :form }) do |f| %>
+      <%= simple_form_for(resource, as: resource_name, url: update_user_confirmation_path, method: :put, html: { novalidate: false, class: 'validate-form pb-5 theme-form', id: 'activation-form', role: :form }) do |f| %>
         <%= hidden_field_tag :confirmation_token, params[:confirmation_token] %>
         <%= hidden_field_tag :manager_id, params[:manager_id] %>
         <% if @requires_password %>

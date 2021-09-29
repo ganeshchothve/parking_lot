@@ -12,6 +12,11 @@ class HomeController < ApplicationController
     render layout: 'welcome'
   end
 
+  def signed_up
+    @user = User.where(id: params[:user_id]).first
+    render layout: 'devise'
+  end
+
   def privacy_policy
     @channel_partner = ChannelPartner.new
     render layout: 'landing_page'

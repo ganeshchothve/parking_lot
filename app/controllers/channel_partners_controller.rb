@@ -41,7 +41,7 @@ class ChannelPartnersController < ApplicationController
     respond_to do |format|
       if @channel_partner.save
         cookies.delete :srd
-        format.html { redirect_to (user_signed_in? ? channel_partners_path : new_user_session_path), notice: 'Channel partner was successfully created.' }
+        format.html { redirect_to (user_signed_in? ? channel_partners_path : signed_up_path(user_id: @channel_partner.associated_user_id)), notice: 'Channel partner was successfully created.' }
         format.json { render json: @channel_partner, status: :created }
       else
         flash.now[:alert] = @channel_partner.errors.full_messages.uniq
