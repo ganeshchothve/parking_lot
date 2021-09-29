@@ -333,6 +333,8 @@ Rails.application.routes.draw do
     get :incentive_plans_summary, to: "dashboard#incentive_plans_summary"
     get :channel_partner_dashboard_counts, to: "dashboard#channel_partner_dashboard_counts"
     #get :download_brochure, to: 'dashboard#download_brochure'
+    get :sales_board, to: 'dashboard#sales_board'
+
     resource :lead do
       resources :searches, except: [:destroy], controller: 'searches' do
         get :"3d", on: :collection, action: "three_d", as: "three_d"

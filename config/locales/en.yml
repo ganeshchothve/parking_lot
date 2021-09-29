@@ -1206,6 +1206,9 @@ en:
           custom_dates: 'Custom Dates'
 
   controller:
+    sales_board:
+      index:
+        link_name: 'Sales Board'
     customer_searches:
       set_customer_search_missing: 'Customer Search not found.'
     token_types:

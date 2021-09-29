@@ -97,12 +97,16 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     "#{user.buyer? ? 'Buyer' : 'Admin'}::MeetingPolicy".constantize.new(user, Meeting).index?
   end
 
+  def sales_board?
+    DashboardPolicy.new(user, User).sales_board?
+  end
+
   # def cp_lead_activities?
   #   "#{user.buyer? ? '' : 'Admin::'}CpLeadActivityPolicy".constantize.new(user, CpLeadActivity).index?
   # end
 
   def self.custom_methods
-    %w[schemes incentive_schemes user_requests emails smses referrals accounts checklists bulk_upload_reports crms api_logs push_notifications meetings user_kycs].sort
+    %w[schemes incentive_schemes user_requests emails smses referrals accounts checklists bulk_upload_reports crms api_logs push_notifications meetings user_kycs sales_board].sort
     # add_booking portal_stage_priorities phases audits assets
   end
 end

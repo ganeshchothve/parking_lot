@@ -3,7 +3,7 @@
 <% if CustomPolicy.custom_methods.present? %>
   <% CustomPolicy.custom_methods.each do |method| %>
     <% if policy(:custom).send("#{method}?") %>
-        <% links << { method: method.to_s.titleize, link: eval("custom_#{method}_path"), name: t("controller.#{method}.index.link_name")} %>
+        <% links << { method: method.to_s.titleize, link: eval("custom_#{method}_path"), name: t("controller.#{method}.index.link_name"), options: (method == 'sales_board' ? {target: '_blank'} : {}) } %>
       </li>
     <% end %>
   <% end %>
@@ -15,7 +15,7 @@
       <%= active_link_to t('global.custom'), "javascript:;", active: [CustomPolicy.custom_methods.map{|x| 'admin/'+x}, ['index']], class: "nav-link dropdown-toggle", data: {toggle: 'dropdown'},  id: "dropdownMenuLeft3", "data-bs-toggle": "collapse", "data-bs-target":"#dashboardMore", "aria-expanded": "false" %>
       <div id="dashboardMore" class="accordion-collapse collapse" aria-labelledby="dropdownMenuLeft3">
         <% links.each do |link| %>
-          <%= active_link_to link[:name], link[:link] %>
+          <%= active_link_to link[:name], link[:link], link[:options] %>
         <% end %>
       </div>
     </div>

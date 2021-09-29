@@ -14,7 +14,7 @@ Chart.register({
       ctx.save();
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.font = "16px normal 'Helvetica Nueue'";
+      ctx.font = "14px normal 'Rubik', sans-serif";
       if (chart.options.title != undefined && chart.options.title.text != undefined) {
         ctx.fillText(chart.options.title.text, width / 2, 18); // <====   ADDS TITLE
       }
