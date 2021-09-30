@@ -42,7 +42,7 @@
                             <% @assets[0..5].each_with_index do |asset, index|%>
                                 <li class="<%= (@assets.size > 5 && index == 5) ? "more-img" : "" %>">
                                     <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal">
-                                     <img src="<%= asset.file.url %>" class="img-fluid">
+                                     <div class="wd-100 ht-77 rounded" style="background-image: url(<%= asset.file.url %>);background-size:cover;background-position:center"></div>
                                      <% if (@assets.size > 5 && index == 5) %>
                                      <p>+ <%= @assets.size - 6 %></p>
                                      <% end %> 
@@ -242,10 +242,12 @@
                                                     <% @assets = @project.assets.where(document_type: "images") %>
                                                     <% @assets[0..5].each_with_index do |asset, index|%>
                                                         <li class="<%= (@assets.size > 5 && index == 5) ? "more-img" : "" %>">
-                                                            <img src="<%= asset.file.url %>" class="img-fluid">
-                                                            <% if (@assets.size > 5 && index == 5) %>
-                                                                <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal"><p>+ <%= @assets.size - 6 %></p></a>
-                                                            <% end %> 
+                                                            <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal">
+                                                                <div class="wd-100 ht-77 rounded" style="background-image: url(<%= asset.file.url %>);background-size:cover;background-position:center"></div>
+                                                                <% if (@assets.size > 5 && index == 5) %>
+                                                                <p>+ <%= @assets.size - 6 %></p>
+                                                                <% end %> 
+                                                            </a>
                                                         </li>
                                                     <% end %>
                                                 </ul>
@@ -372,7 +374,7 @@
                                             <% @project.specifications.each do |spec| %>
                                                 <div class="col-lg-6 mb-3">
                                                 <h3><%= spec.category.titleize %></h3>
-                                                <p><%= spec.description&.html_safe %></p>
+                                                <div><%= spec.description&.html_safe %></div>
                                                 </div>
                                               <% end %>
                                             </div>

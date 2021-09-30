@@ -23,7 +23,7 @@ $txt-drk-b-lt: #3F5275;
 	background-color: $success;
 }
 .btn:hover{
-	&.bg-primary{
+	&.bg-primary, &.bg-white, &.bg-secondary{
 		color:$white;
 	}
 }
@@ -42,7 +42,6 @@ $txt-drk-b-lt: #3F5275;
 .bg-success-light{
 	background-color: rgba(40,166,69,0.10);
 }
-
 .primary{
 	color: $primary!important;
 }
@@ -205,6 +204,9 @@ a{
 .page-loading{
 	border: 0px solid #fff!important;
     padding: 30px!important;
+}
+.modal{
+	z-index: 99999;
 }
 .load-dotted {
     position: absolute;
@@ -1150,7 +1152,7 @@ select.form-control{
     height: 100%;
     top: 0;
     left: 0;
-    z-index: 9999;
+    z-index: 999;
     .header-logo {
 	    padding: 20px 10px;
 	}
@@ -1938,15 +1940,17 @@ select.form-control{
 			padding-left: 25px;
 			position: relative;
 			&:before{
-				content: "\f058";
+				content: "";
 				margin-right: 10px;
-				width: 10px;
-				height: 10px;
+				width: 12px;
+				height: 12px;
 				display: inline-block;
-				font-family: 'Font Awesome 5 Pro';
-				font-weight: 900;
+				background-image: url("check-circle.svg");
+				background-size: contain;
+				background-position: center;
 				position: absolute;
 				left: 0;
+				top: 4px;
 			}
 		}
 	}
@@ -3801,7 +3805,7 @@ body.fixed-subheader .prjt-menu{
 		border-radius: 4px;
 		background-color: #97B350;
 		text-align: center;
-		padding:7px;
+		padding:5px;
 		color: #fff;
 		&:hover{
 			text-decoration: unset;
@@ -3898,7 +3902,7 @@ table .dropdown-menu.show{
 	.dropdown-item{
 		height: auto;
 		@include tableLightTitle;
-		padding: 8px 15px;
+		padding: 8px 15px!important;
 	}
 }
 @mixin LightTitle14{
@@ -4202,4 +4206,7 @@ table .dropdown-menu.show{
 }
 .wd-4{
 	width: 4px;
+}
+.ht-77{
+	height: 77px;
 }
