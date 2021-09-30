@@ -36,16 +36,88 @@
                 <p class="fn-14 text-light-blue mb-0"><%= Project.count %> Projects Available</p>
               </div>
               <div class="row">
-                <!--
+               
                 <div class="col-lg-4">
                   <div class="p-4">
                     <select class="h3 mb-0 font-weight-medium f-20 form-control d-sm-inline-block">
                       <option>All Projects (<%= Project.count %>)</option>
                     </select>
                   </div>
+                    <div class="col-lg-11 ps-4">
+                      <div class="row mb-3">
+                        <div class="col-lg-8">
+                          <div class="ht-34 wd-100 rounded bg-primary" style="width: 90%;"></div>
+                        </div>
+                        <div class="col-lg-4 p-0">
+                          <div>
+                            <div class="d-inline-block wd-4 ht-34 rounded me-1 bg-primary"></div>
+                            <div class="d-inline-block">
+                              <span class="stage-nos fn-12 font-medium theme-txt-color d-block">378</span>
+                              <span class="stage-title fn-12 text-light-blue">Open</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-lg-8">
+                          <div class="ht-34 wd-100 rounded bg-danger" style="width: 70%;"></div>
+                        </div>
+                        <div class="col-lg-4 p-0">
+                          <div>
+                            <div class="d-inline-block wd-4 ht-34 rounded me-1 bg-danger"></div>
+                            <div class="d-inline-block">
+                              <span class="stage-nos fn-12 font-medium theme-txt-color d-block">290</span>
+                              <span class="stage-title fn-12 text-light-blue">Walk Ins</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-lg-8">
+                          <div class="ht-34 wd-100 rounded bg-warning" style="width: 50%;"></div>
+                        </div>
+                        <div class="col-lg-4 p-0">
+                          <div>
+                            <div class="d-inline-block wd-4 ht-34 rounded me-1 bg-warning"></div>
+                            <div class="d-inline-block">
+                              <span class="stage-nos fn-12 font-medium theme-txt-color d-block">187</span>
+                              <span class="stage-title fn-12 text-light-blue">Bookings</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-lg-8">
+                          <div class="ht-34 wd-100 rounded bg-info" style="width: 30%;"></div>
+                        </div>
+                        <div class="col-lg-4 p-0">
+                          <div>
+                            <div class="d-inline-block wd-4 ht-34 rounded me-1 bg-info"></div>
+                            <div class="d-inline-block">
+                              <span class="stage-nos fn-12 font-medium theme-txt-color d-block">89</span>
+                              <span class="stage-title fn-12 text-light-blue">9.9% Paid</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-lg-8">
+                          <div class="ht-34 wd-100 rounded bg-secondary" style="width: 10%;"></div>
+                        </div>
+                        <div class="col-lg-4 p-0">
+                          <div>
+                            <div class="d-inline-block wd-4 ht-34 rounded me-1 bg-secondary"></div>
+                            <div class="d-inline-block">
+                              <span class="stage-nos fn-12 font-medium theme-txt-color d-block">38</span>
+                              <span class="stage-title fn-12 text-light-blue">Registrations</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                 </div>
-                -->
-                <div class="col-lg-12">
+                
+                <div class="col-lg-8">
                   <canvas id="stage_wise_bar_chart" width="650" height="300"></canvas>
                 </div>
               </div>
