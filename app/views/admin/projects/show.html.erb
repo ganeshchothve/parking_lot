@@ -1,3 +1,4 @@
+<% inventory_avl = @project.project_units.count > 0 %>
 <% project_labels = t('mongoid.attributes.project') %>
 <% interest_access = policy([current_user_role_group, InterestedProject]).index? %>
 <% interest = current_user.interested_projects.in(status: %w(subscribed approved)).where(project_id: @project.id).presence %>
@@ -89,9 +90,9 @@
                                     <div class="col-5 overview-left float-start">
                                         <p>
                                             <span>Configuration</span>
-                                            <%= DashboardDataProvider.configurations(@project).to_sentence %> Flats <%= @project.project_towers.present? ? "| #{@project.project_units.min(:saleable)&.round} - #{@project.project_units.max(:saleable)&.round} #{@project.area_unit}" : '' %>
+                                            <%= inventory_avl ? DashboardDataProvider.configurations(@project).to_sentence : @project.configurations&.to_sentence %> Flats <%= inventory_avl ? "| #{@project.project_units.min(:saleable)&.round} - #{@project.project_units.max(:saleable)&.round} #{@project.area_unit}" : '' %>
                                         </p>
-                                        <% if @project.project_units.count > 0 %>
+                                        <% if inventory_avl %>
                                           <p>
                                               <span>Property Value</span>
                                               <%= number_to_inr(@project.project_units.gt(all_inclusive_price: 0).min(:all_inclusive_price)) %> - <%= number_to_inr(@project.project_units.gt(all_inclusive_price: 0).max(:all_inclusive_price)) %>
@@ -148,6 +149,7 @@
                                     <% end %>
                                 </div>
                             </div>
+                            <% if inventory_avl %>
                             <div class="prjt-desc-tab col-12 pt-4 float-start" id="tab-configure">
                                 <div class="tab-header col-12 float-start">
                                     <h2 class="tab-title float-start">Configurations</h2>
@@ -228,6 +230,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <% end %>
                             <div class="prjt-desc-tab col-12 bt-bt float-start" id="tab-collaterals">
                                 <div class="tab-header col-12 float-start">
                                     <h2 class="tab-title float-start">Collaterals</h2>
@@ -362,6 +365,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <% if @project.specifications.present? %>
                             <div class="prjt-desc-tab col-12 bt-bt float-start" id="tab-specifications">
                                 <div class="tab-header col-12 float-start">
                                     <h2 class="tab-title">Specifications</h2>
@@ -369,7 +373,6 @@
                                 <div class="tab-body">
                                     <div class="col-12">
                                         <div class="specifications-tab-wrap">
-                                            <p>Your desire to stand apart, is closer than you think! Live in trendy homes that have been smartly designed; just for you! Smaller passages and larger rooms. Because we know you spend 98% more time in your rooms than in the passages.</p>
                                             <div class="row mt-4 specification-list">
                                             <% @project.specifications.each do |spec| %>
                                                 <div class="col-lg-6 mb-3">
@@ -382,6 +385,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <% end %>
                             <% if @project.timeline_updates.present? %>
                             <div class="prjt-desc-tab col-12 bt-bt float-start" id="tab-timeline">
                                 <div class="tab-header col-12 float-start pb-3">

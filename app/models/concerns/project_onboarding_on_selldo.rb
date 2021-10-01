@@ -510,11 +510,11 @@ module ProjectOnboardingOnSelldo
       if response.code == '200' || response.code == '201'
         return JSON.parse(response.body)
       else
-        errors << "Create Custom Field - ERRMSG: #{response.body}"
+        errors << "Create Custom Field (#{label}) - ERRMSG: #{response.body}"
         return nil
       end
     rescue => e
-      errors << "Create Custom Field - ERRMSG: #{e.message}"
+      errors << "Create Custom Field (#{label}) - ERRMSG: #{e.message}"
       return nil
     end
   end
