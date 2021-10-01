@@ -3649,13 +3649,17 @@ body.fixed-subheader .prjt-menu{
 
 /******************************** Header *****************************/
 .navbar{
-	padding: 10px;
+	padding: 0 10px;
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
-	.navbar-brand{
-		font-size: 24px;
-		font-weight: 700;
-		letter-spacing: 4.2px;
-		color: #074bcc;
+	.header-logo{
+		padding: 0;
+		height: 80px;
+		width: 160px;
+		position: relative;
+		img{
+			width: 100%;
+			height: auto;
+		}
 	}
 	&.fixed-top {
 		position: fixed;
