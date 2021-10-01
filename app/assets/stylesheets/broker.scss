@@ -1151,7 +1151,7 @@ select.form-control{
     background-color: $theme-txt-color;
     width: 160px;
     position: fixed;
-    height: 100%;
+    height: calc(100% - 80px);
     top: 0;
     left: 0;
     z-index: 999;
@@ -1159,7 +1159,7 @@ select.form-control{
 	.header-menu{
 		margin-top: 10px;
 		ul{
-			height: 78vh;
+			height: calc(100vh - 135px);
 			overflow-y: auto;
 			overflow-x: hidden;
 			li{
@@ -1198,7 +1198,7 @@ select.form-control{
 					.accordion-collapse{
 						background-color: rgba(62,72,92,0.61);
 						a{
-							padding: 10px 0px 10px 30px;
+							padding: 7px 0px 7px 30px;
 						}
 					}
 				}
@@ -3648,9 +3648,12 @@ body.fixed-subheader .prjt-menu{
 }
 
 /******************************** Header *****************************/
-.navbar{
+.navbar, .header-menu{
 	padding: 0 10px;
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+	&.header-menu{
+		padding:0px;
+	}
 	.header-logo{
 		padding: 0;
 		height: 80px;
@@ -4223,4 +4226,15 @@ table .dropdown-menu.show{
 }
 .ht-77{
 	height: 77px;
+}
+.noty_bar{
+	background-color: $white!important;
+	box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.15) !important;
+	border-bottom: 0px solid!important;
+	.custom-noty-temp{
+		svg{
+			width: 36px;
+			height: 36px;
+		}
+	}
 }

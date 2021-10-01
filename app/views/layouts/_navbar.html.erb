@@ -34,7 +34,7 @@
         <div class="account-menu d-sm-inline-block dropdown">
           <a href="javascript:;" class="dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown"
             aria-expanded="false">
-            <span class="user-first-ltr">JW</span>
+            <span class="user-first-ltr"><%= "#{current_user.first_name.try(:[], 0)}#{current_user.last_name.try(:[], 0)}" %></span>
             <span class="user-name"><%= t('welcome', name: current_user.first_name ) %></span>
           </a>
           <div class="dropdown-menu user-menu-top" aria-labelledby="navbarDropdown">
