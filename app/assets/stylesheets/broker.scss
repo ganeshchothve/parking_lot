@@ -6,7 +6,9 @@
 @import "building";
 
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap');
-
+a{
+	color: inherit;
+}
 $primary: #006DEE;
 $warning: #FFA200;
 $danger: #EE0000;
@@ -1153,9 +1155,7 @@ select.form-control{
     top: 0;
     left: 0;
     z-index: 999;
-    .header-logo {
-	    padding: 20px 10px;
-	}
+	margin-top: 80px;
 	.header-menu{
 		margin-top: 10px;
 		ul{
@@ -1209,13 +1209,23 @@ select.form-control{
 .header-topbar {
     position: fixed;
     top: 0;
-    left: 160px;
-    width: calc(100% - 160px);
+    left: 0;
+    width: 100%;
     background-color: #fff;
     z-index: 999;
-    padding: 0px 20px;
+    padding: 0px 20px 0 0;
     box-shadow: 0px 2px 8px #00000014;
     height: 80px;
+	.header-logo {
+	    padding: 0;
+		height: 80px;
+		width: 160px;
+		position: relative;
+		img{
+			width: 100%;
+			height: auto;
+		}	
+	}
     .header-inner{
 	    h1.page-title {
 		    line-height: 24px;

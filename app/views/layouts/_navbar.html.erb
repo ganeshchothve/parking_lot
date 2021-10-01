@@ -6,9 +6,6 @@
 <header>
   <div class="header-leftbar">
     <div class="leftbar-wrap">
-      <div class="header-logo">
-        <%= link_to((image_tag 'launchpad-white-logo.png', class: 'img-fluid'), dashboard_path) %>
-      </div>
       <div class="header-menu">
         <ul class="list-unstyled ">
           <%= render "layouts/navbar/#{current_user_role_group}" %>
@@ -18,6 +15,9 @@
   </div>
   <div class="header-topbar">
     <div class="header-inner">
+      <div class="header-logo float-start">
+        <%= link_to (current_client.logo.present? ? (image_tag current_client.logo.url, class: 'img-fluid position-absolute start-50 top-50 translate-middle', alt: "Logo") : "launchpad-logo.png"), dashboard_path, class: 'navbar-brand me-0'%>
+      </div>
       <div class="float-start">
         <%# <h1 class="page-title">Dashboard</h1> %>
       </div>
@@ -34,7 +34,7 @@
         <div class="account-menu d-sm-inline-block dropdown">
           <a href="javascript:;" class="dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown"
             aria-expanded="false">
-            <%# <span class="user-first-ltr">JW</span> %>
+            <span class="user-first-ltr">JW</span>
             <span class="user-name"><%= t('welcome', name: current_user.first_name ) %></span>
           </a>
           <div class="dropdown-menu user-menu-top" aria-labelledby="navbarDropdown">
