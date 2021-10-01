@@ -10,10 +10,10 @@ module BulkUpload
       booking_portal_client = bur.client
       #client_id = booking_portal_client.selldo_client_id
 
-      developer = Developer.where(name: booking_portal_client.name, booking_portal_client_id: booking_portal_client.id).first
-      if developer.blank?
-        developer = Developer.create(name: booking_portal_client.name,booking_portal_client_id: booking_portal_client.id)
-      end
+      #developer = Developer.where(name: booking_portal_client.name, booking_portal_client_id: booking_portal_client.id).first
+      #if developer.blank?
+      #  developer = Developer.create(name: booking_portal_client.name,booking_portal_client_id: booking_portal_client.id)
+      #end
 
       costs = {}
       data = {}
@@ -86,13 +86,13 @@ module BulkUpload
           if(ProjectUnit.where(erp_id: erp_id).blank?)
             project_unit = ProjectUnit.new
             project_unit.erp_id = erp_id
-            project_unit.developer = developer
+            #project_unit.developer = developer
             project_unit.project = project
             project_unit.project_tower = project_tower
             project_unit.unit_configuration = unit_configuration
             project_unit.booking_portal_client = booking_portal_client
 
-            project_unit.developer_name = developer.name
+            #project_unit.developer_name = developer.name
             project_unit.project_name = project_name
             project_unit.project_tower_name = project_tower_name
             project_unit.unit_configuration_name = unit_configuration_name
