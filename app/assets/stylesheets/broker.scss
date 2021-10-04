@@ -1127,6 +1127,19 @@ select.form-control{
 		}
 	}
 }
+.projectDescCarousel{
+	button{
+		bottom: inherit;
+		span{
+			width: 16px;
+			height: 16px;
+		}
+	}
+	.carousel-control-prev{
+		left: inherit;
+		right: 20px;
+	}
+}
 
 /**************** Header ***********/
  /* Firefox */
@@ -2846,7 +2859,7 @@ select.form-control{
 				list-style: none;
 				width: 25%;
 				float: left;
-				border-bottom: 1px solid #e4e4e4;
+				// border-bottom: 1px solid #e4e4e4;
 				position: relative;
 				padding-bottom: 10px;
 				a{
@@ -3315,6 +3328,10 @@ select.form-control{
 								line-height: 20px;
 								letter-spacing: 0.39px;
 							}
+							.project-overview-desc{
+								height: 140px;
+								overflow-y: auto;
+							}
 						}
 						.location-list{
 							p{
@@ -3641,7 +3658,7 @@ select.form-control{
 
 body.fixed-subheader .prjt-menu{
 	background-color: #fff;
-	z-index: 999;
+	z-index: 99;
 	position: fixed;
 	top: 80px;
 	width: 100%;
