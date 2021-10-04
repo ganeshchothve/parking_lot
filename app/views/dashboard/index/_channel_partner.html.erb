@@ -401,7 +401,7 @@
       <%= simple_form_for(channel_partner, local: true, remote: true, html: {id: 'new_channel_partner_form', class: 'validate-form theme-form tab-content', "data-resource-type": global_labels['channel_partner'], "data-type": "json"}) do |form| %>
       <div class="step-tab-content tab-pane fade show active px-3" role="tabpanel" id="step-1">
         <div class="step-tab-inner">
-          <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Personal Info</h2>
+          <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Personal Info</h2> %>
           <div class="cp-form-wrap px-4 pt-2 mb-5">
             <%= render "channel_partners/personal_fields", {form: form} %>
           </div>
@@ -410,7 +410,7 @@
 
       <div class="step-tab-content tab-pane fade shadow-sm px-3" role="tabpanel" id="step-2">
         <div class="step-tab-inner">
-          <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Company Info</h2>
+          <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Company Info</h2> %>
           <div class="cp-form-wrap px-4 pt-2 mb-5">
             <%= render "channel_partners/company_fields", {form: form} %>
           </div>
@@ -418,7 +418,7 @@
       </div>
       <div class="step-tab-content tab-pane fade shadow-sm px-3" role="tabpanel" id="step-3">
         <div class="step-tab-inner">
-          <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Company Details</h2>
+          <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Company Details</h2> %>
           <div class="cp-form-wrap px-4 pt-2 mb-5">
             <%= render "channel_partners/questionaire_fields", {form: form} %>
           </div>
@@ -426,7 +426,7 @@
       </div>
       <div class="step-tab-content tab-pane fade shadow-sm px-3" role="tabpanel" id="step-4">
         <div class="step-tab-inner">
-          <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Upload Documents</h2>
+          <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Upload Documents</h2> %>
           <div class="cp-form-wrap px-4 pt-2 mb-5">
             <%= render 'channel_partners/asset_form', assetable: channel_partner %>
           </div>
@@ -550,13 +550,13 @@
               <span>
                 <img src="<%= asset_path 'cp-ex-feat-10.svg' %>">
               </span>
-              <p>Unique online<br> broker profile</p>
+              <p>Unique online<br> channel partner profile</p>
             </div>
             <div class="col-lg-3 app-features-list">
               <span>
                 <img src="<%= asset_path 'cp-ex-feat-11.svg' %>">
               </span>
-              <p>Performance-based<br> broker ratings</p>
+              <p>Performance-based<br> channel partner ratings</p>
             </div>
           </div>
         </div>
