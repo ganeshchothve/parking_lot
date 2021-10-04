@@ -126,7 +126,7 @@ class Project
   mount_uploader :mobile_cover_photo, DocUploader
 
   belongs_to :booking_portal_client, class_name: 'Client'
-  belongs_to :developer
+  belongs_to :developer, optional: true
   belongs_to :creator, class_name: 'User'
   has_many :project_units
   has_many :booking_details

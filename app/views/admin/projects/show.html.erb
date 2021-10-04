@@ -519,7 +519,7 @@
                     </div>
                 </div>
                 -->
-                <% if Project.ne(id: @project.id).where(developer_id: @project.developer_id).present? %>
+                <% if Project.ne(id: @project.id).where(developer_name: @project.developer_name).present? %>
                 <div class="row mb-5">
                     <div class="col-lg-12 mt-5 mb-3">
                       <h2 class="sec-title">Other projects by <%= @project.developer_name %></h2>

@@ -7,8 +7,8 @@
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :developer_id, class: 'label-required' %>
-      <%= f.select :developer_id, Developer.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: (policy([current_user_role_group, project]).editable_field?("developer_id") ? false : true) %>
+      <%= f.label :developer_name, class: 'label-required' %>
+      <%= f.text_field :developer_name, class: 'form-control', autofocus: true, required: 'required', disabled: !policy([:admin, project]).editable_field?("developer_name") %>
     </div>
   </div>
   <div class="col-md-6">
