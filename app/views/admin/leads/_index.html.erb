@@ -17,17 +17,14 @@
                       <% end %>
                     </h2>
                     <% if lead.email.present? %>
-                    <a href="javascript:;" class="email-icon small d-inline-block mt-1 fn-16" data-bs-toggle="popover" data-bs-container="body" data-bs-placement="bottom"
-                      title="Email" data-bs-content="<%= lead.email || '' %>">
-                      <i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i>
-                  </a>
+                    <p class="email-icon small d-inline-block mt-1 fn-16 mb-0">
+                      <i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i><%= lead.email || '' %>
+                    </p>
                     <% end %>
                     <% if lead.phone.present? %>
-                    <a href="javascript:;" class="phone-icon small d-inline-block mt-1 fn-16" data-bs-container="body"
-                      data-bs-placement="bottom" data-bs-toggle="popover" title="Phone no"
-                      data-bs-content="<%= lead.phone || '' %>">
-                      <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i>
-                </a>
+                    <p class="phone-icon small d-inline-block mt-1 ms-2 fn-16 mb-0">
+                      <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= lead.phone || '' %>
+                    </p>
                     <% end %>
                     <% if lead.manager_id? && current_user.role.in?(%w(admin superadmin)) %>
                     <p class="fn-14 mt-1 mb-0">

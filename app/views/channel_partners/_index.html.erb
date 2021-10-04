@@ -13,17 +13,14 @@
                       <%= channel_partner.name %>
                     </h2>
                     <% if channel_partner.email.present? %>
-                    <span class="email-icon small d-inline-block mt-1 fn-16" data-bs-toggle="popover"
-                      title="Popover title" data-bs-content="<%= channel_partner.email %>">
-                      <i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i>
-                    </span>
+                    <p class="email-icon small d-inline-block mt-1 fn-16 mb-0">
+                      <i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i><%= channel_partner.email || '' %>
+                    </p>
                     <% end %>
                     <% if channel_partner.phone.present? %>
-                    <span class="phone-icon small d-inline-block mt-1 fn-16" data-bs-container="body"
-                      data-bs-placement="bottom" data-bs-toggle="popover" title="Popover title"
-                      data-bs-content="<%= channel_partner.phone %>">
-                      <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i>
-                    </span>
+                    <p class="phone-icon small d-inline-block mt-1 ms-2 fn-16 mb-0">
+                      <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= channel_partner.phone || '' %>
+                    </p>
                     <% end %>
                     <% if channel_partner.cp_code.present? %>
                     <p class="fn-14 mt-1 mb-0">
