@@ -1,0 +1,31 @@
+<% if policy([ current_user_role_group, video]).update? %>
+  <div class="mb-3">
+    <%= f.label :thumbnail, class: 'label-required' %>
+    <%= f.file_field :thumbnail, class: 'form-control' %>
+  </div>
+<hr/>
+<% end %>
+<div class = "row">
+  <div class="files-container-single">
+    <% unless video.new_record? %>
+      <%=
+        links = {}
+        if policy([ current_user_role_group, video]).destroy?
+          links[:destroy] = videoable_path(videoable_type: videoable.class.model_name.i18n_key.to_s, videoable_id: videoable.id, id: video.id)
+        end
+        if video.thumbnail.file.exists?
+          render "assets/file_icon", record: {id: video.id, file_size: '', url: video.thumbnail.url, content_type: video.thumbnail.content_type, name: video.thumbnail.filename }, links: links
+        end
+      %>
+    <% end %>
+  </div>
+</div>
+<div class="mb-3">
+  <%= f.label :description, class: 'label-required' %>
+  <%= f.text_field :description, autofocus: true, class: "form-control", required: 'required', disabled: !(policy([:admin, video]).editable_field?("description")) %>
+</div>
+<div class="mb-3">
+  <%= f.label :embedded_video, class: 'label-required' %>
+  <%= f.text_area :embedded_video, rows: 5, autofocus: true, class: "form-control", required: 'required', disabled: !(policy([:admin, video]).editable_field?("embedded_video")) %>
+</div>
+

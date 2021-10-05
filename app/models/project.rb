@@ -151,6 +151,7 @@ class Project
   has_many :token_types
   has_many :time_slots
   has_many :unit_configurations
+  has_many :videos, as: :videoable
 
   validates :name, presence: true
   validates_uniqueness_of :name, :rera_registration_no, allow_blank: true

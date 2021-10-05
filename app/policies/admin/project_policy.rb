@@ -13,6 +13,14 @@ class Admin::ProjectPolicy < ProjectPolicy
     asset_create?
   end
 
+  def video_create?
+    update?
+  end
+
+  def video_update?
+    video_create?
+  end
+
   def index?
     !user.buyer? && (current_client.enable_actual_inventory?(user) || enable_incentive_module?(user))
   end

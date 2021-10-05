@@ -24,9 +24,9 @@ Array.prototype.to_sentence = function() {
   }
 }
 Amura.global_success_handler = function(message){
-  if(message){     
+  if(message){
     new Noty({
-      text:message, 
+      text:message,
       type:"success",
       progressBar: true,
       timeout: 5000,
@@ -43,7 +43,7 @@ Amura.global_error_handler = function(errors){
     if(typeof errors == "string"){
       if(errors != ""){
         new Noty({
-          text:errors, 
+          text:errors,
           type:"error",
           progressBar: true,
           callbacks: {
@@ -57,6 +57,7 @@ Amura.global_error_handler = function(errors){
           text:"There was some issue with the system. Please contact " + App.client.name + " support", 
           type:"error",
           progressBar: true,
+          timeout: 5000,
           callbacks: {
             onTemplate: function() {
               this.barDom.innerHTML = '<div class="custom-noty-temp shadow success-temp noty_body d-flex content-justify-between"><i class="fa fa-exclamation-circle fill-danger mt-2"></i><div class="noty-info ms-3"><h3 class="danger fn-20 font-medium">Error!</h3><p class="theme-txt-color fn-14 mb-0">' + this.options.text + '</p></div><div>';
@@ -69,7 +70,7 @@ Amura.global_error_handler = function(errors){
       _.each(errors, function(err){(message = message + "<li>" + err + "</li>")});
       message = message + "</ul>";
       new Noty({
-        text:message, 
+        text:message,
         type:"error",
         progressBar: true,
         callbacks: {

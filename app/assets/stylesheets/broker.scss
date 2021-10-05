@@ -2323,7 +2323,7 @@ select.form-control{
 /* .googleMeet-modal{ */
 	.modal-dialog{
 		width: 636px;
-		min-width: 636px;
+		//min-width: 636px;
 		h3{
 			color: $theme-txt-color;
 			font-size: 20px;
@@ -3052,7 +3052,7 @@ select.form-control{
 	.radio_buttons{
 		border-radius: 50%;
 	} 
-	.mb-3 input, textarea, select{
+	.mb-3 input, select{
 		height: 36px;
 	}
 	select, textarea{
