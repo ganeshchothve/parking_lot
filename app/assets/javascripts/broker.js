@@ -27,6 +27,7 @@
 //= require otp_based_login
 //= require amura
 //= require plugins/jsencrypt
+//= require jquery-ui.min
 
 var window_wt = $(window).width();
 var window_ht = $(window).height();

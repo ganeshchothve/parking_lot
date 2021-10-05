@@ -151,11 +151,86 @@
                             </div>
                             <% if inventory_avl %>
                             <div class="prjt-desc-tab col-12 pt-4 float-start" id="tab-configure">
-                                <div class="tab-header col-12 float-start">
+                                <div class="tab-header col-12 float-start position-relative">
                                     <h2 class="tab-title float-start">Configurations</h2>
-                                    <!--
-                                    <p class="float-end">EMI's starting at <strong>₹ 25,000</strong> /month</p>
-                                    -->
+                                    <a href="javascript:;"><p class="float-end">EMI's starting at <strong>₹ 25,000</strong> /month</p>                                   
+                                    </a>
+                                     <div class="card emi-wrapper position-absolute top-50 end-0">
+                                        <div class="card-header bg-primary py-4  d-flex justify-content-between">
+                                            <h2 class="fn-20 white mb-0">EMI Status</h2>
+                                            <p class="fn-20 font-medium white mb-0">₹ <span class="emiValue"></span></p>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="widget">
+                                                <div class="wid_left">
+                                                    <div class="form-group">
+                                                        <div class="range_indicator">
+                                                            <label for="loan-amount">Home Loan Amount <span>In Lakhs</span> </label>
+                                                            <div class="indi_rgt">₹  <span id="selected-amount"></span> Lakhs </div>
+                                                        </div>
+                                                        <div id="loan-amount"></div>
+                                                        <span class="scalerange">
+                                                            <span>0</span>
+                                                            <span>25</span>
+                                                            <span>50</span>
+                                                            <span>75</span>
+                                                            <span>100</span>
+                                                            <span>125</span>
+                                                            <span>150</span>
+                                                            <span>175</span>
+                                                            <span>200</span>
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="range_indicator">
+                                                            <label for="loan-duration">Rate of Interest</label>
+                                                            <div class="indi_rgt"><span id="selected-interest"></span> % </div>
+                                                        </div>
+                                                        <div id="interest-rate"></div>
+                                                        <span class="scalerange">
+                                                            <span>5</span>
+                                                            <span>7.5</span>
+                                                            <span>10</span>
+                                                            <span>12.5</span>
+                                                            <span>15</span>
+                                                            <span>17.5</span>
+                                                            <span>20</span>
+                                                            <span>22.5</span>
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="range_indicator">
+                                                            <label for="loan-duration">Loan Tenure</label>
+                                                            <div class="indi_rgt"><span id="selected-duration"></span> Years </div>
+                                                        </div>
+                                                        <div id="loan-duration"></div>
+                                                        <span class="scalerange">
+                                                            <span>0</span>
+                                                            <span>5</span>
+                                                            <span>10</span>
+                                                            <span>15</span>
+                                                            <span>20</span>
+                                                            <span>25</span>
+                                                            <span>30</span>
+                                                            <span>35</span>
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="wid_right list-unstyled d-flex justify-content-between">
+                                                        <div class="fn-14">Total Interest Payable <p class=" fn-20 font-medium">₹ <span class="interestValue"></span></p>
+                                                        </div>
+                                                        <div class="fn-14">Total Amount Payable 
+                                                            <!-- <p class="fn-14 mb-0">Principal + Interest</p> -->
+                                                            <p class="fn-20 font-medium">₹ <span class="TotalValue "></span></p>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="tab-body col-12 float-start">
                                     <div class="col-12">
