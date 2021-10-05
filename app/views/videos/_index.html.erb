@@ -1,0 +1,48 @@
+<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
+  <thead class="th-default">
+    <thead>
+      <tr class="bg-primary white">
+        <th><%= t('mongoid.attributes.video.thumbnail') %></th>
+        <th><%= t('mongoid.attributes.video.description') %></th>
+        <th class="text-right wd-22"></th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+    <% videos.each do |video| %>
+    <tr>
+      <td data-title=<%= t('mongoid.attributes.video.thumbnail') %>>
+        <%= image_tag video.thumbnail.url, width: 100, height: 100, class: 'img-fluid' %>
+      </td>
+      <td data-title=<%= t('mongoid.attributes.video.description') %>>
+        <%= video.description %>
+      </td>
+      <td>
+        <div class="dropdown d-inline-block">
+          <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            <i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+            <% if policy([:admin, video]).edit? %>
+            <%= link_to t('helpers.edit.link_name', model: Video.model_name.human), edit_videoable_path(id: video.id), class: 'dropdown-item modal-remote-form-link' %>
+            <% end %>
+            <% if policy([:admin, video]).destroy? %>
+            <%= link_to t("controller.videos.destroy.link_name"), videoable_path(id: video.id), method: :delete, class: 'dropdown-item' %>
+            <% end %>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<div class="col-lg-12 py-3 bg-white mb-2 px-2">
+  <div class="row">
+    <div class="col-lg-6">
+      <p class="table-entry mb-0 ps-2 pt-2"><%= page_entries_info videos %></p>
+    </div>
+    <div class="col-lg-6 table-pagination">
+      <%= will_paginate videos, list_classes: %w(pagination justify-content-end) %>
+    </div>
+  </div>
+</div>

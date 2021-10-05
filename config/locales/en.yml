@@ -103,6 +103,10 @@ en:
         zero: 'Document'
         one: Document
         other: Documents
+      video:
+        zero: 'Video'
+        one: Video
+        other: Videos
       address:
         one: Address
         other: Addresses
@@ -245,6 +249,10 @@ en:
         other: Unit Configurations
 
     attributes:
+      video:
+        thumbnail: Thumbnail
+        description: Title
+        embedded_video: 'Embedded Video'
       unit_configuration:
         name: Name
         project_id: Project
@@ -1221,6 +1229,9 @@ en:
           custom_dates: 'Custom Dates'
 
   controller:
+    videos:
+      destroy:
+        link_name: 'Delete'
     sales_board:
       index:
         link_name: 'Sales Board'

@@ -40,6 +40,9 @@ Rails.application.routes.draw do
   scope "*notable_type/:notable_id" do
     resources :notes, controller: :notes, as: :notables
   end
+  scope "*videoable_type/:videoable_id" do
+    resources :videos, controller: :videos, as: :videoables
+  end
   resources :channel_partners, except: [:destroy] do
     get 'export', action: 'export', on: :collection, as: :export
     post :change_state, on: :member

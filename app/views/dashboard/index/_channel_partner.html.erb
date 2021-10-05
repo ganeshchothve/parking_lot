@@ -324,6 +324,7 @@
         <div class="app-review float-start wd-100">
           <h1 class="notify-title float-start wd-100">Your application is under review</h1>
           <p class="notify-desc float-start mb-0">We will notify you via email on the status of your application</p>
+          <p class="notify-desc float-end pe-3 mb-0">Our estimated review time is between 24-48 hours</p>
         </div>
       </div>
     </div>
@@ -432,6 +433,7 @@
           </div>
         </div>
       </div>
+
       <div class="cp-form-wrap border-top px-4 py-4 pb-3 text-end">
         <div class='form-footer px-0 text-start d-inline-block'>
           <%= form.submit "Save", class: "btn btn-primary white me-3 d-inline-block px-4 py-2 font-medium w-auto", id: 'cp-form-submit' %>
@@ -439,10 +441,36 @@
         <div class="form-footer px-0 d-inline-block d-none">
           <% if policy([current_user_role_group, channel_partner]).change_state? && policy([current_user_role_group, channel_partner]).editable_field?('event') %>
             <% link_name = "#{channel_partner.rejected? ? 'Resubmit Application' : 'Submit Application'}" %>
-            <%= link_to link_name, change_state_channel_partner_path(channel_partner, {channel_partner: {event: 'submit_for_approval'}}), method: :post, remote: true, data: {type: 'json', 'disable-with': link_name}, id: 'cp-form-change-state', class: 'btn bg-primary white px-4 d-inline-block py-2 font-medium w-auto fn-14' %>
+            <a href="javascript:;" class="btn bg-primary white px-4 d-inline-block py-2 font-medium w-auto fn-14"  data-bs-toggle="modal" data-bs-target="#confirmRegistration"><%= link_name %></a>
           <% end %>
+          <div class="modal fade googleMeet-modal" id="confirmRegistration" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class='modal-header'>
+                  <h6 class='modal-title'>Are you sure?</h6>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <p class='text-start'>By skipping the registration you will not be able to access your activity dashboard, projects and the many benefits of launchpad!</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer col-lg-12">
+                  <div class="row">
+                    <div class="col-lg-12 text-end px-0">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Skip anyway</button>
+                      <%= link_to 'Complete Registration', change_state_channel_partner_path(channel_partner, {channel_partner: {event: 'submit_for_approval'}}), method: :post, remote: true, data: {type: 'json', 'disable-with': 'Complete Registration', 'bs-dismiss': 'modal'}, id: 'cp-form-change-state', class: 'btn btn-primary' %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
       <% end %>
     </div>
   </div>
@@ -451,6 +479,7 @@
 <%= javascript_tag do %>
   $(document).ready(function(){
     FormInitializer.init($("#new_channel_partner_form"));
+
     $('#new_channel_partner_form').on('ajax:error', function(event) {
       if(typeof event.detail[0] == 'object' && event.detail[0].errors != undefined) {
         Amura.global_error_handler(event.detail[0].errors);

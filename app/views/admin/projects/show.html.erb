@@ -333,39 +333,24 @@
                                         </div>
                                     </div>
                                     
-                                    <!--
                                     <div class="col-12 mb-3 float-start">
                                         <div class="prjt-gallery">
                                             <h2>Video</h2>
                                             <ul class="collaterals-list">
+                                              <% @project.videos.each do |video| %>
                                                 <li>
                                                     <div class="prjt-video">
-                                                        <img src="<%= asset_path 'search-home-img.png' %>" class="img-fluid">
-                                                        <a href="javascript:;"><i class="fa fa-play-circle"></i></a>
-                                                        <div class="video-info">
-                                                            <span>Home overvi..</span>
-                                                            <span class="video-download">
-                                                                <i class="fa fa-download"></i>
-                                                            </span>
-                                                        </div>
+                                                      <%= image_tag video.thumbnail&.url, class: 'img-fluid' %>
+                                                      <%= link_to '<i class="fa fa-play-circle"></i>'.html_safe, videoable_path(videoable_type: @project.class.model_name.i18n_key.to_s, videoable_id: @project.id, id: video.id), class: 'modal-remote-form-link' %>
+                                                      <div class="video-info">
+                                                        <span class='text-truncate'><%= video.description %></span>
+                                                      </div>
                                                     </div>
                                                 </li>
-                                                <li>
-                                                    <div class="prjt-video">
-                                                        <img src="<%= asset_path 'search-home-img.png' %>" class="img-fluid">
-                                                        <a href="javascript:;"><i class="fa fa-play-circle"></i></a>
-                                                        <div class="video-info">
-                                                            <span>Floor Plan</span>
-                                                            <span class="video-download">
-                                                                <i class="fa fa-download"></i>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </li>
+                                              <% end %>
                                             </ul>
                                         </div>
                                     </div>
-                                    -->
                                     <div class="col-12 mb-3 float-start">
                                         <div class="prjt-gallery">
                                             <h2>Documents</h2>

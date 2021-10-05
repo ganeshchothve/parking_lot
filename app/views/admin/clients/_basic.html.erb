@@ -109,3 +109,11 @@
     </div>
   </div>
 </div>
+<div class="row">
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :powered_by_link, class: 'label-required' %>
+      <%= f.url_field :powered_by_link, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("powered_by_link") ? false : true) %>
+    </div>
+  </div>
+</div>
