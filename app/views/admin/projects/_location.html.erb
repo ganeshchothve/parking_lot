@@ -1,0 +1,30 @@
+<div class="col-md-12">
+  <div class="mb-3">
+    <%= f.label :embed_map_tag, class: '' %>
+    <%= f.text_area :embed_map_tag, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("embed_map_tag") %>
+  </div>
+</div>
+<div class="locations">
+  <% editable_locations = policy([:admin, project]).editable_field?("nearby_locations_attributes")%>
+  <% if editable_locations %>
+    <div class='text-right'>
+      <%= f.link_to_add "Add Nearby Location", :nearby_locations, :data => { :target => ".locations" }, class: 'btn btn-secondary' %>
+    </div>
+  <% end %>
+  <%= f.fields_for :nearby_locations do |sf|%>
+    <% if editable_locations %>
+      <div class='pl-2 text-right'>
+        <%= sf.link_to_remove icon("far", "times-circle") %>
+      </div>
+    <% end %>
+    <div class="mb-3">
+      <%= sf.label :distance, class: 'label-required' %>
+      <%= sf.text_field :distance, class:'form-control', required: 'required', disabled: !editable_locations %>
+    </div>
+    <div class="mb-3">
+      <%= sf.label :destination, class: 'label-required' %>
+      <%= sf.text_field :destination, class:'form-control', required: 'required', disabled: !editable_locations %>
+    </div>
+  <% end %>
+  <hr>
+</div>

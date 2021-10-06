@@ -23,6 +23,7 @@
               <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-specifications" role="tab">Specs</a>
               <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-offers" role="tab">Offers</a>
               <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-timeline" role="tab">Timeline</a>
+              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-location" role="tab">Location</a>
               <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-pages" role="tab">Content Pages</a>
               <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-logos" role="tab">Images & Docs</a>
               <% if current_user.role?(:superadmin) %>
@@ -48,6 +49,9 @@
             </div>
             <div class="tab-pane fade" id="nav-project-timeline" role="tabpanel">
               <%= render 'admin/projects/timeline-updates', f: f, project: project %>
+            </div>
+            <div class="tab-pane fade" id="nav-project-location" role="tabpanel">
+              <%= render 'admin/projects/location', f: f, project: project %>
             </div>
             <div class="tab-pane fade" id="nav-project-pages" role="tabpanel">
                 <%= render 'admin/projects/pages', f: f, project: project %>

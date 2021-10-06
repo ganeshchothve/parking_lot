@@ -94,6 +94,7 @@ class Project
   field :enable_daily_reports, type: Hash, default: {"payments_report": false}
   field :enable_slot_generation, type: Boolean, default: false
   field :embed_map_tag, type: String
+  field :usp, type: Array, default: []
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
@@ -152,13 +153,14 @@ class Project
   has_many :time_slots
   has_many :unit_configurations
   has_many :videos, as: :videoable
+  has_many :nearby_locations
 
   validates :name, presence: true
   validates_uniqueness_of :name, :rera_registration_no, allow_blank: true
   validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
 
-  accepts_nested_attributes_for :specifications, :offers, :timeline_updates, :address, allow_destroy: true
+  accepts_nested_attributes_for :specifications, :offers, :timeline_updates, :address, :nearby_locations, allow_destroy: true
 
   default_scope -> { where(is_active: true)}
 

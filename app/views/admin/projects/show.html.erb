@@ -116,30 +116,16 @@
                                 <div class="tab-body col-12 float-start pt-3">
                                     <div class="col-6 float-start">
                                         <div class="location-list">
-                                          <p><%= @project.address&.to_sentence %></p>
                                           <p><i class="fa fa-map-marker-alt me-2"></i><%= "#{@project.micro_market}, #{@project.city}" %></p>
-                                          <!--
+                                          <% if @project.nearby_locations.present? %>
                                             <ul>
+                                              <% @project.nearby_locations.each do |nb_loc| %>
                                                 <li>
-                                                    <p><span>0.2 km</span> Upcoming Mall And Theatre</p>
+                                                  <p><span><%= nb_loc.distance %> km</span> <%= nb_loc.destination&.titleize %></p>
                                                 </li>
-                                                <li>
-                                                    <p><span>0.2 km</span> Upcoming Mall And Theatre</p>
-                                                </li>
-                                                <li>
-                                                    <p><span>0.2 km</span> Upcoming Mall And Theatre</p>
-                                                </li>
-                                                <li>
-                                                    <p><span>0.2 km</span> Upcoming Mall And Theatre</p>
-                                                </li>
-                                                <li>
-                                                    <p><span>0.2 km</span> Upcoming Mall And Theatre</p>
-                                                </li>
-                                                <li>
-                                                    <p><span>0.2 km</span> Upcoming Mall And Theatre</p>
-                                                </li>
+                                              <% end %>
                                             </ul>
-                                          -->
+                                          <% end %>
                                         </div>
                                     </div>
                                     <% if @project.embed_map_tag.present? %>
@@ -273,30 +259,23 @@
                                                               <%= link_to 'View Cost Sheet', quotation_admin_project_unit_path(avl_unit, layout: false), class: 'cost-sheet-btn float-end modal-remote-form-link', style: 'height: auto' %>
                                                           </div>
                                                         <% end %>
-                                                        <!--
-                                                        <div class="col-12 bt-bt mt-3 float-start pt-2">
-                                                            <div class="col-6 float-start">
-                                                                <p class="points-list-title">Uniques Selling Points</p>
-                                                            </div>
-                                                            <div class="col-6 float-end">
-                                                                <a href="javascript:;" class="float-end view-all-btn">View All</a>
-                                                            </div>
-                                                            <ul class="points-list col-12 float-start">
-                                                                <li>
-                                                                    <p>26 Floors | 2 Apartments per floor</p>
-                                                                </li>
-                                                                <li>
-                                                                    <p>26 Floors | 2 Apartments per floor</p>
-                                                                </li>
-                                                                <li>
-                                                                    <p>26 Floors | 2 Apartments per floor</p>
-                                                                </li>
-                                                                <li>
-                                                                    <p>26 Floors | 2 Apartments per floor</p>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        -->
+                                                        <% if @project.usp.present? %>
+                                                          <div class="col-12 bt-bt mt-3 float-start pt-2">
+                                                              <div class="col-6 float-start">
+                                                                  <p class="points-list-title">Uniques Selling Points</p>
+                                                              </div>
+                                                              <div class="col-6 float-end">
+                                                                  <a href="javascript:;" class="float-end view-all-btn">View All</a>
+                                                              </div>
+                                                              <ul class="points-list col-12 float-start">
+                                                                <% @project.usp.first(3).each do |usp| %>
+                                                                  <li>
+                                                                    <p><%= usp %></p>
+                                                                  </li>
+                                                                <% end %>
+                                                              </ul>
+                                                          </div>
+                                                        <% end %>
                                                     </div>
                                                 </div>
                                             </div>

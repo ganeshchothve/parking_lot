@@ -15,6 +15,7 @@
                 <%= link_to ips.html_safe, admin_projects_path(fltrs: {user_interested_projects: current_user.id}), class: "filter-link #{params.dig(:fltrs, :user_interested_projects).present? ? 'active' : ''}" %>
               <% end %>
             </div>
+            <!--
             <div class="col-lg-4 text-end px-0">
               <div class="filter-search">
                 <input type="text" name="" placeholder="Search projects">
@@ -26,6 +27,7 @@
                 <a href="javascript:;"><i class="fa fa-sort-amount-up fill-theme"></i></a>
               </div>
             </div>
+            -->
           </div>
           <div class="row">
             <div class="col-lg-12 project-listing">
