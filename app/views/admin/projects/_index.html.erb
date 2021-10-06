@@ -1,143 +1,91 @@
-<section class="mt-3 mb-5">
-    <div class="px-4">
-      <% interested_project_ids = current_user.interested_projects.in(status: %w(subscribed approved)).distinct(:project_id) %>
-        <div class="row">
-          <div class="col-lg-12 row">
-            <div class="col-lg-8 filter-set">
-              <% all_projects = "All (#{Project.where(Project.user_based_scope(current_user, params)).count})" %>
-              <%= link_to all_projects.html_safe, admin_projects_path, class: "filter-link #{params.dig(:fltrs).blank? ? 'active' : ''}" %>
-              <% newly_launched = "Newly Launched (#{Project.where(Project.user_based_scope(current_user, params)).where(category: 'launch').count})<span class='notify'></span>" %>
-              <%= link_to newly_launched.html_safe, admin_projects_path(fltrs: {category: 'launch'}), class: "filter-link #{params.dig(:fltrs, :category) == 'launch' ? 'active' : ''}" %>
-              <% pre_launch = "Pre Launch (#{Project.where(Project.user_based_scope(current_user, params)).where(category: 'pre_launch').count})<span class='notify'></span>" %>
-              <%= link_to pre_launch.html_safe, admin_projects_path(fltrs: {category: 'pre_launch'}), class: "filter-link #{params.dig(:fltrs, :category) == 'pre_launch' ? 'active' : ''}" %>
-              <% if policy([current_user_role_group, InterestedProject]).index? %>
-                <% ips = "Interested Projects (#{interested_project_ids.count})" %>
-                <%= link_to ips.html_safe, admin_projects_path(fltrs: {user_interested_projects: current_user.id}), class: "filter-link #{params.dig(:fltrs, :user_interested_projects).present? ? 'active' : ''}" %>
-              <% end %>
-            </div>
-            <!--
-            <div class="col-lg-4 text-end px-0">
-              <div class="filter-search">
-                <input type="text" name="" placeholder="Search projects">
-              </div>
-              <div class="filter-popup">
-                <a href="javascript:;"><i class="fa fa-filter fill-theme"></i></a>
-              </div>
-              <div class="filter-sort">
-                <a href="javascript:;"><i class="fa fa-sort-amount-up fill-theme"></i></a>
-              </div>
-            </div>
-            -->
-          </div>
-          <div class="row">
-            <div class="col-lg-12 project-listing">
-              <% projects.each do |project| %>
-                <% meetings = Meeting.where(Meeting.user_based_scope(current_user, {project_id: project.id})) %>
-                <% meeting = meetings.first %>
-              <div class="single-prjt-list mt-4">
-                <div class="prjt-thumb">
-                  <div class="prjt-thumb-inner" style="background-image: url('<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>')"></div>
-                </div>
-                <div class="project-inner-info">
-                  <div class="inner-info">
-                    <h2 class="title"><%= link_to project.name, admin_project_path(project) %></h2>
-                    <p class="devl-name"><%= project.developer_name %></p>
-                    <% if project.micro_market.present? && project.city.present? %>
-                      <p class="location"><i class="fa fa-map-marker-alt fill-primary me-2"></i><%= project.micro_market %>, <%= project.city %></p>
-                    <% end %>
-                    <p class="prjt-event"><%= meetings.presence&.count || 'No' %> New event <%= meeting ? "<span>#{meeting.scheduled_on&.strftime('%b %e %Y')}#{meeting.scheduled_on&.to_time&.in_time_zone(current_user.time_zone)&.strftime(', %I:%M%p %Z')}</span>".html_safe : '' %></p>
-                  </div>
-                  <div class="prjt-date-info">
-                    <div class="inner-date">
-                      <p><%= project.launched_on.strftime('%d %b, %Y') rescue "-" %></p>
-                      <span>Launch Date</span>
-                    </div>
-                  </div>
-                  <div class="prjt-stats">
-                    <div class="prjt-inner-stats">
-                      <p>
-                        <%= Lead.where(Lead.user_based_scope(current_user, params)).where(project_id: project.id).count %> <span>Walk Ins</span>
-                        <% if policy([:admin, Lead.new(project_id: project.id)]).new? %>
-                          <%= link_to 'ADD', new_admin_lead_path(project_id: project.id), class: 'modal-remote-form-link prjt-add h-auto' %>
-                        <% end %>
-                      </p>
-                      <p>
-                        <%= BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: project.id).count %> <span>Bookings</span>
-                        <a href="javascript:;" class="prjt-add"></a>
-                      </p>
-                      <p>
-                        <%= BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: project.id).booking_stages.filter_by_tasks_completed('registration_done').count %> <span>Registrations</span>
-                        <a href="javascript:;" class="prjt-add"></a>
-                      </p>
-                    </div>
-
-                    <div class="prjt-meets">
-                      <% if meeting %>
-                        <a href="javascript:;" class="meets-devlpr-link me-3"  data-bs-toggle="modal" data-bs-target="#meeting_<%= meeting.id.to_s %>"><i class="fa fa-calendar-alt fill-primary me-2"></i>Meet Developers</a>
-
-                        <div class="modal fade googleMeet-modal" id="meeting_<%= meeting.id.to_s %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-                          <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                              <div class="modal-body">
-                                <div class="row">
-                                  <div class="col-lg-8">
-                                    <h3><%= meeting.topic %></h3>
-                                    <p><%= meeting.project&.name %> by <%= meeting.project&.developer_name %></p>
-                                  </div>
-                                  <% if meeting.meeting_type == 'webinar' %>
-                                    <div class="col-lg-4">
-                                      <img src="<%= asset_path "#{meeting.provider}.png" %>" class="<%= meeting.provider %>-logo">
-                                    </div>
-                                  <% end %>
-                                  <div class="col-lg-12">
-                                    <% meeting_time = meeting.scheduled_on&.to_time&.in_time_zone(current_user.time_zone).presence %>
-                                    <h3><%= "#{meeting.scheduled_on&.strftime('%e %b %Y')}#{meeting.scheduled_on&.to_time&.in_time_zone(current_user.time_zone)&.strftime(', %I.%M %p %Z')}" %>
-                                    <h3><%= %></h3>
-                                    <p><%= meeting.agenda %>, This <%= "#{meeting.scheduled_on&.strftime('%A %b %e, %Y')}#{meeting_time&.strftime('at %I:%M%p')}#{meeting_time&.advance(minutes: meeting.duration)&.strftime(' - %I:%M%p %Z')}" %> </p>
-                                  </div>
-                                </div>
-                              </div>
-                              <%= render 'meetings/toggle_interest_form', meeting: meeting %>
-                            </div>
-                          </div>
-                        </div>
-                      <% end %>
-
-                      <% if policy([current_user_role_group, InterestedProject]).index? %>
-                        <% heart_class = project.id.in?(interested_project_ids) ? 'fill-danger' : 'fill-theme' %>
-                        <%= link_to_if !project.id.in?(interested_project_ids), "<i class='fa fa-heart #{heart_class} me-3'></i>".html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist' %>
-                      <% end %>
-
-                      <div class="prjt-menu-top float-md-right">
-                        <div class="dropdown">
-                           <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                           <i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
-                           <div class="dropdown-menu dropdown-menu-right"  aria-labelledby="dropdownMenuLink">
-                              <%= render "#{current_user_role_group}/projects/links", project: project %>
-                           </div>
-                        </div>
-                     </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <% end %>
-            </div>
-          </div>
-
-          <!----------- Pagination ---------->
-          
-          <div class="col-lg-12 py-3 bg-white mb-2 px-3 mt-3 shadow-sm">
-            <div class="row">
-              <div class="col-lg-6 pt-2">
-                <p class="table-entry mb-0"><%= page_entries_info projects %></p>
-              </div>
-              <div class="col-lg-6 table-pagination">            
-                <%= will_paginate projects, list_classes: %w(pagination justify-content-end) %>
-              </div>
-            </div>
-          </div>
-
+<% projects.each do |project| %>
+  <% meetings = Meeting.where(Meeting.user_based_scope(current_user, {project_id: project.id})) %>
+  <% meeting = meetings.first %>
+  <div class="single-prjt-list mt-4">
+    <div class="prjt-thumb">
+      <div class="prjt-thumb-inner" style="background-image: url('<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>')"></div>
+    </div>
+    <div class="project-inner-info">
+      <div class="inner-info">
+        <h2 class="title"><%= link_to project.name, admin_project_path(project) %></h2>
+        <p class="devl-name"><%= project.developer_name %></p>
+        <% if project.micro_market.present? && project.city.present? %>
+          <p class="location"><i class="fa fa-map-marker-alt fill-primary me-2"></i><%= project.micro_market %>, <%= project.city %></p>
+        <% end %>
+        <p class="prjt-event"><%= meetings.presence&.count || 'No' %> New event <%= meeting ? "<span>#{meeting.scheduled_on&.strftime('%b %e %Y')}#{meeting.scheduled_on&.to_time&.in_time_zone(current_user.time_zone)&.strftime(', %I:%M%p %Z')}</span>".html_safe : '' %></p>
+      </div>
+      <div class="prjt-date-info">
+        <div class="inner-date">
+          <p><%= project.launched_on.strftime('%d %b, %Y') rescue "-" %></p>
+          <span>Launch Date</span>
         </div>
-    </div>  
-</section>
+      </div>
+      <div class="prjt-stats">
+        <div class="prjt-inner-stats">
+          <p>
+            <%= Lead.where(Lead.user_based_scope(current_user, params)).where(project_id: project.id).count %> <span>Walk Ins</span>
+            <% if policy([:admin, Lead.new(project_id: project.id)]).new? %>
+              <%= link_to 'ADD', new_admin_lead_path(project_id: project.id), class: 'modal-remote-form-link prjt-add h-auto' %>
+            <% end %>
+          </p>
+          <p>
+            <%= BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: project.id).count %> <span>Bookings</span>
+            <a href="javascript:;" class="prjt-add"></a>
+          </p>
+          <p>
+            <%= BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: project.id).booking_stages.filter_by_tasks_completed('registration_done').count %> <span>Registrations</span>
+            <a href="javascript:;" class="prjt-add"></a>
+          </p>
+        </div>
+
+        <div class="prjt-meets">
+          <% if meeting %>
+            <a href="javascript:;" class="meets-devlpr-link me-3"  data-bs-toggle="modal" data-bs-target="#meeting_<%= meeting.id.to_s %>"><i class="fa fa-calendar-alt fill-primary me-2"></i>Meet Developers</a>
+
+            <div class="modal fade googleMeet-modal" id="meeting_<%= meeting.id.to_s %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-lg-8">
+                        <h3><%= meeting.topic %></h3>
+                        <p><%= meeting.project&.name %> by <%= meeting.project&.developer_name %></p>
+                      </div>
+                      <% if meeting.meeting_type == 'webinar' %>
+                        <div class="col-lg-4">
+                          <img src="<%= asset_path "#{meeting.provider}.png" %>" class="<%= meeting.provider %>-logo">
+                        </div>
+                      <% end %>
+                      <div class="col-lg-12">
+                        <% meeting_time = meeting.scheduled_on&.to_time&.in_time_zone(current_user.time_zone).presence %>
+                        <h3><%= "#{meeting.scheduled_on&.strftime('%e %b %Y')}#{meeting.scheduled_on&.to_time&.in_time_zone(current_user.time_zone)&.strftime(', %I.%M %p %Z')}" %>
+                        <h3><%= %></h3>
+                        <p><%= meeting.agenda %>, This <%= "#{meeting.scheduled_on&.strftime('%A %b %e, %Y')}#{meeting_time&.strftime('at %I:%M%p')}#{meeting_time&.advance(minutes: meeting.duration)&.strftime(' - %I:%M%p %Z')}" %> </p>
+                      </div>
+                    </div>
+                  </div>
+                  <%= render 'meetings/toggle_interest_form', meeting: meeting %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+          <% if policy([current_user_role_group, InterestedProject]).index? %>
+            <% heart_class = project.id.in?(interested_project_ids) ? 'fill-danger' : 'fill-theme' %>
+            <%= link_to_if !project.id.in?(interested_project_ids), "<i class='fa fa-heart #{heart_class} me-3'></i>".html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist' %>
+          <% end %>
+
+          <div class="prjt-menu-top float-md-right">
+            <div class="dropdown">
+               <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               <i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
+               <div class="dropdown-menu dropdown-menu-right"  aria-labelledby="dropdownMenuLink">
+                  <%= render "#{current_user_role_group}/projects/links", project: project %>
+               </div>
+            </div>
+         </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

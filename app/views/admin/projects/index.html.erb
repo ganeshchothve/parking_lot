@@ -1,1 +1,67 @@
-<%= render 'index', {projects: @projects} %>
+<section class="mt-3 mb-5">
+  <div class="px-4">
+    <% interested_project_ids = current_user.interested_projects.in(status: %w(subscribed approved)).distinct(:project_id) %>
+    <div class="row">
+      <div class="col-lg-12 row">
+        <div class="col-lg-8 filter-set">
+          <% all_projects = "All (#{Project.where(Project.user_based_scope(current_user, params)).count})" %>
+          <%= link_to all_projects.html_safe, admin_projects_path, class: "filter-link #{params.dig(:fltrs).blank? ? 'active' : ''}" %>
+          <% newly_launched = "Newly Launched (#{newly_launched_count = Project.where(Project.user_based_scope(current_user, params)).where(category: 'launch').count})" + "#{newly_launched_count > 0 ? "<span class='notify'></span>".html_safe : ''}" %>
+          <%= link_to newly_launched.html_safe, admin_projects_path(fltrs: {category: 'launch'}), class: "filter-link #{params.dig(:fltrs, :category) == 'launch' ? 'active' : ''}" %>
+          <% pre_launch = "Pre Launch (#{pre_launch_count = Project.where(Project.user_based_scope(current_user, params)).where(category: 'pre_launch').count})" + "#{pre_launch_count > 0 ? "<span class='notify'></span>".html_safe : ''}" %>
+          <%= link_to pre_launch.html_safe, admin_projects_path(fltrs: {category: 'pre_launch'}), class: "filter-link #{params.dig(:fltrs, :category) == 'pre_launch' ? 'active' : ''}" %>
+          <% if policy([current_user_role_group, InterestedProject]).index? %>
+            <% ips = "Interested Projects (#{interested_project_ids.count})" %>
+            <%= link_to ips.html_safe, admin_projects_path(fltrs: {user_interested_projects: current_user.id}), class: "filter-link #{params.dig(:fltrs, :user_interested_projects).present? ? 'active' : ''}" %>
+          <% end %>
+        </div>
+        <div class="col-lg-4 text-end px-0 filter-set">
+          <a href='<%= ENV_CONFIG.dig('third_party_inventory', 'base_url') %>' target='third_party_inventory_iframe' class='filter-link' id='third_party_inventory'>Search Third Party Inventory</a>
+        </div>
+        <!--
+        <div class="col-lg-4 text-end px-0">
+          <div class="filter-search">
+            <input type="text" name="" placeholder="Search projects">
+          </div>
+          <div class="filter-popup">
+            <a href="javascript:;"><i class="fa fa-filter fill-theme"></i></a>
+          </div>
+          <div class="filter-sort">
+            <a href="javascript:;"><i class="fa fa-sort-amount-up fill-theme"></i></a>
+          </div>
+        </div>
+        -->
+      </div>
+      <div class="row">
+        <div class="col-lg-12 project-listing">
+          <div class='launchpad_inventory'>
+            <%= render 'index', {projects: @projects, interested_project_ids: interested_project_ids} %>
+          </div>
+          <iframe name='third_party_inventory_iframe' height='500px' width='100%' title='Third Party Inventory Iframe' class='mt-4 third_party_inventory_iframe' hidden></iframe>
+        </div>
+        <!----------- Pagination ---------->
+        <div class="col-lg-12 py-3 bg-white mb-2 px-3 mt-3 shadow-sm launchpad_inventory_pagination">
+          <div class="row">
+            <div class="col-lg-6 pt-2">
+              <p class="table-entry mb-0"><%= page_entries_info @projects %></p>
+            </div>
+            <div class="col-lg-6 table-pagination">
+              <%= will_paginate @projects, list_classes: %w(pagination justify-content-end) %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<%= javascript_tag do %>
+  $(document).ready(function() {
+    $('#third_party_inventory').on('click', function(e) {
+      $('.launchpad_inventory').attr('hidden', 'hidden');
+      $('.launchpad_inventory_pagination').attr('hidden', 'hidden');
+      $('.third_party_inventory_iframe').removeAttr('hidden');
+      $('.filter-link').removeClass('active');
+      $(this).addClass('active');
+    });
+  });
+<% end %>

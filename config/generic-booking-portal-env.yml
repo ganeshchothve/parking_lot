@@ -62,3 +62,5 @@ sfdc:
   client_id:
   client_secret:
   refresh_token:
+third_party_inventory:
+  base_url:
