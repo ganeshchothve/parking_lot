@@ -1,7 +1,11 @@
 // TODO: handle case if sell.do throws error, the form is hidden and nothing will happen
 <% url = Rails.application.routes.url_helpers %>
 var OtpBasedLogin = (function(){
-  var handleSendOtpSuccess = function(elem, data){
+  var handleSendOtpSuccess = function(elem, data, resend){
+    if (resend != undefined && resend) {
+      Amura.global_success_handler('OTP resent to ' + data.phone);
+    }
+    $('.top-message').html('OTP sent to ' + data.phone).closest('.top-notification').removeAttr('hidden');
     $(elem).find('[name="user[login]"]').closest(".mb-3").attr("hidden", "hidden");
     $(elem).find('[name="user[login_otp]"]').closest(".mb-3").removeAttr("hidden");
     $(elem).find('[name="user[login_otp]"]').focus();
@@ -12,7 +16,7 @@ var OtpBasedLogin = (function(){
       if(data.confirmed){
         $(elem).find('input[type="submit"]').val("Log In").attr("data-disable-with", "Logging in");
       }else{
-        $(elem).find('input[type="submit"]').val("Verfiy your Account").attr("data-disable-with", "Verifying & Logging you in");
+        $(elem).find('input[type="submit"]').val("Verify your Account").attr("data-disable-with", "Verifying & Logging you in");
       }
     }, 200);
 
@@ -25,17 +29,9 @@ var OtpBasedLogin = (function(){
 
   var handleSendOtpError = function(xhr, data){
     if(xhr.status == 201){
-      new Noty({
-        text: "Invalid Phone Number",
-        timeout: 7000,
-        type: 'error'
-      }).show();
+      Amura.global_error_handler('Invalid Phone Number');
     }else if(xhr.status == 422){
-      new Noty({
-        text: data["errors"],
-        timeout: 7000,
-        type: 'error'
-      }).show();
+      Amura.global_error_handler(data['errors']);
     }
   }
 
@@ -67,7 +63,7 @@ var OtpBasedLogin = (function(){
         dataType: "json",
         type: "post",
         success: function(data, status, xhr){
-          handleSendOtpSuccess($('#otp_user_form'), data);
+          handleSendOtpSuccess($('#otp_user_form'), data, true);
         },
         error: function(xhr, status, data){
           handleSendOtpError(xhr, xhr.responseJSON);
