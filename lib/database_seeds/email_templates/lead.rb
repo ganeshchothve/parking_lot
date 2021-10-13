@@ -19,6 +19,26 @@ module DatabaseSeeds
             </div>
           </div>') if ::Template::EmailTemplate.where(name: "payment_link", project_id: project_id, booking_portal_client_id: client_id).blank?
       end
+
+      def self.client_seed client_id
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "Lead", name: "send_tp_projects_link", subject: "Check out these New projects", content: <<-'CONTENT'
+  <div class="card w-100">
+    <div class="card-body">
+      <p>
+        Dear <%= lead.name %>,
+      </p>
+      <div class="mb-3"></div>
+      <p>
+        Please check out these new projects:
+      </p>
+      <% url = "#{@project_url}?#{@project_ids.collect {|x| 'search[project_ids][]=' + x}.join('&')}" %>
+      <div class="mb-3"></div>
+      <a href="<%= url %>" target="_blank">Explore New Projects</a>
+    </div>
+  </div>
+CONTENT
+) if ::Template::EmailTemplate.where(name: "send_tp_projects_link", booking_portal_client_id: client_id).blank?
+      end
     end
   end
 end

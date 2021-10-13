@@ -17,6 +17,7 @@ module DatabaseSeeds
 
     def self.client_based_email_templates_seed client_id
       DatabaseSeeds::EmailTemplates::User.seed(client_id)
+      DatabaseSeeds::EmailTemplates::Lead.client_seed(client_id)
       DatabaseSeeds::EmailTemplates::ChannelPartner.seed(client_id)
       DatabaseSeeds::EmailTemplates::Reminder.client_based_email_templates_seed(client_id)
     end

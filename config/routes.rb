@@ -203,6 +203,7 @@ Rails.application.routes.draw do
       collection do
         get :export
         get :search_by
+        post :search_inventory
       end
       member do
         get 'sync_notes'
