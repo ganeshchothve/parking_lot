@@ -28,7 +28,7 @@ class ProjectUnit
   field :new_base_rate, type: Float
 
   # These fields majorly are pulled from sell.do and may be used on the UI
-  field :developer_name, type: String
+  #field :developer_name, type: String
   field :project_name, type: String
   field :project_tower_name, type: String
   field :unit_configuration_name, type: String
@@ -59,7 +59,7 @@ class ProjectUnit
   )
 
   belongs_to :project
-  belongs_to :developer
+  belongs_to :developer, optional: true
   belongs_to :project_tower
   belongs_to :unit_configuration
   belongs_to :booking_portal_client, class_name: 'Client'
@@ -83,7 +83,7 @@ class ProjectUnit
   accepts_nested_attributes_for :data, :parameters, :costs, allow_destroy: true
   accepts_nested_attributes_for :assets, reject_if: proc { |attributes| attributes['file'].blank? }
 
-  validates :saleable, :carpet, :base_rate, :agreement_price, :all_inclusive_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bathrooms, :type, :developer_name, :project_name, :project_tower_name, :unit_configuration_name, :bedrooms, presence: true
+  validates :saleable, :carpet, :base_rate, :agreement_price, :all_inclusive_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bathrooms, :type, :project_name, :project_tower_name, :unit_configuration_name, :bedrooms, presence: true
   validates :status, :name, :erp_id, presence: true
   validates :status, inclusion: { in: proc { ProjectUnit.available_statuses.collect { |x| x[:id] } } }
   validates :available_for, inclusion: { in: proc { ProjectUnit.available_available_fors.collect { |x| x[:id] } } }
@@ -109,6 +109,7 @@ class ProjectUnit
 
 
   delegate :name, to: :phase, prefix: true, allow_nil: true
+  delegate :developer_name, to: :project, prefix: false, allow_nil: true
 
   def ds_name
     "#{project_tower_name} | #{name} | #{bedrooms} BHK"

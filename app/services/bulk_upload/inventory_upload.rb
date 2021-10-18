@@ -73,7 +73,7 @@ module BulkUpload
             end
           end
 
-          unit_configuration = UnitConfiguration.where(name: unit_configuration_name).where(project_id: project.id).first
+          unit_configuration = UnitConfiguration.where(project_id: project.id).where(name: unit_configuration_name, saleable: saleable.to_f, carpet: carpet.to_f, base_rate: base_rate.to_f).first
           unless unit_configuration.present?
             unit_configuration = UnitConfiguration.new(name: unit_configuration_name, project_id: project.id, project_tower_id: project_tower.id, saleable: saleable.to_f, carpet: carpet.to_f, base_rate: base_rate.to_f)
             unless unit_configuration.save

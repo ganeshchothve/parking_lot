@@ -7,6 +7,10 @@ class Admin::LeadPolicy < LeadPolicy
     out
   end
 
+  def search_inventory?
+    index?
+  end
+
   def export?
     %w[superadmin admin sales_admin crm cp_admin billing_team cp].include?(user.role)
   end

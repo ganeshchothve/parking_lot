@@ -281,6 +281,7 @@ class Lead
       when :channel_partner
         lead_ids = CpLeadActivity.where(user_id: user.id).distinct(:lead_id)
         custom_scope = {_id: { '$in': lead_ids }, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
+        #custom_scope[:'$or'] = [{manager_id: user.id}, {referenced_manager_ids: user.id}]
       when :cp_admin
         channel_partner_ids = User.where(role: 'channel_partner', manager_id: user.id).distinct(:id)
         lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
