@@ -171,6 +171,15 @@ $(document).ready(function () {
       }, 1000);
     }
   });
+  $('.emi-calc-btn').click(function(){
+    $('.emi-wrapper').fadeIn();
+  });
+  $('.close-emi').click(function(){
+    $('.emi-wrapper').fadeOut();
+  });
+  // $('body').click(function(){
+  //   $('.emi-wrapper').fadeOut();
+  // });
 });
 /* AppC */
 $(function () {
@@ -213,7 +222,7 @@ $(function () {
     }), $("#selected-interest").text($("#interest-rate").slider("value")), i = $("#interest-rate").slider("value") / 1200, $("#loan-duration").slider({
       range: "min",
       value: 20,
-      min: 0,
+      min: 10,
       max: 35,
       step: .5,
       slide: function (e, n) {

@@ -139,12 +139,13 @@
                             <div class="prjt-desc-tab col-12 pt-4 float-start" id="tab-configure">
                                 <div class="tab-header col-12 float-start position-relative">
                                     <h2 class="tab-title float-start">Configurations</h2>
-                                    <a href="javascript:;"><p class="float-end">EMI's starting at <strong>₹ 25,000</strong> /month</p>                                   
+                                    <a href="javascript:;" class="emi-calc-btn"><p class="float-end">EMI's starting at <strong>₹ 25,000</strong> /month</p>                                   
                                     </a>
                                      <div class="card emi-wrapper position-absolute top-50 end-0">
                                         <div class="card-header bg-primary py-4  d-flex justify-content-between">
                                             <h2 class="fn-20 white mb-0">EMI Status</h2>
                                             <p class="fn-20 font-medium white mb-0">₹ <span class="emiValue"></span></p>
+                                            <a href="javascript:;" class="close-emi position-absolute top-0 end-0 me-2 mt-1"><i class="fa far fa-times fill-white"></i></a>
                                         </div>
                                         <div class="card-body">
                                             <div id="widget">
@@ -704,7 +705,7 @@
                     <div id="gallerySlider" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
                         <% @assets = @project.assets.where(document_type: "images") %>
-                        <% @assets[0..5].each_with_index do |asset, index|%>
+                        <% @assets.each_with_index do |asset, index|%>
                             <div class="carousel-item <%= (index == 0) ? "active" : "" %>">
                                 <img src="<%= asset.file.url %>" class="d-block w-100 img-fluid" alt="">
                             </div>

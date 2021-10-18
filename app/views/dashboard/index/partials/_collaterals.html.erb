@@ -85,27 +85,26 @@
           <div class="project-info-outer px-3">
             <div class="row">
               <div class="col-lg-12 pe-2 ps-3">
-                <div class="list-txt project-desc mb-0"><%= project.description&.html_safe %></div>
-                <div id="projectDescCarousel_<%= index %>" class="projectDescCarousel carousel slide position-relative" data-bs-ride="carousel">
+                <div id="projectDescCarouselIntrest_<%= index %>" class="projectDescCarousel carousel slide position-relative" data-bs-ride="carousel">
                   <div class="carousel-inner">
                       <div class="carousel-item active">
                           <h2 class="fn-14 font-medium theme-txt-color">Deal for you </h2>
-                          <p class="list-txt project-desc mb-0">
+                          <div class="list-txt project-desc mb-0" title="<%= project.description&.html_safe rescue '' %>">
                           <%= project.description&.html_safe %>
-                          </p>
+                          </div>
                       </div>
                       <div class="carousel-item">
                           <h2 class="fn-14 font-medium theme-txt-color">Deal for Customers</h2>
-                          <p class="list-txt project-desc mb-0">
+                          <div class="list-txt project-desc mb-0" title="<%= project.description&.html_safe rescue '' %>">
                           <%= project.description&.html_safe %>
-                          </p>
+                          </div>
                       </div>
                   </div>
-                  <button class="carousel-control-prev position-absolute top-0" type="button" data-bs-target="#projectDescCarousel_<%= index %>" data-bs-slide="prev">
+                  <button class="carousel-control-prev position-absolute top-0" type="button" data-bs-target="#projectDescCarouselIntrest_<%= index %>" data-bs-slide="prev">
                       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                       <span class="visually-hidden">Previous</span>
                   </button>
-                  <button class="carousel-control-next position-absolute top-0 end-0" type="button" data-bs-target="#projectDescCarousel_<%= index %>" data-bs-slide="next">
+                  <button class="carousel-control-next position-absolute top-0 end-0" type="button" data-bs-target="#projectDescCarouselIntrest_<%= index %>" data-bs-slide="next">
                       <span class="carousel-control-next-icon" aria-hidden="true"></span>
                       <span class="visually-hidden">Next</span>
                   </button>

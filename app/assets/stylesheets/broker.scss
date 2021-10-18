@@ -4272,8 +4272,9 @@ table .dropdown-menu.show{
 
 /* Widget Theming */
 .emi-wrapper{
-	// display: none;
+	display: none;
 	z-index: 10;
+	width: 400px;
 }
 #widget .wid_left .form-group{margin-bottom:40px}
 #widget .wid_left .form-group label{margin:0;font-size:18px;font-weight:500;/* color: #212529; */}
