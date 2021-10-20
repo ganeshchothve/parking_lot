@@ -166,7 +166,6 @@ class ApplicationController < ActionController::Base
     end
     alert = t policy_name, scope: "pundit", default: :default
     respond_to do |format|
-      debugger
       unless request.referer && request.referer.include?('remote-state') && request.method == 'GET'
         format.html { redirect_to (user_signed_in? ? dashboard_path : root_path), alert: alert }
         format.json { render json: { errors: alert }, status: 403 }

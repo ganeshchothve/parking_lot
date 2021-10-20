@@ -17,7 +17,7 @@
         </div>
         <% if ENV_CONFIG.dig('third_party_inventory', 'base_url').present? %>
           <div class="col-lg-4 text-end px-0 filter-set">
-            <a href='<%= "#{ENV_CONFIG.dig('third_party_inventory', 'base_url')}?domain=#{request.domain}" %>' target='third_party_inventory_iframe' class='filter-link' id='third_party_inventory'>Search Third Party Inventory</a>
+            <a href='<%= "#{ENV_CONFIG.dig('third_party_inventory', 'base_url')}?domain=#{request.host}" %>' target='third_party_inventory_iframe' class='filter-link' id='third_party_inventory'>Search Third Party Inventory</a>
           </div>
         <% end %>
         <!--

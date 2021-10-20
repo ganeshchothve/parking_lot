@@ -27,7 +27,7 @@
                 </div>
                 <div class="d-flex justify-content-between">
                   <div class="ps-3 py-3">
-                    <p class="mb-0 theme-txt-color mb-0 font-medium"><%= link_to project_unit.name, [current_user_role_group, project_unit], class: "theme-txt-color" %></p>
+                    <p class="mb-0 theme-txt-color mb-0 font-medium"><%= link_to_if policy([current_user_role_group, project_unit]).show?, project_unit.name, [current_user_role_group, project_unit], class: "theme-txt-color" %></p>
                   </div>
                   <div class="inner-info">
                     <div class="pe-3 py-3  d-flex justify-content-end">
