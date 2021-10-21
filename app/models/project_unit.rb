@@ -89,7 +89,7 @@ class ProjectUnit
   validates :available_for, inclusion: { in: proc { ProjectUnit.available_available_fors.collect { |x| x[:id] } } }
   validates :saleable, :carpet, :base_rate, :numericality => {:greater_than => 0}, if: :valid_status?
   validates :floor_order, uniqueness: { scope: [:project_tower_id, :floor] }
-  validates :erp_id, uniqueness: true
+  validates :erp_id, uniqueness: { scope: [:project_id] }
 
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
   # return empty criteria if project ids not available

@@ -16,7 +16,7 @@ class UnitConfiguration
   field :offers, type: Boolean, default: false
 
   validates :name, presence: true
-  validates :saleable,:carpet,:base_rate,:numericality => {:greater_than => 0}
+  validates :saleable,:carpet,:numericality => {:greater_than => 0}
 
   belongs_to :project
   has_many :project_units

@@ -3,7 +3,7 @@ module BulkUpload
 
     def initialize(bulk_upload_report)
       super(bulk_upload_report)
-      @correct_headers = %w[rera_registration_no project_name project_tower_name unit_configuration_name unit_name floor floor_order carpet saleable base_rate floor_rise status bedrooms bathrooms unit_facing_direction erp_id floor_plan_urls agreement_price all_inclusive_price]
+      @correct_headers = %w[rera_registration_no project_name project_tower_name unit_configuration_name unit_name floor floor_order carpet saleable base_rate floor_rise status bedrooms bathrooms unit_facing_direction erp_id agreement_price all_inclusive_price]
     end
 
     def process_csv(csv)
@@ -49,7 +49,6 @@ module BulkUpload
           bathrooms = (row.field(13).strip.presence || 2) rescue ""
           unit_facing_direction = row.field(14).strip rescue ""
           erp_id = row.field(15).strip rescue ""
-          floor_plan_urls = row.field(16).strip rescue ""
           agreement_price = row.field(17).strip rescue ""
           all_inclusive_price = row.field(18).strip rescue ""
 
@@ -73,9 +72,13 @@ module BulkUpload
             end
           end
 
-          unit_configuration = UnitConfiguration.where(project_id: project.id).where(name: unit_configuration_name, saleable: saleable.to_f, carpet: carpet.to_f, base_rate: base_rate.to_f).first
+          unit_configuration = UnitConfiguration.where(project_id: project.id).where({'$and': [
+            {data_attributes: {'$elemMatch': {n: 'name', v: unit_configuration_name }}},
+            {data_attributes: {'$elemMatch': {n: 'saleable', v: saleable.to_f}}},
+            {data_attributes: {'$elemMatch': {n: 'carpet', v: carpet.to_f}}}
+          ]}).first
           unless unit_configuration.present?
-            unit_configuration = UnitConfiguration.new(name: unit_configuration_name, project_id: project.id, project_tower_id: project_tower.id, saleable: saleable.to_f, carpet: carpet.to_f, base_rate: base_rate.to_f)
+            unit_configuration = UnitConfiguration.new(name: unit_configuration_name, project_id: project.id, saleable: saleable.to_f, carpet: carpet.to_f)
             unless unit_configuration.save
               (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push(*unit_configuration.errors.full_messages.map{ |er| "Unit Configuration: " + er })).uniq
               bur.failure_count += 1 if bur.upload_errors.where(row: row.fields).present?
@@ -83,7 +86,7 @@ module BulkUpload
             end
           end
 
-          if(ProjectUnit.where(erp_id: erp_id).blank?)
+          if(ProjectUnit.where(project_id: project.id, erp_id: erp_id).blank?)
             project_unit = ProjectUnit.new
             project_unit.erp_id = erp_id
             #project_unit.developer = developer
@@ -149,11 +152,6 @@ module BulkUpload
               end
             end
             if project_unit.save
-              if floor_plan_urls.present?
-                floor_plan_urls.split(",").each do |url|
-                  Asset.create(remote_file_url: url, assetable: project_unit, asset_type: "floor_plan")
-                end
-              end
               bur.success_count = bur.success_count + 1
               # TODO: We will enable it when we get it working.
               # ActionCable.server.broadcast "web_notifications_channel", message: "<p class = 'text-success'>"+ project_unit.name.titleize + " successfully uploaded</p>"
@@ -186,7 +184,7 @@ module BulkUpload
 
     def validate_headers(headers)
       if headers
-        unless headers.compact.map(&:strip).slice(0, 19) == correct_headers
+        unless headers.compact.map(&:strip).slice(0, 18) == correct_headers
           (bur.upload_errors.find_or_initialize_by(row: headers).messages << 'Invalid headers').uniq
           false
         else
