@@ -23,7 +23,7 @@ module BulkUpload
         if value.match(/^parameters\|/i)
           parameters[index] = value.split("|").last.strip
         elsif value.match(/^cost\|/i)
-          costs[index] = value.split("|")[1..2].map(&:strip)
+          costs[index] = value.split("|")[1..3].map(&:strip)
         elsif value.match(/^data\|/i)
           data[index] = value.split("|").last.strip
         elsif value.strip.match(/^crm\|/i)
@@ -135,7 +135,8 @@ module BulkUpload
             project_unit.blocking_amount = booking_portal_client.blocking_amount if booking_portal_client.blocking_amount.present? && !booking_portal_client.blocking_amount.zero?
 
             costs.each do |index, arr|
-              project_unit.costs.build(category: arr[0], name: arr[1], absolute_value: row[index], key: arr[1].gsub(/[\W_]+/i, "_").downcase)
+              cost = project_unit.costs.build(category: arr[0], name: arr[1], key: arr[1].gsub(/[\W_]+/i, "_").downcase)
+              cost[(arr[2].presence || 'absolute_value')] = row[index]
             end
             data.each do |index, name|
               project_unit.data.build(name: name, absolute_value: row[index], key: name.gsub(/[\W_]+/i, "_").downcase)
