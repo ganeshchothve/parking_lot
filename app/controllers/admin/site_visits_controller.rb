@@ -3,6 +3,7 @@ class Admin::SiteVisitsController < AdminController
   before_action :set_lead, except: %w[index show sync_with_selldo]
   before_action :set_site_visit, only: %w[edit update show sync_with_selldo]
   before_action :set_crm_base, only: %w[create sync_with_selldo]
+  around_action :user_time_zone, if: :current_user
 
   #
   # This index action for Admin users where Admin can view all site_visits.
@@ -118,6 +119,10 @@ class Admin::SiteVisitsController < AdminController
   end
 
   private
+
+  def user_time_zone
+    Time.use_zone(current_user.time_zone) { yield }
+  end
 
   def set_crm_base
     @crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first

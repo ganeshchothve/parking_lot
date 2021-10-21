@@ -4,6 +4,7 @@ class Api::SellDo::LeadsController < Api::SellDoController
   before_action :create_user, only: [:lead_created]
   before_action :set_lead, except: [:lead_created]
   before_action :set_site_visit, only: [:site_visit_updated]
+  around_action :user_time_zone, only: [:site_visit_created, :site_visit_updated]
 
   def lead_created
     respond_to do |format|
@@ -80,6 +81,10 @@ class Api::SellDo::LeadsController < Api::SellDoController
   end
 
   private
+
+  def user_time_zone
+    Time.use_zone(@lead.user.time_zone) { yield }
+  end
 
   def set_project
     @project = Project.where(selldo_id: params[:project_id]).first
