@@ -238,7 +238,9 @@
                                             <div class="tab-pane fade show <%= (index == 0) ? "active" : "" %>" id="floor_<%= uc.name&.gsub(/[()\s]*/, '').underscore + uc.saleable.to_i.to_s %>" role="tabpanel">
                                                 <div class="col-5 float-start">
                                                   <% if url = uc.assets.first&.file&.url&.presence %>
-                                                    <img src="<%= url %>" class="plan-img img-fluid">
+                                                    <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#configurationModal">
+                                                        <img src="<%= url %>" class="plan-img img-fluid">
+                                                    </a>
                                                   <% end %>
                                                     <!--<p class="ps-2"><i class="fa fa-eye me-2"></i>220 Interests</p>-->
                                                 </div>
@@ -694,7 +696,37 @@
         </div>
     </div>
 </section>
+
 <div class="modal fade" tabindex="-1" id="galleryModal" aria-labelledby="galleryModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="gallerySlider" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                        <% @assets = @project.assets.where(document_type: "images") %>
+                        <% @assets.each_with_index do |asset, index|%>
+                            <div class="carousel-item <%= (index == 0) ? "active" : "" %>">
+                                <img src="<%= asset.file.url %>" class="d-block w-100 img-fluid" alt="">
+                            </div>
+                        <% end %>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#gallerySlider" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#gallerySlider" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" id="configurationModal" aria-labelledby="galleryModal" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
