@@ -391,7 +391,33 @@ a{
 		}
 	}
 }
-
+.payment-receipt-wrapper{
+	.box-card{
+		border: 1px solid #e5e5e5;
+		border-radius: 6px;
+		.box-header{
+			height: auto;
+			background-color: #f8f8f8;
+			text-align: left!important;
+			padding: 15px 15px;
+			border-bottom: 1px solid #e5e5e5;
+			border-radius: 6px 6px 0 0;
+			h2{
+				color: $theme-txt-color;
+				font-weight: 500;
+				font-size: 18px;
+				strong{
+					font-weight: 500;
+				}
+			}
+		}
+		.box-content{
+			table{
+				margin-bottom: 0px;
+			}
+		}
+	}
+}
 .box-card{
 	width: 100%;
 	float: left;
@@ -4305,4 +4331,4 @@ table .dropdown-menu.show{
 .scalerange{display:flex;width:calc(100% + 32px);justify-content:space-between;margin:0 -15px;font-size:12px;color:#4a4a4a}
 .scalerange span{text-align:center;min-width:35px;padding-top:16px;position:relative}
 .scalerange span:before{content:'';background: #a9a9a9;display:block;width:1px;height:9px;position:absolute;top: 7px;left:calc(50% - 1px);}
-#widget .ui-slider .ui-slider-handle{margin-left: -6px;}
+#widget .ui-slider .ui-slider-handle{margin-left: -15px;}
