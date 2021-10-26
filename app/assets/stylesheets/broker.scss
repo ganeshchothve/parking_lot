@@ -304,6 +304,9 @@ a{
 			width: 73px;
 		}
 	}
+	.bg-primary{
+		background-color: $theme-txt-color!important;
+	}
 	.box-content{
 		padding: 40px 0px;
 		position: relative;
@@ -330,7 +333,7 @@ a{
 				text-align: center;
 				font-size: 12px;
 				line-height: 1.67;
-				color: #518ef7;
+				color: $theme-txt-color;
 				width: 150px;
 				height: 95px;
 				border-radius: 6px;
@@ -2174,10 +2177,15 @@ select.form-control{
 	    border-radius: 8px;
 	    float: left;
 	    width: 100%;
+		transition: all 0.6s ease-in-out;
+		&:hover{
+			box-shadow: 1px 1px 16px #b9b9b9;
+		}
 	    .prjt-thumb{
 		    width: 200px;
-	    	height: 168px;
+	    	height: 120px;
 	    	float: left;
+			margin: 15px;
 	    	.prjt-thumb-inner{
 	    		width: 100%;
 			    height: 100%;
@@ -2187,7 +2195,7 @@ select.form-control{
 	    	}
 	    }
 	    .project-inner-info {
-		    width: calc(100% - 200px);
+		    width: calc(100% - 230px);
 		    float: left;
 		    .inner-info {
 			    padding: 15px;
@@ -2198,7 +2206,7 @@ select.form-control{
 				    font-size: 20px;
 				    line-height: 30px;
 				    letter-spacing: 0.56px;
-				    font-weight: 400;
+				    font-weight: 500;
 				}
 				.devl-name {
 				    color: #2E384D;
@@ -2259,7 +2267,7 @@ select.form-control{
 		    float: left;
 		    padding: 0 15px;
 		    position: relative;
-		    height: 168px;
+		    height: 150px;
 		    border-left: 1px solid #e8e8e8;
 		    border-right: 1px solid #e8e8e8;
 		    .inner-date {
@@ -2286,7 +2294,7 @@ select.form-control{
 		    width: calc(55% - 160px);
 		    float: left;
 		    position: relative;
-		    height: 168px;
+		    height: 122px;
 		    padding: 0 10px;
 		    .prjt-inner-stats {
 			    position: absolute;
