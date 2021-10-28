@@ -63,8 +63,6 @@ class Template::BookingDetailFormTemplate < Template
             if @booking_detail.primary_user_kyc.present?;
               if @booking_detail.primary_user_kyc.aadhaar.present?;
                 @booking_detail.primary_user_kyc.aadhaar;
-              elsif (@booking_detail.primary_user_kyc.additional_id_type.present? && @booking_detail.primary_user_kyc.additional_id_type == 'aadhar_card');
-                @booking_detail.primary_user_kyc.try(:additional_id_number);
               end;
             end;
           %>
@@ -102,10 +100,7 @@ class Template::BookingDetailFormTemplate < Template
       </div>
       <div class='row'>
         <div class='col-sm border pt-3'>
-          <p>Address:&nbsp<%= @booking_detail.primary_user_kyc&.mailing_address&.to_sentence %></p>
-        </div>
-        <div class='col-sm border pt-3'>
-          <p>Pincode: <%= @booking_detail.primary_user_kyc&.home_address_pin_code %></p>
+          <p>Address:&nbsp<%= @booking_detail.primary_user_kyc&.addresses&.first&.to_sentence %></p>
         </div>
       </div>
       <div class='row'>
@@ -201,7 +196,7 @@ class Template::BookingDetailFormTemplate < Template
           <%= r&.payment_identifier %>
         </div>
         <div class='col-sm border pt-3'>
-           <%= 'Account Number: ' + r&.bank_account_number + ', IFSC Code: ' + r&.ifsc_code +  ', Issuing Bank:' + r&.issuing_bank %>
+           <%= 'Issuing Bank:' + r&.issuing_bank %>
       </div>
     </div>
 <% end %>
@@ -248,7 +243,7 @@ class Template::BookingDetailFormTemplate < Template
           <%= r.try(:payment_identifier) %>
         </div>
         <div class='col-sm border pt-3'>
-           <%= 'Account Number: ' + r.try(:bank_account_number) + ', IFSC Code: ' + r.try(:ifsc_code) +  ', Issuing Bank:' + r.try(:issuing_bank) %>
+           <%= 'Issuing Bank:' + r.try(:issuing_bank) %>
       </div>
     </div>
 <% end %>
@@ -468,8 +463,6 @@ Yours faithfully,</br><strong>For <%= @booking_detail.project.developer_name %>,
     <td>AADHAAR Number: <%= if @booking_detail.primary_user_kyc.present?;
     if @booking_detail.primary_user_kyc.aadhaar.present?;
       @booking_detail.primary_user_kyc.aadhaar;
-     elsif (@booking_detail.primary_user_kyc.additional_id_type.present? && @booking_detail.primary_user_kyc.additional_id_type == 'aadhar_card');
-      @booking_detail.primary_user_kyc.try(:additional_id_number);
      end;
      end; %></td>
   </tr>
@@ -492,8 +485,7 @@ Yours faithfully,</br><strong>For <%= @booking_detail.project.developer_name %>,
     <td align='center'><h2><strong>Communication Details</strong></h2></td>
   </tr>
   <tr>
-    <td><p>Address:&nbsp<%= @booking_detail.primary_user_kyc.try(:mailing_address).try(:to_sentence) %></p></td>
-    <td><p>Pincode: <%= @booking_detail.primary_user_kyc.try(:home_address_pin_code) %></p></td>
+    <td><p>Address:&nbsp<%= @booking_detail.primary_user_kyc&.addresses&.first&.to_sentence %></p></td>
   </tr>
   <tr>
     <td><p>Mobile No:&nbsp<%= @booking_detail.user.phone %></p></td>
@@ -543,7 +535,7 @@ Yours faithfully,</br><strong>For <%= @booking_detail.project.developer_name %>,
       <td><%= number_to_indian_currency(r.try(:total_amount)) %></td>
       <td><%= r.try(:issued_date).try(:strftime, '%d/%m/%y') %></td>
       <td><%= r.try(:payment_identifier) %></td>
-      <td><%= 'Account Number: ' + r.try(:bank_account_number) + ', IFSC Code: ' + r.try(:ifsc_code) +  ', Issuing Bank:' + r.try(:issuing_bank) %></td>
+      <td><%= 'Issuing Bank:' + r.try(:issuing_bank) %></td>
     </tr>
   <% end %>
   <% @booking_detail.receipts.ne(payment_type: 'token').where(payment_mode: {'$ne': 'cheque'}).each do |r| %>
@@ -565,7 +557,7 @@ Yours faithfully,</br><strong>For <%= @booking_detail.project.developer_name %>,
       <td><%= number_to_indian_currency(r.try(:total_amount)) %></td>
       <td><%= r.try(:issued_date).try(:strftime, '%d/%m/%y') %></td>
       <td><%= r.try(:payment_identifier) %></td>
-      <td><%= 'Account Number: ' + r.try(:bank_account_number) + ', IFSC Code: ' + r.try(:ifsc_code) +  ', Issuing Bank:' + r.try(:issuing_bank) %></td>
+      <td><%= 'Issuing Bank:' + r.try(:issuing_bank) %></td>
     </tr>
   <% end %>
   <% @booking_detail.receipts.where(payment_type: 'stamp_duty', payment_mode: {'$ne': 'cheque'}).each do |r| %>
