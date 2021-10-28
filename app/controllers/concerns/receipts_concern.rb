@@ -35,7 +35,7 @@ module ReceiptsConcern
       email = Email.create!(
         project_id: @receipt.project_id,
         booking_portal_client_id: user.booking_portal_client_id,
-        email_template_id: Template::EmailTemplate.find_by(project_id: @receipt.project_id, name: 'receipt_success').id,
+        email_template_id: Template::EmailTemplate.find_by(project_id: @receipt.project_id, name: "receipt_#{@receipt.status}").id,
         recipients: [user],
         cc: user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
         cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
