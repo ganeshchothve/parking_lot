@@ -44,7 +44,8 @@
     FormInitializer.init($form);
     var userId = $form.find('[name="fltrs[_id]"]').val();
     if(!_.isEmpty(userId)){
-      $form.submit();
+      var form = document.getElementById('lead_search_form');
+      Rails.fire(form, 'submit');
     }
 
     // $('#get-started').hide();
