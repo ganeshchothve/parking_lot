@@ -1,5 +1,5 @@
 <% projects.each do |project| %>
-  <% meetings = Meeting.where(Meeting.user_based_scope(current_user, {project_id: project.id})) %>
+  <% meetings = Meeting.where(Meeting.user_based_scope(current_user, {project_id: project.id})).where(status: 'scheduled') %>
   <% meeting = meetings.first %>
   <div class="single-prjt-list mt-4">
     <div class="prjt-thumb">
@@ -39,7 +39,7 @@
         </div>
 
         <div class="prjt-meets">
-          <% if meeting %>
+          <% if false #meeting %>
             <a href="javascript:;" class="meets-devlpr-link me-3"  data-bs-toggle="modal" data-bs-target="#meeting_<%= meeting.id.to_s %>"><i class="fa fa-calendar-alt fill-primary me-2"></i>Meet Developers</a>
 
             <div class="modal fade googleMeet-modal" id="meeting_<%= meeting.id.to_s %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
