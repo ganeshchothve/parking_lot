@@ -35,7 +35,7 @@ class SelldoLeadUpdater
       elsif user.portal_stage.priority.to_i <= priority[stage].to_i
         user.portal_stages.where(stage:  stage).present? ? user.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : user.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
       end
-      params = { custom_portal_stage: stage, not_clear_custom_fields: true }
+      params = { portal_stage: stage, not_clear_custom_fields: true }
       custom_hash = {lead: params}
     else
       user.portal_stage
