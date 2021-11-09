@@ -3,7 +3,7 @@
     <% interested_project_ids = current_user.interested_projects.in(status: %w(subscribed approved)).distinct(:project_id) %>
     <div class="row">
       <div class="col-lg-12 row">
-        <div class="col-lg-8 filter-set">
+        <div class="col-lg-7 filter-set">
           <% all_projects = "All (#{Project.where(Project.user_based_scope(current_user, params)).count})" %>
           <%= link_to all_projects.html_safe, admin_projects_path, class: "filter-link #{params.dig(:fltrs).blank? ? 'active' : ''}" %>
           <% newly_launched = "Newly Launched (#{newly_launched_count = Project.where(Project.user_based_scope(current_user, params)).where(category: 'launch').count})" + "#{newly_launched_count > 0 ? "<span class='notify'></span>".html_safe : ''}" %>
@@ -15,11 +15,14 @@
             <%= link_to ips.html_safe, admin_projects_path(fltrs: {user_interested_projects: current_user.id}), class: "filter-link #{params.dig(:fltrs, :user_interested_projects).present? ? 'active' : ''}" %>
           <% end %>
         </div>
-        <% if ENV_CONFIG.dig('third_party_inventory', 'base_url').present? %>
-          <div class="col-lg-4 text-end px-0 filter-set">
+        <div class="col-lg-5 text-end px-0 filter-set">
+          <% if ENV_CONFIG.dig('third_party_inventory', 'base_url').present? %>
             <a href='<%= "#{ENV_CONFIG.dig('third_party_inventory', 'base_url')}?domain=#{request.host}" %>' target='third_party_inventory_iframe' class='filter-link' id='third_party_inventory'>Search Third Party Inventory</a>
-          </div>
-        <% end %>
+          <% end %>
+          <% if policy([:admin, Project]).new? %>
+            <%= link_to t('helpers.new.link_name', model: Project.model_name.human), new_admin_project_path, class: 'modal-remote-form-link filter-link' %>
+          <% end %>
+        </div>
         <!--
         <div class="col-lg-4 text-end px-0">
           <div class="filter-search">

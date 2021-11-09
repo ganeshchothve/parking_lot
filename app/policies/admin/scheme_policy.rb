@@ -4,6 +4,7 @@ class Admin::SchemePolicy < SchemePolicy
   def index?
     out = current_client.enable_actual_inventory?(user) && %w[superadmin admin sales crm cp channel_partner].include?(user.role)
     out && user.active_channel_partner?
+    false
   end
 
   def create?

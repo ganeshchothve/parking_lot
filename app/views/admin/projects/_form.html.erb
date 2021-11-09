@@ -11,7 +11,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h3 class="title">
-            <%= t('helpers.edit.link_name', model: Project.model_name.human)%>
+            <%= t("helpers.#{action_name}.link_name", model: Project.model_name.human)%>
           </h3>
           <button type="button" class="close btn-close" data-bs-dismiss="modal" aria-label="Close">
           </button>

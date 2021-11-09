@@ -3,6 +3,7 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   def index?
     out = current_client.enable_actual_inventory?(user) && !user.buyer?
     out && user.active_channel_partner?
+    false
   end
 
   def ds?
