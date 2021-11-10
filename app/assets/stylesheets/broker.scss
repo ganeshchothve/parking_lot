@@ -1174,7 +1174,7 @@ select.form-control{
  /* Firefox */
  * {
     scrollbar-width: auto;
-    scrollbar-color: #006dee;
+    scrollbar-color: #182C57;
   }
 
   /* Chrome, Edge, and Safari */
@@ -1188,9 +1188,9 @@ select.form-control{
   }
 
   *::-webkit-scrollbar-thumb {
-    background-color: #006dee;
+    background-color: #182C57;
     border-radius: 36px;
-    border: 1px solid #006dee;
+    border: 1px solid #182C57;
   }
 .header-leftbar {
     background-color: $theme-txt-color;
