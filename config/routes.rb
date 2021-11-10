@@ -26,7 +26,7 @@ Rails.application.routes.draw do
     root 'dashboard#index', as: :authenticated_root
   end
 
-  root 'channel_partners#new'
+  root 'home#index'
 
   as :user do
     put '/user/confirmation', to: 'local_devise/confirmations#update', :as => :update_user_confirmation

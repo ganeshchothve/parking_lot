@@ -6,6 +6,7 @@ class HomeController < ApplicationController
   before_action :set_project, :set_user, :set_lead, :set_customer_search, only: :check_and_register
 
   def index
+    render layout: 'landing_page'
   end
 
   def welcome

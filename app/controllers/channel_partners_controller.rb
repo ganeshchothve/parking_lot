@@ -25,8 +25,7 @@ class ChannelPartnersController < ApplicationController
 
   def new
     @channel_partner = ChannelPartner.new
-    layout = (current_user.present? ? 'devise' : 'landing_page')
-    render layout: layout
+    render layout: 'landing_page'
   end
 
   def edit
