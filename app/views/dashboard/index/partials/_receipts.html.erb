@@ -14,12 +14,12 @@
       <%= form_tag dashboard_path, method: "get", id: "dashboard-receipts-fltrs" do %>
       <div class="row">
         <div class="col-md-11">
-          <div class="form-group">
+          <div class="mb-3">
             <%= select_tag "receipt_fltrs[group_by]", options_for_select(DashboardDataProvider.receipts_available_group_by.collect{|x| [x[:text], x[:id]]}, (params[:receipt_fltrs].present? && params[:receipt_fltrs][:group_by].present? ? params[:receipt_fltrs][:group_by] : [])), {class: "selectize", prompt: "Select", multiple: true} %>
           </div>
         </div>
         <div class="col-md-1">
-          <div class="form-group">
+          <div class="mb-3">
             <%= submit_tag :Apply, class: "btn btn-primary float-md-right" %>
           </div>
         </div>
@@ -30,7 +30,7 @@
       <div class="table-responsive">
         <table class="table">
           <thead>
-            <tr class="bg-gradient-cd white">
+            <tr class="bg-primary white">
               <% if (params[:receipt_fltrs] && params[:receipt_fltrs][:group_by] && params[:receipt_fltrs][:group_by].include?("status")) || params[:receipt_fltrs].nil? %>
               <th>Status</th>
               <% end %>

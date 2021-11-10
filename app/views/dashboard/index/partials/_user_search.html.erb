@@ -28,8 +28,8 @@
           </div>
         </div>
         <div class = 'col-sm-1'>
-          <div class="form-group float-right mt-2">
-            <%= submit_tag :Apply, class: "btn apply-btn" %>
+          <div class="form-group float-right mt-4">
+            <%= submit_tag :Apply, class: "btn apply-btn btn-primary border-primary" %>
           </div>
         </div>
       </div>
@@ -44,7 +44,8 @@
     FormInitializer.init($form);
     var userId = $form.find('[name="fltrs[_id]"]').val();
     if(!_.isEmpty(userId)){
-      $form.submit();
+      var form = document.getElementById('lead_search_form');
+      Rails.fire(form, 'submit');
     }
 
     // $('#get-started').hide();

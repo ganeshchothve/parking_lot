@@ -40,6 +40,9 @@ Rails.application.routes.draw do
   scope "*notable_type/:notable_id" do
     resources :notes, controller: :notes, as: :notables
   end
+  scope "*videoable_type/:videoable_id" do
+    resources :videos, controller: :videos, as: :videoables
+  end
   resources :channel_partners, except: [:destroy] do
     get 'export', action: 'export', on: :collection, as: :export
     post :change_state, on: :member
@@ -162,13 +165,13 @@ Rails.application.routes.draw do
       get :collaterals, on: :collection
       post :sync_on_selldo, on: :member
 
+      resources :unit_configurations, only: [:index, :edit, :update], controller: 'projects/unit_configurations'
       resources :token_types, except: [:destroy, :show], controller: 'projects/token_types' do
         member do
           get :token_init
           get :token_de_init
         end
       end
-
       resources :time_slots, controller: 'projects/time_slots'
     end
     resources :project_towers, only: [:index]
@@ -200,6 +203,7 @@ Rails.application.routes.draw do
       collection do
         get :export
         get :search_by
+        post :search_inventory
       end
       member do
         get 'sync_notes'
@@ -304,8 +308,10 @@ Rails.application.routes.draw do
   get 'buyer/projects', to: 'home#select_project', as: :buyer_select_project
   post 'select_project', to: 'home#select_project', as: :select_project
 
+  get 'signed_up/:user_id', to: 'home#signed_up', as: :signed_up
+
   scope :custom do
-    match :inventory, to: 'custom#inventory', as: :custom_inventory, via: [:get]
+    match 'inventory/:id', to: 'custom#inventory', as: :custom_inventory, via: [:get]
   end
 
   scope :dashboard do
@@ -326,10 +332,13 @@ Rails.application.routes.draw do
     get :invoice_ageing_report, to: "dashboard#invoice_ageing_report"
     get :billing_team_dashboard, to: "dashboard#billing_team_dashboard"
     get :project_wise_summary, to: "dashboard#project_wise_summary"
+    get :project_wise_leads, to: "dashboard#project_wise_leads"
     get :incentive_plans_started, to: "dashboard#incentive_plans_started"
     get :incentive_plans_summary, to: "dashboard#incentive_plans_summary"
     get :channel_partner_dashboard_counts, to: "dashboard#channel_partner_dashboard_counts"
     #get :download_brochure, to: 'dashboard#download_brochure'
+    get :sales_board, to: 'dashboard#sales_board'
+
     resource :lead do
       resources :searches, except: [:destroy], controller: 'searches' do
         get :"3d", on: :collection, action: "three_d", as: "three_d"

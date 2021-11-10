@@ -1,73 +1,73 @@
-<div class="container mb-4 admin-dashboard">
+<div class="px-4 mb-4 admin-dashboard">
   <div class="row">
     <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
-      <div class="box-card">
-        <div class="box-header bg-gradient-cd br-rd-tr-4">
-          <h4 class="white pre text-center"><%= User.human_attribute_name("role.user", count: 3) %></h4>
+      <div class="box-card shadow rounded">
+        <div class="box-header bg-theme br-rd-tr-4 rounded-top px-2  position-relative">
+          <h4 class="white pre text-center fn-18 mb-0  position-absolute top-50 start-50 translate-middle wd-100"><%= User.human_attribute_name("role.user", count: 3) %></h4>
         </div>
-        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
-          <span class = 'fn-18'><%= DashboardData::AdminDataProvider.customer_count %></span>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
-      <div class="box-card">
-        <div class="box-header bg-gradient-cd br-rd-tr-4">
-          <h4 class="white pre text-center"><%= ChannelPartner.model_name.human(count: 3) %></h4>
-        </div>
-        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
-          <span class = 'fn-18'><%= DashboardData::AdminDataProvider.channel_partner_count %></span>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
+          <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.customer_count %></span>
         </div>
       </div>
     </div>
     <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
-      <div class="box-card">
-        <div class="box-header bg-gradient-cd br-rd-tr-4">
-          <h4 class="white pre text-center"><%= ProjectUnit.model_name.human(count: 3) %></h4>
+      <div class="box-card shadow rounded">
+        <div class="box-header bg-theme br-rd-tr-4 rounded-top  position-relative">
+          <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle wd-100"><%= ChannelPartner.model_name.human(count: 3) %></h4>
         </div>
-        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
-          <span class = 'fn-18'><%= DashboardData::AdminDataProvider.sold_project_units_count %> / <%= DashboardData::AdminDataProvider.all_project_units_count %></span>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
-      <div class="box-card">
-        <div class="box-header bg-gradient-cd br-rd-tr-4">
-          <h4 class="white pre text-center"><%= UserRequest.model_name.human(count: 3) %></h4>
-        </div>
-        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
-          <span class = 'fn-18'><%= DashboardData::AdminDataProvider.open_user_requests %></span>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
+          <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.channel_partner_count %></span>
         </div>
       </div>
     </div>
     <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
-      <div class="box-card">
-        <div class="box-header bg-gradient-cd br-rd-tr-4">
-          <h4 class="white pre text-center"><%= Receipt.model_name.human(count: 3) %></h4>
+      <div class="box-card shadow rounded">
+        <div class="box-header bg-theme br-rd-tr-4 rounded-top position-relative">
+          <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle"><%= ProjectUnit.model_name.human(count: 3) %></h4>
         </div>
-        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
+          <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.sold_project_units_count %> / <%= DashboardData::AdminDataProvider.all_project_units_count %></span>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
+      <div class="box-card shadow rounded">
+        <div class="box-header bg-theme br-rd-tr-4 rounded-top position-relative">
+          <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle wd-100"><%= UserRequest.model_name.human(count: 3) %></h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
+          <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.open_user_requests %></span>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
+      <div class="box-card shadow rounded">
+        <div class="box-header bg-theme br-rd-tr-4 rounded-top position-relative">
+          <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle"><%= Receipt.model_name.human(count: 3) %></h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
           <span title="<%= Receipt.human_attribute_name("payment_mode.online") %>">
-            <i class="online-label"></i>
-            <span class="fn-18">
+            <span class="fn-18 font-medium">
+            <i class="fa fa-circle fn-12 success me-1"></i>
               <%= DashboardData::AdminDataProvider.online_receipts %>
             </span>
           </span>
           <span title="<%= Receipt.human_attribute_name("payment_mode.offline") %>">
-            <i class="offline-label"></i>
-            <span class="fn-18">
-              <%= DashboardData::AdminDataProvider.offline_receipts %>
+            <span class="fn-18 font-medium">
+            <i class="fa fa-circle fn-12 danger me-1 ms-2"></i>  
+            <%= DashboardData::AdminDataProvider.offline_receipts %>
             </span>
           </span>
         </div>
       </div>
     </div>
     <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
-      <div class="box-card">
-        <div class="box-header bg-gradient-cd br-rd-tr-4">
-          <h4 class="white pre text-center"><%= Scheme.model_name.human(count: 3) %></h4>
+      <div class="box-card shadow rounded">
+        <div class="box-header bg-theme br-rd-tr-4 rounded-top position-relative">
+          <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle"><%= Scheme.model_name.human(count: 3) %></h4>
         </div>
-        <div class="box-content br-rd-bl-4 bg-white py-3 text-center">
-          <span class = 'fn-18'><%= DashboardData::AdminDataProvider.active_schemes %></span>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
+          <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.active_schemes %></span>
         </div>
       </div>
     </div>
@@ -78,7 +78,7 @@
   <div class="row mb-3">
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 mb-3">
       <div class="box-card">
-        <div class="box-header bg-gradient-cd br-rd-tr-4">
+        <div class="box-header bg-primary br-rd-tr-4">
           <div class = "row">
             <div class = "col-6">
               <h4 class="white pre text-center float-left lh-2"><%#= Receipt.model_name.human(count: 3) %></h4>
@@ -101,7 +101,7 @@
     </div>
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12">
       <div class="box-card">
-        <div class="box-header bg-gradient-cd br-rd-tr-4">
+        <div class="box-header bg-primary br-rd-tr-4">
           <div class = "row">
             <div class = "col-6">
               <h4 class="white pre text-center float-left lh-2"><%#= t('controller.dashboard.receipt_frequency') %></h4>
@@ -126,7 +126,7 @@
   <div class="row mb-3">
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 mb-3">
       <div class="box-card">
-        <div class="box-header bg-gradient-cd br-rd-tr-4">
+        <div class="box-header bg-primary br-rd-tr-4">
           <div class = "row">
             <div class = "col-6">
               <h4 class="white pre text-center float-left lh-2"><%#= ProjectUnit.model_name.human(count: 3) %></h4>
@@ -142,7 +142,7 @@
     </div>
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12">
       <div class="box-card">
-        <div class="box-header bg-gradient-cd br-rd-tr-4">
+        <div class="box-header bg-primary br-rd-tr-4">
           <div class = "row">
             <div class = "col-6">
               <h4 class="white pre text-center float-left lh-2"><%#= BookingDetail.model_name.human(count: 3) %></h4>
@@ -167,7 +167,7 @@
   <div class="row mb-3">
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 mb-3">
       <div class="box-card">
-        <div class="box-header bg-gradient-cd br-rd-tr-4">
+        <div class="box-header bg-primary br-rd-tr-4">
           <div class = "row">
             <div class = "col-6">
               <h4 class="white pre text-center float-left lh-2"><%#= Receipt.model_name.human(count: 3) %></h4>
@@ -190,7 +190,7 @@
     </div>
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12">
       <div class="box-card">
-        <div class="box-header bg-gradient-cd br-rd-tr-4">
+        <div class="box-header bg-primary br-rd-tr-4">
           <div class = "row">
             <div class = "col-6">
               <h4 class="white pre text-center float-left lh-2"><%= User.human_attribute_name("role.user") %></h4>

@@ -1,10 +1,9 @@
-<section class="team_lead">
-  <div class="container">
+<section class="team_lead mt-4">
+  <div class="px-3">
     <div class="row">
       <div class="col-lg-6 col-xs-6 col-md-6 col-sm-6 no-pd">
         <div class="table-title pt-2 pb-3">
-          <img class="float-left mr-2" width=20 src="<%= asset_path 'user-black.svg' %>" alt="Team Lead">
-          <h4 class="title"><%= current_user.name.try(:titleize) %> <small>(Team Lead)</small></h4>
+          <h4 class="theme-txt-color fn-18"><%= current_user.name.try(:titleize) %> <small>(Team Lead)</small></h4>
         </div>
       </div>
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
@@ -40,7 +39,7 @@
         var selectize = $select.selectize()[0].selectize;
         var $control = selectize.$control;
         if($select.data('params').fltrs.queue_number && $control.find('.clear-search').length == 0){
-          $control.append("<small class='clear-search'><a class='float-right' href='javascript;'>Clear Search</a></small>");
+          $control.append("<small class='clear-search float-end me-4'><a href='javascript;'><i class='fa fa-times-circle fn-14 theme-fill'></i></a></small>");
         }
       }
     };
@@ -73,7 +72,7 @@
     $('.team_lead').on('drop', '.sales-team-box.available', function(event) {
       event.preventDefault();
       var customerId = event.originalEvent.dataTransfer.getData('customer_id');
-      var salesId = $(event.currentTarget).parent('.sales-box').attr('id');
+      var salesId = $(event.currentTarget).closest('.sales-box').attr('id');
 
       $.ajax({
         url: '/admin/leads/' + customerId + '/assign_sales',

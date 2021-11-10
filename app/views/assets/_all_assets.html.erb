@@ -1,9 +1,9 @@
 <% if policy([ current_user_role_group, Asset.new(assetable: assetable)]).update? %>
   <div class="row">
     <div class="col-md-6">
-      <div class="form-group">
+      <div class="mb-3">
         <div class="btn btn-primary fileinput-button pull-right">
-          <input type="file" name="files[]" class="btn btn-primary fileupload fileupload_single" data-extensions="<%= allowed_file_extensions('AssetUploader', assetable) %>" data-url="<%= assetables_path(assetable_type: assetable.class.model_name.i18n_key.to_s, assetable_id: assetable.id) %>" multiple=true data-target='.files-container-single' <%= policy([ current_user_role_group, Asset.new(assetable: assetable)]).update? ? "" : "disabled=disabled" %> data-klass = 'Asset' data-field_name = 'file' />
+          <input type="file" name="files[]" class="btn btn-primary fileupload fileupload_single" data-extensions="<%= allowed_file_extensions('AssetUploader', assetable) %>" data-url="<%= assetables_path(assetable_type: assetable.class.model_name.i18n_key.to_s, assetable_id: assetable.id) %>" multiple=true data-bs-target='.files-container-single' <%= policy([ current_user_role_group, Asset.new(assetable: assetable)]).update? ? "" : "disabled=disabled" %> data-klass = 'Asset' data-field_name = 'file' />
         </div>
       </div>
     </div>

@@ -6,23 +6,45 @@ var window_ht = $(window).height();
 var window_wt = $(window).width();
 var header_ht = $('header').height();
 
-$(window).on("load", function() {
+$(window).on("load", function () {
     // alert(123);
     $('.home-points_lists').addClass('animated');
     $('.home-points_lists').addClass('fadeIn');
 });
 
-$(document).ready(function() {
+$(document).ready(function () {
 
-    $(".home-banner.slide").css({ 'height': (window_wt <= 768) ? (window_ht - 46) : window_ht });
+    $(".home-banner.slide").css({
+        'height': (window_wt <= 768) ? (window_ht - 46) : window_ht
+    });
 
     $('.scroll-sec').click(function() {
-        $('html, body').animate({ scrollTop: $('#'+$(this).attr('rel')).offset().top - 60 }, 'slow');
+        $('html, body').animate({
+            scrollTop: $('#'+$(this).attr('rel')).offset().top - 60
+        }, 'slow');
     });
 
-    $('.register-btn, #close').click(function() {
+    $('.register-btn, #close').click(function () {
         $('#overlay').fadeToggle();
     });
+
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+        var regexS = "[\\?&]" + name + "=([^&#]*)";
+        var regex = new RegExp(regexS);
+        var results = regex.exec(window.location.href);
+        if (results == null)
+            return "";
+        else
+            return decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    if (getParameterByName("goto").indexOf("register-now") > -1) {
+        setTimeout(function () {
+            $('#overlay').fadeToggle();
+        }, 1000);
+    }
+
 
     // $(".customer-testimonials-left-section .customer-testimonial-video-thumbnail").click(function(ev){
     //   $(this).hide();          
@@ -35,15 +57,15 @@ $(document).ready(function() {
     if (window_wt < 768) {
         $('.last-slide-exclusive').remove();
         $('.exclusive-features-slider').bxSlider({
-            mode:"horizontal",
-              auto: true,
-              speed:800,
-              pager: false,
-              controls: true,
-              infiniteLoop:true,
-              touchEnabled:true,
-              pause: 5000,
-              moveSlides: 1,
+            mode: "horizontal",
+            auto: true,
+            speed: 800,
+            pager: false,
+            controls: true,
+            infiniteLoop: true,
+            touchEnabled: true,
+            pause: 5000,
+            moveSlides: 1,
             prevSelector: '#exct-feat-prev',
             prevText: "<img data-src='<%= asset_path 'left-arrow-new-2.png' %>' class='lazy'>",
             nextSelector: '#exct-feat-next',
@@ -67,7 +89,7 @@ $(document).ready(function() {
     });
 
     if (window_wt <= 768) {
-        $(".brand-logo img").attr("src", "<%= asset_path 'launchpad-blue-logo.png' %>");
+        $(".brand-logo img").attr("src", "<%= asset_path 'beyondwalls-logo.png' %>");
     }
 
     if (window_wt < 768) {
@@ -80,7 +102,7 @@ $(document).ready(function() {
         var cityValue = $('select.city').val();
         var plotType = $('select.type').val();
 
-        $('.property-load-section').find('.property-item').hide().filter(function() {
+        $('.property-load-section').find('.property-item').hide().filter(function () {
 
             var okCity = true;
             if (cityValue !== "all") {
@@ -106,7 +128,7 @@ $(document).ready(function() {
         }
     }
 
-    $(".load-more-btn").click(function() {
+    $(".load-more-btn").click(function () {
 
         if ($(".property-load-section").hasClass("property-hide")) {
             $(".property-load-section").removeClass("property-hide");
@@ -125,7 +147,7 @@ $(document).ready(function() {
         var cityValue2 = $('select.city2').val();
         var plotType2 = $('select.type2').val();
 
-        $('.property-load-section2').find('.property-item').hide().filter(function() {
+        $('.property-load-section2').find('.property-item').hide().filter(function () {
 
             var okCity2 = true;
             if (cityValue2 !== "all") {
@@ -162,7 +184,7 @@ $(document).ready(function() {
     //  $(".load-more-btn-wrapper2").hide();
     // }
 
-    $(".load-more-btn2").click(function() {
+    $(".load-more-btn2").click(function () {
         if ($(".property-load-section2").hasClass("property-hide2")) {
             $(".property-load-section2").removeClass("property-hide2");
             $(".load-more-btn-wrapper2 a").text("Load Less");
@@ -173,31 +195,31 @@ $(document).ready(function() {
     })
 
 
-    $(window).scroll(function() {
+    $(window).scroll(function () {
 
-        if (window_wt > 768) {
-            if ($(document).scrollTop() > 50) {
-                if($('header').hasClass('sticky-header')){
+        // if (window_wt > 768) {
+        //     if ($(document).scrollTop() > 50) {
+        //         if ($('header').hasClass('sticky-header')) {
 
-                }else{
-                    $('header').addClass('shrink');
-                    $(".brand-logo img").attr("src", "<%= asset_path 'launchpad-blue-logo.png' %>")
-                }
-            } else {
-                if($('header').hasClass('sticky-header')){
+        //         } else {
+        //             $('header').addClass('shrink');
+        //             $(".brand-logo img").attr("src", "<%= asset_path 'beyondwalls-logo.png' %>")
+        //         }
+        //     } else {
+        //         if ($('header').hasClass('sticky-header')) {
 
-                }else{
-                    $('header').removeClass('shrink');
-                    $(".brand-logo img").attr("src", "<%= asset_path 'launchpad-logo.png' %>")
-                }
-            }
-        } else {
-            $(".brand-logo img").attr("src", "<%= asset_path 'launchpad-blue-logo.png' %>");
-        }
+        //         } else {
+        //             // $('header').removeClass('shrink');
+        //             $(".brand-logo img").attr("src", "<%= asset_path 'beyondwalls-logo.png' %>")
+        //         }
+        //     }
+        // } else {
+        //     $(".brand-logo img").attr("src", "<%= asset_path 'beyondwalls-logo.png' %>");
+        // }
 
 
         /******************* Lazy Load Script ************************/
-        $(".lazy").each(function() {
+        $(".lazy").each(function () {
             if ($(this).attr("data-src")) {
                 (this.tagName == "IMG" || this.tagName == "IFRAME") ? $(this).attr("src", $(this).data("src")): $(this).css("background-image", "url(" + $(this).data("src") + ")");
                 $(this).removeAttr("data-src");

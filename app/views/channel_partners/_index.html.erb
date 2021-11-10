@@ -1,55 +1,93 @@
-<table class='table my-customer-table responsive-tbl'>
-  <thead class="th-default">
-    <thead>
-      <tr class="bg-gradient-cd white">
-        <th><%= t('mongoid.attributes.channel_partner.name') %></th>
-        <th><%= t('mongoid.attributes.channel_partner.details')%></th>
-        <th><%= t('mongoid.attributes.channel_partner.rera_id') %></th>
-        <th><%= t('mongoid.attributes.channel_partner.status') %></th>
-        <th><%= t('mongoid.attributes.channel_partner.associated_user_id') %></th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-  </thead>
-  <tbody>
-      <% channel_partners.each do |channel_partner| %>
-        <tr>
-          <td data-title=<%= t('mongoid.attributes.channel_partner.name') %> >
-            <%= channel_partner.name %>
-            <% if channel_partner.cp_code.present? %>
-              <div class='small'>
-                <%= t('mongoid.attributes.channel_partner.cp_code') %>: <%= channel_partner.cp_code %>
-              </div>
-            <% end %>
-          </td>
-          <td data-title= <%= t('mongoid.attributes.channel_partner.details') %> ><i class="far fa-envelope"></i> <%= channel_partner.email %><br/><i class="fas fa-mobile-alt"></i> <%= channel_partner.phone %></td>
-          <td data-title=<%= t('mongoid.attributes.channel_partner.rera_id') %> ><%= channel_partner.rera_id %></td>
-          <td data-title=<%= t('mongoid.attributes.channel_partner.status') %> ><%= ChannelPartner.human_attribute_name("status.#{channel_partner.status}") %></td>
-          <td data-title=<%= t('mongoid.attributes.channel_partner.associated_user_id') %> ><%= channel_partner.associated_user_id.present? ? link_to(channel_partner.associated_user.name, admin_user_path(channel_partner.associated_user_id)) : '-' %></td>
-          <td>
-            <div class="dropdown show text-center">
-            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                <% if Admin::ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
-                  <%= link_to t('helpers.edit.link_name', model: ChannelPartner.model_name.human), edit_channel_partner_path(channel_partner), class: 'dropdown-item modal-remote-form-link' %>
-                <% end %>
-                <%# if policy([:admin, Crm::Base.new()]).choose_crm? && Crm::Api.where(resource_class: 'ChannelPartner').present? %>
-                  <%#= link_to t('controller.crms.choose_crm.link_name'), choose_crm_admin_crm_base_index_path(resource_id: channel_partner.id, resource_class: channel_partner.class), class: "dropdown-item " %>
-                <%# end %>
+<section class="mt-0">
+  <div class="px-0">
+    <div class="row g-0">
+      <div class="col-lg-12 p-0">
+        <% channel_partners.each do |channel_partner| %>
+        <div class="bg-white rounded-3 float-start wd-100 mt-4 shadow-sm position-relative">
+          <div class="float-start wd-100">
+            <div class="">
+              <div>
+                <div class="inner-info d-flex justify-content-between">
+                  <div class="ps-3 py-3">
+                    <h2 class="fn-16 font-medium d-inline-block mb-0 theme-txt-color me-2">
+                      <%= channel_partner.name %>
+                    </h2>
+                    <% if channel_partner.email.present? %>
+                    <p class="email-icon small d-inline-block mt-1 fn-16 mb-0">
+                      <i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i><%= channel_partner.email || '' %>
+                    </p>
+                    <% end %>
+                    <% if channel_partner.phone.present? %>
+                    <p class="phone-icon small d-inline-block mt-1 ms-2 fn-16 mb-0">
+                      <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= channel_partner.phone || '' %>
+                    </p>
+                    <% end %>
+                    <% if channel_partner.cp_code.present? %>
+                    <p class="fn-14 mt-1 mb-0">
+                      <span class="title"><%= t('mongoid.attributes.channel_partner.cp_code') %>:</span>
+                      <%= channel_partner.cp_code %>
+                    </p>
+                    <% end %>
+                  </div>
+                  <div class="pe-3 py-3">
+                    <div class="dropdown d-inline-block">
+                      <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        <i class="fa fa-ellipsis-v primary" aria-hidden="true"></i></a>
+                      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                        <% if Admin::ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
+                        <%= link_to t('helpers.edit.link_name', model: ChannelPartner.model_name.human), edit_channel_partner_path(channel_partner), class: 'dropdown-item modal-remote-form-link' %>
+                        <% end %>
+                        <%# if policy([:admin, Crm::Base.new()]).choose_crm? && Crm::Api.where(resource_class: 'ChannelPartner').present? %>
+                        <%#= link_to t('controller.crms.choose_crm.link_name'), choose_crm_admin_crm_base_index_path(resource_id: channel_partner.id, resource_class: channel_partner.class), class: "dropdown-item " %>
+                        <%# end %>
 
-                <% if Admin::ChannelPartnerPolicy.new(current_user, channel_partner).show? %>
-                  <%= link_to t('helpers.show.link_name', model: ChannelPartner.model_name.human), channel_partner, class: 'dropdown-item' %>
-                <% end %>
-                <% if policy([ current_user_role_group, Asset.new(assetable: channel_partner)]).index? %>
-                  <%= link_to t('controller.assets.index.link_name'), assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'dropdown-item modal-remote-form-link' %>
-                <% end %>
-             </div>
+                        <% if Admin::ChannelPartnerPolicy.new(current_user, channel_partner).show? %>
+                        <%= link_to t('helpers.show.link_name', model: ChannelPartner.model_name.human), channel_partner, class: 'dropdown-item' %>
+                        <% end %>
+                        <% if policy([ current_user_role_group, Asset.new(assetable: channel_partner)]).index? %>
+                        <%= link_to t('controller.assets.index.link_name'), assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'dropdown-item modal-remote-form-link' %>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="border-bottom col-12"></div>
+              </div>
+              <div class="d-flex justify-content-between">
+                <div class="ps-3 py-3">
+                  <p class="fn-14 mb-0 theme-txt-color">
+                    <%= channel_partner.associated_user_id.present? ? link_to(channel_partner.associated_user.name, admin_user_path(channel_partner.associated_user_id), class: "theme-txt-color col-title") : '-' %>
+                  </p>
+                </div>
+                <div class="inner-info">
+                  <div class="pe-3 py-3  d-flex justify-content-end">
+                    <p class="fn-16 secondary mb-0">RERA Registration Number : <span
+                        class="font-medium theme-txt-color"><%= channel_partner.rera_id.present? ? channel_partner.rera_id : '-'  %></span>
+                    </p>
+                    <span class="secondary mx-3">| </span>
+                    <p class="font-medium fn-14 mb-0 theme-txt-color"><i
+                        class='fa fa-circle status_<%= ChannelPartner.human_attribute_name("status.#{channel_partner.status}").downcase.gsub(" ", "_") %> me-2 fa-xs'></i><%= ChannelPartner.human_attribute_name("status.#{channel_partner.status}") %>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          </td>
-        </tr>
-      <% end %>
-  </tbody>
-</table>
-<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">
-  <%= will_paginate channel_partners, list_classes: %w(pagination justify-content-center) %>
-</div>
+        </div>
+        <% end %>
+      </div>
+
+      <div class="col-lg-12 py-3 bg-white mb-2 px-2 mt-3 shadow-sm">
+        <div class="row">
+          <div class="col-lg-6">
+            <p class="table-entry mb-0 ps-2 pt-2"><%= page_entries_info channel_partners %></p>
+          </div>
+          <div class="col-lg-6 table-pagination">
+            <%= will_paginate channel_partners, list_classes: %w(pagination justify-content-end) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -2,30 +2,28 @@
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header bg-gradient-cd white">
+      <div class="modal-header">
         <h3 class="title"><%= @template.new_record? ? "New" : "Edit" %> <%= ::Template.model_name.human %></h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" class="white">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        <div class="form-group">
+      <div class="modal-body theme-form">
+        <div class="mb-3">
           <%= f.label :name %>
           <div><%= t("templates.#{@template.name}") rescue @template._type.split("::").last %></div>
         </div>
         <% if @template.is_a?(::Template::EmailTemplate) %>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :subject %>
             <%= f.text_field :subject, class: 'form-control' %>
           </div>
         <% end %>
 
         <% if @template.is_a?(::Template::SmsTemplate) %>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :dlt_temp_id %>
             <%= f.text_field :dlt_temp_id, class: 'form-control' %>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :dlt_tag_id %>
             <%= f.text_field :dlt_tag_id, class: 'form-control' %>
           </div>
@@ -38,13 +36,13 @@
               <%= adj.link_to_remove icon("far", "times-circle") %>
               <div class="row">
                 <div class="col-md-6">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <%= adj.label :number, class: 'label-required' %>
                     <%= adj.number_field :number, class: "form-control", required: 'required', disabled: !editable_template_variable %>
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <%= adj.label :content %>
                     <%= adj.text_field :content, class: "form-control", disabled: !editable_template_variable %>
                   </div>
@@ -55,8 +53,8 @@
         <% end %>
 
         <div class="form-check">
-          <%= f.check_box :is_active, class: 'form-check-input' %>
-          <%= f.label :is_active, class: 'form-check-label' %>
+          <%= f.check_box :is_active, class: 'form-check-input wd-22' %>
+          <%= f.label :is_active, class: 'form-check-label d-inline-block ms-2' %>
         </div>
 
         <div>
@@ -64,7 +62,7 @@
           <%= f.text_area :content, rows: 15, class: 'form-control' %>
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer text-end">
         <%= f.submit "Save", class: "btn btn-primary" %>
       </div>
     </div>

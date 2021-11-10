@@ -1,6 +1,6 @@
 @import "custom_variables";
 @import "custom"; // this is the css to be modified per client
-@import "bootstrap/bootstrap";
+@import "bootstrap";
 @import "font-awesome-sprockets";
 @import "font-awesome";
 @import "building";
@@ -34,11 +34,11 @@ html, body{
 	color: #a6a6a6;
 }
 .last-drop-down::after { vertical-align: text-top; margin-left: 0px; margin-top: 0px; }
-.form-group.has-error .form-control,
-.form-group.has-error .custom-select{
+.mb-3.has-error .form-control,
+.mb-3.has-error .custom-select{
   border-color: $form-feedback-invalid-color !important;
 }
-.form-group.has-error .help-block {
+.mb-3.has-error .help-block {
   color: $form-feedback-invalid-color !important;
 }
 label.label-required:after {
@@ -686,7 +686,7 @@ h6{
   border-right: 2px solid #dee2e6;
 }
 
-.form-group {
+.mb-3 {
   .h-auto {
     height: auto !important;
   }
@@ -878,9 +878,6 @@ h6{
   }
 }
 
-.dragover {
-  background-color: #e4e4e4 !important;
-}
 
 
 // Gre dashboard flow CSS

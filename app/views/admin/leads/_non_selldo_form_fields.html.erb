@@ -14,8 +14,12 @@
     <%= f.input :phone, required: true, disabled: !policy([:admin, lead]).editable_field?("phone"), as: :tel, input_html: { class: 'phone', name: 'phone' } %>
   </div>
 </div>
-<div class='row'>
-  <div class="col-md-12">
-    <%= f.input :project_id, collection: Project.all.collect{|p| [p.name, p.id]}, disabled: !policy([:admin, lead]).editable_field?("project_id"), as: :select, prompt: :translate, input_html: { class: 'selectize', name: 'project_id' } %>
+<% if Project.count == 1 %>
+  <%= f.input :project_id, as: :hidden, input_html: { name: 'project_id' } %>
+<% else %>
+  <div class='row'>
+    <div class="col-md-12">
+      <%= f.input :project_id, collection: Project.all.collect{|p| [p.name, p.id]}, disabled: !policy([:admin, lead]).editable_field?("project_id"), as: :select, prompt: :translate, input_html: { class: 'selectize', name: 'project_id' } %>
+    </div>
   </div>
-</div>
+<% end %>

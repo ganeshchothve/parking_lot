@@ -1,9 +1,10 @@
 class Admin::LeadsController < AdminController
   before_action :authenticate_user!
-  before_action :set_lead, except: %i[index new export search_by]
+  before_action :set_lead, except: %i[index new export search_by search_inventory]
   before_action :authorize_resource
   before_action :set_sales_user, only: :assign_sales
-  around_action :apply_policy_scope, only: %i[index]
+  around_action :apply_policy_scope, only: %i[index search_inventory]
+  around_action :user_time_zone, if: :current_user
 
   def new
     attrs = {}
@@ -11,7 +12,11 @@ class Admin::LeadsController < AdminController
       @user = User.where(id: params[:user_id]).first
       attrs = @user.as_json(only: %w(first_name last_name email phone))
     end
-    attrs[:project_id] = params[:project_id] if params[:project_id].present?
+    if params[:project_id].present?
+      attrs[:project_id] = params[:project_id]
+    elsif Project.count == 1
+      attrs[:project_id] = Project.first.id
+    end
     @lead = Lead.new(attrs)
     render layout: false
   end
@@ -105,7 +110,43 @@ class Admin::LeadsController < AdminController
     end
   end
 
+  def search_inventory
+    @leads = Lead.in(id: params[:leads][:ids])
+    @project_ids = params.dig(:leads, :tp_project_ids).split(',')
+    @project_url = ENV_CONFIG.dig('third_party_inventory', 'base_url')
+
+    respond_to do |format|
+      email_template = ::Template::EmailTemplate.where(name: "send_tp_projects_link").first
+      if email_template.present? && @leads.present? && @project_ids.present?
+        @leads.each do |lead|
+          email = Email.create!({
+            booking_portal_client_id: current_client.id,
+            body: ERB.new(current_client.email_header).result(binding) + ERB.new(email_template.content).result(binding).html_safe + ERB.new(current_client.email_footer).result(binding),
+            subject: ERB.new(email_template.subject).result(binding).html_safe,
+            to: [lead.email],
+            triggered_by_id: lead.id,
+            triggered_by_type: lead.class.to_s
+          })
+          email.sent!
+        end
+
+        format.json { render json: { message: "Mail successfully sent to the selected leads" }, status: :ok }
+      else
+        errors = []
+        errors << 'Email template not found' unless email_template.present?
+        errors << 'Please select some leads' unless @leads.present?
+        errors << 'Please select some projects' unless @project_ids.present?
+        format.json { render json: { errors: errors }, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
+
+  def user_time_zone
+    Time.use_zone(current_user.time_zone) { yield }
+  end
+
   def set_lead
     @lead = if params[:crm_client_id].present? && params[:id].present?
               find_lead_with_reference_id(params[:crm_client_id], params[:id])
@@ -129,7 +170,7 @@ class Admin::LeadsController < AdminController
   end
 
   def authorize_resource
-    if %w[index new export search_by].include?(params[:action])
+    if %w[index new export search_by search_inventory].include?(params[:action])
       authorize [current_user_role_group, Lead]
     else
       authorize [current_user_role_group, @lead]

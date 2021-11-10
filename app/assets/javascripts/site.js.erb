@@ -2,12 +2,10 @@
 //= require_self
 
 var aArray = [];
-$(document).ready(function(){
-
-  var wn_width = $(window).width();
-  var wn_height = $(window).height();
-  var wind_height = $('.header').outerHeight();
-
+var wn_width = $(window).width();
+var wn_height = $(window).height();
+var wind_height = $('.header').outerHeight();
+$(document).ready(function () {
   $(".project-slider").bxSlider({
     mode: 'fade',
     infiniteLoop: true,
@@ -22,22 +20,74 @@ $(document).ready(function(){
     nextText: '>',
     prevText: '<'
   });
-
-
-  $('.db-filter-btn').click(function(){
-    if($(this).parents('.box-card').length){
-      $(this).parents('.box-card').find('.filter-box').slideToggle('slow')
+  $('.header-search-icon').click(function () {
+    $('.icon-search').toggleClass('close');
+  });
+  $('.pwd-btn').click(function () {
+    if ($(this).hasClass('show-pwd')) {
+      $(this).removeClass('show-pwd').addClass('hide-pwd')
+      $(this).children().removeClass('fa-eye-slash').addClass('fa-eye');
+      $('.pwd-field').attr('type', 'text');
+    } else {
+      $('.pwd-field').attr('type', 'password');
+      $(this).removeClass('hide-pwd').addClass('show-pwd')
+      $(this).children().removeClass('fa-eye').addClass('fa-eye-slash');
     }
-    else{
+  });
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+
+  var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+  var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    return new bootstrap.Popover(popoverTriggerEl)
+  });
+  // var popover = new bootstrap.Popover(document.querySelector('.popover-dismiss'), {
+  //   trigger: 'focus'
+  // })
+ 
+  $('body').on('click', '.theme-tab a', function (options) {
+
+    var opts = {
+      delayTime: 300
+    };
+    options = options || {};
+    opts = $.extend(opts, options);
+    // return this.each(function() {
+    $(this).on('click', function (event) {
+      event.preventDefault();
+      var sum = 0;
+      $(this).prevAll().each(function () {
+        sum += $(this).width();
+      });
+      var get = document.getElementsByClassName('theme-tab').scrollWidth;
+      var dist = sum - ($(this).parent().width() - $(this).width()) / 2;
+      if (dist < 0) {
+        dist = 0;
+      } else if (dist + sum > get) {
+        dist = get - sum + dist + dist;
+      }
+      $(this).parent().animate({
+          scrollLeft: dist
+        },
+        opts['delayTime']);
+    });
+    // });
+  });
+
+  $('.db-filter-btn').click(function () {
+    if ($(this).parents('.box-card').length) {
+      $(this).parents('.box-card').find('.filter-box').slideToggle('slow')
+    } else {
       // for index pages
       $('.filter-box').slideToggle('slow');
     }
   });
-  $('body').on('click', '.f-cancel-btn, .close-filter-btn', function(){
-    if($(this).parents('.box-card').length){
+  $('body').on('click', '.f-cancel-btn, .close-filter-btn', function () {
+    if ($(this).parents('.box-card').length) {
       $(this).parents('.box-card').find('.filter-box').slideToggle('slow')
-    }
-    else{
+    } else {
       // for index pages
       $('.filter-box').slideToggle('slow');
     }
@@ -49,16 +99,136 @@ $(document).ready(function(){
     scroll_cost = $('#apartment').outerHeight(true) + 20;
     scroll_payment = $('#apartment').outerHeight(true) + $('#cost-sheet').height() + 40;
 
-    if(curnt_id == 'apartment'){
-      $('.scroll-fixed-height').animate({ scrollTop: 0 },1000);
+    if (curnt_id == 'apartment') {
+      $('.scroll-fixed-height').animate({
+        scrollTop: 0
+      }, 1000);
     }
-    if(curnt_id == 'cost-sheet'){
-      $('.scroll-fixed-height').animate({ scrollTop: scroll_cost },1000);
+    if (curnt_id == 'cost-sheet') {
+      $('.scroll-fixed-height').animate({
+        scrollTop: scroll_cost
+      }, 1000);
     }
-    if(curnt_id == 'payment-schedule'){
-      $('.scroll-fixed-height').animate({ scrollTop: scroll_payment },1000);
+    if (curnt_id == 'payment-schedule') {
+      $('.scroll-fixed-height').animate({
+        scrollTop: scroll_payment
+      }, 1000);
     }
 
   });
 
+  var childrenSelector = $(".prjt-menu a");
+  var aChildren = $(".prjt-menu a"); // find the a children of the list items
+  if (wn_width <= 700)
+    var gap = 60; // $(".header-wrapper").outerHeight(); //Navigation height
+  else
+    var gap = 120;
+  var aArray = []; // create the empty aArray
+  for (var i = 0; i < childrenSelector.length; i++) {
+    var aChild = aChildren[i];
+    if (!$(aChild).hasClass('extLink')) {
+      if ($(aChild).attr('rel')) {
+        var ahref = $(aChild).attr('rel');
+        aArray.push(ahref);
+      }
+    }
+  }
+  //On Scroll - Add class active to active tab
+  $(window).scroll(function () {
+    var windowPos = $(window).scrollTop(); // get the offset of the window from the top of page
+    var windowHeight = $(window).height(); // get the height of the window
+    var docHeight = $(document).height();
+    for (i = 0; i < aArray.length; i++) {
+      var theID = aArray[i];
+      var divPos = $("#" + theID).offset().top; // get the offset of the div from the top of page
+      var divHeight = $("#" + theID).outerHeight(); // get the height of the div in question
+      if (windowPos >= (divPos - gap) && windowPos < ((divPos - gap) + divHeight)) {
+        if (!$("a[rel='" + theID + "']").hasClass("active")) {
+          $("a[rel='" + theID + "']").addClass("active");
+        }
+      } else {
+        $("a[rel='" + theID + "']").removeClass("active");
+      }
+    }
+
+    //If document has scrolled to the end. Add active class to the last navigation menu
+    if (windowPos + windowHeight == docHeight) {
+      if (!$(".prjt-menu a:not(.extLink):last-child").hasClass("active")) {
+        var navActiveCurrent = $(".active").attr("rel");
+        $("a[rel='" + navActiveCurrent + "']").removeClass("active");
+        $(".prjt-menu a:not(.extLink):last-child").addClass("active");
+      }
+    }
+  });
+  $('.prjt-menu a').on("click", function () {
+    console.log('click')
+    if (!$(this).hasClass('extLink')) {
+      var href = $(this).attr("rel");
+      var gap = 120;
+
+      $('html,body').animate({
+        scrollTop: $("#" + href).offset().top - gap
+      }, 1000);
+    }
+  });
+  $('.emi-calc-btn').click(function(){
+    $('.emi-wrapper').fadeIn();
+  });
+  $('.close-emi').click(function(){
+    $('.emi-wrapper').fadeOut();
+  });
+  // $('body').click(function(){
+  //   $('.emi-wrapper').fadeOut();
+  // });
 });
+/* AppC */
+$(function () {
+    function e(e) {
+      if ((e = e.toString()).length > 9) return "overflow";
+      if (n = ("000000000" + e).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/), n) {
+        var t = "";
+        return t += 0 != n[1] ? (l[Number(n[1])] || o[n[1][0]] + " " + l[n[1][1]]) + "crore " : "", t += 0 != n[2] ? (l[Number(n[2])] || o[n[2][0]] + " " + l[n[2][1]]) + "lakh " : "", t += 0 != n[3] ? (l[Number(n[3])] || o[n[3][0]] + " " + l[n[3][1]]) + "thousand " : "", t += 0 != n[4] ? (l[Number(n[4])] || o[n[4][0]] + " " + l[n[4][1]]) + "hundred " : "", t += 0 != n[5] ? ("" != t ? "and " : "") + (l[Number(n[5])] || o[n[5][0]] + " " + l[n[5][1]]) + "only " : ""
+      }
+    }
+  
+    function t() {
+      var n = Math.round(r * i / (1 - Math.pow(1 / (1 + i), a))),
+        t = r * i / (1 - Math.pow(1 / (1 + i), a)),
+        l = t * a - r;
+      $(".emiValue").text(n.toLocaleString("en-IN")), $(".interestValue").text(Math.round(l).toLocaleString("en-IN")), $(".TotalValue").text(Math.round(t * a).toLocaleString("en-IN"));
+    }
+    var r, a, i, l = ["", "one ", "two ", "three ", "four ", "five ", "six ", "seven ", "eight ", "nine ", "ten ", "eleven ", "twelve ", "thirteen ", "fourteen ", "fifteen ", "sixteen ", "seventeen ", "eighteen ", "nineteen "],
+      o = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+    $("#loan-amount").slider({
+      range: "min",
+      value: 40e5,
+      min: 0,
+      max: 2e7,
+      step: 1e5,
+      slide: function (n, a) {
+        $("#selected-amount").text((a.value)/100000), r = a.value, t()
+      }
+    }), $("#selected-amount").text(($("#loan-amount").slider("value"))/100000)
+    var r = $("#loan-amount").slider("value");
+    $("#interest-rate").slider({
+      range: "min",
+      value: 6.95,
+      min: 5,
+      max: 22.5,
+      step: .05,
+      slide: function (e, n) {
+        $("#selected-interest").text(n.value), i = n.value / 1200, t()
+      }
+    }), $("#selected-interest").text($("#interest-rate").slider("value")), i = $("#interest-rate").slider("value") / 1200, $("#loan-duration").slider({
+      range: "min",
+      value: 20,
+      min: 1,
+      max: 35,
+      step: 0.5,
+      slide: function (e, n) {
+        $("#selected-duration").text(n.value), a = 12 * n.value, t()
+      }
+    }), $("#selected-duration").text($("#loan-duration").slider("value")), a = 12 * $("#loan-duration").slider("value"), t()
+  });
+  
+/* AppC */

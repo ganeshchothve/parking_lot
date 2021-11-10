@@ -30,24 +30,24 @@ class SelldoLeadUpdater
 
     priority = PortalStagePriority.where(role: user.role).collect{|x| [x.stage, x.priority]}.to_h
     if stage.present? && priority[stage].present?
-      if lead.portal_stages.empty?
-        lead.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
-      elsif lead.portal_stage.priority.to_i <= priority[stage].to_i
-        lead.portal_stages.where(stage:  stage).present? ? lead.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : lead.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
+      if user.portal_stages.empty?
+        user.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
+      elsif user.portal_stage.priority.to_i <= priority[stage].to_i
+        user.portal_stages.where(stage:  stage).present? ? user.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : user.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
       end
-      params = { custom_portal_stage: stage }
+      params = { portal_stage: stage, not_clear_custom_fields: true }
       custom_hash = {lead: params}
     else
       user.portal_stage
     end
 
     selldo_base_url = ENV_CONFIG['selldo']['base_url'].chomp('/')
-    if selldo_base_url.present? && selldo_api_key.present? && selldo_client_id.present?
+    if custom_hash.present? && selldo_base_url.present? && selldo_api_key.present? && selldo_client_id.present?
       params = {
         api_key: selldo_api_key,
         client_id: selldo_client_id,
       }
-      params = params.merge(data)
+      params = params.merge(custom_hash)
       url = selldo_base_url + "/client/leads/#{user.lead_id}.json"
 
       Rails.logger.info "[SelldoLeadUpdater][CPPortalStage][INFO][Params] #{params}"
@@ -63,7 +63,7 @@ class SelldoLeadUpdater
 
     priority = PortalStagePriority.where(role: 'user').collect{|x| [x.stage, x.priority]}.to_h
     if stage.present? && priority[stage].present?
-      params = {}
+      params = {not_clear_custom_fields: true}
       if lead.portal_stages.empty?
         lead.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
       elsif lead.portal_stage.priority.to_i <= priority[stage].to_i
@@ -107,6 +107,19 @@ class SelldoLeadUpdater
       end
     else
       puts payload
+    end
+  end
+
+  def add_slot_details(lead, payload={})
+    if payload.present?
+      params = {not_clear_custom_fields: true}
+      params['custom_slot_details'] = payload['slot_details'] if payload['slot_details'].present?
+      params['custom_slot_status'] = payload['slot_status'] if payload['slot_status'].present?
+
+      if params.present?
+        custom_hash = {lead: params}
+        sell_do(lead, custom_hash)
+      end
     end
   end
 

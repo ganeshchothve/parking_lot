@@ -1,37 +1,29 @@
-<table class='table my-customer-table responsive-tbl'>
-  <thead class="th-default">
-    <thead>
-      <tr class="bg-gradient-cd white">
-        <th><%= t('mongoid.attributes.crm.base.name') %></th>
-        <% if current_user.role?('superadmin') %>
-          <th><%= t('mongoid.attributes.crm.base.domain') %></th>
-        <% end %>
-        <th></th>
-      </tr>
-    </thead>
-  </thead>
-  <tbody class='bg-white'>
-    <% crms.each do |crm| %>
-      <tr>
-        <td><%= crm.name %></td>
-        <% if current_user.role?('superadmin') %>
-          <td><%= crm.domain %></td>
-        <% end %>
+<div class="row">
+  <% crms.each do |crm| %>
+  <div class="col-4">
+    <p class="fn-12 font-medium mb-0 txt-light-gray"><%= t('mongoid.attributes.crm.base.name') %></p>
+    <p class="fn-14"><%= crm.name %></p>
+  </div>
+  <% if current_user.role?('superadmin') %>
+  <div class="col-4">
+    <p class="fn-12 font-medium mb-0 txt-light-gray"><%= t('mongoid.attributes.crm.base.domain') %></p>
+    <p class="fn-14"><%= crm.domain %></p>
+  </div>
+  <% end %>
+  <div class="col-4">
+    <p class="fn-12 font-medium mb-0 txt-light-gray"></p>
+    <p class="fn-14">
+      <% if (api = apis.where(_type: Crm::Api::Get, resource_class: resource.class.to_s, base_id: crm.id).first) && resource.third_party_references.where(crm_id: crm.id).present? %>
+      <%= link_to t("mongoid.attributes.crm.api.request_types.get"), admin_crm_base_api_show_response_path(api.base, api, resource_id: resource.id, type: api._type , is_active: true), class: 'db-small-btn light-blue bg-white fn-400 btn unset-width modal-remote-form-link mr-2' %>
+      <% end %>
 
-        <td class='text-right'>
-          <% if (api = apis.where(_type: Crm::Api::Get, resource_class: resource.class.to_s, base_id: crm.id).first) && resource.third_party_references.where(crm_id: crm.id).present? %>
-            <%= link_to t("mongoid.attributes.crm.api.request_types.get"), admin_crm_base_api_show_response_path(api.base, api, resource_id: resource.id, type: api._type , is_active: true), class: 'db-small-btn light-blue bg-white fn-400 btn unset-width modal-remote-form-link mr-2' %>
-          <% end %>
-
-          <% if current_user.role?('superadmin') && api = apis.where(_type: Crm::Api::Post, resource_class: resource.class, is_active: true).first %>
-            <% if ApiLog.where(crm_api_id: api.id, status: "Success", resource_id: resource.id).blank? %>
-              <%= link_to t("mongoid.attributes.crm.api.request_types.post"), admin_crm_base_api_show_response_path(api.base, api, resource_id: resource.id, type: api._type), "data-disable-with":"Loading...", class: 'db-small-btn light-blue bg-white fn-400 btn unset-width mr-2' %>
-            <% else %>
-              <%= link_to "Synced - See previous logs", admin_api_logs_path(fltrs: {resource_id: resource.id, status: 'Success'}), "data-disable-with":"Loading...", class: 'db-small-btn light-blue bg-white fn-400 btn unset-width mr-2' %>
-            <% end %>
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+      <% if current_user.role?('superadmin') && api = apis.where(_type: Crm::Api::Post, resource_class: resource.class, is_active: true).first %>
+      <% if ApiLog.where(crm_api_id: api.id, status: "Success", resource_id: resource.id).blank? %>
+      <%= link_to t("mongoid.attributes.crm.api.request_types.post"), admin_crm_base_api_show_response_path(api.base, api, resource_id: resource.id, type: api._type), "data-disable-with":"Loading...", class: 'white bg-primary btn unset-width mr-2' %>
+      <% else %>
+      <%= link_to "Synced - See previous logs", admin_api_logs_path(fltrs: {resource_id: resource.id, status: 'Success'}), "data-disable-with":"Loading...", class: 'bg-primary white btn unset-width mr-2' %>
+      <% end %>
+      <% end %></p>
+  </div>
+  <% end %>
+</div>

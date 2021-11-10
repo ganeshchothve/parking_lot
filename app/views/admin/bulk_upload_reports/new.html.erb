@@ -2,11 +2,9 @@
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header bg-gradient-cd white">
+      <div class="modal-header">
         <h3 class="title"><%= BulkUploadReport.model_name.human(count: 2) %></h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <%= simple_form_for @bulk_upload_report, url: admin_bulk_upload_reports_path, html: {id: 'bulk_upload_report_form', class: 'bulk_upload_report_form'} do |f| %>
         <div class="modal-body">
@@ -21,7 +19,7 @@
                 </div>
                 <% if adj.object.new_record? %>
                   <div class="col-2">
-                    <div class="form-group">
+                    <div class="mb-3">
                       <div class="btn btn-primary fileinput-button pull-right">
                         <span>Upload</span>
                         <%= adj.file_field :file, class: "btn btn-primary fileupload", accept: '.csv' %>
@@ -38,7 +36,7 @@
             </div>
           </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer text-end">
           <%= f.submit "Submit", id: "save", class: "btn btn-primary" %>
         </div>
       <% end %>

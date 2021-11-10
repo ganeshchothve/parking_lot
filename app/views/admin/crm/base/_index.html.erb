@@ -1,36 +1,45 @@
-<table class='table my-customer-table responsive-tbl'>
+<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
   <thead class="th-default">
     <thead>
-      <tr class="bg-gradient-cd white">
+      <tr class="">
         <th><%= t('mongoid.attributes.crm.base.name') %></th>
         <th><%= t('mongoid.attributes.crm.base.domain') %></th>
-        <th class="text-right">Actions</th>
+        <th class="text-right wd-22"></th>
       </tr>
     </thead>
   </thead>
   <tbody>
     <% crms.each do |crm| %>
-      <tr>
-        <td>
-          <%= crm.name %>
-        </td>
-        <td>
-          <%= crm.domain %>
-        </td>
-        <td>
-          <div class="dropdown show text-right">
-            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-              <%= link_to t('helpers.edit.link_name', model: Crm::Base.model_name.human), edit_admin_crm_base_path(crm), class: 'modal-remote-form-link dropdown-item' %>
-              <%= link_to t('helpers.show.link_name', model: Crm::Base.model_name.human), admin_crm_base_path(crm), class: ' dropdown-item' %>
-              <%= link_to t('controller.accounts.destroy.link_name'), admin_crm_base_path(crm), class: 'dropdown-item', method: :delete, data: {confirm: "Are you sure?"} %>
-           </div>
+    <tr>
+      <td>
+        <%= crm.name %>
+      </td>
+      <td>
+        <%= crm.domain %>
+      </td>
+      <td>
+        <div class="dropdown d-inline-block">
+          <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            <i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+            <%= link_to t('helpers.edit.link_name', model: Crm::Base.model_name.human), edit_admin_crm_base_path(crm), class: 'modal-remote-form-link dropdown-item' %>
+            <%= link_to t('helpers.show.link_name', model: Crm::Base.model_name.human), admin_crm_base_path(crm), class: ' dropdown-item' %>
+            <%= link_to t('controller.accounts.destroy.link_name'), admin_crm_base_path(crm), class: 'dropdown-item', method: :delete, data: {confirm: "Are you sure?"} %>
+          </div>
         </div>
-        </td>
-      </tr>
+      </td>
+    </tr>
     <% end %>
   </tbody>
 </table>
-<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pb-2">
-  <%= will_paginate crms, list_classes: %w(pagination justify-content-center) %>
+<div class="col-lg-12 py-3 bg-white mb-2 px-2">
+  <div class="row">
+    <div class="col-lg-6">
+      <p class="table-entry mb-0 ps-2 pt-2"><%= page_entries_info crms %></p>
+    </div>
+    <div class="col-lg-6 table-pagination">
+      <%= will_paginate crms, list_classes: %w(pagination justify-content-end) %>
+    </div>
+  </div>
 </div>

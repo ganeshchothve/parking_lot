@@ -41,7 +41,7 @@ class ChannelPartnersController < ApplicationController
     respond_to do |format|
       if @channel_partner.save
         cookies.delete :srd
-        format.html { redirect_to (user_signed_in? ? channel_partners_path : new_user_session_path), notice: 'Channel partner was successfully created.' }
+        format.html { redirect_to (user_signed_in? ? channel_partners_path : signed_up_path(user_id: @channel_partner.associated_user_id)), notice: 'Channel partner was successfully created.' }
         format.json { render json: @channel_partner, status: :created }
       else
         flash.now[:alert] = @channel_partner.errors.full_messages.uniq
@@ -55,8 +55,8 @@ class ChannelPartnersController < ApplicationController
     authorize([:admin, @channel_partner])
     @channel_partner.assign_attributes(permitted_attributes([:admin, @channel_partner]))
     respond_to do |format|
-      if (params.dig(:channel_partner, :event).present? ? @channel_partner.send("#{params.dig(:channel_partner, :event)}!") : @channel_partner.save(context: :submit_for_approval))
-        format.html { redirect_to channel_partners_path, notice: 'Channel Partner was successfully updated.' }
+      if (params.dig(:channel_partner, :event).present? ? @channel_partner.send("#{params.dig(:channel_partner, :event)}!") : @channel_partner.save)
+        format.html { redirect_to (request.referer || channel_partners_path), notice: 'Channel Partner was successfully updated.' }
         format.json { render json: @channel_partner }
       else
         format.html { render :edit }
@@ -69,6 +69,7 @@ class ChannelPartnersController < ApplicationController
     respond_to do |format|
       if params.dig(:channel_partner, :event).present? && @channel_partner.send("#{params.dig(:channel_partner, :event)}!")
         format.html { redirect_to request.referer, notice: t("controller.channel_partners.status_message.#{@channel_partner.status}") }
+        format.json { render json: @channel_partner }
       else
         format.html { redirect_to request.referer, alert: (@channel_partner.errors.full_messages.uniq.presence || 'Something went wrong') }
         format.json { render json: { errors: (@channel_partner.errors.full_messages.uniq.presence || 'Something went wrong') }, status: :unprocessable_entity }

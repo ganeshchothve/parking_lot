@@ -1,6 +1,6 @@
 class UnitConfigurationPolicy < ApplicationPolicy
 
   def asset_create?
-    create?
+    edit?
   end
 end

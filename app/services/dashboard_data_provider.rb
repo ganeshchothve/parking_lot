@@ -298,9 +298,9 @@ module DashboardDataProvider
 
   def self.configurations(project = nil)
     if project.present?
-      project.project_units.distinct(:unit_configuration_name).sample(3)
+      project.unit_configurations.collect(&:name)&.uniq&.sample(3)
     else
-      ProjectUnit.distinct(:unit_configuration_name).sample(3)
+      UnitConfiguration.all.collect(&:name)&.uniq&.sample(3)
     end
   end
 
@@ -398,8 +398,60 @@ module DashboardDataProvider
       } }
     ]).to_a
     data = data.first
-    data['project_wise'] = data['project_wise'].inject({}) {|hsh, x| hsh[x['project_id']] = x.except('project_id'); hsh}
+    data['project_wise'] = data['project_wise'].inject({}) {|hsh, x| hsh[x['project_id']] = x.except('project_id'); hsh} if data.present?
     data
+  end
+
+  #
+  # { stage1: {project_name1: 2, project_name2: 4}, stage2: {project_name1: 4, project_name2: 2}}
+  #
+  def self.lead_stage_project_wise_leads_count(current_user, options={})
+    matcher = { manager_id: current_user.id }
+    matcher = matcher.merge!(options[:matcher]) if options[:matcher].present?
+    data = Lead.collection.aggregate([
+      {'$match':  matcher},
+      {
+        '$lookup': {
+          from: "projects",
+          let: { project_id: "$project_id" },
+          pipeline: [
+            { '$match': { '$expr': { '$eq': [ "$_id",  "$$project_id" ] } } },
+            { '$project': { project_name: '$name' } }
+          ],
+          as: "projects"
+        }
+      },
+      {
+        '$replaceRoot': {
+          newRoot: {
+            '$mergeObjects': [
+              { '$arrayElemAt': [ "$projects", 0 ] },
+              "$$ROOT"
+            ]
+          }
+        }
+      },
+      { '$project': { project_name: 1, project_id: 1, lead_stage: 1 } },
+      {'$group': {
+        _id: { stage: '$lead_stage', project_name: '$project_name' },
+        count: { '$sum': 1 }
+      } },
+      {'$group': {
+        _id: { stage: '$_id.stage' },
+        total_count: { '$sum': '$count' },
+        project_wise: { '$push': {'project_name': '$_id.project_name', count: { '$sum': '$count' }} }
+      } }
+    ]).to_a
+    o_data = data.inject({}) do |hsh, x|
+      hsh[x.dig('_id', 'stage')] ||= {}
+      hsh[x.dig('_id', 'stage')] = x['project_wise'].inject({}) do |ihsh, ix|
+        ihsh[ix['project_name']] ||= 0
+        ihsh[ix['project_name']] += ix['count']
+        ihsh
+      end
+      hsh
+    end
+    o_data
   end
 
   def self.project_wise_booking_data(current_user, options={})

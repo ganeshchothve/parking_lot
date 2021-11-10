@@ -112,7 +112,7 @@
 		// override these in your code to change the default behavior and style
 		$.blockUI.defaults = {
 			// message displayed when blocking (use null for no message)
-			message:  '<h1>Please wait...</h1>',
+			message:  '<h1  class="load-page-title fn-18 theme-txt-color">Please wait...</h1><span class="load-dotted"><i></i><i></i></span>',
 
 			title: null,		// title string; only used when theme == true
 			draggable: true,	// only used when theme == true (requires jquery-ui.js to be loaded)
@@ -236,7 +236,7 @@
 			quirksmodeOffsetHack: 4,
 
 			// class name of the message block
-			blockMsgClass: 'blockMsg',
+			blockMsgClass: 'blockMsg page-loading rounded',
 
 			// if it is already blocked, then ignore it (don't unblock and reblock)
 			ignoreIfBlocked: false

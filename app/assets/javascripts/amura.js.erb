@@ -25,22 +25,60 @@ Array.prototype.to_sentence = function() {
 }
 Amura.global_success_handler = function(message){
   if(message){
-    new Noty({text:message, type:"success", timeout: 5000}).show();
+    new Noty({
+      text:message,
+      type:"success",
+      progressBar: true,
+      timeout: 5000,
+      callbacks: {
+      onTemplate: function() {
+            this.barDom.innerHTML = '<div class="custom-noty-temp shadow success-temp noty_body d-flex content-justify-between"><i class="fa fa-check-circle fill-success mt-2"></i><div class="noty-info ms-3"><h3 class="success fn-20 font-medium">Success!</h3><p class="theme-txt-color fn-14 mb-0">' + this.options.text + '</p></div><div>';
+        }
+      }
+    }).show();
   }
 };
 Amura.global_error_handler = function(errors){
   if(errors != null){
     if(typeof errors == "string"){
       if(errors != ""){
-        new Noty({text:errors, type:"error", timeout: 5000}).show();
+        new Noty({
+          text:errors,
+          type:"error",
+          progressBar: true,
+          callbacks: {
+            onTemplate: function() {
+              this.barDom.innerHTML = '<div class="custom-noty-temp shadow success-temp noty_body d-flex content-justify-between"><i class="fa fa-exclamation-circle fill-danger mt-2"></i><div class="noty-info ms-3"><h3 class="danger fn-20 font-medium">Error!</h3><p class="theme-txt-color fn-14 mb-0">' + this.options.text + '</p></div><div>';
+            }
+          }
+        }).show();
       }else{
-        new Noty({text:"There was some issue with the system. Please contact " + App.client.name + " support", type:"error", timeout: 5000}).show();
+        new Noty({
+          text:"There was some issue with the system. Please contact " + App.client.name + " support", 
+          type:"error",
+          progressBar: true,
+          timeout: 5000,
+          callbacks: {
+            onTemplate: function() {
+              this.barDom.innerHTML = '<div class="custom-noty-temp shadow success-temp noty_body d-flex content-justify-between"><i class="fa fa-exclamation-circle fill-danger mt-2"></i><div class="noty-info ms-3"><h3 class="danger fn-20 font-medium">Error!</h3><p class="theme-txt-color fn-14 mb-0">' + this.options.text + '</p></div><div>';
+            }
+          }
+        }).show();
       }
     }else if(typeof errors == "object"){
-      var message = "<ul style='text-align:left;'>";
+      var message = "<ul class='theme-txt-color ps-3' style='text-align:left;'>";
       _.each(errors, function(err){(message = message + "<li>" + err + "</li>")});
       message = message + "</ul>";
-      new Noty({text:message, type:"error", timeout: 5000}).show();
+      new Noty({
+        text:message,
+        type:"error",
+        progressBar: true,
+        callbacks: {
+          onTemplate: function() {
+            this.barDom.innerHTML = '<div class="custom-noty-temp shadow success-temp noty_body d-flex content-justify-between"><i class="fa fa-exclamation-circle fill-danger mt-2"></i><div class="noty-info ms-3"><h3 class="danger fn-20 font-medium">Error!</h3><p class="theme-txt-color fn-14 mb-0">' + this.options.text + '</p></div><div>';
+          }
+        }
+      }).show();
     }
   }
 };
@@ -50,7 +88,6 @@ if($.noty){
     type: 'success',
     text: '', // can be html or string
     dismissQueue: true, // If you want to use queue feature set this true
-    template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>',
     animation: {
       open: {height: 'toggle'},
       close: {height: 'toggle'},
@@ -60,6 +97,7 @@ if($.noty){
     timeout: 7000,
     killer: false,
     theme: 'bootstrap',
+    progressBar: true,
     callback: {
       onShow: function() {},
       afterShow: function() {
@@ -134,3 +172,20 @@ Amura.readCookie = function(name){
 	}
 	return null;
 }
+
+Amura.chart_colors = {
+  red: 'rgb(255, 99, 132)',
+  light_red: '#F793A2',
+  light_yellow: '#FFC55D',
+  green: '#005814',
+  light_green: '#709589',
+  light_green_1: '#0F8E2D',
+  light_blue: '#AAD4FF',
+  sky_blue: '#9BC5FF',
+  light_purple: '#9F9EF2',
+  light_cyan: '#85E3D8',
+  grey: 'rgb(201, 203, 207)',
+  light_grey: '#3F5275',
+  peach: '#FF9B9B',
+  brown: '#A6287A'
+};

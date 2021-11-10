@@ -2,19 +2,17 @@
   <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <div class="modal-header bg-gradient-cd white">
+        <div class="modal-header">
           <h3 class="title"><%= t("controller.user_requests.#{@user_request.class.model_name.element}.#{action_name}.header") %></h3>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true" class="white">&times;</span>
-          </button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body theme-form">
           <% begin %>
             <%= render "admin/user_requests/#{@user_request.class.model_name.element}", f: f %>
             <hr/>
           <% rescue ActionView::MissingTemplate %>
           <% end %>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :status %>
             <% if policy([current_user_role_group, (@user_request)]).editable_field?("event") %>
               <% if @user_request.new_record? %>
@@ -24,11 +22,11 @@
                 <%= f.select :event, @user_request.aasm.events.reject { |event| event.name.to_s == f.object.status.to_s }.map {|x| [t("mongoid.attributes.user_request/status.#{x.name}"), x.name] }, { prompt: t("mongoid.attributes.user_request/status.#{f.object.status}") }, class: 'selectize', required: "required" %>
               <% end %>
             <% else %>
-              <h4><%= t("mongoid.attributes.user_request/status.#{f.object.status}") %></h4>
+              <h4 class="fn-18 theme-txt-color"><%= t("mongoid.attributes.user_request/status.#{f.object.status}") %></h4>
             <% end %>
           </div>
           <% if @user_request.status == "failed" %>
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :reason_for_failure, class: 'label-required' %>
               <div><%= @user_request.reason_for_failure %></div>
             </div>
@@ -37,7 +35,7 @@
             <% f.object.notes.new(creator_id: current_user.id) %>
             <%= f.fields_for :notes do |note_field| %>
               <% if (note_field.object.new_record? && policy([current_user_role_group, note_field.object]).create?) || policy([current_user_role_group, note_field.object]).edit? %>
-                <div class="form-group">
+                <div class="mb-3">
                   <%= note_field.label :comments %>
                   <%= note_field.text_area :note, class: "form-control" %>
                   <%= note_field.hidden_field :note_type, value: (note_field.object.note_type.present? ? note_field.object.note_type : "user") if note_field.object.creator.role == "user" %>
@@ -58,7 +56,7 @@
             <% end %>
           <% end %>
           <% if @user_request.new_record? && @user_request.is_a?(UserRequest::Cancellation) %>
-            <div class="form-group">
+            <div class="mb-3">
               <div class="alert alert-primary">
                 Your unit will be released once the cancellation request is processed. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability.<br/>
                 <div class="form-check mt-3">
@@ -69,7 +67,7 @@
             </div>
           <% end %>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer text-end">
           <%= f.submit "Submit", class: 'btn btn-primary', disabled: ((@user_request.new_record? && @user_request.is_a?(UserRequest::Cancellation)) ? true : false), id: "submit_request", data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
         </div>
       </div>

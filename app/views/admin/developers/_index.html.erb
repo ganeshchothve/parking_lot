@@ -1,30 +1,39 @@
 <table class='table my-customer-table responsive-tbl'>
   <thead class="th-default">
     <thead>
-      <tr class="bg-gradient-cd white">
+      <tr class="bg-primary white">
         <th><%= t('mongoid.attributes.developer.name') %></th>
-        <th class="text-right"> <%= t('global.action', count: 2) %></th>
+        <th class="text-right wd-22"></th>
       </tr>
     </thead>
   </thead>
   <tbody>
     <% developers.each do |developer| %>
-      <tr>
-        <td data-title=<%= t('mongoid.attributes.developer.name') %> >
-          <%= link_to developer.name, admin_developer_path(developer) %>
-        </td>
-        <td>
-          <div class="dropdown show text-right">
-            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-              <%= render "#{current_user_role_group}/developers/links", developer: developer %>
-            </div>
+    <tr>
+      <td data-title=<%= t('mongoid.attributes.developer.name') %>>
+        <%= link_to developer.name, admin_developer_path(developer) %>
+      </td>
+      <td>
+        <div class="dropdown d-inline-block">
+          <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            <i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+            <%= render "#{current_user_role_group}/developers/links", developer: developer %>
           </div>
-        </td>
-      </tr>
+        </div>
+      </td>
+    </tr>
     <% end %>
   </tbody>
 </table>
-<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pb-2">
-  <%= will_paginate developers, list_classes: %w(pagination justify-content-center) %>
+<div class="col-lg-12 py-3 bg-white mb-2 px-2">
+  <div class="row">
+    <div class="col-lg-6">
+      <p class="table-entry mb-0 ps-2 pt-2"><%= page_entries_info developers %></p>
+    </div>
+    <div class="col-lg-6 table-pagination">
+      <%= will_paginate developers, list_classes: %w(pagination justify-content-end) %>
+    </div>
+  </div>
 </div>

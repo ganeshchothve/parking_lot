@@ -24,7 +24,7 @@ module BulkUpload
               if value.match(/^parameters\|/i)
                 parameters[index] = value.split("|").last.strip
               elsif value.match(/^cost\|/i)
-                costs[index] = value.split("|")[1..2].map(&:strip)
+                costs[index] = value.split("|")[1..3].map(&:strip)
               elsif value.match(/^data\|/i)
                 data[index] = value.split("|").last.strip
               elsif value.strip.match(/^crm\|/i)
@@ -79,9 +79,13 @@ module BulkUpload
             project_unit.new_blocking_amount = blocking_amount if blocking_amount.present?
 
             if unit_configuration_name.present? && project_unit.unit_configuration_name != unit_configuration_name
-              unit_configuration = UnitConfiguration.where(name: unit_configuration_name).where(project_id: project.id).where(project_tower_id: project_tower.id).first
+              unit_configuration = UnitConfiguration.where(project_id: project.id).where({'$and': [
+                {data_attributes: {'$elemMatch': {n: 'name', v: unit_configuration_name }}},
+                {data_attributes: {'$elemMatch': {n: 'saleable', v: project_unit.saleable}}},
+                {data_attributes: {'$elemMatch': {n: 'carpet', v: project_unit.carpet}}}
+              ]}).first
               unless unit_configuration.present?
-                unit_configuration = UnitConfiguration.new(name: unit_configuration_name, project_id: project.id, project_tower_id: project_tower.id, client_id: bur.client.selldo_client_id, saleable: project_unit.saleable, carpet: project_unit.carpet, base_rate: project_unit.base_rate)
+                unit_configuration = UnitConfiguration.new(name: unit_configuration_name, project_id: project.id, saleable: project_unit.saleable, carpet: project_unit.carpet)
                 unless unit_configuration.save
                   (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push(*unit_configuration.errors.full_messages.map{ |er| "Unit Configuration: " + er })).uniq
                   bur.failure_count += 1 if bur.upload_errors.where(row: row.fields).present?
@@ -96,9 +100,10 @@ module BulkUpload
             costs.each do |index, arr|
               if row[index].to_s.strip.present?
                 if _cost = project_unit.costs.where(category: arr[0], key: arr[1].gsub(/[\W_]+/i, "_").downcase).first.presence
-                  _cost.assign_attributes(new_absolute_value: row[index].to_f)
+                  _cost["new_#{arr[2].presence || 'absolute_value'}"] = row[index]
                 else
-                  project_unit.costs.build(category: arr[0], name: arr[1], absolute_value: 0, new_absolute_value: row[index].to_f, key: arr[1].gsub(/[\W_]+/i, "_").downcase)
+                  _cost = project_unit.costs.build(category: arr[0], name: arr[1], absolute_value: 0, key: arr[1].gsub(/[\W_]+/i, "_").downcase)
+                  _cost["new_#{arr[2].presence || 'absolute_value'}"] = row[index]
                 end
               end
             end

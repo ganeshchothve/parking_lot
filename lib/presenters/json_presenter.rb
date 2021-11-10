@@ -28,7 +28,7 @@ module Presenters
     def self.create_table header, arr
       card = get_table_card(header) + "<table class='table my-customer-table responsive-tbl'><thead class='th-default'>"
       card_end_tag = "</table></div></div></div>"
-      card += "<tr class='bg-gradient-cd white'>"
+      card += "<tr class='bg-primary white'>"
       index = 0
       keys = arr.first.keys[0..4] 
       keys.each do |key|
@@ -66,7 +66,7 @@ module Presenters
 
     def self.get_column key, value
       "<div class='col-3'>
-        <div class='form-group'>
+        <div class='mb-3'>
           <label>#{key.to_s.titleize}</label>
           <div>#{value.is_a?(Array) ? value.to_sentence : (value.is_a?(String) ? value.to_s.titleize : value)}</div>
         </div>

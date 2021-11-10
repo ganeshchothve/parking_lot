@@ -2,24 +2,22 @@
   <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <div class="modal-header bg-gradient-cd white">
+        <div class="modal-header">
           <h3 class="title">
             <%= t("helpers.#{action_name}.link_name", model: ErpModel.model_name.human) %>
           </h3>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true" class="white">&times;</span>
-          </button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body theme-form">
           <div class="row">
             <div class="col-md-6">
-              <div class="form-group">
+              <div class="mb-3">
                 <%= f.label :resource_class %>
                 <%= f.select :resource_class, ErpModel::RESOURCE_CLASS.collect{ |res_class| [ t("erp_models.resource_class.#{res_class}"), res_class] }, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @erp_model]).editable_field?("resource_class") %>
               </div>
             </div>
             <div class="col-md-6">
-              <div class="form-group">
+              <div class="mb-3">
                 <%= f.label :domain %>
                 <%= f.text_field :domain, class: 'form-control', disabled: !policy([:admin, @erp_model]).editable_field?("domain") %>
                 <%#= f.select :domain, ErpModel::DOMAIN, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @erp_model]).editable_field?("domain") %>
@@ -28,13 +26,13 @@
           </div>
           <div class="row">
             <div class="col-md-6">
-              <div class="form-group">
+              <div class="mb-3">
                 <%= f.label :action_name %>
                 <%= f.select :action_name, ErpModel::ACTION_NAME.collect{ |action_name| [ t("erp_models.action_name.#{action_name}"), action_name] }, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @erp_model]).editable_field?("action_name") %>
               </div>
             </div>
             <div class="col-md-6">
-              <div class="form-group">
+              <div class="mb-3">
                 <%= f.label :http_verb %>
                 <%= f.select :http_verb, ErpModel::HTTP_VERB.collect{ |http_verb| [ t("erp_models.resource_class.#{http_verb}"), http_verb] }, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @erp_model]).editable_field?("http_verb") %>
               </div>
@@ -42,7 +40,7 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="mb-3">
                 <%= f.label :url %>
                 <%= f.text_field :url, class: 'form-control', disabled: !policy([:admin, @erp_model]).editable_field?("url") %>
               </div>
@@ -50,13 +48,13 @@
           </div>
           <div class="row">
             <div class="col-md-4">
-              <div class="form-group">
+              <div class="mb-3">
                 <%= f.label :reference_key_name %>
                 <%= f.text_field :reference_key_name, class: 'form-control', disabled: !policy([:admin, @erp_model]).editable_field?("reference_key_name") %>
               </div>
             </div>
             <div class="col-md-4">
-              <div class="form-group">
+              <div class="mb-3">
                 <%= f.label :is_active %><br/>
                 <div class="form-check form-check-inline">
                   <%= f.radio_button :is_active, true, class: "form-check-input" %>
@@ -69,7 +67,7 @@
               </div>
             </div>
             <div class="col-md-4">
-              <div class="form-group">
+              <div class="mb-3">
                 <%= f.label :request_type %>
                 <%= f.select :request_type, ErpModel::REQUEST_TYPE.collect{ |request_type| [ t("erp_models.resource_class.#{request_type}"), request_type] }, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @erp_model]).editable_field?("request_type") %>
               </div>
@@ -77,7 +75,7 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="mb-3">
                 <%= f.label :reference_key_location %><h6>(Comma separated value)</h6>
                 <%= f.text_field :reference_key_location, class: 'form-control', disabled: !policy([:admin, @erp_model]).editable_field?("reference_key_location") %>
               </div>
@@ -85,7 +83,7 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="mb-3">
                 <%= f.label :access_token %>
                 <%= f.text_field :access_token, class: 'form-control', disabled: !policy([:admin, @erp_model]).editable_field?("access_token") %>
               </div>
@@ -93,14 +91,14 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="mb-3">
                 <%= f.label :request_payload %>
                 <%= f.text_area :request_payload, class: 'form-control', disabled: !policy([:admin, @erp_model]).editable_field?("request_payload"), rows: 8 %>
               </div>
             </div>
           </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer text-end">
           <%= f.submit "Save", class: 'btn btn-primary' %>
         </div>
       </div>

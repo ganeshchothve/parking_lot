@@ -1,4 +1,4 @@
-<div class="form-group">
+<div class="mb-3">
   <% _params = {fltrs: { project_id: booking_detail.project_id, project_tower_id: booking_detail.project_unit.project_tower_id, can_be_applied_by: current_user.role, user_role: booking_detail.user.role, user_id: booking_detail.user_id, status: 'approved' } } %>
   <% if booking_detail.lead && booking_detail.lead.manager_role?('channel_partner') %>
     <% _params[:fltrs].delete :can_be_applied_by %>
@@ -38,24 +38,24 @@
     <%= adj.hidden_field :editable, value: true %>
     <div class="row">
       <div class="col-md-6">
-        <div class="form-group">
+        <div class="mb-3">
           <%= adj.label :name, class: 'label-required' %>
           <%= adj.text_field :name, class: "form-control", required: 'required', disabled: !editable_payment_adjustment %>
         </div>
       </div>
       <div class="col-md-6">
-        <div class="form-group">
+        <div class="mb-3">
           <%= adj.label :field, class: 'label-required' %>
           <%= adj.select :field, Scheme::FIELDS.collect{|sf| [t("mongoid.attributes.payment_adjustment/field.#{sf}"), sf]}, {prompt: true}, class: 'selectize-tags', disabled: !editable_payment_adjustment %>
         </div>
       </div>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
       <%= adj.label :absolute_value, class: 'label-required' %>
       <%= adj.number_field :absolute_value, class: "form-control", disabled: !editable_payment_adjustment %>
       <p class="small text-muted">Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)</p>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
       <%#= adj.label :formula, class: 'label-required' %>
       <%#= adj.text_field :formula, class: "form-control", disabled: !editable_payment_adjustment %>
       <!-- <p class="small text-muted">Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)</p>
@@ -67,7 +67,7 @@
 <% end %>
 </br>
 <% if policy([current_user_role_group, booking_detail_scheme]).editable_field?("event") && action_name != 'checkout' %>
-  <div class="form-group">
+  <div class="mb-3">
     <%= f.label :status, class: 'label-required' %>
     <%
       events = booking_detail_scheme.aasm.events(permitted: true).collect{|x| x.name.to_s}

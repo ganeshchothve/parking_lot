@@ -1,24 +1,22 @@
-<section class="auth login-page pb-5">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="login-form-wrapper pt-5">
-          <%= form_tag(select_project_path, id: 'select_project_form') do %>
-            <div class='form-group'>
-              <% if current_user.buyer? %>
-                <%= select_tag 'selected_lead_id', options_from_collection_for_select(@leads, "id", "project_name", current_user.selected_lead_id), prompt: "Select Project to Log in", autofocus: true, class: "selectize" %>
-              <% elsif !current_user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner)) %>
-                <%= select_tag 'selected_project_id', options_from_collection_for_select(@projects, "id", "name", current_user.selected_project_id), prompt: "Select Project to Log in", autofocus: true, class: "selectize" %>
-              <% end %>
-            </div>
-
-            <div class="form-group">
-              <button class="btn btn-primary" type="submit">Submit</button>
-              <%= link_to t('sign_out', scope: "devise"), destroy_session_path(current_user), class: "btn btn-secondary", method: :delete %>
-            </div>
+<div class="mt-5 pt-5"></div>
+<section class="cp-login-otp-sec col-lg-4 mg-auto" id="otp_user_section">
+  <div class="cp-login-otp-wrap">
+    <h2 class="px-4 pt-3 pb-3">Select Project</h2>
+    <div class="cp-signup-form-wrap px-4 cp-form-wrap">
+      <%= form_tag(select_project_path, id: 'select_project_form') do %>
+        <div class='mb-3'>
+          <% if current_user.buyer? %>
+            <%= select_tag 'selected_lead_id', options_from_collection_for_select(@leads, "id", "project_name", current_user.selected_lead_id), prompt: "Select Project to Log in", autofocus: true, class: "selectize" %>
+          <% elsif !current_user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner)) %>
+            <%= select_tag 'selected_project_id', options_from_collection_for_select(@projects, "id", "name", current_user.selected_project_id), prompt: "Select Project to Log in", autofocus: true, class: "selectize" %>
           <% end %>
         </div>
-      </div>
+
+        <div class="mb-3 pt-3 pb-3">
+          <button class="btn btn-primary" type="submit">Submit</button>
+          <%= link_to t('sign_out', scope: "devise"), destroy_session_path(current_user), class: "btn btn-secondary", method: :delete %>
+        </div>
+      <% end %>
     </div>
   </div>
 </section>

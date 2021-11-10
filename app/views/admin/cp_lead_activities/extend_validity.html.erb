@@ -2,24 +2,22 @@
   <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <div class="modal-header bg-gradient-cd white">
+        <div class="modal-header">
           <h3 class="title">
             <%= t("helpers.#{action_name}.link_name", model: 'Extend Validity') %>
             </h3>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true" class="white">&times;</span>
-          </button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body theme-form">
           <div class="row">
             <div class="col-md-6">
-              <div class="form-group position-relative">
+              <div class="mb-3 position-relative">
                 <%= f.label :validity_period %>
                 <%= select_tag(:validity_period, options_for_select([ "10", "45" ], f.object.sitevisit_date.present? ? '45' : '10'), { class: 'form-control' }) %>
               </div>
             </div>
             <div class="col-md-6">
-              <div class="form-group position-relative">
+              <div class="mb-3 position-relative">
                 <label class="label-required">Site Visit Conducted On</label>
                 <% date = (f.object.sitevisit_date.present? ? Time.zone.parse(f.object.sitevisit_date).strftime("%d/%m/%Y") : "") %>
                 <%= f.text_field :sitevisit_date, class: 'form-control datepicker', type:'text', data: {"default-date": date, "max-date": Date.current.strftime("%d/%m/%Y")}, value: date, disabled: !policy(@cp_lead_activity).editable_field?("sitevisit_date"), required: params[:validity_period] == '45' %>
@@ -27,7 +25,7 @@
             </div>
           </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer text-end">
           <%= f.submit "Save", class: 'btn btn-primary' %>
         </div>
       </div>
@@ -40,12 +38,12 @@
     $('#validity_period').on('change', function(){
       var period = parseInt($(this).val());
       if (period == 10) {
-        $('[name="cp_lead_activity[sitevisit_date]"]').closest('.form-group').addClass('hidden');
+        $('[name="cp_lead_activity[sitevisit_date]"]').closest('.mb-3').addClass('hidden');
         $('[name="cp_lead_activity[sitevisit_date]"]').val('');
         $('[name="cp_lead_activity[sitevisit_date]"]').attr("required", false);
       } else {
         $('[name="cp_lead_activity[sitevisit_date]"]').val(moment(new Date()).format("DD/MM/YYYY"));
-        $('[name="cp_lead_activity[sitevisit_date]"]').closest('.form-group').removeClass('hidden');
+        $('[name="cp_lead_activity[sitevisit_date]"]').closest('.mb-3').removeClass('hidden');
         $('[name="cp_lead_activity[sitevisit_date]"]').attr("required", true);
       }
     }).trigger('change');

@@ -13,12 +13,30 @@ module CrmIntegration
   def update_external_ids(ids, crm_id)
     tpr = self.third_party_references.where(crm_id: crm_id).first || self.third_party_references.build(crm_id: crm_id)
     tpr.assign_attributes(ids)
-    tpr.save
+    tpr.save if self.persisted?
   end
 
   def update_references(tpr)
     tpr.update_references
   end
+
+  def push_in_crm(crm_base)
+    if crm_base.present?
+      crm_id = self.third_party_references.where(crm_id: crm_base.id).first&.reference_id
+      if crm_id.present?
+        api = Crm::Api::Put.where(resource_class: self.class.to_s, base_id: crm_base.id, is_active: true).first
+      else
+        api = Crm::Api::Post.where(resource_class: self.class.to_s, base_id: crm_base.id, is_active: true).first
+      end
+
+      if self.valid? && api.present?
+        api.execute(self)
+        api_log = ApiLog.where(resource_id: self.id).first
+      end
+    end
+    [api, api_log]
+  end
+
 
   module ClassMethods
 

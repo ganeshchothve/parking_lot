@@ -17,6 +17,7 @@ module DatabaseSeeds
 
     def self.client_based_email_templates_seed client_id
       DatabaseSeeds::EmailTemplates::User.seed(client_id)
+      DatabaseSeeds::EmailTemplates::Lead.client_seed(client_id)
       DatabaseSeeds::EmailTemplates::ChannelPartner.seed(client_id)
       DatabaseSeeds::EmailTemplates::Reminder.client_based_email_templates_seed(client_id)
     end
@@ -28,7 +29,7 @@ module DatabaseSeeds
             <tbody>
               <tr>
                 <td>
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label>Name</label>
                     <div>
                       <%= self.name %>
@@ -36,7 +37,7 @@ module DatabaseSeeds
                   </div>
                 </td>
                 <td>
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label>Tower</label>
                     <div>
                       <%= self.project_unit.project_tower_name %>
@@ -44,7 +45,7 @@ module DatabaseSeeds
                   </div>
                 </td>
                 <td>
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label>Status</label>
                     <div>
                       <%= BookingDetail.human_attribute_name("status.#{self.status}") %>
@@ -54,7 +55,7 @@ module DatabaseSeeds
               </tr>
               <tr>
                 <td>
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label>Beds / Baths</label>
                     <div>
                       <%= self.project_unit.bedrooms %> / <%= self.project_unit.bathrooms %>
@@ -62,7 +63,7 @@ module DatabaseSeeds
                   </div>
                 </td>
                 <td>
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label>Carpet</label>
                     <div>
                       <%= self.project_unit.carpet %> <%= current_client.area_unit %>
@@ -70,7 +71,7 @@ module DatabaseSeeds
                   </div>
                 </td>
                 <td>
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label>Saleable</label>
                     <div>
                       <%= self.project_unit.saleable %> <%= current_client.area_unit %>
@@ -80,7 +81,7 @@ module DatabaseSeeds
               </tr>
               <tr>
                 <td>
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label>Effective Rate</label>
                     <div>
                       <%= number_to_indian_currency(self.project_unit.effective_rate) %> <%= current_client.area_unit %>
@@ -88,7 +89,7 @@ module DatabaseSeeds
                   </div>
                 </td>
                 <td>
-                  <div class="form-group">
+                  <div class="mb-3">
                     <label>Agreement Price</label>
                     <div>
                       <%= number_to_indian_currency(self.project_unit.agreement_price) %>

@@ -1,5 +1,5 @@
 <% @lead = Lead.where(closing_manager_id: current_user.id).in(customer_status: %w(engaged payment_done)).first %>
-<div class="container">
+<div class="px-4">
   <%= render "dashboard/index/partials/user_search", lead_id: @lead.try(:id) %>
   <div id="get-started">
     <div class='row mt-5'>
@@ -7,8 +7,11 @@
     </div>
   </div>
 </div>
-
-<% template = ::Template::UITemplate.where(name: 'sales_dashboard', project_id: current_user.selected_project_id).first %>
-<% if template.present? %>
-  <%= get_view_erb(template, check_active: true) %>
-<% end %>
+<div class="px-4">
+  <div class="first-sec welcome-box my-3">
+  <% template = ::Template::UITemplate.where(name: 'sales_dashboard', project_id: current_user.selected_project_id).first %>
+  <% if template.present? %>
+    <%= get_view_erb(template, check_active: true) %>
+  <% end %>
+  </div>
+</div>

@@ -1,338 +1,608 @@
 <% date = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") %>
 <% start_date, end_date = date.split(' - ') %>
 <% channel_partner = current_user.associated_channel_partner %>
+<% @channel_partner = channel_partner%>
+
 <% if current_user.active_channel_partner? %>
-  <section class="first-sec welcome-box">
-    <div class="container">
-      <div class="row">
-        <% template = ::Template::UITemplate.where(name: 'index/_channel_partner').first %>
-        <% if template.present? %>
-          <%= get_view_erb(template) %>
-        <% end %>
-      </div>
-    </div>
-  </section>
-
-  <!-- Leads -->
-  <!--
-  <section class="leads-list device-pd mt-3">
-    <div class="container">
-      <%# cp_lead_activities = CpLeadActivity.where(user_id: current_user.id, expiry_date: { '$gte': Date.today }).paginate(page: 1) %>
-      <div class="row">
-        <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
-          <div class="table-title pt-1">
-            <h1 class="title icon-set icon-key-black">
-              Lead Activities
-            </h1>
+<section class="mt-3" id="channel-partner-dashboard">
+  <div class="px-4">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="row mb-3">
+          <div class="col-lg-12">
+            <h2 class="sec-title">Welcome <%= @channel_partner.name %>,</h2>
           </div>
-        </div>
-        <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
-          <div class="table-btn-set float-right pb-3">
-            <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%#= t('global.total')%> : <%#= cp_lead_activities.total_entries %></button>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="box-card relative">
-          <%#= render 'admin/cp_lead_activities/index', cp_lead_activities: cp_lead_activities %>
-        </div>
-      </div>
-    </div>
-  </section>
-  -->
-  
-  <!-- Collaterals -->
-  <%= render 'dashboard/index/partials/collaterals' %>
-  <section class="user-db-sec-5 device-pd">
-    <div class="container">
-      <div class='box-card'>
-        <div class = "row">
-          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
-            <div class="table-title pt-4">
-              <img src="<%= asset_path 'chart-line.svg' %>" alt="user icon"> <h1 class="title"><%= t('dashboard.channel_partner.titles.leads') %></h1>
+          <!--
+          <div class="col-lg-6 text-end">
+            <select class="h3 mb-0 font-weight-medium f-20 form-control d-sm-inline-block">
+              <option>Quater</option>
+              <option>Monthly</option>
+              <option>Year</option>
+            </select>
+            <div class="quater-list d-sm-inline-block ms-2">
+              <input type="text"
+                class="d-sm-inline-block btn btn-sm pull-right bg-white mr-1 font-medium br-gray-1 br-rd-4 txt-light-blue daterangefilter" value="<%= "#{Date.today.strftime('%d/%m/%y')} - #{Date.today.advance(days:1).strftime('%d/%m/%y')}" %>">
+            </div>
+            <div class="quater-year d-sm-inline-block ms-2">
+              <a href="#"
+                class="d-sm-inline-block btn btn-sm pull-right bg-white mr-1 font-medium br-gray-1 br-rd-4 txt-light-blue">2020</a>
             </div>
           </div>
-          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-md-3 no-pd">
-            <div class="table-btn-set float-md-right pt-md-3">
-              <button class="db-filter-btn white fn-500" type="button">
-                <i class="icon-set icon-filter-light-blue"></i>
-              </button>
-            </div>
-          </div>
-          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-            <div class="filter-box">
-              <div class="filter-inner">
-                <div class="filter-header">
-                  <span class="title">Filter</span>
-                  <a href="javascript:;" class="close-filter-btn">&times;</a>
-                </div>
-                <%= form_tag channel_partner_dashboard_counts_path, method: "get", remote: true, id: "channel_partner_dashboard_counts_filter" do %>
-                  <div class="filter-content">
-                    <div class="row">
-                      <div class="form-group col-12">
-                        <%= label_tag "dates", "Dates", class: "control-label float-left" %>
-                        <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
-                      </div>
-                      <div class="form-group col-12">
-                        <%= label_tag :project_ids, "Projects", class: "control-label float-left" %>
-                        <%= select_tag :project_ids, options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="filter-footer">
-                    <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right close-filter-btn" %>
-                    <button type="button" class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
-                  </div>
-                <% end %>
+          -->
+          <div class="col-lg-12">
+            <div class="py-2 bg-white rounded-3">
+              <div class="border-bottom px-4 py-2">
+                <h3 class="font-medium fn-20 theme-txt-color">Project wise Overview</h3>
+                <p class="fn-14 text-light-blue mb-0"><%= Project.count %> Projects Available</p>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <div id = "channel_partner_dashboard_counts">
-  </div>
-
-  <section class="user-db-sec-5 device-pd">
-    <div class="container">
-      <div class='box-card'>
-        <div class = "row">
-          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
-            <div class="table-title pt-4">
-              <h1 class="title icon-set icon-building-black">Project Wise Summary</h1>
-            </div>
-          </div>
-          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-md-3 no-pd">
-            <div class="table-btn-set float-md-right pt-md-3">
-              <button class="db-filter-btn white fn-500" type="button">
-                <i class="icon-set icon-filter-light-blue"></i>
-              </button>
-            </div>
-          </div>
-          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-            <div class="filter-box">
-              <div class="filter-inner">
-                <div class="filter-header">
-                  <span class="title">Filter</span>
-                  <a href="javascript:;" class="close-filter-btn">&times;</a>
-                </div>
-                <%= form_tag project_wise_summary_path, method: "get", remote: true, id: "project_wise_summary_filter" do %>
-                  <div class="filter-content">
-                    <div class="row">
-                      <div class="form-group col-12">
-                        <%= label_tag "dates", "Dates", class: "control-label float-left" %>
-                        <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
-                      </div>
-                    </div>
+              <div class="row">
+                <!--
+                <div class="col-lg-4">
+                  <div class="p-4">
+                    <select class="h3 mb-0 font-weight-medium f-20 form-control d-sm-inline-block">
+                      <option>All Projects (<%#= Project.count %>)</option>
+                    </select>
                   </div>
-                  <div class="filter-footer">
-                    <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right close-filter-btn" %>
-                    <button type="button" class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
-                  </div>
-                <% end %>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row" id = "project_wise_summary"></div>
-      </div>
-    </div>
-  </section>
-<!--
-  <section class="user-db-sec-5 device-pd">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-          <div class="row">
-            <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5 referrals">
-              <div class="box-header bg-gradient-cd br-rd-tr-4">
-              <h2><img src="<%# asset_path 'users-white.svg' %>"  alt="Refer a Friend" class="wd-20"><%# t('dashboard.channel_partner.refer_a_channel_partner.heading') %></h2>
-              </div>
-              <div class="box-content br-rd-bl-4 bg-white fix-ht">
-                <div class="pd-box">
-                  <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12">
-                    <p class="fn-14 content-clr"><%# t('dashboard.channel_partner.refer_a_channel_partner.sub_heading', project_name: current_project.name) %></p>
-                    <a href="javascript:;" class="large-btn bg-light-blue display-block fn-500 text-uppercase">Refer Now&nbsp;&nbsp;></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="box-card col-lg-4 col-md-12 col-sm-12 col-xs-12 mt-5">
-              <div class="box-header bg-gradient-cd br-rd-tr-4">
-                <h2><img src="<%# asset_path 'leaderboard-white.svg' %>" alt="Documents" class="wd-16">Leaderboard</h2>
-                <a href="javascript:;" class="view-all-btn">View All > </a>
-              </div>
-              <div class="box-content br-rd-bl-4 bg-white fix-ht pt-0">
-                <div class="row pd-box">
-                  <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
-                    <ul class="leaderboard-list">
-                      <li class="mt-4">
-                        <div class="display-inline user-icon">
-                          <img src="<%# asset_path 'user.jpg' %>" alt="user img">
+                    <div class="col-lg-11 ps-4">
+                      <div class="row mb-3">
+                        <div class="col-lg-8">
+                          <div class="ht-34 wd-100 rounded bg-primary" style="width: 90%;"></div>
                         </div>
-                        <div class="display-inline user-info">
-                          <span class="rank-type display-block fn-300 fn-12">Rank: 01</span>
-                          <span class="name-point display-block fn-500 fn-14">Prathyush Shetty<br>Points: 1002</span>
-                        </div>
-                      </li>
-                      <li class="mt-4">
-                        <div class="display-inline user-icon">
-                          <img src="<%# asset_path 'user-2.png' %>" alt="user img">
-                        </div>
-                        <div class="display-inline user-info">
-                          <span class="rank-type display-block fn-300 fn-12">Rank: 02</span>
-                          <span class="name-point display-block fn-500 fn-14">Akshay Patil<br>Points: 970</span>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
--->
-  <div class='mb-5 pb-5'>
-    <% if current_user.booking_portal_client.incentive_calculation_type?('calculated') %>
-      <section class="user-db-sec-6 device-pd">
-        <div class="container">
-          <div class='box-card'>
-            <div class = "row">
-              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
-                <div class="table-title pt-4">
-                  <img src="<%= asset_path 'rupee-black.svg' %>" alt="Documents" class="wd-10"><h1 class="title"><%= t('dashboard.channel_partner.incentive_plan_started.heading') %></h1>
-                </div>
-              </div>
-              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-md-3 no-pd">
-                <div class="table-btn-set float-md-right pt-md-3">
-                  <button class="db-filter-btn white fn-500" type="button">
-                    <i class="icon-set icon-filter-light-blue"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-                <div class="filter-box">
-                  <div class="filter-inner">
-                    <div class="filter-header">
-                      <span class="title">Filter</span>
-                      <a href="javascript:;" class="close-filter-btn">&times;</a>
-                    </div>
-                    <%= form_tag incentive_plans_started_path, method: "get", remote: true, id: "incentive_plans_started_filter" do %>
-                      <div class="filter-content">
-                        <div class="row">
-                          <div class="form-group col-12">
-                            <%= label_tag :project_ids, "Projects", class: "control-label float-left" %>
-                            <%= select_tag :project_ids, options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
+                        <div class="col-lg-4 p-0">
+                          <div>
+                            <div class="d-inline-block wd-4 ht-34 rounded me-1 bg-primary"></div>
+                            <div class="d-inline-block">
+                              <span class="stage-nos fn-12 font-medium theme-txt-color d-block">378</span>
+                              <span class="stage-title fn-12 text-light-blue">Open</span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                      <div class="filter-footer">
-                        <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right close-filter-btn" %>
-                        <button type="button" class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+                      <div class="row mb-3">
+                        <div class="col-lg-8">
+                          <div class="ht-34 wd-100 rounded bg-danger" style="width: 70%;"></div>
+                        </div>
+                        <div class="col-lg-4 p-0">
+                          <div>
+                            <div class="d-inline-block wd-4 ht-34 rounded me-1 bg-danger"></div>
+                            <div class="d-inline-block">
+                              <span class="stage-nos fn-12 font-medium theme-txt-color d-block">290</span>
+                              <span class="stage-title fn-12 text-light-blue">Walk Ins</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    <% end %>
-                  </div>
+                      <div class="row mb-3">
+                        <div class="col-lg-8">
+                          <div class="ht-34 wd-100 rounded bg-warning" style="width: 50%;"></div>
+                        </div>
+                        <div class="col-lg-4 p-0">
+                          <div>
+                            <div class="d-inline-block wd-4 ht-34 rounded me-1 bg-warning"></div>
+                            <div class="d-inline-block">
+                              <span class="stage-nos fn-12 font-medium theme-txt-color d-block">187</span>
+                              <span class="stage-title fn-12 text-light-blue">Bookings</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-lg-8">
+                          <div class="ht-34 wd-100 rounded bg-info" style="width: 30%;"></div>
+                        </div>
+                        <div class="col-lg-4 p-0">
+                          <div>
+                            <div class="d-inline-block wd-4 ht-34 rounded me-1 bg-info"></div>
+                            <div class="d-inline-block">
+                              <span class="stage-nos fn-12 font-medium theme-txt-color d-block">89</span>
+                              <span class="stage-title fn-12 text-light-blue">9.9% Paid</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-lg-8">
+                          <div class="ht-34 wd-100 rounded bg-secondary" style="width: 10%;"></div>
+                        </div>
+                        <div class="col-lg-4 p-0">
+                          <div>
+                            <div class="d-inline-block wd-4 ht-34 rounded me-1 bg-secondary"></div>
+                            <div class="d-inline-block">
+                              <span class="stage-nos fn-12 font-medium theme-txt-color d-block">38</span>
+                              <span class="stage-title fn-12 text-light-blue">Registrations</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                -->
+                <div class="col-lg-12">
+                  <canvas id="stage_wise_bar_chart" width="650" height="300"></canvas>
                 </div>
               </div>
             </div>
-            <div class="row" id = "incentive_plans_started"></div>
           </div>
         </div>
-      </section>
-    <% end %>
+        <!--
+        <div class="row">
+          <div class="col-xl-12 col-lg-12">
+            <div class="row">
 
-    <section class="user-db-sec-6 device-pd">
-      <div class="container">
-        <div class='box-card'>
-          <div class = "row">
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
-              <div class="table-title pt-4">
-                <img src="<%= asset_path 'rupee-black.svg' %>" alt="Documents" class="wd-10"><h1 class="title"><%= t('dashboard.channel_partner.incentive_plan.heading') %> (Last 6 months)</h1>
-              </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-md-3 no-pd">
-              <div class="table-btn-set float-md-right pt-md-3">
-                <button class="db-filter-btn white fn-500" type="button">
-                  <i class="icon-set icon-filter-light-blue"></i>
-                </button>
-              </div>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-              <div class="filter-box">
-                <div class="filter-inner">
-                  <div class="filter-header">
-                    <span class="title">Filter</span>
-                    <a href="javascript:;" class="close-filter-btn">&times;</a>
+              <div class="col-lg-8">
+                <div class="card mb-4 br-rd-8 card-shadow no-br">
+                  <div id="total_brokerage">
+                    <canvas id="total_brokerage_Chart" width="650" height="300"></canvas>
                   </div>
-                  <%= form_tag incentive_plans_summary_path, method: "get", remote: true, id: "incentive_plans_summary_filter" do %>
-                    <div class="filter-content">
-                      <div class="row">
-                        <div class="form-group col-12">
-                          <%= label_tag "dates", "Dates", class: "control-label float-left" %>
-                          <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-start-date": start_date || '', "data-end-date": end_date || '', "data-auto-update": true, "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
-                        </div>
-                        <!--
-                        <div class="form-group col-12">
-                          <%#= label_tag :project_ids, "Projects", class: "control-label float-left" %>
-                          <%#= select_tag :project_ids, options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
-                        </div>
-                        -->
+                </div>
+              </div>
+
+              <div class="col-lg-4">
+                <div class="payment-detls fix-ht">
+                  <div class="card br-rd-8 card-shadow  no-br">
+                    <div class="px-3 row">
+                      <div class="col-md-7 pt-3">
+                        <h2 class="sec-title mb-0">Payments</h2>
+                      </div>
+                      <div class="col-md-5 pt-3 text-end">
+                        <a href="javascript:;" class="btn-link font-medium">View All</a>
                       </div>
                     </div>
-                    <div class="filter-footer">
-                      <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right close-filter-btn" %>
-                      <button type="button" class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+                    <hr>
+                    <div class="mt-2 payment-list px-3">
+                      <h4>October, 2020</h4>
+                      <ul class="list-unstyled">
+                        <li>
+                          <div class="payment-wrap">
+                            <p class="date mb-0">Dec 23rd, 2020</p>
+                            <p class="payment-user-name mb-0">Niharika Aswani</p>
+                            <p class="devloper-name mb-0">Vedanta Developers</p>
+                            <p class="payment-amount mb-0 d-sm-inline-block">₹ 34000</p>
+                            <p class="payment-status success-status mb-0 d-sm-inline-block mt-1 float-end">Paid</p>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="payment-wrap">
+                            <p class="date mb-0">Dec 23rd, 2020</p>
+                            <p class="payment-user-name mb-0">Niharika Aswani</p>
+                            <p class="devloper-name mb-0">Vedanta Developers</p>
+                            <p class="payment-amount mb-0 d-sm-inline-block">₹ 34000</p>
+                            <p class="payment-status pending-status mb-0 d-sm-inline-block mt-1 float-end">Pending</p>
+                          </div>
+                        </li>
+                      </ul>
+                      <h4>November, 2020</h4>
+                      <ul>
+                        <li>
+                          <div class="payment-wrap">
+                            <p class="date mb-0">Dec 23rd, 2020</p>
+                            <p class="payment-user-name mb-0">Niharika Aswani</p>
+                            <p class="devloper-name mb-0">Vedanta Developers</p>
+                            <p class="payment-amount mb-0 d-sm-inline-block">₹ 34000</p>
+                            <p class="payment-status cancel-status mb-0 d-sm-inline-block mt-1 float-end">Cancel</p>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="payment-wrap">
+                            <p class="date mb-0">Dec 23rd, 2020</p>
+                            <p class="payment-user-name mb-0">Niharika Aswani</p>
+                            <p class="devloper-name mb-0">Vedanta Developers</p>
+                            <p class="payment-amount mb-0 d-sm-inline-block">₹ 34000</p>
+                            <p class="payment-status pending-status mb-0 d-sm-inline-block mt-1 float-end">Pending</p>
+                          </div>
+                        </li>
+                      </ul>
                     </div>
-                  <% end %>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="row" id = "incentive_plans_summary"></div>
+        </div>
+        -->
+      </div>
+      <!-- <div class="col-lg-3 mt-2 pt-1"> -->
+        <!-- Events ---------->
+        <!--
+        <div class="card br-rd-8 card-shadow no-br mt-4">
+          <div class="">
+            <div class="col-md-12 pt-3 px-3">
+              <h2 class="sec-title mb-0">Upcoming Events</h2>
+            </div>
+            <hr>
+            <% meetings = Meeting.where(Meeting.user_based_scope(current_user)) %>
+            <ul class="upcoming-events-list list-unstyled cmn-list">
+              <% if meetings.present? %>
+              <% meetings.each do |meeting| %>
+              <li class="px-3">
+                <div class="list-wrap row">
+                  <div class="col-lg-2">
+                    <i class="fa fa-calendar-alt fill-primary"></i>
+                  </div>
+                  <div class="col-lg-10">
+                    <p class="list-txt event-title mb-0"><%= meeting.topic %></p>
+                    <p class="list-txt event-time mb-0">
+                      <%= "#{meeting.scheduled_on&.strftime('%e %b %Y')}#{meeting.scheduled_on&.to_time&.in_time_zone(current_user.time_zone)&.strftime(', %I:%M%p %Z')}".html_safe %>
+                    </p>
+                  </div>
+                </div>
+              </li>
+              <% end %>
+              <% else %>
+              <li class="px-3">
+                <div class="list-wrap row">
+                  <div class="col-lg-12">
+                    <p class="list-txt event-title mb-0">No New event</p>
+                  </div>
+                </div>
+              </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+        -->
+
+
+        <!----Announcements------------>
+        <!--
+        <div class="card br-rd-8 card-shadow no-br mt-3">
+          <div class="">
+            <div class="col-md-12 pt-3 px-3">
+              <h2 class="sec-title mb-0">Announcements</h2>
+            </div>
+            <hr>
+            <ul class="announcement-list list-unstyled cmn-list">
+              <li class="px-3">
+                <div class="list-wrap row">
+                  <div class="col-lg-2">
+                    <i class="fa fa-rocket fill-warning fa-sm"></i>
+                  </div>
+                  <div class="col-lg-10">
+                    <p class="list-txt event-title mb-0">New Launch</p>
+                    <p class="list-txt event-info mb-0">Embassy Developers has just launched a new project, Brahma
+                      Towers in Lavassa.</p>
+                    <p class="list-txt event-time mb-0">On May 23rd, 2020</p>
+                  </div>
+                </div>
+              </li>
+              <li class="px-3">
+                <div class="list-wrap row">
+                  <div class="col-lg-2">
+                    <i class="fa fa-calendar-week fill-primary fa-sm"></i>
+                  </div>
+                  <div class="col-lg-10">
+                    <p class="list-txt event-title mb-0">Events</p>
+                    <p class="list-txt event-info mb-0">New plans for projects from Lodha builders in Pune on 24th Dec
+                      2020</p>
+                    <p class="list-txt event-time mb-0">On May 23rd, 2020</p>
+                  </div>
+                </div>
+              </li>
+              <li class="px-3">
+                <div class="list-wrap row">
+                  <div class="col-lg-2">
+                    <i class="fa fa-exclamation-triangle fill-danger fa-sm"></i>
+                  </div>
+                  <div class="col-lg-10">
+                    <p class="list-txt event-title mb-0">Brokerage Alert</p>
+                    <p class="list-txt event-info mb-0">2.5% Brokerage incentive on bookings made within the first week
+                      of the launch date</p>
+                    <p class="list-txt event-time mb-0">Till May 23rd, 2020</p>
+                  </div>
+                </div>
+              </li>
+              <li class="px-3">
+                <div class="list-wrap row">
+                  <div class="col-lg-2">
+                    <i class="fa fa-calendar-week fill-primary fa-sm"></i>
+                  </div>
+                  <div class="col-lg-10">
+                    <p class="list-txt event-title mb-0">Events</p>
+                    <p class="list-txt event-info mb-0">New plans for projects from Lodha builders in Pune on 24th Dec
+                      2020</p>
+                    <p class="list-txt event-time mb-0">On May 23rd, 2020</p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        -->
+      <!-- </div> -->
+    </div>
+</section>
+<%= javascript_tag do %>
+  $.ajax({
+    url: '/dashboard/project_wise_leads',
+    type: 'get'
+  });
+<% end %>
+<% elsif @channel_partner.pending? %>
+<section class="after-register-sec mt-5">
+  <div class=" px-4">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="app-review float-start wd-100">
+          <h1 class="notify-title float-start wd-100">Your application is under review</h1>
+          <p class="notify-desc float-start mb-0">We will notify you via email on the status of your application</p>
+          <p class="notify-desc float-end pe-3 mb-0">Our estimated review time is between 24-48 hours</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<% else %>
+  <% if @channel_partner.rejected? %>
+    <section class="after-register-sec mt-5">
+      <div class=" px-4">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="app-review app-reject float-start wd-100">
+              <h1 class="notify-title float-start mb-0 col-12">Your application has been rejected</h1>
+              <div class="fn-12 col-12">
+                <p class="mb-0">Reason:</p>
+                <div class="error-reason">
+                  <%= @channel_partner.status_change_reason %>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
-  </div>
-
-  <%= javascript_tag do %>
-    $(document).ready(function(){
-      FormInitializer.init($("#project_wise_summary_filter"));
-      FormInitializer.init($("#incentive_plans_started_filter"));
-      FormInitializer.init($("#incentive_plans_summary_filter"));
-      FormInitializer.init($("#channel_partner_dashboard_counts_filter"));
-      $.ajax({
-        url: "/dashboard/project_wise_summary",
-        type: "get"
-      });
-      $.ajax({
-        url: "/dashboard/incentive_plans_started",
-        type: "get"
-      });
-      $.ajax({
-        url: "/dashboard/incentive_plans_summary",
-        type: "get"
-      });
-      $.ajax({
-        url: "/dashboard/channel_partner_dashboard_counts",
-        type: "get"
-      });
-    });
   <% end %>
-<% else %>
-  <section class="first-sec welcome-box">
-    <div class="container">
-      <div class="row">
-        <% template = ::Template::UITemplate.where(name: 'index/inactive_channel_partner').first %>
-        <% if template.present? %>
-          <%= get_view_erb(template, {binding: binding}) %>
-        <% end %>
+<section class="cp-register-sec mt-3">
+  <div class="col-lg-12">
+    <div class="cp-reg-header pt-5 pb-5 col-lg-12">
+      <h1 class="sec-title px-3 ms-4">Complete Registration</h1>
+      <%# <a href="javascript:;" class="skip-step-btn pe-3">Skip for now</a> %>
+    </div>
+    <div class="col-lg-12">
+      <div class="cp-step-list pt-3 col-lg-12">
+        <ul class="nav nav-tabs px-4" id='cp-tabs'>
+          <li class="nav-item">
+            <a href="javascript:;" class="step-done nav-link active border-0" data-bs-toggle="tab"
+              data-bs-target="#step-1" type="button" role="tab">
+              <div class="step-inner">
+                <span>1</span>
+                <p>Personal Info</p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:;" class="step-done nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-2"
+              type="button" role="tab">
+              <div class="step-inner">
+                <span>2</span>
+                <p>Company Info</p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:;" class="step-done nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-3"
+              type="button" role="tab">
+              <div class="step-inner">
+                <span>3</span>
+                <p>Company Details</p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:;" class="step-done nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-4"
+              type="button" role="tab">
+              <div class="step-inner">
+                <span>4</span>
+                <p>Upload Documents</p>
+              </div>
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
-  </section>
+    <div class="col-lg-12 pb-3">
+      <%= simple_form_for(channel_partner, local: true, remote: true, html: {id: 'new_channel_partner_form', class: 'validate-form theme-form tab-content', "data-resource-type": global_labels['channel_partner'], "data-type": "json"}) do |form| %>
+      <div class="step-tab-content tab-pane fade show active px-3" role="tabpanel" id="step-1">
+        <div class="step-tab-inner">
+          <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Personal Info</h2> %>
+          <div class="cp-form-wrap px-4 pt-2 mb-5">
+            <%= render "channel_partners/personal_fields", {form: form} %>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-tab-content tab-pane fade shadow-sm px-3" role="tabpanel" id="step-2">
+        <div class="step-tab-inner">
+          <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Company Info</h2> %>
+          <div class="cp-form-wrap px-4 pt-2 mb-5">
+            <%= render "channel_partners/company_fields", {form: form} %>
+          </div>
+        </div>
+      </div>
+      <div class="step-tab-content tab-pane fade shadow-sm px-3" role="tabpanel" id="step-3">
+        <div class="step-tab-inner">
+          <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Company Details</h2> %>
+          <div class="cp-form-wrap px-4 pt-2 mb-5">
+            <%= render "channel_partners/questionaire_fields", {form: form} %>
+          </div>
+        </div>
+      </div>
+      <div class="step-tab-content tab-pane fade shadow-sm px-3" role="tabpanel" id="step-4">
+        <div class="step-tab-inner">
+          <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Upload Documents</h2> %>
+          <div class="cp-form-wrap px-4 pt-2 mb-5">
+            <%= render 'channel_partners/asset_form', assetable: channel_partner %>
+          </div>
+        </div>
+      </div>
+
+      <div class="cp-form-wrap border-top px-4 py-4 pb-3 text-end">
+        <div class='form-footer px-0 text-start d-inline-block'>
+          <%= form.submit "Save", class: "btn btn-primary white me-3 d-inline-block px-4 py-2 font-medium w-auto", id: 'cp-form-submit' %>
+        </div>
+        <div class="form-footer px-0 d-inline-block d-none">
+          <% if policy([current_user_role_group, channel_partner]).change_state? && policy([current_user_role_group, channel_partner]).editable_field?('event') %>
+            <% link_name = "#{channel_partner.rejected? ? 'Resubmit Application' : 'Submit Application'}" %>
+            <a href="javascript:;" class="btn bg-primary white px-4 d-inline-block py-2 font-medium w-auto fn-14"  data-bs-toggle="modal" data-bs-target="#confirmRegistration"><%= link_name %></a>
+          <% end %>
+          <div class="modal fade googleMeet-modal" id="confirmRegistration" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class='modal-header'>
+                  <h6 class='modal-title'>Are you sure?</h6>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <p class='text-start'>By skipping the registration you will not be able to access your activity dashboard, projects and the many benefits of launchpad!</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer col-lg-12">
+                  <div class="row">
+                    <div class="col-lg-12 text-end px-0">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Skip anyway</button>
+                      <%= link_to 'Complete Registration', change_state_channel_partner_path(channel_partner, {channel_partner: {event: 'submit_for_approval'}}), method: :post, remote: true, data: {type: 'json', 'disable-with': 'Complete Registration', 'bs-dismiss': 'modal'}, id: 'cp-form-change-state', class: 'btn btn-primary' %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <% end %>
+    </div>
+  </div>
+</section>
 <% end %>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#new_channel_partner_form"));
 
+    $('#new_channel_partner_form').on('ajax:error', function(event) {
+      if(typeof event.detail[0] == 'object' && event.detail[0].errors != undefined) {
+        Amura.global_error_handler(event.detail[0].errors);
+      }
+    });
+    $('#new_channel_partner_form').on("ajax:success", function(event, two, three){
+      if(typeof event.detail[0] == 'object' && event.detail[0].status == 'pending') {
+        Amura.global_success_handler("Application submitted successfully");
+        setTimeout(function() {
+          window.location = window.location;
+        }, 3000);
+      } else {
+        Amura.global_success_handler("Details updated successfully");
 
+        // Move to next tab if available, to work like a wizard.
+        var $activeTab = $('#cp-tabs').find('a.active');
+        var $nextTab = $activeTab.parent().next().find('a');
+        if($nextTab.length > 0) {
+          var nextTab = $nextTab[0];
+          var bsTab = new bootstrap.Tab(nextTab);
+          bsTab.show();
+          $(window).scrollTop(0);
+        }
+      }
+    });
+
+    $('a[data-bs-toggle="tab"]').on('show.bs.tab', function (event) {
+      var $tab = $(event.target);
+      if($tab.data('bs-target') == '#step-4') {
+        $('.form-footer').find('#cp-form-submit').val('Save Draft');
+        $('.form-footer').find('#cp-form-submit').removeClass('btn-primary');
+        $('.form-footer').find('#cp-form-submit').addClass('bg-secondary');
+        $('.form-footer').find('#cp-form-change-state').closest('.form-footer').removeClass('d-none');
+      } else {
+        $('.form-footer').find('#cp-form-submit').val('Save');
+        $('.form-footer').find('#cp-form-submit').removeClass('bg-secondary');
+        $('.form-footer').find('#cp-form-submit').addClass('btn-primary');
+        $('.form-footer').find('#cp-form-change-state').closest('.form-footer').addClass('d-none');
+      }
+    })
+  });
+<% end %>
+<section class="after-register-sec mt-0">
+  <div class="px-4">
+    <div class="row">
+      <div class="col-lg-12 mt-4 mb-4">
+        <div class="app-features">
+          <div class="row px-3 py-3">
+            <div class="col-lg-12">
+              <h2 class="pb-4">Why you would love launchpad</h2>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-01.svg' %>">
+              </span>
+              <p>Early access to<br> new launches</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-02.svg' %>">
+              </span>
+              <p>Chance to work with<br> Pune’s biggest developers</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-03.svg' %>">
+              </span>
+              <p>Leads at discounted<br> prices</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-04.svg' %>">
+              </span>
+              <p>CRM training<br> & support</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-05.svg' %>">
+              </span>
+              <p>Marketing support<br> & assets</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-06.svg' %>">
+              </span>
+              <p>Timely payments to<br> streamline cash flows</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-07.svg' %>">
+              </span>
+              <p>Fully automated<br> EOI process</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-09.svg' %>">
+              </span>
+              <p>Complete<br> transparency</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-08.svg' %>">
+              </span>
+              <p>Online inventory<br> selection, KYC & bookings</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-10.svg' %>">
+              </span>
+              <p>Unique online<br> channel partner profile</p>
+            </div>
+            <div class="col-lg-3 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-11.svg' %>">
+              </span>
+              <p>Performance-based<br> channel partner ratings</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Newly Launched ---------->
+    <%= render 'dashboard/index/partials/collaterals' %>
+  </div>
+</section>

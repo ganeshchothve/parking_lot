@@ -1,0 +1,30 @@
+<%= form_for [:admin, @project, @unit_configuration], remote: true, html: { class: 'modal-remote-form validate-form unit_configuration_form', data: { 'resource-type': UnitConfiguration.model_name.human(count: 1), type: :json } } do |f| %>
+  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="title">
+            <%= t("helpers.edit.link_name", model: UnitConfiguration.model_name.human(count: 1)) %>
+          </h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body theme-form">
+          <div class='row'>
+            <div class="mb-3 col-12">
+              <%= f.label :name, class: 'label-required' %>
+              <%= f.text_field :name, class: 'form-control', required: 'required', disabled: !policy([current_user_role_group, @unit_configuration]).editable_field?("name") %>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer text-end">
+          <%= f.submit class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($(".unit_configuration_form"));
+});
+<% end %>

@@ -65,6 +65,11 @@ class DashboardController < ApplicationController
     end
   end
 
+  def sales_board
+    authorize :dashboard
+    @users = User.where(User.user_based_scope(current_user, params)).where(role: 'sales').asc(:sales_status)
+  end
+
   private
 
   def set_lead

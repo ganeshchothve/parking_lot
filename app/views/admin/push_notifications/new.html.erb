@@ -2,31 +2,29 @@
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header bg-gradient-cd white">
+      <div class="modal-header">
         <h3 class="title"> <%= t('controller.push_notifications.new.header') %> </h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" class="white">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        <div class="form-group">
+      <div class="modal-body theme-form">
+        <div class="mb-3">
           <%= f.label :title, class: 'label-required' %>
           <%= f.text_field :title, autofocus: true, class: "form-control", required: 'required', disabled: !(policy([:admin, @push_notification]).editable_field?("title")) %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :content, class: 'label-required' %>
           <%= f.text_field :content, autofocus: true, class: "form-control", required: 'required', disabled: !(policy([:admin, @push_notification]).editable_field?("content")) %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :url, class: 'label-required' %>
           <%= f.text_field :url, autofocus: true, class: "form-control", required: 'required', disabled: !(policy([:admin, @push_notification]).editable_field?("url")) %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :role, class: 'label-required' %>
           <%= f.select :role, User.available_roles(current_client).collect{|role| [ User.human_attribute_name("role.#{role}"), role ]}, {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([current_user_role_group, @push_notification]).editable_field?("role") %>
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer text-end">
         <%= f.submit "Add #{global_labels['note']}", class: "btn btn-primary" %>
       </div>
     </div>

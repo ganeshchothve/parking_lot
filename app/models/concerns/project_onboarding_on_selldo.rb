@@ -18,7 +18,9 @@ module ProjectOnboardingOnSelldo
       create_custom_field('portal stage', 'lead', errors) unless custom_fields&.find {|x| x['name'] == 'custom_portal_stage' && x['class_type'] == 'lead'}
       create_custom_field('token number', 'lead', errors) unless custom_fields&.find {|x| x['name'] == 'custom_token_number' && x['class_type'] == 'lead'}
       create_custom_field('partner code', 'lead', errors) unless custom_fields&.find {|x| x['name'] == 'custom_partner_code' && x['class_type'] == 'lead'}
-      create_custom_field('partner code', 'site_visit', errors) unless custom_fields&.find {|x| x['name'] == 'custom_portal_stage' && x['class_type'] == 'lead'}
+      create_custom_field('slot details', 'lead', errors) unless custom_fields&.find {|x| x['name'] == 'custom_portal_stage' && x['class_type'] == 'lead'}
+      create_custom_field('slot status', 'lead', errors) unless custom_fields&.find {|x| x['name'] == 'custom_portal_stage' && x['class_type'] == 'lead'}
+      create_custom_field('partner code', 'site_visit', errors) unless custom_fields&.find {|x| x['name'] == 'custom_portal_stage' && x['class_type'] == 'site_visit'}
 
       # Create Api clients
       website_api_client = get_api_clients('IRIS with campaign response', errors).try(:[], 'results')&.first&.presence
@@ -508,11 +510,11 @@ module ProjectOnboardingOnSelldo
       if response.code == '200' || response.code == '201'
         return JSON.parse(response.body)
       else
-        errors << "Create Custom Field - ERRMSG: #{response.body}"
+        errors << "Create Custom Field (#{label}) - ERRMSG: #{response.body}"
         return nil
       end
     rescue => e
-      errors << "Create Custom Field - ERRMSG: #{e.message}"
+      errors << "Create Custom Field (#{label}) - ERRMSG: #{e.message}"
       return nil
     end
   end

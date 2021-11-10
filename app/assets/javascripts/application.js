@@ -29,7 +29,7 @@
 //= require plugins/file_uploader
 //= require daterangepicker
 //= require plugins/smooth_zoom
-//= require fontawesome-all
+//= require font-awesome/js/all
 //= require bootstrap-datetimepicker.min
 //= require utils
 //= require file-icon

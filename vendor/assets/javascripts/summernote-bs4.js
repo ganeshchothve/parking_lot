@@ -145,13 +145,13 @@ var dialog = renderer.create('<div class="modal" aria-hidden="false" tabindex="-
         '<div class="modal-dialog">',
         '  <div class="modal-content">',
         (options.title
-            ? '    <div class="modal-header bg-gradient-cd white">' +
+            ? '    <div class="modal-header">' +
                 '      <h4 class="title">' + options.title + '</h4>' +
-                '      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="white">&times;</span></button>' +
+                '      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
                 '    </div>' : ''),
-        '    <div class="modal-body">' + options.body + '</div>',
+        '    <div class="modal-body  theme-form">' + options.body + '</div>',
         (options.footer
-            ? '    <div class="modal-footer">' + options.footer + '</div>' : ''),
+            ? '    <div class="modal-footer text-end">' + options.footer + '</div>' : ''),
         '  </div>',
         '</div>'
     ].join(''));
@@ -5873,11 +5873,11 @@ var LinkDialog = /** @class */ (function () {
     LinkDialog.prototype.initialize = function () {
         var $container = this.options.dialogsInBody ? this.$body : this.$editor;
         var body = [
-            '<div class="form-group note-form-group">',
+            '<div class="mb-3 note-mb-3">',
             "<label class=\"note-form-label\">" + this.lang.link.textToDisplay + "</label>",
             '<input class="note-link-text form-control note-form-control  note-input" type="text" />',
             '</div>',
-            '<div class="form-group note-form-group">',
+            '<div class="mb-3 note-mb-3">',
             "<label class=\"note-form-label\">" + this.lang.link.url + "</label>",
             '<input class="note-link-url form-control note-form-control note-input" type="text" value="http://" />',
             '</div>',
@@ -6085,13 +6085,13 @@ var ImageDialog = /** @class */ (function () {
             imageLimitation = "<small>" + (this.lang.image.maximumFileSize + ' : ' + readableSize) + "</small>";
         }
         var body = [
-            '<div class="form-group note-form-group note-group-select-from-files">',
+            '<div class="mb-3 note-mb-3 note-group-select-from-files">',
             '<label class="note-form-label">' + this.lang.image.selectFromFiles + '</label>',
             '<input class="note-image-input note-form-control note-input" ',
             ' type="file" name="files" accept="image/*" multiple="multiple" />',
             imageLimitation,
             '</div>',
-            '<div class="form-group note-group-image-url" style="overflow:auto;">',
+            '<div class="mb-3 note-group-image-url" style="overflow:auto;">',
             '<label class="note-form-label">' + this.lang.image.url + '</label>',
             '<input class="note-image-url form-control note-form-control note-input ',
             ' col-md-12" type="text" />',
@@ -6302,7 +6302,7 @@ var VideoDialog = /** @class */ (function () {
     VideoDialog.prototype.initialize = function () {
         var $container = this.options.dialogsInBody ? this.$body : this.$editor;
         var body = [
-            '<div class="form-group note-form-group row-fluid">',
+            '<div class="mb-3 note-mb-3 row-fluid">',
             "<label class=\"note-form-label\">" + this.lang.video.url + " <small class=\"text-muted\">" + this.lang.video.providers + "</small></label>",
             '<input class="note-video-url form-control note-form-control note-input" type="text" />',
             '</div>'

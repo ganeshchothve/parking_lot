@@ -1,8 +1,4 @@
-<div class="row justify-content-center">
-  <div class="col-md-11">
-    <div class="card h-100">
-      <div class = 'card-header'>New User</div>
-      <div class="card-body">
+
         <% unless @lead = @customer_search.customer.presence %>
           <% @lead = Lead.new(project_id: current_user.selected_project_id) %>
           <% @customer_search.customer = @lead %>
@@ -10,7 +6,7 @@
         <% else %>
           <% url = admin_customer_search_path(@customer_search) %>
         <% end %>
-        <%= simple_form_for @lead, url: url, remote: true, local: true, html: { class: "validate-form new_lead", "data-resource-type": global_labels['lead'], "data-type": "json" } do |f| %>
+        <%= simple_form_for @lead, url: url, remote: true, local: true, html: { class: "validate-form new_lead theme-form", "data-resource-type": global_labels['lead'], "data-type": "json" } do |f| %>
           <%= hidden_field_tag :customer_search_id, @customer_search.id.to_s %>
           <%= render 'admin/leads/non_selldo_form_fields', f: f, lead: @lead %>
           <div class='row'>
@@ -19,17 +15,11 @@
             </div>
           </div>
           <div class = 'row'>
-            <div class = 'col-md-12'>
-              <%= submit_tag "Save", class: 'btn btn-primary float-right' %>
+            <div class = 'col-md-12 border-top pt-3'>
+              <%= submit_tag "Save", class: 'btn btn-primary float-end w-auto border-primary' %>
             </div>
           </div>
         <% end %>
-      </div>
-    </div>
-  </div>
-</div>
-<br><br><br><br><br><br>
-
 <%= javascript_tag do %>
   $(document).ready(function(){
     $(document).on("ajax:success", '.new_lead', function(evt, data, status, xhr){

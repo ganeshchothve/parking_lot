@@ -3,23 +3,21 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
 
-      <div class="modal-header bg-gradient-cd white">
+      <div class="modal-header">
         <h3 class="title"><%= t("controller.invoices.#{action_name}.link_name") %></h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" class="white">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
-      <div class="modal-body">
+      <div class="modal-body theme-form">
         <% if (incentive_deduction = @invoice.incentive_deduction.presence) %>
           <%= render 'admin/invoices/incentive_deduction', incentive_deduction: incentive_deduction %>
         <% end %>
 
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :amount, class: '' %>
           <%= f.number_field :amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("amount") %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :gst_amount, class: '' %>
           <%= f.number_field :gst_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("gst_amount") %>
         </div>
@@ -28,7 +26,7 @@
             <%= f.fields_for :payment_adjustment do |adj|%>
               <div class="row">
                 <div class="col-md-12">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <%= adj.label :absolute_value, 'Adjustment' %>
                     <%= adj.number_field :absolute_value, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("payment_adjustment_attributes") %>
                     <p class="small text-muted">Make adjustments here for Kicker & Voucher Incentives. Supports negative amount for deductions from Net amount </p>
@@ -38,7 +36,7 @@
             <% end %>
           </div>
         <% end %>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :net_amount, class: '' %>
           <% if policy([:admin, @invoice]).editable_field?("net_amount") %>
             <%= f.number_field :net_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("net_amount") %>
@@ -46,12 +44,12 @@
             <p class='net-amount'><%= f.object.net_amount %></p>
           <% end %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :status, class: 'control-label label-required' %>
           <% events = available_events(@invoice) %>
           <%= f.select :event, options_for_select(events.collect{|event| [t("controller.invoices.events.#{event.to_s}"), event.to_s]}, @invoice.status), {prompt: t("mongoid.attributes.invoice/status.#{@invoice.status}")}, class: 'selectize', required: 'required', disabled: !policy([:admin, @invoice]).editable_field?("event") %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :rejection_reason, class: '' %>
           <% if policy([:admin, @invoice]).editable_field?("rejection_reason") %>
             <%= f.text_area :rejection_reason, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("rejection_reason") %>
@@ -60,7 +58,7 @@
           <% end%>
         </div>
         <% if @invoice.comments.present? %>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :comments, class: '' %>
             <% if policy([:admin, @invoice]).editable_field?("comments") %>
               <%= f.text_area :comments, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("comments") %>
@@ -79,7 +77,7 @@
         <% end %>
       </div>
 
-      <div class="modal-footer">
+      <div class="modal-footer text-end">
         <%= f.submit "Save", class: "btn btn-primary" %>
       </div>
 

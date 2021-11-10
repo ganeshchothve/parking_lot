@@ -36,7 +36,7 @@ module Communication
               attachment_urls: email_json[:attachments]
             }).deliver
           end
-          email.set({sent_on: Time.now})
+          email.set({sent_on: Time.now, status: 'sent'})
         rescue StandardError => e
           if Rails.env.production? || Rails.env.staging?
             Honeybadger.notify(e, context: email.as_json)

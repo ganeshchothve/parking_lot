@@ -1,4 +1,4 @@
-<% campaign_labels = t("mongoid.attributes.campaign").with_indifferent_access %>
+<% campaign_labels = t("mongoid.attributes.campaign").with_indifferent_access %><!--
 <div class="container mb-5">
   <div class="row justify-content-center">
     <div class="col-md-12">
@@ -144,3 +144,336 @@
     </div>
   </div>
 </div>
+-->
+
+<section class="prjt-details-sec">
+    <div class="px-3">
+        <div class="row">
+            <div class="col-lg-8 px-3 bg-white pt-4">
+                <div class="col-12">
+                    <h6 class="card-title d-inline fn-20"><%= @campaign.name %></h6>
+                    <span class="badge bg-warning-light font-normal text-warning fn-14 ms-2">Not yet started</span>
+                    <p class="text-muted fn-14">Campaign ID: <%= @campaign.campaign_id %></p>
+                </div>
+                <hr>
+              <% @campaign.projects.each do |project| %>
+                
+                <div class="border rounded p-2 row col-12 float-start ms-0">
+                    <div class="col-md-auto px-0">
+                        <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-fluid rounded" width="150" alt="">
+                    </div>
+                    <div class="col-md-10 px-0 row">
+                        <div class="col-md-7">
+                            <div class="card-body py-0 mt-2">
+                                
+                                <h6 class="card-title txt-light-blue"><%= project.name %></h6>
+                                <p class="card-text theme-txt-color"><%= project.developer_name %></p>
+                                <p class="card-text"><i class="fa fa-map-marker-alt fill-theme me-1"></i>
+                                    <small class="theme-txt-color"><%= project.address.to_s %></small>
+                                </p>
+                                
+                            </div>
+                        </div>
+                        <div class="col-md-5 text-end p-2">
+                            <a href="javascript:;" class="fn-16 d-inline theme-txt-color pe-2"><i
+                                    class="fa fa-heart fill-danger me-2"></i>Saved</a>
+                            <a href="javascript:;" class="fn-16 d-inline border rounded theme-txt-color px-3 py-2"><i
+                                    class="fa fa-play fill-theme me-3"></i>Launchbook</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 float-start mt-3">
+                    <div class="float-start">
+                        <p class="fn-14 mb-0">Since 1998</p>
+                        <p class="fn-16 font-medium">Embassy Developers</p>
+                    </div>
+                    <div class="float-end">
+                        <p class="fn-12 d-inline-block">Completed Projects <span class="fn-16 d-block">23</span></p>
+                        <p class="fn-12 border-start ps-3 ms-3 d-inline-block">Ongoing Projects <span class="fn-16 d-block">2</span></p>
+                    </div>
+                    <p class="mt-0 float-start">Founded in 1996, City Group is India’s leading real estate developer known for their impeccable designs, detailed and skilled construction practices, and creating assets that are of long-term investment value. Read More</p>
+                </div>
+                <div class="col-12 float-start benefit-wrap p-3 pt-3 pb-2 mb-4">
+                    <h6 class="fn-14 theme-txt-color">Benefits of investing in this project</h6>
+                    <ul class="list-unstyled mt-2 mb-0">
+                        <li class="d-inline">
+                            <p class="mb-2 fn-14 float-start col-3"><i
+                                    class="fa fa-star fa-xs fill-warning me-2"></i>Good Location</p>
+                        </li>
+                        <li class="d-inline">
+                            <p class="mb-2 fn-14 float-start col-3"><i
+                                    class="fa fa-star fa-xs fill-warning me-2"></i>State of the art Amenities</p>
+                        </li>
+                        <li class="d-inline">
+                            <p class="mb-2 fn-14 float-start col-3"><i
+                                    class="fa fa-star fa-xs fill-warning me-2"></i>Reputed Developer</p>
+                        </li>
+                        <li class="d-inline">
+                            <p class="mb-2 fn-14 float-start col-3"><i
+                                    class="fa fa-star fa-xs fill-warning me-2"></i>Bank Offers</p>
+                        </li>
+                        <li class="d-inline">
+                            <p class="mb-2 fn-14 float-start col-3"><i
+                                    class="fa fa-star fa-xs fill-warning me-2"></i>Affordable</p>
+                        </li>
+                        <li class="d-inline">
+                            <p class="mb-2 fn-14 float-start col-3"><i
+                                    class="fa fa-star fa-xs fill-warning me-2"></i>Popular among partners
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+                <% end %>
+                <div class="col-12 border-bottom float-start"></div>
+                
+                <div class="col-12 mt-2 float-start">
+                    <h5 class="fn-16 my-3 px-0">Funds Raised</h5>
+                    <div class="">
+                        <p class="fn-16 font-medium success mb-1">Rs. 1,00,000</p>
+                        <p class="fn-14 success mb-1">Funds raised so far</p>
+                    </div>
+                    <div class="progress mb-0 height-05 mt-2">
+                        <div class="progress-bar progress-bar-animated bg-success" role="progressbar" style="width:53%" aria-valuenow="53" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-end">
+                        <div class="text-center me-5 line-top position-relative mt-2">
+                            <p class="fn-16 font-medium mb-1">Rs. 1,80,000</p>
+                            <p class="fn-14 mb-1">Minimum investment</p>
+                        </div>
+                        <div class="text-end ms-5 line-top position-relative last-line mt-2">
+                            <p class="fn-16 font-medium mb-1">Rs. <%= @campaign.estimated_cost_per_lead %></p>
+                            <p class="fn-14 mb-1">Campaign Goal amount</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 px-3 float-start">
+                    <div class="row">
+                        <h5 class="fn-16 my-3 px-0">Campaign Details</h5>
+                        <div class="col-lg-5 border-bottom px-0 my-2 pb-2">
+                            <span class="fn-14 font-medium">Type of Campaign <i
+                                    class="fa fa-info-circle fill-theme-light" data-bs-toggle="tooltip"
+                                    data-bs-placement="bottom" title="Tooltip on bottom"></i></span>
+                            <span class="fn-14 float-end"><%= Campaign.campaign_types.find{|x| x[:id] == @campaign.campaign_type }[:text] %></span>
+                        </div>
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-5 border-bottom px-0 my-2 pb-2">
+                            <span class="fn-14 font-medium">Campaign Stage <i class="fa fa-info-circle fill-theme-light"
+                                    data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                    title="Tooltip on bottom"></i></span>
+                            <span class="fn-14 float-end"><%= Campaign.statuses.find{|x| x[:id] == @campaign.status }[:text] %></span>
+                        </div>
+                        <div class="col-lg-5 border-bottom px-0 my-2 pb-2">
+                            <span class="fn-14 font-medium">Mediums</span>
+                            <span class="fn-14 float-end"><%= @campaign.sources.collect{|x| Campaign.sources.find{|s| s[:id] == x }[:text] }.to_sentence %></span>
+                        </div>
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-5 border-bottom px-0 my-2 pb-2">
+                            <span class="fn-14 font-medium">Campaign Start Date</span>
+                            <span class="fn-14 float-end"><%= @campaign.start_date %></span>
+                        </div>
+                        <div class="col-lg-5 px-0 my-2 pb-2">
+                            <span class="fn-14 font-medium">Estimated cost per lead <i
+                                    class="fa fa-info-circle fill-theme-light" data-bs-toggle="tooltip"
+                                    data-bs-placement="bottom" title="Tooltip on bottom"></i></span>
+                            <span class="fn-14 float-end">₹<%= @campaign.estimated_cost_per_lead %></span>
+                        </div>
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-5 px-0 my-2 pb-2">
+                            <span class="fn-14 font-medium">Campaign End Date</span>
+                            <span class="fn-14 float-end"><%= @campaign.end_date %></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 border-bottom float-start my-3"></div>
+
+                <div class="col-12">
+                    <h5 class="fn-16 my-3 px-0">Campaign Details</h5>
+                    <!-- <div class="col-12 border-bottom float-start"></div> -->
+                    <div class="col-12 border rounded px-3">
+                        <h6 class="fn-14 my-3 px-0 border-bottom pb-3"><%= @campaign.name %></h6>
+                        <p class="border-bottom fn-14 pb-3"><%= @campaign.description %></p>
+                        <h6 class="fn-14 my-3 px-0">If you have any question, I would be more than happy to answer them.</h6>
+                        <p class="fn-14"><span><i class="fa fa-phone-alt fa-1x fill-theme me-2"></i>+91 9874563210</span><span class="mx-3 text-secondary">|</span><span><i
+                                    class="fa fa-envelope fa-1x fill-theme me-2"></i>abc@gmail.com</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-12 mt-5">
+                    <h5 class="fn-16 my-3 px-0">Frequently asked Questions</h5>
+                    <div class="accordion theme-accordation" id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    How will I get the leads?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <strong>This is the third item's accordion body.</strong> It is hidden by default.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    Question 2
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <strong>This is the third item's accordion body.</strong> It is hidden by default.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    Question 3
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <strong>This is the third item's accordion body.</strong> It is hidden by default.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mt-5">
+                    <h5 class="fn-16 my-3 px-0">Terms & Conditions</h5>
+                    <div class="border rounded p-3">
+                        <p class="fn-14 border-bottom pb-2">The above payment schedule is valid for 15 days from the
+                            date of issue</p>
+                        <p class="fn-14 border-bottom pb-2">Stamp duty VAT / Service tax / GST / CGST / SGST any other
+                            government tax extra as applicable and subject to change as per government rule Input tax
+                            credit (ITC) against Goods and Service Tax GST is already adjusted and included in the final
+                            effective rates</p>
+                        <p class="fn-14 border-bottom pb-2">Parking will be allotted / sold on request</p>
+                        <p class="fn-14 border-bottom pb-2">All cheques / Demand Drafts should be drawn in the name of
+                            City Corporation Limited (account of project as per RERA)</p>
+                        <p class="fn-14 border-bottom pb-2">Stamp Duty / Registration / VAT/ GST / Incidental Charges /
+                            E Stamping charges / Service Tax: All cheques / Demand Drafts should be drawn in the name of
+                            City Corporation Limited (account of project as per RERA)</p>
+                        <p class="fn-14">DS at the rate 1% on agreement value more than 50,00,00 to be borne by customer
+                            against each payment made copy of receipt of payments to be submitted to the CRM</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 pt-2 px-4">
+                <div class="row">
+                    <div class="col-12 bg-white border rounded shadow">
+                        <h5 class="fn-16 my-3 px-0">Invest in this campaign</h5>
+                        <p class="bg-secondary-light theme-txt-color rounded px-2 py-1"><i
+                                class="fa fa-badge-percent fa-1x fill-theme me-2"></i><strong class="font-medium">Early
+                                Bird Offer:</strong> The first 10 people to invest will get 5% cashback</p>
+                        <div class="accordion theme-accordation slab-accordation" id="slab-accordation">
+                          <% @campaign.campaign_slabs.each_with_index do |campaign_slab, index| %>
+                            <div class="accordion-item border-0 border-bottom">
+                                <h2 class="accordion-header" id="heading<%= index %>">
+                                    <button class="accordion-button collapsed d-flex justify-content-between px-0 ps-4" type="button" data-bs-toggle="collapse" data-bs-target="#slab<%= index %>"
+                                        aria-expanded="true" aria-controls="slab<%=index%>">
+                                        <%= campaign_slab.name %> 
+                                        <% if campaign_slab.recommended ? 'Yes' : 'No' == 'Yes' %>
+                                          <span class="badge bg-success-light text-success font-medium fn-14">Recommended</span>
+                                        <% end %>
+                                        <span class="font-medium">INR <%= campaign_slab.minimum_investment_amount %></span>
+                                    </button>
+                                </h2>
+                                <div id="slab<%=index%>" class="accordion-collapse collapse" aria-labelledby="heading<%=index%>"
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <strong>This is the third item's accordion body.</strong> It is hidden by
+                                        default.
+                                    </div>
+                                </div>
+                            </div>
+                            <% end %>
+                            <!--
+                            <div class="accordion-item border-0 border-bottom">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button collapsed d-flex justify-content-between px-0 ps-4"
+                                        type="button" data-bs-toggle="collapse" data-bs-target="#slabTwo"
+                                        aria-expanded="false" aria-controls="slabTwo">
+                                        Slab 2 <span class="font-medium">INR 10,000</span>
+                                    </button>
+                                </h2>
+                                <div id="slabTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <strong>This is the third item's accordion body.</strong> It is hidden by
+                                        default.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item border-0 border-bottom">
+                                <h2 class="accordion-header" id="headingThree">
+                                    <button class="accordion-button d-flex justify-content-between px-0 ps-4"
+                                        type="button" data-bs-toggle="collapse" data-bs-target="#slabThree"
+                                        aria-expanded="false" aria-controls="slabThree">
+                                        Slab 3 <span
+                                            class="badge bg-success-light text-success font-medium fn-14">Recommended</span><span
+                                            class="font-medium">INR 30,000</span>
+                                    </button>
+                                </h2>
+                                <div id="slabThree" class="accordion-collapse collapse show"
+                                    aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body row">
+                                        <div class="col-lg-1">
+                                            <i class="fa fa-user theme-fill fa-1x"></i>
+                                        </div>
+                                        <div class="col-lg-11">
+                                            <p class="fn-14 theme-txt-color font-medium mb-1">Number of Leads</p>
+                                            <p class="fn-14 theme-txt-color">200 Leads</p>
+                                        </div>
+                                        <div class="col-lg-1">
+                                            <i class="fa fa-sack-dollar theme-fill fa-1x"></i>
+                                        </div>
+                                        <div class="col-lg-11">
+                                            <p class="fn-14 theme-txt-color font-medium mb-1">Number of Leads</p>
+                                            <p class="fn-12 text-muted mb-1">Even if 5% of the leads get converted</p>
+                                            <p class="fn-14 theme-txt-color">Rs. 2,00,000</p>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <p class="fn-12 text-muted mb-1">This amount is exclusive oF 12% GST. T&C
+                                                apply*</p>
+                                            <button class="btn btn-primary font-medium fn-15 wd-100">Invest ₹
+                                                30,000</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item border-0">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button collapsed d-flex justify-content-between px-0 ps-4"
+                                        type="button" data-bs-toggle="collapse" data-bs-target="#slabfour"
+                                        aria-expanded="false" aria-controls="slabfour">
+                                        Slab 4 <span class="font-medium">INR 60,000</span>
+                                    </button>
+                                </h2>
+                                <div id="slabfour" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <strong>This is the third item's accordion body.</strong> It is hidden by
+                                        default.
+                                    </div>
+                                </div>
+                            </div>
+                            -->
+                        </div>
+
+                        <p class="p-2 border rounded mt-4 font-medium fn-14 text-center">Have any concerns about this
+                            campaign? <a href="javascript:;" class="primary">Get Help</a></p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

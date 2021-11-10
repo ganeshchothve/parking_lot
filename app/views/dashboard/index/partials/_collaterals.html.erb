@@ -1,81 +1,121 @@
-<section class="user-db-sec-5 device-pd">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
-        <div class="row">
-          <div class="box-card col-lg-12 col-md-12 col-sm-12 col-xs-12 collaterals">
-            <div class="box-header bg-gradient-cd br-rd-tr-4">
-              <h2><img src="<%= asset_path 'folder-white.svg' %>" alt="My Documents" class="wd-18">Collaterals</h2>
-              <%= link_to("View All", collaterals_admin_projects_path, class: 'view-all-btn modal-remote-form-link') %>
-            </div>
-            <div class="box-content br-rd-bl-4 bg-white">
-              <% Project.unscoped.nin(id: current_user.interested_projects.in(status: %w(subscribed approved)).pluck(:project_id)).each do |project| %>
-                <div class="card project-card">
-                  <% if project.logo.present? %>
-                    <img src="<%= project.logo_url %>" class="card-img-top" alt="<%= project.name %> Logo">
-                  <% end %>
-                  <div class="card-body">
-                    <h5 class="card-title"><%= project.name %></h5>
-                    <p class="card-text">
-                      <%= project.developer_name %><br/>
-                      <%= project.description %><br/>
-                      <%= project.configurations.to_sentence %><br/>
-                    </p>
-                    <% brochure = project.assets.where(document_type: 'brochure').first %>
-                    <% if brochure.present? %>
-                      <%= link_to 'Brochure', brochure.file.url, class: 'btn btn-secondary btn-sm', target: '_blank' %>
-                    <% end %>
-                    <% if project.website_link.present? %>
-                      <%= link_to 'Website', project.website_link, class: 'btn btn-secondary btn-sm', target: '_blank' %>
-                    <% end %>
-                    <%= link_to 'Subscribe', admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'btn btn-secondary btn-sm my-2' %>
+<div class="row">
+  <div class="col-lg-12 mt-1 mb-3">
+    <h2 class="sec-title float-start">Newly Launched</h2>
+    <%= link_to("View All", admin_projects_path, class: 'view-all-btn theme-txt-color float-end') %>
+  </div>
+  <% Project.unscoped.nin(id: current_user.interested_projects.in(status: %w(subscribed approved)).pluck(:project_id)).each_with_index do |project, index| %>
+  <div class="col-lg-4">
+    <div class="project-wrap br-rd-8 card-shadow mb-4">
+      <div class="project-list row">
+        <div class="project-img">
+          <div class="project-img-thumb" style="background-image:url(<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>)"></div>
+          <% if project.category.present? && project.category != 'completed' %>
+            <p class="img-tag bg-danger"><%= project.category&.titleize %></p>
+          <% end %>
+        </div>
+        <div class="project-info">
+          <div class="project-info-inner">
+            <h2 class="prjt-title"><%= link_to_if current_user.active_channel_partner?, project.name, admin_project_path(project), class: 'text-white' %></h2>
+            <p class="prjt-devlprs"><%= project.developer_name || '-' %></p>
+            <p class="prjt-location"><i
+                class="fa fa-map-marker-alt fill-white"></i><%= "#{project.micro_market.present? ? project.micro_market&.titleize + ', ': ''}#{project.city&.titleize}".presence || '-' %>
+            </p>
+          </div>
+          <div class="project-info-outer px-3">
+            <div class="row">
+              <div class="col-lg-12 pe-2 ps-3">
+                  <div id="projectDescCarousel_<%= index %>" class="projectDescCarousel carousel slide position-relative" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <h2 class="fn-14 font-medium theme-txt-color">Deal for you </h2>
+                            <div class="list-txt project-desc mb-0" title="<%= project.description&.html_safe rescue '' %>">
+                            <%= project.description&.html_safe %>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <h2 class="fn-14 font-medium theme-txt-color">Deal for Customers</h2>
+                            <div class="list-txt project-desc mb-0" title="<%= project.description&.html_safe %>">
+                            <%= project.description&.html_safe %>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev position-absolute top-0" type="button" data-bs-target="#projectDescCarousel_<%= index %>" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next position-absolute top-0 end-0" type="button" data-bs-target="#projectDescCarousel_<%= index %>" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
                   </div>
-                </div>
-              <% end %>
-
-              <% current_user.interested_projects.in(status: %w(subscribed approved)).each do |interested_project| %>
-                <% project = interested_project.project %>
-                <div class="card project-card">
-                  <% if project.logo.present? %>
-                    <img src="<%= project.logo_url %>" class="card-img-top" alt="<%= project.name %> Logo">
-                  <% end %>
-                  <div class="card-body">
-                    <h5 class="card-title"><%= project.name %></h5>
-                    <p class="card-text">
-                      <%= project.developer_name %><br/>
-                      <%= project.description %><br/>
-                      <%= project.configurations.to_sentence %><br/>
-                    </p>
-                    <% if policy([:admin, Lead.new(project_id: project.id)]).new? %>
-                      <%= link_to t('helpers.new.link_name', model: Lead.model_name.human), new_admin_lead_path(project_id: project.id), class: 'btn btn-primary btn-sm modal-remote-form-link' %>
-                    <% end %>
-                    <% brochure = project.assets.where(document_type: 'brochure').first %>
-                    <% if brochure.present? %>
-                      <%= link_to 'Brochure', brochure.file.url, class: 'btn btn-secondary btn-sm', target: '_blank' %>
-                    <% end %>
-                    <% if project.website_link.present? %>
-                      <%= link_to 'Website', project.website_link, class: 'btn btn-secondary btn-sm', target: '_blank' %>
-                    <% end %>
-                    <% sales_presentation = project.assets.where(document_type: 'sales_presentation').first %>
-                    <% if sales_presentation.present? %>
-                      <%= link_to 'Sales presentation', sales_presentation.file.url, class: 'btn btn-secondary btn-sm', target: '_blank' %>
-                    <% end %>
-                    <% if policy([:admin, project]).collaterals? %>
-                      <%= link_to 'Other Collateral', collaterals_admin_project_path(project), class: 'btn btn-secondary btn-sm modal-remote-form-link' %>
-                    <% end %>
-                    <% if interested_project.subscribed? %>
-                      <%= link_to 'Pending Approval', '#', class: 'btn btn-secondary btn-sm disabled my-2' %>
-                    <% elsif interested_project.approved? %>
-                      <%= link_to 'Subscribed', '#', class: 'btn btn-secondary btn-sm disabled my-2' %>
-                    <% end %>
-                  </div>
-                </div>
-              <% end %>
-              <br clear='all' />
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</section>
+  <% end %>
+</div>
+
+<% if current_user.interested_projects.in(status: %w(subscribed approved)).present? %>
+<div class="row mt-4 mb-5">
+  <div class="col-lg-12 mt-5 mb-3">
+    <h2 class="sec-title">Interested Projects</h2>
+  </div>
+  <% current_user.interested_projects.in(status: %w(subscribed approved)).each_with_index do |interested_project, index| %>
+  <% project = interested_project.project %>
+  <div class="col-lg-4">
+    <div class="project-wrap br-rd-8 card-shadow mb-4">
+      <div class="project-list row">
+        <div class="project-img">
+        <div class="project-img-thumb" style="background-image:url(<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>)"></div>
+          <% if project.category.present? && project.category != 'completed' %>
+            <p class="img-tag bg-danger"><%= project.category&.titleize %></p>
+          <% end %>
+        </div>
+        <div class="project-info">
+          <div class="project-info-inner">
+            <h2 class="prjt-title"><%= project.name %></h2>
+            <p class="prjt-devlprs"><%= project.developer_name || '-' %></p>
+            <p class="prjt-location"><i
+                class="fa fa-map-marker-alt fill-white"></i><%= "#{project.micro_market.present? ? project.micro_market&.titleize + ', ': ''}#{project.city&.titleize}".presence || '-' %>
+            </p>
+          </div>
+          <div class="project-info-outer px-3">
+            <div class="row">
+              <div class="col-lg-12 pe-2 ps-3">
+                <div id="projectDescCarouselIntrest_<%= index %>" class="projectDescCarousel carousel slide position-relative" data-bs-ride="carousel">
+                  <div class="carousel-inner">
+                      <div class="carousel-item active">
+                          <h2 class="fn-14 font-medium theme-txt-color">Deal for you </h2>
+                          <div class="list-txt project-desc mb-0" title="<%= project.description&.html_safe rescue '' %>">
+                          <%= project.description&.html_safe %>
+                          </div>
+                      </div>
+                      <div class="carousel-item">
+                          <h2 class="fn-14 font-medium theme-txt-color">Deal for Customers</h2>
+                          <div class="list-txt project-desc mb-0" title="<%= project.description&.html_safe rescue '' %>">
+                          <%= project.description&.html_safe %>
+                          </div>
+                      </div>
+                  </div>
+                  <button class="carousel-control-prev position-absolute top-0" type="button" data-bs-target="#projectDescCarouselIntrest_<%= index %>" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next position-absolute top-0 end-0" type="button" data-bs-target="#projectDescCarouselIntrest_<%= index %>" data-bs-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% end %>
+</div>
+<% end %>

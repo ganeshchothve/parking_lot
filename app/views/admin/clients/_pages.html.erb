@@ -1,24 +1,24 @@
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :terms_and_conditions, class: '' %>
   <%= f.text_area :terms_and_conditions, class: 'form-control summernote', disabled: !policy([:admin, @client]).editable_field?("terms_and_conditions") %>
 </div>
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :faqs, class: '' %>
   <%= f.text_area :faqs, class: 'form-control summernote', disabled: !policy([:admin, @client]).editable_field?("faqs") %>
 </div>
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :rera, class: '' %>
   <%= f.text_area :rera, class: 'form-control summernote', disabled: !policy([:admin, @client]).editable_field?("rera") %>
 </div>
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :tds_process, class: '' %>
   <%= f.text_area :tds_process, class: 'form-control summernote', disabled: !policy([:admin, @client]).editable_field?("tds_process") %>
 </div>
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :email_header, class: '' %>
   <%= f.text_area :email_header, rows: 10, class: 'form-control h-auto', disabled: !policy([:admin, @client]).editable_field?("email_header") %>
 </div>
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :email_footer, class: '' %>
   <%= f.text_area :email_footer, rows: 10, class: 'form-control h-auto', disabled: !policy([:admin, @client]).editable_field?("email_footer") %>
 </div>

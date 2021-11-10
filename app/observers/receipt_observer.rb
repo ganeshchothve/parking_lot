@@ -20,6 +20,28 @@ class ReceiptObserver < Mongoid::Observer
       receipt.manager_id = booking_detail.manager_id || receipt.lead.active_cp_lead_activities.first.try(:user_id)
     end
     receipt.manager_id = receipt.lead.active_cp_lead_activities.first.try(:user_id) if receipt.manager_id.blank?
+
+    # Create a Sitevisit if time slot is assigned to token
+    #
+    if receipt.time_slot_id_changed? && receipt.time_slot.present?
+      sv = SiteVisit.where(site_visit_type: 'token_slot', lead: receipt.lead, project: receipt.project, status: {'$in': %w(scheduled pending)}).first
+      sv ||= SiteVisit.new(
+        user: receipt.user,
+        lead: receipt.lead,
+        creator: receipt.user,
+        project: receipt.project,
+        site_visit_type: 'token_slot'
+      )
+
+      sv.time_slot = receipt.time_slot
+      sv.save
+
+      # push SV in sell.do
+      crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+      if crm_base.present?
+        api, api_log = sv.push_in_crm(crm_base)
+      end
+    end
   end
 
   def after_create receipt

@@ -258,7 +258,7 @@ section {
 }
 
 .cgreen {
-    color: #97B350;
+    color: #182C57;
 }
 
 .sz18 {
@@ -325,8 +325,8 @@ section {
 }
 
 .green-btn {
-    background-color: #97B350;
-    color: #fff;
+    background-color: #182C57;
+    color: #fff!important;
     position: relative;
     padding: 10px 20px !important;
     display: inline-block;
@@ -339,6 +339,12 @@ section {
     cursor: pointer;
     font-weight: 700;
     border-radius: 5px;
+}
+#channel_partner_form .sign-in-btn{
+    height: auto!important;
+    width: 230px!important;
+    display: block!important;
+    margin: 15px auto 0;
 }
 
 .enq-btn-wrapper {
@@ -452,7 +458,7 @@ section {
     color: #f00 !important;
 }
 
-.selldof .form-group.sell_do_ctc_input_c {
+.selldof .mb-3.sell_do_ctc_input_c {
     width: 180px !important;
 }
 
@@ -503,7 +509,52 @@ section {
 .selldof_row {
     margin-bottom: 8px;
 }
-
+#channel_partner_form label, #channel_partner_form legend{
+    color: #2E384D;
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0.33px;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 5px;
+}
+#channel_partner_form input[type=text],#channel_partner_form input[type=tel],#channel_partner_form input[type=email], #channel_partner_form select{
+    border: 1px solid #d0d0d0;
+    padding: 8px 8px;
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.10);
+    border-radius: 3px;
+    font-size: 13px;
+    height: 36px;
+    background-color: #fff;
+} 
+#channel_partner_form input.radio_buttons{
+    border-radius: 50%;
+} 
+.selectize-input {
+    padding: 0px 8px;
+}
+.selectize-control.multi .selectize-input.has-items {
+    padding: 0px 8px 0px;
+}
+#channel_partner_form .form-check label{
+    display: inline-block;
+    margin-left: 10px;
+}
+.cp-benefit-list{
+    height: 560px;
+    overflow: auto;
+}
+.form-check-input{
+    width: 22px!important;
+    height: 22px!important;
+    padding: 0!important;
+}
 header {
     -moz-transition: all 200ms ease-out;
     -webkit-transition: all 200ms ease-out;
@@ -519,7 +570,7 @@ header.shrink {
 
 header .container {
     position: relative;
-    padding: 20px 20px;
+    padding: 20px 20px 12px;
 }
 
 header .brand-logo {
@@ -700,6 +751,7 @@ footer p {
     letter-spacing: 2.53px;
     position: relative;
     padding-bottom: 20px;
+    color: #0EB8B7;
 }
 
 .new-line-4:before {
@@ -729,9 +781,9 @@ footer p {
     margin: 5% auto;
 }
 
-.home-banner-btn {
+.home-banner-btn, .home-banner-btn:hover {
     display: inline-block;
-    background-color: #F25A29;
+    background-color: #0EB8B7;
     font-weight: 500;
     color: #fff;
     padding: 10px 20px;
@@ -739,6 +791,7 @@ footer p {
     font-size: 28px;
     letter-spacing: 1.42px;
     cursor: pointer;
+    margin-top: 40px;
 }
 
 /*.animpins{-webkit-animation:pinsAnim ease-in 1;-moz-animation:pinsAnim ease-in 1;animation:pinsAnim ease-in 1;-webkit-animation-fill-mode:forwards;-moz-animation-fill-mode:forwards;animation-fill-mode:forwards;-webkit-animation-duration:2s;-moz-animation-duration:2s;animation-duration:2s;}*/
@@ -940,11 +993,12 @@ footer p {
 }
 
 .exclusive-features-section {
-    background-color: #97B350;
+    background-color: #182C57;
 }
 
 .exclusive-features-section .section-heading {
     margin: 0px 0px 8px;
+    color: #fff;
 }
 
 .exclusive-features-item {
@@ -969,7 +1023,7 @@ footer p {
 }
 
 .exclusive-features-last-item {
-    background-color: #172341;
+    background-color: #0EB8B7;
     color: #fff;
     text-transform: uppercase;
     font-weight: 600;
@@ -1045,7 +1099,7 @@ footer p {
 }
 
 .presented-by-amura-items-inner {
-    border-bottom: 7px solid rgba(151, 179, 80, 0.2)
+    border-bottom: 7px solid rgba(24, 44, 87, 0.2)
 }
 
 .presented-by-amura-items-desc {
@@ -1053,7 +1107,7 @@ footer p {
 }
 
 .presented-by-amura-items-image {
-    background-color: #97B350;
+    background-color: #182C57;
     height: 94px;
     width: 94px;
     border-radius: 100%;
@@ -1156,7 +1210,9 @@ footer p {
     font-weight: 800;
     color: #172341;
 }
-
+.existingnew-projects-section{
+    /* padding: 70px 0 0; */
+}
 .existingnew-projects-section .sub-heading,
 .upcoming-projects-section .sub-heading {
     font-weight: 700;
@@ -1169,7 +1225,7 @@ footer p {
 
 .existingnew-projects-items-wrapper {
     width: 80%;
-    margin: auto;
+    margin: 0 auto 50px;
 }
 
 .existingnew-projects-item-inner {
@@ -1182,6 +1238,9 @@ footer p {
     flex-direction: column;
     border-radius: 12px;
     box-shadow: 0px 0px 9px #ccc;
+}
+.existingnew-btn{
+    width: 242px;
 }
 
 .webinar-image-inner {
@@ -1275,9 +1334,9 @@ footer p {
 #popup,
 #popup2,
 #popup3 {
-    max-width: 600px;
-    width: 80%;
-    padding: 28px;
+    /* max-width: 600px; */
+    width: 75%;
+    padding: 0px;
     position: absolute;
     background: #fff;
     margin: auto;
@@ -1286,7 +1345,6 @@ footer p {
     top: 10%;
     z-index: 99;
 }
-
 #close,
 #close2,
 #close3 {
@@ -1436,7 +1494,6 @@ footer p {
 }
 .property-item-details {
     padding: 20px 20px;
-    height: 260px;
 }
 
 .property-name {
@@ -1446,12 +1503,10 @@ footer p {
 
 .property-configuration {
     font-weight: 600;
-    height: 50px;
     margin-bottom: 8px;
 }
 
 .property-location {
-    height: 50px;
     margin-bottom: 8px;
 }
 
@@ -1653,6 +1708,7 @@ footer p {
 .contact-us a{
     color: #333333;
 }
+
 .privacy-policy-sec{
     padding-top: 120px;
 }
@@ -1670,6 +1726,7 @@ footer p {
 .privacy-policy-sec ul li ul li{
     list-style: square;
 }
+                   
 @media only screen and (min-width:1440px) and (max-width:1920px) {}
 
 /*@media only screen and (min-width:1024px) and (max-width:1365px){  
@@ -2382,15 +2439,10 @@ footer p {
     }
 
     .existing-projects-head-left h3,
-    .newprojects-head-left h3 {
-        text-align: center;
-    }
-
+    .newprojects-head-left h3,
+    .property-btn-wrapper,
+    .presenting-launchpad-section,
     .existing-projects-section h2 {
-        text-align: center;
-    }
-
-    .property-btn-wrapper {
         text-align: center;
     }
 
@@ -2405,6 +2457,7 @@ footer p {
 
     .existingnew-projects-items-wrapper {
         width: 100%;
+        margin: 0 auto 20px;
     }
 
     .existingnew-projects-item-inner {
@@ -2417,6 +2470,20 @@ footer p {
 
     .projects-number {
         font-size: 59px;
+    }
+    .site-visit-wrapper .row{
+        --bs-gutter-x: 0rem;
+    }
+    .cp-signup-features{
+        width: 95%;
+        margin: auto;
+    }
+    .cp-benefit-list{
+        height: 100%;
+    }
+    .cp-signup-sec .cp-signup-form-wrap {
+        width: 90%;
+        margin: auto;
     }
 }
 

@@ -1,18 +1,28 @@
-<section class="mb-5">
-  <div class="container">
+<section class="mb-5 mt-3">
+  <div class="px-4">
     <div class="row">
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+      <!--<div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-title pt-1">
           <h1 class="title icon-set icon-users-black icon-bs-15 t-2">
             <%= User.model_name.human(count: @users.total_entries) %>
-          </h1>
+          </h1> 
+          
         </div>
-      </div>
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
-        <div class="table-btn-set float-right pb-3">
-          <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @users.total_entries %></button>
-          <div class="new-menu display-initial" >
-            <button class="db-small-btn white light-blue bg-white fn-400 dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= t('controller.users.new.link_name', role: 'User') %></button>
+      </div>-->
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="table-btn-set float-right pb-1 text-end mt-2">
+          <!--
+          <div class="filter-search">
+            <input type="text" name="" placeholder="Search Name/Email/Phone">
+          </div>
+          -->
+          <div class="filter-popup">
+            <a class="db-filter-btn fn-500" href="javascript:;">
+              <i class="fa fa-filter fill-theme"></i>
+            </a>
+          </div>
+          <div class="new-menu display-initial d-inline me-2 ms-1" >
+            <button class="select-btn fn-400 dropdown-toggle px-3 border rounded py-2" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= t('controller.users.new.link_name', role: 'User') %></button>
             <div class="dropdown-menu">
               <% User.available_roles(current_client).each do |role| %>
                 <% if policy([:admin, User.new(role: role)]).new? %>
@@ -23,17 +33,14 @@
           </div>
 
           <% if policy([:admin, User.new]).export? %>
-            <div class="export-menu display-initial">
-              <button class="db-small-btn light-blue bg-white fn-400 dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <%= t('controller.users.exports.link_name', name: nil) %> </button>
+            <div class="export-menu display-initial d-inline">
+              <button class="select-btn fn-400 dropdown-toggle  px-3 border rounded py-2" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <%= t('controller.users.exports.link_name', name: nil) %> </button>
               <div class="dropdown-menu dropdown-menu-right">
                 <%= link_to t('controller.users.exports.link_name', name: t('global.all')), export_admin_users_path, class: 'dropdown-item' %>
                 <%= link_to t('controller.users.exports.link_name', name: t('global.active_filter')), export_admin_users_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
               </div>
             </div>
           <% end %>
-          <button class="db-filter-btn white fn-500" type="button">
-            <i class="icon-set icon-filter-light-blue"></i>
-          </button>
         </div>
       </div>
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">

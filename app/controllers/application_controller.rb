@@ -176,11 +176,9 @@ class ApplicationController < ActionController::Base
             <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
               <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
-                  <div class="modal-header bg-gradient-cd white">
+                  <div class="modal-header">
                     <h3 class="title">' + params[:controller].titleize + '</h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true" class="white">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">' + alert + '</div>
                   <div class="modal-footer"></div>

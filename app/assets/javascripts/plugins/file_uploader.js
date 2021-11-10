@@ -22,15 +22,17 @@
             <div class="upload-completed-message hidden">Upload completed</div>\
             <div class="asset-actions ">\
               <a href="' + record.url + '" target="_blank" title="Download" class="asset-download" download=""><i class="fa fa-download"></i></a>\
+              <a href="" title="Delete" class="asset-delete"><i class="fa fa-times"></i></a>\
             </div>\
             <div class="asset-name" title="' + file_name + '">' + file_name + '</div>\
           '+ (options.progress_bar ? progress_bar : '')+ '</div>'
   };
   $.fn.fileUploader = function(options){
     var label = this.data("label") || "Upload";
+    var url = this.data("url");
     this.closest(".fileinput-button").prepend('<span>' + label + '</span>');
     this.fileupload({
-      url: this.data("url"),
+      url: url,
       dataType: 'json',
       add: function (e, data) {
         $.blockUI();
@@ -75,6 +77,8 @@
           $container.find(".progress").remove();
           $container.find('.upload-completed-message').removeClass('hidden');
           $container.find(".asset-download").attr("href", data.result.url);
+          $container.find(".asset-delete").attr("href", Amura.removeParamFromURL(url, 'locale') + '/' + data.result.id);
+          FileIcon.init($container.find(".asset-delete"), $container.find(".asset-icon"));
           setTimeout(function(){
             $container.find('.upload-completed-message').addClass('hidden');
             $container.find(".asset-inner").removeClass("asset-blur");

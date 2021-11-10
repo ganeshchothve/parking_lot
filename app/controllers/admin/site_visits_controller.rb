@@ -3,6 +3,7 @@ class Admin::SiteVisitsController < AdminController
   before_action :set_lead, except: %w[index show sync_with_selldo]
   before_action :set_site_visit, only: %w[edit update show sync_with_selldo]
   before_action :set_crm_base, only: %w[create sync_with_selldo]
+  around_action :user_time_zone, if: :current_user
 
   #
   # This index action for Admin users where Admin can view all site_visits.
@@ -41,12 +42,8 @@ class Admin::SiteVisitsController < AdminController
     @site_visit = SiteVisit.new(user: @lead.user, lead: @lead, creator: current_user, project: @lead.project)
     @site_visit.assign_attributes(permitted_attributes([:admin, @site_visit]))
 
-    selldo_api = Crm::Api::Post.where(resource_class: 'SiteVisit', base_id: @crm_base.id, is_active: true).first if @crm_base.present?
+    selldo_api, api_log = @site_visit.push_in_crm(@crm_base) if @crm_base.present?
 
-    if @site_visit.valid? && selldo_api.present?
-      selldo_api.execute(@site_visit)
-      api_log = ApiLog.where(resource_id: @site_visit.id).first
-    end
     respond_to do |format|
       if selldo_api.blank? || (api_log.present? && api_log.status == 'Success')
         if @site_visit.save
@@ -122,6 +119,10 @@ class Admin::SiteVisitsController < AdminController
   end
 
   private
+
+  def user_time_zone
+    Time.use_zone(current_user.time_zone) { yield }
+  end
 
   def set_crm_base
     @crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first

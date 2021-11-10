@@ -1,9 +1,7 @@
-<div class="col-lg-4 col-xs-12 col-sm-12 col-md-6">
-  <div class="active step-result">
-    <i class="icon icon-1"></i>
-    <span>Search</span>
-    <% if @customer_search.crossed_step("search") %>
-      <%= link_to "Change", new_admin_customer_search_path, class: "small position-absolute", style: "right:10px; top:0;" %>
-    <% end %>
-  </div>
-</div>
+<p class="fn-16 theme-txt-color mb-0"><i class="fa fa-check-circle me-2 fill-success"></i>
+  <% if @customer_search.crossed_step("search") %>
+  <%= link_to "Search", new_admin_customer_search_path, class: "theme-txt-color" %>
+  <% else %>
+  Search
+  <% end %>
+</p>

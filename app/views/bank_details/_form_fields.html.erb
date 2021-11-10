@@ -35,15 +35,15 @@
 <div class="row">
   <div class="col-md-6">
     <% if f.object.bankable_type == "UserKyc" %>
-      <div class="form-group">
-        <%= f.label :loan_required %><br/>
+      <div class="mb-3">
+        <%= f.label :loan_required %>
         <div class="form-check form-check-inline">
-          <%= f.radio_button :loan_required, true, class: "form-check-input" %>
-          <%= f.label :loan_required, "Yes", class: "form-check-label" %>
+          <%= f.radio_button :loan_required, true, class: "form-check-input wd-22" %>
+          <%= f.label :loan_required, "Yes", class: "form-check-label d-inline-block ms-2" %>
         </div>
         <div class="form-check form-check-inline">
-          <%= f.radio_button :loan_required, false, class: "form-check-input" %>
-          <%= f.label :loan_required, "No", class: "form-check-label" %>
+          <%= f.radio_button :loan_required, false, class: "form-check-input wd-22" %>
+          <%= f.label :loan_required, "No", class: "form-check-label d-inline-block ms-2" %>
         </div>
       </div>
     <% end %>

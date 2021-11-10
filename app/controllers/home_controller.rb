@@ -12,6 +12,11 @@ class HomeController < ApplicationController
     render layout: 'welcome'
   end
 
+  def signed_up
+    @user = User.where(id: params[:user_id]).first
+    render layout: 'devise'
+  end
+
   def privacy_policy
     @channel_partner = ChannelPartner.new
     render layout: 'landing_page'
@@ -36,7 +41,7 @@ class HomeController < ApplicationController
         if request.method == 'POST'
           current_user.selected_lead_id = params[:selected_lead_id]
           lead = Lead.where(id: params[:selected_lead_id]).first
-          current_user.selected_project_id = lead.project if lead
+          current_user.selected_project_id = lead.project_id if lead
           current_user.save
           redirect_to home_path(current_user)
         else
@@ -69,6 +74,7 @@ class HomeController < ApplicationController
       flash[:notice] = "You have already been logged in"
     else
       store_cookies_for_registration
+      @lead = Lead.new
       render layout: "devise"
     end
   end
@@ -81,7 +87,7 @@ class HomeController < ApplicationController
       respond_to do |format|
         if @lead.present?
           if current_client.enable_lead_conflicts?
-            CpLeadActivityRegister.create_cp_lead_object(@lead, current_user, params[:lead_details]) if current_user.role?("channel_partner")
+            CpLeadActivityRegister.create_cp_lead_object(@lead, current_user, params[:lead_details]) if current_user&.role?("channel_partner")
             format.json { render json: {lead: @lead, success: "Lead created successfully"}, status: :created }
           else
             format.json { render json: {errors: "Lead already exists"}, status: :unprocessable_entity }
@@ -108,9 +114,9 @@ class HomeController < ApplicationController
                 params[:lead_details] = resp['selldo_lead_details']
                 #
                 # Don't create lead if it exists in sell.do when lead conflicts is disabled.
-                unless current_client.enable_lead_conflicts?
-                  format.json { render json: {errors: "Lead already exists"}, status: :unprocessable_entity and return } if params.dig(:lead_details, :lead_already_exists).present?
-                end
+                #unless current_client.enable_lead_conflicts?
+                #  render json: {errors: "Lead already exists"}, status: :unprocessable_entity and return if params.dig(:lead_details, :lead_already_exists).present?
+                #end
               end
             end
 
@@ -118,7 +124,7 @@ class HomeController < ApplicationController
               if @user.save && (selldo_config_base.blank? || @project.save)
                 @lead.assign_attributes(selldo_lead_registration_date: params.dig(:lead_details, :lead_created_at))
 
-                if current_user.role?("channel_partner")
+                if current_user&.role?("channel_partner")
                   cp_lead_activity = CpLeadActivityRegister.create_cp_lead_object(@lead, current_user, (params[:lead_details] || {}))
                 elsif params[:manager_id].present?
                   cp_user = User.all.channel_partner.where(id: params[:manager_id]).first

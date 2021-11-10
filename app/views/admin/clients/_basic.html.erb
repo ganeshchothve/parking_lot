@@ -1,60 +1,61 @@
 <div class="row">
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :name, class: 'label-required' %>
       <%= f.text_field :name, class: 'form-control', autofocus: true, required: 'required', disabled: (policy([:admin, @client]).editable_field?("name") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :registration_name, class: 'label-required' %>
       <%= f.text_field :registration_name, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("registration_name") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :email_domains, class: 'label-required' %>
       <%= f.select :email_domains, @client.email_domains, {}, class: 'selectize-tags domain', multiple: true, required: 'required', disabled: (policy([:admin, @client]).editable_field?("email_domains") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :cin_number, class: 'label-required' %>
       <%= f.text_field :cin_number, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("cin_number") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :disclaimer %>
       <%= f.text_area :disclaimer, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("disclaimer") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :cp_disclaimer %>
       <%= f.text_area :cp_disclaimer, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("cp_disclaimer") ? false : true) %>
+      <%= f.label :cp_disclaimer_sort, class: 'txt-light-blue font-normal' %>
     </div>
   </div>
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :website_link, class: 'label-required' %>
       <%= f.url_field :website_link, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("website_link") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :preferred_login, class: 'label-required' %>
       <%= f.select :preferred_login, Client.available_preferred_logins.collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize', required: 'required', disabled: (policy([:admin, @client]).editable_field?("preferred_login") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :lead_blocking_days %>
       <%= f.number_field :lead_blocking_days, class: 'form-control', disabled: !(policy([:admin, @client]).editable_field?("lead_blocking_days")) %>
     </div>
   </div>
   <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :invoice_approval_tat %>
       <%= f.number_field :invoice_approval_tat, class: 'form-control', disabled: !(policy([:admin, @client]).editable_field?("invoice_approval_tat")) %>
     </div>
@@ -63,15 +64,15 @@
 <div class="row">
   <div class="col-md-6">
     <% if policy(@client).editable_field?("enable_lead_conflicts") %>
-    <div class="form-group">
-      <%= f.label :enable_lead_conflicts %><br/>
+    <div class="mb-3">
+      <%= f.label :enable_lead_conflicts %>
       <div class="form-check form-check-inline">
-        <%= f.radio_button :enable_lead_conflicts, true, class: "form-check-input" %>
-        <%= f.label :enable_lead_conflicts, "Yes", class: "form-check-label" %>
+        <%= f.radio_button :enable_lead_conflicts, true, class: "form-check-input wd-22" %>
+        <%= f.label :enable_lead_conflicts, "Yes", class: "form-check-label d-inline-block ms-2" %>
       </div>
       <div class="form-check form-check-inline">
-        <%= f.radio_button :enable_lead_conflicts, false, class: "form-check-input" %>
-        <%= f.label :enable_lead_conflicts, "No", class: "form-check-label" %>
+        <%= f.radio_button :enable_lead_conflicts, false, class: "form-check-input wd-22" %>
+        <%= f.label :enable_lead_conflicts, "No", class: "form-check-label d-inline-block ms-2" %>
       </div>
     </div>
     <% end %>
@@ -79,15 +80,15 @@
 
   <div class="col-md-6">
     <% if policy(@client).editable_field?("enable_direct_activation_for_cp") %>
-    <div class="form-group">
-      <%= f.label :enable_direct_activation_for_cp, t('helpers.edit.direct_activation_for_cp_label', model: Client.model_name.human) %><br/>
+    <div class="mb-3">
+      <%= f.label :enable_direct_activation_for_cp, t('helpers.edit.direct_activation_for_cp_label', model: Client.model_name.human) %>
       <div class="form-check form-check-inline">
-        <%= f.radio_button :enable_direct_activation_for_cp, true, class: "form-check-input" %>
-        <%= f.label :enable_direct_activation_for_cp, "Yes", class: "form-check-label" %>
+        <%= f.radio_button :enable_direct_activation_for_cp, true, class: "form-check-input wd-22" %>
+        <%= f.label :enable_direct_activation_for_cp, "Yes", class: "form-check-label d-inline-block ms-2" %>
       </div>
       <div class="form-check form-check-inline">
-        <%= f.radio_button :enable_direct_activation_for_cp, false, class: "form-check-input" %>
-        <%= f.label :enable_direct_activation_for_cp, "No", class: "form-check-label" %>
+        <%= f.radio_button :enable_direct_activation_for_cp, false, class: "form-check-input wd-22" %>
+        <%= f.label :enable_direct_activation_for_cp, "No", class: "form-check-label d-inline-block ms-2" %>
       </div>
     </div>
     <% end %>
@@ -96,15 +97,23 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :roles_taking_registrations %>
       <%= f.select :roles_taking_registrations, filter_admin_role_options, {}, class: 'selectize', multiple: true, required: 'required', disabled: !(policy([current_user_role_group, f.object]).editable_field?("roles_taking_registrations")) %>
     </div>
   </div>
   <div class="col-md-12">
-    <div class="form-group">
+    <div class="mb-3">
       <%= f.label :enable_incentive_module %>
       <%= f.select :enable_incentive_module, filter_admin_role_options, {}, class: 'selectize', multiple: true, disabled: !(policy([current_user_role_group, f.object]).editable_field?("enable_incentive_module")) %>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :powered_by_link, class: 'label-required' %>
+      <%= f.url_field :powered_by_link, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("powered_by_link") ? false : true) %>
     </div>
   </div>
 </div>

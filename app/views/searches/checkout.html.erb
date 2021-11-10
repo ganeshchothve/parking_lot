@@ -1,31 +1,31 @@
 <section class="checkout-sec my-4 mb-5">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 bg-white br-rd-4 br-1 mb-5">
-        <div class="row mb-5">
-          <div class="col-lg-4 col-xs-12 col-sm-12 col-md-12 pt-3">
-            <div class="left-info bg-gradient br-rd-4">
+  <div class="px-3">
+    <div class="">
+      <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 bg-white border rounded">
+        <div class="row">
+          <div class="col-lg-4 col-xs-12 col-sm-12 col-md-12 pt-3 ps-4">
+            <div class="left-info bg-primary br-rd-4 p-4 text-center">
               <% template = ::Template::UITemplate.where(name: 'searches/checkout').first %>
               <% if template.present? %>
                 <%= get_view_erb(template) %>
               <% end %>
-              <div class="payment-timer jquery-countdown-container white" id="held-until-countdown"></div>
+              <div class="payment-timer jquery-countdown-container white fs-1 font-medium" id="held-until-countdown"></div>
             </div>
-            <div class="form-sec-title pl-0"><%= Scheme.model_name.human %></div>
+            <div class="form-sec-title pl-0 fn-24 py-3"><%= Scheme.model_name.human %></div>
             <%= nested_form_for([ current_user_role_group, @booking_detail, @booking_detail_scheme], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['schemes'], "data-type": "json", id: 'scheme_form'}) do |f| %>
                 <%= render 'booking_detail_schemes/form', booking_detail_scheme: @booking_detail_scheme, booking_detail: @booking_detail, f: f %>
-                <%= f.submit "Apply", class: "save-kyc-btn fn-12 fn-300" %>
+                <%= f.submit "Apply", class: "save-kyc-btn fn-12 fn-300 bg-primary border-primary white rounded p-1 px-3 shadow-none" %>
               <% end %>
           </div>
-          <div class="col-lg-8 col-xs-12 col-sm-12 col-md-12 br-l-1 px-0 pb-3">
-            <div class="right-info">
-              <div class="checkout-menu-list">
-                <a rel="apartment" class="scroll-sec active"><%= ProjectUnit.model_name.human %></a>
-                <a rel="cost-sheet" class="scroll-sec"> <%= t('mongoid.attributes.project_unit.cost_sheet')%></a>
-                <a rel="payment-schedule" class="scroll-sec"><%= t('mongoid.attributes.project_unit.payment_schedule')%></a>
+          <div class="col-lg-8 col-xs-12 col-sm-12 col-md-12 br-l-1 px-0">
+            <div class="right-info border-start pb-4">
+              <div class="checkout-menu-list ps-3 py-3 border-bottom">
+                <a rel="apartment" class="scroll-sec active fn-16 p-2 display-inline-block theme-txt-color"><%= ProjectUnit.model_name.human %></a>
+                <a rel="cost-sheet" class="scroll-sec fn-16 p-2 display-inline-block theme-txt-color"> <%= t('mongoid.attributes.project_unit.cost_sheet')%></a>
+                <a rel="payment-schedule" class="scroll-sec fn-16 p-2 display-inline-block theme-txt-color"><%= t('mongoid.attributes.project_unit.payment_schedule')%></a>
               </div>
-              <div class="bookings mt-4 pl-4 pr-4 scroll-fixed-height">
-                <div class="container">
+              <div class="bookings scroll-fixed-height">
+                <div class="px-3">
                   <div class="row">
                     <div class='col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd mt-4' id='apartment'>
                       <%= render 'booking_details/details', booking_detail: @booking_detail %>
@@ -40,28 +40,32 @@
                       alert = (current_client.cancellation_amount.present? && current_client.cancellation_amount.to_f > 0) ? "#{number_to_indian_currency(current_client.cancellation_amount)} processing charges will be applied on cancellation of booking" : ""
                     %>
                     <% if current_client.disclaimer.present? %>
-                      <div class="card card-body small" style="height: 100px; overflow: auto;">
+                    <div class="col-lg-12">
+                      <div class="card card-body small pb-0" style="height: 100px; overflow: auto;">
                         <div class="font-weight-bold mb-2">Disclaimer:</div>
                         <%= current_client.disclaimer %>
+                      </div>
                       </div>
                       <div class="mt-3"></div>
                     <% end %>
                     <% if @booking_detail_scheme.present? && @booking_detail_scheme.editable_payment_adjustments_present? %>
+                    <div class="col-lg-12">
                       <div class="alert alert-danger">
                         As the payment is adjusted, this scheme will go for approval first.
                       </div>
+                      </div>
                     <% end %>
                     <% if @project_unit.status == "hold" %>
-                      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd mt-4 agree-check">
+                      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd mt-2 agree-check">
                         <% if current_user.buyer? %>
                           <%= link_to "I Agree", booking_buyer_booking_detail_path(@booking_detail), method: :patch, class: 'btn submit-payemnt-btn fn-12 fn-500', style:'margin-top:0px', onclick: alert %>
                         <% elsif @lead.unattached_blocking_receipt(@project_unit.blocking_amount).present? %>
-                          <%= link_to "I Agree on behalf of #{@lead.name}", booking_admin_lead_booking_detail_path(@lead,@booking_detail), method: :patch, class: 'btn submit-payemnt-btn fn-12 fn-500', style:'margin-top:0px', onclick: alert %>
+                          <%= link_to "I Agree on behalf of #{@lead.name}", booking_admin_lead_booking_detail_path(@lead,@booking_detail), method: :patch, class: 'btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block', style:'margin-top:0px', onclick: alert %>
                         <% elsif policy([ current_user_role_group, Receipt.new(user: @lead.user, lead: @lead, status: "clearance_pending", booking_detail_id: @booking_detail.id)]).new? %>
                           <%= link_to "I Agree on behalf of #{@lead.name} and proceed to add
-                          payment",new_admin_lead_booking_detail_receipt_path(@lead.id, @booking_detail.id) , class: 'btn submit-payemnt-btn fn-12 fn-500 modal-remote-form-link', style:'margin-top:0px', onclick: alert %>
+                          payment",new_admin_lead_booking_detail_receipt_path(@lead.id, @booking_detail.id) , class: 'btn submit-payemnt-btn fn-12 fn-500 modal-remote-form-link btn-primary d-inline-block', style:'margin-top:0px', onclick: alert %>
                           <% if @booking_detail_scheme.present? && @booking_detail_scheme.editable_payment_adjustments_present? %>
-                            <%= link_to "Proceed without payment", send_under_negotiation_admin_lead_booking_detail_path(@lead.id, @booking_detail.id), class: 'btn submit-payemnt-btn fn-12 fn-500', style:'margin-top:0px', onclick: alert, method: :patch %>
+                            <%= link_to "Proceed without payment", send_under_negotiation_admin_lead_booking_detail_path(@lead.id, @booking_detail.id), class: 'btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block', style:'margin-top:0px', onclick: alert, method: :patch %>
                           <% end %>
                         <% else %>
                           <div class="alert alert-danger">
@@ -71,9 +75,9 @@
                         <%# if policy([current_user_role_group, @lead]).send_payment_link? %>
                           <%#= link_to 'Send Payment link', send_payment_link_admin_lead_path(@lead), class: "btn submit-payemnt-btn fn-12 fn-500" %>
                         <%# end %>
-                        <%= form_for @project_unit, url: make_available_lead_search_path(@search), method: 'post', html: {class: 'validate-form float-left'} do |f| %>
+                        <%= form_for @project_unit, url: make_available_lead_search_path(@search), method: 'post', html: {class: 'validate-form float-start d-inline-block'} do |f| %>
                           <%= f.hidden_field :status, value: 'available' %>
-                          <%= f.submit 'Cancel', class: 'btn cancel-btn fn-12 fn-500' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'} %>
+                          <%= f.submit 'Cancel', class: 'btn cancel-btn fn-12 fn-500 border me-2' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'} %>
                         <% end %>
                       </div>
                     <% end %>

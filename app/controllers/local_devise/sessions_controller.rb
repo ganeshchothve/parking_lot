@@ -42,7 +42,7 @@ class LocalDevise::SessionsController < Devise::SessionsController
           Rails.logger.info "---------------- #{resource.otp_code} ----------------"
         end
         if otp_sent_status[:status]
-          format.json { render json: {confirmed: resource.confirmed?, errors: ""}, status: 200 }
+          format.json { render json: {confirmed: resource.confirmed?, phone: resource.phone, errors: ""}, status: 200 }
         else
           format.json { render json: {errors: otp_sent_status[:error]}, status: 422 }
         end

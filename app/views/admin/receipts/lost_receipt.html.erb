@@ -1,28 +1,26 @@
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header bg-gradient-cd white">
+      <div class="modal-header">
         <h3 class="title"> Lost Receipt Details </h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" class="white">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body theme-form">
           <%= form_for [:admin, @lead, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.receipt'), type: :json} } do |f| %>
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :payment_mode, class: 'label-required' %>
                 <%= f.select :payment_mode, ['online'], {prompt: true, selected: @receipt.payment_mode}, class: 'selectize', required: 'required', autofocus: true, disabled: !policy([:admin, @receipt]).editable_field?("payment_mode") %>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :payment_identifier, class: 'label-required' %>
               <%= f.text_field :payment_identifier, class: 'form-control', required: 'required', disabled: !policy([:admin, @receipt]).editable_field?("payment_identifier") %>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :account, class: 'label-required' %>
 
                 <%= f.select :account_number ,Account.all.collect{|x| [ x.account_number, x.id]} , {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :total_amount, class: 'label-required' %>
               <% if !policy([:admin, @receipt]).editable_field?("total_amount") %>
                 <% total_amount = @receipt.total_amount if @receipt.total_amount.present? %>
@@ -32,14 +30,14 @@
                 <%= f.number_field :total_amount, min: 0, class: "form-field form-control green", required: 'required' %>
               <% end %>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :status, class: 'control-label' %>
               <%
                 statuses = ["pending"]
               %>
               <%= f.select :event, options_for_select(statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, @receipt.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @receipt]).editable_field?("event") %>
             </div>
-            <div class="form-group">
+            <div class="mb-3 text-end modal-footer">
               <%= f.submit "Save", class: 'btn btn-primary' %>
             </div>
           <% end %>

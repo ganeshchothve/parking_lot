@@ -1,19 +1,18 @@
-<div class="container mb-5">
-  <div class="row justify-content-center">
-    <div class="col-md-12">
-      <div class="card">
-        <div class="card-body">
-          <div class="row mb-3">
-            <div class="col-md-7">
-              <% if policy([current_user_role_group, Developer.new]).new? %>
+<div class="mb-5 mt-3">
+  <div class="px-4">
+    <div class="row justify-content-center">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <% if policy([current_user_role_group, Developer.new]).new? %>
                 <%= link_to "Add #{global_labels['developer']}", new_admin_developer_path, class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add Event'} %>
-              <% end %>
+                <% end %>
+              </div>
             </div>
-            <div class="col-md-5 text-md-right">
-              <h6 class="mt-2">Total <%= global_labels[:developers] %>: <%= @developers.total_entries %></h6>
-            </div>
+            <%= render 'index', {developers: @developers} %>
           </div>
-          <%= render 'index', {developers: @developers} %>
         </div>
       </div>
     </div>

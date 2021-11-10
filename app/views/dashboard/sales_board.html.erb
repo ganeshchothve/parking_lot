@@ -1,0 +1,14 @@
+<div class="box-card relative">
+  <div class="row">
+    <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 sales-team-list-wrapper">
+      <div class="sales-team-inner" id='sales-users-list'>
+        <%= render 'dashboard/index/partials/list_sales_users', users: @users %>
+      </div>
+    </div>
+  </div>
+</div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    setTimeout(function(){ location.reload(); }, 120000);
+  });
+<% end %>

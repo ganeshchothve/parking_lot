@@ -1,17 +1,17 @@
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
   <div class="table-title pt-4">
-    <h1 class="title icon-set icon-building-black">Project Wise Incentive Deduction Summary</h1>
+    <h1 class="title fn-18 theme-txt-color">Project Wise Incentive Deduction Summary</h1>
   </div>
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
   <div class="box-card relative table-responsive" id="dashboard_project_wise_incentive_deduction_summary">
-    <table class="table my-customer-table responsive-tbl mb-0">
+    <table class="table my-customer-table responsive-tbl mb-0 align-middle border rounded">
       <thead class="th-default">
-        <tr class="bg-gradient-cd white">
-          <th rowspan='2' class='th-border-right'><%= Project.model_name.human %></th>
+        <tr class="bg-primary white">
+          <th rowspan='2' class='text-center border-end th-border-right align-middle'><%= Project.model_name.human %></th>
           <th colspan='4' class='text-center'>No. of <%= IncentiveDeduction.model_name.human(count:2) %></th>
         </tr>
-        <tr class="bg-gradient-cd white text-center">
+        <tr class="bg-primary white text-center">
           <th><%= t('mongoid.attributes.incentive_deduction/status.draft') %></th>
           <th><%= t('mongoid.attributes.incentive_deduction/status.pending_approval') %></th>
           <th><%= t('mongoid.attributes.incentive_deduction/status.approved') %></th>
@@ -42,13 +42,13 @@
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-4 no-pd">
   <div class="box-card relative table-responsive" id="dashboard_project_wise_invoice_summary">
-    <table class="table my-customer-table responsive-tbl mb-0">
+    <table class="table my-customer-table responsive-tbl mb-0 border rounded">
       <thead class="th-default">
-        <tr class="bg-gradient-cd white">
-          <th rowspan='2' class='th-border-right'><%= Project.model_name.human %></th>
+        <tr class="bg-primary white">
+          <th rowspan='2' class='text-center border-end th-border-right align-middle'><%= Project.model_name.human %></th>
           <th colspan='4' class='text-center'>Total <%= t('mongoid.attributes.incentive_deduction.amount') %></th>
         </tr>
-        <tr class="bg-gradient-cd white text-center">
+        <tr class="bg-primary white text-center">
           <th><%= t('mongoid.attributes.incentive_deduction/status.draft') %></th>
           <th><%= t('mongoid.attributes.incentive_deduction/status.pending_approval') %></th>
           <th><%= t('mongoid.attributes.incentive_deduction/status.approved') %></th>

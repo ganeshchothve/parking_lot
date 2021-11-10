@@ -11,7 +11,7 @@ class Admin::ProjectsController < AdminController
   # GET /admin/projects
   #
   def index
-    @projects = Project.all.paginate(page: params[:page] || 1, per_page: params[:per_page])
+    @projects = Project.all.build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
       if params[:ds].to_s == 'true'
         format.json { render json: @projects.collect { |p| { id: p.id, name: p.ds_name } } }

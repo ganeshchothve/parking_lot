@@ -1,4 +1,4 @@
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :logo, class: 'label-required' %><br/>
   <%= f.file_field :logo, class: 'btn pl-0', disabled: (policy([:admin, @client]).editable_field?("logo") ? false : true) %>
   <br/>
@@ -9,7 +9,7 @@
   <% end %>
   <hr/>
 </div>
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :mobile_logo, class: 'label-required' %><br/>
   <%= f.file_field :mobile_logo, class: 'btn pl-0', disabled: (policy([:admin, @client]).editable_field?("mobile_logo") ? false : true) %>
   <br/>
@@ -20,7 +20,7 @@
   <% end %>
   <hr/>
 </div>
-<div class="form-group">
+<div class="mb-3">
   <%= f.label :background_image, class: 'label-required' %><br/>
   <%= f.file_field :background_image, class: 'btn pl-0', disabled: (policy([:admin, @client]).editable_field?("background_image") ? false : true) %>
   <br/>

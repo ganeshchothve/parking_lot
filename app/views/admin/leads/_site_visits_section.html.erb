@@ -1,19 +1,7 @@
 <section class='lead_site_visits_section my-4 mb-4'>
-  <div class="container">
+  <div class="">
     <div class="row">
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 p-0 cursor-pointer" data-toggle="collapse" href="#collapseSiteVisits" role="button" aria-expanded="false" aria-controls="collapseSiteVisits">
-        <div class="table-title pt-1">
-          <h2 class="title text-dark icon-set icon-file-contract-black">
-            Site Visits
-          </h2>
-        </div>
-      </div>
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 p-0">
-        <div class="table-btn-set float-right pb-3">
-          <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @lead.site_visits.count %></button>
-        </div>
-      </div>
-      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 p-0 collapse show" id="collapseSiteVisits">
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12">
         <div class="box-card relative">
           <%= render 'admin/site_visits/index', site_visits: site_visits %>
         </div>

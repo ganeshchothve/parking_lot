@@ -7,10 +7,23 @@
 <% if policy([:admin, project]).sync_on_selldo? %>
   <%= link_to t('controller.projects.sync_on_selldo.link_name'), sync_on_selldo_admin_project_path(project), method: :post, class: 'dropdown-item' %>
 <% end %>
-<%= link_to TokenType.model_name.human(count: 2), admin_project_token_types_path(project), class: 'dropdown-item' %>
-<%= link_to TimeSlot.model_name.human(count: 2), admin_project_time_slots_path(project), class: 'dropdown-item' %>
+<% if policy([:admin, UnitConfiguration]).index? %>
+  <%= link_to UnitConfiguration.model_name.human(count: 2), admin_project_unit_configurations_path(project), class: 'dropdown-item' %>
+<% end %>
+<% if policy([:admin, TokenType]).index? %>
+  <%= link_to TokenType.model_name.human(count: 2), admin_project_token_types_path(project), class: 'dropdown-item' %>
+<% end %>
+<% if policy([:admin, TimeSlot]).index? %>
+  <%= link_to TimeSlot.model_name.human(count: 2), admin_project_time_slots_path(project), class: 'dropdown-item' %>
+<% end %>
 <% if policy([:admin, IncentiveScheme]).index? %>
   <%= link_to IncentiveScheme.model_name.human(count: 2), admin_incentive_schemes_path(fltrs: {project_id: project.id.to_s}), class: 'dropdown-item' %>
+<% end %>
+<% if policy([:admin, ::Template]).index? %>
+  <%= link_to(t('helpers.show.link_name', model: ::Template.model_name.human), admin_client_templates_path(fltrs: {project_id: project.id}), class: 'dropdown-item') %>
+<% end %>
+<% if policy(:custom).inventory? %>
+  <%= link_to(t('controller.inventory.index.link_name'), custom_inventory_path(id: project.id), class: 'dropdown-item') %>
 <% end %>
 <% if policy([:admin, ProjectUnit]).index? %>
   <%= link_to ProjectUnit.model_name.human(count: 2), admin_project_units_path(fltrs: {project_id: project.id.to_s}), class: 'dropdown-item' %>
@@ -20,6 +33,9 @@
 <% end %>
 <% if policy([:admin, BookingDetail.new(project_id: project.id)]).index? %>
   <%= link_to BookingDetail.model_name.human(count: 2), admin_booking_details_path(fltrs: {project_id: project.id.to_s}), class: 'dropdown-item' %>
+<% end %>
+<% if policy([:admin, project]).video_create? %>
+  <%= link_to Video.model_name.human(count: 2), videoables_path(videoable_type: project.class.model_name.i18n_key.to_s, videoable_id: project.id), class: "dropdown-item" %>
 <% end %>
 <% if policy([:admin, project]).asset_create? %>
   <%= link_to Asset.model_name.human(count: 2), admin_projects_path('remote-state': assetables_path(assetable_type: project.class.model_name.i18n_key.to_s, assetable_id: project.id) ), class: "dropdown-item" %>

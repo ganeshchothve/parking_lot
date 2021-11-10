@@ -3,7 +3,7 @@
   <div class="card-body">
     <div class="row">
       <div class="col-md-4">
-        <div class="form-group">
+        <div class="mb-3">
           <label>To</label>
           <div>
             <% if current_user.buyer? %>
@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="form-group">
+        <div class="mb-3">
           <label>Status</label>
           <div>
             <%= t("emails.status.#{email.status}") %>
@@ -25,7 +25,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="form-group">
+        <div class="mb-3">
         <label>Sent On</label>
           <div>
             <%= @email.sent_on.present? ? @email.sent_on.strftime("%d/%m/%Y") : '-' %>
@@ -35,7 +35,7 @@
     </div>
     <div class="row">
       <div class="col-md-4">
-        <div class="form-group">
+        <div class="mb-3">
         <label>Subject</label>
           <div>
             <%= @email.subject.present? ? @email.subject : '-' %>
@@ -45,7 +45,7 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <div class="form-group">
+        <div class="mb-3">
           <div>
             <%= @email.body.html_safe %>
           </div>

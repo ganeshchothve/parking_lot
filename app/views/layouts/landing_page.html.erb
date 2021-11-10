@@ -75,19 +75,122 @@
 
 <div id="overlay" style="display:none;">
   <div id="popup">
-    <div class="site-visit-wrapper">
+    <div class="cp-signup-sec site-visit-wrapper wd-100">
     <div id="close"  data-event-category="Section" data-event-action="Click" data-event-name="Close">&times;</div>
-      <%= simple_form_for(@channel_partner, local: true, html: { id: 'channel_partner_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %>
-        <% if params[:action] == 'create' && @channel_partner.errors[:base].present? %>
-          <p class='alert alert-danger'><%= @channel_partner.errors[:base].to_sentence %></p>
-        <% end %>
-        <%= render "channel_partners/short_form_fields", {form: form} %>
-        <div class="signin-btn pl-0 pr-0 pb-4">
-          <%= form.submit "Register", class: "green-btn sign-in-btn", data: { disable_with: "Please wait..." } %>
+    <div class="row">
+      <div class="col-lg-7 pe-0 br-rt-1">
+        <h1 class="sec-title text-center pt-2 pb-1">Get Started</h1>
+        <p class="sec-desc text-center pb-2">Now is the best time to turn your dream into reality</p>
+        <div class="cp-signup-form-wrap pb-3 cp-form-wrap">
+          <%= simple_form_for(@channel_partner, local: true, html: { id: 'channel_partner_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %>
+            <% if params[:action] == 'create' && @channel_partner.errors[:base].present? %>
+              <p class='alert alert-danger'><%= @channel_partner.errors[:base].to_sentence %></p>
+            <% end %>
+            <%= render "channel_partners/short_form_fields", {form: form} %>
+            <div class="signin-btn pl-0 pr-0 pb-4">
+              <%= form.submit "Register", class: "green-btn sign-in-btn", data: { disable_with: "Please wait..." } %>
+            </div>
+            <hr/>
+            <%= render "devise/shared/links" %>
+          <% end %>
         </div>
-        <hr/>
-        <%= render "devise/shared/links" %>
-      <% end %>
+      </div>
+      <div class="col-lg-5">
+        <div class="cp-signup-features px-2">
+          <h2 class="pt-2 pb-2">Why you would love launchpad</h2>
+          <ul class="list-unstyled mt-4 cp-benefit-list">
+            <li>
+              <div class="features-wrap">
+                <span>
+                  <img src="<%= asset_path 'cp-ex-feat-01.svg' %>">
+                </span>
+                <p>Early access to <br>new launches</p>
+              </div>
+            </li>
+            <li>
+              <div class="features-wrap">
+                <span>
+                  <img src="<%= asset_path 'cp-ex-feat-05.svg' %>">
+                </span>
+                <p>Marketing support<br> & assets</p>
+              </div>
+            </li>
+            <li>
+              <div class="features-wrap">
+                <span>
+                  <img src="<%= asset_path 'cp-ex-feat-08.svg' %>">
+                </span>
+                <p>Online inventory <br>selection, KYC & bookings</p>
+              </div>
+            </li>
+            <li>
+              <div class="features-wrap">
+                <span>
+                  <img src="<%= asset_path 'cp-ex-feat-02.svg' %>">
+                </span>
+                <p>Chance to work with <br>Pune’s biggest developers</p>
+              </div>
+            </li>
+            <li>
+              <div class="features-wrap">
+                <span>
+                  <img src="<%= asset_path 'cp-ex-feat-06.svg' %>">
+                </span>
+                <p>Timely payments to <br>streamline cash flows</p>
+              </div>
+            </li>
+            <li>
+              <div class="features-wrap">
+                <span>
+                  <img src="<%= asset_path 'cp-ex-feat-10.svg' %>">
+                </span>
+                <p>Unique online <br>channel partner profile</p>
+              </div>
+            </li>
+            <li>
+              <div class="features-wrap">
+                <span>
+                  <img src="<%= asset_path 'cp-ex-feat-03.svg' %>">
+                </span>
+                <p>Leads at discounted<br>prices</p>
+              </div>
+            </li>
+            <li>
+              <div class="features-wrap">
+                <span>
+                  <img src="<%= asset_path 'cp-ex-feat-07.svg' %>">
+                </span>
+                <p>Fully automated<br>EOI process</p>
+              </div>
+            </li>
+            <li>
+              <div class="features-wrap">
+                <span>
+                  <img src="<%= asset_path 'cp-ex-feat-11.svg' %>">
+                </span>
+                <p>Performance-based<br>channel partner ratings</p>
+              </div>
+            </li>
+            <li>
+              <div class="features-wrap">
+                <span>
+                  <img src="<%= asset_path 'cp-ex-feat-04.svg' %>">
+                </span>
+                <p>CRM training<br>& support</p>
+              </div>
+            </li>
+            <li>
+              <div class="features-wrap">
+                <span>
+                  <img src="<%= asset_path 'cp-ex-feat-09.svg' %>">
+                </span>
+                <p>Complete<br>transparency</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      </div>
     </div>              
    </div>
 </div>

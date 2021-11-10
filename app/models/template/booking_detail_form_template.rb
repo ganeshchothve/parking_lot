@@ -12,7 +12,7 @@ class Template::BookingDetailFormTemplate < Template
     "<div class='container pt-3 bg-white'>
     <div class='row' align='center'>
       <div class='col-sm' align='center'>
-        <img src='<%= @booking_detail.project_unit.booking_portal_client.logo.url || '' %>' class='img-responsive'>
+        <img src='<%= @booking_detail.project.logo&.url || current_client&.logo&.url %>' class='img-responsive'>
       </div>
     </div>
     <div class='row' align='center'>
@@ -22,7 +22,7 @@ class Template::BookingDetailFormTemplate < Template
     </div>
     <div class='row' align='center'>
       <div class='col-sm' align='center'>
-        <h3>Rera Number: <%= @booking_detail.project_unit.project.rera_registration_no %></h3>
+        <h3>Rera Number: <%= @booking_detail.project.rera_registration_no %></h3>
       </div>
     </div>
     <div class='row'>
@@ -44,18 +44,18 @@ class Template::BookingDetailFormTemplate < Template
           <strong>First Applicant:</strong>
         </div>
         <div class='col-sm border pt-3'>
-          <%= @booking_detail.primary_user_kyc.try(:first_name) || 'First Name' %>
+          <%= @booking_detail.primary_user_kyc&.first_name || 'First Name' %>
         </div>
         <div class='col-sm border pt-3'>
-          <%= @booking_detail.primary_user_kyc.try(:last_name) || 'Last Name' %>
+          <%= @booking_detail.primary_user_kyc&.last_name || 'Last Name' %>
         </div>
       </div>
       <div class='row'>
         <div class='col-sm border pt-3'>
-          DoB: <%= @booking_detail.primary_user_kyc.try(:dob) %>
+          DoB: <%= @booking_detail.primary_user_kyc&.dob %>
         </div>
         <div class='col-sm border pt-3'>
-          PAN Number: <%= @booking_detail.primary_user_kyc.try(:pan_number) %>
+          PAN Number: <%= @booking_detail.primary_user_kyc&.pan_number %>
         </div>
         <div class='col-5 border pt-3'>
           AADHAAR Number:
@@ -63,8 +63,6 @@ class Template::BookingDetailFormTemplate < Template
             if @booking_detail.primary_user_kyc.present?;
               if @booking_detail.primary_user_kyc.aadhaar.present?;
                 @booking_detail.primary_user_kyc.aadhaar;
-              elsif (@booking_detail.primary_user_kyc.additional_id_type.present? && @booking_detail.primary_user_kyc.additional_id_type == 'aadhar_card');
-                @booking_detail.primary_user_kyc.try(:additional_id_number);
               end;
             end;
           %>
@@ -75,18 +73,18 @@ class Template::BookingDetailFormTemplate < Template
           <strong>Second Applicant Name:</strong>
         </div>
         <div class='col-sm border pt-3'>
-          <%= @booking_detail.user_kycs.try(:first).try(:first_name) %>
+          <%= @booking_detail.user_kycs&.first&.first_name %>
         </div>
         <div class='col-sm border pt-3'>
-        <%= @booking_detail.user_kycs.try(:first).try(:last_name) %>
+        <%= @booking_detail.user_kycs&.first&.last_name %>
         </div>
       </div>
       <div class='row'>
         <div class='col-sm border pt-3'>
-          DoB: <%= @booking_detail.user_kycs.try(:first).try(:dob) %>
+          DoB: <%= @booking_detail.user_kycs&.first&.dob %>
         </div>
         <div class='col-sm border pt-3'>
-          PAN Number: <%= @booking_detail.user_kycs.try(:first).try(:pan_number) %>
+          PAN Number: <%= @booking_detail.user_kycs&.first&.pan_number %>
         </div>
         <div class='col-5 border pt-3'>
           AADHAAR Number:
@@ -102,10 +100,7 @@ class Template::BookingDetailFormTemplate < Template
       </div>
       <div class='row'>
         <div class='col-sm border pt-3'>
-          <p>Address:&nbsp<%= @booking_detail.primary_user_kyc.try(:mailing_address).try(:to_sentence) %></p>
-        </div>
-        <div class='col-sm border pt-3'>
-          <p>Pincode: <%= @booking_detail.primary_user_kyc.try(:home_address_pin_code) %></p>
+          <p>Address:&nbsp<%= @booking_detail.primary_user_kyc&.addresses&.first&.to_sentence %></p>
         </div>
       </div>
       <div class='row'>
@@ -149,7 +144,7 @@ class Template::BookingDetailFormTemplate < Template
       </div>
       <div class='row'>
         <div class='col-sm border pt-3'>
-          <p><%= @booking_detail.project_unit.unit_configuration.try(:name) %></p>
+          <p><%= @booking_detail.project_unit.unit_configuration_name %></p>
         </div>
         <div class='col-sm border pt-3'>
           <p><%= @booking_detail.saleable %></p>
@@ -180,76 +175,44 @@ class Template::BookingDetailFormTemplate < Template
           <p>Token Amount</p>
         </div>
         <div class='col-sm border pt-3'>
-          <p><%= number_to_indian_currency(@booking_detail.receipts.where(payment_type: 'token').first.try(:total_amount)) %></p>
+          <p><%= number_to_indian_currency(@booking_detail.receipts.where(payment_type: 'token').first&.total_amount) %></p>
         </div>
         <div class='col-6 border pt-3'>
-          <p> <%= @booking_detail.receipts.where(payment_type: 'token').first.try(:status) %></p>
+          <p> <%= @booking_detail.receipts.where(payment_type: 'token').first&.status %></p>
         </div>
       </div>
-      <% @booking_detail.receipts.where(payment_type: 'ba_1', payment_mode: 'cheque').each do |r| %>
+      <% @booking_detail.receipts.ne(payment_type: 'token').where(payment_mode: 'cheque').each do |r| %>
      <div class = 'row'>
      <div class='col-3 border pt-3'>
-          <p>Booking Amount 1</p>
+          <p>Booking Amount</p>
         </div>
          <div class='col-3 border pt-3'>
-           <%= number_to_indian_currency(r.try(:total_amount)) %>
+           <%= number_to_indian_currency(r&.total_amount) %>
        </div>
          <div class='col-sm border pt-3'>
-           <%= r.try(:issued_date).try(:strftime, '%d/%m/%y') %>
+           <%= r&.issued_date&.strftime('%d/%m/%y') %>
        </div>
         <div class='col-sm border pt-3'>
-          <%= r.try(:payment_identifier) %>
+          <%= r&.payment_identifier %>
         </div>
         <div class='col-sm border pt-3'>
-           <%= 'Account Number: ' + r.try(:bank_account_number) + ', IFSC Code: ' + r.try(:ifsc_code) +  ', Issuing Bank:' + r.try(:issuing_bank) %>
+           <%= 'Issuing Bank:' + r&.issuing_bank %>
       </div>
     </div>
 <% end %>
-<% @booking_detail.receipts.where(payment_type: 'ba_1',payment_mode: {'$ne': 'cheque'}).each do |r| %>
+<% @booking_detail.receipts.ne(payment_type: 'token').where(payment_mode: {'$ne': 'cheque'}).each do |r| %>
     <div class = 'row'>
-         <div class='col-sm border pt-3'>
-           <%= number_to_indian_currency(r.try(:total_amount)) %>
-       </div>
-         <div class='col-sm border pt-3'>
-           --
-       </div>
-        <div class='col-sm border pt-3'>
-          <%= r.try(:payment_identifier) %>
-        </div>
-        <div class='col-sm border pt-3'>
-           --
-      </div>
-    </div>
-<% end %>
-<% @booking_detail.receipts.where(payment_type: 'ba_2', payment_mode: 'cheque').each do |r| %>
-     <div class = 'row'>
      <div class='col-3 border pt-3'>
-          <p>Booking Amount 2</p>
+          <p>Booking Amount</p>
         </div>
-        <div class='col-3 border pt-3'>
-           <%= number_to_indian_currency(r.try(:total_amount)) %>
-       </div>
-         <div class='col-sm border pt-3'>
-           <%= r.try(:issued_date).try(:strftime, '%d/%m/%y') %>
-       </div>
-        <div class='col-sm border pt-3'>
-          <%= r.try(:payment_identifier) %>
-        </div>
-        <div class='col-sm border pt-3'>
-           <%= 'Account Number: ' + r.try(:bank_account_number) + ', IFSC Code: ' + r.try(:ifsc_code) +  ', Issuing Bank:' + r.try(:issuing_bank) %>
-      </div>
-    </div>
-<% end %>
-<% @booking_detail.receipts.where(payment_type: 'ba_2', payment_mode: {'$ne': 'cheque'}).each do |r| %>
-    <div class = 'row'>
-         <div class='col-sm border pt-3'>
-           <%= number_to_indian_currency(r.try(:total_amount)) %>
+         <div class='col-3 border pt-3'>
+           <%= number_to_indian_currency(r&.total_amount) %>
        </div>
          <div class='col-sm border pt-3'>
            --
        </div>
         <div class='col-sm border pt-3'>
-          <%= r.try(:payment_identifier) %>
+          <%= r&.payment_identifier %>
         </div>
         <div class='col-sm border pt-3'>
            --
@@ -280,12 +243,15 @@ class Template::BookingDetailFormTemplate < Template
           <%= r.try(:payment_identifier) %>
         </div>
         <div class='col-sm border pt-3'>
-           <%= 'Account Number: ' + r.try(:bank_account_number) + ', IFSC Code: ' + r.try(:ifsc_code) +  ', Issuing Bank:' + r.try(:issuing_bank) %>
+           <%= 'Issuing Bank:' + r.try(:issuing_bank) %>
       </div>
     </div>
 <% end %>
 <% @booking_detail.receipts.where(payment_type: 'stamp_duty', payment_mode: {'$ne': 'cheque'}).each do |r| %>
     <div class = 'row'>
+     <div class='col-3 border pt-3'>
+          <p>Stamp Duty & regitration</p>
+        </div>
          <div class='col-sm border pt-3'>
            <%= number_to_indian_currency(r.try(:total_amount)) %>
        </div>
@@ -349,7 +315,7 @@ class Template::BookingDetailFormTemplate < Template
           Second Applicant
         </div>
         <div class='col-sm'>
-          MHDL Sales Rep
+          Sales Rep
         </div>
       </div>
     </div>
@@ -362,7 +328,7 @@ class Template::BookingDetailFormTemplate < Template
       </div>
       <ol>
         <li>
-          The Applicants hereby declare and confirm that the Applicants have booked only one Apartment (residential/commercial unit) in entire Happinest Kalyan. The Applicants further declare that spouse and / or minor child / children of the Applicants have not booked / purchased any other Apartment in the said Happinest - Kalyan. The Applicants also confirm that the Applicants and/or spouse and/or minor child / children of the Applicants shall not book / purchase any other Apartment in Happinest - Kalyan.
+          The Applicants hereby declare and confirm that the Applicants have booked only one Apartment (residential/commercial unit) in entire <%= @booking_detail.project.name %>. The Applicants further declare that spouse and / or minor child / children of the Applicants have not booked / purchased any other Apartment in the said <%= @booking_detail.project.name %>. The Applicants also confirm that the Applicants and/or spouse and/or minor child / children of the Applicants shall not book / purchase any other Apartment in <%= @booking_detail.project.name %>.
         </li>
         <li>
           The Applicants are aware and agreeable that, if my/our application is accepted by you then upon realization of payments  towards the Booking Amount 1, Booking Amount 2 on agreed date, you shall issue me/us an Allotment Letter within 7 days thereof. In case of failure to comply, you may treat this application as automatically cancelled/withdrawn and thereafter, you shall be at liberty to deal with the Apartment and the multi-level covered car parking spaces these as you may deem fit without any recourse to me/us. In such an event all amounts paid by me/us to you shall fully forfeited and I/We will not seek any refund of the same.
@@ -381,7 +347,7 @@ class Template::BookingDetailFormTemplate < Template
         This Application is not transferable, and the Promoter shall have right on the said Apartment till all amounts due by the Applicants are paid.
         </li>
         <li>
-          The Applicants hereby agree and authorize Mahindra Happinest Developers Limited and all of its divisions, affiliates, subsidiaries, related parties and other group companies (collectively the “Mahindra Entities”) to access their names, addresses, telephone number, e-mail address, birth date and / or anniversary date (collectively “Basic Date/Contact Details”). The Applicants hereby consent to being contacted through calls/ emails/ SMS/ other communication by any of the Mahindra Entities in order to assist with their purchase or keep them informed regarding product details or send them any product or service related communication and offers. The Applicants provide the details herein at their sole discretion and confirm that no Mahindra Entity shall be held responsible or liable for any claim arising out of accessing or using their basic data / contact details shared by them. They also agree that if at any point of time, they wish to stop receiving such communications from Mahindra Group, they will call at Mahindra’s designated call center (1800-266-411) and register my preference.”
+          The Applicants hereby agree and authorize <%= @booking_detail.project.developer_name %> and all of its divisions, affiliates, subsidiaries, related parties and other group companies to access their names, addresses, telephone number, e-mail address, birth date and / or anniversary date (collectively “Basic Date/Contact Details”). The Applicants hereby consent to being contacted through calls/ emails/ SMS/ other communication in order to assist with their purchase or keep them informed regarding product details or send them any product or service related communication and offers. The Applicants provide the details herein at their sole discretion and confirm that no <%= @booking_detail.project.developer_name %> Entity shall be held responsible or liable for any claim arising out of accessing or using their basic data / contact details shared by them. They also agree that if at any point of time, they wish to stop receiving such communications from <%= @booking_detail.project.developer_name %>, they will call at designated call center and register my preference.”
         </li>
       </ol>
       <div class='row pt-3'>
@@ -440,8 +406,8 @@ class Template::BookingDetailFormTemplate < Template
         <p>Ref.:</p>
       </div>
       <div class='col-sm' align='left'>
-        <p>(1) Project -  Happinest Kalyan having RERA Registration No. <%= @booking_detail.project_unit.project.rera_registration_no %>
-</br>(2) Your application dated <%= @booking_detail.project_unit.blocked_on.try(:strftime, '%d/%m/%y') %>  for allotment of an apartment in tower <%= @booking_detail.project_unit.project_tower_name %> in Happinest Kalyan situated, lying and being at Village Ranjnoli, Taluka Bhiwandi, District Thane Maharashtra
+        <p>(1) Project - <%= @booking_detail.project.name %> having RERA Registration No. <%= @booking_detail.project.rera_registration_no %>
+</br>(2) Your application dated <%= @booking_detail.project_unit.blocked_on.try(:strftime, '%d/%m/%y') %>  for allotment of an apartment in tower <%= @booking_detail.project_unit.project_tower_name %> in <%= @booking_detail.project.name %> situated, lying and being at <%= @booking_detail.project.address&.to_sentence %>
 </p>
       </div>
     </div>
@@ -450,13 +416,13 @@ class Template::BookingDetailFormTemplate < Template
     <div class ='container'>
       <div class='row'>
         <div class='col-sm' align='left'>
-          <p>Dear Sir / Madam,</br> We are pleased to confirm allotment of residential Apartment No.<%= @booking_detail.project_unit.name %> of type <%= @booking_detail.project_unit.unit_configuration.try(:name) %> in Happinest Kalyan admeasuring <%= @booking_detail.saleable %> sq. ft. of Carpet area alongwith for exclusive use of the Allottee open balcony of  ______  sq. ft., enclosed balcony of <%= @booking_detail.project_unit.data.where(key: 'enc_balcony_sqft').first.try(:absolute_value) %> sq. ft., Veranda of ______ sq. ft. and exclusive terrace of  ______  sq. ft., on <%= @booking_detail.project_unit.floor %> floor in the _________ Wing of <%= @booking_detail.project_unit.project_tower_name %> building (“the Apartment”) for the consideration of Rs.<%= number_to_indian_currency(@booking_detail.project_unit.agreement_price) %>/-  (Rupees <%= @booking_detail.project_unit.agreement_price.try(:humanize) %> only) including the proportionate price of the common areas and facilities. We are also allotting covered parking space(s) number _______ situated in a separate car park building known as MLCP building being constructed in the layout for the consideration of Parking charges Rs.
+          <p>Dear Sir / Madam,</br> We are pleased to confirm allotment of residential Apartment No.<%= @booking_detail.project_unit.name %> of type <%= @booking_detail.project_unit.unit_configuration.try(:name) %> in <%= @booking_detail.project.name %> admeasuring <%= @booking_detail.saleable %> sq. ft. of Carpet area alongwith for exclusive use of the Allottee open balcony of  ______  sq. ft., enclosed balcony of <%= @booking_detail.project_unit.data.where(key: 'enc_balcony_sqft').first.try(:absolute_value) %> sq. ft., Veranda of ______ sq. ft. and exclusive terrace of  ______  sq. ft., on <%= @booking_detail.project_unit.floor %> floor in the _________ Wing of <%= @booking_detail.project_unit.project_tower_name %> building (“the Apartment”) for the consideration of Rs.<%= number_to_indian_currency(@booking_detail.project_unit.agreement_price) %>/-  (Rupees <%= @booking_detail.project_unit.agreement_price.try(:humanize) %> only) including the proportionate price of the common areas and facilities. We are also allotting covered parking space(s) number _______ for the consideration of Parking charges Rs.
 <% if @booking_detail.try(:booking_detail_scheme).try(:car_parking).present? %>
  <%= @booking_detail.booking_detail_scheme.payment_adjustments.collect{|pa| pa.try(:absolute_value)}.sum.round %> (Rupees <%= @booking_detail.booking_detail_scheme.payment_adjustments.collect{|pa| pa.try(:absolute_value)}.sum.round.try(:humanize) %> only)<% else %> ______
 <% end %>
   on the terms and conditions and Payment Plan as agreed by you in the Application Form. The Total Consideration as mentioned above excludes Goods and Services Tax (“GST”) and Cess at currently prevailing rates in connection with the construction of and carrying out the Project and/or with respect to the said Apartment and/or Agreement for Sale upto the date of handing over the possession of the said Apartment. Note: At the time of AFS we were informed that Total Consideration is inclusive of GST.
 </br>You are required to pay the requisite stamp duty and registration charges within 7 (seven) days from the date of this allotment letter and the Agreement for Sale should be executed between us and registered within 30 (thirty) days from the date of this Allotment Letter. </br>
-Yours faithfully,</br><strong>For Mahindra Happinest Developers Limited,</strong></br></br></br>_______________</br>Authorized Signature</p>
+Yours faithfully,</br><strong>For <%= @booking_detail.project.developer_name %>,</strong></br></br></br>_______________</br>Authorized Signature</p>
         </div>
       </div>
     </div>
@@ -466,13 +432,13 @@ Yours faithfully,</br><strong>For Mahindra Happinest Developers Limited,</strong
   def self.pdf_content
 "<table style='width:100%'>
   <tr align='center'>
-    <td align='center'><%#= wicked_pdf_image_tag current_client.logo.url || '' %></td>
+    <td align='center'><%#= wicked_pdf_image_tag @booking_detail.project&.logo&.url || current_client&.logo&.url %></td>
   </tr>
   <tr align='center'>
     <td align='center'><h4><%= @booking_detail.project_name %></h4> </td>
   </tr>
   <tr>
-    <td align='center'><h3>Rera Number: <%= @booking_detail.project_unit.project.rera_registration_no %></h3></td>
+    <td align='center'><h3>Rera Number: <%= @booking_detail.project.rera_registration_no %></h3></td>
   </tr>
   <tr>
     <td><p>Date: <%= @booking_detail.project_unit.blocked_on.try(:strftime, '%d/%m/%y') %></p></td>
@@ -497,8 +463,6 @@ Yours faithfully,</br><strong>For Mahindra Happinest Developers Limited,</strong
     <td>AADHAAR Number: <%= if @booking_detail.primary_user_kyc.present?;
     if @booking_detail.primary_user_kyc.aadhaar.present?;
       @booking_detail.primary_user_kyc.aadhaar;
-     elsif (@booking_detail.primary_user_kyc.additional_id_type.present? && @booking_detail.primary_user_kyc.additional_id_type == 'aadhar_card');
-      @booking_detail.primary_user_kyc.try(:additional_id_number);
      end;
      end; %></td>
   </tr>
@@ -521,8 +485,7 @@ Yours faithfully,</br><strong>For Mahindra Happinest Developers Limited,</strong
     <td align='center'><h2><strong>Communication Details</strong></h2></td>
   </tr>
   <tr>
-    <td><p>Address:&nbsp<%= @booking_detail.primary_user_kyc.try(:mailing_address).try(:to_sentence) %></p></td>
-    <td><p>Pincode: <%= @booking_detail.primary_user_kyc.try(:home_address_pin_code) %></p></td>
+    <td><p>Address:&nbsp<%= @booking_detail.primary_user_kyc&.addresses&.first&.to_sentence %></p></td>
   </tr>
   <tr>
     <td><p>Mobile No:&nbsp<%= @booking_detail.user.phone %></p></td>
@@ -545,7 +508,7 @@ Yours faithfully,</br><strong>For Mahindra Happinest Developers Limited,</strong
     <td><p>Unit No.</p></td>
     <td><p>Car Parking</p></td>
   </tr>
-    <td><p><%= @booking_detail.project_unit.unit_configuration.try(:name) %></p></td>
+    <td><p><%= @booking_detail.project_unit.unit_configuration_name %></p></td>
     <td><p><%= @booking_detail.saleable %></p></td>
     <td><p><%= @booking_detail.project_unit.project_tower_name %></p></td>
     <td><p><%= @booking_detail.project_unit.floor %></p></td>
@@ -566,34 +529,18 @@ Yours faithfully,</br><strong>For Mahindra Happinest Developers Limited,</strong
     <td><p><%= number_to_indian_currency(@booking_detail.receipts.where(payment_type: 'token').first.try(:total_amount)) %></p></td>
     <td><p> <%= @booking_detail.receipts.where(payment_type: 'token').first.try(:status) %></p></td>
   </tr>
-  <% @booking_detail.receipts.where(payment_type: 'ba_1', payment_mode: 'cheque').each do |r| %>
+  <% @booking_detail.receipts.ne(payment_type: 'token').where(payment_mode: 'cheque').each do |r| %>
     <tr>
-      <td><p>Booking Amount 1</p></td>
+      <td><p>Booking Amount</p></td>
       <td><%= number_to_indian_currency(r.try(:total_amount)) %></td>
       <td><%= r.try(:issued_date).try(:strftime, '%d/%m/%y') %></td>
       <td><%= r.try(:payment_identifier) %></td>
-      <td><%= 'Account Number: ' + r.try(:bank_account_number) + ', IFSC Code: ' + r.try(:ifsc_code) +  ', Issuing Bank:' + r.try(:issuing_bank) %></td>
+      <td><%= 'Issuing Bank:' + r.try(:issuing_bank) %></td>
     </tr>
   <% end %>
-  <% @booking_detail.receipts.where(payment_type: 'ba_1',payment_mode: {'$ne': 'cheque'}).each do |r| %>
+  <% @booking_detail.receipts.ne(payment_type: 'token').where(payment_mode: {'$ne': 'cheque'}).each do |r| %>
     <tr>
-      <td><%= number_to_indian_currency(r.try(:total_amount)) %></td>
-      <td>--</td>
-      <td><%= r.try(:payment_identifier) %></td>
-      <td>--</td>
-    </tr>
-  <% end %>
-  <% @booking_detail.receipts.where(payment_type: 'ba_2', payment_mode: 'cheque').each do |r| %>
-    <tr>
-      <td><p>Booking Amount 2</p></td>
-      <td><%= number_to_indian_currency(r.try(:total_amount)) %></td>
-      <td><%= r.try(:issued_date).try(:strftime, '%d/%m/%y') %></td>
-      <td><%= r.try(:payment_identifier) %></td>
-      <td><%= 'Account Number: ' + r.try(:bank_account_number) + ', IFSC Code: ' + r.try(:ifsc_code) +  ', Issuing Bank:' + r.try(:issuing_bank) %></td>
-    </tr>
-  <% end %>
-  <% @booking_detail.receipts.where(payment_type: 'ba_2', payment_mode: {'$ne': 'cheque'}).each do |r| %>
-    <tr>
+      <td><p>Booking Amount</p></td>
       <td><%= number_to_indian_currency(r.try(:total_amount)) %></td>
       <td>--</td>
       <td><%= r.try(:payment_identifier) %></td>
@@ -610,11 +557,12 @@ Yours faithfully,</br><strong>For Mahindra Happinest Developers Limited,</strong
       <td><%= number_to_indian_currency(r.try(:total_amount)) %></td>
       <td><%= r.try(:issued_date).try(:strftime, '%d/%m/%y') %></td>
       <td><%= r.try(:payment_identifier) %></td>
-      <td><%= 'Account Number: ' + r.try(:bank_account_number) + ', IFSC Code: ' + r.try(:ifsc_code) +  ', Issuing Bank:' + r.try(:issuing_bank) %></td>
+      <td><%= 'Issuing Bank:' + r.try(:issuing_bank) %></td>
     </tr>
   <% end %>
   <% @booking_detail.receipts.where(payment_type: 'stamp_duty', payment_mode: {'$ne': 'cheque'}).each do |r| %>
     <tr>
+      <td><p>Stamp Duty & regitration</p></td>
       <td><%= number_to_indian_currency(r.try(:total_amount)) %></td>
       <td>--</td>
       <td><%= r.try(:payment_identifier) %></td>
@@ -650,7 +598,7 @@ Yours faithfully,</br><strong>For Mahindra Happinest Developers Limited,</strong
   <tr>
     <td style='width:30%'>First Applicant</td>
     <td style='width:30%'>Second Applicant</td>
-    <td style='width:30%'>MHDL Sales Rep</td>
+    <td style='width:30%'>Sales Rep</td>
   </tr>
 </table>
 </br>
@@ -662,7 +610,7 @@ Yours faithfully,</br><strong>For Mahindra Happinest Developers Limited,</strong
     <td>
       <ol>
         <li>
-          The Applicants hereby declare and confirm that the Applicants have booked only one Apartment (residential/commercial unit) in entire Happinest Kalyan. The Applicants further declare that spouse and / or minor child / children of the Applicants have not booked / purchased any other Apartment in the said Happinest - Kalyan. The Applicants also confirm that the Applicants and/or spouse and/or minor child / children of the Applicants shall not book / purchase any other Apartment in Happinest - Kalyan.
+          The Applicants hereby declare and confirm that the Applicants have booked only one Apartment (residential/commercial unit) in entire <%= @booking_detail.project.name %>. The Applicants further declare that spouse and / or minor child / children of the Applicants have not booked / purchased any other Apartment in the said <%= @booking_detail.project.name %>. The Applicants also confirm that the Applicants and/or spouse and/or minor child / children of the Applicants shall not book / purchase any other Apartment in <%= @booking_detail.project.name %>.
         </li>
         <li>
           The Applicants are aware and agreeable that, if my/our application is accepted by you then upon realization of payments  towards the Booking Amount 1, Booking Amount 2 on agreed date, you shall issue me/us an Allotment Letter within 7 days thereof. In case of failure to comply, you may treat this application as automatically cancelled/withdrawn and thereafter, you shall be at liberty to deal with the Apartment and the multi-level covered car parking spaces these as you may deem fit without any recourse to me/us. In such an event all amounts paid by me/us to you shall fully forfeited and I/We will not seek any refund of the same.
@@ -681,7 +629,7 @@ Yours faithfully,</br><strong>For Mahindra Happinest Developers Limited,</strong
         This Application is not transferable, and the Promoter shall have right on the said Apartment till all amounts due by the Applicants are paid.
         </li>
         <li>
-          The Applicants hereby agree and authorize Mahindra Happinest Developers Limited and all of its divisions, affiliates, subsidiaries, related parties and other group companies (collectively the “Mahindra Entities”) to access their names, addresses, telephone number, e-mail address, birth date and / or anniversary date (collectively “Basic Date/Contact Details”). The Applicants hereby consent to being contacted through calls/ emails/ SMS/ other communication by any of the Mahindra Entities in order to assist with their purchase or keep them informed regarding product details or send them any product or service related communication and offers. The Applicants provide the details herein at their sole discretion and confirm that no Mahindra Entity shall be held responsible or liable for any claim arising out of accessing or using their basic data / contact details shared by them. They also agree that if at any point of time, they wish to stop receiving such communications from Mahindra Group, they will call at Mahindra’s designated call center (1800-266-411) and register my preference.”
+          The Applicants hereby agree and authorize <%= @booking_detail.project.developer_name %> and all of its divisions, affiliates, subsidiaries, related parties and other group companies to access their names, addresses, telephone number, e-mail address, birth date and / or anniversary date (collectively “Basic Date/Contact Details”). The Applicants hereby consent to being contacted through calls/ emails/ SMS/ other communication in order to assist with their purchase or keep them informed regarding product details or send them any product or service related communication and offers. The Applicants provide the details herein at their sole discretion and confirm that no <%= @booking_detail.project.developer_name %> Entity shall be held responsible or liable for any claim arising out of accessing or using their basic data / contact details shared by them. They also agree that if at any point of time, they wish to stop receiving such communications from <%= @booking_detail.project.developer_name %>, they will call at designated call center and register my preference.”
         </li>
       </ol>
     </td>
@@ -725,19 +673,19 @@ Yours faithfully,</br><strong>For Mahindra Happinest Developers Limited,</strong
     <td><p>Ref.:</p></td>
   </tr>
   <tr>
-    <td>p>(1) Project -  Happinest Kalyan having RERA Registration No. <%= @booking_detail.project_unit.project.rera_registration_no %>
-    </br>(2) Your application dated <%= @booking_detail.project_unit.blocked_on.try(:strftime, '%d/%m/%y') %>  for allotment of an apartment in tower <%= @booking_detail.project_unit.project_tower_name %> in Happinest Kalyan situated, lying and being at Village Ranjnoli, Taluka Bhiwandi, District Thane Maharashtra
+    <td>p>(1) Project - <%= @booking_detail.project.name %> having RERA Registration No. <%= @booking_detail.project_unit.project.rera_registration_no %>
+    </br>(2) Your application dated <%= @booking_detail.project_unit.blocked_on.try(:strftime, '%d/%m/%y') %>  for allotment of an apartment in tower <%= @booking_detail.project_unit.project_tower_name %> in <%= @booking_detail.project.name %> situated, lying and being at <%= @booking_detail.project.address&.to_sentence %>
     </p></td>
   </tr>
   <tr>
     <td>
-        <p>Dear Sir / Madam,</br> We are pleased to confirm allotment of residential Apartment No.<%= @booking_detail.project_unit.name %> of type <%= @booking_detail.project_unit.unit_configuration.try(:name) %> in Happinest Kalyan admeasuring <%= @booking_detail.saleable %> sq. ft. of Carpet area alongwith for exclusive use of the Allottee open balcony of  ______  sq. ft., enclosed balcony of <%= @booking_detail.project_unit.data.where(key: 'enc_balcony_sqft').first.try(:absolute_value) %> sq. ft., Veranda of ______ sq. ft. and exclusive terrace of  ______  sq. ft., on <%= @booking_detail.project_unit.floor %> floor in the _________ Wing of <%= @booking_detail.project_unit.project_tower_name %> building (“the Apartment”) for the consideration of Rs.<%= number_to_indian_currency(@booking_detail.project_unit.agreement_price) %>/-  (Rupees <%= @booking_detail.project_unit.agreement_price.try(:humanize) %> only) including the proportionate price of the common areas and facilities. We are also allotting covered parking space(s) number _______ situated in a separate car park building known as MLCP building being constructed in the layout for the consideration of Parking charges Rs.
+        <p>Dear Sir / Madam,</br> We are pleased to confirm allotment of residential Apartment No.<%= @booking_detail.project_unit.name %> of type <%= @booking_detail.project_unit.unit_configuration.try(:name) %> in <%= @booking_detail.project.name %> admeasuring <%= @booking_detail.saleable %> sq. ft. of Carpet area alongwith for exclusive use of the Allottee open balcony of  ______  sq. ft., enclosed balcony of <%= @booking_detail.project_unit.data.where(key: 'enc_balcony_sqft').first.try(:absolute_value) %> sq. ft., Veranda of ______ sq. ft. and exclusive terrace of  ______  sq. ft., on <%= @booking_detail.project_unit.floor %> floor in the _________ Wing of <%= @booking_detail.project_unit.project_tower_name %> building (“the Apartment”) for the consideration of Rs.<%= number_to_indian_currency(@booking_detail.project_unit.agreement_price) %>/-  (Rupees <%= @booking_detail.project_unit.agreement_price.try(:humanize) %> only) including the proportionate price of the common areas and facilities. We are also allotting covered parking space(s) number _______ for the consideration of Parking charges Rs.
       <% if @booking_detail.try(:booking_detail_scheme).try(:car_parking).present? %>
        <%= @booking_detail.booking_detail_scheme.payment_adjustments.collect{|pa| pa.try(:absolute_value)}.sum.round %> (Rupees <%= @booking_detail.booking_detail_scheme.payment_adjustments.collect{|pa| pa.try(:absolute_value)}.sum.round.try(:humanize) %> only)<% else %> ______
       <% end %>
         on the terms and conditions and Payment Plan as agreed by you in the Application Form. The Total Consideration as mentioned above excludes Goods and Services Tax (“GST”) and Cess at currently prevailing rates in connection with the construction of and carrying out the Project and/or with respect to the said Apartment and/or Agreement for Sale upto the date of handing over the possession of the said Apartment. Note: At the time of AFS we were informed that Total Consideration is inclusive of GST.
       </br>You are required to pay the requisite stamp duty and registration charges within 7 (seven) days from the date of this allotment letter and the Agreement for Sale should be executed between us and registered within 30 (thirty) days from the date of this Allotment Letter. </br>
-      Yours faithfully,</br><strong>For Mahindra Happinest Developers Limited,</strong></br></br></br>_______________</br>Authorized Signature</p>
+      Yours faithfully,</br><strong>For <%= @booking_detail.project.developer_name %>,</strong></br></br></br>_______________</br>Authorized Signature</p>
     </td>
   </tr>
 </table>

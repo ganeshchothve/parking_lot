@@ -3,21 +3,19 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title"> Edit <%= t('global.booking_detail') %></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <%= form_for [:admin, @booking_detail], local: true, remote: true, html: {id: 'booking_detail_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.booking_detail'), type: :json} } do |f| %>
-          <div class="form-group">
+          <div class="mb-3">
           <%= f.label :primary_user_kyc_id %>
           <%= f.select :primary_user_kyc_id, @booking_detail.user.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', required: @booking_detail.user.user_kycs.present? ? 'required' : nil,  autofocus: true %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :user_kyc_ids %>
           <%= f.select :user_kyc_ids, @booking_detail.user.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', multiple: true %>
         </div>
-        <div class="form-group">
+        <div class="mb-3 text-end">
           <%= f.submit "Save", class: 'btn btn-primary' %>
         </div>
         <% end %>

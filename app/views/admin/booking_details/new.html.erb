@@ -2,31 +2,29 @@
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header bg-gradient-cd white">
+      <div class="modal-header">
         <h3 class="title"><%= t('controller.booking_details.new.header') %></h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" class="white">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :user_id, class: 'control-label' %>
           <%= f.select :user_id, options_from_collection_for_select(User.where(_id: f.object.user_id), 'id', 'name'), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_users_path, params: { fltrs: { role: { '$in' => User::BUYER_ROLES }} } }%>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :primary_user_kyc_id, class: 'control-label' %>
           <%= f.select :primary_user_kyc_id, options_from_collection_for_select(UserKyc.where(_id: f.object.primary_user_kyc_id), 'id', 'name', f.object.primary_user_kyc_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_user_kycs_url, params: { fltrs: {user_id: User.find_by(user_kyc_id: f.object.primary_user_kyc_id).id } } } %>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
           <%= f.label :project_tower_id, class: 'control-label' %>
           <%= select_tag "project_tower_id", options_for_select(@project_towers), {prompt: "Select", class: "selectize", required: 'required'} %>
         </div>
-        <div class="form-group unit">
+        <div class="mb-3 unit">
           <%= f.label :project_unit_id, class: 'control-label' %>
           <%= f.select :project_unit_id, options_from_collection_for_select(ProjectUnit.where(_id: f.object.project_unit_id), 'id', 'first_name', f.object.project_unit_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_project_units_path, params: { status: 'available', fltrs: { project_tower_id: '-' } } }%>
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer text-end">
         <%= f.submit "Submit", class: "btn btn-primary" %>
       </div>
     </div>

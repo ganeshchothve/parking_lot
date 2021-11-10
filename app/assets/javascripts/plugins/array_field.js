@@ -33,7 +33,7 @@
 
         value = value.replace("\"", "&quot;");
 
-        if(wrapper.closest(".form-group").find(".array-field option[value=\"" + value + "\"]").length > 0){
+        if(wrapper.closest(".mb-3").find(".array-field option[value=\"" + value + "\"]").length > 0){
           valid = false;
           error = "Value already exists.";
         }
@@ -45,15 +45,15 @@
             element.append( new Option(value, value, true, true) );
           }
 
-          input_field.closest(".form-group").find(".help-block").addClass("hidden");
-          input_field.closest(".form-group").removeClass("has-error");
+          input_field.closest(".mb-3").find(".help-block").addClass("hidden");
+          input_field.closest(".mb-3").removeClass("has-error");
         } else {
-          input_field.closest(".form-group").addClass("has-error");
-          if(input_field.closest(".form-group").find(".help-block").length == 0) {
-            input_field.closest(".form-group").append("<span class='help-block'></span>");
+          input_field.closest(".mb-3").addClass("has-error");
+          if(input_field.closest(".mb-3").find(".help-block").length == 0) {
+            input_field.closest(".mb-3").append("<span class='help-block'></span>");
           }
-          input_field.closest(".form-group").find(".help-block").html(error);
-          input_field.closest(".form-group").find(".help-block").removeClass("hidden");
+          input_field.closest(".mb-3").find(".help-block").html(error);
+          input_field.closest(".mb-3").find(".help-block").removeClass("hidden");
         }
       }
     }
@@ -90,7 +90,7 @@
     var html = "<label for='array-field-text' class='control-label " + (required ? "label-required" : "") + "'>" + options.label + "</label>";
 
     if(options.editable) {
-      html += "<div class='form-group' style='margin-bottom: 5px;'>\
+      html += "<div class='mb-3' style='margin-bottom: 5px;'>\
                 <div class='input-group'>\
                   <input value='' type='text' class='form-control array-field-input' placeholder='Type & press enter to add' >\
                   <span class='input-group-btn'>\

@@ -34,10 +34,11 @@
 //= require plugins/smooth_zoom
 //= require daterangepicker
 //= require jquery.countdown
-//= require fontawesome-all
+//= require font-awesome/js/all
 //= require bootstrap-datetimepicker.min
 //= require otp_based_login
 //= require summernote-bs4
+//= require_tree ./foyr
 //= require olark
 //= require utils
 //= require file-icon
@@ -46,11 +47,10 @@
 //= require registration
 //= require gamification
 //= require search
-//= require jquery_ujs
 //= require jquery-ui/widgets/sortable
 //= require rails_sortable
 //= require site
-//= require chart.min
+//= require chartjs-plugins
 //= require chartjs-plugin-colorschemes
 //= require mobile_drag_drop/index.min
 
@@ -74,7 +74,7 @@ $(document).ready(function(){
 
   $('.print').on('click', function(){
     window.print();
-  })
+  });
 
   $('body').on('ajax:success', 'a.move-to-next-state', function(event) {
     if(typeof event.detail[0] == 'object' && event.detail[0].message != undefined) {

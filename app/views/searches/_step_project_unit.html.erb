@@ -4,50 +4,46 @@
     <%= render 'user_kycs_index', {user_kycs: @user_kycs} %>
 </div>
 <div class="mt-3"></div>
-<section class="kyc-information mt-4 mb-5">
-  <div class="container">
     <div class="row">
-      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd mb-3">
-        <div class="box-card">
-          <div class="box-header bg-gradient br-rd-tr-4">
-            <h2><img src="<%= asset_path 'file-spreadsheet-white.svg' %>" alt="KYC Information">KYC Information</h2>
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd mb-3 mt-3 mb-5">
+        <div class="card">
+          <div class="card-header bg-primary">
+            <h2 class="fn-18 white px-2 py-2 pb-0">KYC Information</h2>
             <!-- <a href="javascript:;" class="view-all-btn">View All > </a> -->
           </div>
           <%= form_for(:booking_detail, url: hold_lead_search_path(@search), html: {method: "post", class: 'validate-form', id: 'hold_booking_detail_form'}) do |f| %>
-            <div class="box-content br-rd-bl-4 bg-white pb-3">
+            <div class=" card-body box-content bg-white pb-3 border-bottom">
               <div class="row pd-box">
                 <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <%= f.hidden_field :lead_id, value: @lead.id %>
                     <%= f.label :primary_applicants %>
                     <%= f.select :primary_user_kyc_id, @lead.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', required: current_client.enable_booking_with_kyc? , autofocus: true %>
                   </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
-                  <div class="form-group">
+                  <div class="mb-3">
                     <%= f.label :secondary_applicants %>
                     <%= f.select :user_kyc_ids, @lead.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', multiple: true %>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="box-footer px-4">
+            <div class="box-footer px-4 float-end mt-4">
               <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 text-right no-pd">
-                <%= f.submit "Next", class: "btn next-btn fn-12 fn-300" %>
+                <%= f.submit "Next", class: "btn next-btn bg-primary white fn-12 " %>
               </div>
             </div>
           <% end %>
           <% if @search.previous_step.present? %>
-            <%= form_for [:lead, @search], html: {class: 'validate-form previous-form'} do |ff| %>
+            <%= form_for [:lead, @search], html: {class: 'validate-form previous-form col-4'} do |ff| %>
               <%= ff.hidden_field :step, value: @search.previous_step %>
-              <%= ff.submit "Previous", class: "previous-btn fn-12 fn-300 btn" %>
+              <%= ff.submit "Previous", class: "previous-btn fn-12 fn-300 btn border-primary primary" %>
             <% end %>
           <% end %>
         </div>
       </div>
     </div>
-  </div>
-</section>
 <!-- GENERICTODO: Fire aparment selected (CART) event in GA -->
 <%= javascript_tag do %>
   $(document).on("ajax:success", '#user_kyc_form', function(evt, data, status, xhr){

@@ -3,19 +3,17 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
 
-      <div class="modal-header bg-gradient-cd white">
+      <div class="modal-header">
         <h3 class="title"><%= t("controller.incentive_schemes.#{action_name}.link_name") %></h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" class="white">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
-      <div class="modal-body">
+      <div class="modal-body theme-form">
         <h5> Are you sure you want to end this incentive scheme ? </h5>
         <%= f.hidden_field :ends_on, value: Date.current %>
       </div>
 
-      <div class="modal-footer">
+      <div class="modal-footer text-end">
         <%= f.submit "Save", class: "btn btn-primary" %>
       </div>
 

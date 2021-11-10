@@ -1,10 +1,9 @@
 <%= f.hidden_field :lead_id %>
-<div class="form-group mb-2">
-  <%= f.label :bedrooms %>
+<div class="mb-3 mb-2 col-lg-6 col-xs-12">
+  <%= f.label :configuration %>
   <%= f.select :bedrooms, searches_bedrooms_names(data), {prompt: true}, class: 'selectize', disabled: !policy(@search).editable_field?("bedrooms") %>
 </div>
-<div class='text-center'><strong>OR</strong></div>
-<div class="form-group mb-2">
+<div class="mb-3 mb-2 col-lg-6 col-xs-12">
   <%= f.label :agreement_price %>
   <%
     min = data.first.try(:[],"min_agreement_price") || 0
@@ -16,8 +15,7 @@
   %>
   <%= f.select :agreement_price, agreement_price_slabs, {prompt: true}, class: 'selectize', disabled: !policy(@search).editable_field?("bedrooms") %>
 </div>
-<div class='text-center'><strong>OR</strong></div>
-<div class="form-group">
+<div class="mb-3 col-lg-6 col-xs-12">
   <%= f.label :all_inclusive_price %>
   <%
     min = data.first.try(:[], "min_all_inclusive_price") || 0

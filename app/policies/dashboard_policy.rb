@@ -34,4 +34,8 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
   def admin_dashboard?
     %w[superadmin admin sales_admin].include?(user.role)
   end
+
+  def sales_board?
+    user.role.in?(%w(team_lead))
+  end
 end

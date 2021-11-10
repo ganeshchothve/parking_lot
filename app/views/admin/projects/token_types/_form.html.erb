@@ -2,33 +2,31 @@
   <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <div class="modal-header bg-gradient-cd white">
+        <div class="modal-header">
           <h3 class="title">
             <%= t("controller.token_types.#{action_name}.header") %>
           </h3>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" class="white">&times;</span>
-          </button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-          <div class="form-group">
+        <div class="modal-body theme-form">
+          <div class="mb-3">
             <%= f.label :name, class: 'label-required' %>
             <%= f.text_field :name, autofocus: true, class: "form-control", required: 'required', disabled: !(policy([:admin, @token_type]).editable_field?("name")) %>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :token_amount, class: 'label-required' %>
             <%= f.number_field :token_amount, autofocus: true, class: "form-control", required: 'required', disabled: !(policy([:admin, @token_type]).editable_field?("token_amount")) %>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :token_prefix, class: 'label-required' %>
             <%= f.text_field :token_prefix, autofocus: true, class: "form-control", required: 'required', disabled: !(policy([:admin, @token_type]).editable_field?("token_prefix")) %>
           </div>
-          <div class="form-group">
+          <div class="mb-3">
             <%= f.label :token_seed, class: 'label-required' %>
             <%= f.number_field :token_seed, autofocus: true, class: "form-control", required: 'required', disabled: !(policy([:admin, @token_type]).editable_field?("token_seed")) %>
           </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer text-end">
           <%= f.submit class: "btn btn-primary" %>
         </div>
       </div>

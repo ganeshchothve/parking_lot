@@ -1,22 +1,19 @@
-<section class="mb-5">
-  <div class="container">
+<section class="mb-5 mt-3">
+  <div class="px-4">
     <div class="row">
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
-        <div class="table-title pt-1">
-          <h1 class="title icon-scheme-black icon-set">
-            <%= Scheme.model_name.human(count: @schemes.total_entries) %>
-          </h1>
-        </div>
-      </div>
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
-        <div class="table-btn-set float-right pb-3">
-          <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @schemes.total_entries %></button>
+      <div class="col-lg-12 col-xs-12 col-md-6 col-sm-12 no-pd">
+        <div class="table-btn-set float-end pb-3 text-end">
+        <div class="filter-search">
+            <input type="text" name="" placeholder="Search Schemes">
+          </div>
+          <div class="filter-popup">
+            <a class="db-filter-btn fn-500" href="javascript:;">
+              <i class="fa fa-filter fill-theme"></i>
+            </a>
+          </div>
           <% if policy([:admin, Scheme]).new? %>
-            <%= link_to t('helpers.new.link_name', model: Scheme.model_name.human), new_admin_scheme_path, class: 'db-small-btn light-blue bg-white fn-400 modal-remote-form-link btn unset-width' %>
+            <%= link_to t('helpers.new.link_name', model: Scheme.model_name.human), new_admin_scheme_path, class: 'btn-primary fn-400 modal-remote-form-link btn unset-width ms-2' %>
           <% end %>
-          <button class="db-filter-btn white fn-500" type="button">
-            <i class="icon-set icon-filter-light-blue"></i>
-          </button>
         </div>
       </div>
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">

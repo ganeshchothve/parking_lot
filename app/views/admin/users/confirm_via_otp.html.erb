@@ -2,20 +2,18 @@
   <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <div class="modal-header bg-gradient-cd white">
+        <div class="modal-header">
           <h3 class="title">
             Confirm Account Via <%= I18n.t("global.otp") %>
           </h3>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true" class="white">&times;</span>
-          </button>
+         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body theme-form">
           <% if @otp_sent_status[:status] %>
             <div class="alert alert-primary">
               You are confirming account on behalf of <%= @user.name %>. We have sent an <%= I18n.t("global.otp") %> to the user, you will need to ask for the latest one. <%= I18n.t("global.otp") %>s are not valid for more than 15 mins.
             </div>
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :login_otp, class: 'label-required' %>
               <%= f.text_field :login_otp, class: 'form-control', autofocus: true, required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("login_otp") ? false : true) %>
             </div>
@@ -25,7 +23,7 @@
             </div>
           <% end %>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer text-end">
           <%= f.submit "Save", class: 'btn btn-primary' %>
         </div>
       </div>

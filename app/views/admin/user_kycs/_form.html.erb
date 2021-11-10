@@ -1,16 +1,14 @@
 <%= simple_form_for(@user_kyc, local: true, url: url, remote: true, html: { novalidate: false, class: 'modal-remote-form validate-form', data: { 'resource-type': UserKyc.model_name.human, type: :json }, id: 'user_kyc_form' } ) do |f| %>
-  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
     <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header bg-gradient-cd white">
+      <div class="modal-content theme-form">
+        <div class="modal-header">
           <h3 class="title">
             <%= t("helpers.#{action_name}.link_name", model: UserKyc.model_name.human) %>
             </h3>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true" class="white">&times;</span>
-          </button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body theme-form">
           <div class="row">
             <%= f.input :salutation, collection: UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, prompt: :translate, required: true, wrapper_html: { class: 'col-md-2' } %>
 
@@ -37,7 +35,7 @@
             </div>
             <div class="col-md-6">
               <div class="row">
-                <%= f.input :budget, wrapper_html: { class: "col-md-6" } %>
+                <%= f.input :budget, wrapper_html: { class: "" } %>
               </div>
             </div>
           </div>
@@ -62,7 +60,7 @@
           <% end %>
 
           <% if @lead.project_unit_ids.present? && (@user_kyc.persisted? || !current_user.buyer?) %>
-            <div class="form-group position-relative">
+            <div class="mb-3 position-relative">
               <%= f.label :project_unit_ids %>
               <%= f.select :project_unit_ids, @lead.project_units.collect{|x| [x.name, x.id]}, {prompt: "Select"}, class: 'selectize', multiple: true %>
             </div>
@@ -76,7 +74,7 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-6">
-                    <div class="form-group position-relative">
+                    <div class="mb-3 position-relative">
                       <!-- TODO: check if you want to restrict the dob to 18 years age -->
                       <%= f.label :dob %>
                       <% date = (f.object.dob.present? ? f.object.dob.strftime("%d/%m/%Y") : "") %>
@@ -84,7 +82,7 @@
                     </div>
                   </div>
                   <div class="col-md-6">
-                    <div class="form-group">
+                    <div class="mb-3">
                       <%= f.label :education_qualification %>
                       <%= f.text_field :education_qualification, class: 'form-control' %>
                     </div>
@@ -92,13 +90,13 @@
                 </div>
                 <div class="row">
                   <div class="col-md-6">
-                    <div class="form-group">
+                    <div class="mb-3">
                       <%= f.label :designation %>
                       <%= f.text_field :designation, class: 'form-control' %>
                     </div>
                   </div>
                   <div class="col-md-6">
-                    <div class="form-group">
+                    <div class="mb-3">
                       <%= f.label :customer_company_name %>
                       <%= f.text_field :customer_company_name, class: 'form-control' %>
                     </div>
@@ -111,38 +109,38 @@
                 NRI Related Details
               </div>
               <div class="card-body">
-                <div class="form-group">
-                  <%= f.label :nri %><br />
+                <div class="mb-3">
+                  <%= f.label :nri %>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :nri, true, class: "form-check-input" %>
-                    <%= f.label :nri, "Yes", class: "form-check-label" %>
+                    <%= f.radio_button :nri, true, class: "form-check-input wd-22" %>
+                    <%= f.label :nri, "Yes", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :nri, false, class: "form-check-input" %>
-                    <%= f.label :nri, "No", class: "form-check-label" %>
+                    <%= f.radio_button :nri, false, class: "form-check-input wd-22" %>
+                    <%= f.label :nri, "No", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
-                <div class="form-group nri-fields">
+                <div class="mb-3 nri-fields">
                   <%= f.label :oci %>
                   <%= f.text_field :oci, class: 'form-control' %>
                 </div>
-                <div class="form-group nri-fields">
-                  <%= f.label :poa %><br />
+                <div class="mb-3 nri-fields">
+                  <%= f.label :poa %>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :poa, true, class: "form-check-input" %>
-                    <%= f.label :poa, "Yes", class: "form-check-label" %>
+                    <%= f.radio_button :poa, true, class: "form-check-input wd-22" %>
+                    <%= f.label :poa, "Yes", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :poa, false, class: "form-check-input" %>
-                    <%= f.label :poa, "No", class: "form-check-label" %>
+                    <%= f.radio_button :poa, false, class: "form-check-input wd-22" %>
+                    <%= f.label :poa, "No", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
                 <div class="nri-fields">
-                  <div class="form-group poa-fields">
+                  <div class="mb-3 poa-fields">
                     <%= f.label :poa_details %>
                     <%= f.text_field :poa_details, class: 'form-control' %>
                   </div>
-                  <div class="form-group poa-fields">
+                  <div class="mb-3 poa-fields">
                     <%= f.label :poa_details_phone_no %>
                     <%= f.text_field :poa_details_phone_no, class: 'phone form-control' %>
                   </div>
@@ -154,22 +152,22 @@
                 Corporate Details (If Any)
               </div>
               <div class="card-body">
-                <div class="form-group">
-                  <%= f.label :is_company %><br />
+                <div class="mb-3">
+                  <%= f.label :is_company %>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :is_company, true, class: "form-check-input" %>
-                    <%= f.label :is_company, "Yes", class: "form-check-label" %>
+                    <%= f.radio_button :is_company, true, class: "form-check-input wd-22" %>
+                    <%= f.label :is_company, "Yes", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :is_company, false, class: "form-check-input" %>
-                    <%= f.label :is_company, "No", class: "form-check-label" %>
+                    <%= f.radio_button :is_company, false, class: "form-check-input wd-22" %>
+                    <%= f.label :is_company, "No", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
-                <div class="form-group company-fields">
+                <div class="mb-3 company-fields">
                   <%= f.label :gstn %>
                   <%= f.text_field :gstn, class: 'form-control' %>
                 </div>
-                <div class="form-group company-fields">
+                <div class="mb-3 company-fields">
                   <%= f.label :company_name %>
                   <%= f.text_field :company_name, class: 'form-control' %>
                 </div>
@@ -191,35 +189,35 @@
                 Existing Customer?
               </div>
               <div class="card-body">
-                <div class="form-group">
-                  <%= f.label :existing_customer %><br />
+                <div class="mb-3">
+                  <%= f.label :existing_customer %>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :existing_customer, true, class: "form-check-input" %>
-                    <%= f.label :existing_customer, "Yes", class: "form-check-label" %>
+                    <%= f.radio_button :existing_customer, true, class: "form-check-input wd-22" %>
+                    <%= f.label :existing_customer, "Yes", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :existing_customer, false, class: "form-check-input" %>
-                    <%= f.label :existing_customer, "No", class: "form-check-label" %>
+                    <%= f.radio_button :existing_customer, false, class: "form-check-input wd-22" %>
+                    <%= f.label :existing_customer, "No", class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
-                <div class="form-group customer-fields">
+                <div class="mb-3 customer-fields">
                   <%= f.label :existing_customer_name %>
                   <%= f.text_field :existing_customer_name, class: 'form-control' %>
                 </div>
-                <div class="form-group customer-fields">
+                <div class="mb-3 customer-fields">
                   <%= f.label :existing_customer_project %>
                   <%= f.text_field :existing_customer_project, class: 'form-control' %>
                 </div>
               </div>
             </div>
             <div class="mt-3"></div>
-            <div class="form-group">
+            <div class="mb-3">
               <%= f.label :comments, class: 'control-label', style: 'vertical-align:middle' %>
               <%= f.text_area :comments, class: 'form-control', style: 'vertical-align:middle' %>
             </div>
           <% end %>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer text-end">
           <%= f.submit "Save", class: "btn btn-primary" %>
         </div>
       </div>

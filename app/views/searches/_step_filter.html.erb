@@ -1,69 +1,96 @@
-<% if @towers.present? %>
-  <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 p-0 mt-4 mb-5">
-    <div class="bg-white search-result br-rd-4">
-      <h2 class="title"> <%= t('controller.searches.towers.header') %></h2>
-      <div class="row mb-5">
-        <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 scroll-bar min-ht-3tower">
-          <% @towers.sort{|a,b| a[:project_tower_name] <=> b[:project_tower_name]}.each do |tower| %>
-            <div class="result-list cursor-pointer tower-description" id=<%= tower[:project_tower_id] %>>
-              <div class="title"><%= tower[:project_tower_name] %></div>
-              <ul>
-                <li><span class="no"><%= tower[:floors] %></span><span>Floors</span></li>
-                <li><span class="no"><%= tower[:total_units] %></span><span>Total Apartments</span></li>
-                <li><span class="no"><%= tower[:total_units_available] %></span><span>Available Apartments</span></li>
-              </ul>
-              <div class="info" data-placeholder='gamification'></div>
-            </div>
-          <% end %>
-          <div class="extra-pad"></div>
-        </div>
-        <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 d-none" id="tower-description" data-jquery-selector="tower-card">
-          <div class="card h-md-100">
-            <div class="p-3">
-              <a data-toggle="modal" data-target="#towerImage" href="javascript:;" class="tower_image_container" style="display:none;">
-                <img class="img-fluid" style="width: 100%; display: block;" data-placeholder="tower_image" />
-                <br/>
-                Click to view details
-              </a>
-            </div>
+<div class="card shadow-sm rounded px-0 bg-white mb-5">
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="card-header bg-white pb-0">
+        <div class="p-2 py-3">
+          <h2 class="fn-24 theme-txt-color font-normal">Create Booking</h2>
+            <p class="fn-16 theme-txt-color mb-4"><%= t('controller.searches.new.booking_hint', name: @lead.name) %></p>
+            
+          <div class="d-flex justify-content-start">
+            <p class="fn-16 theme-txt-color mb-0"><i class="fa fa-check-circle me-2 fill-success"></i>
+            <%= link_to t('global.filter_project'), edit_search_path, class: "modal-remote-form-link theme-txt-color step-change-btn" %>  
+            </p>
+            <p class="wd-22 border-top border-2 mt-2 mx-3 mb-0"></p>
+            <p class="fn-16 txt-light-blue mb-0"><i class="fa fa-check-circle me-2 fill-success"></i>Choose Tower</p>
+            <p class="wd-22 border-top border-2 mt-2 mx-3 mb-0"></p>
+            <p class="fn-16 txt-light-blue mb-0"><i class="fa fa-check-circle me-2 fill-theme"></i>Choose Apartment</p>
           </div>
         </div>
-        <div class="modal fade" role="dialog" id="towerImage">
-          <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
+      </div>
+      <div class="card-body bg-white p-0">
+        <div class="card text-dark bg-light border border-white mb-3">
+          <div class="card-body bg-white">
+            <% if @towers.present? %>
+            <% @towers.sort{|a,b| a[:project_tower_name] <=> b[:project_tower_name]}.each do |tower| %>
+            <div class="card text-dark bg-white border mb-3 result-list cursor-pointer tower-description"
+              id=<%= tower[:project_tower_id] %>>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-8">
+                    <h5 class="fn-20 font-normal theme-txt-color"><%= tower[:project_tower_name] %></h5>
+                    <p class="fn-14 theme-txt-color"><%= tower[:floors] %> Floors</p>
+                    <p class="fn-14"><%= tower[:total_units] %> Apartments / <span
+                        class="text-success font-medium"><%= tower[:total_units_available] %>
+                        Available</span></p>
+                  </div>
+                  <div class="col">
+                    <img style="width: 160px; height: 87px;" src="<%= asset_path 'Booking.png' %>">
+                  </div>
+                </div>
               </div>
-              <div class="modal-body" data-placeholder="gallery_tower_images">
+              <div class="card-footer bg-white">
+                <i class="fas fa-bell fill-warning"></i>
+                <div class="fn-12 d-inline-block ms-2 theme-txt-color" data-placeholder='gamification'></div>
               </div>
             </div>
-          </div>
-        </div>
-        <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12">
-          <% if @search.next_step.present? %>
-            <%= form_for [:lead, @search], html: {class: "validate-form edit_search_form"} do |f| %>
-              <div class="form-group">
-                <%= f.hidden_field :step, value: @search.next_step %>
-                <%= f.hidden_field :project_tower_id, id: 'project_tower_id', require: true %>
-              </div>
-              <div class="form-group">
-                <%= f.submit "Next", disabled: true, class: "small-btn blue-bg display-block fn-400 float-right" %>
-              </div>
             <% end %>
-          <% end %>
+
+            <% else %>
+            <div class="alert alert-primary">
+              <%= t('controller.searches.filter.error') %>
+              <br />
+              <%= link_to t('controller.searches.filter.again'), edit_search_path, class: "modal-remote-form-link icon-set icon-sad-tear" %>
+            </div>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>
+    <div class="col-lg-6 text-end">
+      <a data-bs-toggle="modal" data-bs-target="#towerImage" href="javascript:;" class="tower_image_container" style="display:none;">
+        <img class="img-fluid wd-100" data-placeholder="tower_image" />
+        <br/>
+        <span class='me-2 fn-14 theme-txt-color'>Click to view details</span>
+      </a><br/>
+    </div>
+    <div class="col-lg-12">
+      <div class="border-top px-3 mt-3">
+        <% if @search.next_step.present? %>
+        <%= form_for [:lead, @search], html: {class: "validate-form edit_search_form"} do |f| %>
+        <div class="mb-3">
+          <%= f.hidden_field :step, value: @search.next_step %>
+          <%= f.hidden_field :project_tower_id, id: 'project_tower_id', require: true %>
+        </div>
+        <div class="mb-3">
+          <%= f.submit "Next", disabled: true, class: "bg-primary px-3 rounded white border-0 py-1" %>
+        </div>
+        <% end %>
+        <% end %>
+      </div>
+    </div>
   </div>
-<% else %>
-  <div class="alert alert-primary">
-    <%= t('controller.searches.filter.error') %>
-    <br/>
-    <%= link_to t('controller.searches.filter.again'), edit_search_path, class: "modal-remote-form-link icon-set icon-sad-tear" %>
+</div>
+<div class="modal fade" role="dialog" id="towerImage">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" data-placeholder="gallery_tower_images">
+      </div>
+    </div>
   </div>
-<% end %>
+</div>
 <%= javascript_tag do %>
   $(document).ready(function(){
     var towers = <%= raw @towers.to_json(include: [:assets]) %>;

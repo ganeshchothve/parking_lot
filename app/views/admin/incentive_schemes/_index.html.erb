@@ -1,48 +1,57 @@
-<table class='table my-customer-table responsive-tbl'>
+<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
   <thead class="th-default">
     <thead>
       <tr class="bg-gradient-cd white">
         <th><%= t('mongoid.attributes.incentive_scheme.name') %></th>
         <th><%= t('mongoid.attributes.incentive_scheme.project_id') %></th>
         <th><%= t('mongoid.attributes.incentive_scheme.status') %></th>
-        <th class='text-right'><%= t('global.action', count: 3) %></th>
+        <th class='text-right wd-22'></th>
       </tr>
     </thead>
   </thead>
   <tbody>
     <% incentive_schemes.each do |incentive_scheme| %>
-      <tr>
-        <td data-title=<%= t('mongoid.attributes.incentive_scheme.name') %> >
-          <%= incentive_scheme.name %>
-          <div class="small">
+    <tr>
+      <td data-title=<%= t('mongoid.attributes.incentive_scheme.name') %>>
+        <%= incentive_scheme.name %>
+        <div class="small">
+        </div>
+      </td>
+      <td>
+        <%= incentive_scheme.project_name %>
+      </td>
+      <td>
+        <%= t("mongoid.attributes.incentive_scheme/status.#{incentive_scheme.status}") %>
+      </td>
+      <td>
+        <div class="dropdown text-right">
+          <a class="btn table-dropdown-btn black-clr py-0" href="#" role="button" id="dropdownMenuLink"
+            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v"
+              aria-hidden="true"></i></a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+            <% if policy([:admin, incentive_scheme]).edit? %>
+            <%= link_to t('helpers.edit.link_name', model: IncentiveScheme.model_name.human), edit_admin_incentive_scheme_path(incentive_scheme), class: 'dropdown-item modal-remote-form-link' %>
+            <% end %>
+            <% if policy([:admin, incentive_scheme]).end_scheme? %>
+            <%= link_to t('controller.incentive_schemes.end_scheme.link_name'), end_scheme_admin_incentive_scheme_path(incentive_scheme), class: 'dropdown-item modal-remote-form-link' %>
+            <% end %>
+            <% if policy([:admin, IncentiveScheme]).asset_create? %>
+            <%= link_to Asset.model_name.human(count: 2), assetables_path(assetable_type: incentive_scheme.class.model_name.i18n_key.to_s, assetable_id: incentive_scheme.id), class: "dropdown-item modal-remote-form-link" %>
+            <% end %>
           </div>
-        </td>
-        <td>
-          <%= incentive_scheme.project_name %>
-        </td>
-        <td>
-          <%= t("mongoid.attributes.incentive_scheme/status.#{incentive_scheme.status}") %>
-        </td>
-        <td>
-          <div class="dropdown text-right">
-            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-              <% if policy([:admin, incentive_scheme]).edit? %>
-                <%= link_to t('helpers.edit.link_name', model: IncentiveScheme.model_name.human), edit_admin_incentive_scheme_path(incentive_scheme), class: 'dropdown-item modal-remote-form-link' %>
-              <% end %>
-              <% if policy([:admin, incentive_scheme]).end_scheme? %>
-                <%= link_to t('controller.incentive_schemes.end_scheme.link_name'), end_scheme_admin_incentive_scheme_path(incentive_scheme), class: 'dropdown-item modal-remote-form-link' %>
-              <% end %>
-              <% if policy([:admin, IncentiveScheme]).asset_create? %>
-                <%= link_to Asset.model_name.human(count: 2), assetables_path(assetable_type: incentive_scheme.class.model_name.i18n_key.to_s, assetable_id: incentive_scheme.id), class: "dropdown-item modal-remote-form-link" %>
-              <% end %>
-            </div>
-          </div>
-        </td>
-      </tr>
+        </div>
+      </td>
+    </tr>
     <% end %>
   </tbody>
 </table>
-<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">
-  <%= will_paginate incentive_schemes, list_classes: %w(pagination justify-content-center) %>
+<div class="col-lg-12 py-3 bg-white mb-2 px-2">
+  <div class="row">
+    <div class="col-lg-6">
+      <p class="table-entry mb-0 ps-2 pt-2"><%= page_entries_info incentive_schemes %></p>
+    </div>
+    <div class="col-lg-6 table-pagination">
+      <%= will_paginate incentive_schemes, list_classes: %w(pagination justify-content-end) %>
+    </div>
+  </div>
 </div>

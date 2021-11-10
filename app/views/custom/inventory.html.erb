@@ -1,118 +1,118 @@
-<% unless params[:remove_header] %>
-  <div class="card card-body bg-gradient-cd white py-2 rounded-0">
-    <%= form_tag custom_inventory_path, method: "get", id: "custom_inventory_form", class: "form-inline" do %>
-      <div class='row w-100'>
-        <div class="form-group">
-          <%= label_tag "project_tower_id", "Project Tower", class: "control-label sr-only" %>
-        </div>
-        <div class="form-group w-60 pl-2 m-0">
-          <%= select_tag "project_tower_id", options_for_select(ProjectTower.all.collect{|x| ["#{x.project.name} - #{x.name}", x.id]}.sort{|x, y| x[0] <=> y[0]}, params[:project_tower_id]), {prompt: "Select Tower", class: "selectize form-control"} %>
-        </div>
-        <div class="form-group w-40 p-0 m-0">
-          <div class="w-80 p-0">
-            <%= submit_tag :Apply, class: "db-small-btn light-blue bg-white fn-400" %>
-          </div>
-          <div class="w-20 pt-2">
-            <%= link_to content_tag(:i, "", class: 'fa fa-times'), custom_inventory_path(params.permit(:project_tower_id, :utf8).to_hash.merge(remove_header: true)), class: 'float-right white' %>
+<section class="mb-5 mt-3">
+  <div class="px-4">
+    <div class="row">
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="table-btn-set float-end pb-3 text-end">
+          <div class="filter-popup">
+            <a class="db-filter-btn fn-500" href="javascript:;">
+              <i class="fa fa-filter fill-theme"></i>
+            </a>
           </div>
         </div>
       </div>
-    <% end %>
-  </div>
-<% end %>
-<div class="justify-content-center mt-1">
-  <div id="project-tower-carousel" class="carousel slide w-100" data-ride="carousel">
-    <ol class="carousel-indicators">
-      <% @project_towers.each_with_index do |project_tower, index| %>
-        <li data-target="#project-tower-carousel" data-slide-to="<%= index %>" class="<%= index==0 ? 'active': '' %>"></li>
-      <% end %>
-    </ol>
-    <div class="carousel-inner pb-5 mb-3">
-      <% @project_towers.each_with_index do |project_tower, index| %>
-        <div class="carousel-item <%= index == 0 ? 'active' : '' %>">
-          <% project_units = project_tower.project_units %>
-          <% units = project_units.sort_by{|x| [x.floor, x.floor_order]}.to_a %>
-          <div class="col-md-6" id="unit-selection-<%= project_tower.id.to_s%>" style="margin: auto;">
-              <div class="left-info pl-5 pr-5 pt-0 pb-4 book-apartment">
-                <% if units.present? %>
-                <% max_floor = project_units.max(:floor) %>
-                <% max_per_floor = project_units.max(:floor_order) %>
-                <% width = ((100.to_f - (4 * max_per_floor)) / max_per_floor).round(2) %>
-                <%
-                height = (280.to_f / max_floor).round(2)
-                height = 16 if height < 16
-                %>
-              <div class="form-sec-title p-1 text-center"><%= "#{project_tower.project.name} - #{project_tower.name}" %></div>
-                <ul class="book-box-info mb-2">
-                <li><span class="book-box available-aprt"></span><span>Available</span></li>
-                <li><span class="book-box booked-aprt"></span><span>Hold</span></li>
-                <li><span class="book-box soldout-aprt"></span><span>Sold Out</span></li>
-                <li><span class="book-box bg-danger"></span><span>Not Available</span></li>
-                <li><span>R</span><span>Refugee Area</span></li>
-                </ul>
-                <div class="booking-list">
-                  <div class="apartments-no">
-                    <ul class="aprt-no-list">
-                      <% max_per_floor.times do |index| %>
-                        <li><span class="book-box"><%= index + 1 %></span></li>
-                      <% end %>
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="box-card relative bg-white rounded">
+          <div id="project-tower-carousel" class="carousel slide w-100" data-ride="carousel" data-bs-interval="false" data-bs-touch="true">
+            <div class="carousel-indicators">
+            <% @project_towers.each_with_index do |project_tower, index| %>
+              <button type="button" data-bs-target="#project-tower-carousel" data-bs-slide-to="<%= index %>" class="<%= index==0 ? 'active': '' %>" aria-current="true" aria-label="Slide <%= index %>"></button>
+              <% end %>
+            </div>
+            <div class="carousel-inner pb-5 mb-3">
+              <% @project_towers.each_with_index do |project_tower, index| %>
+              <div class="carousel-item <%= index == 0 ? 'active' : '' %>">
+                <% project_units = project_tower.project_units %>
+                <% units = project_units.sort_by{|x| [x.floor, x.floor_order]}.to_a %>
+                <div class="col-md-6" id="unit-selection-<%= project_tower.id.to_s%>" style="margin: auto;">
+                  <div class="left-info pl-5 pr-5 pt-0 pb-4 book-apartment">
+                    <% if units.present? %>
+                    <% max_floor = project_units.max(:floor) %>
+                    <% max_per_floor = project_units.max(:floor_order) %>
+                    <% width = ((100.to_f - (4 * max_per_floor)) / max_per_floor).round(2) %>
+                    <%
+                  height = (280.to_f / max_floor).round(2)
+                  height = 16 if height < 16
+                  %>
+                    <div class="form-sec-title p-1 text-center">
+                      <%= "#{project_tower.project.name} - #{project_tower.name}" %></div>
+                    <ul class="book-box-info mb-2">
+                      <li><span class="book-box available-aprt"></span><span>Available</span></li>
+                      <li><span class="book-box booked-aprt"></span><span>Hold</span></li>
+                      <li><span class="book-box soldout-aprt"></span><span>Sold Out</span></li>
+                      <li><span class="book-box bg-danger"></span><span>Not Available</span></li>
+                      <li><span>R</span><span>Refugee Area</span></li>
                     </ul>
-                    <div class="separate-box"></div>
-                    <div class="floor-listing">
-                      <div class="floor-inner">
-                        <% (1..max_floor).to_a.reverse.each do |floor_data| %>
-                          <div class="floor">
-                            <div class="floor-number"><%= floor_data %></div>
-                            <% max_per_floor.times do |index| %>
+                    <div class="booking-list">
+                      <div class="apartments-no">
+                        <ul class="aprt-no-list">
+                          <% max_per_floor.times do |index| %>
+                          <li><span class="book-box"><%= index + 1 %></span></li>
+                          <% end %>
+                        </ul>
+                        <div class="separate-box"></div>
+                        <div class="floor-listing">
+                          <div class="floor-inner">
+                            <% (1..max_floor).to_a.reverse.each do |floor_data| %>
+                            <div class="floor">
+                              <div class="floor-number"><%= floor_data %></div>
+                              <% max_per_floor.times do |index| %>
                               <%
-                                klass = 'bg-white'
-                                data_selector = ''
-                                unit = units.find{|unit| unit.floor == floor_data && unit.floor_order == (index + 1) }
-                                if unit
-                                  if unit.status == 'available'
-                                    klass = 'available-aprt'
-                                    data_selector = 'unit-card'
-                                  elsif unit.status == 'hold'
-                                    klass = 'booked-aprt'
-                                  elsif ['blocked', 'booked_tentative', 'booked_confirmed','not_available'].include?(unit.status)
-                                    klass = 'soldout-aprt'
-                                  else
-                                    klass = 'bg-danger'
+                                  klass = 'bg-white'
+                                  data_selector = ''
+                                  unit = units.find{|unit| unit.floor == floor_data && unit.floor_order == (index + 1) }
+                                  if unit
+                                    if unit.status == 'available'
+                                      klass = 'available-aprt'
+                                      data_selector = 'unit-card'
+                                    elsif unit.status == 'hold'
+                                      klass = 'booked-aprt'
+                                    elsif ['blocked', 'booked_tentative', 'booked_confirmed','not_available'].include?(unit.status)
+                                      klass = 'soldout-aprt'
+                                    else
+                                      klass = 'bg-danger'
+                                    end
                                   end
-                                end
-                              %>
+                                %>
                               <% if unit.present? %>
-                                <span data-jquery-selector="<%= data_selector %>" data-toggle="popover" data-content="<%= unit_tooltip(unit) %>" data-title="Details for <%= unit.name %>" data-unit-id="<%= unit.present? ? unit.id : '' %>" class="book-box <%= klass %>" ></span>
+                              <span data-jquery-selector="<%= data_selector %>" data-toggle="popover"
+                                data-content="<%= unit_tooltip(unit) %>" data-title="Details for <%= unit.name %>"
+                                data-unit-id="<%= unit.present? ? unit.id : '' %>" class="book-box <%= klass %>"></span>
                               <% else %>
-                                <span data-jquery-selector="<%= data_selector %>" class="book-box <%= klass %>">R</span>
+                              <span data-jquery-selector="<%= data_selector %>" class="book-box <%= klass %>">R</span>
                               <% end %>
+                              <% end %>
+                            </div>
                             <% end %>
                           </div>
-                        <% end %>
+                        </div>
+                        <div class="separate-box"></div>
                       </div>
                     </div>
-                    <div class="separate-box"></div>
                   </div>
+                  <% end %>
                 </div>
               </div>
-            <% end %>
+              <% end %>
             </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#project-tower-carousel" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#project-tower-carousel" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+          <div class="filter-box">
+            <%= render "filters" %>
+          </div>
         </div>
-      <% end %>
+      </div>
     </div>
-    <a class="carousel-control-prev" href="#project-tower-carousel" role="button" data-slide="prev">
-      <span aria-hidden="true"><i class="fa fa-chevron-left fa-3x"></i></span>
-      <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#project-tower-carousel" role="button" data-slide="next">
-      <span aria-hidden="true"><i class="fa fa-chevron-right fa-3x"></i></span>
-      <span class="sr-only">Next</span>
-    </a>
   </div>
-</div>
+</section>
 <%= javascript_tag do %>
-  $(document).ready(function(){
-    setTimeout(function(){ location.reload(); }, 60000);
-  });
+$(document).ready(function(){
+setTimeout(function(){ location.reload(); }, 60000);
+});
 <% end %>
-
