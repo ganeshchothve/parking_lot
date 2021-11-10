@@ -52,6 +52,7 @@ class Admin::LeadPolicy < LeadPolicy
 
   def send_payment_link?
     record.user.confirmed?
+    false
   end
 
   def search_by?
