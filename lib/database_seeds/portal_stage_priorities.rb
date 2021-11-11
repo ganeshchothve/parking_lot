@@ -11,5 +11,16 @@ module DatabaseSeeds
         end
       end
     end
+
+    def self.channel_partner_seed client_id=nil
+      i = 1
+      ['inactive', 'confirmed', 'pending', 'rejected', 'active'].each do |stage|
+        psp = PortalStagePriority.find_or_create_by(stage: stage, role: 'channel_partner')
+        psp.priority = i
+        if psp.save
+          i += 1
+        end
+      end
+    end
   end
 end
