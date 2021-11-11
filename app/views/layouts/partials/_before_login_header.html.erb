@@ -33,15 +33,18 @@
           Register as Channel Partner
           <% end %>
         </div>
+        <% if params[:action] == 'sign_in' %>
         <div class="d-inline-block">
           <%= link_to "Register Now", register_path, class: "btn register-btn bg-primary show-xs p-style ms-3 px-3" %>
         </div>
+        
         <div class="user-info login-btn d-inline-block show-xs mt-2">
           <div class="d-inline-block">
             <img src="<%= asset_path 'lock-black.svg' %>" alt="User Info">
             <%= link_to "Log in", new_session_path("user"), class: "p-style primary" %>
           </div>
         </div>
+        <% end %>
       </div>
       <% end %>
     </div>

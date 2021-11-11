@@ -1055,6 +1055,17 @@ select.form-control{
 		background-size: cover;
 		background-repeat: no-repeat;
 	}
+	.like-prjt-btn {
+		position: absolute;
+		top: 10px;
+		right: 20px;
+		width: 30px;
+		height: 30px;
+		text-align: center;
+		border-radius: 100%;
+		background-color: #fff;
+		padding: 3px;
+	}
 }
 .img-tag {
     position: absolute;
@@ -1100,6 +1111,7 @@ select.form-control{
 .project-info-inner {
     background-color: $theme-txt-color;
     padding: 10px 15px;
+	min-height: 96px;
     .prjt-title{
     	font-size: 16px;
 	    line-height: 24px;
@@ -1180,6 +1192,7 @@ select.form-control{
   /* Chrome, Edge, and Safari */
   *::-webkit-scrollbar {
     width: 6px;
+	height: 2px;
   }
 
   *::-webkit-scrollbar-track {
@@ -2191,9 +2204,11 @@ select.form-control{
 			    height: 100%;
 			    background-size: cover;
 			    background-position: center;
-			    border-radius: 8px 0 0 08px;
+			    border-radius: 8px;
 	    	}
 	    }
+	}
+}
 	    .project-inner-info {
 		    width: calc(100% - 230px);
 		    float: left;
@@ -2290,18 +2305,28 @@ select.form-control{
 				}
 			}
 		}
-		.prjt-stats {
+		.prjt-stats, .prjt-details-header-stats {
 		    width: calc(55% - 160px);
 		    float: left;
 		    position: relative;
 		    height: 122px;
 		    padding: 0 10px;
-		    .prjt-inner-stats {
+			&.prjt-details-header-stats{
+				width: initial;
+			}
+		    .prjt-inner-stats, .right-stats {
 			    position: absolute;
 			    width: 90%;
 			    top: 50%;
 			    left: 50%;
 			    transform: translate(-50%,-50%);
+				&.right-stats{
+					position: unset;
+					width: auto;
+					top: unset;
+					left: unset;
+					transform: unset;
+				}
 			    p {
 				    width: 33.33%;
 				    float: left;
@@ -2329,6 +2354,7 @@ select.form-control{
 					    display: block;
 					    color: #006DEE;
 					    font-weight: 500;
+						text-transform: uppercase;
 					}
 				}
 			}
@@ -2352,8 +2378,6 @@ select.form-control{
     			display: inline-block;
 			}
 		}
-	}
-}
 /* .googleMeet-modal{ */
 	.modal-dialog{
 		width: 636px;
@@ -3285,12 +3309,13 @@ select.form-control{
 				.prjt-menu{
 					overflow: hidden;
 					ul{
-					    width: 150%;
+					    width: 100%;
     					position: relative;
     					overflow: auto;
 						list-style: none;
 						padding: 0;
 						border-bottom: 1px solid #e5e5e5;
+						white-space: nowrap;	
 						li{
 							display: inline-block;
 							position: relative;
