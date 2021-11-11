@@ -20,16 +20,13 @@ class UserObserver < Mongoid::Observer
 
   def before_save user
     user.generate_referral_code
-    if user.confirmed_at_changed?
-      # manager_ids = user.referenced_manager_ids - [user.manager_id]
-      # manager_ids.each do |manager_id|
-      #   mailer = ChannelPartnerMailer.send_user_activated_with_other(manager_id, user.id)
-      #   if Rails.env.development?
-      #     mailer.deliver
-      #   else
-      #     mailer.deliver_later
-      #   end
-      # end
+    if user.confirmed_at_changed? && user.confirmed?
+      # Send confirmed portal stage for channel partner users into selldo
+      if user.channel_partner?
+        if (selldo_api_key = user.booking_portal_client&.selldo_api_key.presence) && (selldo_client_id = user.booking_portal_client&.selldo_client_id.presence)
+          SelldoLeadUpdater.perform_async(user.id.to_s, {stage: 'confirmed', action: 'add_cp_portal_stage', selldo_api_key: selldo_api_key, selldo_client_id: selldo_client_id})
+        end
+      end
     end
 
     if user.manager_id_changed? && user.manager_id.present?

@@ -57,6 +57,30 @@ class SelldoLeadUpdater
     end
   end
 
+  def push_cp_data(user, payload={})
+    return false unless payload.present? && payload[:lead].present?
+    selldo_api_key = payload['selldo_api_key']
+    selldo_client_id = payload['selldo_client_id']
+
+    payload[:lead] ||= {}
+    payload[:lead][:not_clear_custom_fields] = true
+    custom_hash = {lead: payload[:lead]}
+    selldo_base_url = ENV_CONFIG['selldo']['base_url'].chomp('/')
+    if custom_hash.present? && selldo_base_url.present? && selldo_api_key.present? && selldo_client_id.present?
+      params = {
+        api_key: selldo_api_key,
+        client_id: selldo_client_id,
+      }
+      params = params.merge(custom_hash)
+      url = selldo_base_url + "/client/leads/#{user.lead_id}.json"
+
+      Rails.logger.info "[SelldoLeadUpdater][CPData][INFO][Params] #{params}"
+      Rails.logger.info "[SelldoLeadUpdater][CPData][INFO][POST] #{url}"
+
+      RestClient.put(url, params)
+    end
+  end
+
   def add_portal_stage_and_token_number(lead, payload={})
     return false if payload.blank?
     stage = payload['stage']

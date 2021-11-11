@@ -15,7 +15,7 @@ class ChannelPartner
   EXPERTISE = %w( rentals retail residential commercial )
   EXPERIENCE = ['0-1 yrs', '1-5 yrs', '5-10 yrs', '10-15 yrs', '15-20 yrs', '20+ yrs']
   DEVELOPERS = [ "Godrej Properties", "Hiranandani", "Lodha Group", "Piramal Realty", "Kanakia", "Mahindra Lifespaces developers", "Kalpataru", "Runwal Group", "Dosti Group", "Wadhwa Group", "Rustomjee", "Puraniks builders", "Adhiraj construction", "L & T Realty", "Arkade Group", "Paradise group", "Chandak", "Marathon Realty", "Raymond Realty", "Damji Shamji Shah", "Shapoorji Pallonji Real Estate", "SD Corp", "Ornate Universal", "Sethia Infrastructure", "Aadi Properties", "Raheja construction", "Tata Housing", "Ajmera", "Adani", "Oberoi Realty", "Acme", "K Raheja", "Hubtown", "Ekta world", "Akshar group", "Raunak group", "JP Infra", "Sunteck Realty Ltd", "Seth Developers", "Kabra developer", "Koltepatil developer" ]
-  SERVICES = [ "Media Plan", "Creative", "Execution", "CRM", "Lead Management", "Virtual Presentation Platform" ]
+  SERVICES = [ "Work on Mandates", "Sales Training & Branded Collaterals", "Lead Generation Help", "CRM" ]
 
   # Add different types of documents which are uploaded on channel_partner
   DOCUMENT_TYPES = %w[pan_card rera_certificate gst_certificate cheque_scanned_copy company_incorporation_certificate form_10f tax_residency_certificate pe_declaration]
@@ -25,7 +25,7 @@ class ChannelPartner
   REGION = ['Chennai', 'Bangalore', 'Coimbatore', 'NRI']
 
   SHORT_FORM = %i(first_name last_name company_name rera_applicable status interested_services)
-  FULL_FORM = SHORT_FORM.clone + %i(team_size gst_applicable nri)
+  FULL_FORM = SHORT_FORM.clone + %i(gst_applicable nri)
 
   field :title, type: String
   field :first_name, type: String
