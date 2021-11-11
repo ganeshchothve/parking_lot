@@ -92,18 +92,18 @@
 <%= render 'layouts/navbar/custom_links' %>
 
 <% if current_user %>
-  <li class="lang-menu nav-item">
+  <!-- <li class="lang-menu nav-item">
     <div class="btn-group dropdown d-lg-block">
       <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownLang" href="javascript:;">
-        <%= t("language.#{params[:locale] || I18n.default_locale }", default: "language.en")%>
+        <%#= t("language.#{params[:locale] || I18n.default_locale }", default: "language.en")%>
       </a>
       <div class="dropdown-menu dropdown-menu-right menu-top"  aria-labelledby="dropdownLang">
-        <% ['en', 'mr'].each do |language| %>
-          <%= link_to t("language.#{language}"), url_for(params.permit!.merge(locale: language) ), class: 'dropdown-item' %>
-        <% end %>
+        <#% ['en', 'mr'].each do |language| %>
+          <%#= link_to t("language.#{language}"), url_for(params.permit!.merge(locale: language) ), class: 'dropdown-item' %>
+        <#% end %>
       </div>
     </div>
-  </li>
+  </li> -->
 <% end %>
 <% if policy([:admin, current_user]).move_to_next_state? %>
   <%= javascript_tag do %>

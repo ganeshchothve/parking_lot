@@ -108,8 +108,9 @@
       <div class="col-md-6">
         <%= form.input :event, collection: statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, as: :select, prompt: :translate, input_html: { class: 'selectize', disabled: !policy([:admin, @channel_partner]).editable_field?("event") } %>
       </div>
-      <div class="col-md-6 status_change_field">
-        <%= form.input :status_change_reason, disabled: !policy([:admin, @channel_partner]).editable_field?("status_change_reason") %>
+      <div class="col-md-12 status_change_field">
+        <%= form.label :status_change_reason, class: '' %>
+        <%= form.text_area :status_change_reason, class: 'form-control summernote', disabled: !policy([:admin, @channel_partner]).editable_field?("status_change_reason") %>
       </div>
     </div>
   <% end %>
