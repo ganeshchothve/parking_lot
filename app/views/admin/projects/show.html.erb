@@ -83,21 +83,29 @@
                                     <li class="">
                                         <a class="" id="nav-location-tab" href="javascript:;" rel="tab-location">Location</a>
                                     </li>
-                                    <li class="">
-                                        <a class="" id="nav-configure-tab" href="javascript:;" rel="tab-configure">Configurations</a>
-                                    </li>
-                                    <li class="">
-                                        <a class="" id="nav-collaterals-tab" href="javascript:;" rel="tab-collaterals">Collaterals</a>
-                                    </li>
-                                    <li class="">
-                                        <a class="" id="nav-amenities-tab" href="javascript:;" rel="tab-amenities">Amenities</a>
-                                    </li>
-                                    <li class="">
-                                        <a class="" id="nav-specifications-tab" href="javascript:;" rel="tab-specifications">Specifications</a>
-                                    </li>
-                                    <li class="">
-                                        <a class="" id="nav-timeline-tab" href="javascript:;" rel="tab-timeline">Project Timeline</a>
-                                    </li>
+                                    <% if inventory_avl %>
+                                      <li class="">
+                                          <a class="" id="nav-configure-tab" href="javascript:;" rel="tab-configure">Configurations</a>
+                                      </li>
+                                    <% end %>
+                                      <li class="">
+                                          <a class="" id="nav-collaterals-tab" href="javascript:;" rel="tab-collaterals">Collaterals</a>
+                                      </li>
+                                    <% if @project.amenities.present? %>
+                                      <li class="">
+                                          <a class="" id="nav-amenities-tab" href="javascript:;" rel="tab-amenities">Amenities</a>
+                                      </li>
+                                    <% end %>
+                                    <% if @project.specifications.present? %>
+                                      <li class="">
+                                          <a class="" id="nav-specifications-tab" href="javascript:;" rel="tab-specifications">Specifications</a>
+                                      </li>
+                                    <% end %>
+                                    <% if @project.timeline_updates.present? %>
+                                      <li class="">
+                                          <a class="" id="nav-timeline-tab" href="javascript:;" rel="tab-timeline">Project Timeline</a>
+                                      </li>
+                                    <% end %>
                                 </ul>
                             </nav>
                         </div>
@@ -396,6 +404,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <% if @project.amenities.present? %>
                             <div class="prjt-desc-tab col-12 bt-bt float-start" id="tab-amenities">
                                 <div class="tab-header col-12 float-start">
                                     <h2 class="tab-title float-start">Amenities</h2>
@@ -427,6 +436,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <% end %>
                             <% if @project.specifications.present? %>
                             <div class="prjt-desc-tab col-12 bt-bt float-start" id="tab-specifications">
                                 <div class="tab-header col-12 float-start">
