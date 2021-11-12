@@ -18,7 +18,7 @@
       <% if defined?(current_user) && current_user %>
         <hr class="w-100 m-0">
       <% end %>
-      <div class="col-lg-8 no-pd">
+      <div class="col-lg-6 col-md-6 no-pd">
         <div class="footer-top footer-menu">
           <% template = ::Template::UITemplate.where(name: 'layouts/_navbar_footer').first %>
           <% if template.present? %>
@@ -27,7 +27,7 @@
         </div>
       </div>
       <% unless defined?(current_user) && current_user %>
-        <div class="col-lg-4 col-md-4 col-xs-12 col-sm-12 no-pd">
+        <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 no-pd">
           <ul class="footer-menu float-right mb-0">
             <%= render "layouts/language" %>
           </ul>
