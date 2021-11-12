@@ -232,10 +232,11 @@
           <div class="property-item col-app-4 col-app-sm-6">
             <div class="property-item-inner">
               <div class="property-item-image">
-                <%= image_tag(project.cover_photo&.url || (asset_path 'default-project.jpg'), class: 'img-full lazy') %>
+                <%#= image_tag(project.cover_photo&.url || (asset_path 'default-project.jpg'), class: 'img-full lazy') %>
+                <div class="propery-thumb-img" style="background-image: url('<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>')"></div>
               </div>
               <div class="property-item-details">
-                <div class="property-name cgreen f700"><%= project.name %></div>
+                <div class="property-name cgreen f600"><%= project.name %></div>
                 <div class="property-configuration"><%= project.configurations.first(2)&.to_sentence %> <%= project.project_units.present? ? "from #{number_to_inr(project.project_units&.gt(all_inclusive_price: 0)&.min(:all_inclusive_price) || 0)}" : '' %></div>
               </div>
             </div>
