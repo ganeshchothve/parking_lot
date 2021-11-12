@@ -23,10 +23,10 @@
                                   </div>
                               </div>
                             <% end %>
-                            <%= link_to_if (launchbook_url = @project.assets.where(document_type: 'sales_presentation').first&.file&.url&.presence), '<i class="fa fa-lock fill-theme me-3"></i>Launchbook'.html_safe, launchbook_url, class: 'prjt-lauchbook me-3', target:'_blank' do |name|
+                            <%= link_to_if (launchbook_url = @project.assets.where(document_type: 'sales_presentation').first&.file&.url&.presence), '<i class="fa fa-lock fill-theme me-3"></i>Launchbook'.html_safe, launchbook_url, class: 'prjt-lauchbook', target:'_blank' do |name|
                                 ''
                               end%>
-                              <div class="prjt-share-save pt-3 pb-2 d-inline">
+                              <div class="prjt-share-save pt-3 pb-2 d-inline ms-3">
                               <!--<a href="javascript:;" class="share-location me-3"><i class="fa fa-share-alt fill-theme me-2"></i>Share location</a>-->
                                 <% if interest_access %>
                                   <a href="javascript:;" class="prjt-save"></a>
