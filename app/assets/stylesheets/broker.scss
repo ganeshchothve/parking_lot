@@ -3540,7 +3540,7 @@ select.form-control{
 									.amenities-wrap{
 										border: 1px solid #e5e5e5;
 										border-radius: 4px;
-										padding: 10px;
+										padding: 10px 0;
 										min-height: 75px;
 										span{
 											text-align: center;
@@ -3554,8 +3554,7 @@ select.form-control{
 										    font-size: 12px;
 										    line-height: 15px;
 										    letter-spacing: 0.44px;
-										    width: 80%;
-										    overflow: hidden;
+										    width: 100%;
 										    margin: auto;
 										    height: 14px;
 										    display: block;
