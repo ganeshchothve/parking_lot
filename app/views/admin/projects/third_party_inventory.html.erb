@@ -1,0 +1,73 @@
+<section class="mt-3 mb-5">
+  <div class="px-4">
+    <% if ENV_CONFIG.dig('third_party_inventory', 'base_url').present? %>
+      <iframe src="<%= "#{ENV_CONFIG.dig('third_party_inventory', 'base_url')}?domain=#{request.host}" %>" name='third_party_inventory_iframe' height='500px' width='100%' title='Third Party Inventory Iframe' id='third_party_inventory_iframe'></iframe>
+    <% end %>
+
+    <div class="modal fade" role="dialog" id="send_mail_to_leads">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="title text-truncate">Send Projects Link</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            </button>
+          </div>
+          <%= form_for :leads, url: search_inventory_admin_leads_path, remote: true, html: { class: 'validate-form', id: 'send_mail_to_leads_form' , data: { 'resource-type': Lead.model_name.human(count: 1), type: :json} } do |f| %>
+            <div class="modal-body">
+              <div class='row'>
+                <div class='col-lg-12'>
+                  <div class="mb-3">
+                    <%= f.label :select_leads, class: 'label-required' %>
+                    <%= f.select :ids, [], {prompt: 'Select'}, multiple: true, required: 'required', class: "selectize-remote", data: { url: admin_leads_path } %><%#, disabled: !(policy([:admin, Lead]).editable_field?("lead_ids")) %>
+                  </div>
+                  <%= f.hidden_field :tp_project_ids %>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <%= f.submit 'Send Mail', class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<%= javascript_tag do %>
+  $(document).ready(function() {
+    FormInitializer.init('#send_mail_to_leads_form');
+  });
+
+  $('#send_mail_to_leads_form').on('ajax:success', function(event) {
+    var myModal = bootstrap.Modal.getInstance(document.getElementById('send_mail_to_leads'));
+    myModal.hide();
+    if(typeof event.detail[0] == 'object' && event.detail[0].message != undefined) {
+      Amura.global_success_handler(event.detail[0].message);
+    }
+  });
+  $('#send_mail_to_leads_form').on('ajax:error', function(event) {
+    if(typeof event.detail[0] == 'object' && event.detail[0].errors != undefined) {
+      Amura.global_error_handler(event.detail[0].errors);
+    }
+  });
+<% end %>
+<script type="text/javascript">
+  const childWindow = document.getElementById('third_party_inventory_iframe').contentWindow;
+  window.addEventListener('message', function (e) {
+    // Skip unless message posted from target frame
+    if (e.source !== childWindow) {
+      return; // Skip message in this event listener
+    }
+    // Get the sent data
+    const data = e.data;
+    $('#send_mail_to_leads_form').find('[name="leads[tp_project_ids]"]').val(JSON.parse(data).projects);
+    // If you encode the message in JSON before sending them,
+    // then decode here
+    // const decoded = JSON.parse(data);
+    var myModal = bootstrap.Modal.getInstance(document.getElementById('send_mail_to_leads'));
+    if (myModal == null) {
+      myModal = new bootstrap.Modal(document.getElementById('send_mail_to_leads'), {});
+    }
+    myModal.show();
+  });
+</script>

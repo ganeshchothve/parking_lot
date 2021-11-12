@@ -23,7 +23,8 @@
       <div class="prjt-stats">
         <div class="prjt-inner-stats">
           <p>
-            <%= Lead.where(Lead.user_based_scope(current_user, params)).where(project_id: project.id).count %> <span>Leads</span>
+            <% leads_count = Lead.where(Lead.user_based_scope(current_user, params)).where(project_id: project.id).count %>
+            <%= link_to_if policy([current_user_role_group, Lead]).index?, leads_count, admin_leads_path(fltrs: {project_id: project.id}) %> <span>Leads</span>
             <% if policy([:admin, Lead.new(project_id: project.id)]).new? %>
               <%= link_to 'ADD', new_admin_lead_path(project_id: project.id), class: 'modal-remote-form-link prjt-add h-auto' %>
             <% end %>
@@ -32,7 +33,8 @@
             <%= SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).where(project_id: project.id).count %> <span>Walk-Ins</span>
           </p>
           <p>
-            <%= BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: project.id).count %> <span>Bookings</span>
+            <% bookings_count = BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: project.id).count %>
+            <%= link_to_if policy([current_user_role_group, BookingDetail]).index?, bookings_count, admin_booking_details_path(fltrs: {project_id: project.id})  %> <span>Bookings</span>
             <a href="javascript:;" class="prjt-add"></a>
           </p>
           <!--

@@ -1,6 +1,6 @@
 class Admin::ProjectsController < AdminController
-  before_action :set_project, except: %i[index collaterals new create]
-  before_action :authorize_resource, except: %i[collaterals]
+  before_action :set_project, except: %i[index collaterals new create third_party_inventory]
+  before_action :authorize_resource, except: %i[collaterals third_party_inventory]
   around_action :apply_policy_scope, only: %i[index collaterals]
   layout :set_layout
 
@@ -21,6 +21,9 @@ class Admin::ProjectsController < AdminController
         format.html {}
       end
     end
+  end
+
+  def third_party_inventory
   end
 
   #

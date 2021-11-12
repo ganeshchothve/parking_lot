@@ -3,12 +3,12 @@
     <% if defined?(current_user) && current_user %>
       <div class="row pb-1 footer-tow-cmn">
         <div class="col-lg-6 col-md-8 col-xs-6 col-sm-4 no-pd">
-          <ul class="footer-menu float-left mb-0">
+          <ul class="footer-menu text-start mb-0">
             <%= bottom_navigation %>
           </ul>
         </div>
         <div class="col-lg-6 col-md-4 col-xs-6 col-sm-8 no-pd">
-          <ul class="footer-menu float-right mb-0">
+          <ul class="footer-menu mb-0 text-end text-right">
             <%= render "layouts/language" %>
           </ul>
         </div>
@@ -28,7 +28,7 @@
       </div>
       <% unless defined?(current_user) && current_user %>
         <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 no-pd">
-          <ul class="footer-menu float-right mb-0 text-end text-right">
+          <ul class="footer-menu mb-0 text-end text-right">
             <%= render "layouts/language" %>
           </ul>
         </div>
