@@ -1159,12 +1159,12 @@ select.form-control{
 			line-height: 20px;
 			color: $theme-txt-color;
 			letter-spacing: 0.39px;
-			max-height: 60px;
-			min-height: 60px;
+			max-height: 55px;
+			min-height: 55px;
 			overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+			display: -webkit-box;
+			-webkit-line-clamp: 3;
+			-webkit-box-orient: vertical;
 		}
 	}
 }

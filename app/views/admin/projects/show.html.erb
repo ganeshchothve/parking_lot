@@ -589,7 +589,7 @@
                             <div class="project-list row">
                                 <div class="project-img">
                                     <div class="project-img-thumb" style="background-image:url(<%= project.cover_photo&.url || (asset_path 'project-item-image.jpg') %>)">
-                                    <a href="javascript:;" class="like-prjt-btn"><i class="fa fa-thumbs-up fill-danger"></i></a>
+                                    <a href="javascript:;" class="like-prjt-btn border"><i class="fa fa-thumbs-up fill-danger"></i></a>
                                     </div>
                                     <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i><%= project.category&.titleize || 'Just Launch' %></p>
                                 </div>
@@ -601,7 +601,7 @@
                                     </div>
                                     <div class="project-info-outer px-3">
                                         <div class="row">
-                                            <div class="col-lg-12 pe-2 ps-3">
+                                            <div class="col-lg-12 pe-2 ps-2">
                                               <div class="list-txt project-desc mb-0"><%= project.description&.html_safe %></div>
                                               <!--
                                               <div id="projectDescCarousel_<%= index %>" class="projectDescCarousel carousel slide position-relative" data-bs-ride="carousel">
