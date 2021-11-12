@@ -29,7 +29,7 @@
             <% end %>
           </p>
           <p>
-            <%= SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).where(project_id: project.id).count %> <span>Walk-Ins (Site visits)</span>
+            <%= SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).where(project_id: project.id).count %> <span>Walk-Ins</span>
           </p>
           <p>
             <%= BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: project.id).count %> <span>Bookings</span>
