@@ -104,10 +104,14 @@ $txt-drk-b-lt: #3F5275;
 .bg-menu, .bg-theme{
 	background-color: #2E384D;
 }
+html{
+	scroll-behavior: smooth;
+}
 body{
 	background-color: #f9f9f9;
 	font-family: $font-family-base;
 	overflow-x: hidden;
+	scroll-behavior: smooth;
 }
 a{
 	text-decoration: none;

@@ -55,18 +55,6 @@ $(document).ready(function () {
     }
   });
 
-  $('.prjt-menu a').on("click", function () {
-    console.log('click');
-    // if (!$(this).hasClass('extLink')) {
-    var href = $(this).attr("rel");
-    var gap = 110;
-
-    $('html,body').animate({
-      scrollTop: $("#" + href).offset().top - gap
-    });
-    // }
-  });
-
   var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
   var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl)
@@ -92,46 +80,3 @@ $(document).ready(function () {
   });
 });
 
-// var childrenSelector = $(".nav-tabs a");
-//  var aChildren = $(".nav-tabs a"); // find the a children of the list items
-//  if (window_wt <= 700)
-//      var gap = 60; // $(".header-wrapper").outerHeight(); //Navigation height
-//  else
-//      var gap = 70;
-//  var aArray = []; // create the empty aArray
-//  for (var i = 0; i < childrenSelector.length; i++) {
-//      var aChild = aChildren[i];
-//      if (!$(aChild).hasClass('extLink')) {
-//          if ($(aChild).attr('rel')) {
-//              var ahref = $(aChild).attr('rel');
-//              aArray.push(ahref);
-//          }
-//      }
-//  }
-//  //On Scroll - Add class active to active tab
-//  $(window).scroll(function() {
-//      var windowPos = $(".prjt-content-list").scrollTop(); // get the offset of the window from the top of page
-//      var windowHeight = $('.prjt-content-list').height(); // get the height of the window
-//      var docHeight = $(document).height();
-//      for (i = 0; i < aArray.length; i++) {
-//          var theID = aArray[i];
-//          var divPos = $("#" + theID).offset().top; // get the offset of the div from the top of page
-//          var divHeight = $("#" + theID).outerHeight(); // get the height of the div in question
-//          if (windowPos >= (divPos - gap) && windowPos < ((divPos - gap) + divHeight)) {
-//              if (!$("a[rel='" + theID + "']").hasClass("active")) {
-//                  $("a[rel='" + theID + "']").addClass("active");
-//              }
-//          } else {
-//              $("a[rel='" + theID + "']").removeClass("active");
-//          }
-//      }
-
-//      //If document has scrolled to the end. Add active class to the last navigation menu
-//      if (windowPos + windowHeight == docHeight) {
-//          if (!$(".nav-tabs a:not(.extLink):last-child").hasClass("active")) {
-//              var navActiveCurrent = $(".active").attr("rel");
-//              $("a[rel='" + navActiveCurrent + "']").removeClass("active");
-//              $(".nav-tabs a:not(.extLink):last-child").addClass("active");
-//          }
-//      }
-//  });
