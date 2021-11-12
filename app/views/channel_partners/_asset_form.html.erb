@@ -5,6 +5,13 @@
         <% options = assetable_document_types(assetable) %>
         <%= select_tag "document_type", options_for_select(options, options.first[1]), {prompt: "Select", class: "selectize", required: 'required'} %>
         <div class = "text-muted small pb-2">Upload documents in following formats - jpg, jpeg, png, pdf </div>
+        <div class = "text-muted small pb-2">
+          Upload following documents to submit your application
+          <%= assetable.doc_types&.map { |doc_type|
+              t("mongoid.attributes.channel_partner/file_types.#{doc_type}")
+            }&.to_sentence
+          %>
+        </div>
         <div class = "text-muted small"><div class="help_text"></div></div>
       </div>
       <div class="col-2">
