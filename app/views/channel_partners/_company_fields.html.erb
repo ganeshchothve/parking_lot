@@ -18,7 +18,7 @@
     <% if current_user.present? && current_user.role?(:cp_admin) %>
       <%= form.hidden_field :manager_id, value: current_user.id %>
     <% else %>
-      <%= form.input :manager_id, required: true, collection: User.in(role: "cp").collect{|x| [x.ds_name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), as: :select, prompt: :translate %>
+      <%= form.input :manager_id, required: true, collection: User.in(role: "cp").union.in(role: "cp_admin").collect{|x| [x.ds_name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), as: :select, prompt: :translate %>
     <% end %>
   </div>
 </div>

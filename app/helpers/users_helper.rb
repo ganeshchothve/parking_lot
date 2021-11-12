@@ -47,7 +47,7 @@ module UsersHelper
     when *(User::BUYER_ROLES)
       'channel_partner'
     when 'channel_partner'
-      'cp'
+      ['cp', 'cp_admin']
     when 'cp'
       'cp_admin'
     end
