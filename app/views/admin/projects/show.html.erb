@@ -13,8 +13,31 @@
                             <p class="prjt-devlprs mb-2"><%= @project.developer_name || '-' %></p>
                             <p class="prjt-location"><i class="fa fa-map-marker-alt me-2"></i><%= @project.micro_market || '-' %></p>
                         </div>
-                        <div class="col-6 float-end text-end pt-2 prjt-details-header-stats">
-                            <div class="prjt-inner-stats row right-stats">
+                        <div class="col-6 float-end text-end prjt-details-header-stats px-0 pt-2">
+                            <div class="d-block">
+                                <% if current_user.role.in?(%w(superadmin admin)) %>
+                              <div class="dropdown show d-inline">
+                                  <a class="btn table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
+                                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                                      <%= render "#{current_user_role_group}/projects/links", project: @project %>
+                                  </div>
+                              </div>
+                            <% end %>
+                            <%= link_to_if (launchbook_url = @project.assets.where(document_type: 'sales_presentation').first&.file&.url&.presence), '<i class="fa fa-lock fill-theme me-3"></i>Launchbook'.html_safe, launchbook_url, class: 'prjt-lauchbook me-3', target:'_blank' do |name|
+                                ''
+                              end%>
+                              <div class="prjt-share-save pt-3 pb-2 d-inline">
+                              <!--<a href="javascript:;" class="share-location me-3"><i class="fa fa-share-alt fill-theme me-2"></i>Share location</a>-->
+                                <%# if interest_access %>
+                                  <a href="javascript:;" class="prjt-save"></a>
+                                  <%= link_to_unless interest.present?, '<i class="fa fa-heart fill-theme me-2"></i>Show Interest'.html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: @project.id, event: 'subscribe'}), method: :post, class: 'prjt-save' do |name|
+                                    '<i class="fa fa-heart fill-danger"></i>'.html_safe
+                                  end
+                                  %>
+                                <%# end %>
+                            </div>
+                            </div>
+                            <div class="prjt-inner-stats row right-stats mt-3">
                                 <p class="">
                                     <%#= Lead.where(Lead.user_based_scope(current_user, params)).where(project_id: project.id).count %> <span class="d-block">Walk Ins</span>
                                     <%# if policy([:admin, Lead.new(project_id: project.id)]).new? %>
@@ -31,28 +54,8 @@
                                     <a href="javascript:;" class="prjt-add"></a>
                                 </p>
                             </div>
-                            <% if current_user.role.in?(%w(superadmin admin)) %>
-                              <div class="dropdown show d-inline">
-                                  <a class="btn table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
-                                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                                      <%= render "#{current_user_role_group}/projects/links", project: @project %>
-                                  </div>
-                              </div>
-                            <% end %>
-                            <%= link_to_if (launchbook_url = @project.assets.where(document_type: 'sales_presentation').first&.file&.url&.presence), '<i class="fa fa-lock fill-theme me-3"></i>Launchbook'.html_safe, launchbook_url, class: 'prjt-lauchbook', target:'_blank' do |name|
-                                ''
-                              end
-                            %>
-                            <div class="prjt-share-save pt-3 pb-2">
-                              <!--<a href="javascript:;" class="share-location me-3"><i class="fa fa-share-alt fill-theme me-2"></i>Share location</a>-->
-                                <% if interest_access %>
-                                  <a href="javascript:;" class="prjt-save"></a>
-                                  <%= link_to_unless interest.present?, '<i class="fa fa-heart fill-theme me-2"></i>Show Interest'.html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: @project.id, event: 'subscribe'}), method: :post, class: 'prjt-save' do |name|
-                                    '<i class="fa fa-heart fill-danger me-2"></i>'.html_safe
-                                  end
-                                  %>
-                                <% end %>
-                            </div>
+                            
+                            
                         </div>
                     </div>
                     <div class="prjt-gallery pb-3 col-12 float-start">

@@ -2017,7 +2017,7 @@ select.form-control{
 				width: 12px;
 				height: 12px;
 				display: inline-block;
-				background-image: url("check-circle.svg");
+				background-image: url("check-circle.png");
 				background-size: contain;
 				background-position: center;
 				position: absolute;
@@ -2315,7 +2315,7 @@ select.form-control{
 		    height: 122px;
 		    padding: 0 10px;
 			&.prjt-details-header-stats{
-				width: initial;
+				width: 50%;
 			}
 		    .prjt-inner-stats, .right-stats {
 			    position: absolute;

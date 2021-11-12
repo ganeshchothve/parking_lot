@@ -237,6 +237,7 @@
               </div>
               <div class="property-item-details">
                 <div class="property-name cgreen f600"><%= project.name %></div>
+                <p class="property-location">Baner, Pune</p>
                 <div class="property-configuration"><%= project.configurations.first(2)&.to_sentence %> <%= project.project_units.present? ? "from #{number_to_inr(project.project_units&.gt(all_inclusive_price: 0)&.min(:all_inclusive_price) || 0)}" : '' %></div>
               </div>
             </div>
