@@ -95,6 +95,7 @@ class Project
   field :enable_slot_generation, type: Boolean, default: false
   field :embed_map_tag, type: String
   field :usp, type: Array, default: []
+  field :hot, type: Boolean, default: false
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
@@ -166,6 +167,7 @@ class Project
 
   scope :filter_by__id, ->(_id) { all.in(_id: (_id.is_a?(Array) ? _id : [_id])) }
   scope :filter_by_category, ->(category) { where(category: category) }
+  scope :filter_by_hot, ->(hot) { where(hot: hot.eql?("true")) }
   scope :filter_by_user_interested_projects, ->(user_id) { all.in(id: InterestedProject.where(user_id: user_id).in(status: %w(subscribed approved)).distinct(:project_id)) }
 
   #def unit_configurations

@@ -21,7 +21,15 @@
 
 <% if policy([:admin, Project]).index? %>
   <li class="nav-item">
-    <%= active_link_to t('controller.projects.index.link_name'), admin_projects_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <%= active_link_to t('controller.projects.index.link_name'), admin_projects_path, active: request.fullpath.scan(/projects/).present? && %w(user_interested_projects third_party_inventory).all? {|x| request.fullpath.scan(/^(?!.*#{x}).*$/).present?}, class: "nav-link pl-0 pr-0" %>
+  </li>
+  <% if policy([current_user_role_group, InterestedProject]).index? %>
+    <li class='nav-item'>
+      <%= active_link_to 'Interested Projects', admin_projects_path(fltrs: {user_interested_projects: current_user.id}), active: /user_interested_projects/, class: "nav-link pl-0 pr-0" %>
+    </li>
+  <% end %>
+  <li class='nav-item'>
+    <%= active_link_to 'Third Party Inventory', third_party_inventory_admin_projects_path, active: /third_party_inventory/, class: "nav-link pl-0 pr-0" %>
   </li>
 <% end %>
 

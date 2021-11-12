@@ -451,6 +451,7 @@ en:
         name: 'Developer Name'
         selldo_id: 'Sell.Do Developer ID'
       project:
+        hot: 'Hot Property'
         is_active: 'Active?'
         name: 'Project Name'
         micro_market: 'Location'
