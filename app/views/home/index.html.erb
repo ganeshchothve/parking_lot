@@ -228,72 +228,19 @@
     <h2 class="section-heading text-center cgreen">Chance to work with Pune's hottest selling properties</h2>
     <div class="row relative">
       <div class="project-listing-slider">
-        <div class="property-item col-app-4 col-app-sm-6">
-          <div class="property-item-inner">
-            <div class="property-item-image">
-              <img src="<%= asset_path 'empire-square.jpg' %>" class="img-full lazy">
-            </div>
-            <div class="property-item-details">
-              <div class="property-name cgreen f700">Vertical Alcinia </div>
-              <div class="property-configuration">2 BHK from 52.8 lacs ( All incl.)</div>
-            </div>
-          </div>
-        </div>
-        <div class="property-item col-app-4 col-app-sm-6">
-          <div class="property-item-inner">
-            <div class="property-item-image">
-              <img src="<%= asset_path 'Sukhwani-skylines.jpg' %>" class="img-full lazy">
-            </div>
-            <div class="property-item-details">
-              <div class="property-name cgreen f700">Codename Urban Forest</div>
-              <div class="property-configuration">2 &amp; 3 BHK from 47.5 lacs (All incl.)</div>
+        <% Project.limit(15).each do |project| %>
+          <div class="property-item col-app-4 col-app-sm-6">
+            <div class="property-item-inner">
+              <div class="property-item-image">
+                <%= image_tag(project.cover_photo&.url || (asset_path 'default-project.jpg'), class: 'img-full lazy') %>
+              </div>
+              <div class="property-item-details">
+                <div class="property-name cgreen f700"><%= project.name %></div>
+                <div class="property-configuration"><%= project.configurations.first(2)&.to_sentence %> <%= project.project_units.present? ? "from #{number_to_inr(project.project_units&.gt(all_inclusive_price: 0)&.min(:all_inclusive_price) || 0)}" : '' %></div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="property-item col-app-4 col-app-sm-6">
-          <div class="property-item-inner">
-            <div class="property-item-image">
-              <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-full lazy">
-            </div>
-            <div class="property-item-details">
-              <div class="property-name cgreen f700">Astonia Classic</div>
-              <div class="property-configuration">2 BHK from 49.99 lacs (All incl.)</div>
-            </div>
-          </div>
-        </div>
-         <div class="property-item col-app-4 col-app-sm-6">
-          <div class="property-item-inner">
-            <div class="property-item-image">
-              <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-full lazy">
-            </div>
-            <div class="property-item-details">
-              <div class="property-name cgreen f700">Astonia Classic</div>
-              <div class="property-configuration">2 BHK from 49.99 lacs (All incl.)</div>
-            </div>
-          </div>
-        </div>
-         <div class="property-item col-app-4 col-app-sm-6">
-          <div class="property-item-inner">
-            <div class="property-item-image">
-              <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-full lazy">
-            </div>
-            <div class="property-item-details">
-              <div class="property-name cgreen f700">Astonia Classic</div>
-              <div class="property-configuration">2 BHK from 49.99 lacs (All incl.)</div>
-            </div>
-          </div>
-        </div>
-         <div class="property-item col-app-4 col-app-sm-6">
-          <div class="property-item-inner">
-            <div class="property-item-image">
-              <img src="<%= asset_path 'Celestial-City.jpg' %>" class="img-full lazy">
-            </div>
-            <div class="property-item-details">
-              <div class="property-name cgreen f700">Astonia Classic</div>
-              <div class="property-configuration">2 BHK from 49.99 lacs (All incl.)</div>
-            </div>
-          </div>
-        </div>
+        <% end %>
       </div>
       <div id="prjt-list-prev" class=""></div>
       <div id="prjt-list-next" class=""></div>
