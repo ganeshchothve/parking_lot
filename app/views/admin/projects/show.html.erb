@@ -28,34 +28,32 @@
                               end%>
                               <div class="prjt-share-save pt-3 pb-2 d-inline">
                               <!--<a href="javascript:;" class="share-location me-3"><i class="fa fa-share-alt fill-theme me-2"></i>Share location</a>-->
-                                <%# if interest_access %>
+                                <% if interest_access %>
                                   <a href="javascript:;" class="prjt-save"></a>
                                   <%= link_to_unless interest.present?, '<i class="fa fa-heart fill-theme me-2"></i>Show Interest'.html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: @project.id, event: 'subscribe'}), method: :post, class: 'prjt-save' do |name|
                                     '<i class="fa fa-heart fill-danger"></i>'.html_safe
                                   end
                                   %>
-                                <%# end %>
+                                <% end %>
                             </div>
                             </div>
                             <div class="prjt-inner-stats row right-stats mt-3">
-                                <p class="">
-                                    <%#= Lead.where(Lead.user_based_scope(current_user, params)).where(project_id: project.id).count %> <span class="d-block">Walk Ins</span>
-                                    <%# if policy([:admin, Lead.new(project_id: project.id)]).new? %>
-                                    <%#= link_to 'ADD', new_admin_lead_path(project_id: project.id), class: 'modal-remote-form-link prjt-add h-auto' %>
-                                    <a href="javascript:;" class="prjt-add">Add</a>
-                                    <%# end %>
+                                <p>
+                                  <% leads_count = Lead.where(Lead.user_based_scope(current_user, params)).where(project_id: @project.id).count %>
+                                  <%= link_to_if policy([current_user_role_group, Lead]).index?, leads_count, admin_leads_path(fltrs: {project_id: @project.id}) %> <span class="d-block">Leads</span>
+                                  <% if policy([:admin, Lead.new(project_id: @project.id)]).new? %>
+                                    <%= link_to 'ADD', new_admin_lead_path(project_id: @project.id), class: 'modal-remote-form-link prjt-add' %>
+                                  <% end %>
                                 </p>
-                                <p class="">
-                                    <%#= BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: project.id).count %> <span>Bookings</span>
-                                    <a href="javascript:;" class="prjt-add"></a>
+                                <p>
+                                  <%= SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).where(project_id: @project.id).count %> <span class="d-block">Walk-Ins</span>
                                 </p>
-                                <p class="">
-                                    <%#= BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: project.id).booking_stages.filter_by_tasks_completed('registration_done').count %> <span>Registrations</span>
-                                    <a href="javascript:;" class="prjt-add"></a>
+                                <p>
+                                  <% bookings_count = BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: @project.id).count %>
+                                  <%= link_to_if policy([current_user_role_group, BookingDetail]).index?, bookings_count, admin_booking_details_path(fltrs: {project_id: @project.id})  %> <span class="d-block">Bookings</span>
+                                  <a href="javascript:;" class="prjt-add"></a>
                                 </p>
                             </div>
-                            
-                            
                         </div>
                     </div>
                     <div class="prjt-gallery pb-3 col-12 float-start">

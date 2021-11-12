@@ -13,6 +13,9 @@
           <% pre_launch = "Pre Launch (#{pre_launch_count = Project.where(Project.user_based_scope(current_user, params)).where(category: 'pre_launch').count})" %> <%# + "#{pre_launch_count > 0 ? "<span class='notify'></span>".html_safe : ''}" %>
           <%= link_to pre_launch.html_safe, admin_projects_path(fltrs: {category: 'pre_launch'}), class: "filter-link #{params.dig(:fltrs, :category) == 'pre_launch' ? 'active' : ''}" %>
 
+          <% hot_prop = "Hot (#{hot_count = Project.where(Project.user_based_scope(current_user, params)).where(hot: true).count})" %> <%# + "#{hot_count > 0 ? "<span class='notify'></span>".html_safe : ''}" %>
+          <%= link_to hot_prop.html_safe, admin_projects_path(fltrs: {hot: true}), class: "filter-link #{params.dig(:fltrs, :category) == 'launch' ? 'active' : ''}" %>
+
         </div>
         <div class="col-lg-5 text-end px-0 filter-set">
           <% if policy([:admin, Project]).new? %>

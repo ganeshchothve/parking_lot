@@ -1,4 +1,12 @@
 <div class="row">
+  <div class="col-md-12">
+    <div class="form-group text-end">
+      <div class="form-check form-check-inline">
+        <%= f.label :hot, class: "form-check-label d-inline-block ms-2" %>
+        <%= f.check_box :hot, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("hot") }, "Yes", "No" %>
+      </div>
+    </div>
+  </div>
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :name, class: 'label-required' %>
