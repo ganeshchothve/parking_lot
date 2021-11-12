@@ -342,7 +342,7 @@
               <div class="fn-12 col-12">
                 <p class="mb-0">Reason:</p>
                 <div class="error-reason">
-                  <%= @channel_partner.status_change_reason %>
+                  <%= @channel_partner.status_change_reason&.html_safe %>
                 </div>
               </div>
             </div>

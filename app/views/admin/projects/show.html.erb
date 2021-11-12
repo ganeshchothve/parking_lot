@@ -31,16 +31,18 @@
                                     <a href="javascript:;" class="prjt-add"></a>
                                 </p>
                             </div>
-                        <!--<div class="dropdown show d-inline">
-                            <a class="btn table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                                <%= render "#{current_user_role_group}/projects/links", project: @project %>
-                            </div>
-                        </div>-->
-                        <%#= link_to_if (launchbook_url = @project.assets.where(document_type: 'sales_presentation').first&.file&.url&.presence), '<i class="fa fa-lock fill-theme me-3"></i>Launchbook'.html_safe, launchbook_url, class: 'prjt-lauchbook', target:'_blank' do |name|
-                            link_to(name, 'javascript:;', class: 'prjt-lauchbook')
-                          end
-                        %>
+                            <% if current_user.role.in?(%w(superadmin admin)) %>
+                              <div class="dropdown show d-inline">
+                                  <a class="btn table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
+                                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                                      <%= render "#{current_user_role_group}/projects/links", project: @project %>
+                                  </div>
+                              </div>
+                            <% end %>
+                            <%= link_to_if (launchbook_url = @project.assets.where(document_type: 'sales_presentation').first&.file&.url&.presence), '<i class="fa fa-lock fill-theme me-3"></i>Launchbook'.html_safe, launchbook_url, class: 'prjt-lauchbook', target:'_blank' do |name|
+                                ''
+                              end
+                            %>
                             <div class="prjt-share-save pt-3 pb-2">
                               <!--<a href="javascript:;" class="share-location me-3"><i class="fa fa-share-alt fill-theme me-2"></i>Share location</a>-->
                                 <% if interest_access %>
@@ -589,13 +591,17 @@
                             <div class="project-list row">
                                 <div class="project-img">
                                     <div class="project-img-thumb" style="background-image:url(<%= project.cover_photo&.url || (asset_path 'project-item-image.jpg') %>)">
-                                    <a href="javascript:;" class="like-prjt-btn border"><i class="fa fa-thumbs-up fill-danger"></i></a>
+                                    <% interest = current_user.interested_projects.in(status: %w(subscribed approved)).where(project_id: project.id).presence %>
+                                    <%= link_to_unless interest.present?, '<i class="fa fa-thumbs-up fill-theme"></i>'.html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'like-prjt-btn border' do |name|
+                                        '<span class="like-prjt-btn border"><i class="fa fa-thumbs-up fill-danger"></i></span>'.html_safe
+                                      end
+                                    %>
                                     </div>
                                     <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i><%= project.category&.titleize || 'Just Launch' %></p>
                                 </div>
                                 <div class="project-info">
                                     <div class="project-info-inner">
-                                      <h2 class="prjt-title"><%= project.name %></h2>
+                                      <h2 class="prjt-title"><%= link_to_if current_user.active_channel_partner?, project.name, admin_project_path(project), class: 'text-white' %></h2>
                                       <p class="prjt-devlprs"><%= project.developer_name %></p>
                                       <p class="prjt-location"><i class="fa fa-map-marker-alt fill-white"></i><%= "#{project.micro_market}, #{project.city}" %></p>
                                     </div>

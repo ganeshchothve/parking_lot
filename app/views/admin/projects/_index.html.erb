@@ -80,15 +80,17 @@
             <%= link_to_if !project.id.in?(interested_project_ids), "<i class='fa fa-heart #{heart_class} me-3'></i>".html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist' %>
           <% end %>
 
-          <!--<div class="prjt-menu-top float-md-right">
-            <div class="dropdown">
-               <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-               <i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
-               <div class="dropdown-menu dropdown-menu-right"  aria-labelledby="dropdownMenuLink">
-                  <%= render "#{current_user_role_group}/projects/links", project: project %>
-               </div>
+          <% if current_user.role.in?(%w(superadmin admin)) %>
+            <div class="prjt-menu-top float-md-right">
+              <div class="dropdown">
+                 <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                 <i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
+                 <div class="dropdown-menu dropdown-menu-right"  aria-labelledby="dropdownMenuLink">
+                    <%= render "#{current_user_role_group}/projects/links", project: project %>
+                 </div>
+              </div>
             </div>
-         </div>-->
+          <% end %>
         </div>
       </div>
     </div>

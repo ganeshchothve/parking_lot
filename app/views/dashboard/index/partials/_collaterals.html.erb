@@ -9,6 +9,13 @@
       <div class="project-list row">
         <div class="project-img">
           <div class="project-img-thumb" style="background-image:url(<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>)"></div>
+
+          <% interest = current_user.interested_projects.in(status: %w(subscribed approved)).where(project_id: project.id).presence %>
+          <%= link_to_unless interest.present?, '<i class="fa fa-thumbs-up fill-theme"></i>'.html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'like-prjt-btn border' do |name|
+              '<span class="like-prjt-btn border"><i class="fa fa-thumbs-up fill-danger"></i></span>'.html_safe
+            end
+          %>
+
           <% if project.category.present? && project.category != 'completed' %>
             <p class="img-tag bg-danger"><%= project.category&.titleize %></p>
           <% end %>
@@ -72,7 +79,14 @@
     <div class="project-wrap br-rd-8 card-shadow mb-4">
       <div class="project-list row">
         <div class="project-img">
-        <div class="project-img-thumb" style="background-image:url(<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>)"></div>
+          <div class="project-img-thumb" style="background-image:url(<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>)"></div>
+
+          <% interest = current_user.interested_projects.in(status: %w(subscribed approved)).where(project_id: project.id).presence %>
+          <%= link_to_unless interest.present?, '<i class="fa fa-thumbs-up fill-theme"></i>'.html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'like-prjt-btn border' do |name|
+              '<span class="like-prjt-btn border"><i class="fa fa-thumbs-up fill-danger"></i></span>'.html_safe
+            end
+          %>
+
           <% if project.category.present? && project.category != 'completed' %>
             <p class="img-tag bg-danger"><%= project.category&.titleize %></p>
           <% end %>

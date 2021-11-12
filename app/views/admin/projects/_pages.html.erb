@@ -4,7 +4,7 @@
 </div>
 <div class="mb-3">
   <%= f.label :description, class: '' %>
-  <%= f.text_area :description, class: 'form-control summernote', disabled: !policy([:admin, project]).editable_field?("description") %>
+  <%= f.text_area :description, rows: 5, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("description") %>
 </div>
 <div class="mb-3">
   <%= f.label :advantages, class: '' %>
