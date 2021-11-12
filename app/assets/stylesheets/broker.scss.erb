@@ -2021,7 +2021,7 @@ select.form-control{
 				width: 12px;
 				height: 12px;
 				display: inline-block;
-				background-image: url("check-circle.png");
+				background-image: url(<%= asset_path "check-circle.png" %>);
 				background-size: contain;
 				background-position: center;
 				position: absolute;
@@ -2146,7 +2146,7 @@ select.form-control{
 }
 @mixin inputSearchIcon {
 	background-repeat: no-repeat;
-	background-image: url("search.svg");
+	background-image: url(<%= asset_path "search.svg" %>);
     background-position-x: 96%;
     background-position-y: 10px;
     background-size: 18px;
@@ -2185,7 +2185,7 @@ select.form-control{
 	border-radius: 4px;
 	padding: 8px 20px 8px 35px;
 	text-align: center;
-	background-image: url("sort.svg");
+	background-image: url(<%= asset_path "sort.svg" %>);
     background-position-x: 12px;
     background-position-y: 10px;
     background-size: 12px;
