@@ -3,7 +3,11 @@
   <% meeting = meetings.first %>
   <div class="single-prjt-list mt-4">
     <div class="prjt-thumb">
-      <div class="prjt-thumb-inner" style="background-image: url('<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>')"></div>
+      <div class="prjt-thumb-inner position-relative" style="background-image: url('<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>')">
+        <% if project.hot?%>
+        <span class="hot-sellig-tag"><i class="fa fa-fire fill-danger me-1"></i>Hot Selling</span>
+        <% end %>
+      </div>
     </div>
     <div class="project-inner-info">
       <div class="inner-info">

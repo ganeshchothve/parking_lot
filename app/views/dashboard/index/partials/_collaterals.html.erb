@@ -8,7 +8,11 @@
     <div class="project-wrap br-rd-8 card-shadow mb-4">
       <div class="project-list row">
         <div class="project-img">
-          <div class="project-img-thumb" style="background-image:url(<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>)"></div>
+          <div class="project-img-thumb position-relative" style="background-image:url(<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>)">
+            <% if project.hot?%>
+                  <span class="hot-sellig-tag"><i class="fa fa-fire fill-danger me-1"></i>Hot Selling</span>
+                  <% end %>
+          </div>
 
           <% interest = current_user.interested_projects.in(status: %w(subscribed approved)).where(project_id: project.id).presence %>
           <%= link_to_unless interest.present?, '<i class="fa fa-heart fill-theme"></i>'.html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'like-prjt-btn border' do |name|

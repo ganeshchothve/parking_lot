@@ -603,7 +603,8 @@
                         <div class="project-wrap br-rd-8 card-shadow">
                             <div class="project-list row">
                                 <div class="project-img">
-                                    <div class="project-img-thumb" style="background-image:url(<%= project.cover_photo&.url || (asset_path 'project-item-image.jpg') %>)">
+                                    <div class="project-img-thumb position-relative" style="background-image:url(<%= project.cover_photo&.url || (asset_path 'project-item-image.jpg') %>)">
+                                    
                                     <% interest = current_user.interested_projects.in(status: %w(subscribed approved)).where(project_id: project.id).presence %>
                                     <%= link_to_unless interest.present?, '<i class="fa fa-heart fill-theme"></i>'.html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'like-prjt-btn border' do |name|
                                         '<span class="like-prjt-btn border"><i class="fa fa-heart fill-danger"></i></span>'.html_safe
@@ -611,6 +612,9 @@
                                     %>
                                     </div>
                                     <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i><%= project.category&.titleize || 'Just Launch' %></p>
+                                        <% if project.hot?%>
+                                        <p class="img-tag bg-danger" style="top:65px"><i class="fa fa-fire fill-white"></i>Hot Selling</p>
+                                        <% end %>
                                 </div>
                                 <div class="project-info">
                                     <div class="project-info-inner">
