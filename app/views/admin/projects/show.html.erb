@@ -29,13 +29,11 @@
                                <% if interest_access %>
                               <div class="prjt-share-save pt-3 pb-2 d-inline ms-3">
                               <!--<a href="javascript:;" class="share-location me-3"><i class="fa fa-share-alt fill-theme me-2"></i>Share location</a>-->
-                               
                                   <a href="javascript:;" class="prjt-save"></a>
                                   <%= link_to_unless interest.present?, '<i class="fa fa-heart fill-theme me-2"></i>Show Interest'.html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: @project.id, event: 'subscribe'}), method: :post, class: 'prjt-save' do |name|
                                     '<i class="fa fa-heart fill-danger"></i>'.html_safe
                                   end
                                   %>
-                                
                             </div>
                             <% end %>
                             </div>
@@ -122,12 +120,10 @@
                                             <span>Configuration</span>
                                             <%= inventory_avl ? DashboardDataProvider.configurations(@project).to_sentence : @project.configurations&.to_sentence %> Flats <%= inventory_avl ? "| #{@project.project_units.min(:saleable)&.round} - #{@project.project_units.max(:saleable)&.round} #{@project.area_unit}" : '' %>
                                         </p>
-                                        <% if inventory_avl %>
-                                          <p>
-                                              <span>Property Value</span>
-                                              <%= number_to_inr(@project.project_units.gt(all_inclusive_price: 0).min(:all_inclusive_price)) %> - <%= number_to_inr(@project.project_units.gt(all_inclusive_price: 0).max(:all_inclusive_price)) %>
-                                          </p>
-                                        <% end %>
+                                        <p>
+                                            <span>Property Value</span>
+                                            <%= number_to_inr(@project.price_starting_from) %> - <%= number_to_inr(@project.price_upto) %>
+                                        </p>
                                         <p>
                                             <span>Possession Date</span>
                                             <%= @project.possession.present? ? @project.possession.strftime('%d %b, %Y') :  '-' %>

@@ -242,7 +242,7 @@
               <div class="property-item-details">
                 <div class="property-name cgreen f600"><%= project.name %></div>
                 <p class="property-location"><%= "#{project.micro_market.present? ? project.micro_market&.titleize + ', ': ''}#{project.city&.titleize}".presence || '-' %></p>
-                <div class="property-configuration"><%= project.configurations.first(2)&.to_sentence %> <%= project.project_units.present? ? "from #{number_to_inr(project.project_units&.gt(all_inclusive_price: 0)&.min(:all_inclusive_price) || 0)}" : '' %></div>
+                <div class="property-configuration"><%= project.configurations.first(2)&.to_sentence(two_words_connector: ' & ') %> <%= project.price_starting_from.present? ? "from #{number_to_inr(project.price_starting_from)}" : '' %></div>
               </div>
             </div>
           </div>
