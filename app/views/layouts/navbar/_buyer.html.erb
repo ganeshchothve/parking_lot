@@ -28,4 +28,10 @@
       </li>
     <% end %>
 
+    <% if false #policy([:buyer, UserRequest]).index? %>
+      <li class="nav-item">
+        <%= active_link_to t('controller.user_requests.index.link_name'), [:buyer, UserRequest, request_type: :all], active: :inclusive, class: "nav-link pl-0 pr-0" %>
+      </li>
+    <% end %>
+
     <%= render 'layouts/navbar/custom_links' %>

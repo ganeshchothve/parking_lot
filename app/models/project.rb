@@ -22,8 +22,8 @@ class Project
   field :name, type: String
   field :developer_name, type: String
   field :developer_rating, type: Integer
-  field :category, type: String
-  field :project_segment, type: String
+  field :category, type: Array, default: []
+  field :project_segment, type: Array, default: []
   field :possession, type: Date
   field :lat, type: String, default: '100'
   field :lng, type: String, default: '100'
@@ -32,7 +32,7 @@ class Project
   field :configurations, type: Array, default: []
   field :micro_market, type: String
   field :city, type: String
-  field :project_type, type: String, default: "residential"
+  field :project_type, type: Array, default: [ "residential" ]
 
   # descriptive fields
   field :description, type: String

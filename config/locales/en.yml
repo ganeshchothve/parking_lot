@@ -531,6 +531,11 @@ en:
         usp: 'Unique Selling Points'
         price_starting_from: 'Price Starts From'
         price_upto: 'Price Goes Upto'
+        approved_banks/list:
+          hdfc: HDFC Bank
+          sbi: State Bank of India
+          bob: Bank of Baroda
+          bajaj_finance: Bajaj Finance
       nearby_location:
         distance: Distance to destination
         destination: Destination

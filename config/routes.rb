@@ -46,6 +46,7 @@ Rails.application.routes.draw do
   resources :channel_partners, except: [:destroy] do
     get 'export', action: 'export', on: :collection, as: :export
     post :change_state, on: :member
+    get 'asset_form', on: :member
   end
 
   get '/s/:code', to: 'shortened_urls#redirect_to_url'

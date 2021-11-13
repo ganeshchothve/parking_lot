@@ -429,8 +429,8 @@
       <div class="step-tab-content tab-pane fade shadow-sm px-3" role="tabpanel" id="step-4">
         <div class="step-tab-inner">
           <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Upload Documents</h2> %>
-          <div class="cp-form-wrap px-4 pt-2 mb-5">
-            <%= render 'channel_partners/asset_form', assetable: channel_partner %>
+          <div class="cp-form-wrap px-4 pt-2 mb-5" id='asset-form'>
+            <%#= render 'channel_partners/asset_form', assetable: channel_partner %>
           </div>
         </div>
       </div>
@@ -510,6 +510,15 @@
     $('a[data-bs-toggle="tab"]').on('show.bs.tab', function (event) {
       var $tab = $(event.target);
       if($tab.data('bs-target') == '#step-4') {
+        $.ajax({
+          url: "/channel_partners/<%= channel_partner.id %>/asset_form.js",
+          type: "get",
+          success: function(one){
+          },
+          error: function(one, two, three){
+            Amura.global_error_handler("Error while fetching remote form");
+          }
+        });
         $('.form-footer').find('#cp-form-submit').val('Save Draft');
         $('.form-footer').find('#cp-form-submit').removeClass('btn-primary');
         $('.form-footer').find('#cp-form-submit').addClass('bg-secondary');

@@ -27,6 +27,10 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
     update?
   end
 
+  def asset_form?
+    update?
+  end
+
   def change_state?
     ['inactive', 'rejected'].include?(record.status) && user.role == 'channel_partner'# && record.may_submit_for_approval?
   end

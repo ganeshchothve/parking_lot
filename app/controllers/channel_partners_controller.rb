@@ -1,6 +1,6 @@
 class ChannelPartnersController < ApplicationController
   before_action :authenticate_user!, except: %i[new create]
-  before_action :set_channel_partner, only: %i[show edit update destroy change_state]
+  before_action :set_channel_partner, only: %i[show edit update destroy change_state asset_form]
   around_action :apply_policy_scope, only: :index
   before_action :authorize_resource, except: [:new, :create]
 
@@ -73,6 +73,12 @@ class ChannelPartnersController < ApplicationController
         format.html { redirect_to request.referer, alert: (@channel_partner.errors.full_messages.uniq.presence || 'Something went wrong') }
         format.json { render json: { errors: (@channel_partner.errors.full_messages.uniq.presence || 'Something went wrong') }, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def asset_form
+    respond_to do |format|
+      format.js
     end
   end
 

@@ -20,8 +20,8 @@
             end
           %>
 
-          <% if project.category.present? && project.category != 'completed' %>
-            <p class="img-tag bg-danger"><%= project.category&.titleize %></p>
+          <% if project.category.present? && project.category.exclude?('completed') %>
+            <p class="img-tag bg-danger"><%= project.category&.first&.titleize %></p>
           <% end %>
         </div>
         <div class="project-info">
@@ -91,8 +91,8 @@
             end
           %>
 
-          <% if project.category.present? && project.category != 'completed' %>
-            <p class="img-tag bg-danger"><%= project.category&.titleize %></p>
+          <% if project.category.present? && project.category.exclude?('completed') %>
+            <p class="img-tag bg-danger"><%= project.category&.first&.titleize %></p>
           <% end %>
         </div>
         <div class="project-info">

@@ -35,19 +35,6 @@
     <%= form.input :interested_services, collection: ChannelPartner::SERVICES.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("interested_services"), prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
   </div>
 </div>
-<% if policy([:admin, @channel_partner]).editable_field?("event") %>
-  <% statuses = available_chanel_partner_statuses(@channel_partner) %>
-  <% if statuses.present? %>
-    <div class="row">
-      <div class="col-md-6">
-        <%= form.input :event, collection: statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, as: :select, prompt: :translate, input_html: { class: 'selectize', disabled: !policy([:admin, @channel_partner]).editable_field?("event") } %>
-      </div>
-      <div class="col-md-6 status_change_field">
-        <%= form.input :status_change_reason, disabled: !policy([:admin, @channel_partner]).editable_field?("status_change_reason") %>
-      </div>
-    </div>
-  <% end %>
-<% end %>
 <% if policy([:admin, @channel_partner]).editable_field?("bank_detail_attributes") %>
   <div class="box-card mt-3">
     <div class="box-header bg-gradient br-rd-tr-4">

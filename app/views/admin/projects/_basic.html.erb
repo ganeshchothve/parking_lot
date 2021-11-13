@@ -22,19 +22,19 @@
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :project_type, class: 'label-required' %>
-      <%= f.select :project_type, Project::PROJECT_TYPES.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: (policy([current_user_role_group, project]).editable_field?("project_type") ? false : true) %>
+      <%= f.select :project_type, Project::PROJECT_TYPES.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("project_type") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :category, class: 'label-required' %>
-      <%= f.select :category, Project::CATEGORIES.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: (policy([current_user_role_group, project]).editable_field?("category") ? false : true) %>
+      <%= f.select :category, Project::CATEGORIES.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("category") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :project_segment, class: 'label-required' %>
-      <%= f.select :project_segment, Project::SEGMENTS.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: (policy([current_user_role_group, project]).editable_field?("project_segment") ? false : true) %>
+      <%= f.select :project_segment, Project::SEGMENTS.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("project_segment") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
@@ -58,7 +58,7 @@
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :launched_on, class: '' %>
-      <%= f.text_field :launched_on, class: 'form-control datepicker', disabled: !policy([:admin, project]).editable_field?("launched_on"), "data-max-date": (f.object.launched_on.present? && f.object.launched_on < Date.today) ? f.object.launched_on.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), value: f.object.launched_on.present? ? f.object.launched_on.strftime("%d/%m/%Y") : nil %>
+      <%= f.text_field :launched_on, class: 'form-control datepicker', disabled: !policy([:admin, project]).editable_field?("launched_on"), value: f.object.launched_on.present? ? f.object.launched_on.strftime("%d/%m/%Y") : nil %>
     </div>
   </div>
   <div class="col-md-6">
@@ -127,7 +127,7 @@
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :approved_banks, class: 'label-required' %>
-      <%= f.select :approved_banks, Project::ALLOWED_BANKS.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("approved_banks") ? false : true) %>
+      <%= f.select :approved_banks, Project::ALLOWED_BANKS.collect{|x| [t("mongoid.attributes.project.approved_banks/list.#{x}"), x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("approved_banks") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
