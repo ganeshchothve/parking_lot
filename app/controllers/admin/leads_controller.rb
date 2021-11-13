@@ -111,29 +111,47 @@ class Admin::LeadsController < AdminController
   end
 
   def search_inventory
-    @leads = Lead.in(id: params[:leads][:ids])
+    @leads = Lead.in(id: params[:leads][:ids]&.reject(&:blank?))
     @project_ids = params.dig(:leads, :tp_project_ids).split(',')
     @project_url = ENV_CONFIG.dig('third_party_inventory', 'base_url')
 
     respond_to do |format|
-      email_template = ::Template::EmailTemplate.where(name: "send_tp_projects_link").first
-      if email_template.present? && @leads.present? && @project_ids.present?
-        @leads.each do |lead|
-          email = Email.create!({
-            booking_portal_client_id: current_client.id,
-            body: ERB.new(current_client.email_header).result(binding) + ERB.new(email_template.content).result(binding).html_safe + ERB.new(current_client.email_footer).result(binding),
-            subject: ERB.new(email_template.subject).result(binding).html_safe,
-            to: [lead.email],
-            triggered_by_id: lead.id,
-            triggered_by_type: lead.class.to_s
-          })
-          email.sent!
+      if @leads.present? && @project_ids.present?
+        email_template = ::Template::EmailTemplate.where(name: "send_tp_projects_link").first
+        if email_template.present?
+          @leads.each do |lead|
+            if lead.email.present?
+              email = Email.create!({
+                booking_portal_client_id: current_client.id,
+                body: ERB.new(current_client.email_header).result(binding) + ERB.new(email_template.content).result(binding).html_safe + ERB.new(current_client.email_footer).result(binding),
+                subject: ERB.new(email_template.subject).result(binding).html_safe,
+                to: [lead.email],
+                triggered_by_id: lead.id,
+                triggered_by_type: lead.class.to_s
+              })
+              email.sent!
+            end
+          end
+        end
+        sms_template = ::Template::SmsTemplate.where(name: "send_tp_projects_link").first
+        if sms_template.present?
+          @leads.each do |lead|
+            if lead.phone.present?
+              sms_body = ERB.new(sms_template.content).result(binding).html_safe
+              sms = Sms.create!({
+                booking_portal_client_id: current_client.id,
+                body: sms_body,
+                to: [lead.phone],
+                triggered_by_id: lead.id,
+                triggered_by_type: lead.class.to_s
+              }) unless sms_body.blank?
+            end
+          end
         end
 
         format.json { render json: { message: "Mail successfully sent to the selected leads" }, status: :ok }
       else
         errors = []
-        errors << 'Email template not found' unless email_template.present?
         errors << 'Please select some leads' unless @leads.present?
         errors << 'Please select some projects' unless @project_ids.present?
         format.json { render json: { errors: errors }, status: :unprocessable_entity }

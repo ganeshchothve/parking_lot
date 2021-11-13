@@ -115,6 +115,10 @@ module DatabaseSeeds
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "Invitation", name: "referral_invitation", content: "Dear <%= self.name %>, You are invited in <%= self.booking_portal_client.booking_portal_domains.join(', ') %> Please click here. <%= Rails.application.routes.url_helpers.register_url(custom_referral_code: self.referred_by.referral_code) %> or user <%= self.referred_by.referral_code %> code for sign up.") if Template::SmsTemplate.where(booking_portal_client_id: client_id, name: "referral_invitation").blank?
 
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "Lead", name: "send_tp_projects_link", content: 'Dear <%= lead.name %>, Please check out these new projects:
+      <% url = "#{@project_url}?#{@project_ids.collect {|x| \'search[project_ids][]=\' + x}.join(\'&\')}" %>
+      <%= short_url(url) %>') if ::Template::SmsTemplate.where(name: "send_tp_projects_link", booking_portal_client_id: client_id).blank?
+
       return Template::SmsTemplate.where(booking_portal_client_id: client_id).count
     end
   end
