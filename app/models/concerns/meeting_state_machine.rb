@@ -14,15 +14,22 @@ module MeetingStateMachine
 
       event :cancel, after: %i[send_notification] do
         transitions from: :scheduled, to: :cancelled
+        transitions from: :completed, to: :cancelled
       end
 
       event :complete, after: %i[send_notification] do
         transitions from: :scheduled, to: :completed
+        transitions from: :draft, to: :completed, if: :can_complete?
+        transitions from: :cancelled, to: :completed, if: :can_complete?
       end
     end
 
     def can_schedule?
-      true
+      scheduled_on >= Time.now.beginning_of_day
+    end
+
+    def can_complete?
+      scheduled_on < Time.now.beginning_of_day
     end
 
     def send_notification

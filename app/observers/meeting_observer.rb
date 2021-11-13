@@ -9,4 +9,10 @@ class MeetingObserver < Mongoid::Observer
         end
     end
   end
+
+  #def before_create meeting
+  #  if meeting.scheduled_on.present? && meeting.scheduled_on <= Time.now.beginning_of_day
+  #    meeting.complete
+  #  end
+  #end
 end

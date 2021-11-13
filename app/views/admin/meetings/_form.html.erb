@@ -12,7 +12,6 @@
           <div class="mb-3">
             <%= f.input :topic, required: true, disabled: !policy([current_user_role_group, meeting]).editable_field?("topic") %>
           </div>
-          
           <div class="mb-3">
             <%= f.input :agenda, required: true, disabled: !policy([current_user_role_group, meeting]).editable_field?("agenda"), as: :text %>
           </div>
@@ -50,7 +49,7 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <%= f.label :scheduled_on, class: 'label-required' %>
-                <%= f.text_field :scheduled_on, class: 'form-control datepicker', required: true, "data-min-date": (f.object.scheduled_on.present? && f.object.scheduled_on < Date.today) ? f.object.scheduled_on.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), disabled: !policy([:admin, meeting]).editable_field?("scheduled_on"), value: f.object.scheduled_on.present? ? f.object.scheduled_on.strftime("%d/%m/%Y") : nil %>
+                <%= f.text_field :scheduled_on, class: 'form-control datepicker', required: true, disabled: !policy([:admin, meeting]).editable_field?("scheduled_on"), value: f.object.scheduled_on.present? ? f.object.scheduled_on.strftime("%d/%m/%Y") : nil %>
               </div>
             </div>
             <div class="col-md-6">

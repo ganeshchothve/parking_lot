@@ -9,6 +9,8 @@ class Meeting
   extend ApplicationHelper
   extend FilterByCriteria
 
+  DOCUMENT_TYPES = []
+
   field :topic, type: String
   field :meeting_type, type: String
   field :provider, type: String
@@ -23,6 +25,7 @@ class Meeting
   belongs_to :project, optional: true
   belongs_to :campaign, optional: true
   belongs_to :creator, class_name: 'User'
+  has_many :assets, as: :assetable
   has_and_belongs_to_many :participants, class_name: 'User'
 
   attr_accessor :toggle_participant_id
@@ -31,7 +34,7 @@ class Meeting
   validates :provider, :provider_url, presence: true, if: Proc.new { |sv| sv.meeting_type == 'webinar' }
   validates :duration, numericality: {greater_than: 0}
   validates :roles, array: { inclusion: {allow_blank: false, in: proc { |meeting| User.available_roles(meeting.creator.booking_portal_client) } } }, if: Proc.new {|meeting| meeting.creator_id.present? }
-  validate :scheduled_on_future_on_create, on: :create
+  #validate :scheduled_on_future_on_create, on: :create
 
   def participant?(user_id)
     participant_ids.include?(user_id.is_a?(User) ? user_id.id : user_id)
