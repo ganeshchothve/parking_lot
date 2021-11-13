@@ -38,7 +38,7 @@ class ChannelPartnerObserver < Mongoid::Observer
 
       # Push services interested to selldo if set or changed
       if (selldo_api_key = cp_user&.booking_portal_client&.selldo_api_key.presence) && (selldo_client_id = cp_user&.booking_portal_client&.selldo_client_id.presence)
-        SelldoLeadUpdater.perform_async(cp_user.id.to_s, {action: 'push_cp_data', selldo_api_key: selldo_api_key, selldo_client_id: selldo_client_id, lead: {interested_services: channel_partner.interested_services.join(',')}})
+        SelldoLeadUpdater.perform_async(cp_user.id.to_s, {action: 'push_cp_data', selldo_api_key: selldo_api_key, selldo_client_id: selldo_client_id, lead: {custom_interested_services: channel_partner.interested_services.join(',')}})
       end
     end
     channel_partner.rera_applicable = true if channel_partner.rera_id.present?
