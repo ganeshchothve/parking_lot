@@ -147,7 +147,7 @@
                                             <ul>
                                               <% @project.nearby_locations.each do |nb_loc| %>
                                                 <li>
-                                                  <p><span><%= nb_loc.distance %> km</span> <%= nb_loc.destination&.titleize %></p>
+                                                  <p><span><%= nb_loc.distance %> <%= nb_loc.unit.pluralize(nb_loc.distance.to_i)&.titleize %></span> <%= nb_loc.destination&.titleize %></p>
                                                 </li>
                                               <% end %>
                                             </ul>

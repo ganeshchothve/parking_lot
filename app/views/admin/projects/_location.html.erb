@@ -17,13 +17,19 @@
         <%= sf.link_to_remove icon("far", "times-circle") %>
       </div>
     <% end %>
-    <div class="mb-3">
-      <%= sf.label :distance, class: 'label-required' %>
-      <%= sf.text_field :distance, class:'form-control', required: 'required', disabled: !editable_locations %>
-    </div>
-    <div class="mb-3">
-      <%= sf.label :destination, class: 'label-required' %>
-      <%= sf.text_field :destination, class:'form-control', required: 'required', disabled: !editable_locations %>
+    <div class='row'>
+      <div class="mb-3 col-md-6">
+        <%= sf.label :distance, class: 'label-required' %>
+        <%= sf.text_field :distance, class:'form-control', required: 'required', disabled: !editable_locations %>
+      </div>
+      <div class="mb-3 col-md-6">
+        <%= sf.label :unit, class: 'label-required' %>
+        <%= sf.select :unit, NearbyLocation::UNITS.collect{|x| [x.titleize, x]}, {prompt: true}, class:'selectize', required: 'required', disabled: !editable_locations %>
+      </div>
+      <div class="mb-3 col-md-12">
+        <%= sf.label :destination, class: 'label-required' %>
+        <%= sf.text_field :destination, class:'form-control', required: 'required', disabled: !editable_locations %>
+      </div>
     </div>
   <% end %>
   <hr>

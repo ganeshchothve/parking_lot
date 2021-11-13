@@ -6,10 +6,14 @@ class NearbyLocation
   include ApplicationHelper
   extend ApplicationHelper
 
-  field :distance, type: String # in kms
+  UNITS = %w(km min)
+
+  field :distance, type: String
+  field :unit, type: String
   field :destination, type: String
 
   belongs_to :project
 
-  validates :distance, :destination, presence: true
+  validates :distance, :unit, :destination, presence: true
+  validates :unit, inclusion: { in: UNITS }
 end
