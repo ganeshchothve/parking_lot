@@ -98,7 +98,7 @@ class Project
   field :hot, type: Boolean, default: false
   field :price_starting_from, type: Integer
   field :price_upto, type: Integer
-  field :broker_usp, type: Array
+  field :broker_usp, type: Array, default: []
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
