@@ -43,6 +43,51 @@
               <h3><%= %></h3>
               <p><%= @meeting.agenda %>, <%= (@meeting.scheduled? && @meeting.scheduled_on >= Time.now) ? 'This' : '' %> <%= "#{@meeting.scheduled_on&.strftime('%A %b %e, %Y')}#{meeting_time&.strftime(' at %I:%M%p')}#{meeting_time&.advance(minutes: @meeting.duration)&.strftime(' - %I:%M%p %Z')}" %> </p>
             </div>
+            <div class="col-12">
+              <div class="prjt-gallery">
+                      <div class="prjt-gallery-inner">
+                      <h2 class="fn-18 border-top pt-4">Photos</h2>
+                            <ul>
+                                <li class="border-0">
+                                    <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal">
+                                     <div class="wd-100 ht-77 rounded" style="background-image: url(<%= asset_path 'Booking.png' %>);background-size:cover;background-position:center"></div>
+                                     
+                                     </a>
+                                </li>
+                                <li class="border-0">
+                                    <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal">
+                                     <div class="wd-100 ht-77 rounded" style="background-image: url(<%= asset_path 'Booking.png' %>);background-size:cover;background-position:center"></div>
+                                     
+                                     </a>
+                                </li>
+                                <li class="border-0">
+                                    <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal">
+                                     <div class="wd-100 ht-77 rounded" style="background-image: url(<%= asset_path 'Booking.png' %>);background-size:cover;background-position:center"></div>
+                                     
+                                     </a>
+                                </li>
+                                <li class="border-0">
+                                    <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal">
+                                     <div class="wd-100 ht-77 rounded" style="background-image: url(<%= asset_path 'Booking.png' %>);background-size:cover;background-position:center"></div>
+                                     
+                                     </a>
+                                </li>
+                                <li class="border-0">
+                                    <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal">
+                                     <div class="wd-100 ht-77 rounded" style="background-image: url(<%= asset_path 'Booking.png' %>);background-size:cover;background-position:center"></div>
+                                     
+                                     </a>
+                                </li>
+                                <li class="more-img border-0">
+                                    <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal">
+                                     <div class="wd-100 ht-77 rounded" style="background-image: url(<%= asset_path 'Booking.png' %>);background-size:cover;background-position:center"></div>
+                                     <p class="fn-12">+ 5</p>
+                                     </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
