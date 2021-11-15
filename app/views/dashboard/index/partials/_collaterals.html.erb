@@ -3,7 +3,7 @@
     <h2 class="sec-title float-start">Newly Launched</h2>
     <%= link_to("View All", admin_projects_path, class: 'view-all-btn theme-txt-color float-end') %>
   </div>
-  <% Project.unscoped.nin(id: current_user.interested_projects.in(status: %w(subscribed approved)).pluck(:project_id)).each_with_index do |project, index| %>
+  <% Project.unscoped.where(hot: true).nin(id: current_user.interested_projects.in(status: %w(subscribed approved)).pluck(:project_id)).each_with_index do |project, index| %>
   <div class="col-lg-4">
     <div class="project-wrap br-rd-8 card-shadow mb-4">
       <div class="project-list row">

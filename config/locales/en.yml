@@ -531,6 +531,7 @@ en:
         usp: 'Unique Selling Points'
         price_starting_from: 'Price Starts From'
         price_upto: 'Price Goes Upto'
+        broker_usp: 'Broker Unique Selling Points (Fill in upto 3 USPs)'
         approved_banks/list:
           hdfc: HDFC Bank
           sbi: State Bank of India
@@ -1040,6 +1041,12 @@ en:
         project_id: Project
         creator: Host
         creator_id: Host
+      meeting/file_types:
+        photo: 'Photo'
+        collateral: 'Collateral'
+      meeting/help_text:
+        photo_html: '<ul><li>Photos of the Event</li></ul>'
+        collateral_html: '<ul><li>Event Collaterals</li></ul>'
       user:
         temporarily_blocked: 'Qualify lead'
         iris_confirmation: 'Lead Tagging'

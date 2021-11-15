@@ -19,7 +19,7 @@
           <p class="location"><i class="fa fa-map-marker-alt fill-primary me-2"></i><%= project.micro_market %>, <%= project.city %></p>
         <% end %>
         <% meeting_str = "#{meeting.present? ? '1' : 'No'} #{meeting.present? && meeting.completed? ? 'Past' : 'New'} event <span>#{meeting&.scheduled_on&.strftime('%b %e %Y')}#{meeting&.scheduled_on&.to_time&.in_time_zone(current_user.time_zone)&.strftime(', %I:%M%p %Z')}</span>".html_safe %>
-        <p class="prjt-event"><%= link_to_if (false && meeting.present? && Admin::MeetingPolicy.new(current_user, meeting).show?), meeting_str, (meeting.present? ? admin_meeting_path(meeting) : admin_meetings_path), class: 'modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Event details'} %></p>
+        <p class="prjt-event"><%= link_to_if (meeting.present? && Admin::MeetingPolicy.new(current_user, meeting).show?), meeting_str, (meeting.present? ? admin_meeting_path(meeting) : admin_meetings_path), class: 'modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Event details'} %></p>
       </div>
       <div class="prjt-date-info">
         <div class="inner-date">
@@ -60,6 +60,7 @@
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                   <div class="modal-body">
+                    <button type="button" class="btn-close float-end" data-bs-dismiss="modal" aria-label="Close"></button>
                     <div class="row">
                       <div class="col-lg-8">
                         <h3><%= meeting.topic %></h3>

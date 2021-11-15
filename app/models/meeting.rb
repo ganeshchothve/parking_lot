@@ -9,7 +9,7 @@ class Meeting
   extend ApplicationHelper
   extend FilterByCriteria
 
-  DOCUMENT_TYPES = []
+  DOCUMENT_TYPES = ['photo', 'collateral']
 
   field :topic, type: String
   field :meeting_type, type: String

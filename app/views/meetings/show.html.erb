@@ -8,6 +8,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body theme-form">
+          <!--
           <%= t('mongoid.attributes.meeting.topic') %>: <%= @meeting.topic %><br/>
           <%= @meeting.project_id.present? ? "#{@meeting.project.name} by #{@meeting.project.developer_name}" : '' %>
           <br/>
@@ -24,6 +25,25 @@
           <% else %>
               <%= Meeting.meeting_types.select{|x| x[:id] == @meeting.meeting_type}.first[:text] %>
           <% end %>
+          -->
+
+          <div class="row">
+            <div class="col-lg-8">
+              <h3><%= @meeting.topic %></h3>
+              <p><%= @meeting.project&.name %> by <%= @meeting.project&.developer_name %></p>
+            </div>
+            <% if @meeting.meeting_type == 'webinar' %>
+              <div class="col-lg-4">
+                <img src="<%= asset_path "#{@meeting.provider}.png" %>" class="<%= @meeting.provider %>-logo">
+              </div>
+            <% end %>
+            <div class="col-lg-12">
+              <% meeting_time = @meeting.scheduled_on&.to_time&.in_time_zone(current_user.time_zone).presence %>
+              <h3><%= "#{@meeting.scheduled_on&.strftime('%e %b %Y')}#{@meeting.scheduled_on&.to_time&.in_time_zone(current_user.time_zone)&.strftime(', %I.%M %p %Z')}" %>
+              <h3><%= %></h3>
+              <p><%= @meeting.agenda %>, <%= (@meeting.scheduled? && @meeting.scheduled_on >= Time.now) ? 'This' : '' %> <%= "#{@meeting.scheduled_on&.strftime('%A %b %e, %Y')}#{meeting_time&.strftime(' at %I:%M%p')}#{meeting_time&.advance(minutes: @meeting.duration)&.strftime(' - %I:%M%p %Z')}" %> </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
