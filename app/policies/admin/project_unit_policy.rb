@@ -18,7 +18,7 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   end
 
   def edit?
-    %w[admin superadmin].include?(user.role)
+    %w[admin superadmin sales_admin].include?(user.role)
   end
 
   def update?
