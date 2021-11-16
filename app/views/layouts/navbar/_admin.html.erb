@@ -28,9 +28,11 @@
       <%= active_link_to 'Interested Projects', admin_projects_path(fltrs: {user_interested_projects: current_user.id}), active: /user_interested_projects/, class: "nav-link pl-0 pr-0" %>
     </li>
   <% end %>
-  <li class='nav-item'>
-    <%= active_link_to 'Third Party Inventory', third_party_inventory_admin_projects_path, active: /third_party_inventory/, class: "nav-link pl-0 pr-0" %>
-  </li>
+  <% if ENV_CONFIG.dig('third_party_inventory', 'base_url').present? %>
+    <li class='nav-item'>
+      <%= active_link_to 'Third Party Inventory', third_party_inventory_admin_projects_path, active: /third_party_inventory/, class: "nav-link pl-0 pr-0" %>
+    </li>
+  <% end %>
 <% end %>
 
 <% if policy([:admin, ProjectUnit]).index? %>
