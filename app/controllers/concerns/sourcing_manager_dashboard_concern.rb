@@ -44,11 +44,41 @@ module SourcingManagerDashboardConcern
     if ["superadmin","admin"].include?(current_user.role) #Channel Partner Manager Performance Dashboard for admin and superadmin
       @cps = User.in(manager_id: User.filter_by_role("cp_admin").pluck(:id))
     else
-      @cps = User.filter_by_role("cp").filter_by_userwise_project_ids(current_user)
+      # @cps = User.filter_by_role("cp").filter_by_userwise_project_ids(current_user)
+      @cps = User.where(manager_id: current_user.id)
     end
     @matcher = {matcher: {created_at: {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day }}}
     @matcher[:matcher][:project_id] = {"$in": project_ids} if project_ids.present?
     @walkins = DashboardDataProvider.cp_performance_walkins(current_user, @matcher)
     @bookings = DashboardDataProvider.cp_performance_bookings(current_user, @matcher)
+  end
+
+  def cp_status
+    dates = params[:dates]
+    dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
+    project_ids = params["project_ids"].try(:split, ",").try(:flatten) || (current_user.project_ids || [])
+    project_ids = Project.where(id: {"$in": project_ids}).distinct(:id)
+    start_date, end_date = dates.split(' - ')
+    if ["superadmin","admin"].include?(current_user.role) #Channel Partner Manager Performance Dashboard for admin and superadmin
+      @cps = User.in(manager_id: User.filter_by_role("cp_admin").pluck(:id))
+    else
+      @cp_managers = User.filter_by_role(:cp).where(manager_id: current_user.id)
+      @channel_partners = User.filter_by_role(:channel_partner).in(manager_id: @cp_managers.pluck(:id))
+      @hash = {}
+      @cp_managers.each {
+        |cp_manager|
+        @channel_partners = User.filter_by_role(:channel_partner).where(manager_id: cp_manager.id)
+        @inactive_status_count = ChannelPartner.in(associated_user_id: @channel_partners.pluck(:id), status: "inactive").count
+        @active_status_count = ChannelPartner.in(associated_user_id: @channel_partners.pluck(:id), status: "active").count
+        @pending_status_count = ChannelPartner.in(associated_user_id: @channel_partners.pluck(:id), status: "pending").count
+        @rejected_status_count = ChannelPartner.in(associated_user_id: @channel_partners.pluck(:id), status: "rejected").count
+
+        @hash[cp_manager.id] = {name: cp_manager.name,
+                                inactive: @inactive_status_count,
+                                active: @active_status_count,
+                                pending: @pending_status_count,
+                                rejected: @rejected_status_count}
+      }
+    end
   end
 end

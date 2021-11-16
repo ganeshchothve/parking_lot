@@ -329,6 +329,7 @@ Rails.application.routes.draw do
     get :dashboard_counts, to: "dashboard#dashboard_counts"
     get :invoice_summary, to: "dashboard#invoice_summary"
     get :cp_performance, to: "dashboard#cp_performance"
+    get :cp_status, to: "dashboard#cp_status"
     get :project_wise_invoice_summary, to: "dashboard#project_wise_invoice_summary"
     get :project_wise_incentive_deduction_summary, to: "dashboard#project_wise_incentive_deduction_summary"
     get :invoice_ageing_report, to: "dashboard#invoice_ageing_report"

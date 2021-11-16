@@ -1858,6 +1858,8 @@ en:
         heading: "Brokerage Scheme Performance"
       cp_performance:
         heading: "Channel Partner Manager Performance"
+      cp_status:
+        heading: "Channel Partner Status Count"
     channel_partner:
       projects:
         sub_heading: 'Best homes to meet your expectations'
