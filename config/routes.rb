@@ -26,7 +26,7 @@ Rails.application.routes.draw do
     root 'dashboard#index', as: :authenticated_root
   end
 
-  root 'home#index'
+  root to: redirect('users/sign_in')
 
   as :user do
     put '/user/confirmation', to: 'local_devise/confirmations#update', :as => :update_user_confirmation

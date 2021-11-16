@@ -4,7 +4,6 @@ class Admin::ReceiptPolicy < ReceiptPolicy
   def index?
     out = !user.buyer?
     out && user.active_channel_partner?
-    false
   end
 
   def export?
@@ -13,7 +12,6 @@ class Admin::ReceiptPolicy < ReceiptPolicy
 
   def new?
     valid = record.user.buyer? && confirmed_and_ready_user? && user.active_channel_partner?
-    false
   end
 
   def create?

@@ -1,7 +1,6 @@
 class Admin::InvoicePolicy < InvoicePolicy
   def index?
     user.role.in?(%w(admin superadmin channel_partner billing_team cp cp_admin)) && enable_incentive_module?(user)
-    false
   end
 
   def new?
