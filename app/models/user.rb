@@ -625,7 +625,6 @@ class User
         custom_scope = { "$or": [{ role: 'cp', _id: {"$in": cp_ids} }, { role: 'channel_partner', manager_id: {"$in": cp_ids} }] }
         # custom_scope = { role: { '$in': %w(cp channel_partner) } }
       elsif user.role?('cp')
-        cp_ids = User.where(manager_id: user.id).distinct(:id)
         custom_scope = { role: 'channel_partner', manager_id: user.id }
       elsif user.role?('billing_team')
         custom_scope = { role: 'channel_partner' }

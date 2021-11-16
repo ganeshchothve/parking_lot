@@ -1240,6 +1240,12 @@ en:
           last_7_months: 'Last 7 months'
           custom_dates: 'Custom Dates'
 
+      cp/status:
+        inactive: "Inactive CP"
+        active: "Active CP"
+        pending: "Pending CP"
+        rejected: "Rejected CP"
+
   controller:
     videos:
       destroy:
@@ -1871,6 +1877,7 @@ en:
       incentive_plan_started:
         heading: 'Brokerage Plans Started'
         max_ladder_html: '<strong>Max.</strong> Ladder Reached'
+      count: Total Count
 
       titles:
         lead_details: 'Customer Account Details'

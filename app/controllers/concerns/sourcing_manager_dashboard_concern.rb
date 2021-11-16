@@ -54,31 +54,27 @@ module SourcingManagerDashboardConcern
   end
 
   def cp_status
-    dates = params[:dates]
-    dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
-    project_ids = params["project_ids"].try(:split, ",").try(:flatten) || (current_user.project_ids || [])
-    project_ids = Project.where(id: {"$in": project_ids}).distinct(:id)
-    start_date, end_date = dates.split(' - ')
     if ["superadmin","admin"].include?(current_user.role) #Channel Partner Manager Performance Dashboard for admin and superadmin
       @cps = User.in(manager_id: User.filter_by_role("cp_admin").pluck(:id))
     else
       @cp_managers = User.filter_by_role(:cp).where(manager_id: current_user.id)
       @channel_partners = User.filter_by_role(:channel_partner).in(manager_id: @cp_managers.pluck(:id))
-      @hash = {}
-      @cp_managers.each {
+      @channel_partners_status = {}
+      @cp_managers.each do
         |cp_manager|
-        @channel_partners = User.filter_by_role(:channel_partner).where(manager_id: cp_manager.id)
-        @inactive_status_count = ChannelPartner.in(associated_user_id: @channel_partners.pluck(:id), status: "inactive").count
-        @active_status_count = ChannelPartner.in(associated_user_id: @channel_partners.pluck(:id), status: "active").count
-        @pending_status_count = ChannelPartner.in(associated_user_id: @channel_partners.pluck(:id), status: "pending").count
-        @rejected_status_count = ChannelPartner.in(associated_user_id: @channel_partners.pluck(:id), status: "rejected").count
+        @inactive_status_count = ChannelPartner.in(manager_id: @channel_partners.pluck(:id), status: "inactive").count
+        @active_status_count = ChannelPartner.in(manager_id: cp_manager.id, status: "active").count
+        @pending_status_count = ChannelPartner.in(manager_id: cp_manager.id, status: "pending").count
+        @rejected_status_count = ChannelPartner.in(manager_id: cp_manager.id, status: "rejected").count
+        @total_channel_partner_count = ChannelPartner.in(manager_id: cp_manager.id).count
 
-        @hash[cp_manager.id] = {name: cp_manager.name,
+        @channel_partners_status[cp_manager.id] = {name: cp_manager.name,
                                 inactive: @inactive_status_count,
                                 active: @active_status_count,
                                 pending: @pending_status_count,
-                                rejected: @rejected_status_count}
-      }
+                                rejected: @rejected_status_count,
+                                total_count: @total_channel_partner_count}
+      end
     end
   end
 end

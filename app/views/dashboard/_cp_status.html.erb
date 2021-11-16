@@ -3,21 +3,23 @@
   <table class="table my-customer-table responsive-tbl mb-0">
     <thead class="th-default">
       <tr class="bg-primary white">
-        <th><%= t("mongoid.attributes.user/role.cp") %>Name</th>
-        <th>No. of Inactive CP</th>
-        <th>No. of Active CP</th>
-        <th>No. of Pending CP</th>
-        <th>NO. of Rejected CP</th>
+        <th><%= t("mongoid.attributes.user/role.cp") %> Name</th>
+        <th>No. of <%=t("mongoid.attributes.cp/status.inactive") %></th>
+        <th>No. of <%=t("mongoid.attributes.cp/status.active") %></th>
+        <th>No. of <%=t("mongoid.attributes.cp/status.pending") %></th>
+        <th>No. of <%=t("mongoid.attributes.cp/status.rejected") %></th>
+        <th>Total <%=t("mongoid.attributes.channel_partner.count") %></th>
       </tr>
     </thead>
     <tbody>
-      <% @hash.each do |key, value| %>
+      <% @channel_partners_status.each do |key, value| %>
           <tr>
             <td data-title='Sourcing manager Name'><%= value[:name] %></td>
-            <td data-title='Sourcing manager Name'><%= value[:inactive] %></td>
-            <td data-title='Sourcing manager Name'><%= value[:active] %></td>
-            <td data-title='Sourcing manager Name'><%= value[:pending] %></td>
-            <td data-title='Sourcing manager Name'><%= value[:rejected] %></td>
+            <td data-title='No. of Inactive CP'><%= value[:inactive] %></td>
+            <td data-title='No. of Active CP'><%= value[:active] %></td>
+            <td data-title='No. of Pending CP'><%= value[:pending] %></td>
+            <td data-title='No. of Rejected CP'><%= value[:rejected] %></td>
+            <td data-title='Total Channel Partners'><%= value[:total_count] %></td>
           </tr>
       <% end %>
     </tbody>
