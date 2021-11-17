@@ -1,91 +1,106 @@
 <section class="home-section home-banner slide relative" id="home">
   <div class="container-launchpad home-container">
     <div class="home-new-caption cwt text-center">
-      <h1 class="new-line-1 f600">Grow Your Business 5X</h1>
-      <div class="new-line-2">With</div>
+      <h1 class="new-line-1 text-left f600">DON’T BE A JOKER</h1>
+      <h2 class="new-line-3 f600 text-left">BE A SUPERBROKER</h2>
+      <%# <div class="new-line-2">With</div>
       <div class="new-line-3 f700">A REVOLUTIONARY</div>
-      <div class="new-line-4 f700 cgreen">BROKER PLATFORM</div>
+      <div class="new-line-4 f700 cgreen">BROKER PLATFORM</div> %>
       <!--<a class="home-banner-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Join Now">Join Now</a>-->
     </div>
   </div>
   <div class="scroll-down-btn scroll-sec" rel="join-broker-network" data-event-category="Section"
     data-event-action="Click" data-event-name="Scroll Down">Scroll Down</div>
 </section>
-<section class="join-broker-presenting-common-section slide lazy"
-  data-src="<%= asset_path 'join-broker-presenting-common-image.png' %>">
-
-  <section class="join-broker-network-section section-padding" id="join-broker-network">
-    <div class="container">
-      <h2 class="section-heading text-center cgreen">Get ahead in the online Real Estate market</h2>
-      <p class="text-center">K2V2 India’s largest real estate marketing and technology company brings to you a
-        revolutionary platform to grow your business faster. Launchpad is a unique platform where K2V2 ties up with
-        developers for project launches and deploys a complete transparent platform for real estate consultants to
-        efficiently participate in a launch. Not only that, we work with the real estate consultant to solve some of the
-        biggest hindrances in business growth. We will get the best digital marketing resources to get you leads at a
-        discounted price we will also help you with Lead management , CRM, sales training and how to leverage technology
-        to get more closures. Additionally we also ensure that as a platform we are able to track your lead visits,
-        booking and payments transparently with the developers. This ensures timely payments and higher payout in a
-        short time. So do not miss this opportunity where you get the best of resources and a team which is dedicated to
-        your success and growth.</p>
-      <br />
+<section class="broker-sec">
+  <div class="container">
+    <div class="broker-wrapper">
+      <div class="broker-left text-right">
+        <h2>BROKER</h2>
+        <ul class="broker-left-list">
+          <li>NO Brokerage</li>
+          <li>No information about new launches </li>
+          <li>No tie-ups with TOP developers </li>
+          <li>Low Quality Lead</li>
+          <li>No Promotion Material of projects</li>
+        </ul>
+      </div>
+      <div class="broker-img">
+        <img src="<%= asset_path 'broker-img.png' %>">
+      </div>
+      <div class="broker-right">
+        <h2>SUPERBROKER</h2>
+        <ul class="broker-right-list text-left">
+          <li>FULL Brokerage on time</li>
+          <li>Get ALL information about new launches</li>
+          <li>Work with TOP Developers</li>
+          <li>Best quality Leads at Lowest Prices</li>
+          <li>ALL Promotion Materials for every project</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-12">
       <p class="text-center cbk f500">Pune's residential market opportunity</p>
       <div class="join-broker-network-btn-wrapper text-center">
         <a href="<%= new_channel_partner_path %>" class="green-btn register-btn" data-event-category="Section"
-          data-event-action="Click" data-event-name="Register on Launchpad">Register on</a>
+          data-event-action="Click" data-event-name="Register on Launchpad">Register Now</a>
       </div>
-      <div class="clearfix"></div>
-      <div class="col-app-12 join-broker-network-statics text-center">
-        <div class="join-statics-item">
-          <div class="join-statics-item-inner text-center">
-            <div class="join-item-number cgreen f700">
-              3000+
+    </div>
+    <div class="col-12">
+      <div class="stats-brokers">
+        <ul>
+          <li>
+            <div class="stats-inner">
+              <img src="<%= asset_path 'lined-up.svg' %>">
+              <p>3000+<span>Lined Up Launches</span></p>
             </div>
-            <div class="join-statics-item-desc cbk">
-              Lined Up <br /> Launches
+          </li>
+          <li>
+            <div class="stats-inner">
+              <img src="<%= asset_path 'paid-out.svg' %>">
+              <p>Rs. 200 Cr.<span>Brokerage to be paid out <br>within the next 6 months</span></p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="existingnew-projects-section section-padding" id="existingnew-projects">
+  <div class="container">
+    <h2 class="section-heading text-center cgreen">Chance to work with Pune's hottest selling properties</h2>
+    <div class="row relative">
+      <div class="project-listing-slider">
+        <% Project.where(hot: true).limit(15).each do |project| %>
+        <div class="property-item col-app-4 col-app-sm-6">
+          <div class="property-item-inner">
+            <div class="property-item-image">
+              <%#= image_tag(project.cover_photo&.url || (asset_path 'default-project.jpg'), class: 'img-full lazy') %>
+              <div class="propery-thumb-img position-relative"
+                style="background-image: url('<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>')">
+                <% if project.hot?%>
+                <span class="hot-sellig-tag"><i class="fa fa-fire fill-danger me-1"></i>Hot Selling</span>
+                <% end %>
+              </div>
+            </div>
+            <div class="property-item-details">
+              <div class="property-name cgreen f600"><%= project.name %></div>
+              <p class="property-location">
+                <%= "#{project.micro_market.present? ? project.micro_market&.titleize + ', ': ''}#{project.city&.titleize}".presence || '-' %>
+              </p>
+              <div class="property-configuration">
+                <%= project.configurations.first(2)&.to_sentence(two_words_connector: ' & ') %>
+                <%= project.price_starting_from.present? ? "from #{number_to_inr(project.price_starting_from)}" : '' %>
+              </div>
             </div>
           </div>
         </div>
-        <div class="join-statics-item">
-          <div class="join-statics-item-inner text-center">
-            <div class="join-item-number cgreen f700">
-              Rs. 200 Cr.
-            </div>
-            <div class="join-statics-item-desc cbk">
-              Brokerage to be paid out <br />within the next 6 months
-            </div>
-          </div>
-        </div>
+        <% end %>
       </div>
-
+      <div id="prjt-list-prev" class=""></div>
+      <div id="prjt-list-next" class=""></div>
     </div>
-  </section>
-
-  <section class="col-app-12 presenting-launchpad-section section-padding" id="presenting-launchpad">
-    <div class="container">
-      <div class="col-app-7 presenting-launchpad-left-section col-app-xs-12">
-        <h2 class="section-heading cgreen">Presenting Launchpad</h2>
-        <p class="f500">An easy-to-use online Broker platform</p>
-        <div class="presenting-launchpad-right-image visible-xs">
-          <img data-src="<%= asset_path 'presenting-launchpad-icon.png' %>" class="lazy img-full">
-        </div>
-        <br />
-        <p>Launchpad is a revolutionary platform that gives you the<br class="hidden-xs hidden-portrait" /> opportunity
-          to grow your existing business by up to 5X. Sell<br class="hidden-xs hidden-portrait" /> efficiently in the
-          digital world with end-to-end support. Close deals<br class="hidden-xs hidden-portrait" /> faster with access
-          to the latest digital tools, ready-to-use branding<br class="hidden-xs hidden-portrait" /> collaterals and
-          much more.</p>
-        <br />
-        <p class="f500">Know how Launchpad can boost your business.</p>
-        <a href="<%= new_channel_partner_path %>" class="green-btn register-btn" data-event-category="Section"
-          data-event-action="Click" data-event-name="See Features & Advantages">See Features & Advantages</a>
-      </div>
-      <div class="col-app-5 presenting-launchpad-right-section hidden-xs">
-        <div class="presenting-launchpad-right-image">
-          <img data-src="<%= asset_path 'presenting-launchpad-icon.png' %>" class="lazy img-full">
-        </div>
-      </div>
-    </div>
-  </section>
+  </div>
 </section>
 <section class="exclusive-features-section section-padding" id="exclusive-features">
   <div class="container-launchpad">
@@ -217,43 +232,561 @@
       <div id="exct-feat-next" class="visible-xs"></div>
     </div>
     <div class="visible-xs text-center mobile-exclusive-feature-btn-wrapper">
-      <a href="<%= new_channel_partner_path %>" class="green-btn register-btn" data-event-category="Section" data-event-action="Click"
-        data-event-name="Register Now">Register Now</a>
+      <a href="<%= new_channel_partner_path %>" class="green-btn register-btn" data-event-category="Section"
+        data-event-action="Click" data-event-name="Register Now">Register Now</a>
     </div>
   </div>
 </section>
-
-<section class="existingnew-projects-section section-padding" id="existingnew-projects">
+<section class="section-padding logo-sec">
   <div class="container">
-    <h2 class="section-heading text-center cgreen">Chance to work with Pune's hottest selling properties</h2>
-    <div class="row relative">
-      <div class="project-listing-slider">
-        <% Project.where(hot: true).limit(15).each do |project| %>
-          <div class="property-item col-app-4 col-app-sm-6">
-            <div class="property-item-inner">
-              <div class="property-item-image">
-                <%#= image_tag(project.cover_photo&.url || (asset_path 'default-project.jpg'), class: 'img-full lazy') %>
-                <div class="propery-thumb-img position-relative" style="background-image: url('<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>')">
-                <% if project.hot?%>
-                  <span class="hot-sellig-tag"><i class="fa fa-fire fill-danger me-1"></i>Hot Selling</span>
-                  <% end %>
-                </div>
-              </div>
-              <div class="property-item-details">
-                <div class="property-name cgreen f600"><%= project.name %></div>
-                <p class="property-location"><%= "#{project.micro_market.present? ? project.micro_market&.titleize + ', ': ''}#{project.city&.titleize}".presence || '-' %></p>
-                <div class="property-configuration"><%= project.configurations.first(2)&.to_sentence(two_words_connector: ' & ') %> <%= project.price_starting_from.present? ? "from #{number_to_inr(project.price_starting_from)}" : '' %></div>
-              </div>
-            </div>
-          </div>
-        <% end %>
+    <h2 class="section-heading text-center cbk">Why partner with BeyondWalls</h2>
+    <h4 class="text-center">CLIENTS</h4>
+    <p class="text-center">Over 600+ brands have trusted us</p>
+    <div class="col-12">
+      <div class="logo-wrapper relative">
+        <ul class="logos-slider">
+          <li><img src="<%= asset_path 'clientlogo-1.jpg' %>" class="img-responsive lazy" alt="Casagrand Logo"></li>
+          <li><img data-src="<%= asset_path 'clientlogo-2.jpg' %>" class="img-responsive lazy" alt="Ansal Housing Logo">
+          </li>
+          <li><img data-src="<%= asset_path 'clientlogo-3.jpg' %>" class="img-responsive lazy" alt="Hiranandani Logo">
+          </li>
+          <li><img data-src="<%= asset_path 'clientlogo-4.jpg' %>" class="img-responsive lazy" alt="Amanora Logo"></li>
+          <li><img data-src="<%= asset_path 'clientlogo-5.jpg' %>" class="img-responsive lazy" alt="Runwal Logo"></li>
+          <li><img data-src="<%= asset_path 'clientlogo-6.jpg' %>" class="img-responsive lazy" alt="Puraniks Logo"></li>
+          <li><img data-src="<%= asset_path 'clientlogo-7.jpg' %>" class="img-responsive lazy" alt="Embassy Logo"></li>
+          <li><img data-src="<%= asset_path 'vtp.jpg' %>" class="img-responsive lazy" alt="VTP Logo"></li>
+          <li><img data-src="<%= asset_path 'mahindra.jpg' %>" class="img-responsive lazy" alt="Mahindra Logo"></li>
+          <li><img data-src="<%= asset_path 'emaar.jpg' %>" class="img-responsive lazy" alt="Emaar Logo"></li>
+          <li><img data-src="<%= asset_path 'hallmark.jpg' %>" class="img-responsive lazy" alt="Hallmark Logo"></li>
+          <li><img data-src="<%= asset_path 'ncc.jpg' %>" class="img-responsive lazy" alt="NCC Urban Logo"></li>
+          <li><img src="<%= asset_path 'kp.jpg' %>" class="img-responsive lazy" alt="Kolte Patil Logo"></li>
+        </ul>
+        <div id="logo-list-prev" class=""></div>
+        <div id="logo-list-next" class=""></div>
       </div>
-      <div id="prjt-list-prev" class=""></div>
-      <div id="prjt-list-next" class=""></div>
+    </div>
+    <div class="col-12">
+      <ul class="website-stats">
+        <li>
+          <svg id="Group_106" data-name="Group 106" xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink" width="222.233" height="248.497" viewBox="0 0 222.233 248.497">
+            <defs>
+              <clipPath id="clip-path">
+                <rect id="Rectangle_120" data-name="Rectangle 120" width="222.233" height="248.497" fill="none" />
+              </clipPath>
+              <clipPath id="clip-path-3">
+                <rect id="Rectangle_112" data-name="Rectangle 112" width="193.752" height="32.487" fill="none" />
+              </clipPath>
+              <clipPath id="clip-path-4">
+                <path id="Path_40" data-name="Path 40"
+                  d="M240.589,294.929a97.406,97.406,0,0,1-1.358,16.243H48.195a97.831,97.831,0,0,1,0-32.487H239.23a97.407,97.407,0,0,1,1.358,16.244"
+                  transform="translate(-46.837 -278.685)" fill="none" />
+              </clipPath>
+              <radialGradient id="radial-gradient" cx="0.503" cy="0.497" r="2.973" gradientUnits="objectBoundingBox">
+                <stop offset="0" stop-color="#231f20" />
+                <stop offset="0.9" stop-color="#231f20" />
+                <stop offset="0.902" stop-color="#2a2627" />
+                <stop offset="0.92" stop-color="#6a6768" />
+                <stop offset="0.937" stop-color="#9f9d9d" />
+                <stop offset="0.952" stop-color="#c8c7c7" />
+                <stop offset="0.966" stop-color="#e6e5e6" />
+                <stop offset="0.978" stop-color="#f8f8f8" />
+                <stop offset="0.987" stop-color="#fff" />
+                <stop offset="1" stop-color="#fff" />
+              </radialGradient>
+              <clipPath id="clip-path-5">
+                <rect id="Rectangle_113" data-name="Rectangle 113" width="165.393" height="165.393" fill="none" />
+              </clipPath>
+              <clipPath id="clip-path-6">
+                <path id="Path_44" data-name="Path 44"
+                  d="M132.323,169.865a70.883,70.883,0,1,0,70.883-70.883,70.883,70.883,0,0,0-70.883,70.883"
+                  transform="translate(-132.323 -98.982)" fill="none" />
+              </clipPath>
+              <linearGradient id="linear-gradient" x1="-0.284" y1="1.541" x2="-0.282" y2="1.541"
+                gradientUnits="objectBoundingBox">
+                <stop offset="0" stop-color="#e6e6e6" />
+                <stop offset="1" stop-color="#fff" />
+              </linearGradient>
+              <clipPath id="clip-path-7">
+                <path id="Path_45" data-name="Path 45"
+                  d="M139.471,174.84a68.71,68.71,0,1,0,68.71-68.71,68.71,68.71,0,0,0-68.71,68.71"
+                  transform="translate(-139.471 -106.13)" fill="none" />
+              </clipPath>
+              <linearGradient id="linear-gradient-2" x1="-0.309" y1="1.573" x2="-0.306" y2="1.573"
+                gradientUnits="objectBoundingBox">
+                <stop offset="0" stop-color="#fff" />
+                <stop offset="1" stop-color="#e6e6e6" />
+              </linearGradient>
+              <clipPath id="clip-path-9">
+                <rect id="Rectangle_118" data-name="Rectangle 118" width="185.407" height="22.238" fill="none" />
+              </clipPath>
+              <clipPath id="clip-path-10">
+                <path id="Path_46" data-name="Path 46"
+                  d="M251.464,755.255c0,6.141-41.5,11.119-92.7,11.119s-92.7-4.978-92.7-11.119,41.5-11.119,92.7-11.119,92.7,4.978,92.7,11.119"
+                  transform="translate(-66.057 -744.136)" fill="none" />
+              </clipPath>
+              <radialGradient id="radial-gradient-2" cx="0.5" cy="0.5" r="4.109" gradientUnits="objectBoundingBox">
+                <stop offset="0" stop-color="#a7a9ac" />
+                <stop offset="0.195" stop-color="#bfc0c3" />
+                <stop offset="0.516" stop-color="#e2e2e3" />
+                <stop offset="0.781" stop-color="#f7f7f7" />
+                <stop offset="0.954" stop-color="#fff" />
+                <stop offset="1" stop-color="#fff" />
+              </radialGradient>
+            </defs>
+            <g id="Group_105" data-name="Group 105" clip-path="url(#clip-path)">
+              <path id="Path_39" data-name="Path 39"
+                d="M0,278.688,7.177,294.93,0,311.173H222.233L215,294.93l7.236-16.242Z" transform="translate(0 -193.951)"
+                fill="#07b6b6" />
+              <g id="Group_93" data-name="Group 93">
+                <g id="Group_92" data-name="Group 92" clip-path="url(#clip-path)">
+                  <g id="Group_88" data-name="Group 88" transform="translate(14.241 84.736)" opacity="0.49"
+                    style="mix-blend-mode: multiply;isolation: isolate">
+                    <g id="Group_87" data-name="Group 87">
+                      <g id="Group_86" data-name="Group 86" clip-path="url(#clip-path-3)">
+                        <g id="Group_85" data-name="Group 85" transform="translate(0)">
+                          <g id="Group_84" data-name="Group 84" clip-path="url(#clip-path-4)">
+                            <rect id="Rectangle_111" data-name="Rectangle 111" width="193.752" height="32.487"
+                              transform="translate(0)" fill="url(#radial-gradient)" />
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                  <path id="Path_41" data-name="Path 41"
+                    d="M250.247,127.524a89.382,89.382,0,1,1-89.382-89.382,89.382,89.382,0,0,1,89.382,89.382"
+                    transform="translate(-49.748 -26.545)" fill="#07b6b6" />
+                  <path id="Path_42" data-name="Path 42"
+                    d="M140.819,3.427a97.726,97.726,0,0,1,94.589,73.647h3.551a101.033,101.033,0,0,0-191.184-15.4,100.066,100.066,0,0,0-5.1,15.4H46.23A97.727,97.727,0,0,1,140.819,3.427m0,195.105A97.727,97.727,0,0,1,46.23,124.885H42.679a101.033,101.033,0,0,0,191.184,15.4,100.055,100.055,0,0,0,5.1-15.4h-3.551a97.727,97.727,0,0,1-94.589,73.648"
+                    transform="translate(-29.702 0)" fill="#07b6b6" />
+                  <g id="Group_91" data-name="Group 91" transform="translate(28.167 18.858)" opacity="0.49"
+                    style="mix-blend-mode: multiply;isolation: isolate">
+                    <g id="Group_90" data-name="Group 90" transform="translate(0)">
+                      <g id="Group_89" data-name="Group 89" clip-path="url(#clip-path-5)">
+                        <path id="Path_43" data-name="Path 43"
+                          d="M249.029,153.719a82.7,82.7,0,1,1-82.7-82.7,82.7,82.7,0,0,1,82.7,82.7"
+                          transform="translate(-83.636 -71.023)" fill="#07b6b6" />
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+              <g id="Group_95" data-name="Group 95" transform="translate(40.234 30.096)">
+                <g id="Group_94" data-name="Group 94" clip-path="url(#clip-path-6)">
+                  <rect id="Rectangle_115" data-name="Rectangle 115" width="141.767" height="141.766"
+                    transform="translate(0 0)" fill="url(#linear-gradient)" />
+                </g>
+              </g>
+              <g id="Group_97" data-name="Group 97" transform="translate(42.407 32.269)">
+                <g id="Group_96" data-name="Group 96" clip-path="url(#clip-path-7)">
+                  <rect id="Rectangle_116" data-name="Rectangle 116" width="137.42" height="137.42"
+                    transform="translate(0 0)" fill="url(#linear-gradient-2)" />
+                </g>
+              </g>
+              <g id="Group_104" data-name="Group 104">
+                <g id="Group_103" data-name="Group 103" clip-path="url(#clip-path)">
+                  <g id="Group_102" data-name="Group 102" transform="translate(20.085 226.259)"
+                    style="mix-blend-mode: multiply;isolation: isolate">
+                    <g id="Group_101" data-name="Group 101">
+                      <g id="Group_100" data-name="Group 100" clip-path="url(#clip-path-9)">
+                        <g id="Group_99" data-name="Group 99" transform="translate(0 0)">
+                          <g id="Group_98" data-name="Group 98" clip-path="url(#clip-path-10)">
+                            <rect id="Rectangle_117" data-name="Rectangle 117" width="185.407" height="22.238"
+                              transform="translate(0)" fill="url(#radial-gradient-2)" />
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+              <text id="_" data-name=" " transform="translate(92.364 84.394)" font-size="12"
+                font-family="'Manrope', sans-serif" font-weight="700">
+                <tspan x="0" y="0"> </tspan>
+              </text>
+              <text id="_13_YEARS" data-name="13 YEARS" transform="translate(111 95.527)" font-size="24"
+                font-family="Poppins', sans-serif" font-weight="700">
+                <tspan x="-48" y="0" letter-spacing="-0.007em">13 YEARS</tspan>
+              </text>
+              <text id="OF_PROPTECH_EXPERIENCE_" data-name="OF  PROPTECH
+          EXPERIENCE " transform="translate(111 117.527)" font-size="14" font-family="'Manrope', sans-serif">
+                <tspan x="-46" y="0" xml:space="preserve">OF PROPT</tspan>
+                <tspan y="0" letter-spacing="-0.025em">E</tspan>
+                <tspan y="0">CH</tspan>
+                <tspan x="-41" y="14">EXPERIENCE </tspan>
+              </text>
+            </g>
+          </svg>
+
+        </li>
+        <li>
+          <svg id="Group_129" data-name="Group 129" xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink" width="221.217" height="248.497" viewBox="0 0 221.217 248.497">
+            <defs>
+              <clipPath id="clip-path">
+                <rect id="Rectangle_130" data-name="Rectangle 130" width="221.217" height="248.497" fill="none" />
+              </clipPath>
+              <clipPath id="clip-path-3">
+                <rect id="Rectangle_122" data-name="Rectangle 122" width="192.866" height="32.338" fill="none" />
+              </clipPath>
+              <clipPath id="clip-path-4">
+                <path id="Path_48" data-name="Path 48"
+                  d="M239.7,294.854a96.958,96.958,0,0,1-1.352,16.169H48.189a97.384,97.384,0,0,1,0-32.338H238.35a96.959,96.959,0,0,1,1.352,16.169"
+                  transform="translate(-46.837 -278.685)" fill="none" />
+              </clipPath>
+              <radialGradient id="radial-gradient" cx="0.503" cy="0.497" r="2.973" gradientUnits="objectBoundingBox">
+                <stop offset="0" stop-color="#231f20" />
+                <stop offset="0.9" stop-color="#231f20" />
+                <stop offset="0.902" stop-color="#2a2627" />
+                <stop offset="0.92" stop-color="#6a6768" />
+                <stop offset="0.937" stop-color="#9f9d9d" />
+                <stop offset="0.952" stop-color="#c8c7c7" />
+                <stop offset="0.966" stop-color="#e6e5e6" />
+                <stop offset="0.978" stop-color="#f8f8f8" />
+                <stop offset="0.987" stop-color="#fff" />
+                <stop offset="1" stop-color="#fff" />
+              </radialGradient>
+              <clipPath id="clip-path-5">
+                <rect id="Rectangle_123" data-name="Rectangle 123" width="164.636" height="164.636" fill="none" />
+              </clipPath>
+              <clipPath id="clip-path-6">
+                <path id="Path_52" data-name="Path 52"
+                  d="M132.323,169.541a70.559,70.559,0,1,0,70.559-70.559,70.559,70.559,0,0,0-70.559,70.559"
+                  transform="translate(-132.323 -98.982)" fill="none" />
+              </clipPath>
+              <linearGradient id="linear-gradient" x1="-0.284" y1="1.549" x2="-0.282" y2="1.549"
+                gradientUnits="objectBoundingBox">
+                <stop offset="0" stop-color="#e6e6e6" />
+                <stop offset="1" stop-color="#fff" />
+              </linearGradient>
+              <clipPath id="clip-path-7">
+                <path id="Path_53" data-name="Path 53"
+                  d="M139.471,174.525a68.4,68.4,0,1,0,68.4-68.4,68.4,68.4,0,0,0-68.4,68.4"
+                  transform="translate(-139.471 -106.13)" fill="none" />
+              </clipPath>
+              <linearGradient id="linear-gradient-2" x1="-0.309" y1="1.582" x2="-0.306" y2="1.582"
+                gradientUnits="objectBoundingBox">
+                <stop offset="0" stop-color="#fff" />
+                <stop offset="1" stop-color="#e6e6e6" />
+              </linearGradient>
+              <clipPath id="clip-path-9">
+                <rect id="Rectangle_128" data-name="Rectangle 128" width="184.559" height="22.136" fill="none" />
+              </clipPath>
+              <clipPath id="clip-path-10">
+                <path id="Path_54" data-name="Path 54"
+                  d="M245.118,758.959c0,6.113-41.315,11.068-92.28,11.068s-92.28-4.955-92.28-11.068,41.315-11.068,92.28-11.068,92.28,4.955,92.28,11.068"
+                  transform="translate(-60.559 -747.891)" fill="none" />
+              </clipPath>
+              <radialGradient id="radial-gradient-2" cx="0.5" cy="0.5" r="4.109" gradientUnits="objectBoundingBox">
+                <stop offset="0" stop-color="#a7a9ac" />
+                <stop offset="0.195" stop-color="#bfc0c3" />
+                <stop offset="0.516" stop-color="#e2e2e3" />
+                <stop offset="0.781" stop-color="#f7f7f7" />
+                <stop offset="0.954" stop-color="#fff" />
+                <stop offset="1" stop-color="#fff" />
+              </radialGradient>
+            </defs>
+            <g id="Group_128" data-name="Group 128" clip-path="url(#clip-path)">
+              <path id="Path_47" data-name="Path 47"
+                d="M0,278.687l7.144,16.168L0,311.024H221.217l-7.2-16.169,7.2-16.168Z" transform="translate(0 -194.338)"
+                fill="#07b6b6" />
+              <g id="Group_116" data-name="Group 116">
+                <g id="Group_115" data-name="Group 115" clip-path="url(#clip-path)">
+                  <g id="Group_111" data-name="Group 111" transform="translate(14.176 84.348)" opacity="0.49"
+                    style="mix-blend-mode: multiply;isolation: isolate">
+                    <g id="Group_110" data-name="Group 110">
+                      <g id="Group_109" data-name="Group 109" clip-path="url(#clip-path-3)">
+                        <g id="Group_108" data-name="Group 108" transform="translate(0)">
+                          <g id="Group_107" data-name="Group 107" clip-path="url(#clip-path-4)">
+                            <rect id="Rectangle_121" data-name="Rectangle 121" width="192.865" height="32.338"
+                              transform="translate(0)" fill="url(#radial-gradient)" />
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                  <path id="Path_49" data-name="Path 49"
+                    d="M249.43,127.115a88.973,88.973,0,1,1-88.973-88.973,88.973,88.973,0,0,1,88.973,88.973"
+                    transform="translate(-49.848 -26.598)" fill="#07b6b6" />
+                  <path id="Path_50" data-name="Path 50"
+                    d="M140.37,3.411a97.28,97.28,0,0,1,94.156,73.31h3.535a100.571,100.571,0,0,0-190.31-15.33,99.608,99.608,0,0,0-5.073,15.33h3.535A97.28,97.28,0,0,1,140.37,3.411m0,194.213a97.28,97.28,0,0,1-94.156-73.31H42.679a100.571,100.571,0,0,0,190.31,15.329,99.592,99.592,0,0,0,5.073-15.329h-3.535a97.28,97.28,0,0,1-94.156,73.31"
+                    transform="translate(-29.762 0)" fill="#07b6b6" />
+                  <g id="Group_114" data-name="Group 114" transform="translate(28.038 19.983)" opacity="0.49"
+                    style="mix-blend-mode: multiply;isolation: isolate">
+                    <g id="Group_113" data-name="Group 113">
+                      <g id="Group_112" data-name="Group 112" clip-path="url(#clip-path-5)">
+                        <path id="Path_51" data-name="Path 51"
+                          d="M257.272,148.341a82.318,82.318,0,1,1-82.318-82.318,82.318,82.318,0,0,1,82.318,82.318"
+                          transform="translate(-92.636 -66.023)" fill="#07b6b6" />
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+              <g id="Group_118" data-name="Group 118" transform="translate(40.05 29.958)">
+                <g id="Group_117" data-name="Group 117" clip-path="url(#clip-path-6)">
+                  <rect id="Rectangle_125" data-name="Rectangle 125" width="141.118" height="141.118"
+                    transform="translate(0 0)" fill="url(#linear-gradient)" />
+                </g>
+              </g>
+              <g id="Group_120" data-name="Group 120" transform="translate(42.213 32.122)">
+                <g id="Group_119" data-name="Group 119" clip-path="url(#clip-path-7)">
+                  <rect id="Rectangle_126" data-name="Rectangle 126" width="136.791" height="136.791"
+                    transform="translate(0 0)" fill="url(#linear-gradient-2)" />
+                </g>
+              </g>
+              <g id="Group_127" data-name="Group 127">
+                <g id="Group_126" data-name="Group 126" clip-path="url(#clip-path)">
+                  <g id="Group_125" data-name="Group 125" transform="translate(18.329 226.361)"
+                    style="mix-blend-mode: multiply;isolation: isolate">
+                    <g id="Group_124" data-name="Group 124">
+                      <g id="Group_123" data-name="Group 123" clip-path="url(#clip-path-9)">
+                        <g id="Group_122" data-name="Group 122" transform="translate(0 0)">
+                          <g id="Group_121" data-name="Group 121" clip-path="url(#clip-path-10)">
+                            <rect id="Rectangle_127" data-name="Rectangle 127" width="184.559" height="22.136"
+                              transform="translate(0)" fill="url(#radial-gradient-2)" />
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+              <text id="SOLD_IN" data-name="SOLD IN" transform="translate(89.109 113.518)" font-size="12"
+                font-family="'Manrope', sans-serif">
+                <tspan x="0" y="0">SOLD IN</tspan>
+              </text>
+              <text id="_12_PROJECTS" data-name="12 PROJECTS" transform="translate(69.109 132.518)" font-size="14"
+                font-family="'Manrope', sans-serif">
+                <tspan x="0" y="0">12 PROJ</tspan>
+                <tspan y="0" letter-spacing="-0.024em">E</tspan>
+                <tspan y="0">CTS</tspan>
+              </text>
+              <text id="_2000_UNITS" data-name="2000+ UNITS" transform="translate(47.109 93.517)" font-size="20"
+                font-family="'Poppins', sans-serif" font-weight="700">
+                <tspan x="0" y="0">2000+ UNITS</tspan>
+              </text>
+            </g>
+          </svg>
+
+        </li>
+        <li>
+          <svg id="Group_152" data-name="Group 152" xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink" width="220.848" height="248.497" viewBox="0 0 220.848 248.497">
+            <defs>
+              <linearGradient id="linear-gradient" x1="-0.309" y1="1.585" x2="-0.306" y2="1.585"
+                gradientUnits="objectBoundingBox">
+                <stop offset="0" stop-color="#fff" />
+                <stop offset="1" stop-color="#e6e6e6" />
+              </linearGradient>
+              <clipPath id="clip-path">
+                <rect id="Rectangle_140" data-name="Rectangle 140" width="220.848" height="248.497" fill="none" />
+              </clipPath>
+              <clipPath id="clip-path-3">
+                <rect id="Rectangle_132" data-name="Rectangle 132" width="192.544" height="32.284" fill="none" />
+              </clipPath>
+              <clipPath id="clip-path-4">
+                <path id="Path_56" data-name="Path 56"
+                  d="M239.381,294.827a96.8,96.8,0,0,1-1.35,16.142H48.186a97.222,97.222,0,0,1,0-32.284H238.031a96.8,96.8,0,0,1,1.35,16.142"
+                  transform="translate(-46.837 -278.685)" fill="none" />
+              </clipPath>
+              <radialGradient id="radial-gradient" cx="0.503" cy="0.497" r="2.973" gradientUnits="objectBoundingBox">
+                <stop offset="0" stop-color="#231f20" />
+                <stop offset="0.9" stop-color="#231f20" />
+                <stop offset="0.902" stop-color="#2a2627" />
+                <stop offset="0.92" stop-color="#6a6768" />
+                <stop offset="0.937" stop-color="#9f9d9d" />
+                <stop offset="0.952" stop-color="#c8c7c7" />
+                <stop offset="0.966" stop-color="#e6e5e6" />
+                <stop offset="0.978" stop-color="#f8f8f8" />
+                <stop offset="0.987" stop-color="#fff" />
+                <stop offset="1" stop-color="#fff" />
+              </radialGradient>
+              <clipPath id="clip-path-5">
+                <rect id="Rectangle_133" data-name="Rectangle 133" width="164.362" height="164.362" fill="none" />
+              </clipPath>
+              <clipPath id="clip-path-6">
+                <path id="Path_60" data-name="Path 60"
+                  d="M132.323,169.424a70.441,70.441,0,1,0,70.441-70.442,70.441,70.441,0,0,0-70.441,70.442"
+                  transform="translate(-132.323 -98.982)" fill="none" />
+              </clipPath>
+              <linearGradient id="linear-gradient-2" x1="-0.284" y1="1.552" x2="-0.282" y2="1.552"
+                gradientUnits="objectBoundingBox">
+                <stop offset="0" stop-color="#c9c9c9" />
+                <stop offset="1" stop-color="#fff" />
+              </linearGradient>
+              <clipPath id="clip-path-7">
+                <path id="Path_61" data-name="Path 61"
+                  d="M139.471,174.411a68.282,68.282,0,1,0,68.282-68.282,68.281,68.281,0,0,0-68.282,68.282"
+                  transform="translate(-139.471 -106.129)" fill="url(#linear-gradient)" />
+              </clipPath>
+              <clipPath id="clip-path-9">
+                <rect id="Rectangle_138" data-name="Rectangle 138" width="184.251" height="22.099" fill="none" />
+              </clipPath>
+              <clipPath id="clip-path-10">
+                <path id="Path_62" data-name="Path 62"
+                  d="M244.81,760.311c0,6.1-41.246,11.05-92.126,11.05s-92.126-4.947-92.126-11.05,41.246-11.049,92.126-11.049,92.126,4.947,92.126,11.049"
+                  transform="translate(-60.559 -749.262)" fill="none" />
+              </clipPath>
+              <radialGradient id="radial-gradient-2" cx="0.5" cy="0.5" r="4.109" gradientUnits="objectBoundingBox">
+                <stop offset="0" stop-color="#a7a9ac" />
+                <stop offset="0.195" stop-color="#bfc0c3" />
+                <stop offset="0.516" stop-color="#e2e2e3" />
+                <stop offset="0.781" stop-color="#f7f7f7" />
+                <stop offset="0.954" stop-color="#fff" />
+                <stop offset="1" stop-color="#fff" />
+              </radialGradient>
+            </defs>
+            <g id="Group_151" data-name="Group 151" clip-path="url(#clip-path)">
+              <path id="Path_55" data-name="Path 55"
+                d="M0,278.687l7.132,16.141L0,310.97H220.848l-7.191-16.141,7.191-16.141Z"
+                transform="translate(0 -194.479)" fill="#07b6b6" />
+              <g id="Group_139" data-name="Group 139">
+                <g id="Group_138" data-name="Group 138" clip-path="url(#clip-path)">
+                  <g id="Group_134" data-name="Group 134" transform="translate(14.152 84.208)" opacity="0.49"
+                    style="mix-blend-mode: multiply;isolation: isolate">
+                    <g id="Group_133" data-name="Group 133">
+                      <g id="Group_132" data-name="Group 132" clip-path="url(#clip-path-3)">
+                        <g id="Group_131" data-name="Group 131" transform="translate(0)">
+                          <g id="Group_130" data-name="Group 130" clip-path="url(#clip-path-4)">
+                            <rect id="Rectangle_131" data-name="Rectangle 131" width="192.544" height="32.284"
+                              transform="translate(0)" fill="url(#radial-gradient)" />
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                  <path id="Path_57" data-name="Path 57"
+                    d="M249.133,126.967a88.825,88.825,0,1,1-88.825-88.825,88.825,88.825,0,0,1,88.825,88.825"
+                    transform="translate(-49.884 -26.617)" fill="#07b6b6" />
+                  <path id="Path_58" data-name="Path 58"
+                    d="M140.207,3.405a97.117,97.117,0,0,1,94,73.188h3.529a100.4,100.4,0,0,0-189.993-15.3,99.442,99.442,0,0,0-5.064,15.3h3.529a97.117,97.117,0,0,1,94-73.188m0,193.889a97.118,97.118,0,0,1-94-73.188H42.679a100.4,100.4,0,0,0,189.993,15.3,99.417,99.417,0,0,0,5.064-15.3h-3.529a97.118,97.118,0,0,1-94,73.188"
+                    transform="translate(-29.783)" fill="#07b6b6" />
+                  <g id="Group_137" data-name="Group 137" transform="translate(28.595 18.741)" opacity="0.49"
+                    style="mix-blend-mode: multiply;isolation: isolate">
+                    <g id="Group_136" data-name="Group 136">
+                      <g id="Group_135" data-name="Group 135" clip-path="url(#clip-path-5)">
+                        <path id="Path_59" data-name="Path 59"
+                          d="M259,144.2a82.181,82.181,0,1,1-82.181-82.181A82.181,82.181,0,0,1,259,144.2"
+                          transform="translate(-94.636 -62.023)" fill="#07b6b6" />
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+              <g id="Group_141" data-name="Group 141" transform="translate(39.983 29.908)">
+                <g id="Group_140" data-name="Group 140" clip-path="url(#clip-path-6)">
+                  <rect id="Rectangle_135" data-name="Rectangle 135" width="140.883" height="140.883"
+                    transform="translate(0 0)" fill="url(#linear-gradient-2)" />
+                </g>
+              </g>
+              <g id="Group_143" data-name="Group 143" transform="translate(42.143 32.068)">
+                <g id="Group_142" data-name="Group 142" clip-path="url(#clip-path-7)">
+                  <rect id="Rectangle_136" data-name="Rectangle 136" width="136.563" height="136.563"
+                    transform="translate(0 0)" fill="url(#linear-gradient-2)" />
+                </g>
+              </g>
+              <g id="Group_150" data-name="Group 150">
+                <g id="Group_149" data-name="Group 149" clip-path="url(#clip-path)">
+                  <g id="Group_148" data-name="Group 148" transform="translate(18.299 226.397)"
+                    style="mix-blend-mode: multiply;isolation: isolate">
+                    <g id="Group_147" data-name="Group 147">
+                      <g id="Group_146" data-name="Group 146" clip-path="url(#clip-path-9)">
+                        <g id="Group_145" data-name="Group 145" transform="translate(0 0)">
+                          <g id="Group_144" data-name="Group 144" clip-path="url(#clip-path-10)">
+                            <rect id="Rectangle_137" data-name="Rectangle 137" width="184.251" height="22.099"
+                              transform="translate(0 0)" fill="url(#radial-gradient-2)" />
+                          </g>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+              <text id="BROKERAGE" transform="translate(110.424 115.35)" font-size="14"
+                font-family="'Manrope', sans-serif">
+                <tspan x="-39" y="0">BROKER</tspan>
+                <tspan y="0" letter-spacing="-0.019em">A</tspan>
+                <tspan y="0">GE</tspan>
+              </text>
+              <text id="DISTRIBUTED" transform="translate(110.424 132.35)" font-size="12"
+                font-family="'Manrope', sans-serif">
+                <tspan x="-36" y="0">DISTRIBUTED</tspan>
+              </text>
+              <text id="_30_CR." data-name="₹30 CR." transform="translate(110.424 93.35)" font-size="24"
+                font-family="'Poppins', sans-serif" font-weight="700">
+                <tspan x="-39" y="0">₹30 CR.</tspan>
+              </text>
+            </g>
+          </svg>
+
+        </li>
+      </ul>
     </div>
   </div>
 </section>
 
+<section class="incentive-sec section-padding">
+  <div class="container">
+    <h2 class="section-heading text-left cwt">What’s in it for You!</h2>
+    <div class="col-app-4">
+      <ul class="incentive-lists">
+        <li class="active">
+          <a href="javascript:;" class="" rel="tabs-1">Projects in <br>Pune and East</a>
+        </li>
+        <li>
+          <a href="javascript:;" rel="tabs-2">Inventory of ALL sizes</a>
+        </li>
+        <li>
+          <a href="javascript:;" rel="tabs-3">Quarterly and Annual Rewards</a>
+        </li>
+        <li>
+          <a href="javascript:;" rel="tabs-4">Special Incentives</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-app-8">
+      <div class="tab-content active" id="tabs-1">
+        <div class="tab-box ">
+          <img src="<%= asset_path 'incentive-tab-1.jpg' %>">
+          <p>
+            • 5,000 units <br>• INR. 2,000 CR inventory <br>• 2 Large Townships (Magarpatta) 
+          </p>
+        </div>
+      </div>
+      <div class="tab-content" id="tabs-2">
+        <div class="tab-box ">
+          <img src="<%= asset_path 'incentive-tab-2.jpg' %>">
+          <p>
+            • Exclusive early access to inventory <br>• Exclusive lead lock-in <br>• Blocked for 45 days after visit
+          </p>
+        </div>
+      </div>
+      <div class="tab-content" id="tabs-3">
+        <div class="tab-box ">
+          <img src="<%= asset_path 'incentive-tab-3.jpg' %>">
+          <p>
+            • Total prizes worth Rs. 15L for Top performers (Dec’21 - Mar’22)​ <br>• Top 3 Brokers get a Bangkok trip
+            for 3 team members​<br>• Next 5 Brokers get a Goa trip for 3 team members​<br>• Annual Bumper prize –
+            SUV(Dec‘21 - Dec ‘22)​ 
+          </p>
+        </div>
+      </div>
+      <div class="tab-content" id="tabs-4">
+        <div class="tab-box ">
+          <img src="<%= asset_path 'incentive-tab-4.jpg' %>">
+          <p>
+            • Spot booking Incentive- INR 5,000  <br>• Site visit Incentive- INR 500 on First visit <br>• Rs. 300
+            for visits to other projects <br>•Get 3 Bookings in a project – get 30% of your brokerage paid before
+            registration
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--
 <section class="presented-by-amura-section section-padding" id="about-us">
   <div class="container-launchpad">
     <h2 class="section-heading text-center cgreen">Presented by K2V2 Technologies Pvt. Ltd.</h2>
@@ -302,4 +835,4 @@
     </div>
     <div class="clearfix"></div>
   </div>
-</section>
+</section>-->

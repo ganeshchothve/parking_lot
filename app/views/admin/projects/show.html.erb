@@ -140,7 +140,7 @@
                                     <!--<a href="javascript:;" class="location-share float-end"><i class="fa fa-share-alt fill-primary me-2"></i>Share location</a>-->
                                 </div>
                                 <div class="tab-body col-12 float-start pt-3">
-                                    <div class="col-6 float-start">
+                                    <div class="col-lg-6 col-12 float-start">
                                         <div class="location-list">
                                           <p><i class="fa fa-map-marker-alt me-2"></i><%= "#{@project.micro_market}, #{@project.city}" %></p>
                                           <% if @project.nearby_locations.present? %>
@@ -155,7 +155,7 @@
                                         </div>
                                     </div>
                                     <% if @project.embed_map_tag.present? %>
-                                      <div class="col-6  float-end embed-map">
+                                      <div class="col-lg-6 col-12 float-end embed-map">
                                         <%= @project.embed_map_tag.html_safe %>
                                       </div>
                                     <% end %>
@@ -464,7 +464,7 @@
                                 <div class="tab-body pb-5">
                                   <% if @project.timeline_updates.present? %>
                                     <div class="col-12 float-start pb-2">
-                                        <div class="prjt-current-status position-relative pb-5">
+                                        <div class="prjt-current-status position-relative pb-5 pb-xs-0">
                                             <div class="line">
                                                 <span class="inner-line"></span>
                                             </div>

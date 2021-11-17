@@ -444,7 +444,7 @@
     </div>
     <div class="col-lg-12">
       <div class="cp-step-list pt-3 col-lg-12">
-        <ul class="nav nav-tabs px-4" id='cp-tabs'>
+        <ul class="nav nav-tabs px-4 px-xs-0" id='cp-tabs'>
           <li class="nav-item">
             <a href="javascript:;" class="step-done nav-link active border-0" data-bs-toggle="tab"
               data-bs-target="#step-1" type="button" role="tab">
@@ -486,48 +486,48 @@
     </div>
     <div class="col-lg-12 pb-3">
       <%= simple_form_for(channel_partner, local: true, remote: true, html: {id: 'new_channel_partner_form', class: 'validate-form theme-form tab-content', "data-resource-type": global_labels['channel_partner'], "data-type": "json"}) do |form| %>
-      <div class="step-tab-content tab-pane fade show active px-3" role="tabpanel" id="step-1">
-        <div class="step-tab-inner">
+      <div class="step-tab-content tab-pane fade show active px-3 col-12" role="tabpanel" id="step-1">
+        <div class="step-tab-inner col-12">
           <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Personal Info</h2> %>
-          <div class="cp-form-wrap px-4 pt-2 mb-5">
+          <div class="cp-form-wrap px-xs-0 px-4 pt-2 mb-5">
             <%= render "channel_partners/personal_fields", {form: form} %>
           </div>
         </div>
       </div>
 
-      <div class="step-tab-content tab-pane fade shadow-sm px-3" role="tabpanel" id="step-2">
-        <div class="step-tab-inner">
+      <div class="step-tab-content tab-pane fade shadow-sm px-3 col-12" role="tabpanel" id="step-2">
+        <div class="step-tab-inner col-12">
           <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Company Info</h2> %>
-          <div class="cp-form-wrap px-4 pt-2 mb-5">
+          <div class="cp-form-wrap px-xs-0 px-4 pt-2 mb-5">
             <%= render "channel_partners/company_fields", {form: form} %>
           </div>
         </div>
       </div>
-      <div class="step-tab-content tab-pane fade shadow-sm px-3" role="tabpanel" id="step-3">
-        <div class="step-tab-inner">
+      <div class="step-tab-content tab-pane fade shadow-sm px-3 col-12" role="tabpanel" id="step-3">
+        <div class="step-tab-inner col-12">
           <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Company Details</h2> %>
-          <div class="cp-form-wrap px-4 pt-2 mb-5">
+          <div class="cp-form-wrap px-xs-0 px-4 pt-2 mb-5">
             <%= render "channel_partners/questionaire_fields", {form: form} %>
           </div>
         </div>
       </div>
-      <div class="step-tab-content tab-pane fade shadow-sm px-3" role="tabpanel" id="step-4">
-        <div class="step-tab-inner">
+      <div class="step-tab-content tab-pane fade shadow-sm px-3 col-12" role="tabpanel" id="step-4">
+        <div class="step-tab-inner col-12">
           <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Upload Documents</h2> %>
-          <div class="cp-form-wrap px-4 pt-2 mb-5" id='asset-form'>
+          <div class="cp-form-wrap px-xs-0 px-4 pt-2 mb-5" id='asset-form'>
             <%#= render 'channel_partners/asset_form', assetable: channel_partner %>
           </div>
         </div>
       </div>
 
-      <div class="cp-form-wrap border-top px-4 py-4 pb-3 text-end">
+      <div class="cp-form-wrap border-top px-4 py-4 pb-3 text-end px-xs-0">
         <div class='form-footer px-0 text-start d-inline-block'>
           <%= form.submit "Save", class: "btn btn-primary white me-3 d-inline-block px-4 py-2 font-medium w-auto", id: 'cp-form-submit' %>
         </div>
         <div class="form-footer px-0 d-inline-block d-none">
           <% if policy([current_user_role_group, channel_partner]).change_state? && policy([current_user_role_group, channel_partner]).editable_field?('event') %>
             <% link_name = "#{channel_partner.rejected? ? 'Resubmit Application' : 'Submit Application'}" %>
-            <a href="javascript:;" class="btn bg-primary white px-4 d-inline-block py-2 font-medium w-auto fn-14"  data-bs-toggle="modal" data-bs-target="#confirmRegistration"><%= link_name %></a>
+            <a href="javascript:;" class="btn bg-primary white px-4 d-inline-block py-2 me-3 font-medium w-auto fn-14"  data-bs-toggle="modal" data-bs-target="#confirmRegistration"><%= link_name %></a>
           <% end %>
           <div class="modal fade googleMeet-modal" id="confirmRegistration" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">

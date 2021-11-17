@@ -169,6 +169,13 @@ $(document).ready(function () {
       $('html,body').scrollTo($("#" + href).offset().top - gap);
     }
   });
+  $('.incentive-lists li a').click(function(){
+      var curnt_tab = $(this).attr('rel');      
+      $('.tab-content, .incentive-lists li').removeClass('active');
+      $(this).parent('li').addClass('active');
+      $('#'+curnt_tab).addClass('active');
+  });
+
   $('.emi-calc-btn').click(function(){
     $('.emi-wrapper').fadeIn();
   });
