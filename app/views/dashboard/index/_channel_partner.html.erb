@@ -286,14 +286,13 @@
       </div>
        <div class="col-lg-3 mt-2 pt-1">
         <!-- Events ---------->
-        
         <div class="card br-rd-8 card-shadow no-br mt-4">
           <div class="">
             <div class="col-md-12 pt-3 px-3">
               <h2 class="sec-title mb-0">Upcoming Events</h2>
             </div>
             <hr>
-            <% meetings = Meeting.where(Meeting.user_based_scope(current_user)) %>
+            <% meetings = Meeting.where(Meeting.user_based_scope(current_user)).scheduled.asc(:scheduled_on).limit(3) %>
             <ul class="upcoming-events-list list-unstyled cmn-list">
               <% if meetings.present? %>
               <% meetings.each do |meeting| %>
@@ -323,110 +322,77 @@
             </ul>
           </div>
         </div>
-        
 
 
         <!----Announcements------------>
-      
         <div class="card br-rd-8 card-shadow no-br mt-3">
           <div class="">
             <div class="col-md-12 pt-3 px-3">
               <h2 class="sec-title mb-0">Announcements</h2>
             </div>
             <hr>
-            <ul class="announcement-list list-unstyled cmn-list">
-              <li class="px-3">
-                <div class="list-wrap row">
-                  <div class="col-lg-2">
-                    <i class="fa fa-rocket fill-warning fa-sm"></i>
-                  </div>
-                  <div class="col-lg-10">
-                    <p class="list-txt event-title mb-0">New Launch</p>
-                    <p class="list-txt event-info mb-0">Embassy Developers has just launched a new project, Brahma
-                      Towers in Lavassa.</p>
-                    <p class="list-txt event-time mb-0">On May 23rd, 2020</p>
-                    <div class="prjt-gallery">
-                      <div class="prjt-gallery-inner">
-                            <ul>
-                                <li class="border-0">
-                                    <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal">
-                                     <div class="wd-100 ht-34 rounded" style="background-image: url(<%= asset_path 'Booking.png' %>);background-size:cover;background-position:center"></div>
-                                     
-                                     </a>
-                                </li>
-                                <li class="border-0">
-                                    <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal">
-                                     <div class="wd-100 ht-34 rounded" style="background-image: url(<%= asset_path 'Booking.png' %>);background-size:cover;background-position:center"></div>
-                                     
-                                     </a>
-                                </li>
-                                <li class="border-0">
-                                    <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal">
-                                     <div class="wd-100 ht-34 rounded" style="background-image: url(<%= asset_path 'Booking.png' %>);background-size:cover;background-position:center"></div>
-                                     
-                                     </a>
-                                </li>
-                                <li class="border-0">
-                                    <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal">
-                                     <div class="wd-100 ht-34 rounded" style="background-image: url(<%= asset_path 'Booking.png' %>);background-size:cover;background-position:center"></div>
-                                     
-                                     </a>
-                                </li>
-                                <li class="more-img border-0">
-                                    <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal">
-                                     <div class="wd-100 ht-34 rounded" style="background-image: url(<%= asset_path 'Booking.png' %>);background-size:cover;background-position:center"></div>
-                                     <p class="fn-12">+ 5</p>
-                                     </a>
-                                </li>
-                            </ul>
+            <% Announcement.desc(:date).limit(3).each_with_index do |ann, i| %>
+              <ul class="announcement-list list-unstyled cmn-list">
+                <li class="px-3">
+                  <div class="list-wrap row">
+                    <div class="col-lg-2">
+                      <i class="fa fa-sm <%= category_icon_class(ann.category) %>"></i>
+                    </div>
+                    <div class="col-lg-10">
+                      <p class="list-txt event-title mb-0"><%= t("mongoid.attributes.categories.#{ann.category}") %></p>
+                      <p class="list-txt event-info mb-0"><%= ann.title %></p>
+                      <p class="list-txt event-time mb-0">On <%= ann.date&.strftime('%b %e %Y') %></p>
+                      <% ann.assets.limit(5).each_with_index do |asset, ix| %>
+                        <div class="prjt-gallery">
+                          <div class="prjt-gallery-inner">
+                                <ul>
+                                    <li class="border-0 <%= ix == 4 ? 'more-img' : '' %>">
+                                      <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal-<%= ann.id.to_s %>">
+                                         <div class="wd-100 ht-34 rounded" style="background-image: url(<%= asset&.file&.url %>);background-size:cover;background-position:center"></div>
+                                         <% if ix == 4 %>
+                                           <p class="fn-12"> + <%= ann.assets.count - 5 %></p>
+                                         <% end %>
+                                         </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
+                      <% end %>
                     </div>
                   </div>
-                </div>
-              </li>
-              <li class="px-3">
-                <div class="list-wrap row">
-                  <div class="col-lg-2">
-                    <i class="fa fa-calendar-week fill-primary fa-sm"></i>
+                  <div class="modal fade" tabindex="-1" id="galleryModal-<%= ann.id %>" aria-labelledby="galleryModal-<%= ann.id.to_s %>" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <div id="gallerySlider" class="carousel slide" data-bs-ride="carousel">
+                              <div class="carousel-inner">
+                                <% ann.assets.each do |asset| %>
+                                  <div class="carousel-item">
+                                    <img src="<%= asset&.file&.url %>" class="d-block w-100 img-fluid" alt="">
+                                  </div>
+                                <% end %>
+                              </div>
+                              <button class="carousel-control-prev" type="button" data-bs-target="#gallerySlider" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                              </button>
+                              <button class="carousel-control-next" type="button" data-bs-target="#gallerySlider" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="col-lg-10">
-                    <p class="list-txt event-title mb-0">Events</p>
-                    <p class="list-txt event-info mb-0">New plans for projects from Lodha builders in Pune on 24th Dec
-                      2020</p>
-                    <p class="list-txt event-time mb-0">On May 23rd, 2020</p>
-                  </div>
-                </div>
-              </li>
-              <li class="px-3">
-                <div class="list-wrap row">
-                  <div class="col-lg-2">
-                    <i class="fa fa-exclamation-triangle fill-danger fa-sm"></i>
-                  </div>
-                  <div class="col-lg-10">
-                    <p class="list-txt event-title mb-0">Brokerage Alert</p>
-                    <p class="list-txt event-info mb-0">2.5% Brokerage incentive on bookings made within the first week
-                      of the launch date</p>
-                    <p class="list-txt event-time mb-0">Till May 23rd, 2020</p>
-                  </div>
-                </div>
-              </li>
-              <li class="px-3">
-                <div class="list-wrap row">
-                  <div class="col-lg-2">
-                    <i class="fa fa-calendar-week fill-primary fa-sm"></i>
-                  </div>
-                  <div class="col-lg-10">
-                    <p class="list-txt event-title mb-0">Events</p>
-                    <p class="list-txt event-info mb-0">New plans for projects from Lodha builders in Pune on 24th Dec
-                      2020</p>
-                    <p class="list-txt event-time mb-0">On May 23rd, 2020</p>
-                  </div>
-                </div>
-              </li>
-            </ul>
+                </li>
+              </ul>
+            <% end %>
           </div>
         </div>
-        
        </div>
     </div>
 </section>
@@ -651,39 +617,3 @@
     })
   });
 <% end %>
-
-<div class="modal fade" tabindex="-1" id="galleryModal" aria-labelledby="galleryModal" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="gallerySlider" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                            <div class="carousel-item">
-                                <img src="<%= asset_path 'Booking.png' %>" class="d-block w-100 img-fluid" alt="">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="<%= asset_path 'Booking.png' %>" class="d-block w-100 img-fluid" alt="">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="<%= asset_path 'Booking.png' %>" class="d-block w-100 img-fluid" alt="">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="<%= asset_path 'Booking.png' %>" class="d-block w-100 img-fluid" alt="">
-                            </div>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#gallerySlider" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#gallerySlider" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>

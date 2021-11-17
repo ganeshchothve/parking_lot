@@ -249,6 +249,12 @@ en:
         other: Unit Configurations
 
     attributes:
+      announcement:
+        categories:
+          general: General
+          new_launch: New Launch
+          events: Events
+          brokerage_alert: Brokerage Alert
       video:
         thumbnail: Thumbnail
         description: Title
