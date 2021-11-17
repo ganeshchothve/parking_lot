@@ -175,6 +175,14 @@ $(document).ready(function () {
   $('.close-emi').click(function(){
     $('.emi-wrapper').fadeOut();
   });
+  $('.toggle-side-menu').click(function(){    
+    $(this).toggleClass('open-menu');
+    if($(this).hasClass('open-menu')){
+      $('.header-leftbar').css('width', '160px');
+    }else{
+      $('.header-leftbar').css('width', '0px');
+    }
+  });
   // $('body').click(function(){
   //   $('.emi-wrapper').fadeOut();
   // });

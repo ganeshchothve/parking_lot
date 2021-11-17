@@ -298,10 +298,10 @@
               <% meetings.each do |meeting| %>
               <li class="px-3">
                 <div class="list-wrap row">
-                  <div class="col-lg-2">
+                  <div class="col-lg-2 col-2">
                     <i class="fa fa-calendar-alt fill-primary"></i>
                   </div>
-                  <div class="col-lg-10">
+                  <div class="col-lg-10 col-10">
                     <p class="list-txt event-title mb-0"><%= meeting.topic %></p>
                     <p class="list-txt event-time mb-0">
                       <%= "#{meeting.scheduled_on&.strftime('%e %b %Y')}#{meeting.scheduled_on&.to_time&.in_time_zone(current_user.time_zone)&.strftime(', %I:%M%p %Z')}".html_safe %>
@@ -370,8 +370,8 @@
                           <div class="modal-body">
                             <div id="gallerySlider" class="carousel slide" data-bs-ride="carousel">
                               <div class="carousel-inner">
-                                <% ann.assets.each do |asset| %>
-                                  <div class="carousel-item">
+                                <% ann.assets.each_with_index do |asset, index| %>
+                                  <div class="carousel-item <%= (index == 0) ? "active" : "" %>">
                                     <img src="<%= asset&.file&.url %>" class="d-block w-100 img-fluid" alt="">
                                   </div>
                                 <% end %>

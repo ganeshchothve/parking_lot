@@ -71,8 +71,8 @@
 </div>
 
 <% if current_user.interested_projects.in(status: %w(subscribed approved)).present? %>
-<div class="row mt-4 mb-5">
-  <div class="col-lg-12 mt-5 mb-3">
+<div class="row mt-4 mb-5 mb-xs-0">
+  <div class="col-lg-12 mt-5 mb-3 mt-xs-0">
     <h2 class="sec-title">Interested Projects</h2>
   </div>
   <% current_user.interested_projects.in(status: %w(subscribed approved)).limit(3).each_with_index do |interested_project, index| %>

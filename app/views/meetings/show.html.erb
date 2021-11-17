@@ -107,8 +107,8 @@
         <div class="modal-body">
           <div id="gallerySlider" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
-              <% @meeting.assets.each do |asset| %>
-                <div class="carousel-item">
+              <% @meeting.assets.each_with_index do |asset, index| %>
+                <div class="carousel-item <%= (index == 0) ? "active" : "" %>">
                   <img src="<%= asset&.file&.url %>" class="d-block w-100 img-fluid" alt="">
                 </div>
               <% end %>
