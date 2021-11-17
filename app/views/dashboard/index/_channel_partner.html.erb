@@ -346,10 +346,10 @@
                         <div class="prjt-gallery">
                           <div class="prjt-gallery-inner">
                                 <ul>
-                                    <li class="border-0 <%= ix == 4 ? 'more-img' : '' %>">
+                                    <li class="border-0 <%= ix == 4 && ann.assets.count > 5 ? 'more-img' : '' %>">
                                       <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal-<%= ann.id.to_s %>">
                                          <div class="wd-100 ht-34 rounded" style="background-image: url(<%= asset&.file&.url %>);background-size:cover;background-position:center"></div>
-                                         <% if ix == 4 %>
+                                         <% if ix == 4 && ann.assets.count > 5 %>
                                            <p class="fn-12"> + <%= ann.assets.count - 5 %></p>
                                          <% end %>
                                          </a>

@@ -1048,8 +1048,8 @@ en:
         creator: Host
         creator_id: Host
       meeting/file_types:
-        photo: 'Photo'
-        collateral: 'Collateral'
+        photo: 'Photos'
+        collateral: 'Collaterals'
       meeting/help_text:
         photo_html: '<ul><li>Photos of the Event</li></ul>'
         collateral_html: '<ul><li>Event Collaterals</li></ul>'
