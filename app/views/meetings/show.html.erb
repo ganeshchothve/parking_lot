@@ -48,12 +48,13 @@
                 <div class="prjt-gallery-inner">
                   <h2 class="fn-18 border-top pt-4">Photos</h2>
                   <ul>
-                    <% @meeting.assets.limit(6).each_with_index do |asset, ix| %>
-                      <li class="border-0 <%= ix == 5 && @meeting.assets.count > 6 ? 'more-img' : '' %>">
+                    <% assets = @meeting.assets.where(document_type: 'photo') %>
+                    <% assets.limit(6).each_with_index do |asset, ix| %>
+                      <li class="border-0 <%= ix == 5 && assets.count > 6 ? 'more-img' : '' %>">
                         <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal-<%= @meeting.id.to_s %>">
                           <div class="wd-100 ht-77 rounded" style="background-image: url(<%= asset&.file&.url %>);background-size:cover;background-position:center"></div>
-                          <% if ix == 5 && @meeting.assets.count > 6 %>
-                            <p class="fn-12">+ <%= @meeting.assets.count - 6 %></p>
+                          <% if ix == 5 && assets.count > 6 %>
+                            <p class="fn-12">+ <%= assets.count - 6 %></p>
                           <% end %>
                         </a>
                       </li>
@@ -107,7 +108,7 @@
         <div class="modal-body">
           <div id="gallerySlider" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
-              <% @meeting.assets.each_with_index do |asset, index| %>
+              <% @meeting.assets.where(document_type: 'photo').each_with_index do |asset, index| %>
                 <div class="carousel-item <%= (index == 0) ? "active" : "" %>">
                   <img src="<%= asset&.file&.url %>" class="d-block w-100 img-fluid" alt="">
                 </div>
