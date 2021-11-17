@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="project-inner-info">
-      <div class="inner-info">
+      <div class="inner-info position-relative">
         <h2 class="title"><%= link_to project.name, admin_project_path(project) %></h2>
         <p class="devl-name"><%= project.developer_name %></p>
         <% if project.micro_market.present? && project.city.present? %>
@@ -20,6 +20,10 @@
         <% end %>
         <% meeting_str = "#{meeting.present? ? '1' : 'No'} #{meeting.present? && meeting.completed? ? 'Past' : 'New'} event <span>#{meeting&.scheduled_on&.strftime('%b %e %Y')}#{meeting&.scheduled_on&.to_time&.in_time_zone(current_user.time_zone)&.strftime(', %I:%M%p %Z')}</span>".html_safe %>
         <p class="prjt-event"><%= link_to_if (meeting.present? && Admin::MeetingPolicy.new(current_user, meeting).show?), meeting_str, (meeting.present? ? admin_meeting_path(meeting) : admin_meetings_path), class: 'modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Event details'} %></p>
+         <% if policy([current_user_role_group, InterestedProject]).index? %>
+            <% heart_class = project.id.in?(interested_project_ids) ? 'fill-danger' : 'fill-theme' %>
+            <%= link_to_if !project.id.in?(interested_project_ids), "<i class='fa fa-heart #{heart_class} me-3 position-absolute end-0 top-0 mt-1'></i>".html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist position-absolute end-0 top-0 mt-1 d-block d-sm-none' %>
+          <% end %>
       </div>
       <div class="prjt-date-info">
         <div class="inner-date">
@@ -87,7 +91,7 @@
 
           <% if policy([current_user_role_group, InterestedProject]).index? %>
             <% heart_class = project.id.in?(interested_project_ids) ? 'fill-danger' : 'fill-theme' %>
-            <%= link_to_if !project.id.in?(interested_project_ids), "<i class='fa fa-heart #{heart_class} me-3'></i>".html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist' %>
+            <%= link_to_if !project.id.in?(interested_project_ids), "<i class='fa fa-heart #{heart_class} me-3 d-none d-sm-block'></i>".html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-block' %>
           <% end %>
 
           <% if current_user.role.in?(%w(superadmin admin)) %>

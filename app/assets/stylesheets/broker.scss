@@ -1480,6 +1480,27 @@ select.form-control{
 		.mt-xs-0{
 			margin-top: 0px!important;
 		}
+		.ms-xs-0{
+			margin-left:0px!important;
+		}
+		.mb-xs-0{
+			margin-bottom:0px!important;
+		}
+		.me-xs-0{
+			margin-right:0px!important;
+		}
+		.pt-xs-0{
+			padding-top:0px!important;
+		}
+		.pb-xs-0{
+			padding-bottom:0px!important;
+		}
+		.ps-xs-0{
+			padding-left:0px!important;
+		}
+		.pe-xs-0{
+			padding-right:0px!important;
+		}
 	}
 }
 
@@ -2192,6 +2213,7 @@ select.form-control{
 		border: 1px solid #0000001A;
 		display: inline-block;
 		position: relative;
+		margin-bottom:5px;
 		&.active{
 			border: 1px solid #296FE6;
 		}
@@ -2352,15 +2374,14 @@ select.form-control{
 			@media screen and (max-width: 700px){
 				width:100%;
 				.prjt-date-info{
-					width:50%;
-					height:115px;
+					width:100%;
+					height:60px;
 					border:0px;
 				}
 				.inner-info {
-					width:50%;
+					width:100%;
 					padding-top:0px;
 					padding-bottom:0px;
-					border-right: 1px solid #e8e8e8;
 				}
 			}
 		}
@@ -2400,6 +2421,11 @@ select.form-control{
 		    padding: 0 10px;
 			&.prjt-details-header-stats{
 				width: 50%;
+				@media screen and (max-width: 700px){
+					width:100%;
+					height:auto;
+					text-align:left!important;
+				}
 			}
 		    .prjt-inner-stats, .right-stats {
 			    position: absolute;
@@ -2447,6 +2473,7 @@ select.form-control{
 			}
 			@media screen and (max-width: 700px){
 				width:100%;
+				height:85px;
 			}
 		}
 		.prjt-meets{
@@ -3481,6 +3508,9 @@ select.form-control{
 								height: 140px;
 								overflow-y: auto;
 							}
+							@media screen and (max-width: 700px){
+								padding-left:0px!important
+							}
 						}
 						.location-list{
 							p{
@@ -3819,6 +3849,9 @@ body.fixed-subheader .prjt-menu{
 		&.active:after{
 			bottom: 2px!important;
 		}
+	}
+	@media screen and (max-width: 700px){
+		left:0px;
 	}
 }
 
