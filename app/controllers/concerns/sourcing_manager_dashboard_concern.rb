@@ -62,11 +62,11 @@ module SourcingManagerDashboardConcern
       @channel_partners_status = {}
       @cp_managers.each do
         |cp_manager|
-        @inactive_status_count = ChannelPartner.in(manager_id: @channel_partners.pluck(:id), status: "inactive").count
-        @active_status_count = ChannelPartner.in(manager_id: cp_manager.id, status: "active").count
-        @pending_status_count = ChannelPartner.in(manager_id: cp_manager.id, status: "pending").count
-        @rejected_status_count = ChannelPartner.in(manager_id: cp_manager.id, status: "rejected").count
-        @total_channel_partner_count = ChannelPartner.in(manager_id: cp_manager.id).count
+        @inactive_status_count = ChannelPartner.where(manager_id: cp_manager.id, status: "inactive").count
+        @active_status_count = ChannelPartner.where(manager_id: cp_manager.id, status: "active").count
+        @pending_status_count = ChannelPartner.where(manager_id: cp_manager.id, status: "pending").count
+        @rejected_status_count = ChannelPartner.where(manager_id: cp_manager.id, status: "rejected").count
+        @total_channel_partner_count = ChannelPartner.where(manager_id: cp_manager.id).count
 
         @channel_partners_status[cp_manager.id] = {name: cp_manager.name,
                                 inactive: @inactive_status_count,
