@@ -166,6 +166,15 @@
       <%= f.number_field :price_upto, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("price_upto") %>
     </div>
   </div>
+  <div class="col-md-12">
+    <div class="mb-3">
+      <% usp = f.object.broker_usp %>
+      <%= f.label :broker_usp %>
+      <%= f.text_field :broker_usp, value: usp[0], class: 'form-control mb-2', name: 'project[broker_usp][]', disabled: !policy([:admin, project]).editable_field?("broker_usp"), maxlength: 200 %>
+      <%= f.text_field :broker_usp, value: usp[1], class: 'form-control mb-2', name: 'project[broker_usp][]', disabled: !policy([:admin, project]).editable_field?("broker_usp"), maxlength: 200 %>
+      <%= f.text_field :broker_usp, value: usp[2], class: 'form-control', name: 'project[broker_usp][]', disabled: !policy([:admin, project]).editable_field?("broker_usp"), maxlength: 200 %>
+    </div>
+  </div>
 </div>
 <div class="card mt-3">
   <div class="card-header">

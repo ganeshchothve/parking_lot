@@ -10,6 +10,6 @@ class ChannelPartnerPolicy < ApplicationPolicy
   end
 
   def asset_create?
-    create? || user.role.in?(%w(admin sales_admin))
+    create? || user.role.in?(%w(admin cp cp_admin))
   end
 end

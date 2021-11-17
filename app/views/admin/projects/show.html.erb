@@ -423,7 +423,7 @@
                                                     <li class="amenity_<%= type %>">
                                                     <div class="amenities-wrap">
                                                         <span>
-                                                          <!-- <img src='<%#= asset_path "amenities/amenity-#{type.gsub("_", "-")}.svg" %> -->
+                                                          <i class="fad <%= t("amenity_icons.#{type}") %>"></i>
                                                         </span>
                                                     <p><%= type.titleize %></p>
                                                     </div>
@@ -469,7 +469,7 @@
                                                 <span class="inner-line"></span>
                                             </div>
                                             <div class="current-status-tooltip">
-                                              <p>Current Status: <%= @project.category %></p>
+                                              <p>Current Status: <%= @project.category&.first %></p>
                                             </div>
                                             <% tu_count = @project.timeline_updates.count %>
                                             <% @project.timeline_updates.asc(:date).each_with_index do |tu, index| %>
@@ -607,7 +607,7 @@
                                       end
                                     %>
                                     </div>
-                                    <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i><%= project.category&.titleize || 'Just Launch' %></p>
+                                    <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i><%= project.category&.first&.titleize || 'Just Launch' %></p>
                                         <% if project.hot?%>
                                         <p class="img-tag bg-danger" style="top:65px"><i class="fa fa-fire fill-white"></i>Hot Selling</p>
                                         <% end %>

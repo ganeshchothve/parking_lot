@@ -217,7 +217,7 @@
       <div id="exct-feat-next" class="visible-xs"></div>
     </div>
     <div class="visible-xs text-center mobile-exclusive-feature-btn-wrapper">
-      <a class="green-btn register-btn" data-event-category="Section" data-event-action="Click"
+      <a href="<%= new_channel_partner_path %>" class="green-btn register-btn" data-event-category="Section" data-event-action="Click"
         data-event-name="Register Now">Register Now</a>
     </div>
   </div>
@@ -228,7 +228,7 @@
     <h2 class="section-heading text-center cgreen">Chance to work with Pune's hottest selling properties</h2>
     <div class="row relative">
       <div class="project-listing-slider">
-        <% Project.limit(15).each do |project| %>
+        <% Project.where(hot: true).limit(15).each do |project| %>
           <div class="property-item col-app-4 col-app-sm-6">
             <div class="property-item-inner">
               <div class="property-item-image">
