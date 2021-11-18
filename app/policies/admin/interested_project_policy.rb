@@ -4,7 +4,7 @@ class Admin::InterestedProjectPolicy < InterestedProjectPolicy
   end
 
   def create?
-    user.role?('channel_partner')
+    user.role?('channel_partner') && user.active_channel_partner?
   end
 
   def edit?
