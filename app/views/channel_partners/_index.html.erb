@@ -9,16 +9,16 @@
               <div>
                 <div class="inner-info d-flex justify-content-between">
                   <div class="ps-3 py-3">
-                    <h2 class="fn-16 font-medium d-inline-block mb-0 theme-txt-color me-2">
+                    <h2 class="fn-16 font-medium d-block d-sm-inline-block mb-0 theme-txt-color me-2">
                       <%= channel_partner.name %>
                     </h2>
                     <% if channel_partner.email.present? %>
-                    <p class="email-icon small d-inline-block mt-1 fn-16 mb-0">
+                    <p class="email-icon small d-block d-sm-inline-block mt-1 fn-16 mb-0">
                       <i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i><%= channel_partner.email || '' %>
                     </p>
                     <% end %>
                     <% if channel_partner.phone.present? %>
-                    <p class="phone-icon small d-inline-block mt-1 ms-2 fn-16 mb-0">
+                    <p class="phone-icon small d-block d-sm-inline-block mt-1 ms-2 fn-16 mb-0">
                       <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= channel_partner.phone || '' %>
                     </p>
                     <% end %>
@@ -33,7 +33,7 @@
                     <div class="dropdown d-inline-block">
                       <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">
-                        <i class="fa fa-ellipsis-v primary" aria-hidden="true"></i></a>
+                        <i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
                       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                         <% if Admin::ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
                         <%= link_to t('helpers.edit.link_name', model: ChannelPartner.model_name.human), edit_channel_partner_path(channel_partner), class: 'dropdown-item modal-remote-form-link' %>
@@ -54,19 +54,19 @@
                 </div>
                 <div class="border-bottom col-12"></div>
               </div>
-              <div class="d-flex justify-content-between">
-                <div class="ps-3 py-3">
+              <div class="d-flex justify-content-between d-xs-no-flex">
+                <div class="ps-3 py-3 pb-xs-0">
                   <p class="fn-14 mb-0 theme-txt-color">
                     <%= channel_partner.associated_user_id.present? ? link_to(channel_partner.associated_user.name, admin_user_path(channel_partner.associated_user_id), class: "theme-txt-color col-title") : '-' %>
                   </p>
                 </div>
                 <div class="inner-info">
-                  <div class="pe-3 py-3  d-flex justify-content-end">
+                  <div class="pe-3 py-3  d-flex justify-content-end d-xs-no-flex ps-xs-3">
                     <p class="fn-16 secondary mb-0">RERA Registration Number : <span
                         class="font-medium theme-txt-color"><%= channel_partner.rera_id.present? ? channel_partner.rera_id : '-'  %></span>
                     </p>
-                    <span class="secondary mx-3">| </span>
-                    <p class="font-medium fn-14 mb-0 theme-txt-color"><i
+                    <span class="secondary mx-3 d-sm-inline-block d-none">| </span>
+                    <p class="font-medium fn-14 mb-0 theme-txt-color mt-xs-2"><i
                         class='fa fa-circle status_<%= ChannelPartner.human_attribute_name("status.#{channel_partner.status}").downcase.gsub(" ", "_") %> me-2 fa-xs'></i><%= ChannelPartner.human_attribute_name("status.#{channel_partner.status}") %>
                     </p>
                   </div>

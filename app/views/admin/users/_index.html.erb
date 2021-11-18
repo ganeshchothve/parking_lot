@@ -9,7 +9,7 @@
               <div>
                 <div class="inner-info d-flex justify-content-between">
                   <div class="ps-3 py-3">
-                    <h2 class="fn-16 font-medium d-inline-block mb-0 theme-txt-color me-2">
+                    <h2 class="fn-16 font-medium d-block d-sm-inline-block mb-0 theme-txt-color me-2">
                       <% if policy([ current_user_role_group, user]).show? %>
                       <%= link_to user.name, [current_user_role_group, user ], class: "theme-txt-color fn-14" %>
                       <% else %>
@@ -20,12 +20,12 @@
                       <% end %>
                     </h2>
                     <% if user.email.present? %>
-                    <p class="email-icon small d-inline-block mt-1 fn-16 mb-0">
+                    <p class="email-icon small d-block d-sm-inline-block mt-1 fn-16 mb-0">
                       <i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i><%= user.email || '' %>
                     </p>
                     <% end %>
                     <% if user.phone.present? %>
-                    <p class="phone-icon small d-inline-block mt-1 ms-2 fn-16 mb-0">
+                    <p class="phone-icon small d-block d-sm-inline-block mt-1 ms-2 fn-16 mb-0">
                       <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= user.phone || '' %>
                     </p>
                     <% end %>
@@ -43,14 +43,14 @@
                 </div>
                 <div class="border-bottom col-12"></div>
               </div>
-              <div class="d-flex justify-content-between">
-                <div class="ps-3 py-3">
+              <div class="d-flex justify-content-between d-xs-no-flex">
+                <div class="ps-3 py-3 pb-xs-0">
                   <p class="mb-0 theme-txt-color"><%= User.human_attribute_name("role.#{user.role}") %></p>
                 </div>
                 <div class="inner-info">
-                  <div class="pe-3 py-3  d-flex justify-content-end">
+                  <div class="pe-3 py-3 d-flex justify-content-sm-end justify-content-start ps-xs-3">
                     <% if user.buyer? %>
-                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i
+                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color ms-xs-0"><i
                           class='fa fn-16 fa-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= user.is_payment_done? ? 'Payment Done' : 'Payment Pending' %>
                       </p>
                     <% end %>

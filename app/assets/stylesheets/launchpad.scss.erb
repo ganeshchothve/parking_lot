@@ -707,6 +707,7 @@ footer p {
     display: flex;
     align-items: center;
     height: 100%;
+    justify-content: end;
 }
 
 .home-image {
@@ -1009,12 +1010,12 @@ footer p {
 }
 
 .exclusive-features-section {
-    background-color: #078181;
+    background-color: #fff;
 }
 
 .exclusive-features-section .section-heading {
     margin: 0px 0px 8px;
-    color: #fff;
+    /* color: #fff; */
 }
 
 .exclusive-features-item {
@@ -1029,6 +1030,7 @@ footer p {
     justify-content: center;
     flex-direction: column;
     border-radius: 12px;
+    border:1px solid #e5e5e5;
 }
 
 .exclusive-features-desc {
@@ -2604,6 +2606,8 @@ footer p {
     .container{
         position: relative;
         z-index: 2;
+        width:95%;
+        max-width: 95%;
     }
     .broker-wrapper{
         height:600px;
@@ -2659,6 +2663,45 @@ footer p {
                 }
             }
         }
+        @media screen and (max-width: 700px){
+            height: auto;
+            margin-top: 30px;
+            .broker-left, .broker-right{
+                position: unset!important;
+                width: auto!important;
+                ul{
+                    width: auto!important;
+                    li{
+                        height: auto;
+                        padding: 8px 15px;
+                        font-size: 14px;
+                    }
+                }
+                h2{
+                    font-size: 18px;
+                    line-height: 26px;
+                    margin-bottom: 20px;
+                    margin-top: 20px;
+                }
+            }
+            .broker-left{
+                text-align: left!important;
+            }
+            .broker-right{
+                text-align: right!important;
+                ul{
+                    text-align: right!important;
+                }
+            }
+            .broker-img{
+                position: unset;
+                transform: unset;
+                img{
+                    width: 100%;
+                    margin-top:-40px;
+                }
+            }
+        }
     }
 }
 .stats-brokers{
@@ -2704,9 +2747,73 @@ footer p {
     }
 }
 .incentive-sec{
-    background-color:#078181;
+    background-color:#fff;
     h2{
         margin-bottom:50px;
+        color:#078181;
+    }
+    .bx-wrapper{
+        max-width: 100%!important;
+        img{
+            width: 100%;
+        }
+    }
+    .tab-box{
+        position: relative;
+        &:after{
+            content: '';
+            position: absolute;
+            background: transparent linear-gradient(180deg, #00000000 0%, #000000 100%) 0% 0% no-repeat padding-box;
+            opacity: 0.77;
+            width:100%;
+            height:90%;
+            bottom:0px;
+            left:0px;
+            @media screen and (max-width:700px){
+                opacity: 0.97;
+            }
+        }
+        .inner-box{
+            position: absolute;
+            bottom: 0px;
+            z-index: 2;
+            color: #fff;
+            width: 100%;
+            bottom: 30px;
+            padding: 0 50px;
+            height:30px;
+            transition: all 0.6s ease-in-out;
+            h3{
+                font-size: 24px;
+                line-height:33px;
+                margin-bottom:25px;
+                @media screen and (max-width:700px){
+                    margin-bottom: 15px;
+                    font-size: 22px;
+                    font-weight: 600;
+                }
+            }
+            ul{
+                margin-left: 20px;
+                
+                li{
+                    list-style: disc;
+                    line-height:22px;
+                    margin-bottom:10px;
+                }
+            }  
+            @media screen and (max-width:700px){
+                padding: 0 20px;
+                bottom:10px;
+                height:auto;
+            }          
+        }
+        &:hover{
+            .inner-box{
+                bottom:100px;
+                height:150px;
+            }
+        }
     }
     .incentive-lists{
         li{
@@ -2730,36 +2837,6 @@ footer p {
                 line-height:24px;
                 font-weight:500;
             }
-        }
-    }
-    .tab-content{
-        .tab-box{
-            position: relative;
-                img{
-                    width:100%;
-                    border-radius:12px;
-                }
-                &:after {
-                    content: '';
-                    position: absolute;
-                    background: transparent linear-gradient(68deg, #1D1D1D 0%, #686868 100%) 0% 0% no-repeat padding-box;
-                    mix-blend-mode: multiply;
-                    border-radius: 12px;
-                    opacity: 0.75;
-                    width: 100%;
-                    height: 100%;
-                    left: 0;
-                    top: 0;
-                }
-                p{
-                    position: absolute;
-                    z-index: 2;
-                    color:#fff;
-                    bottom:30px;
-                    left:50px;
-                    font-size:18px;
-                    line-height:36px;
-                }
         }
     }
 }
@@ -2820,9 +2897,6 @@ footer p {
     }
 }
 .logo-sec{
-    h4{
-
-    }
     p{
         font-size:40px;
         line-height:50px;
@@ -2830,9 +2904,24 @@ footer p {
     }
     .logo-wrapper{
         margin-bottom:50px;
+        .logos-slider{
+            li{
+                text-align: center;
+                img{
+                    background-color: #fff;
+                }
+            }
+        }
+    }
+    @media screen and (max-width: 700px){
+        p{
+            font-size: 26px;
+            line-height: 30px;
+            margin-top: 20px;
+        }
     }
 }
-#logo-list-prev {
+#logo-list-prev, #incentive-feat-prev {
     position: absolute;
     bottom: -60px;
     left: calc(50% - 20px);
@@ -2840,7 +2929,7 @@ footer p {
     transform: translateX(-50%);
     width: 40px;
 }
-#logo-list-next {
+#logo-list-next, #incentive-feat-next {
     position: absolute;
     bottom: -60px;
     left: calc(50% + 20px);
@@ -2848,10 +2937,16 @@ footer p {
     transform: translateX(-50%);
     width: 40px;
 }
+#incentive-feat-prev, #incentive-feat-next{
+    bottom: 0px;
+}
 .website-stats{
     text-align:center;
     li{
         margin: 80px 50px 0;
         display:inline-block;
+        @media screen and (max-width: 700px){
+            margin:50px 20px 0;
+        }
     }
 }

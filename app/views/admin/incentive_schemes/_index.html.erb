@@ -17,13 +17,13 @@
         <div class="small">
         </div>
       </td>
-      <td>
+      <td data-title="<%= t('mongoid.attributes.incentive_scheme.project_id') %>">
         <%= incentive_scheme.project_name %>
       </td>
-      <td>
+      <td data-title="<%= t('mongoid.attributes.incentive_scheme.status') %>">
         <%= t("mongoid.attributes.incentive_scheme/status.#{incentive_scheme.status}") %>
       </td>
-      <td>
+      <td class="action-btn">
         <div class="dropdown text-right">
           <a class="btn table-dropdown-btn black-clr py-0" href="#" role="button" id="dropdownMenuLink"
             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v"
