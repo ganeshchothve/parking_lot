@@ -36,7 +36,7 @@ module ChannelPartnerStateMachine
 
     def after_submit_for_approval
       self.set( status_change_reason: nil )
-      # send_notification
+      send_notification
     end
 
     def send_notification
@@ -55,6 +55,20 @@ module ChannelPartnerStateMachine
           triggered_by_type: self.class.to_s
         })
         email.sent!
+      end
+
+      sms_template = Template::EmailTemplate.where(name: template_name).first
+      if sms_template.present?
+        phones = recipients.collect(&:phone).reject(&:blank)
+        if phones.present?
+          Sms.create!(
+            booking_portal_client_id: self.associated_user.booking_portal_client_id,
+            to: phones,
+            sms_template_id: sms_template.id,
+            triggered_by_id: self.id,
+            triggered_by_type: self.class.to_s
+          )
+        end
       end
     end
 

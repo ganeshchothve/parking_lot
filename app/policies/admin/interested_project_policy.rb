@@ -1,6 +1,6 @@
 class Admin::InterestedProjectPolicy < InterestedProjectPolicy
   def index?
-    create? && InterestedProject.in(status: %w(subscribed approved)).present?
+    create?
   end
 
   def create?
