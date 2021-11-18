@@ -44,11 +44,36 @@ module SourcingManagerDashboardConcern
     if ["superadmin","admin"].include?(current_user.role) #Channel Partner Manager Performance Dashboard for admin and superadmin
       @cps = User.in(manager_id: User.filter_by_role("cp_admin").pluck(:id))
     else
-      @cps = User.filter_by_role("cp").filter_by_userwise_project_ids(current_user)
+      # @cps = User.filter_by_role("cp").filter_by_userwise_project_ids(current_user)
+      @cps = User.where(manager_id: current_user.id)
     end
     @matcher = {matcher: {created_at: {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day }}}
     @matcher[:matcher][:project_id] = {"$in": project_ids} if project_ids.present?
     @walkins = DashboardDataProvider.cp_performance_walkins(current_user, @matcher)
     @bookings = DashboardDataProvider.cp_performance_bookings(current_user, @matcher)
+  end
+
+  def cp_status
+    if ["superadmin","admin"].include?(current_user.role) #Channel Partner Manager Performance Dashboard for admin and superadmin
+      @cp_managers = User.in(manager_id: User.filter_by_role("cp_admin").pluck(:id))
+    else
+      @cp_managers = User.filter_by_role(:cp).where(manager_id: current_user.id)
+    end
+    @channel_partners_status = {}
+    @cp_managers.each do
+      |cp_manager|
+      @inactive_status_count = ChannelPartner.where(manager_id: cp_manager.id, status: "inactive").count
+      @active_status_count = ChannelPartner.where(manager_id: cp_manager.id, status: "active").count
+      @pending_status_count = ChannelPartner.where(manager_id: cp_manager.id, status: "pending").count
+      @rejected_status_count = ChannelPartner.where(manager_id: cp_manager.id, status: "rejected").count
+      @total_channel_partner_count = ChannelPartner.where(manager_id: cp_manager.id).count
+
+      @channel_partners_status[cp_manager.id] = {name: cp_manager.name,
+                              inactive: @inactive_status_count,
+                              active: @active_status_count,
+                              pending: @pending_status_count,
+                              rejected: @rejected_status_count,
+                              total_count: @total_channel_partner_count}
+    end
   end
 end

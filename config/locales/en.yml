@@ -1871,6 +1871,12 @@ en:
         heading: "Brokerage Scheme Performance"
       cp_performance:
         heading: "Channel Partner Manager Performance"
+      cp_status:
+        active: "Active Partners"
+        inactive: "Inactive Partners"
+        pending: "Pending Partners"
+        rejected: "Rejected Partners"
+        heading: "Channel Partner Status Count"
     channel_partner:
       projects:
         sub_heading: 'Best homes to meet your expectations'
