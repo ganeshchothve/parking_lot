@@ -82,11 +82,7 @@
     <%= form.input :average_quarterly_business, required: false, disabled: !policy([:admin, @channel_partner]).editable_field?("average_quarterly_business"), as: :float %>
   </div>
   <div class="col-md-6">
-    <% if current_user.present? && current_user.role?(:cp_admin) %>
-      <%= form.hidden_field :manager_id, value: current_user.id %>
-    <% else %>
-      <%= form.input :manager_id, collection: User.in(role: "cp").collect{|x| [x.name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), as: :select, prompt: :translate %>
-    <% end %>
+    <%= form.input :manager_id, collection: User.where(is_active: true, confirmed_at: {'$ne': nil}, role: "cp").collect{|x| [x.name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), as: :select, prompt: :translate %>
   </div>
 </div>
 

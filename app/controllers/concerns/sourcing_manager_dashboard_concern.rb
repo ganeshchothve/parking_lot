@@ -42,7 +42,7 @@ module SourcingManagerDashboardConcern
     project_ids = Project.where(id: {"$in": project_ids}).distinct(:id)
     start_date, end_date = dates.split(' - ')
     if ["superadmin","admin"].include?(current_user.role) #Channel Partner Manager Performance Dashboard for admin and superadmin
-      @cps = User.in(manager_id: User.filter_by_role("cp_admin").pluck(:id))
+      @cps = User.in(manager_id: User.filter_by_role("cp_admin").pluck(:id)).where(role: "cp")
     else
       # @cps = User.filter_by_role("cp").filter_by_userwise_project_ids(current_user)
       @cps = User.where(manager_id: current_user.id)
@@ -55,7 +55,7 @@ module SourcingManagerDashboardConcern
 
   def cp_status
     if ["superadmin","admin"].include?(current_user.role) #Channel Partner Manager Performance Dashboard for admin and superadmin
-      @cp_managers = User.in(manager_id: User.filter_by_role("cp_admin").pluck(:id))
+      @cp_managers = User.in(manager_id: User.filter_by_role("cp_admin").pluck(:id)).where(role: "cp")
     else
       @cp_managers = User.filter_by_role(:cp).where(manager_id: current_user.id)
     end
@@ -67,7 +67,6 @@ module SourcingManagerDashboardConcern
       @pending_status_count = ChannelPartner.where(manager_id: cp_manager.id, status: "pending").count
       @rejected_status_count = ChannelPartner.where(manager_id: cp_manager.id, status: "rejected").count
       @total_channel_partner_count = ChannelPartner.where(manager_id: cp_manager.id).count
-
       @channel_partners_status[cp_manager.id] = {name: cp_manager.name,
                               inactive: @inactive_status_count,
                               active: @active_status_count,
