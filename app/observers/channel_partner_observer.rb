@@ -60,6 +60,14 @@ class ChannelPartnerObserver < Mongoid::Observer
     channel_partner.rera_applicable = true if channel_partner.rera_id.present?
     channel_partner.gst_applicable = true if channel_partner.gstin_number.present?
 
+    if channel_partner.manager_id_changed? && channel_partner.manager_id.present?
+      if current_client.external_api_integration?
+        Crm::Api::Put.where(resource_class: 'ChannelPartner', is_active: true).each do |api|
+          api.execute(channel_partner)
+        end
+      end
+    end
+
     # TODO: Handle enable_direct_activation_for_cp setting behavior on client.
     #if channel_partner.new_record? && current_client.reload.enable_direct_activation_for_cp
     #  channel_partner.status = 'active'
