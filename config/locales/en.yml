@@ -379,6 +379,8 @@ en:
         registration_done: 'Registration Done'
         ladder_stage: 'Ladder Stage'
         agreement_price: 'Agreement Price'
+        primary_user_kyc_id: 'Primary User Kyc'
+        user_kyc_ids: 'Secondary User Kycs'
       booking_detail/status:
         available: 'Available'
         not_available: 'Not Available'

@@ -7,7 +7,7 @@ class BookingDetailPolicy < ApplicationPolicy
   def permitted_attributes(_params = {})
     attributes = [:tds_doc]
     attributes += [:erp_id] if %w[admin sales_admin].include?(user.role)
-    attributes += [:primary_user_kyc_id, :user_kyc_ids ]
+    attributes += [:primary_user_kyc_id, user_kyc_ids: [] ]
     attributes
   end
 
