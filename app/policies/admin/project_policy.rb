@@ -22,7 +22,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def index?
-    !user.buyer? && (current_client.enable_actual_inventory?(user) || enable_incentive_module?(user))
+    user.role?('channel_partner') || (!user.buyer? && (current_client.enable_actual_inventory?(user) || enable_incentive_module?(user)))
   end
 
   def show?

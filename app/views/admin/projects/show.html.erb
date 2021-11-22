@@ -8,12 +8,12 @@
             <div class="col-lg-8 px-3 prjt-dtls-wrap pt-3">
                 <div class="prjt-inner-box">
                     <div class="prjt-details-header col-12 float-start bt-br">
-                        <div class="col-6 float-start text-start">
+                        <div class="col-lg-6 col-12 float-start text-start">
                             <h1><%= @project.name || '-' %></h1>
                             <p class="prjt-devlprs mb-2"><%= @project.developer_name || '-' %></p>
                             <p class="prjt-location"><i class="fa fa-map-marker-alt me-2"></i><%= @project.micro_market || '-' %></p>
                         </div>
-                        <div class="col-6 float-end text-end prjt-details-header-stats px-0 pt-2">
+                        <div class="col-lg-6 col-12 float-end text-end prjt-details-header-stats px-0 pt-2">
                             <div class="d-block">
                             <% if current_user.role.in?(%w(superadmin admin)) %>
                                 <div class="dropdown show d-inline">
@@ -115,7 +115,7 @@
                                     <h2 class="tab-title">Overview</h2>
                                 </div>
                                 <div class="tab-body pt-2">
-                                    <div class="col-5 overview-left float-start">
+                                    <div class="col-lg-5 col-12 overview-left float-start">
                                         <p>
                                             <span>Configuration</span>
                                             <%= inventory_avl ? DashboardDataProvider.configurations(@project).to_sentence : @project.configurations&.to_sentence %> Flats <%= inventory_avl ? "| #{@project.project_units.min(:saleable)&.round} - #{@project.project_units.max(:saleable)&.round} #{@project.area_unit}" : '' %>
@@ -129,7 +129,7 @@
                                             <%= @project.possession.present? ? @project.possession.strftime('%d %b, %Y') :  '-' %>
                                         </p>
                                     </div>
-                                    <div class="col-7 ps-3 overview-desc float-end">
+                                    <div class="col-lg-7 col-12 ps-3 overview-desc float-end">
                                         <div class="project-overview-desc"><%= @project.description&.html_safe %></div>
                                     </div>
                                 </div>
@@ -140,7 +140,7 @@
                                     <!--<a href="javascript:;" class="location-share float-end"><i class="fa fa-share-alt fill-primary me-2"></i>Share location</a>-->
                                 </div>
                                 <div class="tab-body col-12 float-start pt-3">
-                                    <div class="col-6 float-start">
+                                    <div class="col-lg-6 col-12 float-start">
                                         <div class="location-list">
                                           <p><i class="fa fa-map-marker-alt me-2"></i><%= "#{@project.micro_market}, #{@project.city}" %></p>
                                           <% if @project.nearby_locations.present? %>
@@ -155,7 +155,7 @@
                                         </div>
                                     </div>
                                     <% if @project.embed_map_tag.present? %>
-                                      <div class="col-6  float-end embed-map">
+                                      <div class="col-lg-6 col-12 float-end embed-map">
                                         <%= @project.embed_map_tag.html_safe %>
                                       </div>
                                     <% end %>
@@ -464,7 +464,7 @@
                                 <div class="tab-body pb-5">
                                   <% if @project.timeline_updates.present? %>
                                     <div class="col-12 float-start pb-2">
-                                        <div class="prjt-current-status position-relative pb-5">
+                                        <div class="prjt-current-status position-relative pb-5 pb-xs-0">
                                             <div class="line">
                                                 <span class="inner-line"></span>
                                             </div>
@@ -662,7 +662,7 @@
                 <div class="col-12 py-4 mt-2 float-start"></div>
                 <% end %>
             </div>
-            <div class="col-lg-4 prjt-right-panel px-3 mt-1">
+            <div class="col-lg-4 prjt-right-panel px-3 mt-1 mb-4">
               <!--
                 <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card">
                     <div class="row">

@@ -71,6 +71,7 @@ class ChannelPartner
   scope :filter_by_city, ->(city) { where(city: city) }
   scope :filter_by__id, ->(_id) { where(_id: _id) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
+  scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
 
   default_scope -> { desc(:created_at) }
 
@@ -172,7 +173,7 @@ class ChannelPartner
   end
 
   def doc_types
-    doc_types = self.nri? ? %w[cheque_scanned_copy company_incorporation_certificate form_10f tax_residency_certificate pe_declaration] : %w[pan_card cheque_scanned_copy]
+    doc_types = self.nri? ? %w[cheque_scanned_copy company_incorporation_certificate form_10f tax_residency_certificate pe_declaration] : %w[pan_card]
     doc_types << 'rera_certificate' if self.rera_applicable?
     doc_types << 'gst_certificate' if self.gst_applicable?
     doc_types
@@ -207,13 +208,13 @@ class ChannelPartner
 
     def user_based_scope(user, _params = {})
       custom_scope = {}
-      #if user.role?('cp_admin')
-      #  cp_ids = User.where(manager_id: user.id).distinct(:id)
-      #  custom_scope = { manager_id: {"$in": cp_ids} }
-      #elsif user.role?('cp')
-      #  custom_scope = { manager_id: user.id }
-      #end
-      #custom_scope
+      if user.role?('cp_admin')
+       #cp_ids = User.where(manager_id: user.id).distinct(:id)
+       #custom_scope = { manager_id: {"$in": cp_ids} }
+      elsif user.role?('cp')
+       custom_scope = { manager_id: user.id }
+      end
+      custom_scope
     end
 
   end # end class methods

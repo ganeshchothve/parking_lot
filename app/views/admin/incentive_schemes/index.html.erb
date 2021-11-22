@@ -12,7 +12,7 @@
             </a>
           </div>
           <% if policy([:admin, IncentiveScheme]).new? %>
-            <%= link_to t('helpers.new.link_name', model: IncentiveScheme.model_name.human), new_admin_incentive_scheme_path, class: 'bg-border rounded px-3 py-2 bg-primary white border-primary ms-2 d-inline-block modal-remote-form-link btn' %>
+            <%= link_to t('helpers.new.link_name', model: IncentiveScheme.model_name.human), new_admin_incentive_scheme_path, class: 'bg-border rounded px-3 py-2 bg-primary white border-primary ms-2 d-inline-block modal-remote-form-link btn mt-xs-3' %>
           <% end %>
         </div>
       </div>

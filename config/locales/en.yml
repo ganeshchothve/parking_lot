@@ -249,6 +249,12 @@ en:
         other: Unit Configurations
 
     attributes:
+      announcement:
+        categories:
+          general: General
+          new_launch: New Launch
+          events: Events
+          brokerage_alert: Brokerage Alert
       video:
         thumbnail: Thumbnail
         description: Title
@@ -373,6 +379,8 @@ en:
         registration_done: 'Registration Done'
         ladder_stage: 'Ladder Stage'
         agreement_price: 'Agreement Price'
+        primary_user_kyc_id: 'Primary User Kyc'
+        user_kyc_ids: 'Secondary User Kycs'
       booking_detail/status:
         available: 'Available'
         not_available: 'Not Available'
@@ -599,6 +607,7 @@ en:
         website: 'Website'
         region: 'Region'
         interested_services: 'Services Interested In'
+        created_at: 'Registered At'
       channel_partner/file_types:
         rera_certificate: 'RERA Certificate'
         gst_certificate: 'GST Certificate'
@@ -1042,8 +1051,8 @@ en:
         creator: Host
         creator_id: Host
       meeting/file_types:
-        photo: 'Photo'
-        collateral: 'Collateral'
+        photo: 'Photos'
+        collateral: 'Collaterals'
       meeting/help_text:
         photo_html: '<ul><li>Photos of the Event</li></ul>'
         collateral_html: '<ul><li>Event Collaterals</li></ul>'
@@ -1865,6 +1874,12 @@ en:
         heading: "Brokerage Scheme Performance"
       cp_performance:
         heading: "Channel Partner Manager Performance"
+      cp_status:
+        active: "Active Partners"
+        inactive: "Inactive Partners"
+        pending: "Pending Partners"
+        rejected: "Rejected Partners"
+        heading: "Channel Partner Status Count"
     channel_partner:
       projects:
         sub_heading: 'Best homes to meet your expectations'

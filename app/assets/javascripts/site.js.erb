@@ -120,7 +120,7 @@ $(document).ready(function () {
   var childrenSelector = $(".prjt-menu a");
   var aChildren = $(".prjt-menu a"); // find the a children of the list items
   if (wn_width <= 700)
-    var gap = 60; // $(".header-wrapper").outerHeight(); //Navigation height
+    var gap = 120; // $(".header-wrapper").outerHeight(); //Navigation height
   else
     var gap = 120;
   var aArray = []; // create the empty aArray
@@ -169,11 +169,26 @@ $(document).ready(function () {
       $('html,body').scrollTo($("#" + href).offset().top - gap);
     }
   });
+  $('.incentive-lists li a').click(function(){
+      var curnt_tab = $(this).attr('rel');      
+      $('.tab-content, .incentive-lists li').removeClass('active');
+      $(this).parent('li').addClass('active');
+      $('#'+curnt_tab).addClass('active');
+  });
+
   $('.emi-calc-btn').click(function(){
     $('.emi-wrapper').fadeIn();
   });
   $('.close-emi').click(function(){
     $('.emi-wrapper').fadeOut();
+  });
+  $('.toggle-side-menu').click(function(){    
+    $(this).toggleClass('open-menu');
+    if($(this).hasClass('open-menu')){
+      $('.header-leftbar').css('width', '160px');
+    }else{
+      $('.header-leftbar').css('width', '0px');
+    }
   });
   // $('body').click(function(){
   //   $('.emi-wrapper').fadeOut();
@@ -230,3 +245,38 @@ $(function () {
   });
   
 /* AppC */
+
+$.fn.tabbing = function(options) {
+  var opts = { delayTime: 300 };
+  options = options || {};
+  opts = $.extend(opts, options);
+  return this.each(function() {
+      $(this).on('click', function(event) {
+          event.preventDefault();
+          var sum = 0;
+          $(this).prevAll().each(function() { sum += $(this).width(); });
+          var get = document.getElementById('tabs').scrollWidth;
+          var dist = sum - ($(this).parent().width() - $(this).width()) / 2;
+          if (dist < 0) {
+              dist = 0;
+          }
+          /* else if(dist+sum > get){
+              dist = get-sum+dist+dist;
+             } */
+          $(this).parent().animate({
+                  scrollLeft: dist
+              },
+              opts['delayTime']);
+      });
+  });
+};
+$('.incentive-lists li').tabbing();
+
+
+$('.incentive-lists li').click(function() {
+  // var hashit = $(this).find('a').attr('href');
+  // var autoHeight = $(hashit).height() + 30;
+  // $('.incentive-lists li').removeClass('active');
+  // $(this).addClass('active');
+  // $('.tab-content').animate({ height: autoHeight }, 100);
+});

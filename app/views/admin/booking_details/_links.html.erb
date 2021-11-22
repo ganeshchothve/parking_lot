@@ -6,6 +6,10 @@
   <%= link_to t('helpers.show.link_name', model: BookingDetail.model_name.human ), admin_booking_detail_path(booking_detail), class: 'dropdown-item' %>
 <% end %>
 
+<% if policy([:admin, booking_detail]).edit? %>
+  <%= link_to t('helpers.edit.link_name', model: BookingDetail.model_name.human ), edit_admin_booking_detail_path(booking_detail), class: 'dropdown-item modal-remote-form-link' %>
+<% end %>
+
 <% if policy([:admin, booking_detail.lead]).show? %>
   <%= link_to t('helpers.show.link_name', model: Lead.model_name.human), admin_lead_path(booking_detail.lead), class: "dropdown-item" %>
 <% end %>

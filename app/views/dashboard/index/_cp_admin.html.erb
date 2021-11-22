@@ -5,14 +5,14 @@
   <div class="px-4">
     <div class='box-card'>
       <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3">
           <div class="table-btn-set float-end">
             <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
               <i class="fa fa-filter fill-theme"></i>
             </button>
           </div>
         </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <div class="filter-box modal-content px-3 fixed-header-footer">
               <div class="filter-header modal-header">
                 <h5 class="modal-title title">Filter</h5>
@@ -38,7 +38,7 @@
               <% end %>
           </div>
         </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd" id = "dashboard_counts">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id = "dashboard_counts">
         </div>
       </div>
     </div>
@@ -98,19 +98,19 @@
   <div class="px-4">
     <div class='box-card'>
       <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3">
           <div class="table-title pt-4">
             <h1 class="title fn-18"><%= t('dashboard.cp_admin.channel_partner_performace.heading') %></h1>
           </div>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3">
           <div class="table-btn-set float-end pt-3">
             <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
               <i class="fa fa-filter fill-theme"></i>
             </button>
           </div>
         </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
          <div class="filter-box modal-content px-3 fixed-header-footer">
               <div class="filter-header modal-header">
                 <h5 class="modal-title title">Filter</h5>
@@ -148,19 +148,19 @@
       <div class="px-4">
         <div class='box-card'>
           <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3">
               <div class="table-title pt-4">
                 <h1 class="title fn-18"><%= t('dashboard.cp_admin.cp_performance.heading') %></h1>
               </div>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3">
               <div class="table-btn-set float-end pt-3">
                 <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
                   <i class="fa fa-filter fill-theme"></i>
                 </button>
               </div>
             </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
               <div class="filter-box modal-content px-3 fixed-header-footer">
                   <div class="filter-header modal-header">
                 <h5 class="modal-title title">Filter</h5>
@@ -186,7 +186,60 @@
                   <% end %>
               </div>
             </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd" id = "cp_performance">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3" id = "cp_performance">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+<% end %>
+
+<% if (["cp_admin","admin","superadmin"].include?current_user.role) %>
+  <div class='mb-5 pb-5'>
+    <section class="user-db-sec-6 device-pd">
+      <div class="px-4">
+        <div class='box-card'>
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
+              <div class="table-title pt-4">
+                <h1 class="title fn-18"><%= t('dashboard.cp_admin.cp_status.heading') %></h1>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 no-pd">
+              <div class="table-btn-set float-end pt-3">
+                <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
+                  <i class="fa fa-filter fill-theme"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
+              <div class="filter-box modal-content px-3 fixed-header-footer">
+                  <div class="filter-header modal-header">
+                <h5 class="modal-title title">Filter</h5>
+                    <a href="javascript:;" class="close-filter-btn btn-close"></a>
+                  </div>
+                  <%= form_tag cp_status_path, method: "get", remote: true, id: "cp_status_form" do %>
+                    <div class="filter-content  modal-body ps-0 pe-0 theme-form">
+                      <div class="row">
+                        <div class="mb-3 col-12">
+                          <%= label_tag "dates", "Dates", class: "control-label float-left" %>
+                          <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-start-date": start_date || '', "data-end-date": end_date || '', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
+                        </div>
+                        <div class="mb-3 col-12">
+                          <%= label_tag :project_ids, "Projects", class: "control-label float-left" %>
+                          <%= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="filter-footer  modal-footer text-end">
+                      <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                      <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+                    </div>
+                  <% end %>
+              </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd" id = "cp_status">
             </div>
           </div>
         </div>
@@ -201,6 +254,7 @@
     FormInitializer.init($("#dashboard_count_filter"));
     FormInitializer.init($("#invoice_summary_filter"));
     FormInitializer.init($("#cp_performance_form"));
+    FormInitializer.init($("#cp_status_form"));
 
     let date = "<%= @dates %>";
     $.ajax({
@@ -215,6 +269,10 @@
     //  url: "/dashboard/invoice_summary",
     //  type: "get"
     //});
+    $.ajax({
+      url: "/dashboard/cp_status",
+      type: "get"
+    });
     $.ajax({
       url: "/dashboard/cp_performance",
       type: "get"

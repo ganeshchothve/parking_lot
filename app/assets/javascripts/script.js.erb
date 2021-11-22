@@ -62,7 +62,7 @@ $(document).ready(function () {
         infiniteLoop: true,
         touchEnabled: true,
         pause: 5000,
-        slideWidth: (window_wt <= 768) ? (window_wt / 1) : (window_wt / 3),
+        slideWidth: (window_wt <= 768) ? (window_wt) : (window_wt / 3),
         slideMargin: (window_wt < 768) ? 0 : 20,
         moveSlides: 1,
         maxSlides: (window_wt < 768) ? 1 : 3,
@@ -72,7 +72,44 @@ $(document).ready(function () {
         nextSelector: '#prjt-list-next',
         nextText: "<img data-src='<%= asset_path 'right-arrow-new-2.png' %>' width='20' class='lazy'>",
     });
-
+    $('.incentive-slider').bxSlider({
+        mode: "horizontal",
+        auto: true,
+        speed: 800,
+        pager: false,
+        controls: true,
+        infiniteLoop: true,
+        touchEnabled: true,
+        pause: 10000,
+        slideWidth: (window_wt <= 768) ? (window_wt) : 450,
+        slideMargin: (window_wt < 768) ? 0 : 0,
+        moveSlides: 1,
+        maxSlides: (window_wt < 768) ? 1 : 2,
+        minSlides: 3,
+        prevSelector: '#incentive-feat-prev',
+        prevText: "<img data-src='<%= asset_path 'left-arrow-new-2.png' %>' width='20' class='lazy'>",
+        nextSelector: '#incentive-feat-next',
+        nextText: "<img data-src='<%= asset_path 'right-arrow-new-2.png' %>' width='20' class='lazy'>",
+    });
+    
+      $(".logos-slider").bxSlider({
+        minSlides: wn_width <= 700 ? 2 : 6,
+        maxSlides: wn_width <= 700 ? 2 : 6,
+        pager: false,
+        auto: !0,
+        slideWidth: 600,
+        slideMargin: 0,
+        controls: true,
+        moveSlides: 6,
+        touchEnabled: !1,
+        oneToOneTouch: !1,
+        pause: 5e3,
+        speed: 1500,
+        prevSelector: '#logo-list-prev',
+        prevText: "<img data-src='<%= asset_path 'left-arrow-new-2.png' %>' width='20' class='lazy'>",
+        nextSelector: '#logo-list-next',
+        nextText: "<img data-src='<%= asset_path 'right-arrow-new-2.png' %>' width='20' class='lazy'>",
+    })
     if (window_wt < 768) {
         $('.last-slide-exclusive').remove();
         $('.exclusive-features-slider').bxSlider({
@@ -108,7 +145,7 @@ $(document).ready(function () {
     });
 
     if (window_wt <= 768) {
-        $(".brand-logo img").attr("src", "<%= asset_path 'beyondwalls-logo.png' %>");
+        $(".brand-logo img").attr("src", "<%= asset_path 'beyondwalls-logo.svg' %>");
     }
 
     if (window_wt < 768) {

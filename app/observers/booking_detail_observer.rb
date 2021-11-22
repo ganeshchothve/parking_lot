@@ -24,6 +24,15 @@ class BookingDetailObserver < Mongoid::Observer
     #end
   end
 
+  def before_save booking_detail
+    if booking_detail.primary_user_kyc_id.blank? && booking_detail.user_kyc_ids.present?
+      booking_detail.primary_user_kyc_id = booking_detail.user_kyc_ids.first
+    end
+    if booking_detail.primary_user_kyc_id.present? && booking_detail.user_kyc_ids.present?
+      booking_detail.user_kyc_ids.reject!{|x| x == booking_detail.primary_user_kyc_id}
+    end
+  end
+
   def after_save booking_detail
     booking_detail.calculate_incentive if booking_detail.incentive_eligible? && booking_detail.project_unit.booking_portal_client.incentive_calculation_type?("calculated")
   end

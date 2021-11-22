@@ -35,7 +35,7 @@ class SelldoLeadUpdater
       elsif user.portal_stage.priority.to_i <= priority[stage].to_i
         user.portal_stages.where(stage:  stage).present? ? user.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : user.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
       end
-      params = { portal_stage: stage, not_clear_custom_fields: true }
+      params = { portal_stage: stage }
       custom_hash = {lead: params}
     else
       user.portal_stage
@@ -46,6 +46,7 @@ class SelldoLeadUpdater
       params = {
         api_key: selldo_api_key,
         client_id: selldo_client_id,
+        not_clear_custom_fields: true
       }
       params = params.merge(custom_hash)
       url = selldo_base_url + "/client/leads/#{user.lead_id}.json"
@@ -63,13 +64,13 @@ class SelldoLeadUpdater
     selldo_client_id = payload['selldo_client_id']
 
     payload[:lead] ||= {}
-    payload[:lead][:not_clear_custom_fields] = true
     custom_hash = {lead: payload[:lead]}
     selldo_base_url = ENV_CONFIG['selldo']['base_url'].chomp('/')
     if custom_hash.present? && selldo_base_url.present? && selldo_api_key.present? && selldo_client_id.present?
       params = {
         api_key: selldo_api_key,
         client_id: selldo_client_id,
+        not_clear_custom_fields: true
       }
       params = params.merge(custom_hash)
       url = selldo_base_url + "/client/leads/#{user.lead_id}.json"
@@ -87,7 +88,7 @@ class SelldoLeadUpdater
 
     priority = PortalStagePriority.where(role: 'user').collect{|x| [x.stage, x.priority]}.to_h
     if stage.present? && priority[stage].present?
-      params = {not_clear_custom_fields: true}
+      params = {}
       if lead.portal_stages.empty?
         lead.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
       elsif lead.portal_stage.priority.to_i <= priority[stage].to_i
@@ -136,7 +137,7 @@ class SelldoLeadUpdater
 
   def add_slot_details(lead, payload={})
     if payload.present?
-      params = {not_clear_custom_fields: true}
+      params = {}
       params['custom_slot_details'] = payload['slot_details'] if payload['slot_details'].present?
       params['custom_slot_status'] = payload['slot_status'] if payload['slot_status'].present?
 
@@ -155,6 +156,7 @@ class SelldoLeadUpdater
       params = {
         api_key: lead.project.selldo_api_key,
         client_id: lead.project.selldo_client_id,
+        not_clear_custom_fields: true
       }
       params = params.merge(data)
       url = selldo_base_url + "/client/leads/#{lead.lead_id}.json"
