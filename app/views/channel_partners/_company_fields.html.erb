@@ -9,12 +9,12 @@
     <%= form.input :company_owner_phone, disabled: !policy([:admin, @channel_partner]).editable_field?("company_owner_phone"), as: :tel, input_html: { class: 'phone' } %>
   </div>
   <div class="col-md-6">
-    <%= form.input :team_size, collection: (1..200).to_a.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("team_size"), as: :select, prompt: :translate %>
+    <%= form.input :team_size, collection: (1..200).to_a.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("team_size"), as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
   </div>
   <div class="col-md-6">
     <%= form.input :average_quarterly_business, required: false, disabled: !policy([:admin, @channel_partner]).editable_field?("average_quarterly_business"), as: :float %>
   </div>
   <div class="col-md-6">
-  <%= form.input :manager_id, required: true, collection: User.where(is_active: true, confirmed_at: {'$ne': nil}, role: "cp").collect{|x| [x.ds_name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), as: :select, prompt: :translate %>
+    <%= form.input :manager_id, required: true, collection: User.where(is_active: true, confirmed_at: {'$ne': nil}, role: "cp").collect{|x| [x.ds_name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
   </div>
 </div>

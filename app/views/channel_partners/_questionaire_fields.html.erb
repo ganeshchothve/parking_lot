@@ -22,7 +22,7 @@
     <%= form.input :expertise, collection: ChannelPartner::EXPERTISE.collect{|x| [x.titleize, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("expertise"), as: :select, prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
   </div>
   <div class="col-md-6">
-    <%= form.input :experience, collection: ChannelPartner::EXPERIENCE.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("experience"), as: :select, prompt: :translate %>
+    <%= form.input :experience, collection: ChannelPartner::EXPERIENCE.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("experience"), as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
   </div>
 </div>
 <div class="row">

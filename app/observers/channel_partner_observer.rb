@@ -6,7 +6,7 @@ class ChannelPartnerObserver < Mongoid::Observer
     channel_partner.set({associated_user_id: user.id})
 
     if current_client.external_api_integration?
-      Crm::Api::Post.where(resource_class: 'ChannelPartner', is_active: true).each do |api|
+      Crm::Api::Post.where(_type: 'Crm::Api::Post', resource_class: 'ChannelPartner', is_active: true).each do |api|
         api.execute(channel_partner)
       end
     end
