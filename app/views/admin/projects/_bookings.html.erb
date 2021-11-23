@@ -17,6 +17,17 @@
 
 <div class="row">
   <div class="col-md-12">
+    <div class="form-group mb-3">
+      <div class="form-check form-check-inline">
+        <%= f.check_box :enable_inventory, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("enable_inventory") }, "Yes", "No" %>
+        <%= f.label :enable_inventory, class: "form-check-label d-inline-block ms-2" %>
+      </div>
+    </div>
+  </div>
+</div>
+<% if f.object.enable_inventory %>
+<div class="row">
+  <div class="col-md-12">
     <div class="mb-3">
       <%= f.label :enable_actual_inventory %>
       <%= f.select :enable_actual_inventory, User.available_roles(@project.booking_portal_client).collect{|x| [ User.human_attribute_name("role.#{x}"), x]}, {}, class: 'selectize', multiple: true, disabled: !policy([:admin, f.object]).editable_field?("enable_actual_inventory") %>
@@ -33,7 +44,7 @@
     </div>
   </div>
 </div>
-
+<% end %>
 <div class="row">
   <div class="col-md-6">
     <div class="mb-3">
