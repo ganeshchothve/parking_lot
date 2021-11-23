@@ -12,16 +12,24 @@
       </tr>
     </thead>
     <tbody>
-      <% @channel_partners_status.each do |key, value| %>
-          <tr>
-            <td data-title='<%= t("mongoid.attributes.user/role.cp") %>'><%= value[:name] %></td>
-            <td data-title='<%= t("dashboard.cp_admin.cp_status.inactive") %>'><%= value[:inactive] %></td>
-            <td data-title='<%= t("dashboard.cp_admin.cp_status.active") %>'><%= value[:active] %></td>
-            <td data-title='<%= t("dashboard.cp_admin.cp_status.pending") %>'><%= value[:pending] %></td>
-            <td data-title='<%= t("dashboard.cp_admin.cp_status.rejected") %>'><%= value[:rejected] %></td>
-            <td data-title='<%= t("global.total") %>'><%= value[:total_count] %></td>
-          </tr>
+      <% @cp_managers_hash.each do |cp_id, cp_name| %> 
+        <tr>
+          <% if @channel_partners_manager_status_count.key?(cp_id) %>
+            <td data-title='<%= t("mongoid.attributes.user/role.cp") %>'><%= link_to cp_name, channel_partners_path(fltrs: {manager_id: (cp_id == 'No Manager' ? 'nil' : cp_id)}) %></td>
+            <td data-title='<%= t("dashboard.cp_admin.cp_status.inactive") %>'><%= link_to((@channel_partners_manager_status_count[cp_id]["inactive"] ? @channel_partners_manager_status_count[cp_id]["inactive"] : 0), channel_partners_path(fltrs: {manager_id: (cp_id == 'No Manager' ? 'nil' : cp_id), status: 'inactive'})) %></td>
+            <td data-title='<%= t("dashboard.cp_admin.cp_status.active") %>'><%= link_to((@channel_partners_manager_status_count[cp_id]["active"] ? @channel_partners_manager_status_count[cp_id]["active"] : 0), channel_partners_path(fltrs: {manager_id: (cp_id == 'No Manager' ? 'nil' : cp_id), status: 'active'})) %></td>
+            <td data-title='<%= t("dashboard.cp_admin.cp_status.pending") %>'><%= link_to((@channel_partners_manager_status_count[cp_id]["pending"] ? @channel_partners_manager_status_count[cp_id]["pending"] : 0), channel_partners_path(fltrs: {manager_id: (cp_id == 'No Manager' ? 'nil' : cp_id), status: 'pending'})) %></td>
+            <td data-title='<%= t("dashboard.cp_admin.cp_status.rejected") %>'><%= link_to((@channel_partners_manager_status_count[cp_id]["rejected"] ? @channel_partners_manager_status_count[cp_id]["rejected"] : 0), channel_partners_path(fltrs: {manager_id: (cp_id == 'No Manager' ? 'nil' : cp_id), status: 'rejected'})) %></td>
+            <td data-title='<%= t("global.total") %>'><%= @channel_partners_manager_status_count[cp_id]["count"] ? @channel_partners_manager_status_count[cp_id]["count"] : 0 %></td>
+          <% end %>
+        </tr>
       <% end %>
+      <tr>
+        <td>Total</td>
+        <% %w(inactive active pending rejected total).each do |status| %>
+          <td><%= link_to @channel_partners_status_count[status], channel_partners_path(fltrs: {status: status}) %></td>
+        <% end %>
+      </tr>
     </tbody>
   </table>
 </div>
