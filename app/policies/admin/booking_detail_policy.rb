@@ -81,11 +81,11 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def permitted_attributes
     attributes = super
-    attributes += [:primary_user_kyc_id, :user_kyc_ids, :project_unit_id, :user_id, :lead_id ]
+    attributes += [:primary_user_kyc_id, :project_unit_id, :user_id, :lead_id, user_kyc_ids: [] ]
     if eligible_users_for_tasks?
       attributes += [tasks_attributes: Admin::TaskPolicy.new(user, Task.new).permitted_attributes]
     end
-    attributes
+    attributes.uniq
   end
 
   private
