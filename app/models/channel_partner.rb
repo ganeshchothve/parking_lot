@@ -67,6 +67,7 @@ class ChannelPartner
   field :srd, type: String
 
   scope :filter_by_rera_id, ->(rera_id) { where(rera_id: rera_id) }
+  scope :filter_by_manager_id, ->(manager_id) { where(manager_id: manager_id) }
   scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_city, ->(city) { where(city: city) }
   scope :filter_by__id, ->(_id) { where(_id: _id) }
