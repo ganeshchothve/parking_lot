@@ -27,6 +27,8 @@ class ChannelPartner
   SHORT_FORM = %i(first_name last_name company_name rera_applicable status interested_services)
   FULL_FORM = SHORT_FORM.clone + %i(gst_applicable nri)
 
+  attr_accessor :referral_code
+
   field :title, type: String
   field :first_name, type: String
   field :last_name, type: String

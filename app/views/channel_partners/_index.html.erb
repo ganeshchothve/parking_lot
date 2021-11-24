@@ -57,7 +57,7 @@
               <div class="d-flex justify-content-between">
                 <div class="ps-3 py-3">
                   <p class="fn-14 mb-0 theme-txt-color">
-                    <%= channel_partner.associated_user_id.present? ? link_to(channel_partner.associated_user.name, admin_user_path(channel_partner.associated_user_id), class: "theme-txt-color col-title") : '-' %>
+                    <%= channel_partner.associated_user_id.present? ? link_to(channel_partner.associated_user.try(:name), admin_user_path(channel_partner.associated_user_id), class: "theme-txt-color col-title") : '-' %>
                   </p>
                 </div>
                 <div class="inner-info">

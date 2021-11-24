@@ -38,4 +38,5 @@
   <div class="col-md-6">
     <%= form.input :rera_id, disabled: !policy([:admin, @channel_partner]).editable_field?("rera_id") %>
   </div>
+  <%= form.hidden_field :referral_code, value: @channel_partner.referral_code %>
 </div>

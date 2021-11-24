@@ -9,8 +9,8 @@ module UsersHelper
   end
 
   def invite_friend_link
-    if policy([:buyer, :referral]).new?
-      link_to t('controller.referrals.new.link_name'), new_buyer_referral_path, class: ' modal-remote-form-link', data:{ event_category: 'Section', event_action: 'Click', event_name: 'Invite Friend'}
+    if policy([:admin, :referral]).new?
+      link_to t('controller.referrals.new.link_name'), new_admin_referral_path, class: ' modal-remote-form-link', data:{ event_category: 'Section', event_action: 'Click', event_name: 'Invite Friend'}
     else
       ''
     end

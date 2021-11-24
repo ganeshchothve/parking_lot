@@ -394,7 +394,7 @@ class User
   end
 
   def generate_referral_code
-    if self.buyer? && self.referral_code.blank?
+    if self.role?("channel_partner") && self.referral_code.blank?
       self.referral_code = "#{self.booking_portal_client.name[0..1].upcase}-#{SecureRandom.hex(4)}"
     else
       self.referral_code
