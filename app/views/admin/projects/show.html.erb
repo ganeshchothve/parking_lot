@@ -422,8 +422,8 @@
                                                 <% @project.amenities.each do |type| %>
                                                     <li class="amenity_<%= type %>">
                                                     <div class="amenities-wrap">
-                                                        <span>
-                                                          <i class="fad <%= t("amenity_icons.#{type}") %>"></i>
+                                                        <span class="text-center d-block">
+                                                          <i class="fad <%= t("amenity_icons.#{type}") %> fn-20 mx-auto"></i>
                                                         </span>
                                                     <p><%= type.titleize %></p>
                                                     </div>

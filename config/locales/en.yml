@@ -1979,5 +1979,11 @@ en:
     calculate_all_inclusive_price: 'All Inclusive'
 
   amenity_icons:
-    swimming_pool: 'fa-lock'
-    auditorium: 'fa-lock'
+    swimming_pool: 'fa-swimming-pool'
+    auditorium: 'fa-theater-masks'
+    gym: 'fa-dumbbell'
+    internal_roads: 'fa-road'
+    movie_theatre: 'fa-camera-movie'
+    playschool: 'fa-school'
+    table_tennis_court: 'fa-table-tennis'
+    sewage_treatment_plant: 'fa-house-flood'

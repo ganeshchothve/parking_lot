@@ -2109,6 +2109,9 @@ select.form-control{
 	}
 }
 .amenities-list{
+	ul{
+		width: calc(100% - 8px);
+	}	
 	li{
 		width: 120px!important;
 		display: inline-block;
@@ -3732,8 +3735,8 @@ select.form-control{
 								li{
 									list-style: none;
 									margin-bottom: 3px;
-									margin-right: 3px;
-									padding: 5px;
+									margin-right: 0px;
+									padding: 4px;
 									.amenities-wrap{
 										border: 1px solid #e5e5e5;
 										border-radius: 4px;
@@ -4353,7 +4356,7 @@ table .dropdown-menu.show{
 			display: inline-block;
 			margin-right: 25px;
 			@media screen and (max-width: 700px){
-				margin: 0 20px;
+				margin: 0 10px;
 			}
 			@media screen and (max-width: 380px){
 				margin: 0 10px;
@@ -4593,6 +4596,11 @@ table .dropdown-menu.show{
 	}
 	html{
 		overflow-x: hidden;
+	}
+	#modal-remote-form-container{
+		iframe{
+			width: 100%!important;
+		}
 	}
 }
 /*************** EMI Calculator ****************/
