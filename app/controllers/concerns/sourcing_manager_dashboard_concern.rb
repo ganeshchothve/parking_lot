@@ -91,7 +91,8 @@ module SourcingManagerDashboardConcern
     @data.each do |channel_partner_data|
       key = channel_partner_data['_id']['manager_id'] || 'No Manager'
       @channel_partners_manager_status_count[key] ||= {}
-      @channel_partners_manager_status_count[key][channel_partner_data["_id"]["status"]] = channel_partner_data["count"]
+      @channel_partners_manager_status_count[key][channel_partner_data["_id"]["status"]] ||= 0
+      @channel_partners_manager_status_count[key][channel_partner_data["_id"]["status"]] += channel_partner_data["count"]
       @channel_partners_manager_status_count[key]["count"] ||= 0
       @channel_partners_manager_status_count[key]["count"] += channel_partner_data["count"]
     end
