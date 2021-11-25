@@ -87,6 +87,19 @@
       </div>
     </div>
   </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :enable_referral_bonus %>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_referral_bonus, true, class: "form-check-input wd-22" %>
+        <%= f.label :enable_referral_bonus, "Yes", class: " form-check-label d-inline-block ms-2" %>
+      </div>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_referral_bonus, false, class: "form-check-input wd-22" %>
+        <%= f.label :enable_referral_bonus, "No", class: " form-check-label d-inline-block ms-2" %>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="row">

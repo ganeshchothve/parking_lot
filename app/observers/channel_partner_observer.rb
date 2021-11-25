@@ -2,8 +2,16 @@ class ChannelPartnerObserver < Mongoid::Observer
   include ApplicationHelper
 
   def after_create channel_partner
-    user = User.create!(first_name: channel_partner.first_name, last_name: channel_partner.last_name, email: channel_partner.email, phone: channel_partner.phone, rera_id: channel_partner.rera_id, role: 'channel_partner', booking_portal_client_id: current_client.id, manager_id: channel_partner.manager_id, channel_partner: channel_partner)
+    user = User.new(first_name: channel_partner.first_name, last_name: channel_partner.last_name, email: channel_partner.email, phone: channel_partner.phone, rera_id: channel_partner.rera_id, role: 'channel_partner', booking_portal_client_id: current_client.id, manager_id: channel_partner.manager_id, channel_partner: channel_partner)
     channel_partner.set({associated_user_id: user.id})
+
+    if channel_partner.referral_code.present?
+      referred_by_user = User.where(referral_code: channel_partner.referral_code).first
+      if referred_by_user
+        user.set(referred_by_id: referred_by_user.id)
+      end
+    end
+    user.save!
 
     if current_client.external_api_integration?
       Crm::Api::Post.where(_type: 'Crm::Api::Post', resource_class: 'ChannelPartner', is_active: true).each do |api|
