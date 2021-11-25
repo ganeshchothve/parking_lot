@@ -608,6 +608,7 @@ en:
         region: 'Region'
         interested_services: 'Services Interested In'
         created_at: 'Registered At'
+        manager_id: 'Manager'
       channel_partner/file_types:
         rera_certificate: 'RERA Certificate'
         gst_certificate: 'GST Certificate'

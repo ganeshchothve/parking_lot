@@ -97,6 +97,8 @@ module ProjectOnboardingOnSelldo
 
             create_workflow("#{self.name} - Site Visit Conducted to IRIS", "sitevisit_conducted", "site_visit#project_id", project['_id'], "SiteVisit", "#{host.chomp('/')}/sell_do/#{project['_id']}/site_visit_updated", errors)
           end
+        else
+          errors << 'Sales user not found'
         end
       end
       errors

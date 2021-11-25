@@ -25,7 +25,7 @@ class ChannelPartner
   REGION = ['Chennai', 'Bangalore', 'Coimbatore', 'NRI']
 
   SHORT_FORM = %i(first_name last_name company_name rera_applicable status interested_services)
-  FULL_FORM = SHORT_FORM.clone + %i(gst_applicable nri)
+  FULL_FORM = SHORT_FORM.clone + %i(gst_applicable nri manager_id)
 
   field :title, type: String
   field :first_name, type: String
