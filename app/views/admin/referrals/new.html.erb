@@ -9,19 +9,14 @@
       <div class="modal-body theme-form">
         <%= form_for [:admin, @referral], local: true, remote: true, html: { class: 'modal-remote-form validate-form', data: { 'resource-type': t('global.referral'), type: :json }, id: "referral_form" } do |f| %>
 
-        <div class="row">
-          <div class="col-md-6">
-            <div class="mb-3">
-              <%= f.label :first_name, class: 'label-required' %>
-              <%= f.text_field :first_name, class: 'form-control', autofocus: true, required: true %>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="mb-3">
-              <%= f.label :last_name, class: 'label-required' %>
-              <%= f.text_field :last_name, class: 'form-control', autofocus: true, required: true %>
-            </div>
-          </div>
+        <div class="mb-3">
+          <%= f.label :first_name, class: 'label-required' %>
+          <%= f.text_field :first_name, class: 'form-control', autofocus: true, required: true %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :last_name, class: 'label-required' %>
+          <%= f.text_field :last_name, class: 'form-control', autofocus: true, required: true %>
         </div>
 
         <div class="mb-3">

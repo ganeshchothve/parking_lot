@@ -6,8 +6,10 @@ class ChannelPartnerObserver < Mongoid::Observer
     channel_partner.set({associated_user_id: user.id})
 
     if channel_partner.referral_code.present?
-      referred_by_user = User.where(referral_code: channel_partner.referral_code)
-      user.set(referred_by_id: referred_by_user ? referred_by_user.first.id : nil)
+      referred_by_user = User.where(referral_code: channel_partner.referral_code).first
+      if referred_by_user
+        user.set(referred_by_id: referred_by_user.id)
+      end
     end
     user.save!
 
