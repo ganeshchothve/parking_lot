@@ -87,6 +87,8 @@ Rails.application.routes.draw do
       get :mis_report, on: :collection
       get :searching_for_towers, on: :collection
       get :status_chart, on: :collection
+      get :new_booking_without_inventory, on: :collection
+      post :create_booking_without_inventory, on: :collection 
       resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
 
       resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts' do

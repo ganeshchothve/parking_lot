@@ -10,7 +10,7 @@
                 <div class="inner-info d-flex justify-content-between">
                   <div class="ps-3 py-3">
                     <p class="fn-16 font-medium theme-txt-color mb-0 pt-2">
-                      <%= booking_detail.project_unit.project_tower_name %> | <%= booking_detail.project.name %> <span
+                      <%= booking_detail.project_unit.present? ? booking_detail.project_unit.project_tower_name : booking_detail.project_tower_name  %> | <%= booking_detail.project.name %> <span
                         class="mx-2">-</span><span class="font-normal"><%= booking_detail.bedrooms %> BHK</span></p>
 
                   </div>

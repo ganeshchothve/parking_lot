@@ -4,7 +4,6 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner billing_team].include?(user.role) && (enable_actual_inventory?(user) || enable_incentive_module?(user))
     out = false if user.role?('channel_partner') && !interested_project_present?
     out
-    false
   end
 
   def new?
@@ -44,7 +43,18 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def show_booking_link?
-    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && record.try(:user).try(:buyer?)
+    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && record.try(:user).try(:buyer?) && !enable_inventory?
+  end
+
+  def show_add_booking_link?
+    enable_inventory? && record.try(:user).try(:buyer?)
+  end
+
+  def enable_inventory?
+    lead = record.lead
+    out = true
+    out = false if lead.project.enable_inventory
+    return out
   end
 
   def send_under_negotiation?
@@ -81,7 +91,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def permitted_attributes
     attributes = super
-    attributes += [:primary_user_kyc_id, :project_unit_id, :user_id, :lead_id, user_kyc_ids: [] ]
+    attributes += [:agreement_price, :channel_partner_id, :other_costs, :agreement_date, :project_unit_configuration, :project_unit_name, :booked_on, :project_id, :primary_user_kyc_id, :project_unit_id, :user_id, :lead_id, user_kyc_ids: []]
     if eligible_users_for_tasks?
       attributes += [tasks_attributes: Admin::TaskPolicy.new(user, Task.new).permitted_attributes]
     end

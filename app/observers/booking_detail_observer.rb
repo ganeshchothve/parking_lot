@@ -1,8 +1,8 @@
 class BookingDetailObserver < Mongoid::Observer
 
   def before_validation booking_detail
-    booking_detail.name = booking_detail.project_unit.name
-    booking_detail.project_tower_id = booking_detail.project_unit.project_tower_id if booking_detail.project_tower_id.blank?
+    booking_detail.name = booking_detail.project_unit.name if booking_detail.project_unit.present?
+    booking_detail.project_tower_id = booking_detail.project_unit.project_tower_id if booking_detail.project_tower_id.blank? && booking_detail.project_unit.present?
     booking_detail.manager_id = booking_detail.lead.active_cp_lead_activities.first.try(:user_id) if booking_detail.manager_id.blank?
   end
 
@@ -13,7 +13,7 @@ class BookingDetailObserver < Mongoid::Observer
   # TODO:: Need to move in state machine callback
   def after_create booking_detail
     #booking_detail.send_notification!
-    if booking_detail.hold?
+    if booking_detail.project_unit.present? && booking_detail.hold?
       booking_detail.project_unit.set(status: 'hold', held_on: DateTime.now)
       ProjectUnitUnholdWorker.perform_in(booking_detail.project_unit.holding_minutes.minutes, booking_detail.project_unit_id.to_s)
     end

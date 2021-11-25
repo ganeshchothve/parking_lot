@@ -1,0 +1,59 @@
+<%= form_for(@booking_detail, url: create_booking_without_inventory_admin_booking_details_path  , local: true, remote: true, html: {class: 'validate-form modal-remote-form', "data-type": "json", id: 'booking_detail_form_without_inv'}) do |f| %>
+<%= f.hidden_field :lead_id, value: @booking_detail.lead_id %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="title"><%= t('controller.booking_details.new.header') %></h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <%= f.label :project_id, class: 'label-required control-label' %>
+          <%= f.select :project_id, Project.all.collect{|p| [p.name, p.id]}, {}, prompt: :translate, class: 'form-control selectize' %>
+        </div>
+        <div class="mb-3 position-relative offline">
+          <%= f.label :project_tower_name, class: 'label-required' %>
+          <%= f.text_field :project_tower_name, class: 'form-control', required: 'required' %>
+        </div>
+        <div class="mb-3 position-relative offline">
+          <%= f.label :project_unit_name, class: 'label-required' %>
+          <%= f.text_field :project_unit_name, class: 'form-control', required: 'required' %>
+        </div>
+        <div class="mb-3 position-relative offline">
+          <%= f.label :project_unit_configuration, class: 'label-required' %>
+          <%= f.text_field :project_unit_configuration, class: 'form-control', required: 'required' %>
+        </div>
+        <div class="mb-3 position-relative offline">
+          <%= f.label :agreement_price, class: 'label-required' %>
+          <%= f.number_field :agreement_price, class: 'form-control', required: 'required' %>
+        </div>
+        <div class="mb-3 position-relative offline">
+          <%= f.label :other_costs, class: 'label-required' %>
+          <%= f.number_field :other_costs, class: 'form-control', required: 'required' %>
+        </div>
+        <div class="mb-3 position-relative offline">
+          <%= f.label :booked_on, class: 'label-required' %>
+          <%= f.text_field :booked_on, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.booked_on.present? ? f.object.booked_on.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), value: f.object.booked_on.present? ? f.object.booked_on.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y") %>
+        </div>
+        <div class="mb-3 position-relative offline">
+          <%= f.label :agreement_date, class: 'label-required' %>
+          <%= f.text_field :agreement_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y") %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :channel_partner_id, class: 'label-required control-label' %>
+          <%= f.select :channel_partner_id, ChannelPartner.all.collect{|cp| [cp.name, cp.id]}, {}, prompt: :translate, class: 'form-control selectize' %>
+        </div>
+      </div>
+      <div class="modal-footer text-end">
+        <%= f.submit "Submit", class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#booking_detail_form_without_inv"));
+});
+<% end %>
