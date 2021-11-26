@@ -25,7 +25,7 @@ class BookingDetail
   field :saleable, type: Float, default: 0
   field :project_name, type: String
   field :project_tower_name, type: String
-  field :project_unit_name, type: String
+  field :booking_project_unit_name, type: String
   field :project_unit_configuration, type: String
   field :bedrooms, type: String
   field :bathrooms, type: String
@@ -197,7 +197,7 @@ class BookingDetail
 
   # validates kyc presence if booking is not allowed without kyc
   def kyc_mandate
-    if project_unit.present? && project_unit.booking_portal_client.enable_booking_with_kyc && !primary_user_kyc_id.present?
+    if project.present? && project.enable_booking_with_kyc && !primary_user_kyc_id.present?
       self.errors.add(:base, "KYC is mandatory for booking.")
     end
   end

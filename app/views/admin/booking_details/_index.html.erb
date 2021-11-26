@@ -33,14 +33,14 @@
               <div class="d-flex justify-content-between">
                 <div class="ps-3 py-3">
                   <p class="mb-0 theme-txt-color mb-0 font-medium">
-                    <%= link_to booking_detail.name, [current_user_role_group, booking_detail], class: "theme-txt-color"  %>
+                    <%= link_to booking_detail.name || booking_detail.booking_project_unit_name, [current_user_role_group, booking_detail], class: "theme-txt-color"  %>
                   </p>
                 </div>
                 <div class="inner-info">
                   <div class="pe-3 py-3  d-flex justify-content-end">
                     <p class="fn-16 secondary mb-0 font-medium"><span class="txt-light-blue">Agreement Value:</span>
                       <span
-                        class="theme-txt-color"><%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %></span>
+                        class="theme-txt-color"><%= number_to_indian_currency((booking_detail.calculate_agreement_price > 0 ? booking_detail.calculate_agreement_price.round : booking_detail.agreement_price)) %></span>
                     </p>
                     <span class="txt-light-blue mx-3">| </span>
                     <p class="font-medium fn-14 mb-0 theme-txt-color mb-0"><i

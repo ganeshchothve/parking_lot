@@ -23,7 +23,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def edit?
-    enable_actual_inventory?(user) && (!current_client.enable_booking_with_kyc? || record.user.user_kycs.present?)
+    enable_actual_inventory?(user) && (!record.try(:project).try(:enable_booking_with_kyc?) || record.try(:user).try(:user_kycs).present?)
   end
 
   def update?
@@ -91,7 +91,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def permitted_attributes
     attributes = super
-    attributes += [:agreement_price, :channel_partner_id, :other_costs, :agreement_date, :project_unit_configuration, :project_unit_name, :booked_on, :project_id, :primary_user_kyc_id, :project_unit_id, :user_id, :lead_id, user_kyc_ids: []]
+    attributes += [:project_tower_name, :agreement_price, :channel_partner_id, :other_costs, :agreement_date, :project_unit_configuration, :booking_project_unit_name, :booked_on, :project_id, :primary_user_kyc_id, :project_unit_id, :user_id, :lead_id, user_kyc_ids: []]
     if eligible_users_for_tasks?
       attributes += [tasks_attributes: Admin::TaskPolicy.new(user, Task.new).permitted_attributes]
     end
