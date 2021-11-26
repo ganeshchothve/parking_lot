@@ -1,0 +1,30 @@
+<section class="mb-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+        <div class="table-title pt-1 mb-3">
+          <h1 class="title icon-set icon-refferal-black">
+            <%= User.model_name.human(count: @referrals.total_entries ) %>
+          </h1>
+        </div>
+      </div>
+      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+        <div class="table-btn-set float-right pb-3">
+          <div class="row m-0">
+            <h6 class="mr-1"><%= t('mongoid.attributes.user.referral_code') %></h6>
+              <%= get_referral_code %>
+            <button disabled="disabled" class="offset-3 db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @referrals.total_entries %></button>
+            <div class="invite-friend-link db-small-btn light-blue bg-white fn-400 pt-2 col-4">
+              <%= invite_friend_link %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="box-card relative">
+          <%= render 'admin/users/index', users: @referrals %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

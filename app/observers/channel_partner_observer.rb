@@ -2,7 +2,15 @@ class ChannelPartnerObserver < Mongoid::Observer
   include ApplicationHelper
 
   def after_create channel_partner
-    user = User.create!(first_name: channel_partner.first_name, last_name: channel_partner.last_name, email: channel_partner.email, phone: channel_partner.phone, rera_id: channel_partner.rera_id, role: 'cp_owner', booking_portal_client_id: current_client.id, manager_id: channel_partner.manager_id, channel_partner: channel_partner, is_active: false)
+    user = User.new(first_name: channel_partner.first_name, last_name: channel_partner.last_name, email: channel_partner.email, phone: channel_partner.phone, rera_id: channel_partner.rera_id, role: 'cp_owner', booking_portal_client_id: current_client.id, manager_id: channel_partner.manager_id, channel_partner: channel_partner, is_active: false)
+
+    if channel_partner.referral_code.present?
+      referred_by_user = User.where(referral_code: channel_partner.referral_code).first
+      if referred_by_user
+        user.set(referred_by_id: referred_by_user.id)
+      end
+    end
+    user.save!
 
     if (selldo_api_key = user&.booking_portal_client&.selldo_api_key.presence) && (selldo_client_id = user&.booking_portal_client&.selldo_client_id.presence)
       SelldoLeadUpdater.perform_async(user.id.to_s, {stage: channel_partner.status, action: 'add_cp_portal_stage', selldo_api_key: selldo_api_key, selldo_client_id: selldo_client_id})
