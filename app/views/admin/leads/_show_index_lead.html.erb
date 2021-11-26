@@ -3,7 +3,6 @@
 <% cp_lead_activities.each do |cp_lead_activity| %>
 <%
         lead = cp_lead_activity.lead
-        channel_partner = cp_lead_activity.user
       %>
 
     <div class="col-lg-4">
@@ -48,7 +47,7 @@
                 <% if !current_user.role?('channel_partner') %>
                 <div class="d-flex justify-content-between p-2 pt-1 pb-1">
                     <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.cp_lead_activity.channel_partner') %></p>
-                    <p class="fn-14 mb-0"><%= channel_partner.name %></p>
+                    <p class="fn-14 mb-0"><%= cp_lead_activity.manager_name %></p>
                 </div>
                  <% end %>
                 <div class="d-flex justify-content-between p-2 pt-1 pb-1">

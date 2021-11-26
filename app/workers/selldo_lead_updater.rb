@@ -8,7 +8,7 @@ class SelldoLeadUpdater
     lead = Lead.where(id: lead_id).first || User.where(id: lead_id).first
     return false unless lead
 
-    if lead.is_a?(User) && lead.role?('channel_partner')
+    if lead.is_a?(User) && lead.role.in?(%w(cp_owner channel_partner))
       cp_user = lead
       op_hash = op_hash.with_indifferent_access
       operation = op_hash.delete 'action'

@@ -80,7 +80,7 @@ class Lead
 
   # delegate :first_name, :last_name, :name, :email, :phone, to: :user, prefix: false, allow_nil: true
   delegate :name, to: :project, prefix: true, allow_nil: true
-  delegate :name, :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
+  delegate :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
   delegate :role, :role?, to: :user, prefix: true, allow_nil: true
 
   scope :filter_by__id, ->(_id) { where(_id: _id) }
@@ -137,6 +137,10 @@ class Lead
         where(id: { '$nin': lead_ids })
       end
     end
+  end
+
+  def manager_name
+    self.cp_lead_activities.where(user_id: self.manager_id).first&.manager_name
   end
 
   def phone_or_email_required
@@ -279,9 +283,12 @@ class Lead
       #  cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
       #  custom_scope = { manager_id: { "$in": User.where(role: 'channel_partner').in(manager_id: cp_ids).distinct(:id) }  }
       when :channel_partner
-        lead_ids = CpLeadActivity.where(user_id: user.id).distinct(:lead_id)
+        lead_ids = CpLeadActivity.where(user_id: user.id, channel_partner_id: user.channel_partner_id).distinct(:lead_id)
         custom_scope = {_id: { '$in': lead_ids }, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
         #custom_scope[:'$or'] = [{manager_id: user.id}, {referenced_manager_ids: user.id}]
+      when :cp_owner
+        lead_ids = CpLeadActivity.where(channel_partner_id: user.channel_partner_id).distinct(:lead_id)
+        custom_scope = {_id: { '$in': lead_ids }}
       when :cp
         channel_partner_ids = User.where(role: 'channel_partner', manager_id: user.id).distinct(:id)
         lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)

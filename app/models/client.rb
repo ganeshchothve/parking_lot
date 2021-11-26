@@ -76,7 +76,7 @@ class Client
   field :enable_communication, type: Hash, default: { 'email': true, 'sms': true, 'whatsapp': false, 'notification': false }
   field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
   field :enable_referral_bonus, type: Boolean, default: false
-  field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner]
+  field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner cp_owner]
   field :lead_blocking_days, type: Integer
   field :invoice_approval_tat, type: Integer, default: 2
 

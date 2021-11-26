@@ -15,9 +15,9 @@ class User
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   ALLOWED_UTM_KEYS = %i[utm_campaign utm_source utm_sub_source utm_content utm_medium utm_term]
   BUYER_ROLES = %w[user employee_user management_user]
-  ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre billing_team team_lead]
-  ALL_PROJECT_ACCESS = %w[superadmin admin cp cp_admin]
-  CHANNEL_PARTNER_USERS = %w[cp cp_admin channel_partner]
+  ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre billing_team team_lead cp_owner]
+  ALL_PROJECT_ACCESS = %w[superadmin admin cp cp_admin cp_owner]
+  CHANNEL_PARTNER_USERS = %w[cp cp_admin channel_partner cp_owner]
   SALES_USER = %w[sales sales_admin]
   COMPANY_USERS = %w[employee_user management_user]
   # Added different types of documents which are uploaded on User
@@ -182,14 +182,14 @@ class User
 
   validates :first_name, :role, presence: true
   #validates :first_name, :last_name, name: true, allow_blank: true
-
+  validates :channel_partner_id, presence: true, if: proc { |user| user.role?('channel_partner') }
   validate :phone_or_email_required, if: proc { |user| user.phone.blank? && user.email.blank? }
   validates :phone, :email, uniqueness: { allow_blank: true }
   validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile mobile fixed_line premium_rate] }, allow_blank: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } , allow_blank: true
   validates :allowed_bookings, presence: true, if: proc { |user| user.buyer? }
   # validates :rera_id, presence: true, if: proc { |user| user.role?('channel_partner') } #TO-DO Done for Runwal to revert for generic
-  validates :rera_id, uniqueness: true, allow_blank: true
+  #validates :rera_id, uniqueness: true, allow_blank: true
   validates :role, inclusion: { in: proc { |user| User.available_roles(user.booking_portal_client) } }
   validates :lead_id, uniqueness: true, if: proc { |user| user.buyer? }, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
@@ -427,12 +427,16 @@ class User
   end
 
   def name
-    str = "#{first_name} #{last_name}"
-    if role?('channel_partner')
+    str = _name
+    if role.in?(%w(cp_owner channel_partner))
       cp = self.channel_partner
       str += " (#{cp.company_name})" if cp.present? && cp.company_name.present?
     end
     str
+  end
+
+  def _name
+    "#{first_name} #{last_name}"
   end
 
   alias :resource_name :name
@@ -446,7 +450,7 @@ class User
   end
 
   def inactive_message
-    is_active ? super : :is_active
+    is_active ? super : (sign_in_count.zero? ? :inactive : :is_active)
   end
 
   def email_required?
@@ -613,6 +617,8 @@ class User
       if user.role?('channel_partner')
         custom_scope = { role: {"$in": User.buyer_roles(user.booking_portal_client)} }
         custom_scope[:'$or'] = [{manager_id: user.id}, {manager_id: nil, referenced_manager_ids: user.id, iris_confirmation: false}]
+      elsif user.role?('cp_owner')
+        custom_scope = { role: {'$in': ['channel_partner', 'cp_owner']}, channel_partner_id: user.channel_partner_id, id: {'$ne': user.id} }
       elsif user.role?('crm')
         custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) + %w(channel_partner) } }
       elsif user.role?('sales_admin')
@@ -668,17 +674,17 @@ class User
   end
 
   def active_channel_partner?
-    if self.role == 'channel_partner'
-      channel_partner = associated_channel_partner
+    if self.role.in?(%w(cp_owner channel_partner))
+      #channel_partner = associated_channel_partner
       return channel_partner.present? && channel_partner.status == 'active'
     else
       return true
     end
   end
 
-  def associated_channel_partner
-    ChannelPartner.where(associated_user_id: self.id).first
-  end
+  #def associated_channel_partner
+  #  ChannelPartner.where(associated_user_id: self.id).first
+  #end
 
   protected
 

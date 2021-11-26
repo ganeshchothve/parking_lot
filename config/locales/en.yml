@@ -1100,6 +1100,7 @@ en:
         total_unattached_balance: "Total Un-attached Balance"
         time_zone: "User's Time Zone"
         utm_params: 'UTM Tracking'
+        channel_partner_id: CP Company Name/ Organisation Name/ CP Name
       user/confirmed:
         :true: 'Confirmed'
         :false: 'Not Confirmed'
@@ -1126,6 +1127,7 @@ en:
         cp_admin: 'Channel Partner Head'
         cp: 'Channel Partner Manager'
         channel_partner: 'Channel Partner'
+        cp_owner: 'Partner Company Owner'
         team_lead: 'Team Lead'
         billing_team: 'Billing Team'
         management_user: 'Management User'
@@ -1477,13 +1479,15 @@ en:
       new:
         link_name: 'Add New ChannelPartner'
       index:
-        link_name: 'Channel Partners'
+        link_name: 'Partner Companies'
       edit:
         link_name: 'Edit Application'
       show:
         link_name: 'Application Details'
       status_message:
         pending: 'Application submitted for approval'
+      create:
+        not_allowed_message: 'Company with these details already exists. Please contact your company admin to create your account.'
 
     dashboard:
       index:

@@ -3,7 +3,6 @@ class ChannelPartner
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include InsertionStringMethods
-  # include SyncDetails
   include CrmIntegration
   extend FilterByCriteria
   include ChannelPartnerStateMachine
@@ -24,17 +23,11 @@ class ChannelPartner
   SOURCE = ['Internal CP', 'External CP']
   REGION = ['Chennai', 'Bangalore', 'Coimbatore', 'NRI']
 
-  SHORT_FORM = %i(first_name last_name company_name rera_applicable status interested_services)
+  SHORT_FORM = %i(company_name rera_applicable status interested_services)
   FULL_FORM = SHORT_FORM.clone + %i(gst_applicable nri manager_id)
 
-  field :title, type: String
-  field :first_name, type: String
-  field :last_name, type: String
-  field :additional_name, type: String
-  field :email, type: String
-  field :alternate_email, type: String
-  field :phone, type: String
-  field :alternate_phone, type: String
+  attr_accessor :first_name, :last_name, :email, :phone
+
   field :rera_id, type: String
   field :status, type: String, default: 'inactive'
 
@@ -83,16 +76,16 @@ class ChannelPartner
     ]
   )
 
-  belongs_to :associated_user, class_name: 'User', optional: true
   belongs_to :manager, class_name: 'User', optional: true
   has_many :users
   has_one :address, as: :addressable
   has_one :bank_detail, as: :bankable, validate: false
   has_many :assets, as: :assetable
 
+  validates :first_name, :last_name, presence: true, on: :create
   validates *SHORT_FORM, presence: true
   validates *FULL_FORM, presence: true, on: :submit_for_approval
-  validate :phone_or_email_required, if: proc { |cp| cp.phone.blank? && cp.email.blank? }
+  validate :phone_or_email_required, if: proc { |cp| cp.phone.blank? && cp.email.blank? }, on: :create
   validates :pan_number, presence: true, unless: :nri?, on: :submit_for_approval
   validates :rera_id, presence: true, if: :rera_applicable?
   validates :gstin_number, presence: true, if: :gst_applicable?
@@ -107,12 +100,12 @@ class ChannelPartner
   validates :source, inclusion: { in: proc { ChannelPartner::SOURCE } }, allow_blank: true
   validates :category, inclusion: { in: proc { ChannelPartner::CATEGORY } }, allow_blank: true
   validates :region, inclusion: { in: proc { ChannelPartner::REGION } }, allow_blank: true
-
+  validates :company_name, uniqueness: true
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: { with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A' }, allow_blank: true
   #validates :first_name, :last_name, name: true, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
-  validate :user_based_uniqueness
+  validate :user_based_uniqueness, on: :create
 
   validates :experience, inclusion: { in: proc{ ChannelPartner::EXPERIENCE } }, allow_blank: true
   validates :expertise, array: { inclusion: {allow_blank: true, in: ChannelPartner::EXPERTISE } }
@@ -140,38 +133,20 @@ class ChannelPartner
   end
 
   def name
-    str = "#{title} #{first_name} #{last_name}"
-    str += " (#{company_name})" if company_name.present?
-    str
+    company_name
   end
 
   alias :resource_name :name
 
   def ds_name
-    "#{name} - #{email} - #{phone}"
+    str = name
+    str += " - #{rera_id}" if rera_applicable?
+    str
   end
 
-  def sfdc_phone
-    self.phone.gsub(/\A\+91/, '')
-  end
-
-  # As we want to push channel partner once its activated, we are using erp_model with create event here.
-  def update_details
-    sync_log = SyncLog.new
-    @erp_models = ErpModel.where(resource_class: self.class, action_name: 'create', is_active: true)
-    @erp_models.each do |erp|
-      sync_log.sync(erp, self)
-    end
-  end
-
-  def sync(erp_model, sync_log)
-    Api::ChannelPartnerDetailsSync.new(erp_model, self, sync_log).execute
-  end
-
-  def update_erp_id(erp_id, domain)
-    super
-    associated_user.update_erp_id(erp_id, domain) if associated_user
-  end
+  #def sfdc_phone
+  #  self.phone.gsub(/\A\+91/, '')
+  #end
 
   def doc_types
     doc_types = self.nri? ? %w[cheque_scanned_copy company_incorporation_certificate form_10f tax_residency_certificate pe_declaration] : %w[pan_card]
@@ -198,7 +173,6 @@ class ChannelPartner
     query << { email: email } if email.present?
     query << { rera_id: rera_id } if rera_id.present?
     criteria = User.or(query)
-    criteria = criteria.ne(id: associated_user_id) if associated_user_id.present?
     if criteria.present?
       errors.add :base, 'User with phone, email or rera already exists'
     end

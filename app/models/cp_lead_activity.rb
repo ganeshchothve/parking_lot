@@ -16,6 +16,7 @@ class CpLeadActivity
   field :sitevisit_date, type: String
 
   belongs_to :user
+  belongs_to :channel_partner
   belongs_to :lead
   has_many :assets, as: :assetable
 
@@ -28,11 +29,10 @@ class CpLeadActivity
   scope :filter_by_expiry_date, ->(date) { start_date, end_date = date.split(' - '); where(expiry_date: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_registered_at, ->(date) { start_date, end_date = date.split(' - '); where(registered_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
 
-  def self.user_based_scope(user, _params = {})
-    custom_scope = {}
-    custom_scope = { user_id: user.id } if user.role?('channel_partner')
-    custom_scope = { user_id: { '$in': User.where(role: 'channel_partner', manager_id: user.id).distinct(:id) } } if user.role?(:cp_admin)
-    custom_scope
+  def manager_name
+    str = self.user&._name
+    str += " (#{channel_partner.company_name})" if channel_partner.present? && channel_partner.company_name.present?
+    str
   end
 
   def lead_validity_period
@@ -52,26 +52,20 @@ class CpLeadActivity
     end
   end
 
-  private
-
-  def authorize_resource
-    if %w[index export portal_stage_chart channel_partner_performance].include?(params[:action])
-      authorize [current_user_role_group, User]
-    elsif params[:action] == 'new' || params[:action] == 'create'
-      if params[:role].present?
-        authorize [current_user_role_group, User.new(role: params[:role], booking_portal_client_id: current_client.id)]
-      else
-        authorize [current_user_role_group, User.new(booking_portal_client_id: current_client.id)]
-      end
-    else
-      authorize [current_user_role_group, @user]
+  def self.user_based_scope(user, _params = {})
+    custom_scope = {}
+    case user.role
+    when 'channel_partner'
+      custom_scope = { user_id: user.id, channel_partner_id: user.channel_partner_id }
+    when 'cp_owner'
+      custom_scope = { channel_partner_id: user.channel_partner_id }
+    when 'cp'
+      custom_scope = { user_id: { '$in': User.where(role: 'channel_partner', manager_id: user.id).distinct(:id) } }
+    when 'cp_admin'
+      cp_ids = User.all.cp.where(manager_id: user.id).distinct(:id)
+      custom_scope = { user_id: { '$in': User.where(role: 'channel_partner', manager_id: {'$in': cp_ids}).distinct(:id) } }
     end
+    custom_scope
   end
 
-  def apply_policy_scope
-    custom_scope = CpLeadActivity.where(CpLeadActivity.user_based_scope(current_user, params))
-    CpLeadActivity.with_scope(policy_scope(custom_scope)) do
-      yield
-    end
-  end
 end

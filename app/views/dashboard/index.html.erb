@@ -22,7 +22,7 @@
       <%= render 'dashboard/index/billing_team' %>
     <% elsif current_user.role?('team_lead') %>
       <%= render 'dashboard/index/team_lead' %>
-    <% elsif ['cp_admin', 'cp'].include?(current_user.role) %>
+    <% elsif ['cp_admin', 'cp', 'cp_owner'].include?(current_user.role) %>
       <%= render 'dashboard/index/cp_admin' %>
     <% elsif ['gre'].include?(current_user.role) %>
       <%= render 'dashboard/index/gre' %>

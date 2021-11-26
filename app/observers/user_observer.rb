@@ -18,6 +18,16 @@ class UserObserver < Mongoid::Observer
     end
   end
 
+  def after_create user
+    if user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner
+      if current_client.external_api_integration?
+        Crm::Api::Post.where(_type: 'Crm::Api::Post', resource_class: 'ChannelPartner', is_active: true).each do |api|
+          api.execute(user.channel_partner)
+        end
+      end
+    end
+  end
+
   def before_save user
     user.generate_referral_code
     if user.confirmed_at_changed? && user.confirmed?
@@ -29,11 +39,15 @@ class UserObserver < Mongoid::Observer
       end
     end
 
-    if user.manager_id_changed? && user.manager_id.present?
-      if user.role?('channel_partner') && user.persisted? && cp = user.associated_channel_partner
-        cp.set(manager_id: user.manager_id)
-      end
+    if user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner
+      user.rera_id = user.channel_partner&.rera_id if user.rera_id.blank?
     end
+
+    #if user.manager_id_changed? && user.manager_id.present?
+    #  if user.role?('channel_partner') && user.persisted? && cp = user.channel_partner
+    #    cp.set(manager_id: user.manager_id)
+    #  end
+    #end
 
     unless user.authentication_token?
       user.reset_authentication_token!
