@@ -4,6 +4,10 @@
     <div class="row">
       <div class="col-lg-12 row">
         <div class="col-lg-7 filter-set">
+          <% if current_user.role?("channel_partner") %>
+            <% region_filter = "Filter By Region" %>
+            <%= link_to region_filter.html_safe, admin_projects_path(fltrs: {regions: current_user.channel_partner.regions}), class: "filter-link #{params.dig(:fltrs, :regions) == current_user.channel_partner.regions ? 'active' : ''}" %>
+          <% end %>
           <% all_projects = "All (#{Project.where(Project.user_based_scope(current_user, params)).count})" %>
           <%= link_to all_projects.html_safe, admin_projects_path, class: "filter-link #{params.dig(:fltrs).blank? ? 'active' : ''}" %>
 
@@ -14,8 +18,7 @@
           <%= link_to pre_launch.html_safe, admin_projects_path(fltrs: {category: 'pre_launch'}), class: "filter-link #{params.dig(:fltrs, :category) == 'pre_launch' ? 'active' : ''}" %>
 
           <% hot_prop = "Hot (#{hot_count = Project.where(Project.user_based_scope(current_user, params)).where(hot: true).count})" %> <%# + "#{hot_count > 0 ? "<span class='notify'></span>".html_safe : ''}" %>
-          <%= link_to hot_prop.html_safe, admin_projects_path(fltrs: {hot: true}), class: "filter-link #{params.dig(:fltrs, :category) == 'launch' ? 'active' : ''}" %>
-
+          <%= link_to hot_prop.html_safe, admin_projects_path(fltrs: {hot: true}), class: "filter-link #{params.dig(:fltrs, :hot) == 'true' ? 'active' : ''}" %>
         </div>
         <div class="col-lg-5 text-end px-0 filter-set">
           <% if policy([:admin, Project]).new? %>
