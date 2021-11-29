@@ -2,7 +2,7 @@
   <div class="px-4">
     <% interested_project_ids = current_user.interested_projects.in(status: %w(subscribed approved)).distinct(:project_id) %>
     <div class="row">
-      <div class="col-lg-12 row">
+      <div class="col-lg-12 row mb-2">
         <div class="col-lg-7 filter-set">
           <% all_projects = "All (#{Project.where(Project.user_based_scope(current_user, params)).count})" %>
           <%= link_to all_projects.html_safe, admin_projects_path, class: "filter-link #{params.dig(:fltrs).blank? ? 'active' : ''}" %>
@@ -43,8 +43,8 @@
           </div>
         </div>
         <!----------- Pagination ---------->
-        <div class="col-lg-12 py-3 bg-white mb-2 px-3 mt-3 shadow-sm launchpad_inventory_pagination">
-          <div class="row">
+        <div class="col-lg-12 launchpad_inventory_pagination">
+          <div class="row py-3 bg-white mb-2 shadow-sm ms-0">
             <div class="col-lg-6 pt-2">
               <p class="table-entry mb-0"><%= page_entries_info @projects %></p>
             </div>

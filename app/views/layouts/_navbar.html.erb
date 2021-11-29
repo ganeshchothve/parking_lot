@@ -1,56 +1,28 @@
-<header>
-  <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top fixed-top">
-    <div class="container no-pd">
-      <%= link_to (current_client.logo.present? ? (image_tag current_client.logo.url, alt: "Logo") : "IRIS"), dashboard_path, class: 'navbar-brand'%>
-      <% if user_signed_in? && params[:action] != 'select_project' %>
-        <%= render "layouts/navbar/#{current_user_role_group}" %>
-      <% else %>
-        <div class="text-right">
-          <!--<div class="user-info float-right hide-xs">
-            <div class="display-inline">
-              <%= link_to 'T & C', dashboard_terms_and_condition_path, active: :exclusive, class: 'p-style', target: "_blank" %>
-            </div>
-          </div>
-          <div class="user-info login-btn float-right hide-xs">
-            <div class="display-inline">
-              <img src="<%= asset_path 'lock-black.svg' %>" alt="User Info">
-              <%= link_to "Log in", new_session_path("user"), class: "p-style" %>
-            </div>
-          </div>-->
-          
-          <div class="display-inline show-xs  float-right">
-            <%= link_to new_channel_partner_path, class: "reg-chnl-prtnr-btn p-style" do %>
-              <%= image_tag 'user-alt-black.svg', alt: "User Info" %>
-              Register as Channel Partner
-            <% end %>
+<% if user_signed_in? %>
 
-          </div>
-          
-          <div class="user-info login-btn float-right">
-            <div class="display-inline">
-              <img src="<%= asset_path 'lock-black.svg' %>" alt="User Info">
-              <%= link_to "Log in", new_session_path("user"), class: "p-style" %>
-            </div>
-          </div>
-          <div class="display-inline ml-2  float-right">
-            <%= link_to "Register Now", lead_registration_path, class: "register-btn" %>
-          </div>
-          <div class="dropdown hide-xs float-right display-inline register-dropdown">
-            <div class="display-inline">
-              <a class="dropdown-toggle p-style" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Register</a>
-              <div class="dropdown-menu menu-top mobile-home-menu" aria-labelledby="navbarDropdown">
-                <%= link_to "Register as Channel Partner", new_channel_partner_path, class: "dropdown-item btn-as-channel-partner text-left" %>
-                <%#= link_to "Register as Customer", register_path, class: "btn btn-primary btn-as-customer-partner text-left" %>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-      <% end %>
+<% if params[:action] == 'select_project' %>
+<%= render "layouts/partials/before_login_header" %>
+<% else %>
+<header>
+  <div class="header-leftbar">
+    <div class="leftbar-wrap">
+      <div class="header-menu">
+        <ul class="list-unstyled ">
+          <%= render "layouts/navbar/#{current_user_role_group}" %>
+        </ul>
+      </div>
     </div>
   </div>
   <div class="header-topbar">
     <div class="header-inner">
+    <a href="javascript:;" class="p-2 py-1 float-start toggle-side-menu mt-4 me-3 ms-2">
+        <div class="burger-menu menu-btn pull-right" data-event-category="Header" data-event-action="Click"
+          data-event-name="Menu">
+          <div class="bar1" data-event-category="Header" data-event-action="Click" data-event-name="Menu"></div>
+          <div class="bar2" data-event-category="Header" data-event-action="Click" data-event-name="Menu"></div>
+          <div class="bar3" data-event-category="Header" data-event-action="Click" data-event-name="Menu"></div>
+        </div>
+      </a>
       <div class="header-logo float-start">
         <%= link_to (current_client.logo.present? ? (image_tag current_client.logo.url, class: 'img-fluid position-absolute start-50 top-50 translate-middle', alt: "Logo") : "launchpad-logo.png"), dashboard_path, class: 'navbar-brand me-0'%>
       </div>
@@ -90,14 +62,6 @@
           </div>
         </div>
       </div>
-      <a href="javascript:;" class="p-2 py-1 bg-theme float-end toggle-side-menu mt-4">
-        <div class="burger-menu menu-btn pull-right" data-event-category="Header" data-event-action="Click"
-          data-event-name="Menu">
-          <div class="bar1" data-event-category="Header" data-event-action="Click" data-event-name="Menu"></div>
-          <div class="bar2" data-event-category="Header" data-event-action="Click" data-event-name="Menu"></div>
-          <div class="bar3" data-event-category="Header" data-event-action="Click" data-event-name="Menu"></div>
-        </div>
-      </a>
     </div>
   </div>
 </header>

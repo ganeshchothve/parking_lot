@@ -6,24 +6,24 @@
   <%= form_tag channel_partners_path, method: "get", id: "channel_partner_search_form" do %>
      <div class="filter-content modal-body ps-0 pe-0">
       <div class="row">
-        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.channel_partner.name_email_phone'), class: "control-label" %>
           <%= select_tag "fltrs[_id]", params.dig(:fltrs,:_id), {class: "selectize-remote", data: {url: channel_partners_path }} %>
         </div>
-        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.channel_partner.rera_id'), class: "control-label" %>
           <%= text_field_tag "fltrs[rera_id]", params.dig(:fltrs,:rera_id), class: "form-control" %>
         </div>
-        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.channel_partner.status'), class: "control-label" %>
           <%= select_tag "fltrs[status]", options_for_select( ChannelPartner::STATUS.collect{|x| [ t("mongoid.attributes.channel_partner/status.#{x}"), x]}, params.dig(:fltrs,:status)), {prompt: "Select", class: "selectize"} %>
         </div>
-        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.channel_partner.created_at'), class: "control-label" %>
           <%= text_field_tag "fltrs[created_at]", (params[:fltrs].present? ? params[:fltrs][:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
         </div>
 
-        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.channel_partner.manager_id'), class: "control-label" %>
           <%= select_tag "fltrs[manager_id]", options_for_select( User.where(is_active: true, confirmed_at: {'$ne': nil}, role: "cp").collect{|x| [ x.ds_name, x.id.to_s]}, params.dig(:fltrs,:manager_id)), {prompt: "Select", class: "selectize"} %>
         </div>

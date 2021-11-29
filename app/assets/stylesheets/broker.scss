@@ -440,6 +440,15 @@ a{
     padding: 1px 5px;
     // border-radius: 0 6px 6px 0;
 }
+.benefits-tag{
+	position: absolute;
+    top: 10px;
+    left: 0;
+    background-color:#dee8f5;
+    color:$primary;
+    font-size: 12px;
+    padding: 1px 5px;
+}
 .box-card{
 	width: 100%;
 	float: left;
@@ -1203,6 +1212,12 @@ select.form-control{
 		right: 20px;
 	}
 }
+.benefits-string-slider {
+	button{
+		align-items: end;
+		justify-content: end;
+	}
+}
 
 /**************** Header ***********/
  /* Firefox */
@@ -1320,7 +1335,7 @@ select.form-control{
 		.bar3 {
 			width: 24px;
 			height: 2px;
-			background-color: #fff;
+			background-color: #2E384D;
 			margin: 5px 0;
 			transition: 0.4s;
 		}
@@ -1375,6 +1390,9 @@ select.form-control{
 				    line-height: 38px;
 				    margin-right: 12px;
 				    margin-left: 20px;
+					@media screen and (max-width: 700px){
+						margin-right: 0px;
+					}
 				}
 				span.user-name {
 				    font-size: 14px;
@@ -1384,6 +1402,11 @@ select.form-control{
 				    text-decoration: none;
 					@media screen and (max-width: 700px){
 						display:none;
+					}
+				}
+				@media screen and (max-width: 700px){
+					&.dropdown-toggle:after{
+						display: none;
 					}
 				}
 		    }
@@ -1467,7 +1490,7 @@ select.form-control{
 	}
 }
 .page-wrapper{
-	margin-top: 110px;
+	margin-top: 100px;
 	margin-left: 160px;
 	width: calc(100% - 160px);
 	@media screen and (max-width: 1024px){
@@ -1539,6 +1562,9 @@ select.form-control{
 		.pt-xs-2{
 			padding-top:2rem!important;
 		}
+		.pb-xs-1{
+			padding-bottom:0.5rem!important;
+		}
 		.pb-xs-2{
 			padding-bottom:2rem!important;
 		}
@@ -1563,6 +1589,10 @@ select.form-control{
 		.px-xs-0{
 			padding-left:0px!important;
 			padding-right:0px!important;
+		}
+		.px-xs-3{
+			padding-left:1rem!important;
+			padding-right:1rem!important;
 		}
 		.top-right-action{
 			position: absolute;
@@ -2491,7 +2521,8 @@ select.form-control{
 		    height: 122px;
 		    padding: 0 10px;
 			&.prjt-details-header-stats{
-				width: 50%;
+				width: 100%;
+				height: auto;
 				@media screen and (max-width: 700px){
 					width:100%;
 					height:auto;
@@ -4182,11 +4213,28 @@ table .dropdown-menu.show{
     top: 80px;
     background-color: #fff;
     padding: 7px 11px;
-    width: 50%;
+    width: 330px;
     height: 100%;
     z-index: 1000;
 	display: none;
-	@media screen and (max-width: 700px){
+	box-shadow: 1px 1px 9px #e5e5e5;
+    border: 1px solid #dee2e6;
+	@media screen and (min-width: 700px){
+		.filter-inner {
+			&.modal-content{
+				height: 100%;
+				form{
+					// overflow-y: auto;
+					.filter-content{
+						height: 75vh;
+						overflow-y: auto;
+						overflow-x: hidden;
+					}
+				}
+			}
+		}	
+	}
+		@media screen and (max-width: 700px){
 		width:100%;
 		top:0;
 		z-index: 9999;
@@ -4194,9 +4242,12 @@ table .dropdown-menu.show{
 			&.modal-content{
 				height: 100%;
 				form{
-					height: 100%;
-					overflow-y: auto;
-					overflow-x: hidden;
+					// overflow-y: auto;
+					.filter-content{
+						height: 83vh;
+						overflow-y: auto;
+						overflow-x: hidden;
+					}
 				}
 			}
 		}
