@@ -1,0 +1,36 @@
+<section class="auth login-page" style="<%= login_image() %>">
+  <div class="container no-pd">
+    <div class="col-lg-6 col-xs-12 col-md-12 col-sm-12 p-0">
+      <div class="login-form-wrapper pt-5 mr-4">
+        <div class="box-card">
+          <div class="box-header bg-gradient br-rd-tr-4">
+            <h2><strong>Basic Details</strong></h2>
+          </div>
+          <div class="box-content br-rd-bl-4 bg-white px-3 pt-3 br-1">
+            <%= simple_form_for(@lead, url: admin_leads_path, local: true, html: { id: 'lead_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %>
+
+              <%= render "home/form_fields", {form: form} %>
+              <div class="signin-btn col-lg-12 pl-0 pr-0 pb-4">
+                <%= form.submit "Register", class: "sign-in-btn", data: { disable_with: "Please wait..." } %>
+              </div>
+              <%= render "devise/shared/links" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#lead_form"));
+    $('#lead_site_visit_date_calender').on('dp.change', function(e){
+      $('#lead_site_visit_date').val(e.date.format())
+    });
+    $("#lead_cp_code").on("change", function(e){
+      var $selector = $(this).selectize()[0].selectize;
+      var companyName = $selector.getItem(e.target.value).text().match(/\((.*?)\)/)[0].replace(/[()]/g, "");
+      $("#lead_channel_partner_executive_company_name").val(companyName);
+    });
+  });
+<% end %>
