@@ -25,12 +25,16 @@ class BookingDetail
   field :saleable, type: Float, default: 0
   field :project_name, type: String
   field :project_tower_name, type: String
+  field :booking_project_unit_name, type: String
+  field :project_unit_configuration, type: String
   field :bedrooms, type: String
   field :bathrooms, type: String
   field :carpet, type: Float
   field :agreement_price, type: Integer
+  field :other_costs, type: Integer
   field :all_inclusive_price, type: Integer
   field :booked_on, type: Date
+  field :agreement_date, type: Date
   field :ladder_stage, type: Array
 
   mount_uploader :tds_doc, DocUploader
@@ -47,11 +51,11 @@ class BookingDetail
   embeds_many :costs, as: :costable
   embeds_many :data, as: :data_attributable
   embeds_many :tasks, cascade_callbacks: true
-  belongs_to :project
-  belongs_to :project_tower
-  belongs_to :project_unit
-  belongs_to :lead
-  belongs_to :user
+  belongs_to :project, optional: true
+  belongs_to :project_tower, optional: true
+  belongs_to :project_unit, optional: true
+  belongs_to :lead, optional: true
+  belongs_to :user, optional: true
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :search, optional: true
   # When a new booking detail object is created from another object, this field will be set. This happens when the user creates a swap request.
@@ -67,7 +71,7 @@ class BookingDetail
   has_many :related_booking_details, foreign_key: :parent_booking_detail_id, primary_key: :_id, class_name: 'BookingDetail'
   has_many :invoices
   has_and_belongs_to_many :user_kycs, validate: true
-
+  belongs_to :channel_partner, optional: true
 
   # TODO: uncomment
   # validates :name, presence: true
@@ -193,7 +197,7 @@ class BookingDetail
 
   # validates kyc presence if booking is not allowed without kyc
   def kyc_mandate
-    if project_unit.booking_portal_client.enable_booking_with_kyc && !primary_user_kyc_id.present?
+    if project.present? && project.enable_booking_with_kyc && !primary_user_kyc_id.present?
       self.errors.add(:base, "KYC is mandatory for booking.")
     end
   end

@@ -100,6 +100,7 @@ class Project
   field :price_upto, type: Integer
   field :broker_usp, type: Array, default: []
   field :enable_inventory, type: Boolean, default: false
+  field :enable_booking_with_kyc, type: Boolean, default: true
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />

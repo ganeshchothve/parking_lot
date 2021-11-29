@@ -2,8 +2,8 @@ class Admin::BookingDetailsController < AdminController
   include BookingDetailConcern
   include SearchConcern
   around_action :apply_policy_scope, only: [:index, :mis_report]
-  before_action :set_booking_detail, except: [:index, :mis_report, :new, :create, :searching_for_towers, :status_chart]
-  before_action :authorize_resource, except: [:index, :mis_report, :new, :create, :searching_for_towers, :status_chart]
+  before_action :set_booking_detail, except: [:index, :mis_report, :new, :create, :searching_for_towers, :status_chart, :new_booking_without_inventory, :create_booking_without_inventory]
+  before_action :authorize_resource, except: [:index, :mis_report, :new, :create, :searching_for_towers, :status_chart, :new_booking_without_inventory, :create_booking_without_inventory]
   before_action :set_project_unit, only: :booking
   before_action :set_receipt, only: :booking
 
@@ -144,6 +144,24 @@ class Admin::BookingDetailsController < AdminController
   def send_booking_detail_form_notification
     @booking_detail.send_booking_detail_form_mail_and_sms
     redirect_to (request.referrer.present? ? request.referrer : admin_booking_details_path), notice: t('controller.booking_details.send_booking_detail_form_notification')
+  end
+
+  def new_booking_without_inventory
+    @booking_detail = BookingDetail.new(lead_id: params[:lead_id])
+    render layout: false
+  end
+
+  def create_booking_without_inventory
+    @booking_detail = BookingDetail.new
+    @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
+    respond_to do |format|
+      if @booking_detail.save
+        format.json { render json: {message: "booking_successful"}, status: :ok }
+        format.html { redirect_to admin_leads_path }
+      else
+        format.html { redirect_to dashboard_path, alert: t('controller.booking_details.booking_unsuccessful') }
+      end
+    end
   end
 
   private

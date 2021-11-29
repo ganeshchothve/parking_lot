@@ -112,7 +112,7 @@ class ApplicationPolicy
   end
 
   def only_for_confirmed_user!
-    return true if record.user.confirmed?
+    return true if record.user.present? && record.user.confirmed?
     @condition = 'only_for_confirmed_user'
     false
   end
