@@ -22,8 +22,6 @@ class ChannelPartner
   COMPANY_TYPE = ['Sole Proprietorship', 'Partnership', 'Private Limited', 'Public Limited', 'Others']
   CATEGORY = ['CP Company', 'Individual CP', 'ROTN', 'IRDA', 'Chartered accountants', 'IT Profession']
   SOURCE = ['Internal CP', 'External CP']
-  REGION = ['Chennai', 'Bangalore', 'Coimbatore', 'NRI']
-
   SHORT_FORM = %i(first_name last_name company_name rera_applicable status interested_services)
   FULL_FORM = SHORT_FORM.clone + %i(gst_applicable nri manager_id)
 
@@ -51,7 +49,7 @@ class ChannelPartner
   field :category, type: String
   field :source, type: String
   field :website, type: String
-  field :region, type: String
+  field :regions, type: Array, default: ['Pune East', 'Pune West', 'Others']
   field :erp_id, type: String, default: ''
 
   field :team_size, type: Integer
