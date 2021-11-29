@@ -15,9 +15,11 @@ class CpLeadActivity
   field :sitevisit_status, type: String
   field :sitevisit_date, type: String
 
+  belongs_to :lead
   belongs_to :user
   belongs_to :channel_partner
-  belongs_to :lead
+  belongs_to :cp_manager, class_name: 'User'
+  belongs_to :cp_admin, class_name: 'User'
   has_many :assets, as: :assetable
 
   default_scope -> { desc(:created_at) }

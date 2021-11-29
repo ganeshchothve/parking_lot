@@ -13,6 +13,7 @@ en:
       default: "%d/%m/%Y %I:%M %p"
   welcome: Welcome %{name}
   global:
+    brand: BeyondWalls
     all: All
     at: 'At'
     action:

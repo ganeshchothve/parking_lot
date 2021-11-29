@@ -174,7 +174,7 @@ class ChannelPartner
     query << { rera_id: rera_id } if rera_id.present?
     criteria = User.or(query)
     if criteria.present?
-      errors.add :base, 'User with phone, email or rera already exists'
+      errors.add :base, 'User with Phone, Email or RERA already exists'
     end
   end
 

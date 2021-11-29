@@ -272,14 +272,16 @@
       //  url: "/dashboard/invoice_summary",
       //  type: "get"
       //});
-      $.ajax({
-        url: "/dashboard/cp_status",
-        type: "get"
-      });
-      $.ajax({
-        url: "/dashboard/cp_performance",
-        type: "get"
-      });
+      <% if (["cp_admin","admin","superadmin"].include?current_user.role) %>
+        $.ajax({
+          url: "/dashboard/cp_status",
+          type: "get"
+        });
+        $.ajax({
+          url: "/dashboard/cp_performance",
+          type: "get"
+        });
+      <% end %>
     });
   <% end %>
 <% end %>

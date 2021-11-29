@@ -46,6 +46,9 @@ class Lead
   embeds_many :portal_stages
   belongs_to :user
   belongs_to :manager, class_name: 'User', optional: true
+  belongs_to :channel_partner, optional: true
+  belongs_to :cp_manager, class_name: 'User', optional: true
+  belongs_to :cp_admin, class_name: 'User', optional: true
   belongs_to :closing_manager, class_name: 'User', optional: true
   belongs_to :project
   has_many :receipts
@@ -89,6 +92,7 @@ class Lead
   scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }
   scope :filter_by_user_id, ->(user_id) { where(user_id: user_id) }
   scope :filter_by_manager_id, ->(manager_id) {where(manager_id: manager_id) }
+  scope :filter_by_cp_manager_id, ->(cp_manager_id) {where(cp_manager_id: cp_manager_id) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
   scope :filter_by_stage, ->(stage) { where(stage: stage) }
@@ -275,30 +279,25 @@ class Lead
     def user_based_scope(user, params = {})
       custom_scope = {}
       case user.role.to_sym
-      #when :channel_partner
-      # custom_scope[:'$or'] = [{manager_id: user.id}, {manager_id: nil, referenced_manager_ids: user.id, iris_confirmation: false}]
-      #when :cp
-      #  custom_scope = { manager_id: { "$in": User.where(role: 'channel_partner', manager_id: user.id).distinct(:id) } }
-      #when :cp_admin
-      #  cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
-      #  custom_scope = { manager_id: { "$in": User.where(role: 'channel_partner').in(manager_id: cp_ids).distinct(:id) }  }
       when :channel_partner
-        lead_ids = CpLeadActivity.where(user_id: user.id, channel_partner_id: user.channel_partner_id).distinct(:lead_id)
-        custom_scope = {_id: { '$in': lead_ids }, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
-        #custom_scope[:'$or'] = [{manager_id: user.id}, {referenced_manager_ids: user.id}]
+        #lead_ids = CpLeadActivity.where(user_id: user.id, channel_partner_id: user.channel_partner_id).distinct(:lead_id)
+        #custom_scope = {_id: { '$in': lead_ids }, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
+        custom_scope = {manager_id: user.id, channel_partner_id: user.channel_partner_id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
       when :cp_owner
-        lead_ids = CpLeadActivity.where(channel_partner_id: user.channel_partner_id).distinct(:lead_id)
-        custom_scope = {_id: { '$in': lead_ids }}
+        #lead_ids = CpLeadActivity.where(channel_partner_id: user.channel_partner_id).distinct(:lead_id)
+        #custom_scope = {_id: { '$in': lead_ids }}
+        custom_scope = {channel_partner_id: user.channel_partner_id}
       when :cp
-        channel_partner_ids = User.where(role: 'channel_partner', manager_id: user.id).distinct(:id)
-        lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
-        custom_scope = {_id: { '$in': lead_ids } }
-       # custom_scope = { manager_id: { "$in": User.where(role: 'channel_partner', manager_id: user.id).distinct(:id) } }
+        #channel_partner_ids = User.where(role: 'channel_partner', manager_id: user.id).distinct(:id)
+        #lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
+        #custom_scope = {_id: { '$in': lead_ids } }
+        custom_scope = {cp_manager_id: user.id}
       when :cp_admin
-        channel_partner_manager_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
-        channel_partner_ids = User.in(manager_id: channel_partner_manager_ids).distinct(:id)
-        lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
-        custom_scope = {_id: { '$in': lead_ids } }
+        #channel_partner_manager_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
+        #channel_partner_ids = User.in(manager_id: channel_partner_manager_ids).distinct(:id)
+        #lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
+        #custom_scope = {_id: { '$in': lead_ids } }
+        custom_scope = {cp_admin_id: user.id}
       end
       custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
       custom_scope = { user_id: user.id } if user.buyer?
