@@ -4461,8 +4461,211 @@ table .dropdown-menu.show{
 	}
 }
 
-
-
+/***************** CP Benefits slider **************************/
+.cpBenefitsCarousel{
+	.carousel-item{
+		height: 337px;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		@media screen and (max-width:700px){
+			height: 580px;
+		}
+	}
+	.carousel-control-prev{
+		bottom: 0px;
+	}
+	.carousel-control-next{
+		bottom: 0px;
+	}
+}
+.slider-1{
+	background-image: url('cp-banner-1.png');
+	padding:60px 40px;
+	h2{
+		color: #172A56;
+		font-size: 26px;
+		line-height: 36px;
+		margin-bottom: 20px;
+	}
+	ul{
+		list-style: none;
+		padding-left: 0px;
+		width: 400px;
+		li{
+			position: relative;
+			padding-left: 30px;
+			&:before{
+				content: '';
+				position: absolute;
+				left: 0;
+				top: 5px;
+				border-top: 6px solid #07B6B6;
+				border-right: 9px solid #07B6B6;
+				border-left: 7px solid transparent;
+				border-bottom: 9px solid transparent;
+				height: 16px;
+				width: 16px;
+			}
+			p{
+				color: #172A56;
+				font-size: 19px;
+				line-height: 22px;
+				font-weight: 500;
+				span{
+					color: #07B6B6;
+				}
+				small{
+					font: 14px;
+					line-height: 22px;
+				}
+			}
+			a{
+				font-size:12px;
+				color: #172A56;
+			}
+		}
+	}
+	@media screen and (max-width:700px){
+		padding: 270px 20px 30px;
+		background-color: #fff;
+		background-size: 153% !important;
+		background-position: -202px 0px !important;
+		h2{
+			font-size: 16px;
+			line-height: 24px;
+			margin-bottom: 20px;
+		}
+		ul{
+			width: auto;
+			p{
+				font-size: 15px!important;
+				line-height: 18px!important;
+				font-weight: 500;
+				margin-bottom: 10px;
+			}
+		}
+	}
+}
+.slider-2{
+	background-image: url('cp-banner-2.png');
+	padding:30px 40px;
+	h2{
+		color: #fff;
+		font-size: 26px;
+		line-height: 36px;
+		margin-bottom: 20px;
+	}
+	h3{
+		color:#07B6B6;
+		font-size: 19px;
+		line-height: 36px;
+		letter-spacing: -0.32px;
+		text-transform: uppercase;
+		margin-bottom: 20px;
+		background-color: #fff;
+		border-radius: 4px;
+		padding:1px 7px;
+		display: inline-block;
+	}
+	ul{
+		list-style: none;
+		padding-left: 0px;
+		width: 550px;
+		li{
+			position: relative;
+			padding-left: 30px;
+			display: inline-block;
+			margin-right: 50px;
+			&:before{
+				content: '';
+				position: absolute;
+				left: 0;
+				top: 5px;
+				border-top: 6px solid #07B6B6;
+				border-right: 9px solid #07B6B6;
+				border-left: 7px solid transparent;
+				border-bottom: 9px solid transparent;
+				height: 16px;
+				width: 16px;
+			}
+			p{
+				color: #fff;
+				font-size: 20px;
+				line-height: 26px;
+				font-weight: 500;
+				span{
+					color: #13D5D5;
+				}
+				small{
+					font: 14px;
+					line-height: 22px;
+				}
+				sup{
+					font-size: 12px;
+				}
+			}
+		}
+	}
+	h5{
+		background-color: #07B6B6;
+		border-radius: 10px;
+		font-size: 18px;
+		line-height: 22px;
+		color: white;
+		padding: 12px 5px;
+		display: inline-block;
+		margin-bottom: 10px;
+		span{
+			border: 1px dashed;
+			border-radius: 10px;
+			padding: 7px;
+		
+		}
+	}
+	a{
+		font-size:14px;
+		color: #fff;
+		display: block;
+		font-weight: 600;
+	}
+	@media screen and (max-width:700px){
+		padding: 270px 20px 30px;
+		background-color: #2c4f4d;
+		background-size: 180%!important;
+		background-position: -305px 5px!important;
+		h2{
+			font-size: 16px;
+			line-height: 22px;
+			margin-bottom: 10px;
+		}
+		h3{
+			font-size: 16px;
+			line-height: 23px;
+			text-align: center;
+		}
+		ul{
+			li{
+				display: block;
+				margin-right: 0;
+				p{
+					font-size: 16px;
+					line-height: 20px;
+					br{
+						display: none;
+					}
+				}
+			}
+		}
+		h5{
+			padding: 5px 5px;
+			span{
+				text-align: center;
+				display: block;
+			}
+		}
+	}
+}
 
 /*********************** Cp Camapign Style *******************/
 .hr-dotted::after{
