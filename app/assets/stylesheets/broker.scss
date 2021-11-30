@@ -440,6 +440,15 @@ a{
     padding: 1px 5px;
     // border-radius: 0 6px 6px 0;
 }
+.benefits-tag{
+	position: absolute;
+    top: 10px;
+    left: 0;
+    background-color:#dee8f5;
+    color:$primary;
+    font-size: 12px;
+    padding: 1px 5px;
+}
 .box-card{
 	width: 100%;
 	float: left;
@@ -1203,6 +1212,12 @@ select.form-control{
 		right: 20px;
 	}
 }
+.benefits-string-slider {
+	button{
+		align-items: end;
+		justify-content: end;
+	}
+}
 
 /**************** Header ***********/
  /* Firefox */
@@ -1320,7 +1335,7 @@ select.form-control{
 		.bar3 {
 			width: 24px;
 			height: 2px;
-			background-color: #fff;
+			background-color: #2E384D;
 			margin: 5px 0;
 			transition: 0.4s;
 		}
@@ -1375,6 +1390,9 @@ select.form-control{
 				    line-height: 38px;
 				    margin-right: 12px;
 				    margin-left: 20px;
+					@media screen and (max-width: 700px){
+						margin-right: 0px;
+					}
 				}
 				span.user-name {
 				    font-size: 14px;
@@ -1384,6 +1402,11 @@ select.form-control{
 				    text-decoration: none;
 					@media screen and (max-width: 700px){
 						display:none;
+					}
+				}
+				@media screen and (max-width: 700px){
+					&.dropdown-toggle:after{
+						display: none;
 					}
 				}
 		    }
@@ -1467,7 +1490,7 @@ select.form-control{
 	}
 }
 .page-wrapper{
-	margin-top: 110px;
+	margin-top: 100px;
 	margin-left: 160px;
 	width: calc(100% - 160px);
 	@media screen and (max-width: 1024px){
@@ -1539,6 +1562,9 @@ select.form-control{
 		.pt-xs-2{
 			padding-top:2rem!important;
 		}
+		.pb-xs-1{
+			padding-bottom:0.5rem!important;
+		}
 		.pb-xs-2{
 			padding-bottom:2rem!important;
 		}
@@ -1563,6 +1589,10 @@ select.form-control{
 		.px-xs-0{
 			padding-left:0px!important;
 			padding-right:0px!important;
+		}
+		.px-xs-3{
+			padding-left:1rem!important;
+			padding-right:1rem!important;
 		}
 		.top-right-action{
 			position: absolute;
@@ -2491,7 +2521,8 @@ select.form-control{
 		    height: 122px;
 		    padding: 0 10px;
 			&.prjt-details-header-stats{
-				width: 50%;
+				width: 100%;
+				height: auto;
 				@media screen and (max-width: 700px){
 					width:100%;
 					height:auto;
@@ -4182,11 +4213,28 @@ table .dropdown-menu.show{
     top: 80px;
     background-color: #fff;
     padding: 7px 11px;
-    width: 50%;
+    width: 330px;
     height: 100%;
     z-index: 1000;
 	display: none;
-	@media screen and (max-width: 700px){
+	box-shadow: 1px 1px 9px #e5e5e5;
+    border: 1px solid #dee2e6;
+	@media screen and (min-width: 700px){
+		.filter-inner {
+			&.modal-content{
+				height: 100%;
+				form{
+					// overflow-y: auto;
+					.filter-content{
+						height: 75vh;
+						overflow-y: auto;
+						overflow-x: hidden;
+					}
+				}
+			}
+		}	
+	}
+		@media screen and (max-width: 700px){
 		width:100%;
 		top:0;
 		z-index: 9999;
@@ -4194,9 +4242,12 @@ table .dropdown-menu.show{
 			&.modal-content{
 				height: 100%;
 				form{
-					height: 100%;
-					overflow-y: auto;
-					overflow-x: hidden;
+					// overflow-y: auto;
+					.filter-content{
+						height: 83vh;
+						overflow-y: auto;
+						overflow-x: hidden;
+					}
 				}
 			}
 		}
@@ -4410,8 +4461,211 @@ table .dropdown-menu.show{
 	}
 }
 
-
-
+/***************** CP Benefits slider **************************/
+.cpBenefitsCarousel{
+	.carousel-item{
+		height: 337px;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		@media screen and (max-width:700px){
+			height: 580px;
+		}
+	}
+	.carousel-control-prev{
+		bottom: 0px;
+	}
+	.carousel-control-next{
+		bottom: 0px;
+	}
+}
+.slider-1{
+	background-image: url('cp-banner-1.png');
+	padding:60px 40px;
+	h2{
+		color: #172A56;
+		font-size: 26px;
+		line-height: 36px;
+		margin-bottom: 20px;
+	}
+	ul{
+		list-style: none;
+		padding-left: 0px;
+		width: 400px;
+		li{
+			position: relative;
+			padding-left: 30px;
+			&:before{
+				content: '';
+				position: absolute;
+				left: 0;
+				top: 5px;
+				border-top: 6px solid #07B6B6;
+				border-right: 9px solid #07B6B6;
+				border-left: 7px solid transparent;
+				border-bottom: 9px solid transparent;
+				height: 16px;
+				width: 16px;
+			}
+			p{
+				color: #172A56;
+				font-size: 19px;
+				line-height: 22px;
+				font-weight: 500;
+				span{
+					color: #07B6B6;
+				}
+				small{
+					font: 14px;
+					line-height: 22px;
+				}
+			}
+			a{
+				font-size:12px;
+				color: #172A56;
+			}
+		}
+	}
+	@media screen and (max-width:700px){
+		padding: 270px 20px 30px;
+		background-color: #fff;
+		background-size: 153% !important;
+		background-position: -202px 0px !important;
+		h2{
+			font-size: 16px;
+			line-height: 24px;
+			margin-bottom: 20px;
+		}
+		ul{
+			width: auto;
+			p{
+				font-size: 15px!important;
+				line-height: 18px!important;
+				font-weight: 500;
+				margin-bottom: 10px;
+			}
+		}
+	}
+}
+.slider-2{
+	background-image: url('cp-banner-2.png');
+	padding:30px 40px;
+	h2{
+		color: #fff;
+		font-size: 26px;
+		line-height: 36px;
+		margin-bottom: 20px;
+	}
+	h3{
+		color:#07B6B6;
+		font-size: 19px;
+		line-height: 36px;
+		letter-spacing: -0.32px;
+		text-transform: uppercase;
+		margin-bottom: 20px;
+		background-color: #fff;
+		border-radius: 4px;
+		padding:1px 7px;
+		display: inline-block;
+	}
+	ul{
+		list-style: none;
+		padding-left: 0px;
+		width: 550px;
+		li{
+			position: relative;
+			padding-left: 30px;
+			display: inline-block;
+			margin-right: 50px;
+			&:before{
+				content: '';
+				position: absolute;
+				left: 0;
+				top: 5px;
+				border-top: 6px solid #07B6B6;
+				border-right: 9px solid #07B6B6;
+				border-left: 7px solid transparent;
+				border-bottom: 9px solid transparent;
+				height: 16px;
+				width: 16px;
+			}
+			p{
+				color: #fff;
+				font-size: 20px;
+				line-height: 26px;
+				font-weight: 500;
+				span{
+					color: #13D5D5;
+				}
+				small{
+					font: 14px;
+					line-height: 22px;
+				}
+				sup{
+					font-size: 12px;
+				}
+			}
+		}
+	}
+	h5{
+		background-color: #07B6B6;
+		border-radius: 10px;
+		font-size: 18px;
+		line-height: 22px;
+		color: white;
+		padding: 12px 5px;
+		display: inline-block;
+		margin-bottom: 10px;
+		span{
+			border: 1px dashed;
+			border-radius: 10px;
+			padding: 7px;
+		
+		}
+	}
+	a{
+		font-size:14px;
+		color: #fff;
+		display: block;
+		font-weight: 600;
+	}
+	@media screen and (max-width:700px){
+		padding: 270px 20px 30px;
+		background-color: #2c4f4d;
+		background-size: 180%!important;
+		background-position: -305px 5px!important;
+		h2{
+			font-size: 16px;
+			line-height: 22px;
+			margin-bottom: 10px;
+		}
+		h3{
+			font-size: 16px;
+			line-height: 23px;
+			text-align: center;
+		}
+		ul{
+			li{
+				display: block;
+				margin-right: 0;
+				p{
+					font-size: 16px;
+					line-height: 20px;
+					br{
+						display: none;
+					}
+				}
+			}
+		}
+		h5{
+			padding: 5px 5px;
+			span{
+				text-align: center;
+				display: block;
+			}
+		}
+	}
+}
 
 /*********************** Cp Camapign Style *******************/
 .hr-dotted::after{
@@ -4569,6 +4823,10 @@ table .dropdown-menu.show{
 }
 .ht-77{
 	height: 77px;
+}
+.referral-code-input {
+    width: 100px;
+    background-color: transparent;
 }
 .noty_bar{
 	background-color: $white!important;
