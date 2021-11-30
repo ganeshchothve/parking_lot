@@ -1,5 +1,5 @@
 class ChannelPartnersController < ApplicationController
-  before_action :authenticate_user!, except: %i[new create]
+  before_action :authenticate_user!, except: %i[new create], unless: proc { params[:action] == 'index' && params[:ds] == 'true' }
   before_action :set_channel_partner, only: %i[show edit update destroy change_state asset_form]
   around_action :apply_policy_scope, only: :index
   before_action :authorize_resource, except: [:new, :create]
@@ -147,14 +147,16 @@ class ChannelPartnersController < ApplicationController
   end
 
   def authorize_resource
-    if params[:action] == 'index' || params[:action] == 'export'
-      authorize [:admin, ChannelPartner]
-    elsif params[:action] == 'new'
-      authorize [:admin, ChannelPartner.new]
-    elsif params[:action] == 'create'
-      authorize [:admin, ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))]
-    else
-      authorize [:admin, @channel_partner]
+    unless params[:action] == 'index' && params[:ds] == 'true'
+      if params[:action] == 'index' || params[:action] == 'export'
+        authorize [:admin, ChannelPartner]
+      elsif params[:action] == 'new'
+        authorize [:admin, ChannelPartner.new]
+      elsif params[:action] == 'create'
+        authorize [:admin, ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))]
+      else
+        authorize [:admin, @channel_partner]
+      end
     end
   end
 

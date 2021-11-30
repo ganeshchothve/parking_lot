@@ -17,7 +17,7 @@ module UsersHelper
   end
 
   def filter_user_role_options
-    User.available_roles(current_client).collect{|role| [ User.human_attribute_name("role.#{role}"), role ]}
+    User.available_roles(current_client).reject {|x| x.in?(%w(cp_owner channel_partner))}.collect{|role| [ User.human_attribute_name("role.#{role}"), role ]}
   end
 
   def filter_admin_role_options
@@ -37,6 +37,8 @@ module UsersHelper
       [[ User.human_attribute_name("role.#{_user.role}"), _user.role]]
     elsif _user.buyer?
       filter_buyer_role_options
+    elsif current_user.role?('cp_owner')
+      %w(cp_owner channel_partner).collect { |x| [User.human_attribute_name("role.#{x}"), x] }
     else
       filter_user_role_options
     end

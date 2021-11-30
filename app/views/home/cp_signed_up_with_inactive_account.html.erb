@@ -7,8 +7,7 @@
     </p>
     <p class="fn-16">We found an old inactive account with these details.<br> We have activated it, registered a new company & linked your account under it.</p>
     <h4 class="text-start">Reset your password</h4>
-    <p class="popup-desc text-start font-medium">We have sent a reset password link to <%= @user.email %></p>
-    <p class="fn-16">Click the link in your email to reset your password.<br> If you can't find the email check your spam folder or <%= link_to 'click here to resend', new_password_path(@user), class: 'text-primary' %></p>
+    <p class="fn-16">If you can't remember your password, please reset it from using the link below.<br> <%= link_to 'Reset Password', new_password_path(@user, user: {login: @user.email}), class: 'text-primary' %></p>
     <p class="fn-16 font-medium theme-txt-color">Sign in after resetting your password</p>
     <%= link_to 'Sign In', new_user_session_path, class: 'bg-primary btn rounded p-2 px-3 white' %>
   </div>

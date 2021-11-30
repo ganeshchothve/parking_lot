@@ -1114,6 +1114,9 @@ en:
           temporarily_blocked:
             :true: 'Unqualified'
             :false: 'Unqualified'
+      user/is_active:
+        :true: 'Active'
+        :false: 'Inactive'
       user/role:
         superadmin: 'Superadmin'
         admin: 'Administrator'

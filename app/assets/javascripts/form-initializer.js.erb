@@ -199,7 +199,7 @@ FormInitializer = (function(){
       valueField: options.hasOwnProperty("valueField") ? options["valueField"] : "id",
       labelField: 'name',
       searchField: 'name',
-      create: false,
+      create: ($(selector).data("create") ? true : false),
       preload: ( _.isNull($(selector).data("preload")) || _.isUndefined($(selector).data("preload")) ) ? 'focus' : $(selector).data("preload") ,
       load: function(query, callback){
         var queryObj = {};

@@ -40,7 +40,7 @@
           <% if @user.role.blank? %>
           <div class="mb-3">
             <%= f.label :role, class: 'label-required' %>
-            <%= f.select :role, User.available_roles(current_client).reject{|role| User.buyer_roles(current_client).include?(role)}.collect{ |r| [User.human_attribute_name("role.#{r}"), r] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("role") ? false : true) %>
+            <%= f.select :role, User.available_roles(current_client).reject{|role| User.buyer_roles(current_client).include?(role) || role.in?(%w(cp_owner channel_partner))}.collect{ |r| [User.human_attribute_name("role.#{r}"), r] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("role") ? false : true) %>
           </div>
           <% elsif policy([current_user_role_group, @user]).editable_field?("role") %>
           <div class="mb-3">
