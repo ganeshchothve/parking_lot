@@ -31,6 +31,12 @@
   </div>
 </div>
 
+<div class='row'>
+  <div class="col-md-12">
+    <%= form.input :referral_code, disabled: !policy([:admin, @channel_partner]).editable_field?("referral_code") %>
+  </div>
+</div>
+
 <div class="row">
   <div class="col-md-6">
     <%= form.input :rera_applicable, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: { disabled: !policy([:admin, @channel_partner]).editable_field?("rera_applicable") } %>
@@ -38,5 +44,4 @@
   <div class="col-md-6">
     <%= form.input :rera_id, disabled: !policy([:admin, @channel_partner]).editable_field?("rera_id") %>
   </div>
-  <%= form.hidden_field :referral_code, value: @channel_partner.referral_code if @channel_partner.referral_code.present? %>
 </div>
