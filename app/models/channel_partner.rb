@@ -93,8 +93,8 @@ class ChannelPartner
   validates :status_change_reason, presence: true, if: proc { |cp| cp.status == 'rejected' }
   validates :aadhaar, format: { with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number' }, allow_blank: true
   validates :rera_id, uniqueness: true, allow_blank: true
-  validates :phone, uniqueness: true, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, allow_blank: true
-  validates :email, uniqueness: true, allow_blank: true
+  validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, allow_blank: true
+  #validates :email, uniqueness: true, allow_blank: true
   validates :status, inclusion: { in: proc { ChannelPartner::STATUS } }
   validates :company_type, inclusion: { in: proc { ChannelPartner::COMPANY_TYPE } }, allow_blank: true
   validates :source, inclusion: { in: proc { ChannelPartner::SOURCE } }, allow_blank: true
@@ -149,7 +149,7 @@ class ChannelPartner
   #end
 
   def doc_types
-    doc_types = self.nri? ? %w[cheque_scanned_copy company_incorporation_certificate form_10f tax_residency_certificate pe_declaration] : %w[pan_card]
+    doc_types = self.nri? ? %w[company_incorporation_certificate form_10f tax_residency_certificate pe_declaration] : %w[pan_card]
     doc_types << 'rera_certificate' if self.rera_applicable?
     doc_types << 'gst_certificate' if self.gst_applicable?
     doc_types
@@ -172,8 +172,8 @@ class ChannelPartner
     query << { phone: phone } if phone.present?
     query << { email: email } if email.present?
     query << { rera_id: rera_id } if rera_id.present?
-    criteria = User.or(query)
-    if criteria.present?
+    user = User.or(query).first
+    if user.present? && (!user.role.in?(%w(cp channel_partner)) || user.is_active?)
       errors.add :base, 'User with Phone, Email or RERA already exists'
     end
   end

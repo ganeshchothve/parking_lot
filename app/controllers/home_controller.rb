@@ -18,6 +18,11 @@ class HomeController < ApplicationController
     render layout: 'devise'
   end
 
+  def cp_signed_up_with_inactive_account
+    @user = User.where(id: params[:user_id]).first
+    render layout: 'devise'
+  end
+
   def privacy_policy
     @channel_partner = ChannelPartner.new
     render layout: 'landing_page'

@@ -2,7 +2,17 @@ class ChannelPartnerObserver < Mongoid::Observer
   include ApplicationHelper
 
   def after_create channel_partner
-    user = User.new(first_name: channel_partner.first_name, last_name: channel_partner.last_name, email: channel_partner.email, phone: channel_partner.phone, rera_id: channel_partner.rera_id, role: 'cp_owner', booking_portal_client_id: current_client.id, manager_id: channel_partner.manager_id, channel_partner: channel_partner, is_active: false)
+    query = []
+    query << { phone: channel_partner.phone } if channel_partner.phone.present?
+    query << { email: channel_partner.email } if channel_partner.email.present?
+    user = User.in(role: %w(channel_partner cp_owner)).or(query).first
+    if user.present?
+      # if user is already present & new company is created with it then change channel partner id on user. Handled in controller, to create a channel partner company only when user account is inactive under a different cp company.
+      # This will provide a mechanism for channel partner user to register a new company & keep the same account without the old leads data.
+      user.assign_attributes(channel_partner_id: channel_partner.id, is_active: true, role: 'cp_owner')
+    else
+      user = User.new(first_name: channel_partner.first_name, last_name: channel_partner.last_name, email: channel_partner.email, phone: channel_partner.phone, rera_id: channel_partner.rera_id, role: 'cp_owner', booking_portal_client_id: current_client.id, manager_id: channel_partner.manager_id, channel_partner: channel_partner)
+    end
 
     if channel_partner.referral_code.present?
       referred_by_user = User.where(referral_code: channel_partner.referral_code).first
