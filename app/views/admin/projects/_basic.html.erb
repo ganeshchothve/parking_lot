@@ -177,8 +177,8 @@
   </div>
   <div class="col-md-12">
     <div class="mb-3">
-      <%= f.label :project_region %>
-      <%= f.select :project_region, current_client.partner_regions, {}, class: 'selectize', required: true,  disabled: !policy([:admin, @project]).editable_field?("project_region") %>
+      <%= f.label :region %>
+      <%= f.select :region, current_client.partner_regions, {}, class: 'selectize', required: true,  disabled: !policy([:admin, @project]).editable_field?("region") %>
     </div>
   </div>
   <div class="col-md-6">

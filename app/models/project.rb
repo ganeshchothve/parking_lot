@@ -33,7 +33,7 @@ class Project
   field :micro_market, type: String
   field :city, type: String
   field :project_type, type: Array, default: [ "residential" ]
-  field :project_region, type: String
+  field :region, type: String
 
   # descriptive fields
   field :description, type: String
@@ -178,7 +178,7 @@ class Project
   scope :filter_by_category, ->(category) { where(category: category) }
   scope :filter_by_hot, ->(hot) { where(hot: hot.eql?("true")) }
   scope :filter_by_user_interested_projects, ->(user_id) { all.in(id: InterestedProject.where(user_id: user_id).in(status: %w(subscribed approved)).distinct(:project_id)) }
-  scope :filter_by_regions, ->(region) {region.is_a?(Array) ? where( project_region: { "$in": region }) : where(project_region: region)}
+  scope :filter_by_regions, ->(regions) {regions.is_a?(Array) ? where( region: { "$in": regions }) : where(region: regions)}
 
   #def unit_configurations
   #  UnitConfiguration.where(data_attributes: {"$elemMatch" => {"n" => "project_id", "v" => self.selldo_id}})
