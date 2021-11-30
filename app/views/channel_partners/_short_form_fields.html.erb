@@ -33,10 +33,14 @@
 
 <div class='row'>
   <div class="col-md-12">
-    <%= form.input :referral_code, disabled: !policy([:admin, @channel_partner]).editable_field?("referral_code") %>
+    <%= form.input :regions, collection: current_client.partner_regions.collect{|region| [region,region]}, disabled: !policy([:admin, @channel_partner]).editable_field?("regions"), prompt: :translate, required: true, input_html: {multiple: true, class: 'selectize'} %>
   </div>
 </div>
-
+<div class="row">
+    <div class="col-md-12">
+      <%= form.input :referral_code, disabled: !policy([:admin, @channel_partner]).editable_field?("referral_code") %>
+    </div>
+</div>
 <div class="row">
   <div class="col-md-6">
     <%= form.input :rera_applicable, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: { disabled: !policy([:admin, @channel_partner]).editable_field?("rera_applicable") } %>

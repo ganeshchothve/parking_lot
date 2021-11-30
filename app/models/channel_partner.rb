@@ -22,8 +22,6 @@ class ChannelPartner
   COMPANY_TYPE = ['Sole Proprietorship', 'Partnership', 'Private Limited', 'Public Limited', 'Others']
   CATEGORY = ['CP Company', 'Individual CP', 'ROTN', 'IRDA', 'Chartered accountants', 'IT Profession']
   SOURCE = ['Internal CP', 'External CP']
-  REGION = ['Chennai', 'Bangalore', 'Coimbatore', 'NRI']
-
   SHORT_FORM = %i(first_name last_name company_name rera_applicable status interested_services)
   FULL_FORM = SHORT_FORM.clone + %i(gst_applicable nri manager_id)
 
@@ -51,7 +49,7 @@ class ChannelPartner
   field :category, type: String
   field :source, type: String
   field :website, type: String
-  field :region, type: String
+  field :regions, type: Array, default: []
   field :erp_id, type: String, default: ''
 
   field :team_size, type: Integer
@@ -108,7 +106,7 @@ class ChannelPartner
   validates :company_type, inclusion: { in: proc { ChannelPartner::COMPANY_TYPE } }, allow_blank: true
   validates :source, inclusion: { in: proc { ChannelPartner::SOURCE } }, allow_blank: true
   validates :category, inclusion: { in: proc { ChannelPartner::CATEGORY } }, allow_blank: true
-  validates :region, inclusion: { in: proc { ChannelPartner::REGION } }, allow_blank: true
+  validates :regions, array: { inclusion: { in: current_client.partner_regions } }
 
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: { with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A' }, allow_blank: true
