@@ -188,6 +188,7 @@ module BookingDetailStateMachine
     end
     # Updating blocked date of project_unit to today and  auto_release_on will be changed to blocking_days more from current auto_release_on.
     def after_booked_tentative_event
+      return unless project_unit.present?
       if booked_tentative? && (get_paid_amount >= project_unit.booking_price)
         booked_confirmed!
       else
@@ -201,6 +202,7 @@ module BookingDetailStateMachine
     #
     # Updating blocked date of project_unit to today and  auto_release_on to nil as booking is confirmed.
     def after_booked_confirmed_event
+      return unless project_unit.present?
       _project_unit = project_unit
       _project_unit.auto_release_on = nil
       _project_unit.save
@@ -361,6 +363,15 @@ module BookingDetailStateMachine
     def update_selldo!
       SelldoLeadUpdater.perform_async(lead_id.to_s, {stage: status})
       SelldoLeadUpdater.perform_async(lead_id.to_s, {action: 'add_slot_details', slot_status: 'booked'})
+    end
+
+    def move_to_next_state!(status)
+      if self.respond_to?("may_#{status}?") && self.send("may_#{status}?")
+        self.aasm.fire!(status.to_sym)
+      else
+        self.errors.add(:base, 'Invalid transition')
+      end
+      self.errors.empty?
     end
 
   end

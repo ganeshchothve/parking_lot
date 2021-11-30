@@ -2,8 +2,8 @@ class Admin::BookingDetailsController < AdminController
   include BookingDetailConcern
   include SearchConcern
   around_action :apply_policy_scope, only: [:index, :mis_report]
-  before_action :set_booking_detail, except: [:index, :mis_report, :new, :create, :searching_for_towers, :status_chart, :new_booking_without_inventory, :create_booking_without_inventory]
-  before_action :authorize_resource, except: [:index, :mis_report, :new, :create, :searching_for_towers, :status_chart, :new_booking_without_inventory, :create_booking_without_inventory]
+  before_action :set_booking_detail, except: [:index, :mis_report, :new, :create, :searching_for_towers, :status_chart, :new_booking_without_inventory, :create_booking_without_inventory, :edit_booking_without_inventory, :update_booking_without_inventory, :move_to_next_state]
+  before_action :authorize_resource, except: [:index, :mis_report, :new, :create, :searching_for_towers, :status_chart, :new_booking_without_inventory, :create_booking_without_inventory, :edit_booking_without_inventory, :update_booking_without_inventory, :move_to_next_state]
   before_action :set_project_unit, only: :booking
   before_action :set_receipt, only: :booking
 
@@ -154,12 +154,45 @@ class Admin::BookingDetailsController < AdminController
   def create_booking_without_inventory
     @booking_detail = BookingDetail.new
     @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
+    @booking_detail.user = current_user
+    @booking_detail.status = "blocked"
     respond_to do |format|
       if @booking_detail.save
         format.json { render json: {message: "booking_successful"}, status: :ok }
         format.html { redirect_to admin_leads_path }
       else
         format.html { redirect_to dashboard_path, alert: t('controller.booking_details.booking_unsuccessful') }
+      end
+    end
+  end
+
+  def edit_booking_without_inventory
+    @booking_detail = BookingDetail.find_by(id: params[:id])
+    render layout: false
+  end
+
+  def update_booking_without_inventory
+    @booking_detail = BookingDetail.find_by(id: params[:id])
+    @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
+    respond_to do |format|
+      if @booking_detail.save
+        format.json { render json: {message: "booking_successful"}, status: :ok }
+        format.html { redirect_to admin_leads_path }
+      else
+        format.html { redirect_to dashboard_path, alert: t('controller.booking_details.booking_unsuccessful') }
+      end
+    end
+  end
+
+  def move_to_next_state
+    @booking_detail = BookingDetail.find_by(id: params[:id])
+    respond_to do |format|
+      if @booking_detail.move_to_next_state!(params[:status])
+        format.html{ redirect_to request.referrer || dashboard_url, notice: "Booking moved to #{params[:status]} successfully" }
+        format.json { render json: { message: "Booking moved to #{params[:status]} successfully" }, status: :ok }
+      else
+        format.html{ redirect_to request.referrer || dashboard_url, alert: @booking_detail.errors.full_messages.uniq }
+        format.json { render json: { errors: @booking_detail.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
   end

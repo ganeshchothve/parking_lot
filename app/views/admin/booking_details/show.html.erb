@@ -8,7 +8,7 @@
             <div class="card-header theme-light-bg py-3 d-flex justify-content-between">
               <div>
                 <p class="fn-12 theme-txt-color mb-0 ">Project</p>
-                <h6 class="fn-20 theme-txt-color mb-0"><%= project_unit.project_name %></h6>
+                <h6 class="fn-20 theme-txt-color mb-0"><%= @booking_detail.project.name %></h6>
               </div>
               <div class="dropdown float-end">
                 <a class="btn table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
@@ -45,7 +45,7 @@
                         </div>
                         <div class="col-3">
                           <p class="fn-12 font-medium mb-0"><%= ProjectTower.model_name.human %></p>
-                          <p class="fn-14"><%= project_unit.project_tower.name %></p>
+                          <p class="fn-14"><%= project_unit.try(:project_tower).try(:name) || @booking_detail.project_tower_name %></p>
                         </div>
                         <% unless action_name == 'quotation' %>
                         <div class="col-3">
@@ -57,11 +57,11 @@
                         <div class="col-3">
                           <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('bedrooms')%>/
                             <%= BookingDetail.human_attribute_name('bathrooms')%></p>
-                          <p class="fn-14"><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></p>
+                          <p class="fn-14"><%= project_unit.try(:bedrooms) || 0 %> / <%= project_unit.try(:bathrooms) || "" %></p>
                         </div>
                         <div class="col-3">
                           <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('carpet')%></p>
-                          <p class="fn-14"><%= project_unit.carpet %> <%= current_client.area_unit %></p>
+                          <p class="fn-14"><%= project_unit.try(:carpet) %> <%= current_client.area_unit %></p>
                         </div>
                         <% if current_user.role?('superadmin') %>
                         <div class="col-3">
@@ -94,7 +94,7 @@
                         </div>
                         <div class="col-3">
                           <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('phase') %></p>
-                          <p class="fn-14"><%= project_unit.phase.try(:name) || '-' %></p>
+                          <p class="fn-14"><%= project_unit.try(:phase).try(:name) || '-' %></p>
                         </div>
                       </div>
                     </div>
@@ -115,10 +115,10 @@
                         <div class="col-12">
                           <p class="fn-12 font-medium"><span class="txt-light-gray">Blocked
                               On:</span> <%= @booking_detail.booked_on.try(:strftime, '%b %d, %Y') %></p>
-                          <h3 class="fn-16 font-medium txt-drk-b-lt"><%= project_unit.project_name %>,
-                            <%= project_unit.project_tower.name %>,
+                          <h3 class="fn-16 font-medium txt-drk-b-lt"><%= project_unit.try(:project_name) || @booking_detail.project_name %>,
+                            <%= project_unit.try(:project_tower).try(:name) || @booking_detail.project_tower_name %>,
                             Flat no. <%= @booking_detail.name %></h3>
-                          <p class="fn-14"><%= project_unit.bedrooms %> BHK · <%= project_unit.carpet %>
+                          <p class="fn-14"><%= project_unit.try(:bedrooms) %> BHK · <%= project_unit.try(:carpet) %>
                             <%= current_client.area_unit %>.</p>
                           <div class="col-8 row">
                             <div class="col-6">
@@ -126,14 +126,14 @@
                                 Value
                               </p>
                               <p class="fn-14">
-                                <%= number_to_indian_currency(@booking_detail.calculate_agreement_price.round) %></p>
+                                <%= number_to_indian_currency(@booking_detail.calculate_agreement_price.round) rescue @booking_detail.agreement_price %></p>
                             </div>
                             <div class="col-6">
                               <p class="fn-12 font-medium mb-0 txt-light-gray">All
                                 Inclusive
                                 Price</p>
                               <p class="fn-14">
-                                <%= number_to_indian_currency(@booking_detail.calculate_all_inclusive_price.round) %>
+                                <%= number_to_indian_currency(@booking_detail.calculate_all_inclusive_price.round) rescue 0 %>
                               </p>
                             </div>
                             <div class="col-6">
@@ -147,7 +147,7 @@
                                 Balance
                               </p>
                               <p class="fn-14">
-                                <%= number_to_indian_currency(@booking_detail.pending_balance({strict: true})) %></p>
+                                <%= number_to_indian_currency(@booking_detail.pending_balance({strict: true})) rescue 0 %></p>
                             </div>
                           </div>
                         </div>

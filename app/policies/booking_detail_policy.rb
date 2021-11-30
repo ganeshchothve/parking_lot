@@ -36,7 +36,7 @@ class BookingDetailPolicy < ApplicationPolicy
     status << 'employee' if record.user.role?('employee')
     status += ['employee', 'management'] if record.user.role?('management')
 
-    return true if status.include?(record.project_unit.status)
+    return true if record.project_unit.present? && status.include?(record.project_unit.status)
     @condition = 'not_available_for_user_group'
     false
   end

@@ -15,7 +15,7 @@ class BookingDetail
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   STATUSES = %w[hold blocked booked_tentative booked_confirmed under_negotiation scheme_rejected scheme_approved swap_requested swapping swapped swap_rejected cancellation_requested cancelling cancelled cancellation_rejected]
   BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed under_negotiation scheme_approved]
-  DOCUMENT_TYPES = %w[booking_detail_form]
+  DOCUMENT_TYPES = %w[booking_detail_form document]
 
   field :status, type: String
   field :erp_id, type: String, default: ''
@@ -336,8 +336,13 @@ class BookingDetail
         #elsif user.role?('cp')
         #  channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
         #  custom_scope = { manager_id: { "$in": channel_partner_ids } }
+        elsif user.role?('account_manager')
+         custom_scope = { user_id: user.id }
+        elsif user.role?('account_manager_head')
+         custom_scope = { project_unit_id: nil}
         elsif user.role?('billing_team')
-          custom_scope = incentive_eligible.selector
+          custom_scope = { project_unit_id: nil}
+
         end
       end
 

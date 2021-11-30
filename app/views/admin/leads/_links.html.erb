@@ -6,7 +6,7 @@
   <%= link_to t('controller.searches.new.link_name'), new_admin_lead_search_path(lead.id), class: "dropdown-item" %>
 <% end %>
 
-<% if policy([:admin, BookingDetail.new(user: lead.user, lead: lead)]).show_add_booking_link? %>
+<% if policy([:admin, BookingDetail.new(user: lead.user, lead: lead)]).show_add_booking_link? && current_user.role?('account_manager')%>
   <%= link_to "Add Booking", new_booking_without_inventory_admin_booking_details_path(lead_id: lead.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 

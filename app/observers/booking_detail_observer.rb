@@ -38,6 +38,6 @@ class BookingDetailObserver < Mongoid::Observer
   end
 
   def after_save booking_detail
-    booking_detail.calculate_incentive if booking_detail.incentive_eligible? && booking_detail.project_unit.booking_portal_client.incentive_calculation_type?("calculated")
+    booking_detail.calculate_incentive if booking_detail.project_unit.present? && booking_detail.incentive_eligible? && booking_detail.project_unit.booking_portal_client.incentive_calculation_type?("calculated")
   end
 end

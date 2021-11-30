@@ -1,9 +1,9 @@
 class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def index?
-    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner billing_team].include?(user.role) && (enable_actual_inventory?(user) || enable_incentive_module?(user))
+    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner].include?(user.role) && (enable_actual_inventory?(user) || enable_incentive_module?(user))
     out = false if user.role?('channel_partner') && !interested_project_present?
-    out
+    out = true if %w[account_manager account_manager_head billing_team].include?(user.role)
   end
 
   def new?
@@ -47,7 +47,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def show_add_booking_link?
-    enable_inventory? && record.try(:user).try(:buyer?)
+    enable_inventory? && record.try(:user).try(:buyer?) && %w[account_manager].include?(user.role)
   end
 
   def enable_inventory?
@@ -73,9 +73,25 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     user.active_channel_partner?
   end
 
+  def move_to_next_state?
+    %w[account_manager, account_manager_head].include?(user.role)
+  end
+
   def send_booking_detail_form_notification?
     user.active_channel_partner?
   end
+
+  def edit_booking_without_inventory?
+    out = false
+    out = true if record.status == 'blocked' && user.role?('account_manager_head')
+    out = true if record.status == 'booked_tentative' && user.role?('billing_team')
+    out
+  end
+
+  def asset_create?
+    %w[account_manager, account_manager_head, billing_team].include?(user.role)
+  end
+
   # def block?
   #   valid = enable_actual_inventory? && only_for_confirmed_user! && only_for_kyc_added_users! && ['hold'].include?(record.status)
   #   if !valid
