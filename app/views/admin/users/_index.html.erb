@@ -54,9 +54,15 @@
                           class='fa fn-16 fa-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= user.is_payment_done? ? 'Payment Done' : 'Payment Pending' %>
                       </p>
                     <% end %>
-                    <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i
-                        class='fa fn-16 fa-<%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") == "Confirmed" ? "check" : "times" %> fill-<%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") == "Confirmed" ? "success" : "danger" %> me-12 fa-lg'></i><%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %>
-                    </p>
+                    <% if (user.buyer? || user.role.in?(%w(channel_partner))) && user.portal_stage.present? %>
+                      <p class="font-medium fn-14 mb-0 theme-txt-color"><i
+                         class='fa fa-circle status_<%= user.portal_stage.stage %> me-2 fa-xs ms-5'></i><%= t("mongoid.attributes.channel_partner/status.#{user.portal_stage.stage}") %>
+                      </p>
+                    <% else %>
+                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i
+                          class='fa fn-16 fa-<%= user.confirmed_at.present? ? "check" : "times" %> fill-<%= user.confirmed_at.present? ? "success" : "danger" %> me-12 fa-lg'></i><%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %>
+                      </p>
+                    <% end %>
                   </div>
                 </div>
               </div>

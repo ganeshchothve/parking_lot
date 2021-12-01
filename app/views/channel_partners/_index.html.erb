@@ -55,14 +55,20 @@
                 <div class="border-bottom col-12"></div>
               </div>
               <div class="d-flex justify-content-between d-xs-no-flex">
-                <div class="ps-3 py-3 pb-xs-0">
+                <div class="ps-3 py-3 pb-xs-0 d-flex justify-content-start d-xs-no-flex">
                   <p class="fn-14 mb-0 theme-txt-color">
-                    <%= channel_partner.associated_user_id.present? ? link_to(channel_partner.associated_user.name, admin_user_path(channel_partner.associated_user_id), class: "theme-txt-color col-title") : '-' %>
+                    <%= channel_partner.associated_user_id.present? ? link_to(channel_partner.associated_user.try(:name), admin_user_path(channel_partner.associated_user_id), class: "theme-txt-color col-title") : '-' %>
                   </p>
+                  <% if channel_partner.manager_id.present? %>
+                    <span class="secondary mx-3 d-sm-inline-block d-none">| </span>
+                    <p class="fn-14 mb-0 theme-txt-color">
+                      <%= t('mongoid.attributes.channel_partner.manager_id') %> : <span class="font-medium theme-txt-color"><%= link_to(channel_partner.manager_name, admin_user_path(channel_partner.manager), class: "theme-txt-color col-title") %></span>
+                    </p>
+                  <% end %>
                 </div>
                 <div class="inner-info">
-                  <div class="pe-3 py-3  d-flex justify-content-end d-xs-no-flex ps-xs-3">
-                    <p class="fn-16 secondary mb-0">RERA Registration Number : <span
+                  <div class="pe-3 py-3 d-flex justify-content-end d-xs-no-flex ps-xs-3">
+                    <p class="fn-16 secondary mb-0"><%= t('mongoid.attributes.channel_partner.rera_id') %> : <span
                         class="font-medium theme-txt-color"><%= channel_partner.rera_id.present? ? channel_partner.rera_id : '-'  %></span>
                     </p>
                     <span class="secondary mx-3 d-sm-inline-block d-none">| </span>

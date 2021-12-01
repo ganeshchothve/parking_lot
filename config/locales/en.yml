@@ -608,6 +608,7 @@ en:
         region: 'Region'
         interested_services: 'Services Interested In'
         created_at: 'Registered At'
+        manager_id: 'Manager'
       channel_partner/file_types:
         rera_certificate: 'RERA Certificate'
         gst_certificate: 'GST Certificate'
@@ -628,8 +629,11 @@ en:
         pe_declaration_html: '<ul><li>PE Declaration (No permanent Establishment in India)</li></ul>'
 
       channel_partner/status:
-        active: Active
-        inactive: Inactive
+        active: Approved
+        inactive: Signed Up
+        confirmed: Confirmed
+        pending: Pending Approval
+        rejected: Rejected
 
       data_attribute:
         name: "Name"
@@ -1099,6 +1103,7 @@ en:
         total_unattached_balance: "Total Un-attached Balance"
         time_zone: "User's Time Zone"
         utm_params: 'UTM Tracking'
+        referral_code: "Referral Code"
       user/confirmed:
         :true: 'Confirmed'
         :false: 'Not Confirmed'
@@ -1876,7 +1881,7 @@ en:
         heading: "Channel Partner Manager Performance"
       cp_status:
         active: "Active Partners"
-        inactive: "Inactive Partners"
+        inactive: "Signed Up Partners"
         pending: "Pending Partners"
         rejected: "Rejected Partners"
         heading: "Channel Partner Status Count"
@@ -1979,5 +1984,11 @@ en:
     calculate_all_inclusive_price: 'All Inclusive'
 
   amenity_icons:
-    swimming_pool: 'fa-lock'
-    auditorium: 'fa-lock'
+    swimming_pool: 'fa-swimming-pool'
+    auditorium: 'fa-theater-masks'
+    gym: 'fa-dumbbell'
+    internal_roads: 'fa-road'
+    movie_theatre: 'fa-camera-movie'
+    playschool: 'fa-school'
+    table_tennis_court: 'fa-table-tennis'
+    sewage_treatment_plant: 'fa-house-flood'

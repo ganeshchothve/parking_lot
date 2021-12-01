@@ -35,7 +35,10 @@ $(document).ready(function(){
     });
   }, 100);
 
-  $(".validate-form").submit(function(e){
+  $(".validate-form").on('submit', validateForm);
+  $(document).on("ajax:beforeSend", '.modal-remote-form.validate-form', validateForm);
+
+  function validateForm(e) {
     var $form = $(this).closest("form");
     var valid = $form.valid();
     if(valid){
@@ -62,11 +65,16 @@ $(document).ready(function(){
       var $div = $form.find('.mb-3.has-error:first')
       if($div.length > 0){
         $div.find('input,select,textarea').focus();
-        $('html, body').animate({
+        $scrollElem = $('html, body');
+        if($(e.currentTarget).hasClass('modal-remote-form')) {
+          $scrollElem = $(e.currentTarget).find('.modal-remote-form-inner');
+        }
+        $scrollElem.animate({
             scrollTop: $div.offset().top - 100
         }, 1000);
       }
       e.preventDefault();
+      $.unblockUI();
     }
-  });
+  }
 })

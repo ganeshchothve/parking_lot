@@ -13,7 +13,7 @@
                             <p class="prjt-devlprs mb-2"><%= @project.developer_name || '-' %></p>
                             <p class="prjt-location"><i class="fa fa-map-marker-alt me-2"></i><%= @project.micro_market || '-' %></p>
                         </div>
-                        <div class="col-lg-6 col-12 float-end text-end prjt-details-header-stats px-0 pt-2">
+                        <div class="col-lg-6 col-12 float-end text-end  px-0 pt-2">
                             <div class="d-block">
                             <% if current_user.role.in?(%w(superadmin admin)) %>
                                 <div class="dropdown show d-inline">
@@ -37,23 +37,7 @@
                             </div>
                             <% end %>
                             </div>
-                            <div class="prjt-inner-stats row right-stats mt-3">
-                                <p>
-                                  <% leads_count = Lead.where(Lead.user_based_scope(current_user, params)).where(project_id: @project.id).count %>
-                                  <%= link_to_if policy([current_user_role_group, Lead]).index?, leads_count, admin_leads_path(fltrs: {project_id: @project.id}) %> <span class="d-block">Leads</span>
-                                  <% if policy([:admin, Lead.new(project_id: @project.id)]).new? %>
-                                    <%= link_to 'ADD', new_admin_lead_path(project_id: @project.id), class: 'modal-remote-form-link prjt-add' %>
-                                  <% end %>
-                                </p>
-                                <p>
-                                  <%= SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).where(project_id: @project.id).count %> <span class="d-block">Walk-Ins</span>
-                                </p>
-                                <p>
-                                  <% bookings_count = BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: @project.id).count %>
-                                  <%= link_to_if policy([current_user_role_group, BookingDetail]).index?, bookings_count, admin_booking_details_path(fltrs: {project_id: @project.id})  %> <span class="d-block">Bookings</span>
-                                  <a href="javascript:;" class="prjt-add"></a>
-                                </p>
-                            </div>
+                            
                         </div>
                     </div>
                     <div class="prjt-gallery pb-3 col-12 float-start">
@@ -61,10 +45,10 @@
                             <ul>
                             <% @assets = @project.assets.where(document_type: "images") %>
                             <% @assets[0..5].each_with_index do |asset, index|%>
-                                <li class="<%= (@assets.size > 5 && index == 5) ? "more-img" : "" %>">
+                                <li class="<%= (@assets.size > 6 && index == 5) ? "more-img" : "" %>">
                                     <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal">
                                      <div class="wd-100 ht-77 rounded" style="background-image: url(<%= asset.file.url %>);background-size:cover;background-position:center"></div>
-                                     <% if (@assets.size > 5 && index == 5) %>
+                                     <% if (@assets.size > 6 && index == 5) %>
                                      <p>+ <%= @assets.size - 6 %></p>
                                      <% end %> 
                                      </a>
@@ -422,8 +406,8 @@
                                                 <% @project.amenities.each do |type| %>
                                                     <li class="amenity_<%= type %>">
                                                     <div class="amenities-wrap">
-                                                        <span>
-                                                          <i class="fad <%= t("amenity_icons.#{type}") %>"></i>
+                                                        <span class="text-center d-block">
+                                                          <i class="fad <%= t("amenity_icons.#{type}") %> fn-20 mx-auto"></i>
                                                         </span>
                                                     <p><%= type.titleize %></p>
                                                     </div>
@@ -663,17 +647,76 @@
                 <% end %>
             </div>
             <div class="col-lg-4 prjt-right-panel px-3 mt-1 mb-4">
-              <!--
+            <div class="row">
+                <div class="col-12">
+                    <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card prjt-details-header-stats pb-2">
+                        <div class="prjt-inner-stats row right-stats mt-3 px-2">
+                            <p>
+                                <% leads_count = Lead.where(Lead.user_based_scope(current_user, params)).where(project_id: @project.id).count %>
+                                <%= link_to_if policy([current_user_role_group, Lead]).index?, leads_count, admin_leads_path(fltrs: {project_id: @project.id}) %> <span class="d-block">Leads</span>
+                                <% if policy([:admin, Lead.new(project_id: @project.id)]).new? %>
+                                <%= link_to 'ADD', new_admin_lead_path(project_id: @project.id), class: 'modal-remote-form-link prjt-add' %>
+                                <% end %>
+                            </p>
+                            <p>
+                                <%= SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).where(project_id: @project.id).count %> <span class="d-block">Walk-Ins</span>
+                            </p>
+                            <p>
+                                <% bookings_count = BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: @project.id).count %>
+                                <%= link_to_if policy([current_user_role_group, BookingDetail]).index?, bookings_count, admin_booking_details_path(fltrs: {project_id: @project.id})  %> <span class="d-block">Bookings</span>
+                                <a href="javascript:;" class="prjt-add"></a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
                 <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card">
                     <div class="row">
                         <div class="col-md-12 pt-3 px-4">
-                            <h3 class="card-title">Channel Partner Opportunities</h3>
+                            <h3 class="card-title">Benefits for You</h3>
                             <ul class="project-list list-unstyled row mb-0 pb-1">
-                                <li class="px-3">
+                                <li class="px-3 mb-2">
                                     <div class="list-wrap row">
-                                        <div class="col-lg-12">
-                                            <p class="list-title mt-2">Hot Deals</p>
+                                        <div class="col-lg-6">
+                                            <p class="list-txt mb-0">Site Visit Incentive</p>
                                         </div>
+                                        <div class="col-lg-6">
+                                           <h2 class="fn-18 mb-0 text-end">₹ 500</h2>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="px-3 mb-2">
+                                    <div class="list-wrap row">
+                                        <div class="col-lg-6">
+                                           <p class="list-txt mb-0">Spot Booking Incentive</p>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <h2 class="fn-18 mb-0 text-end">₹ 500</h2>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="px-3 mb-3">
+                                    <div class="list-wrap row">
+                                        <div class="col-lg-9">
+                                           <p class="list-txt mb-0">Pre-Registration Incentive<br><span class="fn-12 theme-txt-color">for min. 3 bookings</span></p>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <h2 class="fn-18 mb-0 text-end">30% </h2>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card">
+                    <div class="row">
+                        <div class="col-md-12 pt-3 px-4">
+                            <h3 class="card-title">Channel Partner Opportunities(3)</h3>
+                            <ul class="project-list list-unstyled row mb-0 pb-1">
+                                <li class="px-3 mb-3">
+                                    <div class="list-wrap row">
                                         <div class="col-lg-1">
                                             <i class="fa fa-fire fill-danger fa-sm"></i>
                                         </div>
@@ -682,11 +725,8 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li class="px-3">
+                                <li class="px-3 mb-3">
                                     <div class="list-wrap row">
-                                        <div class="col-lg-12">
-                                            <p class="list-title mt-2">Deals</p>
-                                        </div>
                                         <div class="col-lg-1">
                                             <i class="fa fa-fire fill-warning fa-sm"></i>
                                         </div>
@@ -696,7 +736,10 @@
                                     </div>
                                 </li>
                             </ul>
-                            <div class="right-box-footer py-3">
+                            <div class="right-box-footer py-2 text-center">
+                                <a href="javascript:;" class="fn-12 text-primary">View More</a>
+                            </div>
+                           <!-- <div class="right-box-footer py-3">
                               <p class="mt-2"><%= InterestedProject.in(status: %w(subscribed approved)).where(project_id: @project.id).count %> partners are interested</p>
 
                                 <% if interest_access %>
@@ -704,11 +747,11 @@
                                     <%= link_to "I am interested!", admin_user_interested_projects_path(current_user, interested_project: {project_id: @project.id, event: 'subscribe'}), method: :post, class: 'btn-primary theme-btn float-end mb-3' %>
                                   <% end %>
                                 <% end %>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                 </div>
-              -->
+              
                 <% if @project.offers.present? %>
                 <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card">
                     <div class="row">

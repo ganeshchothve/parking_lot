@@ -23,6 +23,12 @@ $(document).ready(function () {
   $('.header-search-icon').click(function () {
     $('.icon-search').toggleClass('close');
   });
+
+  if(wn_width > 700){
+    $('.filter-box .filter-content.modal-body').height(wn_height - 223);
+  }
+
+
   $('.pwd-btn').click(function () {
     if ($(this).hasClass('show-pwd')) {
       $(this).removeClass('show-pwd').addClass('hide-pwd')
@@ -78,18 +84,18 @@ $(document).ready(function () {
 
   $('.db-filter-btn').click(function () {
     if ($(this).parents('.box-card').length) {
-      $(this).parents('.box-card').find('.filter-box').slideToggle('slow')
+      $(this).parents('.box-card').find('.filter-box').toggle('slide', {direction: "right" }, 'slow')
     } else {
       // for index pages
-      $('.filter-box').slideToggle('slow');
+      $('.filter-box').toggle('slide', {direction: "right" }, 'slow');
     }
   });
   $('body').on('click', '.f-cancel-btn, .close-filter-btn', function () {
     if ($(this).parents('.box-card').length) {
-      $(this).parents('.box-card').find('.filter-box').slideToggle('slow')
+      $(this).parents('.box-card').find('.filter-box').toggle('slide', {direction: "right" }, 'slow')
     } else {
       // for index pages
-      $('.filter-box').slideToggle('slow');
+      $('.filter-box').toggle('slide', {direction: "right" }, 'slow');
     }
   });
   $(".scroll-sec").click(function () {
@@ -185,7 +191,7 @@ $(document).ready(function () {
   $('.toggle-side-menu').click(function(){    
     $(this).toggleClass('open-menu');
     if($(this).hasClass('open-menu')){
-      $('.header-leftbar').css('width', '160px');
+      $('.header-leftbar').css('width', '224px');
     }else{
       $('.header-leftbar').css('width', '0px');
     }
@@ -274,9 +280,9 @@ $('.incentive-lists li').tabbing();
 
 
 $('.incentive-lists li').click(function() {
-  // var hashit = $(this).find('a').attr('href');
-  // var autoHeight = $(hashit).height() + 30;
-  // $('.incentive-lists li').removeClass('active');
-  // $(this).addClass('active');
-  // $('.tab-content').animate({ height: autoHeight }, 100);
+  var hashit = $(this).find('a').attr('href');
+  var autoHeight = $(hashit).height() + 30;
+  $('.incentive-lists li').removeClass('active');
+  $(this).addClass('active');
+  $('.tab-content').animate({ height: autoHeight }, 100);
 });

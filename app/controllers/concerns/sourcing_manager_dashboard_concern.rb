@@ -59,20 +59,48 @@ module SourcingManagerDashboardConcern
     else
       @cp_managers = User.filter_by_role(:cp).where(manager_id: current_user.id)
     end
-    @channel_partners_status = {}
-    @cp_managers.each do
-      |cp_manager|
-      @inactive_status_count = ChannelPartner.where(manager_id: cp_manager.id, status: "inactive").count
-      @active_status_count = ChannelPartner.where(manager_id: cp_manager.id, status: "active").count
-      @pending_status_count = ChannelPartner.where(manager_id: cp_manager.id, status: "pending").count
-      @rejected_status_count = ChannelPartner.where(manager_id: cp_manager.id, status: "rejected").count
-      @total_channel_partner_count = ChannelPartner.where(manager_id: cp_manager.id).count
-      @channel_partners_status[cp_manager.id] = {name: cp_manager.name,
-                              inactive: @inactive_status_count,
-                              active: @active_status_count,
-                              pending: @pending_status_count,
-                              rejected: @rejected_status_count,
-                              total_count: @total_channel_partner_count}
+    
+    @cp_managers_hash = {'No Manager' => 'No Manager'}
+    @cp_managers.each do |cp_manager|
+      @cp_managers_hash[cp_manager.id] = cp_manager.name
     end
+
+
+    @data = ChannelPartner.collection.aggregate([
+      {
+        '$project': {
+          'first_name': '$first_name',
+          'status': '$status',
+          'id': '$id',
+          'manager_id': '$manager_id'
+        }},
+        {
+        '$group': {
+          _id: {
+            'manager_id': '$manager_id',
+            'status': "$status"
+          },
+          count: {
+          '$sum': 1
+          }
+        }
+      }
+    ]).to_a
+
+    @channel_partners_manager_status_count = {}
+    @data.each do |channel_partner_data|
+      key = channel_partner_data['_id']['manager_id'] || 'No Manager'
+      @channel_partners_manager_status_count[key] ||= {}
+      @channel_partners_manager_status_count[key][channel_partner_data["_id"]["status"]] ||= 0
+      @channel_partners_manager_status_count[key][channel_partner_data["_id"]["status"]] += channel_partner_data["count"]
+      @channel_partners_manager_status_count[key]["count"] ||= 0
+      @channel_partners_manager_status_count[key]["count"] += channel_partner_data["count"]
+    end
+
+    @channel_partners_status_count = @data.group_by {|x| x['_id']['status']}.inject({}) do |hsh, (k, v)|
+      hsh[k] = v.map{|x| x['count']}.inject(:+)
+      hsh
+    end
+    @channel_partners_status_count['total'] = @channel_partners_status_count.values.inject(:+)
   end
 end

@@ -1,3 +1,4 @@
+require 'autoinc'
 class SiteVisit
   include Mongoid::Document
   include Mongoid::Timestamps

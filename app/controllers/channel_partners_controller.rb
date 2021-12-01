@@ -24,7 +24,7 @@ class ChannelPartnersController < ApplicationController
   end
 
   def new
-    @channel_partner = ChannelPartner.new
+    @channel_partner = ChannelPartner.new(referral_code: params[:custom_referral_code])
     render layout: 'landing_page'
   end
 
@@ -36,7 +36,6 @@ class ChannelPartnersController < ApplicationController
     @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
     @channel_partner.assign_attributes(srd: cookies[:srd]) if cookies[:srd].present?
     layout = (current_user.present? ? 'devise' : 'landing_page')
-
     respond_to do |format|
       if @channel_partner.save
         cookies.delete :srd

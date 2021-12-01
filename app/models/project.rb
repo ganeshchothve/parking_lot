@@ -33,6 +33,7 @@ class Project
   field :micro_market, type: String
   field :city, type: String
   field :project_type, type: Array, default: [ "residential" ]
+  field :region, type: String
 
   # descriptive fields
   field :description, type: String
@@ -47,6 +48,11 @@ class Project
   field :rera_registration_no, type: String
   field :approved_banks, type: Array, default: []
   field :project_size, type: String
+  field :sv_incentive, type: Integer
+  field :spot_booking_incentive, type: Integer
+  field :pre_reg_incentive_percentage, type: Integer
+  field :pre_reg_min_bookings, type: Integer
+  field :iris_url, type: String
 
   # selldo attributes
   field :selldo_id, type: String
@@ -172,6 +178,7 @@ class Project
   scope :filter_by_category, ->(category) { where(category: category) }
   scope :filter_by_hot, ->(hot) { where(hot: hot.eql?("true")) }
   scope :filter_by_user_interested_projects, ->(user_id) { all.in(id: InterestedProject.where(user_id: user_id).in(status: %w(subscribed approved)).distinct(:project_id)) }
+  scope :filter_by_regions, ->(regions) {regions.is_a?(Array) ? where( region: { "$in": regions }) : where(region: regions)}
 
   #def unit_configurations
   #  UnitConfiguration.where(data_attributes: {"$elemMatch" => {"n" => "project_id", "v" => self.selldo_id}})
