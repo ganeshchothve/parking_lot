@@ -4,6 +4,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner].include?(user.role) && (enable_actual_inventory?(user) || enable_incentive_module?(user))
     out = false if user.role?('channel_partner') && !interested_project_present?
     out = true if %w[account_manager account_manager_head billing_team].include?(user.role)
+    out
   end
 
   def new?
