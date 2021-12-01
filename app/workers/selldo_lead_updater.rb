@@ -42,7 +42,7 @@ class SelldoLeadUpdater
     end
 
     selldo_base_url = ENV_CONFIG['selldo']['base_url'].chomp('/')
-    if custom_hash.present? && selldo_base_url.present? && selldo_api_key.present? && selldo_client_id.present?
+    if custom_hash.present? && user.lead_id.present? && selldo_base_url.present? && selldo_api_key.present? && selldo_client_id.present?
       params = {
         api_key: selldo_api_key,
         client_id: selldo_client_id,
@@ -66,7 +66,7 @@ class SelldoLeadUpdater
     payload[:lead] ||= {}
     custom_hash = {lead: payload[:lead]}
     selldo_base_url = ENV_CONFIG['selldo']['base_url'].chomp('/')
-    if custom_hash.present? && selldo_base_url.present? && selldo_api_key.present? && selldo_client_id.present?
+    if custom_hash.present? && user.lead_id.present? && selldo_base_url.present? && selldo_api_key.present? && selldo_client_id.present?
       params = {
         api_key: selldo_api_key,
         client_id: selldo_client_id,
