@@ -23,7 +23,11 @@
                         aria-expanded="false">
                         <i class="fa fa-ellipsis-v theme-txt-color" aria-hidden="true"></i></a>
                       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                        <%= render "#{current_user_role_group}/booking_details/links", booking_detail: booking_detail, link_name: '' %>
+                        <% if booking_detail.project_unit.present? %>
+                          <%= render "#{current_user_role_group}/booking_details/links", booking_detail: booking_detail, link_name: '' %>
+                        <% else %>
+                          <%= render "#{current_user_role_group}/booking_details/booking_without_inventory_links", booking_detail: booking_detail, link_name: '' %>
+                        <% end %>
                       </div>
                     </div>
                   </div>

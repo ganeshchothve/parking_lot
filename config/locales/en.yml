@@ -1128,6 +1128,8 @@ en:
         team_lead: 'Team Lead'
         billing_team: 'Billing Team'
         management_user: 'Management User'
+        account_manager: 'Account Manager'
+        account_manager_head: 'Account Manager Head'
         employee_user: 'Employee'
         direct: Direct
 
