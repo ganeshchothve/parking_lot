@@ -89,7 +89,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def asset_create?
-    %w[account_manager, account_manager_head, billing_team].include?(user.role)
+    %w[account_manager account_manager_head billing_team].include?(user.role)
   end
 
   # def block?
