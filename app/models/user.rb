@@ -395,7 +395,7 @@ class User
 
   def generate_referral_code
     if self.role?("channel_partner") && self.referral_code.blank?
-      self.referral_code = "#{SecureRandom.hex(4)}"
+      self.referral_code = "#{SecureRandom.hex(3)[0..-2]}"
     else
       self.referral_code
     end

@@ -38,7 +38,7 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   def permitted_attributes(_params = {})
     attributes = []
     if user.blank? || (user.present? && (%w[superadmin admin cp_admin].include?(user.role) || (['channel_partner', 'cp_owner'].include?(user.role) && record.id == user.channel_partner_id && ['inactive', 'rejected'].include?(record.status))))
-      attributes += [:email, :phone, :first_name, :region, :last_name, :company_name, :company_owner_name, :company_owner_phone, :pan_number, :gstin_number, :aadhaar, :rera_id, :manager_id, :team_size, :rera_applicable, :gst_applicable, :nri, :experience, :average_quarterly_business, :referral_code, expertise: [], developers_worked_for: [], interested_services: [], address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes]
+      attributes += [:email, :phone, :first_name, :last_name, :company_name, :company_owner_name, :company_owner_phone, :pan_number, :gstin_number, :aadhaar, :rera_id, :manager_id, :team_size, :rera_applicable, :gst_applicable, :nri, :experience, :average_quarterly_business, :referral_code, expertise: [], developers_worked_for: [], interested_services: [], regions: [], address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes]
     end
 
     if user.present? && ['channel_partner', 'cp_owner'].include?(user.role) && record.id == user.channel_partner_id && ['pending', 'active'].include?(record.status)

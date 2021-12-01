@@ -79,7 +79,7 @@ $selected-aprt: #f4667e;
 .bg-gradient{
 	background-image: $gradient-bg-cyan;
 }
-.bg-primary{
+.bg-gradient-cd{
 	background-image: $gradient-bg-pink;
 }
 .fn-12{
@@ -346,7 +346,7 @@ a:hover{
 			padding: .25rem 5px;
 		}
 		.menu-top{
-			left: -50px;
+			// left: -50px;
 		}
 	}
 	.reg-chnl-prtnr-btn{
@@ -867,7 +867,7 @@ table .dropdown-menu.show{
 			display: block;
 			padding: 15px;
 		}
-		.mb-3{
+		.form-group{
 			label{
 				font-size: 12px;
 				font-weight: 500;
@@ -915,12 +915,12 @@ table .dropdown-menu.show{
 	display: block;
 	padding: 15px;
 }
-.mb-3{
+.form-group{
 	label{
 		font-size: 12px;
 		font-weight: 500;
 		color: $content-color;
-		display: block;
+		display: inline-flex;
 	}
 	.form-control{
 		height: 35px;
@@ -1426,7 +1426,7 @@ table .dropdown-menu.show{
 				width: 100%;
 				height: 100%;
 				display: block;
-        		background-color: #fff;
+        background-color: #fff;
 				&:first-of-type{
 					td{
 						margin-top:0px!important;
@@ -1952,6 +1952,18 @@ table .dropdown-menu.show{
 
 }
 .auth{
+    background-repeat: no-repeat;
+    background-position: right;
+    background-color: $white-color;
+    background-size: contain;
+    @media screen and (max-width: 1400px) and (min-width: 992px){
+        background-size: 50% 80%;
+    }
+    @media screen and (max-width: 992px){
+        .container{
+            background-color: rgba(255,255,255,0.8);
+        }
+    }
 	.login-form-wrapper{
 
 		h1{
@@ -2137,7 +2149,7 @@ table .dropdown-menu.show{
 			font-size: 29px;
 			color: #33475b;
 			font-weight: 100;
-			// display: inline-block;
+			display: inline-block;
 			height: 19px;
 			float: right;
 			position: relative;

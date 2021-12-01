@@ -631,7 +631,7 @@ en:
 
       channel_partner/status:
         active: Active
-        inactive: Inactive
+        inactive: Signed Up
 
       data_attribute:
         name: "Name"
@@ -1102,6 +1102,7 @@ en:
         time_zone: "User's Time Zone"
         utm_params: 'UTM Tracking'
         channel_partner_id: CP Company Name/ Organisation Name/ CP Name
+        referral_code: "Referral Code"
       user/confirmed:
         :true: 'Confirmed'
         :false: 'Not Confirmed'
@@ -1888,7 +1889,7 @@ en:
         heading: "Channel Partner Manager Performance"
       cp_status:
         active: "Active Partners"
-        inactive: "Inactive Partners"
+        inactive: "Signed Up Partners"
         pending: "Pending Partners"
         rejected: "Rejected Partners"
         heading: "Channel Partner Status Count"

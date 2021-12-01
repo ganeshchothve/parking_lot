@@ -1,20 +1,20 @@
-<section class="mb-5">
-  <div class="container">
+<section class="mb-5 mt-3">
+  <div class="px-4">
     <div class="row">
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
+      <div class="col-lg-4 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-title pt-1 mb-3">
-          <h1 class="title icon-set icon-refferal-black">
+          <h1 class="title icon-set icon-refferal-black fn-18">
             <%= User.model_name.human(count: @referrals.total_entries ) %>
           </h1>
         </div>
       </div>
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
-        <div class="table-btn-set float-right pb-3">
-          <div class="row m-0">
-            <h6 class="mr-1"><%= t('mongoid.attributes.user.referral_code') %></h6>
+      <div class="col-lg-8 col-xs-12 col-md-6 col-sm-12 no-pd">
+        <div class="table-btn-set float-right pb-3 text-end">
+          <div class="m-0">
+            <h6 class="mr-1 d-inline-block mt-1"><%= t('mongoid.attributes.user.referral_code') %>:</h6>
               <%= get_referral_code %>
-            <button disabled="disabled" class="offset-3 db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @referrals.total_entries %></button>
-            <div class="invite-friend-link db-small-btn light-blue bg-white fn-400 pt-2 col-4">
+            <button disabled="disabled" class="p-2 px-3 btn bg-primary btn-primary border-primary white d-inline-block ms-2 me-2 border rounded"><%= t('global.total')%> : <%= @referrals.total_entries %></button>
+            <div class="invite-friend-link p-2 px-3 btn btn-primary bg-primary border-primary white d-inline-block ms-2 border rounded">
               <%= invite_friend_link %>
             </div>
           </div>

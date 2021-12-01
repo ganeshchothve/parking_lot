@@ -108,6 +108,12 @@
       <%= f.select :enable_incentive_module, filter_admin_role_options, {}, class: 'selectize', multiple: true, disabled: !(policy([current_user_role_group, f.object]).editable_field?("enable_incentive_module")) %>
     </div>
   </div>
+  <div class="col-md-12">
+    <div class="mb-3">
+      <%= f.label :partner_regions %>
+      <%= f.select :partner_regions, current_client.partner_regions, {}, class: 'selectize-tags', multiple: true, disabled: !(policy([current_user_role_group, f.object]).editable_field?("partner_regions")) %>
+    </div>
+  </div>
 </div>
 <div class="row">
   <div class="col-md-6">
