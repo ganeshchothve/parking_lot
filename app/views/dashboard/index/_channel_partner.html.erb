@@ -6,7 +6,7 @@
 <section class="mt-3" id="">
   <div class="px-4">
     <div class="row">
-      <div class="col-lg-9">
+      <div class="col-lg-12">
         <div class="row mb-3">
           <div class="col-lg-12">
             <div id="cpBenefitsCarousel" class="cpBenefitsCarousel carousel slide position-relative">
@@ -24,7 +24,7 @@
                         <p>Get Spot Booking Incentive of <span>INR 5000</span></p>
                       </li>
                     </ul>
-                    <a href="javascript:;">Check out latest mandate projects <i class="fal fn-14 fa-arrow-right fill-theme ms-1"></i></a>
+                    <a href="<%= admin_projects_path(fltrs: {regions: current_user.channel_partner&.regions}) %>">Check out latest mandate projects <i class="fal fn-14 fa-arrow-right fill-theme ms-1"></i></a>
                 </div>
                 <div class="carousel-item slider-2">
                   <h2>Special Quarterly & Annual Rewards</h2>
@@ -38,7 +38,7 @@
                     </li>
                   </ul>
                   <h5><span>ANNUAL BUMPER PRIZE: FULL-SIZED SUV<sup>*</sup></span></h5>
-                  <a href="javascript:;" class="text-white">Check out latest mandate projects <i class="fal fa-arrow-right fill-white ms-1"></i></a>
+                  <a href="<%= admin_projects_path(fltrs: {regions: current_user.channel_partner&.regions}) %>" class="text-white">Check out latest mandate projects <i class="fal fa-arrow-right fill-white ms-1"></i></a>
                 </div>
               </div>
               <!-- <button class="carousel-control-prev position-absolute top-0" type="button"

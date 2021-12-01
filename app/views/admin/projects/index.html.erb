@@ -3,9 +3,9 @@
     <% interested_project_ids = current_user.interested_projects.in(status: %w(subscribed approved)).distinct(:project_id) %>
     <div class="row">
       <div class="col-lg-12 row mb-2">
-        <div class="col-lg-7 filter-set">
+        <div class="col-lg-9 filter-set">
           <% if current_user.role?("channel_partner") %>
-            <%= link_to "Filter By Region", admin_projects_path(fltrs: {regions: current_user.channel_partner&.regions}), class: "filter-link #{params.dig(:fltrs, :regions) == current_user.channel_partner&.regions ? 'active' : ''}" %>
+            <%= link_to "Projects In My Region", admin_projects_path(fltrs: {regions: current_user.channel_partner&.regions}), class: "filter-link #{params.dig(:fltrs, :regions) == current_user.channel_partner&.regions ? 'active' : ''}" %>
           <% end %>
           <% all_projects = "All (#{Project.where(Project.user_based_scope(current_user, params)).count})" %>
           <%= link_to all_projects.html_safe, admin_projects_path, class: "filter-link #{params.dig(:fltrs).blank? ? 'active' : ''}" %>
@@ -19,7 +19,7 @@
           <% hot_prop = "Hot (#{hot_count = Project.where(Project.user_based_scope(current_user, params)).where(hot: true).count})" %> <%# + "#{hot_count > 0 ? "<span class='notify'></span>".html_safe : ''}" %>
           <%= link_to hot_prop.html_safe, admin_projects_path(fltrs: {hot: true}), class: "filter-link #{params.dig(:fltrs, :hot) == 'true' ? 'active' : ''}" %>
         </div>
-        <div class="col-lg-5 text-end px-0 filter-set">
+        <div class="col-lg-3 text-end px-0 filter-set">
           <% if policy([:admin, Project]).new? %>
             <%= link_to t('helpers.new.link_name', model: Project.model_name.human), new_admin_project_path, class: 'modal-remote-form-link filter-link' %>
           <% end %>
