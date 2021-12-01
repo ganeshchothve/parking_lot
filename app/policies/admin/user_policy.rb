@@ -113,7 +113,7 @@ class Admin::UserPolicy < UserPolicy
       attributes += [:allowed_bookings] if current_client.allow_multiple_bookings_per_user_kyc?
     end
     attributes += [:login_otp] if confirm_via_otp?
-    attributes += [:channel_partner_id] if record.role.in?(%w(cp_owner channel_partner)) && user.role.in?(%w(superadmin))
+    attributes += [:channel_partner_id] if record.role.in?(%w(cp_owner channel_partner)) && user.role.in?(%w(superadmin cp_owner))
     attributes += [:premium, :tier_id] if record.role?('channel_partner') && user.role?('admin')
     attributes += [:role] if %w[superadmin admin cp_owner].include?(user.role)
     attributes += [project_ids: []] if %w[admin superadmin].include?(user.role) && record.role.in?(%w(billing_team sales sales_admin gre crm team_lead))
