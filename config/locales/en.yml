@@ -143,8 +143,8 @@ en:
         one: Cost
         other: Costs
       channel_partner:
-        one: Channel Partner
-        other: Channel Partners
+        one: Partner Company
+        other: Partner Companies
       interested_project:
         one: Interested Project
         other: Interested Projects
@@ -1714,6 +1714,8 @@ en:
           break: '%{name} is on break'
           available: '%{name} is available'
           not_available: '%{name} is not available'
+      create:
+        change_channel_partner_company: 'Found an old inactive account with these details. We have activated it & linked it under your company'
 
     interested_projects:
       set_interested_project_missing: 'Interested Project not found'

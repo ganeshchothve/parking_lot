@@ -147,18 +147,22 @@ class Admin::UsersController < AdminController
 
   def create
     # sending the role upfront to ensure the permitted_attributes in next step is updated
-    @user = User.new(booking_portal_client_id: current_client.id, role: params[:user][:role])
-    @user.assign_attributes(permitted_attributes([current_user_role_group, @user]))
-    @user.manager_id = current_user.id if @user.role?('channel_partner') && current_user.role?('cp')
-    if @user.buyer? && current_user.role?('channel_partner')
-      @user.manager_id = current_user.id
-      @user.referenced_manager_ids ||= []
-      @user.referenced_manager_ids += [current_user.id]
+    message = 'User was successfully created.'
+    change_channel_partner_company = false
+    query = []
+    query << { phone: params.dig(:user, :phone) } if params.dig(:user, :phone).present?
+    query << { email: params.dig(:user, :email) } if params.dig(:user, :email).present?
+    @user = User.in(role: %w(channel_partner cp_owner)).or(query).first
+    if current_user.role?('cp_owner') && params[:user][:role].in?(%w(cp_owner channel_partner)) && @user.present? && !@user.is_active? && @user.channel_partner_id != current_user.channel_partner_id
+      @user.assign_attributes(channel_partner_id: current_user.channel_partner_id, role: params[:user][:role], is_active: true)
+      message = t('controller.users.create.change_channel_partner_company')
+      change_channel_partner_company = true
     end
+    create_user unless change_channel_partner_company
 
     respond_to do |format|
       if @user.save
-        format.html { redirect_to admin_users_path, notice: 'User was successfully created.' }
+        format.html { redirect_to admin_users_path, notice: message }
         format.json { render json: @user, status: :created }
       else
         format.html { render :new }
@@ -259,6 +263,17 @@ class Admin::UsersController < AdminController
     _crm = Crm::Base.where(id: crm_id).first
     _user = User.where("third_party_references.crm_id": _crm.try(:id), "third_party_references.reference_id": reference_id ).first
     _user
+  end
+
+  def create_user
+    @user = User.new(booking_portal_client_id: current_client.id, role: params[:user][:role])
+    @user.assign_attributes(permitted_attributes([current_user_role_group, @user]))
+    @user.manager_id = current_user.id if @user.role?('channel_partner') && current_user.role?('cp')
+    if @user.buyer? && current_user.role?('channel_partner')
+      @user.manager_id = current_user.id
+      @user.referenced_manager_ids ||= []
+      @user.referenced_manager_ids += [current_user.id]
+    end
   end
 
   def authorize_resource
