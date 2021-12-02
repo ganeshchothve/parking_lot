@@ -681,7 +681,7 @@
                                             <p class="list-txt mb-0">Site Visit Incentive</p>
                                         </div>
                                         <div class="col-lg-6">
-                                           <h2 class="fn-18 mb-0 text-end">₹ 500</h2>
+                                          <%= @project.sv_incentive.present? ? "<h2 class='fn-18 mb-0 text-end'>#{number_to_indian_currency(@project.sv_incentive)}</h2>".html_safe : "<h2 class='fn-14 mb-0 text-end'>Coming Soon</h2>".html_safe %></h2>
                                         </div>
                                     </div>
                                 </li>
@@ -691,25 +691,39 @@
                                            <p class="list-txt mb-0">Spot Booking Incentive</p>
                                         </div>
                                         <div class="col-lg-6">
-                                            <h2 class="fn-18 mb-0 text-end">₹ 500</h2>
+                                          <h2 class="fn-18 mb-0 text-end"><%= @project.spot_booking_incentive.present? ? "<h2 class='fn-18 mb-0 text-end'>#{number_to_indian_currency(@project.spot_booking_incentive)}</h2>".html_safe : "<h2 class='fn-14 mb-0 text-end'>Coming Soon</h2>".html_safe %></h2>
                                         </div>
                                     </div>
                                 </li>
-                                <li class="px-3 mb-3">
-                                    <div class="list-wrap row">
-                                        <div class="col-lg-9">
-                                           <p class="list-txt mb-0">Pre-Registration Incentive<br><span class="fn-12 theme-txt-color">for min. 3 bookings</span></p>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <h2 class="fn-18 mb-0 text-end">30% </h2>
-                                        </div>
-                                    </div>
-                                </li>
+                                <% if @project.pre_reg_incentive_percentage.present? and @project.pre_reg_min_bookings.present? %>
+                                  <li class="px-3 mb-3">
+                                      <div class="list-wrap row">
+                                          <div class="col-lg-9">
+                                             <p class="list-txt mb-0">Pre-Registration Incentive<br><span class="fn-12 theme-txt-color">for min. <%= @project.pre_reg_min_bookings %> bookings</span></p>
+                                          </div>
+                                          <div class="col-lg-3">
+                                              <h2 class="fn-18 mb-0 text-end"><%= number_to_percentage(@project.pre_reg_incentive_percentage, precision: 0) %></h2>
+                                          </div>
+                                      </div>
+                                  </li>
+                                <% else %>
+                                  <li class="px-3 mb-3">
+                                      <div class="list-wrap row">
+                                          <div class="col-lg-7">
+                                             <p class="list-txt mb-0">Pre-Registration Incentive</p>
+                                          </div>
+                                          <div class="col-lg-5">
+                                              <h2 class="fn-14 mb-0 text-end">Coming Soon</h2>
+                                          </div>
+                                      </div>
+                                  </li>
+                                <% end %>
                             </ul>
                         </div>
                     </div>
                 </div>
 
+                <!--
                 <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card">
                     <div class="row">
                         <div class="col-md-12 pt-3 px-4">
@@ -739,7 +753,7 @@
                             <div class="right-box-footer py-2 text-center">
                                 <a href="javascript:;" class="fn-12 text-primary">View More</a>
                             </div>
-                           <!-- <div class="right-box-footer py-3">
+                           <div class="right-box-footer py-3">
                               <p class="mt-2"><%= InterestedProject.in(status: %w(subscribed approved)).where(project_id: @project.id).count %> partners are interested</p>
 
                                 <% if interest_access %>
@@ -747,10 +761,11 @@
                                     <%= link_to "I am interested!", admin_user_interested_projects_path(current_user, interested_project: {project_id: @project.id, event: 'subscribe'}), method: :post, class: 'btn-primary theme-btn float-end mb-3' %>
                                   <% end %>
                                 <% end %>
-                            </div>-->
+                            </div>
                         </div>
                     </div>
                 </div>
+                -->
               
                 <% if @project.offers.present? %>
                 <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card">

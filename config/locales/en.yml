@@ -630,8 +630,11 @@ en:
         pe_declaration_html: '<ul><li>PE Declaration (No permanent Establishment in India)</li></ul>'
 
       channel_partner/status:
-        active: Active
+        active: Approved
         inactive: Signed Up
+        confirmed: Confirmed
+        pending: Pending Approval
+        rejected: Rejected
 
       data_attribute:
         name: "Name"

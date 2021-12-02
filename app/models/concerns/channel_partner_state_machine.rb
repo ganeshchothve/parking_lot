@@ -8,16 +8,16 @@ module ChannelPartnerStateMachine
       state :inactive, initial: true
       state :active, :pending, :rejected
 
-      event :submit_for_approval, after: %i[after_submit_for_approval update_selldo!] do
+      event :submit_for_approval, after: %i[update_selldo! after_submit_for_approval] do
         transitions from: :inactive, to: :pending, if: :can_send_for_approval?
         transitions from: :rejected, to: :pending, if: :can_send_for_approval?
       end
 
-      event :approve, after: %i[send_notification update_selldo!] do
+      event :approve, after: %i[update_selldo! send_notification] do
         transitions from: :pending, to: :active
       end
 
-      event :reject, after: %i[send_notification update_selldo!] do
+      event :reject, after: %i[update_selldo! send_notification] do
         transitions from: :pending, to: :rejected
       end
 
