@@ -1148,7 +1148,7 @@ en:
         payment_done: '9.90% Received'
         blocking_amount_paid: 'Booking Amount Paid'
         registration_done: 'Registration Done'
-        stage: 'Stage'
+        stage: 'From developer CRM'
         lead_id: 'Lead Id'
         lead_validity_period: 'Lead Validity Period'
         selldo_lead_registration_date: 'Sell Do Lead Registration Date'
