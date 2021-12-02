@@ -16,6 +16,8 @@ class SiteVisit
   belongs_to :user
   belongs_to :creator, class_name: 'User'
   belongs_to :time_slot, optional: true
+  belongs_to :manager, class_name: 'User'
+  belongs_to :channel_partner
 
   field :scheduled_on, type: DateTime
   field :status, type: String, default: 'scheduled'
@@ -65,7 +67,9 @@ class SiteVisit
     custom_scope = {}
     if params[:lead_id].blank? && !user.buyer?
       if user.role?('channel_partner')
-        custom_scope = { manager_id: user.id }
+        custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id }
+      elsif user.role?('cp_owner')
+        custom_scope = {channel_partner_id: user.channel_partner_id}
       #elsif user.role?('cp_admin')
       #  custom_scope = { lead_id: { "$in": Lead.nin(manager_id: [nil, '']).distinct(:id) } }
       #elsif user.role?('cp')

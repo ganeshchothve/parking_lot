@@ -22,7 +22,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def index?
-    user.role?('channel_partner') || (!user.buyer? && (current_client.enable_actual_inventory?(user) || enable_incentive_module?(user)))
+    user.role.in?(%w(channel_partner cp_owner)) || (!user.buyer? && (current_client.enable_actual_inventory?(user) || enable_incentive_module?(user)))
   end
 
   def show?
@@ -39,7 +39,7 @@ class Admin::ProjectPolicy < ProjectPolicy
 
   def collaterals?
     valid = true
-    valid = false if user.role?('channel_partner') && !interested_project_present?
+    valid = false if user.role.in?(%w(channel_partner cp_owner)) && !interested_project_present?
     @condition = 'project_not_subscribed' unless valid
     valid
   end

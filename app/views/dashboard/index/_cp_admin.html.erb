@@ -21,7 +21,7 @@
                   <h5 class="modal-title title">Filter</h5>
                   <a href="javascript:;" class="close-filter-btn btn-close"></a>
                 </div>
-                <%= form_tag dashboard_counts_path, method: "get", remote: true, id: "dashboard_count_filter" do %>
+                <%= form_tag dashboard_counts_path, method: "get", remote: true, id: "dashboard_count_filter", class: 'filter-form-modal' do %>
                   <div class="filter-content modal-body ps-0 pe-0 theme-form">
                     <div class="row">
                       <div class="mb-3 col-12">
@@ -72,7 +72,7 @@
                   <span class="title">Filter</span>
                   <a href="javascript:;" class="close-filter-btn">&times;</a>
                 </div>
-                <%#= form_tag invoice_summary_path, method: "get", remote: true, id: "invoice_summary_filter" do %>
+                <%#= form_tag invoice_summary_path, method: "get", remote: true, id: "invoice_summary_filter", class: 'filter-form-modal' do %>
                   <div class="filter-content">
                     <div class="row">
                       <div class="mb-3 col-12">
@@ -119,7 +119,7 @@
                   <h5 class="modal-title title">Filter</h5>
                   <a href="javascript:;" class="close-filter-btn btn-close"></a>  
                 </div>
-                <%= form_tag channel_partner_performance_admin_users_path, method: "get", remote: true, id: "channel_partner_performance_form" do %>
+                <%= form_tag channel_partner_performance_admin_users_path, method: "get", remote: true, id: "channel_partner_performance_form", class: 'filter-form-modal' do %>
                   <div class="filter-content  modal-body ps-0 pe-0 theme-form">
                     <div class="row">
                       <div class="mb-3 col-12">
@@ -128,7 +128,7 @@
                       </div>
                       <div class = "mb-3 col-12">
                         <%= label_tag "channel_partner_id", "Channel Partner", class: "control-label float-left" %>
-                        <%= select_tag "channel_partner_id", options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), class: "selectize" %>
+                        <%= select_tag "channel_partner_id", options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), prompt: 'Select', class: "selectize" %>
                       </div>
                     </div>
                   </div>
@@ -169,7 +169,7 @@
                   <h5 class="modal-title title">Filter</h5>
                       <a href="javascript:;" class="close-filter-btn btn-close"></a>
                     </div>
-                    <%= form_tag cp_performance_path, method: "get", remote: true, id: "cp_performance_form" do %>
+                    <%= form_tag cp_performance_path, method: "get", remote: true, id: "cp_performance_form", class: 'filter-form-modal' do %>
                       <div class="filter-content  modal-body ps-0 pe-0 theme-form">
                         <div class="row">
                           <div class="mb-3 col-12">
@@ -222,7 +222,7 @@
                   <h5 class="modal-title title">Filter</h5>
                       <a href="javascript:;" class="close-filter-btn btn-close"></a>
                     </div>
-                    <%= form_tag cp_status_path, method: "get", remote: true, id: "cp_status_form" do %>
+                    <%= form_tag cp_status_path, method: "get", remote: true, id: "cp_status_form", class: 'filter-form-modal' do %>
                       <div class="filter-content  modal-body ps-0 pe-0 theme-form">
                         <div class="row">
                           <div class="mb-3 col-12">
@@ -282,6 +282,12 @@
           type: "get"
         });
       <% end %>
+
+      $(document).on("ajax:success", '.filter-form-modal', function(event, two, three){
+        if($(event.currentTarget).data('remote')) {
+          $(event.currentTarget).parents('.box-card').find('.filter-box').toggle('slide', {direction: "right" }, 'slow');
+        }
+      });
     });
   <% end %>
 <% end %>

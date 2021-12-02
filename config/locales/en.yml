@@ -1503,6 +1503,7 @@ en:
         link_name: 'Dashboard'
         billing_team_link_name: 'Billing Dashboard'
         cp_admin_link_name: 'Channel Partner Head Dashboard'
+        cp_owner_link_name: 'Company Owner Dashboard'
       receipt_frequency: 'Payment Frequency'
     emails:
       index:

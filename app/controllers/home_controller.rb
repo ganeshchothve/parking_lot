@@ -93,7 +93,7 @@ class HomeController < ApplicationController
       respond_to do |format|
         if @lead.present?
           if current_client.enable_lead_conflicts?
-            CpLeadActivityRegister.create_cp_lead_object(@lead, current_user, params[:lead_details]) if current_user&.role?("channel_partner")
+            CpLeadActivityRegister.create_cp_lead_object(@lead, current_user, params[:lead_details]) if current_user&.role.in?(%w(channel_partner cp_owner))
             format.json { render json: {lead: @lead, success: "Lead created successfully"}, status: :created }
           else
             format.json { render json: {errors: "Lead already exists"}, status: :unprocessable_entity }
@@ -130,10 +130,10 @@ class HomeController < ApplicationController
               if @user.save && (selldo_config_base.blank? || @project.save)
                 @lead.assign_attributes(selldo_lead_registration_date: params.dig(:lead_details, :lead_created_at))
 
-                if current_user&.role?("channel_partner")
+                if current_user&.role&.in?(%w(channel_partner cp_owner))
                   cp_lead_activity = CpLeadActivityRegister.create_cp_lead_object(@lead, current_user, (params[:lead_details] || {}))
                 elsif params[:manager_id].present?
-                  cp_user = User.all.channel_partner.where(id: params[:manager_id]).first
+                  cp_user = User.all.in(role: %w(channel_partner cp_owner)).where(id: params[:manager_id]).first
                   cp_lead_activity = CpLeadActivityRegister.create_cp_lead_object(@lead, cp_user, (params[:lead_details] || {})) if cp_user
                 end
 

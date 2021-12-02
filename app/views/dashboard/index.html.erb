@@ -6,13 +6,13 @@
       <%= render 'dashboard/index/crm' %>
     <% elsif params[:role] == 'billing_team' %>
       <%= render 'dashboard/index/billing_team' %>
-    <% elsif params[:role] == 'cp_admin' %>
+    <% elsif params[:role].in?(%w(cp_admin cp_owner)) %>
       <%= render 'dashboard/index/cp_admin' %>
     <% end %>
   <% else %>
     <% if current_user.buyer? %>
       <%= render 'dashboard/index/user' %>
-    <% elsif current_user.role?('channel_partner') %>
+    <% elsif current_user.role.in?(%w(channel_partner cp_owner)) %>
       <%= render 'dashboard/index/channel_partner' %>
     <% elsif ['admin'].include?(current_user.role) %>
       <%= render 'dashboard/index/admin' %>
@@ -22,7 +22,7 @@
       <%= render 'dashboard/index/billing_team' %>
     <% elsif current_user.role?('team_lead') %>
       <%= render 'dashboard/index/team_lead' %>
-    <% elsif ['cp_admin', 'cp', 'cp_owner'].include?(current_user.role) %>
+    <% elsif ['cp_admin', 'cp'].include?(current_user.role) %>
       <%= render 'dashboard/index/cp_admin' %>
     <% elsif ['gre'].include?(current_user.role) %>
       <%= render 'dashboard/index/gre' %>

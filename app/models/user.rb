@@ -603,12 +603,14 @@ class User
     def role_based_channel_partners_scope(user, _params = {})
       custom_scope = {}
       if user.role?('cp_admin')
-        cp_ids = User.where(manager_id: user.id).distinct(:id)
-        custom_scope = {role: 'channel_partner'} #, manager_id: {"$in": cp_ids}
+        #cp_ids = User.where(manager_id: user.id).distinct(:id)
+        custom_scope = {role: { '$in': %w(channel_partner cp_owner) } } #, manager_id: {"$in": cp_ids}
       elsif user.role?('cp')
-        custom_scope = {role: 'channel_partner'} #, manager_id: user.id
+        custom_scope = {role: { '$in': %w(channel_partner cp_owner) } } #, manager_id: user.id
+      elsif user.role?('cp_owner')
+        custom_scope = { role: {'$in': ['channel_partner', 'cp_owner']}, channel_partner_id: user.channel_partner_id }
       elsif ["admin","superadmin"].include?(user.role)
-        custom_scope = {role: 'channel_partner'}
+        custom_scope = {role: { '$in': %w(channel_partner cp_owner) } }
       end
     end
 

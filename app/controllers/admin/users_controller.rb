@@ -217,14 +217,17 @@ class Admin::UsersController < AdminController
   def channel_partner_performance
     dates = params[:dates]
     dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
-    @cp_ids = User.where(manager_id: current_user.id).distinct(:id)
+    @walkins = Lead.filter_by_created_at(dates)
+    @bookings = BookingDetail.booking_stages.filter_by_created_at(dates)
     if params[:channel_partner_id].present?
-      @user = User.where(id: params[:channel_partner_id]).first
+      @walkins = @walkins.where(manager_id: params[:channel_partner_id])
+      @bookings = @bookings.where(manager_id: params[:channel_partner_id])
     else
-      @user = User.where(User.role_based_channel_partners_scope(current_user)).first
+      @walkins = @walkins.where(Lead.user_based_scope(current_user, params))
+      @bookings = @bookings.where(BookingDetail.user_based_scope(current_user, params))
     end
-    @walkins = Lead.where(manager_id: @user.id).filter_by_created_at(dates).group_by{|p| p.project_id}
-    @bookings = BookingDetail.booking_stages.where(manager_id: @user.id).filter_by_created_at(dates).group_by{|p| p.project_id}
+    @walkins = @walkins.group_by{|p| p.project_id}
+    @bookings = @bookings.group_by{|p| p.project_id}
   end
 
   # GET /admin/users/search_by
