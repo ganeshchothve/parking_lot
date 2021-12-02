@@ -19,7 +19,7 @@
 <% else %>
   <div class='row'>
     <div class="col-md-12">
-      <%= f.input :project_id, collection: Project.all.collect{|p| [p.name, p.id]}, disabled: !policy([:admin, lead]).editable_field?("project_id"), as: :select, prompt: :translate, input_html: { class: 'selectize', name: 'project_id' } %>
+      <%= f.input :project_id, collection: Project.all.collect{|p| [p.name, p.id]}, required: true, disabled: !policy([:admin, lead]).editable_field?("project_id"), as: :select, prompt: :translate, input_html: { class: 'selectize', name: 'project_id' } %>
     </div>
   </div>
 <% end %>

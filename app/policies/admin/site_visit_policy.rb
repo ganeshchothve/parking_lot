@@ -5,7 +5,7 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
   end
 
   def edit?
-    %w[superadmin admin sales_admin channel_partner].include?(user.role)
+    %w[superadmin admin sales_admin channel_partner cp_owner].include?(user.role)
   end
 
   def new?

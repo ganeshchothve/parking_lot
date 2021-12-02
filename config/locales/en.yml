@@ -1741,6 +1741,10 @@ en:
       move_to_next_state:
         queued: "%{name} moved to sales queue successfully"
         dropoff: '%{name} dropped off successfully'
+      create_from_existing_lead:
+        link_name: 'Add Lead to Other Project'
+      create_new_lead:
+        link_name: 'Add New Lead'
 
     user_kycs:
       index:

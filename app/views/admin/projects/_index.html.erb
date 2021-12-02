@@ -120,6 +120,12 @@
         </div>
         <% end %>
       </div>
+
+      <div class='prjt-inner-stats fn-14 text-primary' style='top: 75%'>
+          <% if !policy([:admin, Lead.new(project_id: project.id)]).new? && policy([current_user_role_group, InterestedProject]).index? %>
+            <%= link_to_if !project.id.in?(interested_project_ids), "Subscribe to project for adding leads", admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-block' %>
+          <% end %>
+      </div>
     </div>
   </div>
   <div class="row col-lg-12 ms-0"></div>
