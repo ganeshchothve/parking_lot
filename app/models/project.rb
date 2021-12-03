@@ -217,7 +217,7 @@ class Project
   end
 
   def ds_name
-    "#{name}"
+    name
   end
 
   def self.user_based_scope(user, params = {})
