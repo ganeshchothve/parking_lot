@@ -116,6 +116,7 @@ module BookingDetailStateMachine
       end
 
       event :cancel, after: :release_project_unit! do
+        transitions from: :booked_tentative, to: :cancelled
         transitions from: :cancelled, to: :cancelled
         transitions from: :scheme_rejected, to: :cancelled
         transitions from: :cancelling, to: :cancelled, after: :update_user_request_to_resolved
@@ -202,14 +203,14 @@ module BookingDetailStateMachine
     #
     # Updating blocked date of project_unit to today and  auto_release_on to nil as booking is confirmed.
     def after_booked_confirmed_event
-      return unless project_unit.present?
-      _project_unit = project_unit
-      _project_unit.auto_release_on = nil
-      _project_unit.save
-      send_email_and_sms_as_confirmed
-
+      if project_unit.present?
+        _project_unit = project_unit
+        _project_unit.auto_release_on = nil
+        _project_unit.save
+        send_email_and_sms_as_confirmed
+      end
       # create asset and send to zoho sign
-      if (self.aasm.from_state == :booked_tentative && self.user.booking_portal_client.document_sign.present?)
+      if (self.aasm.from_state == :booked_tentative) && self.user.booking_portal_client.document_sign.present?)
         self.send_booking_form_to_sign
       end
     end
@@ -355,6 +356,7 @@ module BookingDetailStateMachine
     # This method release the project Unit. Without any fields validation.
     #
     def release_project_unit!
+      return unless self.project_unit.present?
       project_unit.make_available
       project_unit.save(validate: false)
       SelldoLeadUpdater.perform_async(lead_id.to_s, {stage: 'cancelled'})

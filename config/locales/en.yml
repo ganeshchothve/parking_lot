@@ -1056,6 +1056,12 @@ en:
       meeting/help_text:
         photo_html: '<ul><li>Photos of the Event</li></ul>'
         collateral_html: '<ul><li>Event Collaterals</li></ul>'
+      booking_detail/file_types:
+        booking_detail: 'Booking Detail'
+        document: 'Document'
+      booking_detail/help_text:
+        booking_detail: 'Booking Detail'
+        document: 'Document'  
       user:
         temporarily_blocked: 'Qualify lead'
         iris_confirmation: 'Lead Tagging'
