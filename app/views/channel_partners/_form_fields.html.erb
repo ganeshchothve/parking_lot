@@ -97,7 +97,7 @@
 </div>
 <div class="row">
   <div class="col-md-12">
-    <%= form.input :regions, collection: current_client.partner_regions, disabled: !policy([:admin, @channel_partner]).editable_field?("regions"), prompt: :translate, input_html: {multiple: true, class: 'selectize-tags'} %>
+    <%= form.input :regions, collection: current_client.partner_regions, disabled: !policy([:admin, @channel_partner]).editable_field?("regions"), prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
   </div>
 </div>
 
