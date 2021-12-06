@@ -1,1 +1,5 @@
-<%= render 'admin/invoices/draft_form', url: admin_booking_detail_invoices_path(booking_detail_id: @booking_detail.id) %>
+<% if @booking_detail.project_unit.present? %>
+	<%= render 'admin/invoices/draft_form', url: admin_booking_detail_invoices_path(booking_detail_id: @booking_detail.id) %>
+<% else %>
+	<%= render 'admin/invoices/draft_form_without_inventory', url: admin_booking_detail_invoices_path(booking_detail_id: @booking_detail.id) %>
+<% end %>

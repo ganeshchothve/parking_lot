@@ -150,10 +150,11 @@ class BookingDetail
   # @return [Email Object]
   #
   def auto_released_extended_inform_buyer!
+    template = Template::EmailTemplate.find_by(project_id: project_id, name: "auto_release_on_extended")
     email = Email.create!({
       project_id: project_id,
       booking_portal_client_id: project_unit.booking_portal_client_id,
-      email_template_id: Template::EmailTemplate.find_by(project_id: project_id, name: "auto_release_on_extended").id,
+      email_template_id: template.id,
       cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
       recipients: [ lead.user ],
       cc_recipients: ( lead.manager_id.present? ? [lead.manager] : [] ),
@@ -314,7 +315,11 @@ class BookingDetail
   end
 
   def incentive_eligible?
-    booked_confirmed? && system_tasks_completed?
+    if project.present? && project.enable_inventory && project_unit.present?
+      booked_confirmed? && system_tasks_completed?
+    elsif project.present? && !project.enable_inventory  
+      booked_confirmed?
+    end
   end
 
   def calculate_incentive

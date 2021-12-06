@@ -17,6 +17,7 @@ class Invoice
   field :rejection_reason, type: String
   field :comments, type: String
   field :net_amount, type: Float
+  field :gst_slab, type: Float, default: 0.0
 
   belongs_to :project
   belongs_to :booking_detail

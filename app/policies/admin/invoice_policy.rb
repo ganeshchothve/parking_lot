@@ -9,7 +9,7 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def create?
-    user.role.in?(%w(channel_partner admin)) && enable_incentive_module?(user) && incentive_calculation_type?("manual")
+    user.role.in?(%w(channel_partner admin billing_team)) && enable_incentive_module?(user) && incentive_calculation_type?("manual")
   end
 
   def edit?
@@ -82,6 +82,7 @@ class Admin::InvoicePolicy < InvoicePolicy
       attributes += [cheque_detail_attributes: [:id, :total_amount, :payment_identifier, :issued_date, :issuing_bank, :issuing_bank_branch, :handover_date, :creator_id]] if record.status.in?(%w(approved paid))
       attributes += [:event]
     when 'billing_team'
+      attributes += [:number, :gst_slab] if record.status.in?(%w(draft))
       attributes += [:amount, :gst_amount] if record.status.in?(%w(raised pending_approval))
       attributes += [:rejection_reason] if record.status.in?(%w(raised pending_approval rejected))
       attributes += [cheque_detail_attributes: [:id, :total_amount, :payment_identifier, :issued_date, :issuing_bank, :issuing_bank_branch, :handover_date, :creator_id]] if record.status.in?(%w(approved paid))
