@@ -1106,6 +1106,7 @@ en:
         time_zone: "User's Time Zone"
         utm_params: 'UTM Tracking'
         referral_code: "Referral Code"
+        shareable_link: "Shareable Link"
       user/confirmed:
         :true: 'Confirmed'
         :false: 'Not Confirmed'

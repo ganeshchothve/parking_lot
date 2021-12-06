@@ -101,16 +101,19 @@
                   </div>
                 </div>
               </div>
-            <% else %>
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <%= f.label :cp_url, class: "control-label" %>
-                  <%= f.text_field :cp_url, class: 'form-control', autofocus: true, disabled: (policy([current_user_role_group, @user]).editable_field?("cp_url") ? false : true) %>
+            <% end %>
+          </div>
+
+          <div class="row">
+            <% if current_user_role_group.to_s == 'admin' && !@user.buyer? && current_user == @user %>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <%= f.label t('mongoid.attributes.user.shareable_link'), class: 'control-label' %>
+                  <%= f.text_field nil, value: new_channel_partner_url(manager_id: @user.id, layout: true), disabled: true, class: 'form-control' %>
                 </div>
               </div>
             <% end %>
           </div>
-
           <div class="row">
             <% if policy([current_user_role_group, @user]).editable_field?('tier_id') %>
               <div class='col-md-6'>
