@@ -1,32 +1,9 @@
 <div class="row">
-  <div class="col-md-2">
-    <%= form.input :title, collection: UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
-  </div>
-
-  <div class="col-md-5">
-    <%= form.input :first_name, required: true, autofocus: true, disabled: !policy([:admin, @channel_partner]).editable_field?("first_name") %>
-  </div>
-
-  <div class="col-md-5">
-    <%= form.input :last_name, required: true, autofocus: true, disabled: !policy([:admin, @channel_partner]).editable_field?("last_name") %>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-6">
-    <%= form.input :phone, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("phone"), as: :tel, input_html: { class: 'phone' } %>
-  </div>
-  <div class="col-md-6">
-    <%= form.input :email, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("email"), input_html: { class: 'email'} %>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-6">
-    <%= form.input :pan_number, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("pan_number") %>
-  </div>
   <div class="col-md-6">
     <%= form.input :company_name, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("company_name") %>
+  </div>
+  <div class="col-md-6">
+    <%= form.input :pan_number, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("pan_number") %>
   </div>
 </div>
 

@@ -13,22 +13,6 @@
                 <p class="break-word"><%= @channel_partner.name %></p>
               </li>
               <li>
-                <span><%= t('mongoid.attributes.channel_partner.phone') %></span>
-                <p class="break-word"><%= @channel_partner.phone %></p>
-              </li>
-              <li>
-                <span><%= t('mongoid.attributes.channel_partner.alternate_phone') %></span>
-                <p class="break-word"><%= @channel_partner.alternate_phone %></p>
-              </li>
-              <li>
-                <span><%= t('mongoid.attributes.channel_partner.email') %></span>
-                <p class="break-word"><%= @channel_partner.email %></p>
-              </li>
-              <li>
-                <span><%= t('mongoid.attributes.channel_partner.alternate_email') %></span>
-                <p class="break-word"><%= @channel_partner.alternate_email %></p>
-              </li>
-              <li>
                 <span><%= t('mongoid.attributes.channel_partner.rera_id') %></span>
                 <p><%= @channel_partner.rera_id.presence || '-' %></p>
               </li>
@@ -53,20 +37,8 @@
                 <p class="break-word"><%= @channel_partner.company_owner_phone.presence || '-' %></p>
               </li>
               <li>
-                <span><%= t('mongoid.attributes.channel_partner.additional_name') %></span>
-                <p class="break-word"><%= @channel_partner.additional_name.presence || '-' %></p>
-              </li>
-              <li>
-                <span><%= t('mongoid.attributes.channel_partner.region') %></span>
-                <% if @channel_partner.regions.presence %>
-                    <p class="break-word"><%= @channel_partner.regions.join(", ")%></p>
-                <% else %>
-                  <p class="break-word">-</p>
-                <% end %>
-              </li>
-              <li>
-                <span><%= t('mongoid.attributes.channel_partner.category') %></span>
-                <p class="break-word"><%= @channel_partner.category.presence || '-' %></p>
+                <span><%= t('mongoid.attributes.channel_partner.regions') %></span>
+                <p class="break-word"><%= @channel_partner.regions.presence&.to_sentence || '-' %></p>
               </li>
               <li>
                 <span><%= t('mongoid.attributes.channel_partner.category') %></span>

@@ -5,6 +5,16 @@ class SiteVisitObserver < Mongoid::Observer
       tz_str = ActiveSupport::TimeZone.seconds_to_utc_offset(tz.utc_offset)
       site_visit.scheduled_on = "#{site_visit.time_slot.start_time_to_s} #{tz_str}" if site_visit.time_slot&.start_time_to_s.present?
     end
+    # Set project & user
+    site_visit.project_id = site_visit.lead&.project_id if site_visit.project_id.blank?
+    site_visit.user_id = site_visit.lead&.user_id if site_visit.user_id.blank?
+    # Set manager if present on lead
+    site_visit.manager_id = site_visit.lead&.manager_id if site_visit.manager_id.blank?
+    site_visit.channel_partner_id = site_visit.manager&.channel_partner_id if site_visit.channel_partner_id.blank? && site_visit.manager.present?
+    # Set created_by
+    if site_visit.created_by.blank?
+      site_visit.created_by = site_visit.creator&.role
+    end
   end
 
   def before_save site_visit

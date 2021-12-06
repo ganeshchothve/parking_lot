@@ -53,6 +53,9 @@ class BookingDetail
   belongs_to :lead
   belongs_to :user
   belongs_to :manager, class_name: 'User', optional: true
+  belongs_to :channel_partner, optional: true
+  belongs_to :cp_manager, class_name: 'User', optional: true
+  belongs_to :cp_admin, class_name: 'User', optional: true
   belongs_to :search, optional: true
   # When a new booking detail object is created from another object, this field will be set. This happens when the user creates a swap request.
   belongs_to :parent_booking_detail, class_name: 'BookingDetail', optional: true
@@ -91,7 +94,8 @@ class BookingDetail
   scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_unit_id: { "$in": ProjectUnit.where(project_tower_id: project_tower_id).pluck(:_id) })}
   scope :filter_by_user_id, ->(user_id) { where(user_id: user_id)  }
   scope :filter_by_lead_id, ->(lead_id){ where(lead_id: lead_id)}
-  scope :filter_by_manager_id, ->(manager_id){ where(lead_id: { '$in' => Lead.where(manager_id: manager_id).distinct(:_id) } ) }
+  scope :filter_by_manager_id, ->(manager_id){ where(manager_id: manager_id) }
+  scope :filter_by_cp_manager_id, ->(cp_manager_id){ where(cp_manager_id: cp_manager_id) }
   scope :filter_by_incentive_scheme_id, ->(incentive_scheme_id){ where(incentive_scheme_id: incentive_scheme_id) }
   scope :filter_by_ladder_stage, ->(stage) { where(ladder_stage: stage.to_i) }
   scope :filter_by_tasks_completed, ->(task) { where(tasks: { '$elemMatch': {key: task, completed: true} }) }
@@ -324,14 +328,18 @@ class BookingDetail
       custom_scope = {}
       if params[:lead_id].blank? && !user.buyer?
         if user.role?('channel_partner')
-          custom_scope = { manager_id: user.id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
-        #elsif user.role?('cp_admin')
-        #  cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
-        #  channel_partner_ids = User.where(role: 'channel_partner', manager_id: {"$in": cp_ids}).distinct(:id)
-        #  custom_scope = { manager_id: { "$in": channel_partner_ids } }
-        #elsif user.role?('cp')
-        #  channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
-        #  custom_scope = { manager_id: { "$in": channel_partner_ids } }
+          custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
+        elsif user.role?('cp_owner')
+          custom_scope = { channel_partner_id: user.channel_partner_id }
+        elsif user.role?('cp_admin')
+          #cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
+          #channel_partner_ids = User.where(role: 'channel_partner', manager_id: {"$in": cp_ids}).distinct(:id)
+          #custom_scope = { manager_id: { "$in": channel_partner_ids } }
+          custom_scope = { cp_admin_id: user.id }
+        elsif user.role?('cp')
+          #channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
+          #custom_scope = { manager_id: { "$in": channel_partner_ids } }
+          custom_scope = { cp_manager_id: user.id }
         elsif user.role?('billing_team')
           custom_scope = incentive_eligible.selector
         end

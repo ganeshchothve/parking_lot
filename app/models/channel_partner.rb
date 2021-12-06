@@ -3,7 +3,6 @@ class ChannelPartner
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include InsertionStringMethods
-  # include SyncDetails
   include CrmIntegration
   extend FilterByCriteria
   include ChannelPartnerStateMachine
@@ -22,19 +21,12 @@ class ChannelPartner
   COMPANY_TYPE = ['Sole Proprietorship', 'Partnership', 'Private Limited', 'Public Limited', 'Others']
   CATEGORY = ['CP Company', 'Individual CP', 'ROTN', 'IRDA', 'Chartered accountants', 'IT Profession']
   SOURCE = ['Internal CP', 'External CP']
-  SHORT_FORM = %i(first_name last_name company_name rera_applicable status interested_services)
+
+  SHORT_FORM = %i(company_name rera_applicable status interested_services)
   FULL_FORM = SHORT_FORM.clone + %i(gst_applicable nri manager_id)
 
-  attr_accessor :referral_code
+  attr_accessor :first_name, :last_name, :email, :phone, :referral_code
 
-  field :title, type: String
-  field :first_name, type: String
-  field :last_name, type: String
-  field :additional_name, type: String
-  field :email, type: String
-  field :alternate_email, type: String
-  field :phone, type: String
-  field :alternate_phone, type: String
   field :rera_id, type: String
   field :status, type: String, default: 'inactive'
 
@@ -71,7 +63,7 @@ class ChannelPartner
   scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_city, ->(city) { where(city: city) }
   scope :filter_by__id, ->(_id) { where(_id: _id) }
-  scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
+  scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(company_name: regex) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
 
   default_scope -> { desc(:created_at) }
@@ -83,16 +75,16 @@ class ChannelPartner
     ]
   )
 
-  belongs_to :associated_user, class_name: 'User', optional: true
   belongs_to :manager, class_name: 'User', optional: true
   has_many :users
   has_one :address, as: :addressable
   has_one :bank_detail, as: :bankable, validate: false
   has_many :assets, as: :assetable
 
+  validates :first_name, :last_name, presence: true, on: :create
   validates *SHORT_FORM, presence: true
   validates *FULL_FORM, presence: true, on: :submit_for_approval
-  validate :phone_or_email_required, if: proc { |cp| cp.phone.blank? && cp.email.blank? }
+  validate :phone_or_email_required, if: proc { |cp| cp.phone.blank? && cp.email.blank? }, on: :create
   validates :pan_number, presence: true, unless: :nri?, on: :submit_for_approval
   validates :rera_id, presence: true, if: :rera_applicable?
   validates :gstin_number, presence: true, if: :gst_applicable?
@@ -100,19 +92,19 @@ class ChannelPartner
   validates :status_change_reason, presence: true, if: proc { |cp| cp.status == 'rejected' }
   validates :aadhaar, format: { with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number' }, allow_blank: true
   validates :rera_id, uniqueness: true, allow_blank: true
-  validates :phone, uniqueness: true, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, allow_blank: true
-  validates :email, uniqueness: true, allow_blank: true
+  validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, allow_blank: true
+  #validates :email, uniqueness: true, allow_blank: true
   validates :status, inclusion: { in: proc { ChannelPartner::STATUS } }
   validates :company_type, inclusion: { in: proc { ChannelPartner::COMPANY_TYPE } }, allow_blank: true
   validates :source, inclusion: { in: proc { ChannelPartner::SOURCE } }, allow_blank: true
   validates :category, inclusion: { in: proc { ChannelPartner::CATEGORY } }, allow_blank: true
   validates :regions, array: { inclusion: { in: current_client.partner_regions } }
-
+  validates :company_name, uniqueness: true
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: { with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A' }, allow_blank: true
   #validates :first_name, :last_name, name: true, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
-  validate :user_based_uniqueness
+  validate :user_based_uniqueness, on: :create
 
   validates :experience, inclusion: { in: proc{ ChannelPartner::EXPERIENCE } }, allow_blank: true
   validates :expertise, array: { inclusion: {allow_blank: true, in: ChannelPartner::EXPERTISE } }
@@ -140,41 +132,23 @@ class ChannelPartner
   end
 
   def name
-    str = "#{title} #{first_name} #{last_name}"
-    str += " (#{company_name})" if company_name.present?
-    str
+    company_name
   end
 
   alias :resource_name :name
 
   def ds_name
-    "#{name} - #{email} - #{phone}"
+    str = name
+    str += " - #{rera_id}" if rera_applicable?
+    str
   end
 
-  def sfdc_phone
-    self.phone.gsub(/\A\+91/, '')
-  end
-
-  # As we want to push channel partner once its activated, we are using erp_model with create event here.
-  def update_details
-    sync_log = SyncLog.new
-    @erp_models = ErpModel.where(resource_class: self.class, action_name: 'create', is_active: true)
-    @erp_models.each do |erp|
-      sync_log.sync(erp, self)
-    end
-  end
-
-  def sync(erp_model, sync_log)
-    Api::ChannelPartnerDetailsSync.new(erp_model, self, sync_log).execute
-  end
-
-  def update_erp_id(erp_id, domain)
-    super
-    associated_user.update_erp_id(erp_id, domain) if associated_user
-  end
+  #def sfdc_phone
+  #  self.phone.gsub(/\A\+91/, '')
+  #end
 
   def doc_types
-    doc_types = self.nri? ? %w[cheque_scanned_copy company_incorporation_certificate form_10f tax_residency_certificate pe_declaration] : %w[pan_card]
+    doc_types = self.nri? ? %w[company_incorporation_certificate form_10f tax_residency_certificate pe_declaration] : %w[pan_card]
     doc_types << 'rera_certificate' if self.rera_applicable?
     doc_types << 'gst_certificate' if self.gst_applicable?
     doc_types
@@ -197,10 +171,9 @@ class ChannelPartner
     query << { phone: phone } if phone.present?
     query << { email: email } if email.present?
     query << { rera_id: rera_id } if rera_id.present?
-    criteria = User.or(query)
-    criteria = criteria.ne(id: associated_user_id) if associated_user_id.present?
-    if criteria.present?
-      errors.add :base, 'User with phone, email or rera already exists'
+    user = User.or(query).first
+    if user.present? && (!user.role.in?(%w(cp channel_partner)) || user.is_active?)
+      errors.add :base, 'User with Phone, Email or RERA already exists'
     end
   end
 
@@ -209,11 +182,13 @@ class ChannelPartner
 
     def user_based_scope(user, _params = {})
       custom_scope = {}
-      if user.role?('cp_admin')
-       #cp_ids = User.where(manager_id: user.id).distinct(:id)
-       #custom_scope = { manager_id: {"$in": cp_ids} }
-      elsif user.role?('cp')
-       custom_scope = { manager_id: user.id }
+      if user.present?
+        if user.role?('cp_admin')
+         #cp_ids = User.where(manager_id: user.id).distinct(:id)
+         #custom_scope = { manager_id: {"$in": cp_ids} }
+        elsif user.role?('cp')
+         custom_scope = { manager_id: user.id }
+        end
       end
       custom_scope
     end

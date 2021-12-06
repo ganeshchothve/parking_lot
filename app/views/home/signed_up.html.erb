@@ -7,7 +7,7 @@
     </p>
     <h4 class="text-start">Verify your email</h4>
     <p class="popup-desc text-start font-medium">We have sent an account verification link to <%= @user.email %></p>
-    <p class="fn-16">Click the link in your email to verify your account if you can't find the <br>email check your spam folder or <%= link_to 'click here to resend', resend_confirmation_instructions_admin_user_path(@user) %></p>
+    <p class="fn-16">Click the link in your email to verify your account.<br> If you can't find the email check your spam folder or <%= link_to 'click here to resend', resend_confirmation_instructions_admin_user_path(@user), class: 'text-primary' %></p>
     <p class="fn-16 font-medium theme-txt-color">Sign in after verifying your email and setting up a password</p>
     <%= link_to 'Sign In', new_user_session_path, class: 'bg-primary btn rounded p-2 px-3 white' %>
   </div>

@@ -105,6 +105,7 @@ class Project
   field :price_starting_from, type: Integer
   field :price_upto, type: Integer
   field :broker_usp, type: Array, default: []
+  field :check_sv_availability_in_selldo, type: Boolean, default: false
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
@@ -222,7 +223,7 @@ class Project
 
   def self.user_based_scope(user, params = {})
     custom_scope = {}
-    if user.role?('channel_partner')
+    if user.role.in?(%w(cp_owner channel_partner))
       custom_scope = { _id: { '$in': user.interested_projects.approved.distinct(:project_id) } } unless params[:controller] == 'admin/projects'
     end
 
