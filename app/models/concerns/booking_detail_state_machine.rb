@@ -117,6 +117,7 @@ module BookingDetailStateMachine
 
       event :cancel, after: :release_project_unit! do
         transitions from: :booked_tentative, to: :cancelled
+        transitions from: :blocked, to: :cancelled
         transitions from: :cancelled, to: :cancelled
         transitions from: :scheme_rejected, to: :cancelled
         transitions from: :cancelling, to: :cancelled, after: :update_user_request_to_resolved

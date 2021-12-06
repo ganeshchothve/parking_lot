@@ -99,7 +99,7 @@ class Project
   field :price_starting_from, type: Integer
   field :price_upto, type: Integer
   field :broker_usp, type: Array, default: []
-  field :enable_inventory, type: Boolean, default: false
+  field :enable_inventory, type: Boolean, default: true
   field :enable_booking_with_kyc, type: Boolean, default: true
 
   field :email_header, type: String, default: '<div class="container">
