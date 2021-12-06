@@ -10,7 +10,6 @@
   <div class="col-md-5">
     <%= form.input :last_name, required: true, autofocus: true, disabled: !policy([:admin, @channel_partner]).editable_field?("last_name") %>
   </div>
-
 </div>
 
 <div class="row">
@@ -94,6 +93,11 @@
   <div class="col-md-12">
   <!-- Remove form-control class in select field and selectize  -->
     <%= form.input :interested_services, collection: ChannelPartner::SERVICES.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("interested_services"), prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <%= form.input :regions, collection: current_client.partner_regions, disabled: !policy([:admin, @channel_partner]).editable_field?("regions"), prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
   </div>
 </div>
 

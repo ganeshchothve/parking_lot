@@ -459,15 +459,17 @@ en:
         name: 'Developer Name'
         selldo_id: 'Sell.Do Developer ID'
       project:
-        hot: 'Hot Property'
-        is_active: 'Active?'
         name: 'Project Name'
+        region: 'Region'
+        category: 'Category'
+        project_segment: 'Segment'
+        configurations: 'Configurations'
         micro_market: 'Location'
         city: 'City'
-        project_type: Type of Project
-        category: Category
-        project_segment: Segment
         possession: Possession Date
+        hot: 'Hot Property'
+        is_active: 'Active?'
+        project_type: Type of Project
         launched_on: Launch Date
         developer_name: Developer Name
         approved_banks: Approved Banks
