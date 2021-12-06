@@ -31,8 +31,8 @@
 
 <% if policy([:admin, Project]).index? %>
   <li class="nav-item">
-    <% _projects_path = current_user.role?("channel_partner") ? admin_projects_path(fltrs: {regions: current_user.channel_partner&.regions}) : admin_projects_path  %>
-  <%= active_link_to t('controller.projects.index.link_name'), _projects_path, active: request.fullpath.scan(/projects/).present? && %w(user_interested_projects third_party_inventory).all? {|x| request.fullpath.scan(/^(?!.*#{x}).*$/).present?}, class: "nav-link pl-0 pr-0" %>
+    <% _projects_path = current_user.role.in?(%w(cp_owner channel_partner)) ? admin_projects_path(fltrs: {regions: current_user.channel_partner&.regions}) : admin_projects_path  %>
+    <%= active_link_to t('controller.projects.index.link_name'), _projects_path, active: request.fullpath.scan(/projects/).present? && %w(user_interested_projects third_party_inventory).all? {|x| request.fullpath.scan(/^(?!.*#{x}).*$/).present?}, class: "nav-link pl-0 pr-0" %>
   </li>
   <% if policy([current_user_role_group, InterestedProject]).index? && InterestedProject.where(user_id: current_user.id).in(status: %w(subscribed approved)).present? %>
     <li class='nav-item'>

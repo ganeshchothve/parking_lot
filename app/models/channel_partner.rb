@@ -188,6 +188,8 @@ class ChannelPartner
          #custom_scope = { manager_id: {"$in": cp_ids} }
         elsif user.role?('cp')
          custom_scope = { manager_id: user.id }
+        elsif user.role.in?(%w(cp_owner channel_partner))
+          custom_scope = { id: user.channel_partner_id }
         end
       end
       custom_scope
