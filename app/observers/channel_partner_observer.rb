@@ -64,24 +64,17 @@ class ChannelPartnerObserver < Mongoid::Observer
       if channel_partner.rera_id_changed? && channel_partner.rera_id.present?
         channel_partner.users.update_all(rera_id: channel_partner.rera_id)
       end
-
-      # Push services interested to selldo if set or changed
-      if channel_partner.interested_services_changed? && channel_partner.interested_services.present?
-        channel_partner.users.cp_owner.each do |cp_user|
-          if (selldo_api_key = cp_user&.booking_portal_client&.selldo_api_key.presence) && (selldo_client_id = cp_user&.booking_portal_client&.selldo_client_id.presence)
-            SelldoLeadUpdater.perform_async(cp_user.id.to_s, {action: 'push_cp_data', selldo_api_key: selldo_api_key, selldo_client_id: selldo_client_id, lead: {custom_interested_services: channel_partner.interested_services.join(',')}})
-          end
-        end
-      end
     end
     channel_partner.rera_applicable = true if channel_partner.rera_id.present?
     channel_partner.gst_applicable = true if channel_partner.gstin_number.present?
 
-    if channel_partner.manager_id_changed? && channel_partner.manager_id.present?
+    if _changes = (channel_partner.changed & %w(manager_id interested_services regions company_name)).presence && _changes.all? {|attr| channel_partner.send(attr)&.present?}
       channel_partner.users.update_all(manager_id: channel_partner.manager_id)
       if current_client.external_api_integration?
-        Crm::Api::Put.where(resource_class: 'ChannelPartner', is_active: true).each do |api|
-          api.execute(channel_partner)
+        channel_partner.users.each do |cp_user|
+          Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
+            api.execute(cp_user)
+          end
         end
       end
     end

@@ -21,8 +21,11 @@ class UserObserver < Mongoid::Observer
   def after_create user
     if user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner
       if current_client.external_api_integration?
-        Crm::Api::Post.where(_type: 'Crm::Api::Post', resource_class: 'ChannelPartner', is_active: true).each do |api|
-          api.execute(user.channel_partner)
+        Crm::Api::Post.where(_type: 'Crm::Api::Post', resource_class: 'User', is_active: true).each do |api|
+          api.execute(user)
+        end
+        Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
+          api.execute(user)
         end
       end
     end
@@ -41,6 +44,12 @@ class UserObserver < Mongoid::Observer
 
     if user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner
       user.rera_id = user.channel_partner&.rera_id if user.rera_id.blank?
+
+      if _changes = (user.changed & %w(role channel_partner_id)).presence && _changes.all? {|attr| user.send(attr)&.present?}
+        Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
+          api.execute(user)
+        end
+      end
     end
 
     #if user.manager_id_changed? && user.manager_id.present?
