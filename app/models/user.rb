@@ -316,6 +316,22 @@ class User
     portal_stages.desc(:updated_at).first
   end
 
+  def set_portal_stage_and_push_in_crm
+    if self.role.in?(%w(cp_owner channel_partner))
+      stage = self.channel_partner&.status
+      push_to_crm = self.booking_portal_client.external_api_integration?
+      priority = PortalStagePriority.where(role: 'channel_partner').collect{|x| [x.stage, x.priority]}.to_h
+      if stage.present? && priority[stage].present?
+        self.portal_stages.where(stage:  stage).present? ? self.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : self.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
+        if push_to_crm
+          Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
+            api.execute(self)
+          end
+        end
+      end
+    end
+  end
+
   def active_bookings
     booking_details.in(status: BookingDetail::BOOKING_STAGES)
   end

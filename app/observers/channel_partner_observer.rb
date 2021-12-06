@@ -68,7 +68,7 @@ class ChannelPartnerObserver < Mongoid::Observer
     channel_partner.rera_applicable = true if channel_partner.rera_id.present?
     channel_partner.gst_applicable = true if channel_partner.gstin_number.present?
 
-    if _changes = (channel_partner.changed & %w(manager_id interested_services regions company_name)).presence && _changes.all? {|attr| channel_partner.send(attr)&.present?}
+    if _changes = (channel_partner.changed & %w(manager_id interested_services regions company_name)).presence && _changes&.all? {|attr| channel_partner.send(attr)&.present?}
       channel_partner.users.update_all(manager_id: channel_partner.manager_id)
       if current_client.external_api_integration?
         channel_partner.users.each do |cp_user|

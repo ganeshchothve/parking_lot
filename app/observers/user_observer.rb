@@ -36,16 +36,14 @@ class UserObserver < Mongoid::Observer
     if user.confirmed_at_changed? && user.confirmed?
       # Send confirmed portal stage for channel partner users into selldo
       if user.channel_partner?
-        if (selldo_api_key = user.booking_portal_client&.selldo_api_key.presence) && (selldo_client_id = user.booking_portal_client&.selldo_client_id.presence)
-          SelldoLeadUpdater.perform_async(user.id.to_s, {stage: 'confirmed', action: 'add_cp_portal_stage', selldo_api_key: selldo_api_key, selldo_client_id: selldo_client_id})
-        end
+        user.set_portal_stage_and_push_in_crm
       end
     end
 
     if user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner
       user.rera_id = user.channel_partner&.rera_id if user.rera_id.blank?
 
-      if _changes = (user.changed & %w(role channel_partner_id)).presence && _changes.all? {|attr| user.send(attr)&.present?}
+      if _changes = (user.changed & %w(role channel_partner_id)).presence && _changes&.all? {|attr| user.send(attr)&.present?}
         Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
           api.execute(user)
         end
