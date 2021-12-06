@@ -48,5 +48,7 @@
   <div class="col-md-6">
     <%= form.input :rera_id, disabled: !policy([:admin, @channel_partner]).editable_field?("rera_id") %>
   </div>
-  <%= form.hidden_field :manager_id, value: @cp_id %>
+  <% if params[:manager_id].present? %>
+    <%= form.hidden_field :manager_id, value: params[:manager_id] %>
+  <% end %>
 </div>
