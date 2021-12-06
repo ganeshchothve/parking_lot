@@ -17,7 +17,7 @@
       <%= link_to t("mongoid.attributes.crm.api.request_types.get"), admin_crm_base_api_show_response_path(api.base, api, resource_id: resource.id, type: api._type , is_active: true), class: 'db-small-btn light-blue bg-white fn-400 btn unset-width modal-remote-form-link mr-2' %>
       <% end %>
 
-      <% if current_user.role?('superadmin') && api = apis.where(_type: Crm::Api::Post, resource_class: resource.class, is_active: true).first %>
+      <% if ['superadmin', 'admin', 'sales_admin'].include?(current_user.role) && api = apis.where(_type: Crm::Api::Post, resource_class: resource.class, is_active: true).first %>
       <% if ApiLog.where(crm_api_id: api.id, status: "Success", resource_id: resource.id).blank? %>
       <%= link_to t("mongoid.attributes.crm.api.request_types.post"), admin_crm_base_api_show_response_path(api.base, api, resource_id: resource.id, type: api._type), "data-disable-with":"Loading...", class: 'white bg-primary btn unset-width mr-2' %>
       <% else %>
