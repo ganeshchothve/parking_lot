@@ -9,7 +9,7 @@
 <% elsif current_user.role?('billing_team') && booking_detail.status == "booked_tentative" %>
   <%= link_to 'Move to Booked Confirmed', move_to_next_state_admin_booking_detail_path(booking_detail, status: 'booked_confirmed', format: :json), method: 'patch', remote: true, data: { disable_with: 'Queueing...' }, class: "dropdown-item queued move-to-next-state" %>
 <% end %>
-<% if booking_detail.status != 'booked_confirmed' && %w(account_manager_head account_manager superadmin).include?(current_user.role) %>
+<% if (booking_detail.status == 'booked_tentative' || booking_detail.status == 'blocked') && %w(account_manager_head superadmin).include?(current_user.role) %>
   <%= link_to 'Cancel Booking', move_to_next_state_admin_booking_detail_path(booking_detail, status: 'cancel', format: :json), method: 'patch', remote: true, data: { confirm: 'Are you sure?', disable_with: 'Cancelling...' }, class: 'dropdown-item dropoff move-to-next-state' %>
 <% end %>
 <% if policy([current_user_role_group, Asset.new(assetable: booking_detail) ]).update? %>
