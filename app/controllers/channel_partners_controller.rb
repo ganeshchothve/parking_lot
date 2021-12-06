@@ -25,6 +25,7 @@ class ChannelPartnersController < ApplicationController
 
   def new
     @channel_partner = ChannelPartner.new(referral_code: params[:custom_referral_code])
+    @cp_id = params[:manager_id].present? ? User.filter_by_role('cp').where(id: params[:manager_id]).first.id : User.where(email: "manish.pandit@beyondwalls.com").first.id
     render layout: 'landing_page'
   end
 

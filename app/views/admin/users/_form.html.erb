@@ -101,6 +101,13 @@
                   </div>
                 </div>
               </div>
+            <% else %>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <%= f.label :cp_url, class: "control-label" %>
+                  <%= f.text_field :cp_url, class: 'form-control', autofocus: true, disabled: (policy([current_user_role_group, @user]).editable_field?("cp_url") ? false : true) %>
+                </div>
+              </div>
             <% end %>
           </div>
 

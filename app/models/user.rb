@@ -48,6 +48,7 @@ class User
   field :premium,type: Boolean, default: false
 
   field :encrypted_password, type: String, default: ''
+  field :cp_url, type: String
 
   ## Recoverable
   field :reset_password_token,   type: String

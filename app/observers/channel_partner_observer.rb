@@ -42,7 +42,7 @@ class ChannelPartnerObserver < Mongoid::Observer
     end
     sms_template = Template::EmailTemplate.where(name: template_name).first
     if sms_template.present?
-      phones = recipients.collect(&:phone).reject(&:blank)
+      phones = recipients.collect(&:phone).reject(&:blank?)
       if phones.present?
         Sms.create!(
           booking_portal_client_id: channel_partner.associated_user.booking_portal_client_id,
