@@ -42,12 +42,15 @@
           <%= link_to_if policy([current_user_role_group, Lead]).index?, leads_count, admin_leads_path(fltrs: {project_id: project.id}) %>
           <span>Leads</span>
           <% if policy([:admin, Lead.new(project_id: project.id)]).new? %>
-          <%= link_to 'ADD', new_admin_lead_path(project_id: project.id), class: 'modal-remote-form-link prjt-add h-auto' %>
+            <%= link_to 'ADD', new_admin_lead_path(project_id: project.id), class: 'modal-remote-form-link prjt-add h-auto' %>
           <% end %>
         </p>
         <p>
           <%= SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).where(project_id: project.id).count %>
           <span>Walk-Ins</span>
+          <% if policy([:admin, Lead.new(project_id: project.id)]).new? %>
+            <%= link_to 'ADD', new_admin_lead_path(project_id: project.id, walkin: true), class: 'modal-remote-form-link prjt-add h-auto' %>
+          <% end %>
         </p>
         <p>
           <% bookings_count = BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: project.id).count %>
@@ -123,7 +126,7 @@
 
       <div class='prjt-inner-stats fn-14 text-primary' style='top: 75%'>
           <% if !policy([:admin, Lead.new(project_id: project.id)]).new? && policy([current_user_role_group, InterestedProject]).index? %>
-            <%= link_to_if !project.id.in?(interested_project_ids), "Subscribe to project for adding leads", admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-block' %>
+            <%= link_to_if !project.id.in?(interested_project_ids), t('controller.projects.show.show_interest_text'), admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-block' %>
           <% end %>
       </div>
     </div>

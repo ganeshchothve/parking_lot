@@ -16,8 +16,8 @@ class SiteVisit
   belongs_to :user
   belongs_to :creator, class_name: 'User'
   belongs_to :time_slot, optional: true
-  belongs_to :manager, class_name: 'User'
-  belongs_to :channel_partner
+  belongs_to :manager, class_name: 'User', optional: true
+  belongs_to :channel_partner, optional: true
 
   field :scheduled_on, type: DateTime
   field :status, type: String, default: 'scheduled'
@@ -27,6 +27,7 @@ class SiteVisit
   field :is_revisit, type: Boolean
   field :cp_code, type: String
   field :sales_id, type: BSON::ObjectId
+  field :created_by, type: String
 
   scope :filter_by_status, ->(_status) { where(status: { '$in' => _status }) }
   scope :filter_by_site_visit_type, ->(_status) { where(status: { '$in' => _site_visit_type }) }

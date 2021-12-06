@@ -23,4 +23,10 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
   def sync_with_selldo?
     edit? && ENV_CONFIG.dig(:selldo, :base_url).present? && record.project.selldo_client_id.present? && record.project.selldo_api_key.present?
   end
+
+  def permitted_attributes params={}
+    attributes = super || []
+    attributes += [:manager_id] if record.new_record? && user.role.in?(%w(cp_owner channel_partner))
+    attributes
+  end
 end

@@ -40,7 +40,7 @@ module LeadRegisteration
   private
 
   def add_existing_lead_to_project_flow(format)
-    @new_lead = @user.leads.new(email: @lead.email, phone: @lead.phone, first_name: @lead.first_name, last_name: @lead.last_name, project_id: @project.id, manager_id: params[:manager_id])
+    @new_lead = @user.leads.new(email: @lead.email, phone: @lead.phone, first_name: @lead.first_name, last_name: @lead.last_name, project_id: @project.id, manager_id: params[:manager_id], push_to_crm: params[:push_to_crm])
 
     save_lead(format, @new_lead, true)
   end
@@ -51,7 +51,7 @@ module LeadRegisteration
       @user.skip_confirmation! # TODO: Remove this when customer login needs to be given
     end
 
-    @lead = @user.leads.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], project_id: @project.id, manager_id: params[:manager_id])
+    @lead = @user.leads.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], project_id: @project.id, manager_id: params[:manager_id], push_to_crm: params[:push_to_crm])
 
     save_lead(format, @lead)
   end
@@ -60,10 +60,16 @@ module LeadRegisteration
     push_lead_to_selldo(format, lead) do |selldo_api, api_log|
       if existing || (@user.save && (selldo_config_base.blank? || @project.save))
         lead.assign_attributes(selldo_lead_registration_date: params.dig(:lead_details, :lead_created_at))
+        lead.assign_attributes(permitted_attributes([:admin, lead]))
 
         check_if_lead_added_by_channel_partner(lead) do |cp_lead_activity|
           if lead.save
-            update_selldo_lead_stage(lead)
+            # Update selldo lead stage & push Site visits
+            if selldo_api && selldo_api.base.present?
+              update_selldo_lead_stage(lead)
+              site_visit = lead.site_visits.first
+              sv_selldo_api, sv_api_log = site_visit.push_in_crm(selldo_api.base)
+            end
 
             if cp_lead_activity.present?
               if cp_lead_activity.save
@@ -100,19 +106,21 @@ module LeadRegisteration
   end
 
   def push_lead_to_selldo(format, lead)
-    # Push lead first to sell.do & upon getting successful response, save it in IRIS. Same flow as when were using sell.do form for lead registration.
-    crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
-    selldo_api = Crm::Api::Post.where(resource_class: 'Lead', base_id: crm_base.id, is_active: true).first if crm_base.present?
-    if selldo_api.present?
-      selldo_api.execute(lead)
-      api_log = ApiLog.where(resource_id: lead.id).first
-      if resp = api_log.response.try(:first).presence
-        params[:lead_details] = resp['selldo_lead_details']
-        #
-        # Don't create lead if it exists in sell.do when lead conflicts is disabled.
-        #unless current_client.enable_lead_conflicts?
-        #  render json: {errors: "Lead already exists"}, status: :unprocessable_entity and return if params.dig(:lead_details, :lead_already_exists).present?
-        #end
+    if lead.push_to_crm?
+      # Push lead first to sell.do & upon getting successful response, save it in IRIS. Same flow as when were using sell.do form for lead registration.
+      crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+      selldo_api = Crm::Api::Post.where(resource_class: 'Lead', base_id: crm_base.id, is_active: true).first if crm_base.present?
+      if selldo_api.present?
+        selldo_api.execute(lead)
+        api_log = ApiLog.where(resource_id: lead.id).first
+        if resp = api_log.response.try(:first).presence
+          params[:lead_details] = resp['selldo_lead_details']
+          #
+          # Don't create lead if it exists in sell.do when lead conflicts is disabled.
+          #unless current_client.enable_lead_conflicts?
+          #  render json: {errors: "Lead already exists"}, status: :unprocessable_entity and return if params.dig(:lead_details, :lead_already_exists).present?
+          #end
+        end
       end
     end
 

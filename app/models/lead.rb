@@ -41,6 +41,7 @@ class Lead
   field :remarks, type: Array, default: [] # used to store the last five notes
   # used for dump latest queue_number or revisit queue number from sitevisit
   field :queue_number, type: Integer
+  field :push_to_crm, type: Boolean, default: false
 
   embeds_many :state_transitions
   embeds_many :portal_stages
@@ -71,7 +72,7 @@ class Lead
   #has_many :received_smses, class_name: 'Sms', inverse_of: :recipient
   #has_many :received_whatsapps, class_name: 'Whatsapp', inverse_of: :recipient
 
-  accepts_nested_attributes_for :portal_stages, reject_if: :all_blank
+  accepts_nested_attributes_for :portal_stages, :site_visits, reject_if: :all_blank
 
   validates_uniqueness_of :user, scope: :project_id, message: 'already exists for this project'
   validates :first_name, presence: true
@@ -80,6 +81,7 @@ class Lead
   # validates :phone, :email, uniqueness: { allow_blank: true }
   validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile mobile fixed_line premium_rate] }, allow_blank: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } , allow_blank: true
+  validates :site_visits, copy_errors_from_child: true, if: :site_visits?
 
   # delegate :first_name, :last_name, :name, :email, :phone, to: :user, prefix: false, allow_nil: true
   delegate :name, to: :project, prefix: true, allow_nil: true

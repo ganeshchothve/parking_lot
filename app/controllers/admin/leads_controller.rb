@@ -20,6 +20,7 @@ class Admin::LeadsController < AdminController
       attrs[:project_id] = Project.first.id
     end
     @lead = Lead.new(attrs)
+    @lead.site_visits.build if params[:walkin].present?
     render layout: false
   end
 

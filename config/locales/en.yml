@@ -42,6 +42,9 @@ en:
       :true: 'Yes'
       :false: 'No'
     agreement_value: 'AV'
+    walkin:
+      one: Walk-in
+      other: Walk-ins
 
   helpers:
     extend_validity:
@@ -541,6 +544,7 @@ en:
         price_starting_from: 'Price Starts From'
         price_upto: 'Price Goes Upto'
         broker_usp: 'Broker Unique Selling Points (Fill in upto 3 USPs)'
+        check_sv_availability_in_selldo: 'Check Site Visit Availability in Sell.do'
         approved_banks/list:
           hdfc: HDFC Bank
           sbi: State Bank of India
@@ -1162,6 +1166,7 @@ en:
         queue_number: 'Queue No.'
         customer_status: 'Queue Status'
         search_by_name: 'Name/ Email/ Phone'
+        push_to_crm: 'Do You Want The Developer To Contact The Lead ?'
 
       cp_lead_activity:
         lead_id: 'Lead Id'
@@ -1533,6 +1538,8 @@ en:
         link_name: 'Projects'
       sync_on_selldo:
         link_name: 'Sync on Sell.do'
+      show:
+        show_interest_text: 'Subscribe to Project for Adding Leads'
 
     project_units:
       send_cost_sheet_and_payment_schedule:
@@ -1742,7 +1749,7 @@ en:
         queued: "%{name} moved to sales queue successfully"
         dropoff: '%{name} dropped off successfully'
       create_from_existing_lead:
-        link_name: 'Add Lead to Other Project'
+        link_name: 'Add Existing Lead to this Project'
       create_new_lead:
         link_name: 'Add New Lead'
 
