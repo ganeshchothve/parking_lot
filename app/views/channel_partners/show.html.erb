@@ -58,7 +58,11 @@
               </li>
               <li>
                 <span><%= t('mongoid.attributes.channel_partner.region') %></span>
-                <p class="break-word"><%= @channel_partner.region.presence || '-' %></p>
+                <% if @channel_partner.regions.presence %>
+                    <p class="break-word"><%= @channel_partner.regions.join(", ")%></p>
+                <% else %>
+                  <p class="break-word">-</p>
+                <% end %>
               </li>
               <li>
                 <span><%= t('mongoid.attributes.channel_partner.category') %></span>

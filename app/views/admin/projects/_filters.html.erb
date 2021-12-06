@@ -1,0 +1,53 @@
+<div class="filter-inner modal-content ps-2 pe-2 fixed-header-footer">
+    <div class="modal-header filter-header">
+  <h5 class="modal-title title">Filter</h5>
+  <a href="javascript:;" class="close-filter-btn btn-close"></a>
+  </div>
+  <%= form_tag admin_projects_path, method: "get", id: "project_search_form" do %>
+    <div class="filter-content modal-body ps-0 pe-0">
+      <div class="row">
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.project.name') %>
+          <%= select_tag "fltrs[_id]", options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:_id] : "")), {prompt: "Select", class: "selectize"} %>
+        </div>
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.project.region') %>
+          <%= select_tag "fltrs[regions]", options_for_select(Project.nin(region: [nil, '']).distinct(:region), (params[:fltrs].present? ? params[:fltrs][:regions] : "")), { prompt: 'Select', class: "selectize", multiple: true} %>
+        </div>
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.project.category') %>
+          <%= select_tag "fltrs[category]", options_for_select(Project.nin(category: [nil, []]).distinct(:category).map{ |x| x.capitalize() }, (params[:fltrs].present? ? params[:fltrs][:category] : "")), { prompt: 'Select', class: "selectize", multiple: true } %>
+        </div>
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.project.project_segment') %>
+          <%= select_tag "fltrs[project_segment]", options_for_select(Project.nin(project_segment: [nil, []]).distinct(:project_segment).map{ |x| x.capitalize() }, (params[:fltrs].present? ? params[:fltrs][:project_segment] : "")), { prompt: 'Select', class: "selectize", multiple: true } %>
+        </div>
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.project.configurations') %>
+          <%= select_tag "fltrs[configurations]", options_for_select(Project.nin(configurations: [nil, []]).distinct(:configurations).sort_by{|s| s.scan(/\d+(?:\.\d+)?/).first.to_f}, (params[:fltrs].present? ? params[:fltrs][:configurations] : "")), { prompt: 'Select', class: "selectize", multiple: true } %>
+        </div>
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.project.city') %>
+          <%= select_tag "fltrs[city]", options_for_select(Project.nin(city: [nil, '']).distinct(:city), (params[:fltrs].present? ? params[:fltrs][:city] : "")), { prompt: 'Select', class: "selectize" } %>
+        </div>
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.project.micro_market') %>
+          <%= select_tag "fltrs[micro_market]", options_for_select(Project.nin(micro_market: [nil, '']).distinct(:micro_market), (params[:fltrs].present? ? params[:fltrs][:micro_market] : "")), { prompt: 'Select', class: "selectize" } %>
+        </div>
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.project.possession') %>
+          <%= text_field_tag "fltrs[possession]", (params.dig(:fltrs, :possession).present? ? params[:fltrs][:possession] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy', autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+    <div class="filter-footer modal-footer text-end">
+      <%= submit_tag :Apply, class: "btn btn-primary f-save-btn db-small-btn bg-light-blue fn-500 float-end" %>
+      <button type="button" class="btn btn-secondary f-cancel-btn float-end">Cancel</button>
+    </div>
+  <% end %>
+</div>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#project_search_form"));
+});
+<% end %>

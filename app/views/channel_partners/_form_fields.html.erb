@@ -1,9 +1,9 @@
 <div class="row">
   <div class="col-md-6">
-    <%= form.input :pan_number, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("pan_number") %>
+    <%= form.input :company_name, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("company_name") %>
   </div>
   <div class="col-md-6">
-    <%= form.input :company_name, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("company_name") %>
+    <%= form.input :pan_number, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("pan_number") %>
   </div>
 </div>
 
@@ -70,6 +70,11 @@
   <div class="col-md-12">
   <!-- Remove form-control class in select field and selectize  -->
     <%= form.input :interested_services, collection: ChannelPartner::SERVICES.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("interested_services"), prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <%= form.input :regions, collection: current_client.partner_regions, disabled: !policy([:admin, @channel_partner]).editable_field?("regions"), prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
   </div>
 </div>
 
