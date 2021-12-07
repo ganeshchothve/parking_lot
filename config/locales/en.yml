@@ -45,6 +45,7 @@ en:
     walkin:
       one: Walk-in
       other: Walk-ins
+    third_party_inventory: '3rd Party Inventory'
 
   helpers:
     extend_validity:
@@ -229,8 +230,8 @@ en:
         one: General
         other: General
       site_visit:
-        one: Site Visit
-        other: Site Visits
+        one: Walk-in
+        other: Walk-ins
       user_kyc:
         one: KYC
         other: KYCs
@@ -967,6 +968,7 @@ en:
         status: Status
         conducted_on: Conducted on
         site_visit_type: Type
+        approval_status: Approval Status
       user_kyc:
         name: "Name"
         email: "Email"
@@ -1141,12 +1143,13 @@ en:
         cp_admin: 'Channel Partner Head'
         cp: 'Channel Partner Manager'
         channel_partner: 'Channel Partner'
-        cp_owner: 'Partner Company Owner'
+        cp_owner: 'Company Owner'
         team_lead: 'Team Lead'
         billing_team: 'Billing Team'
         management_user: 'Management User'
         employee_user: 'Employee'
         direct: Direct
+        dev_sourcing_manager: 'Developer Sourcing Manager'
 
       lead:
         name: 'Name'
@@ -1181,8 +1184,8 @@ en:
         registered_at: 'Registered At'
         can_extend_validity: 'Can Extend Validity?'
         expiry_date: 'Lead Expiry Date'
-        sitevisit_date: 'Site Visit Date'
-        sitevisit_status: 'Site Visit Status'
+        sitevisit_date: 'Walk-in Date'
+        sitevisit_status: 'Walk-in Status'
 
       user/file_types:
         home_loan_application_form: 'Home Loan Application Form'
@@ -1237,7 +1240,7 @@ en:
         certificate_html: 'Certificate'
         images_html: 'Images'
       cp_lead_activity/file_types:
-        sitevisit_form: 'Site Visit Form'
+        sitevisit_form: 'Walk-in Form'
       cp_lead_activity/help_text:
         sitevisit_form_html: ''
 
@@ -1605,10 +1608,28 @@ en:
       new:
         link_name: 'Add Referrals'
     site_visits:
+      index:
+        link_name: 'Walk-ins'
       new:
-        link_name: 'Schedule Site Visit'
+        link_name: 'Schedule Walk-in'
+      edit:
+        link_name: 'Reschedule'
+      show:
+        link_name: 'Walk-in Details'
       sync_with_selldo:
         link_name: 'Sync with Sell.Do'
+      events:
+        status:
+          conduct: 'Mark Conducted'
+        approval_status:
+          approve: 'Approve'
+          reject: 'Reject'
+      status_message:
+        status:
+          conducted: 'Walk-in Conducted Successfully'
+        approval_status:
+          approved: 'Walk-in Successfully Approved'
+          rejected: 'Walk-in Rejected'
     searches:
       filter:
         header: Select Tower

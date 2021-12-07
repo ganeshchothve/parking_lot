@@ -1,10 +1,10 @@
 class Admin::LeadPolicy < LeadPolicy
 
   def index?
-    out = !user.buyer?
-    out = out && user.active_channel_partner?
-    out = false if user.role.in?(%w(channel_partner cp_owner)) && !interested_project_present?
-    out
+    out = !(user.buyer? || user.role.in?(%w(channel_partner cp_owner dev_sourcing_manager)))
+    #out = out && user.active_channel_partner?
+    #out = false if user.role.in?(%w(channel_partner cp_owner)) && !interested_project_present?
+    #out
   end
 
   def search_inventory?
@@ -16,7 +16,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def new?
-    valid = true
+    valid = true && !user.role?('dev_sourcing_manager')
     valid = false if user.present? && user.role.in?(%w(channel_partner cp_owner)) && !(user.active_channel_partner? && interested_project_present?)
     @condition = 'project_not_subscribed' unless valid
     valid

@@ -16,8 +16,8 @@
 
 <%= javascript_tag do %>
   $(document).ready(function(){
-  $('#site_visit_scheduled_on_calendar').on('dp.change', function(e){
-  $('#site_visit_scheduled_on').val(e.date.format())
-  });
+    $('#site_visit_scheduled_on_calendar').on('dp.change', function(e){
+      $('#site_visit_scheduled_on').val(e.date.format())
+    });
   });
 <% end %>

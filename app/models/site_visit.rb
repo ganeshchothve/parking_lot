@@ -3,7 +3,7 @@ class SiteVisit
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Attributes::Dynamic
-
+  include SiteVisitStateMachine
   include ArrayBlankRejectable
   include CrmIntegration
   include InsertionStringMethods
@@ -18,9 +18,9 @@ class SiteVisit
   belongs_to :time_slot, optional: true
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true
+  has_many :notes, as: :notable
 
   field :scheduled_on, type: DateTime
-  field :status, type: String, default: 'scheduled'
   field :conducted_on, type: DateTime
   field :site_visit_type, type: String, default: 'visit'
   field :selldo_id, type: String
@@ -28,6 +28,7 @@ class SiteVisit
   field :cp_code, type: String
   field :sales_id, type: BSON::ObjectId
   field :created_by, type: String
+  field :conducted_by, type: String
 
   scope :filter_by_status, ->(_status) { where(status: { '$in' => _status }) }
   scope :filter_by_site_visit_type, ->(_status) { where(status: { '$in' => _site_visit_type }) }
@@ -39,8 +40,8 @@ class SiteVisit
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_conducted_on, ->(date) { start_date, end_date = date.split(' - '); where(conducted_on: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
 
-  validates :scheduled_on, :status, :site_visit_type, presence: true
-  validates :conducted_on, presence: true, if: Proc.new { |sv| sv.status == 'conducted' }
+  validates :scheduled_on, :status, :site_visit_type, :created_by, presence: true
+  validates :conducted_on, :conducted_by, presence: true, if: Proc.new { |sv| sv.status == 'conducted' }
   validate :existing_scheduled_sv, on: :create
   validates :time_slot, presence: true, if: Proc.new { |sv| sv.site_visit_type == 'token_slot' }
 
@@ -50,6 +51,14 @@ class SiteVisit
       { id: 'conducted', text: 'Conducted' },
       { id: 'pending', text: 'Pending' },
       { id: 'missed', text: 'Missed' }
+    ]
+  end
+
+  def self.approval_statuses
+    [
+      { id: 'pending', text: 'Pending' },
+      { id: 'approved', text: 'Approved' },
+      { id: 'rejected', text: 'Rejected' }
     ]
   end
 

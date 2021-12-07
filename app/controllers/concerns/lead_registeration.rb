@@ -60,7 +60,7 @@ module LeadRegisteration
     push_lead_to_selldo(format, lead) do |selldo_api, api_log|
       if existing || (@user.save && (selldo_config_base.blank? || @project.save))
         lead.assign_attributes(selldo_lead_registration_date: params.dig(:lead_details, :lead_created_at))
-        lead.assign_attributes(permitted_attributes([:admin, lead]))
+        lead.assign_attributes(permitted_attributes([:admin, lead])) if params[:lead].present?
 
         check_if_lead_added_by_channel_partner(lead) do |cp_lead_activity|
           if lead.save

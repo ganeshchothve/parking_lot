@@ -1,0 +1,57 @@
+<div class="filter-inner modal-content ps-2 pe-2 fixed-header-footer">
+    <div class="modal-header filter-header">
+  <h5 class="modal-title title">Filter</h5>
+  <a href="javascript:;" class="close-filter-btn btn-close"></a>
+  </div>
+  <%= form_tag admin_site_visits_path, method: "get", id: "site_visit_search_form" do %>
+    <div class="filter-content modal-body ps-0 pe-0">
+      <div class="row">
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.site_visit.status') %>
+          <%= select_tag "fltrs[status]", options_for_select(SiteVisit.nin(status: [nil, '']).distinct(:status).map(&:titleize), (params[:fltrs].present? ? params[:fltrs][:status] : "")), { prompt: 'Select', class: "selectize" } %>
+        </div>
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs[project_id]", t('mongoid.attributes.site_visit.project_id'), class: "control-label" %>
+          <%= select_tag "fltrs[project_id]", options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: "Select", class: "selectize"} %>
+        </div>
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.site_visit.site_visit_type'), class: "control-label" %>
+          <%= select_tag "fltrs[site_visit_type]", options_for_select(SiteVisit.nin(site_visit_type: [nil, '']).distinct(:site_visit_type).map(&:titleize), params.dig(:fltrs, :site_visit_type)), {prompt: "Select", class: "selectize"} %>
+        </div>
+        <% unless current_user.role?('channel_partner') %>
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+            <%= label_tag "fltrs", ChannelPartner.model_name.human %>
+            <%= select_tag "fltrs[manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'channel_partner' }}}} %>
+          </div>
+        <% end %>
+        <% unless current_user.role.in?(%w(cp_owner cp channel_partner)) %>
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+            <%= label_tag "fltrs", t('mongoid.attributes.user/role.cp') %>
+            <%= select_tag "fltrs[cp_manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:cp_manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp' }}}} %>
+          </div>
+        <% end %>
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.site_visit.created_at') %>
+          <%= text_field_tag "fltrs[created_at]", (params.dig(:fltrs, :created_at).present? ? params[:fltrs][:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
+        </div>
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.site_visit.scheduled_on') %>
+          <%= text_field_tag "fltrs[scheduled_on]", (params.dig(:fltrs, :scheduled_on).present? ? params[:fltrs][:scheduled_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
+        </div>
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.site_visit.conducted_on') %>
+          <%= text_field_tag "fltrs[conducted_on]", (params.dig(:fltrs, :conducted_on).present? ? params[:fltrs][:conducted_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
+        </div>
+      </div>
+    </div>
+    <div class="filter-footer modal-footer text-end">
+      <%= submit_tag :Apply, class: "btn btn-primary f-save-btn db-small-btn bg-light-blue fn-500 float-end" %>
+      <button type="button" class="btn btn-secondary f-cancel-btn float-end">Cancel</button>
+    </div>
+  <% end %>
+</div>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#site_visit_search_form"));
+});
+<% end %>

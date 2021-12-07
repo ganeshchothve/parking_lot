@@ -13,7 +13,11 @@ class DashboardController < ApplicationController
     @project_units = current_user.project_units
     respond_to do |format|
       format.json { render json: { message: 'Logged In' }, status: 200 }
-      format.html {}
+      if current_user.role?('dev_sourcing_manager')
+        format.html { redirect_to :admin_site_visits }
+      else
+        format.html {}
+      end
     end
   end
 

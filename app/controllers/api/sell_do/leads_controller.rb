@@ -155,6 +155,7 @@ class Api::SellDo::LeadsController < Api::SellDoController
     when 'sitevisit_conducted'
       attrs[:conducted_on] = DateTime.parse(params.dig(:payload, :sv_conducted_on)) rescue nil
     end
+    attrs[:conducted_by] = "crm-#{@crm.id}" if attrs[:conducted_on].present?
     attrs
   end
 
