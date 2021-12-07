@@ -1123,6 +1123,7 @@ en:
         utm_params: 'UTM Tracking'
         channel_partner_id: CP Company Name/ Organisation Name/ CP Name
         referral_code: "Referral Code"
+        shareable_link: "Shareable Link"
       user/confirmed:
         :true: 'Confirmed'
         :false: 'Not Confirmed'
