@@ -72,6 +72,10 @@
             <span class="txt-light-blue fn-12"><%= t('mongoid.attributes.user.rera_id') %></span>
             <p class="fn-14 theme-txt-color"><%= user.rera_id || '-' %></p>
           </li>
+          <li class="col-lg-3">
+            <span class="txt-light-blue fn-12"><%= t('mongoid.attributes.user.referral_code') %></span>
+            <p class="fn-14 theme-txt-color"><%= user.referral_code || '-' %></p>
+          </li>
           <% end %>
 
           <% if user.buyer? %>
@@ -86,10 +90,10 @@
           </li>
 
           <% if current_user.role?('superadmin') %>
-          <li class="col-lg-3">
-            <span class="txt-light-blue fn-12"><%= t("mongoid.attributes.user.portal_stage") %></span>
-            <p class="fn-14 theme-txt-color"><%= user.portal_stage.try(:stage) || '-' %></p>
-          </li>
+            <li class="col-lg-3">
+              <span class="txt-light-blue fn-12"><%= t("mongoid.attributes.user.portal_stage") %></span>
+              <p class="fn-14 theme-txt-color"><%= user.portal_stage.try(:stage) || '-' %></p>
+            </li>
           <% end %>
           <% end %>
         </ul>

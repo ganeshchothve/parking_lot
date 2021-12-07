@@ -8,7 +8,7 @@ class SelldoLeadUpdater
     lead = Lead.where(id: lead_id).first || User.where(id: lead_id).first
     return false unless lead
 
-    if lead.is_a?(User) && lead.role?('channel_partner')
+    if lead.is_a?(User) && lead.role.in?(%w(cp_owner channel_partner))
       cp_user = lead
       op_hash = op_hash.with_indifferent_access
       operation = op_hash.delete 'action'
@@ -28,21 +28,25 @@ class SelldoLeadUpdater
     selldo_api_key = payload['selldo_api_key']
     selldo_client_id = payload['selldo_client_id']
 
-    priority = PortalStagePriority.where(role: user.role).collect{|x| [x.stage, x.priority]}.to_h
+    priority = PortalStagePriority.where(role: 'channel_partner').collect{|x| [x.stage, x.priority]}.to_h
     if stage.present? && priority[stage].present?
       if user.portal_stages.empty?
         user.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
       elsif user.portal_stage.priority.to_i <= priority[stage].to_i
         user.portal_stages.where(stage:  stage).present? ? user.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : user.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
       end
-      params = { portal_stage: stage }
+      if Rails.env.production?
+        params = { portal_stage: stage }
+      elsif Rails.env.staging?
+        params = { custom_portal_stage: stage }
+      end
       custom_hash = {lead: params}
     else
       user.portal_stage
     end
 
     selldo_base_url = ENV_CONFIG['selldo']['base_url'].chomp('/')
-    if custom_hash.present? && selldo_base_url.present? && selldo_api_key.present? && selldo_client_id.present?
+    if custom_hash.present? && user.lead_id.present? && selldo_base_url.present? && selldo_api_key.present? && selldo_client_id.present?
       params = {
         api_key: selldo_api_key,
         client_id: selldo_client_id,
@@ -66,7 +70,7 @@ class SelldoLeadUpdater
     payload[:lead] ||= {}
     custom_hash = {lead: payload[:lead]}
     selldo_base_url = ENV_CONFIG['selldo']['base_url'].chomp('/')
-    if custom_hash.present? && selldo_base_url.present? && selldo_api_key.present? && selldo_client_id.present?
+    if custom_hash.present? && user.lead_id.present? && selldo_base_url.present? && selldo_api_key.present? && selldo_client_id.present?
       params = {
         api_key: selldo_api_key,
         client_id: selldo_client_id,

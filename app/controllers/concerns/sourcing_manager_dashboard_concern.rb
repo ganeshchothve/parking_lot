@@ -42,10 +42,10 @@ module SourcingManagerDashboardConcern
     project_ids = Project.where(id: {"$in": project_ids}).distinct(:id)
     start_date, end_date = dates.split(' - ')
     if ["superadmin","admin"].include?(current_user.role) #Channel Partner Manager Performance Dashboard for admin and superadmin
-      @cps = User.in(manager_id: User.filter_by_role("cp_admin").pluck(:id)).where(role: "cp")
+      @cps = User.where(role: "cp")
     else
       # @cps = User.filter_by_role("cp").filter_by_userwise_project_ids(current_user)
-      @cps = User.where(manager_id: current_user.id)
+      @cps = User.filter_by_role("cp").where(manager_id: current_user.id)
     end
     @matcher = {matcher: {created_at: {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day }}}
     @matcher[:matcher][:project_id] = {"$in": project_ids} if project_ids.present?
@@ -55,24 +55,52 @@ module SourcingManagerDashboardConcern
 
   def cp_status
     if ["superadmin","admin"].include?(current_user.role) #Channel Partner Manager Performance Dashboard for admin and superadmin
-      @cp_managers = User.in(manager_id: User.filter_by_role("cp_admin").pluck(:id)).where(role: "cp")
+      @cp_managers = User.where(role: "cp")
     else
       @cp_managers = User.filter_by_role(:cp).where(manager_id: current_user.id)
     end
-    @channel_partners_status = {}
-    @cp_managers.each do
-      |cp_manager|
-      @inactive_status_count = ChannelPartner.where(manager_id: cp_manager.id, status: "inactive").count
-      @active_status_count = ChannelPartner.where(manager_id: cp_manager.id, status: "active").count
-      @pending_status_count = ChannelPartner.where(manager_id: cp_manager.id, status: "pending").count
-      @rejected_status_count = ChannelPartner.where(manager_id: cp_manager.id, status: "rejected").count
-      @total_channel_partner_count = ChannelPartner.where(manager_id: cp_manager.id).count
-      @channel_partners_status[cp_manager.id] = {name: cp_manager.name,
-                              inactive: @inactive_status_count,
-                              active: @active_status_count,
-                              pending: @pending_status_count,
-                              rejected: @rejected_status_count,
-                              total_count: @total_channel_partner_count}
+    
+    @cp_managers_hash = {'No Manager' => 'No Manager'}
+    @cp_managers.each do |cp_manager|
+      @cp_managers_hash[cp_manager.id] = cp_manager.name
     end
+
+
+    @data = ChannelPartner.collection.aggregate([
+      {
+        '$project': {
+          'first_name': '$first_name',
+          'status': '$status',
+          'id': '$id',
+          'manager_id': '$manager_id'
+        }},
+        {
+        '$group': {
+          _id: {
+            'manager_id': '$manager_id',
+            'status': "$status"
+          },
+          count: {
+          '$sum': 1
+          }
+        }
+      }
+    ]).to_a
+
+    @channel_partners_manager_status_count = {}
+    @data.each do |channel_partner_data|
+      key = channel_partner_data['_id']['manager_id'] || 'No Manager'
+      @channel_partners_manager_status_count[key] ||= {}
+      @channel_partners_manager_status_count[key][channel_partner_data["_id"]["status"]] ||= 0
+      @channel_partners_manager_status_count[key][channel_partner_data["_id"]["status"]] += channel_partner_data["count"]
+      @channel_partners_manager_status_count[key]["count"] ||= 0
+      @channel_partners_manager_status_count[key]["count"] += channel_partner_data["count"]
+    end
+
+    @channel_partners_status_count = @data.group_by {|x| x['_id']['status']}.inject({}) do |hsh, (k, v)|
+      hsh[k] = v.map{|x| x['count']}.inject(:+)
+      hsh
+    end
+    @channel_partners_status_count['total'] = @channel_partners_status_count.values.inject(:+)
   end
 end

@@ -1,33 +1,9 @@
 <div class="row">
-  <div class="col-md-2">
-    <%= form.input :title, collection: UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, as: :select, prompt: :translate %>
-  </div>
-
-  <div class="col-md-5">
-    <%= form.input :first_name, required: true, autofocus: true, disabled: !policy([:admin, @channel_partner]).editable_field?("first_name") %>
-  </div>
-
-  <div class="col-md-5">
-    <%= form.input :last_name, required: true, autofocus: true, disabled: !policy([:admin, @channel_partner]).editable_field?("last_name") %>
-  </div>
-
-</div>
-
-<div class="row">
-  <div class="col-md-6">
-    <%= form.input :phone, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("phone"), as: :tel, input_html: { class: 'phone' } %>
-  </div>
-  <div class="col-md-6">
-    <%= form.input :email, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("email"), input_html: { class: 'email'} %>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-6">
-    <%= form.input :pan_number, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("pan_number") %>
-  </div>
   <div class="col-md-6">
     <%= form.input :company_name, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("company_name") %>
+  </div>
+  <div class="col-md-6">
+    <%= form.input :pan_number, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("pan_number") %>
   </div>
 </div>
 
@@ -45,7 +21,7 @@
     <%= form.input :nri, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: {class: 'wd-22', disabled: !policy([:admin, @channel_partner]).editable_field?("nri") } %>
   </div>
   <div class="col-md-6">
-    <%= form.input :team_size, collection: (1..200).to_a.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("team_size"), as: :select, prompt: :translate %>
+    <%= form.input :team_size, collection: (1..200).to_a.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("team_size"), as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
   </div>
 </div>
 
@@ -73,7 +49,7 @@
     <%= form.input :expertise, collection: ChannelPartner::EXPERTISE.collect{|x| [x.titleize, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("expertise"), as: :select, prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
   </div>
   <div class="col-md-6">
-    <%= form.input :experience, collection: ChannelPartner::EXPERIENCE.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("experience"), as: :select, prompt: :translate %>
+    <%= form.input :experience, collection: ChannelPartner::EXPERIENCE.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("experience"), as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
   </div>
 </div>
 
@@ -82,7 +58,7 @@
     <%= form.input :average_quarterly_business, required: false, disabled: !policy([:admin, @channel_partner]).editable_field?("average_quarterly_business"), as: :float %>
   </div>
   <div class="col-md-6">
-    <%= form.input :manager_id, collection: User.where(is_active: true, confirmed_at: {'$ne': nil}, role: "cp").collect{|x| [x.name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), as: :select, prompt: :translate %>
+    <%= form.input :manager_id, collection: User.where(is_active: true, confirmed_at: {'$ne': nil}, role: "cp").collect{|x| [x.ds_name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), required: true, as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
   </div>
 </div>
 
@@ -94,6 +70,11 @@
   <div class="col-md-12">
   <!-- Remove form-control class in select field and selectize  -->
     <%= form.input :interested_services, collection: ChannelPartner::SERVICES.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("interested_services"), prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <%= form.input :regions, collection: current_client.partner_regions, disabled: !policy([:admin, @channel_partner]).editable_field?("regions"), prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
   </div>
 </div>
 

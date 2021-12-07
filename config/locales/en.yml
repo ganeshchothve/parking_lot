@@ -13,6 +13,7 @@ en:
       default: "%d/%m/%Y %I:%M %p"
   welcome: Welcome %{name}
   global:
+    brand: BeyondWalls
     all: All
     at: 'At'
     action:
@@ -41,6 +42,9 @@ en:
       :true: 'Yes'
       :false: 'No'
     agreement_value: 'AV'
+    walkin:
+      one: Walk-in
+      other: Walk-ins
 
   helpers:
     extend_validity:
@@ -142,8 +146,8 @@ en:
         one: Cost
         other: Costs
       channel_partner:
-        one: Channel Partner
-        other: Channel Partners
+        one: Partner Company
+        other: Partner Companies
       interested_project:
         one: Interested Project
         other: Interested Projects
@@ -459,15 +463,17 @@ en:
         name: 'Developer Name'
         selldo_id: 'Sell.Do Developer ID'
       project:
-        hot: 'Hot Property'
-        is_active: 'Active?'
         name: 'Project Name'
+        region: 'Region'
+        category: 'Category'
+        project_segment: 'Segment'
+        configurations: 'Configurations'
         micro_market: 'Location'
         city: 'City'
-        project_type: Type of Project
-        category: Category
-        project_segment: Segment
         possession: Possession Date
+        hot: 'Hot Property'
+        is_active: 'Active?'
+        project_type: Type of Project
         launched_on: Launch Date
         developer_name: Developer Name
         approved_banks: Approved Banks
@@ -540,11 +546,23 @@ en:
         price_starting_from: 'Price Starts From'
         price_upto: 'Price Goes Upto'
         broker_usp: 'Broker Unique Selling Points (Fill in upto 3 USPs)'
+        check_sv_availability_in_selldo: 'Check Site Visit Availability in Sell.do'
         approved_banks/list:
           hdfc: HDFC Bank
           sbi: State Bank of India
           bob: Bank of Baroda
           bajaj_finance: Bajaj Finance
+
+      project/category:
+        pre_launch: Pre Launch
+        launch: Launch
+        ongoing: Ongoing
+        completed: Completed
+      project/project_segment:
+        affordable: Affordable
+        value: Value
+        luxury: Luxury
+        ultra_luxury: Ultra Luxury
       nearby_location:
         distance: Distance to destination
         destination: Destination
@@ -608,6 +626,7 @@ en:
         region: 'Region'
         interested_services: 'Services Interested In'
         created_at: 'Registered At'
+        manager_id: 'Manager'
       channel_partner/file_types:
         rera_certificate: 'RERA Certificate'
         gst_certificate: 'GST Certificate'
@@ -628,8 +647,11 @@ en:
         pe_declaration_html: '<ul><li>PE Declaration (No permanent Establishment in India)</li></ul>'
 
       channel_partner/status:
-        active: Active
-        inactive: Inactive
+        active: Approved
+        inactive: Signed Up
+        confirmed: Confirmed
+        pending: Pending Approval
+        rejected: Rejected
 
       data_attribute:
         name: "Name"
@@ -1105,6 +1127,9 @@ en:
         total_unattached_balance: "Total Un-attached Balance"
         time_zone: "User's Time Zone"
         utm_params: 'UTM Tracking'
+        channel_partner_id: CP Company Name/ Organisation Name/ CP Name
+        referral_code: "Referral Code"
+        shareable_link: "Shareable Link"
       user/confirmed:
         :true: 'Confirmed'
         :false: 'Not Confirmed'
@@ -1117,6 +1142,9 @@ en:
           temporarily_blocked:
             :true: 'Unqualified'
             :false: 'Unqualified'
+      user/is_active:
+        :true: 'Active'
+        :false: 'Inactive'
       user/role:
         superadmin: 'Superadmin'
         admin: 'Administrator'
@@ -1131,6 +1159,7 @@ en:
         cp_admin: 'Channel Partner Head'
         cp: 'Channel Partner Manager'
         channel_partner: 'Channel Partner'
+        cp_owner: 'Partner Company Owner'
         team_lead: 'Team Lead'
         billing_team: 'Billing Team'
         management_user: 'Management User'
@@ -1151,7 +1180,7 @@ en:
         payment_done: '9.90% Received'
         blocking_amount_paid: 'Booking Amount Paid'
         registration_done: 'Registration Done'
-        stage: 'Stage'
+        stage: 'From developer CRM'
         lead_id: 'Lead Id'
         lead_validity_period: 'Lead Validity Period'
         selldo_lead_registration_date: 'Sell Do Lead Registration Date'
@@ -1159,6 +1188,7 @@ en:
         queue_number: 'Queue No.'
         customer_status: 'Queue Status'
         search_by_name: 'Name/ Email/ Phone'
+        push_to_crm: 'Do You Want The Developer To Contact The Lead ?'
 
       cp_lead_activity:
         lead_id: 'Lead Id'
@@ -1484,19 +1514,23 @@ en:
       new:
         link_name: 'Add New ChannelPartner'
       index:
-        link_name: 'Channel Partners'
+        link_name: 'Partner Companies'
       edit:
         link_name: 'Edit Application'
       show:
         link_name: 'Application Details'
       status_message:
         pending: 'Application submitted for approval'
+      create:
+        not_allowed_message: 'Company with these details already exists. Please contact your company admin (%{owner_name}) to create your account.'
+        already_present_and_active_msg: 'A user with these details is already present & active under a company'
 
     dashboard:
       index:
         link_name: 'Dashboard'
         billing_team_link_name: 'Billing Dashboard'
         cp_admin_link_name: 'Channel Partner Head Dashboard'
+        cp_owner_link_name: 'Company Owner Dashboard'
       receipt_frequency: 'Payment Frequency'
     emails:
       index:
@@ -1526,6 +1560,8 @@ en:
         link_name: 'Projects'
       sync_on_selldo:
         link_name: 'Sync on Sell.do'
+      show:
+        show_interest_text: 'Subscribe to Project for Adding Leads'
 
     project_units:
       send_cost_sheet_and_payment_schedule:
@@ -1712,6 +1748,8 @@ en:
           break: '%{name} is on break'
           available: '%{name} is available'
           not_available: '%{name} is not available'
+      create:
+        change_channel_partner_company: 'Found an old inactive account with these details. We have activated it & linked it under your company'
 
     interested_projects:
       set_interested_project_missing: 'Interested Project not found'
@@ -1732,6 +1770,10 @@ en:
       move_to_next_state:
         queued: "%{name} moved to sales queue successfully"
         dropoff: '%{name} dropped off successfully'
+      create_from_existing_lead:
+        link_name: 'Add Existing Lead to this Project'
+      create_new_lead:
+        link_name: 'Add New Lead'
 
     user_kycs:
       index:
@@ -1884,7 +1926,7 @@ en:
         heading: "Channel Partner Manager Performance"
       cp_status:
         active: "Active Partners"
-        inactive: "Inactive Partners"
+        inactive: "Signed Up Partners"
         pending: "Pending Partners"
         rejected: "Rejected Partners"
         heading: "Channel Partner Status Count"
@@ -1987,5 +2029,11 @@ en:
     calculate_all_inclusive_price: 'All Inclusive'
 
   amenity_icons:
-    swimming_pool: 'fa-lock'
-    auditorium: 'fa-lock'
+    swimming_pool: 'fa-swimming-pool'
+    auditorium: 'fa-theater-masks'
+    gym: 'fa-dumbbell'
+    internal_roads: 'fa-road'
+    movie_theatre: 'fa-camera-movie'
+    playschool: 'fa-school'
+    table_tennis_court: 'fa-table-tennis'
+    sewage_treatment_plant: 'fa-house-flood'

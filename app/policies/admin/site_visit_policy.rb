@@ -5,7 +5,7 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
   end
 
   def edit?
-    %w[superadmin admin sales_admin channel_partner].include?(user.role)
+    %w[superadmin admin sales_admin channel_partner cp_owner].include?(user.role)
   end
 
   def new?
@@ -22,5 +22,11 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
 
   def sync_with_selldo?
     edit? && ENV_CONFIG.dig(:selldo, :base_url).present? && record.project.selldo_client_id.present? && record.project.selldo_api_key.present?
+  end
+
+  def permitted_attributes params={}
+    attributes = super || []
+    attributes += [:manager_id] if record.new_record? && user.role.in?(%w(cp_owner channel_partner))
+    attributes
   end
 end

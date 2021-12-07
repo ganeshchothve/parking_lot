@@ -15,6 +15,14 @@
   </div>
   <div class="header-topbar">
     <div class="header-inner">
+    <a href="javascript:;" class="p-2 py-1 float-start toggle-side-menu mt-4 me-3 ms-2">
+        <div class="burger-menu menu-btn pull-right" data-event-category="Header" data-event-action="Click"
+          data-event-name="Menu">
+          <div class="bar1" data-event-category="Header" data-event-action="Click" data-event-name="Menu"></div>
+          <div class="bar2" data-event-category="Header" data-event-action="Click" data-event-name="Menu"></div>
+          <div class="bar3" data-event-category="Header" data-event-action="Click" data-event-name="Menu"></div>
+        </div>
+      </a>
       <div class="header-logo float-start">
         <%= link_to (current_client.logo.present? ? (image_tag current_client.logo.url, class: 'img-fluid position-absolute start-50 top-50 translate-middle', alt: "Logo") : "launchpad-logo.png"), dashboard_path, class: 'navbar-brand me-0'%>
       </div>
@@ -54,14 +62,6 @@
           </div>
         </div>
       </div>
-      <a href="javascript:;" class="p-2 py-1 bg-theme float-end toggle-side-menu mt-4">
-        <div class="burger-menu menu-btn pull-right" data-event-category="Header" data-event-action="Click"
-          data-event-name="Menu">
-          <div class="bar1" data-event-category="Header" data-event-action="Click" data-event-name="Menu"></div>
-          <div class="bar2" data-event-category="Header" data-event-action="Click" data-event-name="Menu"></div>
-          <div class="bar3" data-event-category="Header" data-event-action="Click" data-event-name="Menu"></div>
-        </div>
-      </a>
     </div>
   </div>
 </header>
@@ -71,13 +71,13 @@
 <% end %>
 
 <%= javascript_tag do %>
-$('document').ready(function(){
-var alert = <%= raw alert.to_json %>
-var notice = <%= raw notice.to_json %>
-if(notice){
-Amura.global_success_handler(notice);
-} else if(alert){
-Amura.global_error_handler(alert);
-}
-});
+  $('document').ready(function(){
+    var alert = <%= raw alert.to_json %>
+    var notice = <%= raw notice.to_json %>
+    if(notice){
+      Amura.global_success_handler(notice);
+    } else if(alert){
+      Amura.global_error_handler(alert);
+    }
+  });
 <% end %>

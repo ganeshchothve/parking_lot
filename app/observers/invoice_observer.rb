@@ -11,6 +11,8 @@ class InvoiceObserver < Mongoid::Observer
         invoice.errors.add(:status, 'transition is invalid')
       end
     end
+
+    invoice.channel_partner_id = invoice.manager&.channel_partner_id if invoice.manager && invoice.channel_partner_id.blank?
   end
 
   def before_save invoice

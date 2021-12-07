@@ -175,6 +175,42 @@
       <%= f.text_field :broker_usp, value: usp[2], class: 'form-control', name: 'project[broker_usp][]', disabled: !policy([:admin, project]).editable_field?("broker_usp"), maxlength: 200 %>
     </div>
   </div>
+  <div class="col-md-12">
+    <div class="mb-3">
+      <%= f.label :region %>
+      <%= f.select :region, current_client.partner_regions, {}, class: 'selectize', required: true,  disabled: !policy([:admin, @project]).editable_field?("region") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :sv_incentive %>
+      <%= f.number_field :sv_incentive, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("sv_incentive") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :spot_booking_incentive %>
+      <%= f.number_field :spot_booking_incentive, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("spot_booking_incentive") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :pre_reg_incentive_percentage, class: '' %>
+      <%= f.number_field :pre_reg_incentive_percentage, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("pre_reg_incentive_percentage") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :pre_reg_min_bookings, class: '' %>
+      <%= f.number_field :pre_reg_min_bookings, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("pre_reg_min_bookings") %>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="mb-3">
+      <%= f.label :iris_url, class: '' %>
+      <%= f.text_field :iris_url, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("iris_url") %>
+    </div>
+  </div>
 </div>
 <div class="card mt-3">
   <div class="card-header">
