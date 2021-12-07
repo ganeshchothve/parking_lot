@@ -327,6 +327,14 @@ class BookingDetail
     IncentiveCalculatorWorker.new.perform(id.to_s)
   end
 
+  def calculate_invoice_amount
+    if self.project.enable_inventory && self.project_unit.present?
+      self.calculate_agreement_price
+    else
+      (self.agreement_price + self.other_costs)
+    end
+  end
+
   class << self
 
     def user_based_scope(user, params = {})

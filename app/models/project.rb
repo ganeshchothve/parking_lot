@@ -47,7 +47,7 @@ class Project
   field :rera_registration_no, type: String
   field :approved_banks, type: Array, default: []
   field :project_size, type: String
-  field :incentive_gst_slabs, type: Array, default: []
+  field :incentive_gst_slabs, type: Array, default: [5, 12, 18]
 
   # selldo attributes
   field :selldo_id, type: String

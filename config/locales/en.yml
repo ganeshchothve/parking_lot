@@ -875,6 +875,7 @@ en:
         approved: 'Approved'
         rejected: 'Rejected'
         paid: 'Paid'
+        tax_invoice_raised: 'Tax Invoice Raised'
       cheque_detail:
         total_amount: 'Total Amount'
         payment_identifier: 'Payment Identifier'

@@ -169,7 +169,7 @@
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :incentive_gst_slabs, class: 'label-required' %>
-      <%= f.select :incentive_gst_slabs, (0..28).collect{|x| [x, x]}, {prompt: 'Select'}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("incentive_gst_slabs") ? false : true) %>
+      <%= f.select :incentive_gst_slabs, f.object.incentive_gst_slabs, {},  class: "selectize-tags", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("incentive_gst_slabs") ? false : true) %>
     </div>
   </div>
   <div class="col-md-12">

@@ -7,7 +7,7 @@ module InvoiceStateMachine
     aasm column: :status, whiny_transitions: false do
       state :draft, initial: true
       state :raised, :pending_approval
-      state :approved, :rejected
+      state :approved, :rejected, :tax_invoice_raised
       state :paid
 
       event :raise do
@@ -20,6 +20,7 @@ module InvoiceStateMachine
       end
 
       event :approve, after: :send_notification do
+        transitions from: :raised, to: :approved
         transitions from: :pending_approval, to: :approved, success: %i[after_approved]
       end
 
@@ -28,13 +29,18 @@ module InvoiceStateMachine
         transitions from: :pending_approval, to: :rejected, success: %i[after_rejected]
       end
 
-      event :paid, after: :send_notification do
+      event :tax_invoice_raise do
+        transitions from: :approved, to: :tax_invoice_raised
+      end
+
+      event :paid do
+        transitions from: :tax_invoice_raised, to: :paid
         transitions from: :approved, to: :paid
       end
     end
 
     def can_raise?
-      self.assets.present? && self.assets.first.file.try(:url).present?
+      self.draft?
     end
 
     def get_pending_approval_recipients_list
@@ -98,6 +104,7 @@ module InvoiceStateMachine
 
     def after_raised
       self.raised_date = Time.now
+      self.generate_pdf
     end
 
     def after_approved

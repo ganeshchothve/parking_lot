@@ -92,6 +92,15 @@ class Admin::BookingDetails::InvoicesController < AdminController
     redirect_to admin_invoices_path(fltrs: params[:fltrs].as_json)
   end
 
+  def new_send_invoice_to_poc
+    render 'admin/invoices/new_send_invoice_to_poc', layout: false
+  end
+
+  def send_invoice_to_poc
+    SendInvoiceToPocMailer.notify(@invoice, params[:email]).deliver
+    redirect_to admin_invoices_path
+  end
+
   private
 
   def associated_class
@@ -110,7 +119,7 @@ class Admin::BookingDetails::InvoicesController < AdminController
 
   def set_invoice
     if params[:action] == 'new'
-      @invoice = Invoice::Manual.new(booking_detail_id: @booking_detail.id)
+      @invoice = Invoice::Manual.new(booking_detail_id: @booking_detail.id, project_id: @booking_detail.project_id, amount: @booking_detail.calculate_invoice_amount)
     else
       @invoice = Invoice.where(id: params[:id]).first
     end
@@ -120,7 +129,7 @@ class Admin::BookingDetails::InvoicesController < AdminController
   def authorize_resource
     if params[:action].in?(%w(index create export))
       authorize [current_user_role_group, Invoice]
-    elsif params[:action].in?(%w(change_state edit update raise_invoice update_gst))
+    elsif params[:action].in?(%w(change_state edit update raise_invoice update_gst new_send_invoice_to_poc))
       authorize [current_user_role_group, @invoice]
     else
       authorize [current_user_role_group, @invoice]

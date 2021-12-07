@@ -1,12 +1,11 @@
 <!-- Show Details Page -->
 <%= link_to t('controller.invoices.show.link_name'), admin_invoice_path(invoice), class: 'dropdown-item' %>
-
 <!-- Raise invoice for channel partner -->
 <% if policy([current_user_role_group, invoice]).change_state? && policy([current_user_role_group, invoice]).editable_field?('event') %>
   <% invoice.aasm.events(permitted: true).each do |event| %>
     <% if event.name == :raise %>
       <%= link_to t("controller.invoices.events.#{event.name}"), raise_invoice_admin_booking_detail_invoice_path(invoice.booking_detail, invoice), class: 'dropdown-item modal-remote-form-link' %>
-    <% else %>
+    <% elsif false %>
       <%= link_to t("controller.invoices.events.#{event.name}"), change_state_admin_booking_detail_invoice_path(invoice.booking_detail, invoice, {invoice: {event: event.name}}), method: :patch, class: 'dropdown-item' %>
     <% end %>
   <% end %>
@@ -21,10 +20,19 @@
   <%#= link_to t("controller.invoices.update_gst.link_name"), update_gst_admin_invoice_path(invoice), class: 'dropdown-item modal-remote-form-link' %>
 <%# end %>
 
-<%# if policy([current_user_role_group, invoice]).generate_invoice? %>
-  <%#= link_to t("controller.invoices.generate_invoice.link_name"), generate_invoice_admin_invoice_path(invoice), class: 'dropdown-item', target: '_blank' %>
-<%# end %>
-
+<% if policy([current_user_role_group, invoice]).generate_invoice? %>
+  <%= link_to t("controller.invoices.generate_invoice.link_name"), generate_invoice_admin_invoice_path(invoice), class: 'dropdown-item', target: '_blank' %>
+<% end %>
+<% if policy([current_user_role_group, invoice]).new_send_invoice_to_poc? %>
+  <%= link_to "Send Invoice", new_send_invoice_to_poc_admin_invoice_path(invoice), class: 'dropdown-item modal-remote-form-link', target: '_blank' %>
+<% end %>
+<% if current_user.role?('billing_team') && invoice.status == "raised" %>
+  <%= link_to t("controller.invoices.events.approve"), change_state_admin_booking_detail_invoice_path(invoice.booking_detail, invoice, {invoice_manual: {event: 'approve'}}), method: :patch, class: 'dropdown-item' %>
+<% elsif current_user.role?('billing_team') && invoice.status == "approved" %>
+  <%= link_to "Move to Tax Invoice Raised", change_state_admin_booking_detail_invoice_path(invoice.booking_detail, invoice, {invoice_manual: {event: 'tax_invoice_raise'}}), method: :patch, class: 'dropdown-item' %>
+<% elsif current_user.role?('billing_team') && invoice.status == "tax_invoice_raised" %>
+  <%= link_to "Mark Paid", change_state_admin_booking_detail_invoice_path(invoice.booking_detail, invoice, {invoice_manual: {event: 'paid'}}), method: :patch, class: 'dropdown-item' %>
+<% end %>
 <!-- Raise incentive deduction for cp_admin -->
 <% incentive_deduction = IncentiveDeduction.where(invoice_id: invoice.id).first %>
 <% if incentive_deduction.blank? %>
