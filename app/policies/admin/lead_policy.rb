@@ -3,7 +3,7 @@ class Admin::LeadPolicy < LeadPolicy
   def index?
     out = !user.buyer?
     out = out && user.active_channel_partner?
-    out = false if user.role?('channel_partner') && !interested_project_present?
+    out = false if user.role.in?(%w(channel_partner cp_owner)) && !interested_project_present?
     out
   end
 
@@ -17,7 +17,7 @@ class Admin::LeadPolicy < LeadPolicy
 
   def new?
     valid = true
-    valid = false if user.present? && user.role?('channel_partner') && !interested_project_present?
+    valid = false if user.present? && user.role.in?(%w(channel_partner cp_owner)) && !(user.active_channel_partner? && interested_project_present?)
     @condition = 'project_not_subscribed' unless valid
     valid
   end
@@ -39,7 +39,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def note_create?
-    user.role?(:channel_partner) && record.user.role.in?(User::BUYER_ROLES)
+    user.role.in?(%w(channel_partner cp_owner)) && record.user.role.in?(User::BUYER_ROLES)
   end
 
   def asset_create?
@@ -73,7 +73,7 @@ class Admin::LeadPolicy < LeadPolicy
 
   def permitted_attributes(params = {})
     attributes = super || []
-    attributes += [:first_name, :last_name, :email, :phone, :project_id] if record.new_record?
+    attributes += [:first_name, :last_name, :email, :phone, :project_id, :push_to_crm, site_visits_attributes: Pundit.policy(user, [:admin, SiteVisit.new]).permitted_attributes] if record.new_record?
     if user.present? && user.role.in?(%w(superadmin admin gre))
       attributes += [:manager_id, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
     end

@@ -25,7 +25,6 @@
     <tr>
       <%
         lead = cp_lead_activity.lead
-        channel_partner = cp_lead_activity.user
       %>
       <tr>
         <td data-title="Name">
@@ -48,7 +47,7 @@
         <% end %>
         <td><%= lead.project.try(:name) %></td>
         <% if !current_user.role?('channel_partner') %>
-          <td><%= channel_partner.name %></td>
+          <td><%= cp_lead_activity.manager_name %></td>
         <% end %>
       <td><%= cp_lead_activity.count_status.try(:titleize) %></td>
       <td><%= cp_lead_activity.lead_status.try(:titleize) %></td>
