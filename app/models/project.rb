@@ -176,8 +176,8 @@ class Project
   default_scope -> { where(is_active: true)}
 
   scope :filter_by__id, ->(_id) { all.in(_id: (_id.is_a?(Array) ? _id : [_id])) }
-  scope :filter_by_category, ->(category) {category.is_a?(Array) ? where(category: {'$in': category.map{|category| category.downcase}}) : where(category: category.downcase) }
-  scope :filter_by_project_segment, ->(project_segment) {project_segment.is_a?(Array) ? where(project_segment: {'$in': project_segment.map{|segment| segment.downcase}} ) : where(project_segment: project_segment.downcase) }
+  scope :filter_by_category, ->(category) {category.is_a?(Array) ? where(category: {'$in': category}) : where(category: category) }
+  scope :filter_by_project_segment, ->(project_segment) {project_segment.is_a?(Array) ? where(project_segment: {'$in': project_segment} ) : where(project_segment: project_segment) }
   scope :filter_by_configurations, ->(configurations) { configurations.is_a?(Array) ? where(configurations: {'$in': configurations} ) : where(configurations: configurations) }
   scope :filter_by_city, ->(city) { where(city: city) }
   scope :filter_by_micro_market, ->(micro_market) { where(micro_market: micro_market) }
