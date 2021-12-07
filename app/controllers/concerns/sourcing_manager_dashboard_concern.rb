@@ -42,10 +42,10 @@ module SourcingManagerDashboardConcern
     project_ids = Project.where(id: {"$in": project_ids}).distinct(:id)
     start_date, end_date = dates.split(' - ')
     if ["superadmin","admin"].include?(current_user.role) #Channel Partner Manager Performance Dashboard for admin and superadmin
-      @cps = User.in(manager_id: User.filter_by_role("cp_admin").pluck(:id)).where(role: "cp")
+      @cps = User.where(role: "cp")
     else
       # @cps = User.filter_by_role("cp").filter_by_userwise_project_ids(current_user)
-      @cps = User.where(manager_id: current_user.id)
+      @cps = User.filter_by_role("cp").where(manager_id: current_user.id)
     end
     @matcher = {matcher: {created_at: {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day }}}
     @matcher[:matcher][:project_id] = {"$in": project_ids} if project_ids.present?
@@ -55,7 +55,7 @@ module SourcingManagerDashboardConcern
 
   def cp_status
     if ["superadmin","admin"].include?(current_user.role) #Channel Partner Manager Performance Dashboard for admin and superadmin
-      @cp_managers = User.in(manager_id: User.filter_by_role("cp_admin").pluck(:id)).where(role: "cp")
+      @cp_managers = User.where(role: "cp")
     else
       @cp_managers = User.filter_by_role(:cp).where(manager_id: current_user.id)
     end

@@ -11,6 +11,8 @@ class Admin::LeadsController < AdminController
     if params[:user_id].present?
       @user = User.where(id: params[:user_id]).first
       attrs = @user.as_json(only: %w(first_name last_name email phone))
+    elsif params[:lead_id].present?
+      @existing_lead = Lead.where(id: params[:lead_id]).first
     end
     if params[:project_id].present?
       attrs[:project_id] = params[:project_id]
@@ -18,6 +20,7 @@ class Admin::LeadsController < AdminController
       attrs[:project_id] = Project.first.id
     end
     @lead = Lead.new(attrs)
+    @lead.site_visits.build if params[:walkin].present?
     render layout: false
   end
 

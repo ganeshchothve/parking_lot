@@ -76,7 +76,7 @@ class Client
   field :enable_communication, type: Hash, default: { 'email': true, 'sms': true, 'whatsapp': false, 'notification': false }
   field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
   field :enable_referral_bonus, type: Boolean, default: false
-  field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner]
+  field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner cp_owner]
   field :lead_blocking_days, type: Integer
   field :invoice_approval_tat, type: Integer, default: 2
 
@@ -92,6 +92,7 @@ class Client
   # required for sell.do links of sitevisit, followup & add task on user to work.
   field :selldo_default_search_list_id, type: String
   field :powered_by_link, type: String
+  field :launchpad_portal, type: Boolean, default: true
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />

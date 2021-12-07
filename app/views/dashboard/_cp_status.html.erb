@@ -27,7 +27,7 @@
       <tr>
         <td>Total</td>
         <% %w(inactive active pending rejected total).each do |status| %>
-          <td><%= link_to @channel_partners_status_count[status], channel_partners_path(fltrs: {status: status}) %></td>
+          <td><%= link_to @channel_partners_status_count[status] || 0, channel_partners_path(fltrs: {status: status}) %></td>
         <% end %>
       </tr>
     </tbody>

@@ -13,9 +13,9 @@ class ThirdPartyReference
 
   def update_references
     if self._parent.class == ChannelPartner
-      if cp_user = self._parent.associated_user.presence
-        cp_user.update_external_ids({reference_id: self.reference_id}, self.crm_id.to_s)
-      end
+      #if cp_user = self._parent.associated_user.presence
+      #  cp_user.update_external_ids({reference_id: self.reference_id}, self.crm_id.to_s)
+      #end
     elsif self._parent.class.in?([Lead, User])
       if self.crm.try(:domain) == ENV_CONFIG.dig(:selldo, :base_url) && self._parent.lead_id.blank?
         self._parent.set(lead_id: self.reference_id)
