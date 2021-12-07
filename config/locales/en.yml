@@ -969,6 +969,7 @@ en:
         conducted_on: Conducted on
         site_visit_type: Type
         approval_status: Approval Status
+        manager_id: 'Partner / Manager / Added by'
       user_kyc:
         name: "Name"
         email: "Email"
@@ -1772,9 +1773,9 @@ en:
         queued: "%{name} moved to sales queue successfully"
         dropoff: '%{name} dropped off successfully'
       create_from_existing_lead:
-        link_name: 'Add Existing Lead to this Project'
+        link_name: 'Add Previous %{model} to this Project'
       create_new_lead:
-        link_name: 'Add New Lead'
+        link_name: 'Add New %{model}'
 
     user_kycs:
       index:

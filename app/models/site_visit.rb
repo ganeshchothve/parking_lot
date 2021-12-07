@@ -31,6 +31,7 @@ class SiteVisit
   field :conducted_by, type: String
 
   scope :filter_by_status, ->(_status) { where(status: { '$in' => _status }) }
+  scope :filter_by_approval_status, ->(_approval_status) { where(approval_status: { '$in' => _approval_status }) }
   scope :filter_by_site_visit_type, ->(_status) { where(status: { '$in' => _site_visit_type }) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
   scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }
