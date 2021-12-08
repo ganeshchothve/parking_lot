@@ -97,6 +97,7 @@
   </section>
   -->
 
+  <% cp_id = ChannelPartner.active.first&.id %>
   <section class="user-db-sec-6 device-pd <%= current_user.role?('cp') ? 'mb-5 pb-5' : '' %>">
     <div class="px-4">
       <div class='box-card'>
@@ -129,6 +130,10 @@
                       <div class = "mb-3 col-12">
                         <%= label_tag "project_id", "Project", class: "control-label float-left" %>
                         <%= select_tag "project_id", options_for_select(Project.where(Project.user_based_scope(current_user)).map{|pr| [pr.name, pr.id]}), prompt: 'Select', class: "selectize" %>
+                      </div>
+                      <div class = "mb-3 col-12">
+                        <%= label_tag "channel_partner_id", ChannelPartner.model_name.human, required: true, class: "control-label float-left" %>
+                        <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}, cp_id), required: true, class: "selectize" %>
                       </div>
                     </div>
                   </div>
@@ -311,6 +316,7 @@
       let date = "<%= @dates %>";
       $.ajax({
         url: "<%= partner_wise_performance_admin_users_path %>",
+        data: { channel_partner_id: "<%= cp_id.to_s %>" },
         type: "get",
       });
       $.ajax({

@@ -49,7 +49,8 @@ module SourcingManagerDashboardConcern
     end
     @matcher = {matcher: {created_at: {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day }}}
     @matcher[:matcher][:project_id] = {"$in": project_ids} if project_ids.present?
-    @walkins = DashboardDataProvider.cp_performance_walkins(current_user, @matcher)
+    @leads = DashboardDataProvider.cp_performance_walkins(current_user, @matcher)
+    @site_visits = DashboardDataProvider.cp_performance_site_visits(current_user, @matcher)
     @bookings = DashboardDataProvider.cp_performance_bookings(current_user, @matcher)
   end
 

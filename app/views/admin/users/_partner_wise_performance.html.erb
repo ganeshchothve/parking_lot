@@ -16,7 +16,8 @@
         </tr>
       </thead>
       <tbody>
-        <% User.filter_by_role(%w(cp_owner channel_partner)).where(User.user_based_scope(current_user)).each do |p| %>
+        <% user = params[:channel_partner_id].present? ? ChannelPartner.where(id: params[:channel_partner_id]).first&.users&.cp_owner&.first : current_user %>
+        <% User.filter_by_role(%w(cp_owner channel_partner)).where(User.user_based_scope(user || current_user)).each do |p| %>
           <tr>
             <td data-title='<%= t("mongoid.attributes.user/role.channel_partner") %>'><%= p.name.titleize %></td>
             <% if policy([:admin, Lead]).index? %>

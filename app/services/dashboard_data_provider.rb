@@ -81,9 +81,10 @@ module DashboardDataProvider
               "count": {"$sum": 1}
             }
           }]).to_a
-    out = {}
+    out = {'pending' => {}, 'approved' => {}, 'rejected' => {}}
     data.each do |d|
-      out[d["_id"].first] = d["count"]
+      out[d.dig('_id', 'status')][d.dig('_id', 'cp_id')&.first&.to_s&.presence || nil] ||= 0
+      out[d.dig('_id', 'status')][d.dig('_id', 'cp_id')&.first&.to_s&.presence || nil] += d["count"]
     end
     out
   end

@@ -4,8 +4,11 @@
     <thead class="th-default">
       <tr class="bg-primary white">
         <th><%= t("mongoid.attributes.user/role.cp") %> Name</th>
-        <th>No. of <%= Lead.model_name.human(count: 2) %></th>
-        <th>No. of <%= BookingDetail.model_name.human(count: 2) %></th>
+        <th><%= Lead.model_name.human(count: 2) %></th>
+        <th>Pending <%= SiteVisit.model_name.human(count: 2) %></th>
+        <th>Approved <%= SiteVisit.model_name.human(count: 2) %></th>
+        <th>Rejected <%= SiteVisit.model_name.human(count: 2) %></th>
+        <th><%= BookingDetail.model_name.human(count: 2) %></th>
         <th><%= t('mongoid.attributes.booking_detail.agreement_price') %></th>
       </tr>
     </thead>
@@ -13,7 +16,10 @@
       <% @cps.each do |cp| %>
         <tr>
           <td data-title='Sourcing manager Name'><%= cp.name %></td>
-          <td data-title='Walk ins'><%= @walkins[cp.id] || 0 %></td>
+          <td data-title='Walk ins'><%= @leads[cp.id] || 0 %></td>
+          <td data-title='Pending <%= SiteVisit.model_name.human(count: 2) %>'><%= @site_visits.dig('pending', cp.id.to_s) || 0 %></td>
+          <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= @site_visits.dig('approved', cp.id.to_s) || 0 %></td>
+          <td data-title='Rejected <%= SiteVisit.model_name.human(count: 2) %>'><%= @site_visits.dig('rejected', cp.id.to_s) || 0 %></td>
           <td data-title='Bookings'><%= @bookings.dig(cp.id, :count) || 0 %></td>
           <td class='non-action-td' data-title='Agreement Value'><%= number_to_inr(@bookings.dig(cp.id, :sales_revenue) || 0)%></td>
         </tr>

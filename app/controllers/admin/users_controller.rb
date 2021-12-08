@@ -245,12 +245,21 @@ class Admin::UsersController < AdminController
       @site_visits = @site_visits.where(project_id: params[:project_id])
       @bookings = @bookings.where(project_id: params[:project_id])
     end
-    @leads = @leads.ne(manager_id: nil).group_by{|p| p.manager_id}
+    if params[:channel_partner_id].present?
+      @leads = @leads.where(channel_partner_id: params[:channel_partner_id])
+      @site_visits = @site_visits.where(channel_partner_id: params[:channel_partner_id])
+      @bookings = @bookings.where(channel_partner_id: params[:channel_partner_id])
+    else
+      @leads = @leads.ne(manager_id: nil)
+      @site_visits = @site_visits.ne(manager_id: nil)
+      @bookings = @bookings.ne(manager_id: nil)
+    end
+    @leads = @leads.group_by{|p| p.manager_id}
     @all_site_visits = @site_visits.ne(manager_id: nil).group_by{|p| p.manager_id}
-    @pending_site_visits = @site_visits.filter_by_approval_status('pending').ne(manager_id: nil).group_by{|p| p.manager_id}
-    @approved_site_visits = @site_visits.filter_by_approval_status('approved').ne(manager_id: nil).group_by{|p| p.manager_id}
-    @rejected_site_visits = @site_visits.filter_by_approval_status('rejected').ne(manager_id: nil).group_by{|p| p.manager_id}
-    @bookings = @bookings.ne(manager_id: nil).group_by{|p| p.manager_id}
+    @pending_site_visits = @site_visits.filter_by_approval_status('pending').group_by{|p| p.manager_id}
+    @approved_site_visits = @site_visits.filter_by_approval_status('approved').group_by{|p| p.manager_id}
+    @rejected_site_visits = @site_visits.filter_by_approval_status('rejected').group_by{|p| p.manager_id}
+    @bookings = @bookings.group_by{|p| p.manager_id}
   end
 
   # GET /admin/users/search_by
