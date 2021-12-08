@@ -558,6 +558,17 @@ en:
           sbi: State Bank of India
           bob: Bank of Baroda
           bajaj_finance: Bajaj Finance
+
+      project/category:
+        pre_launch: Pre Launch
+        launch: Launch
+        ongoing: Ongoing
+        completed: Completed
+      project/project_segment:
+        affordable: Affordable
+        value: Value
+        luxury: Luxury
+        ultra_luxury: Ultra Luxury
       nearby_location:
         distance: Distance to destination
         destination: Destination
@@ -1120,6 +1131,7 @@ en:
         utm_params: 'UTM Tracking'
         channel_partner_id: CP Company Name/ Organisation Name/ CP Name
         referral_code: "Referral Code"
+        shareable_link: "Shareable Link"
       user/confirmed:
         :true: 'Confirmed'
         :false: 'Not Confirmed'
