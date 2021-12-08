@@ -22,16 +22,16 @@
           </li>
           <% end %>
           <% if user.buyer? %>
-          <% if current_client.enable_channel_partners? %>
-          <li class="col-lg-3">
-            <span class="txt-light-blue fn-12"><%= t('mongoid.attributes.user.manager_change_reason') %></span>
-            <p class="fn-14 theme-txt-color break-word"><%= user.manager_change_reason || '-' %></p>
-          </li>
-          <% end %>
-          <li class="col-lg-3">
-            <span class="txt-light-blue fn-12"><%= t('mongoid.attributes.user.lead_id') %></span>
-            <p class="fn-14 theme-txt-color"><%= user.lead_id || '-' %></p>
-          </li>
+            <% if current_client.enable_channel_partners? %>
+              <li class="col-lg-3">
+                <span class="txt-light-blue fn-12"><%= t('mongoid.attributes.user.manager_change_reason') %></span>
+                <p class="fn-14 theme-txt-color break-word"><%= user.manager_change_reason || '-' %></p>
+              </li>
+            <% end %>
+            <li class="col-lg-3">
+              <span class="txt-light-blue fn-12"><%= t('mongoid.attributes.user.lead_id') %></span>
+              <p class="fn-14 theme-txt-color"><%= user.lead_id || '-' %></p>
+            </li>
           <% end %>
 
           <li class="col-lg-3">
@@ -42,60 +42,60 @@
             <span class="txt-light-blue fn-12"><%= t('mongoid.attributes.user.confirmed_at') %></span>
             <p class="fn-14 theme-txt-color">
               <% if user.confirmed? %>
-              <%= t('mongoid.attributes.user.confirmed_by') %>
-              <%= user.confirmed_by_self? ? 'Self' : link_to(user.confirmed_by_name, [current_user_role_group, user.confirmed_by]) %>
-              </br>
-              <%= t('global.at') %>
-              <%= l(user.confirmed_at.in_time_zone(current_user.time_zone)) %>
+                <%= t('mongoid.attributes.user.confirmed_by') %>
+                <%= user.confirmed_by_self? ? 'Self' : link_to(user.confirmed_by_name, [current_user_role_group, user.confirmed_by]) %>
+                </br>
+                <%= t('global.at') %>
+                <%= l(user.confirmed_at.in_time_zone(current_user.time_zone)) %>
               <% else %>
-              <%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %>
+                <%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %>
               <% end %>
             </p>
           </li>
           <% if policy([current_user_role_group, user]).show_lead_tagging? && user.buyer? %>
-          <li class="col-lg-3">
-            <span class="txt-light-blue fn-12"> <%= t('mongoid.attributes.user.iris_confirmation') %></span>
-            <p class="fn-14 theme-txt-color">
-              <%= t("mongoid.attributes.user/iris_confirmation.#{user.iris_confirmation?}.temporarily_blocked.#{user.temporarily_blocked?}") %>
-            </p>
-          </li>
+            <li class="col-lg-3">
+              <span class="txt-light-blue fn-12"> <%= t('mongoid.attributes.user.iris_confirmation') %></span>
+              <p class="fn-14 theme-txt-color">
+                <%= t("mongoid.attributes.user/iris_confirmation.#{user.iris_confirmation?}.temporarily_blocked.#{user.temporarily_blocked?}") %>
+              </p>
+            </li>
           <% end %>
           <% if user.temporarily_blocked? %>
-          <li class="col-lg-3">
-            <span class="txt-light-blue fn-12"><%= t("mongoid.attributes.user.unblock_at") %></span>
-            <p class="fn-14 theme-txt-color"><%= user.unblock_at.try(:strftime, "%d/%m/%Y") %></p>
-          </li>
+            <li class="col-lg-3">
+              <span class="txt-light-blue fn-12"><%= t("mongoid.attributes.user.unblock_at") %></span>
+              <p class="fn-14 theme-txt-color"><%= user.unblock_at.try(:strftime, "%d/%m/%Y") %></p>
+            </li>
           <% end %>
 
           <% if ["channel_partner","cp_owner"].include?(user.role) %>
-          <li class="col-lg-3">
-            <span class="txt-light-blue fn-12"><%= t('mongoid.attributes.user.rera_id') %></span>
-            <p class="fn-14 theme-txt-color"><%= user.rera_id || '-' %></p>
-          </li>
-          <li class="col-lg-3">
-            <span class="txt-light-blue fn-12"><%= t('mongoid.attributes.user.referral_code') %></span>
-            <p class="fn-14 theme-txt-color"><%= user.referral_code || '-' %></p>
-          </li>
-          <li class="col-lg-3">
-            <span class="txt-light-blue fn-12"><%= t("mongoid.attributes.user.referred_by_id") %></span>
-            <p class="fn-14 theme-txt-color"><%= user.referred_by.try(:name) || '-' %></p>
-          </li>
-          <li class="col-lg-3">
-            <span class="txt-light-blue fn-12"><%= t("mongoid.attributes.user.cp_code") %></span>
-            <p class="fn-14 theme-txt-color"><%= user.cp_code || '-' %></p>
-          </li>
+            <li class="col-lg-3">
+              <span class="txt-light-blue fn-12"><%= t('mongoid.attributes.user.rera_id') %></span>
+              <p class="fn-14 theme-txt-color"><%= user.rera_id || '-' %></p>
+            </li>
+            <li class="col-lg-3">
+              <span class="txt-light-blue fn-12"><%= t('mongoid.attributes.user.referral_code') %></span>
+              <p class="fn-14 theme-txt-color"><%= user.referral_code || '-' %></p>
+            </li>
+            <li class="col-lg-3">
+              <span class="txt-light-blue fn-12"><%= t("mongoid.attributes.user.referred_by_id") %></span>
+              <p class="fn-14 theme-txt-color"><%= user.referred_by.try(:name) || '-' %></p>
+            </li>
+            <li class="col-lg-3">
+              <span class="txt-light-blue fn-12"><%= t("mongoid.attributes.user.cp_code") %></span>
+              <p class="fn-14 theme-txt-color"><%= user.cp_code || '-' %></p>
+            </li>
           <% end %>
 
           <% if user.buyer? %>
-          <li class="col-lg-3">
-            <span class="txt-light-blue fn-12"><%= t("mongoid.attributes.user.referral_code") %></span>
-            <p class="fn-14 theme-txt-color"><%= user.referral_code || '-' %></p>
-          </li>
+            <li class="col-lg-3">
+              <span class="txt-light-blue fn-12"><%= t("mongoid.attributes.user.referral_code") %></span>
+              <p class="fn-14 theme-txt-color"><%= user.referral_code || '-' %></p>
+            </li>
 
-          <li class="col-lg-3">
-            <span class="txt-light-blue fn-12"><%= t("mongoid.attributes.user.referred_by_id") %></span>
-            <p class="fn-14 theme-txt-color"><%= user.referred_by.try(:name) || '-' %></p>
-          </li>
+            <li class="col-lg-3">
+              <span class="txt-light-blue fn-12"><%= t("mongoid.attributes.user.referred_by_id") %></span>
+              <p class="fn-14 theme-txt-color"><%= user.referred_by.try(:name) || '-' %></p>
+            </li>
           <% end %>
           <% if current_user.role?('superadmin') %>
             <li class="col-lg-3">
