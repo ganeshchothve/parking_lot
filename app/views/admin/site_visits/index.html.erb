@@ -15,7 +15,13 @@
         </div>
       </div>
       -->
-      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+      <div class="col-lg-9 filter-set">
+        <%= link_to "Scheduled This Week", admin_site_visits_path(fltrs: {scheduled_on: "#{Date.today.beginning_of_week} - #{Date.today.end_of_week}"}, scheduled_this_week: true), class: "filter-link #{params[:scheduled_this_week].present? ? 'active' : ''}" %>
+        <%= link_to "Scheduled Last Week", admin_site_visits_path(fltrs: {scheduled_on: "#{(Date.today-7.days).beginning_of_week} - #{(Date.today-7.days).end_of_week}"}, scheduled_last_week: true), class: "filter-link #{params[:scheduled_last_week].present? ? 'active' : ''}" %>
+        <%= link_to "Scheduled For This Month", admin_site_visits_path(fltrs: {scheduled_on: "#{Date.today.beginning_of_month} - #{Date.today.end_of_month}"}, scheduled_this_month: true), class: "filter-link #{params[:scheduled_this_month].present? ? 'active' : ''}" %>
+        <%= link_to "Pending Approval", admin_site_visits_path(fltrs: {approval_status: 'pending'}), class: "filter-link #{params.dig(:fltrs, :approval_status) == 'pending' ? 'active' : ''}" %>
+      </div>
+      <div class="col-lg-3 col-xs-12 col-md-12 col-sm-12 no-pd">
         <div class="table-btn-set float-right pb-1 text-end mt-2">
           <!--
           <div class="filter-search">
