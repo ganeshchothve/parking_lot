@@ -1,7 +1,7 @@
 class Admin::UsersController < AdminController
   include UsersConcern
   before_action :authenticate_user!, except: :resend_confirmation_instructions
-  before_action :set_user, except: %i[index export new create portal_stage_chart channel_partner_performance search_by]
+  before_action :set_user, except: %i[index export new create portal_stage_chart channel_partner_performance partner_wise_performance search_by]
   before_action :authorize_resource, except: :resend_confirmation_instructions
   around_action :apply_policy_scope, only: %i[index export]
 
@@ -217,17 +217,40 @@ class Admin::UsersController < AdminController
   def channel_partner_performance
     dates = params[:dates]
     dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
-    @walkins = Lead.filter_by_created_at(dates)
-    @bookings = BookingDetail.booking_stages.filter_by_created_at(dates)
+    @leads = Lead.filter_by_created_at(dates).where(Lead.user_based_scope(current_user, params))
+    @site_visits = SiteVisit.filter_by_scheduled_on(dates).where(SiteVisit.user_based_scope(current_user, params))
+    @bookings = BookingDetail.booking_stages.filter_by_booked_on(dates).where(BookingDetail.user_based_scope(current_user, params))
     if params[:channel_partner_id].present?
-      @walkins = @walkins.where(manager_id: params[:channel_partner_id])
+      @leads = @leads.where(manager_id: params[:channel_partner_id])
+      @site_visits = @site_visits.where(manager_id: params[:channel_partner_id])
       @bookings = @bookings.where(manager_id: params[:channel_partner_id])
-    else
-      @walkins = @walkins.where(Lead.user_based_scope(current_user, params))
-      @bookings = @bookings.where(BookingDetail.user_based_scope(current_user, params))
     end
-    @walkins = @walkins.group_by{|p| p.project_id}
+    @leads = @leads.group_by{|p| p.project_id}
+    @all_site_visits = @site_visits.group_by{|p| p.project_id}
+    @pending_site_visits = @site_visits.filter_by_approval_status('pending').group_by{|p| p.project_id}
+    @approved_site_visits = @site_visits.filter_by_approval_status('approved').group_by{|p| p.project_id}
+    @rejected_site_visits = @site_visits.filter_by_approval_status('rejected').group_by{|p| p.project_id}
     @bookings = @bookings.group_by{|p| p.project_id}
+  end
+
+  #TO DO - move to SourcingManagerDashboardConcern
+  def partner_wise_performance
+    dates = params[:dates]
+    dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
+    @leads = Lead.filter_by_created_at(dates).where(Lead.user_based_scope(current_user, params))
+    @site_visits = SiteVisit.filter_by_scheduled_on(dates).where(SiteVisit.user_based_scope(current_user, params))
+    @bookings = BookingDetail.booking_stages.filter_by_booked_on(dates).where(BookingDetail.user_based_scope(current_user, params))
+    if params[:project_id].present?
+      @leads = @leads.where(project_id: params[:project_id])
+      @site_visits = @site_visits.where(project_id: params[:project_id])
+      @bookings = @bookings.where(project_id: params[:project_id])
+    end
+    @leads = @leads.ne(manager_id: nil).group_by{|p| p.manager_id}
+    @all_site_visits = @site_visits.ne(manager_id: nil).group_by{|p| p.manager_id}
+    @pending_site_visits = @site_visits.filter_by_approval_status('pending').ne(manager_id: nil).group_by{|p| p.manager_id}
+    @approved_site_visits = @site_visits.filter_by_approval_status('approved').ne(manager_id: nil).group_by{|p| p.manager_id}
+    @rejected_site_visits = @site_visits.filter_by_approval_status('rejected').ne(manager_id: nil).group_by{|p| p.manager_id}
+    @bookings = @bookings.ne(manager_id: nil).group_by{|p| p.manager_id}
   end
 
   # GET /admin/users/search_by
@@ -280,7 +303,7 @@ class Admin::UsersController < AdminController
   end
 
   def authorize_resource
-    if %w[index export portal_stage_chart channel_partner_performance].include?(params[:action])
+    if %w[index export portal_stage_chart channel_partner_performance partner_wise_performance].include?(params[:action])
       authorize [current_user_role_group, User]
     elsif params[:action] == 'new' || params[:action] == 'create'
       if params.dig(:user, :role).present?

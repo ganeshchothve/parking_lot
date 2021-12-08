@@ -53,6 +53,41 @@ module DashboardDataProvider
     out
   end
 
+  def self.cp_performance_site_visits(user, options={})
+    matcher = {}
+    matcher = options[:matcher] if options[:matcher].present?
+    matcher.merge!(SiteVisit.user_based_scope(user))
+    data = SiteVisit.collection.aggregate([{
+            "$match": matcher
+          },{
+            "$lookup":
+            {
+              "from": "users",
+              "localField": "manager_id",
+              "foreignField": "_id",
+              "as": "manager"
+            }
+          },{
+            "$project":
+            {
+              "sv_id": "$id",
+              "cp_id": "$manager.manager_id",
+              'status': '$approval_status'
+            }
+          },{
+            "$group":
+            {
+              "_id": {cp_id: "$cp_id", 'status': '$status'},
+              "count": {"$sum": 1}
+            }
+          }]).to_a
+    out = {}
+    data.each do |d|
+      out[d["_id"].first] = d["count"]
+    end
+    out
+  end
+
   def self.cp_performance_bookings(user, options={})
     matcher = {}
     matcher = options[:matcher] if options[:matcher].present?

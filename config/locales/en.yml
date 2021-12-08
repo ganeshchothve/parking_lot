@@ -1938,7 +1938,9 @@ en:
   dashboard:
     cp_admin:
       channel_partner_performace:
-        heading: "Channel Partner Performance"
+        heading: "Channel Partner Performance (Project Wise)"
+      partner_wise_performace:
+        heading: "Channel Partner Performance (User Wise)"
       incentive_scheme_performance:
         heading: "Brokerage Scheme Performance"
       cp_performance:

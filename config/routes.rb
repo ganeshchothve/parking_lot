@@ -271,6 +271,7 @@ Rails.application.routes.draw do
         get :export
         get :portal_stage_chart
         get :channel_partner_performance
+        get :partner_wise_performance
         get :search_by
       end
 

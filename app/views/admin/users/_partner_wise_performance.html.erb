@@ -4,7 +4,7 @@
     <table class="table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0">
       <thead class="th-default">
         <tr class="bg-primary white">
-          <th><%= Project.model_name.human %></th>
+          <th><%= t("mongoid.attributes.user/role.channel_partner") %></th>
           <% if policy([:admin, Lead]).index? %>
             <th><%= Lead.model_name.human(count: 2) %></th>
           <% end %>
@@ -16,9 +16,9 @@
         </tr>
       </thead>
       <tbody>
-        <% Project.where(Project.user_based_scope(current_user)).each do |p| %>
+        <% User.filter_by_role(%w(cp_owner channel_partner)).where(User.user_based_scope(current_user)).each do |p| %>
           <tr>
-            <td data-title='<%= Project.model_name.human %>'><%= p.name.titleize %></td>
+            <td data-title='<%= t("mongoid.attributes.user/role.channel_partner") %>'><%= p.name.titleize %></td>
             <% if policy([:admin, Lead]).index? %>
               <td data-title='<%= Lead.model_name.human(count: 2) %>'><%= @leads[p.id].try(:count) || 0 %></td>
             <% end %>

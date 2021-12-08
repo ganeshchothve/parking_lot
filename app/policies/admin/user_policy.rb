@@ -88,6 +88,10 @@ class Admin::UserPolicy < UserPolicy
     true
   end
 
+  def partner_wise_performance?
+    true
+  end
+
   def search_by?
     user.role.in?(%w(team_lead))
   end
