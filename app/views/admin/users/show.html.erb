@@ -71,9 +71,11 @@
                       data-bs-target="#collapseLead" aria-expanded="false" aria-controls="collapseLead">
                       Lead
                     </button>
+                    <!--
                     <% if policy([:admin, Lead]).new? %>
-                    <%= link_to t('helpers.new.link_name', model: Lead.model_name.human), new_admin_lead_path(user_id: @user.id), class: 'fn-12 font-medium theme-txt-color w-25 text-end pe-3 py-3 modal-remote-form-link' %>
+                    <%#= link_to t('helpers.new.link_name', model: Lead.model_name.human), new_admin_lead_path(user_id: @user.id), class: 'fn-12 font-medium theme-txt-color w-25 text-end pe-3 py-3 modal-remote-form-link' %>
                     <% end %>
+                    -->
                   </h2>
                   <div id="collapseLead" class="accordion-collapse collapse" aria-labelledby="headingLead"
                     data-bs-parent="#accordionExample">
