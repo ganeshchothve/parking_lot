@@ -21,7 +21,7 @@ class Invoice
 
   belongs_to :project
   belongs_to :booking_detail
-  belongs_to :manager, class_name: 'User', optional: true
+  belongs_to :manager, class_name: 'User'
   has_one :incentive_deduction
   has_many :assets, as: :assetable
   embeds_one :cheque_detail

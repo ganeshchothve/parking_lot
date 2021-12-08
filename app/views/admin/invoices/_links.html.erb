@@ -5,8 +5,8 @@
   <% invoice.aasm.events(permitted: true).each do |event| %>
     <% if event.name == :raise %>
       <%= link_to t("controller.invoices.events.#{event.name}"), raise_invoice_admin_booking_detail_invoice_path(invoice.booking_detail, invoice), class: 'dropdown-item modal-remote-form-link' %>
-    <% elsif false %>
-      <%= link_to t("controller.invoices.events.#{event.name}"), change_state_admin_booking_detail_invoice_path(invoice.booking_detail, invoice, {invoice: {event: event.name}}), method: :patch, class: 'dropdown-item' %>
+    <%# else %>
+      <%#= link_to t("controller.invoices.events.#{event.name}"), change_state_admin_booking_detail_invoice_path(invoice.booking_detail, invoice, {invoice: {event: event.name}}), method: :patch, class: 'dropdown-item' %>
     <% end %>
   <% end %>
 <% end %>
@@ -26,7 +26,7 @@
 <% if policy([current_user_role_group, invoice]).new_send_invoice_to_poc? %>
   <%= link_to "Send Invoice", new_send_invoice_to_poc_admin_invoice_path(invoice), class: 'dropdown-item modal-remote-form-link', target: '_blank' %>
 <% end %>
-<% if current_user.role?('billing_team') && invoice.status == "raised" %>
+<% if current_user.role?('billing_team') && invoice.status == "pending_approval" %>
   <%= link_to t("controller.invoices.events.approve"), change_state_admin_booking_detail_invoice_path(invoice.booking_detail, invoice, {invoice_manual: {event: 'approve'}}), method: :patch, class: 'dropdown-item' %>
 <% elsif current_user.role?('billing_team') && invoice.status == "approved" %>
   <%= link_to "Move to Tax Invoice Raised", change_state_admin_booking_detail_invoice_path(invoice.booking_detail, invoice, {invoice_manual: {event: 'tax_invoice_raise'}}), method: :patch, class: 'dropdown-item' %>

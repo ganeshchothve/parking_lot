@@ -94,7 +94,7 @@ class Admin::InvoicePolicy < InvoicePolicy
       # attributes += [:amount, :gst_amount] if record.status.in?(%w(raised pending_approval))
       attributes += [:rejection_reason] if record.status.in?(%w(raised pending_approval rejected))
       attributes += [cheque_detail_attributes: [:id, :total_amount, :payment_identifier, :issued_date, :issuing_bank, :issuing_bank_branch, :handover_date, :creator_id]] if record.status.in?(%w(approved paid))
-      attributes += [:event] if record.status.in?(%w(draft raised approved tax_invoice_raised))
+      attributes += [:event] if record.status.in?(%w(draft raised approved tax_invoice_raised pending_approval))
     end
     attributes.uniq
   end

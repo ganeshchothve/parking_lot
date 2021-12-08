@@ -97,7 +97,19 @@ class Admin::BookingDetails::InvoicesController < AdminController
   end
 
   def send_invoice_to_poc
-    SendInvoiceToPocMailer.notify(@invoice, params[:email]).deliver
+    attachments_attributes = []
+    attachments_attributes << {file: File.open(@invoice.assets.where(asset_type: 'system_generated_invoice').first.file.file.file)}
+    email = Email.create!({
+      project_id: @invoice.project.id,
+      booking_portal_client_id: @invoice.project.booking_portal_client_id,
+      email_template_id: Template::EmailTemplate.find_by(project_id: @invoice.project.id, name: "send_invoice_to_poc").id,
+      to: [params[:email]],
+      triggered_by_id: @invoice.id,
+      triggered_by_type: @invoice.class.to_s,
+      attachments_attributes: attachments_attributes
+    })
+    email.sent!
+    @invoice.pending_approval!
     redirect_to admin_invoices_path
   end
 
