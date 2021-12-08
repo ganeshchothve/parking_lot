@@ -10,6 +10,7 @@ class Lead
   extend FilterByCriteria
   extend ApplicationHelper
   include LeadStateMachine
+  include DetailsMaskable
 
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   DOCUMENT_TYPES = []
@@ -209,8 +210,12 @@ class Lead
     "#{first_name} #{last_name}"
   end
 
-  def ds_name
+  def search_name
     "#{name} - #{email} - #{phone} (#{project_name})"
+  end
+
+  def ds_name(current_user)
+    "#{name} - #{masked_email(current_user)} - #{masked_phone(current_user)} (#{project_name})"
   end
 
   def active_cp_lead_activities

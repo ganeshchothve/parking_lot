@@ -191,8 +191,14 @@ class Admin::LeadsController < AdminController
   end
 
   def authorize_resource
-    if %w[index new export search_by search_inventory].include?(params[:action])
+    if %w[new export search_by search_inventory].include?(params[:action])
       authorize [current_user_role_group, Lead]
+    elsif params[:action] == 'index'
+      unless params[:ds]
+        authorize [current_user_role_group, Lead]
+      else
+        policy([current_user_role_group, Lead]).ds_index?
+      end
     else
       authorize [current_user_role_group, @lead]
     end

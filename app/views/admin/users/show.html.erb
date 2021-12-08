@@ -12,12 +12,12 @@
                 <% end %><%= @user.name || '-' %></h6>
               <a href="javascript:;" class="email-icon small d-inline-block mt-1 fn-16" data-bs-toggle="popover"
                 title="Email Id" data-bs-placement="bottom"
-                data-bs-content="<%= @user.email || '-' %>">
+                data-bs-content="<%= (@user.buyer? ? @user.masked_email(current_user) : @user.email) || '-' %>">
                 <i class="fa fa-envelope fill-theme me-2 ms-2 fn-18"></i>
               </a>
               <a href="javascript:;" class="phone-icon small d-inline-block mt-1 fn-16" data-bs-container="body"
                 data-bs-placement="bottom" data-bs-toggle="popover" title="Phone No."
-                data-bs-content="<%= @user.phone || '-' %>">
+                data-bs-content="<%= (@user.buyer? ? @user.masked_phone(current_user) : @user.phone) || '-' %>">
                 <i class="fa fa-phone-alt fill-theme me-2 fn-18"></i>
               </a>
             </div>

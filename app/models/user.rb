@@ -10,6 +10,7 @@ class User
   extend FilterByCriteria
   extend ApplicationHelper
   include SalesUserStateMachine
+  include DetailsMaskable
 
   # Constants
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
@@ -405,7 +406,11 @@ class User
     end
   end
 
-  def ds_name
+  def ds_name(current_user = nil)
+    "#{name} - #{masked_email(current_user)} - #{masked_phone(current_user)}"
+  end
+
+  def search_name
     "#{name} - #{email} - #{phone}"
   end
 
@@ -700,9 +705,9 @@ class User
     end
   end
 
-  #def associated_channel_partner
-  #  ChannelPartner.where(associated_user_id: self.id).first
-  #end
+  def in_masked_details_user_group?
+    role.in?(%w(admin superadmin cp cp_admin sales_admin sales gre crm dev_sourcing_manager))
+  end
 
   protected
 

@@ -2,7 +2,7 @@
   <thead class="th-default">
     <thead>
       <tr class="bg-primary white">
-        <th><%= t('mongoid.attributes.site_visit.lead') %></th>
+        <th><%= t('mongoid.attributes.lead.name') %></th>
         <th><%= t('mongoid.attributes.lead.email') %></th>
         <th><%= t('mongoid.attributes.lead.phone') %></th>
         <th><%= t('mongoid.attributes.site_visit.project') %></th>
@@ -16,7 +16,7 @@
   <tbody>
     <% site_visits.reject(&:new_record?).each do |site_visit| %>
       <tr>
-        <td data-title=<%= t('mongoid.attributes.site_visit.lead') %>>
+        <td data-title=<%= t('mongoid.attributes.lead.name') %>>
           <% if policy([:admin, Lead.new()]).show? %>
             <%= link_to site_visit.lead.name, admin_lead_path(site_visit.lead_id) %>
           <% else %>
@@ -24,10 +24,10 @@
           <% end %>
         </td>
         <td data-title=<%= t('mongoid.attributes.lead.email') %>>
-          <%= site_visit.lead.email %>
+          <%= site_visit.lead.masked_email(current_user) %>
         </td>
         <td data-title=<%= t('mongoid.attributes.lead.phone') %>>
-          <%= site_visit.lead.phone %>
+          <%= site_visit.lead.masked_phone(current_user) %>
         </td>
         <td data-title=<%= t('mongoid.attributes.site_visit.project') %>>
           <% if policy([:admin, Project.new]).show? %>
@@ -53,7 +53,7 @@
           <div class="dropdown show text-right">
           <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-              <%= render 'links', site_visit: site_visit %>
+              <%= render 'admin/site_visits/links', site_visit: site_visit %>
            </div>
         </div>
         </td>
@@ -62,15 +62,17 @@
   </tbody>
 </table>
 
-<div class="col-lg-12 py-3 bg-white mb-2 px-2">
-  <div class="row">
-    <div class="col-lg-6 pt-2">
-      <p class="table-entry mb-0"><%= page_entries_info site_visits %></p>
-    </div>
-    <% if site_visits.respond_to?(:total_pages) %>
-      <div class="col-lg-6 table-pagination">
-        <%= will_paginate site_visits, list_classes: %w(pagination justify-content-end) %>
+<% if site_visits.is_a? WillPaginate::Collection %>
+  <div class="col-lg-12 py-3 bg-white mb-2 px-2">
+    <div class="row">
+      <div class="col-lg-6 pt-2">
+        <p class="table-entry mb-0"><%= page_entries_info site_visits %></p>
       </div>
-    <% end %>
+      <% if site_visits.respond_to?(:total_pages) %>
+        <div class="col-lg-6 table-pagination">
+          <%= will_paginate site_visits, list_classes: %w(pagination justify-content-end) %>
+        </div>
+      <% end %>
+    </div>
   </div>
-</div>
+<% end %>

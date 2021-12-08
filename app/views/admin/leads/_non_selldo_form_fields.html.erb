@@ -15,7 +15,7 @@
 </div>
 <div class="row">
   <div class="col-md-6">
-    <%= f.input :email, required: true, disabled: !policy([:admin, lead]).editable_field?("email"), input_html: { class: 'email', name: 'email' } %>
+    <%= f.input :email, disabled: !policy([:admin, lead]).editable_field?("email"), input_html: { class: 'email', name: 'email' } %>
   </div>
   <div class="col-md-6">
     <%= f.input :phone, required: true, disabled: !policy([:admin, lead]).editable_field?("phone"), as: :tel, input_html: { class: 'phone', name: 'phone' } %>

@@ -651,21 +651,7 @@
                 <div class="col-12">
                     <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card prjt-details-header-stats pb-2">
                         <div class="prjt-inner-stats row right-stats mt-3 px-2">
-                            <p>
-                                <% leads_count = Lead.where(Lead.user_based_scope(current_user, params)).where(project_id: @project.id).count %>
-                                <%= link_to_if policy([current_user_role_group, Lead]).index?, leads_count, admin_leads_path(fltrs: {project_id: @project.id}) %> <span class="d-block">Leads</span>
-                                <% if policy([:admin, Lead.new(project_id: @project.id)]).new? %>
-                                <%= link_to 'ADD', new_admin_lead_path(project_id: @project.id), class: 'modal-remote-form-link prjt-add' %>
-                                <% end %>
-                            </p>
-                            <p>
-                                <%= SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).where(project_id: @project.id).count %> <span class="d-block">Walk-Ins</span>
-                            </p>
-                            <p>
-                                <% bookings_count = BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: @project.id).count %>
-                                <%= link_to_if policy([current_user_role_group, BookingDetail]).index?, bookings_count, admin_booking_details_path(fltrs: {project_id: @project.id})  %> <span class="d-block">Bookings</span>
-                                <a href="javascript:;" class="prjt-add"></a>
-                            </p>
+                          <%= render 'lead_stats', project: @project %>
                         </div>
                     </div>
                 </div>
