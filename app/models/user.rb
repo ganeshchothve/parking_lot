@@ -407,7 +407,11 @@ class User
   end
 
   def ds_name(current_user = nil)
-    "#{name} - #{masked_email(current_user)} - #{masked_phone(current_user)}"
+    if buyer? && maskable_field?(current_user)
+      "#{name} - #{masked_email(current_user)} - #{masked_phone(current_user)}"
+    else
+      search_name
+    end
   end
 
   def search_name
