@@ -1636,6 +1636,8 @@ en:
         link_name: 'Walk-in Details'
       sync_with_selldo:
         link_name: 'Sync with Sell.Do'
+      reject:
+        link_name: 'Reject Walk-in'
       events:
         status:
           conduct: 'Mark Conducted'

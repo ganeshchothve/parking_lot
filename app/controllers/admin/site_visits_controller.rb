@@ -1,7 +1,7 @@
 class Admin::SiteVisitsController < AdminController
 
-  before_action :set_lead, except: %w[index show sync_with_selldo edit update change_state]
-  before_action :set_site_visit, only: %w[edit update show sync_with_selldo change_state]
+  before_action :set_lead, except: %w[index show sync_with_selldo edit update change_state reject]
+  before_action :set_site_visit, only: %w[edit update show sync_with_selldo change_state reject]
   before_action :set_crm_base, only: %w[create sync_with_selldo]
   around_action :user_time_zone, if: :current_user
 
@@ -89,15 +89,16 @@ class Admin::SiteVisitsController < AdminController
       @site_visit.assign_attributes(permitted_attributes([current_user_role_group, @site_visit]))
       @site_visit.assign_attributes(conducted_on: Time.now, conducted_by: current_user.role) if @site_visit.event == 'conduct' || (@site_visit.approval_event == 'approve' && @site_visit.may_conduct?)
       if @site_visit.save
-        uri = URI.parse(request.referer)
-        (@site_visit.verification_rejected? && params.dig(:site_visit, :approval_event) == 'reject') ? (uri.query="remote-state=#{new_notable_path(notable_type: @site_visit.class.model_name.i18n_key.to_s, notable_id: @site_visit.id)}") : uri
-
-        format.html { redirect_to uri.to_s, notice: t("controller.site_visits.status_message.#{params.dig(:site_visit, :event).present? ? "status.#{@site_visit.status}" : "approval_status.#{@site_visit.approval_status}"}") }
+        format.html { redirect_to request.referer, notice: t("controller.site_visits.status_message.#{params.dig(:site_visit, :event).present? ? "status.#{@site_visit.status}" : "approval_status.#{@site_visit.approval_status}"}") }
       else
         format.html { redirect_to request.referer, alert: @site_visit.errors.full_messages.uniq }
         format.json { render json: { errors: @site_visit.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
+  end
+
+  def reject
+    render layout: false
   end
 
   def sync_with_selldo

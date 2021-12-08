@@ -200,6 +200,7 @@ Rails.application.routes.draw do
       member do
         get 'sync_with_selldo'
         patch :change_state
+        get :reject
       end
     end
     resources :leads, only: [:index, :show, :edit, :update, :new] do

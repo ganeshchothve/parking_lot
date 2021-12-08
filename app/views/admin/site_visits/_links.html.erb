@@ -14,7 +14,11 @@
 <% end %>
 <% if policy([current_user_role_group, site_visit]).change_state? && policy([current_user_role_group, site_visit]).editable_field?('approval_event') %>
   <% site_visit.aasm(:approval_status).events(permitted: true).each do |event| %>
-    <%= link_to t("controller.site_visits.events.approval_status.#{event.name}"), change_state_admin_site_visit_path(site_visit, {site_visit: {approval_event: event.name}}), method: :patch, class: 'dropdown-item' %>
+    <% if event.name.to_s == 'reject' %>
+      <%= link_to t("controller.site_visits.events.approval_status.#{event.name}"), reject_admin_site_visit_path(site_visit), class: 'dropdown-item modal-remote-form-link' %>
+    <% else %>
+      <%= link_to t("controller.site_visits.events.approval_status.#{event.name}"), change_state_admin_site_visit_path(site_visit, {site_visit: {approval_event: event.name}}), method: :patch, class: 'dropdown-item' %>
+    <% end %>
   <% end %>
 <% end %>
 <% if policy([:admin, Note.new(notable: site_visit)]).new? %>

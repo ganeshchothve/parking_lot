@@ -20,6 +20,8 @@ class SiteVisit
   belongs_to :channel_partner, optional: true
   has_many :notes, as: :notable
 
+  accepts_nested_attributes_for :notes, reject_if: :all_blank
+
   field :scheduled_on, type: DateTime
   field :conducted_on, type: DateTime
   field :site_visit_type, type: String, default: 'visit'
@@ -45,6 +47,7 @@ class SiteVisit
   validates :conducted_on, :conducted_by, presence: true, if: Proc.new { |sv| sv.status == 'conducted' }
   validate :existing_scheduled_sv, on: :create
   validates :time_slot, presence: true, if: Proc.new { |sv| sv.site_visit_type == 'token_slot' }
+  validates :notes, copy_errors_from_child: true
 
   def self.statuses
     [
