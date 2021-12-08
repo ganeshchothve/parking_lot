@@ -7,9 +7,16 @@
             <%= bottom_navigation %>
           </ul>
         </div>
+        <div class="col-lg-6 col-md-8 col-xs-6 col-sm-4 no-pd">
+          <% if ['channel_partner', 'cp_owner'].include?(current_user.role) %>
+            <ul class="footer-menu float-end mb-0 pe-0">
+              <li class="footer-object me-0">CP Code: <%= current_user.cp_code %>
+              </li>
+            </ul>
+          <% end %>
+        </div>
       </div>
     <% end %>
-    <!--
     <div class="row scroll-footer">
       <% if defined?(current_user) && current_user %>
         <hr class="w-100 m-0">
@@ -18,12 +25,11 @@
         <div class="footer-top footer-menu">
           <% template = ::Template::UITemplate.where(name: 'layouts/_navbar_footer').first %>
           <% if template.present? %>
-            <%#= get_view_erb(template) %>
+            <%= get_view_erb(template) %>
           <% end %>
         </div>
       </div>
     </div>
-    -->
   </div>
 </footer>
 

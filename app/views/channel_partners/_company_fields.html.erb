@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-6">
-    <%= form.input :company_name, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("company_name") %>
+    <%= form.input :company_name, required1: true, disabled: !policy([:admin, @channel_partner]).editable_field?("company_name") %>
   </div>
   <div class="col-md-6">
     <%= form.input :company_owner_name, disabled: !policy([:admin, @channel_partner]).editable_field?("company_owner_name") %>
@@ -22,5 +22,8 @@
   </div>
   <div class="col-md-6">
     <%= form.input :manager_id, collection: User.where(is_active: true, confirmed_at: {'$ne': nil}, role: "cp").collect{|x| [x.ds_name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), required: true, as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
+  </div>
+  <div class="col-md-6">
+    <%= form.input :regions, collection: current_client.partner_regions.collect{|region| [region,region]}, disabled: !policy([:admin, @channel_partner]).editable_field?("regions"), as: :select, prompt: :translate, input_html: { class: 'selectize', multiple: true } %>
   </div>
 </div>

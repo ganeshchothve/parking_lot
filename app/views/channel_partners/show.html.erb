@@ -66,10 +66,6 @@
                 <p class="break-word"><%= @channel_partner.manager_name.presence || '-' %></p>
               </li>
               <li>
-                <span><%= t('mongoid.attributes.channel_partner.cp_code') %></span>
-                <p class="break-word"><%= @channel_partner.cp_code.presence || '-' %></p>
-              </li>
-              <li>
                 <span><%= t('mongoid.attributes.channel_partner.interested_services') %></span>
                 <p class="break-word"><%= @channel_partner.interested_services.presence.try(:to_sentence) || '-' %></p>
               </li>

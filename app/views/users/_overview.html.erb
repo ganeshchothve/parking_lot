@@ -67,7 +67,7 @@
           </li>
           <% end %>
 
-          <% if user.role?('channel_partner') %>
+          <% if ["channel_partner","cp_owner"].include?(user.role) %>
           <li class="col-lg-3">
             <span class="txt-light-blue fn-12"><%= t('mongoid.attributes.user.rera_id') %></span>
             <p class="fn-14 theme-txt-color"><%= user.rera_id || '-' %></p>
@@ -75,6 +75,14 @@
           <li class="col-lg-3">
             <span class="txt-light-blue fn-12"><%= t('mongoid.attributes.user.referral_code') %></span>
             <p class="fn-14 theme-txt-color"><%= user.referral_code || '-' %></p>
+          </li>
+          <li class="col-lg-3">
+            <span class="txt-light-blue fn-12"><%= t("mongoid.attributes.user.referred_by_id") %></span>
+            <p class="fn-14 theme-txt-color"><%= user.referred_by.try(:name) || '-' %></p>
+          </li>
+          <li class="col-lg-3">
+            <span class="txt-light-blue fn-12"><%= t("mongoid.attributes.user.cp_code") %></span>
+            <p class="fn-14 theme-txt-color"><%= user.cp_code || '-' %></p>
           </li>
           <% end %>
 
@@ -88,13 +96,12 @@
             <span class="txt-light-blue fn-12"><%= t("mongoid.attributes.user.referred_by_id") %></span>
             <p class="fn-14 theme-txt-color"><%= user.referred_by.try(:name) || '-' %></p>
           </li>
-
+          <% end %>
           <% if current_user.role?('superadmin') %>
             <li class="col-lg-3">
               <span class="txt-light-blue fn-12"><%= t("mongoid.attributes.user.portal_stage") %></span>
               <p class="fn-14 theme-txt-color"><%= user.portal_stage.try(:stage) || '-' %></p>
             </li>
-          <% end %>
           <% end %>
         </ul>
       </div>

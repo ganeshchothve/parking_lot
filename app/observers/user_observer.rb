@@ -10,6 +10,8 @@ class UserObserver < Mongoid::Observer
   end
 
   def before_create user
+    user.generate_referral_code
+    user.generate_cp_code
     if user.role?("user") && user.email.present?
       email = user.email
       if current_client.email_domains.include?(email.split("@")[1]) && current_client.enable_company_users?
@@ -32,7 +34,6 @@ class UserObserver < Mongoid::Observer
   end
 
   def before_save user
-    user.generate_referral_code
     if user.confirmed_at_changed? && user.confirmed?
       # Send confirmed portal stage for channel partner users into selldo
       if user.channel_partner?
