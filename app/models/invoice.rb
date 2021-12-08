@@ -22,6 +22,7 @@ class Invoice
   belongs_to :project
   belongs_to :booking_detail
   belongs_to :manager, class_name: 'User'
+  belongs_to :channel_partner
   has_one :incentive_deduction
   has_many :assets, as: :assetable
   embeds_one :cheque_detail
@@ -76,17 +77,19 @@ class Invoice
       custom_scope = {}
       if params[:booking_detail_id].blank? && !user.buyer?
         if user.role?('channel_partner')
-          custom_scope = { manager_id: user.id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
+          custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
+        elsif user.role?('cp_owner')
+          custom_scope = { channel_partner_id: user.channel_partner_id }
         elsif user.role?('billing_team')
           custom_scope = { status: { '$in': %w(raised pending_approval approved rejected draft tax_invoice_raised paid) } }
         elsif user.role?('cp_admin')
-          #cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
-          #channel_partner_ids = User.where(role: 'channel_partner', manager_id: {"$in": cp_ids}).distinct(:id)
-          #custom_scope = { manager_id: { "$in": channel_partner_ids }, status: { '$nin': %w(draft) } }
-          custom_scope = { status: { '$nin': %w(draft raised) } }
-        #elsif user.role?('cp')
-        #  channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
-        #  custom_scope = { manager_id: { "$in": channel_partner_ids } }
+          cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
+          channel_partner_ids = User.where(role: 'channel_partner', manager_id: {"$in": cp_ids}).distinct(:id)
+          custom_scope = { manager_id: { "$in": channel_partner_ids }, status: { '$nin': %w(draft) } }
+          #custom_scope = { status: { '$nin': %w(draft raised) } }
+        elsif user.role?('cp')
+          channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
+          custom_scope = { manager_id: { "$in": channel_partner_ids } }
         end
       end
       if params[:booking_detail_id].present?

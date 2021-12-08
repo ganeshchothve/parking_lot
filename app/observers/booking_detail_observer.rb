@@ -3,11 +3,14 @@ class BookingDetailObserver < Mongoid::Observer
   def before_validation booking_detail
     if booking_detail.project_unit.present?
       booking_detail.name = booking_detail.project_unit.name
-    else 
+      booking_detail.project_tower_id = booking_detail.project_unit.project_tower_id if booking_detail.project_tower_id.blank?
+    else
       booking_detail.name = booking_detail.booking_project_unit_name
     end
-    booking_detail.project_tower_id = booking_detail.project_unit.project_tower_id if booking_detail.project_tower_id.blank? && booking_detail.project_unit.present?
-    booking_detail.manager_id = booking_detail.lead.active_cp_lead_activities.first.try(:user_id) if booking_detail.manager_id.blank?
+    booking_detail.manager_id = booking_detail.lead&.manager_id if booking_detail.manager_id.blank? && booking_detail.lead
+    booking_detail.channel_partner_id = booking_detail.manager&.channel_partner_id if booking_detail.channel_partner_id.blank? && booking_detail.manager
+    booking_detail.cp_manager_id = booking_detail.channel_partner&.manager_id if booking_detail.cp_manager_id.blank? && booking_detail.channel_partner
+    booking_detail.cp_admin_id = booking_detail.cp_manager&.manager_id if booking_detail.cp_admin_id.blank? && booking_detail.cp_manager
   end
 
   def before_create booking_detail

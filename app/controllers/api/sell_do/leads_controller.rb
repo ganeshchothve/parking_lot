@@ -129,6 +129,7 @@ class Api::SellDo::LeadsController < Api::SellDoController
       project_id: @lead.project_id,
       user_id: @lead.user_id,
       creator: @crm.user,
+      created_by: "crm-#{@crm.id}",
       scheduled_on: (DateTime.parse(params.dig(:payload, :scheduled_on)) rescue nil),
       third_party_references_attributes: [{
         crm_id: @crm.id,

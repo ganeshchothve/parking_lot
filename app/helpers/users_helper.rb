@@ -4,13 +4,13 @@ module UsersHelper
     if current_user.referral_code.blank?
       link_to t('referrals.generate_code.link_name'), generate_code_buyer_referrals_path, method: :post, remote: true, class: 'btn btn-sm btn-default'
     else
-      text_field_tag '', current_user.referral_code, readonly: true, class: 'form-control col-3 float-right'
+      text_field_tag '', current_user.referral_code, readonly: true, class: 'referral-code-input border-0 shadow-0 font-medium'
     end
   end
 
   def invite_friend_link
-    if policy([:buyer, :referral]).new?
-      link_to t('controller.referrals.new.link_name'), new_buyer_referral_path, class: ' modal-remote-form-link', data:{ event_category: 'Section', event_action: 'Click', event_name: 'Invite Friend'}
+    if policy([:admin, :referral]).new?
+      link_to t('controller.referrals.new.link_name'), new_admin_referral_path, class: ' modal-remote-form-link', data:{ event_category: 'Section', event_action: 'Click', event_name: 'Invite Friend'}
     else
       ''
     end
@@ -37,6 +37,16 @@ module UsersHelper
       [[ User.human_attribute_name("role.#{_user.role}"), _user.role]]
     elsif _user.buyer?
       filter_buyer_role_options
+    elsif current_user.role?('cp_owner') || _user.role.in?(%w(channel_partner cp_owner))
+      %w(cp_owner channel_partner).collect { |x| [User.human_attribute_name("role.#{x}"), x] }
+    else
+      User.available_roles(current_client).reject {|x| x.in?(%w(cp_owner channel_partner))}.collect{|role| [ User.human_attribute_name("role.#{role}"), role ]}
+    end
+  end
+
+  def user_filter_role_options
+    if current_user.role?('cp_owner')
+      %w(cp_owner channel_partner).collect { |x| [User.human_attribute_name("role.#{x}"), x] }
     else
       filter_user_role_options
     end

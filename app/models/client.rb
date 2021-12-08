@@ -76,13 +76,14 @@ class Client
   field :enable_communication, type: Hash, default: { 'email': true, 'sms': true, 'whatsapp': false, 'notification': false }
   field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
   field :enable_referral_bonus, type: Boolean, default: false
-  field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner]
+  field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner cp_owner]
   field :lead_blocking_days, type: Integer
   field :invoice_approval_tat, type: Integer, default: 2
 
   field :external_api_integration, type: Boolean, default: false
   field :enable_daily_reports, type: Hash, default: {"payments_report": false}
   field :enable_incentive_module, type: Array, default: []
+  field :partner_regions, type: Array, default: ['Pune West', 'Pune East', 'Others']
   #
   # This setting will decide how same lead can be added through different channel partners,
   # Enabled: If channel_partner tries to add a lead which is already present in the system & tagged to different channel_partner, then system will check if the lead is confirmed or not, if yes, it won't allow the current channel_partner to add it again & trigger an email to admin saying current channel_partner tried to add an existing lead.
@@ -91,6 +92,7 @@ class Client
   # required for sell.do links of sitevisit, followup & add task on user to work.
   field :selldo_default_search_list_id, type: String
   field :powered_by_link, type: String
+  field :launchpad_portal, type: Boolean, default: true
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />

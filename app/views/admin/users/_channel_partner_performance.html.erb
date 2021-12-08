@@ -14,12 +14,19 @@
         <% Project.where(Project.user_based_scope(current_user)).each do |p| %>
           <tr>
             <td data-title='<%= Project.model_name.human %>'><%= p.name.titleize %></td>
-            <td data-title='Walk ins'><%= @walkins[p.id].try(:count) || 0 %></td>
-            <td data-title='Bookings'><%= @bookings[p.id].try(:count) || 0 %></td>
+            <td data-title='<%= Lead.model_name.human(count: 2) %>'><%= @walkins[p.id].try(:count) || 0 %></td>
+            <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><%= @bookings[p.id].try(:count) || 0 %></td>
             <% sum_of_av = (@bookings[p.id].try(:pluck, :agreement_price).try(:sum) || 0) %>
-            <td class='non-action-td' data-title='Agreement Value'><%= number_to_indian_currency(sum_of_av) %>(<%= number_to_inr(sum_of_av, {precision: 2, significant: false}) %>)</td>
+            <td class='non-action-td' data-title='<%= t('mongoid.attributes.booking_detail.agreement_price') %>'><%= number_to_indian_currency(sum_of_av) %>(<%= number_to_inr(sum_of_av, {precision: 2, significant: false}) %>)</td>
           </tr>
         <% end %>
+        <tr >
+          <th data-title="<%= t('global.total') %>"><%= t('global.total') %></th>
+          <td data-title='<%= Lead.model_name.human(count: 2) %>'><%= @walkins.values&.flatten&.count || 0 %></td>
+          <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><%= @bookings.values&.flatten&.count || 0 %></td>
+          <% sum_of_av = (@bookings.values&.flatten&.pluck(:agreement_price)&.sum || 0) %>
+          <td class='non-action-td' data-title='<%= t('mongoid.attributes.booking_detail.agreement_price') %>'><%= number_to_indian_currency(sum_of_av) %>(<%= number_to_inr(sum_of_av, {precision: 2, significant: false}) %>)</td>
+        </tr>
       </tbody>
     </table>
   </div>

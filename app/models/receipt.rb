@@ -56,6 +56,9 @@ class Receipt
   belongs_to :creator, class_name: 'User'
   belongs_to :account, foreign_key: 'account_number', optional: true
   belongs_to :manager, class_name: 'User', optional: true
+  belongs_to :channel_partner, optional: true
+  belongs_to :cp_manager, class_name: 'User', optional: true
+  belongs_to :cp_admin, class_name: 'User', optional: true
   # remove optional: true when implementing.
   has_many :assets, as: :assetable
   has_many :smses, as: :triggered_by, class_name: 'Sms'
@@ -79,6 +82,8 @@ class Receipt
     _booking_detail_id = _booking_detail_id == '' ? { '$in' => ['', nil] } : _booking_detail_id
     where(booking_detail_id: _booking_detail_id)
   end
+  scope :filter_by_manager_id, ->(manager_id){ where(manager_id: manager_id) }
+  scope :filter_by_cp_manager_id, ->(cp_manager_id){ where(cp_manager_id: cp_manager_id) }
 
   scope :filter_by_reference_id, ->(reference_id) {
     if reference_id.present?
@@ -262,12 +267,18 @@ class Receipt
     custom_scope = {}
     if params[:lead_id].blank? && !user.buyer?
       if user.role?('channel_partner')
-        custom_scope = { manager_id: user.id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
-      #elsif user.role?('cp_admin')
-      #  custom_scope = { lead_id: { "$in": Lead.nin(manager_id: [nil, '']).distinct(:id) } }
-      #elsif user.role?('cp')
-      #  channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
-      #  custom_scope = { lead_id: { "$in": Lead.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
+        custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
+      elsif user.role?('cp_owner')
+        custom_scope = { channel_partner_id: user.channel_partner_id }
+      elsif user.role?('cp_admin')
+        #cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
+        #channel_partner_ids = User.where(role: 'channel_partner', manager_id: {"$in": cp_ids}).distinct(:id)
+        #custom_scope = { manager_id: { "$in": channel_partner_ids } }
+        custom_scope = {cp_admin_id: user.id}
+      elsif user.role?('cp')
+        #channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
+        #custom_scope = { manager_id: { "$in": channel_partner_ids } }
+        custom_scope = {cp_manager_id: user.id}
       end
     end
 

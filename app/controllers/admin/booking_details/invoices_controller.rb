@@ -18,7 +18,7 @@ class Admin::BookingDetails::InvoicesController < AdminController
   end
 
   def create
-    @invoice = Invoice::Manual.new(project: @booking_detail.project, manager: @booking_detail.manager, raised_date: Time.now, booking_detail_id: @booking_detail.id)
+    @invoice = Invoice::Manual.new(project: @booking_detail.project, manager: @booking_detail.manager, raised_date: Time.now, booking_detail_id: @booking_detail.id, channel_partner_id: @booking_detail.channel_partner.id)
     @invoice.assign_attributes(permitted_attributes([current_user_role_group, @invoice]))
     respond_to do |format|
       if @invoice.save

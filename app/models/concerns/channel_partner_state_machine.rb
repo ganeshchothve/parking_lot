@@ -8,16 +8,16 @@ module ChannelPartnerStateMachine
       state :inactive, initial: true
       state :active, :pending, :rejected
 
-      event :submit_for_approval, after: %i[after_submit_for_approval update_selldo!] do
+      event :submit_for_approval, after: %i[update_selldo! after_submit_for_approval] do
         transitions from: :inactive, to: :pending, if: :can_send_for_approval?
         transitions from: :rejected, to: :pending, if: :can_send_for_approval?
       end
 
-      event :approve, after: %i[send_notification update_selldo!] do
+      event :approve, after: %i[update_selldo! send_notification] do
         transitions from: :pending, to: :active
       end
 
-      event :reject, after: %i[send_notification update_selldo!] do
+      event :reject, after: %i[update_selldo! send_notification] do
         transitions from: :pending, to: :rejected
       end
 
@@ -42,13 +42,13 @@ module ChannelPartnerStateMachine
     def send_notification
       template_name = "channel_partner_status_#{self.status}"
       template = Template::EmailTemplate.where(name: template_name).first
-      recipients = [self.associated_user]
+      recipients = self.users.cp_owner.to_a
       recipients << self.manager if self.manager.present?
       recipients << self.manager.manager if self.manager.try(:manager).present?
 
       if template.present?
         email = Email.create!({
-          booking_portal_client_id: self.associated_user.booking_portal_client_id,
+          booking_portal_client_id: self.users.first&.booking_portal_client_id,
           email_template_id: template.id,
           recipients: recipients.flatten,
           triggered_by_id: self.id,
@@ -59,10 +59,10 @@ module ChannelPartnerStateMachine
 
       sms_template = Template::EmailTemplate.where(name: template_name).first
       if sms_template.present?
-        phones = recipients.collect(&:phone).reject(&:blank)
+        phones = recipients.collect(&:phone).reject(&:blank?)
         if phones.present?
           Sms.create!(
-            booking_portal_client_id: self.associated_user.booking_portal_client_id,
+            booking_portal_client_id: self.users.first&.booking_portal_client_id,
             to: phones,
             sms_template_id: sms_template.id,
             triggered_by_id: self.id,
@@ -73,9 +73,7 @@ module ChannelPartnerStateMachine
     end
 
     def update_selldo!
-      if (selldo_api_key = self.associated_user&.booking_portal_client&.selldo_api_key.presence) && (selldo_client_id = self.associated_user&.booking_portal_client&.selldo_client_id.presence)
-        SelldoLeadUpdater.perform_async(self.associated_user_id.to_s, {stage: self.status, action: 'add_cp_portal_stage', selldo_api_key: selldo_api_key, selldo_client_id: selldo_client_id})
-      end
+      self.users.each(&:set_portal_stage_and_push_in_crm)
     end
   end
 end

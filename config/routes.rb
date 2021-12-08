@@ -302,6 +302,10 @@ Rails.application.routes.draw do
         patch :end_scheme
       end
     end
+    
+    resources :referrals, only: [:index, :create, :new] do
+      post :generate_code, on: :collection
+    end
   end
 
   # home & globally accessible
@@ -318,6 +322,7 @@ Rails.application.routes.draw do
   post 'select_project', to: 'home#select_project', as: :select_project
 
   get 'signed_up/:user_id', to: 'home#signed_up', as: :signed_up
+  get 'cp_signed_up_with_inactive_account/:user_id', to: 'home#cp_signed_up_with_inactive_account', as: :cp_signed_up_with_inactive_account
 
   scope :custom do
     match 'inventory/:id', to: 'custom#inventory', as: :custom_inventory, via: [:get]

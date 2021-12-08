@@ -191,6 +191,23 @@
                   </div>
                 </div>
 
+                <% if policy([:admin, Crm::Base.new()]).choose_crm? && apis = Crm::Base.active_apis(@lead).presence %>
+                <div class="accordion-item  border-end-0 border-start-0">
+                  <h2 class="accordion-header d-flex justify-content-between" id="headingCRM">
+                    <button class="accordion-button collapsed  shadow-none" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapseCRM" aria-expanded="false" aria-controls="collapseCRM">
+                      CRM
+                    </button>
+                  </h2>
+                  <div id="collapseCRM" class="accordion-collapse collapse" aria-labelledby="headingCRM"
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body pt-0 ps-4">
+                      <%= render 'admin/crm/base/crms', { apis: apis, resource: @lead } %>
+                    </div>
+                  </div>
+                </div>
+                <% end %>
+
               </div>
             </div>
           </div>

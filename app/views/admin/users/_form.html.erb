@@ -40,7 +40,7 @@
           <% if @user.role.blank? %>
           <div class="mb-3">
             <%= f.label :role, class: 'label-required' %>
-            <%= f.select :role, User.available_roles(current_client).reject{|role| User.buyer_roles(current_client).include?(role)}.collect{ |r| [User.human_attribute_name("role.#{r}"), r] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("role") ? false : true) %>
+            <%= f.select :role, User.available_roles(current_client).reject{|role| User.buyer_roles(current_client).include?(role) || role.in?(%w(cp_owner channel_partner))}.collect{ |r| [User.human_attribute_name("role.#{r}"), r] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("role") ? false : true) %>
           </div>
           <% elsif policy([current_user_role_group, @user]).editable_field?("role") %>
           <div class="mb-3">
@@ -56,11 +56,15 @@
               <%= f.select :allowed_bookings, [1,2,3,4,5,6,100], {prompt: true}, class: 'select', required: 'required' %>
             </div>
           <% end %>
-          <% if policy([current_user_role_group, @user]).editable_field?("rera_id") %>
-            <div class="mb-3">
-              <%= f.label :rera_id %>
-              <%= f.text_field :rera_id, class: 'form-control', disabled: (policy([current_user_role_group, @user]).editable_field?("rera_id") ? false : true) %>
-            </div>
+          <% if policy([current_user_role_group, @user]).editable_field?("channel_partner_id") %>
+            <% if current_user.role?('cp_owner') %>
+              <%= f.hidden_field :channel_partner_id, value: current_user.channel_partner_id %>
+            <% else %>
+              <div class="mb-3">
+                <%= f.label :channel_partner_id %>
+                <%= f.select :channel_partner_id, options_for_select(ChannelPartner.all.collect {|cp| [cp.ds_name, cp.id]}, @user.channel_partner_id), {prompt: true}, class: 'selectize', disabled: (policy([current_user_role_group, @user]).editable_field?("channel_partner_id") ? false : true) %>
+              </div>
+            <% end %>
           <% end %>
           <% if policy([current_user_role_group, @user]).editable_field?("manager_id") %>
             <div class="mb-3">
@@ -104,6 +108,16 @@
             <% end %>
           </div>
 
+          <div class="row">
+            <% if current_user_role_group.to_s == 'admin' && !@user.buyer? && current_user == @user %>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <%= f.label t('mongoid.attributes.user.shareable_link'), class: 'control-label' %>
+                  <%= f.text_field nil, value: new_channel_partner_url(manager_id: @user.id, layout: true), disabled: true, class: 'form-control' %>
+                </div>
+              </div>
+            <% end %>
+          </div>
           <div class="row">
             <% if policy([current_user_role_group, @user]).editable_field?('tier_id') %>
               <div class='col-md-6'>

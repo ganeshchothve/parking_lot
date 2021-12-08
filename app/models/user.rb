@@ -15,9 +15,9 @@ class User
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   ALLOWED_UTM_KEYS = %i[utm_campaign utm_source utm_sub_source utm_content utm_medium utm_term]
   BUYER_ROLES = %w[user employee_user management_user]
-  ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre billing_team team_lead account_manager_head account_manager]
-  ALL_PROJECT_ACCESS = %w[superadmin admin cp cp_admin]
-  CHANNEL_PARTNER_USERS = %w[cp cp_admin channel_partner]
+  ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre billing_team team_lead account_manager_head account_manager cp_owner]
+  ALL_PROJECT_ACCESS = %w[superadmin admin cp cp_admin cp_owner]
+  CHANNEL_PARTNER_USERS = %w[cp cp_admin channel_partner cp_owner]
   SALES_USER = %w[sales sales_admin]
   COMPANY_USERS = %w[employee_user management_user]
   # Added different types of documents which are uploaded on User
@@ -182,14 +182,14 @@ class User
 
   validates :first_name, :role, presence: true
   #validates :first_name, :last_name, name: true, allow_blank: true
-
+  validates :channel_partner_id, presence: true, if: proc { |user| user.role?('channel_partner') }
   validate :phone_or_email_required, if: proc { |user| user.phone.blank? && user.email.blank? }
   validates :phone, :email, uniqueness: { allow_blank: true }
   validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile mobile fixed_line premium_rate] }, allow_blank: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } , allow_blank: true
   validates :allowed_bookings, presence: true, if: proc { |user| user.buyer? }
   # validates :rera_id, presence: true, if: proc { |user| user.role?('channel_partner') } #TO-DO Done for Runwal to revert for generic
-  validates :rera_id, uniqueness: true, allow_blank: true
+  #validates :rera_id, uniqueness: true, allow_blank: true
   validates :role, inclusion: { in: proc { |user| User.available_roles(user.booking_portal_client) } }
   validates :lead_id, uniqueness: true, if: proc { |user| user.buyer? }, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
@@ -200,7 +200,7 @@ class User
   scope :filter_by_confirmation, ->(confirmation) { confirmation.eql?('not_confirmed') ? where(confirmed_at: nil) : where(confirmed_at: { "$ne": nil }) }
   scope :filter_by_is_active, ->(is_active) { is_active.eql?("true") ? where(is_active: true)
     : where(is_active: false)}
-  scope :filter_by_manager_id, ->(manager_id) {where(manager_id: manager_id) }
+  scope :filter_by_channel_partner_id, ->(channel_partner_id) {where(channel_partner_id: channel_partner_id) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_role, ->(_role) { _role.is_a?(Array) ? where( role: { "$in": _role }) : where(role: _role.as_json) }
@@ -316,6 +316,22 @@ class User
     portal_stages.desc(:updated_at).first
   end
 
+  def set_portal_stage_and_push_in_crm
+    if self.role.in?(%w(cp_owner channel_partner))
+      stage = self.channel_partner&.status
+      push_to_crm = self.booking_portal_client.external_api_integration?
+      priority = PortalStagePriority.where(role: 'channel_partner').collect{|x| [x.stage, x.priority]}.to_h
+      if stage.present? && priority[stage].present?
+        self.portal_stages.where(stage:  stage).present? ? self.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : self.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
+        if push_to_crm
+          Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
+            api.execute(self)
+          end
+        end
+      end
+    end
+  end
+
   def active_bookings
     booking_details.in(status: BookingDetail::BOOKING_STAGES)
   end
@@ -394,8 +410,8 @@ class User
   end
 
   def generate_referral_code
-    if self.buyer? && self.referral_code.blank?
-      self.referral_code = "#{self.booking_portal_client.name[0..1].upcase}-#{SecureRandom.hex(4)}"
+    if self.role?("channel_partner") && self.referral_code.blank?
+      self.referral_code = "#{SecureRandom.hex(3)[0..-2]}"
     else
       self.referral_code
     end
@@ -427,12 +443,16 @@ class User
   end
 
   def name
-    str = "#{first_name} #{last_name}"
-    if role?('channel_partner')
+    str = _name
+    if role.in?(%w(cp_owner channel_partner))
       cp = self.channel_partner
       str += " (#{cp.company_name})" if cp.present? && cp.company_name.present?
     end
     str
+  end
+
+  def _name
+    "#{first_name} #{last_name}"
   end
 
   alias :resource_name :name
@@ -446,7 +466,7 @@ class User
   end
 
   def inactive_message
-    is_active ? super : :is_active
+    is_active ? super : (sign_in_count.zero? ? :inactive : :is_active)
   end
 
   def email_required?
@@ -599,12 +619,14 @@ class User
     def role_based_channel_partners_scope(user, _params = {})
       custom_scope = {}
       if user.role?('cp_admin')
-        cp_ids = User.where(manager_id: user.id).distinct(:id)
-        custom_scope = {role: 'channel_partner'} #, manager_id: {"$in": cp_ids}
+        #cp_ids = User.where(manager_id: user.id).distinct(:id)
+        custom_scope = {role: { '$in': %w(channel_partner cp_owner) } } #, manager_id: {"$in": cp_ids}
       elsif user.role?('cp')
-        custom_scope = {role: 'channel_partner'} #, manager_id: user.id
+        custom_scope = {role: { '$in': %w(channel_partner cp_owner) } } #, manager_id: user.id
+      elsif user.role?('cp_owner')
+        custom_scope = { role: {'$in': ['channel_partner', 'cp_owner']}, channel_partner_id: user.channel_partner_id }
       elsif ["admin","superadmin"].include?(user.role)
-        custom_scope = {role: 'channel_partner'}
+        custom_scope = {role: { '$in': %w(channel_partner cp_owner) } }
       end
     end
 
@@ -613,6 +635,8 @@ class User
       if user.role?('channel_partner')
         custom_scope = { role: {"$in": User.buyer_roles(user.booking_portal_client)} }
         custom_scope[:'$or'] = [{manager_id: user.id}, {manager_id: nil, referenced_manager_ids: user.id, iris_confirmation: false}]
+      elsif user.role?('cp_owner')
+        custom_scope = { role: {'$in': ['channel_partner', 'cp_owner']}, channel_partner_id: user.channel_partner_id, id: {'$ne': user.id} }
       elsif user.role?('crm')
         custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) + %w(channel_partner) } }
       elsif user.role?('sales_admin')
@@ -668,17 +692,17 @@ class User
   end
 
   def active_channel_partner?
-    if self.role == 'channel_partner'
-      channel_partner = associated_channel_partner
+    if self.role.in?(%w(cp_owner channel_partner))
+      #channel_partner = associated_channel_partner
       return channel_partner.present? && channel_partner.status == 'active'
     else
       return true
     end
   end
 
-  def associated_channel_partner
-    ChannelPartner.where(associated_user_id: self.id).first
-  end
+  #def associated_channel_partner
+  #  ChannelPartner.where(associated_user_id: self.id).first
+  #end
 
   protected
 
