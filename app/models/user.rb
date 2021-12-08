@@ -706,7 +706,7 @@ class User
   end
 
   def in_masked_details_user_group?
-    role.in?(%w(admin superadmin cp cp_admin sales_admin sales gre crm dev_sourcing_manager))
+    role.in?(booking_portal_client.mask_lead_data_for_roles)
   end
 
   protected

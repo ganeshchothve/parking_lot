@@ -454,9 +454,14 @@ en:
         blocking_days: 'Unit to be blocked for (Days)'
         holding_minutes: 'Unit to be held for (Minutes)'
         enable_company_users: 'Allow Company Users & Benefits'
-        roles_taking_registrations: 'Allowed roles for taking new registrations'
+        roles_taking_registrations: 'Allowed Roles For Taking New Registrations'
         external_api_integration: 'Enable External CRM Integration'
-        enable_incentive_module: 'Enable Brokerage Module for roles'
+        enable_incentive_module: 'Enable Brokerage Module For These Roles'
+        mask_lead_data_for_roles: 'Enable Lead Data Masking For These Roles'
+        partner_regions: 'Define Regions For Channel Partners & Projects'
+        powered_by_link: 'Show Powered By Link'
+        lead_blocking_days: 'Configure Lead Blocking Days'
+        invoice_approval_tat: 'Invoice Approval TAT (In Days)'
       client/payment_gateways:
         Razorpay: Razorpay Payment Gateway
         CCAvenue: CCAvenue Payment Gateway
