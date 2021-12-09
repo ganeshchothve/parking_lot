@@ -8,11 +8,11 @@
           <% if policy([:admin, Lead]).index? %>
             <th><%= Lead.model_name.human(count: 2) %></th>
           <% end %>
-          <th>Pending <%= SiteVisit.model_name.human(count: 2) %></th>
-          <th>Approved <%= SiteVisit.model_name.human(count: 2) %></th>
-          <th>Rejected <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th>Pending<br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th>Approved<br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th>Rejected<br> <%= SiteVisit.model_name.human(count: 2) %></th>
           <th><%= BookingDetail.model_name.human(count: 2) %></th>
-          <th>Total <%= t('mongoid.attributes.booking_detail.agreement_price') %></th>
+          <th>Total<br> <%= t('mongoid.attributes.booking_detail.agreement_price') %></th>
         </tr>
       </thead>
       <tbody>

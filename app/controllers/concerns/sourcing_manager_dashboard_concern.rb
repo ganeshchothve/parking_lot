@@ -60,12 +60,11 @@ module SourcingManagerDashboardConcern
     else
       @cp_managers = User.filter_by_role(:cp).where(manager_id: current_user.id)
     end
-    
+
     @cp_managers_hash = {'No Manager' => 'No Manager'}
     @cp_managers.each do |cp_manager|
       @cp_managers_hash[cp_manager.id] = cp_manager.name
     end
-
 
     @data = ChannelPartner.collection.aggregate([
       {

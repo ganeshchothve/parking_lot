@@ -3,11 +3,11 @@
   <table class="table my-customer-table responsive-tbl mb-0">
     <thead class="th-default">
       <tr class="bg-primary white">
-        <th><%= t("mongoid.attributes.user/role.cp") %> Name</th>
+        <th><%= t("mongoid.attributes.user/role.cp") %></th>
         <th><%= Lead.model_name.human(count: 2) %></th>
-        <th>Pending <%= SiteVisit.model_name.human(count: 2) %></th>
-        <th>Approved <%= SiteVisit.model_name.human(count: 2) %></th>
-        <th>Rejected <%= SiteVisit.model_name.human(count: 2) %></th>
+        <th>Pending<br> <%= SiteVisit.model_name.human(count: 2) %></th>
+        <th>Approved<br> <%= SiteVisit.model_name.human(count: 2) %></th>
+        <th>Rejected<br> <%= SiteVisit.model_name.human(count: 2) %></th>
         <th><%= BookingDetail.model_name.human(count: 2) %></th>
         <th><%= t('mongoid.attributes.booking_detail.agreement_price') %></th>
       </tr>

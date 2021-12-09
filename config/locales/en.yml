@@ -1948,11 +1948,11 @@ en:
       cp_performance:
         heading: "Channel Partner Manager Performance"
       cp_status:
-        active: "Active Partners"
-        inactive: "Signed Up Partners"
-        pending: "Pending Partners"
-        rejected: "Rejected Partners"
-        heading: "Channel Partner Status Count"
+        active_html: "Active<br> Companies"
+        inactive_html: "Signed Up<br> Companies"
+        pending_html: "Pending<br> Companies"
+        rejected_html: "Rejected<br> Companies"
+        heading: "Partner Companies Status Wise Counts"
     channel_partner:
       projects:
         sub_heading: 'Best homes to meet your expectations'

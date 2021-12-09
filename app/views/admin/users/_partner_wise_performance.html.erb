@@ -4,15 +4,15 @@
     <table class="table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0">
       <thead class="th-default">
         <tr class="bg-primary white">
-          <th><%= t("mongoid.attributes.user/role.channel_partner") %></th>
+          <th><%= t("mongoid.attributes.user/role.channel_partner") %> /<br> <%= t("mongoid.attributes.user/role.cp_owner") %></th>
           <% if policy([:admin, Lead]).index? %>
             <th><%= Lead.model_name.human(count: 2) %></th>
           <% end %>
-          <th>Pending <%= SiteVisit.model_name.human(count: 2) %></th>
-          <th>Approved <%= SiteVisit.model_name.human(count: 2) %></th>
-          <th>Rejected <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th>Pending<br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th>Approved<br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th>Rejected<br> <%= SiteVisit.model_name.human(count: 2) %></th>
           <th><%= BookingDetail.model_name.human(count: 2) %></th>
-          <th>Total <%= t('mongoid.attributes.booking_detail.agreement_price') %></th>
+          <th>Total<br> <%= t('mongoid.attributes.booking_detail.agreement_price') %></th>
         </tr>
       </thead>
       <tbody>
