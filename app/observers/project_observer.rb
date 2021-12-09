@@ -11,7 +11,6 @@ class ProjectObserver < Mongoid::Observer
     Template::ReceiptTemplate.create(content: Template::ReceiptTemplate.default_content, booking_portal_client_id: project.booking_portal_client_id, project_id: project.id)
     Template::AllotmentLetterTemplate.create(content: Template::AllotmentLetterTemplate.default_content, booking_portal_client_id: project.booking_portal_client_id, project_id: project.id)
     Template::BookingDetailFormTemplate.seed(project.id.to_s, project.booking_portal_client_id.to_s)
-    Template::EmailTemplate.create(booking_portal_client_id: project.booking_portal_client_id.to_s, project_id: project.id, subject_class: "Invoice", name: "send_invoice_to_poc", subject: 'Invoice raised for booking - <%= self.booking_detail.id %> ', content: '<div class="card w-100">')  
     # Create a default token type
     token_type = project.token_types.create(name: 'Default', token_amount: (project.blocking_amount || project.booking_portal_client.blocking_amount), token_prefix: (project.name.gsub(/\s+/, '')[0..2].try(:upcase).presence || 'TKN'), token_seed: 0)
     token_type.init if token_type.valid?

@@ -18,12 +18,12 @@ class Admin::BookingDetails::InvoicesController < AdminController
   end
 
   def create
-    @invoice = Invoice::Manual.new(project: @booking_detail.project, manager: @booking_detail.manager, raised_date: Time.now, booking_detail_id: @booking_detail.id, channel_partner_id: @booking_detail.channel_partner.id)
+    @invoice = Invoice::Manual.new(project: @booking_detail.project, manager: @booking_detail.manager, raised_date: Time.now, booking_detail_id: @booking_detail.id, channel_partner_id: @booking_detail.channel_partner.try(:id))
     @invoice.assign_attributes(permitted_attributes([current_user_role_group, @invoice]))
     respond_to do |format|
       if @invoice.save
         format.html { redirect_to request.referer, notice: t("controller.invoices.status_message.#{@invoice.status}") }
-        format.json { render json: @invoice, notice: t("controller.invoices.status_message.#{@invoice.status}"), status: :created, location: admin_invoices_path("remote-state": assetables_path(assetable_type: @invoice.class.model_name.i18n_key.to_s, assetable_id: @invoice.id, asset_header: t('controller.invoices.asset_create.link_name'))) }
+        format.json { render json: @invoice, notice: t("controller.invoices.status_message.#{@invoice.status}"), status: :created, location: admin_invoices_path }
       else
         format.html { redirect_to request.referer, alert: @invoice.errors.full_messages.uniq }
         format.json { render json: { errors: @invoice.errors.full_messages.uniq }, status: :unprocessable_entity }
@@ -98,7 +98,7 @@ class Admin::BookingDetails::InvoicesController < AdminController
 
   def send_invoice_to_poc
     attachments_attributes = []
-    attachments_attributes << {file: File.open(@invoice.assets.where(asset_type: 'system_generated_invoice').first.file.file.file)}
+    attachments_attributes << {file: File.open(@invoice.assets.where(asset_type: 'system_generated_invoice').last.file.url)}
     email = Email.create!({
       project_id: @invoice.project.id,
       booking_portal_client_id: @invoice.project.booking_portal_client_id,
@@ -110,7 +110,7 @@ class Admin::BookingDetails::InvoicesController < AdminController
     })
     email.sent!
     @invoice.pending_approval!
-    redirect_to admin_invoices_path
+    redirect_to admin_invoices_path, notice: "Successfully sent."
   end
 
   private

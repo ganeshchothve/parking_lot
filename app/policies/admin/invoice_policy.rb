@@ -17,7 +17,7 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def update?
-    # valid = user.role?('billing_team') && record.status.in?(%w(raised approved))
+    valid = user.role?('billing_team') && record.status.in?(%w(approved tax_invoice_raised paid pending_approval))
     valid ||= user.role?('channel_partner') && record.status.in?(%w(draft rejected))
     valid ||= user.role?('cp_admin') && record.pending_approval?
     valid ||= user.role?('admin') && record.status.in?(%w(draft rejected approved pending_approval))
@@ -93,7 +93,7 @@ class Admin::InvoicePolicy < InvoicePolicy
       attributes += [:number, :gst_slab, :amount, :gst_amount] if record.status.in?(%w(draft))
       # attributes += [:amount, :gst_amount] if record.status.in?(%w(raised pending_approval))
       attributes += [:rejection_reason] if record.status.in?(%w(raised pending_approval rejected))
-      attributes += [cheque_detail_attributes: [:id, :total_amount, :payment_identifier, :issued_date, :issuing_bank, :issuing_bank_branch, :handover_date, :creator_id]] if record.status.in?(%w(approved paid))
+      attributes += [cheque_detail_attributes: [:id, :total_amount, :payment_identifier, :issued_date, :issuing_bank, :issuing_bank_branch, :handover_date, :creator_id]] if record.status.in?(%w(approved paid tax_invoice_raised))
       attributes += [:event] if record.status.in?(%w(draft raised approved tax_invoice_raised pending_approval))
     end
     attributes.uniq
