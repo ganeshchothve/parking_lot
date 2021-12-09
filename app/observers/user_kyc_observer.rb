@@ -9,6 +9,7 @@ class UserKycObserver < Mongoid::Observer
 
   def after_create user_kyc
     lead = user_kyc.lead
+    lead.set(kyc_done: true)
     user = lead.user
     SelldoLeadUpdater.perform_async(lead.id.to_s, {stage: 'kyc_done'})
     template = Template::EmailTemplate.where(name: "user_kyc_added", project_id: lead.project_id).first

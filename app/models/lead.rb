@@ -41,6 +41,7 @@ class Lead
   field :remarks, type: Array, default: [] # used to store the last five notes
   # used for dump latest queue_number or revisit queue number from sitevisit
   field :queue_number, type: Integer
+  field :kyc_done, type: Boolean, default: false
 
   embeds_many :state_transitions
   embeds_many :portal_stages
@@ -136,6 +137,14 @@ class Lead
       elsif paid == 'no'
         where(id: { '$nin': lead_ids })
       end
+    end
+  end
+
+  scope :filter_by_kyc_done, ->(flag) do
+    if flag == 'yes'
+      where(kyc_done: true)
+    elsif flag == 'no'
+      where(kyc_done: false)
     end
   end
 
