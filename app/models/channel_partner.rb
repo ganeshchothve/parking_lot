@@ -106,7 +106,7 @@ class ChannelPartner
   validates :company_type, inclusion: { in: proc { ChannelPartner::COMPANY_TYPE } }, allow_blank: true
   validates :source, inclusion: { in: proc { ChannelPartner::SOURCE } }, allow_blank: true
   validates :category, inclusion: { in: proc { ChannelPartner::CATEGORY } }, allow_blank: true
-  validates :regions, array: { inclusion: { in: current_client.partner_regions } }
+  validates :regions, array: { inclusion: { in: Client.first.try(:partner_regions) || [] } }
 
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: { with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A' }, allow_blank: true
