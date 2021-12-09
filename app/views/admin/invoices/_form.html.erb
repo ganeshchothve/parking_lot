@@ -50,10 +50,11 @@
           <%= f.select :event, options_for_select(events.collect{|event| [t("controller.invoices.events.#{event.to_s}"), event.to_s]}, @invoice.status), {prompt: t("mongoid.attributes.invoice/status.#{@invoice.status}")}, class: 'selectize', required: 'required', disabled: !policy([:admin, @invoice]).editable_field?("event") %>
         </div>
         <div class="mb-3">
-          <%= f.label :rejection_reason, class: '' %>
           <% if policy([:admin, @invoice]).editable_field?("rejection_reason") %>
+            <%= f.label :rejection_reason, class: '' %>
             <%= f.text_area :rejection_reason, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("rejection_reason") %>
-          <% else %>
+          <% elsif f.object.rejection_reason.present?  %>
+            <%= f.label :rejection_reason, class: '' %>
             <p><%= f.object.rejection_reason %></p>
           <% end%>
         </div>

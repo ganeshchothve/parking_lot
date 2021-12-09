@@ -547,6 +547,7 @@ en:
         price_upto: 'Price Goes Upto'
         broker_usp: 'Broker Unique Selling Points (Fill in upto 3 USPs)'
         check_sv_availability_in_selldo: 'Check Site Visit Availability in Sell.do'
+        incentive_gst_slabs: 'Incentive GST Slabs (%)'
         approved_banks/list:
           hdfc: HDFC Bank
           sbi: State Bank of India
@@ -897,6 +898,7 @@ en:
         approved: 'Approved'
         rejected: 'Rejected'
         paid: 'Paid'
+        tax_invoice_raised: 'Tax Invoice Raised'
       cheque_detail:
         total_amount: 'Total Amount'
         payment_identifier: 'Payment Identifier'
@@ -1479,6 +1481,7 @@ en:
         pending_approval: 'Invoice successfully raised'
         approved: 'Invoice successfully approved'
         rejected: 'Invoice rejected'
+        tax_invoice_raised: 'Tax Invoice raised successfully'
       events:
         raise: 'Raise Invoice'
         re_raise: 'Re-Raise Invoice'

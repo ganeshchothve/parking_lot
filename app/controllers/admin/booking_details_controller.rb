@@ -154,7 +154,8 @@ class Admin::BookingDetailsController < AdminController
   def create_booking_without_inventory
     @booking_detail = BookingDetail.new
     @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
-    @booking_detail.user = current_user
+    @booking_detail.manager = current_user
+    @booking_detail.user = @booking_detail.lead.user
     @booking_detail.status = "blocked"
     respond_to do |format|
       if @booking_detail.save
@@ -189,7 +190,7 @@ class Admin::BookingDetailsController < AdminController
     respond_to do |format|
       if @booking_detail.move_to_next_state!(params[:status])
         format.html{ redirect_to request.referrer || dashboard_url, notice: "Booking moved to #{params[:status]} successfully" }
-        format.json { render json: { message: "Booking moved to #{params[:status]} successfully" }, status: :ok }
+        format.json { render json: { message: "Booking moved to #{params[:status].humanize} successfully" }, status: :ok }
       else
         format.html{ redirect_to request.referrer || dashboard_url, alert: @booking_detail.errors.full_messages.uniq }
         format.json { render json: { errors: @booking_detail.errors.full_messages.uniq }, status: :unprocessable_entity }

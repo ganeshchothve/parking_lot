@@ -112,6 +112,8 @@ Rails.application.routes.draw do
       get :generate_invoice, on: :member
       get :update_gst, on: :member
       get :export, on: :collection
+      get :new_send_invoice_to_poc, on: :member
+      post :send_invoice_to_poc, on: :collection
       resources :incentive_deductions, except: :destroy, controller: 'invoices/incentive_deductions' do
         post :change_state, on: :member
       end

@@ -17,6 +17,7 @@ class Invoice
   field :rejection_reason, type: String
   field :comments, type: String
   field :net_amount, type: Float
+  field :gst_slab, type: Float, default: 0.0
 
   belongs_to :project
   belongs_to :booking_detail
@@ -31,8 +32,8 @@ class Invoice
   validates :rejection_reason, presence: true, if: :rejected?
   validates :comments, presence: true, if: proc { pending_approval? && status_was == 'rejected' }
   validates :amount, numericality: { greater_than: 0 }
-  validates :cheque_detail, presence: true, if: :paid?
-  validates :cheque_detail, copy_errors_from_child: true, if: :cheque_detail?
+  # validates :cheque_detail, presence: true, if: :paid?
+  # validates :cheque_detail, copy_errors_from_child: true, if: :cheque_detail?
   validates :net_amount, numericality: { greater_than: 0 }, if: :approved?
 
   delegate :name, to: :project, prefix: true, allow_nil: true
@@ -57,6 +58,20 @@ class Invoice
     _type.match(/manual/i)
   end
 
+  def generate_pdf
+    unless self.assets.where(asset_type: 'system_generated_invoice').present?
+      pdf_content = ApplicationMailer.test(body: self.project.booking_portal_client.templates.where(_type: "Template::InvoiceTemplate", project_id: self.project_id).first.parsed_content(self))
+      pdf = WickedPdf.new.pdf_from_string(pdf_content.html_part.body.to_s)
+      asset = self.assets.build(asset_type: 'system_generated_invoice', assetable: self, assetable_type: self.class.to_s)
+      File.open("#{Rails.root}/exports/invoice-#{self.id}.pdf", "wb") do |file|
+        file << pdf
+        asset.file = file
+      end
+      asset.save
+    end
+  end
+
+
   class << self
     def user_based_scope(user, params = {})
       custom_scope = {}
@@ -66,7 +81,7 @@ class Invoice
         elsif user.role?('cp_owner')
           custom_scope = { channel_partner_id: user.channel_partner_id }
         elsif user.role?('billing_team')
-          custom_scope = { status: { '$nin': %w(draft) } }
+          custom_scope = { status: { '$in': %w(raised pending_approval approved rejected draft tax_invoice_raised paid) } }
         elsif user.role?('cp_admin')
           cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
           channel_partner_ids = User.where(role: 'channel_partner', manager_id: {"$in": cp_ids}).distinct(:id)
@@ -91,7 +106,7 @@ class Invoice
     def user_based_available_statuses(user)
       if user.present?
         if user.role?('billing_team')
-          %w[raised pending_approval approved rejected]
+          %w[raised pending_approval approved rejected draft tax_invoice_raised paid]
         elsif user.role?('cp_admin')
           Invoice.aasm.states.map(&:name) - [:draft, :raised]
         else
