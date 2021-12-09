@@ -4,6 +4,7 @@ class Admin::UsersController < AdminController
   before_action :set_user, except: %i[index export new create portal_stage_chart channel_partner_performance partner_wise_performance search_by]
   before_action :authorize_resource, except: :resend_confirmation_instructions
   around_action :apply_policy_scope, only: %i[index export]
+  around_action :user_time_zone, if: :current_user, only: %i[channel_partner_performance partner_wise_performance]
 
   layout :set_layout
 
@@ -217,13 +218,31 @@ class Admin::UsersController < AdminController
   def channel_partner_performance
     dates = params[:dates]
     dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
-    @leads = Lead.filter_by_created_at(dates).where(Lead.user_based_scope(current_user, params))
-    @site_visits = SiteVisit.filter_by_scheduled_on(dates).where(SiteVisit.user_based_scope(current_user, params))
-    @bookings = BookingDetail.booking_stages.filter_by_booked_on(dates).where(BookingDetail.user_based_scope(current_user, params))
+    @leads = Lead.where(Lead.user_based_scope(current_user, params)).filter_by_created_at(dates)
+    @site_visits = SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).filter_by_scheduled_on(dates)
+    @bookings = BookingDetail.booking_stages.where(BookingDetail.user_based_scope(current_user, params)).filter_by_booked_on(dates)
+    if params[:project_ids].present?
+      project_ids = params["project_ids"].try(:split, ",").try(:flatten)
+      project_ids = Project.where(id: {"$in": project_ids}).distinct(:id)
+      @leads = @leads.filter_by_project_ids(project_ids)
+      @site_visits = @site_visits.filter_by_project_ids(project_ids)
+      @bookings = @bookings.filter_by_project_ids(project_ids)
+    end
     if params[:channel_partner_id].present?
-      @leads = @leads.where(manager_id: params[:channel_partner_id])
-      @site_visits = @site_visits.where(manager_id: params[:channel_partner_id])
-      @bookings = @bookings.where(manager_id: params[:channel_partner_id])
+      @leads = @leads.where(channel_partner_id: params[:channel_partner_id])
+      @site_visits = @site_visits.where(channel_partner_id: params[:channel_partner_id])
+      @bookings = @bookings.where(channel_partner_id: params[:channel_partner_id])
+    end
+    if params[:manager_id].present?
+      @leads = @leads.where(manager_id: params[:manager_id])
+      @site_visits = @site_visits.where(manager_id: params[:manager_id])
+      @bookings = @bookings.where(manager_id: params[:manager_id])
+    end
+    # Exclude leads added by non-channel partner accounts in channel partner performance report
+    if params[:manager_id].blank? && params[:channel_partner_id].blank?
+      @leads = @leads.ne(manager_id: nil)
+      @site_visits = @site_visits.ne(manager_id: nil)
+      @bookings = @bookings.ne(manager_id: nil)
     end
     @leads = @leads.group_by{|p| p.project_id}
     @all_site_visits = @site_visits.group_by{|p| p.project_id}
@@ -282,6 +301,10 @@ class Admin::UsersController < AdminController
   end
 
   private
+
+  def user_time_zone
+    Time.use_zone(current_user.time_zone) { yield }
+  end
 
   def set_user
     @user = if params[:crm_client_id].present? && params[:id].present?

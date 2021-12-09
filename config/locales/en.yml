@@ -1189,7 +1189,7 @@ en:
         queue_number: 'Queue No.'
         customer_status: 'Queue Status'
         search_by_name: 'Name/ Email/ Phone'
-        push_to_crm: 'Do You Want The Developer To Contact The Lead ?'
+        push_to_crm: 'Do You Want The Developer To Contact The Customer ?'
 
       cp_lead_activity:
         lead_id: 'Lead Id'
@@ -1562,7 +1562,7 @@ en:
       sync_on_selldo:
         link_name: 'Sync on Sell.do'
       show:
-        show_interest_text: 'Subscribe to Project for Adding Leads'
+        show_interest_text: 'Subscribe to Project for Adding Walk-Ins'
 
     project_units:
       send_cost_sheet_and_payment_schedule:

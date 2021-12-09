@@ -97,7 +97,7 @@
   </section>
   -->
 
-  <% cp_id = ChannelPartner.active.first&.id %>
+  <% cp_id = ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).first&.id %>
   <section class="user-db-sec-6 device-pd <%= current_user.role?('cp') ? 'mb-5 pb-5' : '' %>">
     <div class="px-4">
       <div class='box-card'>
@@ -170,7 +170,7 @@
            <div class="filter-box modal-content px-3 fixed-header-footer">
                 <div class="filter-header modal-header">
                   <h5 class="modal-title title">Filter</h5>
-                  <a href="javascript:;" class="close-filter-btn btn-close"></a>  
+                  <a href="javascript:;" class="close-filter-btn btn-close"></a>
                 </div>
                 <%= form_tag channel_partner_performance_admin_users_path, method: "get", remote: true, id: "channel_partner_performance_form", class: 'filter-form-modal' do %>
                   <div class="filter-content  modal-body ps-0 pe-0 theme-form">
@@ -180,8 +180,16 @@
                         <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-start-date": start_date || '', "data-end-date": end_date || '', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
                       </div>
                       <div class = "mb-3 col-12">
-                        <%= label_tag "channel_partner_id", "Channel Partner", class: "control-label float-left" %>
-                        <%= select_tag "channel_partner_id", options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), prompt: 'Select', class: "selectize" %>
+                        <%= label_tag "channel_partner_id", ChannelPartner.model_name.human, required: true, class: "control-label float-left" %>
+                        <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}), class: "selectize" %>
+                      </div>
+                      <div class = "mb-3 col-12">
+                        <%= label_tag "manager_id", "Channel Partner", class: "control-label float-left" %>
+                        <%= select_tag "manager_id", options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), prompt: 'Select', class: "selectize" %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag :project_ids, "Projects", class: "control-label float-left" %>
+                        <%= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
                       </div>
                     </div>
                   </div>

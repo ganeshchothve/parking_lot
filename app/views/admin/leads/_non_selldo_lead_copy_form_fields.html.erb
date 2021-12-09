@@ -8,7 +8,7 @@
   <% end %>
   <div class="col-md-12">
     <% options = (existing_lead ? [[existing_lead.ds_name(current_user), existing_lead.id]] : [[]])  %>
-    <%= f.input :_id, label: 'Lead', collection: options, as: :select, prompt: :translate, required: true, autofocus: true, input_html: { name: 'lead_id', class: 'selectize-remote', data: { url: admin_leads_path } } %>
+    <%= f.input :_id, label: 'Customer', collection: options, as: :select, prompt: :translate, required: true, autofocus: true, input_html: { name: 'lead_id', class: 'selectize-remote', data: { url: admin_leads_path } } %>
   </div>
 </div>
 <% if Project.count == 1 || params[:project_id].present? %>

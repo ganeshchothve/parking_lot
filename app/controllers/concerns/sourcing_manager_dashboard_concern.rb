@@ -4,7 +4,7 @@ module SourcingManagerDashboardConcern
     dates = params[:dates]
     dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
     project_ids = params["project_ids"].try(:split, ",").try(:flatten) || (current_user.project_ids || [])
-    @active_partners = Lead.build_criteria(fltrs: {created_at: dates, project_ids: project_ids }).where({"$and": [Lead.user_based_scope(current_user)]}).distinct(:manager_id).count
+    @active_partners = SiteVisit.build_criteria(fltrs: {created_at: dates, project_ids: project_ids }).where({"$and": [SiteVisit.user_based_scope(current_user)]}).distinct(:manager_id).count
     @booking_active_partners = BookingDetail.build_criteria(fltrs: {created_at: dates, project_ids: project_ids }).where({ "$and": [BookingDetail.user_based_scope(current_user), BookingDetail.booking_stages.selector]}).distinct(:manager_id).count
     @raised_invoices = Invoice.build_criteria(fltrs: {created_at: dates, project_ids: project_ids }).where({ "$and": [Invoice.user_based_scope(current_user), status: 'pending_approval']}).count
     @approved_invoices = Invoice.build_criteria(fltrs: {created_at: dates, project_ids: project_ids }).where({ "$and": [Invoice.user_based_scope(current_user), status: 'approved']}).count
