@@ -116,6 +116,7 @@ class User
   # For scoping user with roles: (sales, sales_admin, crm, gre, billing_team) under projects
   # For channel partner users, using interested projects association for scoping under projects
   field :project_ids, type: Array, default: []
+  field :cp_code, type: String
 
   ## Security questionable
 
@@ -417,6 +418,11 @@ class User
     end
   end
 
+  def generate_cp_code
+    if ['channel_partner', 'cp_owner'].include?(self.role)
+      self.cp_code = "#{SecureRandom.hex(3)[0..-2]}"
+    end
+  end
 
   def dashboard_url
     url = Rails.application.routes.url_helpers
