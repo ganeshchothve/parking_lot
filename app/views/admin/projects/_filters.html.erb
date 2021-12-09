@@ -8,7 +8,7 @@
       <div class="row">
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.project.name') %>
-          <%= select_tag "fltrs[_id]", options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:_id] : "")), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[_id]", options_for_select(Project.where(Project.user_based_scope(current_user, params)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:_id] : "")), {prompt: "Select", class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.project.region') %>
