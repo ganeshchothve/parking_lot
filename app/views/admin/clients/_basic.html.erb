@@ -110,6 +110,12 @@
   </div>
   <div class="col-md-12">
     <div class="mb-3">
+      <%= f.label :mask_lead_data_for_roles %>
+      <%= f.select :mask_lead_data_for_roles, filter_admin_role_options, {}, class: 'selectize', multiple: true, required: 'required', disabled: !(policy([current_user_role_group, f.object]).editable_field?("mask_lead_data_for_roles")) %>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="mb-3">
       <%= f.label :partner_regions %>
       <%= f.select :partner_regions, current_client.partner_regions, {}, class: 'selectize-tags', multiple: true, disabled: !(policy([current_user_role_group, f.object]).editable_field?("partner_regions")) %>
     </div>

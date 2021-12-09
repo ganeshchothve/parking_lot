@@ -22,7 +22,11 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def index?
-    user.role.in?(%w(channel_partner cp_owner)) || (!user.buyer? && (current_client.enable_actual_inventory?(user) || enable_incentive_module?(user)))
+    user.role.in?(%w(channel_partner cp_owner dev_sourcing_manager)) || (!user.buyer? && (current_client.enable_actual_inventory?(user) || enable_incentive_module?(user)))
+  end
+
+  def third_party_inventory?
+    index? && !user.role?('dev_sourcing_manager')
   end
 
   def show?

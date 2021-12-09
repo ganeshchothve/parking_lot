@@ -10,12 +10,13 @@ class User
   extend FilterByCriteria
   extend ApplicationHelper
   include SalesUserStateMachine
+  include DetailsMaskable
 
   # Constants
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   ALLOWED_UTM_KEYS = %i[utm_campaign utm_source utm_sub_source utm_content utm_medium utm_term]
   BUYER_ROLES = %w[user employee_user management_user]
-  ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre billing_team team_lead cp_owner]
+  ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre billing_team team_lead cp_owner dev_sourcing_manager]
   ALL_PROJECT_ACCESS = %w[superadmin admin cp cp_admin cp_owner]
   CHANNEL_PARTNER_USERS = %w[cp cp_admin channel_partner cp_owner]
   SALES_USER = %w[sales sales_admin]
@@ -406,7 +407,15 @@ class User
     end
   end
 
-  def ds_name
+  def ds_name(current_user = nil)
+    if buyer? && maskable_field?(current_user)
+      "#{name} - #{masked_email(current_user)} - #{masked_phone(current_user)}"
+    else
+      search_name
+    end
+  end
+
+  def search_name
     "#{name} - #{email} - #{phone}"
   end
 
@@ -642,7 +651,7 @@ class User
         custom_scope = { role: {"$in": User.buyer_roles(user.booking_portal_client)} }
         custom_scope[:'$or'] = [{manager_id: user.id}, {manager_id: nil, referenced_manager_ids: user.id, iris_confirmation: false}]
       elsif user.role?('cp_owner')
-        custom_scope = { role: {'$in': ['channel_partner', 'cp_owner']}, channel_partner_id: user.channel_partner_id, id: {'$ne': user.id} }
+        custom_scope = { role: {'$in': ['channel_partner', 'cp_owner']}, channel_partner_id: user.channel_partner_id }
       elsif user.role?('crm')
         custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) + %w(channel_partner) } }
       elsif user.role?('sales_admin')
@@ -706,9 +715,9 @@ class User
     end
   end
 
-  #def associated_channel_partner
-  #  ChannelPartner.where(associated_user_id: self.id).first
-  #end
+  def in_masked_details_user_group?
+    role.in?(booking_portal_client.mask_lead_data_for_roles)
+  end
 
   protected
 

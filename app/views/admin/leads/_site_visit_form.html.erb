@@ -5,9 +5,9 @@
     <div class='col-md-12'>
       <%= sv_form.label :scheduled_on %>
       <% date = (sv_form.object.scheduled_on.present? ? sv_form.object.scheduled_on : Date.today) %>
-      <% min_date = sv_form.object.scheduled_on.present? ? sv_form.object.scheduled_on : Date.today %>
-      <div class="datetimepicker" id="site_visit_scheduled_on_calendar" data-default-date="<%= date.strftime("%d/%m/%Y ") %>" data-inline=true data-side-by-side=true data-use-current=true data-min-date="<%= min_date.strftime("%d/%m/%Y ") %>" data-max-date="<%= (Date.today + 20.days).strftime("%d/%m/%Y ") %>" data-stepping='30' data-format='DD/MM/YYYY LT'></div>
-      <%= sv_form.hidden_field :scheduled_on, class: 'form-control', id: 'site_visit_scheduled_on', value: date %>
+      <% min_date = Date.today %>
+      <div class="datetimepicker site_visit_scheduled_on_calendar" data-default-date="<%= date.strftime("%d/%m/%Y ") %>" data-inline=true data-side-by-side=true data-use-current=true data-min-date="<%= min_date.strftime("%d/%m/%Y ") %>" data-max-date="<%= (Date.today + 20.days).strftime("%d/%m/%Y") %>" data-stepping='30' data-format='DD/MM/YYYY LT'></div>
+      <%= sv_form.hidden_field :scheduled_on, class: 'site_visit_scheduled_on', value: date %>
     </div>
   </div>
   <%= sv_form.hidden_field :creator_id, value: current_user.id %>
@@ -16,8 +16,8 @@
 
 <%= javascript_tag do %>
   $(document).ready(function(){
-  $('#site_visit_scheduled_on_calendar').on('dp.change', function(e){
-  $('#site_visit_scheduled_on').val(e.date.format())
-  });
+    $('.site_visit_scheduled_on_calendar').on('dp.change', function(e){
+      $(e.currentTarget).siblings('.site_visit_scheduled_on').val(e.date.format())
+    });
   });
 <% end %>
