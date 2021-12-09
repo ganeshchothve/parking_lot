@@ -98,7 +98,10 @@ class Admin::BookingDetails::InvoicesController < AdminController
 
   def send_invoice_to_poc
     attachments_attributes = []
-    attachments_attributes << {file: File.open(@invoice.assets.where(asset_type: 'system_generated_invoice').last.file.url)}
+    File.open("#{Rails.root}/tmp/invoice_to_send_#{@invoice.id}.pdf", "wb") do |file|
+      file << open(@invoice.assets.where(asset_type: 'system_generated_invoice').last.file.url).read
+    end
+    attachments_attributes << {file: File.open("#{Rails.root}/tmp/invoice_to_send_#{@invoice.id}.pdf")}
     email = Email.create!({
       project_id: @invoice.project.id,
       booking_portal_client_id: @invoice.project.booking_portal_client_id,

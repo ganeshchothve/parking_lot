@@ -5,7 +5,7 @@ class Template::InvoiceTemplate < Template
   validates :name, presence: true
 
   def self.seed(client_id, project_id)
-    Template::InvoiceTemplate.create(booking_portal_client_id: client_id, project_id: project_id, name: 'Default Invoice template', content: Template::InvoiceTemplate.default_content, default: true)  if Template::InvoiceTemplate.where(booking_portal_client_id: client_id, name: 'Default Invoice template').blank?
+    Template::InvoiceTemplate.create(booking_portal_client_id: client_id, project_id: project_id, name: 'Default Invoice template', content: Template::InvoiceTemplate.default_content, default: true)  if Template::InvoiceTemplate.where(booking_portal_client_id: client_id, name: 'Default Invoice template', project_id: project_id).blank?
   end
 
   def self.default_content
