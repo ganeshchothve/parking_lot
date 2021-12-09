@@ -231,7 +231,7 @@ module DatabaseSeeds
       # To change text in the footer
       if Template::UITemplate.where(name: 'layouts/_navbar_footer').blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'layouts/_navbar_footer', content: '
-        <p class="m-0 pb-1"><%= current_project.name %> is registered via MahaRERA No.: <%= current_project.rera_registration_no %> & is available on <a href="https://maharera.mahaonline.gov.in" target="_blank">https://maharera.mahaonline.gov.in</a>.</p>' })
+        <% if current_project.rera_registration_no %> <p class="m-0 pb-1"><%= current_project.name %> is registered via MahaRERA No.: <%= current_project.rera_registration_no %> & is available on <a href="https://maharera.mahaonline.gov.in" target="_blank">https://maharera.mahaonline.gov.in</a>.</p> <% end %>' })
       end
 
       # To change text above timer when booking a unit

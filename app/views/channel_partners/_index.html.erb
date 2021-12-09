@@ -22,12 +22,6 @@
                       <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= channel_partner.phone || '' %>
                     </p>
                     <% end %>
-                    <% if channel_partner.cp_code.present? %>
-                    <p class="fn-14 mt-1 mb-0">
-                      <span class="title"><%= t('mongoid.attributes.channel_partner.cp_code') %>:</span>
-                      <%= channel_partner.cp_code %>
-                    </p>
-                    <% end %>
                   </div>
                   <div class="pe-3 py-3">
                     <div class="dropdown d-inline-block">

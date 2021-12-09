@@ -53,7 +53,6 @@ class ChannelPartner
   field :average_quarterly_business, type: Float
   field :developers_worked_for, type: Array, default: []
   field :interested_services, type: Array, default: []
-  field :cp_code, type: String
 
   # Tracking selldo srd for new channel partner registrations.
   field :srd, type: String
