@@ -4,6 +4,10 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
     out && user.active_channel_partner?
   end
 
+  def export?
+    %w[superadmin admin cp_admin cp].include?(user.role)
+  end
+
   def edit?
     (%w[superadmin admin] + User::CHANNEL_PARTNER_USERS).include?(user.role)
   end
@@ -22,6 +26,10 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
 
   def change_state?
     user.role.in?(%w(cp_owner channel_partner dev_sourcing_manager))
+  end
+
+  def reject?
+    user.role?('dev_sourcing_manager') && record.verification_pending?
   end
 
   def sync_with_selldo?
