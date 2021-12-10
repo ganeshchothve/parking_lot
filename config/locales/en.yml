@@ -986,6 +986,15 @@ en:
         site_visit_type: Type
         approval_status: Approval Status
         manager_id: 'Partner / Manager / Added by'
+      site_visit/status:
+        scheduled: 'Scheduled'
+        pending: 'Pending'
+        missed: 'Missed'
+        conducted: 'Conducted'
+      site_visit/approval_status:
+        pending: 'Pending Approval'
+        approved: 'Approved'
+        rejected: 'Rejected'
       user_kyc:
         name: "Name"
         email: "Email"
@@ -1652,6 +1661,10 @@ en:
         approval_status:
           approved: 'Walk-in Successfully Approved'
           rejected: 'Walk-in Rejected'
+      filters:
+        scheduled_this_week: 'This Week'
+        scheduled_last_week: 'Last Week'
+        scheduled_this_month: 'This Month'
     searches:
       filter:
         header: Select Tower
