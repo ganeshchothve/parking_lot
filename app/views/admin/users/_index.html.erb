@@ -21,12 +21,12 @@
                     </h2>
                     <% if user.email.present? %>
                     <p class="email-icon small d-block d-sm-inline-block mt-1 fn-16 mb-0">
-                      <i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i><%= user.email || '' %>
+                      <i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i><%= (user.buyer? ? user.masked_email(current_user) : user.email) || '' %>
                     </p>
                     <% end %>
                     <% if user.phone.present? %>
                     <p class="phone-icon small d-block d-sm-inline-block mt-1 ms-2 fn-16 mb-0">
-                      <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= user.phone || '' %>
+                      <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= (user.buyer? ? user.masked_phone(current_user) : user.phone) || '' %>
                     </p>
                     <% end %>
                   </div>

@@ -1,0 +1,56 @@
+<div class="box-content br-rd-bl-4 bg-white">
+  <div class="row pd-box">
+    <div class="box-content bg-white p-3">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="mb-3">
+            <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.name') %></label>
+            <p class="fn-14 theme-txt-color mb-0"><%= site_visit.lead.name || '-' %></p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="mb-3">
+            <label class="txt-light-blue fn-12"><%= t("mongoid.attributes.site_visit.scheduled_on") %></label>
+            <p class="fn-14 theme-txt-color mb-0">
+              <%= I18n.l(site_visit.scheduled_on) || '-' %>
+            </p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="mb-3">
+            <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.site_visit.status') %></label>
+<p class="fn-14 theme-txt-color mb-0"><%= site_visit.status&.titleize || '-' %></p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="mb-3">
+            <label class="txt-light-blue fn-12"><%= t("mongoid.attributes.site_visit.approval_status") %></label>
+            <p class="fn-14 theme-txt-color mb-0">
+              <%= site_visit.approval_status&.titleize || '-' %>
+            </p>
+          </div>
+        </div>
+        <% if !current_user.role?("channel_partner") %>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.manager_id') %></label>
+               <p class="fn-14 theme-txt-color mb-0">
+                 <% lead = site_visit.lead %>
+                 <% manager_user = lead.manager_id.present? ? User.find(lead.manager_id) : nil %>
+                 <% if manager_user.present? %>
+                   <% if policy([:admin, manager_user]).show? %>
+                     <%= link_to(manager_user.name, admin_user_path(manager_user)) %>
+                   <% else %>
+                     <%= manager_user.name %>
+                   <% end %>
+                 <% else %>
+                   <%= '-' %>
+                 <% end %>
+               </p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -3,6 +3,7 @@ module LeadRegisteration
 
   included do
     before_action :set_project, :set_user, :set_lead, :set_customer_search, only: :check_and_register
+    around_action :user_time_zone, if: :current_user
   end
 
   def check_and_register
@@ -39,6 +40,10 @@ module LeadRegisteration
 
   private
 
+  def user_time_zone
+    Time.use_zone(current_user.time_zone) { yield }
+  end
+
   def add_existing_lead_to_project_flow(format)
     @new_lead = @user.leads.new(email: @lead.email, phone: @lead.phone, first_name: @lead.first_name, last_name: @lead.last_name, project_id: @project.id, manager_id: params[:manager_id], push_to_crm: params[:push_to_crm])
 
@@ -60,7 +65,7 @@ module LeadRegisteration
     push_lead_to_selldo(format, lead) do |selldo_api, api_log|
       if existing || (@user.save && (selldo_config_base.blank? || @project.save))
         lead.assign_attributes(selldo_lead_registration_date: params.dig(:lead_details, :lead_created_at))
-        lead.assign_attributes(permitted_attributes([:admin, lead]))
+        lead.assign_attributes(permitted_attributes([:admin, lead])) if params[:lead].present?
 
         check_if_lead_added_by_channel_partner(lead) do |cp_lead_activity|
           if lead.save

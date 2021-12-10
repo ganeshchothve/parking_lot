@@ -45,6 +45,7 @@ en:
     walkin:
       one: Walk-in
       other: Walk-ins
+    third_party_inventory: '3rd Party Inventory'
 
   helpers:
     extend_validity:
@@ -229,8 +230,8 @@ en:
         one: General
         other: General
       site_visit:
-        one: Site Visit
-        other: Site Visits
+        one: Walk-in
+        other: Walk-ins
       user_kyc:
         one: KYC
         other: KYCs
@@ -453,9 +454,14 @@ en:
         blocking_days: 'Unit to be blocked for (Days)'
         holding_minutes: 'Unit to be held for (Minutes)'
         enable_company_users: 'Allow Company Users & Benefits'
-        roles_taking_registrations: 'Allowed roles for taking new registrations'
+        roles_taking_registrations: 'Allowed Roles For Taking New Registrations'
         external_api_integration: 'Enable External CRM Integration'
-        enable_incentive_module: 'Enable Brokerage Module for roles'
+        enable_incentive_module: 'Enable Brokerage Module For These Roles'
+        mask_lead_data_for_roles: 'Enable Lead Data Masking For These Roles'
+        partner_regions: 'Define Regions For Channel Partners & Projects'
+        powered_by_link: 'Show Powered By Link'
+        lead_blocking_days: 'Configure Lead Blocking Days'
+        invoice_approval_tat: 'Invoice Approval TAT (In Days)'
       client/payment_gateways:
         Razorpay: Razorpay Payment Gateway
         CCAvenue: CCAvenue Payment Gateway
@@ -980,6 +986,8 @@ en:
         status: Status
         conducted_on: Conducted on
         site_visit_type: Type
+        approval_status: Approval Status
+        manager_id: 'Partner / Manager / Added by'
       user_kyc:
         name: "Name"
         email: "Email"
@@ -1161,7 +1169,7 @@ en:
         cp_admin: 'Channel Partner Head'
         cp: 'Channel Partner Manager'
         channel_partner: 'Channel Partner'
-        cp_owner: 'Partner Company Owner'
+        cp_owner: 'Company Owner'
         team_lead: 'Team Lead'
         billing_team: 'Billing Team'
         management_user: 'Management User'
@@ -1169,6 +1177,7 @@ en:
         account_manager_head: 'Account Manager Head'
         employee_user: 'Employee'
         direct: Direct
+        dev_sourcing_manager: 'Developer Sourcing Manager'
 
       lead:
         name: 'Name'
@@ -1190,7 +1199,7 @@ en:
         queue_number: 'Queue No.'
         customer_status: 'Queue Status'
         search_by_name: 'Name/ Email/ Phone'
-        push_to_crm: 'Do You Want The Developer To Contact The Lead ?'
+        push_to_crm: 'Do You Want The Developer To Contact The Customer ?'
 
       cp_lead_activity:
         lead_id: 'Lead Id'
@@ -1203,8 +1212,8 @@ en:
         registered_at: 'Registered At'
         can_extend_validity: 'Can Extend Validity?'
         expiry_date: 'Lead Expiry Date'
-        sitevisit_date: 'Site Visit Date'
-        sitevisit_status: 'Site Visit Status'
+        sitevisit_date: 'Walk-in Date'
+        sitevisit_status: 'Walk-in Status'
 
       user/file_types:
         home_loan_application_form: 'Home Loan Application Form'
@@ -1259,7 +1268,7 @@ en:
         certificate_html: 'Certificate'
         images_html: 'Images'
       cp_lead_activity/file_types:
-        sitevisit_form: 'Site Visit Form'
+        sitevisit_form: 'Walk-in Form'
       cp_lead_activity/help_text:
         sitevisit_form_html: ''
 
@@ -1564,7 +1573,7 @@ en:
       sync_on_selldo:
         link_name: 'Sync on Sell.do'
       show:
-        show_interest_text: 'Subscribe to Project for Adding Leads'
+        show_interest_text: 'Subscribe to Project for Adding Walk-Ins'
 
     project_units:
       send_cost_sheet_and_payment_schedule:
@@ -1628,10 +1637,30 @@ en:
       new:
         link_name: 'Add Referrals'
     site_visits:
+      index:
+        link_name: 'Walk-ins'
       new:
-        link_name: 'Schedule Site Visit'
+        link_name: 'Schedule Walk-in'
+      edit:
+        link_name: 'Reschedule'
+      show:
+        link_name: 'Walk-in Details'
       sync_with_selldo:
         link_name: 'Sync with Sell.Do'
+      reject:
+        link_name: 'Reject Walk-in'
+      events:
+        status:
+          conduct: 'Mark Conducted'
+        approval_status:
+          approve: 'Approve'
+          reject: 'Reject'
+      status_message:
+        status:
+          conducted: 'Walk-in Conducted Successfully'
+        approval_status:
+          approved: 'Walk-in Successfully Approved'
+          rejected: 'Walk-in Rejected'
     searches:
       filter:
         header: Select Tower
@@ -1774,9 +1803,9 @@ en:
         queued: "%{name} moved to sales queue successfully"
         dropoff: '%{name} dropped off successfully'
       create_from_existing_lead:
-        link_name: 'Add Existing Lead to this Project'
+        link_name: 'Add From Existing Customer'
       create_new_lead:
-        link_name: 'Add New Lead'
+        link_name: 'Add New %{model}'
 
     user_kycs:
       index:
@@ -1922,17 +1951,19 @@ en:
   dashboard:
     cp_admin:
       channel_partner_performace:
-        heading: "Channel Partner Performance"
+        heading: "Channel Partner Performance (Project Wise)"
+      partner_wise_performace:
+        heading: "Channel Partner Performance (User Wise)"
       incentive_scheme_performance:
         heading: "Brokerage Scheme Performance"
       cp_performance:
         heading: "Channel Partner Manager Performance"
       cp_status:
-        active: "Active Partners"
-        inactive: "Signed Up Partners"
-        pending: "Pending Partners"
-        rejected: "Rejected Partners"
-        heading: "Channel Partner Status Count"
+        active_html: "Active<br> Companies"
+        inactive_html: "Signed Up<br> Companies"
+        pending_html: "Pending<br> Companies"
+        rejected_html: "Rejected<br> Companies"
+        heading: "Partner Companies Status Wise Counts"
     channel_partner:
       projects:
         sub_heading: 'Best homes to meet your expectations'

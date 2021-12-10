@@ -203,9 +203,11 @@ Rails.application.routes.draw do
       resources :accounts, controller: 'accounts'
     end
 
-    resources :site_visits, only: [:index] do
+    resources :site_visits, only: [:index, :edit, :update, :show] do
       member do
         get 'sync_with_selldo'
+        patch :change_state
+        get :reject
       end
     end
     resources :leads, only: [:index, :show, :edit, :update, :new] do
@@ -220,7 +222,7 @@ Rails.application.routes.draw do
         patch :assign_sales
         patch :move_to_next_state
       end
-      resources :site_visits, only: [:new, :create, :index]
+      resources :site_visits, only: [:new, :create, :index, :update]
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
         get :resend_success, on: :member
         get :lost_receipt, on: :collection
@@ -277,6 +279,7 @@ Rails.application.routes.draw do
         get :export
         get :portal_stage_chart
         get :channel_partner_performance
+        get :partner_wise_performance
         get :search_by
       end
 

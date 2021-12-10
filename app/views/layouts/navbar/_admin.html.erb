@@ -39,9 +39,9 @@
       <%= active_link_to 'Interested Projects', admin_projects_path(fltrs: {user_interested_projects: current_user.id}), active: /user_interested_projects/, class: "nav-link pl-0 pr-0" %>
     </li>
   <% end %>
-  <% if ENV_CONFIG.dig('third_party_inventory', 'base_url').present? %>
+  <% if ENV_CONFIG.dig('third_party_inventory', 'base_url').present? && policy([:admin, Project]).third_party_inventory? %>
     <li class='nav-item'>
-      <%= active_link_to 'Third Party Inventory', third_party_inventory_admin_projects_path, active: /third_party_inventory/, class: "nav-link pl-0 pr-0" %>
+      <%= active_link_to t('global.third_party_inventory'), third_party_inventory_admin_projects_path, active: /third_party_inventory/, class: "nav-link pl-0 pr-0" %>
     </li>
   <% end %>
 <% end %>
@@ -63,6 +63,12 @@
 <% if policy([:admin, Lead]).index? %>
   <li class="nav-item">
     <%= active_link_to t('controller.leads.index.link_name'), admin_leads_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  </li>
+<% end %>
+
+<% if policy([:admin, SiteVisit]).index? %>
+  <li class="nav-item">
+    <%= active_link_to t('controller.site_visits.index.link_name'), admin_site_visits_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
   </li>
 <% end %>
 

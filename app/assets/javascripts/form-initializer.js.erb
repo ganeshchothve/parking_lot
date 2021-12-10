@@ -198,7 +198,7 @@ FormInitializer = (function(){
       plugins: ['infinite_scroll'],
       valueField: options.hasOwnProperty("valueField") ? options["valueField"] : "id",
       labelField: 'name',
-      searchField: 'name',
+      searchField: 'sname',
       create: ($(selector).data("create") ? true : false),
       preload: ( _.isNull($(selector).data("preload")) || _.isUndefined($(selector).data("preload")) ) ? 'focus' : $(selector).data("preload") ,
       load: function(query, callback){
@@ -224,7 +224,7 @@ FormInitializer = (function(){
           },
           success: function(data, type, options){
             if(typeof callback == 'function'){
-              callback(_.map(data, function(a){ return { id: (a['id'] || a._id), name: (a['ds_name'] || a['name']) } }));
+              callback(_.map(data, function(a){ return { id: (a['id'] || a._id), name: (a['ds_name'] || a['name']), sname: a['search_name'] } }));
             }
           }
         });

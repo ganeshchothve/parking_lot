@@ -4,7 +4,7 @@ module SourcingManagerDashboardConcern
     dates = params[:dates]
     dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
     project_ids = params["project_ids"].try(:split, ",").try(:flatten) || (current_user.project_ids || [])
-    @active_partners = Lead.build_criteria(fltrs: {created_at: dates, project_ids: project_ids }).where({"$and": [Lead.user_based_scope(current_user)]}).distinct(:manager_id).count
+    @active_partners = SiteVisit.build_criteria(fltrs: {created_at: dates, project_ids: project_ids }).where({"$and": [SiteVisit.user_based_scope(current_user)]}).distinct(:manager_id).count
     @booking_active_partners = BookingDetail.build_criteria(fltrs: {created_at: dates, project_ids: project_ids }).where({ "$and": [BookingDetail.user_based_scope(current_user), BookingDetail.booking_stages.selector]}).distinct(:manager_id).count
     @raised_invoices = Invoice.build_criteria(fltrs: {created_at: dates, project_ids: project_ids }).where({ "$and": [Invoice.user_based_scope(current_user), status: 'pending_approval']}).count
     @approved_invoices = Invoice.build_criteria(fltrs: {created_at: dates, project_ids: project_ids }).where({ "$and": [Invoice.user_based_scope(current_user), status: 'approved']}).count
@@ -49,7 +49,8 @@ module SourcingManagerDashboardConcern
     end
     @matcher = {matcher: {created_at: {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day }}}
     @matcher[:matcher][:project_id] = {"$in": project_ids} if project_ids.present?
-    @walkins = DashboardDataProvider.cp_performance_walkins(current_user, @matcher)
+    @leads = DashboardDataProvider.cp_performance_walkins(current_user, @matcher)
+    @site_visits = DashboardDataProvider.cp_performance_site_visits(current_user, @matcher)
     @bookings = DashboardDataProvider.cp_performance_bookings(current_user, @matcher)
   end
 
@@ -59,12 +60,11 @@ module SourcingManagerDashboardConcern
     else
       @cp_managers = User.filter_by_role(:cp).where(manager_id: current_user.id)
     end
-    
+
     @cp_managers_hash = {'No Manager' => 'No Manager'}
     @cp_managers.each do |cp_manager|
       @cp_managers_hash[cp_manager.id] = cp_manager.name
     end
-
 
     @data = ChannelPartner.collection.aggregate([
       {
