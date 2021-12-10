@@ -332,7 +332,7 @@ class BookingDetail
     IncentiveCalculatorWorker.new.perform(id.to_s)
   end
 
-  def calculate_invoice_amount
+  def calculate_invoice_agreement_amount
     if self.project.enable_inventory && self.project_unit.present?
       self.calculate_agreement_price
     else

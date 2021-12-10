@@ -134,7 +134,7 @@ class Admin::BookingDetails::InvoicesController < AdminController
 
   def set_invoice
     if params[:action] == 'new'
-      @invoice = Invoice::Manual.new(booking_detail_id: @booking_detail.id, project_id: @booking_detail.project_id, amount: @booking_detail.calculate_invoice_amount)
+      @invoice = Invoice::Manual.new(booking_detail_id: @booking_detail.id, project_id: @booking_detail.project_id, agreement_amount: @booking_detail.calculate_invoice_agreement_amount)
     else
       @invoice = Invoice.where(id: params[:id]).first
     end

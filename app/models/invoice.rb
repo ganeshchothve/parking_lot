@@ -18,6 +18,8 @@ class Invoice
   field :comments, type: String
   field :net_amount, type: Float
   field :gst_slab, type: Float, default: 0.0
+  field :agreement_amount, type: Float, default: 0.0
+  field :percentage_slab, type: Float, default: 18
 
   belongs_to :project
   belongs_to :booking_detail
@@ -71,6 +73,21 @@ class Invoice
     end
   end
 
+  def calculate_amount
+    agreement_amount * (percentage_slab/100)
+  end
+
+  def calculate_gst_amount
+    calculate_amount * (gst_slab/100)
+  end
+
+
+  def calculate_net_amount
+    _amount = calculate_amount + calculate_gst_amount 
+    _amount += payment_adjustment.try(:absolute_value).to_i if payment_adjustment.try(:absolute_value).present?
+    _amount -= incentive_deduction.try(:amount).to_i if incentive_deduction.try(:approved?)
+    _amount
+  end
 
   class << self
     def user_based_scope(user, params = {})

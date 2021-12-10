@@ -14,12 +14,12 @@
         <% end %>
 
         <div class="mb-3">
-          <%= f.label :amount, class: '' %>
-          <%= f.number_field :amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("amount") %>
+          <%= f.label :agreement_amount, class: '' %>
+          <%= f.number_field :agreement_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("agreement_amount") %>
         </div>
         <div class="mb-3">
-          <%= f.label :gst_amount, class: '' %>
-          <%= f.number_field :gst_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("gst_amount") %>
+          <%= f.label :net_amount, class: '' %>
+          <%= f.number_field :net_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("net_amount") %>
         </div>
         <% if policy([:admin, @invoice]).editable_field?("payment_adjustment_attributes") %>
           <div class="payment-adjustment">

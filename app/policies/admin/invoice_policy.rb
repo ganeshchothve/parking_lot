@@ -1,8 +1,9 @@
 class Admin::InvoicePolicy < InvoicePolicy
   def index?
     out = false
-    out = user.role.in?(%w(admin superadmin channel_partner billing_team cp cp_admin account_manager)) && enable_incentive_module?(user)
-    out =  true if user.role.in?(%w(account_manager)) 
+    out = (user.role.in?(%w(admin superadmin channel_partner billing_team cp cp_admin)) && enable_incentive_module?(user))
+    out =  true if user.role.in?(%w(account_manager))
+    out 
   end
 
   def new?
@@ -79,19 +80,19 @@ class Admin::InvoicePolicy < InvoicePolicy
     when 'channel_partner'
       if record.status.in?(%w(draft rejected))
         attributes += [:number, :gst_amount, :comments, :event]
-        attributes += [:amount] if record.manual?
+        attributes += [:amount, :agreement_amount] if record.manual?
       end
     when 'cp_admin'
-      attributes += [:amount, :gst_amount, :rejection_reason, payment_adjustment_attributes: [:id, :absolute_value]] if record.status.in?(%w(pending_approval approved))
+      attributes += [:amount, :agreement_amount, :gst_amount, :rejection_reason, payment_adjustment_attributes: [:id, :absolute_value]] if record.status.in?(%w(pending_approval approved))
       attributes += [:rejection_reason] if record.status.in?(%w(pending_approval rejected))
       attributes += [:event]
     when 'admin'
-      attributes += [:amount, :gst_amount, :rejection_reason, payment_adjustment_attributes: [:id, :absolute_value]] if record.status.in?(%w(pending_approval approved draft))
+      attributes += [:amount, :agreement_amount, :gst_amount, :rejection_reason, payment_adjustment_attributes: [:id, :absolute_value]] if record.status.in?(%w(pending_approval approved draft))
       attributes += [:rejection_reason] if record.status.in?(%w(pending_approval rejected draft))
       attributes += [cheque_detail_attributes: [:id, :total_amount, :payment_identifier, :issued_date, :issuing_bank, :issuing_bank_branch, :handover_date, :creator_id]] if record.status.in?(%w(approved paid))
       attributes += [:event]
     when 'billing_team'
-      attributes += [:number, :gst_slab, :amount, :gst_amount] if record.status.in?(%w(draft))
+      attributes += [:number, :gst_slab, :amount, :gst_amount, :agreement_amount] if record.status.in?(%w(draft))
       # attributes += [:amount, :gst_amount] if record.status.in?(%w(raised pending_approval))
       attributes += [:rejection_reason] if record.status.in?(%w(raised pending_approval rejected))
       attributes += [cheque_detail_attributes: [:id, :total_amount, :payment_identifier, :issued_date, :issuing_bank, :issuing_bank_branch, :handover_date, :creator_id]] if record.status.in?(%w(approved paid tax_invoice_raised))
