@@ -399,9 +399,11 @@
                       <i class="fa fa-sm <%= category_icon_class(ann.category) %>"></i>
                     </div>
                     <div class="col-lg-10">
-                      <p class="list-txt event-title mb-0"><%= t("mongoid.attributes.categories.#{ann.category}") %></p>
-                      <p class="list-txt event-info mb-0"><%= ann.title %></p>
-                      <p class="list-txt event-time mb-0">On <%= ann.date&.strftime('%b %e %Y') %></p>
+                      <%= link_to admin_announcement_path(ann), class: 'modal-remote-form-link' do %>
+                        <p class="list-txt event-title mb-0"><%= t("mongoid.attributes.categories.#{ann.category}") %></p>
+                        <p class="list-txt event-info mb-0"><%= ann.title %></p>
+                        <p class="list-txt event-time mb-0">On <%= ann.date&.strftime('%b %e %Y') %></p>
+                      <% end %>
                       <% ann.assets.limit(5).each_with_index do |asset, ix| %>
                         <div class="prjt-gallery">
                           <div class="prjt-gallery-inner">

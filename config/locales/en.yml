@@ -260,6 +260,9 @@ en:
           new_launch: New Launch
           events: Events
           brokerage_alert: Brokerage Alert
+      announcement/file_types:
+        photo: Photos
+        collaterals: Collaterals
       video:
         thumbnail: Thumbnail
         description: Title

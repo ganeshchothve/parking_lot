@@ -7,7 +7,7 @@ class Announcement
   extend ApplicationHelper
   extend FilterByCriteria
 
-  DOCUMENT_TYPES = []
+  DOCUMENT_TYPES = ['photo', 'collateral']
   CATEGORIES = %w(general new_launch events brokerage_alert)
 
   field :category, type: String
