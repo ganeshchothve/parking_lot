@@ -202,7 +202,7 @@ class BookingDetail
 
   # validates kyc presence if booking is not allowed without kyc
   def kyc_mandate
-    if project.present? && project.enable_booking_with_kyc && !primary_user_kyc_id.present?
+    if project_unit.present? && project.enable_booking_with_kyc && !primary_user_kyc_id.present?
       self.errors.add(:base, "KYC is mandatory for booking.")
     end
   end
@@ -250,6 +250,7 @@ class BookingDetail
   def pending_balance(options={})
     strict = options[:strict] || false
     lead_id = options[:lead_id] || self.lead_id
+    return unless self.project_unit.present?
     if lead_id.present?
       receipts_total = Receipt.where(lead_id: lead_id, booking_detail_id: self.id)
       if strict
@@ -360,8 +361,10 @@ class BookingDetail
           custom_scope = { cp_manager_id: user.id }
         when 'account_manager'
          custom_scope = { manager_id: user.id }
-        when 'account_manager_head', 'billing_team'
-         custom_scope = { project_unit_id: nil}
+        when 'account_manager_head'
+         custom_scope = { project_unit_id: nil }
+        when 'billing_team'
+         custom_scope = { project_unit_id: nil, status: { '$nin': %w(blocked) } }
         end
       end
 

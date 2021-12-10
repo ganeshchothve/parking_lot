@@ -90,6 +90,8 @@ class Invoice
         elsif user.role?('cp')
           channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
           custom_scope = { manager_id: { "$in": channel_partner_ids } }
+        elsif user.role?('account_manager')
+          custom_scope = { manager_id: user.id }
         end
       end
       if params[:booking_detail_id].present?
