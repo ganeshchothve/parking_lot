@@ -190,7 +190,7 @@ class Lead
   end
 
   def total_balance_pending
-    booking_details.in(status: ProjectUnit.booking_stages).sum(&:pending_balance)
+    booking_details.in(status: ProjectUnit.booking_stages).sum(&:pending_balance) rescue nil
   end
 
   def total_unattached_balance

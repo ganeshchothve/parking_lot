@@ -38,7 +38,7 @@
   </div>
   <div class="mb-3">
     <%= f.label :channel_partner_id, class: 'label-required control-label' %>
-    <%= f.select :channel_partner_id, ChannelPartner.all.collect{|cp| [cp.name, cp.id]}, {}, prompt: :translate, class: 'form-control selectize' %>
+    <%= f.select :channel_partner_id, ChannelPartner.where(status: 'active').collect{|cp| [cp.name, cp.id]}, {}, prompt: :translate, class: 'selectize' %>
   </div>
 </div>
 <div class="modal-footer text-end">

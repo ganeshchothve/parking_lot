@@ -35,12 +35,16 @@ module InvoiceStateMachine
 
       event :paid do
         transitions from: :tax_invoice_raised, to: :paid
-        transitions from: :approved, to: :paid
+        transitions from: :approved, to: :paid, guard: :if_project_unit_available?
       end
     end
 
     def can_raise?
       self.draft?
+    end
+
+    def if_project_unit_available?
+      self.booking_detail.project_unit.present?
     end
 
     def get_pending_approval_recipients_list

@@ -1,6 +1,7 @@
 class InvoiceObserver < Mongoid::Observer
   def before_validation invoice
-    invoice.net_amount = invoice.amount.to_f if invoice.net_amount.blank? || invoice.net_amount.zero?
+    invoice.amount = invoice.calculate_amount
+    invoice.net_amount = invoice.calculate_net_amount
 
     _event = invoice.event.to_s
     invoice.event = nil
