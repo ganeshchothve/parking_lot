@@ -28,6 +28,10 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
     user.role.in?(%w(cp_owner channel_partner dev_sourcing_manager))
   end
 
+  def reject?
+    user.role?('dev_sourcing_manager') && record.verification_pending?
+  end
+
   def sync_with_selldo?
     user.role.in?(%w(superadmin admin)) && ENV_CONFIG.dig(:selldo, :base_url).present? && record.project.selldo_client_id.present? && record.project.selldo_api_key.present?# && !user.role?('dev_sourcing_manager')
   end

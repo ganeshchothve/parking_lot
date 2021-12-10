@@ -1795,6 +1795,8 @@ en:
         dropoff: '%{name} dropped off successfully'
       create_from_existing_lead:
         link_name: 'Add From Existing Customer'
+      add_to_another_project:
+        link_name: 'Add To Other Project'
       create_new_lead:
         link_name: 'Add New %{model}'
 
