@@ -1,8 +1,9 @@
 class Admin::SiteVisitsController < AdminController
 
-  before_action :set_lead, except: %w[index show sync_with_selldo edit update change_state reject]
+  before_action :set_lead, except: %w[index show sync_with_selldo edit update change_state reject export]
   before_action :set_site_visit, only: %w[edit update show sync_with_selldo change_state reject]
   before_action :set_crm_base, only: %w[create sync_with_selldo]
+  before_action :authorize_resource, except: %w[new]
   around_action :user_time_zone, if: :current_user
 
   #
@@ -12,7 +13,6 @@ class Admin::SiteVisitsController < AdminController
   # @return [{},{}] records with array of Hashes.
   # GET /admin/site_visits
   def index
-    authorize([:admin, SiteVisit])
     @site_visits = SiteVisit.where(SiteVisit.user_based_scope(current_user, params))
                        .build_criteria(params)
                        .paginate(page: params[:page] || 1, per_page: params[:per_page])
@@ -40,6 +40,7 @@ class Admin::SiteVisitsController < AdminController
   # POST /admin/leads/:lead_id/site_visits
   def create
     @site_visit = SiteVisit.new(user: @lead.user, lead: @lead, creator: current_user, project: @lead.project)
+    authorize([:admin, @site_visit])
     @site_visit.assign_attributes(permitted_attributes([:admin, @site_visit]))
 
     selldo_api, api_log = @site_visit.push_in_crm(@crm_base) if @crm_base.present?
@@ -67,12 +68,10 @@ class Admin::SiteVisitsController < AdminController
   end
 
   def edit
-    authorize([:admin, @site_visit])
     render layout: false
   end
 
   def update
-    authorize([:admin, @site_visit])
     @site_visit.assign_attributes(permitted_attributes([:admin, @site_visit]))
     respond_to do |format|
       if (params.dig(:site_visit, :event).present? ? @site_visit.send("#{params.dig(:site_visit, :event)}!") : @site_visit.save)
@@ -102,8 +101,6 @@ class Admin::SiteVisitsController < AdminController
   end
 
   def sync_with_selldo
-    authorize([:admin, @site_visit])
-
     # Get site visit details from sell.do through API
     selldo_sv_id = @site_visit.third_party_references.where(crm_id: @crm_base.id).first.try(:reference_id)
     url = URI.join(ENV_CONFIG.dig(:selldo, :base_url), "/client/activities/#{selldo_sv_id}.json?api_key=#{@site_visit.project.selldo_api_key}&client_id=#{@site_visit.project.selldo_client_id}")
@@ -135,6 +132,16 @@ class Admin::SiteVisitsController < AdminController
     end
   end
 
+  def export
+    if Rails.env.development?
+      SiteVisitExportWorker.new.perform(current_user.id.to_s, params[:fltrs])
+    else
+      SiteVisitExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json)
+    end
+    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    redirect_to admin_site_visits_path(fltrs: params[:fltrs].as_json)
+  end
+
   private
 
   def user_time_zone
@@ -155,5 +162,13 @@ class Admin::SiteVisitsController < AdminController
     @site_visit = SiteVisit.where(_id: params[:id]).first
     redirect_to request.referer, alert: 'Site visit Not found' if @site_visit.blank?
     @lead = @site_visit.lead if @site_visit && @lead.blank?
+  end
+
+  def authorize_resource
+    if %w[index export].include?(params[:action])
+      authorize [current_user_role_group, SiteVisit]
+    else
+      authorize [current_user_role_group, @site_visit]
+    end
   end
 end

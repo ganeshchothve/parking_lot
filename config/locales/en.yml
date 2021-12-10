@@ -1638,6 +1638,8 @@ en:
         link_name: 'Sync with Sell.Do'
       reject:
         link_name: 'Reject Walk-in'
+      exports:
+        link_name: '%{name} Exports'
       events:
         status:
           conduct: 'Mark Conducted'

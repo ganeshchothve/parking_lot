@@ -4,6 +4,10 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
     out && user.active_channel_partner?
   end
 
+  def export?
+    %w[superadmin admin cp_admin cp].include?(user.role)
+  end
+
   def edit?
     (%w[superadmin admin] + User::CHANNEL_PARTNER_USERS).include?(user.role)
   end
