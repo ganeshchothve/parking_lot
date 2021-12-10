@@ -8,7 +8,6 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body theme-form">
-
           <div class="row">
             <div class="col-lg-8">
               <h3><%= @announcement.title %></h3>
@@ -25,7 +24,7 @@
                     <% assets = @announcement.assets.where(document_type: 'photo') %>
                     <% assets.limit(6).each_with_index do |asset, ix| %>
                       <li class="border-0 <%= ix == 5 && assets.count > 6 ? 'more-img' : '' %>">
-                        <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal-<%= @announcement.id.to_s %>">
+                        <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal-show-<%= @announcement.id.to_s %>">
                           <div class="wd-100 ht-77 rounded" style="background-image: url(<%= asset&.file&.url %>);background-size:cover;background-position:center"></div>
                           <% if ix == 5 && assets.count > 6 %>
                             <p class="fn-12">+ <%= assets.count - 6 %></p>
@@ -38,7 +37,7 @@
               </div>
             </div>
             <div class="col-12">
-              <% @announcement.assets.ne(document_type: 'collateral').group_by(&:document_type).each do |key, value| %>
+              <% @announcement.assets.ne(document_type: 'photo').group_by(&:document_type).each do |key, value| %>
                 <div class="card">
                   <div class = 'card-header'>
                     <h2 class="fn-18 pt-2"><%= t('mongoid.attributes.announcement/file_types.collaterals') %></h2>
@@ -69,7 +68,7 @@
     </div>
   </div>
 </div>
-<div class="modal fade" tabindex="-1" aria-hidden="true">
+<div class="modal fade" tabindex="-1" aria-hidden="true" id="galleryModal-show-<%= @announcement.id.to_s %>">
   <div class="modal-dialog modal-xl">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -77,7 +76,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <div id="gallerySlider" class="carousel slide" data-bs-ride="carousel">
+          <div id="gallerySliderShow" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
               <% @announcement.assets.where(document_type: 'photo').each_with_index do |asset, index| %>
                 <div class="carousel-item <%= (index == 0) ? "active" : "" %>">
@@ -85,10 +84,10 @@
                 </div>
               <% end %>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#gallerySlider" data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#gallerySliderShow" data-bs-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#gallerySlider" data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#gallerySliderShow" data-bs-slide="next">
               <span class="carousel-control-next-icon" aria-hidden="true"></span>
             </button>
           </div>
