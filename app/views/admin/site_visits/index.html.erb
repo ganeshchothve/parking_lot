@@ -15,7 +15,7 @@
         </div>
       </div>
       -->
-      <div class="col-lg-8 filter-set">
+      <div class="col-lg-8 col-12 filter-set d-xs-no-flex">
         <%= link_to t('controller.site_visits.filters.scheduled_this_week'), admin_site_visits_path(fltrs: {scheduled_on: "#{Date.today.beginning_of_week} - #{Date.today.end_of_week}"}, scheduled_this_week: true), class: "filter-link #{params[:scheduled_this_week].present? ? 'active' : ''}" %>
         <%= link_to t('controller.site_visits.filters.scheduled_last_week'), admin_site_visits_path(fltrs: {scheduled_on: "#{(Date.today-7.days).beginning_of_week} - #{(Date.today-7.days).end_of_week}"}, scheduled_last_week: true), class: "filter-link #{params[:scheduled_last_week].present? ? 'active' : ''}" %>
         <%= link_to t('controller.site_visits.filters.scheduled_this_month'), admin_site_visits_path(fltrs: {scheduled_on: "#{Date.today.beginning_of_month} - #{Date.today.end_of_month}"}, scheduled_this_month: true), class: "filter-link #{params[:scheduled_this_month].present? ? 'active' : ''}" %>
