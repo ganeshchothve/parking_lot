@@ -22,6 +22,15 @@
                   <div><%= link_to @invoice.booking_detail.name, [current_user_role_group, @invoice.booking_detail] %></div>
                 </div>
               </div>
+              <% unless %w(channel_partner cp_owner).include?(current_user.role) %>
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <% user =  @invoice.try(:channel_partner).try(:users).try(:first) %>
+                    <label class="small text-muted"><%= ChannelPartner.model_name.human %></label>
+                    <div><%= "#{user.try(:name)} (#{user.try(:cp_code)})" %></div>
+                  </div>
+                </div>
+              <% end %>
               <!--
               <div class="col-md-4">
                 <div class="mb-3">
