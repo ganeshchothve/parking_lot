@@ -43,7 +43,7 @@
   <div class="mb-3">
     <%= f.label :source, class: 'label-required control-label' %>
     <% booking_sources = f.object.lead.project.booking_sources %>
-    <%= f.select :channel_partner_id, booking_sources.collect{|s| [s, s]}, {}, prompt: :translate, class: 'selectize' %>
+    <%= f.select :source, booking_sources.collect{|s| [s, s]}, {}, prompt: :translate, class: 'selectize' %>
   </div>
   <div class="mb-3">
     <% if f.object.lead.manager && f.object.lead.manager.role?('channel_partner')
