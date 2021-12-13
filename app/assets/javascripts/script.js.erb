@@ -110,7 +110,26 @@ $(document).ready(function () {
         prevText: "<img data-src='<%= asset_path 'left-arrow-new-2.png' %>' width='20' class='lazy'>",
         nextSelector: '#logo-list-next',
         nextText: "<img data-src='<%= asset_path 'right-arrow-new-2.png' %>' width='20' class='lazy'>",
-    })
+    });
+    $(".gallery-slider").bxSlider({
+        minSlides: wn_width <= 700 ? 1 : 3,
+        maxSlides: wn_width <= 700 ? 1 : 3,
+        pager: false,
+        auto: !0,
+        slideWidth: 600,
+        slideMargin: 0,
+        controls: true,
+        moveSlides: 1,
+        touchEnabled: !1,
+        oneToOneTouch: !1,
+        infiniteLoop: true,
+        pause: 5e3,
+        speed: 1500,
+        prevSelector: '#gallery-list-prev',
+        prevText: "<img data-src='<%= asset_path 'left-arrow-new-2.png' %>' width='20' class='lazy'>",
+        nextSelector: '#gallery-list-next',
+        nextText: "<img data-src='<%= asset_path 'right-arrow-new-2.png' %>' width='20' class='lazy'>",
+    });
     if (window_wt < 768) {
         $('.last-slide-exclusive').remove();
         $('.exclusive-features-slider').bxSlider({
