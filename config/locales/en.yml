@@ -1156,6 +1156,7 @@ en:
         queue_number: 'Queue No.'
         customer_status: 'Queue Status'
         search_by_name: 'Name/ Email/ Phone'
+        kyc_done: 'KYC Done?'
 
       cp_lead_activity:
         lead_id: 'Lead Id'

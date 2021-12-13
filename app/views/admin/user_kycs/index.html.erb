@@ -10,7 +10,7 @@
       </div>
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-btn-set float-end pb-3">
-          <% if Admin::UserKycPolicy.new(current_user, UserKyc.new(user: @lead.user, lead: @lead)).new? %>
+          <% if @lead.present? && Admin::UserKycPolicy.new(current_user, UserKyc.new(user: @lead.user, lead: @lead)).new? %>
             <%= link_to t('helpers.new.link_name', model: UserKyc.model_name.human), new_admin_lead_user_kyc_path(@lead), class: 'db-small-btn bg-primary btn white light-blue fn-400 modal-remote-form-link btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
           <% end %>
         </div>
