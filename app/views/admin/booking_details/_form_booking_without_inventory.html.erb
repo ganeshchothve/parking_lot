@@ -7,7 +7,6 @@
     <%#= f.label :project_id, class: 'label-required control-label' %>
     <%#= f.select :project_id, Project.all.collect{|p| [p.name, p.id]}, {}, prompt: :translate, class: 'form-control selectize' %>
   <!-- </div> -->
-  <%= f.hidden_field :manager_id, value: f.object.lead.try(:manager_id) %>
   <%= f.hidden_field :creator_id, value: current_user.id %>
   <%= f.hidden_field :project_id, value: f.object.lead.project_id %>
   <div class="mb-3 position-relative offline">
@@ -50,12 +49,12 @@
   </div>
   <div class="mb-3">
     <% if f.object.lead.manager && %w(channel_partner cp_owner).include?(f.object.lead.manager.role)
-      channel_partners = ChannelPartner.where(id: f.object.lead.manager.channel_partner_id) 
+      channel_partners = User.where(id: f.object.lead.manager_id)
     else
-      channel_partners = ChannelPartner.where(status: 'active')
+      channel_partners = User.in(role: ['channel_partner', 'cp_owner'] ).where(status: 'active')
     end %>
-    <%= f.label :channel_partner_id, class: 'label-required control-label' %>
-    <%= f.select :channel_partner_id, channel_partners.collect{|cp| [(cp.users.first.name rescue cp.ds_name), cp.id]}, {}, prompt: :translate, class: 'selectize' %>
+    <label class="'label-required control-label'">Channel Partner</label>
+    <%= f.select :manager_id, channel_partners.collect{|cp| [(cp.name), cp.id]}, {}, prompt: :translate, class: 'selectize' %>
   </div>
 </div>
 <div class="modal-footer text-end">
