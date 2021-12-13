@@ -43,8 +43,8 @@
                           </p>
                         </div>
                         <div class="col-3">
-                          <p class="fn-12 font-medium mb-0"><%= ProjectTower.model_name.human %></p>
-                          <p class="fn-14"><%= @booking_detail.project_tower_name %></p>
+                          <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('project_unit') %></p>
+                          <p class="fn-14"><%= @booking_detail.project_unit %></p>
                         </div>
                         <div class="col-3">
                           <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('agreement_price') %>

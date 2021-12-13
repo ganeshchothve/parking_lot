@@ -4,7 +4,7 @@ class Invoice
   include InsertionStringMethods
   include InvoiceStateMachine
   extend FilterByCriteria
-  include NumberIncrementor
+  # include NumberIncrementor
 
   DOCUMENT_TYPES = []
 
@@ -20,15 +20,22 @@ class Invoice
   field :gst_slab, type: Float, default: 0.0
   field :agreement_amount, type: Float, default: 0.0
   field :percentage_slab, type: Float, default: 18
+  field :number, type: String
 
   belongs_to :project
   belongs_to :booking_detail
-  belongs_to :manager, class_name: 'User'
+  belongs_to :user, optional: true
+  belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner
+  belongs_to :cp_manager, class_name: 'User', optional: true
+  belongs_to :cp_admin, class_name: 'User', optional: true
+  belongs_to :creator, class_name: 'User'
+  belongs_to :account_manager, class_name: 'User', optional: true
   has_one :incentive_deduction
   has_many :assets, as: :assetable
   embeds_one :cheque_detail
   embeds_one :payment_adjustment, as: :payable
+
 
   validates :number, presence: true, if: :raised?
   validates :rejection_reason, presence: true, if: :rejected?
@@ -108,7 +115,7 @@ class Invoice
           channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
           custom_scope = { manager_id: { "$in": channel_partner_ids } }
         elsif user.role?('account_manager')
-          custom_scope = { manager_id: user.id }
+          custom_scope = { account_manager_id: user.id }
         end
       end
       if params[:booking_detail_id].present?

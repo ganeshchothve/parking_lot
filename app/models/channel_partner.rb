@@ -139,6 +139,7 @@ class ChannelPartner
   def ds_name
     str = name
     str += " - #{rera_id}" if rera_applicable?
+    str += " - #{email}" if email.present? 
     str
   end
 

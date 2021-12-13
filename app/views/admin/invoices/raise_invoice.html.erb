@@ -28,6 +28,7 @@
             <%#= f.select :gst_slab, options_for_select(gst_slabs.collect{|gst| [ "#{gst} %", gst]}, @invoice.gst_slab), class: "selectize", required: 'required', disabled: !policy([:admin, @invoice]).editable_field?("gst_slab"), prompt: " " %>
           </div> -->
         <% else %>
+          <%= f.hidden_field :creator_id, value: current_user.id %>
           <div class="mb-3">
             <%= f.label "Consideration value for brokerage", class: 'label-required' %>
             <%= f.number_field :agreement_amount, autofocus: true, required: 'required', class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("agreement_amount") %>

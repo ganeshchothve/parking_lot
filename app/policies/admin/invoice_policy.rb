@@ -77,6 +77,7 @@ class Admin::InvoicePolicy < InvoicePolicy
     #  attributes += [:rejection_reason, cheque_detail_attributes: [:id, :total_amount, :payment_identifier, :issued_date, :issuing_bank, :issuing_bank_branch, :handover_date, :creator_id], payment_adjustment_attributes: [:id, :absolute_value]] unless record.status.in?(%w(approved rejected))
     #  attributes += [:event, :gst_amount] if record.pending_approval?
     #end
+    attributes += [:creator_id]
     case user.role.to_s
     when 'channel_partner'
       if record.status.in?(%w(draft rejected))

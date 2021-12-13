@@ -154,7 +154,6 @@ class Admin::BookingDetailsController < AdminController
   def create_booking_without_inventory
     @booking_detail = BookingDetail.new
     @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
-    @booking_detail.manager = current_user
     @booking_detail.user = @booking_detail.lead.user
     @booking_detail.status = "blocked"
     respond_to do |format|
