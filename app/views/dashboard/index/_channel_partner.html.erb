@@ -391,7 +391,7 @@
               <h2 class="sec-title mb-0">Announcements</h2>
             </div>
             <hr>
-            <% Announcement.desc(:date).limit(3).each_with_index do |ann, i| %>
+            <% Announcement.filter_by_announcement_status.desc(:created_at).limit(3).each_with_index do |ann, i| %>
               <ul class="announcement-list list-unstyled cmn-list">
                 <li class="px-3">
                   <div class="list-wrap row">
@@ -402,7 +402,7 @@
                       <%= link_to admin_announcement_path(ann), class: 'modal-remote-form-link' do %>
                         <p class="list-txt event-title mb-0"><%= t("mongoid.attributes.categories.#{ann.category}") %></p>
                         <p class="list-txt event-info mb-0"><%= ann.title %></p>
-                        <p class="list-txt event-time mb-0">On <%= ann.date&.strftime('%b %e %Y') %></p>
+                        <p class="list-txt event-time mb-0">On <%= ann.date %></p>
                       <% end %>
                       <% ann.assets.where(document_type: 'photo').limit(5).each_with_index do |asset, ix| %>
                         <div class="prjt-gallery">

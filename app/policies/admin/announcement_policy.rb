@@ -28,7 +28,7 @@ class Admin::AnnouncementPolicy < AnnouncementPolicy
   end
 
   def permitted_attributes(_params = {})
-    attributes = ['category', 'title', 'content', 'date']
+    attributes = ['category', 'title', 'content', 'date', 'enable_announcement']
     attributes
   end
 end

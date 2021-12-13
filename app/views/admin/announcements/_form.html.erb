@@ -10,27 +10,29 @@
         </div>
         <div class="modal-body theme-form">
           <div class="mb-3">
+            <%= f.label :category, class: 'label-required' %>
+              <%= f.select :category, Announcement::CATEGORIES.map{|x| [t("mongoid.attributes.announcement.category.#{x}"), x] }, {prompt: true}, class: 'selectize', required: true, disabled: (policy([current_user_role_group, announcement]).editable_field?("category") ? false : true) %>
+          </div>
+          <div class="mb-3">
             <%= f.input :title, required: true, disabled: !policy([current_user_role_group, announcement]).editable_field?("title") %>
           </div>
           <div class="mb-3">
             <%= f.input :content, required: true, disabled: !policy([current_user_role_group, announcement]).editable_field?("content"), as: :text %>
           </div>
-
-          <div class="row">
-            <div class="col-md-6">
-              <div class="mb-3">
-              <%= f.label :category, class: 'label-required' %>
-                <%= f.select :category, Announcement::CATEGORIES.map{|x| [t("mongoid.attributes.announcement.category.#{x}"), x] }, {prompt: true}, class: 'selectize', required: true, disabled: (policy([current_user_role_group, announcement]).editable_field?("category") ? false : true) %>
-              </div>
+          <div class="mb-3">
+            <%= f.input :date, required: true, disabled: !policy([current_user_role_group, announcement]).editable_field?("date")%>
+          </div>
+          <div class="mb-3">
+            <%= f.label :enable_announcement %>
+            <div class="form-check form-check-inline">
+              <%= f.radio_button :enable_announcement, true, class: "form-check-input wd-22" %>
+              <%= f.label :enable_announcement, "Yes", class: " form-check-label d-inline-block ms-2" %>
             </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <%= f.label :date, class: 'label-required' %>
-                <%= f.text_field :date, class: 'form-control datepicker', required: true, disabled: !policy([:admin, announcement]).editable_field?("date"), value: f.object.date.present? ? f.object.date.strftime("%d/%m/%Y") : nil %>
-              </div>
+            <div class="form-check form-check-inline">
+              <%= f.radio_button :enable_announcement, false, class: "form-check-input wd-22" %>
+              <%= f.label :enable_announcement, "No", class: " form-check-label d-inline-block ms-2" %>
             </div>
           </div>
-
           <!-- <div class="mb-3">
             <%#= f.label :roles, class: 'label-required' %>
             <%#= f.select :roles, User.available_roles(current_client).collect{ |r| [User.human_attribute_name("role.#{r}"), r] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, meeting]).editable_field?("roles") ? false : true), multiple: true %>

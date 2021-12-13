@@ -18,7 +18,7 @@
           <%= t('mongoid.attributes.announcement.content') %>: <%= announcement.content %><br/><br/>
           <%#= render 'meetings/toggle_interest_form', meeting: meeting %>
         </td>
-        <td data-title=<%= t('mongoid.attributes.announcement.date') %>><%= announcement.date.strftime("%d %b %Y") rescue "" %></td>
+        <td data-title=<%= t('mongoid.attributes.announcement.date') %>><%= announcement.date rescue "" %></td>
         <td data-title=<%= t('mongoid.attributes.announcement.category.one') %>><%= t("mongoid.attributes.announcement.category.#{announcement.category}")%></td>
         <td class="action-btn">
           <div class="dropdown show text-right">
