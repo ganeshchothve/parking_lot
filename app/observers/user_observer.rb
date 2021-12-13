@@ -44,9 +44,28 @@ class UserObserver < Mongoid::Observer
     if user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner
       user.rera_id = user.channel_partner&.rera_id if user.rera_id.blank?
 
-      if _changes = (user.changed & %w(role channel_partner_id)).presence && _changes&.all? {|attr| user.send(attr)&.present?}
+      if (_changes = (user.changed & %w(role channel_partner_id)).presence) && _changes&.all? {|attr| user.send(attr)&.present?}
+        # For calling Selldo APIs
         Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
           api.execute(user)
+        end
+      end
+
+      if current_client.external_api_integration?
+        if (_changes = (user.changed & %w(first_name last_name email phone role channel_partner_id)).presence) && _changes&.all? {|attr| user.send(attr)&.present?}
+          # For calling Interakt APIs
+          Crm::Api::Post.where(_type: 'Crm::Api::Post', resource_class: 'User', is_active: true).each do |api|
+            api.execute(user)
+          end
+        end
+
+        # Update primary user details on all company users in case of changes
+        if user.role?('cp_owner') && user.channel_partner&.primary_user_id == user.id && (_changes = (user.changed & %w(first_name last_name phone)).present?) && _changes&.all? {|attr| user.send(attr)&.present?}
+          user.channel_partner.users.ne(id: user.id).each do |cp_user|
+            Crm::Api::Post.where(_type: 'Crm::Api::Post', resource_class: 'User', is_active: true).each do |api|
+              api.execute(cp_user)
+            end
+          end
         end
       end
     end

@@ -65,15 +65,28 @@ class ChannelPartnerObserver < Mongoid::Observer
       if channel_partner.rera_id_changed? && channel_partner.rera_id.present?
         channel_partner.users.update_all(rera_id: channel_partner.rera_id)
       end
+      if channel_partner.manager_id_changed? && channel_partner.manager_id.present?
+        channel_partner.users.update_all(manager_id: channel_partner.manager_id)
+      end
     end
     channel_partner.rera_applicable = true if channel_partner.rera_id.present?
     channel_partner.gst_applicable = true if channel_partner.gstin_number.present?
 
-    if _changes = (channel_partner.changed & %w(manager_id interested_services regions company_name)).presence && _changes&.all? {|attr| channel_partner.send(attr)&.present?}
-      channel_partner.users.update_all(manager_id: channel_partner.manager_id)
+    # For selldo apis
+    if (_changes = (channel_partner.changed & %w(manager_id interested_services regions company_name)).presence) && _changes&.all? {|attr| channel_partner.send(attr)&.present?}
       if current_client.external_api_integration?
         channel_partner.users.each do |cp_user|
           Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
+            api.execute(cp_user)
+          end
+        end
+      end
+    end
+    # For calling Interakt APIs
+    if current_client.external_api_integration?
+      if (_changes = (channel_partner.changed & %w(company_name company_type interested_services manager_id developers_worked_for pan_number rera_id gstin_number regions)).presence) && _changes&.all? {|attr| channel_partner.send(attr)&.present?}
+        channel_partner.users.each do |cp_user|
+          Crm::Api::Post.where(resource_class: 'User', is_active: true).each do |api|
             api.execute(cp_user)
           end
         end
