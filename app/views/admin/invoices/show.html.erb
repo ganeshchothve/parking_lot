@@ -25,9 +25,8 @@
               <% unless %w(channel_partner cp_owner).include?(current_user.role) %>
                 <div class="col-md-4">
                   <div class="mb-3">
-                    <% user =  @invoice.try(:channel_partner).try(:users).try(:first) %>
                     <label class="small text-muted"><%= ChannelPartner.model_name.human %></label>
-                    <div><%= "#{user.try(:name)} (#{user.try(:cp_code)})" %></div>
+                    <div><%= "#{invoice.manager.try(:name)} (#{invoice.manager.try(:cp_code)})" %></div>
                   </div>
                 </div>
               <% end %>
