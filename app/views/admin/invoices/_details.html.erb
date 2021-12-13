@@ -1,0 +1,69 @@
+<div class="alert alert-primary">
+  <p><%#= t('controller.booking_details.receipts.show.disclaimer')%></p>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="mb-3">
+        <label class="small"><%= t('mongoid.models.user.name') %></label>
+        <div><%= booking_detail.user.try(:name) %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="mb-3">
+        <label class="small">
+          <%= t('mongoid.attributes.user.manager')%>
+        </label>
+        <div><%= booking_detail.lead.try(:manager).try(:name) || '-' %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="mb-3">
+        <label class="small">
+          <%= t('mongoid.attributes.lead.registered_at') %>
+        </label>
+        <div><%= booking_detail.lead.registered_at.strftime("%d/%m/%Y") rescue '-' %></div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="mb-3">
+        <label class="small">
+          <%= BookingDetail.human_attribute_name('project') %>
+        </label>
+        <div><%= booking_detail.project_name || '-' %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="mb-3">
+        <label class="small"><%= BookingDetail.human_attribute_name('booking_project_unit_name') %></label>
+        <div><%= booking_detail.booking_project_unit_name || '-' %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="mb-3">
+        <label class="small">
+          <%= BookingDetail.human_attribute_name('booked_on') %>
+        </label>
+        <div><%= booking_detail.booked_on.try(:strftime,'%b %e %Y') || '-' %></div>
+      </div>
+    </div>
+  </div>
+  <div class="row">  
+    <div class="col-md-4">
+      <div class="mb-3">
+        <label class="small">
+          <%= BookingDetail.human_attribute_name('agreement_date') %>
+        </label>
+        <div><%= booking_detail.booked_on.try(:strftime,'%b %e %Y') || '-' %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="mb-3">
+        <label class="small">
+          <%= ChannelPartner.human_attribute_name('company_name') %>
+        </label>
+        <div><%= booking_detail.try(:channel_partner).try(:name) || '-' %></div>
+      </div>
+    </div>
+  </div>
+</div>

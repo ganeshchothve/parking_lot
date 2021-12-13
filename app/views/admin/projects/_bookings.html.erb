@@ -81,12 +81,18 @@
 </div>
 
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-6">
     <div class="form-group">
       <div class="form-check form-check-inline">
         <%= f.check_box :enable_slot_generation, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("enable_slot_generation") }, "Yes", "No" %>
         <%= f.label :enable_slot_generation, class: "form-check-label d-inline-block ms-2" %>
       </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :booking_sources, class: 'label-required' %>
+      <%= f.select :booking_sources, f.object.booking_sources, {},  class: "selectize-tags", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("booking_sources") ? false : true) %>
     </div>
   </div>
 </div>

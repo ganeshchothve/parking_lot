@@ -9,6 +9,7 @@
       </div>
 
       <div class="modal-body theme-form">
+        <%= render 'admin/invoices/details', booking_detail: @invoice.booking_detail %>
         <div class="mb-3">
           <%= f.label :number, class: 'label-required' %>
           <%= f.text_field :number, autofocus: true, required: 'required', class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("number") %>
@@ -31,8 +32,9 @@
             <%#= f.select :gst_slab, options_for_select(gst_slabs.collect{|gst| [ "#{gst} %", gst]}, @invoice.gst_slab), class: "selectize", required: 'required', disabled: !policy([:admin, @invoice]).editable_field?("gst_slab"), prompt: " " %>
           </div> -->
         <% else %>
+          <%= f.hidden_field :event, value: "raise" %>
           <div class="mb-3">
-            <%= f.label "Agreement amount + Other cost", class: 'label-required' %>
+            <%= f.label "Consideration value for brokerage", class: 'label-required' %>
             <%= f.number_field :agreement_amount, autofocus: true, required: 'required', class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("agreement_amount") %>
           </div>
           <div class="mb-3">

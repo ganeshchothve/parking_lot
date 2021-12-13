@@ -47,6 +47,7 @@ class Project
   field :total_units, type: Integer, default: 1
   field :rera_registration_no, type: String
   field :approved_banks, type: Array, default: []
+  field :booking_sources, type: Array, default: []
   field :project_size, type: String
   field :incentive_percentage_slabs, type: Array, default: [5, 12, 18]
   field :sv_incentive, type: Integer

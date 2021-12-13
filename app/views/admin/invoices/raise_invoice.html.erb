@@ -29,7 +29,7 @@
           </div> -->
         <% else %>
           <div class="mb-3">
-            <%= f.label "Agreement amount + Other cost", class: 'label-required' %>
+            <%= f.label "Consideration value for brokerage", class: 'label-required' %>
             <%= f.number_field :agreement_amount, autofocus: true, required: 'required', class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("agreement_amount") %>
           </div>
           <div class="mb-3">

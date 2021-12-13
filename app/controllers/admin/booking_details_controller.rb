@@ -159,8 +159,9 @@ class Admin::BookingDetailsController < AdminController
     @booking_detail.status = "blocked"
     respond_to do |format|
       if @booking_detail.save
+        response.set_header('location', admin_booking_detail_path(@booking_detail) )
         format.json { render json: {message: "booking_successful"}, status: :ok }
-        format.html { redirect_to admin_leads_path }
+        format.html { redirect_to admin_booking_detail_path(@booking_detail) }
       else
         format.html { redirect_to dashboard_path, alert: t('controller.booking_details.booking_unsuccessful') }
       end

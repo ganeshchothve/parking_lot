@@ -200,7 +200,7 @@ class Client
   def enable_incentive_module?(user)
     if user.present?
       out = enable_incentive_module.include?(user.role)
-      out && user.active_channel_partner?
+      out && (user.active_channel_partner? || user.role?('billing_team'))
     else
       false
     end

@@ -108,7 +108,7 @@ module InvoiceStateMachine
 
     def after_raised
       self.raised_date = Time.now
-      self.generate_pdf
+      # self.generate_pdf
     end
 
     def after_approved

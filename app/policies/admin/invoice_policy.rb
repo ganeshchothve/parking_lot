@@ -2,7 +2,7 @@ class Admin::InvoicePolicy < InvoicePolicy
   def index?
     out = false
     out = (user.role.in?(%w(admin superadmin channel_partner billing_team cp cp_admin)) && enable_incentive_module?(user))
-    out =  true if user.role.in?(%w(account_manager))
+    out =  true if user.role.in?(%w(account_manager account_manager_head)) 
     out 
   end
 
@@ -23,6 +23,7 @@ class Admin::InvoicePolicy < InvoicePolicy
     valid ||= user.role?('channel_partner') && record.status.in?(%w(draft rejected))
     valid ||= user.role?('cp_admin') && record.pending_approval?
     valid ||= user.role?('admin') && record.status.in?(%w(draft rejected approved pending_approval))
+    valid
   end
 
   def update_gst?
