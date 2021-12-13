@@ -55,7 +55,7 @@
       channel_partners = ChannelPartner.where(status: 'active')
     end %>
     <%= f.label :channel_partner_id, class: 'label-required control-label' %>
-    <%= f.select :channel_partner_id, channel_partners.collect{|cp| [cp.ds_name, cp.id]}, {}, prompt: :translate, class: 'selectize' %>
+    <%= f.select :channel_partner_id, channel_partners.collect{|cp| [(cp.users.first.name rescue cp.ds_name), cp.id]}, {}, prompt: :translate, class: 'selectize' %>
   </div>
 </div>
 <div class="modal-footer text-end">
