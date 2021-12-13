@@ -14,7 +14,7 @@ $(window).on("load", function () {
 
 $(document).ready(function () {
 
-    $(".home-banner.slide").css({
+    $(".home-banner.slide, .home-slider, .home-slider .slide").css({
         'height': (window_wt <= 768) ? (window_ht - 46) : window_ht
     });
 
@@ -162,6 +162,17 @@ $(document).ready(function () {
         moveSlides: 1,
         maxSlides: (window_wt < 768) ? 1 : 2,
         minSlides: 1
+    });
+
+    $('.home-slider').bxSlider({
+        auto: true,
+        controls: true,
+        prevSelector: '#home-prev',
+        prevText: "<img src='<%= asset_path 'chevron-left.svg' %>' width='20'>",
+        nextSelector: '#home-next',
+        nextText: "<img src='<%= asset_path 'chevron-right.svg' %>' width='20'>",
+        pager: false,
+        moveSlides: 1
     });
 
     if (window_wt <= 768) {
