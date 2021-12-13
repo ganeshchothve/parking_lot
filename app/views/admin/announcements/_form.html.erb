@@ -20,7 +20,7 @@
             <div class="col-md-6">
               <div class="mb-3">
               <%= f.label :category, class: 'label-required' %>
-                <%= f.select :category, Announcement::CATEGORIES.map{|x| [t("mongoid.attributes.announcement.category.#{x}"), x] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, announcement]).editable_field?("category") ? false : true) %>
+                <%= f.select :category, Announcement::CATEGORIES.map{|x| [t("mongoid.attributes.announcement.category.#{x}"), x] }, {prompt: true}, class: 'selectize', required: true, disabled: (policy([current_user_role_group, announcement]).editable_field?("category") ? false : true) %>
               </div>
             </div>
             <div class="col-md-6">
