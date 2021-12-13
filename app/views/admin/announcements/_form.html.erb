@@ -1,0 +1,57 @@
+<%= simple_form_for(@announcement, local: true, url: url ,remote: true, html: { novalidate: false, class: 'modal-remote-form validate-form', data: { 'resource-type': Announcement.model_name.human, type: :json }, id: 'announcement_form' } ) do |f| %>
+  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="title">
+            <%= t("helpers.#{action_name}.link_name", model: Announcement.model_name.human) %>
+            </h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body theme-form">
+          <div class="mb-3">
+            <%= f.input :title, required: true, disabled: !policy([current_user_role_group, announcement]).editable_field?("title") %>
+          </div>
+          <div class="mb-3">
+            <%= f.input :content, required: true, disabled: !policy([current_user_role_group, announcement]).editable_field?("content"), as: :text %>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+              <%= f.label :category, class: 'label-required' %>
+                <%= f.select :category, Announcement::CATEGORIES.map{|x| [t("mongoid.attributes.announcement.category.#{x}"), x] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, announcement]).editable_field?("category") ? false : true) %>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <%= f.label :date, class: 'label-required' %>
+                <%= f.text_field :date, class: 'form-control datepicker', required: true, disabled: !policy([:admin, announcement]).editable_field?("date"), value: f.object.date.present? ? f.object.date.strftime("%d/%m/%Y") : nil %>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="mb-3">
+            <%#= f.label :roles, class: 'label-required' %>
+            <%#= f.select :roles, User.available_roles(current_client).collect{ |r| [User.human_attribute_name("role.#{r}"), r] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, meeting]).editable_field?("roles") ? false : true), multiple: true %>
+          </div> -->
+
+          <!-- <div class="mb-3">
+            <%#= f.input :broadcast, disabled: !policy([current_user_role_group, meeting]).editable_field?("broadcast"), as: :boolean, input_html: {class: 'w-auto'} %>
+          </div> -->
+        </div>
+
+        <div class="modal-footer text-end">
+          <%= f.submit "Save", class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script>
+  $(document).ready(function(){
+    let $form = $("#announcement_form")
+    FormInitializer.init($form);
+  });
+</script>

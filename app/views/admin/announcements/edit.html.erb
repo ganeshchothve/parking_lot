@@ -1,0 +1,8 @@
+<%
+  if @announcement.persisted?
+    _url = admin_announcement_path(@announcement)
+  else
+    _url = admin_announcements_path(@announcement)
+  end
+%>
+<%= render 'form', announcement: @announcement, url: _url %>

@@ -6,15 +6,15 @@ module AnnouncementsConcern
   #
   # @return [{},{}] records with array of Hashes.
   #
-  # def index
-  #   @announcements = Announcement.build_criteria params
-  #   if params[:fltrs].present? && params[:fltrs][:_id].present?
-  #     redirect_to admin_announcement_path(params[:fltrs][:_id])
-  #   else
-  #     @announcements = @announcements.paginate(page: params[:page] || 1, per_page: params[:per_page])
-  #   end
-  #   render 'announcements/index', layout: false
-  # end
+  def index
+    @announcements = Announcement.build_criteria params
+    if params[:fltrs].present? && params[:fltrs][:_id].present?
+      redirect_to admin_announcement_path(params[:fltrs][:_id])
+    else
+      @announcements = @announcements.paginate(page: params[:page] || 1, per_page: params[:per_page])
+    end
+    render 'announcements/index'
+  end
 
   #
   # This show action for admin, users where they can view details of a particular meetings.
@@ -25,20 +25,30 @@ module AnnouncementsConcern
     render 'announcements/show', layout: false
   end
 
-  # def update
-  #   attrs = permitted_attributes([current_user_role_group, @announcement])
-  #   @announcement.assign_attributes(attrs)
+  def update
+    attrs = permitted_attributes([current_user_role_group, @announcement])
+    @announcement.assign_attributes(attrs)
     
-  #   respond_to do |format|
-  #     if @announcement.save
-  #       json = @announcement.as_json
-  #       json[:reload] = (params[:reload].present? && params[:reload].to_s == "true")
-  #       format.json { render json: json.to_json }
-  #     else
-  #       format.json { render json: { errors: @announcement.errors.full_messages.uniq }, status: :unprocessable_entity }
-  #     end
-  #   end
-  # end
+    respond_to do |format|
+      if @announcement.save
+        json = @announcement.as_json
+        json[:reload] = (params[:reload].present? && params[:reload].to_s == "true")
+        format.json { render json: json.to_json }
+      else
+        format.json { render json: { errors: @announcement.errors.full_messages.uniq }, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def destroy
+    respond_to do |format|
+      if @announcement.destroy
+        format.html { redirect_to admin_announcements_path, notice: 'Announcement deleted successfully.' }
+      else
+        format.html { redirect_to admin_announcements_path, notice: 'Announcement cannot be deleted' }
+      end
+    end
+  end
 
   private
   def authorize_resource
@@ -53,12 +63,12 @@ module AnnouncementsConcern
     end
   end
 
-  # def apply_policy_scope
-  #   custom_scope = Announcement.where(Announcement.user_based_scope(current_user, params))
-  #   Announcement.with_scope(policy_scope(custom_scope)) do
-  #     yield
-  #   end
-  # end
+  def apply_policy_scope
+    custom_scope = Announcement.where(Announcement.user_based_scope(current_user, params))
+    Announcement.with_scope(policy_scope(custom_scope)) do
+      yield
+    end
+  end
 
   def set_announcement
     @announcement = Announcement.find(params[:id])

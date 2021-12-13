@@ -1,6 +1,6 @@
 class Admin::AnnouncementPolicy < AnnouncementPolicy
   def show?
-    ['channel_partner', 'cp_owner'].include?(user.role)
+    ['channel_partner', 'cp_owner', 'superadmin', 'admin'].include?(user.role)
   end
 
   def new?
@@ -16,17 +16,19 @@ class Admin::AnnouncementPolicy < AnnouncementPolicy
   end
 
   def update?
-    new? || show?
+    edit?
+  end
+
+  def destroy?
+    new?
   end
 
   def asset_create?
     new?
   end
 
-  # def permitted_attributes(_params = {})
-  #   attributes = super + [:event]
-  #   attributes += [:scheduled_on, :duration, roles: []]  if record.new_record? || !record.completed?
-  #   attributes += [:provider, :provider_url, :campaign_id, :project_id, :topic, :meeting_type, :agenda, :duration, :broadcast] if record.new_record? || record.status == 'draft'
-  #   attributes
-  # end
+  def permitted_attributes(_params = {})
+    attributes = ['category', 'title', 'content', 'date']
+    attributes
+  end
 end

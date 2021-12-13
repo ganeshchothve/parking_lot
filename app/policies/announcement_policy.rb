@@ -1,9 +1,5 @@
 class AnnouncementPolicy < ApplicationPolicy
-  # def index?
-  #   user.active_channel_partner? && !user.role?('dev_sourcing_manager')
-  # end
-
-  # def permitted_attributes(_params = {})
-  #   record.scheduled? ? [:toggle_participant_id] : []
-  # end
+  def index?
+    user.role.in?(%w(superadmin admin channel_partner cp_owner))
+  end
 end

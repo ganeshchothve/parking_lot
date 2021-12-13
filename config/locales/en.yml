@@ -1089,6 +1089,17 @@ en:
       meeting/help_text:
         photo_html: '<ul><li>Photos of the Event</li></ul>'
         collateral_html: '<ul><li>Event Collaterals</li></ul>'
+      announcement:
+        title: Title
+        content: Details
+        announcement_details: Title & Details
+        date: Date
+        category:
+          one: Category
+          general: General
+          new_launch: New Launch
+          events: Events
+          brokerage_alert: Brokerage Alert
       user:
         temporarily_blocked: 'Qualify lead'
         iris_confirmation: 'Lead Tagging'
@@ -1345,6 +1356,9 @@ en:
     meetings:
       index:
         link_name: 'Events'
+    announcements:
+      index:
+        link_name: 'Announcements'
     campaigns:
       index:
         link_name: 'Campaigns'
