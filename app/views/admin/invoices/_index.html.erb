@@ -4,6 +4,7 @@
       <tr class="bg-primary white">
         <th><%= t('mongoid.attributes.invoice.number') %></th>
         <th>Walk In</th>
+        <th>Account Manager</th>
         <th><%= Invoice.model_name.human %> Project</th>
         <!--<th><%#= IncentiveScheme.model_name.human %> Details</th> -->
         <th><%= t('mongoid.attributes.invoice.amount') %></th>
@@ -16,7 +17,8 @@
     <% invoices.each do |invoice| %>
       <tr>
         <td><span class="col-title"><%= invoice.try(:number) %></span></td>
-        <td><span class="col-title"><%# unless current_user.role?('channel_partner') %><%#= link_to_if policy([current_user_role_group, invoice.manager]).index?, invoice.manager_name, [:admin, invoice.manager], class: "theme-txt-color" %><%# end %><%= invoice.channel_partner.name %></span></td>
+        <td><span class="col-title"><%= link_to invoice.booking_detail.lead.name, [current_user_role_group, invoice.booking_detail.lead], class: "theme-txt-color" %></span></td>
+        <td><span class="col-title"><%# unless current_user.role?('channel_partner') %><%#= link_to_if policy([current_user_role_group, invoice.manager]).index?, invoice.manager_name, [:admin, invoice.manager], class: "theme-txt-color" %><%# end %><%= invoice.account_manager.try(:name) %></span></td>
         <td>
           <%= link_to invoice.booking_detail.name, [current_user_role_group, invoice.booking_detail], class: "theme-txt-color" %>
           <div class='small d-inline-block'> <span class="mx-2">| </span>

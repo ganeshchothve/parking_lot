@@ -76,6 +76,8 @@ class BookingDetail
   has_many :invoices
   has_and_belongs_to_many :user_kycs, validate: true
   belongs_to :channel_partner, optional: true
+  belongs_to :creator, class_name: 'User', optional: true
+  belongs_to :account_manager, class_name: 'User', optional: true
 
   # TODO: uncomment
   # validates :name, presence: true
@@ -111,6 +113,8 @@ class BookingDetail
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day) }
   scope :filter_by_booked_on, ->(date) { start_date, end_date = date.split(' - '); where(booked_on: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day)
+  }
+   scope :filter_by_agreement_date, ->(date) { start_date, end_date = date.split(' - '); where(agreement_date: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day)
   }
   scope :incentive_eligible, -> { booked_confirmed.filter_by_tasks_completed_tracked_by('system') }
   scope :booking_stages, -> { all.in(status: BOOKING_STAGES) }
@@ -362,7 +366,7 @@ class BookingDetail
           #custom_scope = { manager_id: { "$in": channel_partner_ids } }
           custom_scope = { cp_manager_id: user.id }
         when 'account_manager'
-         custom_scope = { manager_id: user.id }
+         custom_scope = { creator_id: user.id }
         when 'account_manager_head'
          custom_scope = { project_unit_id: nil }
         when 'billing_team'

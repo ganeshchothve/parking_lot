@@ -4,7 +4,7 @@
 <% if policy([current_user_role_group, invoice]).change_state? && policy([current_user_role_group, invoice]).editable_field?('event') %>
   <% invoice.aasm.events(permitted: true).each do |event| %>
     <% if event.name == :raise %>
-      <%= link_to t("controller.invoices.events.#{event.name}"), raise_invoice_admin_booking_detail_invoice_path(invoice.booking_detail, invoice), class: 'dropdown-item modal-remote-form-link' %>
+      <%= link_to t("controller.invoices.events.#{event.name}"), raise_invoice_admin_booking_detail_invoice_path(invoice.booking_detail, invoice), class: 'dropdown-item modal-remote-form-link', data: { disable_with: "Please wait..." }  %>
     <%# else %>
       <%#= link_to t("controller.invoices.events.#{event.name}"), change_state_admin_booking_detail_invoice_path(invoice.booking_detail, invoice, {invoice: {event: event.name}}), method: :patch, class: 'dropdown-item' %>
     <% end %>

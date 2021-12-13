@@ -5,9 +5,9 @@
   <%= link_to 'Edit Booking', edit_booking_without_inventory_admin_booking_detail_path(booking_detail), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 <% if booking_detail.agreement_date.present? && current_user.role?('account_manager_head') && policy([:admin, booking_detail]).move_to_next_state? && booking_detail.status == "blocked" %>
-  <%= link_to 'Move to Booked Tentative', move_to_next_state_admin_booking_detail_path(booking_detail, status: 'booked_tentative', format: :json), method: 'patch', remote: true, data: { confirm: 'Are you sure?' }, class: "dropdown-item queued move-to-next-state" %>
+  <%= link_to 'Move to Booked Tentative', move_to_next_state_admin_booking_detail_path(booking_detail, status: 'booked_tentative', format: :json), method: 'patch', remote: true, data: { confirm: 'Are you sure?', disable_with: "Please wait..." }, class: "dropdown-item queued move-to-next-state" %>
 <% elsif current_user.role?('billing_team') && booking_detail.status == "booked_tentative" %>
-  <%= link_to 'Move to Booked Confirmed', move_to_next_state_admin_booking_detail_path(booking_detail, status: 'booked_confirmed', format: :json), method: 'patch', remote: true, data: { confirm: 'Are you sure?' }, class: "dropdown-item queued move-to-next-state" %>
+  <%= link_to 'Move to Booked Confirmed', move_to_next_state_admin_booking_detail_path(booking_detail, status: 'booked_confirmed', format: :json), method: 'patch', remote: true, data: {disable_with: "Please wait...", confirm: 'Are you sure?'  }, class: "dropdown-item queued move-to-next-state" %>
 <% end %>
 <% if (booking_detail.status == 'booked_tentative') && %w(billing_team).include?(current_user.role) %>
   <%= link_to 'Cancel Booking', move_to_next_state_admin_booking_detail_path(booking_detail, status: 'cancel', format: :json), method: 'patch', remote: true, data: { confirm: 'Are you sure?', disable_with: 'Cancelling...' }, class: 'dropdown-item dropoff move-to-next-state' %>

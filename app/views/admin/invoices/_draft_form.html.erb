@@ -33,6 +33,7 @@
           </div> -->
         <% else %>
           <%= f.hidden_field :event, value: "raise" %>
+          <%= f.hidden_field :creator_id, value: current_user.id %>
           <div class="mb-3">
             <%= f.label "Consideration value for brokerage", class: 'label-required' %>
             <%= f.number_field :agreement_amount, autofocus: true, required: 'required', class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("agreement_amount") %>

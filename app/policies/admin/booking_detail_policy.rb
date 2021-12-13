@@ -108,7 +108,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def permitted_attributes
     attributes = super
-    attributes += [:project_tower_name, :agreement_price, :channel_partner_id, :other_costs, :agreement_date, :project_unit_configuration, :booking_project_unit_name, :booked_on, :project_id, :primary_user_kyc_id, :project_unit_id, :user_id, :lead_id, :source, user_kyc_ids: []]
+    attributes += [:project_tower_name, :agreement_price, :channel_partner_id, :other_costs, :agreement_date, :project_unit_configuration, :booking_project_unit_name, :booked_on, :project_id, :primary_user_kyc_id, :project_unit_id, :user_id, :creator_id, :account_manager_id, :lead_id, :source, user_kyc_ids: []]
     if eligible_users_for_tasks?
       attributes += [tasks_attributes: Admin::TaskPolicy.new(user, Task.new).permitted_attributes]
     end
