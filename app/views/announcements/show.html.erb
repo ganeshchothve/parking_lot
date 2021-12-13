@@ -14,7 +14,7 @@
               <p><%= @announcement.content %></p>
             </div>
             <div class="col-lg-12">
-              <p> On Date: <%= "#{@announcement.date}" %> </p>
+              <p><%= @announcement.date %></p>
             </div>
             <div class="col-12 mb-4">
               <div class="prjt-gallery">
@@ -40,7 +40,7 @@
               <% @announcement.assets.ne(document_type: 'photo').group_by(&:document_type).each do |key, value| %>
                 <div class="card">
                   <div class = 'card-header'>
-                    <h2 class="fn-18 pt-2"><%= t('mongoid.attributes.announcement/file_types.collaterals') %></h2>
+                    <h2 class="fn-18 pt-2"><%= t("mongoid.attributes.announcement/file_types.#{key}") %></h2>
                   </div>
                   <div class = 'card-body'>
                     <div class = "row">

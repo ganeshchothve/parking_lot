@@ -1,4 +1,9 @@
 class Admin::AnnouncementPolicy < AnnouncementPolicy
+
+  def index?
+    user.role.in?(%w(superadmin admin))
+  end
+  
   def show?
     ['channel_partner', 'cp_owner', 'superadmin', 'admin'].include?(user.role)
   end
@@ -28,7 +33,7 @@ class Admin::AnnouncementPolicy < AnnouncementPolicy
   end
 
   def permitted_attributes(_params = {})
-    attributes = ['category', 'title', 'content', 'date', 'enable_announcement']
+    attributes = ['category', 'title', 'content', 'date', 'is_active']
     attributes
   end
 end

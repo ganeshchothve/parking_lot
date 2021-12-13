@@ -23,14 +23,14 @@
             <%= f.input :date, required: true, disabled: !policy([current_user_role_group, announcement]).editable_field?("date")%>
           </div>
           <div class="mb-3">
-            <%= f.label :enable_announcement %>
+            <%= f.label t('mongoid.attributes.announcement.published') %>
             <div class="form-check form-check-inline">
-              <%= f.radio_button :enable_announcement, true, class: "form-check-input wd-22" %>
-              <%= f.label :enable_announcement, "Yes", class: " form-check-label d-inline-block ms-2" %>
+              <%= f.radio_button :is_active, true, class: "form-check-input wd-22" %>
+              <%= f.label :is_active, "Yes", class: " form-check-label d-inline-block ms-2" %>
             </div>
             <div class="form-check form-check-inline">
-              <%= f.radio_button :enable_announcement, false, class: "form-check-input wd-22" %>
-              <%= f.label :enable_announcement, "No", class: " form-check-label d-inline-block ms-2" %>
+              <%= f.radio_button :is_active, false, class: "form-check-input wd-22" %>
+              <%= f.label :is_active, "No", class: " form-check-label d-inline-block ms-2" %>
             </div>
           </div>
           <!-- <div class="mb-3">

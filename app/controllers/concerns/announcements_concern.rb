@@ -31,9 +31,7 @@ module AnnouncementsConcern
     
     respond_to do |format|
       if @announcement.save
-        json = @announcement.as_json
-        json[:reload] = (params[:reload].present? && params[:reload].to_s == "true")
-        format.json { render json: json.to_json }
+        format.json { render json: @announcement }
       else
         format.json { render json: { errors: @announcement.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
@@ -44,8 +42,10 @@ module AnnouncementsConcern
     respond_to do |format|
       if @announcement.destroy
         format.html { redirect_to admin_announcements_path, notice: 'Announcement deleted successfully.' }
+        format.json { render json: @announcement, status: :ok }
       else
-        format.html { redirect_to admin_announcements_path, notice: 'Announcement cannot be deleted' }
+        format.html { redirect_to admin_announcements_path }
+        format.json { render json: { errors: @announcement.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
   end
@@ -71,6 +71,7 @@ module AnnouncementsConcern
   end
 
   def set_announcement
-    @announcement = Announcement.find(params[:id])
+    @announcement = Announcement.where(id: params[:id]).first
+    redirect_to root_path, alert: 'Announcement Not Found' if @announcement.blank?
   end
 end

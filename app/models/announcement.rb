@@ -14,12 +14,12 @@ class Announcement
   field :title, type: String
   field :content, type: String
   field :date, type: String
-  field :enable_announcement, type: Boolean, default: false
+  field :is_active, type: Boolean, default: false
   has_many :assets, as: :assetable
 
   validates :category, inclusion: { in: CATEGORIES }
 
-  scope :filter_by_announcement_status, ->{where(enable_announcement: true)}
+  scope :filter_by_published, ->{where(is_active: true)}
   def self.user_based_scope(user, params = {})
     custom_scope = {}
   end
