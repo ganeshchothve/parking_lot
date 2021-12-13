@@ -33,18 +33,14 @@
                     <div class="accordion-body pt-0 ps-4">
                       <div class="row ps-3">
                         <div class="col-3">
-                          <p class="fn-12 font-medium mb-0"><%= t('mongoid.attributes.booking_detail.name') %></p>
-                          <p class="fn-14"><%= @booking_detail.name %></p>
-                        </div>
-                        <div class="col-3">
                           <p class="fn-12 font-medium mb-0"><%= Lead.model_name.human %></p>
                           <p class="fn-14">
                             <%= link_to_if @booking_detail.lead, (@booking_detail.lead.try(:name) || ''), [current_user_role_group, @booking_detail.lead] %>
                           </p>
                         </div>
                         <div class="col-3">
-                          <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('project_unit') %></p>
-                          <p class="fn-14"><%= @booking_detail.project_unit %></p>
+                          <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('project_tower_name') %></p>
+                          <p class="fn-14"><%= @booking_detail.project_tower_name %></p>
                         </div>
                         <div class="col-3">
                           <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('agreement_price') %>
@@ -72,7 +68,7 @@
                         </div>
                         <div class="col-3">
                           <p class="fn-12 font-medium mb-0"><%= ChannelPartner.human_attribute_name('company_name') %></p>
-                          <p class="fn-14"><%= @booking_detail.try(:channel_partner).try(:name) || '-' %></p>
+                          <p class="fn-14"><%= @booking_detail.try(:manager).try(:name) || '-' %></p>
                         </div>
                       </div>
                     </div>

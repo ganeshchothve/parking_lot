@@ -18,21 +18,13 @@
     <div class="col-md-4">
       <div class="mb-3">
         <label class="small">
-          <%= t('mongoid.attributes.lead.registered_at') %>
+          <%= BookingDetail.human_attribute_name('project') %>
         </label>
-        <div><%= booking_detail.lead.registered_at.strftime("%d/%m/%Y") rescue '-' %></div>
+        <div><%= booking_detail.project_tower_name || '-' %></div>
       </div>
     </div>
   </div>
   <div class="row">
-    <div class="col-md-4">
-      <div class="mb-3">
-        <label class="small">
-          <%= BookingDetail.human_attribute_name('project') %>
-        </label>
-        <div><%= booking_detail.project_name || '-' %></div>
-      </div>
-    </div>
     <div class="col-md-4">
       <div class="mb-3">
         <label class="small"><%= BookingDetail.human_attribute_name('booking_project_unit_name') %></label>
@@ -47,8 +39,6 @@
         <div><%= booking_detail.booked_on.try(:strftime,'%b %e %Y') || '-' %></div>
       </div>
     </div>
-  </div>
-  <div class="row">  
     <div class="col-md-4">
       <div class="mb-3">
         <label class="small">
@@ -57,6 +47,8 @@
         <div><%= booking_detail.booked_on.try(:strftime,'%b %e %Y') || '-' %></div>
       </div>
     </div>
+  </div>
+  <div class="row">  
     <div class="col-md-4">
       <div class="mb-3">
         <label class="small">
