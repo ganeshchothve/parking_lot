@@ -10,9 +10,9 @@
     <div class="col-md-4">
       <div class="mb-3">
         <label class="small">
-          <%= t('mongoid.attributes.user.manager')%>
+          <%= ChannelPartner.human_attribute_name('company_name') %>
         </label>
-        <div><%= booking_detail.lead.try(:manager).try(:name) || '-' %></div>
+        <div><%= booking_detail.try(:manager).try(:name) || '-' %></div>
       </div>
     </div>
     <div class="col-md-4">
@@ -45,16 +45,6 @@
           <%= BookingDetail.human_attribute_name('agreement_date') %>
         </label>
         <div><%= booking_detail.booked_on.try(:strftime,'%b %e %Y') || '-' %></div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-4">
-      <div class="mb-3">
-        <label class="small">
-          <%= ChannelPartner.human_attribute_name('company_name') %>
-        </label>
-        <div><%= booking_detail.try(:channel_partner).try(:name) || '-' %></div>
       </div>
     </div>
   </div>
