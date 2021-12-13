@@ -22,7 +22,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def index?
-    user.role.in?(%w(channel_partner cp_owner dev_sourcing_manager)) || (!user.buyer? && (current_client.enable_actual_inventory?(user) || enable_incentive_module?(user)))
+    user.role.in?(%w(channel_partner cp_owner dev_sourcing_manager)) || (!user.buyer? && (current_client.enable_actual_inventory?(user) || enable_incentive_module?(user))) && !user.role?('billing_team')
   end
 
   def third_party_inventory?
@@ -64,7 +64,7 @@ class Admin::ProjectPolicy < ProjectPolicy
         :notification_email, :notification_numbers, :sender_email, :area_unit,
         :support_number, :support_email, :channel_partner_support_number, :channel_partner_support_email, :cancellation_amount, :blocking_amount, :region, :sv_incentive, :spot_booking_incentive, :pre_reg_incentive_percentage, :pre_reg_min_bookings, :iris_url,
         :blocking_days, :enable_slot_generation, :holding_minutes, :terms_and_conditions, :email_header, :email_footer, :embed_map_tag, :hot, :price_starting_from, :price_upto, :enable_inventory, :enable_booking_with_kyc, :check_sv_availability_in_selldo, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes,
-        email_domains: [], booking_portal_domains: [], enable_actual_inventory: [], enable_live_inventory: [], incentive_percentage_slabs: []
+        email_domains: [], booking_portal_domains: [], enable_actual_inventory: [], enable_live_inventory: [], incentive_percentage_slabs: [], booking_sources: []
       ]
     end
 

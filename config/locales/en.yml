@@ -1433,7 +1433,7 @@ en:
         link_name: 'Bookings'
       new:
         link_name: 'Add Booking'
-        header: "Add Booking"
+        header: "Add Booking for %{customer}-(%{project})"
       edit:
         link_name: 'Update Booking'
       show:

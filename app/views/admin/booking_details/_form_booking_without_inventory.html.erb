@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h3 class="title"><%= t('controller.booking_details.new.header') %></h3>
+  <h3 class="title"><%= t('controller.booking_details.new.header', customer: f.object.lead.name, project: f.object.lead.project_name) %></h3>
   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="modal-body">
@@ -34,13 +34,32 @@
   </div>
   <div class="mb-3 position-relative offline">
     <%= f.label :agreement_date, class: 'label-required' %>
-    <%= f.text_field :agreement_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '' %>
+    <% if current_user.role?('account_manager') %>
+      <%= f.text_field :agreement_date, class: 'form-control datepicker', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '' %>
+    <% else %>
+      <%= f.text_field :agreement_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '' %>
+    <% end %>
   </div>
   <div class="mb-3">
+    <%= f.label :source, class: 'label-required control-label' %>
+    <% booking_sources = f.object.lead.project.booking_sources %>
+    <%= f.select :channel_partner_id, booking_sources.collect{|s| [s, s]}, {}, prompt: :translate, class: 'selectize' %>
+  </div>
+  <div class="mb-3">
+    <% if f.object.lead.manager && f.object.lead.manager.role?('channel_partner')
+      channel_partners = ChannelPartner.where(id: lead.manager.channel_partner_id)
+    else
+      channel_partners = ChannelPartner.where(status: 'active')
+    end %>
     <%= f.label :channel_partner_id, class: 'label-required control-label' %>
-    <%= f.select :channel_partner_id, ChannelPartner.where(status: 'active').collect{|cp| [cp.name, cp.id]}, {}, prompt: :translate, class: 'selectize' %>
+    <%= f.select :channel_partner_id, channel_partners.collect{|cp| [cp.name, cp.id]}, {}, prompt: :translate, class: 'selectize' %>
   </div>
 </div>
 <div class="modal-footer text-end">
-  <%= f.submit "Submit", class: "btn btn-primary" %>
+  <% if edit_access %>
+    <%= f.submit "Submit", class: "btn btn-primary" %>
+  <% else %>
+    <%= f.submit "Submit", data: { :confirm => 'You won’t be able to edit it, Are you sure?'}, class: "btn btn-primary" %>
+  <% end %>
+
 </div>

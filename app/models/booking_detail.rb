@@ -36,6 +36,7 @@ class BookingDetail
   field :booked_on, type: Date
   field :agreement_date, type: Date
   field :ladder_stage, type: Array
+  field :source, type: String
 
   mount_uploader :tds_doc, DocUploader
 
@@ -83,6 +84,7 @@ class BookingDetail
   validate :kyc_mandate
   validate :validate_content, on: :create
   validates :primary_user_kyc, :receipts, :tasks, copy_errors_from_child: true, allow_blank: true
+  validates :agreement_date, presence: true, if: proc { booked_tentative? && status_was == 'blocked' }
 
   delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
   delegate :name, :email, :phone, to: :user, prefix: true, allow_nil: true
@@ -336,7 +338,7 @@ class BookingDetail
     if self.project.enable_inventory && self.project_unit.present?
       self.calculate_agreement_price
     else
-      (self.agreement_price + self.other_costs)
+      (self.agreement_price)
     end
   end
 
@@ -380,7 +382,9 @@ class BookingDetail
     def user_based_available_statuses(user)
       if user.present?
         if user.role?('billing_team')
-          %w[booked_confirmed]
+           %w[booked_confirmed booked_tentative cancelled]
+        elsif user.role?('account_manager') || user.role?('account_manager_head')
+           %w[blocked booked_tentative booked_confirmed cancelled]
         else
           BookingDetail.aasm.states.map(&:name)
         end

@@ -120,7 +120,7 @@ class Admin::UserPolicy < UserPolicy
     attributes += [:channel_partner_id] if record.role.in?(%w(cp_owner channel_partner)) && user.role.in?(%w(superadmin cp_owner))
     attributes += [:premium, :tier_id] if record.role?('channel_partner') && user.role?('admin')
     attributes += [:role] if %w[superadmin admin cp_owner].include?(user.role)
-    attributes += [project_ids: []] if %w[admin superadmin].include?(user.role) && record.role.in?(%w(billing_team sales sales_admin gre crm team_lead dev_sourcing_manager))
+    attributes += [project_ids: []] if %w[admin superadmin].include?(user.role) && record.role.in?(User::SELECTED_PROJECT_ACCESS)
     if %w[superadmin admin sales_admin].include?(user.role)
       attributes += [:erp_id]
       attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]

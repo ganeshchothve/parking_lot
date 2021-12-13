@@ -9,6 +9,7 @@
       </div>
 
       <div class="modal-body theme-form">
+        <%= render 'admin/invoices/details', booking_detail: @invoice.booking_detail %>
         <% if (incentive_deduction = @invoice.incentive_deduction.presence) %>
           <%= render 'admin/invoices/incentive_deduction', incentive_deduction: incentive_deduction %>
         <% end %>
