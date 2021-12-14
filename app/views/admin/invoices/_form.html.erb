@@ -102,19 +102,5 @@
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($("#invoice_form"));
-  <!-- var netAmt = <%#= @invoice.net_amount %>;
-  var invoiceType = '<%#= @invoice.class.to_s.underscore.gsub('/', '_') %>';
-  $('#invoice_form').find('.net-amount').html(Amura.formatMoney(netAmt));
-
-  $('#invoice_form').find('input[name="' + invoiceType + '[gst_amount]"],input[name="' + invoiceType + '[amount]"],input[name="' + invoiceType + '[payment_adjustment_attributes][absolute_value]"]').on('blur', function(event) {
-    $('#invoice_form').find('.net-amount').html(
-      Amura.formatMoney(
-        parseFloat($('input[name="' + invoiceType + '[amount]"]').val() || 0)
-        + parseFloat($('input[name="' + invoiceType + '[gst_amount]"]').val() || 0)
-        + parseFloat($('input[name="' + invoiceType + '[payment_adjustment_attributes][absolute_value]"]').val() || 0)
-        - parseFloat($('#deduction-amount').data('amount') || 0)
-      )
-    );
-  }); -->
 });
 <% end %>
