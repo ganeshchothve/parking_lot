@@ -83,8 +83,12 @@ module DashboardDataProvider
           }]).to_a
     out = {'pending' => {}, 'approved' => {}, 'rejected' => {}}
     data.each do |d|
-      out[d.dig('_id', 'status')][d.dig('_id', 'cp_id')&.first&.to_s&.presence || nil] ||= 0
-      out[d.dig('_id', 'status')][d.dig('_id', 'cp_id')&.first&.to_s&.presence || nil] += d["count"]
+      status = d.dig('_id', 'status')
+      cp = d.dig('_id', 'cp_id')&.first&.to_s&.presence || nil
+      if status.present? && cp.present?
+        out[status][cp] ||= 0
+        out[status][cp] += d["count"]
+      end
     end
     out
   end

@@ -15,13 +15,13 @@
         </div>
       </div>
       -->
-      <div class="col-lg-9 filter-set">
-        <%= link_to "Scheduled This Week", admin_site_visits_path(fltrs: {scheduled_on: "#{Date.today.beginning_of_week} - #{Date.today.end_of_week}"}, scheduled_this_week: true), class: "filter-link #{params[:scheduled_this_week].present? ? 'active' : ''}" %>
-        <%= link_to "Scheduled Last Week", admin_site_visits_path(fltrs: {scheduled_on: "#{(Date.today-7.days).beginning_of_week} - #{(Date.today-7.days).end_of_week}"}, scheduled_last_week: true), class: "filter-link #{params[:scheduled_last_week].present? ? 'active' : ''}" %>
-        <%= link_to "Scheduled For This Month", admin_site_visits_path(fltrs: {scheduled_on: "#{Date.today.beginning_of_month} - #{Date.today.end_of_month}"}, scheduled_this_month: true), class: "filter-link #{params[:scheduled_this_month].present? ? 'active' : ''}" %>
-        <%= link_to "Pending Approval", admin_site_visits_path(fltrs: {approval_status: 'pending'}), class: "filter-link #{params.dig(:fltrs, :approval_status) == 'pending' ? 'active' : ''}" %>
+      <div class="col-lg-8 col-12 filter-set d-xs-no-flex">
+        <%= link_to t('controller.site_visits.filters.scheduled_this_week'), admin_site_visits_path(fltrs: {scheduled_on: "#{Date.today.beginning_of_week} - #{Date.today.end_of_week}"}, scheduled_this_week: true), class: "filter-link #{params[:scheduled_this_week].present? ? 'active' : ''}" %>
+        <%= link_to t('controller.site_visits.filters.scheduled_last_week'), admin_site_visits_path(fltrs: {scheduled_on: "#{(Date.today-7.days).beginning_of_week} - #{(Date.today-7.days).end_of_week}"}, scheduled_last_week: true), class: "filter-link #{params[:scheduled_last_week].present? ? 'active' : ''}" %>
+        <%= link_to t('controller.site_visits.filters.scheduled_this_month'), admin_site_visits_path(fltrs: {scheduled_on: "#{Date.today.beginning_of_month} - #{Date.today.end_of_month}"}, scheduled_this_month: true), class: "filter-link #{params[:scheduled_this_month].present? ? 'active' : ''}" %>
+        <%= link_to t("mongoid.attributes.site_visit/approval_status.pending"), admin_site_visits_path(fltrs: {approval_status: 'pending'}), class: "filter-link #{params.dig(:fltrs, :approval_status) == 'pending' ? 'active' : ''}" %>
       </div>
-      <div class="col-lg-3 col-xs-12 col-md-12 col-sm-12 no-pd">
+      <div class="col-lg-4 col-xs-12 col-md-12 col-sm-12 no-pd">
         <div class="table-btn-set float-right pb-1 text-end mt-2">
           <!--
           <div class="filter-search">
@@ -35,6 +35,15 @@
           </div>
           <% if policy([:admin, Lead]).new? %>
             <%= link_to t('helpers.new.link_name', model: t('global.walkin.one')), new_admin_lead_path(walkin: true), class: 'modal-remote-form-link p-2 px-3 btn bg-primary border-primary white d-inline-block ms-2 me-2 border rounded' %>
+          <% end %>
+          <% if policy([:admin, SiteVisit]).export? %>
+            <div class="export-menu display-initial d-inline text-end">
+              <button class="select-btn fn-400 dropdown-toggle  px-3 border rounded py-2" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <%= t('controller.site_visits.exports.link_name', name: nil) %> </button>
+              <div class="dropdown-menu dropdown-menu-right">
+                <%= link_to t('controller.site_visits.exports.link_name', name: t('global.all')), export_admin_site_visits_path, class: 'dropdown-item' %>
+                <%= link_to t('controller.site_visits.exports.link_name', name: t('global.active_filter')), export_admin_site_visits_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
+              </div>
+            </div>
           <% end %>
         </div>
       </div>

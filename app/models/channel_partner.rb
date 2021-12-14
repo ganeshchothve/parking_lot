@@ -75,6 +75,7 @@ class ChannelPartner
   )
 
   belongs_to :manager, class_name: 'User', optional: true
+  belongs_to :primary_user, class_name: 'User'
   has_many :users
   has_one :address, as: :addressable
   has_one :bank_detail, as: :bankable, validate: false

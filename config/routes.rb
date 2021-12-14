@@ -209,6 +209,7 @@ Rails.application.routes.draw do
         patch :change_state
         get :reject
       end
+      get :export, on: :collection
     end
     resources :leads, only: [:index, :show, :edit, :update, :new] do
       collection do
