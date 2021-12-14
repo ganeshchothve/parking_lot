@@ -97,6 +97,7 @@ class Admin::SiteVisitsController < AdminController
   end
 
   def reject
+    @note = @site_visit.notes.build(note: t('controller.site_visits.reject.default_note'))
     render layout: false
   end
 
