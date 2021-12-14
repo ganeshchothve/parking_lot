@@ -49,7 +49,9 @@ class Project
   field :approved_banks, type: Array, default: []
   field :booking_sources, type: Array, default: []
   field :project_size, type: String
+  field :gst_slab_applicable, type: Boolean, default: true
   field :incentive_percentage_slabs, type: Array, default: [5, 12, 18]
+  field :incentive_gst_slabs, type: Array, default: [5, 12, 18]
   field :sv_incentive, type: Integer
   field :spot_booking_incentive, type: Integer
   field :pre_reg_incentive_percentage, type: Integer

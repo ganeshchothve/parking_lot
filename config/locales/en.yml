@@ -901,10 +901,12 @@ en:
         draft: 'Draft'
         raised: 'Raised'
         pending_approval: 'Pending Approval'
-        approved: 'Approved'
-        rejected: 'Rejected'
         paid: 'Paid'
-        tax_invoice_raised: 'Tax Invoice Raised'
+        raise: 'Raise Invoice'
+        re_raise: 'Re-Raise Invoice'
+        approved: 'Invoice Approved by Developer'
+        rejected: 'Dispute Raised by Developer'
+        tax_invoice_raised: "Raised Tax Invoice"
       cheque_detail:
         total_amount: 'Total Amount'
         payment_identifier: 'Payment Identifier'
@@ -1503,8 +1505,9 @@ en:
       events:
         raise: 'Raise Invoice'
         re_raise: 'Re-Raise Invoice'
-        approve: 'Approve Invoice'
-        reject: 'Reject Invoice'
+        approve: 'Invoice Approved by Developer'
+        reject: 'Dispute Raised by Developer'
+        tax_invoice_raise: "Raised Tax Invoice"
       exports:
         link_name: "%{name} Exports"
 

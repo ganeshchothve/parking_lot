@@ -43,27 +43,26 @@
         <td>
           <span class="col-title">
           <%= number_to_indian_currency(invoice.amount) %></span>
-          <!--
           <% if invoice.status.in?(%w(approved paid)) && invoice.net_amount.present? %>
             <div class='small row'>
-              <span class="col-6 title"><%= t('mongoid.attributes.invoice.net_amount') %>:</span><span class="col-6"> <strong><%= number_to_indian_currency(invoice.net_amount) %></strong></span></span>
+              <span><%= t('mongoid.attributes.invoice.net_amount') %><%= invoice.project.gst_slab_applicable ? ' (included GST)' : '' %> :</span><span> <strong><%= number_to_indian_currency(invoice.net_amount) %></strong></span></span>
             </div>
-          <% end %>-->
+          <% end %>
         </td>
         <td>
           <span class="col-title">
           <i class='fa fa-circle fa-xs status_<%= t("mongoid.attributes.invoice/status.#{invoice.status}").downcase %> me-2'></i><%= t("mongoid.attributes.invoice/status.#{invoice.status}") %></span>
-         <!-- <% if invoice.rejected? %>
+         <% if invoice.rejected? %>
             <div class='small row'>
-              <span class='break-word col-6 title'>Reason:</span><span class="col-6"> <%= invoice.rejection_reason %></span></div>
-               </div>
+              <span class='break-word'>Reason:</span><span> <%= invoice.rejection_reason %></span></div>
+            </div>
           <% end %>
           <% if deduction = invoice.incentive_deduction.presence %>
             <div class='small row'>
-              <span class="col-6 title"><%= IncentiveDeduction.model_name.human %>:</span>
+              <span class="col-6"><%= IncentiveDeduction.model_name.human %>:</span>
               <span class="col-6"> <strong><%= number_to_indian_currency(deduction.amount) %></strong> (<%= t("mongoid.attributes.incentive_deduction/status.#{deduction.status}") %>)</span></span>
             </div>
-          <% end %>-->
+          <% end %>
         </td>
         <td>
           <div class="dropdown show text-right">

@@ -28,7 +28,7 @@
     <div class="form-group mb-3">
       <div class="form-check form-check-inline">
         <%= f.check_box :enable_booking_with_kyc, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("enable_booking_with_kyc") }, "Yes", "No" %>
-        <%= f.label :enable_booking_with_kyc, class: "form-check-label d-inline-block ms-2 enable-inventory-check" %>
+        <%= f.label :enable_booking_with_kyc, class: "form-check-label d-inline-block ms-2 enable-booking-with-kyc" %>
       </div>
     </div>
   </div>

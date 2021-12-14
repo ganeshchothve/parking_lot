@@ -18,10 +18,6 @@
           <%= f.label :agreement_amount, class: '' %>
           <%= f.number_field :agreement_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("agreement_amount") %>
         </div>
-        <div class="mb-3">
-          <%= f.label :net_amount, class: '' %>
-          <%= f.number_field :net_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("net_amount") %>
-        </div>
         <% if policy([:admin, @invoice]).editable_field?("payment_adjustment_attributes") %>
           <div class="payment-adjustment">
             <%= f.fields_for :payment_adjustment do |adj|%>
@@ -37,6 +33,22 @@
             <% end %>
           </div>
         <% end %>
+        <div class="mb-3">
+          <%= f.label :amount, class: '' %>
+          <% if policy([:admin, @invoice]).editable_field?("amount") %>
+            <%= f.number_field :amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("amount") %>
+          <% else %>
+            <p class='net-amount'><%= f.object.amount %></p>
+          <% end %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :gst_amount, class: '' %>
+          <% if policy([:admin, @invoice]).editable_field?("gst_amount") %>
+            <%= f.number_field :gst_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("gst_amount") %>
+          <% else %>
+            <p class='gst-amount'><%= f.object.gst_amount %></p>
+          <% end %>
+        </div>
         <div class="mb-3">
           <%= f.label :net_amount, class: '' %>
           <% if policy([:admin, @invoice]).editable_field?("net_amount") %>
@@ -90,8 +102,8 @@
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($("#invoice_form"));
-  var netAmt = <%= @invoice.net_amount %>;
-  var invoiceType = '<%= @invoice.class.to_s.underscore.gsub('/', '_') %>';
+  <!-- var netAmt = <%#= @invoice.net_amount %>;
+  var invoiceType = '<%#= @invoice.class.to_s.underscore.gsub('/', '_') %>';
   $('#invoice_form').find('.net-amount').html(Amura.formatMoney(netAmt));
 
   $('#invoice_form').find('input[name="' + invoiceType + '[gst_amount]"],input[name="' + invoiceType + '[amount]"],input[name="' + invoiceType + '[payment_adjustment_attributes][absolute_value]"]').on('blur', function(event) {
@@ -103,6 +115,6 @@ $(document).ready(function(){
         - parseFloat($('#deduction-amount').data('amount') || 0)
       )
     );
-  });
+  }); -->
 });
 <% end %>

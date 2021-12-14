@@ -7,7 +7,7 @@ class BookingDetailObserver < Mongoid::Observer
     else
       booking_detail.name = booking_detail.booking_project_unit_name
     end
-    booking_detail.manager_id = booking_detail.lead&.manager_id if booking_detail.lead && (booking_detail.manager_id.blank? || booking_detail.manager_id_changed?) 
+    booking_detail.manager_id = booking_detail.lead&.manager_id if booking_detail.lead.manager && (booking_detail.manager_id.blank? || booking_detail.manager_id_changed?)
     booking_detail.channel_partner_id = booking_detail.manager&.channel_partner_id if booking_detail.manager && (booking_detail.channel_partner_id.blank? ||  booking_detail.manager_id_changed?)
     booking_detail.cp_manager_id = booking_detail.channel_partner&.manager_id if booking_detail.channel_partner && (booking_detail.cp_manager_id.blank? || booking_detail.manager_id_changed?)
     booking_detail.cp_admin_id = booking_detail.cp_manager&.manager_id if booking_detail.cp_manager && (booking_detail.cp_admin_id.blank? || booking_detail.manager_id_changed?) 

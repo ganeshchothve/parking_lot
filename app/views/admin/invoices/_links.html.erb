@@ -24,7 +24,7 @@
   <%= link_to t("controller.invoices.generate_invoice.link_name"), generate_invoice_admin_invoice_path(invoice), class: 'dropdown-item', target: '_blank' %>
 <% end %>
 <% if policy([current_user_role_group, invoice]).new_send_invoice_to_poc? %>
-  <%= link_to "Send Invoice", new_send_invoice_to_poc_admin_invoice_path(invoice), class: 'dropdown-item modal-remote-form-link', target: '_blank' %>
+  <%= link_to "Send invoice to Developer", new_send_invoice_to_poc_admin_invoice_path(invoice), class: 'dropdown-item modal-remote-form-link', target: '_blank' %>
 <% end %>
 
 <!-- Raise incentive deduction for cp_admin -->
@@ -43,6 +43,6 @@
 <% end %>
 
 <!-- Upload documents for channel partner -->
-<% if policy([:admin, invoice]).index? %>
-  <%= link_to current_user.role?('channel_partner')  ? "Upload Invoice copy" : t('controller.invoices.asset_create.link_name'), assetables_path(assetable_type: invoice.class.model_name.i18n_key.to_s, assetable_id: invoice.id, asset_header: t('controller.invoices.asset_create.link_name')), class: "dropdown-item modal-remote-form-link" %>
-<% end %>
+<%# if policy([:admin, invoice]).index? %>
+  <%#= link_to current_user.role?('channel_partner')  ? "Upload Invoice copy" : t('controller.invoices.asset_create.link_name'), assetables_path(assetable_type: invoice.class.model_name.i18n_key.to_s, assetable_id: invoice.id, asset_header: t('controller.invoices.asset_create.link_name')), class: "dropdown-item modal-remote-form-link" %>
+<%# end %>

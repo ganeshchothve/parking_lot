@@ -7,6 +7,7 @@ class InvoiceObserver < Mongoid::Observer
     invoice.cp_manager_id = invoice.channel_partner&.manager_id if invoice.channel_partner
     invoice.cp_admin_id = invoice.cp_manager&.manager_id if invoice.cp_manager
     invoice.amount = invoice.calculate_amount
+    invoice.gst_amount = invoice.calculate_gst_amount
     invoice.net_amount = invoice.calculate_net_amount
   end
 

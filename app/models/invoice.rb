@@ -26,7 +26,7 @@ class Invoice
   belongs_to :booking_detail
   belongs_to :user, optional: true
   belongs_to :manager, class_name: 'User', optional: true
-  belongs_to :channel_partner
+  belongs_to :channel_partner, optional: true
   belongs_to :cp_manager, class_name: 'User', optional: true
   belongs_to :cp_admin, class_name: 'User', optional: true
   belongs_to :creator, class_name: 'User'
@@ -85,7 +85,11 @@ class Invoice
   end
 
   def calculate_gst_amount
-    calculate_amount * (gst_slab/100)
+    if self.project.gst_slab_applicable?
+      calculate_amount * (gst_slab/100)
+    else
+      0
+    end
   end
 
 
