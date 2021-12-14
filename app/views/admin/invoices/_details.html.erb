@@ -10,17 +10,17 @@
     <div class="col-md-4">
       <div class="mb-3">
         <label class="small">
-          <%= ChannelPartner.human_attribute_name('company_name') %>
+          <%= BookingDetail.human_attribute_name('project') %>
         </label>
-        <div><%= booking_detail.try(:manager).try(:name) || '-' %></div>
+        <div><%= booking_detail.project.try(:name) || '-' %></div>
       </div>
     </div>
     <div class="col-md-4">
       <div class="mb-3">
         <label class="small">
-          <%= BookingDetail.human_attribute_name('project') %>
+          <%= BookingDetail.human_attribute_name('project_tower_name') %>
         </label>
-        <div><%= booking_detail.project.try(:name) || '-' %></div>
+        <div><%= (booking_detail.project_unit.present? ? booking_detail.project_unit.try(:project_tower).try(:name) : booking_detail.project_tower_name) || '-' %></div>
       </div>
     </div>
   </div>
@@ -44,7 +44,17 @@
         <label class="small">
           <%= BookingDetail.human_attribute_name('agreement_date') %>
         </label>
-        <div><%= booking_detail.booked_on.try(:strftime,'%b %e %Y') || '-' %></div>
+        <div><%= booking_detail.agreement_date.try(:strftime,'%b %e %Y') || '-' %></div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="mb-3">
+        <label class="small">
+          <%= ChannelPartner.human_attribute_name('company_name') %>
+        </label>
+        <div><%= booking_detail.try(:manager).try(:name) || '-' %></div>
       </div>
     </div>
   </div>
