@@ -73,7 +73,16 @@ module ChannelPartnerStateMachine
     end
 
     def update_selldo!
-      self.users.each(&:set_portal_stage_and_push_in_crm)
+      self.users.each do |user|
+        user.set_portal_stage_and_push_in_crm
+
+        Crm::Api::Post.where(resource_class: 'User', is_active: true).each do |api|
+          api.execute(user)
+        end
+        Crm::Api::Post.where(resource_class: 'User', is_active: true, event: 'Company Onboarding State Change').each do |api|
+          api.execute(user)
+        end
+      end
     end
   end
 end

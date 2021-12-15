@@ -29,6 +29,12 @@ class UserObserver < Mongoid::Observer
         Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
           api.execute(user)
         end
+        # Send manager change on channel_partner/cp_owner user
+        if user.manager_id_changed? && user.manager_id.present?
+          Crm::Api::Post.where(_type: 'Crm::Api::Post', resource_class: 'User', is_active: true, event: 'Manager Changed').each do |api|
+            api.execute(user)
+          end
+        end
       end
     end
   end
@@ -44,16 +50,16 @@ class UserObserver < Mongoid::Observer
     if user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner
       user.rera_id = user.channel_partner&.rera_id if user.rera_id.blank?
 
-      if (_changes = (user.changed & %w(role channel_partner_id)).presence) && _changes&.all? {|attr| user.send(attr)&.present?}
+      if (_changes = (user.changed & %w(role channel_partner_id)).presence) && _changes&.all? {|attr| user.send(attr)&.present?} && user.persisted?
         # For calling Selldo APIs
         Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
           api.execute(user)
         end
       end
 
-      if current_client.external_api_integration?
-        if (_changes = (user.changed & %w(first_name last_name email phone role channel_partner_id)).presence) && _changes&.all? {|attr| user.send(attr)&.present?}
-          # For calling Interakt APIs
+      # For calling Interakt APIs
+      if current_client.external_api_integration? && user.persisted?
+        if (_changes = (user.changed & %w(first_name last_name email phone role channel_partner_id manager_id)).presence) && _changes&.all? {|attr| user.send(attr)&.present?}
           Crm::Api::Post.where(_type: 'Crm::Api::Post', resource_class: 'User', is_active: true).each do |api|
             api.execute(user)
           end
@@ -67,14 +73,14 @@ class UserObserver < Mongoid::Observer
             end
           end
         end
+        # Send manager change on channel_partner/cp_owner user
+        if user.manager_id_changed? && user.manager_id.present?
+          Crm::Api::Post.where(_type: 'Crm::Api::Post', resource_class: 'User', is_active: true, event: 'Manager Changed').each do |api|
+            api.execute(user)
+          end
+        end
       end
     end
-
-    #if user.manager_id_changed? && user.manager_id.present?
-    #  if user.role?('channel_partner') && user.persisted? && cp = user.channel_partner
-    #    cp.set(manager_id: user.manager_id)
-    #  end
-    #end
 
     unless user.authentication_token?
       user.reset_authentication_token!
