@@ -73,7 +73,7 @@
                     </p>
                     <span class="secondary mx-3 d-sm-inline-block d-none">| </span>
                     <p class="font-medium fn-14 mb-0 theme-txt-color mt-xs-2"><i
-                        class='fa fa-circle status_<%= ChannelPartner.human_attribute_name("status.#{channel_partner.status}").downcase.gsub(" ", "_") %> me-2 fa-xs'></i><%= ChannelPartner.human_attribute_name("status.#{channel_partner.status}") %>
+                        class='fa fa-circle status_<%= channel_partner.status %> me-2 fa-xs'></i><%= ChannelPartner.human_attribute_name("status.#{channel_partner.status}") %>
                     </p>
                   </div>
                 </div>

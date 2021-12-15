@@ -26,9 +26,9 @@
                       <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= site_visit.lead.masked_phone(current_user) || '' %>
                     </p>
                     <% end %>
-                    <% if site_visit.lead.manager_id? && current_user.role.in?(%w(admin superadmin)) %>
+                    <% if site_visit.lead.manager_id? && !current_user.role?('channel_partner') %>
                     <p class="fn-14 mt-1 mb-0">
-                      <%= "#{t('mongoid.attributes.lead.manager_id')} : #{link_to site_visit.lead.manager_name, [current_user_role_group, site_visit.lead.manager], class: 'theme-txt-color'}".html_safe %>
+                      <%= "#{t('mongoid.attributes.lead.manager_id')} : #{link_to_if (policy([:admin, User]).index? && current_user.role.in?(User::ALL_PROJECT_ACCESS)), site_visit.lead.manager_name, [current_user_role_group, site_visit.lead.manager], class: 'theme-txt-color'}".html_safe %>
                     </p>
                     <% end %>
                   </div>

@@ -9,10 +9,10 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <%= f.fields_for :notes, (@note = f.object.notes.build) do |notes_form| %>
+          <%= f.fields_for :notes, @note do |notes_form| %>
             <div class="mb-3">
               <%= notes_form.label :note, class: 'label-required' %>
-              <%= notes_form.text_area :note, autofocus: true, class: "form-control", required: 'required', disabled: (policy([current_user_role_group, @note]).editable_field?("note") ? false : true) %>
+              <%= notes_form.text_area :note, autofocus: true, class: "form-control", rows: 5, required: 'required', disabled: !policy([current_user_role_group, @note]).editable_field?("note") %>
             </div>
             <%= notes_form.hidden_field :creator_id, value: current_user.id %>
           <% end %>
