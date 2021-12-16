@@ -33,11 +33,14 @@ class SiteVisitExportWorker
       "Email Id",
       "Phone",
       "Project Name",
+      "Created at",
       "Scheduled on",
       "Status",
       "Conducted on",
       "Approval Status",
       "Partner / Manager / Added by",
+      "Partner ID (Used for VLOOKUP)",
+      "Partner Phone",
     ] + Crm::Base.all.map{|crm| crm.name + " SiteVisit ID"  }
 
     sv_columns.flatten
@@ -49,11 +52,14 @@ class SiteVisitExportWorker
       sv.lead&.masked_email(user),
       sv.lead&.masked_phone(user),
       sv.project_name,
+      sv.created_at.try(:strftime, '%d/%m/%Y %I:%M %p'),
       sv.scheduled_on.try(:strftime, '%d/%m/%Y %I:%M %p'),
       sv.status&.titleize,
       sv.conducted_on.try(:strftime, '%d/%m/%Y %I:%M %p'),
       sv.approval_status&.titleize,
-      sv.manager.try(:name),
+      sv.manager&.name,
+      sv.manager_id.to_s,
+      sv.manager&.phone,
     ] + Crm::Base.all.map{|crm| sv.third_party_references.where(crm_id: crm.id).first.try(:reference_id) }
 
     sv_row.flatten
