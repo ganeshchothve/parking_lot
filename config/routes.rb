@@ -37,6 +37,11 @@ Rails.application.routes.draw do
       patch :create, on: :collection
     end
   end
+  scope "*public_assetable_type/:public_assetable_id" do
+    resources :public_assets, controller: :public_assets, as: :public_assetables do
+      patch :create, on: :collection
+    end
+  end
   scope "*notable_type/:notable_id" do
     resources :notes, controller: :notes, as: :notables
   end

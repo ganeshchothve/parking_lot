@@ -142,6 +142,11 @@ module ApplicationHelper
         #{link_to( t('controller.assets.index.link_name'), assetables_path(assetable_type: current_client.class.model_name.i18n_key.to_s, assetable_id: current_client.id), class: 'footer-link modal-remote-form-link')}
       </li>"
     end
+    if current_user && policy([current_user_role_group, PublicAsset.new(public_assetable: current_client)]).index? && current_user.role?("superadmin")
+      html += "<li >
+        #{link_to( t('controller.public_assets.index.link_name'), public_assetables_path(public_assetable_type: current_client.class.model_name.i18n_key.to_s, public_assetable_id: current_client.id), class: 'footer-link modal-remote-form-link')}
+      </li>"
+    end
     if current_user.buyer? && current_client.support_number.present?
       html += "<li class = 'footer-object'>
         Need Help? Contact Us - #{current_client.support_number}

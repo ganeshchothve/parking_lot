@@ -7,6 +7,7 @@ class Client
   PAYMENT_GATEWAYS = %w(Razorpay CCAvenue)
   # Add different types of documents which are uploaded on client
   DOCUMENT_TYPES = %w[document offer login_page_image].freeze
+  PUBLIC_DOCUMENT_TYPES = %w[document login_page_image].freeze
   INCENTIVE_CALCULATION = ["manual", "calculated"]
 
   field :name, type: String
@@ -120,8 +121,8 @@ class Client
     <div class="mt-3"></div>
   </div>'
 
-  mount_uploader :logo, LogoUploader
-  mount_uploader :mobile_logo, LogoUploader
+  mount_uploader :logo, PublicAssetUploader
+  mount_uploader :mobile_logo, PublicAssetUploader
   mount_uploader :background_image, DocUploader
 
 
@@ -140,6 +141,7 @@ class Client
   has_many :whatsapps, class_name: 'Whatsapp'
   has_many :push_notifications, class_name: 'PushNotification'
   has_many :assets, as: :assetable
+  has_many :public_assets, as: :public_assetable
   has_many :emails, class_name: 'Email', inverse_of: :booking_portal_client
   has_many :schemes
   has_many :bulk_upload_reports

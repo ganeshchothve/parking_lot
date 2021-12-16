@@ -1,4 +1,4 @@
-class LogoUploader < CarrierWave::Uploader::Base
+class PublicAssetUploader < CarrierWave::Uploader::Base
 
   include CommonUploader
 
