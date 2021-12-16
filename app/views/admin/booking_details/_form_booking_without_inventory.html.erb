@@ -51,7 +51,7 @@
     <% if f.object.lead.manager && %w(channel_partner cp_owner).include?(f.object.lead.manager.role)
       channel_partners = User.where(id: f.object.lead.manager_id)
     else
-      channel_partners = User.in(role: ['channel_partner', 'cp_owner'] ).where(status: 'active')
+      channel_partners = User.in(role: ['channel_partner', 'cp_owner'] )
     end %>
     <label class="'label-required control-label'">Channel Partner</label>
     <%= f.select :manager_id, channel_partners.collect{|cp| [(cp.name), cp.id]}, {}, prompt: :translate, class: 'selectize' %>
