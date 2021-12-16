@@ -9,72 +9,72 @@
         <div class="row">
           <% if !current_user.buyer? %>
             <% if !current_user.role.in?(User::CHANNEL_PARTNER_USERS) && policy([current_user_role_group, User]).index? %>
-              <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+              <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
                 <%= label_tag "fltrs", t('mongoid.attributes.user.name_email_phone'), class: "control-label" %>
                 <%= select_tag "fltrs[user_id]", options_for_select(filter_user_options), {class: "selectize-remote", data: {params: {fltrs: {role: User.buyer_roles(current_client)} }, url: admin_users_path }} %>
               </div>
             <% end %>
-            <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
               <%= label_tag "fltrs", t('mongoid.attributes.lead.name_email_phone'), class: "control-label" %>
               <%= select_tag "fltrs[lead_id]", options_for_select(filter_lead_options), { class: "selectize-remote", data: { url: admin_leads_path } } %>
             </div>
           <% end %>
-          <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.receipt.project_id'), class: "control-label" %>
           <%= select_tag "fltrs[project_id]", options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: "Select", class: "selectize"} %>
         </div>
           <% if policy([current_user_role_group, BookingDetail]).index? %>
-            <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
               <%= label_tag "fltrs", t('mongoid.attributes.receipt.booking_detail_id'), class: "control-label" %>
               <% booking_detail = params.dig(:fltrs, :booking_detail_id).present? ? BookingDetail.where(_id: params.dig(:fltrs, :booking_detail_id) ).first : nil %>
               <%= select_tag "fltrs[booking_detail_id]", options_for_select( booking_detail ? [[booking_detail.name, booking_detail.id]] : []), {class: "selectize-remote", data: {url: admin_booking_details_path }} %>
             </div>
           <% end %>
-          <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.receipt_id'), class: "control-label" %>
             <%= text_field_tag "fltrs[receipt_id]", params.dig(:fltrs, :receipt_id), class: 'form-control' %>
           </div>
 
           <!--
-          <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%#= label_tag "fltrs", t('mongoid.attributes.receipt.token_number'), class: "control-label" %>
             <%#= text_field_tag "fltrs[token_number]", params.dig(:fltrs, :token_number), class: 'form-control' %>
           </div>
           -->
 
-          <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.status'), class: "control-label" %>
             <%= select_tag "fltrs[status][]", options_for_select(Receipt.aasm.states.collect(&:name).collect(&:to_s).collect{|x| [Receipt.human_attribute_name("status.#{x}"), x]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize", multiple: 'multiple'} %>
           </div>
-          <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.payment_mode'), class: "control-label" %>
             <%= select_tag "fltrs[payment_mode]", options_for_select(Receipt.available_payment_modes.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:payment_mode] : "")), {prompt: "Select", class: "selectize"} %>
           </div>
-          <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.issued_date'), class: "control-label" %>
             <%= text_field_tag "fltrs[issued_date]", (params[:fltrs].present? ? params[:fltrs][:issued_date] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
           </div>
-          <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.processed_on'), class: "control-label" %>
             <%= text_field_tag "fltrs[processed_on]", (params[:fltrs].present? ? params[:fltrs][:processed_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
           </div>
           <% unless current_user.role?('channel_partner') %>
-            <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
               <%= label_tag "fltrs", ChannelPartner.model_name.human, class: "control-label" %>
               <%= select_tag "fltrs[manager_id]", options_for_select(filter_manager_options), { class: "selectize-remote", data: { url: admin_users_path, params: { fltrs: { role: 'channel_partner' } } } } %>
             </div>
           <% end %>
           <% unless current_user.role.in?(%w(cp_owner cp channel_partner)) %>
-            <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
               <%= label_tag "fltrs", t('mongoid.attributes.user/role.cp') %>
               <%= select_tag "fltrs[cp_manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:cp_manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp' }}}} %>
             </div>
           <% end %>
-          <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.created_at'), class: "control-label" %>
             <%= text_field_tag "fltrs[created_at]", (params[:fltrs].present? ? params[:fltrs][:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
           </div>
-          <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.sort_by'), class: "control-label" %>
             <%= select_tag "fltrs[sort]", options_for_select(Receipt.available_sort_options.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:sort] : Receipt.available_sort_options.first[:id])), {prompt: "Select", class: "selectize"} %>
           </div>

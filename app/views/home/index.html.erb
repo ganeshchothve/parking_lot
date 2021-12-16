@@ -1,14 +1,22 @@
 <section class="home-section home-banner slide relative" id="home">
-  <div class="container-launchpad home-container">
-    <div class="home-new-caption cwt text-center">
-      <!-- <h1 class="new-line-1 text-left f600">DON’T BE A JOKER</h1> -->
-      <h2 class="new-line-3 f600 text-left">BE A SUPERBROKER</h2>
-      <%# <div class="new-line-2">With</div>
-      <div class="new-line-3 f700">A REVOLUTIONARY</div>
-      <div class="new-line-4 f700 cgreen">BROKER PLATFORM</div> %>
-      <!--<a class="home-banner-btn register-btn" data-event-category="Section" data-event-action="Click" data-event-name="Join Now">Join Now</a>-->
+  <div class="home-slider">
+    <div class="slide slide-1">
+      <div class="container-launchpad home-container">
+        <div class="home-new-caption cwt text-center">
+          <!-- <h1 class="new-line-1 text-left f600">DON’T BE A JOKER</h1> -->
+          <h1 class="new-line-3 f600 text-left">BE A SUPERBROKER</h1>
+        </div>
+      </div>
+    </div>
+    <div class="slide slide-2">
+      <div class="container-launchpad home-container">
+        <div class="home-new-caption cwt text-center">
+        </div>
+      </div>
     </div>
   </div>
+  <div id="home-prev" class=""></div>
+  <div id="home-next" class=""></div>
   <div class="scroll-down-btn scroll-sec" rel="join-broker-network" data-event-category="Section"
     data-event-action="Click" data-event-name="Scroll Down">Scroll Down</div>
 </section>
@@ -323,7 +331,57 @@
 </section>
 <section class="section-padding logo-sec">
   <div class="container">
-    <h2 class="section-heading text-center cgreen">Why partner with BeyondWalls</h2>
+    <div class="col-12 mb-5 pb-4">
+      <h2 class="section-heading text-center cgreen">Channel Partner Summit</h2>
+      <div class="gallery-wrapper relative mb-5">
+        <ul class="gallery-slider">
+          <li>
+            <a href="<%= asset_path 'gallery-1.png' %>" rel="showAll" class="galPopUp">
+              <img src="<%= asset_path 'gallery-1.png' %>" class="img-responsive lazy" alt="Channel Partner Summit">
+            </a>
+          </li>
+          <li>
+            <a href="<%= asset_path 'gallery-2.png' %>" rel="showAll" class="galPopUp">
+              <img data-src="<%= asset_path 'gallery-2.png' %>" class="img-responsive lazy" alt="Channel Partner Summit">
+            </a>
+          </li>
+          <li>
+            <a href="<%= asset_path 'gallery-3.png' %>" rel="showAll" class="galPopUp">
+              <img data-src="<%= asset_path 'gallery-3.png' %>" class="img-responsive lazy" alt="Channel Partner Summit">
+            </a>
+          </li>
+          <li>
+            <a href="<%= asset_path 'gallery-4.png' %>" rel="showAll" class="galPopUp">
+              <img data-src="<%= asset_path 'gallery-4.png' %>" class="img-responsive lazy" alt="Channel Partner Summit">
+            </a>
+          </li>
+          <li>
+            <a href="<%= asset_path 'gallery-5.png' %>" rel="showAll" class="galPopUp">
+              <img data-src="<%= asset_path 'gallery-5.png' %>" class="img-responsive lazy" alt="Channel Partner Summit">
+            </a>
+          </li>
+          <li>
+            <a href="<%= asset_path 'gallery-6.png' %>" rel="showAll" class="galPopUp">
+              <img data-src="<%= asset_path 'gallery-6.png' %>" class="img-responsive lazy" alt="Channel Partner Summit">
+            </a>
+          </li>
+          <li>
+            <a href="<%= asset_path 'gallery-7.png' %>" rel="showAll" class="galPopUp">
+              <img data-src="<%= asset_path 'gallery-7.png' %>" class="img-responsive lazy" alt="Channel Partner Summit">
+            </a>
+          </li>
+          <li>
+            <a href="<%= asset_path 'gallery-8.png' %>" rel="showAll" class="galPopUp">
+              <img data-src="<%= asset_path 'gallery-8.png' %>" class="img-responsive lazy" alt="Channel Partner Summit">
+            </a>
+          </li>
+        </ul>
+        <div id="gallery-list-prev" class=""></div>
+        <div id="gallery-list-next" class=""></div>
+      </div>
+    </div>
+
+    <h2 class="section-heading text-center cgreen mt-5">Why partner with BeyondWalls</h2>
     <div class="col-12">
       <ul class="website-stats">
         <li>
@@ -373,7 +431,7 @@
               </radialGradient>
             </defs>
             <g id="Group_105" data-name="Group 105" clip-path="url(#clip-path)">
-              <path id="Path_39" data-name="Path 39" d="M0,278.688,7.177,294.93,0,311.173H222.233L215,294.93l7.236-16.242Z" transform="translate(0 -193.951)" fill="#07b6b6"/>
+              <path id="Path_39" data-name="Path 39" d="M0,278.688,7.177,294.93,0,311.173H222.233L215,294.93l7.236-16.242Z" transform="translate(0 -193.951)" fill="#D62927"/>
               <g id="Group_93" data-name="Group 93">
                 <g id="Group_92" data-name="Group 92" clip-path="url(#clip-path)">
                   <g id="Group_88" data-name="Group 88" transform="translate(14.241 84.736)" opacity="0.49" style="mix-blend-mode: multiply;isolation: isolate">
@@ -387,12 +445,12 @@
                       </g>
                     </g>
                   </g>
-                  <path id="Path_41" data-name="Path 41" d="M250.247,127.524a89.382,89.382,0,1,1-89.382-89.382,89.382,89.382,0,0,1,89.382,89.382" transform="translate(-49.748 -26.545)" fill="#07b6b6"/>
-                  <path id="Path_42" data-name="Path 42" d="M140.819,3.427a97.726,97.726,0,0,1,94.589,73.647h3.551a101.033,101.033,0,0,0-191.184-15.4,100.066,100.066,0,0,0-5.1,15.4H46.23A97.727,97.727,0,0,1,140.819,3.427m0,195.105A97.727,97.727,0,0,1,46.23,124.885H42.679a101.033,101.033,0,0,0,191.184,15.4,100.055,100.055,0,0,0,5.1-15.4h-3.551a97.727,97.727,0,0,1-94.589,73.648" transform="translate(-29.702 0)" fill="#07b6b6"/>
+                  <path id="Path_41" data-name="Path 41" d="M250.247,127.524a89.382,89.382,0,1,1-89.382-89.382,89.382,89.382,0,0,1,89.382,89.382" transform="translate(-49.748 -26.545)" fill="#D62927"/>
+                  <path id="Path_42" data-name="Path 42" d="M140.819,3.427a97.726,97.726,0,0,1,94.589,73.647h3.551a101.033,101.033,0,0,0-191.184-15.4,100.066,100.066,0,0,0-5.1,15.4H46.23A97.727,97.727,0,0,1,140.819,3.427m0,195.105A97.727,97.727,0,0,1,46.23,124.885H42.679a101.033,101.033,0,0,0,191.184,15.4,100.055,100.055,0,0,0,5.1-15.4h-3.551a97.727,97.727,0,0,1-94.589,73.648" transform="translate(-29.702 0)" fill="#D62927"/>
                   <g id="Group_91" data-name="Group 91" transform="translate(28.167 18.858)" opacity="0.49" style="mix-blend-mode: multiply;isolation: isolate">
                     <g id="Group_90" data-name="Group 90" transform="translate(0)">
                       <g id="Group_89" data-name="Group 89" clip-path="url(#clip-path-5)">
-                        <path id="Path_43" data-name="Path 43" d="M249.029,153.719a82.7,82.7,0,1,1-82.7-82.7,82.7,82.7,0,0,1,82.7,82.7" transform="translate(-83.636 -71.023)" fill="#07b6b6"/>
+                        <path id="Path_43" data-name="Path 43" d="M249.029,153.719a82.7,82.7,0,1,1-82.7-82.7,82.7,82.7,0,0,1,82.7,82.7" transform="translate(-83.636 -71.023)" fill="#D62927"/>
                       </g>
                     </g>
                   </g>
@@ -469,7 +527,7 @@
               </radialGradient>
             </defs>
             <g id="Group_128" data-name="Group 128" clip-path="url(#clip-path)">
-              <path id="Path_47" data-name="Path 47" d="M0,278.687l7.144,16.168L0,311.024H221.217l-7.2-16.169,7.2-16.168Z" transform="translate(0 -194.338)" fill="#07b6b6"/>
+              <path id="Path_47" data-name="Path 47" d="M0,278.687l7.144,16.168L0,311.024H221.217l-7.2-16.169,7.2-16.168Z" transform="translate(0 -194.338)" fill="#D62927"/>
               <g id="Group_116" data-name="Group 116">
                 <g id="Group_115" data-name="Group 115" clip-path="url(#clip-path)">
                   <g id="Group_111" data-name="Group 111" transform="translate(14.176 84.348)" opacity="0.49" style="mix-blend-mode: multiply;isolation: isolate">
@@ -483,12 +541,12 @@
                       </g>
                     </g>
                   </g>
-                  <path id="Path_49" data-name="Path 49" d="M249.43,127.115a88.973,88.973,0,1,1-88.973-88.973,88.973,88.973,0,0,1,88.973,88.973" transform="translate(-49.848 -26.598)" fill="#07b6b6"/>
-                  <path id="Path_50" data-name="Path 50" d="M140.37,3.411a97.28,97.28,0,0,1,94.156,73.31h3.535a100.571,100.571,0,0,0-190.31-15.33,99.608,99.608,0,0,0-5.073,15.33h3.535A97.28,97.28,0,0,1,140.37,3.411m0,194.213a97.28,97.28,0,0,1-94.156-73.31H42.679a100.571,100.571,0,0,0,190.31,15.329,99.592,99.592,0,0,0,5.073-15.329h-3.535a97.28,97.28,0,0,1-94.156,73.31" transform="translate(-29.762 0)" fill="#07b6b6"/>
+                  <path id="Path_49" data-name="Path 49" d="M249.43,127.115a88.973,88.973,0,1,1-88.973-88.973,88.973,88.973,0,0,1,88.973,88.973" transform="translate(-49.848 -26.598)" fill="#D62927"/>
+                  <path id="Path_50" data-name="Path 50" d="M140.37,3.411a97.28,97.28,0,0,1,94.156,73.31h3.535a100.571,100.571,0,0,0-190.31-15.33,99.608,99.608,0,0,0-5.073,15.33h3.535A97.28,97.28,0,0,1,140.37,3.411m0,194.213a97.28,97.28,0,0,1-94.156-73.31H42.679a100.571,100.571,0,0,0,190.31,15.329,99.592,99.592,0,0,0,5.073-15.329h-3.535a97.28,97.28,0,0,1-94.156,73.31" transform="translate(-29.762 0)" fill="#D62927"/>
                   <g id="Group_114" data-name="Group 114" transform="translate(28.038 19.983)" opacity="0.49" style="mix-blend-mode: multiply;isolation: isolate">
                     <g id="Group_113" data-name="Group 113">
                       <g id="Group_112" data-name="Group 112" clip-path="url(#clip-path-5)">
-                        <path id="Path_51" data-name="Path 51" d="M257.272,148.341a82.318,82.318,0,1,1-82.318-82.318,82.318,82.318,0,0,1,82.318,82.318" transform="translate(-92.636 -66.023)" fill="#07b6b6"/>
+                        <path id="Path_51" data-name="Path 51" d="M257.272,148.341a82.318,82.318,0,1,1-82.318-82.318,82.318,82.318,0,0,1,82.318,82.318" transform="translate(-92.636 -66.023)" fill="#D62927"/>
                       </g>
                     </g>
                   </g>
@@ -567,7 +625,7 @@
               </clipPath>
             </defs>
             <g id="Group_151" data-name="Group 151" clip-path="url(#clip-path)">
-              <path id="Path_55" data-name="Path 55" d="M0,278.687l7.132,16.141L0,310.97H220.848l-7.191-16.141,7.191-16.141Z" transform="translate(0 -194.479)" fill="#07b6b6"/>
+              <path id="Path_55" data-name="Path 55" d="M0,278.687l7.132,16.141L0,310.97H220.848l-7.191-16.141,7.191-16.141Z" transform="translate(0 -194.479)" fill="#D62927"/>
               <g id="Group_139" data-name="Group 139">
                 <g id="Group_138" data-name="Group 138" clip-path="url(#clip-path)">
                   <g id="Group_134" data-name="Group 134" transform="translate(14.152 84.208)" opacity="0.49" style="mix-blend-mode: multiply;isolation: isolate">
@@ -581,12 +639,12 @@
                       </g>
                     </g>
                   </g>
-                  <path id="Path_57" data-name="Path 57" d="M249.133,126.967a88.825,88.825,0,1,1-88.825-88.825,88.825,88.825,0,0,1,88.825,88.825" transform="translate(-49.884 -26.617)" fill="#07b6b6"/>
-                  <path id="Path_58" data-name="Path 58" d="M140.207,3.405a97.117,97.117,0,0,1,94,73.188h3.529a100.4,100.4,0,0,0-189.993-15.3,99.442,99.442,0,0,0-5.064,15.3h3.529a97.117,97.117,0,0,1,94-73.188m0,193.889a97.118,97.118,0,0,1-94-73.188H42.679a100.4,100.4,0,0,0,189.993,15.3,99.417,99.417,0,0,0,5.064-15.3h-3.529a97.118,97.118,0,0,1-94,73.188" transform="translate(-29.783)" fill="#07b6b6"/>
+                  <path id="Path_57" data-name="Path 57" d="M249.133,126.967a88.825,88.825,0,1,1-88.825-88.825,88.825,88.825,0,0,1,88.825,88.825" transform="translate(-49.884 -26.617)" fill="#D62927"/>
+                  <path id="Path_58" data-name="Path 58" d="M140.207,3.405a97.117,97.117,0,0,1,94,73.188h3.529a100.4,100.4,0,0,0-189.993-15.3,99.442,99.442,0,0,0-5.064,15.3h3.529a97.117,97.117,0,0,1,94-73.188m0,193.889a97.118,97.118,0,0,1-94-73.188H42.679a100.4,100.4,0,0,0,189.993,15.3,99.417,99.417,0,0,0,5.064-15.3h-3.529a97.118,97.118,0,0,1-94,73.188" transform="translate(-29.783)" fill="#D62927"/>
                   <g id="Group_137" data-name="Group 137" transform="translate(28.595 18.741)" opacity="0.49" style="mix-blend-mode: multiply;isolation: isolate">
                     <g id="Group_136" data-name="Group 136">
                       <g id="Group_135" data-name="Group 135" clip-path="url(#clip-path-5)">
-                        <path id="Path_59" data-name="Path 59" d="M259,144.2a82.181,82.181,0,1,1-82.181-82.181A82.181,82.181,0,0,1,259,144.2" transform="translate(-94.636 -62.023)" fill="#07b6b6"/>
+                        <path id="Path_59" data-name="Path 59" d="M259,144.2a82.181,82.181,0,1,1-82.181-82.181A82.181,82.181,0,0,1,259,144.2" transform="translate(-94.636 -62.023)" fill="#D62927"/>
                       </g>
                     </g>
                   </g>
