@@ -25,22 +25,26 @@ class ChannelPartnerExportWorker
       "Email",
       "Phone",
       "RERA ID",
-      "Associated User",
-      "Associated User ID (used for VLOOKUP)",
+      "Owner User ID (used for VLOOKUP)",
+      "Owner Name",
+      "Owner Phone",
+      "Owner Email",
       "Status"
     ]
   end
 
   def self.get_channel_partner_row(channel_partner)
-    user = channel_partner.users&.cp_owner&.first
+    user = channel_partner.primary_user
     [
       channel_partner.id.to_s,
       channel_partner.company_name,
       user&.email,
       user&.phone,
       channel_partner.rera_id,
-      user&.name,
       user&.id&.to_s,
+      user&.name,
+      user&.phone,
+      user&.email,
       ChannelPartner.human_attribute_name("status.#{channel_partner.status}")
     ]
   end
