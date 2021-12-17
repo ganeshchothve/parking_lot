@@ -24,8 +24,17 @@ class UserObserverWorker
           end
 
           # For calling Interakt APIs
-          if (changed_keys = (changes.keys & %w(first_name last_name email phone role channel_partner_id manager_id)).presence) && changed_keys&.all? {|key| user[key].present?}
-            Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, nil, changes)
+          if (changed_keys = (changes.keys & %w(first_name last_name email phone role channel_partner_id manager_id is_active)).presence) && changed_keys.reject {|key| user[key]&.is_a?(Boolean)}&.all? {|key| user[key].present?}
+            if changed_keys.include?('channel_partner_id') && (channel_partner_id = changes.dig('channel_partner_id', 1).presence)
+              channel_partner = ChannelPartner.where(id: channel_partner_id).first
+            else
+              channel_partner = user.channel_partner
+            end
+            payload = {
+              'channel_partner' => channel_partner&.as_json(include: {primary_user: {methods: [:name]}})
+            }.merge(changes || {})
+
+            Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, nil, payload)
           end
           # Update primary user details on all company users in case of changes
           if user.role?('cp_owner') && user.channel_partner&.primary_user_id == user.id && (changed_keys = (changes.keys & %w(first_name last_name phone)).presence) && changed_keys&.all? {|key| user[key].present?}
@@ -38,8 +47,23 @@ class UserObserverWorker
             end
           end
           # Send manager change on channel_partner/cp_owner user
-          if changes.has_key?('manager_id') && user.manager_id.present?
+          if changes.has_key?('manager_id') && changes.dig('manager_id', 1).present?
             Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, 'Manager Changed', changes)
+          end
+          # Send company change on channel_partner/cp_owner user
+          if changes.has_key?('channel_partner_id') && (channel_partner_id = changes.dig('channel_partner_id', 1).presence)
+            payload = {
+              'channel_partner' => ChannelPartner.where(id: channel_partner_id).first&.as_json(include: {primary_user: {methods: [:name]}, manager: {methods: [:name]}})
+            }.merge(changes || {})
+            Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, 'Company Changed', payload)
+          end
+          # Send account activeness change on channel_partner/cp_owner user
+          if changes.has_key?('is_active')
+            if changes.dig('is_active', 1).present?
+              Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, 'Account Active', changes)
+            elsif changes.dig('is_active', 1).blank?
+              Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, 'Account Inactive', changes)
+            end
           end
 
         else

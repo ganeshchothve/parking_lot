@@ -1,5 +1,7 @@
 module Crm
   class Api::ExecuteWorker
+    include Sidekiq::Worker
+
     def perform(method, klass, model_id, event=nil, payload={}, crm_base_id=nil)
       model = Object.const_get(klass)&.where(id: model_id).first
       if model.present?
