@@ -72,55 +72,12 @@ class ChannelPartnerObserver < Mongoid::Observer
     channel_partner.rera_applicable = true if channel_partner.rera_id.present?
     channel_partner.gst_applicable = true if channel_partner.gstin_number.present?
 
-    # For selldo apis
-    if (_changes = (channel_partner.changed & %w(manager_id interested_services regions company_name)).presence) && _changes&.all? {|attr| channel_partner.send(attr)&.present?} && channel_partner.persisted?
-      if current_client.external_api_integration?
-        channel_partner.users.each do |cp_user|
-          Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
-            api.execute(cp_user)
-          end
-        end
-      end
-    end
-    # For calling Interakt APIs
-    if current_client.external_api_integration? && channel_partner.persisted?
-      if (_changes = (channel_partner.changed & %w(company_name company_type interested_services manager_id developers_worked_for pan_number rera_id gstin_number regions)).presence) && _changes&.all? {|attr| channel_partner.send(attr)&.present?}
-        channel_partner.users.each do |cp_user|
-          Crm::Api::Post.where(resource_class: 'User', is_active: true).each do |api|
-            api.execute(cp_user)
-          end
-        end
-      end
-      if channel_partner.manager_id_changed? && channel_partner.manager_id.present?
-        channel_partner.users.each do |cp_user|
-          Crm::Api::Post.where(resource_class: 'User', is_active: true, event: 'Manager Changed').each do |api|
-            api.execute(cp_user)
-          end
-        end
-      end
-      if channel_partner.regions_changed? && channel_partner.regions.present?
-        regions_added = channel_partner.regions - channel_partner.regions_was
-        regions_removed = channel_partner.regions_was - channel_partner.regions
-        if regions_removed.present?
-          regions_removed.each do |region|
-            channel_partner.users.each do |cp_user|
-              cp_user.region_removed = region
-              Crm::Api::Post.where(resource_class: 'User', is_active: true, event: 'Region Removed').each do |api|
-                api.execute(cp_user)
-              end
-            end
-          end
-        end
-        if regions_added.present?
-          regions_added.each do |region|
-            channel_partner.users.each do |cp_user|
-              cp_user.region_added = region
-              Crm::Api::Post.where(resource_class: 'User', is_active: true, event: 'Region Added').each do |api|
-                api.execute(cp_user)
-              end
-            end
-          end
-        end
+    # For calling Selldo & Interakt APIs
+    if current_client.external_api_integration? && channel_partner.persisted? && channel_partner.changed?
+      if Rails.env.staging? || Rails.env.production?
+        ChannelPartnerObserverWorker.perform_async(channel_partner.id.to_s, channel_partner.changes)
+      else
+        ChannelPartnerObserverWorker.new.perform(channel_partner.id, channel_partner.changes)
       end
     end
   end

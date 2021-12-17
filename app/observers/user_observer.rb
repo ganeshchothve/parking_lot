@@ -21,19 +21,21 @@ class UserObserver < Mongoid::Observer
   end
 
   def after_create user
-    if user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner
-      if current_client.external_api_integration?
-        Crm::Api::Post.where(_type: 'Crm::Api::Post', resource_class: 'User', is_active: true).each do |api|
-          api.execute(user)
+    if current_client.external_api_integration?
+      if user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner
+        if Rails.env.staging? || Rails.env.production?
+          UserObserverWorker.perform_async(user.id.to_s, 'create')
+          UserObserverWorker.perform_async(user.id.to_s, 'update', user.changes)
+        else
+          UserObserverWorker.new.perform(user.id.to_s, 'create')
+          UserObserverWorker.new.perform(user.id, 'update', user.changes)
         end
-        Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
-          api.execute(user)
-        end
-        # Send manager change on channel_partner/cp_owner user
-        if user.manager_id_changed? && user.manager_id.present?
-          Crm::Api::Post.where(_type: 'Crm::Api::Post', resource_class: 'User', is_active: true, event: 'Manager Changed').each do |api|
-            api.execute(user)
-          end
+      end
+      if user.role.in?(%w(dev_sourcing_manager))
+        if Rails.env.staging? || Rails.env.production?
+          UserObserverWorker.perform_async(user.id.to_s, 'create')
+        else
+          UserObserverWorker.new.perform(user.id.to_s, 'create')
         end
       end
     end
@@ -47,37 +49,14 @@ class UserObserver < Mongoid::Observer
       end
     end
 
-    if user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner
-      user.rera_id = user.channel_partner&.rera_id if user.rera_id.blank?
+    if (user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner) || user.role?('dev_sourcing_manager')
+      user.rera_id = user.channel_partner&.rera_id if user.rera_id.blank? && user.role.in?(%w(cp_owner channel_partner))
 
-      if (_changes = (user.changed & %w(role channel_partner_id)).presence) && _changes&.all? {|attr| user.send(attr)&.present?} && user.persisted?
-        # For calling Selldo APIs
-        Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
-          api.execute(user)
-        end
-      end
-
-      # For calling Interakt APIs
-      if current_client.external_api_integration? && user.persisted?
-        if (_changes = (user.changed & %w(first_name last_name email phone role channel_partner_id manager_id)).presence) && _changes&.all? {|attr| user.send(attr)&.present?}
-          Crm::Api::Post.where(_type: 'Crm::Api::Post', resource_class: 'User', is_active: true).each do |api|
-            api.execute(user)
-          end
-        end
-
-        # Update primary user details on all company users in case of changes
-        if user.role?('cp_owner') && user.channel_partner&.primary_user_id == user.id && (_changes = (user.changed & %w(first_name last_name phone)).present?) && _changes&.all? {|attr| user.send(attr)&.present?}
-          user.channel_partner.users.ne(id: user.id).each do |cp_user|
-            Crm::Api::Post.where(_type: 'Crm::Api::Post', resource_class: 'User', is_active: true).each do |api|
-              api.execute(cp_user)
-            end
-          end
-        end
-        # Send manager change on channel_partner/cp_owner user
-        if user.manager_id_changed? && user.manager_id.present?
-          Crm::Api::Post.where(_type: 'Crm::Api::Post', resource_class: 'User', is_active: true, event: 'Manager Changed').each do |api|
-            api.execute(user)
-          end
+      if current_client.external_api_integration?
+        if Rails.env.staging? || Rails.env.production?
+          UserObserverWorker.perform_async(user.id.to_s, 'update', user.changes)
+        else
+          UserObserverWorker.new.perform(user.id, 'update', user.changes)
         end
       end
     end

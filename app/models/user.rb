@@ -28,7 +28,9 @@ class User
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :timeoutable, :password_archivable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: [:login] #:lockable,:expirable,:session_limitable,:password_expirable
 
-  attr_accessor :temporary_password, :payment_link, :temp_manager_id, :region_added, :region_removed
+  attr_accessor :temporary_password, :payment_link, :temp_manager_id
+  # Attributes used in events pushed to Interakt
+  attr_accessor :event_payload
 
   ## Database authenticatable
   field :first_name, type: String, default: ''
