@@ -255,11 +255,23 @@ en:
 
     attributes:
       announcement:
-        categories:
-          general: General
-          new_launch: New Launch
-          events: Events
-          brokerage_alert: Brokerage Alert
+        title: Title
+        content: Details
+        announcement_details: Title & Details
+        date: Date
+        category: Category
+        published: Published
+      announcement/categories:
+        general: General
+        new_launch: New Launch
+        events: Events
+        brokerage_alert: Brokerage Alert
+      announcement/file_types:
+        photo: Photos
+        collateral: Collaterals
+      announcement/help_text:
+        photo_html: '<ul><li>Photos of the Announcement</li></ul>'
+        collateral_html: '<ul><li>Announcement Collaterals</li></ul>'
       video:
         thumbnail: Thumbnail
         description: Title
@@ -1351,6 +1363,9 @@ en:
     meetings:
       index:
         link_name: 'Events'
+    announcements:
+      index:
+        link_name: 'Announcements'
     campaigns:
       index:
         link_name: 'Campaigns'
