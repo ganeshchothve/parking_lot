@@ -36,7 +36,8 @@
 </table>
 <div class="col-lg-12 py-3 white mb-2 px-2">
   <div class="row">
-    <div class="col-lg-6">
+    <div class="col-lg-6 pt-2">
+      <p class="table-entry mb-0"><%= page_entries_info apis %></p>
     </div>
     <div class="col-lg-6 table-pagination">
       <%= will_paginate apis, list_classes: %w(pagination justify-content-end) %>
