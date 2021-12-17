@@ -24,7 +24,7 @@ class UserObserverWorker
           end
 
           # For calling Interakt APIs
-          if (changed_keys = (changes.keys & %w(first_name last_name email phone role channel_partner_id manager_id is_active)).presence) && changed_keys.reject {|key| user[key]&.is_a?(Boolean)}&.all? {|key| user[key].present?}
+          if (changed_keys = (changes.keys & %w(first_name last_name email phone role channel_partner_id manager_id is_active sign_in_count current_sign_in_at)).presence) && changed_keys.reject {|key| user[key]&.is_a?(Boolean)}&.all? {|key| user[key].present?}
             if changed_keys.include?('channel_partner_id') && (channel_partner_id = changes.dig('channel_partner_id', 1).presence)
               channel_partner = ChannelPartner.where(id: channel_partner_id).first
             else
@@ -64,6 +64,10 @@ class UserObserverWorker
             elsif changes.dig('is_active', 1).blank?
               Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, 'Account Inactive', changes)
             end
+          end
+          # Send manager change on channel_partner/cp_owner user
+          if changes.has_key?('sign_in_count') && changes.dig('sign_in_count', 1) == 1
+            Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, 'First Sign In', changes)
           end
 
         else

@@ -14,7 +14,7 @@ class SiteVisitObserverWorker
         'manager' => manager.as_json(methods: [:name])
       }.merge(changes || {})
 
-      users = User.or([{role: 'dev_sourcing_manager', project_ids: project.id.to_s}, {id: sv.manager_id, role: {'$in': %w(cp_owner channel_partner)}}])
+      users = User.or([{role: 'dev_sourcing_manager', project_ids: project.id.to_s, is_active: true}, {id: sv.manager_id, role: {'$in': %w(cp_owner channel_partner)}}])
       users.each do |user|
         if action == 'create'
 
