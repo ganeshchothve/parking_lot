@@ -1,5 +1,6 @@
 class ChannelPartnerObserverWorker
   include Sidekiq::Worker
+    sidekiq_options queue: 'event'
 
   def perform(channel_partner_id, changes={})
     channel_partner = ChannelPartner.where(id: channel_partner_id).first

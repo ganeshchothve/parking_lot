@@ -1,5 +1,6 @@
 class InterestedProjectObserverWorker
   include Sidekiq::Worker
+  sidekiq_options queue: 'event'
 
   def perform(interested_project_id, changes={})
     ip = InterestedProject.where(id: interested_project_id).first

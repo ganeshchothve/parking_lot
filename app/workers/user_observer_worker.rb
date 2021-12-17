@@ -1,5 +1,6 @@
 class UserObserverWorker
   include Sidekiq::Worker
+  sidekiq_options queue: 'event'
 
   def perform(user_id, action='create', changes={})
     user = User.where(id: user_id).first

@@ -1,5 +1,6 @@
 class SiteVisitObserverWorker
   include Sidekiq::Worker
+  sidekiq_options queue: 'event'
 
   def perform(site_visit_id, action='create', changes={})
     sv = SiteVisit.where(id: site_visit_id).first
