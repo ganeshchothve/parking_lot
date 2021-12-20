@@ -92,7 +92,7 @@ class Client
   # required for sell.do links of sitevisit, followup & add task on user to work.
   field :selldo_default_search_list_id, type: String
   field :powered_by_link, type: String
-  field :launchpad_portal, type: Boolean, default: true
+  field :launchpad_portal, type: Boolean, default: false
   field :mask_lead_data_for_roles, type: Array, default: %w(admin superadmin cp cp_admin sales_admin sales gre crm team_lead billing_team dev_sourcing_manager)
 
   field :email_header, type: String, default: '<div class="container">
