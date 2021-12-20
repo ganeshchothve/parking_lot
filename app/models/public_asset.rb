@@ -20,7 +20,6 @@ class PublicAsset
   validates :file_name, uniqueness: { scope: [:document_type, :public_assetable_id], message: '^File with this name is already uploaded' }
   validates :asset_type, uniqueness: { scope: [:public_assetable_type, :public_assetable_id] }, if: proc{|asset| asset.asset_type == 'floor_plan' }
   validate :validate_content, on: :create
-  #before_destroy :check_document_validation_on_receipt
 
   def validate_content
     _file = file.file
