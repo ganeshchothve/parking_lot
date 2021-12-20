@@ -15,8 +15,11 @@ class CpLeadActivity
   field :sitevisit_status, type: String
   field :sitevisit_date, type: String
 
-  belongs_to :user
   belongs_to :lead
+  belongs_to :user
+  belongs_to :channel_partner
+  belongs_to :cp_manager, class_name: 'User'
+  belongs_to :cp_admin, class_name: 'User'
   has_many :assets, as: :assetable
 
   default_scope -> { desc(:created_at) }
@@ -28,11 +31,10 @@ class CpLeadActivity
   scope :filter_by_expiry_date, ->(date) { start_date, end_date = date.split(' - '); where(expiry_date: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_registered_at, ->(date) { start_date, end_date = date.split(' - '); where(registered_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
 
-  def self.user_based_scope(user, _params = {})
-    custom_scope = {}
-    custom_scope = { user_id: user.id } if user.role?('channel_partner')
-    custom_scope = { user_id: { '$in': User.where(role: 'channel_partner', manager_id: user.id).distinct(:id) } } if user.role?(:cp_admin)
-    custom_scope
+  def manager_name
+    str = self.user&._name
+    str += " (#{channel_partner.company_name})" if channel_partner.present? && channel_partner.company_name.present?
+    str
   end
 
   def lead_validity_period
@@ -44,34 +46,30 @@ class CpLeadActivity
   end
 
   def push_source_to_selldo
-    _selldo_api_key = self.lead.project.selldo_api_key
-    if _selldo_api_key.present?
-      campaign_resp = { source: 'Channel Partner', sub_source: self.user.name, project_id: self.lead.project.selldo_id.to_s }
-      SelldoLeadUpdater.perform_async(self.lead_id.to_s, { action: 'add_campaign_response', api_key: _selldo_api_key }.merge(campaign_resp).with_indifferent_access)
-      SelldoNotePushWorker.perform_async(self.lead.lead_id, self.user.id.to_s, "Validity: #{self.lead_validity_period}, Expiry: #{self.expiry_date.try(:strftime, '%d/%m/%Y') || '-'}, Count Status: #{self.count_status.try(:titleize) || '-'}")
-    end
-  end
-
-  private
-
-  def authorize_resource
-    if %w[index export portal_stage_chart channel_partner_performance].include?(params[:action])
-      authorize [current_user_role_group, User]
-    elsif params[:action] == 'new' || params[:action] == 'create'
-      if params[:role].present?
-        authorize [current_user_role_group, User.new(role: params[:role], booking_portal_client_id: current_client.id)]
-      else
-        authorize [current_user_role_group, User.new(booking_portal_client_id: current_client.id)]
+    if lead.push_to_crm?
+      _selldo_api_key = self.lead.project.selldo_api_key
+      if _selldo_api_key.present?
+        campaign_resp = { source: 'Channel Partner', sub_source: self.user.name, project_id: self.lead.project.selldo_id.to_s }
+        SelldoLeadUpdater.perform_async(self.lead_id.to_s, { action: 'add_campaign_response', api_key: _selldo_api_key }.merge(campaign_resp).with_indifferent_access)
+        SelldoNotePushWorker.perform_async(self.lead.lead_id, self.user.id.to_s, "Validity: #{self.lead_validity_period}, Expiry: #{self.expiry_date.try(:strftime, '%d/%m/%Y') || '-'}, Count Status: #{self.count_status.try(:titleize) || '-'}")
       end
-    else
-      authorize [current_user_role_group, @user]
     end
   end
 
-  def apply_policy_scope
-    custom_scope = CpLeadActivity.where(CpLeadActivity.user_based_scope(current_user, params))
-    CpLeadActivity.with_scope(policy_scope(custom_scope)) do
-      yield
+  def self.user_based_scope(user, _params = {})
+    custom_scope = {}
+    case user.role
+    when 'channel_partner'
+      custom_scope = { user_id: user.id, channel_partner_id: user.channel_partner_id }
+    when 'cp_owner'
+      custom_scope = { channel_partner_id: user.channel_partner_id }
+    when 'cp'
+      custom_scope = { user_id: { '$in': User.where(role: 'channel_partner', manager_id: user.id).distinct(:id) } }
+    when 'cp_admin'
+      cp_ids = User.all.cp.where(manager_id: user.id).distinct(:id)
+      custom_scope = { user_id: { '$in': User.where(role: 'channel_partner', manager_id: {'$in': cp_ids}).distinct(:id) } }
     end
+    custom_scope
   end
+
 end

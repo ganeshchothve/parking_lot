@@ -1,3 +1,7 @@
+<% if policy([:admin, Lead.new(project_id: lead.project_id)]).new? %>
+  <%= link_to t('controller.leads.add_to_another_project.link_name'), new_admin_lead_path(lead_id: lead._id, add_to_another_project: true), class: 'modal-remote-form-link dropdown-item' %>
+<% end %>
+
 <% if policy([:admin, SiteVisit.new(lead: lead, project: lead.project)]).new? %>
   <%= link_to t('controller.site_visits.new.link_name'), new_admin_lead_site_visit_path(lead.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>

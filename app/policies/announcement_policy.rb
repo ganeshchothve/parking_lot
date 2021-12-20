@@ -1,0 +1,3 @@
+class AnnouncementPolicy < ApplicationPolicy
+  
+end

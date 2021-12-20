@@ -17,9 +17,12 @@ class ReceiptObserver < Mongoid::Observer
       receipt.project = booking_detail.project
       receipt.lead = booking_detail.lead
       receipt.user = booking_detail.lead.user
-      receipt.manager_id = booking_detail.manager_id || receipt.lead.active_cp_lead_activities.first.try(:user_id)
+      receipt.manager_id = booking_detail.manager_id || receipt.lead&.manager_id
     end
-    receipt.manager_id = receipt.lead.active_cp_lead_activities.first.try(:user_id) if receipt.manager_id.blank?
+    receipt.manager_id = receipt.lead&.manager_id if receipt.manager_id.blank?
+    receipt.channel_partner_id = receipt.manager&.channel_partner_id if receipt.channel_partner_id.blank? && receipt.manager
+    receipt.cp_manager_id = receipt.channel_partner&.manager_id if receipt.cp_manager_id.blank? && receipt.channel_partner
+    receipt.cp_admin_id = receipt.cp_manager&.manager_id if receipt.cp_admin_id.blank? && receipt.cp_manager
 
     # Create a Sitevisit if time slot is assigned to token
     #

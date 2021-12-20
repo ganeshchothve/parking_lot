@@ -4,15 +4,15 @@
     <thead class="th-default">
       <tr class="bg-primary white">
         <th><%= t("mongoid.attributes.user/role.cp") %></th>
-        <th><%= t("dashboard.cp_admin.cp_status.inactive") %></th>
-        <th><%= t("dashboard.cp_admin.cp_status.active") %></th>
-        <th><%= t("dashboard.cp_admin.cp_status.pending") %></th>
-        <th><%= t("dashboard.cp_admin.cp_status.rejected") %></th>
+        <th><%= t("dashboard.cp_admin.cp_status.inactive_html") %></th>
+        <th><%= t("dashboard.cp_admin.cp_status.active_html") %></th>
+        <th><%= t("dashboard.cp_admin.cp_status.pending_html") %></th>
+        <th><%= t("dashboard.cp_admin.cp_status.rejected_html") %></th>
         <th><%= t("global.total") %></th>
       </tr>
     </thead>
     <tbody>
-      <% @cp_managers_hash.each do |cp_id, cp_name| %> 
+      <% @cp_managers_hash.each do |cp_id, cp_name| %>
         <tr>
           <% if @channel_partners_manager_status_count.key?(cp_id) %>
             <td data-title='<%= t("mongoid.attributes.user/role.cp") %>'><%= link_to cp_name, channel_partners_path(fltrs: {manager_id: (cp_id == 'No Manager' ? 'nil' : cp_id)}) %></td>
@@ -27,7 +27,7 @@
       <tr>
         <td>Total</td>
         <% %w(inactive active pending rejected total).each do |status| %>
-          <td><%= link_to @channel_partners_status_count[status], channel_partners_path(fltrs: {status: status}) %></td>
+          <td><%= link_to @channel_partners_status_count[status] || 0, channel_partners_path(fltrs: {status: status}) %></td>
         <% end %>
       </tr>
     </tbody>

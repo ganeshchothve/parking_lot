@@ -22,7 +22,11 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def index?
-    user.role?('channel_partner') || (!user.buyer? && (current_client.enable_actual_inventory?(user) || enable_incentive_module?(user)))
+    user.role.in?(%w(channel_partner cp_owner dev_sourcing_manager)) || (!user.buyer? && (current_client.enable_actual_inventory?(user) || enable_incentive_module?(user)))
+  end
+
+  def third_party_inventory?
+    index? && !user.role?('dev_sourcing_manager')
   end
 
   def show?
@@ -39,7 +43,7 @@ class Admin::ProjectPolicy < ProjectPolicy
 
   def collaterals?
     valid = true
-    valid = false if user.role?('channel_partner') && !interested_project_present?
+    valid = false if user.role.in?(%w(channel_partner cp_owner)) && !interested_project_present?
     @condition = 'project_not_subscribed' unless valid
     valid
   end
@@ -59,7 +63,7 @@ class Admin::ProjectPolicy < ProjectPolicy
         :allowed_bookings_per_user, :helpdesk_number, :helpdesk_email, :ga_code, :gtm_tag,
         :notification_email, :notification_numbers, :sender_email, :area_unit,
         :support_number, :support_email, :channel_partner_support_number, :channel_partner_support_email, :cancellation_amount, :blocking_amount, :region, :sv_incentive, :spot_booking_incentive, :pre_reg_incentive_percentage, :pre_reg_min_bookings, :iris_url,
-        :blocking_days, :enable_slot_generation, :holding_minutes, :terms_and_conditions, :email_header, :email_footer, :embed_map_tag, :hot, :price_starting_from, :price_upto, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes,
+        :blocking_days, :enable_slot_generation, :holding_minutes, :terms_and_conditions, :email_header, :email_footer, :embed_map_tag, :hot, :price_starting_from, :price_upto, :check_sv_availability_in_selldo, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes,
         email_domains: [], booking_portal_domains: [], enable_actual_inventory: [], enable_live_inventory: []
       ]
     end

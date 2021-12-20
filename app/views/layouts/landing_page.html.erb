@@ -6,7 +6,8 @@
     <meta name="keywords" content="">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link href="images/favicon.png" rel="icon" type="image/png"/>
+    <link href="<%= asset_path 'favicon.png' %>" rel="icon" type="image/png"/>
+    <meta name="theme-color" content="#172346">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0">
     <link rel="dns-prefetch" href="//trkr.scdn1.secure.raxcdn.com">
     <link rel="preconnect" href="//trkr.scdn1.secure.raxcdn.com">
@@ -89,3 +90,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-M32LFR');}, 2000);</script>
 </body>
 </html>
+
+<%= javascript_tag do %>
+  $('document').ready(function(){
+    var alert = <%= raw alert.to_json %>
+    var notice = <%= raw notice.to_json %>
+    if(notice){
+      Amura.global_success_handler(notice);
+    } else if(alert){
+      Amura.global_error_handler(alert);
+    }
+  });
+<% end %>

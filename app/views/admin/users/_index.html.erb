@@ -21,12 +21,12 @@
                     </h2>
                     <% if user.email.present? %>
                     <p class="email-icon small d-block d-sm-inline-block mt-1 fn-16 mb-0">
-                      <i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i><%= user.email || '' %>
+                      <i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i><%= (user.buyer? ? user.masked_email(current_user) : user.email) || '' %>
                     </p>
                     <% end %>
                     <% if user.phone.present? %>
                     <p class="phone-icon small d-block d-sm-inline-block mt-1 ms-2 fn-16 mb-0">
-                      <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= user.phone || '' %>
+                      <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= (user.buyer? ? user.masked_phone(current_user) : user.phone) || '' %>
                     </p>
                     <% end %>
                   </div>
@@ -49,19 +49,39 @@
                 </div>
                 <div class="inner-info">
                   <div class="pe-3 py-3 d-flex justify-content-sm-end justify-content-start ps-xs-3">
+                    <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i
+                        class='fa fn-16 fa-<%= user.is_active? ? "check" : "times" %> fill-<%= user.is_active? ? "success" : "danger" %> me-12 fa-lg'></i><%= t("mongoid.attributes.user/is_active.#{user.is_active?}") %>
+                    </p>
                     <% if user.buyer? %>
                       <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color ms-xs-0"><i
                           class='fa fn-16 fa-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= user.is_payment_done? ? 'Payment Done' : 'Payment Pending' %>
                       </p>
+                      <% if user.portal_stage.present? %>
+                        <p class="font-medium fn-14 mb-0 theme-txt-color"><i
+                           class='fa fa-circle status_<%= user.portal_stage.stage %> me-2 fa-xs ms-5'></i><%= t("mongoid.attributes.channel_partner/status.#{user.portal_stage.stage}") %>
+                        </p>
+                      <% else %>
+                        <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i
+                           class='fa fn-16 fa-<%= user.confirmed_at.present? ? "check" : "times" %> fill-<%= user.confirmed_at.present? ? "success" : "danger" %> me-12 fa-lg'></i><%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %>
+                        </p>
+                      <% end %>
                     <% end %>
-                    <% if (user.buyer? || user.role.in?(%w(channel_partner))) && user.portal_stage.present? %>
-                      <p class="font-medium fn-14 mb-0 theme-txt-color"><i
-                         class='fa fa-circle status_<%= user.portal_stage.stage %> me-2 fa-xs ms-5'></i><%= t("mongoid.attributes.channel_partner/status.#{user.portal_stage.stage}") %>
-                      </p>
-                    <% else %>
-                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i
-                          class='fa fn-16 fa-<%= user.confirmed_at.present? ? "check" : "times" %> fill-<%= user.confirmed_at.present? ? "success" : "danger" %> me-12 fa-lg'></i><%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %>
-                      </p>
+                    <% if user.role.in?(%w(channel_partner cp_owner)) %>
+                      <% if user.confirmed? %>
+                        <% if user.channel_partner&.inactive? %>
+                          <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i
+                             class='fa fn-16 fa-check fill-success me-12 fa-lg'></i><%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %>
+                          </p>
+                        <% else %>
+                          <p class="font-medium fn-14 mb-0 theme-txt-color"><i
+                             class='fa fa-circle status_<%= user.channel_partner&.status %> me-2 fa-xs ms-5'></i><%= t("mongoid.attributes.channel_partner/status.#{user.channel_partner&.status}") %>
+                          </p>
+                        <% end %>
+                      <% else %>
+                          <p class="font-medium fn-14 mb-0 theme-txt-color"><i
+                             class='fa fa-circle status_inactive me-2 fa-xs ms-5'></i><%= t("mongoid.attributes.channel_partner/status.inactive") %>
+                          </p>
+                      <% end %>
                     <% end %>
                   </div>
                 </div>

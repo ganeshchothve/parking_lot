@@ -1,9 +1,44 @@
 class SiteVisitObserver < Mongoid::Observer
   def before_validation site_visit
+    # Handle state transitions
+    _event = site_visit.event.to_s
+    site_visit.event = nil
+    if _event.present?
+      if site_visit.send("may_#{_event.to_s}?")
+        site_visit.aasm(:status).fire!(_event.to_sym)
+      else
+        site_visit.errors.add(:status, 'transition is invalid')
+      end
+    end
+    approval_event = site_visit.approval_event.to_s
+    site_visit.approval_event = nil
+    if approval_event.present?
+      if site_visit.send("may_#{approval_event.to_s}?")
+        site_visit.aasm(:approval_status).fire!(approval_event.to_sym)
+      else
+        site_visit.errors.add(:approval_status, 'transition is invalid')
+      end
+    end
+
+    # Handle time slot for token visit
     if site_visit.time_slot_id_changed? && site_visit.time_slot.present?
       tz = Time.use_zone(site_visit.user.time_zone) { Time.zone }
       tz_str = ActiveSupport::TimeZone.seconds_to_utc_offset(tz.utc_offset)
       site_visit.scheduled_on = "#{site_visit.time_slot.start_time_to_s} #{tz_str}" if site_visit.time_slot&.start_time_to_s.present?
+    end
+
+    # Set project & user
+    site_visit.project_id = site_visit.lead&.project_id if site_visit.project_id.blank?
+    site_visit.user_id = site_visit.lead&.user_id if site_visit.user_id.blank?
+    # Set manager if present on lead
+    site_visit.manager_id = site_visit.lead&.manager_id if site_visit.manager_id.blank?
+    site_visit.channel_partner_id = site_visit.manager&.channel_partner_id if site_visit.channel_partner_id.blank? && site_visit.manager.present?
+    site_visit.cp_manager_id = site_visit.manager&.manager_id if site_visit.cp_manager_id.blank? && site_visit.manager
+    site_visit.cp_admin_id = site_visit.cp_manager&.manager_id if site_visit.cp_admin_id.blank? && site_visit.cp_manager
+
+    # Set created_by
+    if site_visit.created_by.blank?
+      site_visit.created_by = site_visit.creator&.role
     end
   end
 

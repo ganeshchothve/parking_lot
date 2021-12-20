@@ -55,6 +55,7 @@ Rails.application.routes.draw do
     resources :customer_searches, except: :destroy
     resources :campaigns, except: [:destroy]
     resources :meetings, except: [:destroy]
+    resources :announcements
     resources :api_logs, only: [:index]
     resources :cp_lead_activities do
       member do
@@ -196,10 +197,13 @@ Rails.application.routes.draw do
       resources :accounts, controller: 'accounts'
     end
 
-    resources :site_visits, only: [:index] do
+    resources :site_visits, only: [:index, :edit, :update, :show] do
       member do
         get 'sync_with_selldo'
+        patch :change_state
+        get :reject
       end
+      get :export, on: :collection
     end
     resources :leads, only: [:index, :show, :edit, :update, :new] do
       collection do
@@ -213,7 +217,7 @@ Rails.application.routes.draw do
         patch :assign_sales
         patch :move_to_next_state
       end
-      resources :site_visits, only: [:new, :create, :index]
+      resources :site_visits, only: [:new, :create, :index, :update]
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do
         get :resend_success, on: :member
         get :lost_receipt, on: :collection
@@ -270,6 +274,7 @@ Rails.application.routes.draw do
         get :export
         get :portal_stage_chart
         get :channel_partner_performance
+        get :partner_wise_performance
         get :search_by
       end
 
@@ -315,6 +320,7 @@ Rails.application.routes.draw do
   post 'select_project', to: 'home#select_project', as: :select_project
 
   get 'signed_up/:user_id', to: 'home#signed_up', as: :signed_up
+  get 'cp_signed_up_with_inactive_account/:user_id', to: 'home#cp_signed_up_with_inactive_account', as: :cp_signed_up_with_inactive_account
 
   scope :custom do
     match 'inventory/:id', to: 'custom#inventory', as: :custom_inventory, via: [:get]

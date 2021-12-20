@@ -1,12 +1,12 @@
 <% date = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") %>
 <% start_date, end_date = date.split(' - ') %>
-<% channel_partner = current_user.associated_channel_partner %>
+<% channel_partner = current_user.channel_partner %>
 <% @channel_partner = channel_partner%>
 
 <section class="mt-3" id="">
   <div class="px-4">
     <div class="row">
-      <div class="col-lg-9">
+      <div class="col-lg-12">
         <div class="row mb-3">
           <div class="col-lg-12">
             <div id="cpBenefitsCarousel" class="cpBenefitsCarousel carousel slide position-relative">
@@ -24,7 +24,7 @@
                         <p>Get Spot Booking Incentive of <span>INR 5000</span></p>
                       </li>
                     </ul>
-                    <a href="javascript:;">Check out latest mandate projects <i class="fal fn-14 fa-arrow-right fill-theme ms-1"></i></a>
+                    <a href="<%= admin_projects_path(fltrs: {regions: current_user.channel_partner&.regions}) %>">Check out latest mandate projects <i class="fal fn-14 fa-arrow-right fill-theme ms-1"></i></a>
                 </div>
                 <div class="carousel-item slider-2">
                   <h2>Special Quarterly & Annual Rewards</h2>
@@ -38,7 +38,7 @@
                     </li>
                   </ul>
                   <h5><span>ANNUAL BUMPER PRIZE: FULL-SIZED SUV<sup>*</sup></span></h5>
-                  <a href="javascript:;" class="text-white">Check out latest mandate projects <i class="fal fa-arrow-right fill-white ms-1"></i></a>
+                  <a href="<%= admin_projects_path(fltrs: {regions: current_user.channel_partner&.regions}) %>" class="text-white">Check out latest mandate projects <i class="fal fa-arrow-right fill-white ms-1"></i></a>
                 </div>
               </div>
               <!-- <button class="carousel-control-prev position-absolute top-0" type="button"
@@ -269,73 +269,67 @@
         <div class="app-features">
           <div class="row px-3 py-3">
             <div class="col-lg-12">
-              <h2 class="pb-4">Why you would love launchpad</h2>
+              <h2 class="pb-4">Why you would love <%= t('global.brand') %></h2>
             </div>
             <div class="col-lg-4 app-features-list">
               <span>
-                <img src="<%= asset_path 'cp-ex-feat-01.svg' %>">
-              </span>
-              <p>Early access to<br> new launches</p>
+                  <img src="<%= asset_path 'cp-ex-feat-01.svg' %>" width="45">
+                </span>
+                <p>Early access to <br>new launches</p>
             </div>
             <div class="col-lg-4 app-features-list">
               <span>
-                <img src="<%= asset_path 'cp-ex-feat-02.svg' %>">
-              </span>
-              <p>Chance to work with<br> Pune’s biggest developers</p>
+                  <img src="<%= asset_path 'cp-ex-feat-06.svg' %>" width="45">
+                </span>
+                <p>Timely payments to <br>streamline cash flows</p>
             </div>
             <div class="col-lg-4 app-features-list">
               <span>
-                <img src="<%= asset_path 'cp-ex-feat-03.svg' %>">
-              </span>
-              <p>Leads at discounted<br> prices</p>
+                  <img src="<%= asset_path 'cp-ex-feat-05.svg' %>" width="45">
+                </span>
+                <p>Marketing support<br> & assets</p>
             </div>
             <div class="col-lg-4 app-features-list">
               <span>
-                <img src="<%= asset_path 'cp-ex-feat-04.svg' %>">
-              </span>
-              <p>CRM training<br> & support</p>
+                  <img src="<%= asset_path 'cp-ex-feat-11.svg' %>" width="45">
+                </span>
+                <p>Performance-based<br>channel partner ratings</p>
             </div>
             <div class="col-lg-4 app-features-list">
               <span>
-                <img src="<%= asset_path 'cp-ex-feat-05.svg' %>">
-              </span>
-              <p>Marketing support<br> & assets</p>
+                  <img src="<%= asset_path 'cp-ex-feat-02.svg' %>" width="45">
+                </span>
+                <p>Extensive nurturing and<br>calling during launches</p>
             </div>
             <div class="col-lg-4 app-features-list">
               <span>
-                <img src="<%= asset_path 'cp-ex-feat-06.svg' %>">
-              </span>
-              <p>Timely payments to<br> streamline cash flows</p>
+                  <img src="<%= asset_path 'cp-ex-feat-04.svg' %>" width="45">
+                </span>
+                <p>CRM training<br>& support</p>
             </div>
             <div class="col-lg-4 app-features-list">
               <span>
-                <img src="<%= asset_path 'cp-ex-feat-07.svg' %>">
-              </span>
-              <p>Fully automated<br> EOI process</p>
+                  <img src="<%= asset_path 'cp-ex-feat-07.svg' %>" width="45">
+                </span>
+                <p>Fully automated<br>EOI process</p>
             </div>
             <div class="col-lg-4 app-features-list">
               <span>
-                <img src="<%= asset_path 'cp-ex-feat-09.svg' %>">
-              </span>
-              <p>Complete<br> transparency</p>
+                  <img src="<%= asset_path 'cp-ex-feat-08.svg' %>" width="45">
+                </span>
+                <p>Online inventory selection,<br> KYC & bookings</p>
+            </div>
+            <div class="col-lg-4 app-features-list">
+                <span>
+                  <img src="<%= asset_path 'cp-ex-feat-09.svg' %>" width="45">
+                </span>
+                <p>Complete<br>transparency</p>
             </div>
             <div class="col-lg-4 app-features-list">
               <span>
-                <img src="<%= asset_path 'cp-ex-feat-08.svg' %>">
-              </span>
-              <p>Online inventory<br> selection, KYC & bookings</p>
-            </div>
-            <div class="col-lg-4 app-features-list">
-              <span>
-                <img src="<%= asset_path 'cp-ex-feat-10.svg' %>">
-              </span>
-              <p>Unique online<br> channel partner profile</p>
-            </div>
-            <div class="col-lg-4 app-features-list">
-              <span>
-                <img src="<%= asset_path 'cp-ex-feat-11.svg' %>">
-              </span>
-              <p>Performance-based<br> channel partner ratings</p>
+                  <img src="<%= asset_path 'cp-ex-feat-10.svg' %>" width="45">
+                </span>
+                <p>Unique online <br>broker profile</p>
             </div>
           </div>
         </div>
@@ -364,9 +358,11 @@
                     <i class="fa fa-calendar-alt fill-primary"></i>
                   </div>
                   <div class="col-lg-10 col-10">
-                    <p class="list-txt event-title mb-0"><%= meeting.topic %></p>
-                    <p class="list-txt event-time mb-0">
-                      <%= "#{meeting.scheduled_on&.strftime('%e %b %Y')}#{meeting.scheduled_on&.to_time&.in_time_zone(current_user.time_zone)&.strftime(', %I:%M%p %Z')}".html_safe %>
+                    <%= link_to admin_meeting_path(meeting), class: 'modal-remote-form-link' do %>
+                      <p class="list-txt event-title mb-0"><%= meeting.topic %></p>
+                      <p class="list-txt event-time mb-0">
+                        <%= "#{meeting.scheduled_on&.strftime('%e %b %Y')}#{meeting.scheduled_on&.to_time&.in_time_zone(current_user.time_zone)&.strftime(', %I:%M%p %Z')}".html_safe %>
+                    <% end %>
                     </p>
                   </div>
                 </div>
@@ -393,7 +389,7 @@
               <h2 class="sec-title mb-0">Announcements</h2>
             </div>
             <hr>
-            <% Announcement.desc(:date).limit(3).each_with_index do |ann, i| %>
+            <% Announcement.filter_by_published.desc(:created_at).limit(3).each_with_index do |ann, i| %>
               <ul class="announcement-list list-unstyled cmn-list">
                 <li class="px-3">
                   <div class="list-wrap row">
@@ -401,10 +397,12 @@
                       <i class="fa fa-sm <%= category_icon_class(ann.category) %>"></i>
                     </div>
                     <div class="col-lg-10">
-                      <p class="list-txt event-title mb-0"><%= t("mongoid.attributes.categories.#{ann.category}") %></p>
-                      <p class="list-txt event-info mb-0"><%= ann.title %></p>
-                      <p class="list-txt event-time mb-0">On <%= ann.date&.strftime('%b %e %Y') %></p>
-                      <% ann.assets.limit(5).each_with_index do |asset, ix| %>
+                      <%= link_to admin_announcement_path(ann), class: 'modal-remote-form-link' do %>
+                        <p class="list-txt event-title mb-0"><%= t("mongoid.attributes.categories.#{ann.category}") %></p>
+                        <p class="list-txt event-info mb-0"><%= ann.title %></p>
+                        <p class="list-txt event-time mb-0">On <%= ann.date %></p>
+                      <% end %>
+                      <% ann.assets.where(document_type: 'photo').limit(5).each_with_index do |asset, ix| %>
                         <div class="prjt-gallery">
                           <div class="prjt-gallery-inner">
                                 <ul>
@@ -432,7 +430,7 @@
                           <div class="modal-body">
                             <div id="gallerySlider" class="carousel slide" data-bs-ride="carousel">
                               <div class="carousel-inner">
-                                <% ann.assets.each_with_index do |asset, index| %>
+                                <% ann.assets.where(document_type: 'photo').each_with_index do |asset, index| %>
                                   <div class="carousel-item <%= (index == 0) ? "active" : "" %>">
                                     <img src="<%= asset&.file&.url %>" class="d-block w-100 img-fluid" alt="">
                                   </div>
@@ -464,218 +462,5 @@
     type: 'get'
   });
 <% end %>
-<% elsif @channel_partner.pending? %>
-<section class="after-register-sec mt-5">
-  <div class=" px-4">
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="app-review float-start wd-100">
-          <h1 class="notify-title float-start wd-100">Your application is under review</h1>
-          <p class="notify-desc float-start mb-0">We will notify you via email on the status of your application</p>
-          <p class="notify-desc float-end pe-3 mb-0">Our estimated review time is between 24-48 hours</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<% else %>
-  <% if @channel_partner.rejected? %>
-    <section class="after-register-sec mt-5">
-      <div class=" px-4">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="app-review app-reject float-start wd-100">
-              <h1 class="notify-title float-start mb-0 col-12">Your application has been rejected</h1>
-              <div class="fn-12 col-12">
-                <p class="mb-0">Reason:</p>
-                <div class="error-reason">
-                  <%= @channel_partner.status_change_reason&.html_safe %>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  <% end %>
-<section class="cp-register-sec mt-3">
-  <div class="col-lg-12">
-    <div class="cp-reg-header pt-5 pb-5 col-lg-12">
-      <h1 class="sec-title px-3 ms-4">Complete Registration</h1>
-      <%# <a href="javascript:;" class="skip-step-btn pe-3">Skip for now</a> %>
-    </div>
-    <div class="col-lg-12">
-      <div class="cp-step-list pt-3 col-lg-12">
-        <ul class="nav nav-tabs px-4 px-xs-0" id='cp-tabs'>
-          <li class="nav-item">
-            <a href="javascript:;" class="step-done nav-link active border-0" data-bs-toggle="tab"
-              data-bs-target="#step-1" type="button" role="tab">
-              <div class="step-inner">
-                <span>1</span>
-                <p>Personal Info</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:;" class="step-done nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-2"
-              type="button" role="tab">
-              <div class="step-inner">
-                <span>2</span>
-                <p>Company Info</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:;" class="step-done nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-3"
-              type="button" role="tab">
-              <div class="step-inner">
-                <span>3</span>
-                <p>Company Details</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:;" class="step-done nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-4"
-              type="button" role="tab">
-              <div class="step-inner">
-                <span>4</span>
-                <p>Upload Documents</p>
-              </div>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="col-lg-12 pb-3">
-      <%= simple_form_for(channel_partner, local: true, remote: true, html: {id: 'new_channel_partner_form', class: 'validate-form theme-form tab-content', "data-resource-type": global_labels['channel_partner'], "data-type": "json"}) do |form| %>
-      <div class="step-tab-content tab-pane fade show active px-3 col-12" role="tabpanel" id="step-1">
-        <div class="step-tab-inner col-12">
-          <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Personal Info</h2> %>
-          <div class="cp-form-wrap px-xs-0 px-4 pt-2 mb-5">
-            <%= render "channel_partners/personal_fields", {form: form} %>
-          </div>
-        </div>
-      </div>
-
-      <div class="step-tab-content tab-pane fade shadow-sm px-3 col-12" role="tabpanel" id="step-2">
-        <div class="step-tab-inner col-12">
-          <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Company Info</h2> %>
-          <div class="cp-form-wrap px-xs-0 px-4 pt-2 mb-5">
-            <%= render "channel_partners/company_fields", {form: form} %>
-          </div>
-        </div>
-      </div>
-      <div class="step-tab-content tab-pane fade shadow-sm px-3 col-12" role="tabpanel" id="step-3">
-        <div class="step-tab-inner col-12">
-          <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Company Details</h2> %>
-          <div class="cp-form-wrap px-xs-0 px-4 pt-2 mb-5">
-            <%= render "channel_partners/questionaire_fields", {form: form} %>
-          </div>
-        </div>
-      </div>
-      <div class="step-tab-content tab-pane fade shadow-sm px-3 col-12" role="tabpanel" id="step-4">
-        <div class="step-tab-inner col-12">
-          <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Upload Documents</h2> %>
-          <div class="cp-form-wrap px-xs-0 px-4 pt-2 mb-5" id='asset-form'>
-            <%#= render 'channel_partners/asset_form', assetable: channel_partner %>
-          </div>
-        </div>
-      </div>
-
-      <div class="cp-form-wrap border-top px-4 py-4 pb-3 text-end px-xs-0">
-        <div class='form-footer px-0 text-start d-inline-block'>
-          <%= form.submit "Save", class: "btn btn-primary white me-3 d-inline-block px-4 py-2 font-medium w-auto", id: 'cp-form-submit' %>
-        </div>
-        <div class="form-footer px-0 d-inline-block d-none">
-          <% if policy([current_user_role_group, channel_partner]).change_state? && policy([current_user_role_group, channel_partner]).editable_field?('event') %>
-            <% link_name = "#{channel_partner.rejected? ? 'Resubmit Application' : 'Submit Application'}" %>
-            <a href="javascript:;" class="btn bg-primary white px-4 d-inline-block py-2 me-3 font-medium w-auto fn-14"  data-bs-toggle="modal" data-bs-target="#confirmRegistration"><%= link_name %></a>
-          <% end %>
-          <div class="modal fade googleMeet-modal" id="confirmRegistration" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class='modal-header'>
-                  <h6 class='modal-title'>Are you sure?</h6>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <div class="row">
-                    <div class="col-lg-12">
-                      <p class='text-start'>By clicking on 'Complete Registration' you are confirming all the provided information and your application will be submitted for review to the BeyondWalls Partner Engagement Team.</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="modal-footer col-lg-12">
-                  <div class="row">
-                    <div class="col-lg-12 text-end px-0">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                      <%= link_to 'Complete Registration', change_state_channel_partner_path(channel_partner, {channel_partner: {event: 'submit_for_approval'}}), method: :post, remote: true, data: {type: 'json', 'disable-with': 'Complete Registration', 'bs-dismiss': 'modal'}, id: 'cp-form-change-state', class: 'btn btn-primary' %>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <% end %>
-    </div>
-  </div>
-</section>
 <% end %>
-<%= javascript_tag do %>
-  $(document).ready(function(){
-    FormInitializer.init($("#new_channel_partner_form"));
-
-    $('#new_channel_partner_form').on('ajax:error', function(event) {
-      if(typeof event.detail[0] == 'object' && event.detail[0].errors != undefined) {
-        Amura.global_error_handler(event.detail[0].errors);
-      }
-    });
-    $('#new_channel_partner_form').on("ajax:success", function(event, two, three){
-      if(typeof event.detail[0] == 'object' && event.detail[0].status == 'pending') {
-        Amura.global_success_handler("Application submitted successfully");
-        setTimeout(function() {
-          window.location = window.location;
-        }, 3000);
-      } else {
-        Amura.global_success_handler("Details updated successfully");
-
-        // Move to next tab if available, to work like a wizard.
-        var $activeTab = $('#cp-tabs').find('a.active');
-        var $nextTab = $activeTab.parent().next().find('a');
-        if($nextTab.length > 0) {
-          var nextTab = $nextTab[0];
-          var bsTab = new bootstrap.Tab(nextTab);
-          bsTab.show();
-          $(window).scrollTop(0);
-        }
-      }
-    });
-
-    $('a[data-bs-toggle="tab"]').on('show.bs.tab', function (event) {
-      var $tab = $(event.target);
-      if($tab.data('bs-target') == '#step-4') {
-        $.ajax({
-          url: "/channel_partners/<%= channel_partner.id %>/asset_form.js",
-          type: "get",
-          success: function(one){
-          },
-          error: function(one, two, three){
-            Amura.global_error_handler("Error while fetching remote form");
-          }
-        });
-        $('.form-footer').find('#cp-form-submit').val('Save Draft');
-        $('.form-footer').find('#cp-form-submit').removeClass('btn-primary');
-        $('.form-footer').find('#cp-form-submit').addClass('bg-secondary');
-        $('.form-footer').find('#cp-form-change-state').closest('.form-footer').removeClass('d-none');
-      } else {
-        $('.form-footer').find('#cp-form-submit').val('Save');
-        $('.form-footer').find('#cp-form-submit').removeClass('bg-secondary');
-        $('.form-footer').find('#cp-form-submit').addClass('btn-primary');
-        $('.form-footer').find('#cp-form-change-state').closest('.form-footer').addClass('d-none');
-      }
-    })
-  });
-<% end %>
+<%= render 'dashboard/index/partials/inactive_channel_partner_dashboard', channel_partner: @channel_partner %>

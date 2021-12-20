@@ -3,7 +3,7 @@ class SiteVisit
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Attributes::Dynamic
-
+  include SiteVisitStateMachine
   include ArrayBlankRejectable
   include CrmIntegration
   include InsertionStringMethods
@@ -16,18 +16,29 @@ class SiteVisit
   belongs_to :user
   belongs_to :creator, class_name: 'User'
   belongs_to :time_slot, optional: true
+  belongs_to :manager, class_name: 'User', optional: true
+  belongs_to :channel_partner, optional: true
+  belongs_to :cp_manager, class_name: 'User', optional: true
+  belongs_to :cp_admin, class_name: 'User', optional: true
+  has_many :notes, as: :notable
+
+  accepts_nested_attributes_for :notes, reject_if: :all_blank
 
   field :scheduled_on, type: DateTime
-  field :status, type: String, default: 'scheduled'
   field :conducted_on, type: DateTime
   field :site_visit_type, type: String, default: 'visit'
   field :selldo_id, type: String
   field :is_revisit, type: Boolean
   field :cp_code, type: String
   field :sales_id, type: BSON::ObjectId
+  field :created_by, type: String
+  field :conducted_by, type: String
 
-  scope :filter_by_status, ->(_status) { where(status: { '$in' => _status }) }
-  scope :filter_by_site_visit_type, ->(_status) { where(status: { '$in' => _site_visit_type }) }
+  delegate :name, to: :project, prefix: true, allow_nil: true
+
+  scope :filter_by_status, ->(_status) { where(status: (_status.is_a?(String) ? _status : { '$in' => _status })) }
+  scope :filter_by_approval_status, ->(_approval_status) { where(approval_status: (_approval_status.is_a?(String) ? _approval_status : { '$in' => _approval_status })) }
+  scope :filter_by_site_visit_type, ->(_site_visit_type) { where(status: (_site_visit_type.is_a?(String) ? _site_visit_type : { '$in' => _site_visit_type })) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
   scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }
   scope :filter_by_lead_id, ->(lead_id){ where(lead_id: lead_id)}
@@ -35,11 +46,14 @@ class SiteVisit
   scope :filter_by_scheduled_on, ->(date) { start_date, end_date = date.split(' - '); where(scheduled_on: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_conducted_on, ->(date) { start_date, end_date = date.split(' - '); where(conducted_on: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
+  scope :filter_by_manager_id, ->(manager_id) {where(manager_id: manager_id) }
+  scope :filter_by_cp_manager_id, ->(cp_manager_id) {where(cp_manager_id: cp_manager_id) }
 
-  validates :scheduled_on, :status, :site_visit_type, presence: true
-  validates :conducted_on, presence: true, if: Proc.new { |sv| sv.status == 'conducted' }
+  validates :scheduled_on, :status, :site_visit_type, :created_by, presence: true
+  validates :conducted_on, :conducted_by, presence: true, if: Proc.new { |sv| sv.status == 'conducted' }
   validate :existing_scheduled_sv, on: :create
   validates :time_slot, presence: true, if: Proc.new { |sv| sv.site_visit_type == 'token_slot' }
+  validates :notes, copy_errors_from_child: true
 
   def self.statuses
     [
@@ -47,6 +61,14 @@ class SiteVisit
       { id: 'conducted', text: 'Conducted' },
       { id: 'pending', text: 'Pending' },
       { id: 'missed', text: 'Missed' }
+    ]
+  end
+
+  def self.approval_statuses
+    [
+      { id: 'pending', text: 'Pending' },
+      { id: 'approved', text: 'Approved' },
+      { id: 'rejected', text: 'Rejected' }
     ]
   end
 
@@ -65,12 +87,16 @@ class SiteVisit
     custom_scope = {}
     if params[:lead_id].blank? && !user.buyer?
       if user.role?('channel_partner')
-        custom_scope = { manager_id: user.id }
+        custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id }
+      elsif user.role?('cp_owner')
+        custom_scope = {channel_partner_id: user.channel_partner_id}
       #elsif user.role?('cp_admin')
       #  custom_scope = { lead_id: { "$in": Lead.nin(manager_id: [nil, '']).distinct(:id) } }
       #elsif user.role?('cp')
       #  channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
       #  custom_scope = { lead_id: { "$in": Lead.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
+      elsif user.role?('dev_sourcing_manager')
+        custom_scope = { project_id: user.selected_project_id }
       end
     end
 

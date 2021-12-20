@@ -1,9 +1,10 @@
 class Admin::UsersController < AdminController
   include UsersConcern
   before_action :authenticate_user!, except: :resend_confirmation_instructions
-  before_action :set_user, except: %i[index export new create portal_stage_chart channel_partner_performance search_by]
+  before_action :set_user, except: %i[index export new create portal_stage_chart channel_partner_performance partner_wise_performance search_by]
   before_action :authorize_resource, except: :resend_confirmation_instructions
   around_action :apply_policy_scope, only: %i[index export]
+  around_action :user_time_zone, if: :current_user, only: %i[channel_partner_performance partner_wise_performance]
 
   layout :set_layout
 
@@ -74,7 +75,7 @@ class Admin::UsersController < AdminController
     respond_to do |format|
       format.html do
         if @user.save
-          SelldoLeadUpdater.perform_async(@user.leads.first&.id, {stage: 'confirmed'})
+          SelldoLeadUpdater.perform_async(@user.leads.first&.id, {stage: 'confirmed'}) if @user.buyer?
           email_template = ::Template::EmailTemplate.find_by(name: "account_confirmation")
           email = Email.create!({
             booking_portal_client_id: @user.booking_portal_client_id,
@@ -147,18 +148,22 @@ class Admin::UsersController < AdminController
 
   def create
     # sending the role upfront to ensure the permitted_attributes in next step is updated
-    @user = User.new(booking_portal_client_id: current_client.id, role: params[:user][:role])
-    @user.assign_attributes(permitted_attributes([current_user_role_group, @user]))
-    @user.manager_id = current_user.id if @user.role?('channel_partner') && current_user.role?('cp')
-    if @user.buyer? && current_user.role?('channel_partner')
-      @user.manager_id = current_user.id
-      @user.referenced_manager_ids ||= []
-      @user.referenced_manager_ids += [current_user.id]
+    message = 'User was successfully created.'
+    change_channel_partner_company = false
+    query = []
+    query << { phone: params.dig(:user, :phone) } if params.dig(:user, :phone).present?
+    query << { email: params.dig(:user, :email) } if params.dig(:user, :email).present?
+    @user = User.in(role: %w(channel_partner cp_owner)).or(query).first
+    if current_user.role?('cp_owner') && params[:user][:role].in?(%w(cp_owner channel_partner)) && @user.present? && !@user.is_active? && @user.channel_partner_id != current_user.channel_partner_id
+      @user.assign_attributes(channel_partner_id: current_user.channel_partner_id, role: params[:user][:role], is_active: true)
+      message = t('controller.users.create.change_channel_partner_company')
+      change_channel_partner_company = true
     end
+    create_user unless change_channel_partner_company
 
     respond_to do |format|
       if @user.save
-        format.html { redirect_to admin_users_path, notice: 'User was successfully created.' }
+        format.html { redirect_to admin_users_path, notice: message }
         format.json { render json: @user, status: :created }
       else
         format.html { render :new }
@@ -213,14 +218,67 @@ class Admin::UsersController < AdminController
   def channel_partner_performance
     dates = params[:dates]
     dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
-    @cp_ids = User.where(manager_id: current_user.id).distinct(:id)
-    if params[:channel_partner_id].present?
-      @user = User.where(id: params[:channel_partner_id]).first
-    else
-      @user = User.where(User.role_based_channel_partners_scope(current_user)).first
+    @leads = Lead.where(Lead.user_based_scope(current_user, params)).filter_by_created_at(dates)
+    @site_visits = SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).filter_by_scheduled_on(dates)
+    @bookings = BookingDetail.booking_stages.where(BookingDetail.user_based_scope(current_user, params)).filter_by_booked_on(dates)
+    if params[:project_ids].present?
+      project_ids = params["project_ids"].try(:split, ",").try(:flatten)
+      project_ids = Project.where(id: {"$in": project_ids}).distinct(:id)
+      @leads = @leads.filter_by_project_ids(project_ids)
+      @site_visits = @site_visits.filter_by_project_ids(project_ids)
+      @bookings = @bookings.filter_by_project_ids(project_ids)
     end
-    @walkins = Lead.where(manager_id: @user.id).filter_by_created_at(dates).group_by{|p| p.project_id}
-    @bookings = BookingDetail.booking_stages.where(manager_id: @user.id).filter_by_created_at(dates).group_by{|p| p.project_id}
+    if params[:channel_partner_id].present?
+      @leads = @leads.where(channel_partner_id: params[:channel_partner_id])
+      @site_visits = @site_visits.where(channel_partner_id: params[:channel_partner_id])
+      @bookings = @bookings.where(channel_partner_id: params[:channel_partner_id])
+    end
+    if params[:manager_id].present?
+      @leads = @leads.where(manager_id: params[:manager_id])
+      @site_visits = @site_visits.where(manager_id: params[:manager_id])
+      @bookings = @bookings.where(manager_id: params[:manager_id])
+    end
+    # Exclude leads added by non-channel partner accounts in channel partner performance report
+    if params[:manager_id].blank? && params[:channel_partner_id].blank?
+      @leads = @leads.ne(manager_id: nil)
+      @site_visits = @site_visits.ne(manager_id: nil)
+      @bookings = @bookings.ne(manager_id: nil)
+    end
+    @leads = @leads.group_by{|p| p.project_id}
+    @all_site_visits = @site_visits.group_by{|p| p.project_id}
+    @pending_site_visits = @site_visits.filter_by_approval_status('pending').group_by{|p| p.project_id}
+    @approved_site_visits = @site_visits.filter_by_approval_status('approved').group_by{|p| p.project_id}
+    @rejected_site_visits = @site_visits.filter_by_approval_status('rejected').group_by{|p| p.project_id}
+    @bookings = @bookings.group_by{|p| p.project_id}
+  end
+
+  #TO DO - move to SourcingManagerDashboardConcern
+  def partner_wise_performance
+    dates = params[:dates]
+    dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
+    @leads = Lead.filter_by_created_at(dates).where(Lead.user_based_scope(current_user, params))
+    @site_visits = SiteVisit.filter_by_scheduled_on(dates).where(SiteVisit.user_based_scope(current_user, params))
+    @bookings = BookingDetail.booking_stages.filter_by_booked_on(dates).where(BookingDetail.user_based_scope(current_user, params))
+    if params[:project_id].present?
+      @leads = @leads.where(project_id: params[:project_id])
+      @site_visits = @site_visits.where(project_id: params[:project_id])
+      @bookings = @bookings.where(project_id: params[:project_id])
+    end
+    if params[:channel_partner_id].present?
+      @leads = @leads.where(channel_partner_id: params[:channel_partner_id])
+      @site_visits = @site_visits.where(channel_partner_id: params[:channel_partner_id])
+      @bookings = @bookings.where(channel_partner_id: params[:channel_partner_id])
+    else
+      @leads = @leads.ne(manager_id: nil)
+      @site_visits = @site_visits.ne(manager_id: nil)
+      @bookings = @bookings.ne(manager_id: nil)
+    end
+    @leads = @leads.group_by{|p| p.manager_id}
+    @all_site_visits = @site_visits.ne(manager_id: nil).group_by{|p| p.manager_id}
+    @pending_site_visits = @site_visits.filter_by_approval_status('pending').group_by{|p| p.manager_id}
+    @approved_site_visits = @site_visits.filter_by_approval_status('approved').group_by{|p| p.manager_id}
+    @rejected_site_visits = @site_visits.filter_by_approval_status('rejected').group_by{|p| p.manager_id}
+    @bookings = @bookings.group_by{|p| p.manager_id}
   end
 
   # GET /admin/users/search_by
@@ -244,6 +302,10 @@ class Admin::UsersController < AdminController
 
   private
 
+  def user_time_zone
+    Time.use_zone(current_user.time_zone) { yield }
+  end
+
   def set_user
     @user = if params[:crm_client_id].present? && params[:id].present?
               find_user_with_reference_id(params[:crm_client_id], params[:id])
@@ -261,8 +323,19 @@ class Admin::UsersController < AdminController
     _user
   end
 
+  def create_user
+    @user = User.new(booking_portal_client_id: current_client.id, role: params[:user][:role])
+    @user.assign_attributes(permitted_attributes([current_user_role_group, @user]))
+    @user.manager_id = current_user.id if @user.role?('channel_partner') && current_user.role?('cp')
+    if @user.buyer? && current_user.role?('channel_partner')
+      @user.manager_id = current_user.id
+      @user.referenced_manager_ids ||= []
+      @user.referenced_manager_ids += [current_user.id]
+    end
+  end
+
   def authorize_resource
-    if %w[index export portal_stage_chart channel_partner_performance].include?(params[:action])
+    if %w[index export portal_stage_chart channel_partner_performance partner_wise_performance].include?(params[:action])
       authorize [current_user_role_group, User]
     elsif params[:action] == 'new' || params[:action] == 'create'
       if params.dig(:user, :role).present?

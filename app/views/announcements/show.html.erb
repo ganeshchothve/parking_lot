@@ -1,0 +1,98 @@
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="title">
+            <%= t("helpers.#{action_name}.link_name", model: Announcement.model_name.human) %>
+            </h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body theme-form">
+          <div class="row">
+            <div class="col-lg-8">
+              <h3><%= @announcement.title %></h3>
+              <p><%= @announcement.content %></p>
+            </div>
+            <div class="col-lg-12">
+              <p><%= @announcement.date %></p>
+            </div>
+            <div class="col-12 mb-4">
+              <div class="prjt-gallery">
+                <div class="prjt-gallery-inner">
+                  <h2 class="fn-18 border-top pt-4"><%= t('mongoid.attributes.announcement/file_types.photo') %></h2>
+                  <ul>
+                    <% assets = @announcement.assets.where(document_type: 'photo') %>
+                    <% assets.limit(6).each_with_index do |asset, ix| %>
+                      <li class="border-0 <%= ix == 5 && assets.count > 6 ? 'more-img' : '' %>">
+                        <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#galleryModal-show-<%= @announcement.id.to_s %>">
+                          <div class="wd-100 ht-77 rounded" style="background-image: url(<%= asset&.file&.url %>);background-size:cover;background-position:center"></div>
+                          <% if ix == 5 && assets.count > 6 %>
+                            <p class="fn-12">+ <%= assets.count - 6 %></p>
+                          <% end %>
+                        </a>
+                      </li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <% @announcement.assets.ne(document_type: 'photo').group_by(&:document_type).each do |key, value| %>
+                <div class="card">
+                  <div class = 'card-header'>
+                    <h2 class="fn-18 pt-2"><%= t("mongoid.attributes.announcement/file_types.#{key}") %></h2>
+                  </div>
+                  <div class = 'card-body'>
+                    <div class = "row">
+                      <div class="files-container <%= key %>">
+                        <% value.each do |asset| %>
+                          <%=
+                            links = {}
+                            if policy([ current_user_role_group, asset]).destroy?
+                              links[:destroy] = assetable_path(assetable_type: @announcement.class.model_name.i18n_key.to_s, assetable_id: @announcement.id, id: asset.id)
+                            end
+                            if asset.file.file && asset.file.file.exists?
+                              render "assets/file_icon", record: {id: asset.id, file_size: asset.file_size, url: asset.file.url, content_type: asset.file.content_type, name: asset.file_name }, links: links
+                            end
+                          %>
+                      <% end %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" tabindex="-1" aria-hidden="true" id="galleryModal-show-<%= @announcement.id.to_s %>">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="gallerySliderShow" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              <% @announcement.assets.where(document_type: 'photo').each_with_index do |asset, index| %>
+                <div class="carousel-item <%= (index == 0) ? "active" : "" %>">
+                  <img src="<%= asset&.file&.url %>" class="d-block w-100 img-fluid" alt="">
+                </div>
+              <% end %>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#gallerySliderShow" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#gallerySliderShow" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

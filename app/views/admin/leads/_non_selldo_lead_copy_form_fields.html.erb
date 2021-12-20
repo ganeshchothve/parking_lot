@@ -1,0 +1,25 @@
+<div class="row">
+  <% if policy([:admin, lead]).editable_field?("push_to_crm") %>
+    <div class="col-md-12">
+      <div class="mb-3">
+        <%= f.input :push_to_crm, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, label_html: {class: 'form-check-label d-inline-block ms-2'}, input_html: {class: 'wd-22', disabled: !policy([:admin, lead]).editable_field?("push_to_crm"), name: 'push_to_crm' } %>
+      </div>
+    </div>
+  <% end %>
+  <div class="col-md-12">
+    <% options = (existing_lead ? [[existing_lead.ds_name(current_user), existing_lead.id]] : [[]])  %>
+    <%= f.input :_id, label: 'Customer', collection: options, as: :select, prompt: :translate, required: true, autofocus: true, input_html: { name: 'lead_id', class: 'selectize-remote', data: { url: admin_leads_path } } %>
+  </div>
+</div>
+<% if Project.count == 1 || params[:project_id].present? %>
+  <%= f.input :project_id, as: :hidden, input_html: { name: 'project_id' } %>
+<% else %>
+  <div class="row">
+    <div class="col-md-12">
+      <%= f.input :project_id, collection: Project.all.collect{|p| [p.name, p.id]}, required: true, disabled: !policy([:admin, @lead]).editable_field?("project_id"), as: :select, prompt: :translate, input_html: { class: 'selectize', name: 'project_id' } %>
+    </div>
+  </div>
+<% end %>
+<% if f.object.site_visits.present? && f.object.site_visits.any?(&:new_record) %>
+  <%= render 'admin/leads/site_visit_form', f: f %>
+<% end %>

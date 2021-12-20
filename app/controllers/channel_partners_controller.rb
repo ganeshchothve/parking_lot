@@ -1,5 +1,5 @@
 class ChannelPartnersController < ApplicationController
-  before_action :authenticate_user!, except: %i[new create]
+  before_action :authenticate_user!, except: %i[new create], unless: proc { params[:action] == 'index' && params[:ds] == 'true' }
   before_action :set_channel_partner, only: %i[show edit update destroy change_state asset_form]
   around_action :apply_policy_scope, only: :index
   before_action :authorize_resource, except: [:new, :create]
@@ -25,6 +25,7 @@ class ChannelPartnersController < ApplicationController
 
   def new
     @channel_partner = ChannelPartner.new(referral_code: params[:custom_referral_code])
+    @channel_partner_id = @channel_partner.id
     render layout: 'landing_page'
   end
 
@@ -33,18 +34,76 @@ class ChannelPartnersController < ApplicationController
   end
 
   def create
-    @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
-    @channel_partner.assign_attributes(srd: cookies[:srd]) if cookies[:srd].present?
     layout = (current_user.present? ? 'devise' : 'landing_page')
-    respond_to do |format|
-      if @channel_partner.save
-        cookies.delete :srd
-        format.html { redirect_to (user_signed_in? ? channel_partners_path : signed_up_path(user_id: @channel_partner.associated_user_id)), notice: 'Channel partner was successfully created.' }
-        format.json { render json: @channel_partner, status: :created }
+
+    @channel_partner_id = BSON::ObjectId(params[:channel_partner][:company_name]) rescue nil
+    @channel_partner = ChannelPartner.where(id: @channel_partner_id).first if @channel_partner_id
+    query = []
+    query << { phone: params.dig(:channel_partner, :phone) } if params.dig(:channel_partner, :phone).present?
+    query << { email: params.dig(:channel_partner, :email) } if params.dig(:channel_partner, :email).present?
+    @cp_user = User.in(role: %w(channel_partner cp_owner)).or(query).first
+
+    if @cp_user.present?
+      if !@cp_user.is_active?
+        if @channel_partner.blank?
+          # Create Channel partner company if blank & put cp_user under it
+          @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
+          @channel_partner.assign_attributes(srd: cookies[:srd]) if cookies[:srd].present?
+          respond_to do |format|
+            if @channel_partner.save
+              cookies.delete :srd
+              format.html { redirect_to (user_signed_in? ? channel_partners_path : cp_signed_up_with_inactive_account_path(user_id: @cp_user.id)), notice: 'Registration Successfull' }
+              format.json { render json: @channel_partner, status: :created }
+            else
+              flash.now[:alert] = @channel_partner.errors.full_messages.uniq
+              format.html { render :new, layout: layout, status: :unprocessable_entity}
+              format.json { render json: { errors: @channel_partner.errors.full_messages.uniq }, status: :unprocessable_entity }
+            end
+          end
+        else @cp_user.channel_partner_id != @channel_partner.id
+          # Do not allow to change company on inactive cp accounts through registration. Only owner of respective companies can add such accounts under a company.
+          @cp_owner = User.cp_owner.where(channel_partner_id: @channel_partner.id).first
+          @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
+          respond_to do |format|
+            err_msg = t('controller.channel_partners.create.not_allowed_message', owner_name: @cp_owner&._name || 'Admin')
+            flash.now[:alert] = err_msg
+            format.html { render :new, layout: layout, status: :unprocessable_entity}
+            format.json { render json: { errors: err_msg }, status: :unprocessable_entity }
+          end
+        end
       else
-        flash.now[:alert] = @channel_partner.errors.full_messages.uniq
-        format.html { render :new, layout: layout, status: :unprocessable_entity}
-        format.json { render json: { errors: @channel_partner.errors.full_messages.uniq }, status: :unprocessable_entity }
+        @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
+        respond_to do |format|
+          err_msg = t('controller.channel_partners.create.already_present_and_active_msg', company_name: @cp_user.channel_partner&.company_name)
+          flash.now[:alert] = err_msg
+          format.html { render :new, layout: layout, status: :unprocessable_entity}
+          format.json { render json: { errors: err_msg }, status: :unprocessable_entity }
+        end
+      end
+    else
+      if @channel_partner.blank?
+        @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
+        @channel_partner.assign_attributes(srd: cookies[:srd]) if cookies[:srd].present?
+        respond_to do |format|
+          if @channel_partner.save
+            cookies.delete :srd
+            format.html { redirect_to (user_signed_in? ? channel_partners_path : signed_up_path(user_id: @channel_partner.users.first&.id)), notice: 'Channel partner was successfully created.' }
+            format.json { render json: @channel_partner, status: :created }
+          else
+            flash.now[:alert] = @channel_partner.errors.full_messages.uniq
+            format.html { render :new, layout: layout, status: :unprocessable_entity}
+            format.json { render json: { errors: @channel_partner.errors.full_messages.uniq }, status: :unprocessable_entity }
+          end
+        end
+      else
+        @cp_owner = User.cp_owner.where(channel_partner_id: @channel_partner.id).first
+        @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
+        respond_to do |format|
+          err_msg = t('controller.channel_partners.create.not_allowed_message', owner_name: @cp_owner&._name || 'Admin')
+          flash.now[:alert] = err_msg
+          format.html { render :new, layout: layout, status: :unprocessable_entity}
+          format.json { render json: { errors: err_msg }, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -88,14 +147,16 @@ class ChannelPartnersController < ApplicationController
   end
 
   def authorize_resource
-    if params[:action] == 'index' || params[:action] == 'export'
-      authorize [:admin, ChannelPartner]
-    elsif params[:action] == 'new'
-      authorize [:admin, ChannelPartner.new]
-    elsif params[:action] == 'create'
-      authorize [:admin, ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))]
-    else
-      authorize [:admin, @channel_partner]
+    unless params[:action] == 'index' && params[:ds] == 'true'
+      if params[:action] == 'index' || params[:action] == 'export'
+        authorize [:admin, ChannelPartner]
+      elsif params[:action] == 'new'
+        authorize [:admin, ChannelPartner.new]
+      elsif params[:action] == 'create'
+        authorize [:admin, ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))]
+      else
+        authorize [:admin, @channel_partner]
+      end
     end
   end
 

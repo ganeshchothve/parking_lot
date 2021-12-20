@@ -18,7 +18,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def update_password?
-    edit?
+    edit? && (!user.role?('cp_owner') || user.id == record.id)
   end
 
   def resend_confirmation_instructions?

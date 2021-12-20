@@ -105,6 +105,7 @@ class Project
   field :price_starting_from, type: Integer
   field :price_upto, type: Integer
   field :broker_usp, type: Array, default: []
+  field :check_sv_availability_in_selldo, type: Boolean, default: false
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
@@ -175,7 +176,12 @@ class Project
   default_scope -> { where(is_active: true)}
 
   scope :filter_by__id, ->(_id) { all.in(_id: (_id.is_a?(Array) ? _id : [_id])) }
-  scope :filter_by_category, ->(category) { where(category: category) }
+  scope :filter_by_category, ->(category) {category.is_a?(Array) ? where(category: {'$in': category}) : where(category: category) }
+  scope :filter_by_project_segment, ->(project_segment) {project_segment.is_a?(Array) ? where(project_segment: {'$in': project_segment} ) : where(project_segment: project_segment) }
+  scope :filter_by_configurations, ->(configurations) { configurations.is_a?(Array) ? where(configurations: {'$in': configurations} ) : where(configurations: configurations) }
+  scope :filter_by_city, ->(city) { where(city: city) }
+  scope :filter_by_micro_market, ->(micro_market) { where(micro_market: micro_market) }
+  scope :filter_by_possession, ->(date) { start_date, end_date = date.split(' - '); where(possession: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_hot, ->(hot) { where(hot: hot.eql?("true")) }
   scope :filter_by_user_interested_projects, ->(user_id) { all.in(id: InterestedProject.where(user_id: user_id).in(status: %w(subscribed approved)).distinct(:project_id)) }
   scope :filter_by_regions, ->(regions) {regions.is_a?(Array) ? where( region: { "$in": regions }) : where(region: regions)}
@@ -211,9 +217,13 @@ class Project
     end
   end
 
+  def ds_name
+    name
+  end
+
   def self.user_based_scope(user, params = {})
     custom_scope = {}
-    if user.role?('channel_partner')
+    if user.role.in?(%w(cp_owner channel_partner))
       custom_scope = { _id: { '$in': user.interested_projects.approved.distinct(:project_id) } } unless params[:controller] == 'admin/projects'
     end
 

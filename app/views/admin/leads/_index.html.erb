@@ -18,12 +18,12 @@
                     </h2>
                     <% if lead.email.present? %>
                     <p class="email-icon small d-inline-block mt-1 fn-16 mb-0">
-                      <i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i><%= lead.email || '' %>
+                      <i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i><%= lead.masked_email(current_user) || '' %>
                     </p>
                     <% end %>
                     <% if lead.phone.present? %>
                     <p class="phone-icon small d-inline-block mt-1 ms-2 fn-16 mb-0">
-                      <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= lead.phone || '' %>
+                      <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= lead.masked_phone(current_user) || '' %>
                     </p>
                     <% end %>
                     <% if lead.manager_id? && current_user.role.in?(%w(admin superadmin)) %>

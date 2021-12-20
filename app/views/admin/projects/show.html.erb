@@ -427,7 +427,7 @@
                                 <div class="tab-body">
                                     <div class="col-12">
                                         <div class="specifications-tab-wrap">
-                                            <div class="row mt-4 specification-list">
+                                            <div class="row mt-4 specification-list col-12">
                                             <% @project.specifications.each do |spec| %>
                                                 <div class="col-lg-6 mb-3">
                                                 <h3><%= spec.category.titleize %></h3>
@@ -574,7 +574,8 @@
                 </div>
                 -->
                 <% if Project.ne(id: @project.id).where(developer_name: @project.developer_name).present? %>
-                <div class="row mb-5 pb-5">
+                <div class="mb-5 pb-5 col-12 other-projects">
+                <div class="row gy-4">
                     <div class="col-lg-12 mt-5 mb-3">
                       <h2 class="sec-title">Other projects by <%= @project.developer_name %></h2>
                     </div>
@@ -642,30 +643,17 @@
                     </div>
                     <% end %>
                 </div>
+                </div>
                 <% else%>
                 <div class="col-12 py-4 mt-2 float-start"></div>
                 <% end %>
             </div>
-            <div class="col-lg-4 prjt-right-panel px-3 mt-1 mb-4">
+            <div class="col-lg-4 prjt-right-panel px-3 mt-1 mb-5">
             <div class="row">
                 <div class="col-12">
                     <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card prjt-details-header-stats pb-2">
                         <div class="prjt-inner-stats row right-stats mt-3 px-2">
-                            <p>
-                                <% leads_count = Lead.where(Lead.user_based_scope(current_user, params)).where(project_id: @project.id).count %>
-                                <%= link_to_if policy([current_user_role_group, Lead]).index?, leads_count, admin_leads_path(fltrs: {project_id: @project.id}) %> <span class="d-block">Leads</span>
-                                <% if policy([:admin, Lead.new(project_id: @project.id)]).new? %>
-                                <%= link_to 'ADD', new_admin_lead_path(project_id: @project.id), class: 'modal-remote-form-link prjt-add' %>
-                                <% end %>
-                            </p>
-                            <p>
-                                <%= SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).where(project_id: @project.id).count %> <span class="d-block">Walk-Ins</span>
-                            </p>
-                            <p>
-                                <% bookings_count = BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: @project.id).count %>
-                                <%= link_to_if policy([current_user_role_group, BookingDetail]).index?, bookings_count, admin_booking_details_path(fltrs: {project_id: @project.id})  %> <span class="d-block">Bookings</span>
-                                <a href="javascript:;" class="prjt-add"></a>
-                            </p>
+                          <%= render 'lead_stats', project: @project %>
                         </div>
                     </div>
                 </div>
@@ -677,39 +665,53 @@
                             <ul class="project-list list-unstyled row mb-0 pb-1">
                                 <li class="px-3 mb-2">
                                     <div class="list-wrap row">
-                                        <div class="col-lg-6">
+                                        <div class="col-lg-6 col-8 pe-0">
                                             <p class="list-txt mb-0">Site Visit Incentive</p>
                                         </div>
-                                        <div class="col-lg-6">
-                                           <h2 class="fn-18 mb-0 text-end">₹ 500</h2>
+                                        <div class="col-lg-6 col-4 ps-0">
+                                          <%= @project.sv_incentive.present? ? "<h2 class='fn-18 mb-0 text-end'>#{number_to_indian_currency(@project.sv_incentive)}</h2>".html_safe : "<h2 class='fn-14 mb-0 text-end'>Coming Soon</h2>".html_safe %></h2>
                                         </div>
                                     </div>
                                 </li>
                                 <li class="px-3 mb-2">
                                     <div class="list-wrap row">
-                                        <div class="col-lg-6">
+                                        <div class="col-lg-6 col-8 pe-0">
                                            <p class="list-txt mb-0">Spot Booking Incentive</p>
                                         </div>
-                                        <div class="col-lg-6">
-                                            <h2 class="fn-18 mb-0 text-end">₹ 500</h2>
+                                        <div class="col-lg-6 col-4 ps-0">
+                                          <h2 class="fn-18 mb-0 text-end"><%= @project.spot_booking_incentive.present? ? "<h2 class='fn-18 mb-0 text-end'>#{number_to_indian_currency(@project.spot_booking_incentive)}</h2>".html_safe : "<h2 class='fn-14 mb-0 text-end'>Coming Soon</h2>".html_safe %></h2>
                                         </div>
                                     </div>
                                 </li>
-                                <li class="px-3 mb-3">
-                                    <div class="list-wrap row">
-                                        <div class="col-lg-9">
-                                           <p class="list-txt mb-0">Pre-Registration Incentive<br><span class="fn-12 theme-txt-color">for min. 3 bookings</span></p>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <h2 class="fn-18 mb-0 text-end">30% </h2>
-                                        </div>
-                                    </div>
-                                </li>
+                                <% if @project.pre_reg_incentive_percentage.present? and @project.pre_reg_min_bookings.present? %>
+                                  <li class="px-3 mb-3">
+                                      <div class="list-wrap row">
+                                          <div class="col-lg-9 col-8 pe-0">
+                                             <p class="list-txt mb-0">Pre-Registration Incentive<br><span class="fn-12 theme-txt-color">for min. <%= @project.pre_reg_min_bookings %> bookings</span></p>
+                                          </div>
+                                          <div class="col-lg-3 col-4 ps-0">
+                                              <h2 class="fn-18 mb-0 text-end"><%= number_to_percentage(@project.pre_reg_incentive_percentage, precision: 0) %></h2>
+                                          </div>
+                                      </div>
+                                  </li>
+                                <% else %>
+                                  <li class="px-3 mb-3">
+                                      <div class="list-wrap row">
+                                          <div class="col-lg-7 col-8 pe-0">
+                                             <p class="list-txt mb-0">Pre-Registration Incentive</p>
+                                          </div>
+                                          <div class="col-lg-5 col-4 ps-0">
+                                              <h2 class="fn-14 mb-0 text-end">Coming Soon</h2>
+                                          </div>
+                                      </div>
+                                  </li>
+                                <% end %>
                             </ul>
                         </div>
                     </div>
                 </div>
 
+                <!--
                 <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card">
                     <div class="row">
                         <div class="col-md-12 pt-3 px-4">
@@ -739,7 +741,7 @@
                             <div class="right-box-footer py-2 text-center">
                                 <a href="javascript:;" class="fn-12 text-primary">View More</a>
                             </div>
-                           <!-- <div class="right-box-footer py-3">
+                           <div class="right-box-footer py-3">
                               <p class="mt-2"><%= InterestedProject.in(status: %w(subscribed approved)).where(project_id: @project.id).count %> partners are interested</p>
 
                                 <% if interest_access %>
@@ -747,10 +749,11 @@
                                     <%= link_to "I am interested!", admin_user_interested_projects_path(current_user, interested_project: {project_id: @project.id, event: 'subscribe'}), method: :post, class: 'btn-primary theme-btn float-end mb-3' %>
                                   <% end %>
                                 <% end %>
-                            </div>-->
+                            </div>
                         </div>
                     </div>
                 </div>
+                -->
               
                 <% if @project.offers.present? %>
                 <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card">

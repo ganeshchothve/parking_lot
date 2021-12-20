@@ -7,14 +7,13 @@ var window_wt = $(window).width();
 var header_ht = $('header').height();
 
 $(window).on("load", function () {
-    // alert(123);
     $('.home-points_lists').addClass('animated');
     $('.home-points_lists').addClass('fadeIn');
 });
 
 $(document).ready(function () {
 
-    $(".home-banner.slide").css({
+    $(".home-banner.slide, .home-slider, .home-slider .slide").css({
         'height': (window_wt <= 768) ? (window_ht - 46) : window_ht
     });
 
@@ -52,20 +51,19 @@ $(document).ready(function () {
     //   console.log($(this).parent().find('iframe')[0].src);
     //   ev.preventDefault();
     // });
-
     $('.project-listing-slider').bxSlider({
         mode: "horizontal",
-        auto: true,
+        auto: false,
         speed: 800,
         pager: false,
         controls: true,
         infiniteLoop: true,
         touchEnabled: true,
         pause: 5000,
-        slideWidth: (window_wt <= 768) ? (window_wt) : (window_wt / 3),
-        slideMargin: (window_wt < 768) ? 0 : 20,
+        slideWidth: (window_wt <= 992) ? (window_wt - 25) : (window_wt / 3),
+        slideMargin: (window_wt <= 992) ? 0 : 20,
         moveSlides: 1,
-        maxSlides: (window_wt < 768) ? 1 : 3,
+        maxSlides: (window_wt <= 992) ? 1 : 3,
         minSlides: 3,
         prevSelector: '#prjt-list-prev',
         prevText: "<img data-src='<%= asset_path 'left-arrow-new-2.png' %>' width='20' class='lazy'>",
@@ -100,16 +98,37 @@ $(document).ready(function () {
         slideWidth: 600,
         slideMargin: 0,
         controls: true,
-        moveSlides: 6,
+        moveSlides: 1,
         touchEnabled: !1,
         oneToOneTouch: !1,
+        infiniteLoop: true,
         pause: 5e3,
         speed: 1500,
         prevSelector: '#logo-list-prev',
         prevText: "<img data-src='<%= asset_path 'left-arrow-new-2.png' %>' width='20' class='lazy'>",
         nextSelector: '#logo-list-next',
         nextText: "<img data-src='<%= asset_path 'right-arrow-new-2.png' %>' width='20' class='lazy'>",
-    })
+    });
+    $(".gallery-slider").bxSlider({
+        minSlides: wn_width <= 700 ? 1 : 3,
+        maxSlides: wn_width <= 700 ? 1 : 3,
+        pager: false,
+        auto: !0,
+        slideWidth: 600,
+        slideMargin: 0,
+        controls: true,
+        moveSlides: 1,
+        touchEnabled: !1,
+        oneToOneTouch: !1,
+        infiniteLoop: false,
+        pause: 5e3,
+        speed: 1500,
+        prevSelector: '#gallery-list-prev',
+        prevText: "<img data-src='<%= asset_path 'left-arrow-new-2.png' %>' width='20' class='lazy'>",
+        nextSelector: '#gallery-list-next',
+        nextText: "<img data-src='<%= asset_path 'right-arrow-new-2.png' %>' width='20' class='lazy'>",
+    });
+    $(".galPopUp").colorbox({maxWidth:(window_wt>768)?"80%":"95%",maxHeight:(window_wt>768)?"80%":"400px"})
     if (window_wt < 768) {
         $('.last-slide-exclusive').remove();
         $('.exclusive-features-slider').bxSlider({
@@ -123,9 +142,9 @@ $(document).ready(function () {
             pause: 5000,
             moveSlides: 1,
             prevSelector: '#exct-feat-prev',
-            prevText: "<img data-src='<%= asset_path 'left-arrow-new-2.svg' %>' width='20' class='lazy'>",
+            prevText: "<img data-src='<%= asset_path 'left-arrow-new-2.png' %>' width='20' class='lazy'>",
             nextSelector: '#exct-feat-next',
-            nextText: "<img data-src='<%= asset_path 'right-arrow-new-2.svg' %>' width='20' class='lazy'>",
+            nextText: "<img data-src='<%= asset_path 'right-arrow-new-2.png' %>' width='20' class='lazy'>",
         });
     }
 
@@ -142,6 +161,17 @@ $(document).ready(function () {
         moveSlides: 1,
         maxSlides: (window_wt < 768) ? 1 : 2,
         minSlides: 1
+    });
+
+    $('.home-slider').bxSlider({
+        auto: true,
+        controls: true,
+        prevSelector: '#home-prev',
+        prevText: "<img src='<%= asset_path 'chevron-left.svg' %>' width='20'>",
+        nextSelector: '#home-next',
+        nextText: "<img src='<%= asset_path 'chevron-right.svg' %>' width='20'>",
+        pager: false,
+        moveSlides: 1
     });
 
     if (window_wt <= 768) {

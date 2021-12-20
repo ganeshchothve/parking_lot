@@ -21,25 +21,30 @@ class ChannelPartnerExportWorker
   def self.get_column_names
     [
       "ID (Used for Bulk Upload)",
-      "Name",
+      "Company Name",
       "Email",
       "Phone",
       "RERA ID",
-      "Associated User",
-      "Associated User ID (used for VLOOKUP)",
+      "Owner User ID (used for VLOOKUP)",
+      "Owner Name",
+      "Owner Phone",
+      "Owner Email",
       "Status"
     ]
   end
 
   def self.get_channel_partner_row(channel_partner)
+    user = channel_partner.primary_user
     [
       channel_partner.id.to_s,
-      channel_partner.name,
-      channel_partner.email,
-      channel_partner.phone,
+      channel_partner.company_name,
+      user&.email,
+      user&.phone,
       channel_partner.rera_id,
-      channel_partner.associated_user_id.present? ? channel_partner.associated_user.name : "",
-      channel_partner.associated_user_id.to_s,
+      user&.id&.to_s,
+      user&.name,
+      user&.phone,
+      user&.email,
       ChannelPartner.human_attribute_name("status.#{channel_partner.status}")
     ]
   end
