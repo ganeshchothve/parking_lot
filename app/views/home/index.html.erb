@@ -20,7 +20,7 @@
   <div class="scroll-down-btn scroll-sec" rel="join-broker-network" data-event-category="Section"
     data-event-action="Click" data-event-name="Scroll Down">Scroll Down</div>
 </section>
-<section class="broker-sec">
+<section class="broker-sec" id="join-broker-network">
   <div class="container">
     <div class="broker-wrapper">
       <div class="broker-left text-right">
@@ -85,8 +85,7 @@
           <div class="property-item-inner">
             <div class="property-item-image">
               <%#= image_tag(project.cover_photo&.url || (asset_path 'default-project.jpg'), class: 'img-full lazy') %>
-              <div class="propery-thumb-img position-relative"
-                style="background-image: url('<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>')">
+              <div class="propery-thumb-img position-relative lazy" data-src="<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>">
                 <% if project.hot?%>
                 <span class="hot-sellig-tag"><i class="fa fa-fire fill-danger me-1"></i>Hot Selling</span>
                 <% end %>
@@ -114,7 +113,7 @@
 
 <section class="incentive-sec section-padding position-relative">
   <div class="container">
-    <h2 class="section-heading text-left cgreen">What’s in it for You!</h2>
+    <h2 class="section-heading text-center cgreen">What’s in it for You!</h2>
     <!-- <div class="col-app-4 col-app-xs-12">
       <ul class="incentive-lists">
         <li class="active">
