@@ -43,7 +43,7 @@ class Lead
   # used for dump latest queue_number or revisit queue number from sitevisit
   field :queue_number, type: Integer
   field :kyc_done, type: Boolean, default: false
-  field :push_to_crm, type: Boolean, default: false
+  field :push_to_crm, type: Boolean, default: true
 
   embeds_many :state_transitions
   embeds_many :portal_stages
