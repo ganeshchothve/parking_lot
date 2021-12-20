@@ -7,14 +7,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <% if params.dig(:fltrs, :document_type) == 'video' %>
-          <% template = ::Template::UITemplate.where(name: 'assets/_videos').first %>
-          <% if template.present? %>
-            <%= get_view_erb(template) %>
-          <% end %>
-        <% else %>
-          <%= render "index", assetable: @public_assetable %>
-        <% end %>
+        <%= render "index", assetable: @public_assetable %>
       </div>
       <div class="modal-footer">
       </div>

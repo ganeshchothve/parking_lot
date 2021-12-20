@@ -5,17 +5,12 @@ class PublicAssetPolicy < ApplicationPolicy
   end
 
   def index?
-    valid = user.active_channel_partner?
-    if record.is_a?(PublicAsset) && user.role == 'channel_partner'
-      cp = user.channel_partner
-      valid ||= (record.public_assetable_id == cp.id && record.public_assetable_type == cp.class.model_name.name.to_s) if cp
-    end
-    valid
+    %w[superadmin].include?(user.role)
   end
 
   def permitted_attributes params={}
     attributes = [:asset_type, :file, :public_assetable_id, :public_assetable_type, :document_type ]
-    if record.public_assetable_type.present? && "Admin::#{record.public_assetable_type}Policy".constantize.new(user, record.public_assetable).update?
+    if record.public_assetable_type.present? && %w[superadmin].include?(user.role)
       attributes  += [:id]
     end
     attributes

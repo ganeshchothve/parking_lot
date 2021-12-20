@@ -15,7 +15,7 @@ class PublicAssetsController < ApplicationController
     if public_asset.persisted?
       render partial: "assets/asset.json", locals: {asset: public_asset}
     else
-      render json: {errors: asset.errors.full_messages}, status: 406
+      render json: {errors: public_asset.errors.full_messages}, status: 406
     end
   end
 
