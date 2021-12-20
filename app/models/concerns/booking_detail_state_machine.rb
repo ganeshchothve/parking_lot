@@ -64,12 +64,12 @@ module BookingDetailStateMachine
         transitions from: :cancellation_rejected, to: :blocked
       end
 
-      event :booked_tentative, after: %i[after_booked_tentative_event update_selldo!] do
+      event :booked_tentative, after: %i[after_booked_tentative_event update_selldo! sync_booking] do
         transitions from: :booked_tentative, to: :booked_tentative
         transitions from: :blocked, to: :booked_tentative
       end
 
-      event :booked_confirmed, after: %i[after_booked_confirmed_event update_selldo!] do
+      event :booked_confirmed, after: %i[after_booked_confirmed_event update_selldo! sync_booking] do
         transitions from: :booked_confirmed, to: :booked_confirmed
         transitions from: :booked_tentative, to: :booked_confirmed
       end
@@ -115,7 +115,7 @@ module BookingDetailStateMachine
         transitions from: :cancellation_requested, to: :cancelling
       end
 
-      event :cancel, after: :release_project_unit! do
+      event :cancel, after: %i[release_project_unit! sync_booking] do
         transitions from: :cancelled, to: :cancelled
         transitions from: :scheme_rejected, to: :cancelled
         transitions from: :cancelling, to: :cancelled, after: :update_user_request_to_resolved
@@ -361,6 +361,31 @@ module BookingDetailStateMachine
     def update_selldo!
       SelldoLeadUpdater.perform_async(lead_id.to_s, {stage: status})
       SelldoLeadUpdater.perform_async(lead_id.to_s, {action: 'add_slot_details', slot_status: 'booked'})
+    end
+
+    def sync_booking
+      if self.booked_tentative?
+        Crm::Api::Post.where(resource_class: 'BookingDetail', path: /api\/leads\/add_booking.json/).each do |api|
+          api.execute(self)
+        end
+      else
+        Crm::Api::Put.where(resource_class: 'BookingDetail', path: /api\/leads\/update_booking.json/).each do |api|
+          api.execute(self)
+        end
+      end
+    end
+
+    def selldo_booking_status
+      case status
+      when "booked_tentative"
+        "tentative"
+      when "booked_confirmed"
+        "confirmed"
+      when "cancelled"
+        "cancelled"
+      else
+        ""
+      end
     end
 
   end
