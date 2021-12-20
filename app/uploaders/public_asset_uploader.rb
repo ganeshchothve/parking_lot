@@ -1,6 +1,5 @@
 class PublicAssetUploader < CarrierWave::Uploader::Base
 
-  binding.pry
   include CommonUploader
 
   # Include RMagick or MiniMagick support:
