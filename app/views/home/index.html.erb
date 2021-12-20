@@ -85,8 +85,7 @@
           <div class="property-item-inner">
             <div class="property-item-image">
               <%#= image_tag(project.cover_photo&.url || (asset_path 'default-project.jpg'), class: 'img-full lazy') %>
-              <div class="propery-thumb-img position-relative"
-                style="background-image: url('<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>')">
+              <div class="propery-thumb-img position-relative lazy" data-src="<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>">
                 <% if project.hot?%>
                 <span class="hot-sellig-tag"><i class="fa fa-fire fill-danger me-1"></i>Hot Selling</span>
                 <% end %>
