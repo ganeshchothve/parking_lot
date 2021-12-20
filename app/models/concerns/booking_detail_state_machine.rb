@@ -364,14 +364,9 @@ module BookingDetailStateMachine
     end
 
     def sync_booking
-      if self.booked_tentative?
-        Crm::Api::Post.where(resource_class: 'BookingDetail', path: /api\/leads\/add_booking.json/).each do |api|
-          api.execute(self)
-        end
-      else
-        Crm::Api::Put.where(resource_class: 'BookingDetail', path: /api\/leads\/update_booking.json/).each do |api|
-          api.execute(self)
-        end
+      crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+      if crm_base.present?
+        api, api_log = self.push_in_crm(crm_base)
       end
     end
 
