@@ -1668,12 +1668,14 @@ en:
       events:
         status:
           conduct: 'Mark Conducted'
+          paid: 'Mark Paid'
         approval_status:
           approve: 'Approve'
           reject: 'Reject'
       status_message:
         status:
           conducted: 'Walk-in Conducted Successfully'
+          paid: 'Walk-in Incentive is Paid'
         approval_status:
           approved: 'Walk-in Successfully Approved'
           rejected: 'Walk-in Rejected'
