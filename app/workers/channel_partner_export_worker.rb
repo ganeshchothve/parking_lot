@@ -8,7 +8,7 @@ class ChannelPartnerExportWorker
     end
     user = User.find(user_id)
     file = Spreadsheet::Workbook.new
-    sheet = file.create_worksheet(name: "Partner Companies")
+    sheet = file.create_worksheet(name: "PartnerCompanies")
     sheet.insert_row(0, ChannelPartnerExportWorker.get_column_names)
     ChannelPartner.build_criteria({fltrs: filters}.with_indifferent_access).each_with_index do |channel_partner, index|
       sheet.insert_row(index+1, ChannelPartnerExportWorker.get_channel_partner_row(channel_partner))
