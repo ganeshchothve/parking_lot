@@ -13,7 +13,7 @@ module FileUploaderHelper
       end
       exts.join(',')
     elsif uploder_type=="PublicAssetUploader"
-      %w(PNG png JPEG jpeg JPG jpg PDF pdf SVG svg MP4 mp4).join(',')
+      PublicAsset::ALLOWED_EXTENSIONS.join(',')
     end
   end
 end

@@ -3,6 +3,8 @@ class PublicAsset
   include Mongoid::Timestamps
   extend FilterByCriteria
 
+  ALLOWED_EXTENSIONS = %w(PNG png JPEG jpeg JPG jpg PDF pdf SVG svg MP4 mp4)
+
   mount_uploader :file, PublicAssetUploader
 
   field :file_size, type: Integer
@@ -28,7 +30,7 @@ class PublicAsset
       self.errors.add(:base, 'Invalid file name/type (The filename should not have more than one dot (.))') if file_name.split('.').length > 2
       self.errors.add(:base, 'File without name provided') if file_name.split('.')[0].blank?
       file_meta = MimeMagic.by_path(file.path) rescue nil
-      self.errors.add(:base, 'Invalid file (you can only upload jpg|png|jpeg|pdf|csv files)') if ( file_meta.nil? || %w[png jpg jpeg pdf PNG JPG PDF JPEG csv].exclude?(file_meta.subtype) )
+      self.errors.add(:base, 'Invalid file (you can only upload jpg|png|jpeg|pdf|csv files)') if ( file_meta.nil? || ALLOWED_EXTENSIONS.exclude?(file_meta.subtype) )
     end
   end
 end
