@@ -12,7 +12,7 @@
 <% end %>
 <div class = "row">
   <div class="files-container-single">
-    <% assetable.assets.each do |asset| %>
+    <% assetable.public_assets.each do |asset| %>
       <%=
         links = {}
         if policy([ current_user_role_group, asset]).destroy?
