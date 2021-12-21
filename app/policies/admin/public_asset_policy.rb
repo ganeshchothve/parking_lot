@@ -1,6 +1,10 @@
 class Admin::PublicAssetPolicy < PublicAssetPolicy
-  def create?
+  def index?
     %w[superadmin].include?(user.role)
+  end
+
+  def create?
+    index?
   end
 
   def update?
@@ -8,6 +12,6 @@ class Admin::PublicAssetPolicy < PublicAssetPolicy
   end
 
   def destroy?
-    %w[superadmin].include?(user.role)
+    create?
   end
 end
