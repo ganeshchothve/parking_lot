@@ -371,16 +371,7 @@ module BookingDetailStateMachine
     end
 
     def selldo_booking_status
-      case status
-      when "booked_tentative"
-        "tentative"
-      when "booked_confirmed"
-        "confirmed"
-      when "cancelled"
-        "cancelled"
-      else
-        ""
-      end
+      I18n.t("mongoid.attributes.booking_detail/selldo_status.#{status}")
     end
 
   end
