@@ -70,8 +70,8 @@ class UserExportWorker
       user_kyc.existing_customer_name,
       user_kyc.existing_customer_project,
       user_kyc.comments,
-      user_kyc.user_id.to_s,
-      user_kyc.creator.name
+      user_kyc.user_id&.to_s,
+      user_kyc.creator&.name
     ]
   end
 
@@ -85,6 +85,7 @@ class UserExportWorker
       "Role",
       "Referred by Partner",
       "RERA ID",
+      "UPI Address",
       "Last Sign In At",
       "Confirmed",
       "Confirmed At",
@@ -103,7 +104,8 @@ class UserExportWorker
       user.buyer? ? user.lead_id : "",
       User.human_attribute_name("role.#{user.role}"),
       user.manager_name || "",
-      user.role?("channel_partner") ? user.rera_id : "",
+      user.role.in?(%w(cp_owner channel_partner)) ? user.rera_id : "",
+      user.role.in?(%w(cp_owner channel_partner)) ? user.upi_id : "",
       user.last_sign_in_at.present? ? I18n.l(user.last_sign_in_at.in_time_zone(current_user.time_zone)) : "",
       user.confirmed? ? "Yes" : "No",
       user.confirmed_at.present? ? I18n.l(user.confirmed_at.in_time_zone(current_user.time_zone)) : "",

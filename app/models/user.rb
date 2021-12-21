@@ -119,6 +119,8 @@ class User
   field :project_ids, type: Array, default: []
   field :cp_code, type: String
 
+  field :upi_id, type: String
+
   ## Security questionable
 
 

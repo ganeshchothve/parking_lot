@@ -1153,6 +1153,7 @@ en:
         channel_partner_id: CP Company Name/ Organisation Name/ CP Name
         referral_code: "Referral Code"
         shareable_link: "Shareable Link"
+        upi_id: 'UPI Address'
       user/confirmed:
         :true: 'Confirmed'
         :false: 'Not Confirmed'
@@ -1669,12 +1670,14 @@ en:
       events:
         status:
           conduct: 'Mark Conducted'
+          paid: 'Mark Paid'
         approval_status:
           approve: 'Approve'
           reject: 'Reject'
       status_message:
         status:
           conducted: 'Walk-in Conducted Successfully'
+          paid: 'Walk-in Incentive is Paid'
         approval_status:
           approved: 'Walk-in Successfully Approved'
           rejected: 'Walk-in Rejected'

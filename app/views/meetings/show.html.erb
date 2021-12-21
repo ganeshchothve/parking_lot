@@ -106,7 +106,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <div id="gallerySlider" class="carousel slide" data-bs-ride="carousel">
+          <div id="meetingGallerySlider" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
               <% @meeting.assets.where(document_type: 'photo').each_with_index do |asset, index| %>
                 <div class="carousel-item <%= (index == 0) ? "active" : "" %>">
@@ -114,10 +114,10 @@
                 </div>
               <% end %>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#gallerySlider" data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#meetingGallerySlider" data-bs-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#gallerySlider" data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#meetingGallerySlider" data-bs-slide="next">
               <span class="carousel-control-next-icon" aria-hidden="true"></span>
             </button>
           </div>
