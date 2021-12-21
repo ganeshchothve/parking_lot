@@ -41,6 +41,7 @@ class SiteVisitExportWorker
       "Partner / Manager / Added by",
       "Partner ID (Used for VLOOKUP)",
       "Partner Phone",
+      "Partner UPI Address",
     ] + Crm::Base.all.map{|crm| crm.name + " SiteVisit ID"  }
 
     sv_columns.flatten
@@ -60,6 +61,7 @@ class SiteVisitExportWorker
       sv.manager&.name,
       sv.manager_id.to_s,
       sv.manager&.phone,
+      sv.manager&.upi_id,
     ] + Crm::Base.all.map{|crm| sv.third_party_references.where(crm_id: crm.id).first.try(:reference_id) }
 
     sv_row.flatten
