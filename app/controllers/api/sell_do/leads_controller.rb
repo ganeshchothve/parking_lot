@@ -1,19 +1,14 @@
 # consumes workflow api for leads from sell.do
 class Api::SellDo::LeadsController < Api::SellDoController
   before_action :set_crm, :set_project
-  before_action :create_user, only: [:lead_created]
-  before_action :set_lead, except: [:lead_created]
-  before_action :set_site_visit, only: [:site_visit_updated]
+  before_action :create_or_set_user
+  before_action :create_or_set_lead
+  before_action :create_or_set_site_visit, only: [:site_visit_created, :site_visit_updated]
   around_action :user_time_zone, only: [:site_visit_created, :site_visit_updated]
 
   def lead_created
     respond_to do |format|
-      @lead = @user.leads.new(lead_create_attributes)
-      if @lead.save
-        format.json { render json: @lead }
-      else
-        format.json { render json: {errors: @lead.errors.full_messages.uniq} }
-      end
+      format.json { render json: @lead }
     end
   rescue => e
     respond_to do |format|
@@ -52,20 +47,7 @@ class Api::SellDo::LeadsController < Api::SellDoController
 
   def site_visit_created
     respond_to do |format|
-      if params.dig(:payload, :_id).present?
-        unless SiteVisit.reference_resource_exists?(@crm.id, params.dig(:payload, :_id))
-          @site_visit = SiteVisit.new(site_visit_attributes)
-          if @site_visit.save
-            format.json { render json: @site_visit }
-          else
-            format.json { render json: {errors: @site_visit.errors.full_messages}, status: 200 }
-          end
-        else
-          format.json { render json: {errors: 'SiteVisit already exists'}, status: 200 }
-        end
-      else
-        format.json { render json: {errors: 'SiteVisit Id is missing from params'}, status: 200 }
-      end
+      format.json { render json: @site_visit }
     end
   end
 
@@ -96,10 +78,49 @@ class Api::SellDo::LeadsController < Api::SellDoController
     render json: { errors: ["Sell.do CRM integration not available"] } and return unless @crm
   end
 
-  def set_lead
-    @lead = Lead.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:lead_id].to_s).first
-    render json: { errors: ["Lead with lead_id '#{params[:lead_id]}' not found"] } and return unless @lead
-    @user = @lead.user
+  def create_or_set_user
+    if (email = params.dig(:lead, :email).presence) || (phone = params.dig(:lead, :phone).presence)
+      query = []
+      query << { phone: phone } if phone.present?
+      query << { email: email } if email.present?
+      @user = User.or(query).first
+      if @user.blank?
+        phone = Phonelib.parse(params[:lead][:phone]).to_s
+        @user = User.new(booking_portal_client_id: @project.booking_portal_client_id, email: params[:lead][:email], phone: phone, first_name: params[:lead][:first_name], last_name: params[:lead][:last_name], is_active: false)
+        @user.first_name = "Customer" if @user.first_name.blank?
+        @user.last_name = '' if @user.last_name.nil?
+        @user.skip_confirmation! # TODO: Remove this when customer login needs to be given
+        unless @user.save
+          respond_to do |format|
+            format.json { render json: {errors: @user.errors.full_messages}, status: 200 }
+          end
+        end
+      end
+    else
+      respond_to do |format|
+        format.json { render json: {} and return }
+      end
+    end
+  end
+
+  def create_or_set_lead
+    @lead = @user.leads.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:lead_id].to_s).first
+    unless @lead
+      @lead = @user.leads.new(lead_create_attributes)
+      render json: { errors: @lead.errors.full_messages.uniq } and return unless @lead.save
+    end
+  end
+
+  def create_or_set_site_visit
+    if params.dig("payload", "_id").present?
+      @site_visit = @lead.site_visits.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params.dig("payload", "_id")).first
+      unless @site_visit.present?
+        @site_visit = SiteVisit.new(site_visit_attributes)
+        render json: { errors: @site_visit.errors.full_messages.uniq } and return unless @site_visit.save
+      end
+    else
+      render json: { errors: ["SiteVisit id is missing in params"] } and return
+    end
   end
 
   def lead_create_attributes
@@ -138,15 +159,6 @@ class Api::SellDo::LeadsController < Api::SellDoController
     }
   end
 
-  def set_site_visit
-    if params.dig("payload", "_id").present?
-      @site_visit = @lead.site_visits.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params.dig("payload", "_id")).first
-      render json: { errors: ["SiteVisit with id '#{params.dig("payload", "_id")}' not found"] } and return unless @site_visit
-    else
-      render json: { errors: ["SiteVisit id is missing in params"] } and return
-    end
-  end
-
   def site_visit_update_attributes
     attrs = {status: params.dig(:payload, :status)}
     case params[:event].to_s
@@ -157,30 +169,5 @@ class Api::SellDo::LeadsController < Api::SellDoController
     end
     attrs[:conducted_by] = "crm-#{@crm.id}" if attrs[:conducted_on].present?
     attrs
-  end
-
-  def create_user
-    if (email = params.dig(:lead, :email).presence) || (phone = params.dig(:lead, :phone).presence)
-      query = []
-      query << { phone: phone } if phone.present?
-      query << { email: email } if email.present?
-      @user = User.or(query).first
-      if @user.blank?
-        phone = Phonelib.parse(params[:lead][:phone]).to_s
-        @user = User.new(booking_portal_client_id: @project.booking_portal_client_id, email: params[:lead][:email], phone: phone, first_name: params[:lead][:first_name], last_name: params[:lead][:last_name], is_active: false)
-        @user.first_name = "Customer" if @user.first_name.blank?
-        @user.last_name = '' if @user.last_name.nil?
-        @user.skip_confirmation! # TODO: Remove this when customer login needs to be given
-        unless @user.save
-          respond_to do |format|
-            format.json { render json: {errors: @user.errors.full_messages}, status: 200 }
-          end
-        end
-      end
-    else
-      respond_to do |format|
-        format.json { render json: {} and return }
-      end
-    end
   end
 end

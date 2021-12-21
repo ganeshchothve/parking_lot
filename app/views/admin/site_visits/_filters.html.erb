@@ -7,6 +7,11 @@
     <div class="filter-content modal-body ps-0 pe-0">
       <div class="row">
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.lead.name_email_phone') %>
+          <% lead = Lead.where(_id: params[:fltrs][:lead_id]).first if params.dig(:fltrs, :lead_id).present? %>
+          <%= select_tag "fltrs[lead_id]", options_for_select(lead.present? ? [lead.ds_name(current_user), lead.id] : []), {class: "selectize-remote", data: { url: admin_leads_path } } %>
+        </div>
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.site_visit.project_id'), class: "control-label" %>
           <%= select_tag "fltrs[project_id]", options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: "Select", class: "selectize"} %>
         </div>

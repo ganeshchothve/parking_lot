@@ -18,6 +18,8 @@ class SiteVisit
   belongs_to :time_slot, optional: true
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true
+  belongs_to :cp_manager, class_name: 'User', optional: true
+  belongs_to :cp_admin, class_name: 'User', optional: true
   has_many :notes, as: :notable
 
   accepts_nested_attributes_for :notes, reject_if: :all_blank
@@ -44,6 +46,8 @@ class SiteVisit
   scope :filter_by_scheduled_on, ->(date) { start_date, end_date = date.split(' - '); where(scheduled_on: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_conducted_on, ->(date) { start_date, end_date = date.split(' - '); where(conducted_on: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
+  scope :filter_by_manager_id, ->(manager_id) {where(manager_id: manager_id) }
+  scope :filter_by_cp_manager_id, ->(cp_manager_id) {where(cp_manager_id: cp_manager_id) }
 
   validates :scheduled_on, :status, :site_visit_type, :created_by, presence: true
   validates :conducted_on, :conducted_by, presence: true, if: Proc.new { |sv| sv.status == 'conducted' }

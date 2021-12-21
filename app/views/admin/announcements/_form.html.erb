@@ -1,0 +1,59 @@
+<%= simple_form_for(@announcement, local: true, url: url ,remote: true, html: { novalidate: false, class: 'modal-remote-form validate-form', data: { 'resource-type': Announcement.model_name.human, type: :json }, id: 'announcement_form' } ) do |f| %>
+  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="title">
+            <%= t("helpers.#{action_name}.link_name", model: Announcement.model_name.human) %>
+            </h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body theme-form">
+          <div class="mb-3">
+            <%= f.label :category, class: 'label-required' %>
+              <%= f.select :category, Announcement::CATEGORIES.map{|x| [t("mongoid.attributes.announcement.category.#{x}"), x] }, {prompt: true}, class: 'selectize', required: true, disabled: (policy([current_user_role_group, announcement]).editable_field?("category") ? false : true) %>
+          </div>
+          <div class="mb-3">
+            <%= f.input :title, required: true, disabled: !policy([current_user_role_group, announcement]).editable_field?("title") %>
+          </div>
+          <div class="mb-3">
+            <%= f.input :content, required: true, disabled: !policy([current_user_role_group, announcement]).editable_field?("content"), as: :text %>
+          </div>
+          <div class="mb-3">
+            <%= f.input :date, required: true, disabled: !policy([current_user_role_group, announcement]).editable_field?("date")%>
+          </div>
+          <div class="mb-3">
+            <%= f.label t('mongoid.attributes.announcement.published') %>
+            <div class="form-check form-check-inline">
+              <%= f.radio_button :is_active, true, class: "form-check-input wd-22" %>
+              <%= f.label :is_active, "Yes", class: " form-check-label d-inline-block ms-2" %>
+            </div>
+            <div class="form-check form-check-inline">
+              <%= f.radio_button :is_active, false, class: "form-check-input wd-22" %>
+              <%= f.label :is_active, "No", class: " form-check-label d-inline-block ms-2" %>
+            </div>
+          </div>
+          <!-- <div class="mb-3">
+            <%#= f.label :roles, class: 'label-required' %>
+            <%#= f.select :roles, User.available_roles(current_client).collect{ |r| [User.human_attribute_name("role.#{r}"), r] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, meeting]).editable_field?("roles") ? false : true), multiple: true %>
+          </div> -->
+
+          <!-- <div class="mb-3">
+            <%#= f.input :broadcast, disabled: !policy([current_user_role_group, meeting]).editable_field?("broadcast"), as: :boolean, input_html: {class: 'w-auto'} %>
+          </div> -->
+        </div>
+
+        <div class="modal-footer text-end">
+          <%= f.submit "Save", class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script>
+  $(document).ready(function(){
+    let $form = $("#announcement_form")
+    FormInitializer.init($form);
+  });
+</script>

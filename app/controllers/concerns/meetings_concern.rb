@@ -1,6 +1,10 @@
 module MeetingsConcern
   extend ActiveSupport::Concern
 
+  included do
+    around_action :user_time_zone, if: :current_user
+  end
+
   #
   # This is the index action for admin, users where they can view all the meetings.
   #
@@ -45,6 +49,11 @@ module MeetingsConcern
   end
 
   private
+
+  def user_time_zone
+    Time.use_zone(current_user.time_zone) { yield }
+  end
+
   def authorize_resource
     if params[:action] == 'index' || params[:action] == 'export'
       authorize [:admin, Meeting]

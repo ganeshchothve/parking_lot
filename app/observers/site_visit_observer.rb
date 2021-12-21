@@ -33,6 +33,9 @@ class SiteVisitObserver < Mongoid::Observer
     # Set manager if present on lead
     site_visit.manager_id = site_visit.lead&.manager_id if site_visit.manager_id.blank?
     site_visit.channel_partner_id = site_visit.manager&.channel_partner_id if site_visit.channel_partner_id.blank? && site_visit.manager.present?
+    site_visit.cp_manager_id = site_visit.manager&.manager_id if site_visit.cp_manager_id.blank? && site_visit.manager
+    site_visit.cp_admin_id = site_visit.cp_manager&.manager_id if site_visit.cp_admin_id.blank? && site_visit.cp_manager
+
     # Set created_by
     if site_visit.created_by.blank?
       site_visit.created_by = site_visit.creator&.role

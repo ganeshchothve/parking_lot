@@ -255,11 +255,23 @@ en:
 
     attributes:
       announcement:
-        categories:
-          general: General
-          new_launch: New Launch
-          events: Events
-          brokerage_alert: Brokerage Alert
+        title: Title
+        content: Details
+        announcement_details: Title & Details
+        date: Date
+        category: Category
+        published: Published
+      announcement/categories:
+        general: General
+        new_launch: New Launch
+        events: Events
+        brokerage_alert: Brokerage Alert
+      announcement/file_types:
+        photo: Photos
+        collateral: Collaterals
+      announcement/help_text:
+        photo_html: '<ul><li>Photos of the Announcement</li></ul>'
+        collateral_html: '<ul><li>Announcement Collaterals</li></ul>'
       video:
         thumbnail: Thumbnail
         description: Title
@@ -1141,6 +1153,7 @@ en:
         channel_partner_id: CP Company Name/ Organisation Name/ CP Name
         referral_code: "Referral Code"
         shareable_link: "Shareable Link"
+        upi_id: 'UPI Address'
       user/confirmed:
         :true: 'Confirmed'
         :false: 'Not Confirmed'
@@ -1184,7 +1197,7 @@ en:
         email: 'Email'
         project_id: 'Project'
         manager_id: 'Partner / Manager / Added by'
-        name_email_phone: 'Lead (Project Name)'
+        name_email_phone: 'Name/Email/Phone (Project Name)'
         total_amount_paid: "Total Amount Paid (Inclusive of GST)"
         registered_at: 'Registered At'
         payment_done: '9.90% Received'
@@ -1351,6 +1364,9 @@ en:
     meetings:
       index:
         link_name: 'Events'
+    announcements:
+      index:
+        link_name: 'Announcements'
     campaigns:
       index:
         link_name: 'Campaigns'
@@ -1647,17 +1663,20 @@ en:
         link_name: 'Sync with Sell.Do'
       reject:
         link_name: 'Reject Walk-in'
+        default_note: 'Our developer partner indicated that the customer hasn’t visited the project site and no customer with this name was found in their systems. They have asked us to reject this visit. If you do not agree and in case you know the customer has visited; kindly update the walk-in as conducted. Based on your feedback, we will take this up with our developer partner. If you want to reschedule this visit, you can schedule a new walk-in.'
       exports:
         link_name: '%{name} Exports'
       events:
         status:
           conduct: 'Mark Conducted'
+          paid: 'Mark Paid'
         approval_status:
           approve: 'Approve'
           reject: 'Reject'
       status_message:
         status:
           conducted: 'Walk-in Conducted Successfully'
+          paid: 'Walk-in Incentive is Paid'
         approval_status:
           approved: 'Walk-in Successfully Approved'
           rejected: 'Walk-in Rejected'
