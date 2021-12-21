@@ -1408,6 +1408,9 @@ en:
     assets:
       index:
         link_name: 'Documents'
+    public_assets:
+      index:
+        link_name: 'Public Documents'
     application:
       set_current_client: 'The site is under maintenance. Please contact your  administrator.'
       invalid: 'Invalid'
