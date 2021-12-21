@@ -49,7 +49,7 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <%= f.label :scheduled_on, class: 'label-required' %>
-                <%= f.text_field :scheduled_on, class: 'form-control datepicker', required: true, disabled: !policy([:admin, meeting]).editable_field?("scheduled_on"), value: f.object.scheduled_on.present? ? f.object.scheduled_on.strftime("%d/%m/%Y") : nil %>
+                <%= f.text_field :scheduled_on, class: 'datetimepicker', required: true, disabled: !policy([:admin, meeting]).editable_field?("scheduled_on"), value: f.object.scheduled_on.present? ? f.object.scheduled_on.strftime("%d/%m/%Y %I:%M %p") : nil, data: { format: 'DD/MM/YYYY LT', 'side-by-side': true, current: true, 'default-date': (f.object.scheduled_on.present? ? f.object.scheduled_on.strftime("%d/%m/%Y %I:%M %p") : Time.now.strftime("%d/%m/%Y %I:%M %p") ) } %>
               </div>
             </div>
             <div class="col-md-6">
