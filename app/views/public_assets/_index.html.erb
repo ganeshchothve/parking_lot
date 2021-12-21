@@ -1,0 +1,21 @@
+<% if assetable.present? %>
+  <% if assetable.persisted? %>
+    <% if assetable.class::PUBLIC_DOCUMENT_TYPES.present? %>
+      <%= render 'classified_assets', { assetable: assetable } %>
+    <% else %>
+      <%= render 'all_assets', { assetable: assetable } %>
+    <% end %>
+  <% else %>
+    Please submit your <%= global_labels["#{assetable.model_name.element}"] %> first to upload reference documents.
+  <% end %>
+
+  <%= javascript_tag do %>
+    $(document).ready(function(){
+      FileIcon.init($(".asset-delete"), $(".asset-icon"));
+      $('.selectize').on("change", function(){
+        var formData = {"document_type": $(this).val()}
+        $('#asset_' + $(this).attr('id')).data('form-data', formData)
+      });
+    })
+  <% end %>
+<% end %>
