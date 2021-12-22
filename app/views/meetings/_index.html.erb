@@ -20,7 +20,7 @@
           <%= t('mongoid.attributes.meeting.agenda') %>: <%= meeting.agenda %><br/><br/>
           <%#= render 'meetings/toggle_interest_form', meeting: meeting %>
         </td>
-        <td data-title=<%= t('mongoid.attributes.meeting.scheduled_on') %>><%= meeting.scheduled_on.strftime("%d %b %Y") rescue "" %></td>
+        <td data-title=<%= t('mongoid.attributes.meeting.scheduled_on') %>><%= meeting.scheduled_on.strftime("%d %b %Y %I:%M %p") rescue "" %></td>
         <td data-title=<%= t('mongoid.attributes.meeting.status') %>><%= Meeting.statuses.select{|x| x[:id] == meeting.status}.first[:text] %></td>
         <td>
             <% if meeting.provider.present? %>

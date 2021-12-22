@@ -2641,6 +2641,11 @@ select.form-control{
 	    flex: 1 1 auto;
 	    width: 100%;
 	    display: block;
+		@media screen and (max-width:700px){
+			position: absolute;
+			bottom: 0;
+			left: 0;
+		}
 		.btn{
 			width: auto;
 			height: 30px;
@@ -3299,6 +3304,14 @@ select.form-control{
 	line-height: 20px;
 	letter-spacing: 0.42px;
 	font-weight: 500;
+}
+.upcoming-events-list{
+	height:200px;
+	overflow:auto;
+}
+.announcement-list{
+	height:290px;
+	overflow:auto;
 }
 
 /***************** Theme Nav Tab ***************/

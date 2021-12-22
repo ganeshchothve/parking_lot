@@ -46,11 +46,13 @@ class CpLeadActivity
   end
 
   def push_source_to_selldo
-    _selldo_api_key = self.lead.project.selldo_api_key
-    if _selldo_api_key.present?
-      campaign_resp = { source: 'Channel Partner', sub_source: self.user.name, project_id: self.lead.project.selldo_id.to_s }
-      SelldoLeadUpdater.perform_async(self.lead_id.to_s, { action: 'add_campaign_response', api_key: _selldo_api_key }.merge(campaign_resp).with_indifferent_access)
-      SelldoNotePushWorker.perform_async(self.lead.lead_id, self.user.id.to_s, "Validity: #{self.lead_validity_period}, Expiry: #{self.expiry_date.try(:strftime, '%d/%m/%Y') || '-'}, Count Status: #{self.count_status.try(:titleize) || '-'}")
+    if lead.push_to_crm?
+      _selldo_api_key = self.lead.project.selldo_api_key
+      if _selldo_api_key.present?
+        campaign_resp = { source: 'Channel Partner', sub_source: self.user.name, project_id: self.lead.project.selldo_id.to_s }
+        SelldoLeadUpdater.perform_async(self.lead_id.to_s, { action: 'add_campaign_response', api_key: _selldo_api_key }.merge(campaign_resp).with_indifferent_access)
+        SelldoNotePushWorker.perform_async(self.lead.lead_id, self.user.id.to_s, "Validity: #{self.lead_validity_period}, Expiry: #{self.expiry_date.try(:strftime, '%d/%m/%Y') || '-'}, Count Status: #{self.count_status.try(:titleize) || '-'}")
+      end
     end
   end
 

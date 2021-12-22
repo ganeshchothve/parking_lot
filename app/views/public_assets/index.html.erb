@@ -1,0 +1,16 @@
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="title"><%= params.dig(:fltrs, :document_type).try(:titleize).try(:pluralize) || params[:asset_header] || PublicAsset.model_name.human(count: 2) %></h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= render "index", assetable: @public_assetable %>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
