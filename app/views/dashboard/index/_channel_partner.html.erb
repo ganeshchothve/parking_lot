@@ -348,7 +348,7 @@
               <h2 class="sec-title mb-0">Upcoming Events</h2>
             </div>
             <hr>
-            <% meetings = Meeting.where(Meeting.user_based_scope(current_user)).scheduled.asc(:scheduled_on).limit(3) %>
+            <% meetings = Meeting.where(Meeting.user_based_scope(current_user)).scheduled.asc(:scheduled_on) %>
             <ul class="upcoming-events-list list-unstyled cmn-list">
               <% if meetings.present? %>
               <% meetings.each do |meeting| %>
@@ -390,7 +390,7 @@
             </div>
             <hr>
             <ul class="announcement-list list-unstyled cmn-list">
-            <% Announcement.filter_by_published.desc(:created_at).limit(3).each_with_index do |ann, i| %>              
+            <% Announcement.filter_by_published.desc(:created_at).each_with_index do |ann, i| %>
                 <li class="px-3">
                   <div class="list-wrap row">
                     <div class="col-lg-2">
