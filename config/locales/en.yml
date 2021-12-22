@@ -892,10 +892,32 @@ en:
         tier_id: 'Channel Partner Tier'
         status: 'Status'
         date_range: Date Filter
+        resource_class: Resource
+        category: Category
+        brokerage_type: Brokerage Type
+        payment_to: Payment To
+        auto_apply: Auto Apply
+      incentive_scheme/categories:
+        walk_in: 'Walk-in'
+        spot_booking: 'Spot Booking'
+        lead: 'Lead'
+        referral: 'Referral'
+        brokerage: 'Booking Brokerage'
       incentive_scheme/status:
         draft: Draft
         approved: Approved
         disabled: Disabled
+      incentive_scheme/brokerage_type:
+        brokerage: Brokerage
+        sub_brokerage: Sub Brokerage
+      incentive_scheme/payment_to:
+        company: Partner Company
+        channel_partner: Channel Partner
+      incentive_scheme/resource_class:
+        SiteVisit: Walk-in
+        Lead: Lead
+        BookingDetail: Booking
+        User: User (Referral)
 
       invoice:
         number: 'Invoice Number'

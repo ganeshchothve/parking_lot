@@ -15,11 +15,7 @@
         </div>
         <div class="mb-3">
           <%= f.label :description, class: 'label-required' %>
-          <%= f.text_area :description, autofocus: true, class: "form-control summernote", required: 'required', disabled: !policy([:admin, @incentive_scheme]).editable_field?("description") %>
-        </div>
-        <div class="mb-3">
-          <%= f.label :category, class: 'label-required' %>
-          <%= f.select :category, IncentiveScheme::CATEGORIES.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: (policy([current_user_role_group, @incentive_scheme]).editable_field?("category") ? false : true) %>
+          <%= f.text_area :description, rows: 5, autofocus: true, class: "form-control summernote", required: 'required', disabled: !policy([:admin, @incentive_scheme]).editable_field?("description") %>
         </div>
         <% unless f.object.default? %>
           <div class="mb-3">
@@ -49,6 +45,33 @@
             </div>
           </div>
         <% end %>
+        <div class="mb-3">
+          <%= f.label :resource_class, class: 'label-required' %>
+          <%= f.select :resource_class, IncentiveScheme::RESOURCE_CLASS.collect{|x| [t("mongoid.attributes.incentive_scheme/resource_class.#{x}"), x]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @incentive_scheme]).editable_field?("resource_class") %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :category, class: 'label-required' %>
+          <%= f.select :category, IncentiveScheme::CATEGORIES.collect{|x| [t("mongoid.attributes.incentive_scheme/categories.#{x}"), x]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @incentive_scheme]).editable_field?("category") %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :brokerage_type, class: 'label-required' %>
+          <%= f.select :brokerage_type, IncentiveScheme::BROKERAGE_TYPE.collect{|x| [t("mongoid.attributes.incentive_scheme/brokerage_type.#{x}"), x]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @incentive_scheme]).editable_field?("brokerage_type") %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :payment_to, class: 'label-required' %>
+          <%= f.select :payment_to, IncentiveScheme::PAYMENT_TO.collect{|x| [t("mongoid.attributes.incentive_scheme/payment_to.#{x}"), x]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @incentive_scheme]).editable_field?("payment_to") %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :auto_apply, class: 'label-required mb-2' %>
+          <div class="form-check form-check-inline">
+            <%= f.radio_button :auto_apply, true, required: 'required', class: "form-check-input wd-22" %>
+            <%= f.label :auto_apply, "Yes", class: "form-check-label d-inline-block ms-2" %>
+          </div>
+          <div class="form-check form-check-inline">
+            <%= f.radio_button :auto_apply, false, required: 'required', class: "form-check-input wd-22" %>
+            <%= f.label :auto_apply, "No", class: "form-check-label d-inline-block ms-2" %>
+          </div>
+        </div>
         <div class="mb-3">
           <%= f.label :ladder_strategy, class: 'label-required' %>
           <%= f.select :ladder_strategy, IncentiveScheme::STRATEGY.collect {|x| [x.titleize, x]}, {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @incentive_scheme]).editable_field?("ladder_strategy") %>
@@ -146,6 +169,29 @@
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($("#incentive_scheme_form"));
+
+  $('#incentive_scheme_form #incentive_scheme_resource_class').on('change', function(event) {
+    var categories = <%= raw IncentiveScheme::CATEGORIES_PER_RESOURCE.to_json %>;
+    var categories_translations = <%= raw t('mongoid.attributes.incentive_scheme/categories').to_json %>;
+    var resource = $(event.currentTarget).val();
+    var $category_select = $('#incentive_scheme_form #incentive_scheme_category');
+    var category = $category_select.val();
+    var allowed_categories = categories[resource];
+    if(resource != null && allowed_categories != null){
+      var category_select = $category_select[0].selectize;
+      category_select.setValue('');
+      category_select.clearOptions();
+      category_select.renderCache = {};
+      var options = _.map(allowed_categories, function(d) { return { value: d, text: categories_translations[d] } });
+      category_select.addOption(options)
+      category_select.refreshOptions(false);
+      category_select.settings.placeholder = 'Select Category';
+      category_select.updatePlaceholder();
+      if(!_.isEmpty(category)){
+        category_select.addItem(category, true);
+      }
+    }
+  }).trigger('change');
 
   $("#incentive_scheme_form").on('nested:fieldAdded', function(event){
     var $field = $(event.field);
