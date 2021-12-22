@@ -1,0 +1,58 @@
+<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
+  <thead class="th-default">
+    <thead>
+      <tr class="bg-primary white">
+        <th><%= t('mongoid.attributes.announcement.announcement_details') %></th>
+      <th><%= t('mongoid.attributes.announcement.date') %></th>
+      <th><%= t('mongoid.attributes.announcement.category') %></th>
+      <th><%= t('mongoid.attributes.announcement.published') %></th>
+      <th class="text-right wd-22"></th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+    <% announcements.each do |announcement| %>
+      <tr>
+        <td data-title=<%= t('mongoid.attributes.announcement.title') %>>
+          <%= t('mongoid.attributes.announcement.title') %>: <%= announcement.title %><br/>
+          <br/><br/>
+          <%= t('mongoid.attributes.announcement.content') %>: <%= announcement.content %><br/><br/>
+          <%#= render 'meetings/toggle_interest_form', meeting: meeting %>
+        </td>
+        <td data-title=<%= t('mongoid.attributes.announcement.date') %>><%= announcement.date rescue "" %></td>
+        <td data-title=<%= t('mongoid.attributes.announcement.category') %>><%= t("mongoid.attributes.announcement/categories.#{announcement.category}")%></td>
+        <td data-title=<%= t('mongoid.attributes.announcement.published') %>><%= t("global.boolean.#{announcement.is_active}")%></td>
+        <td class="action-btn">
+          <div class="dropdown show text-right">
+          <a class="btn table-dropdown-btn black-clr" href="javascript:;" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v fill-theme" aria-hidden="true"></i></a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+            <% if Admin::AnnouncementPolicy.new(current_user, announcement).edit? %>
+              <%= link_to t('helpers.edit.link_name', model: Announcement.model_name.human), edit_admin_announcement_path(announcement), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit Announcement'} %>
+            <% end %>
+            <% if Admin::AnnouncementPolicy.new(current_user, announcement).show? %>
+              <%= link_to t('helpers.show.link_name', model: Announcement.model_name.human), admin_announcement_path(announcement), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Event Announcement'} %>
+            <% end %>
+            <% if policy([:admin, announcement]).asset_create? %>
+              <%= link_to Asset.model_name.human(count: 2), admin_announcements_path('remote-state': assetables_path(assetable_type: announcement.class.model_name.i18n_key.to_s, assetable_id: announcement.id) ), class: "dropdown-item" %>
+            <% end %>
+            <% if Admin::AnnouncementPolicy.new(current_user, announcement).destroy? %>
+               <%= link_to "Delete Announcement", admin_announcement_path(announcement), method: :delete, class: 'dropdown-item modal-remote-form-link' %>
+            <% end %>
+           </div>
+        </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="col-lg-12 py-3 bg-white mb-2 px-2">
+  <div class="row">
+    <div class="col-lg-6">
+      <p class="table-entry mb-0 ps-2 pt-2"><%= page_entries_info announcements %></p>
+    </div>
+    <div class="col-lg-6 table-pagination">
+      <%= will_paginate announcements, list_classes: %w(pagination justify-content-end) %>
+    </div>
+  </div>
+</div>

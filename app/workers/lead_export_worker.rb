@@ -8,7 +8,7 @@ class LeadExportWorker
     end
     user = User.find(user_id)
     file = Spreadsheet::Workbook.new
-    sheet = file.create_worksheet(name: "Walk-ins")
+    sheet = file.create_worksheet(name: "Leads")
     sheet.insert_row(0, LeadExportWorker.get_column_names)
     lead_column_size = LeadExportWorker.get_column_names.size rescue 0
     lead_column_size.times { |x| sheet.row(0).set_format(x, title_format) } #making headers bold
@@ -17,7 +17,7 @@ class LeadExportWorker
     end
     file_name = "lead-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/exports/#{file_name}")
-    ExportMailer.notify(file_name, user.email, "Walk-ins").deliver
+    ExportMailer.notify(file_name, user.email, "Leads").deliver
   end
 
   #code for make excel headers bold

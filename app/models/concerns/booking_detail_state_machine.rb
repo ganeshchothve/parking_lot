@@ -64,12 +64,12 @@ module BookingDetailStateMachine
         transitions from: :cancellation_rejected, to: :blocked
       end
 
-      event :booked_tentative, after: %i[after_booked_tentative_event update_selldo!] do
+      event :booked_tentative, after: %i[after_booked_tentative_event update_selldo! sync_booking] do
         transitions from: :booked_tentative, to: :booked_tentative
         transitions from: :blocked, to: :booked_tentative
       end
 
-      event :booked_confirmed, after: %i[after_booked_confirmed_event update_selldo!] do
+      event :booked_confirmed, after: %i[after_booked_confirmed_event update_selldo! sync_booking] do
         transitions from: :booked_confirmed, to: :booked_confirmed
         transitions from: :booked_tentative, to: :booked_confirmed
       end
@@ -115,7 +115,7 @@ module BookingDetailStateMachine
         transitions from: :cancellation_requested, to: :cancelling
       end
 
-      event :cancel, after: :release_project_unit! do
+      event :cancel, after: %i[release_project_unit! sync_booking] do
         transitions from: :booked_tentative, to: :cancelled
         transitions from: :blocked, to: :cancelled
         transitions from: :cancelled, to: :cancelled
@@ -375,6 +375,17 @@ module BookingDetailStateMachine
         self.errors.add(:base, 'Invalid transition')
       end
       self.errors.empty?
+    end
+
+    def sync_booking
+      crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+      if crm_base.present?
+        api, api_log = self.push_in_crm(crm_base)
+      end
+    end
+
+    def selldo_booking_status
+      I18n.t("mongoid.attributes.booking_detail/selldo_status.#{status}")
     end
 
   end

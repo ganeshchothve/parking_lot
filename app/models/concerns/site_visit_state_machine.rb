@@ -10,11 +10,15 @@ module SiteVisitStateMachine
     # SiteVisit status state machine
     aasm :status, column: :status, whiny_transitions: false do
       state :scheduled, initial: true
-      state :pending, :missed, :conducted
+      state :pending, :missed, :conducted, :paid
 
       event :conduct, after: %i[send_notification] do
         transitions from: :scheduled, to: :conducted, if: :can_conduct?
         transitions from: :pending, to: :conducted, if: :can_conduct?
+      end
+
+      event :paid, after: %i[send_notification] do
+        transitions from: :conducted, to: :paid, if: :verification_approved?
       end
     end
 

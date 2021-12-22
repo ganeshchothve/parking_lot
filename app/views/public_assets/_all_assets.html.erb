@@ -1,0 +1,35 @@
+<% if policy([ current_user_role_group, PublicAsset.new(public_assetable: assetable)]).update? %>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <div class="btn btn-primary fileinput-button pull-right">
+          <input type="file" name="files[]" class="btn btn-primary fileupload fileupload_single" data-extensions="<%= allowed_file_extensions('PublicAssetUploader', assetable) %>" data-url="<%= public_assetables_path(public_assetable_type: assetable.class.model_name.i18n_key.to_s, public_assetable_id: assetable.id) %>" multiple=true data-target='.files-container-single' <%= policy([ current_user_role_group, PublicAsset.new(public_assetable: assetable)]).update? ? "" : "disabled=disabled" %> data-klass = 'Public Asset' data-field_name = 'file' />
+        </div>
+      </div>
+    </div>
+  </div>
+<hr/>
+<% end %>
+<div class = "row">
+  <div class="files-container-single">
+    <% assetable.public_assets.each do |asset| %>
+      <%=
+        links = {}
+        if policy([ current_user_role_group, asset]).destroy?
+          links[:destroy] = public_assetables_path(public_assetable_type: assetable.class.model_name.i18n_key.to_s, public_assetable_id: assetable.id, id: asset.id)
+        end
+        if asset.file.file && asset.file.file.exists?
+          render "assets/file_icon", record: {id: asset.id, file_size: asset.file_size, url: asset.file.url, content_type: asset.file.content_type, name: asset.file_name }, links: links
+        end
+      %>
+    <% end %>
+  </div>
+</div>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $(".fileupload_single").last().fileUploader({
+      download_all: false
+    });
+  })
+<% end %>

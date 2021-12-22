@@ -255,11 +255,23 @@ en:
 
     attributes:
       announcement:
-        categories:
-          general: General
-          new_launch: New Launch
-          events: Events
-          brokerage_alert: Brokerage Alert
+        title: Title
+        content: Details
+        announcement_details: Title & Details
+        date: Date
+        category: Category
+        published: Published
+      announcement/categories:
+        general: General
+        new_launch: New Launch
+        events: Events
+        brokerage_alert: Brokerage Alert
+      announcement/file_types:
+        photo: Photos
+        collateral: Collaterals
+      announcement/help_text:
+        photo_html: '<ul><li>Photos of the Announcement</li></ul>'
+        collateral_html: '<ul><li>Announcement Collaterals</li></ul>'
       video:
         thumbnail: Thumbnail
         description: Title
@@ -386,6 +398,10 @@ en:
         agreement_price: 'Agreement Price'
         primary_user_kyc_id: 'Primary User Kyc'
         user_kyc_ids: 'Secondary User Kycs'
+      booking_detail/selldo_status:
+        booked_tentative: tentative
+        booked_confirmed: confirmed
+        cancelled: cancelled
       booking_detail/status:
         available: 'Available'
         not_available: 'Not Available'
@@ -1151,6 +1167,7 @@ en:
         channel_partner_id: CP Company Name/ Organisation Name/ CP Name
         referral_code: "Referral Code"
         shareable_link: "Shareable Link"
+        upi_id: 'UPI Address'
       user/confirmed:
         :true: 'Confirmed'
         :false: 'Not Confirmed'
@@ -1363,6 +1380,9 @@ en:
     meetings:
       index:
         link_name: 'Events'
+    announcements:
+      index:
+        link_name: 'Announcements'
     campaigns:
       index:
         link_name: 'Campaigns'
@@ -1404,6 +1424,9 @@ en:
     assets:
       index:
         link_name: 'Documents'
+    public_assets:
+      index:
+        link_name: 'Public Documents'
     application:
       set_current_client: 'The site is under maintenance. Please contact your  administrator.'
       invalid: 'Invalid'
@@ -1667,12 +1690,14 @@ en:
       events:
         status:
           conduct: 'Mark Conducted'
+          paid: 'Mark Paid'
         approval_status:
           approve: 'Approve'
           reject: 'Reject'
       status_message:
         status:
           conducted: 'Walk-in Conducted Successfully'
+          paid: 'Walk-in Incentive is Paid'
         approval_status:
           approved: 'Walk-in Successfully Approved'
           rejected: 'Walk-in Rejected'
