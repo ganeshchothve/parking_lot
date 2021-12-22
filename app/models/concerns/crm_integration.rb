@@ -37,6 +37,11 @@ module CrmIntegration
     [api, api_log]
   end
 
+  # used safe navigation operator "&."
+  def crm_reference_id(crm_base)
+    third_party_references.where("crm_id": crm_base.id).first&.reference_id
+  end
+
 
   module ClassMethods
 
