@@ -21,6 +21,7 @@ class SiteVisit
   belongs_to :cp_manager, class_name: 'User', optional: true
   belongs_to :cp_admin, class_name: 'User', optional: true
   has_many :notes, as: :notable
+  has_many :invoices, as: :invoiceable
 
   accepts_nested_attributes_for :notes, reject_if: :all_blank
 
@@ -54,6 +55,10 @@ class SiteVisit
   validate :existing_scheduled_sv, on: :create
   validates :time_slot, presence: true, if: Proc.new { |sv| sv.site_visit_type == 'token_slot' }
   validates :notes, copy_errors_from_child: true
+
+  def incentive_eligible?
+    verification_approved? && (conducted? || paid?)
+  end
 
   def self.statuses
     [

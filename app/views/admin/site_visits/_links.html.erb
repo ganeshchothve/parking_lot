@@ -21,6 +21,9 @@
     <% end %>
   <% end %>
 <% end %>
+
+<%= render 'admin/invoices/invoiceable_links', resource: site_visit %>
+
 <% if policy([:admin, Note.new(notable: site_visit)]).new? %>
   <%= link_to t('helpers.new.link_name', model: Note.model_name.human), new_notable_path(notable_type: site_visit.class.model_name.i18n_key.to_s, notable_id: site_visit.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>

@@ -23,7 +23,7 @@ class Invoice
   field :number, type: String
 
   belongs_to :project
-  belongs_to :booking_detail
+  belongs_to :invoiceable, polymorphic: true
   belongs_to :user, optional: true
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true
@@ -55,6 +55,7 @@ class Invoice
   scope :filter_by_booking_detail_id, ->(booking_detail_id) { where(booking_detail_id: booking_detail_id) }
   scope :filter_by_channel_partner_id, ->(channel_partner_id) { where(manager_id: channel_partner_id) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
+  scope :filter_by_invoiceable_id, ->(invoiceable_id) { where(invoiceable_id: invoiceable_id) }
 
   accepts_nested_attributes_for :cheque_detail, reject_if: proc { |attrs| attrs.except('creator_id').values.all?(&:blank?) }
   accepts_nested_attributes_for :payment_adjustment, reject_if: proc { |attrs| attrs['absolute_value'].blank? }

@@ -68,6 +68,7 @@ class Lead
   has_many :whatsapps, as: :triggered_by, class_name: 'Whatsapp'
   has_many :project_units
   has_many :cp_lead_activities
+  has_many :invoices, as: :invoiceable
   #has_and_belongs_to_many :received_emails, class_name: 'Email', inverse_of: :recipients
   #has_and_belongs_to_many :cced_emails, class_name: 'Email', inverse_of: :cc_recipients
   #has_many :received_smses, class_name: 'Sms', inverse_of: :recipient
@@ -144,6 +145,10 @@ class Lead
         where(id: { '$nin': lead_ids })
       end
     end
+  end
+
+  def incentive_eligible?
+    manager_id.present?
   end
 
   def manager_name

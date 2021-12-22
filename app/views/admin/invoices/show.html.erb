@@ -18,14 +18,14 @@
               </div>
               <div class="col-md-4">
                 <div class="mb-3">
-                  <label class="small text-muted"><%= invoice_labels[:booking_detail_id] %></label>
-                  <div><%= link_to @invoice.booking_detail.name, [current_user_role_group, @invoice.booking_detail] %></div>
+                  <label class="small text-muted"><%= @invoice.invoiceable&.class&.model_name&.human %></label>
+                  <div><%= link_to @invoice.invoiceable.name, [current_user_role_group, @invoice.invoiceable] %></div>
                 </div>
               </div>
               <% unless %w(channel_partner cp_owner).include?(current_user.role) %>
                 <div class="col-md-4">
                   <div class="mb-3">
-                    <label class="small text-muted"><%= ChannelPartner.model_name.human %></label>
+                    <label class="small text-muted"><%= t('mongoid.attributes.user/role.channel_partner') %></label>
                     <div><%= "#{@invoice.manager.try(:name)} (#{@invoice.manager.try(:cp_code)})" %></div>
                   </div>
                 </div>

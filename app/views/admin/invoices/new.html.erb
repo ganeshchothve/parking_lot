@@ -1,1 +1,1 @@
-<%= render 'admin/invoices/draft_form', url: admin_booking_detail_invoices_path(booking_detail_id: @booking_detail.id) %>
+<%= render 'admin/invoices/draft_form', url: admin_invoiceable_index_path(invoiceable_type: @resource.class.model_name.i18n_key.to_s, invoiceable_id: @resource.id) %>

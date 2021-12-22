@@ -1,4 +1,4 @@
-<%= nested_form_for([:admin, @booking_detail, @invoice], url: url, local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['invoices'], "data-type": "json", id: 'invoice_form'}) do |f| %>
+<%= nested_form_for([:admin, @resource, @invoice], url: url, local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['invoices'], "data-type": "json", id: 'invoice_form'}) do |f| %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -9,7 +9,7 @@
       </div>
 
       <div class="modal-body theme-form">
-        <%= render 'admin/invoices/details', booking_detail: @invoice.booking_detail %>
+        <%= render "admin/invoices/#{@resource.class.model_name.i18n_key.to_s}/details", resource: @invoice.invoiceable rescue nil %>
         <div class="mb-3">
           <%= f.label :number, class: 'label-required' %>
           <%= f.text_field :number, autofocus: true, required: 'required', class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("number") %>
@@ -26,7 +26,7 @@
             Please change the % as per the Slabs
           </div>
           <%= f.label "Brokerage Percentage Slab", class: 'label-required' %>
-          <% gst_slabs = @booking_detail.project.incentive_percentage_slabs %>
+          <% gst_slabs = @resource.project.incentive_percentage_slabs %>
           <%= f.select :percentage_slab, options_for_select(gst_slabs.collect{|gst| [ "#{gst} %", gst]}, @invoice.gst_slab), class: "selectize", required: 'required', disabled: !policy([:admin, @invoice]).editable_field?("percentage_slab"), prompt: " " %>
         </div>
         <% if @invoice.project.gst_slab_applicable? %>
@@ -35,7 +35,7 @@
               Please change the GST Slab % as per the Slabs
             </div>
             <%= f.label "GST Slab", class: 'label-required' %>
-            <% gst_slabs = @booking_detail.project.incentive_gst_slabs %>
+            <% gst_slabs = @resource.project.incentive_gst_slabs %>
             <%= f.select :gst_slab, options_for_select(gst_slabs.collect{|gst| [ "#{gst} %", gst]}, @invoice.gst_slab), class: "selectize", required: 'required', disabled: !policy([:admin, @invoice]).editable_field?("gst_slab"), prompt: " " %>
           </div>
           <div class="mb-3">

@@ -11,7 +11,7 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def create?
-    user.role.in?(%w(channel_partner admin billing_team)) && enable_incentive_module?(user) && incentive_calculation_type?("manual")
+    user.role.in?(%w(channel_partner admin billing_team superadmin)) && enable_incentive_module?(user) && incentive_calculation_type?("manual")
   end
 
   def edit?
@@ -88,8 +88,8 @@ class Admin::InvoicePolicy < InvoicePolicy
       attributes += [:agreement_amount, :percentage_slab, :gst_slab, :rejection_reason, payment_adjustment_attributes: [:id, :absolute_value]] if record.status.in?(%w(pending_approval approved))
       attributes += [:rejection_reason] if record.status.in?(%w(pending_approval rejected))
       attributes += [:event]
-    when 'admin'
-      attributes += [:agreement_amount, :percentage_slab, :gst_slab, :rejection_reason, payment_adjustment_attributes: [:id, :absolute_value]] if record.status.in?(%w(pending_approval approved draft))
+    when 'admin', 'superadmin'
+      attributes += [:number, :agreement_amount, :percentage_slab, :gst_slab, :rejection_reason, payment_adjustment_attributes: [:id, :absolute_value]] if record.status.in?(%w(pending_approval approved draft))
       attributes += [:rejection_reason] if record.status.in?(%w(pending_approval rejected draft))
       #attributes += [cheque_detail_attributes: [:id, :total_amount, :payment_identifier, :issued_date, :issuing_bank, :issuing_bank_branch, :handover_date, :creator_id]] if record.status.in?(%w(approved paid))
       attributes += [:event]

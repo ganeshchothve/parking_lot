@@ -64,6 +64,8 @@
   <%= link_to t('helpers.new.link_name', model: Note.model_name.human), new_notable_path(notable_type: lead.class.model_name.i18n_key.to_s, notable_id: lead.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
+<%= render 'admin/invoices/invoiceable_links', resource: lead %>
+
 <% if policy([:admin, lead]).asset_create? %>
   <%= link_to Asset.model_name.human(count: 2), admin_lead_path(lead,'remote-state': assetables_path(assetable_type: lead.class.model_name.i18n_key.to_s, assetable_id: lead.id) ), class: "dropdown-item" %>
 <% end %>

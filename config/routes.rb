@@ -104,8 +104,10 @@ Rails.application.routes.draw do
         get :lost_receipt, on: :collection
       end
       # resources :receipts, only: [:index]
+    end
 
-      resources :invoices, only: [:index, :new, :create, :edit, :update], controller: 'booking_details/invoices' do
+    scope "*invoiceable_type/:invoiceable_id" do
+      resources :invoices, only: [:index, :new, :create, :edit, :update], controller: 'invoices', as: :invoiceable do
         member do
           patch :change_state
           get :raise_invoice
@@ -114,7 +116,7 @@ Rails.application.routes.draw do
     end
 
     # for Billing Team
-    resources :invoices, only: [:index, :show, :edit, :update], controller: 'booking_details/invoices' do
+    resources :invoices, only: [:index, :show, :edit, :update], controller: 'invoices' do
       get :generate_invoice, on: :member
       get :update_gst, on: :member
       get :export, on: :collection

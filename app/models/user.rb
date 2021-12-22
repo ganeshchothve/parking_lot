@@ -162,7 +162,7 @@ class User
   has_many :booking_details
   has_many :user_requests
   has_many :user_kycs
-  has_many :invoices
+  has_many :invoices, as: :invoiceable
   has_many :searches
   has_many :received_smses, class_name: 'Sms', inverse_of: :recipient
   has_many :received_whatsapps, class_name: 'Whatsapp', inverse_of: :recipient
@@ -267,6 +267,9 @@ class User
     scope admin_roles, ->{ where(role: admin_roles )}
   end
 
+  def incentive_eligible?
+    referred_by_id.present? && (self.buyer? || self.role.in?(%w(channel_partner cp_owner)))
+  end
 
   def phone_or_email_required
     errors.add(:base, 'Email or Phone is required')
