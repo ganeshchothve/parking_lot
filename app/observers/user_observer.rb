@@ -24,7 +24,8 @@ class UserObserver < Mongoid::Observer
     if current_client.external_api_integration?
       if user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner
         if Rails.env.staging? || Rails.env.production?
-          UserObserverWorker.perform_async(user.id.to_s, 'create')
+          # Kept create user api call inline to avoid firing update calls before create which will fail to find user to update
+          UserObserverWorker.new.perform(user.id.to_s, 'create')
           UserObserverWorker.perform_async(user.id.to_s, 'update', user.changes)
         else
           UserObserverWorker.new.perform(user.id.to_s, 'create')
@@ -52,7 +53,7 @@ class UserObserver < Mongoid::Observer
     if (user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner) || user.role?('dev_sourcing_manager')
       user.rera_id = user.channel_partner&.rera_id if user.rera_id.blank? && user.role.in?(%w(cp_owner channel_partner))
 
-      if current_client.external_api_integration?
+      if current_client.external_api_integration? && user.persisted? && user.changed?
         if Rails.env.staging? || Rails.env.production?
           UserObserverWorker.perform_async(user.id.to_s, 'update', user.changes)
         else

@@ -29,6 +29,15 @@ class ChannelPartnerObserver < Mongoid::Observer
       SelldoLeadUpdater.perform_async(user.id.to_s, {action: 'push_cp_data', selldo_api_key: selldo_api_key, selldo_client_id: selldo_client_id, lead: {custom_interested_services: channel_partner.interested_services.join(',')}})
     end
 
+    # For pushing inactive status event in Interakt
+    if current_client.external_api_integration?
+      if Rails.env.staging? || Rails.env.production?
+        ChannelPartnerObserverWorker.perform_async(channel_partner.id.to_s, { 'status' => [nil, channel_partner.status] })
+      else
+        ChannelPartnerObserverWorker.new.perform(channel_partner.id, { 'status' => [nil, channel_partner.status] })
+      end
+    end
+
     template_name = "channel_partner_created"
     template = Template::EmailTemplate.where(name: template_name).first
     recipients = []

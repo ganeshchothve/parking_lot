@@ -8,11 +8,11 @@ class UserObserverWorker
       if action == 'create'
 
         if user.role.in?(%w(cp_owner channel_partner))
-          Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id)
+          Crm::Api::ExecuteWorker.new.perform('post', 'User', user.id)
           Crm::Api::ExecuteWorker.perform_async('put', 'User', user.id)
         else
           crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:interakt, :base_url)).first
-          Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, nil, {}, crm_base&.id)
+          Crm::Api::ExecuteWorker.new.perform('post', 'User', user.id, nil, {}, crm_base&.id)
         end
 
       elsif action == 'update'

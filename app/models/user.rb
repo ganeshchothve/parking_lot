@@ -424,15 +424,13 @@ class User
   end
 
   def generate_referral_code
-    if self.role?("channel_partner") && self.referral_code.blank?
+    if (self.buyer? || self.role.in?(%w(cp_owner channel_partner))) && self.referral_code.blank?
       self.referral_code = "#{SecureRandom.hex(3)[0..-2]}"
-    else
-      self.referral_code
     end
   end
 
   def generate_cp_code
-    if ['channel_partner', 'cp_owner'].include?(self.role)
+    if ['channel_partner', 'cp_owner'].include?(self.role) && self.cp_code.blank?
       self.cp_code = "#{SecureRandom.hex(3)[0..-2]}"
     end
   end
