@@ -9,6 +9,7 @@ class Asset
   field :file_name, type: String
   field :asset_type, type: String
   field :original_filename, type: String
+  field :url, type: String
   # type or purpose of the document will be stored here. for eg. - photo_identity proof
   # types of document can be different for different assetables and will stored in DOCUMENT_TYPES in respective models.
   field :document_type, type: String

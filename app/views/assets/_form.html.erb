@@ -2,14 +2,15 @@
   <div class="row mb-4">
     <div class="col-10">
       <% options = assetable_document_types(assetable) %>
-      <%= select_tag "document_type", options_for_select(options, options.first[1]), {prompt: "Select", class: "selectize", required: 'required'} %>
+      <%= select_tag "document_type", options_for_select(options, options.first[1]), {prompt: "Select", class: "selectize doc_type", required: 'required'} %>
+      <%= text_field_tag "url", nil, class: "form-control url", placeholder: "Enter URL" %>
       <div class = "text-muted small pb-2">Upload documents in following formats - jpg, jpeg, png, pdf </div>
       <div class = "text-muted small"><div class="help_text"></div></div>
     </div>
     <div class="col-2">
       <div class="mb-3">
         <div class="btn btn-primary fileinput-button pull-right">
-          <input type="file" name="files[]" class="btn btn-primary fileupload" data-extensions="<%= allowed_file_extensions('AssetUploader', assetable) %>" data-url="<%= assetables_path(assetable_type: assetable.class.model_name.i18n_key.to_s, assetable_id: assetable.id) %>" multiple=true <%= policy([ current_user_role_group, Asset.new(assetable: assetable)]).update? ? "" : "disabled=disabled" %> data-klass = 'Asset' data-field_name = 'file' data-form-data = '{"document_type": "<%= assetable.class::DOCUMENT_TYPES[0] %>"}' />
+          <input type="file" name="files[]" class="btn btn-primary fileupload" data-extensions="<%= allowed_file_extensions('AssetUploader', assetable) %>" data-url="<%= assetables_path(assetable_type: assetable.class.model_name.i18n_key.to_s, assetable_id: assetable.id) %>" multiple=true <%= policy([ current_user_role_group, Asset.new(assetable: assetable)]).update? ? "" : "disabled=disabled" %> data-klass = 'Asset' data-field_name = 'file' data-form-data = '{"document_type": "<%= assetable.class::DOCUMENT_TYPES[0] %>", "url": "<%= nil %>"}' />
         </div>
       </div>
     </div>
@@ -25,13 +26,18 @@
         download_all: false
       });
     }
-    var currentType = $('select.selectize').val();
+    var formData={}
     $('select.selectize').on("change", function(){
-      var formData = {"document_type": $(this).val()}
+      formData.document_type = $('.doc_type').val()
       $(this).closest('.new_asset').find(".fileupload").data('form-data', formData)
-      currentType = $(this).val();
+      currentType = $('.doc_type').val();
       $('.help_text').html("Valid documents for <b>" + types[currentType] + "</b> - </br>" + helpText[currentType + "_html"])
     }).trigger('change');
+
+    $('.url').on("change", function(){
+      formData.url = $('.url').val()
+      $(this).closest('.new_asset').find(".fileupload").data('form-data', formData)
+    }).trigger("change");
     $('.fileupload').on("click", function(){
       if($('.' + currentType).length == 0){
         var html_content = "<div class = 'card m-2'><div class = 'card-header'>" + types[currentType] +"</div><div class = 'car-body'><div class = 'files-container p-3 "+ currentType + "'></div></div></div>"
