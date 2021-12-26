@@ -359,6 +359,7 @@ Rails.application.routes.draw do
     get :channel_partner_dashboard_counts, to: "dashboard#channel_partner_dashboard_counts"
     #get :download_brochure, to: 'dashboard#download_brochure'
     get :sales_board, to: 'dashboard#sales_board'
+    get :booking_details_counts, to: 'dashboard#booking_details_counts'
 
     resource :lead do
       resources :searches, except: [:destroy], controller: 'searches' do

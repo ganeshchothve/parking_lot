@@ -19,6 +19,38 @@ module DashboardDataProvider
     data.dig(0, "max") || 0
   end
 
+  def self.booking_details_data(options)
+    matcher = {}
+    matcher = options[:matcher] if options[:matcher].present?
+    project_ids = matcher[:project_id][:$in].map(&:to_s)
+    booking_stages = ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]
+    data = BookingDetail.collection.aggregate([
+      {"$match": matcher},
+      {
+        "$group": {
+          "_id": {
+            "booking_status": "$status",
+            "project_id": "$project_id"
+          },
+          "count": {"$sum": 1}
+        }
+      }
+    ]).as_json
+    booking_data = []
+    project_ids.each do |project_id|
+      booking_data << {project_id: project_id, blocked: 0, under_negotiation: 0, booked_tentative: 0, booked_confirmed: 0, cancelled: 0}
+    end
+    booking_data.each do |booking_d|
+      data.each do |d|
+        d = d.with_indifferent_access
+        if booking_d[:project_id] == d[:_id][:project_id]
+          booking_d[:"#{d[:_id][:booking_status]}"] = d[:count]
+        end
+      end
+    end
+    booking_data
+  end
+
   def self.cp_performance_walkins(user, options={})
     matcher = {}
     matcher = options[:matcher] if options[:matcher].present?
