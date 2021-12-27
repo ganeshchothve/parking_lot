@@ -49,6 +49,7 @@ module BillingTeamDashboardConcern
     else
       options[:project_id] = { "$in": Project.all.pluck(:id) }
     end
+    options[:status] = {"$in": ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]}
     options.with_indifferent_access
   end
 end
