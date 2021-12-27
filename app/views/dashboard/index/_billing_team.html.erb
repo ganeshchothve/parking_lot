@@ -92,14 +92,8 @@
                   </div>
                   <div class="row">
                     <div class="mb-3 col-12">
-                      <%= label_tag "city", "City", class: "control-label" %>
-                    <%= select_tag :cities, options_for_select(Project.all.pluck(:city, :city), (params[:cities].present? ? params[:cities] : "")), {prompt: "Select", class: "selectize", multiple: true} %>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="mb-3 col-12">
                       <%= label_tag "project_ids", "Project", class: "control-label" %>
-                    <%= select_tag :project_ids, options_for_select(Project.all.pluck(:name, :id), (params[:project_ids].present? ? params[:project_ids] : "")), {prompt: "Select", class: "selectize", multiple: true} %>
+                    <%= select_tag :project_ids, options_for_select(Project.all.map { |p| [p.ds_name, p.id] }, (params[:project_ids].present? ? params[:project_ids] : "")), {prompt: "Select", class: "selectize", multiple: true} %>
                     </div>
                   </div>
                 </div>

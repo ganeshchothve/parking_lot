@@ -2,11 +2,11 @@ module DashboardDataProvider
   # TODO remove not used methods from old methods
   # old methods
 
-  def self.city_wise_booking_report (current_user, options={})
+  def self.city_wise_booking_report (current_user, matcher={})
     city_wise_booking_count = {}
     data = BookingDetail.collection.aggregate([
       {
-        '$match': options
+        '$match': matcher
       },
       {
         "$project": {
