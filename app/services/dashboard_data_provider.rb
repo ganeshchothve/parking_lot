@@ -2,6 +2,56 @@ module DashboardDataProvider
   # TODO remove not used methods from old methods
   # old methods
 
+  def self.city_wise_booking_report (current_user, matcher={})
+    city_wise_booking_count = {}
+    data = BookingDetail.collection.aggregate([
+      {
+        '$match': matcher
+      },
+      {
+        "$project": {
+          "name": "$name",
+          "project_id": "$project_id"
+        }
+      },
+      {
+        '$group': {
+          '_id': '$project_id',
+          'bookings_count': { '$sum': 1}
+        }
+      },
+      {
+          '$lookup': {
+          'from': "projects",
+          'let': { 'id': "$_id" },
+          'pipeline': [
+            { '$match': { '$expr': { '$eq': [ "$_id",  "$$id" ] } } },
+            { '$project': { 'city': '$city' } }
+          ],
+          'as': "projects"
+        }
+      },
+      {
+        '$replaceRoot': {
+          'newRoot': {
+            '$mergeObjects': [
+              { '$arrayElemAt': [ "$projects", 0 ] },
+              "$$ROOT"
+            ]
+          }
+        }
+      }
+    ]).as_json
+    data.each do |d|
+      if city_wise_booking_count[d['city']].present?
+        city_wise_booking_count[d['city']].push({ project_id: d['_id'], bookings_count: d['bookings_count'] })
+      else
+        city_wise_booking_count[d['city']] = [{ project_id: d['_id'], bookings_count: d['bookings_count'] }]
+      end
+    end
+    city_wise_booking_count
+  end
+
   def self.incetive_scheme_max_ladders(options)
     matcher = {}
     matcher = options[:matcher] if options[:matcher].present?

@@ -224,7 +224,11 @@ class Project
   end
 
   def ds_name
-    name
+    n = name
+    if city.present?
+      n += " (#{city})"
+    end
+    n
   end
 
   def self.user_based_scope(user, params = {})
