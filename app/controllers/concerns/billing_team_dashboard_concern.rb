@@ -9,7 +9,7 @@ module BillingTeamDashboardConcern
     matcher = set_city_wise_report_matcher
     @project_booking_report = DashboardDataProvider.city_wise_booking_report(current_user, matcher)
     @project_name_hash = {}
-    Project.each do |p|
+    Project.all.each do |p|
       @project_name_hash[p.id.to_s] = p.name
     end
   end
@@ -46,6 +46,8 @@ module BillingTeamDashboardConcern
     end
     if params[:project_ids].present?
       options[:project_id] = { "$in": params[:project_ids].map { |id| BSON::ObjectId(id) } }
+    else
+      options[:project_id] = { "$in": Project.all.pluck(:id) }
     end
     options.with_indifferent_access
   end

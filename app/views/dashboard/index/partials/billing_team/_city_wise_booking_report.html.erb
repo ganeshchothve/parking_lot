@@ -12,21 +12,26 @@
         </tr>
       </thead>
       <tbody class='text-md-center'>
-
-        <% @project_booking_report.each do |key, value| %>
-          <tr>
-            <td rowspan="<%= value.length + 1 %>" data-title='<%= key %>' class='text-center border-end bg-primary white align-middle'><%= key %></td>
-          </tr>
-          <% value.each do |hash| %>
+        <% if @project_booking_report.present? %>
+          <% @project_booking_report.each do |key, value| %>
             <tr>
-              <td class="text-right">
-                <%= @project_name_hash[hash[:project_id]] %>
-              </td>
-              <td>
-                <%= hash[:bookings_count] %>
-              </td>
+              <td rowspan="<%= value.length + 1 %>" data-title='<%= key %>' class='text-center border-end bg-primary white align-middle'><%= key %></td>
             </tr>
-            <% end %>
+            <% value.each do |hash| %>
+              <tr>
+                <td class="text-right">
+                  <%= @project_name_hash[hash[:project_id]] %>
+                </td>
+                <td>
+                  <%= hash[:bookings_count] %>
+                </td>
+              </tr>
+              <% end %>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="3">No Records Found</td>
+          </tr>
         <% end %>
       </tbody>
     </table>

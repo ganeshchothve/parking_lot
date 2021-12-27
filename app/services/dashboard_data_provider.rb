@@ -4,6 +4,7 @@ module DashboardDataProvider
 
   def self.city_wise_booking_report (current_user, matcher={})
     city_wise_booking_count = {}
+    matcher = {status: {"$in": ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]}}
     data = BookingDetail.collection.aggregate([
       {
         '$match': matcher
