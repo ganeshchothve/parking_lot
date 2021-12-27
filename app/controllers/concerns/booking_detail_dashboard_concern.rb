@@ -5,17 +5,17 @@ module BookingDetailDashboardConcern
   end
 
   def set_matcher
-    @dates = params[:dates]
-    @dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if @dates.blank?
-    start_date, end_date = @dates.split(' - ')
-    @options = {
-      matcher: {
-        created_at: {
-          "$gte": Date.parse(start_date).beginning_of_day,
-          "$lte": Date.parse(end_date).end_of_day
+    @options = {matcher: {}}
+    if params[:dates].present?
+      @dates = params[:dates].split(' - ')
+      @start_date, @end_date = @dates
+      @options[:matcher] = {
+        booked_on: {
+          "$gte": Date.parse(@start_date).beginning_of_day,
+          "$lte": Date.parse(@end_date).end_of_day
         }
       }
-    }
+    end
     if params[:project_ids].present?
       @options[:matcher][:project_id] = {"$in": params[:project_ids].map{|id| BSON::ObjectId(id) }}
     else
