@@ -5,6 +5,15 @@ module BillingTeamDashboardConcern
     @dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if @dates.blank?
   end
 
+  def city_wise_booking_report
+    set_matcher
+    @project_booking_report = DashboardDataProvider.city_wise_booking_report(current_user, @options)
+    @project_name_hash = {}
+    Project.each do |p|
+      @project_name_hash[p.id.to_s] = p.name
+    end
+  end
+
   def project_wise_invoice_summary
     set_matcher
     # TO-DO Send options to project_wise_invoice_data
