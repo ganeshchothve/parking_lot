@@ -34,7 +34,7 @@ class IncentiveScheme
   field :auto_apply, type: String, default: true
 
   belongs_to :booking_portal_client, class_name: 'Client'
-  belongs_to :project, optional: -> { !default }
+  belongs_to :project, optional: -> { !default || resource_class == 'User' }
   belongs_to :project_tower, optional: true
   belongs_to :tier, optional: true  # for associating incentive schemes with different channel partner tiers.
   embeds_many :ladders
@@ -59,7 +59,7 @@ class IncentiveScheme
   scope :filter_by_date_range, ->(date) {start_date, end_date = date.split(' - '); where(starts_on: {'$lte': end_date}, ends_on: {'$gte': start_date})}
 
   validates :name, :category, :description, :brokerage_type, :payment_to, :ladder_strategy, presence: true
-  validates_uniqueness_of :name
+  #validates_uniqueness_of :name
   validates :starts_on, :ends_on, presence: true, unless: :default?
   validates :ladder_strategy, inclusion: { in: STRATEGY }
   validates :resource_class, inclusion: { in: RESOURCE_CLASS }

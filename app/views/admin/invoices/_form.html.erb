@@ -1,3 +1,4 @@
+<% @resource = @invoice.invoiceable unless @resource %>
 <%= nested_form_for([:admin, @invoice], url: url, local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['invoices'], "data-type": "json", id: 'invoice_form'}) do |f| %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
@@ -9,28 +10,15 @@
       </div>
 
       <div class="modal-body theme-form">
-        <%= render 'admin/invoices/details', booking_detail: @invoice.booking_detail %>
+        <%= render "admin/invoices/#{@resource.class.model_name.i18n_key.to_s}/details", resource: @invoice.invoiceable rescue nil %>
         <% if (incentive_deduction = @invoice.incentive_deduction.presence) %>
           <%= render 'admin/invoices/incentive_deduction', incentive_deduction: incentive_deduction %>
         <% end %>
 
-        <div class="mb-3">
-          <%= f.label :agreement_amount, class: '' %>
-          <%= f.number_field :agreement_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("agreement_amount") %>
-        </div>
-        <% if policy([:admin, @invoice]).editable_field?("payment_adjustment_attributes") %>
-          <div class="payment-adjustment">
-            <%= f.fields_for :payment_adjustment do |adj|%>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="mb-3">
-                    <%= adj.label :absolute_value, 'Adjustment' %>
-                    <%= adj.number_field :absolute_value, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("payment_adjustment_attributes") %>
-                    <p class="small text-muted">Make adjustments here for Kicker & Voucher Incentives. Supports negative amount for deductions from Net amount </p>
-                  </div>
-                </div>
-              </div>
-            <% end %>
+        <% if policy([:admin, @invoice]).editable_field?("agreement_amount") %>
+          <div class="mb-3">
+            <%= f.label :agreement_amount, class: '' %>
+            <%= f.number_field :agreement_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("agreement_amount") %>
           </div>
         <% end %>
         <div class="mb-3">
@@ -40,6 +28,14 @@
           <% else %>
             <p class='net-amount'><%= f.object.amount %></p>
           <% end %>
+        </div>
+        <div class="mb-3">
+          <div class="alert alert-warning" role="alert">
+            Please change the GST Slab % as per the Slabs
+          </div>
+          <%= f.label :gst_slab %>
+          <% gst_slabs = @resource.try(:project)&.incentive_gst_slabs || @resource.booking_portal_client.try(:gst_slabs) || [] %>
+          <%= f.select :gst_slab, options_for_select(gst_slabs.collect{|gst| ["#{gst} %", gst]} || [], @invoice.gst_slab), {prompt: 'Select'}, class: "selectize", disabled: !policy([:admin, @invoice]).editable_field?("gst_slab") %>
         </div>
         <div class="mb-3">
           <%= f.label :gst_amount, class: '' %>
@@ -57,6 +53,21 @@
             <p class='net-amount'><%= f.object.net_amount %></p>
           <% end %>
         </div>
+        <% if policy([:admin, @invoice]).editable_field?("payment_adjustment_attributes") %>
+          <div class="payment-adjustment">
+            <%= f.fields_for :payment_adjustment do |adj|%>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="mb-3">
+                    <%= adj.label :absolute_value, 'Adjustment' %>
+                    <%= adj.number_field :absolute_value, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("payment_adjustment_attributes") %>
+                    <p class="small text-muted">Make adjustments here for Kicker & Voucher Incentives. Supports negative amount for deductions from Net amount </p>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
         <div class="mb-3">
           <%= f.label :status, class: 'control-label label-required' %>
           <% events = available_events(@invoice) %>
@@ -102,13 +113,30 @@
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($("#invoice_form"));
-  $('#invoice_manual_event').on('change', function(e){
+  var invoiceType = '<%= @invoice.class.to_s.underscore.gsub('/', '_') %>';
+
+  $('#' + invoiceType + '_event').on('change', function(e){
     var status = e.target.value
     if (status == 'reject') {
-      $('#invoice_manual_rejection_reason').attr('required', true);
+      $('#' + invoiceType + '_rejection_reason').attr('required', true);
     } else {
-      $('#invoice_manual_rejection_reason').attr('required', false);
+      $('#' + invoiceType + '_rejection_reason').attr('required', false);
     }
   });
+
+  var netAmt = '<%= @invoice.net_amount %>';
+  var gstApplicable = '<%= @invoice.try(:project)&.gst_slab_applicable? %>';
+  var gstAmount = 0;
+  $('#' + invoiceType + '_gst_slab, #' + invoiceType + '_amount').on('change', function(event) {
+    if (gstApplicable == 'true') {
+      var gstPercentage = parseInt($('#' + invoiceType + '_gst_slab').val());
+      var amount = parseFloat($('input[name="' + invoiceType + '[amount]"]').val());
+      gstAmount = amount * (gstPercentage/100);
+      $('#invoice_form').find('.gst-amount').html(Amura.formatMoney(gstAmount));
+      $('#invoice_form').find('.amount').html(Amura.formatMoney(amount));
+    }
+    netAmt = amount + gstAmount;
+    $('#invoice_form').find('.net-amount').html(Amura.formatMoney(netAmt));
+  }).trigger('change');
 });
 <% end %>

@@ -3,14 +3,13 @@ class InvoiceObserver < Mongoid::Observer
     resource = invoice.invoiceable
     if resource
       invoice.account_manager_id = resource.try(:account_manager_id)
-      invoice.manager_id = resource&.manager_id
+      invoice.manager_id = resource&.invoiceable_manager&.id if resource.manager_id.blank?
       if invoice.manager
         invoice.channel_partner_id = invoice.manager&.channel_partner_id
         invoice.cp_manager_id = invoice.manager&.manager_id
         invoice.cp_admin_id = invoice.cp_manager&.manager_id if invoice.cp_manager
       end
     end
-    invoice.amount = invoice.calculate_amount
     invoice.gst_amount = invoice.calculate_gst_amount
     invoice.net_amount = invoice.calculate_net_amount
   end

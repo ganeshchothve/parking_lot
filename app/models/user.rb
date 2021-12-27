@@ -11,6 +11,7 @@ class User
   extend ApplicationHelper
   include SalesUserStateMachine
   include DetailsMaskable
+  include IncentiveSchemeAutoApplication
 
   # Constants
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
@@ -214,6 +215,7 @@ class User
   scope :buyers, -> { where(role: {'$in' => BUYER_ROLES } )}
   scope :filter_by_userwise_project_ids, ->(user) { self.in(project_ids: user.project_ids) if user.try(:project_ids).present? }
   scope :filter_by_sales_status, ->(*sales_status){ where(sales_status: { '$in': sales_status }) }
+  scope :incentive_eligible, -> { nin(referred_by_id: ['', nil]).in(role: BUYER_ROLES + %w(channel_partner cp_owner)) }
 
   scope :filter_by_created_by, ->(_created_by) do
     if _created_by == 'direct'
@@ -477,6 +479,30 @@ class User
   end
 
   alias :resource_name :name
+  # Used in Incentive Invoice
+  alias :name_in_invoice :name
+  alias :invoiceable_manager :referred_by
+
+  def invoiceable_date
+    Referral.where(referred_by: referred_by, email: email, phone: phone).first&.created_at
+  end
+
+  # Find incentive schemes
+  def find_incentive_schemes
+    tier_id = referred_by&.tier_id
+    incentive_schemes = ::IncentiveScheme.approved.where(project_id: project_id, auto_apply: true).lte(starts_on: invoiceable_date).gte(ends_on: invoiceable_date)
+    # Find tier level scheme
+    if tier_id
+      incentive_schemes = incentive_schemes.where(tier_id: tier_id)
+    end
+    incentive_schemes
+  end
+
+  # Find all the resources for a channel partner that fall under this scheme
+  def find_all_resources_for_scheme(i_scheme)
+    resources = self.class.incentive_eligible.where(:"incentive_scheme_data.#{i_scheme.id.to_s}".exists => true, referred_by_id: self.referred_by_id).gte(scheduled_on: i_scheme.starts_on).lte(scheduled_on: i_scheme.ends_on)
+    self.class.or(resources.selector, {id: self.id})
+  end
 
   def login
     @login || phone || email

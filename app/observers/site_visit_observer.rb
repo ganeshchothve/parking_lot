@@ -53,4 +53,8 @@ class SiteVisitObserver < Mongoid::Observer
   def after_create site_visit
     site_visit.third_party_references.each(&:update_references)
   end
+
+  def after_save site_visit
+    site_visit.calculate_incentive if site_visit.incentive_eligible? && site_visit.project.incentive_calculation_type?("calculated")
+  end
 end

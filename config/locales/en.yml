@@ -478,6 +478,7 @@ en:
         powered_by_link: 'Show Powered By Link'
         lead_blocking_days: 'Configure Lead Blocking Days'
         invoice_approval_tat: 'Invoice Approval TAT (In Days)'
+        incentive_gst_slabs: 'Configure Incentive GST Slabs (%)'
       client/payment_gateways:
         Razorpay: Razorpay Payment Gateway
         CCAvenue: CCAvenue Payment Gateway
@@ -569,7 +570,7 @@ en:
         price_upto: 'Price Goes Upto'
         broker_usp: 'Broker Unique Selling Points (Fill in upto 3 USPs)'
         check_sv_availability_in_selldo: 'Check Site Visit Availability in Sell.do'
-        incentive_gst_slabs: 'Incentive GST Slabs (%)'
+        incentive_gst_slabs: 'Configure Incentive GST Slabs (%)'
         approved_banks/list:
           hdfc: HDFC Bank
           sbi: State Bank of India
@@ -923,7 +924,8 @@ en:
         number: 'Invoice Number'
         amount: Brokerage Amount
         gst_amount: GST Amount
-        net_amount: Approved Amount
+        gst_slab: 'GST Slab'
+        net_amount: Total Brokerage Amount
         comments: Comments
         rejection_reason: Rejection Reason
         project_id: 'Project'
@@ -935,6 +937,8 @@ en:
         approved_date: 'Approved Date'
         status: 'Status'
         cheque_detail: 'Cheque Details'
+        agreement_amount: 'Consideration Value For Brokerage'
+        incentive_resource: 'Resource'
       invoice/status:
         draft: 'Draft'
         raised: 'Raised'

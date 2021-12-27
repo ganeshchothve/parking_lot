@@ -19,11 +19,14 @@ class Invoice
   field :net_amount, type: Float
   field :gst_slab, type: Float, default: 0.0
   field :agreement_amount, type: Float, default: 0.0
-  field :percentage_slab, type: Float, default: 18
+  #field :percentage_slab, type: Float, default: 18
   field :number, type: String
+  field :category, type: String
+  field :brokerage_type, type: String, default: 'sub_brokerage'
+  field :payment_to, type: String, default: 'channel_partner'
 
-  belongs_to :project
   belongs_to :invoiceable, polymorphic: true
+  belongs_to :project, optional: true
   belongs_to :user, optional: true
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true
@@ -37,13 +40,14 @@ class Invoice
   embeds_one :payment_adjustment, as: :payable
 
 
-  validates :number, presence: true, if: :raised?
+  validates :number, :category, :brokerage_type, :payment_to, presence: true, if: :raised?
   validates :rejection_reason, presence: true, if: :rejected?
   validates :comments, presence: true, if: proc { pending_approval? && status_was == 'rejected' }
   validates :amount, numericality: { greater_than: 0 }
   # validates :cheque_detail, presence: true, if: :paid?
   # validates :cheque_detail, copy_errors_from_child: true, if: :cheque_detail?
   validates :net_amount, numericality: { greater_than: 0 }, if: :approved?
+  validates :project_id, presence: true, if: proc { invoiceable_type != 'User' }
 
   delegate :name, to: :project, prefix: true, allow_nil: true
   delegate :name, to: :manager, prefix: true, allow_nil: true
@@ -52,7 +56,6 @@ class Invoice
   scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
   scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }
-  scope :filter_by_booking_detail_id, ->(booking_detail_id) { where(booking_detail_id: booking_detail_id) }
   scope :filter_by_channel_partner_id, ->(channel_partner_id) { where(manager_id: channel_partner_id) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_invoiceable_id, ->(invoiceable_id) { where(invoiceable_id: invoiceable_id) }
@@ -81,21 +84,16 @@ class Invoice
     end
   end
 
-  def calculate_amount
-    agreement_amount * (percentage_slab/100)
-  end
-
   def calculate_gst_amount
-    if self.project.gst_slab_applicable?
-      calculate_amount * (gst_slab/100)
+    if self.project&.gst_slab_applicable?
+      amount * (gst_slab/100)
     else
       0
     end
   end
 
-
   def calculate_net_amount
-    _amount = calculate_amount + calculate_gst_amount 
+    _amount = amount + calculate_gst_amount
     _amount += payment_adjustment.try(:absolute_value).to_i if payment_adjustment.try(:absolute_value).present?
     _amount -= incentive_deduction.try(:amount).to_i if incentive_deduction.try(:approved?)
     _amount
@@ -104,7 +102,7 @@ class Invoice
   class << self
     def user_based_scope(user, params = {})
       custom_scope = {}
-      if params[:booking_detail_id].blank? && !user.buyer?
+      if params[:invoiceable_id].blank? && !user.buyer?
         if user.role?('channel_partner')
           custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
         elsif user.role?('cp_owner')
@@ -123,10 +121,10 @@ class Invoice
           custom_scope = { account_manager_id: user.id }
         end
       end
-      if params[:booking_detail_id].present?
-        custom_scope = { booking_detail_id: params[:booking_detail_id] }
+      if params[:invoiceable_id].present?
+        custom_scope = { invoiceable_id: params[:invoiceable_id] }
       end
-      custom_scope = { booking_detail_id: { '$in': user.booking_details.distinct(:id) } } if user.buyer?
+      custom_scope = {} if user.buyer?
 
       unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
         custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})

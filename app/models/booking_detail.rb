@@ -11,6 +11,7 @@ class BookingDetail
   extend RenderAnywhere
   include PriceCalculator
   include CrmIntegration
+  include IncentiveSchemeAutoApplication
 
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   STATUSES = %w[hold blocked booked_tentative booked_confirmed under_negotiation scheme_rejected scheme_approved swap_requested swapping swapped swap_rejected cancellation_requested cancelling cancelled cancellation_rejected]
@@ -52,7 +53,7 @@ class BookingDetail
   embeds_many :costs, as: :costable
   embeds_many :data, as: :data_attributable
   embeds_many :tasks, cascade_callbacks: true
-  belongs_to :project, optional: true
+  belongs_to :project#, optional: true
   belongs_to :project_tower, optional: true
   belongs_to :project_unit, optional: true
   belongs_to :lead, optional: true
@@ -205,6 +206,39 @@ class BookingDetail
   end
 
   alias :resource_name :ds_name
+  # Used in incentive invoice
+  alias :name_in_invoice :name
+  alias :invoiceable_manager :manager
+  alias :invoiceable_date :booked_on
+
+  def invoiceable_price
+    calculate_invoice_agreement_amount
+  end
+
+  # Find incentive scheme
+  def find_incentive_schemes
+    tower_id = project_tower_id
+    tier_id = manager&.tier_id
+    incentive_schemes = ::IncentiveScheme.approved.where(project_id: project_id, auto_apply: true).lte(starts_on: invoiceable_date).gte(ends_on: invoiceable_date)
+    # Find tier level scheme
+    if tier_id
+      _incentive_schemes = (incentive_schemes.where(project_tower_id: tower_id, tier_id: tier_id) || incentive_schemes.where(tier_id: tier_id, project_tower_id: nil))
+    end
+    # Find tower level scheme
+    _incentive_schemes.presence ||= incentive_schemes.where(project_tower_id: tower_id, tier_id: nil)
+    # Find project level scheme
+    _incentive_schemes.presence ||= incentive_schemes.where(project_tower_id: nil, tier_id: nil)
+    # Use default scheme if not found any of above
+    #_incentive_schemes.presence ||= ::IncentiveScheme.where(default: true)
+    _incentive_schemes
+  end
+
+  # Find all the bookings for a channel partner that fall under this scheme
+  def find_all_resources_for_scheme(i_scheme)
+    booking_details = self.class.incentive_eligible.where(project_id: i_scheme.project_id, "incentive_scheme_data.#{i_scheme.id.to_s}".exists => true, manager_id: self.manager_id).gte(booked_on: i_scheme.starts_on).lte(booked_on: i_scheme.ends_on)
+    booking_details = booking_details.where(project_tower_id: i_scheme.project_tower_id) if i_scheme.project_tower_id.present?
+    self.class.or(booking_details.selector, {id: self.id})
+  end
 
   # validates kyc presence if booking is not allowed without kyc
   def kyc_mandate
@@ -326,20 +360,15 @@ class BookingDetail
   end
 
   def incentive_eligible?
-    if project.present? && project.enable_inventory && project_unit.present?
+    if project.present? && project.enable_inventory? && project_unit.present?
       booked_confirmed? && system_tasks_completed?
-    elsif project.present? && !project.enable_inventory  
+    elsif project.present? && !project.enable_inventory?
       booked_confirmed?
     end
   end
 
-  def calculate_incentive
-    # Calculate incentives & generate invoices
-    IncentiveCalculatorWorker.new.perform(id.to_s)
-  end
-
   def calculate_invoice_agreement_amount
-    if self.project.enable_inventory && self.project_unit.present?
+    if self.project.enable_inventory? && self.project_unit.present?
       self.calculate_agreement_price
     else
       (self.agreement_price)

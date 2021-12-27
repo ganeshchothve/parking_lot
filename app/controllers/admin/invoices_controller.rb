@@ -15,7 +15,7 @@ class Admin::InvoicesController < AdminController
   end
 
   def create
-    @invoice = Invoice::Manual.new(project: @resource.project, manager: @resource.manager, raised_date: Time.now, invoiceable: @resource, channel_partner_id: @resource.channel_partner.try(:id))
+    @invoice = Invoice::Manual.new(project: @resource.try(:project), raised_date: Time.now, invoiceable: @resource, manager: @resource.invoiceable_manager)
     @invoice.assign_attributes(permitted_attributes([current_user_role_group, @invoice]))
     respond_to do |format|
       if @invoice.save
@@ -132,7 +132,7 @@ class Admin::InvoicesController < AdminController
 
   def set_invoice
     if params[:action] == 'new'
-      @invoice = Invoice::Manual.new(invoiceable: @resource, project_id: @resource.project_id, agreement_amount: @resource.try(:calculate_invoice_agreement_amount))
+      @invoice = Invoice::Manual.new(invoiceable: @resource, project_id: @resource.try(:project_id), agreement_amount: @resource.try(:calculate_invoice_agreement_amount))
     else
       @invoice = Invoice.where(id: params[:id]).first
     end

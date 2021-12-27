@@ -10,6 +10,7 @@ class SiteVisit
   extend FilterByCriteria
   include Mongoid::Autoinc
   include QueueNumberAssignment
+  include IncentiveSchemeAutoApplication
 
   belongs_to :project
   belongs_to :lead
@@ -49,6 +50,7 @@ class SiteVisit
   scope :filter_by_conducted_on, ->(date) { start_date, end_date = date.split(' - '); where(conducted_on: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_manager_id, ->(manager_id) {where(manager_id: manager_id) }
   scope :filter_by_cp_manager_id, ->(cp_manager_id) {where(cp_manager_id: cp_manager_id) }
+  scope :incentive_eligible, -> { where(approval_status: 'approved', status: {'$in': %w(conducted paid)}) }
 
   validates :scheduled_on, :status, :site_visit_type, :created_by, presence: true
   validates :conducted_on, :conducted_by, presence: true, if: Proc.new { |sv| sv.status == 'conducted' }
@@ -116,6 +118,13 @@ class SiteVisit
   end
 
   alias :resource_name :name
+  # Used in incentive invoice
+  alias :invoiceable_manager :manager
+  alias :invoiceable_date :scheduled_on
+
+  def name_in_invoice
+    self.lead.name.to_s
+  end
 
   def update_data_from_selldo(data)
     self.status = data.dig('site_visit', 'status')

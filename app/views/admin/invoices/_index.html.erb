@@ -3,9 +3,9 @@
     <thead>
       <tr class="bg-primary white">
         <th><%= t('mongoid.attributes.invoice.number') %></th>
-        <th>Walk In</th>
+        <th><%= t('mongoid.attributes.invoice.category') %></th>
         <th>Account Manager</th>
-        <th><%= Invoice.model_name.human %> Project</th>
+        <th><%= Invoice.model_name.human %> | Project</th>
         <!--<th><%#= IncentiveScheme.model_name.human %> Details</th> -->
         <th><%= t('mongoid.attributes.invoice.amount') %></th>
         <th><%= t('mongoid.attributes.invoice.status') %></th>
@@ -17,13 +17,15 @@
     <% invoices.each do |invoice| %>
       <tr>
         <td><span class="col-title"><%= invoice.try(:number) %></span></td>
-        <td><span class="col-title"><%= link_to invoice.invoiceable.lead.name, [current_user_role_group, invoice.invoiceable.lead], class: "theme-txt-color" %></span></td>
+        <td><span class="col-title"><%= t("mongoid.attributes.incentive_scheme/categories.#{invoice.category}") %></span></td>
         <td><span class="col-title"><%# unless current_user.role?('channel_partner') %><%#= link_to_if policy([current_user_role_group, invoice.manager]).index?, invoice.manager_name, [:admin, invoice.manager], class: "theme-txt-color" %><%# end %><%= invoice.account_manager.try(:name) %></span></td>
         <td>
-          <%= link_to invoice.invoiceable.name, [current_user_role_group, invoice.invoiceable], class: "theme-txt-color" %>
-          <div class='small d-inline-block'> <span class="mx-2">| </span>
-            <span><%= invoice.project_name %></span>
-          </div>
+          <%= link_to invoice.invoiceable.name_in_invoice, [current_user_role_group, invoice.invoiceable], class: "theme-txt-color" %>
+          <% if invoice.invoiceable_type != 'User' %>
+            <div class='small d-inline-block'> <span class="mx-2">| </span>
+              <span><%= invoice.project_name %></span>
+            </div>
+          <% end %>
         </td>
         <!--
         <td>
