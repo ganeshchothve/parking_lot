@@ -18,12 +18,10 @@
 
         <%= f.hidden_field :event, value: "raise" %>
         <%= f.hidden_field :creator_id, value: current_user.id %>
-        <% if policy([:admin, @invoice]).editable_field?("category") %>
-          <div class="mb-3">
-            <%= f.label :category, class: 'label-required' %>
-            <%= f.select :category, IncentiveScheme::CATEGORIES_PER_RESOURCE[@resource.class.to_s].collect{|x| [t("mongoid.attributes.incentive_scheme/categories.#{x}"), x]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @invoice]).editable_field?("category") %>
-          </div>
-        <% end %>
+        <div class="mb-3">
+          <%= f.label :category, class: 'label-required' %>
+          <%= f.select :category, IncentiveScheme::CATEGORIES_PER_RESOURCE[@resource.class.to_s].collect{|x| [t("mongoid.attributes.incentive_scheme/categories.#{x}"), x]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @invoice]).editable_field?("category") %>
+        </div>
         <% if policy([:admin, @invoice]).editable_field?("brokerage_type") %>
           <div class="mb-3">
             <%= f.label :brokerage_type, class: 'label-required' %>
@@ -114,18 +112,22 @@
     FormInitializer.init($("#invoice_form"));
     var netAmt = '<%= @invoice.net_amount %>';
     var gstApplicable = '<%= @invoice.try(:project)&.gst_slab_applicable? %>';
-    var gstAmount = 0;
     var invoiceType = '<%= @invoice.class.to_s.underscore.gsub('/', '_') %>';
+
     $('#' + invoiceType + '_gst_slab, #' + invoiceType + '_amount').on('change', function(event) {
+      var gstAmount = 0;
+      var amount = parseFloat($('input[name="' + invoiceType + '[amount]"]').val() || 0);
+      $('#raise_invoice_form').find('.amount').html(Amura.formatMoney(amount));
       if (gstApplicable == 'true') {
-        var gstPercentage = parseInt($('#' + invoiceType + '_gst_slab').val());
-        var amount = parseFloat($('input[name="' + invoiceType + '[amount]"]').val());
-        gstAmount = amount * (gstPercentage/100);
-        $('#invoice_form').find('.gst-amount').html(Amura.formatMoney(gstAmount));
-        $('#invoice_form').find('.amount').html(Amura.formatMoney(amount));
+        var gstPercVal = $('#' + invoiceType + '_gst_slab').val();
+        if(!_.isEmpty(gstPercVal)){
+          var gstPercentage = parseFloat(gstPercVal);
+          gstAmount = amount * (gstPercentage/100);
+        }
+        $('#raise_invoice_form').find('.gst-amount').html(Amura.formatMoney(gstAmount));
       }
       netAmt = amount + gstAmount;
-      $('#invoice_form').find('.net-amount').html(Amura.formatMoney(netAmt));
+      $('#raise_invoice_form').find('.net-amount').html(Amura.formatMoney(netAmt));
     }).trigger('change');
   });
 <% end %>

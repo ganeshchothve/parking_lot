@@ -103,7 +103,13 @@ class Lead
   scope :filter_by_stage, ->(stage) { where(stage: stage) }
   scope :filter_by_customer_status, ->(*customer_status){ where(customer_status: { '$in': customer_status }) }
   scope :filter_by_queue_number, ->(queue_number){ where(queue_number: queue_number) }
-  scope :incentive_eligible, -> { nin(manager_id: ['', nil]) }
+  scope :incentive_eligible, ->(category) do
+    if category == 'lead'
+      nin(manager_id: ['', nil])
+    else
+      all.not_eligible
+    end
+  end
 
   scope :filter_by_receipts, ->(receipts) do
     lead_ids = Receipt.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).distinct(:lead_id)
@@ -149,8 +155,16 @@ class Lead
     end
   end
 
-  def incentive_eligible?
-    manager_id.present?
+  def incentive_eligible?(category=nil)
+    if category.present?
+      if category == 'lead'
+        manager_id.present?
+      else
+        false
+      end
+    else
+      _incentive_eligible?
+    end
   end
 
   def manager_name

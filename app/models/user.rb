@@ -215,7 +215,13 @@ class User
   scope :buyers, -> { where(role: {'$in' => BUYER_ROLES } )}
   scope :filter_by_userwise_project_ids, ->(user) { self.in(project_ids: user.project_ids) if user.try(:project_ids).present? }
   scope :filter_by_sales_status, ->(*sales_status){ where(sales_status: { '$in': sales_status }) }
-  scope :incentive_eligible, -> { nin(referred_by_id: ['', nil]).in(role: BUYER_ROLES + %w(channel_partner cp_owner)) }
+  scope :incentive_eligible, ->(category) do
+    if category == 'referral'
+      nin(referred_by_id: ['', nil]).in(role: BUYER_ROLES + %w(channel_partner cp_owner))
+    else
+      all.not_eligible
+    end
+  end
 
   scope :filter_by_created_by, ->(_created_by) do
     if _created_by == 'direct'
@@ -269,8 +275,16 @@ class User
     scope admin_roles, ->{ where(role: admin_roles )}
   end
 
-  def incentive_eligible?
-    referred_by_id.present? && (self.buyer? || self.role.in?(%w(channel_partner cp_owner)))
+  def incentive_eligible?(category=nil)
+    if category.present?
+      if category == 'referral'
+        referred_by_id.present? && (self.buyer? || self.role.in?(%w(channel_partner cp_owner)))
+      else
+        false
+      end
+    else
+      _incentive_eligible?
+    end
   end
 
   def phone_or_email_required
@@ -488,9 +502,9 @@ class User
   end
 
   # Find incentive schemes
-  def find_incentive_schemes
+  def find_incentive_schemes(category)
     tier_id = referred_by&.tier_id
-    incentive_schemes = ::IncentiveScheme.approved.where(project_id: project_id, auto_apply: true).lte(starts_on: invoiceable_date).gte(ends_on: invoiceable_date)
+    incentive_schemes = ::IncentiveScheme.approved.where(resource_class: self.class.to_s, category: category, project_id: project_id, auto_apply: true).lte(starts_on: invoiceable_date).gte(ends_on: invoiceable_date)
     # Find tier level scheme
     if tier_id
       incentive_schemes = incentive_schemes.where(tier_id: tier_id)
@@ -500,7 +514,7 @@ class User
 
   # Find all the resources for a channel partner that fall under this scheme
   def find_all_resources_for_scheme(i_scheme)
-    resources = self.class.incentive_eligible.where(:"incentive_scheme_data.#{i_scheme.id.to_s}".exists => true, referred_by_id: self.referred_by_id).gte(scheduled_on: i_scheme.starts_on).lte(scheduled_on: i_scheme.ends_on)
+    resources = self.class.incentive_eligible(i_scheme.category).where(:"incentive_scheme_data.#{i_scheme.id.to_s}".exists => true, referred_by_id: self.referred_by_id).gte(scheduled_on: i_scheme.starts_on).lte(scheduled_on: i_scheme.ends_on)
     self.class.or(resources.selector, {id: self.id})
   end
 

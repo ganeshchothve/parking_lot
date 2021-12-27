@@ -18,12 +18,8 @@
 <% if policy([current_user_role_group, booking_detail]).generate_booking_detail_form? && booking_detail.status == 'booked_confirmed' %>
   <%= link_to t('booking_details.links.print_booking_form'), generate_booking_detail_form_admin_booking_detail_path(booking_detail), class: 'dropdown-item', target: '_blank' %>
 <% end %>
-<% if booking_detail.incentive_eligible? && policy([:admin, Invoice.new]).new? %>
-  <%= link_to t('controller.invoices.new.link_name'), new_admin_booking_detail_invoice_path(booking_detail), class: 'dropdown-item modal-remote-form-link' %>
-<% end %>
-<%# if booking_detail.incentive_eligible? && policy([:admin, Invoice ]).index? %>
-  <%#= link_to t('controller.booking_details.invoices.link_name'), admin_booking_detail_invoices_path(booking_detail), class: 'dropdown-item' %>
-<%# end %>
+<%= render 'admin/invoices/invoiceable_links', resource: booking_detail %>
+
 <%= javascript_tag do %>
   $(document).ready(function(){
     $('a.queued, a.dropoff').on('ajax:success', function(event) {

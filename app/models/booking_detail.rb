@@ -117,7 +117,16 @@ class BookingDetail
   }
    scope :filter_by_agreement_date, ->(date) { start_date, end_date = date.split(' - '); where(agreement_date: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day)
   }
-  scope :incentive_eligible, -> { booked_confirmed.filter_by_tasks_completed_tracked_by('system') }
+  scope :incentive_eligible, ->(category) do
+    case category
+    when 'spot_booking'
+      blocked
+    when 'brokerage'
+      booked_confirmed.filter_by_tasks_completed_tracked_by('system')
+    else
+      all.not_eligible
+    end
+  end
   scope :booking_stages, -> { all.in(status: BOOKING_STAGES) }
 
   accepts_nested_attributes_for :notes, :tasks, :receipts, :user_kycs, :primary_user_kyc, reject_if: :all_blank
@@ -216,18 +225,18 @@ class BookingDetail
   end
 
   # Find incentive scheme
-  def find_incentive_schemes
+  def find_incentive_schemes(category)
     tower_id = project_tower_id
     tier_id = manager&.tier_id
-    incentive_schemes = ::IncentiveScheme.approved.where(project_id: project_id, auto_apply: true).lte(starts_on: invoiceable_date).gte(ends_on: invoiceable_date)
+    incentive_schemes = ::IncentiveScheme.approved.where(resource_class: self.class.to_s, category: category, project_id: project_id, auto_apply: true).lte(starts_on: invoiceable_date).gte(ends_on: invoiceable_date)
     # Find tier level scheme
     if tier_id
       _incentive_schemes = (incentive_schemes.where(project_tower_id: tower_id, tier_id: tier_id) || incentive_schemes.where(tier_id: tier_id, project_tower_id: nil))
     end
     # Find tower level scheme
-    _incentive_schemes.presence ||= incentive_schemes.where(project_tower_id: tower_id, tier_id: nil)
+    _incentive_schemes = _incentive_schemes.presence || incentive_schemes.where(project_tower_id: tower_id, tier_id: nil)
     # Find project level scheme
-    _incentive_schemes.presence ||= incentive_schemes.where(project_tower_id: nil, tier_id: nil)
+    _incentive_schemes = _incentive_schemes.presence || incentive_schemes.where(project_tower_id: nil, tier_id: nil)
     # Use default scheme if not found any of above
     #_incentive_schemes.presence ||= ::IncentiveScheme.where(default: true)
     _incentive_schemes
@@ -235,7 +244,7 @@ class BookingDetail
 
   # Find all the bookings for a channel partner that fall under this scheme
   def find_all_resources_for_scheme(i_scheme)
-    booking_details = self.class.incentive_eligible.where(project_id: i_scheme.project_id, "incentive_scheme_data.#{i_scheme.id.to_s}".exists => true, manager_id: self.manager_id).gte(booked_on: i_scheme.starts_on).lte(booked_on: i_scheme.ends_on)
+    booking_details = self.class.incentive_eligible(i_scheme.category).where(project_id: i_scheme.project_id, :"incentive_scheme_data.#{i_scheme.id.to_s}".exists => true, manager_id: self.manager_id).gte(booked_on: i_scheme.starts_on).lte(booked_on: i_scheme.ends_on)
     booking_details = booking_details.where(project_tower_id: i_scheme.project_tower_id) if i_scheme.project_tower_id.present?
     self.class.or(booking_details.selector, {id: self.id})
   end
@@ -359,11 +368,28 @@ class BookingDetail
     end
   end
 
-  def incentive_eligible?
-    if project.present? && project.enable_inventory? && project_unit.present?
-      booked_confirmed? && system_tasks_completed?
-    elsif project.present? && !project.enable_inventory?
-      booked_confirmed?
+  def incentive_eligible?(category=nil)
+    if category.present?
+      case category
+      when 'spot_booking'
+        blocked?
+      when 'brokerage'
+        if project.present?
+          if project.enable_inventory?
+            if project_unit.present?
+              booked_confirmed? && system_tasks_completed?
+            else
+              false
+            end
+          else
+            booked_confirmed?
+          end
+        end
+      else
+        false
+      end
+    else
+      _incentive_eligible?
     end
   end
 

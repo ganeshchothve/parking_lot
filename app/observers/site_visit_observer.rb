@@ -55,6 +55,6 @@ class SiteVisitObserver < Mongoid::Observer
   end
 
   def after_save site_visit
-    site_visit.calculate_incentive if site_visit.incentive_eligible? && site_visit.project.incentive_calculation_type?("calculated")
+    site_visit.calculate_incentive if site_visit.project.incentive_calculation_type?("calculated")
   end
 end

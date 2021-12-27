@@ -18,13 +18,13 @@
                   </div>
                 </div>
               <% end %>
-              <% unless current_user.role.in?(%w(channel_partner cp_owner)) %>
               <div class="col-md-4">
                 <div class="mb-3">
                   <label class="small text-muted"><%= Invoice.human_attribute_name('category') %></label>
                   <div><%= t("mongoid.attributes.incentive_scheme/categories.#{@invoice.category}") %></div>
                 </div>
               </div>
+              <% unless current_user.role.in?(%w(channel_partner cp_owner)) %>
               <div class="col-md-4">
                 <div class="mb-3">
                   <label class="small text-muted"><%= Invoice.human_attribute_name('brokerage_type') %></label>
@@ -41,7 +41,7 @@
               <div class="col-md-4">
                 <div class="mb-3">
                   <label class="small text-muted"><%= @invoice.invoiceable&.class&.model_name&.human %></label>
-                  <div><%= link_to @invoice.invoiceable.name_in_invoice, [current_user_role_group, @invoice.invoiceable] %></div>
+                  <div><%= link_to_if policy([:admin, @invoice.invoiceable]).index?, @invoice.invoiceable.name_in_invoice, [current_user_role_group, @invoice.invoiceable] %></div>
                 </div>
               </div>
               <% unless %w(channel_partner cp_owner).include?(current_user.role) %>

@@ -939,6 +939,7 @@ en:
         cheque_detail: 'Cheque Details'
         agreement_amount: 'Consideration Value For Brokerage'
         incentive_resource: 'Resource'
+        category: 'Type'
       invoice/status:
         draft: 'Draft'
         raised: 'Raised'

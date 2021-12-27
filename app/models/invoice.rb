@@ -17,7 +17,7 @@ class Invoice
   field :rejection_reason, type: String
   field :comments, type: String
   field :net_amount, type: Float
-  field :gst_slab, type: Float, default: 0.0
+  field :gst_slab, type: Float
   field :agreement_amount, type: Float, default: 0.0
   #field :percentage_slab, type: Float, default: 18
   field :number, type: String
@@ -86,7 +86,7 @@ class Invoice
 
   def calculate_gst_amount
     if self.project&.gst_slab_applicable?
-      amount * (gst_slab/100)
+      amount * ((gst_slab || 0)/100)
     else
       0
     end

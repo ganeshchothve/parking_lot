@@ -1,8 +1,9 @@
 class IncentiveCalculator
-  attr_reader :resource, :channel_partner, :ladder, :options
+  attr_reader :resource, :channel_partner, :ladder, :options, :category
 
-  def initialize(resource, options={test: false})
+  def initialize(resource, category, options={test: false})
     @resource = resource
+    @category = category
     @options = options
     # Find channel partner for above resource
     @channel_partner = resource.invoiceable_manager
@@ -19,7 +20,7 @@ class IncentiveCalculator
 
   # Run incentive calculation
   def calculate
-    if channel_partner && (schemes = resource.find_incentive_schemes)
+    if channel_partner && (schemes = resource.find_incentive_schemes(category))
       schemes.group_by {|is| [is.category, is.brokerage_type]}.each do |key, scheme_arr|
         scheme = scheme_arr.first
         resources = resource.find_all_resources_for_scheme(scheme)
