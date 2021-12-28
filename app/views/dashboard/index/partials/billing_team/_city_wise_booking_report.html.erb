@@ -31,16 +31,16 @@
                   <%= @project_name_hash[hash[:project_id]] %>
                 </td>
                 <td>
-                  <%= link_to hash[:bookings_count], admin_booking_details_path({ fltrs: { project_id: hash[:project_id], created_at: created_at, statuses: ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]}, current: 'all'}) %>
+                  <%= link_to hash[:bookings_count], admin_booking_details_path({ fltrs: { project_id: hash[:project_id], created_at: created_at, status: ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]}}) %>
                 </td>
               </tr>
               <% end %>
           <% end %>
           <tr>
             <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong>Total</strong></td>
-            <td><strong>Total</strong></td>
+            <td><strong>-</strong></td>
             <td><strong>
-                  <%= link_to @total_booking, admin_booking_details_path({ fltrs: { created_at: created_at, statuses: ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]}, current: 'all'}) %>
+                  <%= link_to @total_booking, admin_booking_details_path({ fltrs: { created_at: created_at, status: ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]}}) %>
             </strong></td>
           </tr>
         <% else %>
