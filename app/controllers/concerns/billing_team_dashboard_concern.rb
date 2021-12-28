@@ -12,6 +12,10 @@ module BillingTeamDashboardConcern
     Project.all.each do |p|
       @project_name_hash[p.id.to_s] = p.name
     end
+    @total_booking = 0
+    @project_booking_report.each do |k, v|
+      @total_booking += v.map{|h| h[:bookings_count]  }.sum
+    end
   end
 
   def project_wise_invoice_summary
@@ -34,9 +38,9 @@ module BillingTeamDashboardConcern
 
   def set_city_wise_report_matcher
     options = {}
-    dates = params[:dates]
-    if dates.present?
-      start_date, end_date = dates.split(' - ')
+    @city_wise_dates = params[:dates]
+    if @city_wise_dates.present?
+      start_date, end_date = @city_wise_dates.split(' - ')
       options = {
         created_at: {
           "$gte": Date.parse(start_date).beginning_of_day,

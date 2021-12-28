@@ -1,14 +1,22 @@
+<%
+  if @city_wise_dates.present?
+    start_date, end_date = @city_wise_dates
+    created_at = "#{start_date} - #{end_date}"
+  else
+    created_at = ""
+  end
+%>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
   <div class="box-card relative table-responsive" id="dashboard_project_wise_invoice_summary">
     <table class="table my-customer-table responsive-tbl mb-0 align-middle border rounded">
       <thead class="bg-primary white">
         <tr class="bg-primary white">
           <th rowspan='2' class='text-center border-end bg-primary white align-middle'>City</th>
-          <th colspan='3' class='text-center bg-primary white'>No. of <%= BookingDetail.model_name.human(count:2) %></th>
+          <th colspan='3' class='text-center bg-primary white'>No. of <%= BookingDetail.model_name.human(count:1) %></th>
         </tr>
         <tr>
           <th class="text-center">Project</th>
-          <th class="text-center">Bookings Count</th>
+          <th class="text-center">Booking Count</th>
         </tr>
       </thead>
       <tbody class='text-md-center'>
@@ -23,11 +31,18 @@
                   <%= @project_name_hash[hash[:project_id]] %>
                 </td>
                 <td>
-                  <%= hash[:bookings_count] %>
+                  <%= link_to hash[:bookings_count], admin_booking_details_path({ fltrs: { project_id: hash[:project_id], created_at: created_at, statuses: ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]}, current: 'all'}) %>
                 </td>
               </tr>
               <% end %>
           <% end %>
+          <tr>
+            <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong>Total</strong></td>
+            <td><strong>Total</strong></td>
+            <td><strong>
+                  <%= link_to @total_booking, admin_booking_details_path({ fltrs: { created_at: created_at, statuses: ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]}, current: 'all'}) %>
+            </strong></td>
+          </tr>
         <% else %>
           <tr>
             <td colspan="3">No Records Found</td>
