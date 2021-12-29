@@ -2,6 +2,7 @@ module IncentiveSchemeAutoApplication
   extend ActiveSupport::Concern
 
   included do
+    field :incentive_categories_auto_applied, type: Hash, default: {}
     field :incentive_scheme_data, type: Hash, default: {}
 
     scope :not_eligible, -> { where(non_existent_attribute: 'present') }
@@ -35,7 +36,13 @@ module IncentiveSchemeAutoApplication
 
   def calculate_incentive
     ::IncentiveScheme::CATEGORIES_PER_RESOURCE[self.class.to_s].each do |category|
-      if self.incentive_eligible?(category)
+      if self.incentive_eligible?(category) && self.incentive_categories_auto_applied[category].blank?
+
+        # Maintain incentive categories auto application on resource to avoid calculating same incentive more than once
+        icategories_auto_applied = self.incentive_categories_auto_applied.clone
+        icategories_auto_applied[category] = 1
+        self.set(incentive_categories_auto_applied: icategories_auto_applied)
+
         # Calculate incentives & generate invoices
         if Rails.env.production? || Rails.env.staging?
           IncentiveCalculatorWorker.perform_async(self.class.to_s, id.to_s, category)

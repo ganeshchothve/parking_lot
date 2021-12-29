@@ -75,7 +75,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def move_to_next_state?
-    %w[account_manager, account_manager_head].include?(user.role)
+    %w[account_manager account_manager_head].include?(user.role)
   end
 
   def send_booking_detail_form_notification?

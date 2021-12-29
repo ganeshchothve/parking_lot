@@ -1698,6 +1698,8 @@ en:
         link_name: 'Referrals'
       new:
         link_name: 'Add Referrals'
+      generate_code:
+        link_name: 'Generate Referral Code'
     site_visits:
       index:
         link_name: 'Walk-ins'

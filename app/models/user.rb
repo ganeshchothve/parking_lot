@@ -442,7 +442,7 @@ class User
   end
 
   def generate_referral_code
-    if self.role?("channel_partner") && self.referral_code.blank?
+    if self.role.in?(%w(cp_owner channel_partner)) && self.referral_code.blank?
       self.referral_code = "#{SecureRandom.hex(3)[0..-2]}"
     else
       self.referral_code
@@ -498,13 +498,16 @@ class User
   alias :invoiceable_manager :referred_by
 
   def invoiceable_date
-    Referral.where(referred_by: referred_by, email: email, phone: phone).first&.created_at
+    query = []
+    query << { phone: phone } if phone.present?
+    query << { email: email } if email.present?
+    Referral.where(referred_by: referred_by).or(query).first&.created_at
   end
 
   # Find incentive schemes
   def find_incentive_schemes(category)
     tier_id = referred_by&.tier_id
-    incentive_schemes = ::IncentiveScheme.approved.where(resource_class: self.class.to_s, category: category, project_id: project_id, auto_apply: true).lte(starts_on: invoiceable_date).gte(ends_on: invoiceable_date)
+    incentive_schemes = ::IncentiveScheme.approved.where(resource_class: self.class.to_s, category: category, auto_apply: true).lte(starts_on: invoiceable_date).gte(ends_on: invoiceable_date)
     # Find tier level scheme
     if tier_id
       incentive_schemes = incentive_schemes.where(tier_id: tier_id)
