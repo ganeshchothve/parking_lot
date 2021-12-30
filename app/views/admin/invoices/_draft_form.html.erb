@@ -1,4 +1,5 @@
-<%= nested_form_for([:admin, @booking_detail, @invoice], url: url, local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['invoices'], "data-type": "json", id: 'invoice_form'}) do |f| %>
+<% @resource = @invoice.invoiceable unless @resource %>
+<%= nested_form_for([:admin, @resource, @invoice], url: url, local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['invoices'], "data-type": "json", id: 'invoice_form'}) do |f| %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -9,7 +10,7 @@
       </div>
 
       <div class="modal-body theme-form">
-        <%= render 'admin/invoices/details', booking_detail: @invoice.booking_detail %>
+        <%= render "admin/invoices/#{@resource.class.model_name.i18n_key.to_s}/details", resource: @invoice.invoiceable rescue nil %>
         <div class="mb-3">
           <%= f.label :number, class: 'label-required' %>
           <%= f.text_field :number, autofocus: true, required: 'required', class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("number") %>
@@ -18,49 +19,57 @@
         <%= f.hidden_field :event, value: "raise" %>
         <%= f.hidden_field :creator_id, value: current_user.id %>
         <div class="mb-3">
-          <%= f.label "Consideration value for brokerage", class: 'label-required' %>
-          <%= f.number_field :agreement_amount, autofocus: true, required: 'required', class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("agreement_amount") %>
+          <%= f.label :category, class: 'label-required' %>
+          <%= f.select :category, IncentiveScheme::CATEGORIES_PER_RESOURCE[@resource.class.to_s].collect{|x| [t("mongoid.attributes.incentive_scheme/categories.#{x}"), x]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @invoice]).editable_field?("category") %>
+        </div>
+        <% if policy([:admin, @invoice]).editable_field?("brokerage_type") %>
+          <div class="mb-3">
+            <%= f.label :brokerage_type, class: 'label-required' %>
+            <%= f.select :brokerage_type, IncentiveScheme::BROKERAGE_TYPE.collect{|x| [t("mongoid.attributes.incentive_scheme/brokerage_type.#{x}"), x]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @invoice]).editable_field?("brokerage_type") %>
+          </div>
+        <% end %>
+        <% if policy([:admin, @invoice]).editable_field?("payment_to") %>
+          <div class="mb-3">
+            <%= f.label :payment_to, class: 'label-required' %>
+            <%= f.select :payment_to, IncentiveScheme::PAYMENT_TO.collect{|x| [t("mongoid.attributes.incentive_scheme/payment_to.#{x}"), x]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @invoice]).editable_field?("payment_to") %>
+          </div>
+        <% end %>
+        <% if policy([:admin, @invoice]).editable_field?("agreement_amount") %>
+          <div class="mb-3">
+            <%= f.label :agreement_amount, class: 'label-required' %>
+            <%= f.number_field :agreement_amount, autofocus: true, required: 'required', class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("agreement_amount") %>
+          </div>
+        <% end %>
+        <div class="mb-3">
+          <%= f.label :amount, 'Brokerage Amount' %>
+          <% if policy([:admin, @invoice]).editable_field?("amount") %>
+            <%= f.number_field :amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("amount") %>
+          <% else %>
+            <p class='amount'><%= f.object.amount %></p>
+          <% end %>
         </div>
         <div class="mb-3">
           <div class="alert alert-warning" role="alert">
-            Please change the % as per the Slabs
+            Please change the GST Slab % as per the Slabs
           </div>
-          <%= f.label "Brokerage Percentage Slab", class: 'label-required' %>
-          <% gst_slabs = @booking_detail.project.incentive_percentage_slabs %>
-          <%= f.select :percentage_slab, options_for_select(gst_slabs.collect{|gst| [ "#{gst} %", gst]}, @invoice.gst_slab), class: "selectize", required: 'required', disabled: !policy([:admin, @invoice]).editable_field?("percentage_slab"), prompt: " " %>
+          <%= f.label :gst_slab %>
+          <% gst_slabs = @resource.try(:project)&.incentive_gst_slabs || @resource.booking_portal_client.try(:gst_slabs) || [] %>
+          <%= f.select :gst_slab, options_for_select(gst_slabs.collect{|gst| ["#{gst} %", gst]} || [], @invoice.gst_slab), {prompt: 'Select'}, class: "selectize", disabled: !policy([:admin, @invoice]).editable_field?("gst_slab") %>
         </div>
-        <% if @invoice.project.gst_slab_applicable? %>
-          <div class="mb-3">
-            <div class="alert alert-warning" role="alert">
-              Please change the GST Slab % as per the Slabs
-            </div>
-            <%= f.label "GST Slab", class: 'label-required' %>
-            <% gst_slabs = @booking_detail.project.incentive_gst_slabs %>
-            <%= f.select :gst_slab, options_for_select(gst_slabs.collect{|gst| [ "#{gst} %", gst]}, @invoice.gst_slab), class: "selectize", required: 'required', disabled: !policy([:admin, @invoice]).editable_field?("gst_slab"), prompt: " " %>
-          </div>
-          <div class="mb-3">
-            <%= f.label :amount, 'Brokerage Amount' %>
-            <% if policy([:admin, @invoice]).editable_field?("amount") %>
-              <%= f.number_field :amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("amount") %>
-            <% else %>
-              <p class='amount'><%= f.object.amount %></p>
-            <% end %>
-          </div>
-          <div class="mb-3">
-            <%= f.label :amount, 'GST Amount' %>
-            <% if policy([:admin, @invoice]).editable_field?("gst-amount") %>
-              <%= f.number_field :gst-amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("gst-amount") %>
-            <% else %>
-              <p class='gst-amount'><%= f.object.gst_amount %></p>
-            <% end %>
-          </div>
-        <% end %>
+        <div class="mb-3">
+          <%= f.label :gst_amount, 'GST Amount' %>
+          <% if policy([:admin, @invoice]).editable_field?("gst_amount") %>
+            <%= f.number_field :gst_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("gst_amount") %>
+          <% else %>
+            <p class='gst-amount'><%= f.object.gst_amount %></p>
+          <% end %>
+        </div>
         <div class="mb-3">
           <%= f.label :net_amount, 'Total Brokerage Amount' %>
           <% if policy([:admin, @invoice]).editable_field?("net_amount") %>
             <%= f.number_field :net_amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("net_amount") %>
           <% else %>
-            <p class='net-amount'><%= f.object.net_amount %></p>
+            <p class='net-amount'><%= f.object.net_amount || 0 %></p>
           <% end %>
         </div>
         <% if policy([:admin, @invoice]).editable_field?("event") && !current_user.role?('channel_partner') && !current_user.role?('billing_team') %>
@@ -102,20 +111,23 @@
   $(document).ready(function(){
     FormInitializer.init($("#invoice_form"));
     var netAmt = '<%= @invoice.net_amount %>';
-    var gstApplicable = '<%= @invoice.project.gst_slab_applicable? %>';
-    var gstAmount = 0;
+    var gstApplicable = '<%= @invoice.try(:project)&.gst_slab_applicable? %>';
     var invoiceType = '<%= @invoice.class.to_s.underscore.gsub('/', '_') %>';
-    $('#invoice_manual_percentage_slab, #invoice_manual_gst_slab').on('change', function(event) {
-      var slabPercentage = parseInt($('#invoice_manual_percentage_slab').val());
-      var amount = parseFloat($('input[name="' + invoiceType + '[agreement_amount]"]').val() || 0) * (slabPercentage/100);
+
+    $('#' + invoiceType + '_gst_slab, #' + invoiceType + '_amount').on('change', function(event) {
+      var gstAmount = 0;
+      var amount = parseFloat($('input[name="' + invoiceType + '[amount]"]').val() || 0);
+      $('#raise_invoice_form').find('.amount').html(Amura.formatMoney(amount));
       if (gstApplicable == 'true') {
-        var gstPercentage = parseInt($('#invoice_manual_gst_slab').val());
-        gstAmount = amount * (gstPercentage/100);
-        $('#invoice_form').find('.gst-amount').html(Amura.formatMoney(gstAmount));
-        $('#invoice_form').find('.amount').html(Amura.formatMoney(amount));
+        var gstPercVal = $('#' + invoiceType + '_gst_slab').val();
+        if(!_.isEmpty(gstPercVal)){
+          var gstPercentage = parseFloat(gstPercVal);
+          gstAmount = amount * (gstPercentage/100);
+        }
+        $('#raise_invoice_form').find('.gst-amount').html(Amura.formatMoney(gstAmount));
       }
       netAmt = amount + gstAmount;
-      $('#invoice_form').find('.net-amount').html(Amura.formatMoney(netAmt));
+      $('#raise_invoice_form').find('.net-amount').html(Amura.formatMoney(netAmt));
     }).trigger('change');
   });
 <% end %>

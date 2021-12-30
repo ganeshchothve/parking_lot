@@ -1,5 +1,5 @@
-class Admin::BookingDetails::InvoicesController < AdminController
-  before_action :set_booking_detail
+class Admin::InvoicesController < AdminController
+  before_action :set_resource, only: [:index, :new, :create]
   before_action :set_invoice, except: [:index, :create, :export]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: [:index]
@@ -8,9 +8,6 @@ class Admin::BookingDetails::InvoicesController < AdminController
     @invoices = associated_class.build_criteria(params)
                        .asc(:ladder_stage)
                        .paginate(page: params[:page] || 1, per_page: params[:per_page])
-    respond_to do |format|
-      format.html { render template: (@booking_detail.present? ? 'booking_details/invoices/index' : 'admin/invoices/index') }
-    end
   end
 
   def new
@@ -18,12 +15,13 @@ class Admin::BookingDetails::InvoicesController < AdminController
   end
 
   def create
-    @invoice = Invoice::Manual.new(project: @booking_detail.project, manager: @booking_detail.manager, raised_date: Time.now, booking_detail_id: @booking_detail.id, channel_partner_id: @booking_detail.channel_partner.try(:id))
+    @invoice = Invoice::Manual.new(project: @resource.try(:project), raised_date: Time.now, invoiceable: @resource, manager: @resource.invoiceable_manager)
     @invoice.assign_attributes(permitted_attributes([current_user_role_group, @invoice]))
     respond_to do |format|
       if @invoice.save
-        format.html { redirect_to request.referer, notice: t("controller.invoices.status_message.#{@invoice.status}") }
-        format.json { render json: @invoice, notice: t("controller.invoices.status_message.#{@invoice.status}"), status: :created, location: admin_invoices_path }
+        url = (@resource.present? ? admin_invoiceable_index_path(invoiceable_type: @resource.class.model_name.i18n_key.to_s, invoiceable_id: @resource.id, fltrs: { invoiceable_id: @resource.id }) : admin_invoices_path)
+        format.html { redirect_to url, notice: t("controller.invoices.status_message.#{@invoice.status}") }
+        format.json { render json: @invoice, notice: t("controller.invoices.status_message.#{@invoice.status}"), status: :created, location: url }
       else
         format.html { redirect_to request.referer, alert: @invoice.errors.full_messages.uniq }
         format.json { render json: { errors: @invoice.errors.full_messages.uniq }, status: :unprocessable_entity }
@@ -128,13 +126,13 @@ class Admin::BookingDetails::InvoicesController < AdminController
                         end
   end
 
-  def set_booking_detail
-    @booking_detail = BookingDetail.where(id: params[:booking_detail_id]).first if params[:booking_detail_id].present?
+  def set_resource
+    @resource = params[:invoiceable_type]&.classify&.constantize.where(id: params[:invoiceable_id]).first if params[:invoiceable_id].present? && params[:invoiceable_type].present?
   end
 
   def set_invoice
     if params[:action] == 'new'
-      @invoice = Invoice::Manual.new(booking_detail_id: @booking_detail.id, project_id: @booking_detail.project_id, agreement_amount: @booking_detail.calculate_invoice_agreement_amount)
+      @invoice = Invoice::Manual.new(invoiceable: @resource, project_id: @resource.try(:project_id), agreement_amount: @resource.try(:calculate_invoice_agreement_amount))
     else
       @invoice = Invoice.where(id: params[:id]).first
     end

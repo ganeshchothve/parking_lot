@@ -485,6 +485,7 @@ en:
         powered_by_link: 'Show Powered By Link'
         lead_blocking_days: 'Configure Lead Blocking Days'
         invoice_approval_tat: 'Invoice Approval TAT (In Days)'
+        incentive_gst_slabs: 'Configure Incentive GST Slabs (%)'
       client/payment_gateways:
         Razorpay: Razorpay Payment Gateway
         CCAvenue: CCAvenue Payment Gateway
@@ -576,7 +577,7 @@ en:
         price_upto: 'Price Goes Upto'
         broker_usp: 'Broker Unique Selling Points (Fill in upto 3 USPs)'
         check_sv_availability_in_selldo: 'Check Site Visit Availability in Sell.do'
-        incentive_gst_slabs: 'Incentive GST Slabs (%)'
+        incentive_gst_slabs: 'Configure Incentive GST Slabs (%)'
         approved_banks/list:
           hdfc: HDFC Bank
           sbi: State Bank of India
@@ -899,16 +900,39 @@ en:
         tier_id: 'Channel Partner Tier'
         status: 'Status'
         date_range: Date Filter
+        resource_class: Resource
+        category: Category
+        brokerage_type: Brokerage Type
+        payment_to: Payment To
+        auto_apply: Auto Apply
+      incentive_scheme/categories:
+        walk_in: 'Walk-in'
+        spot_booking: 'Spot Booking'
+        lead: 'Lead'
+        referral: 'Referral'
+        brokerage: 'Booking Brokerage'
       incentive_scheme/status:
         draft: Draft
         approved: Approved
         disabled: Disabled
+      incentive_scheme/brokerage_type:
+        brokerage: Brokerage
+        sub_brokerage: Sub Brokerage
+      incentive_scheme/payment_to:
+        company: Partner Company
+        channel_partner: Channel Partner
+      incentive_scheme/resource_class:
+        SiteVisit: Walk-in
+        Lead: Lead
+        BookingDetail: Booking
+        User: User (Referral)
 
       invoice:
         number: 'Invoice Number'
         amount: Brokerage Amount
         gst_amount: GST Amount
-        net_amount: Approved Amount
+        gst_slab: 'GST Slab'
+        net_amount: Total Brokerage Amount
         comments: Comments
         rejection_reason: Rejection Reason
         project_id: 'Project'
@@ -920,6 +944,11 @@ en:
         approved_date: 'Approved Date'
         status: 'Status'
         cheque_detail: 'Cheque Details'
+        agreement_amount: 'Consideration Value For Brokerage'
+        incentive_resource: 'Resource'
+        category: 'Type'
+        manager_id: 'Partner'
+        account_manager_id: 'Account Manager'
       invoice/status:
         draft: 'Draft'
         raised: 'Raised'
@@ -1540,6 +1569,10 @@ en:
         tax_invoice_raise: "Raised Tax Invoice"
       exports:
         link_name: "%{name} Exports"
+      filters:
+        all: 'All'
+        manual_invoices: 'Manual Invoices'
+        calculated_invoices: 'Calculated Invoices'
 
     incentive_deductions:
       index:
@@ -1678,6 +1711,8 @@ en:
         link_name: 'Referrals'
       new:
         link_name: 'Add Referrals'
+      generate_code:
+        link_name: 'Generate Referral Code'
     site_visits:
       index:
         link_name: 'Walk-ins'

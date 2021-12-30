@@ -2,7 +2,7 @@ module UsersHelper
 
   def get_referral_code
     if current_user.referral_code.blank?
-      link_to t('referrals.generate_code.link_name'), generate_code_buyer_referrals_path, method: :post, remote: true, class: 'btn btn-sm btn-default'
+      link_to t('controller.referrals.generate_code.link_name'), [:generate_code, current_user_role_group, :referrals], method: :post, class: 'btn btn-sm btn-primary'
     else
       text_field_tag '', current_user.referral_code, readonly: true, class: 'referral-code-input border-0 shadow-0 font-medium'
     end
@@ -10,7 +10,7 @@ module UsersHelper
 
   def invite_friend_link
     if policy([:admin, :referral]).new?
-      link_to t('controller.referrals.new.link_name'), new_admin_referral_path, class: ' modal-remote-form-link', data:{ event_category: 'Section', event_action: 'Click', event_name: 'Invite Friend'}
+      link_to t('controller.referrals.new.link_name'), new_admin_referral_path, class: 'modal-remote-form-link btn btn-sm btn-primary', data:{ event_category: 'Section', event_action: 'Click', event_name: 'Invite Friend'}
     else
       ''
     end

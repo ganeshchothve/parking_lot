@@ -96,6 +96,14 @@
     </div>
   </div>
 </div>
+<div class='row'>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :incentive_calculation, class: 'label-required' %>
+      <%= f.select :incentive_calculation, Client::INCENTIVE_CALCULATION.collect{|x| [x,x]}, {}, class: 'selectize', multiple: true, required: 'required', disabled: !policy([:admin, project]).editable_field?("incentive_calculation") %>
+    </div>
+  </div>
+</div>
 <%= javascript_tag do %>
   $(document).ready(function(){
     $('#project_enable_inventory').change(function(){

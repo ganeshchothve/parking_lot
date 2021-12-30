@@ -1,15 +1,15 @@
 class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def index?
-    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner].include?(user.role) && (enable_actual_inventory?(user) || enable_incentive_module?(user))
-    out = false if user.role?('channel_partner') && !interested_project_present?
+    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner].include?(user.role) && enable_actual_inventory?(user)
+    out = false if user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
     out = true if %w[account_manager account_manager_head billing_team].include?(user.role)
     out
   end
 
   def new?
-    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner].include?(user.role) && eligible_user? && enable_actual_inventory?(user)
-    out = false if user.role?('channel_partner') && !interested_project_present?
+    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner].include?(user.role) && eligible_user? && enable_actual_inventory?(user)
+    out = false if user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
     out
   end
 
@@ -75,7 +75,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def move_to_next_state?
-    %w[account_manager, account_manager_head].include?(user.role)
+    %w[account_manager account_manager_head].include?(user.role)
   end
 
   def send_booking_detail_form_notification?
@@ -143,7 +143,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
         @condition = 'record_not_held'
         false
       end
-    elsif (user.role?('channel_partner') && record.status == 'hold')
+    elsif (user.role.in?(%w(cp_owner channel_partner)) && record.status == 'hold')
       return true if record.lead.cp_lead_activities.where(user_id: user.id).present? && user.active_channel_partner?
       @condition = 'not_authorise_to_book_for_this_user'
       false
