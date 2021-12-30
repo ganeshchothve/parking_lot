@@ -13,7 +13,6 @@ class ClientObserver < Mongoid::Observer
     ExternalInventoryViewConfig.create(booking_portal_client_id: client.id)
     DatabaseSeeds::PortalStagePriorities.seed
     DatabaseSeeds::PortalStagePriorities.channel_partner_seed
-    Template::InvoiceTemplate.seed(client.id.to_s)
 
     DocumentSign.create(booking_portal_client_id: client.id)
   end

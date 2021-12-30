@@ -1,287 +1,295 @@
 <% project_unit = @booking_detail.project_unit %>
-<section class="prjt-details-sec">
-  <div class="px-3">
-    <div class="row">
-      <div class="col-lg-12 px-3 pt-4">
-        <div class="col-12 float-start mt-3 pb-0 bg-white">
-          <div class="card">
-            <div class="card-header theme-light-bg py-3 d-flex justify-content-between">
-              <div>
-                <p class="fn-12 theme-txt-color mb-0 ">Project</p>
-                <h6 class="fn-20 theme-txt-color mb-0"><%= project_unit.project_name %></h6>
+<% if project_unit.present? %>
+  <section class="prjt-details-sec">
+    <div class="px-3">
+      <div class="row">
+        <div class="col-lg-12 px-3 pt-4">
+          <div class="col-12 float-start mt-3 pb-0 bg-white">
+            <div class="card">
+              <div class="card-header theme-light-bg py-3 d-flex justify-content-between">
+                <div>
+                  <p class="fn-12 theme-txt-color mb-0 ">Project</p>
+                  <h6 class="fn-20 theme-txt-color mb-0"><%= project_unit.project_name %></h6>
+                </div>
+                <div class="dropdown float-end">
+                  <a class="btn table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v txt-light-blue"
+                      aria-hidden="true"></i></a>
+                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                    <% if @booking_detail.project_unit.present? %>
+                      <%= render "#{current_user_role_group}/booking_details/links", booking_detail: @booking_detail, link_name: 'Update Booking' %>
+                    <% else %>
+                      <%= render "#{current_user_role_group}/booking_details/booking_without_inventory_links", booking_detail: @booking_detail, link_name: 'Update Booking' %>
+                    <% end %>
+                  </div>
+                </div>
               </div>
-              <div class="dropdown float-end">
-                <a class="btn table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v txt-light-blue"
-                    aria-hidden="true"></i></a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                  <%= render "#{current_user_role_group}/booking_details/links", booking_detail: @booking_detail, link_name: 'Update Booking' %>
-                </div>
-              </div>
-            </div>
-            
-            <div class="card-body p-0 rounded-0 border-0">
-              <div class="accordion theme-accordation" id="accordionExample">
-                <div class="accordion-item rounded-0 border-bottom border-top-0  border-end-0 border-start-0">
-                  <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                      Basic Details
-                    </button>
-                  </h2>
-                  <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body pt-0 ps-4">
-                      <div class="row ps-3">
-                        <div class="col-3">
-                          <p class="fn-12 font-medium mb-0"><%= t('mongoid.attributes.booking_detail.name') %></p>
-                          <p class="fn-14"><%= @booking_detail.name %></p>
-                        </div>
-                        <div class="col-3">
-                          <p class="fn-12 font-medium mb-0"><%= Lead.model_name.human %></p>
-                          <p class="fn-14">
-                            <%= link_to_if @booking_detail.lead, (@booking_detail.lead.try(:name) || ''), [current_user_role_group, @booking_detail.lead] %>
-                          </p>
-                        </div>
-                        <div class="col-3">
-                          <p class="fn-12 font-medium mb-0"><%= ProjectTower.model_name.human %></p>
-                          <p class="fn-14"><%= project_unit.project_tower.name %></p>
-                        </div>
-                        <% unless action_name == 'quotation' %>
-                        <div class="col-3">
-                          <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('status') %></p>
-                          <p class="fn-14"><%= BookingDetail.human_attribute_name("status.#{@booking_detail.status}") %>
-                          </p>
-                        </div>
-                        <% end %>
-                        <div class="col-3">
-                          <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('bedrooms')%>/
-                            <%= BookingDetail.human_attribute_name('bathrooms')%></p>
-                          <p class="fn-14"><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></p>
-                        </div>
-                        <div class="col-3">
-                          <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('carpet')%></p>
-                          <p class="fn-14"><%= project_unit.carpet %> <%= current_client.area_unit %></p>
-                        </div>
-                        <% if current_user.role?('superadmin') %>
-                        <div class="col-3">
-                          <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('effective_rate') %>
-                          </p>
-                          <p class="fn-14"><%= number_to_indian_currency(@booking_detail.effective_rate) %></p>
-                        </div>
-                        <div class="col-3">
-                          <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('saleable') %></p>
-                          <p class="fn-14"><%= @booking_detail.saleable %> <%= current_client.area_unit %></p>
-                        </div>
-                        <div class="col-3">
-                          <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('base_rate') %>/
-                            <%= BookingDetail.human_attribute_name('floor_rise') %></p>
-                          <p class="fn-14"><%= number_to_indian_currency(@booking_detail.base_rate)%> /
-                            <%= number_to_indian_currency(@booking_detail.floor_rise) %></p>
-                        </div>
-                        <% end %>
-                        <div class="col-3">
-                          <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('agreement_price') %>
-                          </p>
-                          <p class="fn-14">
-                            <%= number_to_indian_currency(@booking_detail.calculate_agreement_price.round) %></p>
-                        </div>
-                        <div class="col-3">
-                          <p class="fn-12 font-medium mb-0">
-                            <%= BookingDetail.human_attribute_name('all_inclusive_price') %></p>
-                          <p class="fn-14">
-                            <%= number_to_indian_currency(@booking_detail.calculate_all_inclusive_price.round) %></p>
-                        </div>
-                        <div class="col-3">
-                          <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('phase') %></p>
-                          <p class="fn-14"><%= project_unit.phase.try(:name) || '-' %></p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <% if %w[ hold swapped cancelled ].exclude?(@booking_detail.status)  %>
-                <div class="accordion-item  border-end-0 border-start-0">
-                  <h2 class="accordion-header d-flex justify-content-between" id="headingTwo">
-                    <button class="accordion-button collapsed  shadow-none" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                      Booking Details
-                    </button>
-                  </h2>
-                  <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body pt-0 ps-4">
-                      <div class="row ps-3">
-                        <div class="col-12">
-                          <p class="fn-12 font-medium"><span class="txt-light-gray">Blocked
-                              On:</span> <%= @booking_detail.booked_on.try(:strftime, '%b %d, %Y') %></p>
-                          <h3 class="fn-16 font-medium txt-drk-b-lt"><%= project_unit.project_name %>,
-                            <%= project_unit.project_tower.name %>,
-                            Flat no. <%= @booking_detail.name %></h3>
-                          <p class="fn-14"><%= project_unit.bedrooms %> BHK · <%= project_unit.carpet %>
-                            <%= current_client.area_unit %>.</p>
-                          <div class="col-8 row">
-                            <div class="col-6">
-                              <p class="fn-12 font-medium mb-0 txt-light-gray">Agreement
-                                Value
-                              </p>
-                              <p class="fn-14">
-                                <%= number_to_indian_currency(@booking_detail.calculate_agreement_price.round) %></p>
-                            </div>
-                            <div class="col-6">
-                              <p class="fn-12 font-medium mb-0 txt-light-gray">All
-                                Inclusive
-                                Price</p>
-                              <p class="fn-14">
-                                <%= number_to_indian_currency(@booking_detail.calculate_all_inclusive_price.round) %>
-                              </p>
-                            </div>
-                            <div class="col-6">
-                              <p class="fn-12 font-medium mb-0 txt-light-gray">Total
-                                Amount
-                                Paid (Inclusive of GST)</p>
-                              <p class="fn-14"><%= number_to_indian_currency(@booking_detail.total_amount_paid) %></p>
-                            </div>
-                            <div class="col-6">
-                              <p class="fn-12 font-medium mb-0 txt-light-gray">Pending
-                                Balance
-                              </p>
-                              <p class="fn-14">
-                                <%= number_to_indian_currency(@booking_detail.pending_balance({strict: true})) %></p>
-                            </div>
+              
+              <div class="card-body p-0 rounded-0 border-0">
+                <div class="accordion theme-accordation" id="accordionExample">
+                  <div class="accordion-item rounded-0 border-bottom border-top-0  border-end-0 border-start-0">
+                    <h2 class="accordion-header" id="headingOne">
+                      <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Basic Details
+                      </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                      data-bs-parent="#accordionExample">
+                      <div class="accordion-body pt-0 ps-4">
+                        <div class="row ps-3">
+                          <div class="col-3">
+                            <p class="fn-12 font-medium mb-0"><%= t('mongoid.attributes.booking_detail.name') %></p>
+                            <p class="fn-14"><%= @booking_detail.name %></p>
                           </div>
-                        </div>
-                        <div class="alert alert-primary col-md-12 col-lg-12 col-xs-12 col-sm-12">
-                          <% template = ::Template::UITemplate.where(name: 'booking_details/_details').first %>
-                          <% if template.present? %>
-                          <% @bd = @booking_detail %>
-                          <%= get_view_erb(template) %>
-                          <% end %>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <% end %>
-                <% if @scheme.present? %>
-                <div class="accordion-item border-end-0 border-start-0">
-                  <h2 class="accordion-header d-flex justify-content-between" id="headingThree">
-                    <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseThree" aria-expanded="false" aria-controls="headingThree">
-                      <%= BookingDetailScheme.model_name.human %>
-                    </button>
-                  </h2>
-                  <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body pt-0 ps-4">
-                      <div class="row ps-3">
-                        <div class="col-12">
-                          <div class="col-6">
-                            <p class="fn-12 font-medium mb-0 txt-light-gray mb-2">Derived from scheme
+                          <div class="col-3">
+                            <p class="fn-12 font-medium mb-0"><%= Lead.model_name.human %></p>
+                            <p class="fn-14">
+                              <%= link_to_if @booking_detail.lead, (@booking_detail.lead.try(:name) || ''), [current_user_role_group, @booking_detail.lead] %>
                             </p>
-                            <p class="fn-14 font-medium"><%= @scheme.derived_from_scheme.name %></p>
                           </div>
-                          <% if @scheme.payment_adjustments.present? %>
-                          <div class="col-6">
-                            <p class="fn-16 font-medium mb-0 txt-light-gray mb-2 mt-3">Payment Adjustments</p>
+                          <div class="col-3">
+                            <p class="fn-12 font-medium mb-0"><%= ProjectTower.model_name.human %></p>
+                            <p class="fn-14"><%= project_unit.project_tower.name %></p>
                           </div>
-                          <% @scheme.payment_adjustments.each do |adjustment| %>
-                          <div class="col-4">
-                            <p class="fn-12 font-medium mb-0 txt-light-gray mb-2">Name
+                          <% unless action_name == 'quotation' %>
+                          <div class="col-3">
+                            <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('status') %></p>
+                            <p class="fn-14"><%= BookingDetail.human_attribute_name("status.#{@booking_detail.status}") %>
                             </p>
-                            <p class="fn-14 font-medium"><%= adjustment.name %></p>
-                          </div>
-                          <div class="col-4">
-                            <p class="fn-12 font-medium mb-0 txt-light-gray mb-2">Field
-                            </p>
-                            <p class="fn-14 font-medium"><%= adjustment.field.titleize %></p>
-                          </div>
-                          <div class="col-4">
-                            <p class="fn-12 font-medium mb-0 txt-light-gray mb-2">Value
-                            </p>
-                            <p class="fn-14 font-medium"><%= adjustment.value(@booking_detail.project_unit) %></p>
                           </div>
                           <% end %>
+                          <div class="col-3">
+                            <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('bedrooms')%>/
+                              <%= BookingDetail.human_attribute_name('bathrooms')%></p>
+                            <p class="fn-14"><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></p>
+                          </div>
+                          <div class="col-3">
+                            <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('carpet')%></p>
+                            <p class="fn-14"><%= project_unit.carpet %> <%= current_client.area_unit %></p>
+                          </div>
+                          <% if current_user.role?('superadmin') %>
+                          <div class="col-3">
+                            <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('effective_rate') %>
+                            </p>
+                            <p class="fn-14"><%= number_to_indian_currency(@booking_detail.effective_rate) %></p>
+                          </div>
+                          <div class="col-3">
+                            <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('saleable') %></p>
+                            <p class="fn-14"><%= @booking_detail.saleable %> <%= current_client.area_unit %></p>
+                          </div>
+                          <div class="col-3">
+                            <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('base_rate') %>/
+                              <%= BookingDetail.human_attribute_name('floor_rise') %></p>
+                            <p class="fn-14"><%= number_to_indian_currency(@booking_detail.base_rate)%> /
+                              <%= number_to_indian_currency(@booking_detail.floor_rise) %></p>
+                          </div>
                           <% end %>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <% end %>
-                <% if @booking_detail.cost_sheet_template.try(:is_active?) %>
-                <div class="accordion-item rounded-bottom border-bottom-0 border-end-0 border-start-0">
-                  <h2 class="accordion-header d-flex justify-content-between" id="headingFour">
-                    <button class="accordion-button collapsed shadow-none rounded-bottom" type="button"
-                      data-bs-toggle="collapse" data-bs-target="#collapse-cs" aria-expanded="false"
-                      aria-controls="headingFour">
-                      Cost Sheet
-                    </button>
-                  </h2>
-                  <div id="collapse-cs" class="accordion-collapse collapse rounded-bottom"
-                    aria-labelledby="headingFour" data-bs-parent="#accordionExample">
-                    <div class="accordion-body pt-0 ps-4">
-                      <div class="ps-3">
-                        <div class="col-12 row ps-2">
-                          <div class="col-12  border rounded p-0 pb-2">
-                            <%= @booking_detail.cost_sheet_template.try(:parsed_content, @booking_detail) %>
+                          <div class="col-3">
+                            <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('agreement_price') %>
+                            </p>
+                            <p class="fn-14">
+                              <%= number_to_indian_currency(@booking_detail.calculate_agreement_price.round) %></p>
+                          </div>
+                          <div class="col-3">
+                            <p class="fn-12 font-medium mb-0">
+                              <%= BookingDetail.human_attribute_name('all_inclusive_price') %></p>
+                            <p class="fn-14">
+                              <%= number_to_indian_currency(@booking_detail.calculate_all_inclusive_price.round) %></p>
+                          </div>
+                          <div class="col-3">
+                            <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('phase') %></p>
+                            <p class="fn-14"><%= project_unit.phase.try(:name) || '-' %></p>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <% end %>
+                  <% if %w[ hold swapped cancelled ].exclude?(@booking_detail.status)  %>
+                  <div class="accordion-item  border-end-0 border-start-0">
+                    <h2 class="accordion-header d-flex justify-content-between" id="headingTwo">
+                      <button class="accordion-button collapsed  shadow-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Booking Details
+                      </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                      data-bs-parent="#accordionExample">
+                      <div class="accordion-body pt-0 ps-4">
+                        <div class="row ps-3">
+                          <div class="col-12">
+                            <p class="fn-12 font-medium"><span class="txt-light-gray">Blocked
+                                On:</span> <%= @booking_detail.booked_on.try(:strftime, '%b %d, %Y') %></p>
+                            <h3 class="fn-16 font-medium txt-drk-b-lt"><%= project_unit.project_name %>,
+                              <%= project_unit.project_tower.name %>,
+                              Flat no. <%= @booking_detail.name %></h3>
+                            <p class="fn-14"><%= project_unit.bedrooms %> BHK · <%= project_unit.carpet %>
+                              <%= current_client.area_unit %>.</p>
+                            <div class="col-8 row">
+                              <div class="col-6">
+                                <p class="fn-12 font-medium mb-0 txt-light-gray">Agreement
+                                  Value
+                                </p>
+                                <p class="fn-14">
+                                  <%= number_to_indian_currency(@booking_detail.calculate_agreement_price.round) %></p>
+                              </div>
+                              <div class="col-6">
+                                <p class="fn-12 font-medium mb-0 txt-light-gray">All
+                                  Inclusive
+                                  Price</p>
+                                <p class="fn-14">
+                                  <%= number_to_indian_currency(@booking_detail.calculate_all_inclusive_price.round) %>
+                                </p>
+                              </div>
+                              <div class="col-6">
+                                <p class="fn-12 font-medium mb-0 txt-light-gray">Total
+                                  Amount
+                                  Paid (Inclusive of GST)</p>
+                                <p class="fn-14"><%= number_to_indian_currency(@booking_detail.total_amount_paid) %></p>
+                              </div>
+                              <div class="col-6">
+                                <p class="fn-12 font-medium mb-0 txt-light-gray">Pending
+                                  Balance
+                                </p>
+                                <p class="fn-14">
+                                  <%= number_to_indian_currency(@booking_detail.pending_balance({strict: true})) %></p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="alert alert-primary col-md-12 col-lg-12 col-xs-12 col-sm-12">
+                            <% template = ::Template::UITemplate.where(name: 'booking_details/_details').first %>
+                            <% if template.present? %>
+                            <% @bd = @booking_detail %>
+                            <%= get_view_erb(template) %>
+                            <% end %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <% end %>
+                  <% if @scheme.present? %>
+                  <div class="accordion-item border-end-0 border-start-0">
+                    <h2 class="accordion-header d-flex justify-content-between" id="headingThree">
+                      <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseThree" aria-expanded="false" aria-controls="headingThree">
+                        <%= BookingDetailScheme.model_name.human %>
+                      </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                      data-bs-parent="#accordionExample">
+                      <div class="accordion-body pt-0 ps-4">
+                        <div class="row ps-3">
+                          <div class="col-12">
+                            <div class="col-6">
+                              <p class="fn-12 font-medium mb-0 txt-light-gray mb-2">Derived from scheme
+                              </p>
+                              <p class="fn-14 font-medium"><%= @scheme.derived_from_scheme.name %></p>
+                            </div>
+                            <% if @scheme.payment_adjustments.present? %>
+                            <div class="col-6">
+                              <p class="fn-16 font-medium mb-0 txt-light-gray mb-2 mt-3">Payment Adjustments</p>
+                            </div>
+                            <% @scheme.payment_adjustments.each do |adjustment| %>
+                            <div class="col-4">
+                              <p class="fn-12 font-medium mb-0 txt-light-gray mb-2">Name
+                              </p>
+                              <p class="fn-14 font-medium"><%= adjustment.name %></p>
+                            </div>
+                            <div class="col-4">
+                              <p class="fn-12 font-medium mb-0 txt-light-gray mb-2">Field
+                              </p>
+                              <p class="fn-14 font-medium"><%= adjustment.field.titleize %></p>
+                            </div>
+                            <div class="col-4">
+                              <p class="fn-12 font-medium mb-0 txt-light-gray mb-2">Value
+                              </p>
+                              <p class="fn-14 font-medium"><%= adjustment.value(@booking_detail.project_unit) %></p>
+                            </div>
+                            <% end %>
+                            <% end %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <% end %>
+                  <% if @booking_detail.cost_sheet_template.try(:is_active?) %>
+                  <div class="accordion-item rounded-bottom border-bottom-0 border-end-0 border-start-0">
+                    <h2 class="accordion-header d-flex justify-content-between" id="headingFour">
+                      <button class="accordion-button collapsed shadow-none rounded-bottom" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#collapse-cs" aria-expanded="false"
+                        aria-controls="headingFour">
+                        Cost Sheet
+                      </button>
+                    </h2>
+                    <div id="collapse-cs" class="accordion-collapse collapse rounded-bottom"
+                      aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+                      <div class="accordion-body pt-0 ps-4">
+                        <div class="ps-3">
+                          <div class="col-12 row ps-2">
+                            <div class="col-12  border rounded p-0 pb-2">
+                              <%= @booking_detail.cost_sheet_template.try(:parsed_content, @booking_detail) %>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <% end %>
 
-                <% if @booking_detail.payment_schedule_template.try(:is_active?) %>
-                <div class="accordion-item rounded-bottom border-bottom-0 border-end-0 border-start-0">
-                  <h2 class="accordion-header d-flex justify-content-between" id="headingFour">
-                    <button class="accordion-button collapsed shadow-none rounded-bottom" type="button"
-                      data-bs-toggle="collapse" data-bs-target="#collapse-ps" aria-expanded="false"
-                      aria-controls="headingFour">
-                      Payment Schedule
-                    </button>
-                  </h2>
-                  <div id="collapse-ps" class="accordion-collapse collapse rounded-bottom"
-                    aria-labelledby="headingFour" data-bs-parent="#accordionExample">
-                    <div class="accordion-body pt-0 ps-4">
-                      <div class="ps-3">
-                        <div class="col-12 row ps-2">
-                          <div class="col-12  border rounded p-0 pb-2">
-                            <%= @booking_detail.payment_schedule_template.try(:parsed_content, @booking_detail)  %>
+                  <% if @booking_detail.payment_schedule_template.try(:is_active?) %>
+                  <div class="accordion-item rounded-bottom border-bottom-0 border-end-0 border-start-0">
+                    <h2 class="accordion-header d-flex justify-content-between" id="headingFour">
+                      <button class="accordion-button collapsed shadow-none rounded-bottom" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#collapse-ps" aria-expanded="false"
+                        aria-controls="headingFour">
+                        Payment Schedule
+                      </button>
+                    </h2>
+                    <div id="collapse-ps" class="accordion-collapse collapse rounded-bottom"
+                      aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+                      <div class="accordion-body pt-0 ps-4">
+                        <div class="ps-3">
+                          <div class="col-12 row ps-2">
+                            <div class="col-12  border rounded p-0 pb-2">
+                              <%= @booking_detail.payment_schedule_template.try(:parsed_content, @booking_detail)  %>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <% end %>
-                <% if policy([:admin, Crm::Base.new()]).choose_crm? && apis = Crm::Base.active_apis(@booking_detail).presence %>
-                <div class="accordion-item rounded-bottom border-bottom-0 border-end-0 border-start-0">
-                  <h2 class="accordion-header d-flex justify-content-between" id="headingFive">
-                    <button class="accordion-button collapsed shadow-none rounded-bottom" type="button"
-                      data-bs-toggle="collapse" data-bs-target="#collapse-crm" aria-expanded="false"
-                      aria-controls="headingFive">
-                      Get Details from CRM
-                    </button>
-                  </h2>
-                  <div id="collapse-crm" class="accordion-collapse collapse rounded-bottom"
-                    aria-labelledby="headingFive" data-bs-parent="#accordionExample">
-                    <div class="accordion-body pt-0 ps-4">
-                      <div class="ps-3">
-                        <div class="col-12 row ps-2">
-                          <%= render "admin/crm/base/choose_crm", crms: Crm::Base.where(id: {"$in": apis.distinct(:base_id)}), apis: apis, resource: @booking_detail %>
+                  <% end %>
+                  <% if policy([:admin, Crm::Base.new()]).choose_crm? && apis = Crm::Base.active_apis(@booking_detail).presence %>
+                  <div class="accordion-item rounded-bottom border-bottom-0 border-end-0 border-start-0">
+                    <h2 class="accordion-header d-flex justify-content-between" id="headingFive">
+                      <button class="accordion-button collapsed shadow-none rounded-bottom" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#collapse-crm" aria-expanded="false"
+                        aria-controls="headingFive">
+                        Get Details from CRM
+                      </button>
+                    </h2>
+                    <div id="collapse-crm" class="accordion-collapse collapse rounded-bottom"
+                      aria-labelledby="headingFive" data-bs-parent="#accordionExample">
+                      <div class="accordion-body pt-0 ps-4">
+                        <div class="ps-3">
+                          <div class="col-12 row ps-2">
+                            <%= render "admin/crm/base/choose_crm", crms: Crm::Base.where(id: {"$in": apis.distinct(:base_id)}), apis: apis, resource: @booking_detail %>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
+                  <% end %>
                 </div>
-                <% end %>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+<% else %>
+  <%= render 'show_booking_without_inventory' %>    
+<% end %>  

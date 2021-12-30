@@ -1,5 +1,5 @@
-<% if current_user.role?('channel_partner') %>
-  <%= render 'admin/invoices/draft_form', url: admin_booking_detail_invoice_path(booking_detail_id: @invoice.booking_detail.id, id: @invoice.id) %>
+<% if current_user.role.in?(%w(cp_owner channel_partner)) %>
+  <%= render 'admin/invoices/draft_form', url: admin_invoiceable_path(@invoice, invoiceable_type: @invoice.invoiceable_type, invoiceable_id: @invoice.invoiceable_id) %>
 <% else %>
-  <%= render 'admin/invoices/form', url: admin_booking_detail_invoice_path(booking_detail_id: @invoice.booking_detail.id, id: @invoice.id) %>
+  <%= render 'admin/invoices/form', url: admin_invoiceable_path(@invoice, invoiceable_type: @invoice.invoiceable_type, invoiceable_id: @invoice.invoiceable_id) %>
 <% end %>

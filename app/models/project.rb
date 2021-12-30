@@ -47,7 +47,11 @@ class Project
   field :total_units, type: Integer, default: 1
   field :rera_registration_no, type: String
   field :approved_banks, type: Array, default: []
+  field :booking_sources, type: Array, default: []
   field :project_size, type: String
+  field :gst_slab_applicable, type: Boolean, default: true
+  field :incentive_percentage_slabs, type: Array, default: [5, 12, 18]
+  field :incentive_gst_slabs, type: Array, default: [5, 12, 18]
   field :sv_incentive, type: Integer
   field :spot_booking_incentive, type: Integer
   field :pre_reg_incentive_percentage, type: Integer
@@ -105,7 +109,10 @@ class Project
   field :price_starting_from, type: Integer
   field :price_upto, type: Integer
   field :broker_usp, type: Array, default: []
+  field :enable_inventory, type: Boolean, default: true
+  field :enable_booking_with_kyc, type: Boolean, default: true
   field :check_sv_availability_in_selldo, type: Boolean, default: false
+  field :incentive_calculation, type: Array, default: ["manual"]
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
@@ -225,6 +232,14 @@ class Project
 
   def ds_name
     name
+  end
+
+  def incentive_calculation_type?(_type)
+    if _type.present?
+      incentive_calculation.include?(_type)
+    else
+      false
+    end
   end
 
   def self.user_based_scope(user, params = {})

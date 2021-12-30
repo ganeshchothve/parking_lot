@@ -11,13 +11,15 @@ class User
   extend ApplicationHelper
   include SalesUserStateMachine
   include DetailsMaskable
+  include IncentiveSchemeAutoApplication
 
   # Constants
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   ALLOWED_UTM_KEYS = %i[utm_campaign utm_source utm_sub_source utm_content utm_medium utm_term]
   BUYER_ROLES = %w[user employee_user management_user]
-  ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre billing_team team_lead cp_owner dev_sourcing_manager]
+  ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre billing_team team_lead account_manager_head account_manager cp_owner dev_sourcing_manager]
   ALL_PROJECT_ACCESS = %w[superadmin admin cp cp_admin cp_owner]
+  SELECTED_PROJECT_ACCESS = %w[billing_team sales sales_admin gre crm team_lead dev_sourcing_manager account_manager account_manager_head]
   CHANNEL_PARTNER_USERS = %w[cp cp_admin channel_partner cp_owner]
   SALES_USER = %w[sales sales_admin]
   COMPANY_USERS = %w[employee_user management_user]
@@ -123,6 +125,8 @@ class User
 
   field :upi_id, type: String
 
+  field :referred_on, type: DateTime
+
   ## Security questionable
 
 
@@ -163,7 +167,7 @@ class User
   has_many :booking_details
   has_many :user_requests
   has_many :user_kycs
-  has_many :invoices
+  has_many :invoices, as: :invoiceable
   has_many :searches
   has_many :received_smses, class_name: 'Sms', inverse_of: :recipient
   has_many :received_whatsapps, class_name: 'Whatsapp', inverse_of: :recipient
@@ -215,6 +219,13 @@ class User
   scope :buyers, -> { where(role: {'$in' => BUYER_ROLES } )}
   scope :filter_by_userwise_project_ids, ->(user) { self.in(project_ids: user.project_ids) if user.try(:project_ids).present? }
   scope :filter_by_sales_status, ->(*sales_status){ where(sales_status: { '$in': sales_status }) }
+  scope :incentive_eligible, ->(category) do
+    if category == 'referral'
+      nin(referred_by_id: ['', nil]).in(role: BUYER_ROLES + %w(channel_partner cp_owner))
+    else
+      all.not_eligible
+    end
+  end
 
   scope :filter_by_created_by, ->(_created_by) do
     if _created_by == 'direct'
@@ -268,6 +279,17 @@ class User
     scope admin_roles, ->{ where(role: admin_roles )}
   end
 
+  def incentive_eligible?(category=nil)
+    if category.present?
+      if category == 'referral'
+        referred_by_id.present? && (self.buyer? || self.role.in?(%w(channel_partner cp_owner)))
+      else
+        false
+      end
+    else
+      _incentive_eligible?
+    end
+  end
 
   def phone_or_email_required
     errors.add(:base, 'Email or Phone is required')
@@ -473,6 +495,27 @@ class User
   end
 
   alias :resource_name :name
+  # Used in Incentive Invoice
+  alias :name_in_invoice :name
+  alias :invoiceable_manager :referred_by
+  alias :invoiceable_date :referred_on
+
+  # Find incentive schemes
+  def find_incentive_schemes(category)
+    tier_id = referred_by&.tier_id
+    incentive_schemes = ::IncentiveScheme.approved.where(resource_class: self.class.to_s, category: category, auto_apply: true).lte(starts_on: invoiceable_date).gte(ends_on: invoiceable_date)
+    # Find tier level scheme
+    if tier_id
+      incentive_schemes = incentive_schemes.where(tier_id: tier_id)
+    end
+    incentive_schemes
+  end
+
+  # Find all the resources for a channel partner that fall under this scheme
+  def find_all_resources_for_scheme(i_scheme)
+    resources = self.class.incentive_eligible(i_scheme.category).where(:"incentive_scheme_data.#{i_scheme.id.to_s}".exists => true, referred_by_id: self.referred_by_id).gte(scheduled_on: i_scheme.starts_on).lte(scheduled_on: i_scheme.ends_on)
+    self.class.or(resources.selector, {id: self.id})
+  end
 
   def login
     @login || phone || email

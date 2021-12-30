@@ -55,10 +55,10 @@
             </div>
             <div class="tab-pane fade" id="nav-project-pages" role="tabpanel">
                 <%= render 'admin/projects/pages', f: f, project: project %>
-              </div>
-              <div class="tab-pane fade" id="nav-project-logos" role="tabpanel">
-                <%= render 'admin/projects/logos', f: f, project: project %>
-              </div>
+            </div>
+            <div class="tab-pane fade" id="nav-project-logos" role="tabpanel">
+              <%= render 'admin/projects/logos', f: f, project: project %>
+            </div>
             <% if current_user.role?(:superadmin) %>
               <div class="tab-pane fade" id="nav-project-bookings" role="tabpanel">
                 <%= render 'admin/projects/bookings', f: f, project: project %>

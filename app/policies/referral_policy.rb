@@ -2,7 +2,7 @@
 class ReferralPolicy < ApplicationPolicy
 
   def index?
-    user.booking_portal_client.enable_referral_bonus && user.role?("channel_partner") #['superadmin', 'admin'].exclude?(user.role)
+    user.booking_portal_client.enable_referral_bonus && (user.role.in?(%w(cp_owner channel_partner)) || user.buyer?)
   end
 
   def create?

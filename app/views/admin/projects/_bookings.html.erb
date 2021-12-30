@@ -16,6 +16,24 @@
 </div>
 
 <div class="row">
+  <div class="col-md-6">
+    <div class="form-group mb-3">
+      <div class="form-check form-check-inline">
+        <%= f.check_box :enable_inventory, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("enable_inventory") }, "Yes", "No" %>
+        <%= f.label :enable_inventory, class: "form-check-label d-inline-block ms-2 enable-inventory-check" %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group mb-3">
+      <div class="form-check form-check-inline">
+        <%= f.check_box :enable_booking_with_kyc, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("enable_booking_with_kyc") }, "Yes", "No" %>
+        <%= f.label :enable_booking_with_kyc, class: "form-check-label d-inline-block ms-2 enable-booking-with-kyc" %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row inventory-role-fields <%= f.object.enable_inventory  ?   '' :  'd-none'  %>">
   <div class="col-md-12">
     <div class="mb-3">
       <%= f.label :enable_actual_inventory %>
@@ -24,8 +42,7 @@
     </div>
   </div>
 </div>
-
-<div class="row">
+<div class="row inventory-role-fields <%= f.object.enable_inventory  ?   '' :  'd-none'  %>">
   <div class="col-md-12">
     <div class="mb-3">
       <%= f.label :enable_live_inventory %>
@@ -33,7 +50,6 @@
     </div>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-6">
     <div class="mb-3">
@@ -65,7 +81,7 @@
 </div>
 
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-6">
     <div class="form-group">
       <div class="form-check form-check-inline">
         <%= f.check_box :enable_slot_generation, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("enable_slot_generation") }, "Yes", "No" %>
@@ -73,4 +89,29 @@
       </div>
     </div>
   </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :booking_sources, class: 'label-required' %>
+      <%= f.select :booking_sources, f.object.booking_sources, {},  class: "selectize-tags", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("booking_sources") ? false : true) %>
+    </div>
+  </div>
 </div>
+<div class='row'>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :incentive_calculation, class: 'label-required' %>
+      <%= f.select :incentive_calculation, Client::INCENTIVE_CALCULATION.collect{|x| [x,x]}, {}, class: 'selectize', multiple: true, required: 'required', disabled: !policy([:admin, project]).editable_field?("incentive_calculation") %>
+    </div>
+  </div>
+</div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $('#project_enable_inventory').change(function(){
+      if($(this).is(":checked")){
+        $('.inventory-role-fields').removeClass('d-none');
+      }else{
+        $('.inventory-role-fields').addClass('d-none');
+      }
+    });
+  });
+<% end %>

@@ -1,15 +1,15 @@
 class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def index?
-    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner billing_team].include?(user.role) && (enable_actual_inventory?(user) || enable_incentive_module?(user))
-    out = false if user.role?('channel_partner') && !interested_project_present?
+    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner].include?(user.role) && enable_actual_inventory?(user)
+    out = false if user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
+    out = true if %w[account_manager account_manager_head billing_team].include?(user.role)
     out
-    false
   end
 
   def new?
-    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner].include?(user.role) && eligible_user? && enable_actual_inventory?(user)
-    out = false if user.role?('channel_partner') && !interested_project_present?
+    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner].include?(user.role) && eligible_user? && enable_actual_inventory?(user)
+    out = false if user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
     out
   end
 
@@ -24,7 +24,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def edit?
-    enable_actual_inventory?(user) && (!current_client.enable_booking_with_kyc? || record.user.user_kycs.present?)
+    enable_actual_inventory?(user) && (!record.try(:project).try(:enable_booking_with_kyc?) || record.try(:user).try(:user_kycs).present?)
   end
 
   def update?
@@ -44,7 +44,18 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def show_booking_link?
-    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && record.try(:user).try(:buyer?)
+    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && record.try(:user).try(:buyer?) && !enable_inventory?
+  end
+
+  def show_add_booking_link?
+    enable_inventory? && record.try(:user).try(:buyer?) && %w[account_manager].include?(user.role)
+  end
+
+  def enable_inventory?
+    lead = record.lead
+    out = true
+    out = false if lead.project.enable_inventory
+    return out
   end
 
   def send_under_negotiation?
@@ -63,9 +74,25 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     user.active_channel_partner?
   end
 
+  def move_to_next_state?
+    %w[account_manager account_manager_head].include?(user.role)
+  end
+
   def send_booking_detail_form_notification?
     user.active_channel_partner?
   end
+
+  def edit_booking_without_inventory?
+    out = false
+    out = true if record.status == 'blocked' && user.role?('account_manager_head')
+    out = true if %w('booked_tentative', 'booked_confirmed') && user.role?('billing_team')
+    out
+  end
+
+  def asset_create?
+    %w[account_manager account_manager_head billing_team].include?(user.role)
+  end
+
   # def block?
   #   valid = enable_actual_inventory? && only_for_confirmed_user! && only_for_kyc_added_users! && ['hold'].include?(record.status)
   #   if !valid
@@ -81,7 +108,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def permitted_attributes
     attributes = super
-    attributes += [:primary_user_kyc_id, :project_unit_id, :user_id, :lead_id, user_kyc_ids: [] ]
+    attributes += [:project_tower_name, :agreement_price, :channel_partner_id, :other_costs, :agreement_date, :project_unit_configuration, :booking_project_unit_name, :booked_on, :project_id, :primary_user_kyc_id, :project_unit_id, :user_id, :creator_id, :manager_id, :account_manager_id, :lead_id, :source, user_kyc_ids: []]
     if eligible_users_for_tasks?
       attributes += [tasks_attributes: Admin::TaskPolicy.new(user, Task.new).permitted_attributes]
     end
@@ -116,7 +143,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
         @condition = 'record_not_held'
         false
       end
-    elsif (user.role?('channel_partner') && record.status == 'hold')
+    elsif (user.role.in?(%w(cp_owner channel_partner)) && record.status == 'hold')
       return true if record.lead.cp_lead_activities.where(user_id: user.id).present? && user.active_channel_partner?
       @condition = 'not_authorise_to_book_for_this_user'
       false

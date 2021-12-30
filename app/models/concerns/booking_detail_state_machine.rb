@@ -116,6 +116,8 @@ module BookingDetailStateMachine
       end
 
       event :cancel, after: %i[release_project_unit! sync_booking] do
+        transitions from: :booked_tentative, to: :cancelled
+        transitions from: :blocked, to: :cancelled
         transitions from: :cancelled, to: :cancelled
         transitions from: :scheme_rejected, to: :cancelled
         transitions from: :cancelling, to: :cancelled, after: :update_user_request_to_resolved
@@ -188,6 +190,7 @@ module BookingDetailStateMachine
     end
     # Updating blocked date of project_unit to today and  auto_release_on will be changed to blocking_days more from current auto_release_on.
     def after_booked_tentative_event
+      return unless project_unit.present?
       if booked_tentative? && (get_paid_amount >= project_unit.booking_price)
         booked_confirmed!
       else
@@ -201,11 +204,12 @@ module BookingDetailStateMachine
     #
     # Updating blocked date of project_unit to today and  auto_release_on to nil as booking is confirmed.
     def after_booked_confirmed_event
-      _project_unit = project_unit
-      _project_unit.auto_release_on = nil
-      _project_unit.save
-      send_email_and_sms_as_confirmed
-
+      if project_unit.present?
+        _project_unit = project_unit
+        _project_unit.auto_release_on = nil
+        _project_unit.save
+        send_email_and_sms_as_confirmed
+      end
       # create asset and send to zoho sign
       if (self.aasm.from_state == :booked_tentative && self.user.booking_portal_client.document_sign.present?)
         self.send_booking_form_to_sign
@@ -353,6 +357,7 @@ module BookingDetailStateMachine
     # This method release the project Unit. Without any fields validation.
     #
     def release_project_unit!
+      return unless self.project_unit.present?
       project_unit.make_available
       project_unit.save(validate: false)
       SelldoLeadUpdater.perform_async(lead_id.to_s, {stage: 'cancelled'})
@@ -361,6 +366,15 @@ module BookingDetailStateMachine
     def update_selldo!
       SelldoLeadUpdater.perform_async(lead_id.to_s, {stage: status})
       SelldoLeadUpdater.perform_async(lead_id.to_s, {action: 'add_slot_details', slot_status: 'booked'})
+    end
+
+    def move_to_next_state!(status)
+      if self.respond_to?("may_#{status}?") && self.send("may_#{status}?")
+        self.aasm.fire!(status.to_sym)
+      else
+        self.errors.add(:base, 'Invalid transition')
+      end
+      self.errors.empty?
     end
 
     def sync_booking
