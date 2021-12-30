@@ -9,7 +9,7 @@
               <div>
                 <div class="inner-info d-flex d-xs-no-flex justify-content-between position-relative">
                   <div class="ps-3 py-3 pb-xs-0">
-                    <h2 class="fn-16 font-medium d-sm-inline-block mb-0 theme-txt-color me-2 d-block">
+                    <h2 class="fn-16 font-medium mb-0 theme-txt-color me-2 d-block">
                       <% if policy([ current_user_role_group, invoice.invoiceable]).show? %>
                         <%= link_to invoice.invoiceable.name_in_invoice, [current_user_role_group, invoice.invoiceable], class: "theme-txt-color" %>
                       <% else %>
@@ -17,21 +17,23 @@
                       <% end %>
                     </h2>
                     <% if invoice.manager_id? && !current_user.role?('channel_partner') %>
-                    <p class="fn-14 mt-1 mb-0">
+                    <p class="fn-14 mt-2 mb-0 d-inline-block">
                       <%= "#{t('mongoid.attributes.invoice.manager_id')} : #{link_to_if (policy([:admin, User]).index? && current_user.role.in?(User::ALL_PROJECT_ACCESS)), invoice.manager_name, [current_user_role_group, invoice.manager], class: 'theme-txt-color'}".html_safe %>
                     </p>
                     <% end %>
                     <% if invoice.account_manager.present? %>
                       <span class="secondary mx-3 d-sm-inline-block d-none">| </span>
-                      <p class="fn-14 mt-1 mb-0">
+                      <p class="fn-14 mt-2 mb-0 d-inline-block">
                         <%= "#{t('mongoid.attributes.invoice.account_manager_id')} : #{invoice.account_manager.name}" %>
                       </p>
                     <% end %>
                   </div>
                   <div class="pe-3 py-3 ps-xs-3">
                     <p class="font-medium fn-12 mb-0 d-inline-block me-2">
-                      <%= invoice.number %>
-                      <span class="secondary mx-3 d-sm-inline-block d-none">| </span>
+                      <% if invoice.number.present? %>
+                        <%= invoice.number %>
+                        <span class="secondary mx-3 d-sm-inline-block d-none">| </span>
+                      <% end %>
                       <i class="fa fa-circle info me-2 fa-sm"></i><%= t("mongoid.attributes.invoice/status.#{invoice.status}") || '-' %></p>
                     <div class="dropdown d-inline-block top-right-action">
                       <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
