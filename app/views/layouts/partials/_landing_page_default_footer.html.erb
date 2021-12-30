@@ -26,7 +26,7 @@
 
     <div class="mobile-footer visible-xs visible-portrait fixed text-center col-app-12">
         <div class="mob-number col-app-6">             
-        <%= link_to 'Sign in', new_user_session_path, class: 'sign-in-footer' %>
+        <%= link_to 'Sign in', new_user_session_path, {class: 'sign-in-footer', 'data-event-category': 'Footer', 'data-event-action': 'Click', 'data-event-name': 'Login'} %>
         </div>
         <div class="enquiry col-app-6">
             <a href='<%= new_channel_partner_path %>' class="green-btn mobile-enquire-button relative register-btn" data-event-category="Footer" data-event-action="Click" data-event-name="Register Now">Register Now</a>

@@ -7,16 +7,16 @@
         </div>
         <div class="col-app-4 col-app-xs-12">
           <div class="social-links">
-            <a href="https://www.facebook.com/BeyondWallsDigital/" target="_blank">
+            <a href="https://www.facebook.com/beyondwallsofficial" target="_blank">
               <img data-src="<%= asset_path 'facebook-icon.png' %>" class="lazy">
             </a>
-            <a href="https://www.instagram.com/beyondwalls_digital/" target="_blank">
+            <a href="https://www.instagram.com/beyondwallsofficial/" target="_blank">
               <img data-src="<%= asset_path 'insta-icon.png' %>" class="lazy">
             </a>
             <a href="https://twitter.com/BeyondwallsD" target="_blank">
               <img data-src="<%= asset_path 'twitter-icon.png' %>" class="lazy">
             </a>
-            <a href="https://www.linkedin.com/company/beyondwallsofficial/" target="_blank">
+            <a href="https://www.linkedin.com/company/beyondwallsofficial/?viewAsMember=true" target="_blank">
               <img data-src="<%= asset_path 'linkedin-icon.png' %>" class="lazy">
             </a>
           </div>
@@ -29,7 +29,7 @@
             &nbsp;<a href="tel:02067082786" style="font-weight: 700; color: #000;">020 6708 2786</span>
         </div> -->
         <div class="enquiry col-app-12">
-        <%= link_to 'Sign in', new_user_session_path, class: 'green-btn mobile-enquire-button relative register-btn' %>
+        <%= link_to 'Sign in', new_user_session_path, {class: 'green-btn mobile-enquire-button relative register-btn', 'data-event-category': 'Footer', 'data-event-action': 'Click', 'data-event-name': 'Login'} %>
         </div>            
     </div>
   </footer>
