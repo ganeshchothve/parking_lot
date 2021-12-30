@@ -947,6 +947,8 @@ en:
         agreement_amount: 'Consideration Value For Brokerage'
         incentive_resource: 'Resource'
         category: 'Type'
+        manager_id: 'Partner'
+        account_manager_id: 'Account Manager'
       invoice/status:
         draft: 'Draft'
         raised: 'Raised'
@@ -1567,6 +1569,10 @@ en:
         tax_invoice_raise: "Raised Tax Invoice"
       exports:
         link_name: "%{name} Exports"
+      filters:
+        all: 'All'
+        manual_invoices: 'Manual Invoices'
+        calculated_invoices: 'Calculated Invoices'
 
     incentive_deductions:
       index:

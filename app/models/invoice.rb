@@ -40,7 +40,8 @@ class Invoice
   embeds_one :payment_adjustment, as: :payable
 
 
-  validates :number, :category, :brokerage_type, :payment_to, presence: true, if: :raised?
+  validates :category, :brokerage_type, :payment_to, presence: true
+  validates :number, presence: true, if: :raised?
   validates :rejection_reason, presence: true, if: :rejected?
   validates :comments, presence: true, if: proc { pending_approval? && status_was == 'rejected' }
   validates :amount, numericality: { greater_than: 0 }
@@ -54,9 +55,11 @@ class Invoice
 
   scope :filter_by_invoice_type, ->(request_type){ where(_type: /#{request_type}/i)}
   scope :filter_by_status, ->(status) { where(status: status) }
+  scope :filter_by_category, ->(category) { where(category: category) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
   scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }
-  scope :filter_by_channel_partner_id, ->(channel_partner_id) { where(manager_id: channel_partner_id) }
+  scope :filter_by_manager_id, ->(manager_id) { where(manager_id: manager_id) }
+  scope :filter_by_channel_partner_id, ->(channel_partner_id) { where(channel_partner_id: channel_partner_id) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_invoiceable_id, ->(invoiceable_id) { where(invoiceable_id: invoiceable_id) }
 

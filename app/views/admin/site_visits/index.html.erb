@@ -1,20 +1,6 @@
 <section class="mb-5 mt-3">
   <div class="px-4">
     <div class="row">
-      <!--
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
-        <div class="table-title pt-1 pb-3">
-          <h1 class="title icon-set icon-file-kycs-black">
-            <%= SiteVisit.model_name.human(count: @site_visits.total_entries ) %>
-          </h1>
-        </div>
-      </div>
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
-        <div class="table-btn-set float-right pb-3">
-          <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @site_visits.total_entries %></button>
-        </div>
-      </div>
-      -->
       <div class="col-lg-8 col-12 filter-set d-xs-no-flex">
         <%= link_to t('controller.site_visits.filters.scheduled_this_week'), admin_site_visits_path(fltrs: {scheduled_on: "#{Date.today.beginning_of_week} - #{Date.today.end_of_week}"}, scheduled_this_week: true), class: "filter-link #{params[:scheduled_this_week].present? ? 'active' : ''}" %>
         <%= link_to t('controller.site_visits.filters.scheduled_last_week'), admin_site_visits_path(fltrs: {scheduled_on: "#{(Date.today-7.days).beginning_of_week} - #{(Date.today-7.days).end_of_week}"}, scheduled_last_week: true), class: "filter-link #{params[:scheduled_last_week].present? ? 'active' : ''}" %>

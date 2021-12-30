@@ -127,7 +127,7 @@ class Admin::InvoicesController < AdminController
   end
 
   def set_resource
-    @resource = params[:invoiceable_type]&.classify&.constantize.where(id: params[:invoiceable_id]).first if params[:invoiceable_id].present?
+    @resource = params[:invoiceable_type]&.classify&.constantize.where(id: params[:invoiceable_id]).first if params[:invoiceable_id].present? && params[:invoiceable_type].present?
   end
 
   def set_invoice
