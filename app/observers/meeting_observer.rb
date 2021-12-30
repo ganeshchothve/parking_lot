@@ -1,4 +1,6 @@
 class MeetingObserver < Mongoid::Observer
+  include ApplicationHelper
+
   def before_save meeting
     if meeting.toggle_participant_id.present?
         toggle_participant_id = BSON::ObjectId(meeting.toggle_participant_id.to_s)
@@ -6,6 +8,14 @@ class MeetingObserver < Mongoid::Observer
             meeting.participant_ids.reject!{|x| x == toggle_participant_id}
         else
             meeting.participant_ids << toggle_participant_id
+        end
+        user = User.where(id: toggle_participant_id).first
+        if user && current_client.external_api_integration?
+          if Rails.env.staging? || Rails.env.production?
+            MeetingObserverWorker.perform_async(meeting.id.to_s, user.id.to_s, meeting.changes)
+          else
+            MeetingObserverWorker.new.perform(meeting.id, user.id, meeting.changes)
+          end
         end
     end
   end

@@ -63,4 +63,6 @@ sfdc:
   client_secret:
   refresh_token:
 third_party_inventory:
-  base_url: 'https://inventory.beyondwalls.com/search'
+  base_url:
+interakt:
+  base_url:

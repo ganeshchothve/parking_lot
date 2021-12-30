@@ -9,11 +9,14 @@ class Crm::Api
   field :path, type: String
   field :request_payload, type: String
   field :is_active, type: Boolean, default: true
+  field :event, type: String
 
   validate :validate_url
   validates :resource_class, inclusion: { in: RESOURCE_CLASS }
-  validates :_type, uniqueness: {scope: [:resource_class, :base_id]}
+  #validates :_type, uniqueness: {scope: [:resource_class, :base_id]}
   validates :path, :_type, presence: true
+
+  default_scope -> { where(event: {'$in': ['', nil]}) }
 
   belongs_to :base
 

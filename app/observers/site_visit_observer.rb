@@ -1,4 +1,6 @@
 class SiteVisitObserver < Mongoid::Observer
+  include ApplicationHelper
+
   def before_validation site_visit
     # Handle state transitions
     _event = site_visit.event.to_s
@@ -48,10 +50,26 @@ class SiteVisitObserver < Mongoid::Observer
         SelldoLeadUpdater.perform_async(site_visit.lead_id.to_s, {action: 'add_slot_details', slot_details: site_visit.time_slot&.to_s(site_visit.user&.time_zone), slot_status: site_visit.slot_status})
       end
     end
+
+    if current_client.external_api_integration?
+      if Rails.env.staging? || Rails.env.production?
+        SiteVisitObserverWorker.perform_async(site_visit.id.to_s, 'update', site_visit.changes.merge(site_visit.notes.select {|x| x.new_record? && x.changes.present?}.first&.changes&.slice('note') || {}))
+      else
+        SiteVisitObserverWorker.new.perform(site_visit.id, 'update', site_visit.changes.merge(site_visit.notes.select {|x| x.new_record? && x.changes.present?}.first&.changes&.slice('note') || {}))
+      end
+    end
   end
 
   def after_create site_visit
     site_visit.third_party_references.each(&:update_references)
+
+    if current_client.external_api_integration?
+      if Rails.env.staging? || Rails.env.production?
+        SiteVisitObserverWorker.perform_async(site_visit.id.to_s, 'create', site_visit.changes)
+      else
+        SiteVisitObserverWorker.new.perform(site_visit.id.to_s, 'create', site_visit.changes)
+      end
+    end
   end
 
   def after_save site_visit

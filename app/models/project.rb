@@ -197,6 +197,12 @@ class Project
   #  UnitConfiguration.where(data_attributes: {"$elemMatch" => {"n" => "project_id", "v" => self.selldo_id}})
   #end
 
+  %w(logo mobile_logo cover_photo mobile_cover_photo).each do |uploader|
+    define_method "#{uploader}_url" do
+      self.send(uploader)&.url
+    end
+  end
+
   def compute_area_price
     self.area_price_data = []
     configs = self.unit_configurations  #.select{|x| x.bedrooms > 0}
