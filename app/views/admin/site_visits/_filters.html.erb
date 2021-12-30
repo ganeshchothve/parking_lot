@@ -30,7 +30,7 @@
         <% unless current_user.role?('channel_partner') %>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.site_visit.manager_id') %>
-            <%= select_tag "fltrs[manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: ['channel_partner', 'cp_ower'] }}}} %>
+            <%= select_tag "fltrs[manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: ['channel_partner', 'cp_owner'] }}}} %>
           </div>
         <% end %>
         <% unless current_user.role.in?(%w(cp_owner cp channel_partner)) %>
