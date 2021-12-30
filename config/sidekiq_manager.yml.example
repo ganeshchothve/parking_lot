@@ -9,3 +9,6 @@
   otp:
     min: 1
     conc: 2
+  event:
+    min: 1
+    conc: 3

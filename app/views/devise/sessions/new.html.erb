@@ -72,7 +72,7 @@ end %>
     <div class="signin-footer text-center mt-4">
       <% if current_client.sms_enabled? %>
       <a href="javascript:;" class="a-style opacity-5 toggle_signin_form d-block d-md-inline pr-0"
-        data-target="#otp_user_section"><%= t('sessions.new.login_with_otp_link') %></a>
+        data-target="#otp_user_section" data-event-category="section" data-event-action="Click" data-event-name="<%= t('sessions.new.login_with_otp_link') %>"><%= t('sessions.new.login_with_otp_link') %></a>
       <% end %>
       <div class="signup-btn-set mt-2">
         <%- if devise_mapping.registerable? && controller_name != 'registrations' %>

@@ -317,6 +317,13 @@ en:
             Receipt: Payment
             UserKyc: 'User KYC'
             BookingDetail: 'Booking Detail'
+      crm/api:
+        event: 'Event Name'
+        resource_class: 'Resource Class'
+        Path: 'Api Path'
+        request_payload: 'Request Payload'
+        is_active: 'Active'
+        response_crm_id_location: 'CRM Reference ID Location In Response'
 
       bulk_upload_report:
         uploaded_by_id: 'Uploaded By'
