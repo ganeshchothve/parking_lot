@@ -15,11 +15,17 @@ class ChannelPartnerObserver < Mongoid::Observer
     end
 
     if channel_partner.referral_code.present?
-      referred_by_user = User.where(referral_code: channel_partner.referral_code).first
-      if referred_by_user
-        user.set(referred_by_id: referred_by_user.id)
+      query = []
+      query << { phone: user.phone } if user.phone.present?
+      query << { email: user.email } if user.email.present?
+      referral = Referral.where(referral_code: channel_partner.referral_code).or(query).first
+      if referral
+        user.set(referred_by_id: referral.referred_by_id, referred_on: referral.created_at)
+      elsif (referred_by = User.where(referral_code: channel_partner.referral_code).first)
+        user.set(referred_by_id: referred_by.id, referred_on: Time.now)
       end
     end
+
     user.save!
     channel_partner.set(primary_user_id: user.id)
 

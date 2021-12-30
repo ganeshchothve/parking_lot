@@ -193,6 +193,29 @@ $(document).ready(function(){
     }
   }).trigger('change');
 
+  $('#incentive_scheme_form #incentive_scheme_category').on('change', function(event) {
+    var brokerage_types = <%= raw IncentiveScheme::BROKERAGE_TYPE_PER_CATEOGORY.to_json %>;
+    var brokerage_type_translations = <%= raw t('mongoid.attributes.incentive_scheme/brokerage_type').to_json %>;
+    var category = $(event.currentTarget).val();
+    var $brokerage_type_select = $('#incentive_scheme_form #incentive_scheme_brokerage_type');
+    var brokerage_type = $brokerage_type_select.val();
+    var allowed_brokerage_types = brokerage_types[category];
+    if(category != null && allowed_brokerage_types != null){
+      var brokerage_type_select = $brokerage_type_select[0].selectize;
+      brokerage_type_select.setValue('');
+      brokerage_type_select.clearOptions();
+      brokerage_type_select.renderCache = {};
+      var options = _.map(allowed_brokerage_types, function(d) { return { value: d, text: brokerage_type_translations[d] } });
+      brokerage_type_select.addOption(options)
+      brokerage_type_select.refreshOptions(false);
+      brokerage_type_select.settings.placeholder = 'Select Brokerage Type';
+      brokerage_type_select.updatePlaceholder();
+      if(!_.isEmpty(brokerage_type)){
+        brokerage_type_select.addItem(brokerage_type, true);
+      }
+    }
+  }).trigger('change');
+
   $("#incentive_scheme_form").on('nested:fieldAdded', function(event){
     var $field = $(event.field);
     var elems = _.reject($('input[type="hidden"].stage').get(), function(elem) { return $(elem).parents('.fields').css('display') == 'none' });

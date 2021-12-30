@@ -19,6 +19,13 @@ class IncentiveScheme
     'BookingDetail' => %w[spot_booking brokerage],
     'User' => %w[referral]
   }
+  BROKERAGE_TYPE_PER_CATEOGORY = {
+    'walk_in' => %w[sub_brokerage],
+    'lead' => %w[sub_brokerage],
+    'spot_booking' => %w[sub_brokerage],
+    'brokerage' => %w[brokerage sub_brokerage],
+    'referral' => %w[sub_brokerage]
+  }
 
   field :name, type: String
   field :description, type: String
@@ -30,7 +37,7 @@ class IncentiveScheme
   field :resource_class, type: String, default: 'BookingDetail'
   field :category, type: String
   field :brokerage_type, type: String, default: 'sub_brokerage'
-  field :payment_to, type: String, default: 'company'
+  field :payment_to, type: String, default: 'channel_partner'
   field :auto_apply, type: String, default: true
 
   belongs_to :booking_portal_client, class_name: 'Client'

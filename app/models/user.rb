@@ -125,6 +125,8 @@ class User
 
   field :upi_id, type: String
 
+  field :referred_on, type: DateTime
+
   ## Security questionable
 
 
@@ -496,13 +498,7 @@ class User
   # Used in Incentive Invoice
   alias :name_in_invoice :name
   alias :invoiceable_manager :referred_by
-
-  def invoiceable_date
-    query = []
-    query << { phone: phone } if phone.present?
-    query << { email: email } if email.present?
-    Referral.where(referred_by: referred_by).or(query).first&.created_at
-  end
+  alias :invoiceable_date :referred_on
 
   # Find incentive schemes
   def find_incentive_schemes(category)
