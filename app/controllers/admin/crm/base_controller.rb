@@ -44,7 +44,7 @@ class Admin::Crm::BaseController < ApplicationController
   end
 
   def show
-    @apis = @crm.apis.paginate(page: params[:page] || 1, per_page: params[:per_page])
+    @apis = @crm.apis.unscoped.paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
   def destroy
