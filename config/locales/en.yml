@@ -1042,6 +1042,7 @@ en:
         site_visit_type: Type
         approval_status: Approval Status
         manager_id: 'Partner / Manager / Added by'
+        rejection_reason: Rejection Reason
       site_visit/status:
         scheduled: 'Scheduled'
         pending: 'Pending'
@@ -1051,6 +1052,12 @@ en:
         pending: 'Pending Approval'
         approved: 'Approved'
         rejected: 'Rejected'
+      site_visit/rejection_reason:
+        budget_not_match: Budget didn't match
+        location_not_match: Location didn't match
+        possession_not_match: Possession didn't match
+        didnt_visit: Didn't visit
+        different_cp: Walk In with different CP
       user_kyc:
         name: "Name"
         email: "Email"
