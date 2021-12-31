@@ -9,6 +9,10 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <div class="mb-3">
+            <%= f.label :rejection_reason, class: 'label-required' %>
+            <%= f.select :rejection_reason, SiteVisit::REJECTION_REASONS.collect{ |r| [ t("mongoid.attributes.site_visit/rejection_reason.#{r}"), r] }, {prompt: true}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @site_visit]).editable_field?("rejection_reason")%>
+          </div>
           <%= f.fields_for :notes, @note do |notes_form| %>
             <div class="mb-3">
               <%= notes_form.label :note, class: 'label-required' %>
@@ -26,6 +30,6 @@
 <% end %>
 <%= javascript_tag do %>
 $(document).ready(function(){
-  var $form = $("#site_visit_reject_form");
+  FormInitializer.init($("#site_visit_reject_form"));
 });
 <% end %>

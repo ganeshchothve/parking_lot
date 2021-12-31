@@ -68,6 +68,12 @@
                         <div class="col-12">
                           <%= render 'notes/section', notable: @site_visit %>
                         </div>
+                        <% if @site_visit.approval_status == "rejected" %>
+                          <div class="mb-3">
+                            <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.site_visit.rejection_reason') %></label>
+                            <p class="fn-14 theme-txt-color mb-0"><%= t("mongoid.attributes.site_visit/rejection_reason.#{@site_visit.rejection_reason}") || '-' %></p>
+                          </div>
+                        <% end %>
                       </div>
                     </div>
                   </div>
