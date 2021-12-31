@@ -61,6 +61,7 @@ class SiteVisit
   validates :scheduled_on, :status, :site_visit_type, :created_by, presence: true
   validates :conducted_on, :conducted_by, presence: true, if: Proc.new { |sv| sv.status == 'conducted' }
   validate :existing_scheduled_sv, on: :create
+  validate :validate_scheduled_on_datetime
   validates :time_slot, presence: true, if: Proc.new { |sv| sv.site_visit_type == 'token_slot' }
   validates :notes, copy_errors_from_child: true
 
@@ -158,6 +159,11 @@ class SiteVisit
   end
 
   private
+
+  def validate_scheduled_on_datetime
+    self.errors.add :base, 'Scheduled On should not be past date' if self.scheduled_on.beginning_of_day < Time.now.beginning_of_day
+  end
+
   def existing_scheduled_sv
     self.errors.add :base, 'One Scheduled Site Visit Already Exists' if SiteVisit.where(lead_id: lead_id, status: 'scheduled').present?
   end
