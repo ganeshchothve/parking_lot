@@ -29,7 +29,8 @@ class ChannelPartnerExportWorker
       "Owner Name",
       "Owner Phone",
       "Owner Email",
-      "Status"
+      "Status",
+      "Walkin Count"
     ]
   end
 
@@ -45,7 +46,8 @@ class ChannelPartnerExportWorker
       user&.name,
       user&.phone,
       user&.email,
-      ChannelPartner.human_attribute_name("status.#{channel_partner.status}")
+      ChannelPartner.human_attribute_name("status.#{channel_partner.status}"),
+      channel_partner.site_visits.count
     ]
   end
 end
