@@ -11,11 +11,12 @@ class BookingDetail
   extend RenderAnywhere
   include PriceCalculator
   include CrmIntegration
+  include IncentiveSchemeAutoApplication
 
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   STATUSES = %w[hold blocked booked_tentative booked_confirmed under_negotiation scheme_rejected scheme_approved swap_requested swapping swapped swap_rejected cancellation_requested cancelling cancelled cancellation_rejected]
   BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed under_negotiation scheme_approved]
-  DOCUMENT_TYPES = %w[booking_detail_form]
+  DOCUMENT_TYPES = %w[booking_detail_form document]
 
   field :status, type: String
   field :erp_id, type: String, default: ''
@@ -25,13 +26,18 @@ class BookingDetail
   field :saleable, type: Float, default: 0
   field :project_name, type: String
   field :project_tower_name, type: String
+  field :booking_project_unit_name, type: String
+  field :project_unit_configuration, type: String
   field :bedrooms, type: String
   field :bathrooms, type: String
   field :carpet, type: Float
   field :agreement_price, type: Integer
+  field :other_costs, type: Integer
   field :all_inclusive_price, type: Integer
   field :booked_on, type: Date
+  field :agreement_date, type: Date
   field :ladder_stage, type: Array
+  field :source, type: String
 
   mount_uploader :tds_doc, DocUploader
 
@@ -47,11 +53,11 @@ class BookingDetail
   embeds_many :costs, as: :costable
   embeds_many :data, as: :data_attributable
   embeds_many :tasks, cascade_callbacks: true
-  belongs_to :project
-  belongs_to :project_tower
-  belongs_to :project_unit
-  belongs_to :lead
-  belongs_to :user
+  belongs_to :project#, optional: true
+  belongs_to :project_tower, optional: true
+  belongs_to :project_unit, optional: true
+  belongs_to :lead, optional: true
+  belongs_to :user, optional: true
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true
   belongs_to :cp_manager, class_name: 'User', optional: true
@@ -68,9 +74,11 @@ class BookingDetail
   has_many :notes, as: :notable
   has_many :user_requests, as: :requestable
   has_many :related_booking_details, foreign_key: :parent_booking_detail_id, primary_key: :_id, class_name: 'BookingDetail'
-  has_many :invoices
+  has_many :invoices, as: :invoiceable
   has_and_belongs_to_many :user_kycs, validate: true
-
+  belongs_to :channel_partner, optional: true
+  belongs_to :creator, class_name: 'User', optional: true
+  belongs_to :account_manager, class_name: 'User', optional: true
 
   # TODO: uncomment
   # validates :name, presence: true
@@ -79,6 +87,7 @@ class BookingDetail
   validate :kyc_mandate
   validate :validate_content, on: :create
   validates :primary_user_kyc, :receipts, :tasks, copy_errors_from_child: true, allow_blank: true
+  validates :agreement_date, presence: true, if: proc { booked_tentative? && status_was == 'blocked' }
 
   delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
   delegate :name, :email, :phone, to: :user, prefix: true, allow_nil: true
@@ -106,7 +115,18 @@ class BookingDetail
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day) }
   scope :filter_by_booked_on, ->(date) { start_date, end_date = date.split(' - '); where(booked_on: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day)
   }
-  scope :incentive_eligible, -> { booked_confirmed.filter_by_tasks_completed_tracked_by('system') }
+   scope :filter_by_agreement_date, ->(date) { start_date, end_date = date.split(' - '); where(agreement_date: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day)
+  }
+  scope :incentive_eligible, ->(category) do
+    case category
+    when 'spot_booking'
+      blocked
+    when 'brokerage'
+      booked_confirmed.filter_by_tasks_completed_tracked_by('system')
+    else
+      all.not_eligible
+    end
+  end
   scope :booking_stages, -> { all.in(status: BOOKING_STAGES) }
 
   accepts_nested_attributes_for :notes, :tasks, :receipts, :user_kycs, :primary_user_kyc, reject_if: :all_blank
@@ -150,10 +170,11 @@ class BookingDetail
   # @return [Email Object]
   #
   def auto_released_extended_inform_buyer!
+    template = Template::EmailTemplate.find_by(project_id: project_id, name: "auto_release_on_extended")
     email = Email.create!({
       project_id: project_id,
       booking_portal_client_id: project_unit.booking_portal_client_id,
-      email_template_id: Template::EmailTemplate.find_by(project_id: project_id, name: "auto_release_on_extended").id,
+      email_template_id: template.id,
       cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
       recipients: [ lead.user ],
       cc_recipients: ( lead.manager_id.present? ? [lead.manager] : [] ),
@@ -194,10 +215,43 @@ class BookingDetail
   end
 
   alias :resource_name :ds_name
+  # Used in incentive invoice
+  alias :name_in_invoice :name
+  alias :invoiceable_manager :manager
+  alias :invoiceable_date :booked_on
+
+  def invoiceable_price
+    calculate_invoice_agreement_amount
+  end
+
+  # Find incentive scheme
+  def find_incentive_schemes(category)
+    tower_id = project_tower_id
+    tier_id = manager&.tier_id
+    incentive_schemes = ::IncentiveScheme.approved.where(resource_class: self.class.to_s, category: category, project_id: project_id, auto_apply: true).lte(starts_on: invoiceable_date).gte(ends_on: invoiceable_date)
+    # Find tier level scheme
+    if tier_id
+      _incentive_schemes = (incentive_schemes.where(project_tower_id: tower_id, tier_id: tier_id) || incentive_schemes.where(tier_id: tier_id, project_tower_id: nil))
+    end
+    # Find tower level scheme
+    _incentive_schemes = _incentive_schemes.presence || incentive_schemes.where(project_tower_id: tower_id, tier_id: nil)
+    # Find project level scheme
+    _incentive_schemes = _incentive_schemes.presence || incentive_schemes.where(project_tower_id: nil, tier_id: nil)
+    # Use default scheme if not found any of above
+    #_incentive_schemes.presence ||= ::IncentiveScheme.where(default: true)
+    _incentive_schemes
+  end
+
+  # Find all the bookings for a channel partner that fall under this scheme
+  def find_all_resources_for_scheme(i_scheme)
+    booking_details = self.class.incentive_eligible(i_scheme.category).where(project_id: i_scheme.project_id, :"incentive_scheme_data.#{i_scheme.id.to_s}".exists => true, manager_id: self.manager_id).gte(booked_on: i_scheme.starts_on).lte(booked_on: i_scheme.ends_on)
+    booking_details = booking_details.where(project_tower_id: i_scheme.project_tower_id) if i_scheme.project_tower_id.present?
+    self.class.or(booking_details.selector, {id: self.id})
+  end
 
   # validates kyc presence if booking is not allowed without kyc
   def kyc_mandate
-    if project_unit.booking_portal_client.enable_booking_with_kyc && !primary_user_kyc_id.present?
+    if project_unit.present? && project.enable_booking_with_kyc && !primary_user_kyc_id.present?
       self.errors.add(:base, "KYC is mandatory for booking.")
     end
   end
@@ -245,6 +299,7 @@ class BookingDetail
   def pending_balance(options={})
     strict = options[:strict] || false
     lead_id = options[:lead_id] || self.lead_id
+    return unless self.project_unit.present?
     if lead_id.present?
       receipts_total = Receipt.where(lead_id: lead_id, booking_detail_id: self.id)
       if strict
@@ -313,13 +368,37 @@ class BookingDetail
     end
   end
 
-  def incentive_eligible?
-    booked_confirmed? && system_tasks_completed?
+  def incentive_eligible?(category=nil)
+    if category.present?
+      case category
+      when 'spot_booking'
+        blocked?
+      when 'brokerage'
+        if project.present?
+          if project.enable_inventory?
+            if project_unit.present?
+              booked_confirmed? && system_tasks_completed?
+            else
+              false
+            end
+          else
+            booked_confirmed?
+          end
+        end
+      else
+        false
+      end
+    else
+      _incentive_eligible?
+    end
   end
 
-  def calculate_incentive
-    # Calculate incentives & generate invoices
-    IncentiveCalculatorWorker.new.perform(id.to_s)
+  def calculate_invoice_agreement_amount
+    if self.project.enable_inventory? && self.project_unit.present?
+      self.calculate_agreement_price
+    else
+      (self.agreement_price)
+    end
   end
 
   class << self
@@ -327,21 +406,26 @@ class BookingDetail
     def user_based_scope(user, params = {})
       custom_scope = {}
       if params[:lead_id].blank? && !user.buyer?
-        if user.role?('channel_partner')
+        case user.role.to_s
+        when 'channel_partner'
           custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
-        elsif user.role?('cp_owner')
+        when 'cp_owner'
           custom_scope = { channel_partner_id: user.channel_partner_id }
-        elsif user.role?('cp_admin')
+        when 'cp_admin'
           #cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
           #channel_partner_ids = User.where(role: 'channel_partner', manager_id: {"$in": cp_ids}).distinct(:id)
           #custom_scope = { manager_id: { "$in": channel_partner_ids } }
           custom_scope = { cp_admin_id: user.id }
-        elsif user.role?('cp')
+        when 'cp'
           #channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
           #custom_scope = { manager_id: { "$in": channel_partner_ids } }
           custom_scope = { cp_manager_id: user.id }
-        elsif user.role?('billing_team')
-          custom_scope = incentive_eligible.selector
+        when 'account_manager'
+         custom_scope = { creator_id: user.id }
+        when 'account_manager_head'
+         custom_scope = { project_unit_id: nil }
+        when 'billing_team'
+         custom_scope = { project_unit_id: nil, status: { '$nin': %w(blocked) } }
         end
       end
 
@@ -357,7 +441,9 @@ class BookingDetail
     def user_based_available_statuses(user)
       if user.present?
         if user.role?('billing_team')
-          %w[booked_confirmed]
+           %w[booked_confirmed booked_tentative cancelled]
+        elsif user.role?('account_manager') || user.role?('account_manager_head')
+           %w[blocked booked_tentative booked_confirmed cancelled]
         else
           BookingDetail.aasm.states.map(&:name)
         end

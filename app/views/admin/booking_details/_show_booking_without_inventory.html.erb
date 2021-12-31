@@ -1,0 +1,84 @@
+<section class="prjt-details-sec">
+  <div class="px-3">
+    <div class="row">
+      <div class="col-lg-12 px-3 pt-4">
+        <div class="col-12 float-start mt-3 pb-0 bg-white">
+          <div class="card">
+            <div class="card-header theme-light-bg py-3 d-flex justify-content-between">
+              <div>
+                <p class="fn-12 theme-txt-color mb-0 ">Project</p>
+                <h6 class="fn-20 theme-txt-color mb-0"><%= @booking_detail.project.name %></h6>
+              </div>
+              <div class="dropdown float-end">
+                <a class="btn table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v txt-light-blue"
+                    aria-hidden="true"></i></a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                  <%= render "#{current_user_role_group}/booking_details/links", booking_detail: @booking_detail, link_name: 'Update Booking' %>
+                </div>
+              </div>
+            </div>
+            
+            <div class="card-body p-0 rounded-0 border-0">
+              <div class="accordion theme-accordation" id="accordionExample">
+                <div class="accordion-item rounded-0 border-bottom border-top-0  border-end-0 border-start-0">
+                  <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                      Basic Details
+                    </button>
+                  </h2>
+                  <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body pt-0 ps-4">
+                      <div class="row ps-3">
+                        <div class="col-3">
+                          <p class="fn-12 font-medium mb-0"><%= Lead.model_name.human %></p>
+                          <p class="fn-14">
+                            <%= link_to_if @booking_detail.lead, (@booking_detail.lead.try(:name) || ''), [current_user_role_group, @booking_detail.lead] %>
+                          </p>
+                        </div>
+                        <div class="col-3">
+                          <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('project_tower_name') %></p>
+                          <p class="fn-14"><%= @booking_detail.project_tower_name %></p>
+                        </div>
+                        <div class="col-3">
+                          <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('agreement_price') %>
+                          </p>
+                          <p class="fn-14">
+                            <%= @booking_detail.agreement_price.round %></p>
+                        </div>
+                        <!-- <div class="col-3">
+                          <p class="fn-12 font-medium mb-0">
+                            <%#= BookingDetail.human_attribute_name('all_inclusive_price') %></p>
+                          <p class="fn-14">
+                            <%#= number_to_indian_currency(@booking_detail.calculate_all_inclusive_price.round) %></p>
+                        </div> -->
+                        <div class="col-3">
+                          <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('booking_project_unit_name') %></p>
+                          <p class="fn-14"><%= @booking_detail.booking_project_unit_name || '-' %></p>
+                        </div>
+                        <div class="col-3">
+                          <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('agreement_date') %></p>
+                          <p class="fn-14"><%= @booking_detail.agreement_date.try(:strftime,'%b %e %Y') || '-' %></p>
+                        </div>
+                        <div class="col-3">
+                          <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('booked_on') %></p>
+                          <p class="fn-14"><%= @booking_detail.booked_on.try(:strftime,'%b %e %Y') || '-' %></p>
+                        </div>
+                        <div class="col-3">
+                          <p class="fn-12 font-medium mb-0"><%= ChannelPartner.human_attribute_name('company_name') %></p>
+                          <p class="fn-14"><%= @booking_detail.try(:manager).try(:name) || '-' %></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

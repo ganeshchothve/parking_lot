@@ -21,13 +21,22 @@ class UserObserver < Mongoid::Observer
   end
 
   def after_create user
-    if user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner
-      if current_client.external_api_integration?
-        Crm::Api::Post.where(_type: 'Crm::Api::Post', resource_class: 'User', is_active: true).each do |api|
-          api.execute(user)
+    if current_client.external_api_integration?
+      if user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner
+        if Rails.env.staging? || Rails.env.production?
+          # Kept create user api call inline to avoid firing update calls before create which will fail to find user to update
+          UserObserverWorker.new.perform(user.id.to_s, 'create')
+          UserObserverWorker.perform_async(user.id.to_s, 'update', user.changes)
+        else
+          UserObserverWorker.new.perform(user.id.to_s, 'create')
+          UserObserverWorker.new.perform(user.id, 'update', user.changes)
         end
-        Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
-          api.execute(user)
+      end
+      if user.role.in?(%w(dev_sourcing_manager))
+        if Rails.env.staging? || Rails.env.production?
+          UserObserverWorker.perform_async(user.id.to_s, 'create')
+        else
+          UserObserverWorker.new.perform(user.id.to_s, 'create')
         end
       end
     end
@@ -41,21 +50,17 @@ class UserObserver < Mongoid::Observer
       end
     end
 
-    if user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner
-      user.rera_id = user.channel_partner&.rera_id if user.rera_id.blank?
+    if (user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner) || user.role?('dev_sourcing_manager')
+      user.rera_id = user.channel_partner&.rera_id if user.rera_id.blank? && user.role.in?(%w(cp_owner channel_partner))
 
-      if _changes = (user.changed & %w(role channel_partner_id)).presence && _changes&.all? {|attr| user.send(attr)&.present?}
-        Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
-          api.execute(user)
+      if current_client.external_api_integration? && user.persisted? && user.changed?
+        if Rails.env.staging? || Rails.env.production?
+          UserObserverWorker.perform_async(user.id.to_s, 'update', user.changes)
+        else
+          UserObserverWorker.new.perform(user.id, 'update', user.changes)
         end
       end
     end
-
-    #if user.manager_id_changed? && user.manager_id.present?
-    #  if user.role?('channel_partner') && user.persisted? && cp = user.channel_partner
-    #    cp.set(manager_id: user.manager_id)
-    #  end
-    #end
 
     unless user.authentication_token?
       user.reset_authentication_token!
@@ -66,6 +71,7 @@ class UserObserver < Mongoid::Observer
     if user.lead_id.present? && crm = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
       user.update_external_ids({ reference_id: user.lead_id }, crm.id)
     end
+    user.calculate_incentive if user.booking_portal_client.incentive_calculation_type?("calculated")
   end
 
   def after_update user

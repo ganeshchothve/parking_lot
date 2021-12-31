@@ -49,6 +49,10 @@
           <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.booked_on'), class: "control-label" %>
           <%= text_field_tag "fltrs[booked_on]", (params[:fltrs].present? ? params[:fltrs][:booked_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
         </div>
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.agreement_date'), class: "control-label" %>
+          <%= text_field_tag "fltrs[agreement_date]", (params[:fltrs].present? ? params[:fltrs][:agreement_date] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
+        </div>
         <!--
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%#= label_tag "fltrs", IncentiveScheme.model_name.human, class: "control-label" %>

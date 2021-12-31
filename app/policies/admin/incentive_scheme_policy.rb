@@ -22,10 +22,10 @@ class Admin::IncentiveSchemePolicy < IncentiveSchemePolicy
 
   def permitted_attributes(params = {})
     attributes = super
-    attributes += [:name, :description, :category]
+    attributes += [:name, :description]
     if record.draft?
       attributes += [:event] if user.role.in?(%w(admin superadmin))
-      attributes += [:starts_on, :ends_on, :ladder_strategy, :project_id, :project_tower_id, :tier_id, ladders_attributes: LadderPolicy.new(user, Ladder.new).permitted_attributes]
+      attributes += [:category, :resource_class, :brokerage_type, :payment_to, :auto_apply, :starts_on, :ends_on, :ladder_strategy, :project_id, :project_tower_id, :tier_id, ladders_attributes: LadderPolicy.new(user, Ladder.new).permitted_attributes]
     end
     # For disabling approved scheme till they are not started.
     attributes += [:event] if user.role.in?(%w(admin superadmin)) && record.approved?

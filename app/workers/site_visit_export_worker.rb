@@ -29,6 +29,8 @@ class SiteVisitExportWorker
 
   def self.get_column_names
     sv_columns = [
+      "Id",
+      "User ID(lead)",
       "Name",
       "Email Id",
       "Phone",
@@ -42,6 +44,7 @@ class SiteVisitExportWorker
       "Partner ID (Used for VLOOKUP)",
       "Partner Phone",
       "Partner UPI Address",
+      "Partner Role",
     ] + Crm::Base.all.map{|crm| crm.name + " SiteVisit ID"  }
 
     sv_columns.flatten
@@ -49,6 +52,8 @@ class SiteVisitExportWorker
 
   def self.get_site_visit_row(sv, user)
     sv_row = [
+      sv.id.to_s,
+      sv.lead&.id.to_s,
       sv.lead&.name,
       sv.lead&.masked_email(user),
       sv.lead&.masked_phone(user),
@@ -62,6 +67,7 @@ class SiteVisitExportWorker
       sv.manager_id.to_s,
       sv.manager&.phone,
       sv.manager&.upi_id,
+      sv.manager&.role,
     ] + Crm::Base.all.map{|crm| sv.third_party_references.where(crm_id: crm.id).first.try(:reference_id) }
 
     sv_row.flatten

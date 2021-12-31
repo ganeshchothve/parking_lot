@@ -10,9 +10,13 @@
   <%= link_to t('controller.searches.new.link_name'), new_admin_lead_search_path(lead.id), class: "dropdown-item" %>
 <% end %>
 
+<% if policy([:admin, BookingDetail.new(user: lead.user, lead: lead)]).show_add_booking_link? && current_user.role?('account_manager')%>
+  <%= link_to "Add Booking", new_booking_without_inventory_admin_booking_details_path(lead_id: lead.id), class: "dropdown-item modal-remote-form-link" %>
+<% end %>
+
 <% hold_booking = lead.booking_details.where(status: 'hold').first %>
 
-<% if hold_booking.present? #&& policy([current_user_role_group, hold_booking]).block? %>
+<% if hold_booking.present? && !policy([:admin, BookingDetail.new(user: lead.user, lead: lead)]).show_add_booking_link? #&& policy([current_user_role_group, hold_booking]).block? %>
   <%= link_to t('controller.booking_details.continue_booking.link_name'), checkout_lead_search_path(lead.get_search(hold_booking.project_unit_id)), class: "dropdown-item" %>
 <% end %>
 
@@ -59,6 +63,8 @@
 <% if policy([:admin, Note.new(notable: lead)]).new? %>
   <%= link_to t('helpers.new.link_name', model: Note.model_name.human), new_notable_path(notable_type: lead.class.model_name.i18n_key.to_s, notable_id: lead.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
+
+<%= render 'admin/invoices/invoiceable_links', resource: lead %>
 
 <% if policy([:admin, lead]).asset_create? %>
   <%= link_to Asset.model_name.human(count: 2), admin_lead_path(lead,'remote-state': assetables_path(assetable_type: lead.class.model_name.i18n_key.to_s, assetable_id: lead.id) ), class: "dropdown-item" %>

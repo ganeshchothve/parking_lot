@@ -10,20 +10,26 @@
                 <div class="inner-info d-flex justify-content-between">
                   <div class="ps-3 py-3">
                     <p class="fn-16 font-medium theme-txt-color mb-0 pt-2">
-                      <%= booking_detail.project_unit.project_tower_name %> | <%= booking_detail.project.name %> <span
-                        class="mx-2">-</span><span class="font-normal"><%= booking_detail.bedrooms %> BHK</span></p>
+                      <%= booking_detail.project_unit.present? ? booking_detail.project_unit.project_tower_name : booking_detail.project_tower_name  %> | <%= booking_detail.project.name %> <span
+                        class="mx-2">-</span><span class="font-normal">
+                          <%= booking_detail.bedrooms.present? ? booking_detail.bedrooms.to_s + " BHK" : booking_detail.project_unit_configuration %>
+                        </span></p>
 
                   </div>
                   <div class="pe-3 py-3">
                     <% if booking_detail.incentive_eligible? && policy([:admin, Invoice.new]).new? %>
-                      <%= link_to t('controller.invoices.new.link_name'), new_admin_booking_detail_invoice_path(booking_detail), class: 'modal-remote-form-link border rounded py-1 px-2 me-2 txt-light-blue d-inline-block fn-14 font-medium' %>
+                      <%= link_to t('controller.invoices.new.link_name'), new_admin_invoiceable_path(invoiceable_type: booking_detail.class.model_name.i18n_key.to_s, invoiceable_id: booking_detail.id), class: 'modal-remote-form-link border rounded py-1 px-2 me-2 txt-light-blue d-inline-block fn-14 font-medium' %>
                     <% end %>
                     <div class="dropdown d-inline-block">
                       <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">
                         <i class="fa fa-ellipsis-v theme-txt-color" aria-hidden="true"></i></a>
                       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                        <%= render "#{current_user_role_group}/booking_details/links", booking_detail: booking_detail, link_name: '' %>
+                        <% if booking_detail.project_unit.present? %>
+                          <%= render "#{current_user_role_group}/booking_details/links", booking_detail: booking_detail, link_name: '' %>
+                        <% else %>
+                          <%= render "#{current_user_role_group}/booking_details/booking_without_inventory_links", booking_detail: booking_detail, link_name: '' %>
+                        <% end %>
                       </div>
                     </div>
                   </div>
@@ -33,14 +39,14 @@
               <div class="d-flex justify-content-between">
                 <div class="ps-3 py-3">
                   <p class="mb-0 theme-txt-color mb-0 font-medium">
-                    <%= link_to booking_detail.name, [current_user_role_group, booking_detail], class: "theme-txt-color"  %>
+                    <%= link_to booking_detail.name || booking_detail.booking_project_unit_name, [current_user_role_group, booking_detail], class: "theme-txt-color"  %>
                   </p>
                 </div>
                 <div class="inner-info">
                   <div class="pe-3 py-3  d-flex justify-content-end">
                     <p class="fn-16 secondary mb-0 font-medium"><span class="txt-light-blue">Agreement Value:</span>
                       <span
-                        class="theme-txt-color"><%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %></span>
+                        class="theme-txt-color"><%= number_to_indian_currency((booking_detail.calculate_agreement_price > 0 ? booking_detail.calculate_agreement_price.round : booking_detail.agreement_price)) %></span>
                     </p>
                     <span class="txt-light-blue mx-3">| </span>
                     <p class="font-medium fn-14 mb-0 theme-txt-color mb-0"><i

@@ -1,6 +1,6 @@
 class Admin::Crm::ApiController < ApplicationController
-  before_action :set_api, only: %w[edit update destroy]
   before_action :set_crm
+  before_action :set_api, only: %w[edit update destroy]
   before_action :authorize_resource
   
   def new
@@ -63,7 +63,8 @@ class Admin::Crm::ApiController < ApplicationController
   private
 
   def set_api
-    @api = params[:type].constantize.find params[:id]
+    @api = params[:type].constantize.unscoped.where(id: params[:id]).first
+    redirect_to admin_crm_base_path(@crm), alert: 'API not found' if @api.blank?
   end
 
   def set_crm

@@ -1,0 +1,55 @@
+<div class="alert alert-primary">
+  <p><%#= t('controller.booking_details.receipts.show.disclaimer')%></p>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="mb-3">
+        <label class="small"><%= t('mongoid.models.user.name') %></label>
+        <div><%= resource.name_in_invoice %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="mb-3">
+        <label class="small">
+          <%= SiteVisit.human_attribute_name('project') %>
+        </label>
+        <div><%= resource.project.try(:name) || '-' %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="mb-3">
+        <label class="small">
+          <%= SiteVisit.human_attribute_name('scheduled_on') %>
+        </label>
+        <div><%= resource.invoiceable_date.try(:strftime,'%b %e %Y') || '-' %></div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="mb-3">
+        <label class="small">
+          <%= SiteVisit.human_attribute_name('status') %>
+        </label>
+        <div><%= t("mongoid.attributes.site_visit/status.#{resource.status}") %></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="mb-3">
+        <label class="small">
+          <%= SiteVisit.human_attribute_name('approval_status') %>
+        </label>
+        <div><%= t("mongoid.attributes.site_visit/approval_status.#{resource.approval_status}") %></div>
+      </div>
+    </div>
+  </div>
+  <div class='row'>
+    <div class="col-md-12">
+      <div class="mb-3">
+        <label class="small">
+          <%= ChannelPartner.human_attribute_name('company_name') %>
+        </label>
+        <div><%= resource.manager.try(:name) || '-' %></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,11 +1,11 @@
 class IncentiveCalculatorWorker
   include Sidekiq::Worker
 
-  def perform booking_detail_id
+  def perform resource_class, resource_id, category
     # Find booking detail
-    booking_detail = BookingDetail.where(id: booking_detail_id).first
-    if booking_detail
-      incentive_calc = IncentiveCalculator.new(booking_detail)
+    resource = resource_class.classify&.constantize&.where(id: resource_id)&.first
+    if resource
+      incentive_calc = IncentiveCalculator.new(resource, category)
       incentive_calc.calculate
     end
   end
