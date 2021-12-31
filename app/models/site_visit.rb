@@ -12,6 +12,8 @@ class SiteVisit
   include QueueNumberAssignment
   include IncentiveSchemeAutoApplication
 
+  REJECTION_REASONS = ["budget_not_match", "location_not_match", "possession_not_match", "didnt_visit", "different_cp"]
+
   belongs_to :project
   belongs_to :lead
   belongs_to :user
@@ -35,6 +37,7 @@ class SiteVisit
   field :sales_id, type: BSON::ObjectId
   field :created_by, type: String
   field :conducted_by, type: String
+  field :rejection_reason, type: String
 
   delegate :name, to: :project, prefix: true, allow_nil: true
 
