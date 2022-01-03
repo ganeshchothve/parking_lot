@@ -106,10 +106,10 @@
     var gstAmount = 0;
     var invoiceType = '<%= @invoice.class.to_s.underscore.gsub('/', '_') %>';
     $('#invoice_manual_percentage_slab, #invoice_manual_gst_slab').on('change', function(event) {
-      var slabPercentage = parseInt($('#invoice_manual_percentage_slab').val());
+      var slabPercentage = parseFloat($('#invoice_manual_percentage_slab').val());
       var amount = parseFloat($('input[name="' + invoiceType + '[agreement_amount]"]').val() || 0) * (slabPercentage/100);
       if (gstApplicable == 'true') {
-        var gstPercentage = parseInt($('#invoice_manual_gst_slab').val());
+        var gstPercentage = parseFloat($('#invoice_manual_gst_slab').val());
         gstAmount = amount * (gstPercentage/100);
         $('#invoice_form').find('.gst-amount').html(Amura.formatMoney(gstAmount));
         $('#invoice_form').find('.amount').html(Amura.formatMoney(amount));
