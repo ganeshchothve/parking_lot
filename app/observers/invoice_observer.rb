@@ -2,9 +2,9 @@ class InvoiceObserver < Mongoid::Observer
   def before_validation invoice
     booking_detail = invoice.booking_detail
     invoice.account_manager_id = booking_detail.account_manager_id
-    invoice.manager_id = booking_detail.manager_id || booking_detail.channel_partner_id if (booking_detail.manager ||  booking_detail.channel_partner)
+    invoice.manager_id = booking_detail.manager_id if booking_detail.manager && (invoice.manager_id.blank? || invoice.manager_id_changed?)
     invoice.channel_partner_id = invoice.manager.channel_partner_id if invoice.manager
-    invoice.cp_manager_id = invoice.channel_partner&.manager_id if invoice.channel_partner
+    invoice.cp_manager_id = invoice.manager&.manager_id if invoice.manager
     invoice.cp_admin_id = invoice.cp_manager&.manager_id if invoice.cp_manager
     invoice.amount = invoice.calculate_amount
     invoice.gst_amount = invoice.calculate_gst_amount
