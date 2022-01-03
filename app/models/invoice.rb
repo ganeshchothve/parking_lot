@@ -81,12 +81,12 @@ class Invoice
   end
 
   def calculate_amount
-    agreement_amount * (percentage_slab/100)
+    (agreement_amount * (percentage_slab/100)).round(2)
   end
 
   def calculate_gst_amount
     if self.project.gst_slab_applicable?
-      calculate_amount * (gst_slab/100)
+      (calculate_amount * (gst_slab/100)).round(2)
     else
       0
     end
@@ -97,7 +97,7 @@ class Invoice
     _amount = calculate_amount + calculate_gst_amount 
     _amount += payment_adjustment.try(:absolute_value).to_i if payment_adjustment.try(:absolute_value).present?
     _amount -= incentive_deduction.try(:amount).to_i if incentive_deduction.try(:approved?)
-    _amount
+    _amount.round(2)
   end
 
   class << self
