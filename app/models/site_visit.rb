@@ -164,7 +164,7 @@ class SiteVisit
   private
 
   def validate_scheduled_on_datetime
-    self.errors.add :base, 'Scheduled On should not be past date' if self.scheduled_on.beginning_of_day < Time.now.beginning_of_day
+    self.errors.add :base, 'Scheduled On should not be past date' if (self.scheduled_on_changed? && self.scheduled_on < Time.current.beginning_of_day)
   end
 
   def existing_scheduled_sv
