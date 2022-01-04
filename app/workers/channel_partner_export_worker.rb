@@ -33,7 +33,8 @@ class ChannelPartnerExportWorker
       "Status",
       "Manager Name",
       "Walkin Status",
-      "Sign in count"
+      "Sign in count",
+      "Walkin Count"
     ]
   end
 
@@ -52,8 +53,9 @@ class ChannelPartnerExportWorker
       user&.email,
       ChannelPartner.human_attribute_name("status.#{channel_partner.status}"),
       channel_partner.manager_name,
-      SiteVisit.where(channel_partner_id: channel_partner.id).present? ? 'Active' : 'Inactive',
-      user&.sign_in_count
+      channel_partner.site_visits.present? ? 'Active' : 'Inactive',
+      user&.sign_in_count,
+      channel_partner.site_visits.count
     ]
   end
 end

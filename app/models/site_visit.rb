@@ -113,11 +113,10 @@ class SiteVisit
         custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id }
       elsif user.role?('cp_owner')
         custom_scope = {channel_partner_id: user.channel_partner_id}
-      #elsif user.role?('cp_admin')
-      #  custom_scope = { lead_id: { "$in": Lead.nin(manager_id: [nil, '']).distinct(:id) } }
-      #elsif user.role?('cp')
-      #  channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
-      #  custom_scope = { lead_id: { "$in": Lead.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
+      elsif user.role?('cp_admin')
+        custom_scope = {cp_admin_id: user.id}
+      elsif user.role?('cp')
+        custom_scope = {cp_manager_id: user.id}
       elsif user.role?('dev_sourcing_manager')
         custom_scope = { project_id: user.selected_project_id }
       end

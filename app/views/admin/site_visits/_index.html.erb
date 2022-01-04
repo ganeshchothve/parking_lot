@@ -56,6 +56,12 @@
                   <p class="mb-0 theme-txt-color">
                     <%= link_to_if policy([current_user_role_group, site_visit.project]).show?, site_visit.project_name, [current_user_role_group, site_visit.project], class: 'theme-txt-color' %>
                   </p>
+                  <% if site_visit.cp_manager.present? && ["cp_admin","admin","superadmin"].include?(current_user.role) %>
+                    <span class="secondary mx-3 d-sm-inline-block d-none">| </span>
+                    <p class="fn-14 mb-0 theme-txt-color">
+                      <%= t('mongoid.attributes.channel_partner.manager_id') %> : <span class="font-medium theme-txt-color"><%= link_to(site_visit.cp_manager.name, admin_user_path(site_visit.cp_manager), class: "theme-txt-color col-title") %></span>
+                    </p>
+                  <% end %>
                 </div>
                 <div class="inner-info">
                   <div class="pe-3 py-3 ps-3 pt-xs-0 d-sm-flex justify-content-end">
