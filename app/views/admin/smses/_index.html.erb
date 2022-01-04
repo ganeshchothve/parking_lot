@@ -27,7 +27,7 @@
             <%= t("mongoid.attributes.sms/status.#{sms.status}") %>
           </td>
           <td data-title=<%= t('mongoid.attributes.sms.sent_on') %> >
-            <%= sms.sent_on.present? ? I18n.l(sms.sent_on.in_time_zone(current_user.time_zone) :  '-' %>
+            <%= sms.sent_on.present? ? I18n.l(sms.sent_on.in_time_zone(current_user.time_zone)) :  '-' %>
             <div class="modal fade right fixed-header-footer" role="dialog" id="sms_show_<%=sms.id.to_s %>">
               <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
