@@ -5,6 +5,19 @@ module BillingTeamDashboardConcern
     @dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if @dates.blank?
   end
 
+  def city_wise_booking_report
+    matcher = set_city_wise_report_matcher
+    @project_booking_report = DashboardDataProvider.city_wise_booking_report(current_user, matcher)
+    @project_name_hash = {}
+    Project.all.each do |p|
+      @project_name_hash[p.id.to_s] = p.name
+    end
+    @total_booking = 0
+    @project_booking_report.each do |k, v|
+      @total_booking += v.map{|h| h[:bookings_count]  }.sum
+    end
+  end
+
   def project_wise_invoice_summary
     set_matcher
     # TO-DO Send options to project_wise_invoice_data
@@ -23,17 +36,24 @@ module BillingTeamDashboardConcern
     @invoice_age_data = DashboardDataProvider.project_wise_invoice_ageing_data(current_user, @options)
   end
 
-  def set_matcher
-    @dates = params[:dates]
-    @dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if @dates.blank?
-    start_date, end_date = @dates.split(' - ')
-    @options = {
-      matcher: {
+  def set_city_wise_report_matcher
+    options = {}
+    @city_wise_dates = params[:dates]
+    if @city_wise_dates.present?
+      start_date, end_date = @city_wise_dates.split(' - ')
+      options = {
         created_at: {
-          "$gte": Date.parse(start_date).beginning_of_day, 
-          "$lte": Date.parse(end_date).end_of_day 
+          "$gte": Date.parse(start_date).beginning_of_day,
+          "$lte": Date.parse(end_date).end_of_day
         }
       }
-    }
+    end
+    if params[:project_ids].present?
+      options[:project_id] = { "$in": params[:project_ids].map { |id| BSON::ObjectId(id) } }
+    else
+      options[:project_id] = { "$in": Project.all.pluck(:id) }
+    end
+    options[:status] = {"$in": ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]}
+    options.with_indifferent_access
   end
 end

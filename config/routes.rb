@@ -350,6 +350,7 @@ Rails.application.routes.draw do
     get :cp_status, to: "dashboard#cp_status"
     get :project_wise_invoice_summary, to: "dashboard#project_wise_invoice_summary"
     get :project_wise_incentive_deduction_summary, to: "dashboard#project_wise_incentive_deduction_summary"
+    get :city_wise_booking_report, to: "dashboard#city_wise_booking_report"
     get :invoice_ageing_report, to: "dashboard#invoice_ageing_report"
     get :billing_team_dashboard, to: "dashboard#billing_team_dashboard"
     get :project_wise_summary, to: "dashboard#project_wise_summary"
@@ -359,6 +360,7 @@ Rails.application.routes.draw do
     get :channel_partner_dashboard_counts, to: "dashboard#channel_partner_dashboard_counts"
     #get :download_brochure, to: 'dashboard#download_brochure'
     get :sales_board, to: 'dashboard#sales_board'
+    get :booking_details_counts, to: 'dashboard#booking_details_counts'
 
     resource :lead do
       resources :searches, except: [:destroy], controller: 'searches' do

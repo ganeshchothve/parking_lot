@@ -2,6 +2,56 @@ module DashboardDataProvider
   # TODO remove not used methods from old methods
   # old methods
 
+  def self.city_wise_booking_report (current_user, matcher={})
+    city_wise_booking_count = {}
+    data = BookingDetail.collection.aggregate([
+      {
+        '$match': matcher
+      },
+      {
+        "$project": {
+          "name": "$name",
+          "project_id": "$project_id"
+        }
+      },
+      {
+        '$group': {
+          '_id': '$project_id',
+          'bookings_count': { '$sum': 1}
+        }
+      },
+      {
+          '$lookup': {
+          'from': "projects",
+          'let': { 'id': "$_id" },
+          'pipeline': [
+            { '$match': { '$expr': { '$eq': [ "$_id",  "$$id" ] } } },
+            { '$project': { 'city': '$city' } }
+          ],
+          'as': "projects"
+        }
+      },
+      {
+        '$replaceRoot': {
+          'newRoot': {
+            '$mergeObjects': [
+              { '$arrayElemAt': [ "$projects", 0 ] },
+              "$$ROOT"
+            ]
+          }
+        }
+      }
+    ]).as_json
+    data.each do |d|
+      if city_wise_booking_count[d['city']].present?
+        city_wise_booking_count[d['city']].push({ project_id: d['_id'], bookings_count: d['bookings_count'] })
+      else
+        city_wise_booking_count[d['city']] = [{ project_id: d['_id'], bookings_count: d['bookings_count'] }]
+      end
+    end
+    city_wise_booking_count
+  end
+
   def self.incetive_scheme_max_ladders(options)
     matcher = {}
     matcher = options[:matcher] if options[:matcher].present?
@@ -17,6 +67,38 @@ module DashboardDataProvider
             }
           }]).to_a
     data.dig(0, "max") || 0
+  end
+
+  def self.booking_details_data(options)
+    matcher = {}
+    matcher = options[:matcher] if options[:matcher].present?
+    project_ids = matcher[:project_id][:$in].map(&:to_s)
+    booking_stages = ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]
+    data = BookingDetail.collection.aggregate([
+      {"$match": matcher},
+      {
+        "$group": {
+          "_id": {
+            "booking_status": "$status",
+            "project_id": "$project_id"
+          },
+          "count": {"$sum": 1}
+        }
+      }
+    ]).as_json
+    booking_data = []
+    project_ids.each do |project_id|
+      booking_data << {project_id: project_id, blocked: 0, under_negotiation: 0, booked_tentative: 0, booked_confirmed: 0, cancelled: 0}
+    end
+    booking_data.each do |booking_d|
+      data.each do |d|
+        d = d.with_indifferent_access
+        if booking_d[:project_id] == d[:_id][:project_id]
+          booking_d[:"#{d[:_id][:booking_status]}"] = d[:count]
+        end
+      end
+    end
+    booking_data
   end
 
   def self.cp_performance_walkins(user, options={})
