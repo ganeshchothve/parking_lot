@@ -29,7 +29,7 @@
                               </div>
                             <% end %>
                             <% if policy([current_user_role_group, InterestedProject]).report? %>
-                              <% ip_count = User.filter_by_interested_project(@project.id).count %>
+                              <% ip_count = User.where(User.user_based_scope(current_user, params)).filter_by_interested_project(@project.id).count %>
                               <%= link_to "<i class='fa fa-heart fill-danger me-2'></i>#{ip_count}".html_safe, admin_users_path(fltrs: {interested_project: @project.id}), class: 'prjt-save' %>
                             <% end %>
                             <% if current_user.role.in?(%w(superadmin admin)) %>
