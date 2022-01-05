@@ -10,7 +10,7 @@
 <% end %>
 
 <% if links.present? %>
-  <li class="nav-item d-none d-lg-block accordion">
+  <li class="nav-item accordion">
                 <div class="accordion-item bg-menu rounded-none border-0 dropdown">
       <%= active_link_to t('global.custom'), "javascript:;", active: [CustomPolicy.custom_methods.map{|x| 'admin/'+x}, ['index']], class: "nav-link dropdown-toggle", data: {toggle: 'dropdown'},  id: "dropdownMenuLeft3", "data-bs-toggle": "collapse", "data-bs-target":"#dashboardMore", "aria-expanded": "false" %>
       <div id="dashboardMore" class="accordion-collapse collapse" aria-labelledby="dropdownMenuLeft3">
