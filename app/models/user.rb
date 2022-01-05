@@ -184,6 +184,7 @@ class User
   has_many :emails, as: :triggered_by, class_name: 'Email'
   has_many :whatsapps, as: :triggered_by, class_name: 'Whatsapp'
   has_many :referrals, class_name: 'User', foreign_key: :referred_by_id, inverse_of: :referred_by
+  has_many :site_visits
   has_and_belongs_to_many :schemes
   has_many :logs, class_name: 'SyncLog', inverse_of: :user_reference
   embeds_many :portal_stages

@@ -93,7 +93,9 @@ class UserExportWorker
       "Referral Code",
       "Referred By",
       "Referred By ID (Used for VLOOKUP)",
-      "Sign-in-count"
+      "Sign-in-count",
+      "Company Name",
+      "Walkin Count"
     ]
   end
 
@@ -115,7 +117,22 @@ class UserExportWorker
       user.referral_code,
       user.referred_by.try(:name),
       user.referred_by_id.to_s,
-      user.sign_in_count
+      user.sign_in_count,
+      user.role.in?(%w(cp_owner channel_partner)) ? user.channel_partner.try(:company_name) : "",
+      site_visit_count(user)
     ]
+  end
+
+  def self.site_visit_count(user)
+    case user.role
+    when 'cp_owner', 'channel_partner'
+      SiteVisit.where(manager_id: user.id).count
+    when 'cp'
+      SiteVisit.where(cp_manager_id: user.id).count
+    when 'cp_admin'
+      SiteVisit.where(cp_admin_id: user.id).count
+    else
+      user.site_visits.count
+    end
   end
 end

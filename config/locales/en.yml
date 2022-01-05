@@ -8,9 +8,11 @@ en:
   time:
     formats:
       default: "%d/%m/%Y %I:%M %p"
+      date: "%d/%m/%Y"
   date_time:
     formats:
       default: "%d/%m/%Y %I:%M %p"
+      date: "%d/%m/%Y"
   welcome: Welcome %{name}
   global:
     brand: BeyondWalls
@@ -631,7 +633,7 @@ en:
         alternate_email: 'Alternate Email'
         phone: 'Phone'
         alternate_phone: 'Alternate Phone'
-        rera_id: 'RERA Registration Number'
+        rera_id: 'RERA No.'
         city: 'City'
         associated_user_id: 'Associated User'
         status: 'Status'
