@@ -1,8 +1,9 @@
 class ChannelPartnersController < ApplicationController
-  before_action :authenticate_user!, except: %i[new create], unless: proc { params[:action] == 'index' && params[:ds] == 'true' }
+  before_action :authenticate_user!, except: %i[new create create_cp_user], unless: proc { params[:action] == 'index' && params[:ds] == 'true' }
   before_action :set_channel_partner, only: %i[show edit update destroy change_state asset_form]
   around_action :apply_policy_scope, only: :index
-  before_action :authorize_resource, except: [:new, :create]
+  before_action :authorize_resource, except: [:new, :create, :create_cp_user]
+  skip_before_action :verify_authenticity_token, only: [:create_cp_user]
 
   def index
     @channel_partners = ChannelPartner.build_criteria params
@@ -104,6 +105,18 @@ class ChannelPartnersController < ApplicationController
           format.html { render :new, layout: layout, status: :unprocessable_entity}
           format.json { render json: { errors: err_msg }, status: :unprocessable_entity }
         end
+      end
+    end
+  end
+
+  def create_cp_user
+    @user = User.new(permitted_attributes([:buyer, User.new]))
+    @user.assign_attributes(role: "channel_partner", booking_portal_client_id: current_client.id)
+    respond_to do |format|
+      if @user.save
+        format.json { render json: { user: @user.as_json }, status: :created }
+      else
+        format.json { render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity }
       end
     end
   end
