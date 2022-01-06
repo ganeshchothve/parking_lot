@@ -509,6 +509,9 @@ en:
         launched_on: Launch Date
         developer_name: Developer Name
         approved_banks: Approved Banks
+        support_name: Name
+        support_mail: Email
+        support_contact: Contact
         allowed_bookings_per_user: 'Bookings allowed per user'
         selldo_client_id: 'SellDo Client ID'
         selldo_form_id: 'SellDo Form ID'
@@ -585,7 +588,6 @@ en:
           sbi: State Bank of India
           bob: Bank of Baroda
           bajaj_finance: Bajaj Finance
-
       project/category:
         pre_launch: Pre Launch
         launch: Launch
