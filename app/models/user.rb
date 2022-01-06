@@ -12,6 +12,7 @@ class User
   include SalesUserStateMachine
   include DetailsMaskable
   include IncentiveSchemeAutoApplication
+  include UserStatusInCompanyStateMachine
 
   # Constants
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
@@ -294,6 +295,16 @@ class User
 
   def phone_or_email_required
     errors.add(:base, 'Email or Phone is required')
+  end
+
+  def status
+    if role?('sales')
+      sales_status
+    elsif ["channel_partner","cp_owner"].include?(role)
+      user_status_in_company
+    else
+      nil
+    end
   end
 
   def unblock_lead!(tag = false)
