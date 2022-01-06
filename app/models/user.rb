@@ -266,6 +266,9 @@ class User
         User.none
       end
   end
+  scope :filter_by_interested_project, ->(project_id) do
+    all.in(id: InterestedProject.approved.where(project_id: project_id).distinct(:user_id))
+  end
 
 
   # This some additional scope which help to fetch record easily.
