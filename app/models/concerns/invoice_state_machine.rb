@@ -19,7 +19,7 @@ module InvoiceStateMachine
         transitions from: :raised, to: :pending_approval #, success: %i[after_pending_approval]
       end
 
-      event :approve, after: :send_notification do
+      event :approve, after: [:make_payment, :send_notification] do
         transitions from: :raised, to: :approved
         transitions from: :pending_approval, to: :approved, success: %i[after_approved]
       end
@@ -33,18 +33,14 @@ module InvoiceStateMachine
         transitions from: :approved, to: :tax_invoice_raised
       end
 
-      event :paid do
+      event :paid, after: :mark_invoiceable_paid do
         transitions from: :tax_invoice_raised, to: :paid
-        transitions from: :approved, to: :paid, guard: :if_project_unit_available?
+        transitions from: :approved, to: :paid
       end
     end
 
     def can_raise?
       self.draft?
-    end
-
-    def if_project_unit_available?
-      self.booking_detail.project_unit.present?
     end
 
     def get_pending_approval_recipients_list
@@ -131,5 +127,21 @@ module InvoiceStateMachine
       self.incentive_deduction.rejected! if self.incentive_deduction? && self.incentive_deduction.pending_approval?
     end
 
+    def make_payment
+      if Rails.env.staging? || Rails.env.production?
+        InvoicePayoutWorker.perform_async(self.id.to_s)
+      else
+        InvoicePayoutWorker.new.perform(self.id.to_s)
+      end
+    end
+
+    def mark_invoiceable_paid
+      case category
+      when 'walk_in'
+        if invoiceable.is_a?(SiteVisit) && invoiceable.may_paid?
+          invoiceable.aasm(:status).fire!(:paid)
+        end
+      end
+    end
   end
 end

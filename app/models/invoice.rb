@@ -28,8 +28,7 @@ class Invoice
 
   belongs_to :invoiceable, polymorphic: true
   belongs_to :project, optional: true
-  belongs_to :user, optional: true
-  belongs_to :manager, class_name: 'User', optional: true
+  belongs_to :manager, class_name: 'User'
   belongs_to :channel_partner, optional: true
   belongs_to :cp_manager, class_name: 'User', optional: true
   belongs_to :cp_admin, class_name: 'User', optional: true
@@ -40,9 +39,8 @@ class Invoice
   embeds_one :cheque_detail
   embeds_one :payment_adjustment, as: :payable
 
-
   validates :category, :brokerage_type, :payment_to, presence: true
-  validates :number, presence: true, if: :raised?
+  validates :number, presence: true, if: proc { raised? && category.in?(%w(spot_booking lead referral brokerage)) }
   validates :rejection_reason, presence: true, if: :rejected?
   validates :comments, presence: true, if: proc { pending_approval? && status_was == 'rejected' }
   validates :amount, numericality: { greater_than: 0 }
@@ -114,13 +112,10 @@ class Invoice
         elsif user.role?('billing_team')
           custom_scope = { status: { '$in': %w(raised pending_approval approved rejected draft tax_invoice_raised paid) } }
         elsif user.role?('cp_admin')
-          cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
-          channel_partner_ids = User.where(role: 'channel_partner', manager_id: {"$in": cp_ids}).distinct(:id)
-          custom_scope = { manager_id: { "$in": channel_partner_ids }, status: { '$nin': %w(draft) } }
+          custom_scope = { cp_admin_id: user.id, status: { '$nin': %w(draft) } }
           #custom_scope = { status: { '$nin': %w(draft raised) } }
         elsif user.role?('cp')
-          channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
-          custom_scope = { manager_id: { "$in": channel_partner_ids } }
+          custom_scope = { cp_manager_id: user.id }
         elsif user.role?('account_manager')
           custom_scope = { account_manager_id: user.id }
         end

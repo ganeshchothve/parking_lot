@@ -12,7 +12,7 @@
         <%= render "admin/invoices/#{@invoice.invoiceable.class.model_name.i18n_key.to_s}/details", resource: @invoice.invoiceable rescue nil %>
         <div class="mb-3">
           <%= f.label :number, class: 'label-required' %>
-          <%= f.text_field :number, autofocus: true, required: 'required', class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("number") %>
+          <%= f.text_field :number, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("number") %>
         </div>
 
         <%= f.hidden_field :event, value: "raise" %>
@@ -35,9 +35,9 @@
           <div class="alert alert-warning" role="alert">
             Please change the GST Slab % as per the Slabs
           </div>
-          <%= f.label :gst_slab, class: 'label-required' %>
+          <%= f.label :gst_slab %>
           <% gst_slabs = @invoice.invoiceable.try(:project)&.incentive_gst_slabs || @invoice.invoiceable.booking_portal_client.try(:gst_slabs) || [] %>
-          <%= f.select :gst_slab, options_for_select(gst_slabs.collect{|gst| ["#{gst} %", gst]} || [], @invoice.gst_slab), {prompt: 'Select'}, class: "selectize", required: 'required', disabled: !policy([:admin, @invoice]).editable_field?("gst_slab") %>
+          <%= f.select :gst_slab, options_for_select(gst_slabs.collect{|gst| ["#{gst} %", gst]} || [], @invoice.gst_slab), {prompt: 'Select'}, class: "selectize", disabled: !policy([:admin, @invoice]).editable_field?("gst_slab") %>
         </div>
         <div class="mb-3">
           <%= f.label :gst_amount, 'GST Amount' %>

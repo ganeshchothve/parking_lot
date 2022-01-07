@@ -5,6 +5,7 @@ module CrmIntegration
     # Attributes used in events pushed to Interakt
     attr_accessor :event_payload
 
+    has_many :api_logs, as: :resource
     embeds_many :third_party_references, as: :reference_model, after_add: :update_references
 
     accepts_nested_attributes_for :third_party_references, reject_if: proc { |attributes| attributes['reference_id'].blank? }
