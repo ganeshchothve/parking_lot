@@ -36,7 +36,7 @@ class Project
   field :region, type: String
   field :support_name, type: String
   field :support_mail, type: String
-  field :support_contact, type: String
+  field :support_phone, type: String
 
   # descriptive fields
   field :description, type: String

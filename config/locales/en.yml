@@ -511,7 +511,7 @@ en:
         approved_banks: Approved Banks
         support_name: Name
         support_mail: Email
-        support_contact: Contact
+        support_phone: Contact
         allowed_bookings_per_user: 'Bookings allowed per user'
         selldo_client_id: 'SellDo Client ID'
         selldo_form_id: 'SellDo Form ID'
