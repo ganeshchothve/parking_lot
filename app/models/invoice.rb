@@ -4,6 +4,7 @@ class Invoice
   include InsertionStringMethods
   include InvoiceStateMachine
   extend FilterByCriteria
+  include CrmIntegration
   # include NumberIncrementor
 
   DOCUMENT_TYPES = []

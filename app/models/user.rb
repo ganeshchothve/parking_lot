@@ -31,8 +31,6 @@ class User
   devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :timeoutable, :password_archivable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: [:login] #:lockable,:expirable,:session_limitable,:password_expirable
 
   attr_accessor :temporary_password, :payment_link, :temp_manager_id
-  # Attributes used in events pushed to Interakt
-  attr_accessor :event_payload
 
   ## Database authenticatable
   field :first_name, type: String, default: ''
@@ -177,6 +175,7 @@ class User
   has_many :cp_lead_activities
   has_and_belongs_to_many :meetings
   has_many :interested_projects  # Channel partners can subscribe to new projects through this
+  has_many :fund_accounts
 
   has_many :notes, as: :notable
 
@@ -189,6 +188,7 @@ class User
   has_many :logs, class_name: 'SyncLog', inverse_of: :user_reference
   embeds_many :portal_stages
   embeds_many :user_notification_tokens
+
   accepts_nested_attributes_for :portal_stages, :user_notification_tokens, reject_if: :all_blank
 
   validates :first_name, :role, presence: true

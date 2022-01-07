@@ -173,17 +173,19 @@ class Admin::UsersController < AdminController
   end
 
   def update
-    @user.assign_attributes(permitted_attributes([current_user_role_group, @user]))
     respond_to do |format|
-      if @user.save
-        if current_user == @user && permitted_attributes([current_user_role_group, @user]).key?('password')
-          bypass_sign_in(@user)
+      push_fund_account(format, @user) do |razorpay_api, api_log|
+        @user.assign_attributes(permitted_attributes([current_user_role_group, @user]))
+        if @user.save
+          if current_user == @user && permitted_attributes([current_user_role_group, @user]).key?('password')
+            bypass_sign_in(@user)
+          end
+          format.html { redirect_to edit_admin_user_path(@user), notice: 'User Profile updated successfully.' }
+          format.json { render json: @user }
+        else
+          format.html { render :edit }
+          format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
         end
-        format.html { redirect_to edit_admin_user_path(@user), notice: 'User Profile updated successfully.' }
-        format.json { render json: @user }
-      else
-        format.html { render :edit }
-        format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
   end
@@ -332,6 +334,33 @@ class Admin::UsersController < AdminController
       @user.manager_id = current_user.id
       @user.referenced_manager_ids ||= []
       @user.referenced_manager_ids += [current_user.id]
+    end
+  end
+
+  def push_fund_account(format, user)
+    if user.role.in?(%w(cp_owner channel_partner))
+      if params.dig(:user, :fund_accounts, :address).present?
+        fund_account = user.fund_accounts.first || user.fund_accounts.build
+        fund_account.assign_attributes(params.dig(:user, :fund_accounts).permit(FundAccountPolicy.new(current_user, fund_account).permitted_attributes))
+
+        if (fund_account.new_record? && fund_account.is_active?) || (fund_account.persisted? && fund_account.is_active_changed?)
+          crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:razorpay, :base_url)).first
+          razorpay_api, api_log = fund_account.push_in_crm(crm_base) if crm_base.present?
+        end
+      end
+    end
+
+    if razorpay_api.blank? || (api_log.present? && api_log.status == 'Success')
+      if fund_account.blank? || fund_account.save
+        if fund_account && !fund_account.is_active? && api_log.present? && api_log.status == 'Success'
+          fund_account.third_party_references.where("crm_id": crm_base.id).first&.destroy
+        end
+        yield(razorpay_api, api_log)
+      else
+        format.json { render json: {errors: fund_account.errors.full_messages}, status: :unprocessable_entity }
+      end
+    else
+      format.json { render json: {errors: api_log.message}, status: :unprocessable_entity }
     end
   end
 
