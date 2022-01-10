@@ -137,7 +137,7 @@ class Admin::SiteVisitsController < AdminController
     if Rails.env.development?
       SiteVisitExportWorker.new.perform(current_user.id.to_s, params[:fltrs])
     else
-      SiteVisitExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json)
+      SiteVisitExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json, timezone: current_user.time_zone)
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
     redirect_to admin_site_visits_path(fltrs: params[:fltrs].as_json)
