@@ -29,6 +29,7 @@ class LeadExportWorker
 
   def self.get_column_names
     lead_columns = [
+      "Lead Id",
       "Name",
       "Email Id",
       "Phone",
@@ -53,6 +54,7 @@ class LeadExportWorker
 
   def self.get_lead_row(lead)
     lead_row = [
+      lead.id.to_s,
       lead.name,
       lead.email,
       lead.phone,

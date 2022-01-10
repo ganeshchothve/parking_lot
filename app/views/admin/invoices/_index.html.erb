@@ -1,77 +1,91 @@
-<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
-  <thead class="th-default">
-    <thead>
-      <tr class="bg-primary white">
-        <th><%= t('mongoid.attributes.invoice.number') %></th>
-        <th>Walk In</th>
-        <th><%= Invoice.model_name.human %> Project</th>
-        <!--<th><%#= IncentiveScheme.model_name.human %> Details</th> -->
-        <th><%= t('mongoid.attributes.invoice.amount') %></th>
-        <th><%= t('mongoid.attributes.invoice.status') %></th>
-        <th class="text-right action"></th>
-      </tr>
-    </thead>
-  </thead>
-  <tbody>
-    <% invoices.each do |invoice| %>
-      <tr>
-        <td><span class="col-title"><%= invoice.try(:number) %></span></td>
-        <td><span class="col-title"><% unless current_user.role?('channel_partner') %><%= link_to_if policy([current_user_role_group, invoice.manager]).index?, invoice.manager_name, [:admin, invoice.manager], class: "theme-txt-color" %><% end %></span></td>
-        <td>
-          <%= link_to invoice.booking_detail.name, [current_user_role_group, invoice.booking_detail], class: "theme-txt-color" %>
-          <div class='small d-inline-block'> <span class="mx-2">| </span>
-            <span><%= invoice.project_name %></span>
-          </div>
-        </td>
-        <!--
-        <td>
-          <%#= link_to_if policy([current_user_role_group, IncentiveScheme]).index?, invoice.incentive_scheme.name.try(:titleize), [:admin, :invoices, {'remote-state': edit_admin_incentive_scheme_path(invoice.incentive_scheme)}] %>
-          <div class='small'>
-            <span><%#= Ladder.model_name.human %> - Stage <%#= invoice.ladder_stage %></span><br>
-            <%# if adj = invoice.incentive_scheme.ladders.where(stage: invoice.ladder_stage).first.try(:payment_adjustment).presence %>
-              <%# if adj.absolute_value.blank? && adj.formula.present? %>
-                <span><%#= formula_to_human(adj.formula) %><span>
-              <%# else %>
-                <span><strong><%#= number_to_indian_currency(adj.absolute_value) %></strong></span>
-              <%# end %>
-            <%# end %>
-          </div>
-        </td>
-        -->
-        <td>
-          <span class="col-title">
-          <%= number_to_indian_currency(invoice.amount) %></span>
-          <!--
-          <% if invoice.status.in?(%w(approved paid)) && invoice.net_amount.present? %>
-            <div class='small row'>
-              <span class="col-6 title"><%= t('mongoid.attributes.invoice.net_amount') %>:</span><span class="col-6"> <strong><%= number_to_indian_currency(invoice.net_amount) %></strong></span></span>
-            </div>
-          <% end %>-->
-        </td>
-        <td>
-          <span class="col-title">
-          <i class='fa fa-circle fa-xs status_<%= t("mongoid.attributes.invoice/status.#{invoice.status}").downcase %> me-2'></i><%= t("mongoid.attributes.invoice/status.#{invoice.status}") %></span>
-         <!-- <% if invoice.rejected? %>
-            <div class='small row'>
-              <span class='break-word col-6 title'>Reason:</span><span class="col-6"> <%= invoice.rejection_reason %></span></div>
-               </div>
-          <% end %>
-          <% if deduction = invoice.incentive_deduction.presence %>
-            <div class='small row'>
-              <span class="col-6 title"><%= IncentiveDeduction.model_name.human %>:</span>
-              <span class="col-6"> <strong><%= number_to_indian_currency(deduction.amount) %></strong> (<%= t("mongoid.attributes.incentive_deduction/status.#{deduction.status}") %>)</span></span>
-            </div>
-          <% end %>-->
-        </td>
-        <td>
-          <div class="dropdown show text-right">
-            <a class="btn table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-              <%= render 'admin/invoices/links', invoice: invoice %>
+<section class="mt-0">
+  <div class="px-0">
+    <div class="row g-0">
+      <div class="col-lg-12 p-0">
+        <% invoices.each_with_index do |invoice, index| %>
+        <div class="bg-white rounded-3 float-start wd-100 shadow-sm position-relative <%= index.zero? ? 'mt-2' : 'mt-4 ' %>">
+          <div class="float-start wd-100">
+            <div class="">
+              <div>
+                <div class="inner-info d-flex d-xs-no-flex justify-content-between position-relative">
+                  <div class="ps-3 py-3 pb-xs-0">
+                    <h2 class="fn-16 font-medium mb-0 theme-txt-color me-2 d-block">
+                      <% if policy([ current_user_role_group, invoice.invoiceable]).show? %>
+                        <%= link_to invoice.invoiceable.name_in_invoice, [current_user_role_group, invoice.invoiceable], class: "theme-txt-color" %>
+                      <% else %>
+                        <%= invoice.invoiceable.name_in_invoice %>
+                      <% end %>
+                    </h2>
+                    <% if invoice.manager_id? && !current_user.role?('channel_partner') %>
+                    <p class="fn-14 mt-2 mb-0 d-inline-block">
+                      <%= "#{t('mongoid.attributes.invoice.manager_id')} : #{link_to_if (policy([:admin, User]).index? && current_user.role.in?(User::ALL_PROJECT_ACCESS)), invoice.manager_name, [current_user_role_group, invoice.manager], class: 'theme-txt-color'}".html_safe %>
+                    </p>
+                    <% end %>
+                    <% if invoice.account_manager.present? %>
+                      <span class="secondary mx-3 d-sm-inline-block d-none">| </span>
+                      <p class="fn-14 mt-2 mb-0 d-inline-block">
+                        <%= "#{t('mongoid.attributes.invoice.account_manager_id')} : #{invoice.account_manager.name}" %>
+                      </p>
+                    <% end %>
+                  </div>
+                  <div class="pe-3 py-3 ps-xs-3">
+                    <p class="font-medium fn-12 mb-0 d-inline-block me-2">
+                      <% if invoice.number.present? %>
+                        <%= invoice.number %>
+                        <span class="secondary mx-3 d-sm-inline-block d-none">| </span>
+                      <% end %>
+                      <i class="fa fa-circle info me-2 fa-sm"></i><%= t("mongoid.attributes.invoice/status.#{invoice.status}") || '-' %></p>
+                    <div class="dropdown d-inline-block top-right-action">
+                      <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        <i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
+                      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                        <%= render "#{current_user_role_group}/invoices/links", invoice: invoice %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="border-bottom col-12"></div>
               </div>
+              <div class="d-flex justify-content-between d-xs-no-flex">
+                <div class="ps-3 py-3 pb-xs-0 d-flex justify-content-start d-xs-no-flex">
+                  <p class="fn-14 mb-0 theme-txt-color">
+                    <span class="font-medium theme-txt-color"><%= t("mongoid.attributes.incentive_scheme/categories.#{invoice.category}") %></span>
+                  </p>
+                  <% if invoice.invoiceable_type != 'User' %>
+                    <span class="secondary mx-3 d-sm-inline-block d-none">| </span>
+                    <p class="mb-0 theme-txt-color">
+                        <%= link_to_if policy([current_user_role_group, invoice.project]).show?, invoice.project_name, [current_user_role_group, invoice.project], class: 'theme-txt-color' %>
+                    </p>
+                  <% end %>
+                </div>
+                <div class="inner-info">
+                  <div class="pe-3 py-3 ps-3 pt-xs-0 d-sm-flex justify-content-end">
+                    <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color ms-xs-0">
+                      <%= number_to_indian_currency(invoice.amount) %>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+        </div>
+        <% end %>
+      </div>
+
+      <!----------- Pagination ---------->
+      <% if invoices.is_a? WillPaginate::Collection %>
+      <div class="col-lg-12 py-3 bg-white mb-2 px-3 mt-3 shadow-sm">
+        <div class="row">
+          <div class="col-lg-6 pt-2">
+            <p class="table-entry mb-0"><%= page_entries_info invoices %></p>
+          </div>
+          <div class="col-lg-6 table-pagination">
+            <%= will_paginate invoices, list_classes: %w(pagination justify-content-end) %>
+          </div>
+        </div>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</section>

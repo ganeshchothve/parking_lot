@@ -21,7 +21,7 @@ class ClientPolicy < ApplicationPolicy
       address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes,
       checklists_attributes: ChecklistPolicy.new(user, Checklist.new).permitted_attributes,
       email_domains: [], booking_portal_domains: [], enable_actual_inventory: [], enable_live_inventory: [],
-      enable_incentive_module: [], incentive_calculation: []
+      enable_incentive_module: [], incentive_calculation: [], incentive_gst_slabs: []
     ]
   end
 end

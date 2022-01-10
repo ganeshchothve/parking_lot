@@ -166,6 +166,28 @@
       <%= f.number_field :price_upto, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("price_upto") %>
     </div>
   </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :incentive_percentage_slabs, class: 'label-required' %>
+      <%= f.select :incentive_percentage_slabs, f.object.incentive_percentage_slabs, {},  class: "selectize-tags", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("incentive_percentage_slabs") ? false : true) %>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="col-md-6">
+      <div class="form-group mb-3">
+        <div class="form-check form-check-inline">
+          <%= f.check_box :gst_slab_applicable, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("gst_slab_applicable") }, "Yes", "No" %>
+          <%= f.label :gst_slab_applicable, class: "form-check-label d-inline-block ms-2 gst-slab-applicable-check" %>
+        </div>
+    </div>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :incentive_gst_slabs, class: 'label-required' %>
+        <%= f.select :incentive_gst_slabs, f.object.incentive_gst_slabs, {},  class: "selectize-tags", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("incentive_gst_slabs") ? false : true) %>
+      </div>
+    </div>
+  </div>
   <div class="col-md-12">
     <div class="mb-3">
       <% usp = f.object.broker_usp %>

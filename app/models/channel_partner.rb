@@ -80,6 +80,7 @@ class ChannelPartner
   has_one :address, as: :addressable
   has_one :bank_detail, as: :bankable, validate: false
   has_many :assets, as: :assetable
+  has_many :site_visits
 
   validates :first_name, :last_name, presence: true, on: :create
   validates *SHORT_FORM, presence: true
@@ -140,6 +141,7 @@ class ChannelPartner
   def ds_name
     str = name
     str += " - #{rera_id}" if rera_applicable?
+    str += " - #{email}" if email.present? 
     str
   end
 

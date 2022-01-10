@@ -8,9 +8,11 @@ en:
   time:
     formats:
       default: "%d/%m/%Y %I:%M %p"
+      date: "%d/%m/%Y"
   date_time:
     formats:
       default: "%d/%m/%Y %I:%M %p"
+      date: "%d/%m/%Y"
   welcome: Welcome %{name}
   global:
     brand: BeyondWalls
@@ -317,6 +319,13 @@ en:
             Receipt: Payment
             UserKyc: 'User KYC'
             BookingDetail: 'Booking Detail'
+      crm/api:
+        event: 'Event Name'
+        resource_class: 'Resource Class'
+        Path: 'Api Path'
+        request_payload: 'Request Payload'
+        is_active: 'Active'
+        response_crm_id_location: 'CRM Reference ID Location In Response'
 
       bulk_upload_report:
         uploaded_by_id: 'Uploaded By'
@@ -478,6 +487,7 @@ en:
         powered_by_link: 'Show Powered By Link'
         lead_blocking_days: 'Configure Lead Blocking Days'
         invoice_approval_tat: 'Invoice Approval TAT (In Days)'
+        incentive_gst_slabs: 'Configure Incentive GST Slabs (%)'
       client/payment_gateways:
         Razorpay: Razorpay Payment Gateway
         CCAvenue: CCAvenue Payment Gateway
@@ -569,6 +579,7 @@ en:
         price_upto: 'Price Goes Upto'
         broker_usp: 'Broker Unique Selling Points (Fill in upto 3 USPs)'
         check_sv_availability_in_selldo: 'Check Site Visit Availability in Sell.do'
+        incentive_gst_slabs: 'Configure Incentive GST Slabs (%)'
         approved_banks/list:
           hdfc: HDFC Bank
           sbi: State Bank of India
@@ -622,7 +633,7 @@ en:
         alternate_email: 'Alternate Email'
         phone: 'Phone'
         alternate_phone: 'Alternate Phone'
-        rera_id: 'RERA Registration Number'
+        rera_id: 'RERA No.'
         city: 'City'
         associated_user_id: 'Associated User'
         status: 'Status'
@@ -891,16 +902,39 @@ en:
         tier_id: 'Channel Partner Tier'
         status: 'Status'
         date_range: Date Filter
+        resource_class: Resource
+        category: Category
+        brokerage_type: Brokerage Type
+        payment_to: Payment To
+        auto_apply: Auto Apply
+      incentive_scheme/categories:
+        walk_in: 'Walk-in'
+        spot_booking: 'Spot Booking'
+        lead: 'Lead'
+        referral: 'Referral'
+        brokerage: 'Booking Brokerage'
       incentive_scheme/status:
         draft: Draft
         approved: Approved
         disabled: Disabled
+      incentive_scheme/brokerage_type:
+        brokerage: Brokerage
+        sub_brokerage: Sub Brokerage
+      incentive_scheme/payment_to:
+        company: Partner Company
+        channel_partner: Channel Partner
+      incentive_scheme/resource_class:
+        SiteVisit: Walk-in
+        Lead: Lead
+        BookingDetail: Booking
+        User: User (Referral)
 
       invoice:
         number: 'Invoice Number'
         amount: Brokerage Amount
         gst_amount: GST Amount
-        net_amount: Approved Amount
+        gst_slab: 'GST Slab'
+        net_amount: Total Brokerage Amount
         comments: Comments
         rejection_reason: Rejection Reason
         project_id: 'Project'
@@ -912,13 +946,21 @@ en:
         approved_date: 'Approved Date'
         status: 'Status'
         cheque_detail: 'Cheque Details'
+        agreement_amount: 'Consideration Value For Brokerage'
+        incentive_resource: 'Resource'
+        category: 'Type'
+        manager_id: 'Partner'
+        account_manager_id: 'Account Manager'
       invoice/status:
         draft: 'Draft'
         raised: 'Raised'
         pending_approval: 'Pending Approval'
-        approved: 'Approved'
-        rejected: 'Rejected'
         paid: 'Paid'
+        raise: 'Raise Invoice'
+        re_raise: 'Re-Raise Invoice'
+        approved: 'Invoice Approved by Developer'
+        rejected: 'Dispute Raised by Developer'
+        tax_invoice_raised: "Raised Tax Invoice"
       cheque_detail:
         total_amount: 'Total Amount'
         payment_identifier: 'Payment Identifier'
@@ -1002,6 +1044,7 @@ en:
         site_visit_type: Type
         approval_status: Approval Status
         manager_id: 'Partner / Manager / Added by'
+        rejection_reason: Rejection Reason
       site_visit/status:
         scheduled: 'Scheduled'
         pending: 'Pending'
@@ -1011,6 +1054,12 @@ en:
         pending: 'Pending Approval'
         approved: 'Approved'
         rejected: 'Rejected'
+      site_visit/rejection_reason:
+        budget_not_match: Budget didn't match
+        location_not_match: Location didn't match
+        possession_not_match: Possession didn't match
+        didnt_visit: Didn't visit
+        different_cp: Walk In with different CP
       user_kyc:
         name: "Name"
         email: "Email"
@@ -1111,6 +1160,12 @@ en:
       meeting/help_text:
         photo_html: '<ul><li>Photos of the Event</li></ul>'
         collateral_html: '<ul><li>Event Collaterals</li></ul>'
+      booking_detail/file_types:
+        booking_detail: 'Booking Detail'
+        document: 'Document'
+      booking_detail/help_text:
+        booking_detail: 'Booking Detail'
+        document: 'Document'  
       user:
         temporarily_blocked: 'Qualify lead'
         iris_confirmation: 'Lead Tagging'
@@ -1191,6 +1246,8 @@ en:
         team_lead: 'Team Lead'
         billing_team: 'Billing Team'
         management_user: 'Management User'
+        account_manager: 'Account Manager'
+        account_manager_head: 'Account Manager Head'
         employee_user: 'Employee'
         direct: Direct
         dev_sourcing_manager: 'Developer Sourcing Manager'
@@ -1456,7 +1513,7 @@ en:
         link_name: 'Bookings'
       new:
         link_name: 'Add Booking'
-        header: "Add Booking"
+        header: "Add Booking for %{customer}-(%{project})"
       edit:
         link_name: 'Update Booking'
       show:
@@ -1513,13 +1570,19 @@ en:
         pending_approval: 'Invoice successfully raised'
         approved: 'Invoice successfully approved'
         rejected: 'Invoice rejected'
+        tax_invoice_raised: 'Tax Invoice raised successfully'
       events:
         raise: 'Raise Invoice'
         re_raise: 'Re-Raise Invoice'
-        approve: 'Approve Invoice'
-        reject: 'Reject Invoice'
+        approve: 'Invoice Approved by Developer'
+        reject: 'Dispute Raised by Developer'
+        tax_invoice_raise: "Raised Tax Invoice"
       exports:
         link_name: "%{name} Exports"
+      filters:
+        all: 'All'
+        manual_invoices: 'Manual Invoices'
+        calculated_invoices: 'Calculated Invoices'
 
     incentive_deductions:
       index:
@@ -1658,6 +1721,8 @@ en:
         link_name: 'Referrals'
       new:
         link_name: 'Add Referrals'
+      generate_code:
+        link_name: 'Generate Referral Code'
     site_visits:
       index:
         link_name: 'Walk-ins'

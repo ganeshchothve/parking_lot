@@ -83,6 +83,6 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def enable_booking_with_kyc?
-    current_client.enable_booking_with_kyc
+    record.project.present? ? record.project.enable_booking_with_kyc : false
   end
 end

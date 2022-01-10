@@ -47,23 +47,19 @@
   <%= link_to t('controller.booking_details.receipts.new.link_name'), new_admin_lead_booking_detail_receipt_path(booking_detail.lead, booking_detail_id: booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 
-<% scheme = booking_detail.project_unit.project_tower.default_scheme %>
+<% scheme = booking_detail.project_unit.present? ? booking_detail.project_unit.project_tower.default_scheme : nil %>
 
 <% if booking_detail.booking_detail_scheme && policy([:admin, booking_detail.booking_detail_scheme]).edit? %>
   <%= link_to t('helpers.edit.link_name', model: BookingDetailScheme.model_name.human), edit_admin_booking_detail_booking_detail_scheme_path( booking_detail, booking_detail.booking_detail_scheme.id), class: 'dropdown-item modal-remote-form-link' %>
-<% elsif policy([:admin, BookingDetailScheme.new(booking_detail: booking_detail, derived_from_scheme_id: scheme.id, project_unit_id: booking_detail.project_unit_id)]).new?%>
+<% elsif scheme.present? && policy([:admin, BookingDetailScheme.new(booking_detail: booking_detail, derived_from_scheme_id: scheme.id, project_unit_id: booking_detail.project_unit_id)]).new?%>
   <%= link_to t('helpers.new.link_name', model: BookingDetailScheme.model_name.human ), new_admin_booking_detail_booking_detail_scheme_path( booking_detail), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 
 <% if policy([:admin, Receipt ]).index? %>
   <%= link_to t('controller.receipts.index.link_name'), admin_lead_booking_detail_receipts_path(booking_detail.lead, booking_detail), class: 'dropdown-item' %>
 <% end %>
-<% if booking_detail.incentive_eligible? && policy([:admin, Invoice.new]).new? %>
-  <%= link_to t('controller.invoices.new.link_name'), new_admin_booking_detail_invoice_path(booking_detail), class: 'dropdown-item modal-remote-form-link' %>
-<% end %>
-<% if booking_detail.incentive_eligible? && policy([:admin, Invoice ]).index? %>
-  <%= link_to t('controller.booking_details.invoices.link_name'), admin_booking_detail_invoices_path(booking_detail), class: 'dropdown-item' %>
-<% end %>
+
+<%= render 'admin/invoices/invoiceable_links', resource: booking_detail %>
 
 <% booking_requests = [UserRequest::Cancellation, UserRequest::Swap] %>
 <% booking_requests.each do |klass| %>

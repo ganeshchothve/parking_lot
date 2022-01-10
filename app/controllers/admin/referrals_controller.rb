@@ -44,9 +44,11 @@ class Admin::ReferralsController < AdminController
     @user.generate_referral_code
     respond_to do |format|
       if @user.save
+        format.html { redirect_to request.referrer, notice: 'Code successfully generated' }
         format.json { render json: @user, status: :created }
         format.js
       else
+        format.html { redirect_to request.referrer, alert: @user.errors.full_messages }
         format.json { render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity }
         format.js
       end

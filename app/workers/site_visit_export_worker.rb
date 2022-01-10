@@ -29,6 +29,8 @@ class SiteVisitExportWorker
 
   def self.get_column_names
     sv_columns = [
+      "Id",
+      "User ID(lead)",
       "Name",
       "Email Id",
       "Phone",
@@ -42,6 +44,7 @@ class SiteVisitExportWorker
       "Partner ID (Used for VLOOKUP)",
       "Partner Phone",
       "Partner UPI Address",
+      "Partner Role",
     ] + Crm::Base.all.map{|crm| crm.name + " SiteVisit ID"  }
 
     sv_columns.flatten
@@ -49,19 +52,22 @@ class SiteVisitExportWorker
 
   def self.get_site_visit_row(sv, user)
     sv_row = [
+      sv.id.to_s,
+      sv.lead&.id.to_s,
       sv.lead&.name,
       sv.lead&.masked_email(user),
       sv.lead&.masked_phone(user),
       sv.project_name,
-      sv.created_at.try(:strftime, '%d/%m/%Y %I:%M %p'),
-      sv.scheduled_on.try(:strftime, '%d/%m/%Y %I:%M %p'),
+      I18n.l(sv.created_at.in_time_zone(user.time_zone)),
+      I18n.l(sv.scheduled_on.in_time_zone(user.time_zone)),
       sv.status&.titleize,
-      sv.conducted_on.try(:strftime, '%d/%m/%Y %I:%M %p'),
+      sv.conducted_on.present? ? I18n.l(sv.conducted_on.in_time_zone(user.time_zone)) : "",
       sv.approval_status&.titleize,
       sv.manager&.name,
       sv.manager_id.to_s,
       sv.manager&.phone,
       sv.manager&.upi_id,
+      sv.manager&.role,
     ] + Crm::Base.all.map{|crm| sv.third_party_references.where(crm_id: crm.id).first.try(:reference_id) }
 
     sv_row.flatten

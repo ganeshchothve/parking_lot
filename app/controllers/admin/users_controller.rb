@@ -326,6 +326,7 @@ class Admin::UsersController < AdminController
   def create_user
     @user = User.new(booking_portal_client_id: current_client.id, role: params[:user][:role])
     @user.assign_attributes(permitted_attributes([current_user_role_group, @user]))
+    @user.manager_id = @user.channel_partner&.manager_id if @user.role?('channel_partner') && @user.channel_partner&.manager_id.present?
     @user.manager_id = current_user.id if @user.role?('channel_partner') && current_user.role?('cp')
     if @user.buyer? && current_user.role?('channel_partner')
       @user.manager_id = current_user.id

@@ -25,7 +25,7 @@ class Crm::ApiPolicy < ApplicationPolicy
   end
 
   def permitted_attributes
-    attributes = %w[resource_class path request_payload base_id _type is_active]
+    attributes = %w[resource_class path request_payload base_id _type is_active event]
     attributes
   end
 end

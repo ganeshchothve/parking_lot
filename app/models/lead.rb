@@ -11,6 +11,7 @@ class Lead
   extend ApplicationHelper
   include LeadStateMachine
   include DetailsMaskable
+  include IncentiveSchemeAutoApplication
 
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   DOCUMENT_TYPES = []
@@ -69,6 +70,7 @@ class Lead
   has_many :whatsapps, as: :triggered_by, class_name: 'Whatsapp'
   has_many :project_units
   has_many :cp_lead_activities
+  has_many :invoices, as: :invoiceable
   #has_and_belongs_to_many :received_emails, class_name: 'Email', inverse_of: :recipients
   #has_and_belongs_to_many :cced_emails, class_name: 'Email', inverse_of: :cc_recipients
   #has_many :received_smses, class_name: 'Sms', inverse_of: :recipient
@@ -102,6 +104,13 @@ class Lead
   scope :filter_by_stage, ->(stage) { where(stage: stage) }
   scope :filter_by_customer_status, ->(*customer_status){ where(customer_status: { '$in': customer_status }) }
   scope :filter_by_queue_number, ->(queue_number){ where(queue_number: queue_number) }
+  scope :incentive_eligible, ->(category) do
+    if category == 'lead'
+      nin(manager_id: ['', nil])
+    else
+      all.not_eligible
+    end
+  end
 
   scope :filter_by_receipts, ->(receipts) do
     lead_ids = Receipt.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).distinct(:lead_id)
@@ -155,6 +164,18 @@ class Lead
     end
   end
 
+  def incentive_eligible?(category=nil)
+    if category.present?
+      if category == 'lead'
+        manager_id.present?
+      else
+        false
+      end
+    else
+      _incentive_eligible?
+    end
+  end
+
   def manager_name
     self.cp_lead_activities.where(user_id: self.manager_id).first&.manager_name
   end
@@ -200,7 +221,7 @@ class Lead
   end
 
   def total_balance_pending
-    booking_details.in(status: ProjectUnit.booking_stages).sum(&:pending_balance)
+    booking_details.in(status: ProjectUnit.booking_stages).sum(&:pending_balance) rescue nil
   end
 
   def total_unattached_balance
@@ -218,6 +239,11 @@ class Lead
   def name
     "#{first_name} #{last_name}"
   end
+
+  # Used in incentive invoice
+  alias :name_in_invoice :name
+  alias :invoiceable_manager :manager
+  alias :invoiceable_date :created_at
 
   def search_name
     "#{name} - #{email} - #{phone} (#{project_name})"

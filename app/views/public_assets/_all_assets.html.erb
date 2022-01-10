@@ -16,7 +16,7 @@
       <%=
         links = {}
         if policy([ current_user_role_group, asset]).destroy?
-          links[:destroy] = public_assetables_path(public_assetable_type: assetable.class.model_name.i18n_key.to_s, public_assetable_id: assetable.id, id: asset.id)
+          links[:destroy] = public_assetable_path(public_assetable_type: assetable.class.model_name.i18n_key.to_s, public_assetable_id: assetable.id, id: asset.id)
         end
         if asset.file.file && asset.file.file.exists?
           render "assets/file_icon", record: {id: asset.id, file_size: asset.file_size, url: asset.file.url, content_type: asset.file.content_type, name: asset.file_name }, links: links

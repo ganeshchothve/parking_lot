@@ -15,11 +15,17 @@ class ChannelPartnerObserver < Mongoid::Observer
     end
 
     if channel_partner.referral_code.present?
-      referred_by_user = User.where(referral_code: channel_partner.referral_code).first
-      if referred_by_user
-        user.set(referred_by_id: referred_by_user.id)
+      query = []
+      query << { phone: user.phone } if user.phone.present?
+      query << { email: user.email } if user.email.present?
+      referral = Referral.where(referral_code: channel_partner.referral_code).or(query).first
+      if referral
+        user.set(referred_by_id: referral.referred_by_id, referred_on: referral.created_at)
+      elsif (referred_by = User.where(referral_code: channel_partner.referral_code).first)
+        user.set(referred_by_id: referred_by.id, referred_on: Time.now)
       end
     end
+
     user.save!
     channel_partner.set(primary_user_id: user.id)
 
@@ -27,6 +33,15 @@ class ChannelPartnerObserver < Mongoid::Observer
       SelldoLeadUpdater.perform_async(user.id.to_s, {stage: channel_partner.status, action: 'add_cp_portal_stage', selldo_api_key: selldo_api_key, selldo_client_id: selldo_client_id})
       # Push services interested to selldo if set or changed
       SelldoLeadUpdater.perform_async(user.id.to_s, {action: 'push_cp_data', selldo_api_key: selldo_api_key, selldo_client_id: selldo_client_id, lead: {custom_interested_services: channel_partner.interested_services.join(',')}})
+    end
+
+    # For pushing inactive status event in Interakt
+    if current_client.external_api_integration?
+      if Rails.env.staging? || Rails.env.production?
+        ChannelPartnerObserverWorker.perform_async(channel_partner.id.to_s, { 'status' => [nil, channel_partner.status] })
+      else
+        ChannelPartnerObserverWorker.new.perform(channel_partner.id, { 'status' => [nil, channel_partner.status] })
+      end
     end
 
     template_name = "channel_partner_created"
@@ -65,18 +80,19 @@ class ChannelPartnerObserver < Mongoid::Observer
       if channel_partner.rera_id_changed? && channel_partner.rera_id.present?
         channel_partner.users.update_all(rera_id: channel_partner.rera_id)
       end
+      if channel_partner.manager_id_changed? && channel_partner.manager_id.present?
+        channel_partner.users.update_all(manager_id: channel_partner.manager_id)
+      end
     end
     channel_partner.rera_applicable = true if channel_partner.rera_id.present?
     channel_partner.gst_applicable = true if channel_partner.gstin_number.present?
 
-    if _changes = (channel_partner.changed & %w(manager_id interested_services regions company_name)).presence && _changes&.all? {|attr| channel_partner.send(attr)&.present?}
-      channel_partner.users.update_all(manager_id: channel_partner.manager_id)
-      if current_client.external_api_integration?
-        channel_partner.users.each do |cp_user|
-          Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
-            api.execute(cp_user)
-          end
-        end
+    # For calling Selldo & Interakt APIs
+    if current_client.external_api_integration? && channel_partner.persisted? && channel_partner.changed?
+      if Rails.env.staging? || Rails.env.production?
+        ChannelPartnerObserverWorker.perform_async(channel_partner.id.to_s, channel_partner.changes)
+      else
+        ChannelPartnerObserverWorker.new.perform(channel_partner.id, channel_partner.changes)
       end
     end
   end

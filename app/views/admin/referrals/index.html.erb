@@ -11,12 +11,12 @@
       <div class="col-lg-8 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-btn-set float-right pb-3 text-end">
           <div class="m-0">
-            <h6 class="mr-1 d-inline-block mt-1"><%= t('mongoid.attributes.user.referral_code') %>:</h6>
-              <%= get_referral_code %>
-            <button disabled="disabled" class="p-2 px-3 btn bg-primary btn-primary border-primary white d-inline-block ms-2 me-2 border rounded"><%= t('global.total')%> : <%= @referrals.total_entries %></button>
-            <div class="invite-friend-link p-2 px-3 btn btn-primary bg-primary border-primary white d-inline-block ms-2 border rounded">
+            <h6 class="mr-1 d-inline-block mt-1 me-2"><%= t('mongoid.attributes.user.referral_code') %>:</h6><%= get_referral_code %>
+          <% if policy([:admin, :referral]).new? %>
+            <div class="invite-friend-link p-2 px-3 d-inline-block ms-2">
               <%= invite_friend_link %>
             </div>
+          <% end %>
           </div>
         </div>
       </div>

@@ -83,7 +83,8 @@ class UserExportWorker
       "Phone",
       "Sell.Do Lead ID",
       "Role",
-      "Referred by Partner",
+      "Manager Name",
+      "Regions",
       "RERA ID",
       "UPI Address",
       "Last Sign In At",
@@ -91,7 +92,10 @@ class UserExportWorker
       "Confirmed At",
       "Referral Code",
       "Referred By",
-      "Referred By ID (Used for VLOOKUP)"
+      "Referred By ID (Used for VLOOKUP)",
+      "Sign-in-count",
+      "Company Name",
+      "Walkin Count"
     ]
   end
 
@@ -104,6 +108,7 @@ class UserExportWorker
       user.buyer? ? user.lead_id : "",
       User.human_attribute_name("role.#{user.role}"),
       user.manager_name || "",
+      user.channel_partner&.regions&.to_sentence,
       user.role.in?(%w(cp_owner channel_partner)) ? user.rera_id : "",
       user.role.in?(%w(cp_owner channel_partner)) ? user.upi_id : "",
       user.last_sign_in_at.present? ? I18n.l(user.last_sign_in_at.in_time_zone(current_user.time_zone)) : "",
@@ -111,7 +116,23 @@ class UserExportWorker
       user.confirmed_at.present? ? I18n.l(user.confirmed_at.in_time_zone(current_user.time_zone)) : "",
       user.referral_code,
       user.referred_by.try(:name),
-      user.referred_by_id.to_s
+      user.referred_by_id.to_s,
+      user.sign_in_count,
+      user.role.in?(%w(cp_owner channel_partner)) ? user.channel_partner.try(:company_name) : "",
+      site_visit_count(user)
     ]
+  end
+
+  def self.site_visit_count(user)
+    case user.role
+    when 'cp_owner', 'channel_partner'
+      SiteVisit.where(manager_id: user.id).count
+    when 'cp'
+      SiteVisit.where(cp_manager_id: user.id).count
+    when 'cp_admin'
+      SiteVisit.where(cp_admin_id: user.id).count
+    else
+      user.site_visits.count
+    end
   end
 end

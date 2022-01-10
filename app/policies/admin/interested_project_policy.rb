@@ -15,6 +15,10 @@ class Admin::InterestedProjectPolicy < InterestedProjectPolicy
     edit?
   end
 
+  def report?
+    user.role.in?(%w(cp cp_admin admin superadmin))
+  end
+
   def permitted_attributes(params = {})
     attrs = super
     attrs += [:event] if user.role.in?(%w(channel_partner cp_owner)) && (record.new_record? || record.rejected?)

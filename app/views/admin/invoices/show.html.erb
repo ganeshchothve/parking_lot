@@ -10,23 +10,45 @@
           <div class="pd-box">
             <% invoice_labels = t("mongoid.attributes.invoice").with_indifferent_access %>
             <div class="row">
-              <div class="col-md-4">
-                <div class="mb-3">
-                  <label class="small text-muted"><%= invoice_labels[:project_id] %></label>
-                  <div><%= @invoice.project.name %></div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="mb-3">
-                  <label class="small text-muted"><%= invoice_labels[:booking_detail_id] %></label>
-                  <div><%= link_to @invoice.booking_detail.name, [current_user_role_group, @invoice.booking_detail] %></div>
-                </div>
-              </div>
-              <% unless current_user.role?('channel_partner') %>
+              <% if @invoice.invoiceable_type != 'User' %>
                 <div class="col-md-4">
                   <div class="mb-3">
-                    <label class="small text-muted"><%= ChannelPartner.model_name.human %></label>
-                    <div><%= link_to_if policy([current_user_role_group, @invoice.manager]).index?, @invoice.manager_name, [:admin, @invoice.manager] %></div>
+                    <label class="small text-muted"><%= invoice_labels[:project_id] %></label>
+                    <div><%= @invoice.try(:project)&.name %></div>
+                  </div>
+                </div>
+              <% end %>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label class="small text-muted"><%= Invoice.human_attribute_name('category') %></label>
+                  <div><%= t("mongoid.attributes.incentive_scheme/categories.#{@invoice.category}") %></div>
+                </div>
+              </div>
+              <% unless current_user.role.in?(%w(channel_partner cp_owner)) %>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label class="small text-muted"><%= Invoice.human_attribute_name('brokerage_type') %></label>
+                  <div><%= t("mongoid.attributes.incentive_scheme/categories.#{@invoice.brokerage_type}") %></div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label class="small text-muted"><%= Invoice.human_attribute_name('payment_to') %></label>
+                  <div><%= t("mongoid.attributes.incentive_scheme/categories.#{@invoice.payment_to}") %></div>
+                </div>
+              </div>
+              <% end %>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label class="small text-muted"><%= @invoice.invoiceable&.class&.model_name&.human %></label>
+                  <div><%= link_to_if policy([:admin, @invoice.invoiceable]).index?, @invoice.invoiceable.name_in_invoice, [current_user_role_group, @invoice.invoiceable] %></div>
+                </div>
+              </div>
+              <% unless %w(channel_partner cp_owner).include?(current_user.role) %>
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <label class="small text-muted"><%= t('mongoid.attributes.user/role.channel_partner') %></label>
+                    <div><%= "#{@invoice.manager.try(:name)} (#{@invoice.manager.try(:cp_code)})" %></div>
                   </div>
                 </div>
               <% end %>
@@ -176,7 +198,7 @@
                   </div>
                 </div>
               <% end %>
-              <% if @invoice.status.in?(%w(approved paid)) && @invoice.net_amount.present? %>
+              <% if @invoice.status.in?(%w(approved tax_invoice_raised paid)) && @invoice.net_amount.present? %>
                 <div class="col-md-4">
                   <div class="mb-3">
                     <label class="small text-muted"><%= invoice_labels[:net_amount] %></label>

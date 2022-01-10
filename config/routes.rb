@@ -89,18 +89,25 @@ Rails.application.routes.draw do
         get :tasks
         get :cost_sheet
         get :doc, path: 'doc/:type'
+        patch :move_to_next_state
       end
       get :mis_report, on: :collection
       get :searching_for_towers, on: :collection
       get :status_chart, on: :collection
+      get :new_booking_without_inventory, on: :collection
+      get :edit_booking_without_inventory, on: :member
+      post :create_booking_without_inventory, on: :collection
+      patch :update_booking_without_inventory, on: :member 
       resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
 
       resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts' do
         get :lost_receipt, on: :collection
       end
       # resources :receipts, only: [:index]
+    end
 
-      resources :invoices, only: [:index, :new, :create, :edit, :update], controller: 'booking_details/invoices' do
+    scope "*invoiceable_type/:invoiceable_id" do
+      resources :invoices, only: [:index, :new, :create, :edit, :update], controller: 'invoices', as: :invoiceable do
         member do
           patch :change_state
           get :raise_invoice
@@ -109,10 +116,12 @@ Rails.application.routes.draw do
     end
 
     # for Billing Team
-    resources :invoices, only: [:index, :show, :edit, :update], controller: 'booking_details/invoices' do
+    resources :invoices, only: [:index, :show, :edit, :update], controller: 'invoices' do
       get :generate_invoice, on: :member
       get :update_gst, on: :member
       get :export, on: :collection
+      get :new_send_invoice_to_poc, on: :member
+      post :send_invoice_to_poc, on: :collection
       resources :incentive_deductions, except: :destroy, controller: 'invoices/incentive_deductions' do
         post :change_state, on: :member
       end

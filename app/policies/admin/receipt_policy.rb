@@ -11,7 +11,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
   end
 
   def new?
-    valid = record.user.buyer? && confirmed_and_ready_user? && user.active_channel_partner?
+    valid = record.user.present? && record.user.buyer? && confirmed_and_ready_user? && user.active_channel_partner?
   end
 
   def create?

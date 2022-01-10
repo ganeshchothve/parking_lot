@@ -20,7 +20,7 @@
             <% end %>
             <%= render "channel_partners/short_form_fields", {form: form} %>
             <div class="signin-btn pl-0 pr-0 pb-4">
-              <%= form.submit "Register", class: "green-btn sign-in-btn", data: { disable_with: "Please wait..." } %>
+              <%= form.submit "Register", class: "green-btn sign-in-btn", data: { disable_with: "Please wait...", event_category: 'Footer', event_action: 'Click', event_name: 'Submit' } %>
             </div>
             <hr/>
             <%= render "devise/shared/links" %>

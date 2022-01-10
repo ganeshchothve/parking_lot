@@ -95,6 +95,7 @@ class Client
   field :powered_by_link, type: String
   field :launchpad_portal, type: Boolean, default: false
   field :mask_lead_data_for_roles, type: Array, default: %w(admin superadmin cp cp_admin dev_sourcing_manager)
+  field :incentive_gst_slabs, type: Array, default: [5, 12, 18]
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
@@ -202,7 +203,7 @@ class Client
   def enable_incentive_module?(user)
     if user.present?
       out = enable_incentive_module.include?(user.role)
-      out && user.active_channel_partner?
+      out && (user.active_channel_partner? || user.role?('billing_team'))
     else
       false
     end

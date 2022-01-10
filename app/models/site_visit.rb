@@ -10,6 +10,9 @@ class SiteVisit
   extend FilterByCriteria
   include Mongoid::Autoinc
   include QueueNumberAssignment
+  include IncentiveSchemeAutoApplication
+
+  REJECTION_REASONS = ["budget_not_match", "location_not_match", "possession_not_match", "didnt_visit", "different_cp"]
 
   belongs_to :project
   belongs_to :lead
@@ -21,6 +24,7 @@ class SiteVisit
   belongs_to :cp_manager, class_name: 'User', optional: true
   belongs_to :cp_admin, class_name: 'User', optional: true
   has_many :notes, as: :notable
+  has_many :invoices, as: :invoiceable
 
   accepts_nested_attributes_for :notes, reject_if: :all_blank
 
@@ -33,6 +37,7 @@ class SiteVisit
   field :sales_id, type: BSON::ObjectId
   field :created_by, type: String
   field :conducted_by, type: String
+  field :rejection_reason, type: String
 
   delegate :name, to: :project, prefix: true, allow_nil: true
 
@@ -48,12 +53,30 @@ class SiteVisit
   scope :filter_by_conducted_on, ->(date) { start_date, end_date = date.split(' - '); where(conducted_on: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_manager_id, ->(manager_id) {where(manager_id: manager_id) }
   scope :filter_by_cp_manager_id, ->(cp_manager_id) {where(cp_manager_id: cp_manager_id) }
+  scope :incentive_eligible, ->(category) do
+    if category == 'walk_in'
+      where(approval_status: 'approved', status: {'$in': %w(conducted paid)})
+    else
+      all.not_eligible
+    end
+  end
 
   validates :scheduled_on, :status, :site_visit_type, :created_by, presence: true
   validates :conducted_on, :conducted_by, presence: true, if: Proc.new { |sv| sv.status == 'conducted' }
   validate :existing_scheduled_sv, on: :create
+  validate :validate_scheduled_on_datetime
   validates :time_slot, presence: true, if: Proc.new { |sv| sv.site_visit_type == 'token_slot' }
   validates :notes, copy_errors_from_child: true
+
+  def incentive_eligible?(category=nil)
+    if category.present?
+      if category == 'walk_in'
+        verification_approved? && (conducted? || paid?)
+      end
+    else
+      _incentive_eligible?
+    end
+  end
 
   def self.statuses
     [
@@ -90,11 +113,10 @@ class SiteVisit
         custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id }
       elsif user.role?('cp_owner')
         custom_scope = {channel_partner_id: user.channel_partner_id}
-      #elsif user.role?('cp_admin')
-      #  custom_scope = { lead_id: { "$in": Lead.nin(manager_id: [nil, '']).distinct(:id) } }
-      #elsif user.role?('cp')
-      #  channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
-      #  custom_scope = { lead_id: { "$in": Lead.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
+      elsif user.role?('cp_admin')
+        custom_scope = {cp_admin_id: user.id}
+      elsif user.role?('cp')
+        custom_scope = {cp_manager_id: user.id}
       elsif user.role?('dev_sourcing_manager')
         custom_scope = { project_id: user.selected_project_id }
       end
@@ -111,6 +133,13 @@ class SiteVisit
   end
 
   alias :resource_name :name
+  # Used in incentive invoice
+  alias :invoiceable_manager :manager
+  alias :invoiceable_date :scheduled_on
+
+  def name_in_invoice
+    self.lead.name.to_s
+  end
 
   def update_data_from_selldo(data)
     self.status = data.dig('site_visit', 'status')
@@ -132,6 +161,11 @@ class SiteVisit
   end
 
   private
+
+  def validate_scheduled_on_datetime
+    self.errors.add :base, 'Scheduled On should not be past date' if (self.scheduled_on_changed? && self.scheduled_on < Time.current.beginning_of_day)
+  end
+
   def existing_scheduled_sv
     self.errors.add :base, 'One Scheduled Site Visit Already Exists' if SiteVisit.where(lead_id: lead_id, status: 'scheduled').present?
   end

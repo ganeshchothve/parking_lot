@@ -4492,12 +4492,15 @@ table .dropdown-menu.show{
 /***************** CP Benefits slider **************************/
 .cpBenefitsCarousel{
 	.carousel-item{
-		height: 337px;
-		background-position: center;
-		background-repeat: no-repeat;
-		background-size: cover;
-		@media screen and (max-width:700px){
+		.banner-image
+		{
+			height: 400px;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: cover;
+			@media screen and (max-width:700px){
 			height: 580px;
+			}
 		}
 	}
 	.carousel-control-prev{
@@ -4510,6 +4513,7 @@ table .dropdown-menu.show{
 .slider-1{
 	background-image: url('<%= asset_path "cp-banner-1.png" %>');
 	padding:60px 40px;
+	background-repeat: no-repeat;
 	h2{
 		color: #172A56;
 		font-size: 26px;
@@ -4578,6 +4582,7 @@ table .dropdown-menu.show{
 .slider-2{
 	background-image: url('<%= asset_path "cp-banner-2.png" %>');
 	padding:30px 40px;
+	background-repeat: no-repeat;
 	h2{
 		color: #fff;
 		font-size: 26px;
@@ -5014,3 +5019,5 @@ table .dropdown-menu.show{
 .scalerange span{text-align:center;min-width:35px;padding-top:16px;position:relative}
 .scalerange span:before{content:'';background: #a9a9a9;display:block;width:1px;height:9px;position:absolute;top: 7px;left:calc(50% - 1px);}
 #widget .ui-slider .ui-slider-handle{margin-left: -15px;}
+
+.daterangepicker{z-index:99999!important;}

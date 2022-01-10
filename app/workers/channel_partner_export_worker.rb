@@ -24,12 +24,17 @@ class ChannelPartnerExportWorker
       "Company Name",
       "Email",
       "Phone",
+      "Regions",
       "RERA ID",
       "Owner User ID (used for VLOOKUP)",
       "Owner Name",
       "Owner Phone",
       "Owner Email",
-      "Status"
+      "Status",
+      "Manager Name",
+      "Walkin Status",
+      "Sign in count",
+      "Walkin Count"
     ]
   end
 
@@ -40,12 +45,17 @@ class ChannelPartnerExportWorker
       channel_partner.company_name,
       user&.email,
       user&.phone,
+      channel_partner.regions&.to_sentence,
       channel_partner.rera_id,
       user&.id&.to_s,
       user&.name,
       user&.phone,
       user&.email,
-      ChannelPartner.human_attribute_name("status.#{channel_partner.status}")
+      ChannelPartner.human_attribute_name("status.#{channel_partner.status}"),
+      channel_partner.manager_name,
+      channel_partner.site_visits.present? ? 'Active' : 'Inactive',
+      user&.sign_in_count,
+      channel_partner.site_visits.count
     ]
   end
 end

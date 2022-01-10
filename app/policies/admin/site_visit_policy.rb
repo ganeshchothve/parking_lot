@@ -48,6 +48,7 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
     attributes += [:event] if record.scheduled? && user.role.in?(%w(cp_owner channel_partner)) && current_client.launchpad_portal?
     attributes += [:event] if record.may_paid? && user.role.in?(%w(superadmin admin cp_admin))
     attributes += [:approval_event] if record.approval_status.in?(%w(pending rejected)) && user.role.in?(%w(dev_sourcing_manager)) && current_client.launchpad_portal?
+    attributes += [:rejection_reason] if user.role?(:dev_sourcing_manager)
     attributes
   end
 end

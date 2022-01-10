@@ -1,26 +1,16 @@
 <section class="mb-5 mt-3">
   <div class="px-4">
     <div class="row">
-      <div class="col-lg-5 col-xs-12 col-md-6 col-sm-12 no-pd">
-        <div class="table-title">
-          <div class="dropdown show text-right">
-            <button class="select-btn fn-400 dropdown-toggle px-3 border rounded py-2 ms-2" href="javascript:;"
-              role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> All Exports</button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-              <%= link_to "All", admin_invoices_path, active: :exclusive, class: "dropdown-item", id: 'all' %>
-              <%= link_to "Calculated Invoices", admin_invoices_path({invoice_type: "calculated"}), active: :exclusive, class: "dropdown-item", id: 'calculated' %>
-              <%= link_to "Manual Invoices", admin_invoices_path({invoice_type: "manual"}), active: :exclusive, class: "dropdown-item", id: 'manual' %>
-            </div>
-          </div>
-          <nav class="nav float-left">
-          </nav>
-        </div>
+      <div class="col-lg-8 col-12 filter-set d-xs-no-flex">
+        <%= link_to t('controller.invoices.filters.all'), @resource.present? ? admin_invoiceable_index_path(invoiceable_type: @resource.class.model_name.i18n_key.to_s, invoiceable_id: @resource.id, fltrs: { invoiceable_id: @resource.id }) : admin_invoices_path, class: "filter-link #{params[:invoice_type].blank? ? 'active' : ''}" %>
+        <%= link_to t('controller.invoices.filters.manual_invoices'), @resource.present? ? admin_invoiceable_index_path(invoiceable_type: @resource.class.model_name.i18n_key.to_s, invoiceable_id: @resource.id, invoice_type: "manual", fltrs: { invoiceable_id: @resource.id }) : admin_invoices_path({invoice_type: "manual"}), class: "filter-link #{params[:invoice_type] == 'manual' ? 'active' : ''}" %>
+        <%= link_to t('controller.invoices.filters.calculated_invoices'), @resource.present? ? admin_invoiceable_index_path(invoiceable_type: @resource.class.model_name.i18n_key.to_s, invoiceable_id: @resource.id, invoice_type: "calculated", fltrs: { invoiceable_id: @resource.id }) : admin_invoices_path({invoice_type: "calculated"}), class: "filter-link #{params[:invoice_type] == 'calculated' ? 'active' : ''}" %>
       </div>
-      <div class="col-lg-7 col-xs-12 col-md-6 col-sm-12 no-pd">
+      <div class="col-lg-4 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-btn-set float-right pb-1 text-end mt-2">
-          <div class="filter-search">
+          <!-- <div class="filter-search">
             <input type="text" name="" placeholder="Search projects">
-          </div>
+          </div> -->
           <div class="filter-popup">
             <a class="db-filter-btn fn-500" href="javascript:;">
               <i class="fa fa-filter fill-theme"></i>
@@ -44,17 +34,6 @@
           <%= render 'admin/invoices/index', invoices: @invoices %>
           <div class="filter-box">
             <%= render "admin/invoices/filters" %>
-          </div>
-
-          <div class="col-lg-12 py-3 bg-white mb-2 px-2">
-            <div class="row">
-              <div class="col-lg-6">
-                <p class="table-entry mb-0 ps-2 pt-2"><%= page_entries_info @invoices %></p>
-              </div>
-              <div class="col-lg-6 table-pagination">
-                <%= will_paginate @invoices, list_classes: %w(pagination justify-content-end) %>
-              </div>
-            </div>
           </div>
         </div>
       </div>

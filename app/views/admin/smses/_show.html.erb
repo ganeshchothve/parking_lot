@@ -14,7 +14,7 @@
     </div>
     <div class="col-6">
       <span> Sent On :</span>
-      <span><%= sms.sent_on.try(:strftime, '%b %e %Y, %l:%M %p') %></span>
+      <span><%= sms.sent_on.present? ? I18n.l(sms.sent_on.in_time_zone(current_user.time_zone)) :  '-'  %></span>
     </div>
   </div>
   <hr>
