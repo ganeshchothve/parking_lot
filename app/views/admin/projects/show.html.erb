@@ -716,35 +716,35 @@
             <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card mb-5">
                     <div class="row">
                         <div class="col-md-12 pt-3 px-4">
-                            <h3 class="card-title">Contact Details</h3>
+                            <h3 class="card-title">Support Contact Details</h3>
                             <ul class="project-list list-unstyled row mb-0 pb-1">
                                 <li class="px-3 mb-2">
                                     <div class="list-wrap row">
                                         <div class="col-lg-6 col-8 pe-0">
-                                            <p class="list-txt mb-0">Name</p>
+                                            <p class="list-txt mb-0"><%= t('mongoid.attributes.project.support_name')%></p>
                                         </div>
                                         <div class="col-lg-6 col-4 ps-0">
-                                          <h2 class='fn-14 mb-0 text-end'>Ravi</h2>
+                                          <h2 class='fn-14 mb-0 text-end'><%= @project.support_name.present? ? @project.support_name : 'NA' %></h2>
                                         </div>
                                     </div>
                                 </li>
                                 <li class="px-3 mb-2">
                                     <div class="list-wrap row">
                                         <div class="col-lg-6 col-8 pe-0">
-                                           <p class="list-txt mb-0">Contact</p>
+                                           <p class="list-txt mb-0"><%= t('mongoid.attributes.project.support_phone')%></p>
                                         </div>
                                         <div class="col-lg-6 col-4 ps-0">
-                                          <h2 class="fn-14 mb-0 text-end">Rajesh More</h2>
+                                          <h2 class="fn-14 mb-0 text-end"><%= @project.support_phone.present? ? @project.support_phone : 'NA' %></h2>
                                         </div>
                                     </div>
                                 </li>
                                 <li class="px-3 mb-2">
                                     <div class="list-wrap row">
                                         <div class="col-lg-6 col-8 pe-0">
-                                           <p class="list-txt mb-0">Email</p>
+                                           <p class="list-txt mb-0"><%= t('mongoid.attributes.project.support_mail')%></p>
                                         </div>
                                         <div class="col-lg-6 col-4 ps-0">
-                                          <h2 class="fn-14 mb-0 text-end">ravi@gmail.com</h2>
+                                          <h2 class="fn-14 mb-0 text-end"><%= @project.support_mail.present? ? @project.support_mail : 'NA' %></h2>
                                         </div>
                                     </div>
                                 </li>

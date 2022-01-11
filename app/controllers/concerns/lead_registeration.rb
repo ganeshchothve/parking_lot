@@ -45,7 +45,8 @@ module LeadRegisteration
   end
 
   def add_existing_lead_to_project_flow(format)
-    @new_lead = @user.leads.new(email: @lead.email, phone: @lead.phone, first_name: @lead.first_name, last_name: @lead.last_name, project_id: @project.id, manager_id: params[:manager_id], push_to_crm: params[:push_to_crm])
+    @new_lead = @user.leads.new(email: @lead.email, phone: @lead.phone, first_name: @lead.first_name, last_name: @lead.last_name, project_id: @project.id, manager_id: params[:manager_id])
+    @new_lead.push_to_crm = params[:push_to_crm] unless params[:push_to_crm].nil?
 
     save_lead(format, @new_lead, true)
   end
@@ -56,7 +57,8 @@ module LeadRegisteration
       @user.skip_confirmation! # TODO: Remove this when customer login needs to be given
     end
 
-    @lead = @user.leads.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], project_id: @project.id, manager_id: params[:manager_id], push_to_crm: params[:push_to_crm])
+    @lead = @user.leads.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], project_id: @project.id, manager_id: params[:manager_id])
+    @new_lead.push_to_crm = params[:push_to_crm] unless params[:push_to_crm].nil?
 
     save_lead(format, @lead)
   end
@@ -73,7 +75,7 @@ module LeadRegisteration
             if selldo_api && selldo_api.base.present?
               update_selldo_lead_stage(lead)
               site_visit = lead.site_visits.first
-              sv_selldo_api, sv_api_log = site_visit.push_in_crm(selldo_api.base)
+              sv_selldo_api, sv_api_log = site_visit.push_in_crm(selldo_api.base) if site_visit.present?
             end
 
             if cp_lead_activity.present?
