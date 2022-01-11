@@ -25,7 +25,7 @@ class ChannelPartner
   SHORT_FORM = %i(company_name rera_applicable status interested_services)
   FULL_FORM = SHORT_FORM.clone + %i(gst_applicable nri manager_id)
 
-  attr_accessor :first_name, :last_name, :email, :phone, :referral_code
+  attr_accessor :first_name, :last_name, :email, :phone, :referral_code, :is_existing_company
 
   field :rera_id, type: String
   field :status, type: String, default: 'inactive'
@@ -170,7 +170,7 @@ class ChannelPartner
   private
   def user_based_uniqueness
     query = []
-    query << { phone: phone } if phone.present?
+    # query << { phone: phone } if phone.present?
     query << { email: email } if email.present?
     query << { rera_id: rera_id } if rera_id.present?
     user = User.or(query).first
