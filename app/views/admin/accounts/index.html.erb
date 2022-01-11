@@ -3,9 +3,11 @@
     <div class="row">
       <div class="col-lg-12 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-btn-set float-end pb-3 text-end">
+          <!--
           <div class="filter-search">
             <input type="text" name="" placeholder="Search Account">
           </div>
+          -->
           <button class="select-btn fn-400 dropdown-toggle  px-3 border rounded py-2 ms-2" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= t('controller.accounts.new.link_name', model: Account.model_name.human) %></button>
             <div class="dropdown-menu dropdown-menu-right">
               <% Client::PAYMENT_GATEWAYS.each do |acct_type| %>
