@@ -21,10 +21,6 @@ class Admin::EmailsController < AdminController
 
   private
 
-  def user_time_zone
-    Time.use_zone(current_user.time_zone) { yield }
-  end
-
   def apply_policy_scope
     Email.with_scope(policy_scope([:admin, Email])) do
       yield

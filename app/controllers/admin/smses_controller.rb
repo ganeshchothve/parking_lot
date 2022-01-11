@@ -20,10 +20,6 @@ class Admin::SmsesController < AdminController
 
   private
 
-  def user_time_zone
-    Time.use_zone(current_user.time_zone) { yield }
-  end
-
   def apply_policy_scope
     Sms.with_scope(policy_scope([:admin, Sms])) do
       yield

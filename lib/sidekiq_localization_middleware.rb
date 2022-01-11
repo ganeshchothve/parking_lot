@@ -1,3 +1,4 @@
+# This middleware will allow all export workers to work on local time zone
 class SidekiqLocalizationMiddleware
   def call(_worker, msg, _queue)
     args = msg["args"]
