@@ -84,7 +84,7 @@ class Admin::InvoicesController < AdminController
     if Rails.env.development?
       BrokerageExportWorker.new.perform(current_user.id.to_s, params[:fltrs])
     else
-      BrokerageExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json, timezone: current_user.time_zone)
+      BrokerageExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json, timezone: Time.zone.name)
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
     redirect_to admin_invoices_path(fltrs: params[:fltrs].as_json)

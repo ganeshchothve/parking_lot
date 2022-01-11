@@ -3,7 +3,7 @@ class Admin::SmsesController < AdminController
   before_action :set_sms, only: :show #set_sms written in SmsConcern
   before_action :authorize_resource
   around_action :apply_policy_scope, only: :index
-
+  around_action :user_time_zone, if: :current_user
   # index defined in SmsConcern
   # GET /admin/smses
 
@@ -20,6 +20,9 @@ class Admin::SmsesController < AdminController
 
   private
 
+  def user_time_zone
+    Time.use_zone(current_user.time_zone) { yield }
+  end
 
   def apply_policy_scope
     Sms.with_scope(policy_scope([:admin, Sms])) do
