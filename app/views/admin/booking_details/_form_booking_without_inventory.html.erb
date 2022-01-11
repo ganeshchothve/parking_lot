@@ -8,6 +8,7 @@
     <%#= f.select :project_id, Project.all.collect{|p| [p.name, p.id]}, {}, prompt: :translate, class: 'form-control selectize' %>
   <!-- </div> -->
   <%= f.hidden_field :project_id, value: f.object.lead.project_id %>
+  <%= f.hidden_field :creator_id, value: current_user.id %>
   <div class="mb-3 position-relative offline">
     <%= f.label :project_tower_name, class: 'label-required' %>
     <%= f.text_field :project_tower_name, class: 'form-control', required: 'required' %>
@@ -35,12 +36,9 @@
   <div class="mb-3 position-relative offline">
     <%= f.label :agreement_date, class: 'label-required' %>
     <% if current_user.role?('account_manager') %>
-      <%= f.hidden_field :creator_id, value: current_user.id %>
       <%= f.hidden_field :account_manager_id, value: current_user.id %>
-      <%= f.text_field :agreement_date, class: 'form-control datepicker', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '' %>
-    <% else %>
-      <%= f.text_field :agreement_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '' %>
     <% end %>
+    <%= f.text_field :agreement_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '' %>
   </div>
   <div class="mb-3">
     <%= f.label :source, class: 'label-required control-label' %>
