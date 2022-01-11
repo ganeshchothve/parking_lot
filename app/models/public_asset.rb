@@ -29,8 +29,8 @@ class PublicAsset
     if _file && file_name.present?
       self.errors.add(:base, 'Invalid file name/type (The filename should not have more than one dot (.))') if file_name.split('.').length > 2
       self.errors.add(:base, 'File without name provided') if file_name.split('.')[0].blank?
-      file_meta = MimeMagic.by_path(file.path) rescue nil
-      self.errors.add(:base, 'Invalid file (you can only upload jpg|png|jpeg|pdf|csv files)') if ( file_meta.nil? || ALLOWED_EXTENSIONS.exclude?(file_meta.subtype) )
+      # file_meta = MimeMagic.by_path(file.path) rescue nil
+      # self.errors.add(:base, 'Invalid file (you can only upload jpg|png|jpeg|pdf|csv files)') if ( file_meta.nil? || ALLOWED_EXTENSIONS.exclude?(file_meta.subtype) )
     end
   end
 end

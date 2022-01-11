@@ -34,6 +34,9 @@ class Project
   field :city, type: String
   field :project_type, type: Array, default: [ "residential" ]
   field :region, type: String
+  field :support_name, type: String
+  field :support_mail, type: String
+  field :support_phone, type: String
 
   # descriptive fields
   field :description, type: String
@@ -113,6 +116,7 @@ class Project
   field :enable_booking_with_kyc, type: Boolean, default: true
   field :check_sv_availability_in_selldo, type: Boolean, default: false
   field :incentive_calculation, type: Array, default: ["manual"]
+
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
