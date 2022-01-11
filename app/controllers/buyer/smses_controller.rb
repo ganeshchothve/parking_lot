@@ -3,7 +3,6 @@ class Buyer::SmsesController < BuyerController
   before_action :set_sms, only: :show #set_sms written in SmsConcern
   before_action :authorize_resource
   around_action :apply_policy_scope, only: :index
-
   # index defined in SmsConcern
   # GET /buyer/smses
 
