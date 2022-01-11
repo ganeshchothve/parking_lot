@@ -1,5 +1,8 @@
 module SmsConcern
   extend ActiveSupport::Concern
+  included do
+    around_action :user_time_zone, if: :current_user
+  end
   #
   # This index action for Admin, users where they can view all the smses sent.
   # Admin can  view all the smses and user can view the sms sent to them.
