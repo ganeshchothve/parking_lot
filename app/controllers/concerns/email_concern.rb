@@ -1,6 +1,8 @@
 module EmailConcern
   extend ActiveSupport::Concern
-
+  included do
+    around_action :user_time_zone, if: :current_user
+  end
   #
   # This index action for Admin, users where they can view all the emails sent.
   # Admin can  view all the emails and user can view the emails sent to them.
@@ -20,6 +22,10 @@ module EmailConcern
   def show; end
 
   private
+
+  def user_time_zone
+    Time.use_zone(current_user.time_zone) { yield }
+  end
 
   def set_email
     @email = Email.find(params[:id])
