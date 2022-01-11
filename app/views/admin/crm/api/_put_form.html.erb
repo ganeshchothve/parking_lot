@@ -1,6 +1,6 @@
 <div class = 'col-12'>
   <div class="mb-3">
     <%= f.label :http_method %>
-    <%= f.select :http_method, options_for_select(Crm::Api::Put::METHODS.collect {|x| [x.titleize, x]}), {prompt: 'Select Method'}, class: "selectize", required: 'required', disabled: !policy([:admin, @api]).editable_field?("http_method") %>
+    <%= f.select :http_method, options_for_select(Crm::Api::Put::METHODS.collect {|x| [x.titleize, x]}, f.object.http_method), {prompt: 'Select Method'}, class: "selectize", required: 'required', disabled: !policy([:admin, @api]).editable_field?("http_method") %>
   </div>
 </div>
