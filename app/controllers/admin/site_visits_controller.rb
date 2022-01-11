@@ -134,7 +134,7 @@ class Admin::SiteVisitsController < AdminController
   end
 
   def export
-    if false #Rails.env.development?
+    if Rails.env.development?
       SiteVisitExportWorker.new.perform(current_user.id.to_s, params[:fltrs])
     else
       SiteVisitExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json, timezone: Time.zone.name)
