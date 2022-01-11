@@ -88,7 +88,7 @@ class Invoice
 
   def calculate_gst_amount
     if self.project&.gst_slab_applicable?
-      amount * ((gst_slab || 0)/100)
+      (amount * ((gst_slab || 0)/100)).round(2)
     else
       0
     end

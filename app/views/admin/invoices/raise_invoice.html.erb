@@ -105,7 +105,9 @@
         var gstPercVal = $('#' + invoiceType + '_gst_slab').val();
         if(!_.isEmpty(gstPercVal)){
           var gstPercentage = parseFloat(gstPercVal);
-          gstAmount = amount * (gstPercentage/100);
+          _gstAmount = amount * (gstPercentage/100);
+          // Round gst amount to 2 decimal places
+          gstAmount = Math.round((_gstAmount + Number.EPSILON) * 100) / 100
         }
         $('#raise_invoice_form').find('.gst-amount').html(Amura.formatMoney(gstAmount));
       }

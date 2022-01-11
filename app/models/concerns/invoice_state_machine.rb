@@ -75,7 +75,7 @@ module InvoiceStateMachine
       if recipients.present? && project.booking_portal_client.email_enabled?
         template_name = "invoice_#{status}"
         if email_template = Template::EmailTemplate.where(name: template_name, project_id: project_id).first
-          email = Email.create!(
+          email = Email.new(
             booking_portal_client_id: project.booking_portal_client_id,
             email_template_id: email_template.id,
             cc: [],
@@ -84,13 +84,13 @@ module InvoiceStateMachine
             triggered_by_id: self.id,
             triggered_by_type: self.class.to_s
           )
-          email.sent!
+          email.sent! if email.save
         end
       end
       if recipients.pluck(:phone).present? && project.booking_portal_client.sms_enabled?
         if sms_template = Template::SmsTemplate.where(name: template_name, project_id: project_id).first
           recipients.each do |recipient|
-            Sms.create!(
+            Sms.create(
               booking_portal_client_id: project.booking_portal_client_id,
               recipient_id: recipient.id,
               sms_template_id: sms_template.id,
