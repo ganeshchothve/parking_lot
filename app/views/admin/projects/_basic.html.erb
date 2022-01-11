@@ -236,6 +236,31 @@
 </div>
 <div class="card mt-3">
   <div class="card-header">
+    Support Contact Details
+  </div>
+  <div class="card-body">
+    <div class="col-md-12">
+      <div class="mb-3">
+        <%= f.label :support_name %>
+        <%= f.text_field :support_name, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("support_name") %>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="mb-3">
+        <%= f.label :support_mail %>
+        <%= f.email_field :support_mail, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("support_mail") %>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="mb-3">
+        <%= f.label :support_phone %>
+        <%= f.text_field :support_phone, class: 'form-control phone', disabled: !policy([:admin, project]).editable_field?("support_phone") %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card mt-3">
+  <div class="card-header">
     Address
   </div>
   <div class="card-body">
