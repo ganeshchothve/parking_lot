@@ -3,7 +3,6 @@ class Buyer::EmailsController < BuyerController
   before_action :set_email, only: :show #set_email written in EmailConcern
   before_action :authorize_resource
   around_action :apply_policy_scope, only: :index
-
   # index defined in EmailConcern
   # GET /buyer/emails
 
