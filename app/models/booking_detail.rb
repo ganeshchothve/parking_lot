@@ -36,6 +36,7 @@ class BookingDetail
   field :all_inclusive_price, type: Integer
   field :booked_on, type: Date
   field :agreement_date, type: Date
+  field :tentative_agreement_date, type: Date
   field :ladder_stage, type: Array
   field :source, type: String
 
