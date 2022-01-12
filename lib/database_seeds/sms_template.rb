@@ -26,9 +26,9 @@ module DatabaseSeeds
         <% end %>
         ") if Template::SmsTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "cancellation_request_rejected").blank?
 
-      Template::SmsTemplate.create(booking_portal_client_id: client_id, project_id: project_id,  subject_class: "Invoice", name: "invoice_pending_approval", content: "Invoice for <%= self.booking_detail.name %> has been raised") if Template::SmsTemplate.where(name: "invoice_pending_approval", project_id: project_id).blank?
+      Template::SmsTemplate.create(booking_portal_client_id: client_id, project_id: project_id,  subject_class: "Invoice", name: "invoice_pending_approval", content: "Invoice for <%= self.invoiceable.name_in_invoice %> has been raised") if Template::SmsTemplate.where(name: "invoice_pending_approval", project_id: project_id).blank?
 
-      Template::SmsTemplate.create(booking_portal_client_id: client_id, project_id: project_id,  subject_class: "Invoice", name: "invoice_approved", content: "Invoice for <%= self.booking_detail.name %> has been approved") if Template::SmsTemplate.where(name: "invoice_approved", project_id: project_id).blank?
+      Template::SmsTemplate.create(booking_portal_client_id: client_id, project_id: project_id,  subject_class: "Invoice", name: "invoice_approved", content: "Invoice for <%= self.invoiceable.name_in_invoice %> has been approved") if Template::SmsTemplate.where(name: "invoice_approved", project_id: project_id).blank?
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, project_id: project_id,  subject_class: "UserRequest::Swap", name: "swap_request_created", content: "A swap has been requested on your booking of <%= project_unit.name %> at <%= project_unit.project_name %>. Our CRM team is reviewing your request and will get in touch with you shortly.") if Template::SmsTemplate.where(project_id: project_id, name: "swap_request_created").blank?
 
