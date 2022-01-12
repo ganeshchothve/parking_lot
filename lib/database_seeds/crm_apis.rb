@@ -29,7 +29,7 @@ module DatabaseSeeds
         {"_type"=>"Crm::Api::Post", "path"=>"/v1/contacts", "request_payload"=>"{\n  \"name\": \"<%= Phonelib.parse(self.phone).sanitized %>\",\n  \"email\": \"<%= self.email %>\",\n  \"contact\": <%= Phonelib.parse(self.phone).sanitized %>,\n  \"type\": \"customer\",\n  \"reference_id\": \"<%= self.id.to_s %>\"\n}", "resource_class"=>"User"},
         {"_type"=>"Crm::Api::Post", "path"=>"/v1/fund_accounts", "request_payload"=>"<% crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:razorpay, :base_url)).first %>\n{\n  \"contact_id\": \"<%= self.user&.crm_reference_id(crm_base) %>\",\n  \"account_type\": \"vpa\",\n  \"vpa\": {\n    \"address\": \"<%= self.address %>\"\n  }\n}", "resource_class"=>"FundAccount"},
         {"_type"=>"Crm::Api::Post", "path"=>"/v1/payouts", "request_payload"=>"{\n  \"account_number\": \"2323230082969142\",\n  \"fund_account_id\": \"<%= self.event_payload&.dig('fund_account_id') %>\",\n  \"amount\": <%= self.net_amount * 100 %>,\n  \"currency\": \"INR\",\n  \"mode\": \"UPI\",\n  \"purpose\": \"payout\",\n  \"reference_id\": \"<%= self.id.to_s %>\"\n}", "resource_class"=>"Invoice"},
-        {"_type"=>"Crm::Api::Put", "http_method"=>"patch", "path"=>"/v1/fund_accounts/<%= self.crm_reference_id(ENV_CONFIG.dig(:razorpay, :base_url)) %>", "request_payload"=>"{\n    'active': false\n}", "resource_class"=>"FundAccount"}
+        {"_type"=>"Crm::Api::Put", "http_method"=>"patch", "path"=>"/v1/fund_accounts/<%= self.crm_reference_id(ENV_CONFIG.dig(:razorpay, :base_url)) %>", "request_payload"=>"{\n    'active': <%= self.is_active? %>\n}", "resource_class"=>"FundAccount"}
       ]
 
       if crm_base.present?
