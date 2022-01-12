@@ -20,7 +20,7 @@ class Admin::InvoicePolicy < InvoicePolicy
 
   def update?
     return false if record.project && !record.project.is_active?
-    valid = user.role?('billing_team') && record.status.in?(%w(approved tax_invoice_raised pending_approval))
+    valid = user.role?('billing_team') && record.status.in?(%w(approved tax_invoice_raised pending_approval raised))
     valid ||= user.role.in?(%w(channel_partner cp_owner)) && record.status.in?(%w(draft rejected))
     valid ||= user.role?('cp_admin') && record.pending_approval?
     valid ||= user.role.in?(%w(superadmin admin)) && record.status.in?(%w(draft rejected approved pending_approval))
@@ -109,7 +109,7 @@ class Admin::InvoicePolicy < InvoicePolicy
       #attributes += [cheque_detail_attributes: [:id, :total_amount, :payment_identifier, :issued_date, :issuing_bank, :issuing_bank_branch, :handover_date, :creator_id]] if record.status.in?(%w(approved paid))
       attributes += [:event]
     when 'billing_team'
-      if record.status.in?(%w(draft))
+      if record.status.in?(%w(draft raised))
         attributes += [:brokerage_type, :payment_to, :number, :amount, :gst_slab]
         attributes += [:category] if record.new_record?
         attributes += [:agreement_amount] if record.invoiceable_type == 'BookingDetail'

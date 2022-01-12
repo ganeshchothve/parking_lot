@@ -1,10 +1,9 @@
 class Crm::Api::Put < Crm::Api::Post
+  METHODS = %w[put patch]
 
-  field :response_crm_id_location, type: String
-
-  validates :response_crm_id_location, format: {with: /\A[a-zA-Z0-9_..]*\z/}, allow_blank: true
+  field :http_method, type: String, default: 'put'
 
   def execute record
-    _execute record, 'put'
+    _execute record, (http_method || 'put')
   end
 end

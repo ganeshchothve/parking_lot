@@ -2,8 +2,10 @@
 module DatabaseSeeds
   module CrmApis
     def self.seed crm_base_id
-      # puts Crm::Api::Post.unscoped.where(base_id: crm_base_id).as_json(only: %w(resource_class event path request_payload))
-      crm_data = [
+      crm_base = Crm::Base.where(id: crm_base_id).first
+
+      # puts Crm::Api.unscoped.where(base_id: crm_base_id).as_json(only: %w(resource_class event path request_payload))
+      interakt_crm_data = [
         {"event"=>"", "path"=>"/v1/public/track/users/", "request_payload"=>"<% ph = Phonelib.parse(self.event_payload&.dig('phone', 0) || self.phone) %>\n{\n    \"userId\": \"<%= id.to_s %>\",\n    \"phoneNumber\": \"<%= ph&.national(false)&.last(10) %>\",\n    \"countryCode\": \"+<%= ph&.country_code %>\",    \n    \"traits\": {\n        \"first_name\": \"<%= first_name %>\",\n        \"last_name\": \"<%= last_name %>\",\n        \"name\": \"<%= name %>\",\n        \"email\": \"<%= email %>\",\n        \"phone\": \"<%= phone %>\",\n        \"role\": \"<%= role %>\",\n        \"sourcing_manager_projects\": \"<%= Project.in(id: (event_payload&.dig('project_ids', 1) || project_ids)).pluck(:name)&.to_sentence %>\",\n        \"company_name\": \"<%= event_payload&.dig('company_name', 1) || event_payload.dig('channel_partner', 'company_name') || channel_partner&.company_name %>\",\n        \"company_type\": \"<%= event_payload&.dig('company_type', 1) || event_payload.dig('channel_partner', 'company_type') || channel_partner&.company_type %>\",\n        \"company_owner_name\": \"<%= event_payload&.dig('primary_owner', 'first_name') || event_payload&.dig('channel_partner', 'primary_user', 'name') || channel_partner&.primary_user&.name %>\",\n        \"company_owner_phone\": \"<%= event_payload&.dig('primary_owner', 'phone') || event_payload&.dig('channel_partner', 'primary_user', 'phone') || channel_partner&.primary_user&.phone %>\",\n        \"interested_services\": \"<%= (event_payload&.dig('interested_services', 1) || event_payload.dig('channel_partner', 'interested_services') || channel_partner&.interested_services)&.to_sentence %>\",\n        \"developers_worked_for\": \"<%= (event_payload&.dig('developers_worked_for', 1) || event_payload.dig('channel_partner', 'developers_worked_for') || channel_partner&.developers_worked_for)&.to_sentence %>\",\n        \"pan_number\": \"<%= event_payload&.dig('pan_number', 1) || event_payload.dig('channel_partner', 'pan_number') || channel_partner&.pan_number %>\",\n        \"rera_number\": \"<%= event_payload&.dig('rera_id', 1) || event_payload.dig('channel_partner', 'rera_id') || channel_partner&.rera_id %>\",\n        \"gstin_number\": \"<%= event_payload&.dig('gstin_number', 1) || event_payload.dig('channel_partner', 'gstin_number') || channel_partner&.gstin_number %>\",\n        \"manager_name\": \"<%= manager&.name %>\",\n        \"regions\": \"<%= (event_payload&.dig('regions', 1) || event_payload.dig('channel_partner', 'regions') || channel_partner&.regions)&.to_sentence %>\",\n        \"status\": \"<%= event_payload&.dig('status', 1) || event_payload.dig('channel_partner', 'status') || channel_partner&.status %>\",\n        \"referred_by_name\": \"<%= referred_by&.name %>\",\n        \"projects_subscribed\": \"<%= event_payload.dig('interested_projects')&.to_sentence %>\",\n        \"account_status\": \"<%= self.event_payload.dig('is_active', 1).nil? ? (self.is_active? ? 'active' : 'inactive') : (self.event_payload.dig('is_active', 1).present? ?  'active' : 'inactive') %>\",\n        \"sign_in_count\": \"<%= event_payload.dig('sign_in_count', 1) || self.sign_in_count %>\",\n        \"last_sign_in_time\": \"<%= I18n.l((event_payload.dig('current_sign_in_at', 1) || self.current_sign_in_at || Time.now).in_time_zone(self.time_zone)) %>\"\n    },\n    \"createdAt\": \"<%= created_at&.iso8601 %>\"\n}", "resource_class"=>"User"},
         {"event"=>"Company Onboarding State Change", "path"=>"/v1/public/track/events/", "request_payload"=>"<% ph = Phonelib.parse(phone) %>\n{\n    \"userId\": \"<%= id.to_s %>\",\n    \"phoneNumber\": \"<%= ph&.national(false)&.last(10) %>\",\n    \"countryCode\": \"+<%= ph&.country_code %>\",\n    \"event\": \"Company Onboarding State Change\",\n    \"traits\": {\n        status: \"<%= self.event_payload&.dig('status', 1) || self.channel_partner&.status %>\",\n        rejection_reason: \"<%= self.channel_partner&.rejected? ? (self.event_payload&.dig('status_change_reason', 1) || self.channel_partner&.status_change_reason) : '' %>\"\n    },\n    \"createdAt\": \"<%= Time.now.iso8601 %>\"\n}", "resource_class"=>"User"},
         {"event"=>"Manager Changed", "path"=>"/v1/public/track/events/", "request_payload"=>"<% ph = Phonelib.parse(phone) %>\n{\n    \"userId\": \"<%= id.to_s %>\",\n    \"phoneNumber\": \"<%= ph&.national(false)&.last(10) %>\",\n    \"countryCode\": \"+<%= ph&.country_code %>\",\n    \"event\": \"Manager Changed\",\n    \"traits\": {\n        manager_name: \"<%= self.manager_name %>\",\n        manager_email: \"<%= self.manager&.email %>\",\n        manager_phone: \"<%= self.manager&.phone %>\"\n    },\n    \"createdAt\": \"<%= Time.now.iso8601 %>\"\n}", "resource_class"=>"User"},
@@ -23,9 +25,33 @@ module DatabaseSeeds
         {"event"=>"Event Unsubscribed", "path"=>"/v1/public/track/events/", "request_payload"=>"<% ph = Phonelib.parse(phone) %>\n{\n    \"userId\": \"<%= id.to_s %>\",\n    \"phoneNumber\": \"<%= ph&.national(false)&.last(10) %>\",\n    \"countryCode\": \"+<%= ph&.country_code %>\",\n    \"event\": \"Event Unsubscribed\",\n    \"traits\": {\n       \"topic\": \"<%= self.event_payload.dig('meeting', 'topic') %>\",\n       \"meeting_type\": \"<%= self.event_payload.dig('meeting', 'meeting_type') %>\",\n       \"provider\": \"<%= self.event_payload.dig('meeting', 'provider') %>\",\n       \"provider_url\": \"<%= self.event_payload.dig('meeting', 'provider_url') %>\",\n       \"scheduled_on\": \"<%= self.event_payload.dig('meeting', 'scheduled_on') %>\",\n       \"duration\": \"<%= self.event_payload.dig('meeting', 'duration') %>\",\n       \"agenda\": \"<%= self.event_payload.dig('meeting', 'agenda') %>\",\n       \"project_name\": \"<%= self.event_payload.dig('project', 'name') %>\",\n       \"campaign_name\": \"<%= self.event_payload.dig('campaign', 'name') %>\",\n       \"image_url\": \"<%= (self.event_payload.dig('meeting', 'assets') || []).select {|x| x['document_type'] == 'photo'}.first.try(:[], 'file').try(:[], 'url') %>\"\n    }\n}", "resource_class"=>"User"}
       ]
 
-      crm_data.each do |crm_api|
-        puts Crm::Api::Post.create(base_id: crm_base_id, path: crm_api['path'], resource_class: crm_api['resource_class'], event: crm_api['event'], request_payload: crm_api['request_payload'])
+      razorpay_crm_data = [
+        {"_type"=>"Crm::Api::Post", "path"=>"/v1/contacts", "request_payload"=>"{\n  \"name\": \"<%= Phonelib.parse(self.phone).sanitized %>\",\n  \"email\": \"<%= self.email %>\",\n  \"contact\": <%= Phonelib.parse(self.phone).sanitized %>,\n  \"type\": \"customer\",\n  \"reference_id\": \"<%= self.id.to_s %>\"\n}", "resource_class"=>"User"},
+        {"_type"=>"Crm::Api::Post", "path"=>"/v1/fund_accounts", "request_payload"=>"<% crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:razorpay, :base_url)).first %>\n{\n  \"contact_id\": \"<%= self.user&.crm_reference_id(crm_base) %>\",\n  \"account_type\": \"vpa\",\n  \"vpa\": {\n    \"address\": \"<%= self.address %>\"\n  }\n}", "resource_class"=>"FundAccount"},
+        {"_type"=>"Crm::Api::Post", "path"=>"/v1/payouts", "request_payload"=>"{\n  \"account_number\": \"2323230082969142\",\n  \"fund_account_id\": \"<%= self.event_payload&.dig('fund_account_id') %>\",\n  \"amount\": <%= self.net_amount * 100 %>,\n  \"currency\": \"INR\",\n  \"mode\": \"UPI\",\n  \"purpose\": \"payout\",\n  \"reference_id\": \"<%= self.id.to_s %>\"\n}", "resource_class"=>"Invoice"},
+        {"_type"=>"Crm::Api::Put", "http_method"=>"patch", "path"=>"/v1/fund_accounts/<%= self.crm_reference_id(ENV_CONFIG.dig(:razorpay, :base_url)) %>", "request_payload"=>"{\n    'active': <%= self.is_active? %>\n}", "resource_class"=>"FundAccount"}
+      ]
+
+      if crm_base.present?
+        case crm_base.domain
+        when ENV_CONFIG.dig(:interakt, :base_url)
+          interakt_crm_data.each do |crm_api|
+            puts Crm::Api::Post.create(base_id: crm_base_id, path: crm_api['path'], resource_class: crm_api['resource_class'], event: crm_api['event'], request_payload: crm_api['request_payload'])
+          end
+        when ENV_CONFIG.dig(:razorpay, :base_url)
+          razorpay_crm_data.each do |crm_api|
+            klass = crm_api['_type']
+            if klass
+              attrs = {base_id: crm_base.id, path: crm_api['path'], resource_class: crm_api['resource_class'], request_payload: crm_api['request_payload']}
+              attrs['http_method'] = crm_api['http_method'] if crm_api['http_method'].present?
+              puts Object.const_get(klass).create(attrs)
+            end
+          end
+        end
+      else
+        puts 'Crm Base Not found'
       end
+
     end
   end
 end
