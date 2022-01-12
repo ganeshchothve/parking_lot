@@ -30,7 +30,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def show?
-    index?
+    index? && (record.is_active? || user.role?('superadmin'))
   end
 
   def create?
@@ -49,7 +49,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def ds?
-    current_client.enable_actual_inventory?(user)
+    current_client.enable_actual_inventory?(user) || enable_incentive_module?(user)
   end
 
   def permitted_attributes(params = {})

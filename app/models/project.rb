@@ -252,14 +252,14 @@ class Project
     end
 
     unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
-      if user.selected_project_id.present?
+      if user.selected_project_id.present? && params[:select_project].blank?
         custom_scope.merge!({_id: user.selected_project_id})
       elsif user.project_ids.present?
         project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
         custom_scope.merge!({_id: {"$in": project_ids}})
       end
     end
-    custom_scope.merge!({ is_active: true }) if params[:controller] == 'admin/projects' && !user.role?('superadmin')
+    custom_scope.merge!({ is_active: true }) if params[:controller].in?(%w(admin/projects home)) && !user.role?('superadmin')
     custom_scope
   end
 end

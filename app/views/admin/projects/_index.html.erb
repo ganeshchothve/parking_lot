@@ -24,7 +24,7 @@
       <p class="prjt-event">
         <%= link_to_if (meeting.present? && Admin::MeetingPolicy.new(current_user, meeting).show?), meeting_str, (meeting.present? ? admin_meeting_path(meeting) : admin_meetings_path), class: 'modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Event details'} %>
       </p>
-      <% if policy([current_user_role_group, InterestedProject]).index? %>
+      <% if policy([current_user_role_group, InterestedProject.new(project_id: project.id)]).create? %>
       <% heart_class = project.id.in?(interested_project_ids) ? 'fill-danger' : 'fill-theme' %>
       <%= link_to_if !project.id.in?(interested_project_ids), "<i class='fa fa-heart #{heart_class} me-3 position-absolute end-0 top-0 mt-1 d-block d-sm-none'></i>".html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist position-absolute end-0 top-0 mt-1 d-block d-sm-none' %>
       <% end %>
@@ -83,7 +83,7 @@
         </div>
         <% end %>
 
-        <% if policy([current_user_role_group, InterestedProject]).index? %>
+        <% if policy([current_user_role_group, InterestedProject.new(project_id: project.id)]).create? %>
           <% heart_class = project.id.in?(interested_project_ids) ? 'fill-danger' : 'fill-theme' %>
           <%= link_to_if !project.id.in?(interested_project_ids), "<i class='fa fa-heart #{heart_class} me-3 d-none d-sm-block'></i>".html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-block' %>
         <% end %>
@@ -107,7 +107,7 @@
       </div>
 
       <div class='prjt-inner-stats fn-14 text-primary' style='top: 75%'>
-          <% if !policy([:admin, Lead.new(project_id: project.id)]).new? && policy([current_user_role_group, InterestedProject]).index? %>
+          <% if !policy([:admin, Lead.new(project_id: project.id)]).new? && policy([current_user_role_group, InterestedProject.new(project_id: project.id)]).create? %>
             <%= link_to_if !project.id.in?(interested_project_ids), t('controller.projects.show.show_interest_text'), admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-block' %>
           <% end %>
       </div>
