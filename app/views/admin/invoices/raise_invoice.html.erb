@@ -96,7 +96,6 @@
     var netAmt = '<%= @invoice.net_amount %>';
     var gstApplicable = '<%= @invoice.project.gst_slab_applicable? %>';
     var invoiceType = '<%= @invoice.class.to_s.underscore.gsub('/', '_') %>';
-
     $('#' + invoiceType + '_gst_slab, #' + invoiceType + '_amount').on('change', function(event) {
       var gstAmount = 0;
       var amount = parseFloat($('input[name="' + invoiceType + '[amount]"]').val() || 0);

@@ -99,7 +99,7 @@ class Invoice
     _amount = amount + calculate_gst_amount
     _amount += payment_adjustment.try(:absolute_value).to_i if payment_adjustment.try(:absolute_value).present?
     _amount -= incentive_deduction.try(:amount).to_i if incentive_deduction.try(:approved?)
-    _amount
+    _amount.round(2)
   end
 
   class << self

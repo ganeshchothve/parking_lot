@@ -1,0 +1,71 @@
+<%= form_for(@channel_partner, url: create_channel_partner_channel_partners_path, local: true, remote: true, html: {class: 'validate-form modal-remote-form', "data-type": "json", id: 'new_channel_partner_id'}) do |f| %>
+  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="title">New Channel Partner</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <%= f.hidden_field :lead_id, value: @lead_id %>
+          <div class="mb-3 position-relative offline">
+            <%= f.label :company_name, class: 'label-required' %>
+            <%= f.select :company_name, options_from_collection_for_select(ChannelPartner.where(_id: f.object.id), 'ds_name', 'id'), {prompt: true}, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: channel_partners_path, create: true, params: {ds: true} }%>
+          </div>
+          <div class="mb-3 position-relative offline">
+            <%= f.label :first_name, class: 'label-required' %>
+            <%= f.text_field :first_name, class: 'form-control', required: 'required', disabled: !policy([:admin, @channel_partner]).editable_field?("first_name") %>
+          </div>
+          <div class="mb-3 position-relative offline">
+            <%= f.label :last_name, class: 'label-required' %>
+            <%= f.text_field :last_name, class: 'form-control', required: 'required', disabled: !policy([:admin, @channel_partner]).editable_field?("last_name") %>
+          </div>
+          <div class="mb-3 position-relative offline">
+            <%= f.label :phone, class: 'label-required' %><br>
+            <%= f.text_field :phone, class: 'form-control phone', required: 'required', disabled: !policy([:admin, @channel_partner]).editable_field?("phone") %>
+          </div>
+          <div class="mb-3 position-relative offline">
+            <%= f.label :email, class: 'label-required' %><br>
+            <%= f.text_field :email, class: 'form-control email', required: 'required', disabled: !policy([:admin, @channel_partner]).editable_field?("email") %>
+          </div>
+          <div class="mb-3 position-relative offline">
+            <%= f.label :interested_services, class: 'label-required' %><br>
+            <%= f.select :interested_services, ChannelPartner::SERVICES.collect{|x| [x, x]}, {}, prompt: :translate, class: 'selectize', multiple: true, disabled: !policy([:admin, @channel_partner]).editable_field?("interested_services") %>
+          </div>
+          <div class="mb-3 position-relative offline">
+            <%= f.label :regions, class: 'label-required' %><br>
+            <%= f.select :regions, current_client.partner_regions.collect{|region| [region,region]}, {}, prompt: :translate, class: 'selectize', multiple: true, disabled: !policy([:admin, @channel_partner]).editable_field?("regions") %>
+          </div>
+          <div class="mb-3 position-relative offline">
+            <%= f.label :referral_code, class: 'label-required' %>
+            <%= f.text_field :referral_code, class: 'form-control', disabled: !policy([:admin, @channel_partner]).editable_field?("referral_code") %>
+          </div>
+          <div class="mb-3 position-relative offline">
+            <%= f.label :rera_applicable, class: 'label-required' %><br>
+            <div class="form-check form-check-inline">
+              <%= f.radio_button :rera_applicable, true, class: "form-check-input wd-22", disabled: !policy([:admin, @channel_partner]).editable_field?("rera_applicable") %>
+              <%= f.label :rera_applicable, "Yes", class: " form-check-label d-inline-block ms-2", disabled: true %>
+            </div>
+            <div class="form-check form-check-inline">
+              <%= f.radio_button :rera_applicable, false, class: "form-check-input wd-22", disabled: !policy([:admin, @channel_partner]).editable_field?("rera_applicable") %>
+              <%= f.label :rera_applicable, "No", class: " form-check-label d-inline-block ms-2" %>
+            </div>
+          </div>
+          <div class="mb-3 position-relative offline">
+            <%= f.label :rera_id, class: 'label-required' %>
+            <%= f.text_field :rera_id, class: 'form-control', disabled: !policy([:admin, @channel_partner]).editable_field?("rera_id") %>
+          </div>
+          <div class="mb-3 position-relative offline">
+
+          </div>
+          <%= f.submit "Submit", class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#new_channel_partner_id"));
+});
+<% end %>

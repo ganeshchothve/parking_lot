@@ -113,18 +113,14 @@
     var netAmt = '<%= @invoice.net_amount %>';
     var gstApplicable = '<%= @invoice.try(:project)&.gst_slab_applicable? %>';
     var invoiceType = '<%= @invoice.class.to_s.underscore.gsub('/', '_') %>';
-
-    $('#' + invoiceType + '_gst_slab, #' + invoiceType + '_amount').on('change', function(event) {
-      var gstAmount = 0;
-      var amount = parseFloat($('input[name="' + invoiceType + '[amount]"]').val() || 0);
-      $('#raise_invoice_form').find('.amount').html(Amura.formatMoney(amount));
+    $('#invoice_manual_percentage_slab, #invoice_manual_gst_slab').on('change', function(event) {
+      var slabPercentage = parseFloat($('#invoice_manual_percentage_slab').val());
+      var amount = parseFloat($('input[name="' + invoiceType + '[agreement_amount]"]').val() || 0) * (slabPercentage/100);
       if (gstApplicable == 'true') {
-        var gstPercVal = $('#' + invoiceType + '_gst_slab').val();
-        if(!_.isEmpty(gstPercVal)){
-          var gstPercentage = parseFloat(gstPercVal);
-          gstAmount = amount * (gstPercentage/100);
-        }
-        $('#raise_invoice_form').find('.gst-amount').html(Amura.formatMoney(gstAmount));
+        var gstPercentage = parseFloat($('#invoice_manual_gst_slab').val());
+        gstAmount = amount * (gstPercentage/100);
+        $('#invoice_form').find('.gst-amount').html(Amura.formatMoney(gstAmount));
+        $('#invoice_form').find('.amount').html(Amura.formatMoney(amount));
       }
       netAmt = amount + gstAmount;
       $('#raise_invoice_form').find('.net-amount').html(Amura.formatMoney(netAmt));
