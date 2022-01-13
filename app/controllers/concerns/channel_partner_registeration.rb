@@ -10,6 +10,7 @@ module ChannelPartnerRegisteration
 
   def register_with_new_company
     @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
+    @channel_partner.assign_attributes(primary_user_id: current_user.id)
     @channel_partner.is_existing_company = false
     respond_to do |format|
       if @channel_partner.save
