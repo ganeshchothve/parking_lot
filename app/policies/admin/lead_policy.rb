@@ -23,9 +23,11 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def new?
-    valid = true && !user.role?('dev_sourcing_manager')
+    valid = true && user.role.in?(%w(superadmin admin gre crm account_manager account_manager_head) + User::CHANNEL_PARTNER_USERS + User::SALES_USER)
     valid = false if user.present? && user.role.in?(%w(channel_partner cp_owner)) && !(user.active_channel_partner? && interested_project_present?)
     @condition = 'project_not_subscribed' unless valid
+    valid = valid && (!record.is_a?(Lead) || record.project.is_active?)
+    @condition = 'project_not_active' unless valid
     valid
   end
 
