@@ -2,17 +2,19 @@
 <% start_date, end_date = date.split(' - ') %>
 <% channel_partner = current_user.channel_partner %>
 <% @channel_partner = channel_partner%>
-<section class="mt-3" id="">
-  <div class="px-4">
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="alert alert-danger" role="alert">
-          Please add your UPI Address for quick payment. Please click on the link <a href="#" class="alert-link">an UPI link</a>.
+<% if current_user.fund_accounts.count.zero? %>
+  <section class="mt-3" id="">
+    <div class="px-4">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="alert alert-danger" role="alert">
+            Please add your UPI Address for quick payment. Please click on the link <%= link_to 'Update UPI Address', [:edit, current_user_role_group, current_user], class: "alert-link modal-remote-form-link" %>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+<% end %>
 <section class="mt-3" id="">
   <div class="px-4">
     <div class="row">
