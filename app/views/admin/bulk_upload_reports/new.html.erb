@@ -32,7 +32,7 @@
           <% end %>
           <div class='row bur-project-select hide'>
             <div class='col-12'>
-              <%= f.input :project_id, collection: Project.all.collect{|p| [p.name, p.id]}, disabled: !policy([:admin, @bulk_upload_report]).editable_field?("project_id"), as: :select, prompt: :translate, input_html: { class: ' selectize' } %>
+              <%= f.input :project_id, collection: [], disabled: !policy([:admin, @bulk_upload_report]).editable_field?("project_id"), as: :select, prompt: :translate, input_html: { class: ' selectize-remote', data: {url: admin_projects_path} } %>
             </div>
           </div>
         </div>

@@ -109,15 +109,16 @@ class SiteVisit
   def self.user_based_scope(user, params = {})
     custom_scope = {}
     if params[:lead_id].blank? && !user.buyer?
-      if user.role?('channel_partner')
+      case user.role.to_s
+      when 'channel_partner'
         custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id }
-      elsif user.role?('cp_owner')
+      when 'cp_owner'
         custom_scope = {channel_partner_id: user.channel_partner_id}
-      elsif user.role?('cp_admin')
+      when 'cp_admin'
         custom_scope = {cp_admin_id: user.id}
-      elsif user.role?('cp')
+      when 'cp'
         custom_scope = {cp_manager_id: user.id}
-      elsif user.role?('dev_sourcing_manager')
+      when 'dev_sourcing_manager', 'billing_team'
         custom_scope = { project_id: user.selected_project_id }
       end
     end

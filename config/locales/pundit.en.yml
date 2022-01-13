@@ -16,12 +16,15 @@ en:
       lead_policy:
         new?:
           project_not_subscribed: 'This project is not subscribed'
+          project_not_active: 'This project is inactive'
         check_and_register?:
           project_not_subscribed: 'This project is not subscribed'
+          project_not_active: 'This project is inactive'
 
       project_policy:
         collaterals?:
           project_not_subscribed: 'This project is not subscribed'
+          project_not_active: 'This project is inactive'
 
       booking_detail_policy:
         create?:

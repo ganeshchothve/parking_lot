@@ -10,6 +10,7 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def create?
+    return false if record.project && !record.project.is_active?
     user.role.in?(%w(channel_partner cp_owner admin superadmin)) && enable_incentive_module?(user) && incentive_calculation_type?("manual")
   end
 
@@ -18,6 +19,7 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def update?
+    return false if record.project && !record.project.is_active?
     valid = user.role?('billing_team') && record.status.in?(%w(approved tax_invoice_raised pending_approval raised))
     valid ||= user.role.in?(%w(channel_partner cp_owner)) && record.status.in?(%w(draft rejected))
     valid ||= user.role?('cp_admin') && record.pending_approval?
@@ -26,10 +28,12 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def update_gst?
+    return false if record.project && !record.project.is_active?
     user.role.in?(%w(billing_team admin)) && record.status.in?(%w(raised pending_approval))
   end
 
   def change_state?
+    return false if record.project && !record.project.is_active?
     user.role.in?(%w(channel_partner cp_owner admin billing_team)) #&& record.aasm.events(permitted: true).map(&:name).include?(:raise)
   end
 
@@ -38,6 +42,7 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def new_send_invoice_to_poc?
+    return false if record.project && !record.project.is_active?
     user.role.in?(%w(billing_team)) && record.status.in?(%w(raised))
   end
 
@@ -46,10 +51,12 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def generate_invoice?
+    return false if record.project && !record.project.is_active?
     index? && record.approved? && !user.role?('billing_team')
   end
 
   def asset_create?
+    return false if record.project && !record.project.is_active?
     user.role.in?(%w(channel_partner cp_owner admin)) && !record.status.in?(%w(approved paid))
   end
 

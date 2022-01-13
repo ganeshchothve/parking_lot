@@ -16,7 +16,7 @@
 
 <% hold_booking = lead.booking_details.where(status: 'hold').first %>
 
-<% if hold_booking.present? && !policy([:admin, BookingDetail.new(user: lead.user, lead: lead)]).show_add_booking_link? #&& policy([current_user_role_group, hold_booking]).block? %>
+<% if lead.project.is_active? && hold_booking.present? && !policy([:admin, BookingDetail.new(user: lead.user, lead: lead)]).show_add_booking_link? #&& policy([current_user_role_group, hold_booking]).block? %>
   <%= link_to t('controller.booking_details.continue_booking.link_name'), checkout_lead_search_path(lead.get_search(hold_booking.project_unit_id)), class: "dropdown-item" %>
 <% end %>
 

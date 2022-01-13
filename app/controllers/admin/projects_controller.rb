@@ -11,7 +11,9 @@ class Admin::ProjectsController < AdminController
   # GET /admin/projects
   #
   def index
-    @projects = Project.all.build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
+    @projects = Project.all.build_criteria(params)
+    @projects = @projects.filter_by_is_active(true) unless policy([current_user_role_group, Project.new(is_active: false)]).show?
+    @projects = @projects.paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
       if params[:ds].to_s == 'true'
         format.json { render json: @projects.collect { |p| { id: p.id, name: p.ds_name } } }
@@ -122,7 +124,11 @@ class Admin::ProjectsController < AdminController
 
   def authorize_resource
     if %w[index export].include?(params[:action])
-      authorize [:admin, Project]
+      if params[:ds]
+        policy([current_user_role_group, Project]).ds?
+      else
+        authorize [:admin, Project]
+      end
     elsif params[:action] == 'new'
       authorize [:admin, Project.new]
     elsif params[:action] == 'create'
