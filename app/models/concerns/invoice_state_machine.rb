@@ -19,7 +19,7 @@ module InvoiceStateMachine
         transitions from: :raised, to: :pending_approval #, success: %i[after_pending_approval]
       end
 
-      event :approve, after: :send_notification do
+      event :approve, after: [:make_payment, :send_notification] do
         transitions from: :raised, to: :approved
         transitions from: :pending_approval, to: :approved, success: %i[after_approved]
       end
@@ -33,18 +33,14 @@ module InvoiceStateMachine
         transitions from: :approved, to: :tax_invoice_raised
       end
 
-      event :paid do
+      event :paid, after: :mark_invoiceable_paid do
         transitions from: :tax_invoice_raised, to: :paid
-        transitions from: :approved, to: :paid, guard: :if_project_unit_available?
+        transitions from: :approved, to: :paid
       end
     end
 
     def can_raise?
       self.draft?
-    end
-
-    def if_project_unit_available?
-      self.booking_detail.project_unit.present?
     end
 
     def get_pending_approval_recipients_list
@@ -79,7 +75,7 @@ module InvoiceStateMachine
       if recipients.present? && project.booking_portal_client.email_enabled?
         template_name = "invoice_#{status}"
         if email_template = Template::EmailTemplate.where(name: template_name, project_id: project_id).first
-          email = Email.create!(
+          email = Email.new(
             booking_portal_client_id: project.booking_portal_client_id,
             email_template_id: email_template.id,
             cc: [],
@@ -88,13 +84,13 @@ module InvoiceStateMachine
             triggered_by_id: self.id,
             triggered_by_type: self.class.to_s
           )
-          email.sent!
+          email.sent! if email.save
         end
       end
       if recipients.pluck(:phone).present? && project.booking_portal_client.sms_enabled?
         if sms_template = Template::SmsTemplate.where(name: template_name, project_id: project_id).first
           recipients.each do |recipient|
-            Sms.create!(
+            Sms.create(
               booking_portal_client_id: project.booking_portal_client_id,
               recipient_id: recipient.id,
               sms_template_id: sms_template.id,
@@ -131,5 +127,21 @@ module InvoiceStateMachine
       self.incentive_deduction.rejected! if self.incentive_deduction? && self.incentive_deduction.pending_approval?
     end
 
+    def make_payment
+      if Rails.env.staging? || Rails.env.production?
+        InvoicePayoutWorker.perform_async(self.id.to_s)
+      else
+        InvoicePayoutWorker.new.perform(self.id.to_s)
+      end
+    end
+
+    def mark_invoiceable_paid
+      case category
+      when 'walk_in'
+        if invoiceable.is_a?(SiteVisit) && invoiceable.may_paid?
+          invoiceable.aasm(:status).fire!(:paid)
+        end
+      end
+    end
   end
 end

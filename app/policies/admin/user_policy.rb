@@ -117,8 +117,8 @@ class Admin::UserPolicy < UserPolicy
       attributes += [:allowed_bookings] if current_client.allow_multiple_bookings_per_user_kyc?
     end
     if record.role.in?(%w(cp_owner channel_partner))
-      attributes += [:upi_id]
       attributes += [:channel_partner_id] if user.role.in?(%w(superadmin cp_owner))
+      attributes += [fund_accounts_attributes: FundAccountPolicy.new(user, FundAccount.new).permitted_attributes] if record.persisted?
     end
     attributes += [:login_otp] if confirm_via_otp?
     attributes += [:premium, :tier_id] if record.role?('channel_partner') && user.role?('admin')

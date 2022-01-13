@@ -16,7 +16,7 @@
     <% apis.each do |api| %>
       <tr>
         <td><%= api.resource_class %></td>
-        <td><%= api._type.demodulize %></td>
+        <td><%= api.try(:http_method)&.titleize || api._type.demodulize %></td>
         <td><%= api.event %></td>
         <td><%= api.path %></td>
         <td><%= api.is_active? ? "Yes" : "No" %></td>
