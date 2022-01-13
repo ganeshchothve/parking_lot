@@ -20,6 +20,7 @@ class IncentiveCalculator
 
   # Run incentive calculation
   def calculate
+    resource_hash={}
     if channel_partner && (schemes = resource.find_incentive_schemes(category))
       schemes.group_by {|is| [is.category, is.brokerage_type]}.each do |key, scheme_arr|
         scheme = scheme_arr.first

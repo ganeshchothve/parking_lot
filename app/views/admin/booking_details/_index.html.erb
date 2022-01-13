@@ -44,12 +44,17 @@
                 </div>
                 <div class="inner-info">
                   <div class="pe-3 py-3  d-flex justify-content-end">
-                    <p class="fn-16 secondary mb-0 font-medium"><span class="txt-light-blue">Agreement Date:</span>
+                    <p class="fn-16 secondary mb-0 font-medium"><span class="txt-light-blue"><%= t('mongoid.attributes.booking_detail.tentative_agreement_date')%>:</span>
+                      <span
+                        class="theme-txt-color"><%= booking_detail.tentative_agreement_date? ? booking_detail.tentative_agreement_date.strftime('%b %e %Y') : '-' %></span>
+                    </p>
+                    <span class="txt-light-blue mx-3">| </span>
+                    <p class="fn-16 secondary mb-0 font-medium"><span class="txt-light-blue"><%= t('mongoid.attributes.booking_detail.agreement_date')%>:</span>
                       <span
                         class="theme-txt-color"><%= booking_detail.agreement_date? ? booking_detail.agreement_date.strftime('%b %e %Y') : '-' %></span>
                     </p>
                     <span class="txt-light-blue mx-3">| </span>
-                    <p class="fn-16 secondary mb-0 font-medium"><span class="txt-light-blue">Agreement Value:</span>
+                    <p class="fn-16 secondary mb-0 font-medium"><span class="txt-light-blue"><%= t('mongoid.attributes.booking_detail.agreement_price')%>:</span>
                       <span
                         class="theme-txt-color"><%= number_to_indian_currency((booking_detail.calculate_agreement_price > 0 ? booking_detail.calculate_agreement_price.round : booking_detail.agreement_price)) %></span>
                     </p>
