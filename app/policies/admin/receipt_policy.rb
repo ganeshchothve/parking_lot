@@ -2,9 +2,8 @@ class Admin::ReceiptPolicy < ReceiptPolicy
   # def edit_token_number? from ReceiptPolicy
 
   def index?
-    out = !user.buyer?
-    out && user.active_channel_partner?
-    false
+    out = !user.buyer? && (enable_actual_inventory?(user) || enable_direct_payment?)
+    out = out && user.active_channel_partner?
   end
 
   def export?

@@ -316,7 +316,7 @@ module BookingDetailStateMachine
       if project_unit.booking_portal_client.email_enabled?
         attachments_attributes = []
         _status = status.sub('booked_', '')
-        email = Email.create!(
+        email = Email.new(
           project_id: project_id,
           booking_portal_client_id: project_unit.booking_portal_client_id,
           email_template_id: Template::EmailTemplate.find_by(name: "booking_#{_status}", project_id: project_id).id,
@@ -327,10 +327,10 @@ module BookingDetailStateMachine
           triggered_by_type: self.class.to_s,
           attachments_attributes: attachments_attributes
         )
-        email.sent!
+        email.sent! if email.save
       end
       if project_unit.booking_portal_client.sms_enabled?
-        Sms.create!(
+        Sms.create(
             project_id: project_id,
             booking_portal_client_id: project_unit.booking_portal_client_id,
             recipient_id: lead.user_id,
