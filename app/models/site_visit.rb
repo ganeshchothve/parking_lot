@@ -115,9 +115,9 @@ class SiteVisit
       when 'cp_owner'
         custom_scope = {channel_partner_id: user.channel_partner_id}
       when 'cp_admin'
-        custom_scope = {cp_admin_id: user.id}
+        custom_scope = {}
       when 'cp'
-        custom_scope = {cp_manager_id: user.id}
+        custom_scope = {}
       when 'dev_sourcing_manager', 'billing_team'
         custom_scope = { project_id: user.selected_project_id }
       end
