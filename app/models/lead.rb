@@ -333,13 +333,13 @@ class Lead
         #channel_partner_ids = User.where(role: 'channel_partner', manager_id: user.id).distinct(:id)
         #lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
         #custom_scope = {_id: { '$in': lead_ids } }
-        custom_scope = {cp_manager_id: user.id}
+        custom_scope = {}
       when :cp_admin
         #channel_partner_manager_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
         #channel_partner_ids = User.in(manager_id: channel_partner_manager_ids).distinct(:id)
         #lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
         #custom_scope = {_id: { '$in': lead_ids } }
-        custom_scope = {cp_admin_id: user.id}
+        custom_scope = {}
       end
       custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
       custom_scope = { user_id: user.id } if user.buyer?

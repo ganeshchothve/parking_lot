@@ -64,14 +64,14 @@ module BookingDetailStateMachine
         transitions from: :cancellation_rejected, to: :blocked
       end
 
-      event :booked_tentative, after: %i[after_booked_tentative_event update_selldo! sync_booking] do
+      event :booked_tentative, after: %i[after_booked_tentative_event update_selldo!] do
         transitions from: :booked_tentative, to: :booked_tentative
-        transitions from: :blocked, to: :booked_tentative
+        transitions from: :blocked, to: :booked_tentative, success: :sync_booking
       end
 
-      event :booked_confirmed, after: %i[after_booked_confirmed_event update_selldo! sync_booking] do
+      event :booked_confirmed, after: %i[after_booked_confirmed_event update_selldo!] do
         transitions from: :booked_confirmed, to: :booked_confirmed
-        transitions from: :booked_tentative, to: :booked_confirmed
+        transitions from: :booked_tentative, to: :booked_confirmed , success: :sync_booking
       end
 
       event :swap_requested do
@@ -115,12 +115,12 @@ module BookingDetailStateMachine
         transitions from: :cancellation_requested, to: :cancelling
       end
 
-      event :cancel, after: %i[release_project_unit! sync_booking] do
+      event :cancel, after: %i[release_project_unit!] do
         transitions from: :booked_tentative, to: :cancelled
         transitions from: :blocked, to: :cancelled
         transitions from: :cancelled, to: :cancelled
         transitions from: :scheme_rejected, to: :cancelled
-        transitions from: :cancelling, to: :cancelled, after: :update_user_request_to_resolved
+        transitions from: :cancelling, to: :cancelled, after: :update_user_request_to_resolved, success: :sync_booking
       end
     end
 
@@ -316,7 +316,7 @@ module BookingDetailStateMachine
       if project_unit.booking_portal_client.email_enabled?
         attachments_attributes = []
         _status = status.sub('booked_', '')
-        email = Email.create!(
+        email = Email.new(
           project_id: project_id,
           booking_portal_client_id: project_unit.booking_portal_client_id,
           email_template_id: Template::EmailTemplate.find_by(name: "booking_#{_status}", project_id: project_id).id,
@@ -327,10 +327,10 @@ module BookingDetailStateMachine
           triggered_by_type: self.class.to_s,
           attachments_attributes: attachments_attributes
         )
-        email.sent!
+        email.sent! if email.save
       end
       if project_unit.booking_portal_client.sms_enabled?
-        Sms.create!(
+        Sms.create(
             project_id: project_id,
             booking_portal_client_id: project_unit.booking_portal_client_id,
             recipient_id: lead.user_id,

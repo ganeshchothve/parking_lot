@@ -374,7 +374,7 @@ class Admin::UsersController < AdminController
       end
     end
 
-    if razorpay_api.blank? || (api_log.present? && api_log.status == 'Success')
+    if razorpay_api.blank? || api_log.blank? || api_log.status == 'Success'
       if fund_account.blank? || fund_account.save
         yield
       else
