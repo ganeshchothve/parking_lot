@@ -8,7 +8,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def new?
-    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner].include?(user.role) && eligible_user? && enable_actual_inventory?(user)
+    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner].include?(user.role) && eligible_user? && enable_actual_inventory?(user) && record.project&.is_active?
     out = false if user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
     out
   end
@@ -24,7 +24,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def edit?
-    enable_actual_inventory?(user) && (!record.try(:project).try(:enable_booking_with_kyc?) || record.try(:user).try(:user_kycs).present?)
+    record.project&.is_active? && enable_actual_inventory?(user) && (!record.try(:project).try(:enable_booking_with_kyc?) || record.try(:user).try(:user_kycs).present?)
   end
 
   def update?
@@ -32,7 +32,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def tasks?
-    %w[cancelled swapped].exclude?(record.status) && (eligible_users_for_tasks? || enable_incentive_module?(user))
+    record.project&.is_active? && %w[cancelled swapped].exclude?(record.status) && (eligible_users_for_tasks? || enable_incentive_module?(user))
   end
 
   def mis_report?
@@ -40,7 +40,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def hold?
-    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && eligible_user? && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && buyer_kyc_booking_limit_exceed?
+    record.project&.is_active? && _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && eligible_user? && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && buyer_kyc_booking_limit_exceed?
   end
 
   def show_booking_link?
@@ -54,7 +54,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   def enable_inventory?
     lead = record.lead
     out = true
-    out = false if lead.project.enable_inventory
+    out = false if lead.project.is_active? && lead.project.enable_inventory
     return out
   end
 

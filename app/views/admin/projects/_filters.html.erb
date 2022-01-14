@@ -38,6 +38,12 @@
           <%= label_tag "fltrs", t('mongoid.attributes.project.possession') %>
           <%= text_field_tag "fltrs[possession]", (params.dig(:fltrs, :possession).present? ? params[:fltrs][:possession] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy', autocomplete: 'off' %>
         </div>
+        <% if policy([:admin, Project.new(is_active: false)]).show? %>
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+            <%= label_tag "fltrs", t('mongoid.attributes.project.is_active') %>
+            <%= select_tag "fltrs[is_active]", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:fltrs].present? ? params[:fltrs][:is_active] : "")), { prompt: 'Select', class: "selectize" } %>
+          </div>
+        <% end %>
       </div>
     </div>
     <div class="filter-footer modal-footer text-end">

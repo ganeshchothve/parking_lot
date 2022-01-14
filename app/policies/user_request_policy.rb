@@ -27,9 +27,9 @@ class UserRequestPolicy < ApplicationPolicy
   def new_permission_by_requestable_type
     case record.requestable_type
     when 'BookingDetail'
-      enable_actual_inventory?(user) && BookingDetail::BOOKING_STAGES.include?(record.requestable.status)
+      record.project&.is_active? && enable_actual_inventory?(user) && BookingDetail::BOOKING_STAGES.include?(record.requestable.status)
     when 'Receipt'
-      enable_actual_inventory?(user) && record.requestable.success? && record.requestable.booking_detail_id.blank?
+      record.project&.is_active? && enable_actual_inventory?(user) && record.requestable.success? && record.requestable.booking_detail_id.blank?
     else
       true
     end

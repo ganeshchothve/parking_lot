@@ -184,8 +184,6 @@ class Project
 
   accepts_nested_attributes_for :specifications, :offers, :timeline_updates, :address, :nearby_locations, allow_destroy: true
 
-  default_scope -> { where(is_active: true)}
-
   scope :filter_by__id, ->(_id) { all.in(_id: (_id.is_a?(Array) ? _id : [_id])) }
   scope :filter_by_category, ->(category) {category.is_a?(Array) ? where(category: {'$in': category}) : where(category: category) }
   scope :filter_by_project_segment, ->(project_segment) {project_segment.is_a?(Array) ? where(project_segment: {'$in': project_segment} ) : where(project_segment: project_segment) }
@@ -196,6 +194,7 @@ class Project
   scope :filter_by_hot, ->(hot) { where(hot: hot.eql?("true")) }
   scope :filter_by_user_interested_projects, ->(user_id) { all.in(id: InterestedProject.where(user_id: user_id).in(status: %w(subscribed approved)).distinct(:project_id)) }
   scope :filter_by_regions, ->(regions) {regions.is_a?(Array) ? where( region: { "$in": regions }) : where(region: regions)}
+  scope :filter_by_is_active, ->(is_active) { where(is_active: is_active.to_s == 'true') }
 
   #def unit_configurations
   #  UnitConfiguration.where(data_attributes: {"$elemMatch" => {"n" => "project_id", "v" => self.selldo_id}})
@@ -253,13 +252,14 @@ class Project
     end
 
     unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
-      if user.selected_project_id.present?
+      if user.selected_project_id.present? && params[:select_project].blank?
         custom_scope.merge!({_id: user.selected_project_id})
       elsif user.project_ids.present?
         project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
         custom_scope.merge!({_id: {"$in": project_ids}})
       end
     end
+    custom_scope.merge!({ is_active: true }) if params[:controller].in?(%w(admin/projects home))
     custom_scope
   end
 end
