@@ -64,14 +64,14 @@ module BookingDetailStateMachine
         transitions from: :cancellation_rejected, to: :blocked
       end
 
-      event :booked_tentative, after: %i[after_booked_tentative_event update_selldo! sync_booking] do
+      event :booked_tentative, after: %i[after_booked_tentative_event update_selldo!] do
         transitions from: :booked_tentative, to: :booked_tentative
-        transitions from: :blocked, to: :booked_tentative
+        transitions from: :blocked, to: :booked_tentative, success: :sync_booking
       end
 
-      event :booked_confirmed, after: %i[after_booked_confirmed_event update_selldo! sync_booking] do
+      event :booked_confirmed, after: %i[after_booked_confirmed_event update_selldo!] do
         transitions from: :booked_confirmed, to: :booked_confirmed
-        transitions from: :booked_tentative, to: :booked_confirmed
+        transitions from: :booked_tentative, to: :booked_confirmed , success: :sync_booking
       end
 
       event :swap_requested do
@@ -115,12 +115,12 @@ module BookingDetailStateMachine
         transitions from: :cancellation_requested, to: :cancelling
       end
 
-      event :cancel, after: %i[release_project_unit! sync_booking] do
+      event :cancel, after: %i[release_project_unit!] do
         transitions from: :booked_tentative, to: :cancelled
         transitions from: :blocked, to: :cancelled
         transitions from: :cancelled, to: :cancelled
         transitions from: :scheme_rejected, to: :cancelled
-        transitions from: :cancelling, to: :cancelled, after: :update_user_request_to_resolved
+        transitions from: :cancelling, to: :cancelled, after: :update_user_request_to_resolved, success: :sync_booking
       end
     end
 
