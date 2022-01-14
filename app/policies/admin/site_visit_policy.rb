@@ -1,6 +1,6 @@
 class Admin::SiteVisitPolicy < SiteVisitPolicy
   def index?
-    out = user.role.in?(%w(admin superadmin dev_sourcing_manager) + User::CHANNEL_PARTNER_USERS)
+    out = user.role.in?(%w(admin superadmin dev_sourcing_manager billing_team) + User::CHANNEL_PARTNER_USERS)
     out && user.active_channel_partner?
   end
 
@@ -9,7 +9,7 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
   end
 
   def edit?
-    (%w[superadmin admin] + User::CHANNEL_PARTNER_USERS).include?(user.role)
+    (%w[superadmin admin] + User::CHANNEL_PARTNER_USERS).include?(user.role) && record.project.is_active?
   end
 
   def new?
@@ -25,9 +25,12 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
   end
 
   def change_state?
-    (user.role.in?(%w(cp_owner channel_partner dev_sourcing_manager)) && record.scheduled?) ||
+    record.project.is_active? &&
+    (
+      (user.role.in?(%w(cp_owner channel_partner dev_sourcing_manager)) && record.scheduled?) ||
       (user.role.in?(%w(superadmin admin cp_admin)) && record.may_paid?) ||
       (user.role.in?(%w(dev_sourcing_manager)) && record.approval_status.in?(%w(pending rejected)))
+    )
   end
 
   def reject?
@@ -35,7 +38,7 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
   end
 
   def sync_with_selldo?
-    user.role.in?(%w(superadmin admin)) && ENV_CONFIG.dig(:selldo, :base_url).present? && record.project.selldo_client_id.present? && record.project.selldo_api_key.present? && record.lead&.push_to_crm?# && !user.role?('dev_sourcing_manager')
+    record.project.is_active? && user.role.in?(%w(superadmin admin)) && ENV_CONFIG.dig(:selldo, :base_url).present? && record.project.selldo_client_id.present? && record.project.selldo_api_key.present? && record.lead&.push_to_crm?# && !user.role?('dev_sourcing_manager')
   end
 
   def note_create?

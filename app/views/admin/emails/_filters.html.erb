@@ -7,33 +7,33 @@
   <%= form_tag url, method: "get", id: "email_search_form" do %>
     <div class="filter-content modal-body ps-0 pe-0">
       <div class="row">
-        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.email.project_id'), class: "control-label" %>
-          <%= select_tag "fltrs[project_id]", options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[project_id]", options_from_collection_for_select(params[:fltrs].present? ? Project.where(_id: params[:fltrs][:project_id]) : [], "id", "ds_name", params.dig(:fltrs, :project_id)), {prompt: "Select", class: "selectize-remote", data: {url: admin_projects_path}} %>
         </div>
         <% unless true #current_user.buyer? %>
-          <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs[to]", t('mongoid.attributes.email.to'), class: "control-label" %>
             <%= select_tag "fltrs[to]", options_for_select(policy_scope([:admin, Email]).pluck(:to).flatten.uniq.each {|x| x}, (params[:fltrs].present? ? params[:fltrs][:to] : "")), {prompt: "Select Email", class: "selectize"} %>
           </div>
-          <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs[cc]", t('mongoid.attributes.email.cc'), class: "control-label" %>
             <%= select_tag "fltrs[cc]", options_for_select(policy_scope([:admin, Email]).pluck(:cc).flatten.uniq.each {|x| x}, (params[:fltrs].present? ? params[:fltrs][:cc] : "")), {prompt: "Select Email", class: "selectize"} %>
           </div>
         <% end %>
-        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs[status]", t('mongoid.attributes.email.status'), class: "control-label" %>
           <%= select_tag "fltrs[status]", options_for_select(Email::STATUS.collect{|x| [ t("mongoid.attributes.email/status.#{x}"), x]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select Status", class: "selectize"} %>
         </div>
-        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.email.sent_on'), class: "control-label" %>
           <%= text_field_tag "fltrs[sent_on]", (params[:fltrs].present? ? params[:fltrs][:sent_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
         </div>
-        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.email.subject'), class: "control-label" %>
           <%= text_field_tag "fltrs[subject]", (params[:fltrs].present? ? params[:fltrs][:subject] : ""), {prompt: "Enter Subject", class: 'form-control'} %>
         </div>
-        <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.email.body'), class: "control-label" %>
           <%= text_field_tag "fltrs[body]", (params[:fltrs].present? ? params[:fltrs][:body] : ""), {prompt: "Enter Content", class: 'form-control'} %>
         </div>

@@ -9,7 +9,7 @@ class Admin::UserKycPolicy < UserKycPolicy
   end
 
   def new?
-    true #record.user.buyer?
+    record.lead&.project&.is_active? #record.user.buyer?
   end
 
   def create?
