@@ -262,12 +262,12 @@
                                                         <div class="left-info col-12 float-start pb-2">
                                                             <span><i class="fa fa-building"></i></span>
                                                             <div class="prjt-info">
-                                                                <p><%= unit.project_tower_name %></p>
+                                                                <p><%= unit.try(:project_tower_name) || uc.project_tower.try(:name) %></p>
                                                                 <span><%= units.collect(&:floor).max %> Floors | <%= units.map(&:floor_order).uniq.count %> Apartments per floor</span>
                                                             </div>
                                                         </div>
                                                         <div class="col-6 float-start">
-                                                            <p class="prjt-short-info"><%= uc.name %> (<%= uc.saleable %> sq.ft) <%= number_to_inr(unit.all_inclusive_price) %></p>
+                                                            <p class="prjt-short-info"><%= uc.name %> (<%= uc.saleable %> sq.ft) <%= number_to_inr(unit.try(:all_inclusive_price) || 0) %></p>
                                                         </div>
                                                         <% avl_unit = units.where(status: 'available').first.presence %>
                                                         <% if avl_unit %>
