@@ -404,9 +404,11 @@ en:
         tasks_completed_tracked_by: 'All Tasks Completed Tracked by'
         registration_done: 'Registration Done'
         ladder_stage: 'Ladder Stage'
-        agreement_price: 'Agreement Price'
         primary_user_kyc_id: 'Primary User Kyc'
         user_kyc_ids: 'Secondary User Kycs'
+        invoice_generated: Invoice Generated
+        tentative_agreement_date: Tentative Agreement Date
+        agreement_date: Agreement Date
       booking_detail/selldo_status:
         booked_tentative: tentative
         booked_confirmed: confirmed

@@ -58,7 +58,7 @@ module LeadRegisteration
     end
 
     @lead = @user.leads.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], project_id: @project.id, manager_id: params[:manager_id])
-    @new_lead.push_to_crm = params[:push_to_crm] unless params[:push_to_crm].nil?
+    @lead.push_to_crm = params[:push_to_crm] unless params[:push_to_crm].nil?
 
     save_lead(format, @lead)
   end
