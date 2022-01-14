@@ -32,6 +32,10 @@ class BookingDetailObserver < Mongoid::Observer
   end
 
   def before_save booking_detail
+    if booking_detail.tentative_agreement_date.blank?
+      booking_detail.tentative_agreement_date = booking_detail.agreement_date
+    end
+
     if booking_detail.primary_user_kyc_id.blank? && booking_detail.user_kyc_ids.present?
       booking_detail.primary_user_kyc_id = booking_detail.user_kyc_ids.first
     end
