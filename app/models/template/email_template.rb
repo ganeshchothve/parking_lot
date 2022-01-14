@@ -19,7 +19,11 @@ class Template::EmailTemplate < Template
   end
 
   def parsed_subject object
-    return ERB.new(self.subject).result( object.get_binding ).html_safe
+    begin
+      return ERB.new(self.subject).result( object.get_binding ).html_safe
+    rescue Exception => e
+      "We are sorry! #{self.class.name} has some issue. Please Contact to Administrator."
+    end
   end
 
   private

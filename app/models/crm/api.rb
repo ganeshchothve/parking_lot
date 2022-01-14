@@ -3,7 +3,7 @@ class Crm::Api
   include Mongoid::Timestamps
 
   DEFAULT_REQUEST_HEADER = { 'Content-Type' => 'application/json' }
-  RESOURCE_CLASS = %w[User UserKyc Receipt BookingDetail ChannelPartner Lead SiteVisit]
+  RESOURCE_CLASS = %w[User UserKyc Receipt BookingDetail ChannelPartner Lead SiteVisit FundAccount Invoice]
 
   field :resource_class, type: String
   field :path, type: String

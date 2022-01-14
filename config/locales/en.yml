@@ -240,6 +240,9 @@ en:
       user:
         one: User Account
         other: Users Accounts
+      fund_account:
+        one: Fund Account
+        other: Fund Accounts
       lead:
         one: Lead
         other: Leads
@@ -326,6 +329,8 @@ en:
         request_payload: 'Request Payload'
         is_active: 'Active'
         response_crm_id_location: 'CRM Reference ID Location In Response'
+      crm/api/put:
+        http_method: 'HTTP Method'
 
       bulk_upload_report:
         uploaded_by_id: 'Uploaded By'
@@ -1255,6 +1260,10 @@ en:
         employee_user: 'Employee'
         direct: Direct
         dev_sourcing_manager: 'Developer Sourcing Manager'
+
+      fund_account:
+        address: 'UPI Address'
+        is_active: 'Activate UPI Address'
 
       lead:
         name: 'Name'

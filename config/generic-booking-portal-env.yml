@@ -66,3 +66,5 @@ third_party_inventory:
   base_url:
 interakt:
   base_url:
+razorpay:
+  base_url:
