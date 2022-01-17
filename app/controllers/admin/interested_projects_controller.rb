@@ -51,8 +51,10 @@ class Admin::InterestedProjectsController < AdminController
   end
 
   def authorize_resource
-    if %w[index create].include?(params[:action])
+    if %w[index].include?(params[:action])
       authorize [current_user_role_group, InterestedProject]
+    elsif params[:action] == 'create'
+      authorize [current_user_role_group, InterestedProject.new(project_id: params.dig(:interested_project, :project_id))]
     else
       authorize [current_user_role_group, @interested_project]
     end

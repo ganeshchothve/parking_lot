@@ -253,7 +253,7 @@ class Project
   def self.user_based_scope(user, params = {})
     custom_scope = {}
     if user.role.in?(%w(cp_owner channel_partner))
-      custom_scope = { _id: { '$in': user.interested_projects.approved.distinct(:project_id) } } unless params[:controller] == 'admin/projects'
+      custom_scope = { _id: { '$in': user.interested_projects.approved.distinct(:project_id) } } unless params[:controller] == 'admin/projects' && params[:ds].blank?
     end
 
     unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
