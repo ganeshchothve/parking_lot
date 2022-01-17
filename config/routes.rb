@@ -298,6 +298,12 @@ Rails.application.routes.draw do
       resources :interested_projects, only: [:index, :create, :edit, :update]
     end # end resources :users block
 
+    resources :interested_projects, only: [:subscribe_projects] do
+      collection do
+          post :subscribe_projects
+        end
+    end
+
     resources :user_kycs, only: %i[index show], controller: 'user_kycs'
     scope ":request_type" do
       resources :user_requests, except: [:destroy], controller: 'user_requests' do

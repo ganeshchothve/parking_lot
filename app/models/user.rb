@@ -191,6 +191,7 @@ class User
   embeds_many :portal_stages
   embeds_many :user_notification_tokens
   accepts_nested_attributes_for :portal_stages, :user_notification_tokens, reject_if: :all_blank
+  accepts_nested_attributes_for :interested_projects, reject_if: :all_blank
 
   validates :role, presence: true
   #validates :first_name, :last_name, name: true, allow_blank: true
