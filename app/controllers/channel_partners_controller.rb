@@ -112,7 +112,7 @@ class ChannelPartnersController < ApplicationController
   # end
 
   def create_cp_user
-    @user = User.new(permitted_attributes([:buyer, User.new]))
+    @user = User.new(permitted_attributes([:admin, User.new]))
     @user.assign_attributes(role: "cp_owner", booking_portal_client_id: current_client.id)
     respond_to do |format|
       if @user.save
