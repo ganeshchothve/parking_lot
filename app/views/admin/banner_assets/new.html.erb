@@ -1,0 +1,48 @@
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="title"><%= BannerAsset.model_name.human(count: 2) %></h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <%= simple_form_for @banner_asset, url: admin_banner_assets_path, html: {id: 'banner_asset_form', class: 'banner_asset_form'} do |f| %>
+        <div class="modal-body">
+          <div class="mb-3">
+            <%= f.label :banner_image %><br/>
+            <%= f.file_field :banner_image, class: 'btn pl-0', disabled: (policy([:admin, @banner_asset]).editable_field?("banner_image") ? false : true) %>
+          <hr/>
+          </div>
+          <div class="mb-3">
+            <%= f.label :mobile_banner_image %><br/>
+            <%= f.file_field :mobile_banner_image, class: 'btn pl-0', disabled: (policy([:admin, @banner_asset]).editable_field?("mobile_banner_image") ? false : true) %>
+            <hr/>
+          </div>
+          <div class="mb-3">
+            <%= f.label :url %>
+            <%= f.text_field :url, class: 'form-control', disabled: (policy([:admin, @banner_asset]).editable_field?("url") ? false : true) %>
+         </div>
+         <div class="mb-3">
+            <%= f.label :publish %>
+            <div class="form-check form-check-inline">
+              <%= f.radio_button :publish, true, class: "form-check-input wd-22" %>
+              <%= f.label "Yes", class: "form-check-label d-inline-block ms-2" %>
+            </div>
+            <div class="form-check form-check-inline">
+              <%= f.radio_button :publish, false, class: "form-check-input wd-22" %>
+              <%= f.label "No", class: "form-check-label d-inline-block ms-2" %>
+            </div>
+         </div>
+        </div>
+        <div class="modal-footer text-end">
+          <%= f.submit "Submit", id: "save", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#banner_asset_form"));
+  });
+<% end %>

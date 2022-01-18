@@ -27,11 +27,11 @@
                   <div class="carousel-item <%= index==0 ? 'active' : '' %>">
                     <% if value.url.present? %>
                       <%= link_to '', href: value.url, target: :_blank do %>
-                      <div class="banner-image" style="background-image: url('<%= value.file %>');">
+                      <div class="banner-image" style="background-image: url('<%= value.banner_image %>');">
                       </div>
                       <% end %>
                     <% else %>
-                      <div class="banner-image" style="background-image: url('<%= value.file %>');">
+                      <div class="banner-image" style="background-image: url('<%= value.banner_image %>');">
                       </div>
                     <% end %>
                   </div>
