@@ -99,6 +99,9 @@ gem 'safe_parser'
 gem 'twilio-ruby'
 gem 'custom_error_message', '1.1.1'
 
+# deivce_detector is used to detect the type of device being used Eg: smartphone, desktop
+gem 'device_detector', '1.0.6'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
