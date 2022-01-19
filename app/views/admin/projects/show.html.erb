@@ -247,7 +247,8 @@
                                         <div class="tab-content br-1 br-rd-8 py-1 wd-100">
                                         <% @project.unit_configurations.each_with_index do | uc, index | %>
                                           <% units = uc.project_units %>
-                                          <% unit = units&.first %>
+                                          <% if units.present? %>
+                                            <% unit = units&.first %>
                                             <div class="tab-pane fade show <%= (index == 0) ? "active" : "" %>" id="floor_<%= uc.name&.gsub(/[()\s]*/, '').underscore + uc.saleable.to_i.to_s %>" role="tabpanel">
                                                 <div class="col-5 float-start">
                                                   <% if url = uc.assets.first&.file&.url&.presence %>
@@ -262,12 +263,12 @@
                                                         <div class="left-info col-12 float-start pb-2">
                                                             <span><i class="fa fa-building"></i></span>
                                                             <div class="prjt-info">
-                                                                <p><%= unit.try(:project_tower_name) || uc.project_tower.try(:name) %></p>
+                                                                <p><%= unit.project_tower_name %></p>
                                                                 <span><%= units.collect(&:floor).max %> Floors | <%= units.map(&:floor_order).uniq.count %> Apartments per floor</span>
                                                             </div>
                                                         </div>
                                                         <div class="col-6 float-start">
-                                                            <p class="prjt-short-info"><%= uc.name %> (<%= uc.saleable %> sq.ft) <%= number_to_inr(unit.try(:all_inclusive_price) || 0) %></p>
+                                                            <p class="prjt-short-info"><%= uc.name %> (<%= uc.saleable %> sq.ft) <%= number_to_inr(unit.all_inclusive_price) %></p>
                                                         </div>
                                                         <% avl_unit = units.where(status: 'available').first.presence %>
                                                         <% if avl_unit %>
@@ -295,6 +296,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                          <% end %>
                                         <% end %>
                                         </div>
                                     </div>
