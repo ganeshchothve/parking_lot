@@ -27,16 +27,19 @@ class BookingDetailMisReportWorker
   end
 
   def self.get_column_names
-    [
+    [ "Id",
       "Erp id",
       "Unit Name",
       "Unit Type",
       "Type of Apartment",
-      "User Name",
-      "User Email",
-      "User Phone",
+      "Project Tower",
+      "Lead Id",
+      "Lead Name",
+      "Lead Email",
+      "Lead Phone",
       "Status",
       "Blocked on",
+      "Agreement Date",
       'Ageing',
       "Current Due",
       "Total amount paid",
@@ -51,23 +54,31 @@ class BookingDetailMisReportWorker
       "Scheme name",
       "Scheme status",
       "Negotiation - FEILD",
-      "Negotiation - VALUE"
+      "Negotiation - VALUE",
+      "Manager Id",
+      "Manager Name",
+      "Manager Email",
+      "Manager Phone"
     ]
   end
 
   def self.get_booking_detail_row(booking_detail)
     project_unit = booking_detail.project_unit
-    user = booking_detail.user
+    lead = booking_detail.lead
     [
-      project_unit.erp_id,
-      project_unit.name,
-      project_unit.unit_configuration_name,
-      project_unit.bedrooms,
-      booking_detail.user_name || 'N/A',
-      booking_detail.user_email || "N/A",
-      booking_detail.user_phone || "N/A",
+      booking_detail.id.to_s,
+      project_unit.try(:erp_id),
+      project_unit.try(:name) || booking_detail.booking_project_unit_name,
+      project_unit.try(:unit_configuration_name) || booking_detail.project_unit_configuration,
+      project_unit.try(:bedrooms) || booking_detail.bedrooms,
+      project_unit.try(:project_tower_name) || booking_detail.project_tower_name,
+      lead.id.to_s,
+      lead.name || 'N/A',
+      lead.email || "N/A",
+      lead.phone || "N/A",
       BookingDetail.human_attribute_name("status.#{booking_detail.status}"),
-      project_unit.blocked_on.try(:strftime, '%d/%m/%Y'),
+      booking_detail.booked_on.try(:strftime, '%d/%m/%Y'),
+      booking_detail.agreement_date.try(:strftime, '%d/%m/%Y'),
       booking_detail.ageing,
       booking_detail.pending_balance({strict: true}),
       booking_detail.total_amount_paid,
@@ -82,7 +93,11 @@ class BookingDetailMisReportWorker
       booking_detail.try(:booking_detail_scheme).try(:derived_from_scheme).try(:name) || "N/A",
       booking_detail.try(:booking_detail_scheme).try(:status) || "N/A",
       booking_detail.try(:booking_detail_scheme).try(:payment_adjustments).try(:first).try(:field),
-      booking_detail.try(:booking_detail_scheme).try(:payment_adjustments).try(:first).try(:value, booking_detail)
+      booking_detail.try(:booking_detail_scheme).try(:payment_adjustments).try(:first).try(:value, booking_detail),
+      booking_detail.manager_id.to_s,
+      booking_detail.manager.try(:name),
+      booking_detail.manager.try(:email),
+      booking_detail.manager.try(:phone)
     ]
   end
 end
