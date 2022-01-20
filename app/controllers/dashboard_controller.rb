@@ -13,9 +13,11 @@ class DashboardController < ApplicationController
     authorize :dashboard, :index?
     @customer_search = CustomerSearch.new if current_user.role == 'gre'
     @project_units = current_user.project_units
+
     if ['channel_partner', 'cp_owner'].include?(current_user.role)
-      @offer_assets = current_client.assets.filter_by_document_type("offer")
+      @offer_assets = BannerAsset.filter_by_publish
     end
+
     respond_to do |format|
       format.json { render json: { message: 'Logged In' }, status: 200 }
       if current_user.role?('dev_sourcing_manager')

@@ -35,8 +35,15 @@ class PublicAssetUploader < CarrierWave::Uploader::Base
   end
 
   def save_file_size_in_model
-    model.file_size = file.size if model.respond_to?(:file_size)
-    model.file_name = file.filename if model.respond_to?(:file_name)
+    if model.class.to_s == 'BannerAsset'
+      model.file_size = file.size if model.respond_to?(:file_size) && mounted_as.to_s == 'banner_image'
+      model.file_name = file.filename if model.respond_to?(:file_name) && mounted_as.to_s == 'banner_image'
+      model.mobile_file_size = file.filename if model.respond_to?(:mobile_file_size) && mounted_as.to_s == 'mobile_banner_image'
+      model.mobile_file_name = file.filename if model.respond_to?(:mobile_file_name) && mounted_as.to_s == 'mobile_banner_image'
+    else
+      model.file_size = file.size if model.respond_to?(:file_size)
+      model.file_name = file.filename if model.respond_to?(:file_name)
+    end
   end
 
   def content_type_whitelist

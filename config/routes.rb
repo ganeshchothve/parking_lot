@@ -82,6 +82,8 @@ Rails.application.routes.draw do
       get :show_errors, on: :member
     end
 
+    resources :banner_assets
+
     resources :booking_details, only: [:index, :show, :new, :create, :edit, :update] do
       member do
         patch :booking
