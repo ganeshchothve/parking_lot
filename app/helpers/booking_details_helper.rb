@@ -56,7 +56,7 @@ module BookingDetailsHelper
 
   def filter_lead_options
     if params.dig(:fltrs, :lead_id).present?
-      Lead.where(_id: params.dig(:fltrs, :lead_id)).map{|lead| [lead.ds_name, lead.id]}
+      Lead.where(_id: params.dig(:fltrs, :lead_id)).map{|lead| [lead.ds_name(current_user), lead.id]}
     else
       []
     end

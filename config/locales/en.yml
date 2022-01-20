@@ -647,7 +647,7 @@ en:
         gstin_number: "GST Number"
         pan_number: "PAN Number"
         aadhaar: "Aadhaar"
-        name_email_phone: 'Name/Email/Phone'
+        name_email_phone: 'Partner Companies'
         details: 'Details'
         team_size: 'Team Size'
         rera_applicable: 'Is RERA Applicable?'
@@ -667,6 +667,7 @@ en:
         interested_services: 'Services Interested In'
         created_at: 'Registered At'
         manager_id: 'Manager'
+        roles: CP/CP Owner
       channel_partner/file_types:
         rera_certificate: 'RERA Certificate'
         gst_certificate: 'GST Certificate'
@@ -914,6 +915,7 @@ en:
         brokerage_type: Brokerage Type
         payment_to: Payment To
         auto_apply: Auto Apply
+        date_range: Date Range
       incentive_scheme/categories:
         walk_in: 'Walk-in'
         spot_booking: 'Spot Booking'

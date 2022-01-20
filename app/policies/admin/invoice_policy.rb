@@ -11,7 +11,7 @@ class Admin::InvoicePolicy < InvoicePolicy
 
   def create?
     return false if record.project && !record.project.is_active?
-    user.role.in?(%w(channel_partner cp_owner admin superadmin)) && enable_incentive_module?(user) && incentive_calculation_type?("manual")
+    user.role.in?(%w(channel_partner cp_owner admin superadmin billing_team)) && enable_incentive_module?(user) && incentive_calculation_type?("manual")
   end
 
   def edit?
