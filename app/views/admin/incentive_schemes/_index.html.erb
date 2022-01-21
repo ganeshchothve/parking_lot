@@ -25,7 +25,7 @@
         <%= t("mongoid.attributes.incentive_scheme/status.#{incentive_scheme.status}") %>
       </td>
       <td data-title="<%= t('mongoid.attributes.incentive_scheme.date_range') %>">
-       <%= incentive_scheme.starts_on.to_s + " - " + incentive_scheme.ends_on.to_s %>
+       <%= I18n.l(incentive_scheme.starts_on) + " - " + I18n.l(incentive_scheme.ends_on) %>
       </td>
       <td class="action-btn">
         <div class="dropdown text-right">

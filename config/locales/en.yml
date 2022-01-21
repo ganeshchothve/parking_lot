@@ -667,7 +667,6 @@ en:
         interested_services: 'Services Interested In'
         created_at: 'Registered At'
         manager_id: 'Manager'
-        roles: CP/CP Owner
       channel_partner/file_types:
         rera_certificate: 'RERA Certificate'
         gst_certificate: 'GST Certificate'
@@ -958,7 +957,7 @@ en:
         agreement_amount: 'Consideration Value For Brokerage'
         incentive_resource: 'Resource'
         category: 'Type'
-        manager_id: 'Partner'
+        manager_id: 'Partner / Manager / Added by'
         account_manager_id: 'Account Manager'
       invoice/status:
         draft: 'Draft'
@@ -1277,7 +1276,7 @@ en:
         payment_done: '9.90% Received'
         blocking_amount_paid: 'Booking Amount Paid'
         registration_done: 'Registration Done'
-        stage: 'From developer CRM'
+        stage: 'Status (From Developer CRM)'
         lead_id: 'Lead Id'
         lead_validity_period: 'Lead Validity Period'
         selldo_lead_registration_date: 'Sell Do Lead Registration Date'
@@ -1286,6 +1285,13 @@ en:
         customer_status: 'Queue Status'
         search_by_name: 'Name/ Email/ Phone'
         push_to_crm: 'Do You Want The Developer To Contact The Customer ?'
+
+      lead/stage:
+        incoming: 'Incoming'
+        booked: 'Booked'
+        opportunity: 'Opportunity'
+        prospect: 'Prospect'
+        unqualified: 'Unqualified'
 
       cp_lead_activity:
         lead_id: 'Lead Id'
