@@ -42,7 +42,7 @@ module BillingTeamDashboardConcern
     if @city_wise_dates.present?
       start_date, end_date = @city_wise_dates.split(' - ')
       options = {
-        created_at: {
+        booked_on: {
           "$gte": Date.parse(start_date).beginning_of_day,
           "$lte": Date.parse(end_date).end_of_day
         }
