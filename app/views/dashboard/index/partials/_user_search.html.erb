@@ -11,7 +11,6 @@
         <div class = 'col-sm-5'>
           <div class="form-group">
             <label for="">Name / Email / Phone</label>
-            <% binding.pry %>
             <% if lead_id.present? %>
               <%= select_tag "fltrs[_id]", options_for_select(([ [Lead.where(id: lead_id).first.try(:ds_name, current_user), lead_id] ]), lead_id ), prompt: "#{t('mongoid.attributes.lead.search_by_name')}", class: "selectize-remote", data: {url: admin_leads_path } %>
             <% else %>
