@@ -52,7 +52,7 @@
       channel_partners = User.in(role: ['channel_partner', 'cp_owner'] )
     end %>
       <label class="'label-required control-label'">Channel Partner</label>
-      <%= f.select :manager_id, channel_partners.collect{|cp| [(cp.name), cp.id]}, {}, prompt: :translate, class: 'selectize' %>
+      <%= f.select :manager_id, channel_partners.collect{|cp| [(cp.name), cp.id]}, {prompt: true}, class: 'selectize' %>
       <%= link_to "Add Channel Partner", new_channel_partner_channel_partners_path(lead_id: f.object.try(:lead).try(:id).to_s), class: 'modal-remote-form-link' %>
   </div>
 </div>

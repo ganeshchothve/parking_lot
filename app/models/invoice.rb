@@ -28,7 +28,7 @@ class Invoice
 
   belongs_to :invoiceable, polymorphic: true
   belongs_to :project, optional: true
-  belongs_to :manager, class_name: 'User'
+  belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true
   belongs_to :cp_manager, class_name: 'User', optional: true
   belongs_to :cp_admin, class_name: 'User', optional: true

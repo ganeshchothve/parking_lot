@@ -10,7 +10,7 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def create?
-    return false if record.project && !record.project.is_active?
+    return false if record.try(:project) && !record.try(:project).try(:is_active?)
     enable_incentive_module?(user) && incentive_calculation_type?("manual")
   end
 
