@@ -206,4 +206,9 @@ module ApplicationHelper
     uri.to_s
   end
 
+  def device_type
+    client = DeviceDetector.new(request.env['HTTP_USER_AGENT'])
+    client.device_type
+  end
+
 end

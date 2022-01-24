@@ -339,6 +339,12 @@ en:
         success_count: 'Successfully Uploaded'
         failure_count: 'Failed to Upload'
         file_uploaded: 'File Uploaded'
+      banner_asset:
+        uploaded_by_id: 'Uploaded By'
+        banner_image: 'Website Banner'
+        mobile_banner_image: 'Mobile Banner'
+        url: 'URL'
+        publish: 'Publish'
       upload_error:
         row: 'Row'
         errors: 'Errors'
@@ -1447,6 +1453,9 @@ en:
     announcements:
       index:
         link_name: 'Announcements'
+    banner_assets:
+      index:
+        link_name: 'Banner Assets'
     campaigns:
       index:
         link_name: 'Campaigns'
