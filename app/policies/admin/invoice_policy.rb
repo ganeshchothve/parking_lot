@@ -112,7 +112,7 @@ class Admin::InvoicePolicy < InvoicePolicy
       if record.status.in?(%w(draft raised))
         attributes += [:brokerage_type, :payment_to, :number, :amount, :gst_slab]
         attributes += [:category] if record.new_record?
-        attributes += [:agreement_amount] if record.invoiceable_type == 'BookingDetail'
+        attributes += [:agreement_amount] if record.invoiceable_type == 'BookingDetail' && record.category != 'spot_booking'
       end
       # attributes += [:amount, :percentage_slab] :gst_slab, if record.status.in?(%w(raised pending_approval))
       attributes += [:rejection_reason] if record.status.in?(%w(raised pending_approval rejected))

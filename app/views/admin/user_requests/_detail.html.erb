@@ -38,9 +38,9 @@
             <li>
               <span>Status</span>
               <p>
-                <label class="badge badge-<%= user_request_status_badge(user_request) %> white" > <%= t("mongoid.attributes.user_request/status.#{user_request.status}") %></label>
+                <%= t("mongoid.attributes.user_request/status.#{user_request.status}") %>
                 <%- if user_request.reason_for_failure.present? %>
-                  <span> Reason : <%= user_request.reason_for_failure || '-' %></span>
+                  <small class="d-block"> Reason : <%= user_request.reason_for_failure || '-' %></small>
                 <% end %>
               </p>
             </li>
