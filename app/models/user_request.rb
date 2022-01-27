@@ -52,7 +52,7 @@ class UserRequest
 
       custom_scope = {}
       if params[:lead_id].blank? && !user.buyer?
-        if user.role?('channel_partner')
+        if user.role.in?(%w(cp_owner channel_partner))
           custom_scope = { user_id: user.id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
         #elsif user.role?('cp')
         #  channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)

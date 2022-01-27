@@ -653,7 +653,7 @@ en:
         gstin_number: "GST Number"
         pan_number: "PAN Number"
         aadhaar: "Aadhaar"
-        name_email_phone: 'Name/Email/Phone'
+        name_email_phone: 'Partner Companies'
         details: 'Details'
         team_size: 'Team Size'
         rera_applicable: 'Is RERA Applicable?'
@@ -920,6 +920,7 @@ en:
         brokerage_type: Brokerage Type
         payment_to: Payment To
         auto_apply: Auto Apply
+        date_range: Date Range
       incentive_scheme/categories:
         walk_in: 'Walk-in'
         spot_booking: 'Spot Booking'
@@ -962,7 +963,7 @@ en:
         agreement_amount: 'Consideration Value For Brokerage'
         incentive_resource: 'Resource'
         category: 'Type'
-        manager_id: 'Partner'
+        manager_id: 'Partner / Manager / Added by'
         account_manager_id: 'Account Manager'
       invoice/status:
         draft: 'Draft'
@@ -1281,7 +1282,7 @@ en:
         payment_done: '9.90% Received'
         blocking_amount_paid: 'Booking Amount Paid'
         registration_done: 'Registration Done'
-        stage: 'From developer CRM'
+        stage: 'Status (From Developer CRM)'
         lead_id: 'Lead Id'
         lead_validity_period: 'Lead Validity Period'
         selldo_lead_registration_date: 'Sell Do Lead Registration Date'
@@ -1290,6 +1291,13 @@ en:
         customer_status: 'Queue Status'
         search_by_name: 'Name/ Email/ Phone'
         push_to_crm: 'Do You Want The Developer To Contact The Customer ?'
+
+      lead/stage:
+        incoming: 'Incoming'
+        booked: 'Booked'
+        opportunity: 'Opportunity'
+        prospect: 'Prospect'
+        unqualified: 'Unqualified'
 
       cp_lead_activity:
         lead_id: 'Lead Id'

@@ -26,7 +26,7 @@
           <% if policy([:admin, @invoice]).editable_field?("amount") %>
             <%= f.number_field :amount, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("amount") %>
           <% else %>
-            <p class='net-amount'><%= f.object.amount %></p>
+            <p class='amount'><%= f.object.amount %></p>
           <% end %>
         </div>
         <div class="mb-3">
@@ -129,10 +129,11 @@ $(document).ready(function(){
 
   $('#' + invoiceType + '_gst_slab, #' + invoiceType + '_amount').on('change', function(event) {
     var gstAmount = 0;
-    var amount = parseFloat($('input[name="' + invoiceType + '[amount]"]').val() || 0);
+    var amount = parseFloat($('input[name="' + invoiceType + '[amount]"]').val() || $('#invoice_form').find('.amount').html() || 0);
     $('#invoice_form').find('.amount').html(Amura.formatMoney(amount));
     if (gstApplicable == 'true') {
       var gstPercVal = $('#' + invoiceType + '_gst_slab').val();
+      debugger
       if(!_.isEmpty(gstPercVal)){
         var gstPercentage = parseFloat(gstPercVal);
         _gstAmount = amount * (gstPercentage/100);

@@ -1,2 +1,3 @@
 $('#asset-form').html('<%= j (render "channel_partners/asset_form", assetable: @channel_partner) %>')
 $('#asset-form #document_type').selectize();
+FileIcon.init($(".asset-delete"), $(".asset-icon"));
