@@ -220,7 +220,7 @@ class BookingDetail
   end
 
   def ds_name
-    "#{name} - #{status}"
+    "#{name} - #{I18n.t("mongoid.attributes.booking_detail/status.#{status}")}"
   end
 
   alias :resource_name :ds_name

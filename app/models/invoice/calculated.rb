@@ -14,9 +14,4 @@ class Invoice::Calculated < Invoice
     amount
   end
 
-  def calculate_net_amount
-    _amount = amount
-    _amount -= incentive_deduction.amount if incentive_deduction.try(:approved?)
-    _amount
-  end
 end

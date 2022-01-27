@@ -18,9 +18,4 @@ class Invoice::Manual < Invoice
     amount + gst_amount.to_f + payment_adjustment.try(:absolute_value).to_f
   end
 
-  def calculate_net_amount
-    _amount = amount + gst_amount.to_f + payment_adjustment.try(:absolute_value).to_f
-    _amount -= incentive_deduction.amount if incentive_deduction.try(:approved?)
-    _amount
-  end
 end

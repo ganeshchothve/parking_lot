@@ -10,8 +10,8 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def create?
-    return false if record.try(:project) && !record.try(:project).try(:is_active?)
-    enable_incentive_module?(user) && incentive_calculation_type?("manual")
+    return false if record.project && !record.project.is_active?
+    user.role.in?(%w(channel_partner cp_owner admin superadmin billing_team)) && enable_incentive_module?(user) && incentive_calculation_type?("manual")
   end
 
   def edit?
@@ -112,7 +112,7 @@ class Admin::InvoicePolicy < InvoicePolicy
       if record.status.in?(%w(draft raised))
         attributes += [:brokerage_type, :payment_to, :number, :amount, :gst_slab]
         attributes += [:category] if record.new_record?
-        attributes += [:agreement_amount] if record.invoiceable_type == 'BookingDetail'
+        attributes += [:agreement_amount] if record.invoiceable_type == 'BookingDetail' && record.category != 'spot_booking'
       end
       # attributes += [:amount, :percentage_slab] :gst_slab, if record.status.in?(%w(raised pending_approval))
       attributes += [:rejection_reason] if record.status.in?(%w(raised pending_approval rejected))
