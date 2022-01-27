@@ -14,10 +14,11 @@ class InvoicePayoutWorker
                       invoice.channel_partner&.primary_user
                     end
           tpr_id = cp_user&.fund_accounts&.where(account_type: 'vpa', is_active: true)&.first&.crm_reference_id(crm_base) if cp_user
+
+          if tpr_id
+            Crm::Api::ExecuteWorker.new.perform('post', 'Invoice', invoice.id.to_s, nil, {'fund_account_id' => tpr_id}, crm_base.id)
+          end
         end
-      end
-      if tpr_id
-        Crm::Api::ExecuteWorker.new.perform('post', 'Invoice', invoice.id.to_s, nil, {'fund_account_id' => tpr_id}, crm_base.id)
       end
     end
   end
