@@ -9,6 +9,7 @@ module BillingTeamDashboardConcern
     set_matcher
     # TO-DO Send options to project_wise_invoice_data
     @invoice_data = DashboardDataProvider.project_wise_invoice_data(current_user, @options)
+    @invoice_data = @invoice_data.delete_if {|x| x[:project_name] == nil }
   end
 
   def project_wise_incentive_deduction_summary
