@@ -1528,6 +1528,8 @@ en:
       scheme_approved: 'Scheme applied successfully, please check cost sheet.'
       scheme_under_negotiation: 'Scheme registered successfully and sent for approval.'
     booking_details:
+      add_booking:
+        link_name: "Add Booking"
       index:
         link_name: 'Bookings'
       new:
@@ -1555,6 +1557,7 @@ en:
       send_booking_detail_form_notification: "Booking detail form will be sent to customer shortly."
       set_booking_detail_missing: "Booking detail not found"
       set_project_unit_missing: "Project unit not found"
+      set_project_missing: "Project not found"
       booking_successful: "You have completed the booking successfully."
       booking_unsuccessful: "Your booking was unsuccessful. Please contact administrator to book."
       set_receipt_missing: 'Make new payment'

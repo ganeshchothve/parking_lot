@@ -2,10 +2,12 @@ class Admin::BookingDetailsController < AdminController
   include BookingDetailConcern
   include SearchConcern
   around_action :apply_policy_scope, only: [:index, :mis_report]
-  before_action :set_booking_detail, except: [:index, :mis_report, :new, :create, :searching_for_towers, :status_chart, :new_booking_without_inventory, :create_booking_without_inventory, :edit_booking_without_inventory, :update_booking_without_inventory, :move_to_next_state]
-  before_action :authorize_resource, except: [:index, :mis_report, :new, :create, :searching_for_towers, :status_chart, :new_booking_without_inventory, :create_booking_without_inventory, :edit_booking_without_inventory, :update_booking_without_inventory, :move_to_next_state]
+  before_action :set_booking_detail, except: [:index, :mis_report, :new, :create, :searching_for_towers, :status_chart, :new_booking_without_inventory, :create_booking_without_inventory, :edit_booking_without_inventory, :update_booking_without_inventory, :move_to_next_state, :new_booking_on_project, :process_booking_on_project]
+  before_action :authorize_resource, except: [:index, :mis_report, :new, :create, :searching_for_towers, :status_chart, :new_booking_without_inventory, :create_booking_without_inventory, :edit_booking_without_inventory, :update_booking_without_inventory, :move_to_next_state, :new_booking_on_project, :process_booking_on_project]
   before_action :set_project_unit, only: :booking
   before_action :set_receipt, only: :booking
+  before_action :set_project, only: [:new_booking_on_project]
+  before_action :set_lead, only: [:process_booking_on_project]
 
   def index
     authorize [:admin, BookingDetail]
@@ -22,6 +24,18 @@ class Admin::BookingDetailsController < AdminController
     @project_towers.map!{|f| [f[:project_tower_name], f[:project_tower_id]]}
     # authorize [:admin, @booking_detail]
     render layout: false
+  end
+  
+  def new_booking_on_project
+    @booking_detail = BookingDetail.new
+    render layout: false
+  end
+
+  def process_booking_on_project
+    respond_to do |format|
+      response.set_header('location', new_admin_lead_search_path(@lead.id) )
+      format.json { render json: { status: :ok } }
+    end
   end
 
   def create
@@ -147,7 +161,7 @@ class Admin::BookingDetailsController < AdminController
   end
 
   def new_booking_without_inventory
-    @booking_detail = BookingDetail.new(lead_id: params[:lead_id])
+    @booking_detail = BookingDetail.new(lead_id: params[:lead_id], project_id: params[:project_id], site_visit_id: params[:site_visit_id])
     render layout: false
   end
 
@@ -199,6 +213,16 @@ class Admin::BookingDetailsController < AdminController
   end
 
   private
+
+  def set_lead
+    @lead = Lead.where(id: params[:lead_id]).first
+    redirect_to dashboard_path, alert: "Lead not found" if @lead.blank?
+  end
+
+  def set_project
+    @project = Project.where(id: params[:project_id]).first
+    redirect_to dashboard_path, alert: t('controller.booking_details.set_project_missing') if @project.blank?
+  end
 
   def set_booking_detail
     @booking_detail = BookingDetail.where(_id: params[:id]).first

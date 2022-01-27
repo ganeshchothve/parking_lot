@@ -92,7 +92,6 @@
           <%= link_to "<i class='fa fa-heart fill-danger d-none d-sm-inline-block me-1'></i>#{ip_count}".html_safe, admin_users_path(fltrs: {interested_project: project.id}), class: 'add-wishlist d-none d-sm-inline-block me-2' %>
         <% end %>
 
-        <% if current_user.role.in?(%w(superadmin admin)) %>
         <div class="prjt-menu-top float-md-right">
           <div class="dropdown">
             <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -103,7 +102,6 @@
             </div>
           </div>
         </div>
-        <% end %>
       </div>
 
       <div class='prjt-inner-stats fn-14 text-primary' style='top: 75%'>
