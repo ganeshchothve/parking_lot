@@ -2662,6 +2662,183 @@ select.form-control{
 	}
 /* } */
 
+
+/**************** Booking Details ******/
+
+.booking-listing{
+	padding-right: 0px;
+	.single-booking-prjt-list{
+	    background-color: #fff;
+	    border-radius: 8px;
+	    float: left;
+	    width: 100%;
+			transition: all 0.6s ease-in-out;
+			&:hover{
+				box-shadow: 1px 1px 16px #b9b9b9;
+			}
+	    .booking-prjt-thumb{
+		    width: 260px;
+	    	height: 100px;
+	    	float: left;
+				margin: 15px;
+				padding: 35px 0px 0px 35px;
+	    	.booking-prjt-thumb-inner{
+	    		width: 100%;
+			    height: 100%;
+			    background-size: cover;
+			    background-position: center;
+			    border-radius: 8px;
+	    	}
+			@media screen and (max-width: 700px){
+				width:calc(100% - 30px);
+				height:150px;
+			}
+	    }
+	}
+}
+
+
+.booking-inner-info {
+    width: calc(100% - 300px);
+    float: left;
+    .inner-info {
+	    padding: 35px 0px 0px 85px;
+	    width: 40%;
+	    float: left;
+	    .title {
+		    color: #2E384D;
+		    font-size: 20px;
+		    line-height: 30px;
+		    letter-spacing: 0.56px;
+		    font-weight: 500;
+		}
+		.devl-name {
+		    color: #2E384D;
+		    font-size: 16px;
+		    line-height: 24px;
+		    letter-spacing: 0.39px;
+		    margin-bottom: 8px;
+		}
+	}
+	@media screen and (max-width: 700px){
+		width:100%;
+		.booking-prjt-date-info{
+			width:100%;
+			height:60px;
+			border:0px;
+		}
+		.inner-info {
+			width:100%;
+			padding-top:0px;
+			padding-bottom:0px;
+			padding-left: 25px;
+		}
+	}
+}
+.booking-prjt-date-info {
+    width: 200px;
+    float: left;
+    padding: 0 25px;
+    position: relative;
+    height: 150px;
+    border-left: 1px solid #e8e8e8;
+    border-right: 1px solid #e8e8e8;
+    .inner-date {
+	    position: absolute;
+	    top: 50%;
+	    transform: translateY(-50%);
+	    p {
+		    color: #2E384D;
+		    font-size: 16px;
+		    line-height: 12px;
+		    letter-spacing: 0.44px;
+		    font-weight: 500;
+		    margin-bottom: 0;
+		}
+		span {
+		    color: #2E384D;
+		    font-size: 12px;
+		    line-height: 14px;
+		    letter-spacing: 0.33px;
+		}
+	}
+}
+.booking-prjt-stats, .prjt-details-header-stats {
+    width: calc(55% - 160px);
+    float: left;
+    position: relative;
+    height: 122px;
+    padding: 0 10px;
+	&.prjt-details-header-stats{
+		width: 100%;
+		height: auto;
+		@media screen and (max-width: 700px){
+			width:100%;
+			height:auto;
+			text-align:left!important;
+		}
+	}
+  .prjt-inner-stats, .right-stats {
+    position: absolute;
+    width: 100%;
+    top: 55%;
+    left: 55%;
+    transform: translate(-50%,-50%);
+		&.right-stats{
+			position: unset;
+			width: auto;
+			top: unset;
+			left: unset;
+			transform: unset;
+		}
+    p {
+	    width: 33.33%;
+	    float: left;
+	    color: #2E384D;
+	    font-size: 16px;
+	    line-height: 12px;
+	    letter-spacing: 0.44px;
+	    font-weight: 500;
+	    margin-bottom: 0;
+	     span {
+		    font-size: 12px;
+		    line-height: 14px;
+		    letter-spacing: 0.33px;
+		    margin-bottom: 8px;
+		    margin-top: 6px;
+		    display: block;
+		    color: #2E384D;
+		    font-weight: 400;
+			}
+			a.prjt-add {
+			    font-size: 14px;
+			    line-height: 20px;
+			    letter-spacing: 0.39px;
+			    margin-bottom: 0;
+			    display: block;
+			    color: #006DEE;
+			    font-weight: 500;
+				text-transform: uppercase;
+			}
+		}
+	}
+	@media screen and (max-width: 700px){
+		width:100%;
+		height:85px;
+	}
+}
+.booking-prjt-meets{
+    position: absolute;
+    top: 12px;
+    right: 20px;
+	.prjt-menu-top{
+	    width: 10px;
+			display: inline-block;
+	}
+}
+/**************************************/
+
+
 /**************** Booking Tower ********/
 .book-apartment{
 	.book-box-info{
