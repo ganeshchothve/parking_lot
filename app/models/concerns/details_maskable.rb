@@ -4,10 +4,12 @@ module DetailsMaskable
   def masked_email(current_user = nil)
     if maskable_field?(current_user)
       masked_email = ''
-      email.chars.each_with_index { |c, i| masked_email << (i.in?([(0..1).to_a, email.index('@'), (email.rindex('.')..email.length).to_a].flatten) ? c : '*';) } if email.present?
+      email.chars.each_with_index { |c, i| masked_email << (i.in?([(0..1).to_a, email.index('@'), (email.include?('.') ? email.rindex('.')..email.length : []).to_a].flatten) ? c : '*';) } if email.present?
       masked_email.gsub!(/\*+/, '*****')
     end
     masked_email.presence || email
+  rescue StandardError => e
+    email
   end
 
   def masked_phone(current_user = nil)

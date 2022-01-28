@@ -45,7 +45,7 @@ module IncentiveSchemeAutoApplication
 
         # Calculate incentives & generate invoices
         if Rails.env.production? || Rails.env.staging?
-          IncentiveCalculatorWorker.perform_async(self.class.to_s, id.to_s, category)
+          IncentiveCalculatorWorker.perform_async(self.class.to_s, id.to_s, category, timezone: Time.zone.name)
         else
           IncentiveCalculatorWorker.new.perform(self.class.to_s, id.to_s, category)
         end

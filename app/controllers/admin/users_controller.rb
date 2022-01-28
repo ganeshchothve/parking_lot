@@ -347,7 +347,9 @@ class Admin::UsersController < AdminController
         end
       else
         fund_account = user.fund_accounts.first
-        fund_account.assign_attributes(params.dig(:user, :fund_accounts).permit(FundAccountPolicy.new(current_user, fund_account).permitted_attributes))
+        if params.dig(:user, :fund_accounts).present?
+          fund_account.assign_attributes(params.dig(:user, :fund_accounts).permit(FundAccountPolicy.new(current_user, fund_account).permitted_attributes))
+        end
       end
 
       # Create/Update fund account in razorpay if its api is configured
