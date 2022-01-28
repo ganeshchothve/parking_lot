@@ -42,9 +42,4 @@
     <%= link_to Asset.model_name.human(count: 2), admin_projects_path('remote-state': assetables_path(assetable_type: project.class.model_name.i18n_key.to_s, assetable_id: project.id) ), class: "dropdown-item" %>
   <% end %>
 <% end %>
-<% if %w(cp_owner channel_partner).include?(current_user.role) && current_user.interested_projects.where(project_id: project.id).present? %>
-  <%= render "new_booking_links", project: project %>
-<% elsif !%w(cp_owner channel_partner).include?(current_user.role) %>
-  <%= render "new_booking_links", project: project %>
-<% end %>
 
