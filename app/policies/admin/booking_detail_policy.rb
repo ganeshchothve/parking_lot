@@ -108,7 +108,8 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def permitted_attributes
     attributes = super
-    attributes += [:project_tower_name, :agreement_price, :channel_partner_id, :other_costs, :project_unit_configuration, :booking_project_unit_name, :booked_on, :project_id, :primary_user_kyc_id, :project_unit_id, :user_id, :creator_id, :manager_id, :account_manager_id, :lead_id, :source, user_kyc_ids: []] if record.new_record?
+
+    attributes += [:project_tower_name, :agreement_price, :channel_partner_id, :other_costs, :project_unit_configuration, :booking_project_unit_name, :booked_on, :project_id, :primary_user_kyc_id, :project_unit_id, :user_id, :creator_id, :manager_id, :account_manager_id, :lead_id, :source, user_kyc_ids: []] if record.new_record? || (user.role?('account_manager_head') && record.status == 'blocked')
 
     attributes += [:agreement_date]
     if eligible_users_for_tasks?
