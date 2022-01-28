@@ -3,14 +3,12 @@
   <div class="single-booking-prjt-list mb-4">
     <div class="booking-prjt-thumb">
       <div class="booking-prjt-thumb-inner position-relative">
-        <h3 class="title text-center"><%= link_to booking_detail.lead.name, admin_booking_detail_path(booking_detail) %></h3>
+        <h5 class="title"><%= link_to booking_detail.lead.name, admin_booking_detail_path(booking_detail) %></h5>
+        <p class="devl-name"><%= booking_detail.project.name ? booking_detail.project.name : '-' %> | <%= booking_detail.project_tower_name ? booking_detail.project_tower_name : '-' %> | <%= booking_detail.booking_project_unit_name ? booking_detail.booking_project_unit_name : '-' %> </p>
       </div>
     </div>
     <div class="booking-inner-info">
       <div class="inner-info position-relative">
-        <p class="devl-name"><b>Project Name:</b> <%= booking_detail.project.name %></p>
-        <p class="devl-name"><b>Tower Name:</b> <%= booking_detail.project_tower_name %></p>
-        <p class="devl-name"><b>Unit Name:</b> <%= booking_detail.booking_project_unit_name %></p>
       </div>
       <div class="booking-prjt-date-info">
         <div class="inner-date">
