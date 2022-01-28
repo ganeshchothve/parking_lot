@@ -1,0 +1,5 @@
+<% if project.enable_inventory? %>
+  <%= link_to t('controller.booking_details.add_booking.link_name'), new_booking_on_project_admin_booking_details_path(project_id: project.id), class: 'dropdown-item modal-remote-form-link' %>
+<% else %>
+  <%= link_to "Add Booking", new_booking_without_inventory_admin_booking_details_path(project_id: project.id.to_s), class: "dropdown-item modal-remote-form-link" %>
+<% end %>

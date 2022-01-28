@@ -42,9 +42,9 @@
     <%= link_to Asset.model_name.human(count: 2), admin_projects_path('remote-state': assetables_path(assetable_type: project.class.model_name.i18n_key.to_s, assetable_id: project.id) ), class: "dropdown-item" %>
   <% end %>
 <% end %>
-<% if project.enable_inventory? %>
-  <%= link_to t('controller.booking_details.add_booking.link_name'), new_booking_on_project_admin_booking_details_path(project_id: project.id), class: 'dropdown-item modal-remote-form-link' %>
-<% else %>
-  <%= link_to "Add Booking", new_booking_without_inventory_admin_booking_details_path(project_id: project.id.to_s), class: "dropdown-item modal-remote-form-link" %>
+<% if %w(cp_owner channel_partner).include?(current_user.role) && current_user.interested_projects.where(project_id: project.id).present? %>
+  <%= render "new_booking_links", project: project %>
+<% elsif !%w(cp_owner channel_partner).include?(current_user.role) %>
+  <%= render "new_booking_links", project: project %>
 <% end %>
 
