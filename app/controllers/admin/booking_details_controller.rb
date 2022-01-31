@@ -98,9 +98,9 @@ class Admin::BookingDetailsController < AdminController
   #
   def mis_report
     if Rails.env.development?
-      BookingDetailMisReportWorker.new.perform(current_user.id.to_s, params[:fltrs])
+      BookingDetailMisReportWorker.new.perform(current_user.id.to_s, params[:fltrs].as_json)
     else
-      BookingDetailMisReportWorker.perform_async(current_user.id.to_s, params[:fltrs])
+      BookingDetailMisReportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json)
     end
     flash[:notice] = 'Your mis-report has been scheduled and will be emailed to you in some time'
     redirect_to admin_booking_details_path(fltrs: params[:fltrs].as_json)
