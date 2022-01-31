@@ -33,7 +33,7 @@
                     <div class="accordion-body pt-0 ps-4">
                       <div class="row ps-3">
                         <div class="col-3">
-                          <p class="fn-12 font-medium mb-0"><%= Lead.model_name.human %></p>
+                          <p class="fn-12 font-medium mb-0"><%= t('mongoid.attributes.booking_detail.lead_id') %></p>
                           <p class="fn-14">
                             <%= link_to_if @booking_detail.lead, (@booking_detail.lead.try(:name) || ''), [current_user_role_group, @booking_detail.lead] %>
                           </p>

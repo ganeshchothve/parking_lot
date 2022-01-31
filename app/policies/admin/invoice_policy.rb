@@ -21,7 +21,7 @@ class Admin::InvoicePolicy < InvoicePolicy
   def update?
     return false if record.project && !record.project.is_active?
     valid = user.role?('billing_team') && record.status.in?(%w(approved tax_invoice_raised pending_approval raised))
-    valid ||= user.role.in?(%w(channel_partner cp_owner)) && record.status.in?(%w(draft rejected))
+    # valid ||= user.role.in?(%w(channel_partner cp_owner)) && record.status.in?(%w(draft rejected))
     valid ||= user.role?('cp_admin') && record.pending_approval?
     valid ||= user.role.in?(%w(superadmin admin)) && record.status.in?(%w(draft rejected approved pending_approval))
     valid
@@ -87,7 +87,7 @@ class Admin::InvoicePolicy < InvoicePolicy
     case user.role.to_s
     when 'channel_partner', 'cp_owner'
       if record.status.in?(%w(draft rejected))
-        attributes += [:number, :amount, :gst_slab, :comments, :event]
+        attributes += [:number, :amount, :gst_slab, :comments]
         attributes += [:category] if record.new_record?
         attributes += [:agreement_amount] if record.manual? && record.invoiceable_type == 'BookingDetail'
       end
