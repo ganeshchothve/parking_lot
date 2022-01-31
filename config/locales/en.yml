@@ -418,6 +418,8 @@ en:
         agreement_price: 'Agreement Price'
         primary_user_kyc_id: 'Primary User Kyc'
         user_kyc_ids: 'Secondary User Kycs'
+        lead_id: 'Customer Name'
+        agreement_price: ' Consideration Value'
       booking_detail/selldo_status:
         booked_tentative: tentative
         booked_confirmed: confirmed
