@@ -420,6 +420,7 @@ en:
         invoice_generated: Invoice Generated
         tentative_agreement_date: Tentative Agreement Date
         agreement_date: Agreement Date
+        booked_on: Booked On
       booking_detail/selldo_status:
         booked_tentative: tentative
         booked_confirmed: confirmed
