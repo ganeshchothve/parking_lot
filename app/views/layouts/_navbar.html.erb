@@ -58,6 +58,9 @@
             <%= link_to 'Resume Work', move_to_next_state_admin_user_path(current_user, status: 'available', format: :json), method: 'patch', remote: true, data: { disable_with: 'Resuming Work...' }, class: 'dropdown-item available move-to-next-state' %>
             <% end %>
             <% end %>
+            <% if policy([Project]).switch_project? %>
+              <%= link_to t('controller.home.select_project.link_name'), buyer_select_project_path, class: "dropdown-item" %>
+            <% end %>
             <%= link_to t('sign_out', scope: "devise"), destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
           </div>
         </div>
