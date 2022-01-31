@@ -2,13 +2,17 @@ require 'spreadsheet'
 class BookingDetailMisReportWorker
   include Sidekiq::Worker
 
-  def perform user_id
+  def perform user_id, filters = nil
+    if filters.present? && filters.is_a?(String)
+      filters =  JSON.parse(filters)
+    end
+
     user = User.find(user_id)
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "Receipts")
     sheet.insert_row(0, BookingDetailMisReportWorker.get_column_names)
     row = 1
-    BookingDetail.where(BookingDetail.user_based_scope(user)).each_with_index do |booking_detail, index|
+    BookingDetail.where(BookingDetail.user_based_scope(user)).build_criteria({fltrs: filters}.with_indifferent_access).each_with_index do |booking_detail, index|
       sheet.insert_row(row, BookingDetailMisReportWorker.get_booking_detail_row(booking_detail))
       row = row + 1
       if (booking_detail.try(:booking_detail_scheme).try(:payment_adjustments).try(:count) || 0) > 1
@@ -19,7 +23,6 @@ class BookingDetailMisReportWorker
           row = row + 1
         end
       end
-
     end
     file_name = "booking_detail_mis-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/exports/#{file_name}")

@@ -97,9 +97,13 @@ class Admin::BookingDetailsController < AdminController
   # GET /admin/booking_details/mis_report
   #
   def mis_report
-    BookingDetailMisReportWorker.perform_async(current_user.id.to_s)
+    if Rails.env.development?
+      BookingDetailMisReportWorker.new.perform(current_user.id.to_s, params[:fltrs])
+    else
+      BookingDetailMisReportWorker.perform_async(current_user.id.to_s, params[:fltrs])
+    end
     flash[:notice] = 'Your mis-report has been scheduled and will be emailed to you in some time'
-    redirect_to request.referer || dashboard_path
+    redirect_to admin_booking_details_path(fltrs: params[:fltrs].as_json)
   end
 
   #
