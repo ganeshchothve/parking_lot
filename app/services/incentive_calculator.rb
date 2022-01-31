@@ -45,7 +45,8 @@ class IncentiveCalculator
               existing_invoices = Invoice::Calculated.where(project_id: _resource.try(:project_id), invoiceable: _resource, incentive_scheme_id: scheme.id, manager_id: channel_partner.id, category: scheme.category, brokerage_type: scheme.brokerage_type)
 
               if invoice.new_record?
-                agreement_amount = @resource.project.enable_inventory? ? @resource.calculate_agreement_price.rounc : @resource.agreement_price.round
+                # Only in case of booking we set the agreement amount on invoice.
+                agreement_amount = (@resource.project.enable_inventory? ? (@resource.try(:calculate_agreement_price).try(:round) || 0) : (@resource.try(:agreement_price).try(:round) || 0))
                 amount = (incentive_amount - existing_invoices.sum(:amount)).round
                 invoice.agreement_amount = agreement_amount
                 invoice.amount = (amount > 0 ? amount : 0)
