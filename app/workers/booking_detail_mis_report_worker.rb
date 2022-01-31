@@ -23,7 +23,7 @@ class BookingDetailMisReportWorker
     end
     file_name = "booking_detail_mis-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/exports/#{file_name}")
-    ExportMailer.notify(file_name, user.email, "Units").deliver
+    ExportMailer.notify(file_name, user.email, "Booking Detail MIS").deliver
   end
 
   def self.get_column_names
