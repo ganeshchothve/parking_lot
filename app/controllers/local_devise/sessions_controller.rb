@@ -42,12 +42,12 @@ class LocalDevise::SessionsController < Devise::SessionsController
           Rails.logger.info "---------------- #{resource.otp_code} ----------------"
         end
         if otp_sent_status[:status]
-          format.json { render json: {confirmed: resource.confirmed?, phone: resource.phone, errors: ""}, status: 200 }
+          format.json { render json: {confirmed: resource.confirmed?, phone: resource.phone, errors: []}, status: 200 }
         else
-          format.json { render json: {errors: otp_sent_status[:error]}, status: 422 }
+          format.json { render json: {errors: [otp_sent_status[:error]].flatten}, status: 422 }
         end
       else
-        format.json { render json: {errors: "Please enter a valid login"}, status: :unprocessable_entity }
+        format.json { render json: {errors: ["Please enter a valid login"]}, status: :unprocessable_entity }
       end
     end
   end

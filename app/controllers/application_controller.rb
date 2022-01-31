@@ -154,7 +154,7 @@ class ApplicationController < ActionController::Base
   end
 
   def token_authentication_valid_params?
-    params[:user_email].present? && params[:user_token].present?
+    params[:user_login].present? && params[:user_token].present?
   end
 
   def user_not_authorized(exception)

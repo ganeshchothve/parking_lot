@@ -6,7 +6,10 @@ module UsersConcern
     @booking_details = @user.booking_details.paginate(page: params[:page], per_page: params[:per_page])
     @receipts = @user.receipts.order('created_at DESC').paginate(page: params[:page], per_page: params[:per_page])
     @referrals = @user.referrals.order('created_at DESC').paginate(page: params[:page], per_page: params[:per_page])
-    render template: 'admin/users/show'
+    respond_to do |format|
+      format.html { render template: 'admin/users/show' }
+      format.json { render json: { user: @user.as_json } }
+    end
   end
 
   def edit

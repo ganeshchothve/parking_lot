@@ -106,30 +106,35 @@ class Admin::UserPolicy < UserPolicy
 
   def permitted_attributes(params = {})
     attributes = super
-    attributes += [:is_active] if record.persisted? && record.id != user.id && (!record.role.in?(%w(cp_owner channel_partner)) || user.role.in?(%w(cp_owner superadmin)))
-    if %w[admin superadmin].include?(user.role) && record.role.in?(%w(channel_partner cp cp_owner))
-      attributes += [:manager_id]
-    end
-    if %w[admin superadmin cp_admin sales_admin].include?(user.role) && record.buyer?
-      # TODO: Lead conflict module with multi project
-      #attributes += [:manager_id]
-      #attributes += [:manager_change_reason] if record.persisted?
-      attributes += [:allowed_bookings] if current_client.allow_multiple_bookings_per_user_kyc?
-    end
+    if user.present?
+      attributes += [:is_active] if record.persisted? && record.id != user.id && (!record.role.in?(%w(cp_owner channel_partner)) || user.role.in?(%w(cp_owner superadmin)))
+      if %w[admin superadmin].include?(user.role) && record.role.in?(%w(channel_partner cp cp_owner))
+        attributes += [:manager_id]
+      end
+      if %w[admin superadmin cp_admin sales_admin].include?(user.role) && record.buyer?
+        # TODO: Lead conflict module with multi project
+        #attributes += [:manager_id]
+        #attributes += [:manager_change_reason] if record.persisted?
+        attributes += [:allowed_bookings] if current_client.allow_multiple_bookings_per_user_kyc?
+      end
+
+      attributes += [:premium, :tier_id] if record.role.in?(%w(cp_owner channel_partner)) && user.role?('admin')
+      attributes += [:role] if %w[superadmin admin cp_owner].include?(user.role)
+      attributes += [project_ids: []] if %w[admin superadmin].include?(user.role) && record.role.in?(User::SELECTED_PROJECT_ACCESS)
+      if %w[superadmin admin sales_admin].include?(user.role)
+        attributes += [:erp_id]
+        attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
+      end
+      # To give selected channel partner access of live inventory.
+      attributes += [:enable_live_inventory] if user.role?(:superadmin) && record.role?(:channel_partner)
+    end # user.present?
+
     if record.role.in?(%w(cp_owner channel_partner))
       attributes += [:upi_id]
-      attributes += [:channel_partner_id] if user.role.in?(%w(superadmin cp_owner))
+      attributes += [:referral_code] if record.new_record?
+      attributes += [:channel_partner_id] if user.present? && user.role.in?(%w(superadmin cp_owner))
     end
     attributes += [:login_otp] if confirm_via_otp?
-    attributes += [:premium, :tier_id] if record.role?('channel_partner') && user.role?('admin')
-    attributes += [:role] if %w[superadmin admin cp_owner].include?(user.role)
-    attributes += [project_ids: []] if %w[admin superadmin].include?(user.role) && record.role.in?(User::SELECTED_PROJECT_ACCESS)
-    if %w[superadmin admin sales_admin].include?(user.role)
-      attributes += [:erp_id]
-      attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
-    end
-    # To give selected channel partner access of live inventory.
-    attributes += [:enable_live_inventory] if user.role?(:superadmin) && record.role?(:channel_partner)
     attributes.uniq
   end
 end

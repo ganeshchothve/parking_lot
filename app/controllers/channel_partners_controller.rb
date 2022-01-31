@@ -1,11 +1,11 @@
 class ChannelPartnersController < ApplicationController
   include ChannelPartnerRegisteration
 
-  before_action :authenticate_user!, except: %i[new create create_cp_user], unless: proc { params[:action] == 'index' && params[:ds] == 'true' }
+  before_action :authenticate_user!, except: %i[new create find_or_create_cp_user], unless: proc { params[:action] == 'index' && params[:ds] == 'true' }
   before_action :set_channel_partner, only: %i[show edit update destroy change_state asset_form]
   around_action :apply_policy_scope, only: :index
-  before_action :authorize_resource, except: [:new, :create, :create_cp_user]
-  skip_before_action :verify_authenticity_token, only: [:create_cp_user]
+  before_action :authorize_resource, except: [:new, :create, :find_or_create_cp_user]
+  skip_before_action :verify_authenticity_token, only: [:find_or_create_cp_user]
 
   def index
     @channel_partners = ChannelPartner.build_criteria params
@@ -111,12 +111,23 @@ class ChannelPartnersController < ApplicationController
   #   end
   # end
 
-  def create_cp_user
-    @user = User.new(permitted_attributes([:buyer, User.new]))
-    @user.assign_attributes(role: "cp_owner", booking_portal_client_id: current_client.id)
+  def find_or_create_cp_user
+    @user = User.where(phone: params.dig(:user, :phone)).first
+    unless @user
+      @user = User.new(permitted_attributes([:admin, User.new]))
+      @user.assign_attributes(role: "cp_owner", booking_portal_client_id: current_client.id)
+    end
     respond_to do |format|
-      if @user.save
-        format.json { render json: { user: @user.as_json }, status: :created }
+      if @user.persisted? || @user.save
+        otp_sent_status = @user.send_otp
+        if Rails.env.development?
+          Rails.logger.info "---------------- #{@user.otp_code} ----------------"
+        end
+        if otp_sent_status[:status]
+          format.json { render json: { user: @user.as_json }, status: :created }
+        else
+          format.json { render json: {user: @user.as_json, errors: [otp_sent_status[:error]].flatten}, status: :created }
+        end
       else
         format.json { render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity }
       end
