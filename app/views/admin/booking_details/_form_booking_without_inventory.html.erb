@@ -28,7 +28,7 @@
     <%= f.text_field :project_unit_configuration, class: 'form-control', required: 'required' %>
   </div>
   <div class="mb-3 position-relative offline">
-    <%= f.label :agreement_price, class: 'label-required' %>
+    <%= f.label :agreement_price_without_inventory, class: 'label-required' %>
     <%= f.number_field :agreement_price, class: 'form-control', required: 'required' %>
   </div>
   <% if policy([current_user_role_group, f.object]).editable_field?("other_costs")%>
