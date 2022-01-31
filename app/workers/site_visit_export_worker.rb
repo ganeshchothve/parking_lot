@@ -66,7 +66,7 @@ class SiteVisitExportWorker
       sv.manager&.name,
       sv.manager_id.to_s,
       sv.manager&.phone,
-      sv.manager&.upi_id,
+      sv.manager&.fund_accounts&.first.try(:address),
       sv.manager&.role,
     ] + Crm::Base.all.map{|crm| sv.third_party_references.where(crm_id: crm.id).first.try(:reference_id) }
 

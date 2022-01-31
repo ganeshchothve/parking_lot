@@ -128,10 +128,14 @@ module InvoiceStateMachine
     end
 
     def make_payment
-      if Rails.env.staging? || Rails.env.production?
-        InvoicePayoutWorker.perform_async(self.id.to_s)
-      else
-        InvoicePayoutWorker.new.perform(self.id.to_s)
+      if self.brokerage_type == 'sub_brokerage'
+        if invoiceable.is_a?(SiteVisit) && self.category.in?(%w(walk_in))
+          if Rails.env.staging? || Rails.env.production?
+            InvoicePayoutWorker.perform_async(self.id.to_s)
+          else
+            InvoicePayoutWorker.new.perform(self.id.to_s)
+          end
+        end
       end
     end
 
