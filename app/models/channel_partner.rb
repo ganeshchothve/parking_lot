@@ -22,7 +22,7 @@ class ChannelPartner
   CATEGORY = ['CP Company', 'Individual CP', 'ROTN', 'IRDA', 'Chartered accountants', 'IT Profession']
   SOURCE = ['Internal CP', 'External CP']
 
-  SHORT_FORM = %i(company_name rera_applicable status interested_services)
+  SHORT_FORM = %i(company_name rera_applicable status)
   FULL_FORM = SHORT_FORM.clone + %i(gst_applicable nri manager_id)
 
   attr_accessor :first_name, :last_name, :email, :phone, :referral_code, :is_existing_company
@@ -75,14 +75,14 @@ class ChannelPartner
   )
 
   belongs_to :manager, class_name: 'User', optional: true
-  belongs_to :primary_user, class_name: 'User', optional: true
+  belongs_to :primary_user, class_name: 'User'
   has_many :users
   has_one :address, as: :addressable
   has_one :bank_detail, as: :bankable, validate: false
   has_many :assets, as: :assetable
   has_many :site_visits
 
-  validates :first_name, :last_name, presence: true, on: :create
+  validates :first_name, presence: true, on: :create
   validates *SHORT_FORM, presence: true
   validates *FULL_FORM, presence: true, on: :submit_for_approval
   validate :phone_or_email_required, if: proc { |cp| cp.phone.blank? && cp.email.blank? }, on: :create
@@ -108,6 +108,7 @@ class ChannelPartner
   #validates :first_name, :last_name, name: true, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
   # validate :user_based_uniqueness, on: :create
+  validates :primary_user_id, uniqueness: true
 
   validates :experience, inclusion: { in: proc{ ChannelPartner::EXPERIENCE } }, allow_blank: true
   validates :expertise, array: { inclusion: {allow_blank: true, in: ChannelPartner::EXPERTISE } }

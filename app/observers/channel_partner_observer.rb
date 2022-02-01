@@ -1,6 +1,19 @@
 class ChannelPartnerObserver < Mongoid::Observer
   include ApplicationHelper
 
+  def before_validation channel_partner
+    # Set primary user on create channel partner first time
+    if channel_partner.primary_user_id.blank?
+      query = []
+      query << { phone: channel_partner.phone } if channel_partner.phone.present?
+      query << { email: channel_partner.email } if channel_partner.email.present?
+      user = User.in(role: %w(channel_partner cp_owner)).or(query).first
+      if user.present?
+        channel_partner.primary_user_id = user.id
+      end
+    end
+  end
+
   def after_create channel_partner
     query = []
     query << { phone: channel_partner.phone } if channel_partner.phone.present?
@@ -30,7 +43,6 @@ class ChannelPartnerObserver < Mongoid::Observer
       user.active
     end
     user.save!
-    # channel_partner.set(primary_user_id: user.id)
 
     if (selldo_api_key = user&.booking_portal_client&.selldo_api_key.presence) && (selldo_client_id = user&.booking_portal_client&.selldo_client_id.presence)
       SelldoLeadUpdater.perform_async(user.id.to_s, {stage: channel_partner.status, action: 'add_cp_portal_stage', selldo_api_key: selldo_api_key, selldo_client_id: selldo_client_id})
