@@ -100,7 +100,7 @@ class Lead
   scope :filter_by_cp_manager_id, ->(cp_manager_id) {where(cp_manager_id: cp_manager_id) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
-  scope :filter_by_stage, ->(stage) { where(stage: stage) }
+  scope :filter_by_lead_stage, ->(lead_stage) { where(lead_stage: lead_stage) }
   scope :filter_by_customer_status, ->(*customer_status){ where(customer_status: { '$in': customer_status }) }
   scope :filter_by_queue_number, ->(queue_number){ where(queue_number: queue_number) }
   scope :incentive_eligible, ->(category) do
@@ -324,13 +324,13 @@ class Lead
         #channel_partner_ids = User.where(role: 'channel_partner', manager_id: user.id).distinct(:id)
         #lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
         #custom_scope = {_id: { '$in': lead_ids } }
-        custom_scope = {cp_manager_id: user.id}
+        custom_scope = {}
       when :cp_admin
         #channel_partner_manager_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
         #channel_partner_ids = User.in(manager_id: channel_partner_manager_ids).distinct(:id)
         #lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
         #custom_scope = {_id: { '$in': lead_ids } }
-        custom_scope = {cp_admin_id: user.id}
+        custom_scope = {}
       end
       custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
       custom_scope = { user_id: user.id } if user.buyer?

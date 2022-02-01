@@ -12,17 +12,22 @@ class ThirdPartyReference
   after_save :update_references
 
   def update_references
-    if self._parent.class == ChannelPartner
+    case self._parent.class.name
+    when 'ChannelPartner'
       #if cp_user = self._parent.associated_user.presence
       #  cp_user.update_external_ids({reference_id: self.reference_id}, self.crm_id.to_s)
       #end
-    elsif self._parent.class.in?([Lead, User])
+    when 'Lead', 'User'
       if self.crm.try(:domain) == ENV_CONFIG.dig(:selldo, :base_url) && self._parent.lead_id.blank?
         self._parent.set(lead_id: self.reference_id)
       end
-    elsif self._parent.class == SiteVisit
+    when 'SiteVisit'
       if self.crm.try(:domain) == ENV_CONFIG.dig(:selldo, :base_url) && self._parent.selldo_id.blank?
         self._parent.set(selldo_id: self.reference_id)
+      end
+    when /Invoice/
+      if self.crm.try(:domain) == ENV_CONFIG.dig(:razorpay, :base_url) && self._parent.may_paid?
+        self._parent.paid!
       end
     end
   end

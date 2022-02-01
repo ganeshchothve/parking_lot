@@ -133,6 +133,7 @@ class Admin::UserPolicy < UserPolicy
       attributes += [:upi_id]
       attributes += [:referral_code] if record.new_record?
       attributes += [:channel_partner_id] if user.present? && user.role.in?(%w(superadmin cp_owner))
+      attributes += [fund_accounts_attributes: FundAccountPolicy.new(user, FundAccount.new).permitted_attributes] if record.persisted?
     end
     attributes += [:login_otp] if confirm_via_otp?
     attributes.uniq

@@ -240,6 +240,9 @@ en:
       user:
         one: User Account
         other: Users Accounts
+      fund_account:
+        one: Fund Account
+        other: Fund Accounts
       lead:
         one: Lead
         other: Leads
@@ -326,6 +329,8 @@ en:
         request_payload: 'Request Payload'
         is_active: 'Active'
         response_crm_id_location: 'CRM Reference ID Location In Response'
+      crm/api/put:
+        http_method: 'HTTP Method'
 
       bulk_upload_report:
         uploaded_by_id: 'Uploaded By'
@@ -334,6 +339,12 @@ en:
         success_count: 'Successfully Uploaded'
         failure_count: 'Failed to Upload'
         file_uploaded: 'File Uploaded'
+      banner_asset:
+        uploaded_by_id: 'Uploaded By'
+        banner_image: 'Website Banner'
+        mobile_banner_image: 'Mobile Banner'
+        url: 'URL'
+        publish: 'Publish'
       upload_error:
         row: 'Row'
         errors: 'Errors'
@@ -509,6 +520,9 @@ en:
         launched_on: Launch Date
         developer_name: Developer Name
         approved_banks: Approved Banks
+        support_name: Name
+        support_mail: Email
+        support_phone: Contact
         allowed_bookings_per_user: 'Bookings allowed per user'
         selldo_client_id: 'SellDo Client ID'
         selldo_form_id: 'SellDo Form ID'
@@ -585,7 +599,6 @@ en:
           sbi: State Bank of India
           bob: Bank of Baroda
           bajaj_finance: Bajaj Finance
-
       project/category:
         pre_launch: Pre Launch
         launch: Launch
@@ -640,7 +653,7 @@ en:
         gstin_number: "GST Number"
         pan_number: "PAN Number"
         aadhaar: "Aadhaar"
-        name_email_phone: 'Name/Email/Phone'
+        name_email_phone: 'Partner Companies'
         details: 'Details'
         team_size: 'Team Size'
         rera_applicable: 'Is RERA Applicable?'
@@ -907,6 +920,7 @@ en:
         brokerage_type: Brokerage Type
         payment_to: Payment To
         auto_apply: Auto Apply
+        date_range: Date Range
       incentive_scheme/categories:
         walk_in: 'Walk-in'
         spot_booking: 'Spot Booking'
@@ -949,7 +963,7 @@ en:
         agreement_amount: 'Consideration Value For Brokerage'
         incentive_resource: 'Resource'
         category: 'Type'
-        manager_id: 'Partner'
+        manager_id: 'Partner / Manager / Added by'
         account_manager_id: 'Account Manager'
       invoice/status:
         draft: 'Draft'
@@ -1252,6 +1266,10 @@ en:
         direct: Direct
         dev_sourcing_manager: 'Developer Sourcing Manager'
 
+      fund_account:
+        address: 'UPI Address'
+        is_active: 'Activate UPI Address'
+
       lead:
         name: 'Name'
         phone: 'Phone'
@@ -1264,7 +1282,7 @@ en:
         payment_done: '9.90% Received'
         blocking_amount_paid: 'Booking Amount Paid'
         registration_done: 'Registration Done'
-        stage: 'From developer CRM'
+        stage: 'Status (From Developer CRM)'
         lead_id: 'Lead Id'
         lead_validity_period: 'Lead Validity Period'
         selldo_lead_registration_date: 'Sell Do Lead Registration Date'
@@ -1273,6 +1291,13 @@ en:
         customer_status: 'Queue Status'
         search_by_name: 'Name/ Email/ Phone'
         push_to_crm: 'Do You Want The Developer To Contact The Customer ?'
+
+      lead/stage:
+        incoming: 'Incoming'
+        booked: 'Booked'
+        opportunity: 'Opportunity'
+        prospect: 'Prospect'
+        unqualified: 'Unqualified'
 
       cp_lead_activity:
         lead_id: 'Lead Id'
@@ -1428,6 +1453,9 @@ en:
     announcements:
       index:
         link_name: 'Announcements'
+    banner_assets:
+      index:
+        link_name: 'Banner Assets'
     campaigns:
       index:
         link_name: 'Campaigns'

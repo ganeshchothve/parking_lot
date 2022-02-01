@@ -35,15 +35,22 @@ class PublicAssetUploader < CarrierWave::Uploader::Base
   end
 
   def save_file_size_in_model
-    model.file_size = file.size if model.respond_to?(:file_size)
-    model.file_name = file.filename if model.respond_to?(:file_name)
+    if model.class.to_s == 'BannerAsset'
+      model.file_size = file.size if model.respond_to?(:file_size) && mounted_as.to_s == 'banner_image'
+      model.file_name = file.filename if model.respond_to?(:file_name) && mounted_as.to_s == 'banner_image'
+      model.mobile_file_size = file.filename if model.respond_to?(:mobile_file_size) && mounted_as.to_s == 'mobile_banner_image'
+      model.mobile_file_name = file.filename if model.respond_to?(:mobile_file_name) && mounted_as.to_s == 'mobile_banner_image'
+    else
+      model.file_size = file.size if model.respond_to?(:file_size)
+      model.file_name = file.filename if model.respond_to?(:file_name)
+    end
   end
 
   def content_type_whitelist
-    ['image/jpeg', 'image/png', 'image/jpg', 'image/svg+xml', 'video/mp4']
+    ['image/jpeg', 'image/png', 'image/jpg', 'image/svg', 'video/mp4', 'application/pdf']
   end
 
-  def extension_white_list
+  def extension_whitelist
     PublicAsset::ALLOWED_EXTENSIONS
     # %w(JPEG JFIF Exif TIFF BMP GIF PNG PPM PGM PBM PNM WebP HEIF BAT BPG CD5 DEEP ECW FITS FLIF ICO ILBM IMG IMG JPEG Nrrd PAM PCX PGF PLBM SGI SID TGA VICAR XISF CPT PSD PSP XCF CGM SVG AI CDR DrawingML HPGL HVIF MathML NAPLPS ODG PSTricks PGF TikZ ReGIS VML WMF Xar XPS EPS PDF PostScript PICT SWF XAML jpeg jfif exif tiff bmp gif png ppm pgm pbm pnm webp heif bat bpg cd5 deep ecw fits flif ico ilbm img img jpeg nrrd pam pcx pgf plbm sgi sid tga vicar xisf cpt psd psp xcf cgm svg ai cdr drawingml hpgl hvif mathml naplps odg pstricks pgf tikz regis vml wmf xar xps eps pdf postscript pict swf xaml ZIP zip TAR tar PDF pdf jpg JPG odp ODP)
   end

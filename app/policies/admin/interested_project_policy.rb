@@ -1,10 +1,10 @@
 class Admin::InterestedProjectPolicy < InterestedProjectPolicy
   def index?
-    create?
+    user.role.in?(%w(channel_partner cp_owner)) && user.active_channel_partner?
   end
 
   def create?
-    user.role.in?(%w(channel_partner cp_owner)) && user.active_channel_partner?
+    index? && record.project&.is_active?
   end
 
   def subscribe_projects?
@@ -17,6 +17,10 @@ class Admin::InterestedProjectPolicy < InterestedProjectPolicy
 
   def update?
     edit?
+  end
+
+  def report?
+    user.role.in?(%w(cp cp_admin admin superadmin))
   end
 
   def permitted_attributes(params = {})

@@ -29,7 +29,7 @@
         <%= t("emails.status.#{email.status}") %>
       </td>
       <td data-title=<%= t('mongoid.attributes.email.sent_on') %>>
-        <%= email.sent_on.try(:in_time_zone, current_user.time_zone).try(:strftime, '%b %e %Y, %l:%M %p') || '-' %>
+        <%= email.sent_on.present? ? email.sent_on.strftime('%b %e %Y, %l:%M %p') : '-' %>
       </td>
       <td>
         <div class="dropdown">

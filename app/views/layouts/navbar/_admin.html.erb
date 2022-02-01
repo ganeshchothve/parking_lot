@@ -2,7 +2,7 @@
 <% if policy(:dashboard).index? %>
   <% if ["admin","superadmin"].include?(current_user.role) %>
 
-    <li class="nav-item d-none d-lg-block accordion">
+    <li class="nav-item accordion">
       <div class="accordion-item bg-menu rounded-none border-0 dropdown">
         <%= active_link_to t('controller.dashboard.index.link_name'), "javascript:;", active: :exclusive, class: "nav-link pl-0 pr-0 dropdown-toggle", data: {toggle: 'dropdown'}, id: "dropdownMenuLeft", "data-bs-toggle": "collapse", "data-bs-target":"#dashboardMenu", "aria-expanded": "false" %>
         <div id="dashboardMenu" class="accordion-collapse collapse" aria-labelledby="dropdownMenuLeft">
@@ -13,7 +13,7 @@
       </div>
     </li>
   <% elsif ["cp_owner"].include?(current_user.role) %>
-    <li class="nav-item d-none d-lg-block accordion">
+    <li class="nav-item accordion">
       <div class="accordion-item bg-menu rounded-none border-0 dropdown">
         <%= active_link_to t('controller.dashboard.index.link_name'), "javascript:;", active: :exclusive, class: "nav-link pl-0 pr-0 dropdown-toggle", data: {toggle: 'dropdown'}, id: "dropdownMenuLeft", "data-bs-toggle": "collapse", "data-bs-target":"#dashboardMenu", "aria-expanded": "false" %>
         <div id="dashboardMenu" class="accordion-collapse collapse" aria-labelledby="dropdownMenuLeft">
@@ -119,6 +119,11 @@
 <% if policy([:admin, UserRequest]).index? %>
   <li class="nav-item">
     <%= active_link_to t('controller.user_requests.index.link_name'), [:admin, UserRequest, request_type: :all], active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  </li>
+<% end %>
+<% if policy([:admin, BannerAsset]).index? %>
+  <li class="nav-item">
+    <%= active_link_to t('controller.banner_assets.index.link_name'), admin_banner_assets_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
   </li>
 <% end %>
 

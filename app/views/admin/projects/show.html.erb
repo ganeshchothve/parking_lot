@@ -14,30 +14,33 @@
                             <p class="prjt-location"><i class="fa fa-map-marker-alt me-2"></i><%= @project.micro_market || '-' %></p>
                         </div>
                         <div class="col-lg-6 col-12 float-end text-end  px-0 pt-2">
-                            <div class="d-block">
-                            <% if current_user.role.in?(%w(superadmin admin)) %>
-                                <div class="dropdown show d-inline">
-                                    <a class="btn table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                                        <%= render "#{current_user_role_group}/projects/links", project: @project %>
-                                    </div>
-                                </div>
-                            <% end %>
+                          <div class="d-block">
                             <%= link_to_if (launchbook_url = @project.assets.where(document_type: 'sales_presentation').first&.file&.url&.presence), '<i class="fa fa-lock fill-theme me-3"></i>Launchbook'.html_safe, launchbook_url, class: 'prjt-lauchbook', target:'_blank' do |name|
-                                ''
-                              end%>
-                               <% if interest_access %>
+                              ''
+                            end%>
+                            <% if interest_access %>
                               <div class="prjt-share-save pt-3 pb-2 d-inline ms-3">
-                              <!--<a href="javascript:;" class="share-location me-3"><i class="fa fa-share-alt fill-theme me-2"></i>Share location</a>-->
-                                  <a href="javascript:;" class="prjt-save"></a>
-                                  <%= link_to_unless interest.present?, '<i class="fa fa-heart fill-theme me-2"></i>Show Interest'.html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: @project.id, event: 'subscribe'}), method: :post, class: 'prjt-save' do |name|
-                                    '<i class="fa fa-heart fill-danger"></i>'.html_safe
-                                  end
-                                  %>
-                            </div>
+                                <!--<a href="javascript:;" class="share-location me-3"><i class="fa fa-share-alt fill-theme me-2"></i>Share location</a>-->
+                                <a href="javascript:;" class="prjt-save"></a>
+                                <%= link_to_unless interest.present?, '<i class="fa fa-heart fill-theme me-2"></i>Show Interest'.html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: @project.id, event: 'subscribe'}), method: :post, class: 'prjt-save' do |name|
+                                  '<i class="fa fa-heart fill-danger"></i>'.html_safe
+                                end
+                              %>
+                              </div>
                             <% end %>
-                            </div>
-                            
+                            <% if policy([current_user_role_group, InterestedProject]).report? %>
+                              <% ip_count = User.where(User.user_based_scope(current_user, params)).filter_by_interested_project(@project.id).count %>
+                              <%= link_to "<i class='fa fa-heart fill-danger me-2'></i>#{ip_count}".html_safe, admin_users_path(fltrs: {interested_project: @project.id}), class: 'prjt-save' %>
+                            <% end %>
+                            <% if current_user.role.in?(%w(superadmin admin)) %>
+                              <div class="dropdown show d-inline">
+                                <a class="btn table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                                  <%= render "#{current_user_role_group}/projects/links", project: @project %>
+                                </div>
+                              </div>
+                            <% end %>
+                          </div>
                         </div>
                     </div>
                     <div class="prjt-gallery pb-3 col-12 float-start">
@@ -244,7 +247,8 @@
                                         <div class="tab-content br-1 br-rd-8 py-1 wd-100">
                                         <% @project.unit_configurations.each_with_index do | uc, index | %>
                                           <% units = uc.project_units %>
-                                          <% unit = units&.first %>
+                                          <% if units.present? %>
+                                            <% unit = units&.first %>
                                             <div class="tab-pane fade show <%= (index == 0) ? "active" : "" %>" id="floor_<%= uc.name&.gsub(/[()\s]*/, '').underscore + uc.saleable.to_i.to_s %>" role="tabpanel">
                                                 <div class="col-5 float-start">
                                                   <% if url = uc.assets.first&.file&.url&.presence %>
@@ -292,6 +296,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                          <% end %>
                                         <% end %>
                                         </div>
                                     </div>
@@ -710,7 +715,45 @@
                         </div>
                     </div>
                 </div>
-
+            <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card mb-5">
+                    <div class="row">
+                        <div class="col-md-12 pt-3 px-4">
+                            <h3 class="card-title">Support Contact Details</h3>
+                            <ul class="project-list list-unstyled row mb-0 pb-1">
+                                <li class="px-3 mb-2">
+                                    <div class="list-wrap row">
+                                        <div class="col-lg-6 col-8 pe-0">
+                                            <p class="list-txt mb-0"><%= t('mongoid.attributes.project.support_name')%></p>
+                                        </div>
+                                        <div class="col-lg-6 col-4 ps-0">
+                                          <h2 class='fn-14 mb-0 text-end'><%= @project.support_name.present? ? @project.support_name : 'NA' %></h2>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="px-3 mb-2">
+                                    <div class="list-wrap row">
+                                        <div class="col-lg-6 col-8 pe-0">
+                                           <p class="list-txt mb-0"><%= t('mongoid.attributes.project.support_phone')%></p>
+                                        </div>
+                                        <div class="col-lg-6 col-4 ps-0">
+                                          <h2 class="fn-14 mb-0 text-end"><%= @project.support_phone.present? ? @project.support_phone : 'NA' %></h2>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="px-3 mb-2">
+                                    <div class="list-wrap row">
+                                        <div class="col-lg-6 col-8 pe-0">
+                                           <p class="list-txt mb-0"><%= t('mongoid.attributes.project.support_mail')%></p>
+                                        </div>
+                                        <div class="col-lg-6 col-4 ps-0">
+                                          <h2 class="fn-14 mb-0 text-end"><%= @project.support_mail.present? ? @project.support_mail : 'NA' %></h2>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
                 <!--
                 <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card">
                     <div class="row">

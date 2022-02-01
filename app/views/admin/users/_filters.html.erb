@@ -24,6 +24,12 @@
             <%= select_tag "fltrs[channel_partner_id]", options_from_collection_for_select(params[:fltrs].present? ? ChannelPartner.where(_id: params[:fltrs][:channel_partner_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: channel_partners_path, ds: true }} %>
           </div>
         <% end %>
+        <% if policy([current_user_role_group, InterestedProject]).report? %>
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+            <%= label_tag "fltrs", InterestedProject.model_name.human %>
+            <%= select_tag "fltrs[interested_project]", options_from_collection_for_select(params[:fltrs].present? ? Project.where(_id: params[:fltrs][:interested_project]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_projects_path, ds: true }} %>
+          </div>
+        <% end %>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.user.created_at') %>
           <%= text_field_tag "fltrs[created_at]", (params.dig(:fltrs, :created_at).present? ? params[:fltrs][:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>

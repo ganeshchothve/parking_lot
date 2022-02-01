@@ -1,4 +1,4 @@
-<% if resource.incentive_eligible? && policy([:admin, Invoice.new]).new? %>
+<% if resource.incentive_eligible? && policy([:admin, Invoice.new(project_id: resource.try(:project_id))]).new? %>
   <%= link_to t('controller.invoices.new.link_name'), new_admin_invoiceable_path(invoiceable_type: resource.class.model_name.i18n_key.to_s, invoiceable_id: resource.id), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 <% if resource.incentive_eligible? && policy([:admin, Invoice ]).index? %>

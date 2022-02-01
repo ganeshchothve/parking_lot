@@ -1,0 +1,18 @@
+<section class="mb-5 mt-3">
+  <div class="px-4">
+    <div class="row">
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="table-btn-set float-end pb-2 text-end">
+          <% if policy([current_user_role_group, BannerAsset.new]).new? %>
+            <%= link_to "Upload Banner Image", new_admin_banner_asset_path, class: 'border rounded px-3 py-2 px-3 border-primary white bg-primary rounded py-2 ms-2 modal-remote-form-link btn' %>
+          <% end %>
+        </div>
+      </div>
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="box-card relative">
+          <%= render 'index', {banner_assets: @banner_assets} %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

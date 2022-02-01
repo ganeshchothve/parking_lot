@@ -34,6 +34,9 @@ class Project
   field :city, type: String
   field :project_type, type: Array, default: [ "residential" ]
   field :region, type: String
+  field :support_name, type: String
+  field :support_mail, type: String
+  field :support_phone, type: String
 
   # descriptive fields
   field :description, type: String
@@ -114,6 +117,7 @@ class Project
   field :check_sv_availability_in_selldo, type: Boolean, default: false
   field :incentive_calculation, type: Array, default: ["manual"]
 
+
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
     <div class="mt-3"></div>'
@@ -180,8 +184,6 @@ class Project
 
   accepts_nested_attributes_for :specifications, :offers, :timeline_updates, :address, :nearby_locations, allow_destroy: true
 
-  default_scope -> { where(is_active: true)}
-
   scope :filter_by__id, ->(_id) { all.in(_id: (_id.is_a?(Array) ? _id : [_id])) }
   scope :filter_by_category, ->(category) {category.is_a?(Array) ? where(category: {'$in': category}) : where(category: category) }
   scope :filter_by_project_segment, ->(project_segment) {project_segment.is_a?(Array) ? where(project_segment: {'$in': project_segment} ) : where(project_segment: project_segment) }
@@ -192,6 +194,8 @@ class Project
   scope :filter_by_hot, ->(hot) { where(hot: hot.eql?("true")) }
   scope :filter_by_user_interested_projects, ->(user_id) { all.in(id: InterestedProject.where(user_id: user_id).in(status: %w(subscribed approved)).distinct(:project_id)) }
   scope :filter_by_regions, ->(regions) {regions.is_a?(Array) ? where( region: { "$in": regions }) : where(region: regions)}
+  scope :filter_by_is_active, ->(is_active) { where(is_active: is_active.to_s == 'true') }
+  scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
 
   #def unit_configurations
   #  UnitConfiguration.where(data_attributes: {"$elemMatch" => {"n" => "project_id", "v" => self.selldo_id}})
@@ -245,17 +249,18 @@ class Project
   def self.user_based_scope(user, params = {})
     custom_scope = {}
     if user.role.in?(%w(cp_owner channel_partner))
-      custom_scope = { _id: { '$in': user.interested_projects.approved.distinct(:project_id) } } unless params[:controller] == 'admin/projects'
+      custom_scope = { _id: { '$in': user.interested_projects.approved.distinct(:project_id) } } unless params[:controller] == 'admin/projects' && params[:ds].blank?
     end
 
     unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
-      if user.selected_project_id.present?
+      if user.selected_project_id.present? && params[:select_project].blank?
         custom_scope.merge!({_id: user.selected_project_id})
       elsif user.project_ids.present?
         project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
         custom_scope.merge!({_id: {"$in": project_ids}})
       end
     end
+    custom_scope.merge!({ is_active: true }) if params[:controller].in?(%w(admin/projects home))
     custom_scope
   end
 end

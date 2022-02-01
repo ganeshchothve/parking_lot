@@ -32,8 +32,6 @@ class User
   devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :timeoutable, :password_archivable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: [:login] #:lockable,:expirable,:session_limitable,:password_expirable
 
   attr_accessor :temporary_password, :payment_link, :temp_manager_id
-  # Attributes used in events pushed to Interakt
-  attr_accessor :event_payload
 
   ## Database authenticatable
   field :first_name, type: String, default: ''
@@ -178,6 +176,7 @@ class User
   has_many :cp_lead_activities
   has_and_belongs_to_many :meetings
   has_many :interested_projects  # Channel partners can subscribe to new projects through this
+  has_many :fund_accounts
 
   has_many :notes, as: :notable
 
@@ -190,6 +189,7 @@ class User
   has_many :logs, class_name: 'SyncLog', inverse_of: :user_reference
   embeds_many :portal_stages
   embeds_many :user_notification_tokens
+
   accepts_nested_attributes_for :portal_stages, :user_notification_tokens, reject_if: :all_blank
   accepts_nested_attributes_for :interested_projects, reject_if: :all_blank
 
@@ -267,6 +267,9 @@ class User
       else
         User.none
       end
+  end
+  scope :filter_by_interested_project, ->(project_id) do
+    all.in(id: InterestedProject.approved.where(project_id: project_id).distinct(:user_id))
   end
 
 
@@ -360,15 +363,15 @@ class User
   def set_portal_stage_and_push_in_crm
     if self.role.in?(%w(cp_owner channel_partner))
       stage = self.channel_partner&.status
-      push_to_crm = self.booking_portal_client.external_api_integration?
       priority = PortalStagePriority.where(role: 'channel_partner').collect{|x| [x.stage, x.priority]}.to_h
       if stage.present? && priority[stage].present?
         self.portal_stages.where(stage:  stage).present? ? self.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : self.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
-        if push_to_crm
-          Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
-            api.execute(self)
-          end
-        end
+        #push_to_crm = self.booking_portal_client.external_api_integration?
+        #if push_to_crm
+        #  Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
+        #    api.execute(self)
+        #  end
+        #end
       end
     end
   end

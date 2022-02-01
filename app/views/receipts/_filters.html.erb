@@ -60,8 +60,8 @@
           </div>
           <% unless current_user.role?('channel_partner') %>
             <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-              <%= label_tag "fltrs", ChannelPartner.model_name.human, class: "control-label" %>
-              <%= select_tag "fltrs[manager_id]", options_for_select(filter_manager_options), { class: "selectize-remote", data: { url: admin_users_path, params: { fltrs: { role: 'channel_partner' } } } } %>
+              <%= label_tag "fltrs", t('mongoid.attributes.user.manager_id'), class: "control-label" %>
+              <%= select_tag "fltrs[manager_id]", options_for_select(filter_manager_options), { class: "selectize-remote", data: { url: admin_users_path, params: { fltrs: { role: ['channel_partner', 'cp_owner'] } } } } %>
             </div>
           <% end %>
           <% unless current_user.role.in?(%w(cp_owner cp channel_partner)) %>

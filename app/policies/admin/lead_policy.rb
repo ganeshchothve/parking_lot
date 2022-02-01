@@ -23,9 +23,13 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def new?
-    valid = true && !user.role?('dev_sourcing_manager')
+    valid = true && user.role.in?(%w(superadmin admin gre crm account_manager account_manager_head) + User::CHANNEL_PARTNER_USERS + User::SALES_USER)
     valid = false if user.present? && user.role.in?(%w(channel_partner cp_owner)) && !(user.active_channel_partner? && interested_project_present?)
     @condition = 'project_not_subscribed' unless valid
+    if record.is_a?(Lead) && !record.project.is_active?
+      @condition = 'project_not_active'
+      valid = false
+    end
     valid
   end
 
@@ -76,6 +80,10 @@ class Admin::LeadPolicy < LeadPolicy
         (record.is_a?(Lead) && record.may_dropoff? && (record.closing_manager_id == user.id)) ||
         (!record.is_a?(Lead) && record.role?('sales') && (record.may_break? || record.may_available?))
       )
+  end
+
+  def show_existing_customer?
+    %w(sales).exclude?(user.role)
   end
 
   def permitted_attributes(params = {})
