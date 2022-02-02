@@ -22,7 +22,7 @@
 <span>Bookings</span>
 <% if %w(cp_owner channel_partner).include?(current_user.role) && current_user.interested_projects.where(project_id: project.id).present? %>
   <%= render "new_booking_links", project: project %>
-<% elsif !%w(cp_owner channel_partner).include?(current_user.role) %>
+<% elsif !%w(cp_owner channel_partner billing_team).include?(current_user.role) %>
   <%= render "new_booking_links", project: project %>
 <% end %>
 <!-- <a href="javascript:;" class="prjt-add"></a> -->
