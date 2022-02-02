@@ -85,14 +85,13 @@
 
         <% if policy([current_user_role_group, InterestedProject.new(project_id: project.id)]).create? %>
           <% heart_class = project.id.in?(interested_project_ids) ? 'fill-danger' : 'fill-theme' %>
-          <%= link_to_if !project.id.in?(interested_project_ids), "<i class='fa fa-heart #{heart_class} me-3 d-none d-sm-block'></i>".html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-block' %>
+          <%= link_to_if !project.id.in?(interested_project_ids), "<i class='fa fa-heart #{heart_class} d-none d-sm-inline-block me-1'></i>".html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-inline-block me-2' %>
         <% end %>
         <% if policy([current_user_role_group, InterestedProject]).report? %>
           <% ip_count = User.where(User.user_based_scope(current_user, params)).filter_by_interested_project(project.id).count %>
           <%= link_to "<i class='fa fa-heart fill-danger d-none d-sm-inline-block me-1'></i>#{ip_count}".html_safe, admin_users_path(fltrs: {interested_project: project.id}), class: 'add-wishlist d-none d-sm-inline-block me-2' %>
         <% end %>
 
-        <% if current_user.role.in?(%w(superadmin admin)) %>
         <div class="prjt-menu-top float-md-right">
           <div class="dropdown">
             <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -103,7 +102,6 @@
             </div>
           </div>
         </div>
-        <% end %>
       </div>
 
       <div class='prjt-inner-stats fn-14 text-primary' style='top: 75%'>

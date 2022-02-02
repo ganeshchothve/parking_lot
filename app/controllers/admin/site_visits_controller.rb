@@ -22,6 +22,10 @@ class Admin::SiteVisitsController < AdminController
     end
   end
 
+  def show
+    @booking_details = BookingDetail.where(site_visit_id: @site_visit.id).paginate(page: params[:page], per_page: params[:per_page])
+  end
+
   #
   # This new action always create a new site_visit form for user's project unit rerceipt form.
   #

@@ -102,6 +102,8 @@ Rails.application.routes.draw do
       get :edit_booking_without_inventory, on: :member
       post :create_booking_without_inventory, on: :collection
       patch :update_booking_without_inventory, on: :member 
+      get :new_booking_on_project, on: :collection
+      post :process_booking_on_project, on: :collection
       resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
 
       resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts' do

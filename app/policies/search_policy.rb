@@ -74,6 +74,6 @@ class SearchPolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    [:bedrooms, :carpet, :agreement_price, :all_inclusive_price, :project_unit_id, :project_tower_id, :floor, :step, :payment_schedule_template_id, :cost_sheet_template_id]
+    [:site_visit_id, :bedrooms, :carpet, :agreement_price, :all_inclusive_price, :project_unit_id, :project_tower_id, :floor, :step, :payment_schedule_template_id, :cost_sheet_template_id]
   end
 end

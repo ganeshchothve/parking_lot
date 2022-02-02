@@ -80,6 +80,7 @@ class BookingDetail
   belongs_to :channel_partner, optional: true
   belongs_to :creator, class_name: 'User', optional: true
   belongs_to :account_manager, class_name: 'User', optional: true
+  belongs_to :site_visit, optional: true
 
   # TODO: uncomment
   # validates :name, presence: true

@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h3 class="title"><%= t('controller.booking_details.new.header', customer: f.object.lead.name, project: f.object.lead.project_name) %></h3>
+  <h3 class="title"><%= t('controller.booking_details.new.header', customer: f.object.lead.try(:name), project: (f.object.lead.try(:project_name) || f.object.project.name)) %></h3>
   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="modal-body">
@@ -7,7 +7,14 @@
     <%#= f.label :project_id, class: 'label-required control-label' %>
     <%#= f.select :project_id, Project.all.collect{|p| [p.name, p.id]}, {}, prompt: :translate, class: 'form-control selectize' %>
   <!-- </div> -->
-  <%= f.hidden_field :project_id, value: f.object.lead.project_id %>
+  <%= f.hidden_field :site_visit_id, value: f.object.site_visit.try(:id) %>
+  <%= f.hidden_field :project_id, value: ( f.object.lead.try(:project_id) || f.object.project_id ) %>
+  <% if !f.object.lead.present? && f.object.project.present? %>
+    <div class="mb-3">
+      <%= f.label :lead_id, class: 'label-required control-label' %>
+      <%= f.select :lead_id, options_for_select(filter_lead_options), {prompt: 'Select'},  required: 'required', class: "selectize-remote", data: { url: admin_leads_path(fltrs: {project_id: f.object.project.id, ds: true}) } %>
+    </div>
+  <% end %>
   <div class="mb-3 position-relative offline">
     <%= f.label :project_tower_name, class: 'label-required' %>
     <%= f.text_field :project_tower_name, class: 'form-control', required: 'required', disabled: !(policy([:admin, @booking_detail]).editable_field?("project_tower_name")) %>
@@ -21,33 +28,50 @@
     <%= f.text_field :project_unit_configuration, class: 'form-control', required: 'required', disabled: !(policy([:admin, @booking_detail]).editable_field?("project_unit_configuration")) %>
   </div>
   <div class="mb-3 position-relative offline">
-    <%= f.label :agreement_price, class: 'label-required' %>
+    <%= f.label :agreement_price_without_inventory, class: 'label-required' %>
     <%= f.number_field :agreement_price, class: 'form-control', required: 'required', disabled: !(policy([:admin, @booking_detail]).editable_field?("agreement_price")) %>
   </div>
-  <div class="mb-3 position-relative offline">
-    <%= f.label :other_costs, class: 'label-required' %>
-    <%= f.number_field :other_costs, class: 'form-control', required: 'required', disabled: !(policy([:admin, @booking_detail]).editable_field?("other_costs")) %>
-  </div>
+  <% if policy([current_user_role_group, f.object]).editable_field?("other_costs")%>
+    <div class="mb-3 position-relative offline">
+      <%= f.label :other_costs, class: 'label-required' %>
+      <%= f.number_field :other_costs, class: 'form-control', required: 'required', disabled: !(policy([:admin, @booking_detail]).editable_field?("other_costs")) %>
+    </div>
+  <% end %>
   <div class="mb-3 position-relative offline">
     <%= f.label :booked_on, class: 'label-required' %>
     <%= f.text_field :booked_on, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.booked_on.present? ? f.object.booked_on.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), value: f.object.booked_on.present? ? f.object.booked_on.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), disabled: !(policy([:admin, @booking_detail]).editable_field?("booked_on")) %>
   </div>
   <div class="mb-3 position-relative offline">
-    <%= f.label :agreement_date, class: 'label-required' %>
-    <% if current_user.role?('account_manager') %>
+    <% if %w(channel_partner cp_owner).include?(current_user.role) %>
+      <%= f.label 'Tentative agreement date', class: 'label-required' %>
+    <% else %>
+      <%= f.label :agreement_date, class: 'label-required' %>
+    <% end %>
+    <% if %w(channel_partner account_manager cp_owner).include?(current_user.role) %>
       <%= f.hidden_field :creator_id, value: current_user.id %>
-      <%= f.hidden_field :account_manager_id, value: current_user.id %>
+      <% if current_user.role?('account_manager') %>
+        <%= f.hidden_field :account_manager_id, value: current_user.id %>
+      <% end %>
+      <%= f.text_field :agreement_date, class: 'form-control datepicker', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '' %>
+    <% else %>
+      <%= f.text_field :agreement_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '' %>
     <% end %>
     <%= f.text_field :agreement_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', disabled: !(policy([:admin, @booking_detail]).editable_field?("agreement_date")) %>
   </div>
   <div class="mb-3">
     <%= f.label :source, class: 'label-required control-label' %>
-    <% booking_sources = f.object.lead.project.booking_sources %>
-    <%= f.select :source, booking_sources.collect{|s| [s, s]}, {}, prompt: :translate, class: 'selectize', disabled: !(policy([:admin, @booking_detail]).editable_field?("source")) %>
+    <% if %w(channel_partner cp_owner).include?(current_user.role) %>
+      <% booking_sources = ["Channel Partner"]%>
+    <% else %>
+      <% booking_sources = ( f.object.lead.present? ? f.object.lead.project.booking_sources : f.object.project.booking_sources ) %>
+    <% end %>
+    <%= f.select :source, booking_sources.collect{|s| [s, s]}, {}, prompt: :translate, class: 'selectize', disabled: !(policy([:admin, @booking_detail]).editable_field?("source"))  %>
   </div>
   <div class="mb-3">
-    <% if f.object.lead.manager && %w(channel_partner cp_owner).include?(f.object.lead.manager.role)
+    <% if f.object.lead.present? && f.object.lead.manager && %w(channel_partner cp_owner).include?(f.object.lead.manager.role)
       channel_partners = User.where(id: f.object.lead.manager_id)
+    elsif %w(channel_partner cp_owner).include?(current_user.role)
+      channel_partners = User.where(id: current_user.id)
     else
       channel_partners = User.in(role: ['channel_partner', 'cp_owner'] )
     end %>

@@ -14,7 +14,7 @@
                   aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v txt-light-blue"
                     aria-hidden="true"></i></a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                  <%= render "#{current_user_role_group}/booking_details/links", booking_detail: @booking_detail, link_name: 'Update Booking' %>
+                  <%= render "#{current_user_role_group}/booking_details/booking_without_inventory_links", booking_detail: @booking_detail, link_name: '' %>
                 </div>
               </div>
             </div>
@@ -33,7 +33,7 @@
                     <div class="accordion-body pt-0 ps-4">
                       <div class="row ps-3">
                         <div class="col-3">
-                          <p class="fn-12 font-medium mb-0"><%= Lead.model_name.human %></p>
+                          <p class="fn-12 font-medium mb-0"><%= t('mongoid.attributes.booking_detail.lead_id') %></p>
                           <p class="fn-14">
                             <%= link_to_if @booking_detail.lead, (@booking_detail.lead.try(:name) || ''), [current_user_role_group, @booking_detail.lead] %>
                           </p>

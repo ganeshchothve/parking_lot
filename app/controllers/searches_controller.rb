@@ -269,6 +269,9 @@ class SearchesController < ApplicationController
     if params[:step].present?
       @search.step = params[:step]
     end
+    if params[:site_visit_id].present?
+      @search.site_visit_id = params[:site_visit_id]
+    end
     if @search.next_step.present?
       eval("search_for_#{@search.next_step}")
     elsif @search.project_unit_id.present?
@@ -292,7 +295,8 @@ class SearchesController < ApplicationController
           saleable: @search.project_unit.saleable,
           costs: @search.project_unit.costs,
           data: @search.project_unit.data,
-          manager_id: @search.lead_manager_id
+          manager_id: @search.lead_manager_id,
+          site_visit_id: @search.site_visit_id
         )
         @booking_detail.search = @search
       end
