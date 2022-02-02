@@ -52,6 +52,8 @@ Rails.application.routes.draw do
     get 'export', action: 'export', on: :collection, as: :export
     post :change_state, on: :member
     get 'asset_form', on: :member
+    get :new_channel_partner, on: :collection
+    post :create_channel_partner, on: :collection
   end
 
   get '/s/:code', to: 'shortened_urls#redirect_to_url'
@@ -100,6 +102,8 @@ Rails.application.routes.draw do
       get :edit_booking_without_inventory, on: :member
       post :create_booking_without_inventory, on: :collection
       patch :update_booking_without_inventory, on: :member 
+      get :new_booking_on_project, on: :collection
+      post :process_booking_on_project, on: :collection
       resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
 
       resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts' do
@@ -358,6 +362,7 @@ Rails.application.routes.draw do
     get :cp_status, to: "dashboard#cp_status"
     get :project_wise_invoice_summary, to: "dashboard#project_wise_invoice_summary"
     get :project_wise_incentive_deduction_summary, to: "dashboard#project_wise_incentive_deduction_summary"
+    get :city_wise_booking_report, to: "dashboard#city_wise_booking_report"
     get :invoice_ageing_report, to: "dashboard#invoice_ageing_report"
     get :billing_team_dashboard, to: "dashboard#billing_team_dashboard"
     get :project_wise_summary, to: "dashboard#project_wise_summary"
@@ -367,6 +372,7 @@ Rails.application.routes.draw do
     get :channel_partner_dashboard_counts, to: "dashboard#channel_partner_dashboard_counts"
     #get :download_brochure, to: 'dashboard#download_brochure'
     get :sales_board, to: 'dashboard#sales_board'
+    get :booking_details_counts, to: 'dashboard#booking_details_counts'
 
     resource :lead do
       resources :searches, except: [:destroy], controller: 'searches' do

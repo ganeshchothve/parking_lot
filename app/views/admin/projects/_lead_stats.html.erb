@@ -20,7 +20,12 @@
 <% bookings_count = BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: project.id).count %>
 <%= link_to_if policy([current_user_role_group, BookingDetail]).index?, bookings_count, admin_booking_details_path(fltrs: {project_id: project.id})  %>
 <span>Bookings</span>
-<a href="javascript:;" class="prjt-add"></a>
+<% if %w(cp_owner channel_partner).include?(current_user.role) && current_user.interested_projects.where(project_id: project.id).present? %>
+  <%= render "new_booking_links", project: project %>
+<% elsif !%w(cp_owner channel_partner billing_team).include?(current_user.role) %>
+  <%= render "new_booking_links", project: project %>
+<% end %>
+<!-- <a href="javascript:;" class="prjt-add"></a> -->
 </p>
 <!--
   <p>
