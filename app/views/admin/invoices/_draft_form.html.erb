@@ -112,7 +112,7 @@
     FormInitializer.init($("#invoice_form"));
     var netAmt = '<%= @invoice.net_amount %>';
     var gstApplicable = '<%= @invoice.try(:project)&.gst_slab_applicable? %>';
-    var invoiceType = '<%= @invoice.class.to_s.underscore.gsub('/', '_') %>';
+    var invoiceType = '<%= @invoice.class.to_s.underscore.gsub('/', '_') %>'
 
     $('#' + invoiceType + '_gst_slab, #' + invoiceType + '_amount').on('change', function(event) {
       var gstAmount = 0;

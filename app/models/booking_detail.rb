@@ -36,6 +36,7 @@ class BookingDetail
   field :all_inclusive_price, type: Integer
   field :booked_on, type: Date
   field :agreement_date, type: Date
+  field :tentative_agreement_date, type: Date
   field :ladder_stage, type: Array
   field :source, type: String
 
@@ -97,7 +98,14 @@ class BookingDetail
 
   scope :filter_by_id, ->(_id) { where(_id: _id) }
   scope :filter_by_name, ->(name) { where(name: ::Regexp.new(::Regexp.escape(name), 'i')) }
-  scope :filter_by_status, ->(status) { where(status: status) }
+  scope :filter_by_status, ->(status) do
+    if status.is_a?(Array)
+      where(status: {"$in": status})
+    else
+      where(status: status)
+    end
+  end
+  scope :filter_by_statuses, ->(statuses) { where(status: {"$in": statuses}) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
   scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }
   scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_unit_id: { "$in": ProjectUnit.where(project_tower_id: project_tower_id).pluck(:_id) })}
@@ -115,8 +123,9 @@ class BookingDetail
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day) }
   scope :filter_by_booked_on, ->(date) { start_date, end_date = date.split(' - '); where(booked_on: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day)
   }
-   scope :filter_by_agreement_date, ->(date) { start_date, end_date = date.split(' - '); where(agreement_date: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day)
+  scope :filter_by_agreement_date, ->(date) { start_date, end_date = date.split(' - '); where(agreement_date: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day)
   }
+
   scope :incentive_eligible, ->(category) do
     case category
     when 'spot_booking'
@@ -425,7 +434,7 @@ class BookingDetail
         when 'account_manager_head'
          custom_scope = { project_unit_id: nil }
         when 'billing_team'
-         custom_scope = { project_unit_id: nil, status: { '$nin': %w(blocked) } }
+         # custom_scope = { project_unit_id: nil, status: { '$nin': %w(blocked) } }
         end
       end
 

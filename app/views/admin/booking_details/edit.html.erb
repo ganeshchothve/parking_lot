@@ -15,6 +15,10 @@
           <%= f.label :user_kyc_ids %>
           <%= f.select :user_kyc_ids, @booking_detail.lead.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', multiple: true %>
         </div>
+        <div class="mb-3">
+          <%= f.label :agreement_date %>
+          <%= f.text_field :agreement_date, class: 'form-control datepicker', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '' %>
+        </div>
         <div class="mb-3 text-end">
           <%= f.submit "Save", class: 'btn btn-primary' %>
         </div>
