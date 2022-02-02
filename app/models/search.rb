@@ -19,6 +19,7 @@ class Search
   belongs_to :user, optional: true
   belongs_to :project_unit, optional: true
   belongs_to :project_tower, optional: true
+  belongs_to :site_visit, optional: true
 
   delegate :manager_id, to: :user, prefix: true, allow_nil: true
   delegate :manager_id, to: :lead, prefix: true, allow_nil: true

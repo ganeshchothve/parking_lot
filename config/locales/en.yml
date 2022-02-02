@@ -415,9 +415,14 @@ en:
         tasks_completed_tracked_by: 'All Tasks Completed Tracked by'
         registration_done: 'Registration Done'
         ladder_stage: 'Ladder Stage'
-        agreement_price: 'Agreement Price'
         primary_user_kyc_id: 'Primary User Kyc'
         user_kyc_ids: 'Secondary User Kycs'
+        lead_id: 'Customer Name'
+        agreement_price_without_inventory: 'Consideration Value'
+        invoice_generated: Invoice Generated
+        tentative_agreement_date: Tentative Agreement Date
+        agreement_date: Agreement Date
+        booked_on: Booked On
       booking_detail/selldo_status:
         booked_tentative: tentative
         booked_confirmed: confirmed
@@ -1537,6 +1542,8 @@ en:
       scheme_approved: 'Scheme applied successfully, please check cost sheet.'
       scheme_under_negotiation: 'Scheme registered successfully and sent for approval.'
     booking_details:
+      add_booking:
+        link_name: "Add Booking"
       index:
         link_name: 'Bookings'
       new:
@@ -1564,6 +1571,7 @@ en:
       send_booking_detail_form_notification: "Booking detail form will be sent to customer shortly."
       set_booking_detail_missing: "Booking detail not found"
       set_project_unit_missing: "Project unit not found"
+      set_project_missing: "Project not found"
       booking_successful: "You have completed the booking successfully."
       booking_unsuccessful: "Your booking was unsuccessful. Please contact administrator to book."
       set_receipt_missing: 'Make new payment'

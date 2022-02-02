@@ -78,7 +78,26 @@
                     </div>
                   </div>
                 </div>
-
+                <% if @booking_details.present? and current_client.enable_actual_inventory?(current_user) %>
+                  <div class="accordion-item border-end-0 border-start-0">
+                    <h2 class="accordion-header d-flex justify-content-between" id="headingBookings">
+                      <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseBookings" aria-expanded="false" aria-controls="headingBookings">
+                        Bookings
+                      </button>
+                    </h2>
+                    <div id="collapseBookings" class="accordion-collapse collapse" aria-labelledby="headingBookings"
+                      data-bs-parent="#accordionExample">
+                      <div class="accordion-body pt-0 ps-4">
+                        <div class="row ps-3">
+                          <div class="col-12">
+                            <%= render 'booking_details/section', booking_details: @booking_details %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
                 <% if policy([:admin, Crm::Base.new()]).choose_crm? && apis = Crm::Base.active_apis(@site_visit).presence %>
                 <div class="accordion-item  border-end-0 border-start-0">
                   <h2 class="accordion-header d-flex justify-content-between" id="headingCRM">

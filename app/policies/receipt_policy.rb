@@ -72,7 +72,7 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def record_user_kyc_ready?
-    return true if (record.lead.kyc_ready?)
+    return true if (record.try(:lead).present? && record.try(:lead).try(:kyc_ready?))
 
     @condition = 'not_kyc_present'
     false

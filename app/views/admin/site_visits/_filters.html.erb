@@ -51,6 +51,10 @@
           <%= label_tag "fltrs", t('mongoid.attributes.site_visit.conducted_on') %>
           <%= text_field_tag "fltrs[conducted_on]", (params.dig(:fltrs, :conducted_on).present? ? params[:fltrs][:conducted_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
         </div>
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.invoice_generated'), class: "control-label" %>
+          <%= select_tag "fltrs[incentive_generated]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :incentive_generated)), {prompt: "Select", class: "selectize"} %>
+        </div>
       </div>
     </div>
     <div class="filter-footer modal-footer text-end">

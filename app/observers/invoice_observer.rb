@@ -25,4 +25,15 @@ class InvoiceObserver < Mongoid::Observer
     invoice.net_amount = invoice.calculate_net_amount
   end
 
+  def after_save invoice
+    # invoice generated set to trueif invoice.invoiceable.present?
+    if invoice.invoiceable.present?
+      if invoice.invoiceable.invoices.nin(status: ['rejected']).count > 0
+        invoice.invoiceable.set(incentive_generated: true)
+      else
+        # invoice rejected set to false
+        invoice.invoiceable.set(incentive_generated: false)
+      end
+    end
+  end
 end
