@@ -63,7 +63,7 @@ class BrokerageExportWorker
     invoice_row = [
       invoice.number,
       invoice.project_name,
-      invoice.booking_detail.try(:name),
+      invoice.invoiceable.try(:name),
       invoice.manager.try(:name),
       invoice.raised_date.present? ? I18n.l(invoice.raised_date, format: :date) : "",
       (I18n.t("mongoid.attributes.invoice/status.#{invoice.status}")),
