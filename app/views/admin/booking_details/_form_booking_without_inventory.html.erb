@@ -52,11 +52,10 @@
       <% if current_user.role?('account_manager') %>
         <%= f.hidden_field :account_manager_id, value: current_user.id %>
       <% end %>
-      <%= f.text_field :agreement_date, class: 'form-control datepicker', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '' %>
+      <%= f.text_field :agreement_date, class: 'form-control datepicker', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '',  disabled: !(policy([:admin, @booking_detail]).editable_field?("agreement_date")) %>
     <% else %>
-      <%= f.text_field :agreement_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '' %>
+      <%= f.text_field :agreement_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '',  disabled: !(policy([:admin, @booking_detail]).editable_field?("agreement_date")) %>
     <% end %>
-    <%= f.text_field :agreement_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', disabled: !(policy([:admin, @booking_detail]).editable_field?("agreement_date")) %>
   </div>
   <div class="mb-3">
     <%= f.label :source, class: 'label-required control-label' %>
