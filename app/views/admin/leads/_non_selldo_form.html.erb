@@ -11,7 +11,9 @@
         <nav>
           <div class="nav nav-tabs theme-tab" role="tablist">
             <a class="nav-item nav-link <%= @existing_lead ? '' : 'active' %>" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-lead-new" role="tab"><%= t('controller.leads.create_new_lead.link_name', model: (params[:walkin] ? SiteVisit.model_name.human : Lead.model_name.human)) %></a>
-            <a class="nav-item nav-link <%= @existing_lead ? 'active' : '' %>" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-lead-existing" role="tab"><%= t('controller.leads.create_from_existing_lead.link_name') %></a>
+            <% if policy([current_user_role_group, Lead.new]).show_existing_customer? %>
+              <a class="nav-item nav-link <%= @existing_lead ? 'active' : '' %>" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-lead-existing" role="tab"><%= t('controller.leads.create_from_existing_lead.link_name') %></a>
+            <% end %>
           </div>
         </nav>
         <div class="mt-3"></div>
@@ -21,11 +23,13 @@
               <%= render 'admin/leads/non_selldo_form_fields', f: f, lead: @lead %>
             <% end %>
           </div>
-          <div class="tab-pane fade <%= @existing_lead ? 'show active' : '' %>" id="nav-lead-existing" role="tabpanel">
-            <%= simple_form_for @lead, url: check_and_register_path, remote: true, local: true, html: { class: "modal-remote-form validate-form theme-form", id: 'add-existing-lead-form', "data-resource-type": global_labels['lead'], "data-type": "json" } do |f| %>
-              <%= render 'admin/leads/non_selldo_lead_copy_form_fields', f: f, lead: @lead, existing_lead: @existing_lead %>
-            <% end %>
-          </div>
+          <% if policy([current_user_role_group, Lead.new]).show_existing_customer? %>
+            <div class="tab-pane fade <%= @existing_lead ? 'show active' : '' %>" id="nav-lead-existing" role="tabpanel">
+              <%= simple_form_for @lead, url: check_and_register_path, remote: true, local: true, html: { class: "modal-remote-form validate-form theme-form", id: 'add-existing-lead-form', "data-resource-type": global_labels['lead'], "data-type": "json" } do |f| %>
+                <%= render 'admin/leads/non_selldo_lead_copy_form_fields', f: f, lead: @lead, existing_lead: @existing_lead %>
+              <% end %>
+            </div>
+          <% end %>
         </div>
       </div>
       <div class="modal-footer text-end">

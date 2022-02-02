@@ -82,6 +82,10 @@ class Admin::LeadPolicy < LeadPolicy
       )
   end
 
+  def show_existing_customer?
+    %w(sales).exclude?(user.role)
+  end
+
   def permitted_attributes(params = {})
     attributes = super || []
     attributes += [:first_name, :last_name, :email, :phone, :project_id, :push_to_crm, site_visits_attributes: Pundit.policy(user, [:admin, SiteVisit.new]).permitted_attributes] if record.new_record?

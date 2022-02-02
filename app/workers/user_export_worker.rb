@@ -110,7 +110,7 @@ class UserExportWorker
       user.manager_name || "",
       user.channel_partner&.regions&.to_sentence,
       user.role.in?(%w(cp_owner channel_partner)) ? user.rera_id : "",
-      user.role.in?(%w(cp_owner channel_partner)) ? user.upi_id : "",
+      user.role.in?(%w(cp_owner channel_partner)) ? user.fund_accounts.first.try(:address) : "",
       user.last_sign_in_at.present? ? I18n.l(user.last_sign_in_at) : "",
       user.confirmed? ? "Yes" : "No",
       user.confirmed_at.present? ? I18n.l(user.confirmed_at) : "",

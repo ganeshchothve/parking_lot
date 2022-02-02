@@ -26,8 +26,8 @@ module Communication
           params[:subdatatype]   = 'M'
           params[:tmid]          = client.sms_provider_telemarketer_id
           params[:dltentityid]   = client.sms_provider_dlt_entity_id
-          params[:dlttempid]     = template.dlt_temp_id
-          params[:dlttagid]      = template.dlt_tag_id
+          params[:dlttempid]     = template.try(:dlt_temp_id)
+          params[:dlttagid]      = template.try(:dlt_tag_id)
           params[:msgdata]       = { data: sms.to.map { |phone| {mobile: phone, message: sms.body} } }.to_json
           uri                    = URI("http://www.smsjust.com/sms/user/urlsms_json.php")
           response               = Net::HTTP.post_form(uri, params)

@@ -96,10 +96,9 @@
     var netAmt = '<%= @invoice.net_amount %>';
     var gstApplicable = '<%= @invoice.project.gst_slab_applicable? %>';
     var invoiceType = '<%= @invoice.class.to_s.underscore.gsub('/', '_') %>';
-
     $('#' + invoiceType + '_gst_slab, #' + invoiceType + '_amount').on('change', function(event) {
       var gstAmount = 0;
-      var amount = parseFloat($('input[name="' + invoiceType + '[amount]"]').val() || 0);
+      var amount = parseFloat($('input[name="' + invoiceType + '[amount]"]').val() || $('#raise_invoice_form').find('.amount').html() || 0);
       $('#raise_invoice_form').find('.amount').html(Amura.formatMoney(amount));
       if (gstApplicable == 'true') {
         var gstPercVal = $('#' + invoiceType + '_gst_slab').val();

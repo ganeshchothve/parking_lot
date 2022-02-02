@@ -2,13 +2,17 @@ require 'spreadsheet'
 class BookingDetailMisReportWorker
   include Sidekiq::Worker
 
-  def perform user_id
+  def perform user_id, filters = nil
+    if filters.present? && filters.is_a?(String)
+      filters =  JSON.parse(filters)
+    end
+
     user = User.find(user_id)
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "Receipts")
     sheet.insert_row(0, BookingDetailMisReportWorker.get_column_names)
     row = 1
-    BookingDetail.where(BookingDetail.user_based_scope(user)).each_with_index do |booking_detail, index|
+    BookingDetail.where(BookingDetail.user_based_scope(user)).build_criteria({fltrs: filters}.with_indifferent_access).each_with_index do |booking_detail, index|
       sheet.insert_row(row, BookingDetailMisReportWorker.get_booking_detail_row(booking_detail))
       row = row + 1
       if (booking_detail.try(:booking_detail_scheme).try(:payment_adjustments).try(:count) || 0) > 1
@@ -19,11 +23,10 @@ class BookingDetailMisReportWorker
           row = row + 1
         end
       end
-
     end
     file_name = "booking_detail_mis-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/exports/#{file_name}")
-    ExportMailer.notify(file_name, user.email, "Units").deliver
+    ExportMailer.notify(file_name, user.email, "Booking Detail MIS").deliver
   end
 
   def self.get_column_names
@@ -88,7 +91,7 @@ class BookingDetailMisReportWorker
       booking_detail.costs.where(key: 'vat_gst').first.try(:value) || "N/A",
       booking_detail.costs.where(key: 'reg_charges').first.try(:value) || "N/A",
       booking_detail.costs.where(key: 'stamp_duty_charges').first.try(:value) || "N/A",
-      booking_detail.calculate_agreement_price,
+      project_unit.present? ? booking_detail.calculate_agreement_price : booking_detail.agreeement_price,
       booking_detail.calculate_all_inclusive_price,
       booking_detail.try(:booking_detail_scheme).try(:derived_from_scheme).try(:name) || "N/A",
       booking_detail.try(:booking_detail_scheme).try(:status) || "N/A",

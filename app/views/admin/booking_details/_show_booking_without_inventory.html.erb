@@ -23,12 +23,12 @@
               <div class="accordion theme-accordation" id="accordionExample">
                 <div class="accordion-item rounded-0 border-bottom border-top-0  border-end-0 border-start-0">
                   <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
+                    <button class="accordion-button shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                       Basic Details
                     </button>
                   </h2>
-                  <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                  <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                     data-bs-parent="#accordionExample">
                     <div class="accordion-body pt-0 ps-4">
                       <div class="row ps-3">
@@ -60,11 +60,11 @@
                         </div>
                         <div class="col-3">
                           <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('agreement_date') %></p>
-                          <p class="fn-14"><%= @booking_detail.agreement_date.try(:strftime,'%b %e %Y') || '-' %></p>
+                          <p class="fn-14"><%= I18n.l(@booking_detail.agreement_date) || '-' %></p>
                         </div>
                         <div class="col-3">
                           <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('booked_on') %></p>
-                          <p class="fn-14"><%= @booking_detail.booked_on.try(:strftime,'%b %e %Y') || '-' %></p>
+                          <p class="fn-14"><%= I18n.l(@booking_detail.booked_on) || '-' %></p>
                         </div>
                         <div class="col-3">
                           <p class="fn-12 font-medium mb-0"><%= ChannelPartner.human_attribute_name('company_name') %></p>

@@ -1,7 +1,7 @@
 class Admin::InvoicesController < AdminController
   before_action :set_resource, only: [:index, :new, :create]
   before_action :set_invoice, except: [:index, :create, :export]
-  before_action :authorize_resource
+  before_action :authorize_resource, except: :create
   around_action :apply_policy_scope, only: [:index]
 
   def index
@@ -17,6 +17,7 @@ class Admin::InvoicesController < AdminController
   def create
     @invoice = Invoice::Manual.new(project: @resource.try(:project), raised_date: Time.now, invoiceable: @resource, manager: @resource.invoiceable_manager)
     @invoice.assign_attributes(permitted_attributes([current_user_role_group, @invoice]))
+    authorize [current_user_role_group, @invoice]
     respond_to do |format|
       if @invoice.save
         url = (@resource.present? ? admin_invoiceable_index_path(invoiceable_type: @resource.class.model_name.i18n_key.to_s, invoiceable_id: @resource.id, fltrs: { invoiceable_id: @resource.id }) : admin_invoices_path)
@@ -140,7 +141,7 @@ class Admin::InvoicesController < AdminController
   end
 
   def authorize_resource
-    if params[:action].in?(%w(index create export))
+    if params[:action].in?(%w(index export))
       authorize [current_user_role_group, Invoice]
     elsif params[:action].in?(%w(change_state edit update raise_invoice update_gst new_send_invoice_to_poc))
       authorize [current_user_role_group, @invoice]
