@@ -71,7 +71,7 @@ class SiteVisit
   def incentive_eligible?(category=nil)
     if category.present?
       if category == 'walk_in'
-        verification_approved? && (conducted? || paid?)
+        scheduled?
       end
     else
       _incentive_eligible?
@@ -81,7 +81,7 @@ class SiteVisit
   def actual_incentive_eligible?(category=nil)
     if category.present?
       if category == 'walk_in'
-        scheduled?
+        verification_approved? && (conducted? || paid?)
       end
     else
       _actual_incentive_eligible?

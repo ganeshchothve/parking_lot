@@ -387,7 +387,7 @@ class BookingDetail
         if project.present?
           if project.enable_inventory?
             if project_unit.present?
-              blocked? && system_tasks_completed?
+              blocked?
             else
               false
             end
@@ -399,7 +399,7 @@ class BookingDetail
         false
       end
     else
-      _incentive_eligible?
+      _actual_incentive_eligible?
     end
   end
 
