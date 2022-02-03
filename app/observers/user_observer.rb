@@ -7,6 +7,16 @@ class UserObserver < Mongoid::Observer
     user.phone = Phonelib.parse(user.phone).to_s if user.phone.present?
 
     user.assign_attributes(manager_change_reason: 'Blocking the lead', unblock_at: Date.today + user.booking_portal_client.lead_blocking_days) if user.temporarily_blocked == true && user.unblock_at == nil && user.booking_portal_client.lead_blocking_days.present?
+
+    _event = user.event.to_s
+    user.event = nil
+    if _event.present?
+      if user.send("may_#{_event.to_s}?")
+        user.aasm(:company).fire!(_event.to_sym)
+      else
+        user.errors.add(:status, 'transition is invalid')
+      end
+    end
   end
 
   def before_create user

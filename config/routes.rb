@@ -52,6 +52,8 @@ Rails.application.routes.draw do
     get 'export', action: 'export', on: :collection, as: :export
     post :change_state, on: :member
     get 'asset_form', on: :member
+    post 'register', on: :collection, to: "channel_partners#find_or_create_cp_user"
+    get 'add_user_account', on: :collection
   end
 
   get '/s/:code', to: 'shortened_urls#redirect_to_url'
@@ -283,6 +285,7 @@ Rails.application.routes.draw do
         patch :unblock_lead
         patch :reactivate_account
         patch :move_to_next_state
+        patch :change_state
       end
 
       collection do
@@ -449,5 +452,4 @@ Rails.application.routes.draw do
   match '/sell_do/:project_id/site_visit_updated', to: "api/sell_do/leads#site_visit_updated", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
   match '/zoho/download', to: "api/zoho/assets#download", via: [:get, :post]
-  match '/channel_partners/register', to: "channel_partners#find_or_create_cp_user", via: [:post]
 end

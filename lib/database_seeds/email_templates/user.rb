@@ -81,6 +81,17 @@ module DatabaseSeeds
                 </p>
             </div>
           </div>') if ::Template::EmailTemplate.where(name: "account_confirmation").blank?
+
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: "cp_user_register_in_company", subject: '<%= name %> has requested to register his account into your company on <%= I18n.t("global.brand") %>', content: '<div class="card w-100">
+          <div class="card-body">
+            <p>Dear <%= temp_channel_partner&.primary_user&.name || "Sir/Madam" %>,</p>
+            <p>
+              <%= name %> has requested to register his account into your company on <%= I18n.t("global.brand") %>.
+              Please use below link to approve his/her account to give him/her access as a <%= I18n.t("mongoid.attributes.user/role.channel_partner") %> into your company.
+              <%= ActionController::Base.helpers.link_to "Approve or Reject #{I18n.t("mongoid.attributes.user/role.channel_partner")}", Rails.application.routes.url_helpers.add_user_account_channel_partners_url(register_code: self.register_in_cp_company_token, channel_partner_id: self.temp_channel_partner&.id.to_s) %>
+            </p>
+          </div>
+        </div>') if ::Template::EmailTemplate.where(name: "cp_user_register_in_company").blank?
       end
     end
   end

@@ -22,9 +22,7 @@ class ChannelPartnerObserver < Mongoid::Observer
     if user.present?
       # if user is already present & new company is created with it then change channel partner id on user. Handled in controller, to create a channel partner company only when user account is inactive under a different cp company.
       # This will provide a mechanism for channel partner user to register a new company & keep the same account without the old leads data.
-      user.assign_attributes(first_name: channel_partner.first_name, last_name: channel_partner.last_name,channel_partner_id: channel_partner.id, is_active: true, role: 'cp_owner', rera_id: channel_partner.rera_id, email: channel_partner.email, manager_id: channel_partner.manager_id, channel_partner: channel_partner)
-    else
-      user = User.new(first_name: channel_partner.first_name, last_name: channel_partner.last_name, email: channel_partner.email, phone: channel_partner.phone, rera_id: channel_partner.rera_id, role: 'cp_owner', booking_portal_client_id: current_client.id, manager_id: channel_partner.manager_id, channel_partner: channel_partner)
+      user.assign_attributes(first_name: channel_partner.first_name, last_name: channel_partner.last_name, is_active: true, role: 'cp_owner', rera_id: channel_partner.rera_id, email: channel_partner.email, manager_id: channel_partner.manager_id, channel_partner: channel_partner)
     end
 
     if channel_partner.referral_code.present?
@@ -90,6 +88,9 @@ class ChannelPartnerObserver < Mongoid::Observer
   end
 
   def before_save channel_partner
+    if primary_user = channel_partner.primary_user.presence
+      primary_user.update(first_name: channel_partner.first_name, last_name: channel_partner.last_name, email: channel_partner.email)
+    end
     # update user's details from channel partner
     if channel_partner.users.present?
       if channel_partner.rera_id_changed? && channel_partner.rera_id.present?

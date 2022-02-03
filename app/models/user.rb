@@ -31,7 +31,7 @@ class User
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :timeoutable, :password_archivable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: [:login] #:lockable,:expirable,:session_limitable,:password_expirable
 
-  attr_accessor :temporary_password, :payment_link, :temp_manager_id
+  attr_accessor :temporary_password, :payment_link, :temp_manager_id, :temp_channel_partner
 
   ## Database authenticatable
   field :first_name, type: String, default: ''
@@ -125,6 +125,7 @@ class User
   field :upi_id, type: String
 
   field :referred_on, type: DateTime
+  field :register_in_cp_company_token, type: String
 
   ## Security questionable
 

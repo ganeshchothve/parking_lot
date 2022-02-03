@@ -1,8 +1,8 @@
 class Admin::UsersController < AdminController
   include UsersConcern
-  before_action :authenticate_user!, except: :resend_confirmation_instructions
+  before_action :authenticate_user!, except: %w[resend_confirmation_instructions change_state]
   before_action :set_user, except: %i[index export new create portal_stage_chart channel_partner_performance partner_wise_performance search_by]
-  before_action :authorize_resource, except: :resend_confirmation_instructions
+  before_action :authorize_resource, except: %w[resend_confirmation_instructions change_state]
   around_action :apply_policy_scope, only: %i[index export]
   around_action :user_time_zone, if: :current_user, only: %i[channel_partner_performance partner_wise_performance]
 
@@ -297,6 +297,23 @@ class Admin::UsersController < AdminController
         format.json { render json: { message: I18n.t("controller.users.move_to_next_state.#{@user.role}.#{@user.status}", name: @user.name.titleize) }, status: :ok }
       else
         format.html{ redirect_to request.referrer || dashboard_url, alert: @user.errors.full_messages.uniq }
+        format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # For changing the state of channel_partner user accounts
+  def change_state
+    respond_to do |format|
+      @user.assign_attributes(event: params.dig(:user, :user_status_in_company_event))
+      @channel_partner = ChannelPartner.where(id: params.dig(:user, :channel_partner_id)).first
+      @user.assign_attributes(temp_channel_partner: @channel_partner) if @user.event == 'active'
+
+      if @user.save
+        @user.set(register_in_cp_company_token: nil) if @user.status.in?(%w(active inactive))
+        format.html { redirect_to root_path, notice: t("controller.users.status_in_company_message.#{@user.user_status_in_company}") }
+      else
+        format.html { redirect_to request.referer, alert: @user.errors.full_messages.uniq }
         format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end

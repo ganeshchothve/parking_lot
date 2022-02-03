@@ -2,7 +2,7 @@ module UserStatusInCompanyStateMachine
   extend ActiveSupport::Concern
   included do
     include AASM
-    attr_accessor :event
+    attr_accessor :user_status_in_company_event
 
     field :user_status_in_company, type: String, default: :inactive
 
@@ -14,7 +14,7 @@ module UserStatusInCompanyStateMachine
         transitions from: :inactive, to: :pending_approval
       end
 
-      event :active do
+      event :active, after: :set_channel_partner do
         transitions from: :inactive, to: :active
         transitions from: :pending_approval, to: :active
       end
@@ -23,6 +23,10 @@ module UserStatusInCompanyStateMachine
         transitions from: :active, to: :inactive
         transitions from: :pending_approval, to: :inactive
       end
+    end
+
+    def set_channel_partner
+      self.update(channel_partner: temp_channel_partner)
     end
   end
 end
