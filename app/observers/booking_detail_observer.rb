@@ -45,6 +45,7 @@ class BookingDetailObserver < Mongoid::Observer
   end
 
   def after_save booking_detail
+    booking_detail.invoices.where(status: 'tentative').update_all(status: 'draft') if booking_detail.actual_incentive_eligible?
     booking_detail.calculate_incentive if booking_detail.project.present? && booking_detail.project.incentive_calculation_type?("calculated")
   end
 end

@@ -5,10 +5,14 @@ module InvoiceStateMachine
     attr_accessor :event
 
     aasm column: :status, whiny_transitions: false do
-      state :draft, initial: true
-      state :raised, :pending_approval
+      state :tentative, initial: true
+      state :draft, :raised, :pending_approval
       state :approved, :rejected, :tax_invoice_raised
       state :paid
+
+      event :draft do
+        transitions from: :tentative, to: :draft
+      end
 
       event :raise do
         transitions from: :draft, to: :raised, if: :can_raise?, success: %i[after_raised]

@@ -11,7 +11,7 @@ class Invoice
 
   field :amount, type: Float, default: 0.0
   field :gst_amount, type: Float, default: 0.0
-  field :status, type: String, default: 'draft'
+  field :status, type: String, default: 'tentative'
   field :raised_date, type: DateTime
   field :processing_date, type: DateTime
   field :approved_date, type: DateTime
@@ -110,7 +110,7 @@ class Invoice
         elsif user.role?('cp_owner')
           custom_scope = { channel_partner_id: user.channel_partner_id }
         elsif user.role?('billing_team')
-          custom_scope = { status: { '$in': %w(raised pending_approval approved rejected draft tax_invoice_raised paid) } }
+          custom_scope = { status: { '$in': %w(tentative raised pending_approval approved rejected draft tax_invoice_raised paid) } }
         elsif user.role?('cp_admin')
           custom_scope = { cp_admin_id: user.id, status: { '$nin': %w(draft) } }
           #custom_scope = { status: { '$nin': %w(draft raised) } }

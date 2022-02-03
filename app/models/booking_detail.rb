@@ -387,6 +387,31 @@ class BookingDetail
         if project.present?
           if project.enable_inventory?
             if project_unit.present?
+              blocked? && system_tasks_completed?
+            else
+              false
+            end
+          else
+            blocked?
+          end
+        end
+      else
+        false
+      end
+    else
+      _incentive_eligible?
+    end
+  end
+
+  def actual_incentive_eligible?(category=nil)
+    if category.present?
+      case category
+      when 'spot_booking'
+        blocked?
+      when 'brokerage'
+        if project.present?
+          if project.enable_inventory?
+            if project_unit.present?
               booked_confirmed? && system_tasks_completed?
             else
               false
@@ -399,7 +424,7 @@ class BookingDetail
         false
       end
     else
-      _incentive_eligible?
+      _actual_incentive_eligible?
     end
   end
 
