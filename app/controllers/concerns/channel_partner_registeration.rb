@@ -96,6 +96,7 @@ module ChannelPartnerRegisteration
 
         if @user.save
           send_request_to_company_owner
+          ExpireRegisterPartnerInExistingCompanyLinkWorker.perform_in(24.hours, @user.id.to_s)
           format.json { render json: { user: @user.as_json(@user.ui_json) }, status: :ok }
         else
           format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
