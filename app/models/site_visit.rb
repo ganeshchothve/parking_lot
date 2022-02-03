@@ -78,6 +78,16 @@ class SiteVisit
     end
   end
 
+  def actual_incentive_eligible?(category=nil)
+    if category.present?
+      if category == 'walk_in'
+        scheduled?
+      end
+    else
+      _actual_incentive_eligible?
+    end
+  end
+
   def self.statuses
     [
       { id: 'scheduled', text: 'Scheduled' },

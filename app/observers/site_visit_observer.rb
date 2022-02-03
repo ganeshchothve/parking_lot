@@ -73,6 +73,7 @@ class SiteVisitObserver < Mongoid::Observer
   end
 
   def after_save site_visit
+    site_visit.invoices.where(status: 'tentative').update_all(status: 'draft') if site_visit.actual_incentive_eligible?
     site_visit.calculate_incentive if site_visit.project.incentive_calculation_type?("calculated")
   end
 end
