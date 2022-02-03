@@ -8,7 +8,7 @@ module UsersConcern
     @referrals = @user.referrals.order('created_at DESC').paginate(page: params[:page], per_page: params[:per_page])
     respond_to do |format|
       format.html { render template: 'admin/users/show' }
-      format.json { render json: { user: @user.as_json } }
+      format.json { render json: { user: @user.as_json(@user.ui_json) } }
     end
   end
 

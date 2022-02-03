@@ -19,7 +19,12 @@ class Admin::ProjectsController < AdminController
         format.json { render json: @projects.collect { |p| { id: p.id, name: p.ds_name } } }
         format.html {}
       else
-        format.json { render json: @projects }
+        format.json { render json: {
+          :current_page => @projects.current_page,
+          :per_page => @projects.per_page,
+          :total_entries => @projects.total_entries,
+          :entries => @projects.as_json(Project.ui_json)
+        } }
         format.html {}
       end
     end

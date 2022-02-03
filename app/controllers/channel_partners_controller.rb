@@ -124,9 +124,9 @@ class ChannelPartnersController < ApplicationController
           Rails.logger.info "---------------- #{@user.otp_code} ----------------"
         end
         if otp_sent_status[:status]
-          format.json { render json: { user: @user.as_json }, status: :created }
+          format.json { render json: { user: @user.as_json(@user.ui_json) }, status: :created }
         else
-          format.json { render json: {user: @user.as_json, errors: [otp_sent_status[:error]].flatten}, status: :created }
+          format.json { render json: {user: @user.as_json(@user.ui_json), errors: [otp_sent_status[:error]].flatten}, status: :created }
         end
       else
         format.json { render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity }

@@ -263,4 +263,12 @@ class Project
     custom_scope.merge!({ is_active: true }) if params[:controller].in?(%w(admin/projects home))
     custom_scope
   end
+
+  def self.ui_json
+    self.mobile_json
+  end
+
+  def self.mobile_json
+    {only: ['name', '_id', 'developer_name', 'mobile_cover_photo_url', 'cover_photo_url', 'project_type', 'category', 'configuration', 'rera_registration_no', 'micro_market', 'city', 'region', 'project_segment', 'sv_incentive', 'spot_booking_incentive', 'pre_reg_incentive_percentage', 'pre_reg_min_bookings', 'hot']}
+  end
 end
