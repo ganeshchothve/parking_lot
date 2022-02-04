@@ -306,12 +306,21 @@ class Admin::UsersController < AdminController
   def change_state
     respond_to do |format|
       @user.assign_attributes(event: params.dig(:user, :user_status_in_company_event))
-      @channel_partner = ChannelPartner.where(id: params.dig(:user, :channel_partner_id)).first
-      @user.assign_attributes(temp_channel_partner: @channel_partner) if @user.event == 'active'
+      user_current_status_in_company = @user.user_status_in_company
+
+      if user_current_status_in_company == 'pending_approval' && @user.event == 'active'
+        @channel_partner = ChannelPartner.where(id: params.dig(:user, :channel_partner_id)).first
+        if @channel_partner
+          @user.assign_attributes(temp_channel_partner: @channel_partner)
+        else
+          format.html { redirect_to request.referer, alert: 'Requested partner company not found' }
+          format.json { render json: { errors: ['Requested partner company not found'] }, status: :unprocessable_entity }
+          return
+        end
+      end
 
       if @user.save
-        @user.set(register_in_cp_company_token: nil) if @user.status.in?(%w(active inactive))
-        format.html { redirect_to root_path, notice: t("controller.users.status_in_company_message.#{@user.user_status_in_company}") }
+        format.html { redirect_to (request.referrer.include?('add_user_account') ? root_path : request.referrer), notice: t("controller.users.status_in_company_message.#{user_current_status_in_company}_to_#{@user.user_status_in_company}") }
       else
         format.html { redirect_to request.referer, alert: @user.errors.full_messages.uniq }
         format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }

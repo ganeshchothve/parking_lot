@@ -14,12 +14,12 @@ module UserStatusInCompanyStateMachine
         transitions from: :inactive, to: :pending_approval
       end
 
-      event :active, after: :set_channel_partner do
+      event :active, after: [:set_channel_partner, :clear_register_token] do
         transitions from: :inactive, to: :active
         transitions from: :pending_approval, to: :active
       end
 
-      event :inactive do
+      event :inactive, after: [:unset_channel_partner, :clear_register_token] do
         transitions from: :active, to: :inactive
         transitions from: :pending_approval, to: :inactive
       end
@@ -32,6 +32,16 @@ module UserStatusInCompanyStateMachine
         attrs[:role] = 'channel_partner'
         self.update(attrs)
       end
+    end
+
+    def clear_register_token
+      if ( aasm(:company).from_state.in?(%i(pending_approval)) && aasm(:company).to_state.in?(%i(active inactive)) ) || ( aasm(:company).from_state.in?(%i(active)) && aasm(:company).to_state.in?(%i(inactive)) )
+        self.set(register_in_cp_company_token: nil)
+      end
+    end
+
+    def unset_channel_partner
+      self.set(channel_partner_id: nil) if self.channel_partner_id.present?
     end
   end
 end

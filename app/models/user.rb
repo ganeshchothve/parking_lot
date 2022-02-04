@@ -716,7 +716,7 @@ class User
         if user.channel_partner_id.present?
           custom_scope = { role: {'$in': ['channel_partner', 'cp_owner']}, channel_partner_id: user.channel_partner_id }
         else
-          custom_scope = { role: 'cp_owner', _id: user.id }
+          custom_scope = { id: user.id }
         end
       elsif user.role?('crm')
         custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) + %w(channel_partner) } }

@@ -104,6 +104,10 @@ class Admin::UserPolicy < UserPolicy
       )
   end
 
+  def change_state?
+    ( user.role.in?(%w(cp_owner)) && user.id != record.id && record.user_status_in_company.in?(%w(active pending_approval)) ) || ( user.role.in?(%w(cp cp_admin)) && record.user_status_in_company.in?(%w(pending_approval)) )
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     if user.present?

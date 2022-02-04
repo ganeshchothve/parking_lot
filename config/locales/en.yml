@@ -1906,11 +1906,16 @@ en:
       create:
         change_channel_partner_company: 'Found an old inactive account with these details. We have activated it & linked it under your company'
       change_state:
-        active: 'Approve'
-        inactive: 'Reject'
+        buttons:
+          active: 'Approve'
+          inactive: 'Reject'
+        links:
+          active_to_inactive: 'Remove Account From Company'
+          pending_approval_to_inactive: 'Cancel Registration In Company Request'
       status_in_company_message:
-        inactive: 'Rejected the registration request'
-        active: 'Account added successfully'
+        pending_approval_to_inactive: 'Registration request is rejected'
+        pending_approval_to_active: 'Account added successfully'
+        active_to_inactive: 'Account removed successfully'
 
     interested_projects:
       set_interested_project_missing: 'Interested Project not found'
