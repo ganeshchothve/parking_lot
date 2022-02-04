@@ -399,7 +399,7 @@ class BookingDetail
         false
       end
     else
-      _actual_incentive_eligible?
+      _incentive_eligible?
     end
   end
 
