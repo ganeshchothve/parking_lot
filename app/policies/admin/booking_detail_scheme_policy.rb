@@ -52,6 +52,9 @@ class Admin::BookingDetailSchemePolicy < BookingDetailSchemePolicy
 
     if record.draft? && !(record.new_record?)
       attributes += [:event ] if record.approver?(user)
+      if user.role?('sales_admin') && !current_client.launchpad_portal
+        attributes += [:event ]
+      end
     end
 
     attributes

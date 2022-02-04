@@ -129,7 +129,7 @@ module InvoiceStateMachine
 
     def make_payment
       if self.brokerage_type == 'sub_brokerage'
-        if invoiceable.is_a?(SiteVisit) && self.category.in?(%w(walk_in))
+        if self.category.in?(%w(walk_in spot_booking))
           if Rails.env.staging? || Rails.env.production?
             InvoicePayoutWorker.perform_async(self.id.to_s)
           else

@@ -40,7 +40,7 @@ class Invoice
   embeds_one :payment_adjustment, as: :payable
 
   validates :category, :brokerage_type, :payment_to, presence: true
-  validates :number, presence: true, if: proc { raised? && category.in?(%w(spot_booking lead referral brokerage)) }
+  validates :number, presence: true, if: proc { raised? && category.in?(%w(brokerage)) }
   validates :rejection_reason, presence: true, if: :rejected?
   validates :comments, presence: true, if: proc { pending_approval? && status_was == 'rejected' }
   validates :amount, numericality: { greater_than: 0 }
