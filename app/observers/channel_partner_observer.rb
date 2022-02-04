@@ -7,22 +7,33 @@ class ChannelPartnerObserver < Mongoid::Observer
       query = []
       query << { phone: channel_partner.phone } if channel_partner.phone.present?
       query << { email: channel_partner.email } if channel_partner.email.present?
-      user = User.in(role: %w(channel_partner cp_owner)).or(query).first
-      if user.present?
-        channel_partner.primary_user_id = user.id
+      if query.present?
+        user = User.in(role: %w(channel_partner cp_owner)).or(query).first
+        if user.present?
+          channel_partner.primary_user_id = user.id
+        end
       end
     end
   end
 
   def after_create channel_partner
-    query = []
-    query << { phone: channel_partner.phone } if channel_partner.phone.present?
-    query << { email: channel_partner.email } if channel_partner.email.present?
-    user = User.in(role: %w(channel_partner cp_owner)).or(query).first
+    user = channel_partner.primary_user
+    unless user.present?
+      query = []
+      query << { phone: channel_partner.phone } if channel_partner.phone.present?
+      query << { email: channel_partner.email } if channel_partner.email.present?
+      user = User.in(role: %w(channel_partner cp_owner)).or(query).first
+    end
     if user.present?
-      # if user is already present & new company is created with it then change channel partner id on user. Handled in controller, to create a channel partner company only when user account is inactive under a different cp company.
-      # This will provide a mechanism for channel partner user to register a new company & keep the same account without the old leads data.
-      user.assign_attributes(first_name: channel_partner.first_name, last_name: channel_partner.last_name, is_active: true, role: 'cp_owner', rera_id: channel_partner.rera_id, email: channel_partner.email, manager_id: channel_partner.manager_id, channel_partner: channel_partner)
+      attrs = {}
+      attrs[:first_name] = channel_partner.first_name if channel_partner.first_name
+      attrs[:last_name] = channel_partner.last_name if channel_partner.last_name
+      attrs[:rera_id] = channel_partner.rera_id if channel_partner.rera_id
+      attrs[:email] = channel_partner.email if channel_partner.email
+      attrs[:manager_id] = channel_partner.manager_id if channel_partner.manager_id
+      attrs[:channel_partner_id] = channel_partner.id
+      attrs[:role] = 'cp_owner'
+      user.assign_attributes(attrs)
     end
 
     if channel_partner.referral_code.present?
@@ -38,7 +49,7 @@ class ChannelPartnerObserver < Mongoid::Observer
     end
 
     unless channel_partner.is_existing_company.present?
-      user.active
+      user.active(true)
     end
     user.save!
 
@@ -89,7 +100,11 @@ class ChannelPartnerObserver < Mongoid::Observer
 
   def before_save channel_partner
     if primary_user = channel_partner.primary_user.presence
-      primary_user.update(first_name: channel_partner.first_name, last_name: channel_partner.last_name, email: channel_partner.email)
+      attrs = {}
+      attrs[:first_name] = channel_partner.first_name if channel_partner.first_name
+      attrs[:last_name] = channel_partner.last_name if channel_partner.last_name
+      attrs[:email] = channel_partner.email if channel_partner.email
+      primary_user.update(attrs)
     end
     # update user's details from channel partner
     if channel_partner.users.present?

@@ -27,8 +27,7 @@ class ChannelPartnersController < ApplicationController
   end
 
   def new
-    @channel_partner = ChannelPartner.new(referral_code: params[:custom_referral_code])
-    @channel_partner_id = @channel_partner.id
+    @user = User.new(role: 'cp_owner')
     render layout: 'landing_page'
   end
 

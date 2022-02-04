@@ -14,9 +14,9 @@
         <h1 class="sec-title text-center pt-2 pb-1">Get Started</h1>
         <p class="sec-desc text-center pb-2">Now is the best time to turn your dream into reality</p>
         <div class="cp-signup-form-wrap pb-3 cp-form-wrap px-3">
-          <%= simple_form_for(@channel_partner, local: true, html: { id: 'channel_partner_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %>
-            <% if params[:action] == 'create' && @channel_partner.errors[:base].present? %>
-              <p class='alert alert-danger'><%= @channel_partner.errors[:base].to_sentence %></p>
+          <%= simple_form_for(@user, url: register_channel_partners_path, local: true, html: { id: 'channel_partner_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %>
+            <% if params[:action] == 'find_or_create_cp_user' && @user.errors[:base].present? %>
+              <p class='alert alert-danger'><%= @user.errors[:base].to_sentence %></p>
             <% end %>
             <%= render "channel_partners/short_form_fields", {form: form} %>
             <div class="signin-btn pl-0 pr-0 pb-4">

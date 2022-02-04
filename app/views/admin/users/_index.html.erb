@@ -49,9 +49,11 @@
                 </div>
                 <div class="inner-info">
                   <div class="pe-3 py-3 d-flex justify-content-sm-end justify-content-start ps-xs-3">
-                    <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i
-                        class='fa fn-16 fa-<%= user.is_active? ? "check" : "times" %> fill-<%= user.is_active? ? "success" : "danger" %> me-12 fa-lg'></i><%= t("mongoid.attributes.user/is_active.#{user.is_active?}") %>
-                    </p>
+                    <% if policy([:admin, user]).editable_field?('is_active') %>
+                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i
+                          class='fa fn-16 fa-<%= user.is_active? ? "check" : "times" %> fill-<%= user.is_active? ? "success" : "danger" %> me-12 fa-lg'></i><%= t("mongoid.attributes.user/is_active.#{user.is_active?}") %>
+                      </p>
+                    <% end %>
                     <% if user.buyer? %>
                       <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color ms-xs-0"><i
                           class='fa fn-16 fa-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= user.is_payment_done? ? 'Payment Done' : 'Payment Pending' %>
@@ -68,7 +70,7 @@
                     <% end %>
                     <% if user.role.in?(%w(channel_partner cp_owner)) %>
                       <% if user.confirmed? %>
-                        <% if user.channel_partner&.inactive? %>
+                        <% if user.channel_partner.blank? || user.channel_partner&.inactive? %>
                           <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i
                              class='fa fn-16 fa-check fill-success me-12 fa-lg'></i><%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %>
                           </p>

@@ -1,0 +1,7 @@
+<div class="row">
+  <div class="col-md-12">
+    <%= label_tag t('mongoid.attributes.channel_partner.company_name') %>
+    <%= select_tag :channel_partner_id, options_for_select([]), required: true, prompt: 'Select', class: 'selectize-remote', data: {url: channel_partners_path}, name: 'channel_partner_id' %>
+  </div>
+</div>
+<%= hidden_field_tag :user_id, current_user.id.to_s %>

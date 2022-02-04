@@ -82,10 +82,10 @@ class ChannelPartner
   has_many :assets, as: :assetable
   has_many :site_visits
 
-  validates :first_name, presence: true, on: :create
+  #validates :first_name, presence: true, on: :create
   validates *SHORT_FORM, presence: true
   validates *FULL_FORM, presence: true, on: :submit_for_approval
-  validate :phone_or_email_required, if: proc { |cp| cp.phone.blank? && cp.email.blank? }, on: :create
+  #validate :phone_or_email_required, if: proc { |cp| cp.phone.blank? && cp.email.blank? }, on: :create
   #
   #TODO: Commented for testing on Mobile app
   #validates :pan_number, presence: true, unless: :nri?, on: :submit_for_approval
@@ -108,7 +108,7 @@ class ChannelPartner
   #validates :first_name, :last_name, name: true, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
   # validate :user_based_uniqueness, on: :create
-  validates :primary_user_id, uniqueness: true
+  validates :primary_user_id, uniqueness: true, allow_blank: true
 
   validates :experience, inclusion: { in: proc{ ChannelPartner::EXPERIENCE } }, allow_blank: true
   validates :expertise, array: { inclusion: {allow_blank: true, in: ChannelPartner::EXPERTISE } }
@@ -116,9 +116,7 @@ class ChannelPartner
 
   validates :gstin_number, format: { with: /\A([0]{1}[1-9]{1}|[1-2]{1}[0-9]{1}|[3]{1}[0-7]{1})([a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[zZ]{1}[0-9a-zA-Z]{1})+\z/i, message: 'is not valid format' }, allow_blank: true
   validates :rera_id, format: { with: /\A([A-Za-z])\d{11}\z/i, message: 'is not valid format' }, allow_blank: true
-  #
-  #TODO: Commented for testing on Mobile app
-  #validate :docs_required_for_approval, on: :submit_for_approval
+  validate :docs_required_for_approval, on: :submit_for_approval
 
   accepts_nested_attributes_for :bank_detail, :address
 

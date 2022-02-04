@@ -2,24 +2,16 @@ module ChannelPartnerRegisteration
   extend ActiveSupport::Concern
 
   def find_or_create_cp_user
-    @user = User.where(phone: params.dig(:user, :phone)).first
-    unless @user
-      @user = User.new(permitted_attributes([:admin, User.new]))
-      @user.assign_attributes(role: "cp_owner", booking_portal_client_id: current_client.id)
-    end
     respond_to do |format|
-      if @user.persisted? || @user.save
-        otp_sent_status = @user.send_otp
-        if Rails.env.development?
-          Rails.logger.info "---------------- #{@user.otp_code} ----------------"
-        end
-        if otp_sent_status[:status]
-          format.json { render json: { user: @user.as_json(@user.ui_json) }, status: :created }
-        else
-          format.json { render json: {user: @user.as_json(@user.ui_json), errors: [otp_sent_status[:error]].flatten}, status: :created }
-        end
+      if request.format.json?
+        handle_json_request
       else
-        format.json { render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity }
+        create_cp_user
+        if @user.save
+          format.html { redirect_to new_user_session_path, notice: 'Successfully registered' }
+        else
+          format.html { render :new, alert: @user.errors.full_messages, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -73,6 +65,30 @@ module ChannelPartnerRegisteration
 
   private
 
+  def create_cp_user
+    @user = User.new(permitted_attributes([:admin, User.new]))
+    @user.assign_attributes(role: "cp_owner", booking_portal_client_id: current_client.id)
+  end
+
+  def handle_json_request
+    @user = User.where(phone: params.dig(:user, :phone)).first
+    create_cp_user unless @user
+
+    if @user.persisted? || @user.save
+      otp_sent_status = @user.send_otp
+      if Rails.env.development?
+        Rails.logger.info "---------------- #{@user.otp_code} ----------------"
+      end
+      if otp_sent_status[:status]
+        format.json { render json: { user: @user.as_json(@user.ui_json) }, status: :created }
+      else
+        format.json { render json: {user: @user.as_json(@user.ui_json), errors: [otp_sent_status[:error]].flatten}, status: :created }
+      end
+    else
+      format.json { render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity }
+    end
+  end
+
   def register_with_new_company
     @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
     @channel_partner.is_existing_company = false
@@ -92,12 +108,12 @@ module ChannelPartnerRegisteration
     respond_to do |format|
       if @channel_partner && @user
         @user.assign_attributes(register_in_cp_company_token: SecureRandom.base58(24), temp_channel_partner: @channel_partner, event: 'pending_approval')
-        @user.assign_attributes(user_permitted_attributes_for_existing_company_flow)
+        @user.assign_attributes(user_permitted_attributes_for_existing_company_flow || {})
 
         if @user.save
           send_request_to_company_owner
           ExpireRegisterPartnerInExistingCompanyLinkWorker.perform_in(24.hours, @user.id.to_s)
-          format.json { render json: { user: @user.as_json(@user.ui_json) }, status: :ok }
+          format.json { render json: { user: @user.as_json(@user.ui_json), message: 'Registration request sent to Company owner' }, status: :ok }
         else
           format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
         end
@@ -108,7 +124,7 @@ module ChannelPartnerRegisteration
   end
 
   def user_permitted_attributes_for_existing_company_flow
-    params.require(:user).permit(:first_name, :last_name, :email)
+    params.require(:user).permit(:first_name, :last_name, :email) if params[:user].present?
   end
 
   def send_request_to_company_owner

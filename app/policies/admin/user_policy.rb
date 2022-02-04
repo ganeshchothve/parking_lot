@@ -107,7 +107,7 @@ class Admin::UserPolicy < UserPolicy
   def permitted_attributes(params = {})
     attributes = super
     if user.present?
-      attributes += [:is_active] if record.persisted? && record.id != user.id && (!record.role.in?(%w(cp_owner channel_partner)) || user.role.in?(%w(cp_owner superadmin)))
+      attributes += [:is_active] if record.persisted? && record.id != user.id && user.role.in?(%w(cp cp_admin admin superadmin))
       if %w[admin superadmin].include?(user.role) && record.role.in?(%w(channel_partner cp cp_owner))
         attributes += [:manager_id]
       end
