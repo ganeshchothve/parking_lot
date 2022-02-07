@@ -52,9 +52,17 @@ module SourcingManagerDashboardConcern
     @leads = DashboardDataProvider.cp_performance_walkins(current_user, @matcher)
     @site_visits = DashboardDataProvider.cp_performance_site_visits(current_user, @matcher)
     @bookings = DashboardDataProvider.cp_performance_bookings(current_user, @matcher)
+    respond_to do |format|
+      format.js
+      format.csv { send_data CsvGenerator::ChannelPartnerPerformance.cp_performance_csv(@cps, @site_visits, @leads, @bookings) , filename: "cp_performance-#{Date.today}.csv", type: "text/csv" }
+    end
   end
 
   def cp_status
+    dates = params[:dates]
+    dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
+    start_date, end_date = dates.split(' - ')
+    matcher = {created_at: {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day }}
     if ["superadmin","admin"].include?(current_user.role) #Channel Partner Manager Performance Dashboard for admin and superadmin
       @cp_managers = User.where(role: "cp")
     else
@@ -67,6 +75,9 @@ module SourcingManagerDashboardConcern
     end
 
     @data = ChannelPartner.collection.aggregate([
+      {
+        "$match": matcher
+      },
       {
         '$project': {
           'first_name': '$first_name',
@@ -102,5 +113,9 @@ module SourcingManagerDashboardConcern
       hsh
     end
     @channel_partners_status_count['total'] = @channel_partners_status_count.values.inject(:+)
+    respond_to do |format|
+      format.js
+      format.csv { send_data CsvGenerator::ChannelPartnerPerformance.cp_status_csv(@cp_managers_hash, @channel_partners_manager_status_count, @channel_partners_status_count) , filename: "cp_status-#{Date.today}.csv", type: "text/csv" }
+    end
   end
 end
