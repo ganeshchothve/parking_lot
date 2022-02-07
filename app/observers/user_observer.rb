@@ -71,8 +71,8 @@ class UserObserver < Mongoid::Observer
     if user.lead_id.present? && crm = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
       user.update_external_ids({ reference_id: user.lead_id }, crm.id)
     end
-    user.invoices.where(status: 'tentative').update_all(status: 'draft') if user.actual_incentive_eligible?
     user.calculate_incentive if user.booking_portal_client.incentive_calculation_type?("calculated")
+    user.invoices.where(status: 'tentative').update_all(status: 'draft') if user.actual_incentive_eligible?
   end
 
   def after_update user

@@ -17,6 +17,7 @@ class BookingDetail
   STATUSES = %w[hold blocked booked_tentative booked_confirmed under_negotiation scheme_rejected scheme_approved swap_requested swapping swapped swap_rejected cancellation_requested cancelling cancelled cancellation_rejected]
   BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed under_negotiation scheme_approved]
   DOCUMENT_TYPES = %w[booking_detail_form document]
+  SKIPPED_BOOKING_STAGES = %w[swapped cancelled]
 
   field :status, type: String
   field :erp_id, type: String, default: ''
@@ -126,13 +127,12 @@ class BookingDetail
   }
   scope :filter_by_agreement_date, ->(date) { start_date, end_date = date.split(' - '); where(agreement_date: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day)
   }
-
   scope :incentive_eligible, ->(category) do
     case category
     when 'spot_booking'
       blocked
     when 'brokerage'
-      booked_confirmed.filter_by_tasks_completed_tracked_by('system')
+      where({ status: { '$nin': BookingDetail::SKIPPED_BOOKING_STAGES } })
     else
       all.not_eligible
     end
@@ -406,8 +406,6 @@ class BookingDetail
   def actual_incentive_eligible?(category=nil)
     if category.present?
       case category
-      when 'spot_booking'
-        blocked?
       when 'brokerage'
         if project.present?
           if project.enable_inventory?

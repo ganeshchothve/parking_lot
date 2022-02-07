@@ -55,7 +55,7 @@ class SiteVisit
   scope :filter_by_cp_manager_id, ->(cp_manager_id) {where(cp_manager_id: cp_manager_id) }
   scope :incentive_eligible, ->(category) do
     if category == 'walk_in'
-      where(approval_status: 'approved', status: {'$in': %w(conducted paid)})
+      where(approval_status: {'$nin': %w(rejected)})
     else
       all.not_eligible
     end

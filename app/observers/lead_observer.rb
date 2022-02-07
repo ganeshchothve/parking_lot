@@ -19,8 +19,8 @@ class LeadObserver < Mongoid::Observer
     if lead.lead_id_changed? && lead.lead_id.present? && crm = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
       lead.update_external_ids({ reference_id: lead.lead_id }, crm.id)
     end
-    lead.invoices.where(status: 'tentative').update_all(status: 'draft') if lead.actual_incentive_eligible?
     lead.calculate_incentive if lead.project.incentive_calculation_type?("calculated")
+    lead.invoices.where(status: 'tentative').update_all(status: 'draft') if lead.actual_incentive_eligible?
   end
 
   def after_update lead
