@@ -1,10 +1,10 @@
-module CsvGenerator::ChannelPartnerPerformance
+module CsvGenerator::PartnerWisePerformance
 
-  def self.channel_partner_performance_csv(current_user, projects, leads, bookings, all_site_visits, site_visits, pending_site_visits, approved_site_visits, rejected_site_visits)
-    attributes = channel_partner_performance_csv_headers
+  def self.partner_wise_performance_csv(user, leads, bookings, all_site_visits, site_visits, pending_site_visits, approved_site_visits, rejected_site_visits)
+    attributes = partner_wise_performance_csv_headers
     csv_str = CSV.generate(headers: true) do |csv|
       csv << attributes
-      projects.where(Project.user_based_scope(current_user)).each do |p|
+       User.filter_by_role(%w(cp_owner channel_partner)).where(User.user_based_scope(user)).each do |p|
         csv << [
           p.name.titleize,
           leads[p.id].try(:count) || 0, 
@@ -25,12 +25,12 @@ module CsvGenerator::ChannelPartnerPerformance
         (bookings.values&.flatten&.pluck(:agreement_price)&.map(&:to_f)&.sum || 0)
       ]
     end
-    csv_str   
+    csv_str 
   end
 
-  def self.channel_partner_performance_csv_headers
+  def self.partner_wise_performance_csv_headers
     [
-      Project.model_name.human,
+      I18n.t("mongoid.attributes.user/role.cp_owner"),
       Lead.model_name.human(count: 2),
       "Pending #{SiteVisit.model_name.human(count: 2)}",
       "Approved #{SiteVisit.model_name.human(count: 2)}",
