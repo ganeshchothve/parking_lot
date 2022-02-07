@@ -1,4 +1,4 @@
-module CsvGenerator
+module CsvGenerator::ChannelPartnerPerformance
 
   def  self.cp_status_csv(cp_managers_hash, channel_partners_manager_status_count, channel_partners_status_count)
     attributes = cp_status_csv_headers

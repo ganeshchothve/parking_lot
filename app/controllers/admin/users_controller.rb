@@ -255,7 +255,7 @@ class Admin::UsersController < AdminController
     @projects = params[:project_ids].present? ? Project.filter_by__id(params[:project_ids]) : Project.all
     respond_to do |format|
       format.js
-      format.csv { send_data CsvGenerator.channel_partner_performance_csv(current_user, @projects, @leads, @bookings, @all_site_visits, @site_visits, @pending_site_visits, @approved_site_visits, @rejected_site_visits) , filename: "channel_partner_performance-#{Date.today}.csv", type: "text/csv" }
+      format.csv { send_data CsvGenerator::ChannelPartnerPerformance.channel_partner_performance_csv(current_user, @projects, @leads, @bookings, @all_site_visits, @site_visits, @pending_site_visits, @approved_site_visits, @rejected_site_visits) , filename: "channel_partner_performance-#{Date.today}.csv", type: "text/csv" }
     end
   end
 
@@ -289,7 +289,7 @@ class Admin::UsersController < AdminController
     user = params[:channel_partner_id].present? ? ChannelPartner.where(id: params[:channel_partner_id]).first&.users&.cp_owner&.first : current_user
     respond_to do |format|
       format.js
-      format.csv { send_data CsvGenerator.partner_wise_performance_csv(user, @leads, @bookings, @all_site_visits, @site_visits, @pending_site_visits, @approved_site_visits, @rejected_site_visits) , filename: "partner_wise_performance-#{Date.today}.csv", type: "text/csv" }
+      format.csv { send_data CsvGenerator::ChannelPartnerPerformance.partner_wise_performance_csv(user, @leads, @bookings, @all_site_visits, @site_visits, @pending_site_visits, @approved_site_visits, @rejected_site_visits) , filename: "partner_wise_performance-#{Date.today}.csv", type: "text/csv" }
     end
   end
 
