@@ -25,8 +25,10 @@ class SiteVisit
   belongs_to :cp_admin, class_name: 'User', optional: true
   has_many :notes, as: :notable
   has_many :invoices, as: :invoiceable
+  has_many :assets, as: :assetable
 
   accepts_nested_attributes_for :notes, reject_if: :all_blank
+  accepts_nested_attributes_for :assets, reject_if: :all_blank
 
   field :scheduled_on, type: DateTime
   field :conducted_on, type: DateTime
