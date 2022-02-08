@@ -220,7 +220,7 @@ class Admin::UsersController < AdminController
   def channel_partner_performance
     interested_project_matcher = {status: {'$in': ["approved"]}}
     dates = params[:dates]
-    dates = (Date.today - 12.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
+    dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
     start_date, end_date = dates.split(' - ')
     interested_project_matcher[:created_at] =  {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day }
     @leads = Lead.where(Lead.user_based_scope(current_user, params)).filter_by_created_at(dates)
