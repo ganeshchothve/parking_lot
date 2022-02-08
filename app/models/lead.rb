@@ -241,7 +241,11 @@ class Lead
   end
 
   def ds_name(current_user)
-    "#{name} - #{masked_email(current_user)} - #{masked_phone(current_user)} (#{project_name})"
+    ds_name = "#{name}"
+    ds_name << " - #{masked_email(current_user)}" if email.present?
+    ds_name << " - #{masked_phone(current_user)}" if phone.present?
+    ds_name << " (#{project_name})" if project_name.present?
+    return ds_name
   end
 
   def active_cp_lead_activities

@@ -177,6 +177,10 @@ module BookingDetailStateMachine
       _lead.booking_done!
       _project_unit = project_unit
       _project_unit.blocked_on = Date.today
+      if self.agreement_date.blank? && self.project_unit.present?
+        self.set(agreement_date: Date.today + 45)
+        self.set(tentative_agreement_date: Date.today + 45)
+      end
       _project_unit.auto_release_on ||= Date.today
       _project_unit.auto_release_on +=  _project_unit.blocking_days.days
       _project_unit.save

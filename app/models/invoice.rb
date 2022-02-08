@@ -28,7 +28,7 @@ class Invoice
 
   belongs_to :invoiceable, polymorphic: true
   belongs_to :project, optional: true
-  belongs_to :manager, class_name: 'User'
+  belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true
   belongs_to :cp_manager, class_name: 'User', optional: true
   belongs_to :cp_admin, class_name: 'User', optional: true
@@ -40,7 +40,7 @@ class Invoice
   embeds_one :payment_adjustment, as: :payable
 
   validates :category, :brokerage_type, :payment_to, presence: true
-  validates :number, presence: true, if: proc { raised? && category.in?(%w(spot_booking lead referral brokerage)) }
+  validates :number, presence: true, if: proc { raised? && category.in?(%w(brokerage)) }
   validates :rejection_reason, presence: true, if: :rejected?
   validates :comments, presence: true, if: proc { pending_approval? && status_was == 'rejected' }
   validates :amount, numericality: { greater_than: 0 }
@@ -98,7 +98,7 @@ class Invoice
     _amount = amount + calculate_gst_amount
     _amount += payment_adjustment.try(:absolute_value).to_i if payment_adjustment.try(:absolute_value).present?
     _amount -= incentive_deduction.try(:amount).to_i if incentive_deduction.try(:approved?)
-    _amount
+    _amount.round(2)
   end
 
   class << self
