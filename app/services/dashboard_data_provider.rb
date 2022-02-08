@@ -838,6 +838,26 @@ module DashboardDataProvider
     data.map {|x| x.merge(x.delete('_id')).with_indifferent_access}
   end
 
+  def self.subscribed_count_project_wise(current_user, matcher)
+    data = InterestedProject.collection.aggregate([
+      {
+        "$match": matcher
+      },
+        {
+        '$group': {
+          _id: {
+            'project_id': '$project_id'
+          },
+          count: {
+          '$sum': 1
+          }
+        }
+      }
+    ]).to_a
+    data.map {|x| [x["_id"]["project_id"], x["count"]]}.to_h
+  end
+
+
   protected
 
   def self.calculate_all_towers all_towers_out, current_tower_data
