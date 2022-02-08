@@ -6,8 +6,6 @@ module IncentiveSchemeAutoApplication
     field :incentive_scheme_data, type: Hash, default: {}
     field :incentive_generated, type: Boolean, default: false
 
-    scope :not_eligible, -> { where(non_existent_attribute: 'present') }
-
     scope :filter_by_incentive_generated, ->(flag) do
       if flag=="yes"
         where(incentive_generated: true)

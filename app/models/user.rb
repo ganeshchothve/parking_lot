@@ -224,7 +224,7 @@ class User
     if category == 'referral'
       nin(referred_by_id: ['', nil]).in(role: BUYER_ROLES + %w(channel_partner cp_owner))
     else
-      all.not_eligible
+      none
     end
   end
 
