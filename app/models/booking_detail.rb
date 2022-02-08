@@ -406,6 +406,8 @@ class BookingDetail
   def actual_incentive_eligible?(category=nil)
     if category.present?
       case category
+      when 'spot_booking'
+        blocked?
       when 'brokerage'
         if project.present?
           if project.enable_inventory?

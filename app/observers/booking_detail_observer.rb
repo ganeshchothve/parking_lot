@@ -53,6 +53,7 @@ class BookingDetailObserver < Mongoid::Observer
       booking_detail.invoices.where(status: 'tentative').update_all(status: 'rejected')
     end
 
-    booking_detail.invoices.where(status: 'tentative').update_all(status: 'draft') if booking_detail.actual_incentive_eligible? || booking_detail.find_incentive_schemes('spot_booking').count > 0
+    booking_detail.invoices.where(status: 'tentative', category: 'brokerage').update_all(status: 'draft') if booking_detail.actual_incentive_eligible?('brokerage')
+    booking_detail.invoices.where(status: 'tentative', category: 'spot_booking').update_all(status: 'draft') if booking_detail.actual_incentive_eligible?('spot_booking')
   end
 end
