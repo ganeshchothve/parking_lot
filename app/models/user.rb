@@ -295,6 +295,18 @@ class User
     end
   end
 
+  def actual_incentive_eligible?(category=nil)
+    if category.present?
+      if category == 'referral'
+        referred_by_id.present? && (self.buyer? || self.role.in?(%w(channel_partner cp_owner)))
+      else
+        false
+      end
+    else
+      _actual_incentive_eligible?
+    end
+  end
+
   def phone_or_email_required
     errors.add(:base, 'Email or Phone is required')
   end

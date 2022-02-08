@@ -23,6 +23,12 @@ module IncentiveSchemeAutoApplication
     end
   end
 
+  def _actual_incentive_eligible?
+    ::IncentiveScheme::CATEGORIES_PER_RESOURCE[self.class.to_s].any? do |category|
+      self.actual_incentive_eligible?(category)
+    end
+  end
+
   def invoiceable_price
   end
 
