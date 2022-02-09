@@ -6,7 +6,7 @@ class Admin::UserRequestPolicy < UserRequestPolicy
   end
 
   def edit?
-    %w[admin crm sales cp superadmin].include?(user.role) && current_client.enable_actual_inventory?(user)
+    %w[admin crm sales cp superadmin sales_admin].include?(user.role) && current_client.enable_actual_inventory?(user)
   end
 
   def update?
@@ -26,6 +26,9 @@ class Admin::UserRequestPolicy < UserRequestPolicy
     access_status = (record.status == 'pending' && ["UserRequest::Cancellation", "UserRequest::Swap"].include?(record._type))
     access_status = access_status || (['pending', 'processing'].include?(record.status) && record._type == "UserRequest::General")
     if access_status && %w[admin crm sales superadmin cp cp_admin billing_team].include?(user.role)
+      attributes += [:event, :reason_for_failure]
+    end
+    if access_status && %w[sales_admin].include?(user.role) && !current_client.launchpad_portal
       attributes += [:event, :reason_for_failure]
     end
     if %w[admin crm superadmin cp channel_partner cp_admin billing_team].include?(user.role)

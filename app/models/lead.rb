@@ -108,7 +108,7 @@ class Lead
     if category == 'lead'
       nin(manager_id: ['', nil])
     else
-      all.not_eligible
+      none
     end
   end
 

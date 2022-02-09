@@ -97,7 +97,7 @@
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :configurations, class: 'label-required' %>
-      <%= f.select :configurations, Project::DEFAULT_CONFIGURATIONS.collect{|x| [x, x]}.sort{|x, y| x[0] <=> y[0]}, {}, class: 'selectize-tags', multiple: true, disabled: !policy([:admin, project]).editable_field?("configurations"), required: true %>
+      <%= f.select :configurations, (Project::DEFAULT_CONFIGURATIONS + Project.pluck(:configurations)).flatten.compact.uniq.collect{|x| [x, x]}.sort{|x, y| x[0] <=> y[0]}, {}, class: 'selectize-tags', multiple: true, disabled: !policy([:admin, project]).editable_field?("configurations"), required: true %>
     </div>
   </div>
   <div class="col-md-6">

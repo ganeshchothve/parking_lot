@@ -57,7 +57,7 @@ class SiteVisit
     if category == 'walk_in'
       where(approval_status: 'approved', status: {'$in': %w(conducted paid)})
     else
-      all.not_eligible
+      none
     end
   end
 

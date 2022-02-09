@@ -134,7 +134,7 @@ class BookingDetail
     when 'brokerage'
       booked_confirmed.filter_by_tasks_completed_tracked_by('system')
     else
-      all.not_eligible
+      none
     end
   end
   scope :booking_stages, -> { all.in(status: BOOKING_STAGES) }
