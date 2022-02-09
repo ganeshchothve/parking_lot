@@ -78,6 +78,18 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     %w[account_manager account_manager_head].include?(user.role)
   end
 
+  def can_move_booked_tentative?
+    record.agreement_date.present? && move_to_next_state? && record.blocked?
+  end
+
+  def can_move_booked_confirmed?
+    (user.role?(:billing_team) || (current_client.launchpad_portal? && user.role?(:account_manager_head))) && record.booked_tentative?
+  end
+
+  def can_move_cancel?
+    record.booked_tentative? && %w(billing_team).include?(user.role)
+  end
+
   def send_booking_detail_form_notification?
     user.active_channel_partner?
   end
