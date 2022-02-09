@@ -8,6 +8,8 @@
           <% if policy([:admin, Lead]).index? %>
             <th><%= Lead.model_name.human(count: 2) %></th>
           <% end %>
+          <th>Scheduled<br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th>Conducted<br> <%= SiteVisit.model_name.human(count: 2) %></th>
           <th>Pending<br> <%= SiteVisit.model_name.human(count: 2) %></th>
           <th>Approved<br> <%= SiteVisit.model_name.human(count: 2) %></th>
           <th>Rejected<br> <%= SiteVisit.model_name.human(count: 2) %></th>
@@ -24,6 +26,8 @@
             <% if policy([:admin, Lead]).index? %>
               <td data-title='<%= Lead.model_name.human(count: 2) %>'><%= @leads[p.id].try(:count) || 0 %></td>
             <% end %>
+            <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= @scheduled_site_visits[p.id].try(:count) || 0 %></td>
+            <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= @conducted_site_visits[p.id].try(:count) || 0 %></td>
             <td data-title='Pending <%= SiteVisit.model_name.human(count: 2) %>'><%= @pending_site_visits[p.id].try(:count) || 0 %></td>
             <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= @approved_site_visits[p.id].try(:count) || 0 %></td>
             <td data-title='Rejected <%= SiteVisit.model_name.human(count: 2) %>'><%= @rejected_site_visits[p.id].try(:count) || 0 %></td>
@@ -39,6 +43,8 @@
           <% if policy([:admin, Lead]).index? %>
             <td data-title='<%= Lead.model_name.human(count: 2) %>'><%= @leads.values&.flatten&.count || 0 %></td>
           <% end %>
+          <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= @scheduled_site_visits.values&.flatten&.count || 0 %></td>
+          <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= @conducted_site_visits.values&.flatten&.count || 0 %></td>
           <td data-title='Pending <%= SiteVisit.model_name.human(count: 2) %>'><%= @pending_site_visits.values&.flatten&.count || 0 %></td>
           <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= @approved_site_visits.values&.flatten&.count || 0 %></td>
           <td data-title='Rejected <%= SiteVisit.model_name.human(count: 2) %>'><%= @rejected_site_visits.values&.flatten&.count || 0 %></td>

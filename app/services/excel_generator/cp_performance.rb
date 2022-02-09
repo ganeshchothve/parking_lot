@@ -15,6 +15,8 @@ module ExcelGenerator::CpPerformance
      sheet.insert_row(index, [
       cp.name,
       leads[cp.id] || 0,
+      site_visits.dig('scheduled', cp.id.to_s) || 0,
+      site_visits.dig('conducted', cp.id.to_s) || 0,
       site_visits.dig('pending', cp.id.to_s) || 0,
       site_visits.dig('approved', cp.id.to_s) || 0,
       site_visits.dig('rejected', cp.id.to_s) || 0,
@@ -33,6 +35,8 @@ module ExcelGenerator::CpPerformance
     [
       I18n.t("mongoid.attributes.user/role.cp"),
       Lead.model_name.human(count: 2),
+      "Scheduled #{SiteVisit.model_name.human(count: 2)}",
+      "Conducted #{SiteVisit.model_name.human(count: 2)}",
       "Pending #{SiteVisit.model_name.human(count: 2)}",
       "Approved #{SiteVisit.model_name.human(count: 2)}",
       "Rejected #{SiteVisit.model_name.human(count: 2)}",

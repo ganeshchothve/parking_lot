@@ -1,6 +1,6 @@
 module ExcelGenerator::PartnerWisePerformance
 
-  def self.partner_wise_performance_csv(user, leads, bookings, all_site_visits, site_visits, pending_site_visits, approved_site_visits, rejected_site_visits)
+  def self.partner_wise_performance_csv(user, leads, bookings, all_site_visits, site_visits, pending_site_visits, approved_site_visits, rejected_site_visits, scheduled_site_visits, conducted_site_visits)
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "PartnerWisePerformance")
     sheet.insert_row(0, ["Channel Partner Performance (User Wise)"])
@@ -14,6 +14,8 @@ module ExcelGenerator::PartnerWisePerformance
       sheet.insert_row(index, [
         p.name.titleize,
         leads[p.id].try(:count) || 0, 
+        scheduled_site_visits[p.id].try(:count) || 0,
+        conducted_site_visits[p.id].try(:count) || 0,
         pending_site_visits[p.id].try(:count) || 0,
         approved_site_visits[p.id].try(:count) || 0,
         rejected_site_visits[p.id].try(:count) || 0,
@@ -24,6 +26,8 @@ module ExcelGenerator::PartnerWisePerformance
     total_values = [
       I18n.t('global.total'),
       leads.values&.flatten&.count || 0,
+      scheduled_site_visits.values&.flatten&.count || 0,
+      conducted_site_visits.values&.flatten&.count || 0,
       pending_site_visits.values&.flatten&.count || 0,
       approved_site_visits.values&.flatten&.count || 0,
       rejected_site_visits.values&.flatten&.count || 0,
@@ -41,6 +45,8 @@ module ExcelGenerator::PartnerWisePerformance
     [
       I18n.t("mongoid.attributes.user/role.cp_owner"),
       Lead.model_name.human(count: 2),
+      "Scheduled #{SiteVisit.model_name.human(count: 2)}",
+      "Conducted #{SiteVisit.model_name.human(count: 2)}",
       "Pending #{SiteVisit.model_name.human(count: 2)}",
       "Approved #{SiteVisit.model_name.human(count: 2)}",
       "Rejected #{SiteVisit.model_name.human(count: 2)}",
