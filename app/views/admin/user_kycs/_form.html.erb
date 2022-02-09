@@ -30,7 +30,7 @@
           <div class="row">
             <div class="col-md-6">
               <%= f.label :configurations, class: 'control-label' %>
-              <%= f.select :configurations, UserKyc.available_configurations.collect{|x| [x[:text], x[:id]] }, {prompt: "Select"}, class: 'selectize', multiple: true, disabled: !policy(@user_kyc).editable_field?("configurations") %>
+              <%= f.select :configurations, UserKyc.available_configurations(@user_kyc.lead_id.to_s).collect{|x| [x[:text], x[:id]] }, {prompt: "Select"}, class: 'selectize', multiple: true, disabled: !policy(@user_kyc).editable_field?("configurations") %>
 
             </div>
             <div class="col-md-6">

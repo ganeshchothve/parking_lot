@@ -56,7 +56,7 @@ module UsersHelper
     case user.role
     when *(User::BUYER_ROLES)
       'channel_partner'
-    when 'channel_partner'
+    when 'channel_partner', 'cp_owner'
       'cp'
     when 'cp'
       'cp_admin'
