@@ -370,6 +370,7 @@ Rails.application.routes.draw do
     get :incentive_plans_started, to: "dashboard#incentive_plans_started"
     get :incentive_plans_summary, to: "dashboard#incentive_plans_summary"
     get :channel_partner_dashboard_counts, to: "dashboard#channel_partner_dashboard_counts"
+    get :project_wise_invoice_details, to: "dashboard#project_wise_invoice_details"
     #get :download_brochure, to: 'dashboard#download_brochure'
     get :sales_board, to: 'dashboard#sales_board'
     get :booking_details_counts, to: 'dashboard#booking_details_counts'
