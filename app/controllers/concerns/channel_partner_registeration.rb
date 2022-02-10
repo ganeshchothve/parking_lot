@@ -4,7 +4,7 @@ module ChannelPartnerRegisteration
   def find_or_create_cp_user
     respond_to do |format|
       if request.format.json?
-        handle_json_request
+        handle_json_request(format)
       else
         create_cp_user
         if @user.save
@@ -70,7 +70,7 @@ module ChannelPartnerRegisteration
     @user.assign_attributes(role: "channel_partner", booking_portal_client_id: current_client.id)
   end
 
-  def handle_json_request
+  def handle_json_request(format)
     @user = User.where(phone: params.dig(:user, :phone)).first
     create_cp_user unless @user
 
