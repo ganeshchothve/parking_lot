@@ -12,11 +12,11 @@ module ExcelGenerator::CpStatus
     cp_managers_hash.each do |cp_id, cp_name|
       sheet.insert_row(index+1, [
         cp_name,
-        (channel_partners_manager_status_count[cp_id]["inactive"] || 0),
-        (channel_partners_manager_status_count[cp_id]["active"] || 0),
-        (channel_partners_manager_status_count[cp_id]["pending"] || 0),
-        (channel_partners_manager_status_count[cp_id]["rejected"] || 0),
-        (channel_partners_manager_status_count[cp_id]["count"] || 0)
+        ((channel_partners_manager_status_count[cp_id]["inactive"] || 0) rescue 0),
+        ((channel_partners_manager_status_count[cp_id]["active"] || 0) rescue 0),
+        ((channel_partners_manager_status_count[cp_id]["pending"] || 0) rescue 0),
+        ((channel_partners_manager_status_count[cp_id]["rejected"] || 0) rescue 0),
+        ((channel_partners_manager_status_count[cp_id]["count"] || 0) rescue 0)
       ])
     end
     total_values = ["Total"]
