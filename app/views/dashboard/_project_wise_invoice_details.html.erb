@@ -23,7 +23,7 @@
                   <%= @project_name_hash[hash[:project_id].to_s] %>
                 </td>
                 <td>
-                  <%= hash[:total_tentative_amount] %>
+                  <%= hash[:amount] %>
                   <%#= link_to hash[:bookings_count], admin_booking_details_path({ fltrs: { project_id: hash[:project_id], created_at: created_at, status: ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]}}) %>
                 </td>
               </tr>

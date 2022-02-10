@@ -176,6 +176,7 @@ class Project
   has_many :unit_configurations
   has_many :videos, as: :videoable
   has_many :nearby_locations
+  has_many :invoices
 
   validates :name, :configurations, presence: true
   validates_uniqueness_of :name, :rera_registration_no, allow_blank: true
