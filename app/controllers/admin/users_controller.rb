@@ -265,7 +265,7 @@ class Admin::UsersController < AdminController
     @projects = params[:project_ids].present? ? Project.filter_by__id(params[:project_ids]) : Project.all
     respond_to do |format|
       format.js
-      format.xlsx { send_data ExcelGenerator::ChannelPartnerPerformance.channel_partner_performance_csv(current_user, @projects, @leads, @bookings, @all_site_visits, @site_visits, @pending_site_visits, @approved_site_visits, @rejected_site_visits, @subscribed_count_project_wise, @scheduled_site_visits, @conducted_site_visits).string , filename: "channel_partner_performance-#{Date.today}.xlsx", type: "application/xls" }
+      format.xls { send_data ExcelGenerator::ChannelPartnerPerformance.channel_partner_performance_csv(current_user, @projects, @leads, @bookings, @all_site_visits, @site_visits, @pending_site_visits, @approved_site_visits, @rejected_site_visits, @subscribed_count_project_wise, @scheduled_site_visits, @conducted_site_visits).string , filename: "channel_partner_performance-#{Date.today}.xls", type: "application/xls" }
     end
   end
 
@@ -301,7 +301,7 @@ class Admin::UsersController < AdminController
     user = params[:channel_partner_id].present? ? ChannelPartner.where(id: params[:channel_partner_id]).first&.users&.cp_owner&.first : current_user
     respond_to do |format|
       format.js
-      format.xlsx { send_data ExcelGenerator::PartnerWisePerformance.partner_wise_performance_csv(user, @leads, @bookings, @all_site_visits, @site_visits, @pending_site_visits, @approved_site_visits, @rejected_site_visits, @scheduled_site_visits, @conducted_site_visits).string , filename: "partner_wise_performance-#{Date.today}.xlsx", type: "application/xls" }
+      format.xls { send_data ExcelGenerator::PartnerWisePerformance.partner_wise_performance_csv(user, @leads, @bookings, @all_site_visits, @site_visits, @pending_site_visits, @approved_site_visits, @rejected_site_visits, @scheduled_site_visits, @conducted_site_visits).string , filename: "partner_wise_performance-#{Date.today}.xls", type: "application/xls" }
     end
   end
 
