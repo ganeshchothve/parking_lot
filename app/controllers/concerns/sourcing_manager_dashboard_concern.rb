@@ -54,7 +54,7 @@ module SourcingManagerDashboardConcern
     @bookings = DashboardDataProvider.cp_performance_bookings(current_user, @matcher)
     respond_to do |format|
       format.js
-      format.xlsx { send_data ExcelGenerator::CpPerformance.cp_performance_csv(@cps, @site_visits, @leads, @bookings).string , filename: "cp_performance-#{Date.today}.xlsx", type: "application/xls" }
+      format.xls { send_data ExcelGenerator::CpPerformance.cp_performance_csv(@cps, @site_visits, @leads, @bookings).string , filename: "cp_performance-#{Date.today}.xls", type: "application/xls" }
     end
   end
 
@@ -115,7 +115,7 @@ module SourcingManagerDashboardConcern
     @channel_partners_status_count['total'] = @channel_partners_status_count.values.inject(:+)
     respond_to do |format|
       format.js
-      format.xlsx { send_data ExcelGenerator::CpStatus.cp_status_csv(@cp_managers_hash, @channel_partners_manager_status_count, @channel_partners_status_count).string , filename: "cp_status-#{Date.today}.xlsx", type: "application/xls" }
+      format.xls { send_data ExcelGenerator::CpStatus.cp_status_csv(@cp_managers_hash, @channel_partners_manager_status_count, @channel_partners_status_count).string , filename: "cp_status-#{Date.today}.xls", type: "application/xls" }
     end
   end
 end

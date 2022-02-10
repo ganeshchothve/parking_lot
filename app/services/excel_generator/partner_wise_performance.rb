@@ -9,10 +9,13 @@ module ExcelGenerator::PartnerWisePerformance
     column_size.times { |x| sheet.row(0).set_format(x, title_format) } #making headers bold 
     column_size.times { |x| sheet.row(1).set_format(x, title_format) }
     index = 1
+    total_sign_in_count = 0
     User.filter_by_role(%w(cp_owner channel_partner)).where(User.user_based_scope(user)).each do |p|
       index = index+1 
+      total_sign_in_count += (p.sign_in_count || 0)
       sheet.insert_row(index, [
         p.name.titleize,
+        p.sign_in_count || 0,
         leads[p.id].try(:count) || 0, 
         scheduled_site_visits[p.id].try(:count) || 0,
         conducted_site_visits[p.id].try(:count) || 0,
@@ -25,6 +28,7 @@ module ExcelGenerator::PartnerWisePerformance
     end
     total_values = [
       I18n.t('global.total'),
+      total_sign_in_count,
       leads.values&.flatten&.count || 0,
       scheduled_site_visits.values&.flatten&.count || 0,
       conducted_site_visits.values&.flatten&.count || 0,
@@ -35,7 +39,7 @@ module ExcelGenerator::PartnerWisePerformance
       (bookings.values&.flatten&.pluck(:agreement_price)&.map(&:to_f)&.sum || 0)
     ]
     sheet.insert_row(sheet.last_row_index + 1, total_values)
-    sheet.merge_cells(0,0,0,6)
+    sheet.merge_cells(0,0,0,9)
     spreadsheet = StringIO.new 
     file.write spreadsheet
     spreadsheet 
@@ -44,6 +48,7 @@ module ExcelGenerator::PartnerWisePerformance
   def self.partner_wise_performance_csv_headers
     [
       I18n.t("mongoid.attributes.user/role.cp_owner"),
+      "Sign In Count",
       Lead.model_name.human(count: 2),
       "Scheduled #{SiteVisit.model_name.human(count: 2)}",
       "Conducted #{SiteVisit.model_name.human(count: 2)}",

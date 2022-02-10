@@ -20,8 +20,8 @@ module ExcelGenerator::CpStatus
       ])
     end
     total_values = ["Total"]
-    %w(inactive active pending rejected total).each do |status| 
-      total_values << channel_partners_status_count[status] || 0
+    %w(inactive active pending rejected total).each do |status|
+      total_values << (channel_partners_status_count[status] || 0)
     end
     sheet.merge_cells(0,0,0,5)
     sheet.insert_row(sheet.last_row_index + 1, total_values)
