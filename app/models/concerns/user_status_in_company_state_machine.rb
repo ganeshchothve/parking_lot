@@ -41,7 +41,7 @@ module UserStatusInCompanyStateMachine
     end
 
     def unset_channel_partner
-      self.set(channel_partner_id: nil) if self.channel_partner_id.present?
+      self.set(channel_partner_id: nil, role: 'channel_partner') if self.channel_partner_id.present?
     end
   end
 end

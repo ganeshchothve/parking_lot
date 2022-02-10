@@ -27,7 +27,7 @@ class ChannelPartnersController < ApplicationController
   end
 
   def new
-    @user = User.new(role: 'cp_owner')
+    @user = User.new(role: 'channel_partner')
     render layout: 'landing_page'
   end
 
