@@ -118,7 +118,8 @@
                 <%= link_to t("dashboard.exports.link_name", type: nil) %>
               </button>
               <div class="dropdown-menu dropdown-menu-right">
-                <%= link_to link_to t("dashboard.exports.link_name", type: t('global.all')), partner_wise_performance_admin_users_path(format: "xlsx"), class: 'dropdown-item' %>
+                <%= link_to link_to t("dashboard.exports.link_name", type: t('global.all')), partner_wise_performance_admin_users_path(format: "xls"), class: 'dropdown-item' %>
+                <%= link_to t('dashboard.exports.link_name', type: t('global.active_filter')), partner_wise_performance_admin_users_path(format: "xls", channel_partner_id: params["channel_partner_id"], project_id: params["project_id"], dates: params["dates"]), class: 'dropdown-item', id: 'partner-wise-performance-af-export' %>
               </div>
             </div>
           </div>
@@ -178,7 +179,8 @@
                 <%= link_to t("dashboard.exports.link_name", type: nil) %>
               </button>
               <div class="dropdown-menu dropdown-menu-right">
-                <%= link_to link_to t("dashboard.exports.link_name", type: t('global.all')), channel_partner_performance_admin_users_path(format: "xlsx"), class: 'dropdown-item' %>
+                <%= link_to link_to t("dashboard.exports.link_name", type: t('global.all')), channel_partner_performance_admin_users_path(format: "xls"), class: 'dropdown-item' %>
+                <%= link_to t('dashboard.exports.link_name', type: t('global.active_filter')), channel_partner_performance_admin_users_path(format: "xls", channel_partner_id: params["channel_partner_id"], dates: params["dates"], project_ids: params["project_ids"], manager_id: params["manager_id"]), class: 'dropdown-item', id: 'channel-partner-performance-af-export' %>
               </div>
             </div>
           </div>
@@ -244,7 +246,8 @@
                     <%= link_to t("dashboard.exports.link_name", type: nil) %>
                   </button>
                   <div class="dropdown-menu dropdown-menu-right">
-                    <%= link_to link_to t("dashboard.exports.link_name", type: t('global.all')), cp_performance_path(format: "xlsx"), class: 'dropdown-item' %>
+                    <%= link_to link_to t("dashboard.exports.link_name", type: t('global.all')), cp_performance_path(format: "xls"), class: 'dropdown-item' %>
+                    <%= link_to t('dashboard.exports.link_name', type: t('global.active_filter')), cp_performance_path(format: "xls", dates: params["dates"], project_ids: params["project_ids"]), class: 'dropdown-item', id: 'cp-performance-af-export' %>
                   </div>
                 </div>
               </div>
@@ -305,7 +308,8 @@
                     <%= t("dashboard.exports.link_name", type: nil) %>
                   </button>
                   <div class="dropdown-menu dropdown-menu-right">
-                    <%= link_to t("dashboard.exports.link_name", type: t('global.all')), cp_status_path(format: "xlsx"), class: 'dropdown-item' %>
+                    <%= link_to t("dashboard.exports.link_name", type: t('global.all')), cp_status_path(format: "xls"), class: 'dropdown-item' %>
+                    <%= link_to t('dashboard.exports.link_name', type: t('global.active_filter')), cp_status_path(format: "xls", dates: params["dates"]), class: 'dropdown-item', id: 'cp-status-af-export' %>
                   </div>
                 </div>
               </div>
