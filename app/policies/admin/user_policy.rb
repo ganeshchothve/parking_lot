@@ -105,7 +105,13 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def change_state?
-    ( user.role.in?(%w(cp_owner)) && user.id != record.id && record.user_status_in_company.in?(%w(active pending_approval)) ) || ( user.role.in?(%w(cp cp_admin)) && record.user_status_in_company.in?(%w(pending_approval)) )
+    (
+      user.role.in?(%w(cp_owner)) && user.id != record.id &&
+      record.user_status_in_company.in?(%w(active pending_approval))
+    ) || (
+      user.role.in?(%w(cp cp_admin superadmin)) &&
+      record.user_status_in_company.in?(%w(pending_approval))
+    )
   end
 
   def permitted_attributes(params = {})
@@ -123,7 +129,11 @@ class Admin::UserPolicy < UserPolicy
       end
 
       attributes += [:premium, :tier_id] if record.role.in?(%w(cp_owner channel_partner)) && user.role?('admin')
-      attributes += [:role] if %w[superadmin admin cp_owner].include?(user.role)
+
+      if %w[superadmin admin cp_owner].include?(user.role)
+        attributes += [:role] unless record.role?('cp_owner') && record&.channel_partner&.primary_user_id == record.id
+      end
+
       attributes += [project_ids: []] if %w[admin superadmin].include?(user.role) && record.role.in?(User::SELECTED_PROJECT_ACCESS)
       if %w[superadmin admin sales_admin].include?(user.role)
         attributes += [:erp_id]
