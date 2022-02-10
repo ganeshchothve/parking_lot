@@ -1,6 +1,6 @@
 module ExcelGenerator::ChannelPartnerPerformance
 
-  def self.channel_partner_performance_csv(current_user, projects, leads, bookings, all_site_visits, site_visits, pending_site_visits, approved_site_visits, rejected_site_visits, subscribed_count_project_wise)
+  def self.channel_partner_performance_csv(current_user, projects, leads, bookings, all_site_visits, site_visits, pending_site_visits, approved_site_visits, rejected_site_visits, subscribed_count_project_wise, scheduled_site_visits, conducted_site_visits)
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "ChannelPartnerPerformance")
     sheet.insert_row(0, ["Channel Partner Performance (Project Wise)"])
@@ -14,6 +14,8 @@ module ExcelGenerator::ChannelPartnerPerformance
       sheet.insert_row(index, [
         p.name.titleize,
         leads[p.id].try(:count) || 0, 
+        scheduled_site_visits[p.id].try(:count) || 0,
+        conducted_site_visits[p.id].try(:count) || 0,
         pending_site_visits[p.id].try(:count) || 0,
         approved_site_visits[p.id].try(:count) || 0,
         rejected_site_visits[p.id].try(:count) || 0,
@@ -25,6 +27,8 @@ module ExcelGenerator::ChannelPartnerPerformance
     total_values = [
       I18n.t('global.total'),
       leads.values&.flatten&.count || 0,
+      scheduled_site_visits.values&.flatten&.count || 0,
+      conducted_site_visits.values&.flatten&.count || 0,
       pending_site_visits.values&.flatten&.count || 0,
       approved_site_visits.values&.flatten&.count || 0,
       rejected_site_visits.values&.flatten&.count || 0,
@@ -43,6 +47,8 @@ module ExcelGenerator::ChannelPartnerPerformance
     [
       Project.model_name.human,
       Lead.model_name.human(count: 2),
+      "Scheduled #{SiteVisit.model_name.human(count: 2)}",
+      "Conducted #{SiteVisit.model_name.human(count: 2)}",
       "Pending #{SiteVisit.model_name.human(count: 2)}",
       "Approved #{SiteVisit.model_name.human(count: 2)}",
       "Rejected #{SiteVisit.model_name.human(count: 2)}",

@@ -256,6 +256,8 @@ class Admin::UsersController < AdminController
     @subscribed_count_project_wise = DashboardDataProvider.subscribed_count_project_wise(current_user, interested_project_matcher)
     @leads = @leads.group_by{|p| p.project_id}
     @all_site_visits = @site_visits.group_by{|p| p.project_id}
+    @scheduled_site_visits = @site_visits.filter_by_status('scheduled').group_by{|p| p.project_id}
+    @conducted_site_visits = @site_visits.filter_by_status('conducted').group_by{|p| p.project_id}
     @pending_site_visits = @site_visits.filter_by_approval_status('pending').group_by{|p| p.project_id}
     @approved_site_visits = @site_visits.filter_by_approval_status('approved').group_by{|p| p.project_id}
     @rejected_site_visits = @site_visits.filter_by_approval_status('rejected').group_by{|p| p.project_id}
@@ -263,7 +265,7 @@ class Admin::UsersController < AdminController
     @projects = params[:project_ids].present? ? Project.filter_by__id(params[:project_ids]) : Project.all
     respond_to do |format|
       format.js
-      format.xlsx { send_data ExcelGenerator::ChannelPartnerPerformance.channel_partner_performance_csv(current_user, @projects, @leads, @bookings, @all_site_visits, @site_visits, @pending_site_visits, @approved_site_visits, @rejected_site_visits, @subscribed_count_project_wise).string , filename: "channel_partner_performance-#{Date.today}.xlsx", type: "application/xls" }
+      format.xlsx { send_data ExcelGenerator::ChannelPartnerPerformance.channel_partner_performance_csv(current_user, @projects, @leads, @bookings, @all_site_visits, @site_visits, @pending_site_visits, @approved_site_visits, @rejected_site_visits, @subscribed_count_project_wise, @scheduled_site_visits, @conducted_site_visits).string , filename: "channel_partner_performance-#{Date.today}.xlsx", type: "application/xls" }
     end
   end
 
@@ -290,6 +292,8 @@ class Admin::UsersController < AdminController
     end
     @leads = @leads.group_by{|p| p.manager_id}
     @all_site_visits = @site_visits.ne(manager_id: nil).group_by{|p| p.manager_id}
+    @scheduled_site_visits = @site_visits.filter_by_status('scheduled').group_by{|p| p.manager_id}
+    @conducted_site_visits = @site_visits.filter_by_status('conducted').group_by{|p| p.manager_id}
     @pending_site_visits = @site_visits.filter_by_approval_status('pending').group_by{|p| p.manager_id}
     @approved_site_visits = @site_visits.filter_by_approval_status('approved').group_by{|p| p.manager_id}
     @rejected_site_visits = @site_visits.filter_by_approval_status('rejected').group_by{|p| p.manager_id}
@@ -297,7 +301,7 @@ class Admin::UsersController < AdminController
     user = params[:channel_partner_id].present? ? ChannelPartner.where(id: params[:channel_partner_id]).first&.users&.cp_owner&.first : current_user
     respond_to do |format|
       format.js
-      format.xlsx { send_data ExcelGenerator::PartnerWisePerformance.partner_wise_performance_csv(user, @leads, @bookings, @all_site_visits, @site_visits, @pending_site_visits, @approved_site_visits, @rejected_site_visits).string , filename: "partner_wise_performance-#{Date.today}.xlsx", type: "application/xls" }
+      format.xlsx { send_data ExcelGenerator::PartnerWisePerformance.partner_wise_performance_csv(user, @leads, @bookings, @all_site_visits, @site_visits, @pending_site_visits, @approved_site_visits, @rejected_site_visits, @scheduled_site_visits, @conducted_site_visits).string , filename: "partner_wise_performance-#{Date.today}.xlsx", type: "application/xls" }
     end
   end
 
