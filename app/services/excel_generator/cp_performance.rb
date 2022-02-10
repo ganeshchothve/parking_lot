@@ -24,7 +24,7 @@ module ExcelGenerator::CpPerformance
       bookings.dig(cp.id, :sales_revenue) || 0
     ])
     end
-    sheet.merge_cells(0,0,0,6)
+    sheet.merge_cells(0,0,0,8)
     file_name = "cp_performance-#{SecureRandom.hex}.xls"
     spreadsheet = StringIO.new 
     file.write spreadsheet

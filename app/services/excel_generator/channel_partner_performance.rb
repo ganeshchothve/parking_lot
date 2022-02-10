@@ -37,7 +37,7 @@ module ExcelGenerator::ChannelPartnerPerformance
       (bookings.values&.flatten&.pluck(:agreement_price)&.map(&:to_f)&.sum || 0)
     ]
     sheet.insert_row(sheet.last_row_index + 1, total_values)
-    sheet.merge_cells(0,0,0,6)
+    sheet.merge_cells(0,0,0,9)
     spreadsheet = StringIO.new 
     file.write spreadsheet
     spreadsheet  
