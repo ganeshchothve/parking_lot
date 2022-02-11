@@ -220,9 +220,10 @@ class Admin::UsersController < AdminController
   def channel_partner_performance
     interested_project_matcher = {status: {'$in': ["approved"]}}
     dates = params[:dates]
+    @interested_project_dates = dates
     dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
-    start_date, end_date = dates.split(' - ')
-    interested_project_matcher[:created_at] =  {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day }
+    start_date, end_date = @interested_project_dates.split(' - ') if @interested_project_dates.present?
+    interested_project_matcher[:created_at] =  {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day } if start_date.present? && end_date.present?
     @leads = Lead.where(Lead.user_based_scope(current_user, params)).filter_by_created_at(dates)
     @site_visits = SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).filter_by_scheduled_on(dates)
     @bookings = BookingDetail.booking_stages.where(BookingDetail.user_based_scope(current_user, params)).filter_by_booked_on(dates)
@@ -238,14 +239,13 @@ class Admin::UsersController < AdminController
       @leads = @leads.where(channel_partner_id: params[:channel_partner_id])
       @site_visits = @site_visits.where(channel_partner_id: params[:channel_partner_id])
       @bookings = @bookings.where(channel_partner_id: params[:channel_partner_id])
+      channel_partner = ChannelPartner.where(id: params[:channel_partner_id]).first
+      interested_project_matcher[:user_id] = {'$in': channel_partner.users.distinct(:id)} if channel_partner.present?
     end
     if params[:manager_id].present?
       @leads = @leads.where(manager_id: params[:manager_id])
       @site_visits = @site_visits.where(manager_id: params[:manager_id])
       @bookings = @bookings.where(manager_id: params[:manager_id])
-      manager = User.where(id: params[:manager_id]).first
-      cp_users_ids = User.where({ role: {'$in': ['channel_partner', 'cp_owner']}, channel_partner_id: manager.channel_partner_id }).distinct(:id)
-      interested_project_matcher[:user_id] = {'$in': cp_users_ids} if cp_users_ids.present?
     end
     # Exclude leads added by non-channel partner accounts in channel partner performance report
     if params[:manager_id].blank? && params[:channel_partner_id].blank?

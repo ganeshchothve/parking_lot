@@ -142,7 +142,7 @@
                       </div>
                       <div class = "mb-3 col-12">
                         <%= label_tag "channel_partner_id", ChannelPartner.model_name.human, required: true, class: "control-label float-left" %>
-                        <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}, cp_id), required: true, class: "selectize" %>
+                        <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}, cp_id), required: true, prompt: 'Select', class: "selectize" %>
                       </div>
                     </div>
                   </div>
@@ -199,7 +199,7 @@
                       </div>
                       <div class = "mb-3 col-12">
                         <%= label_tag "channel_partner_id", ChannelPartner.model_name.human, required: true, class: "control-label float-left" %>
-                        <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}), class: "selectize" %>
+                        <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}), prompt: 'Select', class: "selectize" %>
                       </div>
                       <div class = "mb-3 col-12">
                         <%= label_tag "manager_id", "Channel Partner", class: "control-label float-left" %>
