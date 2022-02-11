@@ -15,8 +15,6 @@ class SiteVisit
   REJECTION_REASONS = ["budget_not_match", "location_not_match", "possession_not_match", "didnt_visit", "different_cp"]
   DOCUMENT_TYPES = []
 
-  attr_accessor :assets_data
-
   belongs_to :project
   belongs_to :lead
   belongs_to :user
