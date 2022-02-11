@@ -47,7 +47,7 @@ module ExcelGenerator::PartnerWisePerformance
 
   def self.partner_wise_performance_csv_headers
     [
-      I18n.t("mongoid.attributes.user/role.cp_owner"),
+      "#{I18n.t("mongoid.attributes.user/role.channel_partner")}/#{I18n.t("mongoid.attributes.user/role.cp_owner")}",
       "Sign In Count",
       Lead.model_name.human(count: 2),
       "Scheduled #{SiteVisit.model_name.human(count: 2)}",
