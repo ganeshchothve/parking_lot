@@ -99,7 +99,7 @@
                   <div class="row">
                     <div class="mb-3 col-12">
                       <%= label_tag "project_ids", "Project", class: "control-label" %>
-                    <%= select_tag :project_ids, options_for_select(Project.all.map { |p| [p.ds_name, p.id] }, (params[:project_ids].present? ? params[:project_ids] : "")), {prompt: "Select", class: "selectize", multiple: true} %>
+                      <%= select_tag :project_ids, options_for_select(Project.all.map { |p| [p.ds_name, p.id] }, (params[:project_ids].present? ? params[:project_ids] : "")), {prompt: "Select", class: "selectize", multiple: true} %>
                     </div>
                   </div>
                 </div>
@@ -120,7 +120,7 @@
   </div>
 </section>
 <%= render 'dashboard/index/partials/booking_detail_data' %>
-<%= render 'dashboard/index/partials/project_wise_invoice_data' %>
+<%= render 'dashboard/index/partials/project_wise_tentative_revenue_data' %>
 <!-- Keeping margin at bottom, so that data can be scrolled up into viewable screen -->
 <div class='mb-5 pb-5'>
 </div>

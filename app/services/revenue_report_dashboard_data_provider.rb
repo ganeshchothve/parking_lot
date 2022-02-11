@@ -1,7 +1,7 @@
 module RevenueReportDashboardDataProvider
   def self.tentative_reports(current_user, params={})
-    invoice_matcher = set_invoice_matcher("tentative")
-    invoiceable_matcher = set_invoiceable_matcher("tentative")
+    invoice_matcher = set_invoice_matcher("tentative", params)
+    invoiceable_matcher = set_invoiceable_matcher("tentative", params)
     project_wise_total_tentative_amount = {}
     data = Invoice.collection.aggregate([
     {
@@ -9,13 +9,13 @@ module RevenueReportDashboardDataProvider
     },
     {
       '$lookup': {
-      'from':  get_resource(params[:resource]="BookingDetail"),
+      'from':  get_resource(params[:resource]),
       'let': { 'invoiceable_id': "$invoiceable_id" },
       'pipeline': [
         { '$match': { '$and': [invoiceable_matcher, { '$expr': { '$eq': [ "$_id",  "$$invoiceable_id" ] } }] } },
         {'$project': {'_id': 0, 'invoiceable_id': "$_id"}}
       ],
-      'as': "booking_details"
+      'as': get_resource(params[:resource])
       }
     },
     {
@@ -66,25 +66,24 @@ module RevenueReportDashboardDataProvider
     project_wise_tentative_amount
   end
 
-  def self.set_invoice_matcher(report_type="tentative", params={resource: "BookingDetail"})
-    params = params.with_indifferent_access
+  def self.set_invoice_matcher(report_type="tentative", params)
     matcher = {}
     matcher[:status] = report_type == "tentative" ? "tentative" : {'$ne': "tentative"}
-    matcher[:project_id] = {'$in': params[:project_id].split(",")} if params[:project_id].present?
+    matcher[:project_id] = {'$in': params[:project_id].map { |id| BSON::ObjectId(id) }} if params[:project_id].present?
     matcher[:channel_partner_id] = params[:channel_partner_id] if params[:channel_partner_id].present?
-    matcher[:manager_id] = params[:manager_id] if params[:manager_id].present?
-    matcher[:cp_manager_id] = params[:cp_manager_id] if params[:cp_manager_id].present?
-    matcher[:cp_admin_id] = params[:cp_admin_id] if params[:cp_admin_id].present?
+    matcher[:manager_id] = BSON::ObjectId(params[:manager_id]) if params[:manager_id].present?
+    matcher[:cp_manager_id] = BSON::ObjectId(params[:cp_manager_id]) if params[:cp_manager_id].present?
+    matcher[:cp_admin_id] = BSON::ObjectId(params[:cp_admin_id]) if params[:cp_admin_id].present?
     matcher[:category] = params[:category] if params[:category].present?
 
-    matcher[:invoiceable_type] = params[:resource] || "BookingDetail"
+    matcher[:invoiceable_type] = params[:resource].present? ? params[:resource] : "BookingDetail"
 
     matcher
   end
 
-  def self.set_invoiceable_matcher(report_type="tentative", params={resource: "BookingDetail"})
-    params = params.with_indifferent_access
+  def self.set_invoiceable_matcher(report_type="tentative", params)
     matcher = {}
+    params[:resource] ||= "BookingDetail"
     case params[:resource]
     when "BookingDetail"
       if params[:agreement_date].present?

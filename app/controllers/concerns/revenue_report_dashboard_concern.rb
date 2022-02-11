@@ -1,6 +1,6 @@
 module RevenueReportDashboardConcern
 
-  def project_wise_invoice_details
+  def project_wise_tentative_revenue
     @project_wise_total_tentative_amount={}
     @project_wise_total_tentative_amount = RevenueReportDashboardDataProvider.tentative_reports(current_user, params)
     @project_name_hash = {}
