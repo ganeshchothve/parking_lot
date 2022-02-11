@@ -54,4 +54,8 @@ class Asset
       end
     end
   end
+
+  def name_in_error
+    file_name
+  end
 end

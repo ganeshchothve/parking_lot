@@ -13,6 +13,9 @@ class SiteVisit
   include IncentiveSchemeAutoApplication
 
   REJECTION_REASONS = ["budget_not_match", "location_not_match", "possession_not_match", "didnt_visit", "different_cp"]
+  DOCUMENT_TYPES = []
+
+  attr_accessor :assets_data
 
   belongs_to :project
   belongs_to :lead
@@ -69,6 +72,7 @@ class SiteVisit
   validate :validate_scheduled_on_datetime
   validates :time_slot, presence: true, if: Proc.new { |sv| sv.site_visit_type == 'token_slot' }
   validates :notes, copy_errors_from_child: true
+  validates :assets, copy_errors_from_child: true
 
   def incentive_eligible?(category=nil)
     if category.present?
@@ -161,6 +165,17 @@ class SiteVisit
     when 'conducted'
       'visited'
     end
+  end
+
+  def save_assets(params)
+    site_visit = self
+    errors = []
+    site_visit.assign_attributes(params || {})
+    unless site_visit.save
+      errors = site_visit.errors.full_messages.uniq
+    end
+    site_visit.reload
+    errors
   end
 
   private
