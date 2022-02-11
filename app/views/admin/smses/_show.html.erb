@@ -16,6 +16,12 @@
       <span> Sent On :</span>
       <span><%= sms.sent_on.present? ? I18n.l(sms.sent_on.in_time_zone(current_user.time_zone)) :  '-'  %></span>
     </div>
+    <% if current_user.role == 'superadmin' %>
+      <div class="col-6">
+        <span> Response : </span>
+        <span><%= sms.try(:response).presence || '-' %></span>
+      </div>
+    <% end %>
   </div>
   <hr>
   <div class="row justify-content-center">
