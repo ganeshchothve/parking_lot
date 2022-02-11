@@ -105,7 +105,7 @@ module Communication
             body: sms.body,
             to: params[:dest_mobileno],
             from: params[:from])
-            attrs = {response: {sid: message.message.sid, api_version: message.api_version, direction: message.direction, error_code: message.error_code, error_message: message.error_message, status: message.status}}
+            attrs = {response: {sid: message.try(:sid), api_version: message.api_version, direction: message.direction, error_code: message.error_code, error_message: message.error_message, status: message.status}}
           if message.status == 'queued'
             sms.set(status: 'sent', sent_on: Time.now, sms_gateway: 'twilio')
           else
