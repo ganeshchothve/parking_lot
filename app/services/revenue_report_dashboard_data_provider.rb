@@ -19,6 +19,9 @@ module RevenueReportDashboardDataProvider
       }
     },
     {
+      '$match': { "#{get_resource(params[:resource])}": {'$ne': []}}
+    },
+    {
       '$lookup': {
       'from': "projects",
       'let': { 'project_id': "$project_id" },
