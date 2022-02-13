@@ -26,7 +26,16 @@ module Communication
           if Rails.env.production? || Rails.env.staging?
             message = get_message_object(email_json, email.booking_portal_client.sender_email)
             mailgun = ::Mailgun::Client.new email.booking_portal_client.mailgun_private_api_key
-            mailgun.send_message(email.booking_portal_client.mailgun_email_domain, message)
+            response = mailgun.send_message(email.booking_portal_client.mailgun_email_domain, message)
+            begin
+             response = JSON.parse(response.body)
+            rescue StandardError => e
+              response = {status: false, message: e.inspect}
+              puts "==============================="
+              puts "Error in email response:#{e.class} : #{e.message}"
+              puts e.backtrace
+              puts "==============================="
+            end
           else
             ApplicationMailer.test({
               to: email.to || [],
@@ -35,7 +44,9 @@ module Communication
               subject: email.subject,
               attachment_urls: email_json[:attachments]
             }).deliver
+            response = { status: true, message: 'from development env' }
           end
+          email.set(response: response)
           email.set({sent_on: Time.now, status: 'sent'})
         rescue StandardError => e
           if Rails.env.production? || Rails.env.staging?
