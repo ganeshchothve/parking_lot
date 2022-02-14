@@ -54,4 +54,8 @@ class Asset
       end
     end
   end
+
+  def self.ui_json
+    {only: ['file_name'], methods: ['file_url']}
+  end
 end
