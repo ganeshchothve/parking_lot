@@ -57,6 +57,10 @@
                       <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.booked_on'), class: "control-label" %>
                       <%= text_field_tag "booked_on", (params[:booked_on].present? ? params[:booked_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
                     </div>
+                    <div class="mb-3 col-12">
+                      <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.status'), class: "control-label" %>
+                      <%= select_tag "booking_detail_status", options_for_select(BookingDetail::BOOKING_STAGES.collect{|x| [ t("mongoid.attributes.booking_detail/status.#{x}"), x.to_s]}, (params[:booking_detail_status] || "")), {prompt: "Select", class: "selectize"} %>
+                    </div>
                   </div>
                   <div class="row site_visit_filters">
                     <div class="mb-3 col-12">
@@ -66,6 +70,10 @@
                     <div class="mb-3 col-12">
                       <%= label_tag "fltrs", t('mongoid.attributes.site_visit.conducted_on') %>
                       <%= text_field_tag "conducted_on", (params[:conducted_on].present? ? params[:conducted_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
+                    </div>
+                    <div class="mb-3 col-12">
+                      <%= label_tag "fltrs", t('mongoid.attributes.site_visit.status') %>
+                      <%= select_tag "site_visit_status", options_for_select(SiteVisit.aasm(:status).states.collect(&:name).map {|x| [x.to_s.titleize, x.to_s]}, (params[:site_visit_status].present? ? params[:site_visit_status] : "")), { prompt: 'Select', class: "selectize" } %>
                     </div>
                   </div>
                 </div>

@@ -105,6 +105,8 @@ module RevenueReportDashboardDataProvider
           }
       end
 
+      matcher[:status] = params[:booking_detail_status] if params[:booking_detail_status].present?
+
     when "SiteVisit"
       if params[:scheduled_on].present?
         start_date, end_date = params[:scheduled_on].split(' - ')
@@ -121,6 +123,9 @@ module RevenueReportDashboardDataProvider
             "$lte": Date.parse(end_date).end_of_day
           }
       end
+
+      matcher[:status] = params[:site_visit_status] if params[:site_visit_status].present?
+
     end
 
     # common parameter for BookingDetails and SiteVisit
