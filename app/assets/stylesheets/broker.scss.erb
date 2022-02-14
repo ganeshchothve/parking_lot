@@ -3084,9 +3084,17 @@ select.form-control{
 					letter-spacing: 0.39px;
 					font-weight: 500;
 					margin-bottom:0px;
+					@media screen and (max-width:700px){
+						br{
+							display: none;
+						}
+					}
 				}
 			}
 		}
+	}
+	@media screen and (max-width:700px){
+		width: 100%!important;
 	}
 }
 .cp-signup-thank-popup{
