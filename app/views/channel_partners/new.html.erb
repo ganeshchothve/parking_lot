@@ -10,10 +10,10 @@
 <div class="cp-login-otp-sec col-lg-10 mx-auto my-5" id="otp_user_section">
   <div class="cp-login-otp-wrap mx-3">  
     <div class="row">
-      <div class="col-lg-7 pe-0 br-rt-1">
+      <div class="col-lg-7 pe-0 br-rt-1 ps-0 ps-sm-2">
         <h1 class="sec-title text-center pt-2 pb-1">Get Started</h1>
         <p class="sec-desc text-center pb-2">Now is the best time to turn your dream into reality</p>
-        <div class="cp-signup-form-wrap pb-3 cp-form-wrap px-3">
+        <div class="cp-signup-form-wrap pb-3 cp-form-wrap px-2 px-sm-3">
           <%= simple_form_for(@user, url: register_channel_partners_path, local: true, html: { id: 'channel_partner_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %>
             <% if params[:action] == 'find_or_create_cp_user' && @user.errors[:base].present? %>
               <p class='alert alert-danger'><%= @user.errors[:base].to_sentence %></p>
@@ -27,16 +27,16 @@
           <% end %>
         </div>
       </div>
-      <div class="col-lg-5">
+      <div class="col-lg-5 px-0 px-sm-2">
         <div class="cp-signup-features px-2">
           <h2 class="pt-2 pb-2">Why you would love <%= t('global.brand') %></h2>
-          <ul class="list-unstyled mt-4 cp-benefit-list">
+          <ul class="list-unstyled mt-4 cp-benefit-list cp-benefit-2row">
             <li>
               <div class="features-wrap">
                 <span>
                   <img src="<%= asset_path 'cp-ex-feat-01.svg' %>">
                 </span>
-                <p>Early access to <br>new launches</p>
+                <p>Early access to <br> new launches</p>
               </div>
             </li>
             <li>
@@ -44,7 +44,7 @@
                 <span>
                   <img src="<%= asset_path 'cp-ex-feat-06.svg' %>">
                 </span>
-                <p>Timely payments to <br>streamline cash flows</p>
+                <p>Timely payments to <br> streamline cash flows</p>
               </div>
             </li>
             <li>
@@ -60,7 +60,7 @@
                 <span>
                   <img src="<%= asset_path 'cp-ex-feat-11.svg' %>">
                 </span>
-                <p>Performance-based<br>channel partner ratings</p>
+                <p>Performance-based<br> channel partner ratings</p>
               </div>
             </li>
             <li>
@@ -68,7 +68,7 @@
                 <span>
                   <img src="<%= asset_path 'cp-ex-feat-02.svg' %>">
                 </span>
-                <p>Extensive nurturing and<br>calling during launches</p>
+                <p>Extensive nurturing and<br> calling during launches</p>
               </div>
             </li>
             <li>
@@ -76,7 +76,7 @@
                 <span>
                   <img src="<%= asset_path 'cp-ex-feat-04.svg' %>">
                 </span>
-                <p>CRM training<br>& support</p>
+                <p>CRM training<br> & support</p>
               </div>
             </li>
             <li>
@@ -84,7 +84,7 @@
                 <span>
                   <img src="<%= asset_path 'cp-ex-feat-07.svg' %>">
                 </span>
-                <p>Fully automated<br>EOI process</p>
+                <p>Fully automated<br> EOI process</p>
               </div>
             </li>
             <li>
@@ -100,7 +100,7 @@
                 <span>
                   <img src="<%= asset_path 'cp-ex-feat-09.svg' %>">
                 </span>
-                <p>Complete<br>transparency</p>
+                <p>Complete<br> transparency</p>
               </div>
             </li>
             <li>
