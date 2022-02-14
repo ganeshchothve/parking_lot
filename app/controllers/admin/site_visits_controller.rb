@@ -89,13 +89,17 @@ class Admin::SiteVisitsController < AdminController
 
   def change_state
     respond_to do |format|
+      @doc_errors = []
+      @doc_errors = @site_visit.save_assets(site_visit_assests_params) if params.dig(:site_visit, :assets_attributes).present?
       @site_visit.assign_attributes(permitted_attributes([current_user_role_group, @site_visit]))
       @site_visit.assign_attributes(conducted_on: Time.now, conducted_by: current_user.role) if @site_visit.event == 'conduct' || (@site_visit.approval_event == 'approve' && @site_visit.may_conduct?)
       if @site_visit.save
-        format.html { redirect_to request.referer, notice: t("controller.site_visits.status_message.#{params.dig(:site_visit, :event).present? ? "status.#{@site_visit.status}" : "approval_status.#{@site_visit.approval_status}"}") }
+        message = t("controller.site_visits.status_message.#{params.dig(:site_visit, :event).present? ? "status.#{@site_visit.status}" : "approval_status.#{@site_visit.approval_status}"}")
+        format.html { redirect_to request.referer, notice: message}
+        format.json { render json: { site_visit: @site_visit.as_json, message: message, errors: @doc_errors}, status: :ok }
       else
         format.html { redirect_to request.referer, alert: @site_visit.errors.full_messages.uniq }
-        format.json { render json: { errors: @site_visit.errors.full_messages.uniq }, status: :unprocessable_entity }
+        format.json { render json: { errors: (@site_visit.errors.full_messages.uniq + @doc_errors).flatten.uniq }, status: :unprocessable_entity }
       end
     end
   end
@@ -175,5 +179,9 @@ class Admin::SiteVisitsController < AdminController
     else
       authorize [current_user_role_group, @site_visit]
     end
+  end
+
+  def site_visit_assests_params
+    params.require(:site_visit).permit(assets_attributes: [:file])
   end
 end
