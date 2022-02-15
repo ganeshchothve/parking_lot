@@ -218,8 +218,12 @@ class Admin::UsersController < AdminController
 
   #TO DO - move to SourcingManagerDashboardConcern
   def channel_partner_performance
+    interested_project_matcher = {status: {'$in': ["approved"]}}
     dates = params[:dates]
+    @interested_project_dates = dates
     dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
+    start_date, end_date = @interested_project_dates.split(' - ') if @interested_project_dates.present?
+    interested_project_matcher[:created_at] =  {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day } if start_date.present? && end_date.present?
     @leads = Lead.where(Lead.user_based_scope(current_user, params)).filter_by_created_at(dates)
     @site_visits = SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).filter_by_scheduled_on(dates)
     @bookings = BookingDetail.booking_stages.where(BookingDetail.user_based_scope(current_user, params)).filter_by_booked_on(dates)
@@ -229,11 +233,14 @@ class Admin::UsersController < AdminController
       @leads = @leads.filter_by_project_ids(project_ids)
       @site_visits = @site_visits.filter_by_project_ids(project_ids)
       @bookings = @bookings.filter_by_project_ids(project_ids)
+      interested_project_matcher[:project_id] = {'$in': project_ids} if project_ids.present?
     end
     if params[:channel_partner_id].present?
       @leads = @leads.where(channel_partner_id: params[:channel_partner_id])
       @site_visits = @site_visits.where(channel_partner_id: params[:channel_partner_id])
       @bookings = @bookings.where(channel_partner_id: params[:channel_partner_id])
+      channel_partner = ChannelPartner.where(id: params[:channel_partner_id]).first
+      interested_project_matcher[:user_id] = {'$in': channel_partner.users.distinct(:id)} if channel_partner.present?
     end
     if params[:manager_id].present?
       @leads = @leads.where(manager_id: params[:manager_id])
@@ -246,12 +253,20 @@ class Admin::UsersController < AdminController
       @site_visits = @site_visits.ne(manager_id: nil)
       @bookings = @bookings.ne(manager_id: nil)
     end
+    @subscribed_count_project_wise = DashboardDataProvider.subscribed_count_project_wise(current_user, interested_project_matcher)
     @leads = @leads.group_by{|p| p.project_id}
     @all_site_visits = @site_visits.group_by{|p| p.project_id}
+    @scheduled_site_visits = @site_visits.filter_by_status('scheduled').group_by{|p| p.project_id}
+    @conducted_site_visits = @site_visits.filter_by_status('conducted').group_by{|p| p.project_id}
     @pending_site_visits = @site_visits.filter_by_approval_status('pending').group_by{|p| p.project_id}
     @approved_site_visits = @site_visits.filter_by_approval_status('approved').group_by{|p| p.project_id}
     @rejected_site_visits = @site_visits.filter_by_approval_status('rejected').group_by{|p| p.project_id}
     @bookings = @bookings.group_by{|p| p.project_id}
+    @projects = params[:project_ids].present? ? Project.filter_by__id(params[:project_ids]) : Project.all
+    respond_to do |format|
+      format.js
+      format.xls { send_data ExcelGenerator::ChannelPartnerPerformance.channel_partner_performance_csv(current_user, @projects, @leads, @bookings, @all_site_visits, @site_visits, @pending_site_visits, @approved_site_visits, @rejected_site_visits, @subscribed_count_project_wise, @scheduled_site_visits, @conducted_site_visits).string , filename: "channel_partner_performance-#{Date.today}.xls", type: "application/xls" }
+    end
   end
 
   #TO DO - move to SourcingManagerDashboardConcern
@@ -277,10 +292,17 @@ class Admin::UsersController < AdminController
     end
     @leads = @leads.group_by{|p| p.manager_id}
     @all_site_visits = @site_visits.ne(manager_id: nil).group_by{|p| p.manager_id}
+    @scheduled_site_visits = @site_visits.filter_by_status('scheduled').group_by{|p| p.manager_id}
+    @conducted_site_visits = @site_visits.filter_by_status('conducted').group_by{|p| p.manager_id}
     @pending_site_visits = @site_visits.filter_by_approval_status('pending').group_by{|p| p.manager_id}
     @approved_site_visits = @site_visits.filter_by_approval_status('approved').group_by{|p| p.manager_id}
     @rejected_site_visits = @site_visits.filter_by_approval_status('rejected').group_by{|p| p.manager_id}
     @bookings = @bookings.group_by{|p| p.manager_id}
+    user = params[:channel_partner_id].present? ? ChannelPartner.where(id: params[:channel_partner_id]).first&.users&.cp_owner&.first : current_user
+    respond_to do |format|
+      format.js
+      format.xls { send_data ExcelGenerator::PartnerWisePerformance.partner_wise_performance_csv(user, @leads, @bookings, @all_site_visits, @site_visits, @pending_site_visits, @approved_site_visits, @rejected_site_visits, @scheduled_site_visits, @conducted_site_visits).string , filename: "partner_wise_performance-#{Date.today}.xls", type: "application/xls" }
+    end
   end
 
   # GET /admin/users/search_by
