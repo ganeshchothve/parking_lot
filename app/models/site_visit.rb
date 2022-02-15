@@ -53,9 +53,10 @@ class SiteVisit
   scope :filter_by_conducted_on, ->(date) { start_date, end_date = date.split(' - '); where(conducted_on: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_manager_id, ->(manager_id) {where(manager_id: manager_id) }
   scope :filter_by_cp_manager_id, ->(cp_manager_id) {where(cp_manager_id: cp_manager_id) }
+  scope :filter_by_is_revisit, ->(is_revisit) { where(is_revisit: is_revisit.to_s == 'true') }
   scope :incentive_eligible, ->(category) do
     if category == 'walk_in'
-      where(approval_status: 'approved', status: {'$in': %w(conducted paid)})
+      where(approval_status: 'approved', status: {'$in': %w(conducted paid)}, is_revisit: false)
     else
       none
     end
@@ -71,7 +72,7 @@ class SiteVisit
   def incentive_eligible?(category=nil)
     if category.present?
       if category == 'walk_in'
-        verification_approved? && (conducted? || paid?)
+        !is_revisit? && verification_approved? && (conducted? || paid?)
       end
     else
       _incentive_eligible?

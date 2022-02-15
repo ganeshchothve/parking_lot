@@ -1064,6 +1064,7 @@ en:
         approval_status: Approval Status
         manager_id: 'Partner / Manager / Added by'
         rejection_reason: Rejection Reason
+        is_revisit: Revisit
       site_visit/status:
         scheduled: 'Scheduled'
         pending: 'Pending'
