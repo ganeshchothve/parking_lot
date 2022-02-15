@@ -273,6 +273,23 @@ class Project
   end
 
   def self.mobile_json
-    {only: ['name', '_id', 'developer_name', 'project_type', 'category', 'configuration', 'rera_registration_no', 'micro_market', 'city', 'region', 'project_segment', 'sv_incentive', 'spot_booking_incentive', 'pre_reg_incentive_percentage', 'pre_reg_min_bookings', 'hot'], methods: ['mobile_cover_photo_url', 'cover_photo_url']}
+    {
+      only: [
+        'name', '_id', 'developer_name', 'project_type', 'category', 'configuration', 'rera_registration_no',
+        'micro_market', 'city', 'region', 'project_segment', 'sv_incentive', 'spot_booking_incentive',
+        'pre_reg_incentive_percentage', 'pre_reg_min_bookings', 'hot'
+      ],
+      methods: [
+        'mobile_cover_photo_url', 'cover_photo_url'
+      ],
+      include: {
+        assets: {
+          only: %w(document_type _id file file_name file_size)
+        },
+        videos: {
+          only: %w(_id description embedded_video thumbnail)
+        }
+      }
+    }
   end
 end
