@@ -2083,6 +2083,8 @@ en:
       heading2_html: '<strong>Register now</strong> & join our network to explore new opportunities'
 
   dashboard:
+    exports:
+      link_name: '%{type} Exports'
     cp_admin:
       channel_partner_performace:
         heading: "Channel Partner Performance (Project Wise)"
