@@ -1,6 +1,7 @@
 <% date = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") %>
 <% start_date, end_date = date.split(' - ') %>
-<section class="user-db-sec-5 device-pd">
+<%= render 'dashboard/index/partials/project_wise_tentative_revenue_data' %>
+<!-- <section class="user-db-sec-5 device-pd">
   <div class="px-4">
     <div class='box-card'>
       <div class="row">
@@ -25,21 +26,21 @@
                 <h5 class="modal-title title">Filter</h5>
                 <a href="javascript:;" class="close-filter-btn btn-close"></a>
               </div>
-              <%= form_tag billing_team_dashboard_path, method: "get", remote: true, id: "billing_team_dashboard_filter" do %>
+              <%#= form_tag billing_team_dashboard_path, method: "get", remote: true, id: "billing_team_dashboard_filter" do %>
               <div class="filter-content modal-body ps-0 pe-0">
                 <div class="row">
                   <div class="mb-3 col-12">
-                    <%= label_tag "dates", "Dates", class: "control-label float-left" %>
-                    <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-start-date": start_date || '', "data-end-date": end_date || '', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
+                    <%#= label_tag "dates", "Dates", class: "control-label float-left" %>
+                    <%#= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-start-date": start_date || '', "data-end-date": end_date || '', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
                   </div>
                 </div>
               </div>
               <div class="filter-footer modal-footer text-end">
-                <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                <%#= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
                 <button type="button"
                   class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
               </div>
-              <% end %>
+              <%# end %>
             </div>
           </div>
         </div>
@@ -47,7 +48,7 @@
       <div class="row" id="project_wise_invoice_summary"></div>
     </div>
   </div>
-</section>
+</section> -->
 <section class="user-db-sec-5 device-pd">
   <div class="px-4">
     <div class='box-card'>
@@ -120,7 +121,6 @@
   </div>
 </section>
 <%= render 'dashboard/index/partials/booking_detail_data' %>
-<%= render 'dashboard/index/partials/project_wise_tentative_revenue_data' %>
 <!-- Keeping margin at bottom, so that data can be scrolled up into viewable screen -->
 <div class='mb-5 pb-5'>
 </div>
@@ -128,10 +128,10 @@
 $(document).ready(function(){
 FormInitializer.init($("#billing_team_dashboard_filter"));
 FormInitializer.init($("#city_wise_booking_report_filter"));
-$.ajax({
-url: "/dashboard/project_wise_invoice_summary",
-type: "get"
-});
+// $.ajax({
+// url: "/dashboard/project_wise_invoice_summary",
+// type: "get"
+// });
 $.ajax({
 url: "/dashboard/project_wise_incentive_deduction_summary",
 type: "get"
