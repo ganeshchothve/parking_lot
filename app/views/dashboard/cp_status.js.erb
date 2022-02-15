@@ -1,1 +1,2 @@
 $('#cp_status').html("<%= j (render partial: 'cp_status' ) %>")
+$("#cp-status-af-export").attr("href", "<%= cp_status_path(format: "xls", dates: params["dates"]) %>");
