@@ -320,6 +320,13 @@ Rails.application.routes.draw do
         patch :end_scheme
       end
     end
+
+    resources :variable_incentive_schemes, except: [:destroy] do
+      member do
+        get :end_scheme
+        patch :end_scheme
+      end
+    end
     
     resources :referrals, only: [:index, :create, :new] do
       post :generate_code, on: :collection
