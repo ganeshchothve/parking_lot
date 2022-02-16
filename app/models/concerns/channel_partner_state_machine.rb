@@ -70,6 +70,30 @@ module ChannelPartnerStateMachine
           )
         end
       end
+      
+      # send notification
+      user = self.users.first
+      if user.present? && user.role?('channel_partner')
+        send_push_notification(template_name, user)
+      elsif user.present? && user.role?('cp_owner')
+        recipients.each_do |r|
+          send_push_notification(template_name, r)
+        end
+      end
+    end
+
+    def send_push_notification template_name, recipient
+      template = Template::NotificationTemplate.where(name: template_name).first
+      if template.present? && user.booking_portal_client.notification_enabled?
+        push_notification = PushNotification.new(
+          notification_template_id: template.id,
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s,
+          recipient_id: recipient.id,
+          booking_portal_client_id: recipient.booking_portal_client.id
+        )
+        push_notification.save
+      end
     end
 
     def update_selldo!
