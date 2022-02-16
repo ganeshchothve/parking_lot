@@ -66,7 +66,7 @@ module RevenueReportDashboardDataProvider
         project_wise_tentative_amount[d['city']] = [{ project_id: d['_id'], amount: d['amount'] }]
       end
     end
-    project_wise_tentative_amount\
+    project_wise_tentative_amount
   end
 
   def self.actual_reports(current_user, params={})
