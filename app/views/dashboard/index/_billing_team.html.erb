@@ -1,6 +1,7 @@
 <% date = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") %>
 <% start_date, end_date = date.split(' - ') %>
 <%= render 'dashboard/index/partials/project_wise_tentative_revenue_data' %>
+<%= render 'dashboard/index/partials/project_wise_actual_revenue_data' %>
 <!-- <section class="user-db-sec-5 device-pd">
   <div class="px-4">
     <div class='box-card'>

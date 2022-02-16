@@ -66,7 +66,86 @@ module RevenueReportDashboardDataProvider
         project_wise_tentative_amount[d['city']] = [{ project_id: d['_id'], amount: d['amount'] }]
       end
     end
-    project_wise_tentative_amount
+    project_wise_tentative_amount\
+  end
+
+  def self.actual_reports(current_user, params={})
+    invoice_matcher = set_invoice_matcher("actual", params)
+    invoiceable_matcher = set_invoiceable_matcher("actual", params)
+    project_wise_total_tentative_amount = {}
+    data = Invoice.collection.aggregate([
+    {
+      '$match': invoice_matcher
+    },
+    {
+      '$lookup': {
+      'from':  get_resource(params[:resource]),
+      'let': { 'invoiceable_id': "$invoiceable_id" },
+      'pipeline': [
+        { '$match': { '$and': [invoiceable_matcher, { '$expr': { '$eq': [ "$_id",  "$$invoiceable_id" ] } }] } },
+        {'$project': {'_id': 0, 'invoiceable_id': "$_id"}}
+      ],
+      'as': get_resource(params[:resource])
+      }
+    },
+    {
+      '$match': { "#{get_resource(params[:resource])}": {'$ne': []}}
+    },
+    {
+      '$lookup': {
+      'from': "projects",
+      'let': { 'project_id': "$project_id" },
+      'pipeline': [
+        { '$match': { '$expr': { '$eq': [ "$_id",  "$$project_id" ] } } },
+        { '$project': {'_id': 0, 'project_id': "$_id", 'city': '$city', 'invoiceable_id': '$invoiceable_id' } }
+      ],
+      'as': "projects"
+      }
+    },
+    {
+      '$replaceRoot': {
+        'newRoot': {
+          '$mergeObjects': [
+            { '$arrayElemAt': [ "$projects", 0 ] },
+            "$$ROOT"
+          ]
+        }
+      }
+    },
+    {
+      '$project': {'project_id': '$project_id' , 'city': '$city', 'amount': '$amount', 'gst_amount': '$gst_amount', 'net_amount': '$net_amount', 'status': '$status', 'invoiceable_id': '$invoiceable_id'}
+    },
+    {
+      '$group': {
+          '_id': {
+            'project_id': '$project_id',
+            'status': '$status'
+            },
+          'amount': {'$sum': '$amount'},
+          'city': {'$first': '$city'},
+        }
+    }
+    ]).as_json
+
+    project_wise_actual_amount = {}
+    data.each do |d|
+      if project_wise_actual_amount.has_key?(d['city'])
+        if project_wise_actual_amount[d['city']].has_key?(d['_id']['project_id'])
+          project_wise_actual_amount[d['city']][d['_id']['project_id']][d['_id']['status']] = d['amount']
+        else
+          temp_status_hash = {}
+          temp_status_hash[d['_id']['status']] = d['amount']
+          project_wise_actual_amount[d['city']][d['_id']['project_id']] = temp_status_hash
+        end
+      else
+        temp_status_hash = {}
+        temp_status_hash[d['_id']['status']] = d['amount']
+        temp_project_wise_amount_hash = {}
+        temp_project_wise_amount_hash[d['_id']['project_id']] = temp_status_hash
+        project_wise_actual_amount[d['city']] = temp_project_wise_amount_hash
+      end
+    end
+    project_wise_actual_amount
   end
 
   def self.set_invoice_matcher(report_type="tentative", params)
