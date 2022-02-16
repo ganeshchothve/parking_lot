@@ -3,10 +3,9 @@ module RevenueReportDashboardConcern
   def project_wise_tentative_revenue
     @project_wise_total_tentative_amount={}
     @project_wise_total_tentative_amount = RevenueReportDashboardDataProvider.tentative_reports(current_user, params)
-    @project_name_hash = {}
-    Project.all.each do |p|
-      @project_name_hash[p.id.to_s] = p.name
-    end
+
+    projects_hash
+
     @total_amount = 0
     @project_wise_total_tentative_amount.each do |k, v|
       @total_amount += v.map{|h| h[:amount] }.sum
@@ -16,10 +15,8 @@ module RevenueReportDashboardConcern
   def project_wise_actual_revenue
     @project_wise_total_invoice_amount={}
     @project_wise_total_invoice_amount = RevenueReportDashboardDataProvider.actual_reports(current_user, params)
-    @project_name_hash = {}
-    Project.all.each do |p|
-      @project_name_hash[p.id.to_s] = p.name
-    end
+
+    projects_hash
 
     @status_wise_total_amount = {}
     @project_wise_total_invoice_amount.each do |key, project_wise_count_hash|
@@ -43,6 +40,14 @@ module RevenueReportDashboardConcern
 
     @total_amount = 0
     @total_amount = @project_wise_total_amount.values.sum
+  end
+
+  def projects_hash
+    @project_name_hash = {}
+    Project.all.each do |p|
+      @project_name_hash[p.id.to_s] = p.name
+    end
+    @project_name_hash
   end
 
 end

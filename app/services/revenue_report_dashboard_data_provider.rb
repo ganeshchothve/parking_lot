@@ -2,7 +2,6 @@ module RevenueReportDashboardDataProvider
   def self.tentative_reports(current_user, params={})
     invoice_matcher = set_invoice_matcher("tentative", params)
     invoiceable_matcher = set_invoiceable_matcher("tentative", params)
-    project_wise_total_tentative_amount = {}
     data = Invoice.collection.aggregate([
     {
       '$match': invoice_matcher
@@ -72,7 +71,6 @@ module RevenueReportDashboardDataProvider
   def self.actual_reports(current_user, params={})
     invoice_matcher = set_invoice_matcher("actual", params)
     invoiceable_matcher = set_invoiceable_matcher("actual", params)
-    project_wise_total_tentative_amount = {}
     data = Invoice.collection.aggregate([
     {
       '$match': invoice_matcher
