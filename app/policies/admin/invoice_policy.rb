@@ -73,11 +73,6 @@ class Admin::InvoicePolicy < InvoicePolicy
     %w[superadmin admin sales_admin crm cp_admin billing_team cp].include?(user.role)
   end
 
-  def show_tentative_invoices?
-    return false if record.tentative? && !user.role.in?(%w(admin superadmin billing_team))
-    true
-  end
-
   def permitted_attributes(params = {})
     attributes = super
     #case user.role.to_s

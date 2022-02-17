@@ -1,0 +1,76 @@
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
+  <div class="box-card relative table-responsive" id="dashboard_project_wise_tentative_reports">
+    <table class="table my-customer-table responsive-tbl mb-0 align-middle border rounded">
+      <thead class="bg-primary white">
+        <tr class="bg-primary white">
+          <th rowspan='2' class='text-center border-end bg-primary white align-middle'>City</th>
+          <th colspan='8' class='text-center bg-primary white'>Actual Invoice Amount</th>
+        </tr>
+        <tr>
+          <th class="text-center">Project</th>
+          <th class="text-center"><%= t('mongoid.attributes.invoice/status.draft') %></th>
+          <th class="text-center"><%= t('mongoid.attributes.invoice/status.raised') %></th>
+          <th class="text-center"><%= t('mongoid.attributes.invoice/status.pending_approval') %></th>
+          <th class="text-center"><%= t('mongoid.attributes.invoice/status.approve') %></th>
+          <th class="text-center"><%= t('mongoid.attributes.invoice/status.tax_invoice_raised') %></th>
+          <th class="text-center"><%= t('mongoid.attributes.invoice/status.paid') %></th>
+          <th class="text-center"><strong>Total</strong></th>
+        </tr>
+      </thead>
+      <tbody class='text-md-center'>
+        <% if @project_wise_total_invoice_amount.present? %>
+          <% @project_wise_total_invoice_amount.each do |key, value| %>
+            <tr>
+              <td rowspan="<%= value.length + 1 %>" data-title='<%= key %>' class='text-center border-end bg-primary white align-middle'><%= key %></td>
+            </tr>
+            <% value.each do |key, value| %>
+              <tr>
+                <td class="text-right">
+                  <%= @project_name_hash[key.to_s] %>
+                </td>
+                <td>
+                  <%= value['draft'] ||= 0 %>
+                </td>
+                <td>
+                  <%= value['raised'] ||= 0 %>
+                </td>
+                <td>
+                  <%= value['pending_approval'] ||= 0 %>
+                </td>
+                <td>
+                  <%= value['approved'] ||= 0 %>
+                </td>
+                <td>
+                  <%= value['tax_invoice_raised'] ||= 0 %>
+                </td>
+                <td>
+                  <%= value['paid'] ||= 0 %>
+                </td>
+                <td>
+                  <strong>
+                    <%= number_to_indian_currency(@project_wise_total_amount[key]) %>
+                  </strong>
+                </td>
+              </tr>
+              <% end %>
+          <% end %>
+          <tr>
+            <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong>Total</strong></td>
+            <td><strong>-</strong></td>
+            <td><strong><%= number_to_indian_currency(@status_wise_total_amount['draft'] ||=0)%></strong></td>
+            <td><strong><%= number_to_indian_currency(@status_wise_total_amount['raised'] ||=0) %></strong></td>
+            <td><strong><%= number_to_indian_currency(@status_wise_total_amount['pending_approval'] ||=0) %></strong></td>
+            <td><strong><%= number_to_indian_currency(@status_wise_total_amount['approved'] ||=0) %></strong></td>
+            <td><strong><%= number_to_indian_currency(@status_wise_total_amount['tax_invoice_raised'] ||=0) %></strong></td>
+            <td><strong><%= number_to_indian_currency(@status_wise_total_amount['paid'] ||=0) %></strong></td>
+            <td><strong><%= number_to_indian_currency(@total_amount ||=0) %></strong></td>
+          </tr>
+        <% else %>
+          <tr>
+            <td colspan="9">No Records Found</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

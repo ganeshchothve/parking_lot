@@ -24,7 +24,6 @@
                 </td>
                 <td>
                   <%= hash[:amount] %>
-                  <%#= link_to hash[:bookings_count], admin_booking_details_path({ fltrs: { project_id: hash[:project_id], created_at: created_at, status: ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]}}) %>
                 </td>
               </tr>
               <% end %>
@@ -33,9 +32,7 @@
             <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong>Total</strong></td>
             <td><strong>-</strong></td>
             <td><strong>
-              <%= @total_amount %>
-              <%#= @total_tentative_amount %>
-                  <%#= link_to @total_booking, admin_booking_details_path({ fltrs: { created_at: created_at, status: ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]}}) %>
+              <%= number_to_indian_currency(@total_amount) %>
             </strong></td>
           </tr>
         <% else %>

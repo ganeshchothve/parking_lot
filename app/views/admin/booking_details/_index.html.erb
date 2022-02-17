@@ -4,7 +4,7 @@
     <div class="booking-prjt-thumb">
       <div class="booking-prjt-thumb-inner position-relative">
         <h5 class="title"><%= link_to booking_detail.lead.name, admin_booking_detail_path(booking_detail) %></h5>
-        <p class="devl-name"><%= booking_detail.project.name ? booking_detail.project.name : '-' %> | <%= booking_detail.project_tower_name ? booking_detail.project_tower_name : '-' %> | <%= booking_detail.booking_project_unit_name ? booking_detail.booking_project_unit_name : '-' %> </p>
+        <p class="devl-name"><%= booking_detail.project.name ? booking_detail.project.name : '-' %> | <%= booking_detail.project_tower_name ? booking_detail.project_tower_name : '-' %> | <%= booking_detail.name ? booking_detail.name : '-' %> </p>
       </div>
     </div>
     <div class="booking-inner-info">

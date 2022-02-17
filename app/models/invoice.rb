@@ -8,6 +8,7 @@ class Invoice
   # include NumberIncrementor
 
   DOCUMENT_TYPES = []
+  INVOICE_REPORT_STAGES = %w(draft raised pending_approval approved tax_invoice_raised paid)
 
   field :amount, type: Float, default: 0.0
   field :gst_amount, type: Float, default: 0.0
@@ -106,18 +107,22 @@ class Invoice
       custom_scope = {}
       if params[:invoiceable_id].blank? && !user.buyer?
         if user.role?('channel_partner')
-          custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
+          custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) }, status: { '$nin': %w(tentative) }}
         elsif user.role?('cp_owner')
-          custom_scope = { channel_partner_id: user.channel_partner_id }
+          custom_scope = { channel_partner_id: user.channel_partner_id, status: { '$nin': %w(tentative) }  }
         elsif user.role?('billing_team')
           custom_scope = { status: { '$in': %w(tentative raised pending_approval approved rejected draft tax_invoice_raised paid) } }
         elsif user.role?('cp_admin')
-          custom_scope = { cp_admin_id: user.id, status: { '$nin': %w(draft) } }
+          custom_scope = { cp_admin_id: user.id, status: { '$nin': %w(draft tentative) } }
           #custom_scope = { status: { '$nin': %w(draft raised) } }
         elsif user.role?('cp')
-          custom_scope = { cp_manager_id: user.id }
+          custom_scope = { cp_manager_id: user.id, status: { '$nin': %w(tentative) } }
         elsif user.role?('account_manager')
-          custom_scope = { account_manager_id: user.id }
+          custom_scope = { account_manager_id: user.id, status: { '$nin': %w(tentative) } }
+        elsif user.role.in?(%w(admin superadmin))
+          custom_scope = { status: { '$in': %w(tentative raised pending_approval approved rejected draft tax_invoice_raised paid) } }
+        else
+          custom_scope = { status: { '$nin': %w(tentative) } }
         end
       end
       if params[:invoiceable_id].present?

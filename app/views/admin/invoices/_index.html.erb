@@ -3,7 +3,6 @@
     <div class="row g-0">
       <div class="col-lg-12 p-0">
         <% invoices.each_with_index do |invoice, index| %>
-        <% if policy([current_user_role_group, invoice]).show_tentative_invoices? %>
         <div class="bg-white rounded-3 float-start wd-100 shadow-sm position-relative <%= index.zero? ? 'mt-2' : 'mt-4 ' %>">
           <div class="float-start wd-100">
             <div class="">
@@ -71,7 +70,6 @@
             </div>
           </div>
         </div>
-        <% end %>
         <% end %>
       </div>
 
