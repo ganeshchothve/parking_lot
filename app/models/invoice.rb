@@ -8,6 +8,7 @@ class Invoice
   # include NumberIncrementor
 
   DOCUMENT_TYPES = []
+  INVOICE_REPORT_STAGES = %w(tentative draft raised pending_approval approved tax_invoice_raised paid)
 
   field :amount, type: Float, default: 0.0
   field :gst_amount, type: Float, default: 0.0

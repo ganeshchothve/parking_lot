@@ -976,7 +976,6 @@ en:
         pending_approval: 'Pending Approval'
         paid: 'Paid'
         approve: 'Approved'
-        reject: 'Rejected'
         raise: 'Raise Invoice'
         re_raise: 'Re-Raise Invoice'
         approved: 'Invoice Approved by Developer'

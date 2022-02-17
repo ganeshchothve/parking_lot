@@ -53,6 +53,13 @@ class BookingDetailObserver < Mongoid::Observer
       booking_detail.invoices.where(status: 'tentative').update_all(status: 'rejected')
     end
 
+    if booking_detail.status_changed? && booking_detail.status == 'swapped'
+      new_booking = BookingDetail.where(parent_booking_detail_id: booking_detail.id).first
+      if new_booking.present?
+        booking_detail.invoices.where(status: 'tentative').update_all(invoiceable_id: new_booking.id)
+      end
+    end
+
     booking_detail.invoices.where(status: 'tentative', category: 'brokerage').update_all(status: 'draft') if booking_detail.actual_incentive_eligible?('brokerage')
     booking_detail.invoices.where(status: 'tentative', category: 'spot_booking').update_all(status: 'draft') if booking_detail.actual_incentive_eligible?('spot_booking')
   end

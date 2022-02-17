@@ -148,7 +148,7 @@ module RevenueReportDashboardDataProvider
 
   def self.set_invoice_matcher(report_type="tentative", params)
     matcher = {}
-    matcher[:status] = report_type == "tentative" ? "tentative" : {'$ne': "tentative"}
+    matcher[:status] = report_type == "tentative" ? "tentative" : {'$in': Invoice::INVOICE_REPORT_STAGES}
     matcher[:project_id] = {'$in': params[:project_id].map { |id| BSON::ObjectId(id) }} if params[:project_id].present?
     matcher[:channel_partner_id] = params[:channel_partner_id] if params[:channel_partner_id].present?
     matcher[:manager_id] = BSON::ObjectId(params[:manager_id]) if params[:manager_id].present?

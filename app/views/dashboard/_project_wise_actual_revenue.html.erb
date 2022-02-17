@@ -12,7 +12,7 @@
           <th class="text-center"><%= t('mongoid.attributes.invoice/status.raised') %></th>
           <th class="text-center"><%= t('mongoid.attributes.invoice/status.pending_approval') %></th>
           <th class="text-center"><%= t('mongoid.attributes.invoice/status.approve') %></th>
-          <th class="text-center"><%= t('mongoid.attributes.invoice/status.reject') %></th>
+          <th class="text-center"><%= t('mongoid.attributes.invoice/status.tax_invoice_raised') %></th>
           <th class="text-center"><%= t('mongoid.attributes.invoice/status.paid') %></th>
           <th class="text-center"><strong>Total</strong></th>
         </tr>
@@ -41,14 +41,14 @@
                   <%= value['approved'] ||= 0 %>
                 </td>
                 <td>
-                  <%= value['rejected'] ||= 0 %>
+                  <%= value['tax_invoice_raised'] ||= 0 %>
                 </td>
                 <td>
                   <%= value['paid'] ||= 0 %>
                 </td>
                 <td>
                   <strong>
-                    <%= @project_wise_total_amount[key] %>
+                    <%= number_to_indian_currency(@project_wise_total_amount[key]) %>
                   </strong>
                 </td>
               </tr>
@@ -57,17 +57,17 @@
           <tr>
             <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong>Total</strong></td>
             <td><strong>-</strong></td>
-            <td><strong><%= @status_wise_total_amount['draft'] ||=0 %></strong></td>
-            <td><strong><%= @status_wise_total_amount['raised'] ||=0 %></strong></td>
-            <td><strong><%= @status_wise_total_amount['pending_approval'] ||=0 %></strong></td>
-            <td><strong><%= @status_wise_total_amount['approved'] ||=0 %></strong></td>
-            <td><strong><%= @status_wise_total_amount['rejected'] ||=0 %></strong></td>
-            <td><strong><%= @status_wise_total_amount['paid'] ||=0 %></strong></td>
-            <td><strong><%= @total_amount ||=0 %></strong></td>
+            <td><strong><%= number_to_indian_currency(@status_wise_total_amount['draft'] ||=0)%></strong></td>
+            <td><strong><%= number_to_indian_currency(@status_wise_total_amount['raised'] ||=0) %></strong></td>
+            <td><strong><%= number_to_indian_currency(@status_wise_total_amount['pending_approval'] ||=0) %></strong></td>
+            <td><strong><%= number_to_indian_currency(@status_wise_total_amount['approved'] ||=0) %></strong></td>
+            <td><strong><%= number_to_indian_currency(@status_wise_total_amount['tax_invoice_raised'] ||=0) %></strong></td>
+            <td><strong><%= number_to_indian_currency(@status_wise_total_amount['paid'] ||=0) %></strong></td>
+            <td><strong><%= number_to_indian_currency(@total_amount ||=0) %></strong></td>
           </tr>
         <% else %>
           <tr>
-            <td colspan="3">No Records Found</td>
+            <td colspan="9">No Records Found</td>
           </tr>
         <% end %>
       </tbody>
