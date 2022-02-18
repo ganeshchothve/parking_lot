@@ -70,6 +70,23 @@ module ChannelPartnerStateMachine
           )
         end
       end
+      # send notification
+      recipient = self.primary_user
+      send_push_notification(template_name, recipient) if recipient.present?
+    end
+
+    def send_push_notification template_name, recipient
+      template = Template::NotificationTemplate.where(name: template_name).first
+      if template.present? && users.first&.booking_portal_client.notification_enabled?
+        push_notification = PushNotification.new(
+          notification_template_id: template.id,
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s,
+          recipient_id: recipient.id,
+          booking_portal_client_id: recipient.booking_portal_client.id
+        )
+        push_notification.save
+      end
     end
 
     def update_selldo!

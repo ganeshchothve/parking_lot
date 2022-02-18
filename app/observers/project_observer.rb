@@ -1,5 +1,6 @@
 class ProjectObserver < Mongoid::Observer
   def after_create project
+    DatabaseSeeds::NotificationTemplate.seed(project.booking_portal_client_id.to_s, project.id.to_s)
     DatabaseSeeds::EmailTemplates.project_based_email_templates_seed(project.id.to_s)
     DatabaseSeeds::SmsTemplate.project_based_sms_templates_seed(project.id.to_s, project.booking_portal_client_id.to_s)
     DatabaseSeeds::UITemplate.project_based_seed(project.id.to_s, project.booking_portal_client_id.to_s)
