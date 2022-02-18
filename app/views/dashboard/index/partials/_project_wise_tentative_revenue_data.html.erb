@@ -15,75 +15,77 @@
           </div>
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-          <div class="filter-box modal-content px-3 fixed-header-footer">
-              <div class="filter-header modal-header">
-                <h5 class="modal-title title">Filter</h5>
-                <a href="javascript:;" class="close-filter-btn btn-close"></a>
-              </div>
-              <%= form_tag project_wise_tentative_revenue_path, method: "get", remote: true, id: "project_wise_tentative_reports_filter", class: 'filter-form-modal' do %>
-                <div class="filter-content modal-body ps-0 pe-0 theme-form">
+          <div class="filter-box">
+            <div class="filter-inner modal-content ps-2 pe-2 fixed-header-footer">
+                <div class="filter-header modal-header">
+                  <h5 class="modal-title title">Filter</h5>
+                  <a href="javascript:;" class="close-filter-btn btn-close"></a>
+                </div>
+                <%= form_tag project_wise_tentative_revenue_path, method: "get", remote: true, id: "project_wise_tentative_reports_filter", class: 'filter-form-modal' do %>
+                  <div class="filter-content modal-body ps-0 pe-0 theme-form">
+                    <div class="row">
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", "Resource" %>
+                        <%= select_tag "resource", options_for_select(IncentiveScheme::RESOURCE_CLASS.collect{|x| [t("mongoid.attributes.incentive_scheme/resource_class.#{x}"), x]}, (params[:resource].present? ? params[:resource] : "BookingDetail")), {prompt: "Select", class: "selectize", onchange: 'yourOnChangeHandler(this.value)'} %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.project.name') %>
+                        <%= select_tag :project_id, options_for_select(Project.all.map { |p| [p.ds_name, p.id] }, (params[:project_id].present? ? params[:project_id] : "")), {prompt: "Select", class: "selectize", multiple: true} %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.lead.manager_id') %>
+                        <%= select_tag "manager_id", options_from_collection_for_select(params[:manager_id].present? ? User.where(_id: params[:manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: ['channel_partner', 'cp_owner'] }}}} %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.user/role.cp') %>
+                        <%= select_tag "cp_manager_id", options_from_collection_for_select(params[:cp_manager_id].present? ? User.where(_id: params[:cp_manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp' }}}} %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", "CP Admin" %>
+                        <%= select_tag "cp_admin_id", options_from_collection_for_select(params[:cp_admin_id].present? ? User.where(_id: params[:cp_admin_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp_admin' }}}} %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.site_visit.created_at') %>
+                        <%= text_field_tag "created_at", (params[:created_at].present? ? params[:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %> 
+                      </div>
+                    </div>
+                    <div class="row booking_detail_filters">
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.agreement_date'), class: "control-label" %>
+                        <%= text_field_tag "agreement_date", (params[:agreement_date].present? ? params[:agreement_date] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.booked_on'), class: "control-label" %>
+                        <%= text_field_tag "booked_on", (params[:booked_on].present? ? params[:booked_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.status'), class: "control-label" %>
+                        <%= select_tag "booking_detail_status", options_for_select(BookingDetail::BOOKING_STAGES.collect{|x| [ t("mongoid.attributes.booking_detail/status.#{x}"), x.to_s]}, (params[:booking_detail_status] || "")), {prompt: "Select", class: "selectize"} %>
+                      </div>
+                    </div>
+                    <div class="row site_visit_filters">
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.site_visit.scheduled_on') %>
+                        <%= text_field_tag "scheduled_on", (params[:scheduled_on].present? ? params[:scheduled_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.site_visit.conducted_on') %>
+                        <%= text_field_tag "conducted_on", (params[:conducted_on].present? ? params[:conducted_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.site_visit.status') %>
+                        <%= select_tag "site_visit_status", options_for_select(SiteVisit.aasm(:status).states.collect(&:name).map {|x| [x.to_s.titleize, x.to_s]}, (params[:site_visit_status].present? ? params[:site_visit_status] : "")), { prompt: 'Select', class: "selectize" } %>
+                      </div>
+                    </div>
+                  </div>
                   <div class="row">
-                    <div class="mb-3 col-12">
-                      <%= label_tag "fltrs", "Resource" %>
-                      <%= select_tag "resource", options_for_select(IncentiveScheme::RESOURCE_CLASS.collect{|x| [t("mongoid.attributes.incentive_scheme/resource_class.#{x}"), x]}, (params[:resource].present? ? params[:resource] : "BookingDetail")), {prompt: "Select", class: "selectize", onchange: 'yourOnChangeHandler(this.value)'} %>
-                    </div>
-                    <div class="mb-3 col-12">
-                      <%= label_tag "fltrs", t('mongoid.attributes.project.name') %>
-                      <%= select_tag :project_id, options_for_select(Project.all.map { |p| [p.ds_name, p.id] }, (params[:project_id].present? ? params[:project_id] : "")), {prompt: "Select", class: "selectize", multiple: true} %>
-                    </div>
-                    <div class="mb-3 col-12">
-                      <%= label_tag "fltrs", t('mongoid.attributes.lead.manager_id') %>
-                      <%= select_tag "manager_id", options_from_collection_for_select(params[:manager_id].present? ? User.where(_id: params[:manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: ['channel_partner', 'cp_owner'] }}}} %>
-                    </div>
-                    <div class="mb-3 col-12">
-                      <%= label_tag "fltrs", t('mongoid.attributes.user/role.cp') %>
-                      <%= select_tag "cp_manager_id", options_from_collection_for_select(params[:cp_manager_id].present? ? User.where(_id: params[:cp_manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp' }}}} %>
-                    </div>
-                    <div class="mb-3 col-12">
-                      <%= label_tag "fltrs", "CP Admin" %>
-                      <%= select_tag "cp_admin_id", options_from_collection_for_select(params[:cp_admin_id].present? ? User.where(_id: params[:cp_admin_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp_admin' }}}} %>
-                    </div>
-                    <div class="mb-3 col-12">
-                      <%= label_tag "fltrs", t('mongoid.attributes.site_visit.created_at') %>
-                      <%= text_field_tag "created_at", (params[:created_at].present? ? params[:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %> 
+                    <div class="filter-footer modal-footer text-end">
+                      <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                      <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
                     </div>
                   </div>
-                  <div class="row booking_detail_filters">
-                    <div class="mb-3 col-12">
-                      <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.agreement_date'), class: "control-label" %>
-                      <%= text_field_tag "agreement_date", (params[:agreement_date].present? ? params[:agreement_date] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
-                    </div>
-                    <div class="mb-3 col-12">
-                      <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.booked_on'), class: "control-label" %>
-                      <%= text_field_tag "booked_on", (params[:booked_on].present? ? params[:booked_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
-                    </div>
-                    <div class="mb-3 col-12">
-                      <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.status'), class: "control-label" %>
-                      <%= select_tag "booking_detail_status", options_for_select(BookingDetail::BOOKING_STAGES.collect{|x| [ t("mongoid.attributes.booking_detail/status.#{x}"), x.to_s]}, (params[:booking_detail_status] || "")), {prompt: "Select", class: "selectize"} %>
-                    </div>
-                  </div>
-                  <div class="row site_visit_filters">
-                    <div class="mb-3 col-12">
-                      <%= label_tag "fltrs", t('mongoid.attributes.site_visit.scheduled_on') %>
-                      <%= text_field_tag "scheduled_on", (params[:scheduled_on].present? ? params[:scheduled_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
-                    </div>
-                    <div class="mb-3 col-12">
-                      <%= label_tag "fltrs", t('mongoid.attributes.site_visit.conducted_on') %>
-                      <%= text_field_tag "conducted_on", (params[:conducted_on].present? ? params[:conducted_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
-                    </div>
-                    <div class="mb-3 col-12">
-                      <%= label_tag "fltrs", t('mongoid.attributes.site_visit.status') %>
-                      <%= select_tag "site_visit_status", options_for_select(SiteVisit.aasm(:status).states.collect(&:name).map {|x| [x.to_s.titleize, x.to_s]}, (params[:site_visit_status].present? ? params[:site_visit_status] : "")), { prompt: 'Select', class: "selectize" } %>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="filter-footer modal-footer text-end">
-                    <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-                    <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
-                  </div>
-                </div>
-              <% end %>
+                <% end %>
+            </div>
           </div>
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id = "project_wise_tentative_revenue">
