@@ -57,6 +57,12 @@ module DatabaseSeeds
 
       Template::NotificationTemplate.create(project_id: project_id, booking_portal_client_id: client_id, subject_class: "User", name: "user_status_inactive_in_company", title: "Account has been rejected", url: "/", content: "You account has been rejected for following reason - <%= self.try(:status_change_reason) %>") if Template::NotificationTemplate.where(name: "user_status_inactive_in_company", project_id: project_id).blank?
 
+      Template::NotificationTemplate.create(project_id: project_id, booking_portal_client_id: client_id, subject_class: "Invoice", name: "invoice_rejected", title: "Invoice rejected", url: "/", content: "Rejected") if Template::NotificationTemplate.where(name: "invoice_rejected", project_id: project_id).blank?
+
+      Template::NotificationTemplate.create(project_id: project_id, booking_portal_client_id: client_id, subject_class: "Invoice", name: "invoice_approved", title: "Invoice approved", url: "/", content: "Approved") if Template::NotificationTemplate.where(name: "invoice_approved", project_id: project_id).blank?
+
+      Template::NotificationTemplate.create(project_id: project_id, booking_portal_client_id: client_id, subject_class: "Invoice", name: "invoice_paid", title: "Invoice paid", url: "/", content: "Paid") if Template::NotificationTemplate.where(name: "invoice_paid", project_id: project_id).blank?
+
       return Template::NotificationTemplate.where(booking_portal_client_id: client_id).count
     end
   end
