@@ -51,7 +51,11 @@ module DatabaseSeeds
 
       Template::NotificationTemplate.create(project_id: project_id, booking_portal_client_id: client_id, subject_class: "ChannelPartner", name: "channel_partner_status_active", title: "Account has been approved", url: "/", content: "You account has been approved.") if Template::NotificationTemplate.where(name: "channel_partner_status_active", project_id: project_id).blank?
 
-      Template::NotificationTemplate.create(project_id: project_id, booking_portal_client_id: client_id, subject_class: "ChannelPartner", name: "channel_partner_status_rejected", title: "Account has been approved", url: "/", content: "You account has been rejected for following reason - <%= self.status_change_reason %>") if Template::NotificationTemplate.where(name: "channel_partner_status_rejected", project_id: project_id).blank?
+      Template::NotificationTemplate.create(project_id: project_id, booking_portal_client_id: client_id, subject_class: "ChannelPartner", name: "channel_partner_status_rejected", title: "Account has been rejected", url: "/", content: "You account has been rejected for following reason - <%= self.try(:status_change_reason) %>") if Template::NotificationTemplate.where(name: "channel_partner_status_rejected", project_id: project_id).blank?
+
+      Template::NotificationTemplate.create(project_id: project_id, booking_portal_client_id: client_id, subject_class: "User", name: "user_status_active_in_company", title: "Account has been approved", url: "/", content: "You account has been approved.") if Template::NotificationTemplate.where(name: "user_status_active_in_company", project_id: project_id).blank?
+
+      Template::NotificationTemplate.create(project_id: project_id, booking_portal_client_id: client_id, subject_class: "User", name: "user_status_inactive_in_company", title: "Account has been rejected", url: "/", content: "You account has been rejected for following reason - <%= self.try(:status_change_reason) %>") if Template::NotificationTemplate.where(name: "user_status_inactive_in_company", project_id: project_id).blank?
 
       return Template::NotificationTemplate.where(booking_portal_client_id: client_id).count
     end

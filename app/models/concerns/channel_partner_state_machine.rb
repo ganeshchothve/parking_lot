@@ -71,14 +71,8 @@ module ChannelPartnerStateMachine
         end
       end
       # send notification
-      user = self.users.first
-      if user.present? && user.role?('channel_partner')
-        send_push_notification(template_name, user)
-      elsif user.present? && user.role?('cp_owner')
-        recipients.each do |r|
-          send_push_notification(template_name, r)
-        end
-      end
+      recipient = self.primary_user
+      send_push_notification(template_name, recipient) if recipient.present?
     end
 
     def send_push_notification template_name, recipient
