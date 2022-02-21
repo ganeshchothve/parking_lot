@@ -1,11 +1,11 @@
 class VariableIncentiveScheme
   include Mongoid::Document
   include Mongoid::Timestamps
-  include IncentiveSchemeStateMachine
   extend FilterByCriteria
   include ArrayBlankRejectable
   include RangeUtils
   include InsertionStringMethods
+  include VariableIncentiveSchemeStateMachine
 
   field :name, type: String
   field :days_multiplier, type: Float, default: 0.0
