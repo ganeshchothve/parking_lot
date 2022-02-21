@@ -63,6 +63,12 @@ module DatabaseSeeds
 
       Template::NotificationTemplate.create(project_id: project_id, booking_portal_client_id: client_id, subject_class: "Sitevisit", name: "site_visit_status_paid_notification", title: "Sitevisit paid", url: "/", content: "Paid") if Template::NotificationTemplate.where(name: "site_visit_status_paid_notification", project_id: project_id).blank?
 
+      Template::NotificationTemplate.create(project_id: project_id, booking_portal_client_id: client_id, subject_class: "Invoice", name: "invoice_rejected", title: "Invoice rejected", url: "/", content: "Rejected") if Template::NotificationTemplate.where(name: "invoice_rejected", project_id: project_id).blank?
+
+      Template::NotificationTemplate.create(project_id: project_id, booking_portal_client_id: client_id, subject_class: "Invoice", name: "invoice_approved", title: "Invoice approved", url: "/", content: "Approved") if Template::NotificationTemplate.where(name: "invoice_approved", project_id: project_id).blank?
+
+      Template::NotificationTemplate.create(project_id: project_id, booking_portal_client_id: client_id, subject_class: "Invoice", name: "invoice_paid", title: "Invoice paid", url: "/", content: "Paid") if Template::NotificationTemplate.where(name: "invoice_paid", project_id: project_id).blank?
+
       return Template::NotificationTemplate.where(booking_portal_client_id: client_id).count
     end
   end
