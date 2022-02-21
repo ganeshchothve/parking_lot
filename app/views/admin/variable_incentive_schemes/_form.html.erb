@@ -4,7 +4,7 @@
     <div class="modal-content">
 
       <div class="modal-header">
-        <h3 class="title"><%= t("controller.incentive_schemes.#{action_name}.link_name") %></h3>
+        <h3 class="title"><%= t("controller.variable_incentive_schemes.#{action_name}.link_name") %></h3>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
@@ -67,7 +67,7 @@
             <%
                 statuses = available_statuses(@variable_incentive_scheme)
               %>
-            <%= f.select :event, options_for_select(statuses.collect{|rec| [t("mongoid.attributes.incentive_scheme/status.#{rec.to_s}"), rec.to_s]}, @variable_incentive_scheme.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @variable_incentive_scheme]).editable_field?("event") %>
+            <%= f.select :event, options_for_select(statuses.collect{|rec| [t("mongoid.attributes.variable_incentive_scheme/status.#{rec.to_s}"), rec.to_s]}, @variable_incentive_scheme.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @variable_incentive_scheme]).editable_field?("event") %>
           <% end %>
         </div>
       </div>

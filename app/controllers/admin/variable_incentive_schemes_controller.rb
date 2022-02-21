@@ -38,7 +38,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
 
   def update
     respond_to do |format|
-      @variable_incentive_scheme.approved_by = current_user if @variable_incentive_scheme.event.present? && @variable_incentive_scheme.event == 'approved' && @variable_incentive_scheme.status != 'approved'
+      @variable_incentive_scheme.approved_by = current_user if params.dig(:variable_incentive_scheme, :event).present? && params.dig(:variable_incentive_scheme, :event) == 'approved' && @variable_incentive_scheme.status != 'approved'
       if @variable_incentive_scheme.update(permitted_attributes([:admin, @variable_incentive_scheme]))
         format.html { redirect_to admin_incentive_schemes_path, notice: 'Incentive Scheme was successfully updated.' }
       else

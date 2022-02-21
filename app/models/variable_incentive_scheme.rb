@@ -1,7 +1,7 @@
 class VariableIncentiveScheme
   include Mongoid::Document
   include Mongoid::Timestamps
-  include IncentiveSchemeStateMachine
+  include VariableIncentiveSchemeStateMachine
   extend FilterByCriteria
   include ArrayBlankRejectable
   include RangeUtils
