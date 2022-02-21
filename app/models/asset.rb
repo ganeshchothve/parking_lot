@@ -55,6 +55,10 @@ class Asset
     end
   end
 
+  def self.ui_json
+    {only: ['file_name'], methods: ['file_url']}
+  end 
+  
   def name_in_error
     file_name
   end
