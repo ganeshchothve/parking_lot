@@ -45,6 +45,17 @@ class BookingDetailObserver < Mongoid::Observer
   end
 
   def after_save booking_detail
+
+    # handling booking swap cases
+    if booking_detail.status_changed? && booking_detail.status == 'swapped'
+      new_booking = BookingDetail.where(parent_booking_detail_id: booking_detail.id).first
+      if new_booking.present? && new_booking.invoices.where(status: 'tentative').blank?
+        booking_detail.invoices.where(status: 'tentative').update_all(invoiceable_id: new_booking.id)
+      else
+        # once the booking is swapped, the previous booking invoice is rejected
+        booking_detail.invoices.where(status: 'tentative').update_all(status: 'rejected')
+      end
+    end
     # calculate incentive and generate an invoice for the respective booking detail
     booking_detail.calculate_incentive if booking_detail.project.present? && booking_detail.project.incentive_calculation_type?("calculated")
 
