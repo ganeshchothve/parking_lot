@@ -5,6 +5,8 @@
       <tr class="bg-primary white">
         <th><%= t("mongoid.attributes.user/role.cp") %></th>
         <th><%= Lead.model_name.human(count: 2) %></th>
+        <th>Scheduled<br> <%= SiteVisit.model_name.human(count: 2) %></th>
+        <th>Conducted<br> <%= SiteVisit.model_name.human(count: 2) %></th>
         <th>Pending<br> <%= SiteVisit.model_name.human(count: 2) %></th>
         <th>Approved<br> <%= SiteVisit.model_name.human(count: 2) %></th>
         <th>Rejected<br> <%= SiteVisit.model_name.human(count: 2) %></th>
@@ -17,6 +19,8 @@
         <tr>
           <td data-title='Sourcing manager Name'><%= cp.name %></td>
           <td data-title='Walk ins'><%= @leads[cp.id] || 0 %></td>
+          <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= @site_visits.dig('scheduled', cp.id.to_s) || 0 %></td>
+          <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= @site_visits.dig('conducted', cp.id.to_s) || 0 %></td>
           <td data-title='Pending <%= SiteVisit.model_name.human(count: 2) %>'><%= @site_visits.dig('pending', cp.id.to_s) || 0 %></td>
           <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= @site_visits.dig('approved', cp.id.to_s) || 0 %></td>
           <td data-title='Rejected <%= SiteVisit.model_name.human(count: 2) %>'><%= @site_visits.dig('rejected', cp.id.to_s) || 0 %></td>

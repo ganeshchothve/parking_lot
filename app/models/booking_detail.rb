@@ -134,7 +134,7 @@ class BookingDetail
     when 'brokerage'
       where({ status: { '$nin': BookingDetail::SKIPPED_BOOKING_STAGES } })
     else
-      all.not_eligible
+      none
     end
   end
   scope :booking_stages, -> { all.in(status: BOOKING_STAGES) }

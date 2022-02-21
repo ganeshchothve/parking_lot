@@ -1266,7 +1266,7 @@ en:
         billing_team: 'Billing Team'
         management_user: 'Management User'
         account_manager: 'Account Manager'
-        account_manager_head: 'Account Manager Head'
+        account_manager_head: 'Sourcing Head'
         employee_user: 'Employee'
         direct: Direct
         dev_sourcing_manager: 'Developer Sourcing Manager'
@@ -2082,6 +2082,8 @@ en:
       heading2_html: '<strong>Register now</strong> & join our network to explore new opportunities'
 
   dashboard:
+    exports:
+      link_name: '%{type} Exports'
     cp_admin:
       channel_partner_performace:
         heading: "Channel Partner Performance (Project Wise)"

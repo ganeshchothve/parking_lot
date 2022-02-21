@@ -1,6 +1,7 @@
 class Email
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Attributes::Dynamic
   extend FilterByCriteria
 
   STATUS = %w(draft scheduled queued sent delivered read unread clicked bounced dropped spam complained unsubscribed untracked)

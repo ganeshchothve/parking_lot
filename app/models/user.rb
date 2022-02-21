@@ -224,7 +224,7 @@ class User
     if category == 'referral'
       nin(referred_by_id: ['', nil]).in(role: BUYER_ROLES + %w(channel_partner cp_owner))
     else
-      all.not_eligible
+      none
     end
   end
 
@@ -268,6 +268,15 @@ class User
   end
   scope :filter_by_interested_project, ->(project_id) do
     all.in(id: InterestedProject.approved.where(project_id: project_id).distinct(:user_id))
+  end
+
+  scope :filter_by_interested_project_created_at, ->(date, project) do
+    start_date, end_date = date.split(' - ')
+    if project.present?
+      all.in(id: InterestedProject.approved.where(project_id: project, created_at: {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day }).distinct(:user_id))
+    else
+      all.in(id: InterestedProject.approved.where(created_at: {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day }).distinct(:user_id))
+    end
   end
 
 
@@ -644,6 +653,7 @@ class User
 
     def build_criteria(params = {})
       criteria = super(params)
+      criteria = criteria.filter_by_interested_project_created_at(params[:interested_project_created_at], params.dig(:fltrs, :interested_project)) if params[:interested_project_created_at].present? && self.respond_to?('filter_by_interested_project_created_at')
       criteria = criteria.where(role: { "$ne": 'superadmin' }) unless criteria.selector.has_key?('role')
       criteria
     end

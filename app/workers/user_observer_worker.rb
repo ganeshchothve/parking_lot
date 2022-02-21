@@ -25,7 +25,7 @@ class UserObserverWorker
 
           # For calling Selldo APIs
           if selldo_base
-            if (changed_keys = (changes.keys & %w(role channel_partner_id confirmed_at)).presence) && changed_keys&.all? {|key| user[key].present?}
+            if (changed_keys = (changes.keys & %w(role channel_partner_id confirmed_at manager_id)).presence) && changed_keys&.all? {|key| user[key].present?}
               Crm::Api::ExecuteWorker.perform_async('put', 'User', user.id, nil, changes, selldo_base.id.to_s)
             end
           end
