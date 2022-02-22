@@ -5,7 +5,7 @@ class Sms
   extend FilterByCriteria
 
   STATUS = %w(received untracked scheduled sent failed)
-  SMS_GATEWAYS = %w(knowlarity sms_just) #twilio
+  SMS_GATEWAYS = %w(knowlarity sms_just twilio)
 
   # Scopes
   scope :filter_by_to, ->(phone) { where(to: phone) }
