@@ -33,7 +33,7 @@ module InvoiceStateMachine
         transitions from: :approved, to: :tax_invoice_raised
       end
 
-      event :paid, after: :mark_invoiceable_paid do
+      event :paid, after: [:mark_invoiceable_paid, :send_notification] do
         transitions from: :tax_invoice_raised, to: :paid
         transitions from: :approved, to: :paid
       end
