@@ -20,6 +20,7 @@ class Admin::ClientPolicy < ClientPolicy
   def permitted_attributes(params = {})
     attributes = super
     if %w[superadmin].include?(user.role)
+      attributes += [:twilio_account_sid, :twilio_auth_token]
       attributes += [general_user_request_categories: [], partner_regions: [], roles_taking_registrations: [], mask_lead_data_for_roles: []]
     end
     attributes.uniq

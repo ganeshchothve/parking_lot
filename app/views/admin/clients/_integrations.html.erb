@@ -120,6 +120,18 @@
     </div>
   </div>
   <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :twilio_account_sid, class: 'label-required' %>
+      <%= f.text_field :twilio_account_sid, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("twilio_account_sid") ? false : true) %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :twilio_auth_token, class: 'label-required' %>
+      <%= f.text_field :twilio_auth_token, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("twilio_auth_token") ? false : true) %>
+    </div>
+  </div>
+  <div class="col-md-6">
     <% if policy([:admin, @client]).editable_field?("external_api_integration") %>
     <div class="mb-3">
       <%= f.label :external_api_integration %>
