@@ -68,6 +68,9 @@ module ChannelPartnerRegisteration
   def create_cp_user
     @user = User.new(permitted_attributes([:admin, User.new]))
     @user.assign_attributes(role: "channel_partner", booking_portal_client_id: current_client.id)
+    if params["user"]["manager_id"].present?
+      @user.set(manager_id: params["user"]["manager_id"])
+    end
   end
 
   def handle_json_request(format)

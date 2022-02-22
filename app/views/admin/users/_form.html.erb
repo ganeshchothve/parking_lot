@@ -6,7 +6,7 @@
           <h3 class="title">
             <%= t("controller.users.#{action_name}.header", role: User.human_attribute_name("role.#{@user.role}") ) %>
           </h3>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close close-profile" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body theme-form">
           <div class="row">
@@ -204,5 +204,10 @@
       create: false
     });
     FormInitializer.init($("#user_form"));
+
+    // reload the dashboard page when profile modal is closed
+    $('.close-profile').click(function(){
+      location.reload();
+    })
   });
 <% end %>
