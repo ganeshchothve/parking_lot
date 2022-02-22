@@ -374,6 +374,8 @@ Rails.application.routes.draw do
     get :billing_team_dashboard, to: "dashboard#billing_team_dashboard"
     get :project_wise_summary, to: "dashboard#project_wise_summary"
     get :project_wise_leads, to: "dashboard#project_wise_leads"
+    get :cp_variable_incentive_scheme_report, to: "dashboard#cp_variable_incentive_scheme_report"
+    get :variable_incentive_scheme_report, to: "dashboard#variable_incentive_scheme_report"
     get :incentive_plans_started, to: "dashboard#incentive_plans_started"
     get :incentive_plans_summary, to: "dashboard#incentive_plans_summary"
     get :channel_partner_dashboard_counts, to: "dashboard#channel_partner_dashboard_counts"

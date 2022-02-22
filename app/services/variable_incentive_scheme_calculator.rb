@@ -13,7 +13,7 @@ class VariableIncentiveSchemeCalculator
         incentive_amount += calculate_capped_incentive(booking_detail, variable_incentive_scheme)
       end
 
-      incentive_data << {variable_incentive_scheme_id: variable_incentive_scheme.id.to_s, total_capped_incentive: incentive_amount}
+      incentive_data << {user_id: user.id.to_s, user_name: user.name, variable_incentive_scheme_id: variable_incentive_scheme.id.to_s, variable_incentive_scheme_name: variable_incentive_scheme.name, total_capped_incentive: incentive_amount}
       incentive_amount = 0
     end
     incentive_data
@@ -61,9 +61,9 @@ class VariableIncentiveSchemeCalculator
 
   # (scheme_days - calculated_days) / scheme_days
   def self.calculate_days_factor(booking_detail, variable_incentive_scheme)
-    difference = (variable_incentive_scheme - calculate_days(booking_detail, variable_incentive_scheme))
+    difference = (variable_incentive_scheme.scheme_days - calculate_days(booking_detail, variable_incentive_scheme))
     difference = [difference, 0].max
-    days_factor = difference / variable_incentive_scheme.scheme_days
+    days_factor = difference.to_f / variable_incentive_scheme.scheme_days
     days_factor
   end
 
@@ -74,8 +74,8 @@ class VariableIncentiveSchemeCalculator
   end
 
   # days_factor * network_effect
-  def self.calculate_network_incentive(variable_incentive_scheme)
-    days_factor = calculate_days_factor(variable_incentive_scheme)
+  def self.calculate_network_incentive(booking_detail, variable_incentive_scheme)
+    days_factor = calculate_days_factor(booking_detail, variable_incentive_scheme)
     network_effect = calculate_network_effect(variable_incentive_scheme)
     network_incentive = days_factor * network_effect
     network_incentive
@@ -84,7 +84,7 @@ class VariableIncentiveSchemeCalculator
   # Days Incentive + Network Incentive + Min Incentive
   def self.calculate_total_incentive(booking_detail, variable_incentive_scheme)
     days_incentive = calculate_days_incentive(booking_detail, variable_incentive_scheme)
-    network_incentive = calculate_network_incentive(variable_incentive_scheme)
+    network_incentive = calculate_network_incentive(booking_detail ,variable_incentive_scheme)
     min_incentive = variable_incentive_scheme.min_incentive
     total_incentive = days_incentive + network_incentive + min_incentive
     total_incentive
@@ -101,7 +101,7 @@ class VariableIncentiveSchemeCalculator
     total_incentive = calculate_total_incentive(booking_detail, variable_incentive_scheme)
     temp_capped_incentive = calculate_temp_capped_incentive(variable_incentive_scheme)
     capped_incentive = [total_incentive, temp_capped_incentive].min
-    capped_incentive
+    capped_incentive.round
   end
 
 end
