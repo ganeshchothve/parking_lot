@@ -15,9 +15,15 @@
               <span><%= t('mongoid.attributes.variable_incentive_scheme.status') %></span>
               <p class="break-word"><%= t("mongoid.attributes.variable_incentive_scheme/status.#{@variable_incentive_scheme.status}")%></p>
             </li>
+
             <li>
               <span><%= t('mongoid.attributes.variable_incentive_scheme.project_ids') %></span>
               <p class="break-word"><%= @variable_incentive_scheme.project_names || '-' %></p>
+            </li>
+
+            <li>
+              <span><%= t('mongoid.attributes.variable_incentive_scheme.days_multiplier') %></span>
+              <p class="break-word"><%= @variable_incentive_scheme.days_multiplier || '-' %></p>
             </li>
 
             <li>
@@ -71,7 +77,7 @@
             </li> 
 
             <li>
-              <span><%= t('mongoid.attributes.variable_incentive_scheme.total_inventory') %></span>
+              <span><%= t('mongoid.attributes.variable_incentive_scheme.approved_by') %></span>
               <p class="break-word"><%= @variable_incentive_scheme.approved_by.try(:name) || "-" %></p>
             </li>
 

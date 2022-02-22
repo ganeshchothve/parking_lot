@@ -6,7 +6,7 @@
     <% end %>
     <%= link_to t('helpers.show.link_name', model: VariableIncentiveScheme.model_name.human), admin_variable_incentive_scheme_path(variable_incentive_scheme), class: 'dropdown-item' %>
     <% if policy([:admin, variable_incentive_scheme]).end_scheme? %>
-      <%= link_to t('controller.variable_incentive_scheme.end_scheme.link_name'), end_scheme_admin_variable_incentive_scheme_path(variable_incentive_scheme), class: 'dropdown-item modal-remote-form-link' %>
+      <%= link_to t('controller.variable_incentive_schemes.end_scheme.link_name'), end_scheme_admin_variable_incentive_scheme_path(variable_incentive_scheme), class: 'dropdown-item modal-remote-form-link' %>
     <% end %>
   </div>
 </div>

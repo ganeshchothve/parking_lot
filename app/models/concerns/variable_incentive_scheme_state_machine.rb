@@ -24,6 +24,13 @@ module VariableIncentiveSchemeStateMachine
       end
     end
 
+    def after_draft_event
+    end
+    def after_approved_event
+    end
+    def after_disabled_event
+    end
+
     def can_move_to_disabled?
       if aasm.from_state.to_s == 'approved'
         Date.current < start_date
