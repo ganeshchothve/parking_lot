@@ -7,7 +7,7 @@ class VariableIncentiveSchemeCalculator
 
     approved_schemes.each_with_index do |variable_incentive_scheme, index|
 
-      booking_details = BookingDetail.where(manager_id: user.id).in(status: BookingDetail::BOOKING_STAGES, project_id: variable_incentive_scheme.project_ids)
+      booking_details = BookingDetail.where(manager_id: user.id).in(status: BookingDetail::BOOKING_STAGES, project_id: variable_incentive_scheme.project_ids).where(booked_on: variable_incentive_scheme.start_date.beginning_of_day..variable_incentive_scheme.end_date.end_of_day)
 
       booking_details.each_with_index do |booking_detail, index|
         incentive_amount += calculate_capped_incentive(booking_detail, variable_incentive_scheme)
