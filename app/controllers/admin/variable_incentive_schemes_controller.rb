@@ -53,8 +53,8 @@ class Admin::VariableIncentiveSchemesController < AdminController
       render layout: false
     elsif request.patch?
       respond_to do |format|
-        if @variable_incentive_scheme.update(ends_on: params.dig(:incentive_scheme, :ends_on))
-          format.html { redirect_to admin_incentive_schemes_path, notice: 'Incentive Scheme was successfully updated.' }
+        if @variable_incentive_scheme.update(end_date: params.dig(:variable_incentive_scheme, :end_date))
+          format.html { redirect_to admin_variable_incentive_schemes_path, notice: 'Variable Incentive Scheme was successfully updated.' }
         else
           format.html { render :edit }
           format.json { render json: { errors: @variable_incentive_scheme.errors.full_messages.uniq }, status: :unprocessable_entity }
