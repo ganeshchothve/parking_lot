@@ -1,3 +1,12 @@
+<head>
+  <script type="text/javascript">
+      function preventBack() {
+          window.history.forward();
+      }
+      setTimeout("preventBack()", 0);
+      window.onunload = function () { null };
+  </script>
+</head>
 <div class="mt-5 pt-5"></div>
 <section class="cp-login-otp-sec col-lg-4 mg-auto">
   <div class="cp-login-otp-wrap">

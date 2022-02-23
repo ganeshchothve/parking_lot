@@ -6,6 +6,7 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def new?(for_edit = false)
+    return false unless user
     if current_client.roles_taking_registrations.include?(user.role)
       if user.role?('superadmin')
         (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner))) || for_edit
@@ -107,7 +108,7 @@ class Admin::UserPolicy < UserPolicy
   def change_state?
     (
       user.role.in?(%w(cp_owner)) && user.id != record.id &&
-      record.user_status_in_company.in?(%w(active pending_approval))
+      record.user_status_in_company.in?(%w(active pending_approval)) && user.channel_partner.primary_user.id != record.id
     ) || (
       user.role.in?(%w(cp cp_admin superadmin)) &&
       record.user_status_in_company.in?(%w(pending_approval))
