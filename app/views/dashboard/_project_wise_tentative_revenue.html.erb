@@ -32,7 +32,7 @@
             <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong>Total</strong></td>
             <td><strong>-</strong></td>
             <td><strong>
-              <%= number_to_indian_currency(@total_amount) %>
+              <%= number_to_indian_currency(@total_amount.round) %>
             </strong></td>
           </tr>
         <% else %>

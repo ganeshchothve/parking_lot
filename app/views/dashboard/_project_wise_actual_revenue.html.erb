@@ -48,7 +48,7 @@
                 </td>
                 <td>
                   <strong>
-                    <%= number_to_indian_currency(@project_wise_total_amount[key]) %>
+                    <%= number_to_indian_currency((@project_wise_total_amount[key]).round) %>
                   </strong>
                 </td>
               </tr>
@@ -63,7 +63,7 @@
             <td><strong><%= number_to_indian_currency(@status_wise_total_amount['approved'] ||=0) %></strong></td>
             <td><strong><%= number_to_indian_currency(@status_wise_total_amount['tax_invoice_raised'] ||=0) %></strong></td>
             <td><strong><%= number_to_indian_currency(@status_wise_total_amount['paid'] ||=0) %></strong></td>
-            <td><strong><%= number_to_indian_currency(@total_amount ||=0) %></strong></td>
+            <td><strong><%= number_to_indian_currency((@total_amount ||=0).round) %></strong></td>
           </tr>
         <% else %>
           <tr>
