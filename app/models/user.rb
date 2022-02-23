@@ -31,7 +31,7 @@ class User
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :timeoutable, :password_archivable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: [:login] #:lockable,:expirable,:session_limitable,:password_expirable
 
-  attr_accessor :temporary_password, :payment_link, :temp_manager_id, :temp_channel_partner
+  attr_accessor :temporary_password, :payment_link, :temp_manager_id
 
   ## Database authenticatable
   field :first_name, type: String, default: ''
@@ -161,6 +161,7 @@ class User
   belongs_to :tier, optional: true  # for associating channel partner users with different tiers.
   belongs_to :selected_lead, class_name: 'Lead', optional: true
   belongs_to :selected_project, class_name: 'Project', optional: true
+  belongs_to :temp_channel_partner, class_name: 'ChannelPartner', optional: true
   has_many :leads
   has_many :receipts
   has_many :project_units
