@@ -15,6 +15,11 @@
 <% if policy([current_user_role_group, invoice]).edit? %>
   <%= link_to t("controller.invoices.edit.link_name"), edit_admin_invoice_path(invoice), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
+
+<% if policy([current_user_role_group, invoice]).move_tentative_to_draft? %>
+  <%= link_to "Move to Draft", change_state_admin_invoiceable_path(invoice, invoiceable_type: invoice.invoiceable_type , invoiceable_id: invoice.invoiceable_id, invoice_calculated: {event: :draft}), method: :patch, class: 'dropdown-item' %>
+<% end %>
+
 <!-- Update GST amount -->
 <%# if policy([current_user_role_group, invoice]).update_gst? %>
   <%#= link_to t("controller.invoices.update_gst.link_name"), update_gst_admin_invoice_path(invoice), class: 'dropdown-item modal-remote-form-link' %>

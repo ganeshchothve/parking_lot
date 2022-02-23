@@ -134,4 +134,19 @@
       <%= f.url_field :powered_by_link, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("powered_by_link") ? false : true) %>
     </div>
   </div>
+  <div class="col-md-6">
+    <% if policy(@client).editable_field?("launchpad_portal") %>
+    <div class="mb-3">
+      <%= f.label :launchpad_portal %>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :launchpad_portal, true, class: "form-check-input wd-22" %>
+        <%= f.label :launchpad_portal, "Yes", class: "form-check-label d-inline-block ms-2" %>
+      </div>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :launchpad_portal, false, class: "form-check-input wd-22" %>
+        <%= f.label :launchpad_portal, "No", class: "form-check-label d-inline-block ms-2" %>
+      </div>
+    </div>
+    <% end %>
+  </div>
 </div>
