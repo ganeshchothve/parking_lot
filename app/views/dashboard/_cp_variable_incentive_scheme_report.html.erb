@@ -1,4 +1,4 @@
-<% total_incentive_data = @incentive_data.pluck(:total_capped_incentive).sum %>
+<% total_incentive_amount = @incentive_data.pluck(:total_capped_incentive).sum %>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd mb-5">
   <div class="box-card relative table-responsive" id="dashboard_project_wise_invoice_summary mb-5">
     <table class="table my-customer-table responsive-tbl mb-0 align-middle border rounded">
@@ -20,7 +20,7 @@
                 <%= data[:variable_incentive_scheme_name] %>
               </td>
               <td>
-                <%= data[:total_capped_incentive] %>
+                <%= number_to_indian_currency(data[:total_capped_incentive]) %>
               </td>
             </tr>
           <% end %>
@@ -28,7 +28,7 @@
             <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong>Total</strong></td>
             <td><strong>-</strong></td>
             <td><strong>
-                  <%= total_incentive_data %>
+                  <%= number_to_indian_currency(total_incentive_amount) %>
             </strong></td>
           </tr>
         <% else %>
