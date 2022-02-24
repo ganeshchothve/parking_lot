@@ -12,13 +12,23 @@ module RevenueReportDashboardDataProvider
       'let': { 'invoiceable_id': "$invoiceable_id" },
       'pipeline': [
         { '$match': { '$and': [invoiceable_matcher, { '$expr': { '$eq': [ "$_id",  "$$invoiceable_id" ] } }] } },
-        {'$project': {'_id': 0, 'invoiceable_id': "$_id"}}
+        {'$project': {'_id': 0, 'invoiceable_id': "$_id", 'agreement_price': '$agreement_price'}}
       ],
       'as': get_resource(params[:resource])
       }
     },
     {
       '$match': { "#{get_resource(params[:resource])}": {'$ne': []}}
+    },
+    {
+      '$replaceRoot': {
+        'newRoot': {
+          '$mergeObjects': [
+            { '$arrayElemAt': [ "$"+"#{get_resource(params[:resource])}", 0 ] },
+            "$$ROOT"
+          ]
+        }
+      }
     },
     {
       '$lookup': {
@@ -42,7 +52,7 @@ module RevenueReportDashboardDataProvider
       }
     },
     {
-      '$project': {'project_id': '$project_id' , 'city': '$city', 'amount': '$amount', 'gst_amount': '$gst_amount', 'net_amount': '$net_amount', 'status': '$status', 'invoiceable_id': '$invoiceable_id'}
+      '$project': {'project_id': '$project_id' , 'city': '$city', 'amount': '$amount', 'gst_amount': '$gst_amount', 'net_amount': '$net_amount', 'status': '$status', 'invoiceable_id': '$invoiceable_id', 'agreement_price': '$agreement_price'}
     },
     {
       '$group': {
@@ -50,6 +60,8 @@ module RevenueReportDashboardDataProvider
           'net_amount': { '$sum': '$net_amount'},
           'amount': {'$sum': '$amount'},
           'gst_amount': {'$sum': '$gst_amount'},
+          'bookings_count': { '$sum': 1},
+          'agreement_price': {'$sum': '$agreement_price'},
           'city': {'$first': '$city'},
           'status': {'$first': '$status'},
           'invoiceable_id': {'$first': '$invoiceable_id'}
@@ -60,9 +72,9 @@ module RevenueReportDashboardDataProvider
     project_wise_tentative_amount = {}
     data.each do |d|
       if project_wise_tentative_amount[d['city']].present?
-        project_wise_tentative_amount[d['city']].push({ project_id: d['_id'], amount: d['amount'] })
+        project_wise_tentative_amount[d['city']].push({ project_id: d['_id'], amount: d['amount'], bookings_count: d['bookings_count'], agreement_price: d['agreement_price'] })
       else
-        project_wise_tentative_amount[d['city']] = [{ project_id: d['_id'], amount: d['amount'] }]
+        project_wise_tentative_amount[d['city']] = [{ project_id: d['_id'], amount: d['amount'], bookings_count: d['bookings_count'], agreement_price: d['agreement_price'] }]
       end
     end
     project_wise_tentative_amount
@@ -171,7 +183,7 @@ module RevenueReportDashboardDataProvider
         matcher[:agreement_date] = {
             "$gte": Date.parse(start_date).beginning_of_day,
             "$lte": Date.parse(end_date).end_of_day
-          }
+        }
       end
 
       if params[:booked_on].present?

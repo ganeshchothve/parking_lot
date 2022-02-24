@@ -42,6 +42,11 @@ class BookingDetailObserver < Mongoid::Observer
     if booking_detail.primary_user_kyc_id.present? && booking_detail.user_kyc_ids.present?
       booking_detail.user_kyc_ids.reject!{|x| x == booking_detail.primary_user_kyc_id}
     end
+
+    if booking_detail.agreement_price == nil
+      agreement_price = booking_detail.calculate_agreement_price
+      booking_detail.set(agreement_price: agreement_price)
+    end
   end
 
   def after_save booking_detail
