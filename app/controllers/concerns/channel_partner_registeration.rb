@@ -142,15 +142,13 @@ module ChannelPartnerRegisteration
       })
       email.sent!
     end
-    recipient = @user.phone
     sms_template = Template::SmsTemplate.where(name: "cp_user_register_in_company").first
     if sms_template.present?
-      phone = recipient
-      if phone.present?
+      if @user.phone.present?
         Sms.create!(
           booking_portal_client_id: client.id,
           body: sms_template.parsed_content(@user),
-          to: [phone],
+          to: [@user.phone],
           sms_template_id: sms_template.id,
           triggered_by_id: @user.id,
           triggered_by_type: @user.class.to_s
