@@ -119,6 +119,13 @@ module DatabaseSeeds
       <% url = "#{@project_url}?#{@project_ids.collect {|x| \'search[project_ids][]=\' + x}.join(\'&\')}" %>
       <%= short_url(url) %>') if ::Template::SmsTemplate.where(name: "send_tp_projects_link", booking_portal_client_id: client_id).blank?
 
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: "cp_user_register_in_company", content: '
+          Dear <%= temp_channel_partner&.primary_user&.name || "Sir/Madam" %>,
+          <%= name %> has requested to register his account into your company on <%= I18n.t("global.brand") %>.
+              Please use the following link to approve his/her account to give him/her access as a <%= I18n.t("mongoid.attributes.user/role.channel_partner") %> into your company.
+              <% url = "#{Rails.application.routes.url_helpers.add_user_account_channel_partners_url(register_code: self.register_in_cp_company_token, channel_partner_id: self.temp_channel_partner&.id.to_s)}" %>
+              <%= short_url(url) %>') if ::Template::SmsTemplate.where(name: "cp_user_register_in_company").blank?
+
       return Template::SmsTemplate.where(booking_portal_client_id: client_id).count
     end
   end

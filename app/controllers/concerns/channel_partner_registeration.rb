@@ -10,7 +10,7 @@ module ChannelPartnerRegisteration
         if @user.save
           format.html { redirect_to new_user_session_path, notice: 'Successfully registered' }
         else
-          format.html { render :new, alert: @user.errors.full_messages, status: :unprocessable_entity }
+          format.html { redirect_to new_channel_partner_path, alert: @user.errors.full_messages }
         end
       end
     end
@@ -141,6 +141,19 @@ module ChannelPartnerRegisteration
         triggered_by_type: @user.class.to_s
       })
       email.sent!
+    end
+    sms_template = Template::SmsTemplate.where(name: "cp_user_register_in_company").first
+    if sms_template.present?
+      if @user.phone.present?
+        Sms.create!(
+          booking_portal_client_id: client.id,
+          body: sms_template.parsed_content(@user),
+          to: [@user.phone],
+          sms_template_id: sms_template.id,
+          triggered_by_id: @user.id,
+          triggered_by_type: @user.class.to_s
+        )
+      end
     end
   end
 
