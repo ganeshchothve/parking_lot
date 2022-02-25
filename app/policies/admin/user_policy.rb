@@ -92,6 +92,10 @@ class Admin::UserPolicy < UserPolicy
     true
   end
 
+  def site_visit_project_wise?
+    true
+  end
+
   def search_by?
     user.role.in?(%w(team_lead))
   end
