@@ -28,7 +28,7 @@ class InvoiceObserver < Mongoid::Observer
   def after_save invoice
     # invoice generated set to trueif invoice.invoiceable.present?
     if invoice.invoiceable.present?
-      if invoice.invoiceable.invoices.nin(status: ['rejected']).count > 0
+      if invoice.invoiceable.invoices.nin(status: ['rejected', 'tentative']).count > 0
         invoice.invoiceable.set(incentive_generated: true)
       else
         # invoice rejected set to false

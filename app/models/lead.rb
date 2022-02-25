@@ -167,6 +167,18 @@ class Lead
     end
   end
 
+  def actual_incentive_eligible?(category=nil)
+    if category.present?
+      if category == 'lead'
+        manager_id.present?
+      else
+        false
+      end
+    else
+      _actual_incentive_eligible?
+    end
+  end
+
   def manager_name
     self.cp_lead_activities.where(user_id: self.manager_id).first&.manager_name
   end

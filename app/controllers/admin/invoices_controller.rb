@@ -15,7 +15,7 @@ class Admin::InvoicesController < AdminController
   end
 
   def create
-    @invoice = Invoice::Manual.new(project: @resource.try(:project), raised_date: Time.now, invoiceable: @resource, manager: @resource.invoiceable_manager)
+    @invoice = Invoice::Manual.new(project: @resource.try(:project), raised_date: Time.now, invoiceable: @resource, manager: @resource.invoiceable_manager, status: 'draft')
     @invoice.assign_attributes(permitted_attributes([current_user_role_group, @invoice]))
     authorize [current_user_role_group, @invoice]
     respond_to do |format|

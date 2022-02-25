@@ -37,6 +37,10 @@ class Admin::InvoicePolicy < InvoicePolicy
     user.role.in?(%w(channel_partner cp_owner admin billing_team)) #&& record.aasm.events(permitted: true).map(&:name).include?(:raise)
   end
 
+  def move_tentative_to_draft?
+    user.role == 'admin' && record.status == 'tentative'
+  end
+
   def raise_invoice?
     change_state?
   end
