@@ -25,7 +25,7 @@ module ExcelGenerator::SiteVisitProjectWise
       approved_site_visits.values&.flatten&.count || 0,
     ]
     sheet.insert_row(sheet.last_row_index + 1, total_values)
-    sheet.merge_cells(0,0,0,5)
+    sheet.merge_cells(0,0,0,3)
     spreadsheet = StringIO.new 
     file.write spreadsheet
     spreadsheet  
