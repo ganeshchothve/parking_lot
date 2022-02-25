@@ -1,6 +1,6 @@
 module ExcelGenerator::SiteVisitProjectWise
 
-  def  self.site_visit_project_wise_csv(current_user, projects, approved_site_visits, scheduled_site_visits, conducted_site_visits)
+  def  self.site_visit_project_wise_csv(current_user, projects, approved_site_visits, scheduled_site_visits, conducted_site_visits, all_site_visits, paid_site_visits)
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "SiteVisitProjectWise")
     sheet.insert_row(0, ["Walk-ins (Project Wise)"])
@@ -13,19 +13,23 @@ module ExcelGenerator::SiteVisitProjectWise
       index = index+1 
       sheet.insert_row(index, [
         p.name.titleize,
+        all_site_visits[p.id].try(:count) || 0,
         scheduled_site_visits[p.id].try(:count) || 0,
         conducted_site_visits[p.id].try(:count) || 0,
+        paid_site_visits[p.id].try(:count) || 0,
         approved_site_visits[p.id].try(:count) || 0,
       ])
     end
     total_values = [
       I18n.t('global.total'),
+      all_site_visits.values&.flatten&.count || 0,
       scheduled_site_visits.values&.flatten&.count || 0,
       conducted_site_visits.values&.flatten&.count || 0,
+      paid_site_visits.values&.flatten&.count || 0,
       approved_site_visits.values&.flatten&.count || 0,
     ]
     sheet.insert_row(sheet.last_row_index + 1, total_values)
-    sheet.merge_cells(0,0,0,3)
+    sheet.merge_cells(0,0,0,5)
     spreadsheet = StringIO.new 
     file.write spreadsheet
     spreadsheet  
@@ -34,8 +38,10 @@ module ExcelGenerator::SiteVisitProjectWise
   def self.site_visit_project_wise_csv_headers
     [
       Project.model_name.human,
+      "All #{SiteVisit.model_name.human(count: 2)}",
       "Scheduled #{SiteVisit.model_name.human(count: 2)}",
       "Conducted #{SiteVisit.model_name.human(count: 2)}",
+      "Paid #{SiteVisit.model_name.human(count: 2)}",
       "Approved #{SiteVisit.model_name.human(count: 2)}",
     ]  
   end

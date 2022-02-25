@@ -324,12 +324,14 @@ class Admin::UsersController < AdminController
     if params[:manager_id].blank? && params[:channel_partner_id].blank?
       @site_visits = @site_visits.ne(manager_id: nil)
     end
-    @scheduled_site_visits = @site_visits.group_by{|p| p.project_id}
+    @all_site_visits = @site_visits.group_by{|p| p.project_id}
+    @scheduled_site_visits = @site_visits.filter_by_status('scheduled').group_by{|p| p.project_id}
     @conducted_site_visits = @site_visits.filter_by_status('conducted').group_by{|p| p.project_id}
+    @paid_site_visits = @site_visits.filter_by_status('paid').group_by{|p| p.project_id}
     @approved_site_visits = @site_visits.filter_by_approval_status('approved').group_by{|p| p.project_id}
     respond_to do |format|
       format.js
-      format.xls { send_data ExcelGenerator::SiteVisitProjectWise.site_visit_project_wise_csv(current_user, @projects, @approved_site_visits, @scheduled_site_visits, @conducted_site_visits).string , filename: "site_visit_project_wise_csv-#{Date.today}.xls", type: "application/xls" }
+      format.xls { send_data ExcelGenerator::SiteVisitProjectWise.site_visit_project_wise_csv(current_user, @projects, @approved_site_visits, @scheduled_site_visits, @conducted_site_visits, @all_site_visits, @paid_site_visits).string , filename: "site_visit_project_wise_csv-#{Date.today}.xls", type: "application/xls" }
     end
   end
 
