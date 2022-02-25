@@ -1,7 +1,7 @@
 class Admin::VariableIncentiveSchemesController < AdminController
-  before_action :set_variable_incentive_scheme, except: %i[index new create]
+  before_action :set_variable_incentive_scheme, except: %i[index new create vis_details]
   before_action :authorize_resource
-  around_action :apply_policy_scope, only: [:index]
+  around_action :apply_policy_scope, only: [:index, :vis_details]
 
   def index
     @variable_incentive_schemes = VariableIncentiveScheme.build_criteria params
@@ -63,6 +63,21 @@ class Admin::VariableIncentiveSchemesController < AdminController
     end
   end
 
+  def vis_details
+    variable_incentive_schemes = VariableIncentiveScheme.approved.or(get_query)
+    options = {}
+    options.merge!(user_id: params[:user_id]) if params[:user_id].present?
+    options.merge!(project_ids: params[:project_ids]) if params[:project_ids].present?
+    if ["cp_owner", "channel_partner"].include?(current_user.role)
+      options.merge!(user_id: current_user.id.to_s)
+    end
+    @vis_details = VariableIncentiveSchemeCalculator.vis_details(variable_incentive_schemes, options)
+    respond_to do |format|
+      format.json { render json: @vis_details }
+      format.html {}
+    end
+  end
+
   private
 
   def set_variable_incentive_scheme
@@ -71,7 +86,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
   end
 
   def authorize_resource
-    if params[:action] == 'index'
+    if ['index', 'vis_details'].include?(params[:action])
       authorize [current_user_role_group, VariableIncentiveScheme]
     elsif params[:action] == 'new' || params[:action] == 'create'
       authorize [current_user_role_group, VariableIncentiveScheme.new(created_by: current_user)]
@@ -85,5 +100,12 @@ class Admin::VariableIncentiveSchemesController < AdminController
     VariableIncentiveScheme.with_scope(policy_scope(custom_scope)) do
       yield
     end
+  end
+
+  def get_query
+    query = []
+    query << {project_ids: {"$in": params[:project_ids]}} if params[:project_ids].present?
+    query << {id: {"$in": params[:variable_incentive_scheme_ids]}} if params[:variable_incentive_scheme_ids].present?
+    query
   end
 end

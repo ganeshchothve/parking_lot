@@ -19,6 +19,10 @@ class Admin::VariableIncentiveSchemePolicy < VariableIncentiveSchemePolicy
     record.approved? && (record.start_date <= Date.current && Date.current < record.end_date) && update?
   end
 
+  def vis_details?
+    %w[superadmin admin billing_team channel_partner cp_owner].include?(user.role)
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     attributes += [:name]
