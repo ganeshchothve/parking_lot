@@ -11,8 +11,7 @@
         </tr>
       </thead>
       <tbody>
-        <% projects = params[:project_ids].present? ? Project.filter_by__id(params[:project_ids]) : Project.all %>
-        <% projects.where(Project.user_based_scope(current_user)).each do |p| %>
+        <% @projects.where(Project.user_based_scope(current_user)).each do |p| %>
           <tr>
             <td data-title='<%= Project.model_name.human %>'><%= p.name.titleize %></td>
             <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= @scheduled_site_visits[p.id].try(:count) || 0 %></td>

@@ -324,7 +324,7 @@ class Admin::UsersController < AdminController
     @scheduled_site_visits = @site_visits.group_by{|p| p.project_id}
     @conducted_site_visits = @site_visits.filter_by_status('conducted').group_by{|p| p.project_id}
     @approved_site_visits = @site_visits.filter_by_approval_status('approved').group_by{|p| p.project_id}
-    @projects = params[:project_ids].present? ? Project.filter_by__id(params[:project_ids]) : Project.all
+    @projects = params[:project_ids].present? ? Project.filter_by__id(params[:project_ids]) : Project.filter_by_is_active(true)
     respond_to do |format|
       format.js
       format.xls { send_data ExcelGenerator::SiteVisitProjectWise.site_visit_project_wise_csv(current_user, @projects, @approved_site_visits, @scheduled_site_visits, @conducted_site_visits).string , filename: "site_visit_project_wise_csv-#{Date.today}.xls", type: "application/xls" }
