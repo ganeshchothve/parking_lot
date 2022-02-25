@@ -20,6 +20,7 @@ class LeadObserver < Mongoid::Observer
       lead.update_external_ids({ reference_id: lead.lead_id }, crm.id)
     end
     lead.calculate_incentive if lead.project.incentive_calculation_type?("calculated")
+    lead.invoices.where(status: 'tentative').update_all(status: 'draft') if lead.actual_incentive_eligible?
   end
 
   def after_update lead
