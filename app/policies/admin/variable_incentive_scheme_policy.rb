@@ -23,6 +23,10 @@ class Admin::VariableIncentiveSchemePolicy < VariableIncentiveSchemePolicy
     %w[superadmin admin billing_team channel_partner cp_owner].include?(user.role)
   end
 
+  def export?
+    vis_details?
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     attributes += [:name]
