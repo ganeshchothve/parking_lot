@@ -968,6 +968,8 @@ en:
         total_inventory: Total Inventory
         date_range: Date Range
         status: Status
+        day: Day
+        capped_incentive: Capped Incentive Amount
       variable_incentive_scheme/status:
         draft: Draft
         approved: Approved
@@ -1888,6 +1890,8 @@ en:
       new:
         link_name: Add Variable Incentive Scheme
         header: Add Variable Incentive Scheme
+      vis_details:
+        link_name: Variable Incentive Details
     sync_logs:
       index:
         link_name: 'Sync Logs'

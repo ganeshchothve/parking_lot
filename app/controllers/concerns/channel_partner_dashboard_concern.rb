@@ -108,7 +108,8 @@ module ChannelPartnerDashboardConcern
 
   def cp_variable_incentive_scheme_report
     options = {}
-    @incentive_data = VariableIncentiveSchemeCalculator.channel_partner_incentive(current_user, options)
+    options.merge!(user_id: current_user.id.to_s)
+    @incentive_data = VariableIncentiveSchemeCalculator.channel_partner_incentive(options)
   end
 
   private

@@ -326,6 +326,9 @@ Rails.application.routes.draw do
         get :end_scheme
         patch :end_scheme
       end
+      collection do
+        get :vis_details
+      end
     end
     
     resources :referrals, only: [:index, :create, :new] do

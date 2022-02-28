@@ -60,11 +60,7 @@ module BillingTeamDashboardConcern
 
   def variable_incentive_scheme_report
     options = {}
-    if params[:user_id].present?
-      user = User.where(User.role_based_channel_partners_scope(current_user)).where(id: params[:user_id]).first
-    else
-      user = User.where(User.role_based_channel_partners_scope(current_user)).first
-    end
-    @incentive_data = VariableIncentiveSchemeCalculator.channel_partner_incentive(user, options)
+    options.merge!(user_id: params[:user_id]) if params[:user_id].present?
+    @incentive_data = VariableIncentiveSchemeCalculator.channel_partner_incentive(options)
   end
 end
