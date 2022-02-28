@@ -1,6 +1,6 @@
 module RevenueReportDashboardDataProvider
-  def self.tentative_reports(current_user, params={}, current_client)
-    invoice_matcher = set_invoice_matcher("tentative", params, current_client)
+  def self.tentative_reports(current_user, params={})
+    invoice_matcher = set_invoice_matcher("tentative", params, client=Client.first)
     invoiceable_matcher = set_invoiceable_matcher("tentative", params)
     data = Invoice.collection.aggregate([
     {
@@ -80,8 +80,8 @@ module RevenueReportDashboardDataProvider
     project_wise_tentative_amount
   end
 
-  def self.actual_reports(current_user, params={}, current_client)
-    invoice_matcher = set_invoice_matcher("actual", params, current_client)
+  def self.actual_reports(current_user, params={})
+    invoice_matcher = set_invoice_matcher("actual", params, client=Client.first)
     invoiceable_matcher = set_invoiceable_matcher("actual", params)
     data = Invoice.collection.aggregate([
     {
@@ -158,7 +158,7 @@ module RevenueReportDashboardDataProvider
     project_wise_actual_amount
   end
 
-  def self.set_invoice_matcher(report_type="tentative", params, current_client)
+  def self.set_invoice_matcher(report_type="tentative", params, client)
     matcher = {}
     matcher[:status] = report_type == "tentative" ? "tentative" : {'$in': Invoice::INVOICE_REPORT_STAGES}
     matcher[:project_id] = {'$in': params[:project_id].map { |id| BSON::ObjectId(id) }} if params[:project_id].present?
@@ -173,7 +173,7 @@ module RevenueReportDashboardDataProvider
     if params[:brokerage_type].present?
       matcher[:brokerage_type] = params[:brokerage_type]
     else
-      matcher[:brokerage_type] = current_client.launchpad_portal ? 'sub_brokerage' : 'brokerage'
+      matcher[:brokerage_type] = client.launchpad_portal ? 'sub_brokerage' : 'brokerage'
     end
     matcher
   end
