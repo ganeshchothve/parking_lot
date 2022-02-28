@@ -50,6 +50,7 @@ class User
   field :utm_params, type: Hash, default: {} # {"campaign": '' ,"source": '',"sub_source": '',"medium": '',"term": '',"content": ''}
   field :enable_communication, type: Hash, default: { "email": true, "sms": true }
   field :premium,type: Boolean, default: false
+  field :rejection_reason, type: String
 
   field :encrypted_password, type: String, default: ''
 
