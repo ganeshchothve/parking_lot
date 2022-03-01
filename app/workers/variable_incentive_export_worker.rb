@@ -4,6 +4,7 @@ class VariableIncentiveExportWorker
 
   def perform user_id, options={}
     user = User.find(user_id)
+    options = options.with_indifferent_access
     get_query = options[:query]
     variable_incentive_schemes = VariableIncentiveScheme.approved.or(get_query)
     vis_details = VariableIncentiveSchemeCalculator.vis_details(variable_incentive_schemes, options)

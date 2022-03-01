@@ -76,7 +76,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
   def export
     @options.merge!(query: get_query)
     if Rails.env.development?
-      VariableIncentiveExportWorker.new.perform(current_user.id.to_s, @options)
+      VariableIncentiveExportWorker.perform_async(current_user.id.to_s, @options)
     else
       VariableIncentiveExportWorker.perform_async(current_user.id.to_s, @options.as_json)
     end
