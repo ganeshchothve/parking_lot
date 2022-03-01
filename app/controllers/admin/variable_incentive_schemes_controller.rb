@@ -1,7 +1,8 @@
 class Admin::VariableIncentiveSchemesController < AdminController
-  before_action :set_variable_incentive_scheme, except: %i[index new create vis_details]
+  before_action :set_variable_incentive_scheme, except: %i[index new create vis_details export]
+  before_action :get_options, only: %i[vis_details export]
   before_action :authorize_resource
-  around_action :apply_policy_scope, only: [:index, :vis_details]
+  around_action :apply_policy_scope, only: [:index, :vis_details, :export]
 
   def index
     @variable_incentive_schemes = VariableIncentiveScheme.build_criteria params
@@ -65,17 +66,23 @@ class Admin::VariableIncentiveSchemesController < AdminController
 
   def vis_details
     variable_incentive_schemes = VariableIncentiveScheme.approved.or(get_query)
-    options = {}
-    options.merge!(user_id: params[:user_id]) if params[:user_id].present?
-    options.merge!(project_ids: params[:project_ids]) if params[:project_ids].present?
-    if ["cp_owner", "channel_partner"].include?(current_user.role)
-      options.merge!(user_id: current_user.id.to_s)
-    end
-    @vis_details = VariableIncentiveSchemeCalculator.vis_details(variable_incentive_schemes, options)
+    @vis_details = VariableIncentiveSchemeCalculator.vis_details(variable_incentive_schemes, @options)
     respond_to do |format|
       format.json { render json: @vis_details }
       format.html {}
     end
+  end
+
+  def export
+    @options.merge!(query: get_query)
+    if Rails.env.development?
+      VariableIncentiveExportWorker.perform_async(current_user.id.to_s, @options)
+    else
+      VariableIncentiveExportWorker.perform_async(current_user.id.to_s, @options.as_json)
+    end
+    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    filters = params.as_json.slice("user_id", "project_ids", "variable_incentive_scheme_ids", "user_id")
+    redirect_to vis_details_admin_variable_incentive_schemes_path(filters)
   end
 
   private
@@ -86,7 +93,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
   end
 
   def authorize_resource
-    if ['index', 'vis_details'].include?(params[:action])
+    if ['index', 'vis_details', "export"].include?(params[:action])
       authorize [current_user_role_group, VariableIncentiveScheme]
     elsif params[:action] == 'new' || params[:action] == 'create'
       authorize [current_user_role_group, VariableIncentiveScheme.new(created_by: current_user)]
@@ -107,5 +114,14 @@ class Admin::VariableIncentiveSchemesController < AdminController
     query << {project_ids: {"$in": params[:project_ids]}} if params[:project_ids].present?
     query << {id: {"$in": params[:variable_incentive_scheme_ids]}} if params[:variable_incentive_scheme_ids].present?
     query
+  end
+
+  def get_options
+    @options = {}
+    @options.merge!(user_id: params[:user_id]) if params[:user_id].present?
+    @options.merge!(project_ids: params[:project_ids]) if params[:project_ids].present?
+    if ["cp_owner", "channel_partner"].include?(current_user.role)
+      @options.merge!(user_id: current_user.id.to_s)
+    end
   end
 end

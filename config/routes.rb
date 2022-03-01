@@ -328,6 +328,7 @@ Rails.application.routes.draw do
       end
       collection do
         get :vis_details
+        get :export
       end
     end
     

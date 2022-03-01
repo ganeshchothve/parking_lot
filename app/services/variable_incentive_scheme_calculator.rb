@@ -39,7 +39,7 @@ class VariableIncentiveSchemeCalculator
         end
       end
     end
-    incentive_data
+    incentive_data.sort_by!{|data| data[:day] }
   end
 
   # this method not used yet
