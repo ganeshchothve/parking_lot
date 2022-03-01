@@ -78,7 +78,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
     if Rails.env.development?
       VariableIncentiveExportWorker.new.perform(current_user.id.to_s, @options)
     else
-      VariableIncentiveExportWorker.perform_async(current_user.id.to_s, @options)
+      VariableIncentiveExportWorker.perform_async(current_user.id.to_s, @options.as_json)
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
     filters = params.as_json.slice("user_id", "project_ids", "variable_incentive_scheme_ids", "user_id")
