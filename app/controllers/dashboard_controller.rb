@@ -4,6 +4,7 @@ class DashboardController < ApplicationController
   include ChannelPartnerDashboardConcern
   include BookingDetailDashboardConcern
   include RevenueReportDashboardConcern
+  include ChannelPartnerLeaderboardConcern
   before_action :authenticate_user!, only: [:index, :documents]
   before_action :set_lead, only: :index, if: proc { current_user.buyer? }
   around_action :user_time_zone, if: :current_user
