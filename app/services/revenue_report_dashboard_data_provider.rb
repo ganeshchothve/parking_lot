@@ -31,6 +31,15 @@ module RevenueReportDashboardDataProvider
       }
     },
     {
+      '$group': {
+          '_id': '$invoiceable_id',
+          'project_id': {'$first': '$project_id'},
+          'agreement_price': {'$first': '$agreement_price'},
+          'amount': {'$sum': '$amount'},
+          'net_amount': {'$sum': '$net_amount'}
+      }
+    },
+    {
       '$lookup': {
       'from': "projects",
       'let': { 'project_id': "$project_id" },
@@ -169,7 +178,6 @@ module RevenueReportDashboardDataProvider
     matcher[:category] = params[:category] if params[:category].present?
 
     matcher[:invoiceable_type] = params[:resource].present? ? params[:resource] : "BookingDetail"
-
     if params[:brokerage_type].present?
       matcher[:brokerage_type] = params[:brokerage_type]
     else
