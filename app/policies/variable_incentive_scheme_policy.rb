@@ -1,0 +1,2 @@
+class VariableIncentiveSchemePolicy < ApplicationPolicy
+end

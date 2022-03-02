@@ -224,6 +224,21 @@
     </div>
   </section>
 
+  <section class="user-db-sec-6 device-pd <%= current_user.role?('cp') ? 'mb-5 pb-5' : '' %>">
+    <div class="px-4">
+      <div class='box-card'>
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3">
+            <div class="table-title pt-4">
+              <h1 class="title fn-18">Variable Incentive Scheme Report</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row" id = "variable_incentive_scheme_performance"></div>
+      </div>
+    </div>
+  </section>
+
   <% if (["cp_admin","admin","superadmin"].include?current_user.role) %>
     <div class='mb-5 pb-5'>
       <section class="user-db-sec-6 device-pd">
@@ -365,6 +380,10 @@
       });
       $.ajax({
         url: "<%= channel_partner_performance_admin_users_path %>",
+        type: "get",
+      });
+      $.ajax({
+        url: "<%= cp_variable_incentive_scheme_report_path %>",
         type: "get",
       });
       $.ajax({
