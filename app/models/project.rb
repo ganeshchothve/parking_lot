@@ -250,6 +250,14 @@ class Project
     end
   end
 
+  def cp_subscription_count
+    InterestedProject.where(project_id: self.id).count
+  end
+
+  def is_subscribed(user)
+    InterestedProject.where(project_id: self.id, user_id: user.id).in(status: %w(subscribed approved)).present?
+  end
+
   def self.user_based_scope(user, params = {})
     custom_scope = {}
     if user.role.in?(%w(cp_owner channel_partner))
@@ -268,28 +276,4 @@ class Project
     custom_scope
   end
 
-  def self.ui_json
-    self.mobile_json
-  end
-
-  def self.mobile_json
-    {
-      only: [
-        'name', '_id', 'developer_name', 'project_type', 'category', 'configuration', 'rera_registration_no',
-        'micro_market', 'city', 'region', 'project_segment', 'sv_incentive', 'spot_booking_incentive',
-        'pre_reg_incentive_percentage', 'pre_reg_min_bookings', 'hot'
-      ],
-      methods: [
-        'mobile_cover_photo_url', 'cover_photo_url'
-      ],
-      include: {
-        assets: {
-          only: %w(document_type _id file file_name file_size)
-        },
-        videos: {
-          only: %w(_id description embedded_video thumbnail)
-        }
-      }
-    }
-  end
 end

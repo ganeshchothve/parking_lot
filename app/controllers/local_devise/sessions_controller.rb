@@ -28,7 +28,7 @@ class LocalDevise::SessionsController < Devise::SessionsController
     yield resource if block_given?
     respond_to do |format|
       format.html { respond_with resource, location: after_sign_in_path_for(resource) }
-      format.json { render json: {message: find_message(:signed_in), user: current_user.as_json(current_user.ui_json) }, status: 200 }
+      format.json { render json: {message: find_message(:signed_in), user: resource.as_json(resource.ui_json) }, status: 200 }
     end
   end
 

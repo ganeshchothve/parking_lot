@@ -17,7 +17,7 @@ class Admin::SiteVisitsController < AdminController
                        .build_criteria(params)
                        .paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
-      format.json { render json: @site_visits.as_json(methods: [:name]) }
+      format.json
       format.html
     end
   end
