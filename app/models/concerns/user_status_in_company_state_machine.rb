@@ -11,7 +11,7 @@ module UserStatusInCompanyStateMachine
       state :pending_approval, :active
 
       event :pending_approval do
-        transitions from: :inactive, to: :pending_approval
+        transitions from: :inactive, to: :pending_approval, after: :remove_rejection_reason
       end
 
       event :active, after: [:set_channel_partner, :clear_register_token] do
@@ -42,6 +42,10 @@ module UserStatusInCompanyStateMachine
 
     def unset_channel_partner
       self.set(channel_partner_id: nil, role: 'channel_partner') if self.channel_partner_id.present?
+    end
+
+    def remove_rejection_reason
+      self.set(rejection_reason: nil) if self.rejection_reason.present?
     end
   end
 end

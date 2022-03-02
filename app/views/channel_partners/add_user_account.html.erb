@@ -12,37 +12,46 @@
   <div class="cp-login-otp-wrap">
     <h2 class="px-4 pt-3 pb-3">Account Registration In Company</h2>
     <p class="px-4 pt-3 pb-1 font-weight-medium"><%= @user.name %> is requesting to register his account into your Company</p>
-    <div class="cp-signup-form-wrap px-4 cp-form-wrap">
-        <%= form_for [:admin, @user], url: change_state_admin_user_path(@user), html: {id: 'rejection_reason_form'} do |f| %>
-          <div class="mb-3 pt-3 pb-3">
-            <%= f.label :rejection_reason, class: '' %>
-            <%= f.text_area :rejection_reason, rows: 2, class: 'form-control', id: 'rejection_reason', disabled: !policy([:admin, @user]).editable_field?("rejection_reason") %>
-          </div>
-          <div class="pb-3">
-            <%= f.submit t('controller.users.change_state.buttons.active'), class: 'btn btn-primary', id: 'accept_cp' %>
-            <%= f.submit t('controller.users.change_state.buttons.inactive'), class: 'btn btn-secondary', id: 'reject_cp' %>
-          </div>
-          <%= f.hidden_field :user_status_in_company_event, id: 'user_status' %>
-          <%= f.hidden_field :channel_partner_id, value: @channel_partner.id %>
-        <% end %>
-      </div>
+    <div class="cp-signup-form-wrap px-4 cp-form-wrap user-reg">
+      <%= form_for [:admin, @user], url: change_state_admin_user_path(@user), html: {id: 'rejection_reason_form'} do |f| %>
+        <div class="mb-3 pt-3">
+          <%= f.label :rejection_reason, class: '' %>
+          <%= f.text_area :rejection_reason, rows: 2, class: 'form-control', required: true %>
+        </div>
+        <div class="pb-3">
+          <%= f.submit t('controller.users.change_state.buttons.inactive'), class: 'btn btn-secondary reject-cp' %>
+        </div>
+        <%= f.hidden_field :user_status_in_company_event, value: 'inactive' %>
+        <%= f.hidden_field :channel_partner_id, value: @channel_partner.id %>
+      <% end %>
+
+      <%= form_for [:admin, @user], url: change_state_admin_user_path(@user), html: {id: 'rejection_reason_form'} do |f| %>
+        <div class="pb-3">
+          <%= f.submit t('controller.users.change_state.buttons.active'), class: 'btn btn-primary' %>
+        </div>
+        <%= f.hidden_field :user_status_in_company_event, value: 'active' %>
+        <%= f.hidden_field :channel_partner_id, value: @channel_partner.id %>
+      <% end %>
     </div>
   </div>
 </section>
-
+<style>
+  .user-reg form:nth-child(2)
+  {
+    position: relative;
+    top: -54px;
+    left: 0px;
+    z-index: 2;
+  }
+  .user-reg form:nth-child(1) .reject-cp
+  {
+    position: relative;
+    left: 100px;
+    z-index: 3;
+  }
+</style>
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($("#rejection_reason_form"));
-
-  // empty the rejection reason textarea after page reload
-  $('#rejection_reason').val('')
-
-  $('#accept_cp').click(function(){
-    $('#user_status').val('active')
-  });
-  $('#reject_cp').click(function(){
-    $('#user_status').val('inactive')
-    $('#rejection_reason').prop('required', true)
-  });
 })
 <% end %>
