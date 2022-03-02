@@ -169,7 +169,7 @@ class Admin::SiteVisitsController < AdminController
 
   def set_site_visit
     @site_visit = SiteVisit.where(_id: params[:id]).first
-    redirect_to request.referer, alert: 'Site visit Not found' if @site_visit.blank?
+    redirect_to request.referer || home_path(current_user), alert: 'Site visit Not found' if @site_visit.blank?
     @lead = @site_visit.lead if @site_visit && @lead.blank?
   end
 
