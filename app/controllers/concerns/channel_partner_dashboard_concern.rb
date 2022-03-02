@@ -106,6 +106,12 @@ module ChannelPartnerDashboardConcern
     @stage_wise_leads = DashboardDataProvider.lead_stage_project_wise_leads_count(current_user, options)
   end
 
+  def cp_variable_incentive_scheme_report
+    options = {}
+    options.merge!(user_id: current_user.id.to_s)
+    @incentive_data = VariableIncentiveSchemeCalculator.channel_partner_incentive(options)
+  end
+
   private
 
   def get_labels(data)

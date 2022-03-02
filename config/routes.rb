@@ -297,6 +297,7 @@ Rails.application.routes.draw do
         get :partner_wise_performance
         get :search_by
         get :site_visit_project_wise
+        get :site_visit_partner_wise
       end
 
       match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]
@@ -319,6 +320,17 @@ Rails.application.routes.draw do
       member do
         get :end_scheme
         patch :end_scheme
+      end
+    end
+
+    resources :variable_incentive_schemes, except: [:destroy] do
+      member do
+        get :end_scheme
+        patch :end_scheme
+      end
+      collection do
+        get :vis_details
+        get :export
       end
     end
     
@@ -368,6 +380,8 @@ Rails.application.routes.draw do
     get :billing_team_dashboard, to: "dashboard#billing_team_dashboard"
     get :project_wise_summary, to: "dashboard#project_wise_summary"
     get :project_wise_leads, to: "dashboard#project_wise_leads"
+    get :cp_variable_incentive_scheme_report, to: "dashboard#cp_variable_incentive_scheme_report"
+    get :variable_incentive_scheme_report, to: "dashboard#variable_incentive_scheme_report"
     get :incentive_plans_started, to: "dashboard#incentive_plans_started"
     get :incentive_plans_summary, to: "dashboard#incentive_plans_summary"
     get :channel_partner_dashboard_counts, to: "dashboard#channel_partner_dashboard_counts"

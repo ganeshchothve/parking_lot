@@ -1,0 +1,52 @@
+<%
+  if ["channel_partner", "cp_owner"].include?(current_user.role)
+    user_id = current_user.id.to_s
+  else
+    user_id = params[:user_id]
+  end
+%>
+
+<% total_incentive_amount = @incentive_data.pluck(:total_capped_incentive).sum %>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd mb-5">
+  <div class="box-card relative table-responsive" id="dashboard_project_wise_invoice_summary mb-5">
+    <table class="table my-customer-table responsive-tbl mb-0 align-middle border rounded">
+      <thead class="bg-primary white">
+        <tr>
+          <th class="text-center">Company Owner/Channel Partner</th>
+          <th class="text-center">Variable Incentive Scheme</th>
+          <th class="text-center">Capped Incentive</th>
+        </tr>
+      </thead>
+      <tbody class='text-md-center'>
+        <% if @incentive_data.present? %>
+          <tr>
+            <td rowspan="<%= @incentive_data.length + 1 %>" class='text-center border-end bg-primary white align-middle'><%= @incentive_data.first[:user_name] %></td>
+          </tr>
+          <% @incentive_data.each do |data| %>
+            <tr>
+              <td class="text-right">
+                <%= data[:variable_incentive_scheme_name] %>
+              </td>
+              <td>
+                <%#= number_to_indian_currency(data[:total_capped_incentive]) %>
+                <%= link_to number_to_indian_currency(data[:total_capped_incentive]), vis_details_admin_variable_incentive_schemes_path({user_id: user_id, variable_incentive_scheme_ids: [data[:variable_incentive_scheme_id]]}) %>
+              </td>
+            </tr>
+          <% end %>
+          <tr>
+            <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong>Total</strong></td>
+            <td><strong>-</strong></td>
+            <td><strong>
+                  <%#= number_to_indian_currency(total_incentive_amount) %>
+                  <%= link_to number_to_indian_currency(total_incentive_amount), vis_details_admin_variable_incentive_schemes_path({user_id: user_id}) %>
+            </strong></td>
+          </tr>
+        <% else %>
+          <tr>
+            <td colspan="3">No Records Found</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

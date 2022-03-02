@@ -1,0 +1,46 @@
+<!-- TO-DO - Add sourcing manager directory and move this there in dashboard views -->
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 mb-5">
+  <div class="box-card relative table-responsive">
+    <table class="table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0">
+      <thead class="th-default">
+        <tr class="bg-primary white">
+          <th><%= ChannelPartner.model_name.human(count: 1) %></th>
+          <th><%= t("mongoid.attributes.user/role.channel_partner") %></th>
+          <th>All<br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th>Scheduled<br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th>Conducted<br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th>Paid<br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th>Approved<br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th><%= BookingDetail.model_name.human(count: 2) %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% user = params[:channel_partner_id].present? ? ChannelPartner.where(id: params[:channel_partner_id]).first&.users&.cp_owner&.first : current_user %>
+        <% User.filter_by_role(%w(cp_owner)).where(User.user_based_scope(user || current_user)).each do |p| %>
+          <% users = User.where(channel_partner_id: p.channel_partner_id) %>
+          <tr>
+            <td data-title='<%= t("mongoid.attributes.user/role.channel_partner") %>'><%= p.channel_partner.name.titleize %></td>
+            <td></td>
+            <td data-title='All <%= SiteVisit.model_name.human(count: 2) %>'><%= @all_site_visits.values_at(*users.pluck(:id))&.flatten&.compact&.count || 0 %></td>
+            <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= @scheduled_site_visits.values_at(*users.pluck(:id))&.flatten&.compact&.count || 0 %></td>
+            <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= @conducted_site_visits.values_at(*users.pluck(:id))&.flatten&.compact&.count || 0 %></td>
+            <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= @paid_site_visits.values_at(*users.pluck(:id))&.flatten&.compact&.count || 0 %></td>
+            <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= @approved_site_visits.values_at(*users.pluck(:id))&.flatten&.compact&.count || 0 %></td>
+            <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><%= @bookings.values_at(*users.pluck(:id))&.flatten&.compact&.count || 0 %></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td data-title='<%= t("mongoid.attributes.user/role.channel_partner") %>'><%= p.name.titleize %></td>
+            <td data-title='All <%= SiteVisit.model_name.human(count: 2) %>'><%= @all_site_visits[p.id].try(:count) || 0 %></td>
+            <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= @scheduled_site_visits[p.id].try(:count) || 0 %></td>
+            <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= @conducted_site_visits[p.id].try(:count) || 0 %></td>
+            <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= @paid_site_visits[p.id].try(:count) || 0 %></td>
+            <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= @approved_site_visits[p.id].try(:count) || 0 %></td>
+            <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><%= @bookings[p.id].try(:count) || 0 %></td>
+          </tr>
+          <%= render 'channel_partner_site_visits', users: users %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

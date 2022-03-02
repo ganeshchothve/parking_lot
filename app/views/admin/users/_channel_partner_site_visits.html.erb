@@ -1,0 +1,14 @@
+
+<% users.each do |c| %>
+  <% next if c.role?('cp_owner') %>
+  <tr>
+    <td></td>
+    <td data-title='<%= t("mongoid.attributes.user/role.channel_partner") %>'><%= c.name.titleize %></td>
+    <td data-title='All <%= SiteVisit.model_name.human(count: 2) %>'><%= @all_site_visits[c.id].try(:count) || 0 %></td>
+    <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= @scheduled_site_visits[c.id].try(:count) || 0 %></td>
+    <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= @conducted_site_visits[c.id].try(:count) || 0 %></td>
+    <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= @paid_site_visits[c.id].try(:count) || 0 %></td>
+    <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= @approved_site_visits[c.id].try(:count) || 0 %></td>
+    <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><%= @bookings[c.id].try(:count) || 0 %></td>
+  </tr>
+<% end %>

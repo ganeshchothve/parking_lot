@@ -1,0 +1,33 @@
+<div class="filter-inner modal-content ps-2 pe-2 fixed-header-footer">
+    <div class="modal-header filter-header">
+  <h5 class="modal-title title">Filter</h5>
+  <a href="javascript:;" class="close-filter-btn btn-close"></a>
+  </div>
+  <%= form_tag vis_details_admin_variable_incentive_schemes_path, method: "get", id: "vis_details_form" do %>
+    <div class="filter-content modal-body ps-0 pe-0">
+      <div class="row">
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag :variable_incentive_scheme_ids, "Variable Incentive Scheme Name", class: "control-label float-left" %>
+          <%= select_tag :variable_incentive_scheme_ids, options_for_select(VariableIncentiveScheme.approved.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
+        </div>
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag :project_ids, "Projects", class: "control-label float-left" %>
+          <%= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
+        </div>
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag :user_id, "Channel Partner", class: "control-label float-left" %>
+          <%= select_tag :user_id, options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), prompt: 'Select', class: "selectize" %>
+        </div>
+      </div>
+    </div>
+    <div class="filter-footer modal-footer text-end">
+      <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
+      <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+    </div>
+  <% end %>
+</div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#vis_details_form"));
+  });
+<% end %>
