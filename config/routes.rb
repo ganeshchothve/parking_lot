@@ -296,6 +296,7 @@ Rails.application.routes.draw do
         get :channel_partner_performance
         get :partner_wise_performance
         get :search_by
+        get :site_visit_partner_wise
       end
 
       match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]
