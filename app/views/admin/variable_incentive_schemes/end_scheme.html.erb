@@ -1,0 +1,28 @@
+<%= nested_form_for([:end_scheme, :admin, @variable_incentive_scheme], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['variable_incentive_schemes'], "data-type": "json", id: 'end_scheme_variable_incentive_scheme_form'}) do |f| %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h3 class="title"><%= t("controller.variable_incentive_schemes.#{action_name}.link_name") %></h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body theme-form">
+        <h5> Are you sure you want to end this scheme ? </h5>
+        <%= f.hidden_field :end_date, value: Date.current %>
+      </div>
+
+      <div class="modal-footer text-end">
+        <%= f.submit "Save", class: "btn btn-primary" %>
+      </div>
+
+    </div>
+  </div>
+</div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#end_scheme_variable_incentive_scheme_form"));
+});
+<% end %>

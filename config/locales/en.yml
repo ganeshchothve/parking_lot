@@ -48,6 +48,7 @@ en:
       one: Walk-in
       other: Walk-ins
     third_party_inventory: '3rd Party Inventory'
+    variable_incentive_schemes: Variable Incentive Scheme
 
   helpers:
     extend_validity:
@@ -257,6 +258,9 @@ en:
       unit_configuration:
         one: Unit Configuration
         other: Unit Configurations
+      variable_incentive_scheme:
+        one: Variable Incentive Scheme
+        other: Variable Incentive Schemes
 
     attributes:
       announcement:
@@ -947,6 +951,29 @@ en:
         Lead: Lead
         BookingDetail: Booking
         User: User (Referral)
+      variable_incentive_scheme:
+        name: Name
+        days_multiplier: Days Multiplier
+        total_bookings_multiplier: Total Bookings Multiplier
+        min_incentive: Minimum Incentive
+        scheme_days: Scheme Days
+        average_revenue_or_bookings: Avg. Revenue / Booking
+        max_expense_percentage: Expense Max %
+        start_date: Start Date
+        end_date: End Date
+        project_ids: Projects
+        approved_by: Approved By
+        created_by: Created by
+        total_bookings: Total Bookings
+        total_inventory: Total Inventory
+        date_range: Date Range
+        status: Status
+        day: Day
+        capped_incentive: Capped Incentive Amount
+      variable_incentive_scheme/status:
+        draft: Draft
+        approved: Approved
+        disabled: Disabled
 
       invoice:
         number: 'Invoice Number'
@@ -1852,6 +1879,21 @@ en:
       new:
         link_name: Add Brokerage Scheme
         header: Add Brokerage Scheme
+    variable_incentive_schemes:
+      index:
+        link_name: Variable Incentive Schemes
+      edit:
+        link_name: Edit Variable Incentive Scheme
+      end_scheme:
+        link_name: End Scheme
+      show:
+        link_name: Variable Incentive Scheme Detail
+        header: Variable Incentive Scheme Detail
+      new:
+        link_name: Add Variable Incentive Scheme
+        header: Add Variable Incentive Scheme
+      vis_details:
+        link_name: Variable Incentive Details
     sync_logs:
       index:
         link_name: 'Sync Logs'
@@ -2091,6 +2133,8 @@ en:
         heading: "Channel Partner Performance (Project Wise)"
       partner_wise_performace:
         heading: "Channel Partner Performance (User Wise)"
+      site_visit_partner_wise:
+        heading: "Walk-ins (User Wise)"
       incentive_scheme_performance:
         heading: "Brokerage Scheme Performance"
       cp_performance:

@@ -1,0 +1,87 @@
+<%= nested_form_for([:admin, @variable_incentive_scheme], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['variable_incentive_scheme'], "data-type": "json", id: 'variable_incentive_scheme_form'}) do |f| %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h3 class="title"><%= t("controller.variable_incentive_schemes.#{action_name}.link_name") %></h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body theme-form">
+        <div class="mb-3">
+          <%= f.label :name, class: 'label-required' %>
+          <%= f.text_field :name, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, @variable_incentive_scheme]).editable_field?("name") %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :days_multiplier, class: 'label-required' %>
+          <%= f.number_field :days_multiplier, autofocus: true, min: 0, step: :any, class: "form-control", required: 'required', disabled: !policy([:admin, @variable_incentive_scheme]).editable_field?("days_multiplier") %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :total_bookings_multiplier, class: 'label-required' %>
+          <%= f.number_field :total_bookings_multiplier, autofocus: true, min: 0, step: :any, class: "form-control", required: 'required', disabled: !policy([:admin, @variable_incentive_scheme]).editable_field?("total_bookings_multiplier") %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :min_incentive, class: 'label-required' %>
+          <%= f.number_field :min_incentive, autofocus: true, step: :any, min: 0, class: "form-control", required: 'required', disabled: !policy([:admin, @variable_incentive_scheme]).editable_field?("min_incentive") %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :max_expense_percentage, class: 'label-required' %>
+          <%= f.number_field :max_expense_percentage, autofocus: true, min: 0, step: :any, class: "form-control", required: 'required', disabled: !policy([:admin, @variable_incentive_scheme]).editable_field?("max_expense_percentage") %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :total_bookings, class: 'label-required' %>
+          <%= f.number_field :total_bookings, autofocus: true, min: 0, class: "form-control", required: 'required', disabled: !policy([:admin, @variable_incentive_scheme]).editable_field?("total_bookings") %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :total_inventory, class: 'label-required' %>
+          <%= f.number_field :total_inventory, autofocus: true, min: 0, class: "form-control", required: 'required', disabled: !policy([:admin, @variable_incentive_scheme]).editable_field?("total_inventory") %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :average_revenue_or_bookings, class: 'label-required' %>
+          <%= f.number_field :average_revenue_or_bookings, autofocus: true, min: 0, step: :any, class: "form-control", required: 'required', disabled: !policy([:admin, @variable_incentive_scheme]).editable_field?("average_revenue_or_bookings") %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :project_ids, class: "label-required" %>
+          <%= f.select :project_ids, filter_project_names_options, {}, class: 'selectize', required: 'required', multiple: true, disabled: !(policy([current_user_role_group, f.object]).editable_field?("project_ids")) %>
+        </div>
+        <div class='row'>
+            <div class='col-md-6'>
+              <div class="mb-3">
+                <%= f.label :start_date, class: 'label-required' %>
+                <%= f.text_field :start_date, class: 'form-control datepicker', required: true, "data-min-date": (f.object.start_date.present? && f.object.start_date < Date.today) ? f.object.start_date.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), disabled: !policy([:admin, @variable_incentive_scheme]).editable_field?("start_date"), value: f.object.start_date.present? ? f.object.start_date.strftime("%d/%m/%Y") : nil %>
+              </div>
+            </div>
+            <div class='col-md-6'>
+              <div class="mb-3">
+                <%= f.label :end_date, class: 'label-required' %>
+                <%= f.text_field :end_date, class: 'form-control datepicker', required: true, "data-min-date": (f.object.end_date.present? && f.object.end_date < Date.today) ? f.object.end_date.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), disabled: !policy([:admin, @variable_incentive_scheme]).editable_field?("end_date"), value: f.object.end_date.present? ? f.object.end_date.strftime("%d/%m/%Y") : nil %>
+              </div>
+            </div>
+          </div>
+        <div class="mb-3">
+          <% if f.object.new_record? %>
+            <%= f.hidden_field :event, value: 'draft' %>
+          <% else %>
+            <%= f.label :status, class: 'control-label' %>
+            <%
+                statuses = available_statuses(@variable_incentive_scheme)
+              %>
+            <%= f.select :event, options_for_select(statuses.collect{|rec| [t("mongoid.attributes.variable_incentive_scheme/status.#{rec.to_s}"), rec.to_s]}, @variable_incentive_scheme.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @variable_incentive_scheme]).editable_field?("event") %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="modal-footer text-end">
+        <%= f.submit "Save", class: "btn btn-primary" %>
+      </div>
+
+    </div>
+  </div>
+</div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#variable_incentive_scheme_form"));
+});
+<% end %>
