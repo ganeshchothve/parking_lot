@@ -324,6 +324,35 @@ class Admin::UsersController < AdminController
     end
   end
 
+  def site_visit_partner_wise
+    dates = params[:dates]
+    dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
+    @site_visits = SiteVisit.filter_by_scheduled_on(dates).where(SiteVisit.user_based_scope(current_user, params))
+    @bookings = BookingDetail.booking_stages.filter_by_booked_on(dates).where(BookingDetail.user_based_scope(current_user, params))
+    if params[:project_id].present?
+      @site_visits = @site_visits.where(project_id: params[:project_id])
+      @bookings = @bookings.where(project_id: params[:project_id])
+    end
+    if params[:channel_partner_id].present?
+      @site_visits = @site_visits.where(channel_partner_id: params[:channel_partner_id])
+      @bookings = @bookings.where(channel_partner_id: params[:channel_partner_id])
+    else
+      @site_visits = @site_visits.ne(manager_id: nil)
+      @bookings = @bookings.ne(manager_id: nil)
+    end
+    @all_site_visits = @site_visits.ne(manager_id: nil).group_by{|p| p.manager_id}
+    @scheduled_site_visits = @site_visits.filter_by_status('scheduled').group_by{|p| p.manager_id}
+    @conducted_site_visits = @site_visits.filter_by_status('conducted').group_by{|p| p.manager_id}
+    @paid_site_visits = @site_visits.filter_by_status('paid').group_by{|p| p.manager_id}
+    @approved_site_visits = @site_visits.filter_by_approval_status('approved').group_by{|p| p.manager_id}
+    @bookings = @bookings.group_by{|p| p.manager_id}
+    user = params[:channel_partner_id].present? ? ChannelPartner.where(id: params[:channel_partner_id]).first&.users&.cp_owner&.first : current_user
+    respond_to do |format|
+      format.js
+      format.xls { send_data ExcelGenerator::SiteVisitPartnerWise.site_visit_partner_wise_csv(user, @bookings, @all_site_visits, @approved_site_visits, @scheduled_site_visits, @conducted_site_visits, @paid_site_visits).string , filename: "site_visit_partner_wise-#{Date.today}.xls", type: "application/xls" }
+    end
+  end
+
   private
 
   def user_time_zone
