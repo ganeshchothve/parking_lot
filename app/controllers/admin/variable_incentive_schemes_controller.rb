@@ -65,8 +65,8 @@ class Admin::VariableIncentiveSchemesController < AdminController
   end
 
   def vis_details
-    variable_incentive_schemes = VariableIncentiveScheme.approved.or(get_query)
-    @vis_details = VariableIncentiveSchemeCalculator.vis_details(variable_incentive_schemes, @options)
+    @options.merge!(query: get_query)
+    @vis_details = VariableIncentiveSchemeCalculator.vis_details(@options)
     respond_to do |format|
       format.json { render json: @vis_details }
       format.html {}
@@ -76,7 +76,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
   def export
     @options.merge!(query: get_query)
     if Rails.env.development?
-      VariableIncentiveExportWorker.perform_async(current_user.id.to_s, @options)
+      VariableIncentiveExportWorker.new.perform(current_user.id.to_s, @options)
     else
       VariableIncentiveExportWorker.perform_async(current_user.id.to_s, @options.as_json)
     end

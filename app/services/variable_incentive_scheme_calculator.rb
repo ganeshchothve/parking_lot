@@ -25,8 +25,11 @@ class VariableIncentiveSchemeCalculator
     incentive_data
   end
 
-  def self.vis_details(variable_incentive_schemes, options={})
+  def self.vis_details(options={})
     incentive_data = []
+    options = options.with_indifferent_access
+    filter_query = options[:query]
+    variable_incentive_schemes = VariableIncentiveScheme.approved.or(filter_query)
     query = get_query(options)
     if variable_incentive_schemes.present?
       variable_incentive_schemes.each do |variable_incentive_scheme|
