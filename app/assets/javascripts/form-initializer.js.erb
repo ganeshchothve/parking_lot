@@ -224,7 +224,17 @@ FormInitializer = (function(){
           },
           success: function(data, type, options){
             if(typeof callback == 'function'){
-              callback(_.map(data, function(a){ return { id: (a['id'] || a._id), name: (a['ds_name'] || a['name']), sname: (a['search_name'] || a['name']) } }));
+              var res;
+              if(typeof data == 'object') {
+
+                if(_.isArray(data)) {
+                  res = data;
+                } else {
+                  res = data['entries'];
+                }
+
+                callback(_.map(res, function(a){ return { id: (a['id'] || a._id), name: (a['ds_name'] || a['name']), sname: (a['search_name'] || a['name']) } }));
+              }
             }
           }
         });

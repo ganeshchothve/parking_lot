@@ -121,7 +121,7 @@ class ChannelPartnersController < ApplicationController
     respond_to do |format|
       if (params.dig(:channel_partner, :event).present? ? @channel_partner.send("#{params.dig(:channel_partner, :event)}!") : @channel_partner.save)
         format.html { redirect_to (request.referer || channel_partners_path), notice: 'Channel Partner was successfully updated.' }
-        format.json { render json: @channel_partner }
+        format.json { render 'channel_partners/show.json' }
       else
         format.html { render :edit }
         format.json { render json: { errors: @channel_partner.errors.full_messages }, status: :unprocessable_entity }

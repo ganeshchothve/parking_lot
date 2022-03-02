@@ -75,15 +75,11 @@ module ChannelPartnerRegisteration
     create_cp_user unless @user
 
     if @user.persisted? || @user.save
-      otp_sent_status = @user.send_otp
+      @otp_sent_status = @user.send_otp
       if Rails.env.development?
         Rails.logger.info "---------------- #{@user.otp_code} ----------------"
       end
-      if otp_sent_status[:status]
-        format.json { render json: { user: @user.as_json(@user.ui_json) }, status: :created }
-      else
-        format.json { render json: {user: @user.as_json(@user.ui_json), errors: [otp_sent_status[:error]].flatten}, status: :created }
-      end
+      format.json { render 'channel_partners/register.json', status: :created }
     else
       format.json { render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity }
     end
@@ -94,7 +90,7 @@ module ChannelPartnerRegisteration
     @channel_partner.is_existing_company = false
     respond_to do |format|
       if @channel_partner.save
-        format.json { render json: { channel_partner: @channel_partner }, status: :created }
+        format.json { render 'channel_partners/register_with_new_company.json', status: :created }
       else
         format.json { render json: { errors: @channel_partner.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
@@ -113,7 +109,7 @@ module ChannelPartnerRegisteration
         if @user.save
           send_request_to_company_owner
           ExpireRegisterPartnerInExistingCompanyLinkWorker.perform_in(24.hours, @user.id.to_s)
-          format.json { render json: { user: @user.as_json(@user.ui_json), message: 'Registration request sent to Company owner' }, status: :ok }
+          format.json { render 'channel_partners/register_with_existing_company.json', status: :ok }
         else
           format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
         end
