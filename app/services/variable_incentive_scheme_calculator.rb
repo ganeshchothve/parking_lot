@@ -38,7 +38,7 @@ class VariableIncentiveSchemeCalculator
         booking_details.each do |booking_detail|
           day = VariableIncentiveSchemeCalculator.calculate_days(booking_detail, variable_incentive_scheme)
           capped_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(booking_detail, variable_incentive_scheme)
-          incentive_data << {scheme_name: variable_incentive_scheme.name, day: day, project_name: booking_detail.project.try(:name), booking_detail_id: booking_detail.id.to_s, booking_detail_name: booking_detail.name, capped_incentive: capped_incentive, manager_name: booking_detail.manager_name, manager_id: booking_detail.manager_id.to_s}
+          incentive_data << {scheme_name: variable_incentive_scheme.name, scheme_id: variable_incentive_scheme.id.to_s, total_bookings: variable_incentive_scheme.total_bookings, day: day, project_name: booking_detail.project.try(:name), project_id: booking_detail.project_id.to_s, booking_detail_id: booking_detail.id.to_s, booking_detail_name: booking_detail.name, capped_incentive: capped_incentive, manager_name: booking_detail.manager_name, manager_id: booking_detail.manager_id.to_s}
         end
       end
     end
