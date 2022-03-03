@@ -36,7 +36,8 @@ module RevenueReportDashboardDataProvider
           'project_id': {'$first': '$project_id'},
           'agreement_price': {'$first': '$agreement_price'},
           'amount': {'$sum': '$amount'},
-          'net_amount': {'$sum': '$net_amount'}
+          'net_amount': {'$sum': '$net_amount'},
+          'gst_amount': {'$sum': '$gst_amount'}
       }
     },
     {
