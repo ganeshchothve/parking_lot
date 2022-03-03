@@ -305,6 +305,36 @@ class Admin::UsersController < AdminController
     end
   end
 
+  def site_visit_project_wise
+    dates = params[:dates]
+    dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
+    @site_visits = SiteVisit.filter_by_scheduled_on(dates).where(SiteVisit.user_based_scope(current_user, params))
+    @projects = params[:project_ids].present? ? Project.filter_by__id(params[:project_ids]) : Project.filter_by_is_active(true)
+    if params[:project_ids].present?
+      @site_visits = @site_visits.where(project_id: {"$in": params[:project_ids]})
+    elsif
+      @site_visits = @site_visits.where(project_id: {"$in": @projects.pluck(:id)})
+    end
+    if params[:manager_id].present?
+      @site_visits = @site_visits.where(manager_id: params[:manager_id])
+    end
+    if params[:channel_partner_id].present?
+      @site_visits = @site_visits.where(channel_partner_id: params[:channel_partner_id])
+    end
+    if params[:manager_id].blank? && params[:channel_partner_id].blank?
+      @site_visits = @site_visits.ne(manager_id: nil)
+    end
+    @all_site_visits = @site_visits.group_by{|p| p.project_id}
+    @scheduled_site_visits = @site_visits.filter_by_status('scheduled').group_by{|p| p.project_id}
+    @conducted_site_visits = @site_visits.filter_by_status('conducted').group_by{|p| p.project_id}
+    @paid_site_visits = @site_visits.filter_by_status('paid').group_by{|p| p.project_id}
+    @approved_site_visits = @site_visits.filter_by_approval_status('approved').group_by{|p| p.project_id}
+    respond_to do |format|
+      format.js
+      format.xls { send_data ExcelGenerator::SiteVisitProjectWise.site_visit_project_wise_csv(current_user, @projects, @approved_site_visits, @scheduled_site_visits, @conducted_site_visits, @all_site_visits, @paid_site_visits).string , filename: "site_visit_project_wise_csv-#{Date.today}.xls", type: "application/xls" }
+    end
+  end
+
   # GET /admin/users/search_by
   #
   def search_by

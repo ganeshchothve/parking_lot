@@ -2138,6 +2138,8 @@ en:
         heading: "Brokerage Scheme Performance"
       cp_performance:
         heading: "Channel Partner Manager Performance"
+      site_visit_project_wise:
+        heading: "Walk-ins (Project wise)"
       cp_status:
         active_html: "Active<br> Companies"
         inactive_html: "Signed Up<br> Companies"

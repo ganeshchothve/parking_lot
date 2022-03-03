@@ -1,0 +1,3 @@
+$('#site_visit_project_wise').html("<%= j (render partial: 'site_visit_project_wise' ) %>")
+$("#site-visit-project_wise-af-export").attr("href", "<%= site_visit_project_wise_admin_users_path(format: "xls", channel_partner_id: params["channel_partner_id"], dates: params["dates"], project_ids: params["project_ids"], manager_id: params["manager_id"])%>");
+

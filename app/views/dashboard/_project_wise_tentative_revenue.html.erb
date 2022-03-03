@@ -4,10 +4,14 @@
       <thead class="bg-primary white">
         <tr class="bg-primary white">
           <th rowspan='2' class='text-center border-end bg-primary white align-middle'>City</th>
-          <th colspan='3' class='text-center bg-primary white'>Tentative Invoice Amount</th>
+          <th colspan='4' class='text-center bg-primary white'>Tentative Invoice Amount</th>
         </tr>
         <tr>
           <th class="text-center">Project</th>
+          <% if params[:resource] == "BookingDetail" %>
+            <th class="text-center">Bookings Count</th>
+            <th class="text-center">Agreement Price</th>
+          <% end %>
           <th class="text-center">Tentative Amount</th>
         </tr>
       </thead>
@@ -22,6 +26,14 @@
                 <td class="text-right">
                   <%= @project_name_hash[hash[:project_id].to_s] %>
                 </td>
+                <% if params[:resource] == "BookingDetail" %>
+                  <td>
+                    <%= hash[:bookings_count] %>
+                  </td>
+                  <td>
+                    <%= hash[:agreement_price] %>
+                  </td>
+                <% end %>
                 <td>
                   <%= hash[:amount] %>
                 </td>
@@ -31,13 +43,21 @@
           <tr>
             <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong>Total</strong></td>
             <td><strong>-</strong></td>
+            <% if params[:resource] == "BookingDetail" %>
+              <td><strong>
+                <%= @total_bookings_count %>
+              </strong></td>
+              <td><strong>
+                <%= number_to_indian_currency(@total_agreement_price.round) %>
+              </strong></td>
+            <% end %>
             <td><strong>
               <%= number_to_indian_currency(@total_amount.round) %>
             </strong></td>
           </tr>
         <% else %>
           <tr>
-            <td colspan="3">No Records Found</td>
+            <td colspan="5">No Records Found</td>
           </tr>
         <% end %>
       </tbody>
