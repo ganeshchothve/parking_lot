@@ -2166,6 +2166,12 @@ en:
         download_brochure: 'Download Brochure'
         visit_website: 'Visit Website'
 
+  mobile:
+    channel_partner:
+      status_message:
+        pending: "Your application is under review. We will notify you via email on the status of your application. Our estimated review time is between 24-48 hours"
+        rejected: "Your application has been rejected. Reason: %{reason}"
+
   selldo:
     links:
       header: 'Take Action in Sell.Do'

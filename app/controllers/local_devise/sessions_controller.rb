@@ -8,6 +8,8 @@ class LocalDevise::SessionsController < Devise::SessionsController
 
   around_action :reset_unique_session, only: :destroy
 
+  helper_method :find_message
+
   def create
     if params[self.resource_name][:login_otp].present?
       user = self.resource_class.find_for_database_authentication(params[resource_name])
@@ -28,7 +30,7 @@ class LocalDevise::SessionsController < Devise::SessionsController
     yield resource if block_given?
     respond_to do |format|
       format.html { respond_with resource, location: after_sign_in_path_for(resource) }
-      format.json { render json: {message: find_message(:signed_in), user: current_user.as_json(current_user.ui_json) }, status: 200 }
+      format.json { render 'devise/sessions/create.json', status: 200 }
     end
   end
 

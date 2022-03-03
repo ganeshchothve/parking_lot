@@ -23,7 +23,7 @@ class ChannelPartner
   SOURCE = ['Internal CP', 'External CP']
 
   SHORT_FORM = %i(company_name rera_applicable status)
-  FULL_FORM = SHORT_FORM.clone + %i(gst_applicable nri manager_id)
+  FULL_FORM = SHORT_FORM.clone + %i(gst_applicable nri) #manager_id)
 
   attr_accessor :first_name, :last_name, :email, :phone, :referral_code, :is_existing_company
 
@@ -153,7 +153,7 @@ class ChannelPartner
   #end
 
   def doc_types
-    doc_types = self.nri? ? %w[company_incorporation_certificate form_10f tax_residency_certificate pe_declaration] : %w[pan_card]
+    doc_types = self.nri? ? %w[company_incorporation_certificate form_10f tax_residency_certificate pe_declaration] : [] #%w[pan_card]
     doc_types << 'rera_certificate' if self.rera_applicable?
     doc_types << 'gst_certificate' if self.gst_applicable?
     doc_types

@@ -787,19 +787,6 @@ class User
     role.in?(booking_portal_client.mask_lead_data_for_roles)
   end
 
-  def ui_json(options=nil)
-    mobile_json(options)
-  end
-
-  def mobile_json(options=nil)
-    case role
-    when 'channel_partner', 'cp_owner'
-      {include: :channel_partner}
-    else
-      {}
-    end
-  end
-
   protected
 
   def send_confirmation_notification?
