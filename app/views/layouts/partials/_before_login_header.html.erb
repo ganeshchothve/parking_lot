@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top fixed-top">
     <div class="container no-pd">
     <div class="header-logo">
-      <%= link_to (current_client.logo.present? ? (image_tag current_client.logo.url, class: 'img-fluid position-absolute start-50 top-50 translate-middle', alt: "Logo") : "launchpad-logo.png"), home_path(current_user), class: 'navbar-brand me-0'%>
+      <%= link_to (current_client.logo.present? ? (image_tag current_client.logo.url, class: 'img-fluid position-absolute start-50 top-50 translate-middle', alt: "Logo") : "launchpad-logo.png"), 'https://beyondwalls.com/broker/', class: 'navbar-brand me-0'%>
       </div>
       <% unless user_signed_in? %>  
       <div class="text-end">
