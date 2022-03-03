@@ -92,6 +92,10 @@ class Admin::UserPolicy < UserPolicy
     true
   end
 
+  def site_visit_project_wise?
+    true
+  end
+  
   def site_visit_partner_wise?
     true
   end

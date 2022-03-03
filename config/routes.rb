@@ -296,6 +296,7 @@ Rails.application.routes.draw do
         get :channel_partner_performance
         get :partner_wise_performance
         get :search_by
+        get :site_visit_project_wise
         get :site_visit_partner_wise
       end
 
