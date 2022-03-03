@@ -133,10 +133,10 @@ module ChannelPartnerRegisteration
     if email_template.present?
       email = Email.create!({
         booking_portal_client_id: client.id,
-        body: ERB.new(client.email_header).result(binding) + email_template.parsed_content(@user) + ERB.new(client.email_footer).result(binding),
         subject: email_template.parsed_subject(@user),
         to: [ @channel_partner.primary_user&.email ],
         cc: client.notification_email.to_s.split(',').map(&:strip),
+        email_template_id: email_template.id,
         triggered_by_id: @user.id,
         triggered_by_type: @user.class.to_s
       })
@@ -147,7 +147,6 @@ module ChannelPartnerRegisteration
       if @user.phone.present?
         Sms.create!(
           booking_portal_client_id: client.id,
-          body: sms_template.parsed_content(@user),
           to: [@user.phone],
           sms_template_id: sms_template.id,
           triggered_by_id: @user.id,
