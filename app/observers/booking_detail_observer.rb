@@ -7,6 +7,12 @@ class BookingDetailObserver < Mongoid::Observer
     else
       booking_detail.name = booking_detail.booking_project_unit_name
     end
+
+    # incase of booking with inventory we are setting the agreement price for that booking
+    if booking_detail.project_unit.present?
+      booking_detail.agreement_price = booking_detail.calculate_agreement_price.round
+    end
+
     booking_detail.manager_id = booking_detail.lead&.manager_id if booking_detail.lead.manager && (booking_detail.manager_id.blank? || booking_detail.manager_id_changed?)
     booking_detail.channel_partner_id = booking_detail.manager&.channel_partner_id if booking_detail.manager && (booking_detail.channel_partner_id.blank? ||  booking_detail.manager_id_changed?)
     booking_detail.cp_manager_id = booking_detail.channel_partner&.manager_id if booking_detail.channel_partner && (booking_detail.cp_manager_id.blank? || booking_detail.manager_id_changed?)
@@ -61,7 +67,7 @@ class BookingDetailObserver < Mongoid::Observer
 
     # once the booking is cancelled, the invoice in tentative state should move to rejected state
     if booking_detail.status_changed? && booking_detail.status == 'cancelled'
-      booking_detail.invoices.where(status: 'tentative').update_all(status: 'rejected')
+      booking_detail.invoices.where(status: 'tentative').update_all(status: 'rejected', rejection_reason: 'Booking has been cancelled')
     end
 
     booking_detail.invoices.where(status: 'tentative', category: 'brokerage').update_all(status: 'draft') if booking_detail.actual_incentive_eligible?('brokerage')

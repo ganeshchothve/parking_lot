@@ -1,6 +1,6 @@
 module RevenueReportDashboardDataProvider
   def self.tentative_reports(current_user, params={})
-    invoice_matcher = set_invoice_matcher("tentative", params)
+    invoice_matcher = set_invoice_matcher("tentative", params, client=Client.first)
     invoiceable_matcher = set_invoiceable_matcher("tentative", params)
     data = Invoice.collection.aggregate([
     {
@@ -12,13 +12,33 @@ module RevenueReportDashboardDataProvider
       'let': { 'invoiceable_id': "$invoiceable_id" },
       'pipeline': [
         { '$match': { '$and': [invoiceable_matcher, { '$expr': { '$eq': [ "$_id",  "$$invoiceable_id" ] } }] } },
-        {'$project': {'_id': 0, 'invoiceable_id': "$_id"}}
+        {'$project': {'_id': 0, 'invoiceable_id': "$_id", 'agreement_price': '$agreement_price'}}
       ],
       'as': get_resource(params[:resource])
       }
     },
     {
       '$match': { "#{get_resource(params[:resource])}": {'$ne': []}}
+    },
+    {
+      '$replaceRoot': {
+        'newRoot': {
+          '$mergeObjects': [
+            { '$arrayElemAt': [ "$"+"#{get_resource(params[:resource])}", 0 ] },
+            "$$ROOT"
+          ]
+        }
+      }
+    },
+    {
+      '$group': {
+          '_id': '$invoiceable_id',
+          'project_id': {'$first': '$project_id'},
+          'agreement_price': {'$first': '$agreement_price'},
+          'amount': {'$sum': '$amount'},
+          'net_amount': {'$sum': '$net_amount'},
+          'gst_amount': {'$sum': '$gst_amount'}
+      }
     },
     {
       '$lookup': {
@@ -42,7 +62,7 @@ module RevenueReportDashboardDataProvider
       }
     },
     {
-      '$project': {'project_id': '$project_id' , 'city': '$city', 'amount': '$amount', 'gst_amount': '$gst_amount', 'net_amount': '$net_amount', 'status': '$status', 'invoiceable_id': '$invoiceable_id'}
+      '$project': {'project_id': '$project_id' , 'city': '$city', 'amount': '$amount', 'gst_amount': '$gst_amount', 'net_amount': '$net_amount', 'status': '$status', 'invoiceable_id': '$invoiceable_id', 'agreement_price': '$agreement_price'}
     },
     {
       '$group': {
@@ -50,6 +70,8 @@ module RevenueReportDashboardDataProvider
           'net_amount': { '$sum': '$net_amount'},
           'amount': {'$sum': '$amount'},
           'gst_amount': {'$sum': '$gst_amount'},
+          'bookings_count': { '$sum': 1},
+          'agreement_price': {'$sum': '$agreement_price'},
           'city': {'$first': '$city'},
           'status': {'$first': '$status'},
           'invoiceable_id': {'$first': '$invoiceable_id'}
@@ -60,16 +82,16 @@ module RevenueReportDashboardDataProvider
     project_wise_tentative_amount = {}
     data.each do |d|
       if project_wise_tentative_amount[d['city']].present?
-        project_wise_tentative_amount[d['city']].push({ project_id: d['_id'], amount: d['amount'] })
+        project_wise_tentative_amount[d['city']].push({ project_id: d['_id'], amount: d['amount'], bookings_count: d['bookings_count'], agreement_price: d['agreement_price'] })
       else
-        project_wise_tentative_amount[d['city']] = [{ project_id: d['_id'], amount: d['amount'] }]
+        project_wise_tentative_amount[d['city']] = [{ project_id: d['_id'], amount: d['amount'], bookings_count: d['bookings_count'], agreement_price: d['agreement_price'] }]
       end
     end
     project_wise_tentative_amount
   end
 
   def self.actual_reports(current_user, params={})
-    invoice_matcher = set_invoice_matcher("actual", params)
+    invoice_matcher = set_invoice_matcher("actual", params, client=Client.first)
     invoiceable_matcher = set_invoiceable_matcher("actual", params)
     data = Invoice.collection.aggregate([
     {
@@ -146,7 +168,7 @@ module RevenueReportDashboardDataProvider
     project_wise_actual_amount
   end
 
-  def self.set_invoice_matcher(report_type="tentative", params)
+  def self.set_invoice_matcher(report_type="tentative", params, client)
     matcher = {}
     matcher[:status] = report_type == "tentative" ? "tentative" : {'$in': Invoice::INVOICE_REPORT_STAGES}
     matcher[:project_id] = {'$in': params[:project_id].map { |id| BSON::ObjectId(id) }} if params[:project_id].present?
@@ -157,7 +179,11 @@ module RevenueReportDashboardDataProvider
     matcher[:category] = params[:category] if params[:category].present?
 
     matcher[:invoiceable_type] = params[:resource].present? ? params[:resource] : "BookingDetail"
-
+    if params[:brokerage_type].present?
+      matcher[:brokerage_type] = params[:brokerage_type]
+    else
+      matcher[:brokerage_type] = client.launchpad_portal ? 'sub_brokerage' : 'brokerage'
+    end
     matcher
   end
 
@@ -171,7 +197,7 @@ module RevenueReportDashboardDataProvider
         matcher[:agreement_date] = {
             "$gte": Date.parse(start_date).beginning_of_day,
             "$lte": Date.parse(end_date).end_of_day
-          }
+        }
       end
 
       if params[:booked_on].present?
