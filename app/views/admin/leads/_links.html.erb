@@ -25,9 +25,9 @@
 <% end %>
 
 <% if policy([:admin, lead]).move_to_next_state? %>
-  <% if lead.may_queued? %>
-    <%= link_to 'Move to Sales Queue', move_to_next_state_admin_lead_path(lead, status: 'queued', format: :json), method: 'patch', remote: true, data: { disable_with: 'Queueing...' }, class: "dropdown-item queued move-to-next-state" %>
-  <% elsif lead.may_dropoff? %>
+  <%# if lead.may_queued? %>
+    <%#= link_to 'Move to Sales Queue', move_to_next_state_admin_lead_path(lead, status: 'queued', format: :json), method: 'patch', remote: true, data: { disable_with: 'Queueing...' }, class: "dropdown-item queued move-to-next-state" %>
+  <% if lead.may_dropoff? %>
     <%= link_to 'Drop Customer', move_to_next_state_admin_lead_path(lead, status: 'dropoff', format: :json), method: 'patch', remote: true, data: { confirm: 'Are you sure?', disable_with: 'Dropping...' }, class: 'dropdown-item dropoff move-to-next-state' %>
   <% end %>
 <% end %>
