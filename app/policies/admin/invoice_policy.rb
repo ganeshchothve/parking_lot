@@ -37,6 +37,10 @@ class Admin::InvoicePolicy < InvoicePolicy
     user.role.in?(%w(channel_partner cp_owner admin billing_team)) #&& record.aasm.events(permitted: true).map(&:name).include?(:raise)
   end
 
+  def move_tentative_to_draft?
+    user.role.in?(%w(admin billing_team)) && record.status == 'tentative'
+  end
+
   def raise_invoice?
     change_state?
   end
@@ -109,7 +113,7 @@ class Admin::InvoicePolicy < InvoicePolicy
       #attributes += [cheque_detail_attributes: [:id, :total_amount, :payment_identifier, :issued_date, :issuing_bank, :issuing_bank_branch, :handover_date, :creator_id]] if record.status.in?(%w(approved paid))
       attributes += [:event]
     when 'billing_team'
-      if record.status.in?(%w(draft raised))
+      if record.status.in?(%w(tentative draft raised))
         attributes += [:brokerage_type, :payment_to, :number, :amount, :gst_slab]
         attributes += [:category] if record.new_record?
         attributes += [:agreement_amount] if record.invoiceable_type == 'BookingDetail' && record.category != 'spot_booking'
@@ -117,7 +121,7 @@ class Admin::InvoicePolicy < InvoicePolicy
       # attributes += [:amount, :percentage_slab] :gst_slab, if record.status.in?(%w(raised pending_approval))
       attributes += [:rejection_reason] if record.status.in?(%w(raised pending_approval rejected))
       #attributes += [cheque_detail_attributes: [:id, :total_amount, :payment_identifier, :issued_date, :issuing_bank, :issuing_bank_branch, :handover_date, :creator_id]] if record.status.in?(%w(approved paid tax_invoice_raised))
-      attributes += [:event] if record.status.in?(%w(draft raised approved tax_invoice_raised pending_approval))
+      attributes += [:event] if record.status.in?(%w(tentative draft raised approved tax_invoice_raised pending_approval))
     end
     attributes.uniq
   end

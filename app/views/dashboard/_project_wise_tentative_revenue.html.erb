@@ -1,0 +1,66 @@
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 no-pd">
+  <div class="box-card relative table-responsive" id="dashboard_project_wise_tentative_reports">
+    <table class="table my-customer-table responsive-tbl mb-0 align-middle border rounded">
+      <thead class="bg-primary white">
+        <tr class="bg-primary white">
+          <th rowspan='2' class='text-center border-end bg-primary white align-middle'>City</th>
+          <th colspan='4' class='text-center bg-primary white'>Tentative Invoice Amount</th>
+        </tr>
+        <tr>
+          <th class="text-center">Project</th>
+          <% if params[:resource] == "BookingDetail" %>
+            <th class="text-center">Bookings Count</th>
+            <th class="text-center">Agreement Price</th>
+          <% end %>
+          <th class="text-center">Tentative Amount</th>
+        </tr>
+      </thead>
+      <tbody class='text-md-center'>
+        <% if @project_wise_total_tentative_amount.present? %>
+          <% @project_wise_total_tentative_amount.each do |key, value| %>
+            <tr>
+              <td rowspan="<%= value.length + 1 %>" data-title='<%= key %>' class='text-center border-end bg-primary white align-middle'><%= key %></td>
+            </tr>
+            <% value.each do |hash| %>
+              <tr>
+                <td class="text-right">
+                  <%= @project_name_hash[hash[:project_id].to_s] %>
+                </td>
+                <% if params[:resource] == "BookingDetail" %>
+                  <td>
+                    <%= hash[:bookings_count] %>
+                  </td>
+                  <td>
+                    <%= hash[:agreement_price] %>
+                  </td>
+                <% end %>
+                <td>
+                  <%= hash[:amount] %>
+                </td>
+              </tr>
+              <% end %>
+          <% end %>
+          <tr>
+            <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong>Total</strong></td>
+            <td><strong>-</strong></td>
+            <% if params[:resource] == "BookingDetail" %>
+              <td><strong>
+                <%= @total_bookings_count %>
+              </strong></td>
+              <td><strong>
+                <%= number_to_indian_currency(@total_agreement_price.round) %>
+              </strong></td>
+            <% end %>
+            <td><strong>
+              <%= number_to_indian_currency(@total_amount.round) %>
+            </strong></td>
+          </tr>
+        <% else %>
+          <tr>
+            <td colspan="5">No Records Found</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

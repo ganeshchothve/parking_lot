@@ -82,6 +82,7 @@ class UserObserver < Mongoid::Observer
       user.update_external_ids({ reference_id: user.lead_id }, crm.id)
     end
     user.calculate_incentive if user.booking_portal_client.incentive_calculation_type?("calculated")
+    user.invoices.where(status: 'tentative').update_all(status: 'draft') if user.actual_incentive_eligible?
   end
 
   def after_update user

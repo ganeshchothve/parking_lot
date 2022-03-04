@@ -154,22 +154,28 @@ module DashboardDataProvider
             {
               "sv_id": "$id",
               "cp_id": "$manager.manager_id",
-              'status': '$approval_status'
+              'approval_status': '$approval_status',
+              'status': '$status'
             }
           },{
             "$group":
             {
-              "_id": {cp_id: "$cp_id", 'status': '$status'},
+              "_id": {cp_id: "$cp_id", 'status': '$status', 'approval_status': '$approval_status'},
               "count": {"$sum": 1}
             }
           }]).to_a
-    out = {'pending' => {}, 'approved' => {}, 'rejected' => {}}
+    out = {'pending' => {}, 'approved' => {}, 'rejected' => {}, 'scheduled' => {}, 'conducted' => {}}
     data.each do |d|
       status = d.dig('_id', 'status')
+      approval_status = d.dig('_id', 'approval_status')
       cp = d.dig('_id', 'cp_id')&.first&.to_s&.presence || nil
-      if status.present? && cp.present?
+      if status.present? && %w(scheduled conducted).include?(status) && cp.present?
         out[status][cp] ||= 0
         out[status][cp] += d["count"]
+      end
+      if approval_status.present? && cp.present?
+        out[approval_status][cp] ||= 0
+        out[approval_status][cp] += d["count"]
       end
     end
     out
@@ -837,6 +843,26 @@ module DashboardDataProvider
     ]).to_a
     data.map {|x| x.merge(x.delete('_id')).with_indifferent_access}
   end
+
+  def self.subscribed_count_project_wise(current_user, matcher)
+    data = InterestedProject.collection.aggregate([
+      {
+        "$match": matcher
+      },
+        {
+        '$group': {
+          _id: {
+            'project_id': '$project_id'
+          },
+          count: {
+          '$sum': 1
+          }
+        }
+      }
+    ]).to_a
+    data.map {|x| [x["_id"]["project_id"], x["count"]]}.to_h
+  end
+
 
   protected
 

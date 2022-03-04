@@ -58,7 +58,7 @@ class SiteVisit
   scope :filter_by_cp_manager_id, ->(cp_manager_id) {where(cp_manager_id: cp_manager_id) }
   scope :incentive_eligible, ->(category) do
     if category == 'walk_in'
-      where(approval_status: 'approved', status: {'$in': %w(conducted paid)})
+      where(approval_status: {'$nin': %w(rejected)})
     else
       none
     end
@@ -75,10 +75,20 @@ class SiteVisit
   def incentive_eligible?(category=nil)
     if category.present?
       if category == 'walk_in'
-        verification_approved? && (conducted? || paid?)
+        scheduled?
       end
     else
       _incentive_eligible?
+    end
+  end
+
+  def actual_incentive_eligible?(category=nil)
+    if category.present?
+      if category == 'walk_in'
+        verification_approved? && (conducted? || paid?)
+      end
+    else
+      _actual_incentive_eligible?
     end
   end
 
@@ -179,7 +189,7 @@ class SiteVisit
   private
 
   def validate_scheduled_on_datetime
-    self.errors.add :base, 'Scheduled On should not be past date' if (self.scheduled_on_changed? && self.scheduled_on < Time.current.beginning_of_day)
+    self.errors.add :base, 'Scheduled On should not be past date more than 4 days' if (self.scheduled_on_changed? && self.scheduled_on <  (Time.current.beginning_of_day - 4.days))
   end
 
   def existing_scheduled_sv

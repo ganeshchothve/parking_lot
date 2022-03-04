@@ -1,0 +1,55 @@
+<section class="user-db-sec-6 device-pd <%= current_user.role?('cp') ? 'mb-5 pb-5' : '' %>">
+  <div class="px-4">
+    <div class='box-card'>
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3">
+          <div class="table-title pt-4">
+            <h1 class="title fn-18">Variable Incentive Scheme Report</h1>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3">
+          <div class="table-btn-set float-end pt-3">
+            <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
+              <i class="fa fa-filter fill-theme"></i>
+            </button>
+          </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="filter-box modal-content px-3 fixed-header-footer">
+              <div class="filter-header modal-header">
+                <h5 class="modal-title title">Filter</h5>
+                <a href="javascript:;" class="close-filter-btn btn-close"></a>
+              </div>
+              <%= form_tag variable_incentive_scheme_report_path, method: "get", remote: true, id: "variable_incentive_scheme_report_filter", class: 'filter-form-modal' do %>
+                <div class="filter-content modal-body ps-0 pe-0 theme-form">
+                  <div class="row">
+                    <div class = "mb-3 col-12">
+                      <%= label_tag "user_id", "Channel Partner", class: "control-label float-left" %>
+                      <%= select_tag "user_id", options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), prompt: 'Select', class: "selectize" %>
+                    </div>
+                  </div>
+                </div>
+                <div class="filter-footer modal-footer text-end">
+                  <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                  <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+                </div>
+              <% end %>
+          </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id = "booking_details_counts">
+        </div>
+      </div>
+      <div class="row" id = "variable_incentive_scheme_report"></div>
+    </div>
+  </div>
+</section>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#variable_incentive_scheme_report_filter"));
+  });
+  $.ajax({
+    url: "<%= variable_incentive_scheme_report_path %>",
+    type: "get",
+  });
+<% end %>

@@ -76,7 +76,7 @@ class UserKyc
   # validates :phone, uniqueness: {scope: [:aadhaar, :lead_id] }
   validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile mobile fixed_line premium_rate] }, allow_blank: true
   # validates :phone, uniqueness: {scope: :aadhaar}, phone: true # TODO: we can remove phone validation, as the validation happens in
-  validates :configurations, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_configurations.collect{|x| x[:id]} } }}
+  validates :configurations, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_configurations(kyc.lead_id.to_s).collect{|x| x[:id]} } }}
   validates :preferred_floors, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_preferred_floors.collect{|x| x[:id]} } }}
   validates :pan_number, format: { with: /[A-Z]{3}[ABCGFHLJPTE][A-Z][0-9]{4}[A-Z]/i, message: 'is not in a format of AAAAA9999A' }, reduce: true, allow_blank: true
   validates :aadhaar, format: { with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number' }, allow_blank: true
@@ -159,21 +159,32 @@ class UserKyc
       ]
     end
 
-    def available_configurations
-      [
-        { text: '1 BHK', id: '1' },
-        { text: '1.5 BHK', id: '1.5' },
-        { text: '2 BHK', id: '2' },
-        { text: '2.5 BHK', id: '2.5' },
-        { text: '3 BHK', id: '3' },
-        { text: '3.5 BHK', id: '3.5' },
-        { text: '4 BHK', id: '4' },
-        { text: '4.5 BHK', id: '4.5' },
-        { text: '5 BHK', id: '5' },
-        { text: '5.5 BHK', id: '5.5' },
-        { text: '6 BHK', id: '6' },
-        { text: '7 BHK', id: '7' }
-      ]
+    def available_configurations(lead_id = nil)
+      lead = Lead.where(id: lead_id).first
+      configurations = []
+
+      if lead.present?
+        unit_configurations = lead.project.unit_configurations.map{|uc| uc.name }.uniq.compact rescue []
+        configurations = unit_configurations.map{|a| { text: a, id: a } }
+      end
+      
+      if configurations.empty?
+        configurations = [
+          { text: '1 BHK', id: '1' },
+          { text: '1.5 BHK', id: '1.5' },
+          { text: '2 BHK', id: '2' },
+          { text: '2.5 BHK', id: '2.5' },
+          { text: '3 BHK', id: '3' },
+          { text: '3.5 BHK', id: '3.5' },
+          { text: '4 BHK', id: '4' },
+          { text: '4.5 BHK', id: '4.5' },
+          { text: '5 BHK', id: '5' },
+          { text: '5.5 BHK', id: '5.5' },
+          { text: '6 BHK', id: '6' },
+          { text: '7 BHK', id: '7' }
+        ]
+      end
+      configurations
     end
 
     def available_preferred_floors

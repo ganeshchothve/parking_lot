@@ -11,7 +11,7 @@
           <%= render 'admin/leads/non_selldo_form_fields', f: f, lead: @lead %>
           <div class='row'>
             <div class="col-md-12">
-              <%= f.input :manager_id, collection: User.channel_partner.includes(:channel_partner).collect{|user| [user.name, user.id]}, selected: @lead.manager_id, disabled: !policy([:admin, @lead]).editable_field?("manager_id"), prompt: :translate, input_html: { class: 'selectize', name: 'manager_id' } %>
+              <%= f.input :manager_id, collection: User.in(role: ['channel_partner', 'cp_owner']).collect{|user| [user.name, user.id]}, selected: @lead.manager_id, disabled: !policy([:admin, @lead]).editable_field?("manager_id"), prompt: :translate, input_html: { class: 'selectize', name: 'manager_id' } %>
             </div>
           </div>
           <div class = 'row'>
