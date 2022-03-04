@@ -55,6 +55,9 @@ class Client
   field :sms_provider, type: String, default: 'sms_just'
   field :mailgun_private_api_key, type: String
   field :mailgun_email_domain, type: String
+  field :twilio_auth_token, type: String
+  field :twilio_account_sid, type: String
+  field :twilio_virtual_number, type: String
   field :enable_actual_inventory, type: Array, default: []
   field :enable_live_inventory, type: Array, default: []
   field :enable_channel_partners, type: Boolean, default: false

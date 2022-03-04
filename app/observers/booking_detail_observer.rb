@@ -7,6 +7,12 @@ class BookingDetailObserver < Mongoid::Observer
     else
       booking_detail.name = booking_detail.booking_project_unit_name
     end
+
+    # incase of booking with inventory we are setting the agreement price for that booking
+    if booking_detail.project_unit.present?
+      booking_detail.agreement_price = booking_detail.calculate_agreement_price.round
+    end
+
     booking_detail.manager_id = booking_detail.lead&.manager_id if booking_detail.lead.manager && (booking_detail.manager_id.blank? || booking_detail.manager_id_changed?)
     booking_detail.channel_partner_id = booking_detail.manager&.channel_partner_id if booking_detail.manager && (booking_detail.channel_partner_id.blank? ||  booking_detail.manager_id_changed?)
     booking_detail.cp_manager_id = booking_detail.channel_partner&.manager_id if booking_detail.channel_partner && (booking_detail.cp_manager_id.blank? || booking_detail.manager_id_changed?)
@@ -45,6 +51,26 @@ class BookingDetailObserver < Mongoid::Observer
   end
 
   def after_save booking_detail
+
+    # handling booking swap cases
+    if booking_detail.status_changed? && booking_detail.status == 'swapped'
+      new_booking = BookingDetail.where(parent_booking_detail_id: booking_detail.id).first
+      if new_booking.present? && new_booking.invoices.where(status: 'tentative').blank?
+        booking_detail.invoices.where(status: 'tentative').update_all(invoiceable_id: new_booking.id)
+      else
+        # once the booking is swapped, the previous booking invoice is rejected
+        booking_detail.invoices.where(status: 'tentative').update_all(status: 'rejected')
+      end
+    end
+    # calculate incentive and generate an invoice for the respective booking detail
     booking_detail.calculate_incentive if booking_detail.project.present? && booking_detail.project.incentive_calculation_type?("calculated")
+
+    # once the booking is cancelled, the invoice in tentative state should move to rejected state
+    if booking_detail.status_changed? && booking_detail.status == 'cancelled'
+      booking_detail.invoices.where(status: 'tentative').update_all(status: 'rejected', rejection_reason: 'Booking has been cancelled')
+    end
+
+    booking_detail.invoices.where(status: 'tentative', category: 'brokerage').update_all(status: 'draft') if booking_detail.actual_incentive_eligible?('brokerage')
+    booking_detail.invoices.where(status: 'tentative', category: 'spot_booking').update_all(status: 'draft') if booking_detail.actual_incentive_eligible?('spot_booking')
   end
 end

@@ -1,0 +1,46 @@
+<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
+  <thead class="th-default">
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= t('mongoid.attributes.variable_incentive_scheme.name') %></th>
+        <th><%= t('mongoid.attributes.variable_incentive_scheme.project_ids') %></th>
+        <th><%= t('mongoid.attributes.variable_incentive_scheme.status') %></th>
+        <th><%= t('mongoid.attributes.variable_incentive_scheme.date_range') %></th>
+        <th class='text-right wd-22'></th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+    <% variable_incentive_schemes.each do |variable_incentive_scheme| %>
+    <tr>
+      <td data-title=<%= t('mongoid.attributes.variable_incentive_scheme.name') %>>
+        <%= variable_incentive_scheme.name %>
+        <div class="small">
+        </div>
+      </td>
+      <td data-title="<%= t('mongoid.attributes.variable_incentive_scheme.project_ids') %>">
+        <%= variable_incentive_scheme.project_names %>
+      </td>
+      <td data-title="<%= t('mongoid.attributes.variable_incentive_scheme.status') %>">
+        <%= t("mongoid.attributes.variable_incentive_scheme/status.#{variable_incentive_scheme.status}") %>
+      </td>
+      <td data-title="<%= t('mongoid.attributes.variable_incentive_scheme.date_range') %>">
+       <%= I18n.l(variable_incentive_scheme.start_date) + " - " + I18n.l(variable_incentive_scheme.end_date) %>
+      </td>
+      <td>
+        <%= render "#{current_user_role_group}/variable_incentive_schemes/links", variable_incentive_scheme: variable_incentive_scheme, color: 'black' %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<div class="col-lg-12 py-3 bg-white mb-2 px-2">
+  <div class="row">
+    <div class="col-lg-6">
+      <p class="table-entry mb-0 ps-2 pt-2"><%= page_entries_info variable_incentive_schemes %></p>
+    </div>
+    <div class="col-lg-6 table-pagination">
+      <%= will_paginate variable_incentive_schemes, list_classes: %w(pagination justify-content-end) %>
+    </div>
+  </div>
+</div>

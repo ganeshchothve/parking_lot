@@ -57,4 +57,10 @@ module BillingTeamDashboardConcern
     options[:status] = {"$in": ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]}
     options.with_indifferent_access
   end
+
+  def variable_incentive_scheme_report
+    options = {}
+    options.merge!(user_id: params[:user_id]) if params[:user_id].present?
+    @incentive_data = VariableIncentiveSchemeCalculator.channel_partner_incentive(options)
+  end
 end

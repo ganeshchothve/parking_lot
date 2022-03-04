@@ -41,7 +41,7 @@
   <div class="col-md-4">
     <div class="mb-3">
       <label class="small text-muted"><%= kyc_labels[:configurations] %></label>
-      <div><%= user_kyc.configurations.collect{|x| UserKyc.available_configurations.find{|t| t[:id] == x}.try(:[], :text)}.to_sentence %></div>
+      <div><%= user_kyc.configurations.collect{|x| UserKyc.available_configurations(user_kyc.lead_id.to_s).find{|t| t[:id] == x}.try(:[], :text)}.to_sentence %></div>
     </div>
   </div>
   <div class="col-md-4">

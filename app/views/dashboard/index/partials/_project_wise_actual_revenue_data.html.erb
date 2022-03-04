@@ -1,0 +1,181 @@
+<section class="user-db-sec-5 device-pd">
+  <div class="px-4">
+    <div class='box-card'>
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3">
+          <div class="table-title pt-4">
+            <h1 class="title fn-18">Project Wise Actual Revenue Reports</h1>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3">
+          <div class="table-btn-set float-end pt-3">
+            <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
+              <i class="fa fa-filter fill-theme"></i>
+            </button>
+          </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="filter-box">
+            <div class="filter-inner modal-content ps-2 pe-2 fixed-header-footer">
+                <div class="filter-header modal-header">
+                  <h5 class="modal-title title">Filter</h5>
+                  <a href="javascript:;" class="close-filter-btn btn-close"></a>
+                </div>
+                <%= form_tag project_wise_actual_revenue_path, method: "get", remote: true, id: "project_wise_actual_reports_filter", class: 'filter-form-modal' do %>
+                  <div class="filter-content modal-body ps-0 pe-0 theme-form">
+                    <div class="row">
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", "Resource" %>
+                        <%= select_tag "resource", options_for_select(IncentiveScheme::RESOURCE_CLASS.collect{|x| [t("mongoid.attributes.incentive_scheme/resource_class.#{x}"), x]}, (params[:resource].present? ? params[:resource] : "BookingDetail")), {prompt: "Select", class: "selectize resource"} %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", "Category" %>
+                        <%= select_tag "category", options_for_select(IncentiveScheme::CATEGORIES.collect{|x| [t("mongoid.attributes.incentive_scheme/categories.#{x}"), x]}, (params[:category].present? ? params[:category] : "BookingDetail")), {prompt: "Select", class: "selectize category_class"} %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", "Brokerage Type" %>
+                        <%= select_tag "brokerage_type", options_for_select(IncentiveScheme::BROKERAGE_TYPE.collect{|x| [t("mongoid.attributes.incentive_scheme/brokerage_type.#{x}"), x]}, (params[:brokerage_type].present? ? params[:brokerage_type] : "BookingDetail")), {prompt: "Select", class: "selectize brokerage_type_class"} %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.project.name') %>
+                        <%= select_tag :project_id, options_for_select(Project.all.map { |p| [p.ds_name, p.id] }, (params[:project_id].present? ? params[:project_id] : "")), {prompt: "Select", class: "selectize", multiple: true} %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.lead.manager_id') %>
+                        <%= select_tag "manager_id", options_from_collection_for_select(params[:manager_id].present? ? User.where(_id: params[:manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: ['channel_partner', 'cp_owner'] }}}} %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.user/role.cp') %>
+                        <%= select_tag "cp_manager_id", options_from_collection_for_select(params[:cp_manager_id].present? ? User.where(_id: params[:cp_manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp' }}}} %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", "CP Admin" %>
+                        <%= select_tag "cp_admin_id", options_from_collection_for_select(params[:cp_admin_id].present? ? User.where(_id: params[:cp_admin_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp_admin' }}}} %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.site_visit.created_at') %>
+                        <%= text_field_tag "created_at", (params[:created_at].present? ? params[:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %> 
+                      </div>
+                    </div>
+                    <div class="row booking_detail_filters">
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.agreement_date'), class: "control-label" %>
+                        <%= text_field_tag "agreement_date", (params[:agreement_date].present? ? params[:agreement_date] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.booked_on'), class: "control-label" %>
+                        <%= text_field_tag "booked_on", (params[:booked_on].present? ? params[:booked_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.status'), class: "control-label" %>
+                        <%= select_tag "booking_detail_status", options_for_select(BookingDetail::BOOKING_STAGES.collect{|x| [ t("mongoid.attributes.booking_detail/status.#{x}"), x.to_s]}, (params[:booking_detail_status] || "")), {prompt: "Select", class: "selectize"} %>
+                      </div>
+                    </div>
+                    <div class="row site_visit_filters">
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.site_visit.scheduled_on') %>
+                        <%= text_field_tag "scheduled_on", (params[:scheduled_on].present? ? params[:scheduled_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.site_visit.conducted_on') %>
+                        <%= text_field_tag "conducted_on", (params[:conducted_on].present? ? params[:conducted_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", t('mongoid.attributes.site_visit.status') %>
+                        <%= select_tag "site_visit_status", options_for_select(SiteVisit.aasm(:status).states.collect(&:name).map {|x| [x.to_s.titleize, x.to_s]}, (params[:site_visit_status].present? ? params[:site_visit_status] : "")), { prompt: 'Select', class: "selectize" } %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="filter-footer modal-footer text-end">
+                      <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                      <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+                    </div>
+                  </div>
+                <% end %>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id = "project_wise_actual_revenue">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#project_wise_actual_reports_filter"));
+    $('.site_visit_filters').hide();
+
+    // categories according to the resource selected
+    $('.resource').on('change', function(event){
+      var categories = <%= raw IncentiveScheme::CATEGORIES_PER_RESOURCE.to_json %>;
+      var categories_translations = <%= raw t('mongoid.attributes.incentive_scheme/categories').to_json %>;
+      var resource = $(event.currentTarget).val();
+      var $category_select = $('.category_class');
+      var category = $category_select.val();
+      var allowed_categories = categories[resource];
+
+      if(resource != null && allowed_categories != null)
+      {
+        if (resource == 'BookingDetail')
+        {
+          $('.site_visit_filters').hide()
+          $('.booking_detail_filters').show()
+        }
+        else if (resource == 'SiteVisit')
+        {
+          $('.booking_detail_filters').hide()
+          $('.site_visit_filters').show()
+        }
+        else
+        {
+          $('.booking_detail_filters').hide()
+          $('.site_visit_filters').hide()
+        }
+        var category_select = $category_select[0].selectize;
+        category_select.setValue('');
+        category_select.clearOptions();
+        category_select.renderCache = {};
+        var options = _.map(allowed_categories, function(d) { return { value: d, text: categories_translations[d] } });
+        category_select.addOption(options)
+        category_select.refreshOptions(false);
+        category_select.settings.placeholder = 'Select Category';
+        category_select.updatePlaceholder();
+        if(!_.isEmpty(category)){
+          category_select.addItem(category, true);
+        }
+      }
+    }).trigger('change');
+
+    // brokerage types according to the category selected
+    $('.category_class').on('change', function(event) {
+    var brokerage_types = <%= raw IncentiveScheme::BROKERAGE_TYPE_PER_CATEOGORY.to_json %>;
+    var brokerage_type_translations = <%= raw t('mongoid.attributes.incentive_scheme/brokerage_type').to_json %>;
+    var category = $(event.currentTarget).val();
+    var $brokerage_type_select = $('.brokerage_type_class');
+    var brokerage_type = $brokerage_type_select.val();
+    var allowed_brokerage_types = brokerage_types[category];
+    if(category != null && allowed_brokerage_types != null)
+    {
+      var brokerage_type_select = $brokerage_type_select[0].selectize;
+      brokerage_type_select.setValue('');
+      brokerage_type_select.clearOptions();
+      brokerage_type_select.renderCache = {};
+      var options = _.map(allowed_brokerage_types, function(d) { return { value: d, text: brokerage_type_translations[d] } });
+      brokerage_type_select.addOption(options)
+      brokerage_type_select.refreshOptions(false);
+      brokerage_type_select.settings.placeholder = 'Select Brokerage Type';
+      brokerage_type_select.updatePlaceholder();
+      if(!_.isEmpty(brokerage_type)){
+        brokerage_type_select.addItem(brokerage_type, true);
+      }
+    }
+    }).trigger('change');
+  });
+  $.ajax({
+    url: "<%= project_wise_actual_revenue_path %>",
+    type: "get",
+  });
+<% end %>

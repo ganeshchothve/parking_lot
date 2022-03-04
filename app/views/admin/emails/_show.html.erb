@@ -24,6 +24,16 @@
           </div>
         </div>
       </div>
+      <% if current_user.role == 'superadmin' %>
+        <div class="col-md-4">
+          <div class="mb-3">
+            <label>Response</label>
+            <div>
+             <%= email.try(:response).presence || '-' %>
+            </div>
+          </div>
+        </div>
+      <% end %>
       <div class="col-md-4">
         <div class="mb-3">
         <label>Sent On</label>

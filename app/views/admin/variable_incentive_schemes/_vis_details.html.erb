@@ -1,0 +1,41 @@
+<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
+  <thead class="th-default">
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= VariableIncentiveScheme.model_name.human %></th>
+        <th><%= t('mongoid.attributes.variable_incentive_scheme.day') %></th>
+        <th><%= t('mongoid.attributes.invoice.manager_id') %></th>
+        <th><%= Project.model_name.human %></th>
+        <th><%= BookingDetail.model_name.human %></th>
+        <th><%= t('mongoid.attributes.variable_incentive_scheme.capped_incentive') %></th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+    <% vis_details.each do |vis_detail| %>
+    <tr>
+      <td data-title=<%= VariableIncentiveScheme.model_name.human %>>
+        <%= vis_detail[:scheme_name] %>
+        <div class="small">
+        </div>
+      </td>
+      <td data-title="<%= t('mongoid.attributes.variable_incentive_scheme.day') %>">
+        <%= vis_detail[:day] %>
+      </td>
+      <td data-title="<%= t('mongoid.attributes.invoice.manager_id') %>">
+        <%= vis_detail[:manager_name] || "-" %>
+      </td>
+      <td data-title="<%= Project.model_name.human %>">
+        <%= vis_detail[:project_name] || "-" %>
+      </td>
+      <td data-title="<%= BookingDetail.model_name.human %>">
+       <% booking_detail = BookingDetail.where(id: vis_detail[:booking_detail_id]).first %>
+       <%= link_to vis_detail[:booking_detail_name], admin_booking_detail_path(booking_detail)%>
+      </td>
+      <td data-title="<%= t('mongoid.attributes.variable_incentive_scheme.capped_incentive') %>">
+        <%= number_to_indian_currency((vis_detail[:capped_incentive] rescue 0.0)) %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
