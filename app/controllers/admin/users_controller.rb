@@ -305,7 +305,7 @@ class Admin::UsersController < AdminController
   # For changing the state of channel_partner user accounts
   def change_state
     respond_to do |format|
-      @user.assign_attributes(event: params.dig(:user, :user_status_in_company_event))
+      @user.assign_attributes(event: params.dig(:user, :user_status_in_company_event), rejection_reason: params.dig(:user, :rejection_reason))
       user_current_status_in_company = @user.user_status_in_company
 
       if user_current_status_in_company == 'pending_approval' && @user.event == 'active'

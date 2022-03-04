@@ -1,0 +1,13 @@
+.user-reg form:nth-child(2)
+{
+  position: relative;
+  top: -54px;
+  left: 0px;
+  z-index: 2;
+}
+.user-reg form:nth-child(1) .reject-cp
+{
+  position: relative;
+  left: 100px;
+  z-index: 3;
+}

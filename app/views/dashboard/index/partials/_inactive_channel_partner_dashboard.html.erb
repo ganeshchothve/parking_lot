@@ -201,6 +201,25 @@
 
 <% else %>
   <% if current_user.inactive? %>
+    <% if current_user.rejection_reason.present? %>
+      <section class="after-register-sec mt-5 mb-2">
+        <div class=" px-4">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="app-review app-reject float-start wd-100">
+                <h1 class="notify-title float-start mb-0 col-12">Your application has been rejected by <strong><%= current_user.temp_channel_partner.name %></strong></h1>
+                <div class="fn-12 col-12">
+                  <p class="mb-0">Reason:</p>
+                  <div class="error-reason">
+                    <%= current_user.rejection_reason %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    <% end %>
     <section class="cp-register-sec">
       <div class="col-lg-12">
         <div class="cp-reg-header pt-5 pb-5 col-lg-12">
