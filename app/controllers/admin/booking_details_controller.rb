@@ -180,7 +180,9 @@ class Admin::BookingDetailsController < AdminController
         format.json { render json: {message: "booking_successful"}, status: :ok }
         format.html { redirect_to admin_booking_detail_path(@booking_detail) }
       else
+        flash[:alert] = @booking_detail.errors.full_messages
         format.html { redirect_to dashboard_path, alert: t('controller.booking_details.booking_unsuccessful') }
+        format.json { render json: { errors: @booking_detail.errors.full_messages }, status: :unprocessable_entity }
       end
     end
   end
