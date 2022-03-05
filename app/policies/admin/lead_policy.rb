@@ -66,15 +66,15 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def search_by?
-    user.role.in?(%w(sales team_lead))
+    user.role.in?(%w(sales gre team_lead))
   end
 
   def assign_sales?
-    user.role.in?(%w(team_lead))
+    user.role.in?(%w(gre team_lead))
   end
 
   def move_to_next_state?
-    (user.role?('team_lead') && (record.is_a?(Lead) || record.role?('sales'))) ||
+    (user.role.in?(%w(gre team_lead)) && (record.is_a?(Lead) || record.role?('sales'))) ||
       user.role?('sales') && (
         (record.is_a?(Lead) && record.may_dropoff? && (record.closing_manager_id == user.id)) ||
         (!record.is_a?(Lead) && record.role?('sales') && (record.may_break? || record.may_available?))
