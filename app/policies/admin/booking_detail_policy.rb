@@ -3,7 +3,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   def index?
     out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner].include?(user.role) && enable_actual_inventory?(user)
     out = false if user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
-    out = true if %w[account_manager account_manager_head billing_team].include?(user.role)
+    out = true if %w[account_manager account_manager_head billing_team cp_admin].include?(user.role)
     out
   end
 
@@ -75,7 +75,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def move_to_next_state?
-    %w[account_manager account_manager_head].include?(user.role)
+    %w[account_manager account_manager_head cp_admin].include?(user.role)
   end
 
   def can_move_booked_tentative?
@@ -83,7 +83,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def can_move_booked_confirmed?
-    (user.role?(:billing_team) || (current_client.launchpad_portal? && user.role?(:account_manager_head))) && record.booked_tentative?
+    (user.role?(:billing_team) || (current_client.launchpad_portal? && user.role.in?(%w(account_manager_head cp_admin)))) && record.booked_tentative?
   end
 
   def can_move_cancel?
