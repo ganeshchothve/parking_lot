@@ -96,7 +96,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def edit_booking_without_inventory?
     out = false
-    out = true if record.status.in?(%w(blocked booked_tentative)) && user.role.in?(%w(account_manager account_manager_head))
+    out = true if record.status.in?(%w(blocked booked_tentative)) && user.role.in?(%w(account_manager account_manager_head cp_admin))
     # out = true if %w('booked_tentative', 'booked_confirmed') && user.role?('billing_team')
     out
   end
