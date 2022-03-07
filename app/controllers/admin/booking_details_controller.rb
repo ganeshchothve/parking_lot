@@ -177,12 +177,12 @@ class Admin::BookingDetailsController < AdminController
     respond_to do |format|
       if @booking_detail.save
         response.set_header('location', admin_booking_detail_path(@booking_detail) )
-        format.json { render json: {message: "booking_successful"}, status: :ok }
+        format.json { render json: {message: "Booking created successfully"}, status: :ok }
         format.html { redirect_to admin_booking_detail_path(@booking_detail) }
       else
         flash[:alert] = @booking_detail.errors.full_messages
         format.html { redirect_to dashboard_path, alert: t('controller.booking_details.booking_unsuccessful') }
-        format.json { render json: { errors: @booking_detail.errors.full_messages }, status: :unprocessable_entity }
+        format.json { render json: { errors: flash[:alert] }, status: :unprocessable_entity }
       end
     end
   end
@@ -197,10 +197,12 @@ class Admin::BookingDetailsController < AdminController
     @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
     respond_to do |format|
       if @booking_detail.save
-        format.json { render json: {message: "booking_successful"}, status: :ok }
+        format.json { render json: {message: "Booking updated successfully"}, status: :ok }
         format.html { redirect_to admin_leads_path }
       else
+        flash[:alert] = @booking_detail.errors.full_messages
         format.html { redirect_to dashboard_path, alert: t('controller.booking_details.booking_unsuccessful') }
+        format.json { render json: { errors: flash[:alert] }, status: :unprocessable_entity }
       end
     end
   end
