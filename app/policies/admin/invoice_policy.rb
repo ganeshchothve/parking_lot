@@ -104,7 +104,7 @@ class Admin::InvoicePolicy < InvoicePolicy
       attributes += [:rejection_reason] if record.status.in?(%w(pending_approval rejected))
       attributes += [:event]
     when 'admin', 'superadmin'
-      if record.status.in?(%w(pending_approval approved draft))
+      if record.status.in?(%w(pending_approval approved draft tentative))
         attributes += [:brokerage_type, :payment_to, :number, :amount, :gst_slab, :rejection_reason, payment_adjustment_attributes: [:id, :absolute_value]]
         attributes += [:category] if record.new_record?
         attributes += [:agreement_amount] if record.invoiceable_type == 'BookingDetail'

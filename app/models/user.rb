@@ -759,7 +759,7 @@ class User
         custom_scope = { role: 'channel_partner' }
       elsif user.role?('admin')
         custom_scope = { role: { "$ne": 'superadmin' } }
-      elsif user.role?('team_lead')
+      elsif user.role?('team_lead')|| user.role?('gre')
         custom_scope = { role: 'sales', project_ids: user.selected_project_id.to_s }
       end
       custom_scope
