@@ -1,3 +1,3 @@
-json.channel_partner do
-  json.partial! 'channel_partners/show', channel_partner: @channel_partner
+json.user do
+  json.partial! 'admin/users/show', user: @channel_partner.primary_user
 end
