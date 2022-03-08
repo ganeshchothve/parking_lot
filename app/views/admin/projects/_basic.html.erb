@@ -172,6 +172,21 @@
       <%= f.select :incentive_percentage_slabs, f.object.incentive_percentage_slabs, {},  class: "selectize-tags", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("incentive_percentage_slabs") ? false : true) %>
     </div>
   </div>
+  <div class="col-md-6">
+    <% if policy([:admin, project]).editable_field?("enable_payment") %>
+      <div class="mb-3">
+        <%= f.label :enable_payment, class: 'mb-2' %>
+        <div class="form-check form-check-inline">
+          <%= f.radio_button :enable_payment, true, class: "form-check-input wd-22" %>
+          <%= f.label :enable_payment, "Yes", class: "form-check-label d-inline-block ms-2" %>
+        </div>
+        <div class="form-check form-check-inline">
+          <%= f.radio_button :enable_payment, false, class: "form-check-input wd-22" %>
+          <%= f.label :enable_payment, "No", class: "form-check-label d-inline-block ms-2" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
   <div class="col-md-12">
     <div class="col-md-6">
       <div class="form-group mb-3">
