@@ -37,7 +37,7 @@ class Project
   field :support_name, type: String
   field :support_mail, type: String
   field :support_phone, type: String
-  field :enable_payment, type: Boolean, default: false
+  field :payment_enabled, type: Boolean, default: true
 
   # descriptive fields
   field :description, type: String
