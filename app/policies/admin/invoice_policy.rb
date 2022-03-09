@@ -23,7 +23,7 @@ class Admin::InvoicePolicy < InvoicePolicy
     valid = user.role?('billing_team') && record.status.in?(%w(approved tax_invoice_raised pending_approval raised))
     # valid ||= user.role.in?(%w(channel_partner cp_owner)) && record.status.in?(%w(draft rejected))
     valid ||= user.role?('cp_admin') && record.pending_approval?
-    valid ||= user.role.in?(%w(superadmin admin)) && record.status.in?(%w(draft rejected approved pending_approval))
+    valid ||= user.role.in?(%w(superadmin admin)) && record.status.in?(%w(draft rejected approved pending_approval raised))
     valid
   end
 
