@@ -57,16 +57,24 @@
                     <% end %>
                     <% if @project_unit.status == "hold" %>
                       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd mt-2 agree-check">
+                        <% unless @booking_detail.project.payment_enabled? %>
+                          <% if @booking_detail_scheme.present? && @booking_detail_scheme.editable_payment_adjustments_present? %>
+                            <%= link_to "Proceed without payment", send_under_negotiation_admin_lead_booking_detail_path(@lead.id, @booking_detail.id), class: 'btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block', style:'margin-top:0px', onclick: alert, method: :patch %>
+                          <% else %>
+                            <%= link_to "Proceed without payment", send_blocked_admin_lead_booking_detail_path(@lead.id, @booking_detail.id), class: 'btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block', style:'margin-top:0px', onclick: alert, method: :patch %>
+                          <% end %>
+                        <% else %>
+                          <% if policy([ current_user_role_group, Receipt.new(user: @lead.user, lead: @lead, status: "clearance_pending", booking_detail_id: @booking_detail.id)]).new? %>
+                            <%= link_to "I Agree on behalf of #{@lead.name} and proceed to add
+                          payment",new_admin_lead_booking_detail_receipt_path(@lead.id, @booking_detail.id) , class: 'btn submit-payemnt-btn fn-12 fn-500 modal-remote-form-link btn-primary d-inline-block', style:'margin-top:0px', onclick: alert %>
+                          <% elsif @booking_detail_scheme.present? && @booking_detail_scheme.editable_payment_adjustments_present? %>
+                            <%= link_to "Proceed without payment", send_under_negotiation_admin_lead_booking_detail_path(@lead.id, @booking_detail.id), class: 'btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block', style:'margin-top:0px', onclick: alert, method: :patch %>
+                          <% end %>
+                        <% end %>
                         <% if current_user.buyer? %>
                           <%= link_to "I Agree", booking_buyer_booking_detail_path(@booking_detail), method: :patch, class: 'btn submit-payemnt-btn fn-12 fn-500', style:'margin-top:0px', onclick: alert %>
                         <% elsif @lead.unattached_blocking_receipt(@project_unit.blocking_amount).present? %>
                           <%= link_to "I Agree on behalf of #{@lead.name}", booking_admin_lead_booking_detail_path(@lead,@booking_detail), method: :patch, class: 'btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block', style:'margin-top:0px', onclick: alert %>
-                        <% elsif policy([ current_user_role_group, Receipt.new(user: @lead.user, lead: @lead, status: "clearance_pending", booking_detail_id: @booking_detail.id)]).new? %>
-                          <%= link_to "I Agree on behalf of #{@lead.name} and proceed to add
-                          payment",new_admin_lead_booking_detail_receipt_path(@lead.id, @booking_detail.id) , class: 'btn submit-payemnt-btn fn-12 fn-500 modal-remote-form-link btn-primary d-inline-block', style:'margin-top:0px', onclick: alert %>
-                          <% if @booking_detail_scheme.present? && @booking_detail_scheme.editable_payment_adjustments_present? %>
-                            <%= link_to "Proceed without payment", send_under_negotiation_admin_lead_booking_detail_path(@lead.id, @booking_detail.id), class: 'btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block', style:'margin-top:0px', onclick: alert, method: :patch %>
-                          <% end %>
                         <% else %>
                           <div class="alert alert-danger">
                             You do not have access to take a Clearance pending <%= global_labels[:receipt] %> on behalf of <%= @lead.name %>.
