@@ -1,34 +1,38 @@
-<section class="team_lead mt-4">
-  <div class="px-3">
-    <div class="row">
-      <div class="col-lg-6 col-xs-6 col-md-6 col-sm-6 no-pd">
-        <div class="table-title pt-2 pb-3">
-          <h4 class="theme-txt-color fn-18"><%= current_user.name.try(:titleize) %> <small>(Team Lead)</small></h4>
+<% if current_user.role.in?(current_client.team_lead_dashboard_access_roles) || current_user.role?('team_lead')%>
+  <section class="team_lead mt-4">
+    <div class="px-3">
+      <div class="row">
+        <div class="col-lg-6 col-xs-6 col-md-6 col-sm-6 no-pd">
+          <div class="table-title pt-2 pb-3">
+            <h4 class="theme-txt-color fn-18"><%= current_user.name.try(:titleize) %> <small>(Team Lead)</small></h4>
+          </div>
         </div>
-      </div>
-      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
-        <div class="box-card relative">
-          <div class="row">
-            <div class="col-lg-3 col-sm-12 col-md-4 col-xs-12 user-list-wrapper">
-              <div class="search-user mb-2">
-                <%= select_tag :search_user, "", prompt: 'Search User by Queue No.', class: 'selectize-remote', autofocus: true, remote: true, data: { url: search_by_admin_leads_path, params: { fltrs: { customer_status: 'queued', sort: 'queue_number.asc' }, element: '#queued-users-list', template: 'dashboard/index/partials/list_queued_users' }, preload: true } %>
+        <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+          <div class="box-card relative">
+            <div class="row">
+              <div class="col-lg-3 col-sm-12 col-md-4 col-xs-12 user-list-wrapper">
+                <div class="search-user mb-2">
+                  <%= select_tag :search_user, "", prompt: 'Search User by Queue No.', class: 'selectize-remote', autofocus: true, remote: true, data: { url: search_by_admin_leads_path, params: { fltrs: { customer_status: 'queued', sort: 'queue_number.asc' }, element: '#queued-users-list', template: 'dashboard/index/partials/list_queued_users' }, preload: true } %>
+                </div>
+                <div id='queued-users-list'></div>
               </div>
-              <div id='queued-users-list'></div>
-            </div>
-            <div class="col-lg-9 col-sm-12 col-md-8 col-xs-12 sales-team-list-wrapper">
-              <div class="sales-team-inner" id='sales-users-list'>
-                <%= render 'dashboard/index/partials/list_sales_users', users: User.where(User.user_based_scope(current_user, params)).asc(:sales_status) %>
+              <div class="col-lg-9 col-sm-12 col-md-8 col-xs-12 sales-team-list-wrapper">
+                <div class="sales-team-inner" id='sales-users-list'>
+                  <%= render 'dashboard/index/partials/list_sales_users', users: User.where(User.user_based_scope(current_user, params)).asc(:sales_status) %>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
-
+  </section>
+<% end %>
 <%= javascript_tag do %>
   $(document).ready(function(){
+
+  setTimeout(function(){ location.reload(); }, <%= current_client.tl_dashboard_refresh_timer*60000 %>);
+
     var onType = function(value) {
       this.$input.data('params').fltrs.queue_number = value;
     };

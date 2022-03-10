@@ -29,6 +29,14 @@
   <% end %>
 <% end %>
 
+<% if policy(:dashboard).index? %>
+  <% if current_user.role.in?(current_client.team_lead_dashboard_access_roles) || current_user.role?('team_lead') %>
+    <li class="nav-item">
+      <%= active_link_to t('controller.dashboard.index.team_lead'), team_lead_dashboard_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+    </li>
+  <% end %>
+<% end %>
+
 <% if policy([:admin, Project]).index? %>
   <li class="nav-item">
     <% _projects_path = current_user.role.in?(%w(cp_owner channel_partner)) ? admin_projects_path(fltrs: {regions: current_user.channel_partner&.regions}) : admin_projects_path  %>

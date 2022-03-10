@@ -32,6 +32,10 @@ module UsersHelper
     User.buyer_roles(current_client).collect{|role| [ User.human_attribute_name("role.#{role}"), role ]}
   end
 
+  def filter_tl_dashboard_access_options
+    User::TEAM_LEAD_DASHBOARD_ACCESS_USERS.collect{|role| [User.human_attribute_name("role.#{role}"), role]}
+  end
+
   def user_edit_role_options(_user)
     if _user.id == current_user.id
       [[ User.human_attribute_name("role.#{_user.role}"), _user.role]]
