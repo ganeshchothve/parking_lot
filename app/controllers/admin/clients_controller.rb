@@ -27,6 +27,11 @@ class Admin::ClientsController < AdminController
     end
   end
 
+  def get_regions
+    @regions = @client.regions
+    @regions = @regions.where(city: params[:city]) if params[:city]
+  end
+
   private
 
   def set_client

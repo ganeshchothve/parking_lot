@@ -46,7 +46,7 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   def permitted_attributes(_params = {})
     attributes = []
     if user.blank? || (user.present? && (%w[superadmin admin cp_admin account_manager_head account_manager].include?(user.role) || (['channel_partner', 'cp_owner'].include?(user.role) && record.id == user.channel_partner_id && ['inactive', 'rejected'].include?(record.status))))
-      attributes += [:email, :phone, :first_name, :last_name, :company_name, :company_owner_name, :company_owner_phone, :pan_number, :gstin_number, :aadhaar, :rera_id, :manager_id, :team_size, :rera_applicable, :gst_applicable, :nri, :experience, :average_quarterly_business, :referral_code, expertise: [], developers_worked_for: [], interested_services: [], regions: [], address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes]
+      attributes += [:email, :phone, :first_name, :last_name, :company_name, :company_owner_name, :company_owner_phone, :pan_number, :gstin_number, :aadhaar, :rera_id, :manager_id, :team_size, :rera_applicable, :gst_applicable, :nri, :experience, :average_quarterly_business, :referral_code, :city, expertise: [], developers_worked_for: [], interested_services: [], regions: [], address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes]
     end
     if user.role.in?(%w(cp_owner channel_partner)) && record.new_record?
       attributes += [:primary_user_id]
@@ -57,7 +57,7 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
     end
 
     if user.present? && ['channel_partner', 'cp_owner'].include?(user.role)
-      attributes += [:email, :phone, :first_name, :last_name, :company_name, :company_owner_name, :company_owner_phone, :pan_number, :gstin_number, :aadhaar, :rera_id, :manager_id, :team_size, :rera_applicable, :gst_applicable, :nri, :experience, :average_quarterly_business, :referral_code,expertise: [], developers_worked_for: [], interested_services: [], regions: [], address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes]
+      attributes += [:email, :phone, :first_name, :last_name, :company_name, :company_owner_name, :company_owner_phone, :pan_number, :gstin_number, :aadhaar, :rera_id, :manager_id, :team_size, :rera_applicable, :gst_applicable, :nri, :experience, :average_quarterly_business, :referral_code, :city, expertise: [], developers_worked_for: [], interested_services: [], regions: [], address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes]
     end
 
     attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes] if user.present?

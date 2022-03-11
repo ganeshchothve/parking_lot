@@ -17,6 +17,10 @@ class Admin::ClientPolicy < ClientPolicy
     update?
   end
 
+  def get_regions?
+    show?
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     if %w[superadmin].include?(user.role)

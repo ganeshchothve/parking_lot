@@ -153,6 +153,7 @@ Rails.application.routes.draw do
       resources :templates, only: [:edit, :update, :index]
       get 'document_sign/prompt'
       get 'document_sign/callback'
+      get 'get_regions'
     end
     namespace :audit do
       resources :records, only: [:index]

@@ -41,6 +41,7 @@ class ChannelPartner
   field :category, type: String
   field :source, type: String
   field :website, type: String
+  field :city, type: String
   field :regions, type: Array, default: []
   field :erp_id, type: String, default: ''
 
@@ -61,6 +62,7 @@ class ChannelPartner
   scope :filter_by_manager_id, ->(manager_id) { where(manager_id: manager_id) }
   scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_city, ->(city) { where(city: city) }
+  scope :filter_by_regions, ->(regions) { where( regions: { "$all": regions }) }
   scope :filter_by__id, ->(_id) { where(_id: _id) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(company_name: regex) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
@@ -101,7 +103,8 @@ class ChannelPartner
   validates :company_type, inclusion: { in: proc { ChannelPartner::COMPANY_TYPE } }, allow_blank: true
   validates :source, inclusion: { in: proc { ChannelPartner::SOURCE } }, allow_blank: true
   validates :category, inclusion: { in: proc { ChannelPartner::CATEGORY } }, allow_blank: true
-  validates :regions, array: { inclusion: { in: current_client.try(:partner_regions) || [] } }
+  validates :city, inclusion: { in: current_client.regions.distinct(:city) }, allow_blank: true
+  validates :regions, array: { inclusion: { allow_blank: true, in: current_client.regions.distinct(:partner_regions).flatten || [] } }
   validates :company_name, uniqueness: true
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: { with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A' }, allow_blank: true
@@ -153,7 +156,7 @@ class ChannelPartner
   #end
 
   def doc_types
-    doc_types = self.nri? ? %w[company_incorporation_certificate form_10f tax_residency_certificate pe_declaration] : [] %w[pan_card]
+    doc_types = self.nri? ? %w[company_incorporation_certificate form_10f tax_residency_certificate pe_declaration] : %w[pan_card]
     doc_types << 'rera_certificate' if self.rera_applicable?
     doc_types << 'gst_certificate' if self.gst_applicable?
     doc_types

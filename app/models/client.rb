@@ -162,7 +162,10 @@ class Client
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
   validates :whatsapp_api_key, :whatsapp_api_secret, presence: true, if: :whatsapp_enabled?
   validates :notification_api_key, presence: true, if: :notification_enabled?
+  validates :regions, copy_errors_from_child: true
+
   accepts_nested_attributes_for :address, :external_inventory_view_config, :checklists
+  accepts_nested_attributes_for :regions, allow_destroy: true
 
   def self.available_preferred_logins
     [

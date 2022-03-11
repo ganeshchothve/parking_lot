@@ -171,6 +171,7 @@ FormInitializer = (function(){
 
     add_payment_mode_event();
     filter_towers(selector);
+    filter_regions(selector);
   };
   var add_payment_mode_event = function(){
     $("#receipt_payment_mode").selectize().on("change", function() {
@@ -293,10 +294,57 @@ FormInitializer = (function(){
     }
   };
 
+  var filter_regions = function(selector){
+    var $city_select = $(selector).find(".city_select");
+    var $regions_select = $(selector).find(".regions_select");
+    var selected_regions = $regions_select.val();
+
+    if($regions_select.length > 0) {
+      $city_select.on("change", function(e){
+        var city = $(e.currentTarget).val();
+        if(!_.isEmpty(city)) {
+          $.ajax({
+            url: $regions_select.data("url"),
+            data: {
+              city: city
+            },
+            type: "get",
+            dataType: "json",
+            success: function(data){
+              var regions = data[0].partner_regions;
+              var regions_selectize = $regions_select[0].selectize;
+              regions_selectize.setValue('');
+              regions_selectize.clearOptions();
+              regions_selectize.renderCache = {};
+              var options = _.map(regions, function(d) { return { value: d, text: d } });
+              regions_selectize.addOption(options)
+              regions_selectize.refreshOptions(false);
+              regions_selectize.settings.placeholder = 'Select';
+              regions_selectize.updatePlaceholder();
+              if(!_.isEmpty(selected_regions)){
+                if(typeof selected_regions == 'object'){
+                  _.each(selected_regions, function(reg) {
+                    regions_selectize.addItem(reg, true);
+                  });
+                }else{
+                  regions_selectize.addItem(selected_regions, true);
+                }
+              }
+            },
+            error: function(){
+              Amura.global_error_handler("Error in fetching the regions...")
+            }
+          });
+        }
+      }).trigger('change');
+    }
+  };
+
   return {
     init: init,
     remoteSelectize: remote_selectize,
-    filterTowers: filter_towers
+    filterTowers: filter_towers,
+    filterRegions: filter_regions
   };
 
 })();
