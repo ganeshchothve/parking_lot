@@ -119,7 +119,11 @@ class Admin::ProjectsController < AdminController
 
   def set_project
     @project = Project.where(id: params[:id]).first
-    redirect_to dashboard_path, alert: 'Project not found' unless @project
+    if action_name == 'edit'
+      render json: { errors: 'Project not found' }, status: :not_found unless @project
+    else
+      redirect_to dashboard_path, alert: 'Project not found' unless @project
+    end
   end
 
   def authorize_resource

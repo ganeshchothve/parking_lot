@@ -275,7 +275,7 @@ class Project
         custom_scope.merge!({_id: {"$in": project_ids}})
       end
     end
-    custom_scope.merge!({ is_active: true }) if params[:controller].in?(%w(admin/projects home))
+    custom_scope.merge!({ is_active: true }) if (params[:controller] == 'admin/projects' && params[:action] == 'index') || params[:controller] == 'home'
     custom_scope
   end
 
