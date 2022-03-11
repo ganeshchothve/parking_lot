@@ -47,8 +47,6 @@ module ExcelGenerator::SiteVisitPartnerWise
           bookings[c.id].try(:count) || 0
         ])
       end
-      index += 1
-      sheet.insert_row(index)
     end
     sheet.merge_cells(0,0,0,9)
     spreadsheet = StringIO.new 
