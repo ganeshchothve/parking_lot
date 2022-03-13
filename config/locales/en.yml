@@ -1325,6 +1325,7 @@ en:
         customer_status: 'Queue Status'
         search_by_name: 'Name/ Email/ Phone'
         push_to_crm: 'Do You Want The Developer To Contact The Customer ?'
+        closing_manager_id: Available Sales Users
 
       lead/stage:
         incoming: 'Incoming'
@@ -1977,12 +1978,14 @@ en:
       move_to_next_state:
         queued: "%{name} moved to sales queue successfully"
         dropoff: '%{name} dropped off successfully'
+      accepted_by_sales: Lead %{status}
       create_from_existing_lead:
         link_name: 'Add From Existing Customer'
       add_to_another_project:
         link_name: 'Add To Other Project'
       create_new_lead:
         link_name: 'Add New %{model}'
+      reassign_sales: Reassign Lead
 
     user_kycs:
       index:

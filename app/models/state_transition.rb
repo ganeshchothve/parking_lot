@@ -11,6 +11,8 @@ class StateTransition
   field :queue_number, type: Integer
   field :revisit_queue_number, type: Integer
   field :sitevisit_id, type: BSON::ObjectId
+  field :sales_id, type: BSON::ObjectId
+  field :event, type: String
 
   embedded_in :lead
 
