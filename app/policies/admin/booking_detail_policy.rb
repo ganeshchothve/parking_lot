@@ -44,7 +44,11 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def show_booking_link?
-    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && record.try(:user).try(:buyer?) && enable_inventory?
+    valid = _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && record.try(:user).try(:buyer?) && enable_inventory?
+    if is_assigned_lead?
+      valid = is_lead_accepted? && valid
+    end
+    valid
   end
 
   def show_add_booking_link?
@@ -175,6 +179,22 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
       user.interested_projects.approved.where(project_id: record.project_id).present?
     else
       true
+    end
+  end
+
+  def is_assigned_lead?
+    if user.role?(:sales) && record.lead.is_a?(Lead)
+      Lead.where(id: record.lead.id, closing_manager_id: user.id).in(customer_status: %w(engaged)).first.present?
+    else
+      false
+    end
+  end
+
+  def is_lead_accepted?
+    if user.role?(:sales) && record.lead.is_a?(Lead)
+      record.lead.accepted_by_sales?
+    else
+      false
     end
   end
 end
