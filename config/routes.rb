@@ -88,6 +88,7 @@ Rails.application.routes.draw do
       member do
         patch :booking
         patch :send_under_negotiation
+        patch :send_blocked
         get :generate_booking_detail_form
         get :send_booking_detail_form_notification
         get :tasks
@@ -259,6 +260,7 @@ Rails.application.routes.draw do
       resources :booking_details, only: [:index, :show] do
         patch :booking, on: :member
         patch :send_under_negotiation, on: :member
+        patch :send_blocked, on: :member
         resources :booking_detail_schemes, only: [:index], controller: 'booking_details/booking_detail_schemes'
 
         resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'

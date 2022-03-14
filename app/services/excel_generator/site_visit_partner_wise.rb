@@ -24,7 +24,7 @@ module ExcelGenerator::SiteVisitPartnerWise
       ])
       index += 1
       sheet.insert_row(index, [
-        "",
+        p.channel_partner&.name&.titleize,
         p.name&.titleize,
         all_site_visits[p.id].try(:count) || 0,
         scheduled_site_visits[p.id].try(:count) || 0,
@@ -37,7 +37,7 @@ module ExcelGenerator::SiteVisitPartnerWise
         next if c.role?('cp_owner')
         index = index+1 
         sheet.insert_row(index, [
-          "",
+          p.channel_partner&.name&.titleize,
           c.name.titleize,
           all_site_visits[c.id].try(:count) || 0,
           scheduled_site_visits[c.id].try(:count) || 0,
@@ -47,8 +47,6 @@ module ExcelGenerator::SiteVisitPartnerWise
           bookings[c.id].try(:count) || 0
         ])
       end
-      index += 1
-      sheet.insert_row(index)
     end
     sheet.merge_cells(0,0,0,9)
     spreadsheet = StringIO.new 
