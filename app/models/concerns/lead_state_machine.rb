@@ -110,7 +110,7 @@ module LeadStateMachine
       last_closing_manager_id = self.closing_manager_id if last_closing_manager_id.blank?
       current_sitevisit = self.current_site_visit
       _latest = self.state_transitions.desc(:created_at, sitevisit_id: self.current_site_visit_id).first
-      _latest.update(exit_time: DateTime.now, sales_id: last_closing_manager_id, event: event)
+      _latest.update(exit_time: DateTime.now, sales_id: last_closing_manager_id)
       self.state_transitions << StateTransition.new(status: self.status, enter_time: DateTime.now, queue_number: current_sitevisit.queue_number, revisit_queue_number: current_sitevisit.revisit_queue_number, sitevisit_id: current_sitevisit.id, sales_id: self.closing_manager_id, event: event)
     end
 

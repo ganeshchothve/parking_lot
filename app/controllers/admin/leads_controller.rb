@@ -127,8 +127,8 @@ class Admin::LeadsController < AdminController
   def accept_lead
     respond_to do |format|
       if @lead.update(accepted_by_sales: params[:accepted_by_sales])
+        @lead.reassign_log_status(nil, params[:event])
         if @lead.accepted_by_sales
-          @lead.reassign_log_status(nil, params[:event])
           message = I18n.t('controller.leads.accepted_by_sales', status: "Accepted")
         else
           message = I18n.t('controller.leads.accepted_by_sales', status: "Rejected")
