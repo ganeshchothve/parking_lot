@@ -391,9 +391,7 @@ class Admin::UsersController < AdminController
 
       if user_current_status_in_company == 'pending_approval' && @user.event == 'active'
         @channel_partner = ChannelPartner.where(id: params.dig(:user, :channel_partner_id)).first
-        if @channel_partner
-          @user.assign_attributes(temp_channel_partner: @channel_partner)
-        else
+        unless @channel_partner
           format.html { redirect_to request.referer, alert: 'Requested partner company not found' }
           format.json { render json: { errors: ['Requested partner company not found'] }, status: :unprocessable_entity }
           return

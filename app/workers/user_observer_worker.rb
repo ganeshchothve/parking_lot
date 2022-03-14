@@ -60,10 +60,11 @@ class UserObserverWorker
             end
             # Send company change on channel_partner/cp_owner user
             if changes.has_key?('channel_partner_id') && (channel_partner_id = changes.dig('channel_partner_id', 1).presence)
+              event = user.temp_channel_partner_id.present? ? 'Joined Existing Company' : 'Registered New Company'
               payload = {
                 'channel_partner' => ChannelPartner.where(id: channel_partner_id).first&.as_json(include: {primary_user: {methods: [:name]}, manager: {methods: [:name]}})
               }.merge(changes || {})
-              Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, 'Company Changed', payload, interakt_base.id.to_s)
+              Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, event, payload, interakt_base.id.to_s)
             end
             # Send account activeness change on channel_partner/cp_owner user
             if changes.has_key?('is_active')

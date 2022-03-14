@@ -11,6 +11,7 @@ class ChannelPartnerObserver < Mongoid::Observer
         user = User.in(role: %w(channel_partner cp_owner)).or(query).first
         if user.present?
           channel_partner.primary_user_id = user.id
+          channel_partner.manager_id = user.manager_id
         end
       end
     end
