@@ -1,6 +1,14 @@
 <% customer = Lead.where(closing_manager_id: sales.id).in(customer_status: %w(engaged payment_done)).first %>
+<%
+    if customer.present?
+      is_lead_rejected = customer.engaged? && (!customer.accepted_by_sales.nil?) && customer.accepted_by_sales == false
+    else
+      is_lead_rejected = false
+    end
+%>
+<% rejected_border = is_lead_rejected ? 'border border-danger border-5' : '' %>
 <div class="card mb-3">
-  <div class="sales-team-box curnt-status <%= sales.sales_status %>">
+  <div class="sales-team-box curnt-status <%= sales.sales_status %> <%= rejected_border %>">
     <div class="card-header pt-3">
       <div class="d-flex justify-content-start align-items-center">
         <div class="sales-name-prefix bg-primary rounded-circle p-2 d-inline-block white">
@@ -25,9 +33,7 @@
           <% if customer %>
           <span class="theme-txt-color fn-16 d-block text-truncate"><%= customer.name %></span>
           <span class="theme-txt-color fn-16 d-block text-truncate">
-            <% if customer.engaged? && (!customer.accepted_by_sales.nil?) && customer.accepted_by_sales == false %>
-              <%= link_to t('controller.leads.reassign_sales'), reassign_lead_admin_lead_path(customer), class: 'modal-remote-form-link text-red' %>
-            <% end %>
+            <%= link_to t('controller.leads.reassign_sales'), reassign_lead_admin_lead_path(customer), class: 'modal-remote-form-link text-red' %>
           </span>
           <% status_log = customer.state_transitions.where(status: 'engaged', sitevisit_id: customer.current_site_visit_id).first %>
           <% unless action_name == 'sales_board' %>
