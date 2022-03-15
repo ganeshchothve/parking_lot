@@ -606,6 +606,7 @@ en:
         broker_usp: 'Broker Unique Selling Points (Fill in upto 3 USPs)'
         check_sv_availability_in_selldo: 'Check Site Visit Availability in Sell.do'
         incentive_gst_slabs: 'Configure Incentive GST Slabs (%)'
+        payment_enabled: Enable Payment
         approved_banks/list:
           hdfc: HDFC Bank
           sbi: State Bank of India
@@ -1095,6 +1096,7 @@ en:
         approval_status: Approval Status
         manager_id: 'Partner / Manager / Added by'
         rejection_reason: Rejection Reason
+        is_revisit: Revisit
       site_visit/status:
         scheduled: 'Scheduled'
         pending: 'Pending'
@@ -1960,6 +1962,17 @@ en:
           not_available: '%{name} is not available'
       create:
         change_channel_partner_company: 'Found an old inactive account with these details. We have activated it & linked it under your company'
+      change_state:
+        buttons:
+          active: 'Approve'
+          inactive: 'Reject'
+        links:
+          active_to_inactive: 'Remove Account From Company'
+          pending_approval_to_inactive: 'Cancel Registration In Company Request'
+      status_in_company_message:
+        pending_approval_to_inactive: 'Registration request is rejected'
+        pending_approval_to_active: 'Account added successfully'
+        active_to_inactive: 'Account removed successfully'
 
     interested_projects:
       set_interested_project_missing: 'Interested Project not found'
@@ -2207,6 +2220,12 @@ en:
         available_inventory: 'Available Inventory'
         download_brochure: 'Download Brochure'
         visit_website: 'Visit Website'
+
+  mobile:
+    channel_partner:
+      status_message:
+        pending: "Your application is under review. We will notify you via email on the status of your application. Our estimated review time is between 24-48 hours"
+        rejected: "Your application has been rejected. Reason: %{reason}"
 
   selldo:
     links:

@@ -1,30 +1,217 @@
-<% unless current_user.active_channel_partner? %>
-  <% if channel_partner.pending? %>
-  <section class="after-register-sec mt-5">
-    <div class=" px-4">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="app-review float-start wd-100">
-            <h1 class="notify-title float-start wd-100">Your application is under review</h1>
-            <p class="notify-desc float-start mb-0">We will notify you via email on the status of your application</p>
-            <p class="notify-desc float-end pe-3 mb-0">Our estimated review time is between 24-48 hours</p>
+<% if channel_partner.present? %>
+  <% unless current_user.active_channel_partner? %>
+    <% if channel_partner.pending? %>
+    <section class="after-register-sec mt-5">
+      <div class=" px-4">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="app-review float-start wd-100">
+              <h1 class="notify-title float-start wd-100">Your application is under review</h1>
+              <p class="notify-desc float-start mb-0">We will notify you via email on the status of your application</p>
+              <p class="notify-desc float-end pe-3 mb-0">Our estimated review time is between 24-48 hours</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-  <% else %>
-    <% if channel_partner.rejected? %>
-      <section class="after-register-sec mt-5">
+    </section>
+    <% else %>
+      <% if channel_partner.rejected? %>
+        <section class="after-register-sec mt-5">
+          <div class=" px-4">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="app-review app-reject float-start wd-100">
+                  <h1 class="notify-title float-start mb-0 col-12">Your application has been rejected</h1>
+                  <div class="fn-12 col-12">
+                    <p class="mb-0">Reason:</p>
+                    <div class="error-reason">
+                      <%= channel_partner.status_change_reason&.html_safe %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      <% end %>
+    <section class="cp-register-sec mt-3">
+      <div class="col-lg-12">
+        <div class="cp-reg-header pt-5 pb-5 col-lg-12">
+          <h1 class="sec-title px-3 ms-4">Complete Registration</h1>
+          <%# <a href="javascript:;" class="skip-step-btn pe-3">Skip for now</a> %>
+        </div>
+        <div class="col-lg-12">
+          <div class="cp-step-list pt-3 col-lg-12">
+            <ul class="nav nav-tabs px-4 px-xs-0" id='cp-tabs'>
+              <li>
+                <a href="javascript:;" class="step-done nav-link border-0 active" data-bs-toggle="tab" data-bs-target="#step-1"
+                  type="button" role="tab">
+                  <div class="step-inner">
+                    <span>1</span>
+                    <p>Company Info</p>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="javascript:;" class="step-done nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-2"
+                  type="button" role="tab">
+                  <div class="step-inner">
+                    <span>2</span>
+                    <p>Company Details</p>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="javascript:;" class="step-done nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-3"
+                  type="button" role="tab">
+                  <div class="step-inner">
+                    <span>3</span>
+                    <p>Upload Documents</p>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-12 pb-3">
+          <%= simple_form_for(channel_partner, local: true, remote: true, html: {id: 'new_channel_partner_form', class: 'validate-form theme-form tab-content', "data-resource-type": global_labels['channel_partner'], "data-type": "json"}) do |form| %>
+          <div class="step-tab-content tab-pane fade show active px-3 col-12" role="tabpanel" id="step-1">
+            <div class="step-tab-inner col-12">
+              <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Company Info</h2> %>
+              <div class="cp-form-wrap px-xs-0 px-4 pt-2 mb-5">
+                <%= render "channel_partners/company_fields", {form: form} %>
+              </div>
+            </div>
+          </div>
+          <div class="step-tab-content tab-pane fade px-3 col-12" role="tabpanel" id="step-2">
+            <div class="step-tab-inner col-12">
+              <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Company Details</h2> %>
+              <div class="cp-form-wrap px-xs-0 px-4 pt-2 mb-5">
+                <%= render "channel_partners/questionaire_fields", {form: form} %>
+              </div>
+            </div>
+          </div>
+          <div class="step-tab-content tab-pane fade px-3 col-12" role="tabpanel" id="step-3">
+            <div class="step-tab-inner col-12">
+              <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Upload Documents</h2> %>
+              <div class="cp-form-wrap px-xs-0 px-4 pt-2 mb-5" id='asset-form'>
+                <%#= render 'channel_partners/asset_form', assetable: channel_partner %>
+              </div>
+            </div>
+          </div>
+
+          <div class="cp-form-wrap border-top px-4 py-4 pb-3 text-end px-xs-0">
+            <div class='form-footer px-0 text-start d-inline-block'>
+              <%= form.submit "Save", class: "btn btn-primary white me-3 d-inline-block px-4 py-2 font-medium w-auto", id: 'cp-form-submit' %>
+            </div>
+            <div class="form-footer px-0 d-inline-block d-none">
+              <% if policy([current_user_role_group, channel_partner]).change_state? && policy([current_user_role_group, channel_partner]).editable_field?('event') %>
+                <% link_name = "#{channel_partner.rejected? ? 'Resubmit Application' : 'Submit Application'}" %>
+                <a href="javascript:;" class="btn bg-primary white px-4 d-inline-block py-2 me-3 font-medium w-auto fn-14"  data-bs-toggle="modal" data-bs-target="#confirmRegistration"><%= link_name %></a>
+              <% end %>
+              <div class="modal fade googleMeet-modal" id="confirmRegistration" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class='modal-header'>
+                      <h6 class='modal-title'>Are you sure?</h6>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="row">
+                        <div class="col-lg-12">
+                          <p class='text-start'>By clicking on 'Complete Registration' you are confirming all the provided information and your application will be submitted for review to the BeyondWalls Partner Engagement Team.</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer col-lg-12">
+                      <div class="row">
+                        <div class="col-lg-12 text-end px-0">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                          <%= link_to 'Complete Registration', change_state_channel_partner_path(channel_partner, {channel_partner: {event: 'submit_for_approval'}}), method: :post, remote: true, data: {type: 'json', 'disable-with': 'Complete Registration', 'bs-dismiss': 'modal'}, id: 'cp-form-change-state', class: 'btn btn-primary' %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <% end %>
+        </div>
+      </div>
+    </section>
+    <% end %>
+    <%= javascript_tag do %>
+      $(document).ready(function(){
+        FormInitializer.init($("#new_channel_partner_form"));
+
+        $('#new_channel_partner_form').on('ajax:error', function(event) {
+          if(typeof event.detail[0] == 'object' && event.detail[0].errors != undefined) {
+            Amura.global_error_handler(event.detail[0].errors);
+          }
+        });
+        $('#new_channel_partner_form').on("ajax:success", function(event, two, three){
+          if(typeof event.detail[0] == 'object' && event.detail[0].status == 'pending') {
+            Amura.global_success_handler("Application submitted successfully");
+            setTimeout(function() {
+              window.location = window.location;
+            }, 3000);
+          } else {
+            Amura.global_success_handler("Details updated successfully");
+
+            // Move to next tab if available, to work like a wizard.
+            var $activeTab = $('#cp-tabs').find('a.active');
+            var $nextTab = $activeTab.parent().next().find('a');
+            if($nextTab.length > 0) {
+              var nextTab = $nextTab[0];
+              var bsTab = new bootstrap.Tab(nextTab);
+              bsTab.show();
+              $(window).scrollTop(0);
+            }
+          }
+        });
+
+        $('a[data-bs-toggle="tab"]').on('show.bs.tab', function (event) {
+          var $tab = $(event.target);
+          if($tab.data('bs-target') == '#step-3') {
+            $.ajax({
+              url: "/channel_partners/<%= channel_partner.id %>/asset_form.js",
+              type: "get",
+              success: function(one){
+              },
+              error: function(one, two, three){
+                Amura.global_error_handler("Error while fetching remote form");
+              }
+            });
+            $('.form-footer').find('#cp-form-submit').val('Save Draft');
+            $('.form-footer').find('#cp-form-submit').removeClass('btn-primary');
+            $('.form-footer').find('#cp-form-submit').addClass('bg-secondary');
+            $('.form-footer').find('#cp-form-change-state').closest('.form-footer').removeClass('d-none');
+          } else {
+            $('.form-footer').find('#cp-form-submit').val('Save');
+            $('.form-footer').find('#cp-form-submit').removeClass('bg-secondary');
+            $('.form-footer').find('#cp-form-submit').addClass('btn-primary');
+            $('.form-footer').find('#cp-form-change-state').closest('.form-footer').addClass('d-none');
+          }
+        })
+      });
+    <% end %>
+  <% end %>
+
+<% else %>
+  <% if current_user.inactive? %>
+    <% if current_user.rejection_reason.present? %>
+      <section class="after-register-sec mt-5 mb-2">
         <div class=" px-4">
           <div class="row">
             <div class="col-lg-12">
               <div class="app-review app-reject float-start wd-100">
-                <h1 class="notify-title float-start mb-0 col-12">Your application has been rejected</h1>
+                <h1 class="notify-title float-start mb-0 col-12">Your application has been rejected by <strong><%= current_user.temp_channel_partner&.name %></strong></h1>
                 <div class="fn-12 col-12">
                   <p class="mb-0">Reason:</p>
                   <div class="error-reason">
-                    <%= channel_partner.status_change_reason&.html_safe %>
+                    <%= current_user.rejection_reason %>
                   </div>
                 </div>
               </div>
@@ -33,167 +220,99 @@
         </div>
       </section>
     <% end %>
-  <section class="cp-register-sec mt-3">
-    <div class="col-lg-12">
-      <div class="cp-reg-header pt-5 pb-5 col-lg-12">
-        <h1 class="sec-title px-3 ms-4">Complete Registration</h1>
-        <%# <a href="javascript:;" class="skip-step-btn pe-3">Skip for now</a> %>
-      </div>
+    <section class="cp-register-sec">
       <div class="col-lg-12">
-        <div class="cp-step-list pt-3 col-lg-12">
-          <ul class="nav nav-tabs px-4 px-xs-0" id='cp-tabs'>
-            <li>
-              <a href="javascript:;" class="step-done nav-link border-0 active" data-bs-toggle="tab" data-bs-target="#step-1"
-                type="button" role="tab">
-                <div class="step-inner">
-                  <span>1</span>
-                  <p>Company Info</p>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="javascript:;" class="step-done nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-2"
-                type="button" role="tab">
-                <div class="step-inner">
-                  <span>2</span>
-                  <p>Company Details</p>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="javascript:;" class="step-done nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-3"
-                type="button" role="tab">
-                <div class="step-inner">
-                  <span>3</span>
-                  <p>Upload Documents</p>
-                </div>
-              </a>
-            </li>
-          </ul>
+        <div class="cp-reg-header pt-5 pb-5 col-lg-12">
+          <h1 class="sec-title px-3 ms-4">Company Registration</h1>
+          <%# <a href="javascript:;" class="skip-step-btn pe-3">Skip for now</a> %>
         </div>
-      </div>
-      <div class="col-lg-12 pb-3">
-        <%= simple_form_for(channel_partner, local: true, remote: true, html: {id: 'new_channel_partner_form', class: 'validate-form theme-form tab-content', "data-resource-type": global_labels['channel_partner'], "data-type": "json"}) do |form| %>
-        <div class="step-tab-content tab-pane fade show active px-3 col-12" role="tabpanel" id="step-1">
-          <div class="step-tab-inner col-12">
-            <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Company Info</h2> %>
-            <div class="cp-form-wrap px-xs-0 px-4 pt-2 mb-5">
-              <%= render "channel_partners/company_fields", {form: form} %>
-            </div>
-          </div>
-        </div>
-        <div class="step-tab-content tab-pane fade shadow-sm px-3 col-12" role="tabpanel" id="step-2">
-          <div class="step-tab-inner col-12">
-            <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Company Details</h2> %>
-            <div class="cp-form-wrap px-xs-0 px-4 pt-2 mb-5">
-              <%= render "channel_partners/questionaire_fields", {form: form} %>
-            </div>
-          </div>
-        </div>
-        <div class="step-tab-content tab-pane fade shadow-sm px-3 col-12" role="tabpanel" id="step-3">
-          <div class="step-tab-inner col-12">
-            <%# <h2 class="px-4 py-2 mb-3 text-theme-color fn-20 font-medium">Upload Documents</h2> %>
-            <div class="cp-form-wrap px-xs-0 px-4 pt-2 mb-5" id='asset-form'>
-              <%#= render 'channel_partners/asset_form', assetable: channel_partner %>
-            </div>
-          </div>
-        </div>
-
-        <div class="cp-form-wrap border-top px-4 py-4 pb-3 text-end px-xs-0">
-          <div class='form-footer px-0 text-start d-inline-block'>
-            <%= form.submit "Save", class: "btn btn-primary white me-3 d-inline-block px-4 py-2 font-medium w-auto", id: 'cp-form-submit' %>
-          </div>
-          <div class="form-footer px-0 d-inline-block d-none">
-            <% if policy([current_user_role_group, channel_partner]).change_state? && policy([current_user_role_group, channel_partner]).editable_field?('event') %>
-              <% link_name = "#{channel_partner.rejected? ? 'Resubmit Application' : 'Submit Application'}" %>
-              <a href="javascript:;" class="btn bg-primary white px-4 d-inline-block py-2 me-3 font-medium w-auto fn-14"  data-bs-toggle="modal" data-bs-target="#confirmRegistration"><%= link_name %></a>
-            <% end %>
-            <div class="modal fade googleMeet-modal" id="confirmRegistration" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                  <div class='modal-header'>
-                    <h6 class='modal-title'>Are you sure?</h6>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="col-lg-12">
+          <div class="cp-step-list new-user-cp-step pt-3 col-lg-12">
+            <ul class="nav nav-tabs px-4 px-xs-0" id='cp-tabs'>
+              <li>
+                <a href="javascript:;" class="step-done nav-link border-0 active" data-bs-toggle="tab" data-bs-target="#step-existing-company" type="button" role="tab">
+                  <div class="step-inner">
+                    <p>Get Yourself Registered in Existing Company</p>
                   </div>
-                  <div class="modal-body">
-                    <div class="row">
-                      <div class="col-lg-12">
-                        <p class='text-start'>By clicking on 'Complete Registration' you are confirming all the provided information and your application will be submitted for review to the BeyondWalls Partner Engagement Team.</p>
-                      </div>
-                    </div>
+                </a>
+              </li>
+              <li>
+                <a href="javascript:;" class="step-done nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-new-company" type="button" role="tab">
+                  <div class="step-inner">
+                    <p>Register a New Company</p>
                   </div>
-                  <div class="modal-footer col-lg-12">
-                    <div class="row">
-                      <div class="col-lg-12 text-end px-0">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <%= link_to 'Complete Registration', change_state_channel_partner_path(channel_partner, {channel_partner: {event: 'submit_for_approval'}}), method: :post, remote: true, data: {type: 'json', 'disable-with': 'Complete Registration', 'bs-dismiss': 'modal'}, id: 'cp-form-change-state', class: 'btn btn-primary' %>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-12 pb-3 tab-content">
+          <div class="step-tab-content tab-pane fade show active px-3 col-12" role="tabpanel" id="step-existing-company">
+            <div class="step-tab-inner col-12">
+              <div class="cp-form-wrap px-xs-0 px-4 pt-2 mb-5">
+                <%= form_for(:channel_partner, url: channel_partners_path, remote: true, local: true, html: {id: 'new_user_existing_channel_partner_form', class: 'validate-form theme-form', "data-resource-type": global_labels['channel_partner'], "data-type": "json"}) do |form| %>
+                  <%= render "channel_partners/existing_company_form", {form: form} %>
+                <% end %>
               </div>
             </div>
           </div>
+          <div class="step-tab-content tab-pane fade px-3 col-12" role="tabpanel" id="step-new-company">
+            <div class="step-tab-inner col-12">
+              <div class="cp-form-wrap px-xs-0 px-4 pt-2 mb-5">
+                <%= simple_form_for(current_user.build_channel_partner, url: channel_partners_path, remote: true, local: true, html: {id: 'new_user_new_channel_partner_form', class: 'validate-form theme-form', "data-resource-type": global_labels['channel_partner'], "data-type": "json"}) do |form| %>
+                  <%= render "channel_partners/new_company_form", {form: form} %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+
+          <div class="cp-form-wrap border-top px-4 py-4 pb-3 text-end px-xs-0">
+            <div class='form-footer px-0 text-start d-inline-block'>
+              <%= submit_tag "Proceed", class: "btn btn-primary white me-3 d-inline-block px-4 py-2 font-medium w-auto", form: 'new_user_existing_channel_partner_form', data: {disable_with: 'Please wait..'} %>
+            </div>
+          </div>
         </div>
-
-        <% end %>
       </div>
-    </div>
-  </section>
-  <% end %>
-  <%= javascript_tag do %>
-    $(document).ready(function(){
-      FormInitializer.init($("#new_channel_partner_form"));
+    </section>
+    <%= javascript_tag do %>
+      $(document).ready(function(){
+        FormInitializer.init($("#new_user_new_channel_partner_form"));
+        FormInitializer.init($("#new_user_existing_channel_partner_form"));
 
-      $('#new_channel_partner_form').on('ajax:error', function(event) {
-        if(typeof event.detail[0] == 'object' && event.detail[0].errors != undefined) {
-          Amura.global_error_handler(event.detail[0].errors);
-        }
-      });
-      $('#new_channel_partner_form').on("ajax:success", function(event, two, three){
-        if(typeof event.detail[0] == 'object' && event.detail[0].status == 'pending') {
-          Amura.global_success_handler("Application submitted successfully");
-          setTimeout(function() {
-            window.location = window.location;
-          }, 3000);
-        } else {
-          Amura.global_success_handler("Details updated successfully");
+        $('a[data-bs-toggle="tab"]').on('show.bs.tab', function (event) {
+          var $tab = $(event.target);
+          $(event.currentTarget).parents('.cp-register-sec').find('.form-footer input[type="submit"]').attr('form', $(event.currentTarget).parents('.cp-register-sec').find($tab.data('bs-target')).find('form').attr('id'));
+        });
 
-          // Move to next tab if available, to work like a wizard.
-          var $activeTab = $('#cp-tabs').find('a.active');
-          var $nextTab = $activeTab.parent().next().find('a');
-          if($nextTab.length > 0) {
-            var nextTab = $nextTab[0];
-            var bsTab = new bootstrap.Tab(nextTab);
-            bsTab.show();
-            $(window).scrollTop(0);
+        $('#new_user_new_channel_partner_form, #new_user_existing_channel_partner_form').on('ajax:error', function(event) {
+          if(typeof event.detail[0] == 'object' && event.detail[0].errors != undefined) {
+            Amura.global_error_handler(event.detail[0].errors);
           }
-        }
+        });
+        $('#new_user_new_channel_partner_form, #new_user_existing_channel_partner_form').on("ajax:success", function(event, two, three){
+          var resp = event.detail[0];
+          if(typeof resp == 'object') {
+            Amura.global_success_handler(resp.message || "Registered successfully");
+            setTimeout(function() {
+              window.location = window.location;
+            }, 1000);
+          }
+        });
       });
-
-      $('a[data-bs-toggle="tab"]').on('show.bs.tab', function (event) {
-        var $tab = $(event.target);
-        if($tab.data('bs-target') == '#step-3') {
-          $.ajax({
-            url: "/channel_partners/<%= channel_partner.id %>/asset_form.js",
-            type: "get",
-            success: function(one){
-            },
-            error: function(one, two, three){
-              Amura.global_error_handler("Error while fetching remote form");
-            }
-          });
-          $('.form-footer').find('#cp-form-submit').val('Save Draft');
-          $('.form-footer').find('#cp-form-submit').removeClass('btn-primary');
-          $('.form-footer').find('#cp-form-submit').addClass('bg-secondary');
-          $('.form-footer').find('#cp-form-change-state').closest('.form-footer').removeClass('d-none');
-        } else {
-          $('.form-footer').find('#cp-form-submit').val('Save');
-          $('.form-footer').find('#cp-form-submit').removeClass('bg-secondary');
-          $('.form-footer').find('#cp-form-submit').addClass('btn-primary');
-          $('.form-footer').find('#cp-form-change-state').closest('.form-footer').addClass('d-none');
-        }
-      })
-    });
+    <% end %>
+  <% elsif current_user.pending_approval? %>
+    <section class="after-register-sec">
+      <div class=" px-4">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="app-review float-start wd-100">
+              <h1 class="notify-title float-start wd-100">Your registration request has been sent to respective company owner</h1>
+              <p class="notify-desc float-start mb-0">Please get your account approved by contacting the owner</p>
+              <p class="notify-desc float-start mb-0">If you want to cancel above registration request in company, please contact your channel partner representative in <%= t('global.brand') %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   <% end %>
 <% end %>

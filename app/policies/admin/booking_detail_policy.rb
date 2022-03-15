@@ -62,6 +62,10 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     hold?
   end
 
+  def send_blocked?
+    hold?
+  end
+
   def block?
     hold?
   end

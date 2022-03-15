@@ -20,6 +20,18 @@ class Admin::ClientsController < AdminController
     end
   end
 
+  def show
+    respond_to do |format|
+      format.json { render json: @client.as_json({only: [:_id,:name], include: {regions: {only: [:_id, :city, :partner_regions]}}}) }
+      format.html {}
+    end
+  end
+
+  def get_regions
+    @regions = @client.regions
+    @regions = @regions.where(city: params[:city]) if params[:city]
+  end
+
   private
 
   def set_client

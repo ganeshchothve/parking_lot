@@ -155,6 +155,7 @@ class Client
   has_one :external_inventory_view_config, inverse_of: :booking_portal_client
   has_one :document_sign
   embeds_many :checklists, cascade_callbacks: true
+  embeds_many :regions, cascade_callbacks: true
 
   validates :name, :allowed_bookings_per_user, :helpdesk_email, :helpdesk_number, :notification_email, :notification_numbers, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :website_link, :support_email, :support_number, :payment_gateway, :cin_number, :mailgun_private_api_key, :mailgun_email_domain, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true
   validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
@@ -163,7 +164,10 @@ class Client
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
   validates :whatsapp_api_key, :whatsapp_api_secret, presence: true, if: :whatsapp_enabled?
   validates :notification_api_key, presence: true, if: :notification_enabled?
+  validates :regions, copy_errors_from_child: true
+
   accepts_nested_attributes_for :address, :external_inventory_view_config, :checklists
+  accepts_nested_attributes_for :regions, allow_destroy: true
 
   def self.available_preferred_logins
     [

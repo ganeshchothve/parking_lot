@@ -22,6 +22,21 @@ class Admin::InterestedProjectsController < AdminController
     end
   end
 
+  def subscribe_projects
+    if params[:interested_projects_attributes].present?
+      @user.interested_projects_attributes = params[:interested_projects_attributes].as_json
+      respond_to do |format|
+        if @user.save
+          format.json { render json: { subscribed_projects: @user.interested_projects }, status: :created }
+        else
+          format.json { render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity }
+        end
+      end
+    else
+      format.json { render json: { errors:  "Projects not selected"}, status: :unprocessable_entity }
+    end
+  end
+
   def edit
     render layout: false
   end
@@ -51,7 +66,7 @@ class Admin::InterestedProjectsController < AdminController
   end
 
   def authorize_resource
-    if %w[index].include?(params[:action])
+    if %w[index subscribe_projects].include?(params[:action])
       authorize [current_user_role_group, InterestedProject]
     elsif params[:action] == 'create'
       authorize [current_user_role_group, InterestedProject.new(project_id: params.dig(:interested_project, :project_id))]

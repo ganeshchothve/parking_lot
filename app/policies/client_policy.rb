@@ -20,6 +20,7 @@ class ClientPolicy < ApplicationPolicy
       external_inventory_view_config_attributes: ExternalInventoryViewConfigPolicy.new(user, ExternalInventoryViewConfig.new).permitted_attributes,
       address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes,
       checklists_attributes: ChecklistPolicy.new(user, Checklist.new).permitted_attributes,
+      regions_attributes: RegionPolicy.new(user, Region.new).permitted_attributes,
       email_domains: [], booking_portal_domains: [], enable_actual_inventory: [], enable_live_inventory: [],
       enable_incentive_module: [], incentive_calculation: [], incentive_gst_slabs: []
     ]
