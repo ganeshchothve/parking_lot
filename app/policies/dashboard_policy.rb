@@ -1,4 +1,6 @@
 class DashboardPolicy < Struct.new(:user, :dashboard)
+  include ApplicationHelper
+
   def index?
     true
   end
@@ -37,5 +39,9 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
 
   def sales_board?
     user.role.in?(%w(team_lead))
+  end
+
+  def team_lead_dashboard?
+    user.role.in?(current_client.team_lead_dashboard_access_roles) || user.role?('team_lead')
   end
 end

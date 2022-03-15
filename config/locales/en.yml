@@ -509,6 +509,8 @@ en:
         lead_blocking_days: 'Configure Lead Blocking Days'
         invoice_approval_tat: 'Invoice Approval TAT (In Days)'
         incentive_gst_slabs: 'Configure Incentive GST Slabs (%)'
+        team_lead_dashboard_access_roles: Team Lead Dashboard Access Roles
+        tl_dashboard_refresh_timer: Team Lead Dashboard Refresh Timer (Minutes)
       client/payment_gateways:
         Razorpay: Razorpay Payment Gateway
         CCAvenue: CCAvenue Payment Gateway
@@ -1695,6 +1697,7 @@ en:
         billing_team_link_name: 'Billing Dashboard'
         cp_admin_link_name: 'Channel Partner Head Dashboard'
         cp_owner_link_name: 'Company Owner Dashboard'
+        team_lead: 'Team Lead Dashboard'
       receipt_frequency: 'Payment Frequency'
     emails:
       index:

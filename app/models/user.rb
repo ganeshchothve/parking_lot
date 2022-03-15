@@ -26,6 +26,7 @@ class User
   COMPANY_USERS = %w[employee_user management_user]
   # Added different types of documents which are uploaded on User
   DOCUMENT_TYPES = %w[home_loan_application_form photo_identity_proof residence_address_proof residence_ownership_proof income_proof job_continuity_proof bank_statement advance_processing_cheque financial_documents]
+  TEAM_LEAD_DASHBOARD_ACCESS_USERS = %w[sales sales_admin team_lead gre superadmin admin]
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
