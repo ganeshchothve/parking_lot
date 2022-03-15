@@ -3,7 +3,7 @@ class Admin::SiteVisitsController < AdminController
   before_action :set_lead, except: %w[index show sync_with_selldo edit update change_state reject export]
   before_action :set_site_visit, only: %w[edit update show sync_with_selldo change_state reject]
   before_action :set_crm_base, only: %w[create sync_with_selldo]
-  before_action :authorize_resource, except: %w[new]
+  before_action :authorize_resource, except: %w[new create]
   around_action :user_time_zone, if: :current_user
 
   #

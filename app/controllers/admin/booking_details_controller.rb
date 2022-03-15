@@ -105,6 +105,14 @@ class Admin::BookingDetailsController < AdminController
     end
   end
 
+  def send_blocked
+    @booking_detail.set(booked_on: Date.current) if @booking_detail.booked_on.blank?
+    @booking_detail.blocked!
+    respond_to do |format|
+      format.html { redirect_to admin_booking_detail_path(@booking_detail) }
+    end
+  end
+
   #
   # This mis_report action for Admin users where Admin will be mailed the report
   #
