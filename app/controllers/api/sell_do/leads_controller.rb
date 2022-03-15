@@ -138,8 +138,8 @@ class Api::SellDo::LeadsController < Api::SellDoController
       last_name: @user.last_name,
       project_id: @project.id,
       lead_stage: params.dig(:payload, :stage),
-      source: params.dig(:payload, :campaign_info,:source),
-      sub_source: params.dig(:payload, :campaign_info,:sub_source),
+      source: params.dig(:payload, :campaign_info, :source),
+      sub_source: params.dig(:payload, :campaign_info, :sub_source),
       third_party_references_attributes: [{
         crm_id: @crm.id,
         reference_id: params[:lead_id]
