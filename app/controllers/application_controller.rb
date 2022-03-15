@@ -9,6 +9,8 @@ class ApplicationController < ActionController::Base
   before_action :set_cache_headers, :set_request_store, :set_cookies
   before_action :load_hold_unit
   before_action :set_current_client
+  # Run in current user Time Zone
+  around_action :user_time_zone, if: :current_user
   around_action :apply_project_scope, if: :current_user, unless: proc { current_user.role?('channel_partner') && params[:controller] == 'admin/projects' }
 
   acts_as_token_authentication_handler_for User, if: :token_authentication_valid_params?
@@ -47,6 +49,10 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
+  def user_time_zone
+    Time.use_zone(current_user.time_zone) { yield }
+  end
 
   def set_current_client
     unless current_client

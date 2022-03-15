@@ -4,7 +4,6 @@ class Admin::UsersController < AdminController
   before_action :set_user, except: %i[index export new create portal_stage_chart channel_partner_performance partner_wise_performance search_by]
   before_action :authorize_resource, except: %w[resend_confirmation_instructions change_state]
   around_action :apply_policy_scope, only: %i[index export]
-  around_action :user_time_zone, if: :current_user, only: %i[channel_partner_performance partner_wise_performance]
 
   layout :set_layout
 
@@ -408,10 +407,6 @@ class Admin::UsersController < AdminController
   end
 
   private
-
-  def user_time_zone
-    Time.use_zone(current_user.time_zone) { yield }
-  end
 
   def set_user
     @user = if params[:crm_client_id].present? && params[:id].present?

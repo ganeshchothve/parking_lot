@@ -4,7 +4,6 @@ class Admin::LeadsController < AdminController
   before_action :authorize_resource
   before_action :set_sales_user, only: :assign_sales
   around_action :apply_policy_scope, only: %i[index search_inventory]
-  around_action :user_time_zone, if: :current_user
 
   def new
     attrs = {}
@@ -163,10 +162,6 @@ class Admin::LeadsController < AdminController
   end
 
   private
-
-  def user_time_zone
-    Time.use_zone(current_user.time_zone) { yield }
-  end
 
   def set_lead
     @lead = if params[:crm_client_id].present? && params[:id].present?
