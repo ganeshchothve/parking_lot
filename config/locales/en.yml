@@ -1327,6 +1327,8 @@ en:
         customer_status: 'Queue Status'
         search_by_name: 'Name/ Email/ Phone'
         push_to_crm: 'Do You Want The Developer To Contact The Customer ?'
+        source: Source
+        sub_source: Sub-Source
 
       lead/stage:
         incoming: 'Incoming'
