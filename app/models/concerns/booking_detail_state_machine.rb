@@ -59,6 +59,7 @@ module BookingDetailStateMachine
 
       event :blocked, after: %i[after_blocked_event update_selldo!] do
         transitions from: :blocked, to: :blocked
+        transitions from: :hold, to: :blocked
         transitions from: :scheme_approved, to: :blocked
         transitions from: :swap_rejected, to: :blocked
         transitions from: :cancellation_rejected, to: :blocked

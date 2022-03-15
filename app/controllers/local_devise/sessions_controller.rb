@@ -8,6 +8,8 @@ class LocalDevise::SessionsController < Devise::SessionsController
 
   around_action :reset_unique_session, only: :destroy
 
+  helper_method :find_message
+
   def create
     if params[self.resource_name][:login_otp].present?
       user = self.resource_class.find_for_database_authentication(params[resource_name])
@@ -28,7 +30,7 @@ class LocalDevise::SessionsController < Devise::SessionsController
     yield resource if block_given?
     respond_to do |format|
       format.html { respond_with resource, location: after_sign_in_path_for(resource) }
-      format.json { render json: {message: find_message(:signed_in), user: current_user }, status: 200 }
+      format.json { render 'devise/sessions/create.json', status: 200 }
     end
   end
 
@@ -42,12 +44,12 @@ class LocalDevise::SessionsController < Devise::SessionsController
           Rails.logger.info "---------------- #{resource.otp_code} ----------------"
         end
         if otp_sent_status[:status]
-          format.json { render json: {confirmed: resource.confirmed?, phone: resource.phone, errors: ""}, status: 200 }
+          format.json { render json: {confirmed: resource.confirmed?, phone: resource.phone, errors: []}, status: 200 }
         else
-          format.json { render json: {errors: otp_sent_status[:error]}, status: 422 }
+          format.json { render json: {errors: [otp_sent_status[:error]].flatten}, status: 422 }
         end
       else
-        format.json { render json: {errors: "Please enter a valid login"}, status: :unprocessable_entity }
+        format.json { render json: {errors: ["Please enter a valid login"]}, status: :unprocessable_entity }
       end
     end
   end

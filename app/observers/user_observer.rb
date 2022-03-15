@@ -7,6 +7,16 @@ class UserObserver < Mongoid::Observer
     user.phone = Phonelib.parse(user.phone).to_s if user.phone.present?
 
     user.assign_attributes(manager_change_reason: 'Blocking the lead', unblock_at: Date.today + user.booking_portal_client.lead_blocking_days) if user.temporarily_blocked == true && user.unblock_at == nil && user.booking_portal_client.lead_blocking_days.present?
+
+    _event = user.event.to_s
+    user.event = nil
+    if _event.present?
+      if user.send("may_#{_event.to_s}?")
+        user.aasm(:company).fire!(_event.to_sym)
+      else
+        user.errors.add(:status, 'transition is invalid')
+      end
+    end
   end
 
   def before_create user
@@ -18,11 +28,14 @@ class UserObserver < Mongoid::Observer
         user.role = "employee_user"
       end
     end
+    if user.role.in?(%w(cp_owner channel_partner)) && ENV_CONFIG[:default_cp_manager_id].present?
+      user.manager_id = ENV_CONFIG[:default_cp_manager_id]
+    end
   end
 
   def after_create user
     if current_client.external_api_integration?
-      if user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner
+      if user.role.in?(%w(cp_owner channel_partner))
         if Rails.env.staging? || Rails.env.production?
           # Kept create user api call inline to avoid firing update calls before create which will fail to find user to update
           UserObserverWorker.new.perform(user.id.to_s, 'create')
@@ -50,7 +63,7 @@ class UserObserver < Mongoid::Observer
       end
     end
 
-    if (user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner) || user.role?('dev_sourcing_manager')
+    if user.role.in?(%w(cp_owner channel_partner dev_sourcing_manager))
       user.rera_id = user.channel_partner&.rera_id if user.rera_id.blank? && user.role.in?(%w(cp_owner channel_partner))
 
       if current_client.external_api_integration? && user.persisted? && user.changed?

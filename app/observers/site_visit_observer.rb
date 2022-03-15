@@ -42,6 +42,15 @@ class SiteVisitObserver < Mongoid::Observer
     if site_visit.created_by.blank?
       site_visit.created_by = site_visit.creator&.role
     end
+
+    # Set revisit
+    if site_visit.is_revisit.nil?
+      if site_visit.lead.site_visits.conducted.count.zero?
+        site_visit.is_revisit = false
+      else
+        site_visit.is_revisit = true
+      end
+    end
   end
 
   def before_save site_visit

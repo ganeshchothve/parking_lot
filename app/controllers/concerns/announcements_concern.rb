@@ -13,7 +13,10 @@ module AnnouncementsConcern
     else
       @announcements = @announcements.paginate(page: params[:page] || 1, per_page: params[:per_page])
     end
-    render 'announcements/index'
+    respond_to do |format|
+      format.json { render json: @announcements.as_json(methods: [:photo_assets_json, :collateral_assets_json]) }
+      format.html { render 'announcements/index' }
+    end
   end
 
   #
@@ -22,7 +25,10 @@ module AnnouncementsConcern
   # @return [{}] record with array of Hashes.
   #
   def show
-    render 'announcements/show', layout: false
+    respond_to do |format|
+      format.json { render json: @announcement.as_json(methods: [:photo_assets_json, :collateral_assets_json]) }
+      format.html { render 'announcements/show', layout: false }
+    end  
   end
 
   def update

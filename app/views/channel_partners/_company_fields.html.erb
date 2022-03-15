@@ -12,7 +12,7 @@
     <%= form.input :team_size, collection: (1..200).to_a.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("team_size"), as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
   </div>
   <div class="col-md-6">
-    <%= form.input :pan_number, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("pan_number") %>
+    <%= form.input :pan_number, disabled: !policy([:admin, @channel_partner]).editable_field?("pan_number") %>
   </div>
   <div class="col-md-6">
     <%= form.input :nri, item_wrapper_class: 'form-check form-check-inline me-3 align-middle', as: :radio_buttons, prompt: :translate, required: true, input_html: {class: 'wd-22', disabled: !policy([:admin, @channel_partner]).editable_field?("nri") } %>
@@ -24,6 +24,9 @@
     <%= form.input :manager_id, collection: User.where(is_active: true, confirmed_at: {'$ne': nil}, role: "cp").collect{|x| [x.ds_name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), required: true, as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
   </div>
   <div class="col-md-6">
-    <%= form.input :regions, collection: current_client.partner_regions.collect{|region| [region,region]}, disabled: !policy([:admin, @channel_partner]).editable_field?("regions"), as: :select, prompt: :translate, input_html: { class: 'selectize', multiple: true } %>
+    <%= form.input :city, collection: current_client.regions.pluck(:city), disabled: !policy([:admin, @channel_partner]).editable_field?("city"), prompt: 'Select', input_html: {class: 'selectize city_select'} %>
+  </div>
+  <div class="col-md-6">
+    <%= form.input :regions, collection: (@channel_partner.city.present? ? current_client.regions.where(city: @channel_partner.city).pluck(:partner_regions).first : []), selected: @channel_partner.regions, disabled: !policy([:admin, @channel_partner]).editable_field?("regions"), prompt: :translate, input_html: {multiple: true, class: 'selectize regions_select', data: {url: get_regions_admin_client_path}, placeholder: 'Select City First'} %>
   </div>
 </div>

@@ -211,4 +211,13 @@ module ApplicationHelper
     client.device_type
   end
 
+  def device_type?(type)
+    case type
+    when 'mobile'
+      device_type.in?(['smartphone', 'feature phone', 'phablet', 'tablet'])
+    when 'desktop'
+      device_type.in?(%w(desktop tv))
+    end
+  end
+
 end

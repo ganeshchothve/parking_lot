@@ -32,7 +32,7 @@ class UserObserverWorker
 
           # For calling Interakt APIs
           if interakt_base
-            if (changed_keys = (changes.keys & %w(first_name last_name email phone role channel_partner_id manager_id is_active sign_in_count current_sign_in_at)).presence) && changed_keys.reject {|key| user[key]&.is_a?(Boolean)}&.all? {|key| user[key].present?}
+            if (changed_keys = (changes.keys & %w(first_name last_name email phone role channel_partner_id manager_id is_active sign_in_count current_sign_in_at user_status_in_company)).presence) && changed_keys.reject {|key| user[key]&.is_a?(Boolean)}&.all? {|key| user[key].present?}
               if changed_keys.include?('channel_partner_id') && (channel_partner_id = changes.dig('channel_partner_id', 1).presence)
                 channel_partner = ChannelPartner.where(id: channel_partner_id).first
               else
@@ -58,12 +58,12 @@ class UserObserverWorker
             if changes.has_key?('manager_id') && changes.dig('manager_id', 1).present?
               Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, 'Manager Changed', changes, interakt_base.id.to_s)
             end
-            # Send company change on channel_partner/cp_owner user
-            if changes.has_key?('channel_partner_id') && (channel_partner_id = changes.dig('channel_partner_id', 1).presence)
+            # Send joined existing company event on channel_partner user
+            if changes.has_key?('channel_partner_id') && (channel_partner_id = changes.dig('channel_partner_id', 1).presence) && user.temp_channel_partner_id.present?
               payload = {
                 'channel_partner' => ChannelPartner.where(id: channel_partner_id).first&.as_json(include: {primary_user: {methods: [:name]}, manager: {methods: [:name]}})
               }.merge(changes || {})
-              Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, 'Company Changed', payload, interakt_base.id.to_s)
+              Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, 'Joined Existing Company' , payload, interakt_base.id.to_s)
             end
             # Send account activeness change on channel_partner/cp_owner user
             if changes.has_key?('is_active')

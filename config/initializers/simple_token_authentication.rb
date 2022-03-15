@@ -5,7 +5,7 @@ SimpleTokenAuthentication.configure do |config|
   # If true, user is stored in the session and the authentication token and
   # email may be provided only once.
   # If false, users must provide their authentication token and email at every request.
-  config.sign_in_token = true
+  config.sign_in_token = false
 
   # Configure the name of the HTTP headers watched for authentication.
   #
@@ -51,7 +51,7 @@ SimpleTokenAuthentication.configure do |config|
   #
   #   `config.identifiers = { super_admin: 'phone_number', user: 'uuid' }`
   #
-  # config.identifiers = { user: 'email' }
+  config.identifiers = { user: 'login' }
 
   # Configure the Devise trackable strategy integration.
   #
@@ -61,5 +61,5 @@ SimpleTokenAuthentication.configure do |config|
   # If false, given Devise trackable is configured for the relevant model,
   # then signing in through token authentication will be tracked as any other sign in.
   #
-  # config.skip_devise_trackable = true
+  config.skip_devise_trackable = false
 end

@@ -6,7 +6,7 @@
           <h3 class="title">
             <%= t("controller.users.#{action_name}.header", role: User.human_attribute_name("role.#{@user.role}") ) %>
           </h3>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close close-profile" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body theme-form">
           <div class="row">
@@ -18,8 +18,8 @@
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <%= f.label :last_name, class: 'label-required' %>
-                <%= f.text_field :last_name, class: 'form-control', autofocus: true, required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("last_name") ? false : true) %>
+                <%= f.label :last_name %>
+                <%= f.text_field :last_name, class: 'form-control', autofocus: true, disabled: (policy([current_user_role_group, @user]).editable_field?("last_name") ? false : true) %>
               </div>
             </div>
           </div>
@@ -106,7 +106,7 @@
           <% if policy([current_user_role_group, @user]).editable_field?("project_ids") %>
             <div class="mb-3">
               <%= f.label :project_ids, class: "control-label" %>
-              <%= f.select :project_ids, filter_project_names_options, {}, class: 'selectize', multiple: true, disabled: !(policy([current_user_role_group, f.object]).editable_field?("project_ids")) %>
+              <%= f.select :project_ids, options_from_collection_for_select(@user.project_ids.present? ? Project.in(id: @user.project_ids) : [], "id", "ds_name", @user.project_ids), {}, class: 'selectize-remote', multiple: true, data: {url: admin_projects_path}, disabled: !(policy([current_user_role_group, f.object]).editable_field?("project_ids")) %>
             </div>
           <% end %>
           <% if policy([current_user_role_group, @user]).editable_field?("manager_change_reason") %>
@@ -204,5 +204,10 @@
       create: false
     });
     FormInitializer.init($("#user_form"));
+
+    // reload the dashboard page when profile modal is closed
+    $('.close-profile').click(function(){
+      location.reload();
+    })
   });
 <% end %>
