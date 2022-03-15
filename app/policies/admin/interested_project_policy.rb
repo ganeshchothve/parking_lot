@@ -7,6 +7,10 @@ class Admin::InterestedProjectPolicy < InterestedProjectPolicy
     index? && record.project&.is_active?
   end
 
+  def subscribe_projects?
+    user.role.in?(%w(channel_partner cp_owner)) && user.active_channel_partner?
+  end
+
   def edit?
     user.role.in?(%w(admin superadmin))
   end

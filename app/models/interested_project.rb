@@ -14,4 +14,6 @@ class InterestedProject
 
   belongs_to :user
   belongs_to :project
+
+  validates :project_id, uniqueness: { scope: :user_id, message: ->(object, data) { "#{object.project.name} is already subscribed" } }
 end

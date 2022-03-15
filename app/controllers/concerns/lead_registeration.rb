@@ -9,7 +9,7 @@ module LeadRegisteration
   def check_and_register
     authorize [:admin, Lead.new(project_id: @project.id)]
     unless request.xhr?
-      redirect_to (user_signed_in? ? after_sign_in_path : root_path)
+      redirect_to (user_signed_in? ? after_sign_in_path_for(current_user) : root_path)
     else
       respond_to do |format|
         if params[:lead_id].blank? && @lead.present?
