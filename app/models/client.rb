@@ -88,7 +88,7 @@ class Client
   field :enable_daily_reports, type: Hash, default: {"payments_report": false}
   field :enable_incentive_module, type: Array, default: []
   field :partner_regions, type: Array, default: ['Pune West', 'Pune East', 'Others']
-  field :team_lead_dashboard_access_roles, type: Array, default: %w[team_lead gre]
+  field :team_lead_dashboard_access_roles, type: Array, default: %w[gre]
   field :tl_dashboard_refresh_timer, type: Integer, default: 1
   #
   # This setting will decide how same lead can be added through different channel partners,
