@@ -29,14 +29,6 @@ module SalesUserStateMachine
       end
     end
 
-    def status
-      if role?('sales')
-        sales_status
-      else
-        nil
-      end
-    end
-
     def check_customer_status
       Lead.where(closing_manager_id: self.id).in(customer_status: %w(engaged payment_done)).blank?
     end

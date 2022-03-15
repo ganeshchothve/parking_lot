@@ -52,6 +52,9 @@ Rails.application.routes.draw do
     get 'export', action: 'export', on: :collection, as: :export
     post :change_state, on: :member
     get 'asset_form', on: :member
+    post 'register', on: :collection, to: "channel_partners#find_or_create_cp_user"
+    get 'add_user_account', on: :collection
+    # TODO: Change this routes
     get :new_channel_partner, on: :collection
     post :create_channel_partner, on: :collection
   end
@@ -147,10 +150,11 @@ Rails.application.routes.draw do
       get :sms_pulse, on: :collection
     end
     resources :push_notifications, only: %i[index show new create]
-    resource :client, except: [:show, :new, :create] do
+    resource :client, except: [:new, :create] do
       resources :templates, only: [:edit, :update, :index]
       get 'document_sign/prompt'
       get 'document_sign/callback'
+      get 'get_regions'
     end
     namespace :audit do
       resources :records, only: [:index]
@@ -289,6 +293,7 @@ Rails.application.routes.draw do
         patch :unblock_lead
         patch :reactivate_account
         patch :move_to_next_state
+        patch :change_state
       end
 
       collection do
@@ -307,6 +312,12 @@ Rails.application.routes.draw do
       resources :leads, only: :index
       resources :interested_projects, only: [:index, :create, :edit, :update]
     end # end resources :users block
+
+    resources :interested_projects, only: [:subscribe_projects] do
+      collection do
+          post :subscribe_projects
+        end
+    end
 
     resources :user_kycs, only: %i[index show], controller: 'user_kycs'
     scope ":request_type" do
@@ -468,5 +479,4 @@ Rails.application.routes.draw do
   match '/sell_do/:project_id/site_visit_updated', to: "api/sell_do/leads#site_visit_updated", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
   match '/zoho/download', to: "api/zoho/assets#download", via: [:get, :post]
-
 end

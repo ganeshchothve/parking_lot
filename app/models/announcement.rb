@@ -24,4 +24,12 @@ class Announcement
     custom_scope = {}
   end
 
+  def photo_assets_json
+    self.assets.where(document_type: "photo").as_json(Asset.ui_json)
+  end
+
+  def collateral_assets_json
+    self.assets.where(document_type: "collateral").as_json(Asset.ui_json)
+  end
+
 end

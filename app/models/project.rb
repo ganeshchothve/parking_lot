@@ -183,6 +183,8 @@ class Project
   validates_uniqueness_of :name, :rera_registration_no, allow_blank: true
   validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
+  validates :city, inclusion: { in: current_client.regions.distinct(:city) }, allow_blank: true
+  validates :region, inclusion: { in: current_client.regions.distinct(:partner_regions).flatten || [] }, allow_blank: true
 
   accepts_nested_attributes_for :specifications, :offers, :timeline_updates, :address, :nearby_locations, allow_destroy: true
 
@@ -252,6 +254,14 @@ class Project
     end
   end
 
+  def cp_subscription_count
+    InterestedProject.where(project_id: self.id).count
+  end
+
+  def is_subscribed(user)
+    InterestedProject.where(project_id: self.id, user_id: user.id).in(status: %w(subscribed approved)).present?
+  end
+
   def self.user_based_scope(user, params = {})
     custom_scope = {}
     if user.role.in?(%w(cp_owner channel_partner))
@@ -266,7 +276,8 @@ class Project
         custom_scope.merge!({_id: {"$in": project_ids}})
       end
     end
-    custom_scope.merge!({ is_active: true }) if params[:controller].in?(%w(admin/projects home))
+    custom_scope.merge!({ is_active: true }) if (params[:controller] == 'admin/projects' && params[:action] == 'index') || params[:controller] == 'home'
     custom_scope
   end
+
 end

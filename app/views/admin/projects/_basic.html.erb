@@ -46,7 +46,13 @@
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :city, class: 'label-required' %>
-      <%= f.text_field :city, class: 'form-control', required: true, disabled: !policy([:admin, project]).editable_field?("city") %>
+      <%= f.select :city, current_client.regions.pluck(:city), {prompt: 'Select'}, class: 'selectize city_select', required: true,  disabled: !policy([:admin, @project]).editable_field?("city") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :region %>
+      <%= f.select :region, (@project.region.present? ? current_client.regions.where(city: @project.city).pluck(:partner_regions).first : []), {prompt: 'Select City First'}, class: 'selectize regions_select', required: true,  disabled: !policy([:admin, @project]).editable_field?("region"), data: { url: get_regions_admin_client_path } %>
     </div>
   </div>
   <div class="col-md-6">
@@ -210,12 +216,6 @@
       <%= f.text_field :broker_usp, value: usp[0], class: 'form-control mb-2', name: 'project[broker_usp][]', disabled: !policy([:admin, project]).editable_field?("broker_usp"), maxlength: 200 %>
       <%= f.text_field :broker_usp, value: usp[1], class: 'form-control mb-2', name: 'project[broker_usp][]', disabled: !policy([:admin, project]).editable_field?("broker_usp"), maxlength: 200 %>
       <%= f.text_field :broker_usp, value: usp[2], class: 'form-control', name: 'project[broker_usp][]', disabled: !policy([:admin, project]).editable_field?("broker_usp"), maxlength: 200 %>
-    </div>
-  </div>
-  <div class="col-md-12">
-    <div class="mb-3">
-      <%= f.label :region %>
-      <%= f.select :region, current_client.partner_regions, {}, class: 'selectize', required: true,  disabled: !policy([:admin, @project]).editable_field?("region") %>
     </div>
   </div>
   <div class="col-md-6">

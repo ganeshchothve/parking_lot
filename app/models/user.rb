@@ -12,6 +12,7 @@ class User
   include SalesUserStateMachine
   include DetailsMaskable
   include IncentiveSchemeAutoApplication
+  include UserStatusInCompanyStateMachine
 
   # Constants
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
@@ -49,6 +50,7 @@ class User
   field :utm_params, type: Hash, default: {} # {"campaign": '' ,"source": '',"sub_source": '',"medium": '',"term": '',"content": ''}
   field :enable_communication, type: Hash, default: { "email": true, "sms": true }
   field :premium,type: Boolean, default: false
+  field :rejection_reason, type: String
 
   field :encrypted_password, type: String, default: ''
 
@@ -124,6 +126,7 @@ class User
   field :upi_id, type: String
 
   field :referred_on, type: DateTime
+  field :register_in_cp_company_token, type: String
 
   ## Security questionable
 
@@ -159,6 +162,7 @@ class User
   belongs_to :tier, optional: true  # for associating channel partner users with different tiers.
   belongs_to :selected_lead, class_name: 'Lead', optional: true
   belongs_to :selected_project, class_name: 'Project', optional: true
+  belongs_to :temp_channel_partner, class_name: 'ChannelPartner', optional: true
   has_many :leads
   has_many :receipts
   has_many :project_units
@@ -190,10 +194,11 @@ class User
   embeds_many :user_notification_tokens
 
   accepts_nested_attributes_for :portal_stages, :user_notification_tokens, reject_if: :all_blank
+  accepts_nested_attributes_for :interested_projects, reject_if: :all_blank
 
-  validates :first_name, :role, presence: true
+  validates :role, presence: true
   #validates :first_name, :last_name, name: true, allow_blank: true
-  validates :channel_partner_id, presence: true, if: proc { |user| user.role?('channel_partner') }
+  # validates :channel_partner_id, presence: true, if: proc { |user| user.role?('channel_partner') }
   validate :phone_or_email_required, if: proc { |user| user.phone.blank? && user.email.blank? }
   validates :phone, :email, uniqueness: { allow_blank: true }
   validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile mobile fixed_line premium_rate] }, allow_blank: true
@@ -318,6 +323,16 @@ class User
 
   def phone_or_email_required
     errors.add(:base, 'Email or Phone is required')
+  end
+
+  def status
+    if role?('sales')
+      sales_status
+    elsif ["channel_partner","cp_owner"].include?(role)
+      user_status_in_company
+    else
+      nil
+    end
   end
 
   def unblock_lead!(tag = false)
@@ -722,7 +737,11 @@ class User
         custom_scope = { role: {"$in": User.buyer_roles(user.booking_portal_client)} }
         custom_scope[:'$or'] = [{manager_id: user.id}, {manager_id: nil, referenced_manager_ids: user.id, iris_confirmation: false}]
       elsif user.role?('cp_owner')
-        custom_scope = { role: {'$in': ['channel_partner', 'cp_owner']}, channel_partner_id: user.channel_partner_id }
+        if user.channel_partner_id.present?
+          custom_scope = { role: {'$in': ['channel_partner', 'cp_owner']}, channel_partner_id: user.channel_partner_id }
+        else
+          custom_scope = { id: user.id }
+        end
       elsif user.role?('crm')
         custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) + %w(channel_partner) } }
       elsif user.role?('sales_admin')
