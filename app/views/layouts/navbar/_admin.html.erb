@@ -30,7 +30,7 @@
 <% end %>
 
 <% if policy(:dashboard).index? %>
-  <% if current_user.role.in?(current_client.team_lead_dashboard_access_roles) || current_user.role?('team_lead') %>
+  <% if policy(:dashboard).team_lead_dashboard? %>
     <li class="nav-item">
       <%= active_link_to t('controller.dashboard.index.team_lead'), team_lead_dashboard_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
     </li>

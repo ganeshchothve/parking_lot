@@ -1,4 +1,4 @@
-<% if current_user.role.in?(current_client.team_lead_dashboard_access_roles) || current_user.role?('team_lead')%>
+<% if policy(:dashboard).team_lead_dashboard? %>
   <section class="team_lead mt-4">
     <div class="px-3">
       <div class="row">

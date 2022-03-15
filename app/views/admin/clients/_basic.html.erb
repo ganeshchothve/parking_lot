@@ -69,7 +69,7 @@
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :tl_dashboard_refresh_timer, class: 'label-required' %>
-      <%= f.text_field :tl_dashboard_refresh_timer, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("tl_dashboard_refresh_timer") ? false : true), min: 1, max: 30, placeholder: 'Minimum 1 minute' %>
+      <%= f.number_field :tl_dashboard_refresh_timer, class: 'form-control', required: 'required', disabled:!policy([:admin, @client]).editable_field?("tl_dashboard_refresh_timer"), min: 1, max: 30, placeholder: 'Minimum 1 minute' %>
     </div>
   </div>
 </div>
