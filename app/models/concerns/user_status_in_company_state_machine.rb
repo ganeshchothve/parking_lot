@@ -41,8 +41,8 @@ module UserStatusInCompanyStateMachine
     end
 
     def unset_channel_partner
+      attrs = {}
       attrs = {channel_partner_id: nil, role: 'channel_partner'} if self.channel_partner_id.present?
-      attrs[:temp_channel_partner_id] = nil if aasm(:company).from_state == :pending_approval && aasm(:company).to_state == :inactive
       self.set(attrs) if attrs.present?
     end
 

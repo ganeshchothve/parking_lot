@@ -12,7 +12,7 @@
     <%= form.input :team_size, collection: (1..200).to_a.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("team_size"), as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
   </div>
   <div class="col-md-6">
-    <%= form.input :pan_number, required: true, disabled: !policy([:admin, @channel_partner]).editable_field?("pan_number") %>
+    <%= form.input :pan_number, disabled: !policy([:admin, @channel_partner]).editable_field?("pan_number") %>
   </div>
   <div class="col-md-6">
     <%= form.input :nri, item_wrapper_class: 'form-check form-check-inline me-3 align-middle', as: :radio_buttons, prompt: :translate, required: true, input_html: {class: 'wd-22', disabled: !policy([:admin, @channel_partner]).editable_field?("nri") } %>
