@@ -493,7 +493,7 @@ class Admin::UsersController < AdminController
   end
 
   def authorize_resource
-    if %w[index export portal_stage_chart channel_partner_performance partner_wise_performance].include?(params[:action])
+    if %w[index export portal_stage_chart channel_partner_performance partner_wise_performance search_by].include?(params[:action])
       authorize [current_user_role_group, User]
     elsif params[:action] == 'new' || params[:action] == 'create'
       if params.dig(:user, :role).present?
