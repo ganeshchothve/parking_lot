@@ -197,8 +197,8 @@ class User
   accepts_nested_attributes_for :interested_projects, reject_if: :all_blank
 
   validates :role, presence: true
+  validates :phone, presence: true, if: proc { |user| user.role.in?(%w(cp_owner channel_partner)) }
   #validates :first_name, :last_name, name: true, allow_blank: true
-  # validates :channel_partner_id, presence: true, if: proc { |user| user.role?('channel_partner') }
   validate :phone_or_email_required, if: proc { |user| user.phone.blank? && user.email.blank? }
   validates :phone, :email, uniqueness: { allow_blank: true }
   validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile mobile fixed_line premium_rate] }, allow_blank: true
@@ -756,7 +756,7 @@ class User
       elsif user.role?('cp')
         custom_scope = { role: { '$in': %w(channel_partner cp_owner) }, manager_id: user.id }
       elsif user.role?('billing_team')
-        custom_scope = { role: 'channel_partner' }
+        custom_scope = { role: { '$in': %w(channel_partner cp_owner) } }
       elsif user.role?('admin')
         custom_scope = { role: { "$ne": 'superadmin' } }
       elsif user.role?('team_lead')|| user.role?('gre')
