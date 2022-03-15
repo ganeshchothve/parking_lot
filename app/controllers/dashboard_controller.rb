@@ -83,6 +83,7 @@ class DashboardController < ApplicationController
   end
 
   def team_lead_dashboard
+    authorize :dashboard, :team_lead_dashboard?
   end
 
   private

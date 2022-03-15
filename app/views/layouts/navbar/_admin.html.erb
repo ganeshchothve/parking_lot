@@ -29,13 +29,12 @@
   <% end %>
 <% end %>
 
-<% if policy(:dashboard).index? %>
-  <% if policy(:dashboard).team_lead_dashboard? %>
-    <li class="nav-item">
-      <%= active_link_to t('controller.dashboard.index.team_lead'), team_lead_dashboard_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-    </li>
-  <% end %>
+<% if policy(:dashboard).team_lead_dashboard? %>
+  <li class="nav-item">
+    <%= active_link_to t('controller.dashboard.index.team_lead'), team_lead_dashboard_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  </li>
 <% end %>
+
 
 <% if policy([:admin, Project]).index? %>
   <li class="nav-item">
