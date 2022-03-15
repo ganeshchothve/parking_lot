@@ -113,9 +113,9 @@ class Api::SellDo::LeadsController < Api::SellDoController
   end
 
   def update_source_and_sub_source_on_lead
-    @lead.set(source: params.dig(:campaign_info, :source)) if params.dig(:campaign_info, :source).present? && (@lead.source != params.dig(:campaign_info, :source))
+    @lead.set(source: params.dig(:payload, :campaign_info, :source)) if params.dig(:payload, :campaign_info, :source).present? && (@lead.source != params.dig(:payload, :campaign_info, :source))
 
-    @lead.set(sub_source: params.dig(:campaign_info, :sub_source)) if params.dig(:campaign_info, :sub_source).present? && (@lead.sub_source != params.dig(:campaign_info, :sub_source))
+    @lead.set(sub_source: params.dig(:payload, :campaign_info, :sub_source)) if params.dig(:payload, :campaign_info, :sub_source).present? && (@lead.sub_source != params.dig(:payload, :campaign_info, :sub_source))
   end
 
   def create_or_set_site_visit
@@ -138,8 +138,8 @@ class Api::SellDo::LeadsController < Api::SellDoController
       last_name: @user.last_name,
       project_id: @project.id,
       lead_stage: params.dig(:payload, :stage),
-      source: params.dig(:campaign_info,:source),
-      sub_source: params.dig(:campaign_info,:sub_source),
+      source: params.dig(:payload, :campaign_info,:source),
+      sub_source: params.dig(:payload, :campaign_info,:sub_source),
       third_party_references_attributes: [{
         crm_id: @crm.id,
         reference_id: params[:lead_id]
