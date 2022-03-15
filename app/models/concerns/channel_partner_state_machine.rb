@@ -27,11 +27,7 @@ module ChannelPartnerStateMachine
     end
 
     def can_send_for_approval?
-      valid = self.valid?(:submit_for_approval)
-      self.doc_types.each do |dt|
-        valid = valid && self.assets.where(document_type: dt).present?
-      end
-      valid
+      self.valid?(:submit_for_approval)
     end
 
     def after_submit_for_approval
@@ -74,6 +70,17 @@ module ChannelPartnerStateMachine
 
     def update_selldo!
       self.users.each(&:set_portal_stage_and_push_in_crm)
+    end
+
+    def status_message
+      case status.to_s
+      when 'pending'
+        I18n.t("mobile.channel_partner.status_message.#{status}")
+      when 'rejected'
+        I18n.t("mobile.channel_partner.status_message.#{status}", reason: status_change_reason&.html_safe)
+      else
+        nil
+      end
     end
   end
 end

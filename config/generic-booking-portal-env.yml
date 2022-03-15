@@ -68,3 +68,5 @@ interakt:
   base_url:
 razorpay:
   base_url:
+
+default_cp_manager_id:

@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   include Pundit
   include ApplicationHelper
 
-  before_action :store_user_location!, if: :storable_location?
+  #before_action :store_user_location!, if: :storable_location?
   before_action :set_locale
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_cache_headers, :set_request_store, :set_cookies
@@ -154,7 +154,7 @@ class ApplicationController < ActionController::Base
   end
 
   def token_authentication_valid_params?
-    params[:user_email].present? && params[:user_token].present?
+    params[:user_login].present? && params[:user_token].present?
   end
 
   def user_not_authorized(exception)

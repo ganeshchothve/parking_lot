@@ -22,10 +22,10 @@ class ChannelPartner
   CATEGORY = ['CP Company', 'Individual CP', 'ROTN', 'IRDA', 'Chartered accountants', 'IT Profession']
   SOURCE = ['Internal CP', 'External CP']
 
-  SHORT_FORM = %i(company_name rera_applicable status interested_services)
-  FULL_FORM = SHORT_FORM.clone + %i(gst_applicable nri manager_id)
+  SHORT_FORM = %i(company_name rera_applicable status)
+  FULL_FORM = SHORT_FORM.clone + %i(gst_applicable nri) #manager_id)
 
-  attr_accessor :first_name, :last_name, :email, :phone, :referral_code
+  attr_accessor :first_name, :last_name, :email, :phone, :referral_code, :is_existing_company
 
   field :rera_id, type: String
   field :status, type: String, default: 'inactive'
@@ -41,6 +41,7 @@ class ChannelPartner
   field :category, type: String
   field :source, type: String
   field :website, type: String
+  field :city, type: String
   field :regions, type: Array, default: []
   field :erp_id, type: String, default: ''
 
@@ -61,6 +62,7 @@ class ChannelPartner
   scope :filter_by_manager_id, ->(manager_id) { where(manager_id: manager_id) }
   scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_city, ->(city) { where(city: city) }
+  scope :filter_by_regions, ->(regions) { where( regions: { "$all": regions }) }
   scope :filter_by__id, ->(_id) { where(_id: _id) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(company_name: regex) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
@@ -75,18 +77,20 @@ class ChannelPartner
   )
 
   belongs_to :manager, class_name: 'User', optional: true
-  belongs_to :primary_user, class_name: 'User', optional: true
+  belongs_to :primary_user, class_name: 'User'
   has_many :users
   has_one :address, as: :addressable
   has_one :bank_detail, as: :bankable, validate: false
   has_many :assets, as: :assetable
   has_many :site_visits
 
-  validates :first_name, :last_name, presence: true, on: :create
+  #validates :first_name, presence: true, on: :create
   validates *SHORT_FORM, presence: true
   validates *FULL_FORM, presence: true, on: :submit_for_approval
-  validate :phone_or_email_required, if: proc { |cp| cp.phone.blank? && cp.email.blank? }, on: :create
-  validates :pan_number, presence: true, unless: :nri?, on: :submit_for_approval
+  #validate :phone_or_email_required, if: proc { |cp| cp.phone.blank? && cp.email.blank? }, on: :create
+  #
+  #TODO: Commented for testing on Mobile app
+  #validates :pan_number, presence: true, unless: :nri?, on: :submit_for_approval
   validates :rera_id, presence: true, if: :rera_applicable?
   validates :gstin_number, presence: true, if: :gst_applicable?
   validates :team_size, :numericality => { :greater_than => 0 }, allow_blank: true
@@ -99,13 +103,15 @@ class ChannelPartner
   validates :company_type, inclusion: { in: proc { ChannelPartner::COMPANY_TYPE } }, allow_blank: true
   validates :source, inclusion: { in: proc { ChannelPartner::SOURCE } }, allow_blank: true
   validates :category, inclusion: { in: proc { ChannelPartner::CATEGORY } }, allow_blank: true
-  validates :regions, array: { inclusion: { in: Client.first.try(:partner_regions) || [] } }
+  validates :city, inclusion: { in: current_client.regions.distinct(:city) }, allow_blank: true
+  validates :regions, array: { inclusion: { allow_blank: true, in: current_client.regions.distinct(:partner_regions).flatten || [] } }
   validates :company_name, uniqueness: true
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: { with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A' }, allow_blank: true
   #validates :first_name, :last_name, name: true, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
-  validate :user_based_uniqueness, on: :create
+  # validate :user_based_uniqueness, on: :create
+  validates :primary_user_id, uniqueness: true, allow_blank: true
 
   validates :experience, inclusion: { in: proc{ ChannelPartner::EXPERIENCE } }, allow_blank: true
   validates :expertise, array: { inclusion: {allow_blank: true, in: ChannelPartner::EXPERTISE } }
@@ -113,7 +119,7 @@ class ChannelPartner
 
   validates :gstin_number, format: { with: /\A([0]{1}[1-9]{1}|[1-2]{1}[0-9]{1}|[3]{1}[0-7]{1})([a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[zZ]{1}[0-9a-zA-Z]{1})+\z/i, message: 'is not valid format' }, allow_blank: true
   validates :rera_id, format: { with: /\A([A-Za-z])\d{11}\z/i, message: 'is not valid format' }, allow_blank: true
-  validate :docs_required_for_approval, on: :submit_for_approval
+  #validate :docs_required_for_approval, on: :submit_for_approval
 
   accepts_nested_attributes_for :bank_detail, :address
 
