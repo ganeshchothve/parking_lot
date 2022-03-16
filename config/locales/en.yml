@@ -1327,6 +1327,8 @@ en:
         customer_status: 'Queue Status'
         search_by_name: 'Name/ Email/ Phone'
         push_to_crm: 'Do You Want The Developer To Contact The Customer ?'
+        source: Source
+        sub_source: Sub-Source
 
       lead/stage:
         incoming: 'Incoming'
@@ -2222,7 +2224,7 @@ en:
     channel_partner:
       status_message:
         pending: "Your application is under review. We will notify you via email on the status of your application. Our estimated review time is between 24-48 hours"
-        rejected: "Your application has been rejected. Reason: %{reason}"
+        rejected: "Reason: %{reason}"
 
   selldo:
     links:
