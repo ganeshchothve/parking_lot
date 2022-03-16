@@ -33,8 +33,8 @@ var showUnitData = function(unit, assets){
     });
   }
   $("#unit-description").find('[data-placeholder="effective_rate"]').html(Amura.formatMoney(unit.effective_rate));
-  $("#unit-description").find('[data-placeholder="agreement_price"]').html(Amura.formatMoney(unit.agreement_price));
-  $("#unit-description").find('[data-placeholder="all_inclusive_price"]').html(Amura.formatMoney(unit.all_inclusive_price));
+  $("#unit-description").find('[data-placeholder="agreement_price"]').html(Amura.formatMoney(unit.calculate_agreement_price));
+  $("#unit-description").find('[data-placeholder="all_inclusive_price"]').html(Amura.formatMoney(unit.calculate_all_inclusive_price));
   Gamification.gamifyUnitSelection(unit, $('#unit-description [data-placeholder="gamification"]'));
   if(assets.length > 0){
     $(".unit_image_container").show();
