@@ -89,5 +89,13 @@ class SiteVisitObserver < Mongoid::Observer
       site_visit.invoices.where(status: 'tentative').update_all(status: 'rejected', rejection_reason: 'Site Visit has been cancelled')
     end
     site_visit.invoices.where(status: 'tentative').update_all(status: 'draft') if site_visit.actual_incentive_eligible?
+
+    if current_client.external_api_integration?
+      if Rails.env.staging? || Rails.env.production?
+        SiteVisitObserverWorker.perform_async(site_visit.id.to_s, 'update', site_visit.changes.merge(site_visit.notes.select {|x| x.new_record? && x.changes.present?}.first&.changes&.slice('note') || {}))
+      else
+        SiteVisitObserverWorker.new.perform(site_visit.id, 'update', site_visit.changes.merge(site_visit.notes.select {|x| x.new_record? && x.changes.present?}.first&.changes&.slice('note') || {}))
+      end
+    end
   end
 end

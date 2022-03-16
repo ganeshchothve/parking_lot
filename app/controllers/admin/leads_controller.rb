@@ -102,6 +102,11 @@ class Admin::LeadsController < AdminController
   end
 
   def move_to_next_state
+    if @lead.current_site_visit.status == 'arrived'
+      current_site_visit = @lead.current_site_visit
+      current_site_visit.assign_attributes(conducted_on: Time.current, conducted_by: current_user.role, status: 'conducted')
+      current_site_visit.save
+    end
     respond_to do |format|
       if @lead.move_to_next_state!(params[:status])
         format.html{ redirect_to request.referrer || dashboard_url, notice: I18n.t("controller.leads.move_to_next_state.#{@lead.status}", name: @lead.name.titleize) }
