@@ -26,6 +26,7 @@ class User
   COMPANY_USERS = %w[employee_user management_user]
   # Added different types of documents which are uploaded on User
   DOCUMENT_TYPES = %w[home_loan_application_form photo_identity_proof residence_address_proof residence_ownership_proof income_proof job_continuity_proof bank_statement advance_processing_cheque financial_documents]
+  TEAM_LEAD_DASHBOARD_ACCESS_USERS = %w[team_lead gre]
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -224,7 +225,7 @@ class User
   scope :filter_by_role_nin, ->(_role) { _role.is_a?(Array) ? where( role: { "$nin": _role } ) : where(role: _role.as_json) }
   scope :buyers, -> { where(role: {'$in' => BUYER_ROLES } )}
   scope :filter_by_userwise_project_ids, ->(user) { self.in(project_ids: user.project_ids) if user.try(:project_ids).present? }
-  scope :filter_by_sales_status, ->(*sales_status){ where(sales_status: { '$in': sales_status }) }
+  scope :filter_by_sales_status, ->(sales_status){ sales_status.is_a?(Array) ? where( sales_status: { "$in": sales_status }) : where(sales_status: sales_status.as_json) }
   scope :incentive_eligible, ->(category) do
     if category == 'referral'
       nin(referred_by_id: ['', nil]).in(role: BUYER_ROLES + %w(channel_partner cp_owner))

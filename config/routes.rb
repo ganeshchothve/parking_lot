@@ -239,7 +239,10 @@ Rails.application.routes.draw do
       member do
         get 'sync_notes'
         get :send_payment_link
+        get :reassign_lead
         patch :assign_sales
+        patch :reassign_sales
+        patch :accept_lead
         patch :move_to_next_state
       end
       resources :site_visits, only: [:new, :create, :index, :update]
@@ -403,6 +406,7 @@ Rails.application.routes.draw do
     #get :download_brochure, to: 'dashboard#download_brochure'
     get :sales_board, to: 'dashboard#sales_board'
     get :booking_details_counts, to: 'dashboard#booking_details_counts'
+    get :team_lead_dashboard, to: 'dashboard#team_lead_dashboard'
 
     resource :lead do
       resources :searches, except: [:destroy], controller: 'searches' do

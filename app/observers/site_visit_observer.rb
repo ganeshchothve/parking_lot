@@ -89,5 +89,13 @@ class SiteVisitObserver < Mongoid::Observer
       site_visit.invoices.where(status: 'tentative').update_all(status: 'rejected', rejection_reason: 'Site Visit has been cancelled')
     end
     site_visit.invoices.where(status: 'tentative').update_all(status: 'draft') if site_visit.actual_incentive_eligible?
+
+    # if site visit status is changed to conducted, the site visit is pushed to sell do
+    if site_visit.status_changed? && site_visit.status == 'conducted'
+      crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+      if crm_base.present?
+        api, api_log = site_visit.push_in_crm(crm_base)
+      end
+    end
   end
 end

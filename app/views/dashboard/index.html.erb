@@ -26,7 +26,6 @@
       <%= render 'dashboard/index/cp_admin' %>
     <% elsif ['gre'].include?(current_user.role) %>
       <%= render 'dashboard/index/gre' %>
-      <%= render 'dashboard/index/team_lead' %>
     <% elsif ['dev_sourcing_manager'].include?(current_user.role) %>
       <%= render 'dashboard/index/dev_sourcing_manager' %>
     <% elsif DashboardPolicy.new(current_user, :dashboard).admin_dashboard? %>

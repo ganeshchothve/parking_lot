@@ -101,7 +101,55 @@ class Admin::LeadsController < AdminController
     end
   end
 
+  def reassign_lead
+    render layout: false
+  end
+
+  def reassign_sales
+    @sales = User.where(id: params.dig(:lead, :closing_manager_id), role: 'sales').first
+    respond_to do |format|
+      if @sales.present?
+        if @lead.assign_manager(params.dig(:lead, :closing_manager_id), @lead.closing_manager_id)
+          message = "#{@lead.name} assigned to sales #{@sales.name}"
+          format.html { redirect_to request.referrer || dashboard_url, notice: message }
+          format.json { render json: { message: message }, status: :ok }
+        else
+          message = "#{@lead.name} not assigned to sales #{@sales.name}"
+          format.html{ redirect_to request.referrer || dashboard_url, alert: message }
+          format.json { render json: { errors: [message] }, status: :unprocessable_entity }
+        end
+      else
+        format.html{ redirect_to request.referrer || dashboard_url, alert: "Sales user not found" }
+      end
+    end
+  end
+
+  def accept_lead
+    respond_to do |format|
+      if @lead.update(accepted_by_sales: params[:accepted_by_sales])
+        @lead.reassign_log_status(nil, params[:event])
+        if @lead.accepted_by_sales
+          message = I18n.t('controller.leads.accepted_by_sales', status: "Accepted")
+        else
+          message = I18n.t('controller.leads.accepted_by_sales', status: "Rejected")
+        end
+        format.html{ redirect_to request.referrer || dashboard_url, notice: message }
+        format.json { render json: { message: message }, status: :ok }
+      else
+        format.html{ redirect_to request.referrer || dashboard_url, alert: @lead.errors.full_messages.uniq }
+        format.json { render json: { errors: @lead.errors.full_messages.uniq }, status: :unprocessable_entity }
+      end
+    end
+  end
+
   def move_to_next_state
+    # if current site visit status is marked as arrived, then the site visit status is changed to conducted
+    if @lead.current_site_visit.present? && @lead.current_site_visit.status == 'arrived'
+      current_site_visit = @lead.current_site_visit
+      current_site_visit.assign_attributes(conducted_on: Time.current, conducted_by: current_user.role, status: 'conducted')
+      current_site_visit.save
+    end
+
     respond_to do |format|
       if @lead.move_to_next_state!(params[:status])
         format.html{ redirect_to request.referrer || dashboard_url, notice: I18n.t("controller.leads.move_to_next_state.#{@lead.status}", name: @lead.name.titleize) }
