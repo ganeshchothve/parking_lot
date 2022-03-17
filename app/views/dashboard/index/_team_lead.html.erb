@@ -26,9 +26,11 @@
     </div>
   </div>
 </section>
-
 <%= javascript_tag do %>
   $(document).ready(function(){
+
+  setTimeout(function(){ location.reload(); }, <%= current_client.tl_dashboard_refresh_timer*60000 %>);
+
     var onType = function(value) {
       this.$input.data('params').fltrs.queue_number = value;
     };

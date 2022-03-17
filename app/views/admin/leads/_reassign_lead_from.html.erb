@@ -1,0 +1,13 @@
+<div class="modal-header">
+  <h3 class="title">Reassign Lead</h3>
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+  <div class="mb-3">
+    <%= f.label :closing_manager_id, class: 'control-label' %>
+    <%= f.select :closing_manager_id, User.sales.available.collect{|user| [(user.ds_name), user.id]}, {prompt: true}, class: 'selectize', required: true %>
+  </div>
+</div>
+<div class="modal-footer text-end">
+    <%= f.submit "Submit", class: "btn btn-primary" %>
+</div>

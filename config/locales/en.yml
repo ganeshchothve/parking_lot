@@ -509,6 +509,8 @@ en:
         lead_blocking_days: 'Configure Lead Blocking Days'
         invoice_approval_tat: 'Invoice Approval TAT (In Days)'
         incentive_gst_slabs: 'Configure Incentive GST Slabs (%)'
+        team_lead_dashboard_access_roles: Team Lead Dashboard Access Roles
+        tl_dashboard_refresh_timer: Team Lead Dashboard Refresh Timer (Minutes)
       client/payment_gateways:
         Razorpay: Razorpay Payment Gateway
         CCAvenue: CCAvenue Payment Gateway
@@ -1327,6 +1329,7 @@ en:
         customer_status: 'Queue Status'
         search_by_name: 'Name/ Email/ Phone'
         push_to_crm: 'Do You Want The Developer To Contact The Customer ?'
+        closing_manager_id: Available Sales Users
         source: Source
         sub_source: Sub-Source
 
@@ -1696,6 +1699,7 @@ en:
         billing_team_link_name: 'Billing Dashboard'
         cp_admin_link_name: 'Channel Partner Head Dashboard'
         cp_owner_link_name: 'Company Owner Dashboard'
+        team_lead: 'Team Lead Dashboard'
       receipt_frequency: 'Payment Frequency'
     emails:
       index:
@@ -1992,12 +1996,14 @@ en:
       move_to_next_state:
         queued: "%{name} moved to sales queue successfully"
         dropoff: '%{name} dropped off successfully'
+      accepted_by_sales: Lead %{status}
       create_from_existing_lead:
         link_name: 'Add From Existing Customer'
       add_to_another_project:
         link_name: 'Add To Other Project'
       create_new_lead:
         link_name: 'Add New %{model}'
+      reassign_sales: Reassign Lead
 
     user_kycs:
       index:

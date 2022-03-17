@@ -12,6 +12,10 @@ class Admin::ReceiptPolicy < ReceiptPolicy
 
   def new?
     valid = record.user.present? && record.user.buyer? && confirmed_and_ready_user? && user.active_channel_partner? && record.lead&.project&.is_active? && !current_client.launchpad_portal
+    if is_assigned_lead?
+      valid = valid && is_lead_accepted?
+    end
+    valid
   end
 
   def create?
@@ -89,5 +93,21 @@ class Admin::ReceiptPolicy < ReceiptPolicy
     return true if user.role?('superadmin')
     @condition = 'only_superadmin'
     false
+  end
+
+  def is_assigned_lead?
+    if user.role?(:sales) && record.lead.is_a?(Lead)
+      Lead.where(id: record.lead.id, closing_manager_id: user.id).in(customer_status: %w(engaged)).first.present?
+    else
+      false
+    end
+  end
+
+  def is_lead_accepted?
+    if user.role?(:sales) && record.lead.is_a?(Lead)
+      record.lead.accepted_by_sales?
+    else
+      false
+    end
   end
 end
