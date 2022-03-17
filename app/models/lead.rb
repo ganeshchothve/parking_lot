@@ -29,6 +29,9 @@ class Lead
   field :registered_at, type: Date
   field :manager_change_reason, type: String
   field :referenced_manager_ids, type: Array, default: []
+
+  field :source, type: String
+  field :sub_source, type: String
   #
   # Casa specific fields
   field :lead_stage, type: String

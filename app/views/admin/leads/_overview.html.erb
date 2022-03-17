@@ -98,6 +98,29 @@
             </div>
           </div>
         <% end %>
+
+
+        <% if lead.source.present? %>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.source') %></label>
+               <p class="fn-14 theme-txt-color mb-0">
+                <%= lead.source || "-" %>
+                </p>
+            </div>
+          </div>
+        <% end %>
+
+        <% if lead.sub_source.present? %>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.sub_source') %></label>
+               <p class="fn-14 theme-txt-color mb-0">
+                <%= lead.sub_source || "-" %>
+                </p>
+            </div>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>
