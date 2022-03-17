@@ -82,6 +82,10 @@ class DashboardController < ApplicationController
     @users = User.where(User.user_based_scope(current_user, params)).where(role: 'sales').asc(:sales_status)
   end
 
+  def team_lead_dashboard
+    authorize :dashboard, :team_lead_dashboard?
+  end
+
   private
 
   def user_time_zone

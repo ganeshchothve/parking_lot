@@ -1,0 +1,14 @@
+<%= form_for(@lead, url: reassign_sales_admin_lead_path, local: true, remote: true, html: {class: 'validate-form modal-remote-form', "data-resource-type": t('global.lead'), "data-type": "json", id: 'reassign_lead_form_id'}) do |f| %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <%= render 'admin/leads/reassign_lead_from', f: f %>    
+    </div>
+  </div>
+</div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#reassign_lead_form_id"));
+});
+<% end %>
