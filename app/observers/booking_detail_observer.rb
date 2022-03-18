@@ -63,7 +63,7 @@ class BookingDetailObserver < Mongoid::Observer
       end
     end
     # calculate incentive and generate an invoice for the respective booking detail
-    booking_detail.calculate_incentive if booking_detail.project.present? && booking_detail.project.incentive_calculation_type?("calculated")
+    booking_detail.calculate_incentive if booking_detail.project.present? && booking_detail.project.incentive_calculation_type?("calculated") && booking_detail.project&.invoicing_enabled?
 
     # once the booking is cancelled, the invoice in tentative state should move to rejected state
     if booking_detail.status_changed? && booking_detail.status == 'cancelled'
