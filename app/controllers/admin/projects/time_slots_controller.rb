@@ -2,7 +2,6 @@ class Admin::Projects::TimeSlotsController < AdminController
   before_action :set_project
   before_action :set_time_slot, except: [:index, :new, :create]
   before_action :authorize_resource
-  around_action :user_time_zone, if: :current_user
 
   # GET /admin/projects/:project_id/time_slots
   #
@@ -83,10 +82,6 @@ class Admin::Projects::TimeSlotsController < AdminController
   def set_time_slot
     @time_slot = @project.time_slots.where(id: params[:id]).first
     redirect_to dashboard_path, alert: 'Time slot not found' unless @time_slot
-  end
-
-  def user_time_zone
-    Time.use_zone(current_user.time_zone) { yield }
   end
 
   def authorize_resource
