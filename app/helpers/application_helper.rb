@@ -220,4 +220,8 @@ module ApplicationHelper
     end
   end
 
+  def full_page_view?
+    action_name.in?(%w(generate_booking_detail_form generate_invoice sales_board quotation))
+  end
+
 end

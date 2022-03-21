@@ -147,7 +147,7 @@ class ChannelPartnerObserver < Mongoid::Observer
           })
           email.sent!
         end
-        sms_template = Template::EmailTemplate.where(name: template_name).first
+        sms_template = Template::SmsTemplate.where(name: template_name).first
         if sms_template.present?
           phones = recipients.collect(&:phone).reject(&:blank?)
           if phones.present?
