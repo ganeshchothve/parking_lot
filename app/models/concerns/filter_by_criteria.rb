@@ -4,7 +4,8 @@ module FilterByCriteria
   def build_criteria params={}
     params ||= {}
     filters = self.all
-    (params[:fltrs].try(:permit!)&.to_h || {}).each do |key, value|
+    parameter_filters = ActionController::Parameters.new(params[:fltrs] || {})
+    (parameter_filters.permit!&.to_h || {}).each do |key, value|
       if value.present? && self.respond_to?("filter_by_#{key}")
         filters = filters.send("filter_by_#{key}", (value == 'nil' ? nil : value))
       end
