@@ -67,6 +67,11 @@ class SiteVisitObserver < Mongoid::Observer
         SiteVisitObserverWorker.new.perform(site_visit.id, 'update', site_visit.changes.merge(site_visit.notes.select {|x| x.new_record? && x.changes.present?}.first&.changes&.slice('note') || {}))
       end
     end
+
+    if site_visit.scheduled_on_changed? && site_visit.approval_status == 'rejected'
+      site_visit.approval_status = 'pending'
+      site_visit.save
+    end
   end
 
   def after_create site_visit

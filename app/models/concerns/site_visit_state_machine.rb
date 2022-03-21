@@ -48,7 +48,9 @@ module SiteVisitStateMachine
 
       event :reject, after: %i[send_approval_status_notification] do
         transitions from: :pending, to: :rejected, if: :can_reject?
+        transitions from: :rejected, to: :rejected
       end
+
     end
 
     def can_approve?
@@ -67,5 +69,6 @@ module SiteVisitStateMachine
       template_name = "site_visit_approval_status_#{self.approval_status}_notification"
       # TODO: Send Broadcast message via notification, in-app, Email, etc
     end
+
   end
 end
