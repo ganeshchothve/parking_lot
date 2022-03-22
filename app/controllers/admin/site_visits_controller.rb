@@ -77,6 +77,7 @@ class Admin::SiteVisitsController < AdminController
 
   def update
     @site_visit.assign_attributes(permitted_attributes([:admin, @site_visit]))
+    move_to_pending_approval
     respond_to do |format|
       if (params.dig(:site_visit, :event).present? ? @site_visit.send("#{params.dig(:site_visit, :event)}!") : @site_visit.save)
         format.html { redirect_to request.referer, notice: 'Site Visit was successfully updated.' }
@@ -149,6 +150,12 @@ class Admin::SiteVisitsController < AdminController
     end
     flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
     redirect_to admin_site_visits_path(fltrs: params[:fltrs].as_json)
+  end
+
+  def move_to_pending_approval
+    if @site_visit.scheduled_on_changed? && @site_visit.approval_status == 'rejected'
+      @site_visit.pending!
+    end
   end
 
   private

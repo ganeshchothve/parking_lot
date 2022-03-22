@@ -51,6 +51,10 @@ module SiteVisitStateMachine
         transitions from: :rejected, to: :rejected
       end
 
+      event :pending do
+        transitions from: :rejected, to: :pending
+        transitions from: :pending, to: :pending
+      end
     end
 
     def can_approve?
