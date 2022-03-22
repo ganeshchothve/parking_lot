@@ -27,7 +27,7 @@ class Admin::LeadPolicy < LeadPolicy
     valid = false if user.present? && user.role.in?(%w(channel_partner cp_owner)) && !(user.active_channel_partner? && interested_project_present?)
     @condition = 'project_not_subscribed' unless valid
     if record.is_a?(Lead) && !(record.project.is_active? && record.project&.walk_ins_enabled?)
-      @condition = 'project_not_active'
+      @condition = 'walkin_disabled'
       valid = false
     end
     valid
