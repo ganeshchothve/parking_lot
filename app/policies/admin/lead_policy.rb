@@ -26,8 +26,12 @@ class Admin::LeadPolicy < LeadPolicy
     valid = true && user.role.in?(%w(superadmin admin gre crm account_manager account_manager_head) + User::CHANNEL_PARTNER_USERS + User::SALES_USER)
     valid = false if user.present? && user.role.in?(%w(channel_partner cp_owner)) && !(user.active_channel_partner? && interested_project_present?)
     @condition = 'project_not_subscribed' unless valid
-    if record.is_a?(Lead) && !(record.project.is_active? && record.project&.walk_ins_enabled?)
-      @condition = 'walkin_disabled'
+    if record.is_a?(Lead)
+      if !(record.project.is_active?)
+        @condition = 'project_not_active'
+      elsif !(record.project&.walk_ins_enabled?)
+        @condition = 'walkin_disabled'
+      end
       valid = false
     end
     valid
