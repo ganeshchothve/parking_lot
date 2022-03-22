@@ -145,7 +145,7 @@ class SiteVisit
   end
 
   def name
-    "#{project.name} - #{status}"
+    "#{project.name}"
   end
 
   alias :resource_name :name
