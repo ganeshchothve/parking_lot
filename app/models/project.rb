@@ -117,6 +117,7 @@ class Project
   field :enable_booking_with_kyc, type: Boolean, default: true
   field :check_sv_availability_in_selldo, type: Boolean, default: false
   field :incentive_calculation, type: Array, default: ["manual"]
+  field :disable_project, type: Hash, default: {walk_ins: false, bookings: false, invoicing: false}
 
 
   field :email_header, type: String, default: '<div class="container">
@@ -260,6 +261,18 @@ class Project
 
   def is_subscribed(user)
     InterestedProject.where(project_id: self.id, user_id: user.id).in(status: %w(subscribed approved)).present?
+  end
+
+  def walk_ins_enabled?
+    !self.disable_project['walk_ins']
+  end
+
+  def bookings_enabled?
+    !self.disable_project['bookings']
+  end
+
+  def invoicing_enabled?
+    !self.disable_project['invoicing']
   end
 
   def self.user_based_scope(user, params = {})
