@@ -29,10 +29,13 @@ class Admin::LeadPolicy < LeadPolicy
     if record.is_a?(Lead)
       if !(record.project.is_active?)
         @condition = 'project_not_active'
+        valid = false
       elsif !(record.project&.walk_ins_enabled?)
         @condition = 'walkin_disabled'
+        valid = false
+      else
+        valid
       end
-      valid = false
     end
     valid
   end
