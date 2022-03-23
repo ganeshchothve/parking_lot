@@ -105,8 +105,10 @@
       </div>
 
       <div class='prjt-inner-stats fn-14 text-primary' style='top: 75%'>
-          <% if !policy([:admin, Lead.new(project_id: project.id)]).new? && policy([current_user_role_group, InterestedProject.new(project_id: project.id)]).create? && policy([:admin, project]).walk_in_enabled? %>
-            <%= link_to_if !project.id.in?(interested_project_ids), t('controller.projects.show.show_interest_text'), admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-block' %>
+          <% if !policy([:admin, Lead.new(project_id: project.id)]).new? && policy([current_user_role_group, InterestedProject.new(project_id: project.id)]).create? %>
+            <% if !project.id.in?(interested_project_ids) %>
+              <%= link_to t('controller.projects.show.show_interest_text'), admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-block' %>
+            <% end %>
           <% end %>
       </div>
     </div>
