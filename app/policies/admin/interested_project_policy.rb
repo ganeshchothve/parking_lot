@@ -1,6 +1,6 @@
 class Admin::InterestedProjectPolicy < InterestedProjectPolicy
   def index?
-    user.role.in?(%w(channel_partner cp_owner)) && user.active_channel_partner?
+    user.role.in?(%w(channel_partner cp_owner))# && user.active_channel_partner?
   end
 
   def create?
