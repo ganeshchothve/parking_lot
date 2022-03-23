@@ -62,6 +62,7 @@ class Invoice
   scope :filter_by_channel_partner_id, ->(channel_partner_id) { where(channel_partner_id: channel_partner_id) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_invoiceable_id, ->(invoiceable_id) { where(invoiceable_id: invoiceable_id) }
+  scope :filter_by_number, ->(number) { where(number: number) }
 
   accepts_nested_attributes_for :cheque_detail, reject_if: proc { |attrs| attrs.except('creator_id').values.all?(&:blank?) }
   accepts_nested_attributes_for :payment_adjustment, reject_if: proc { |attrs| attrs['absolute_value'].blank? }
