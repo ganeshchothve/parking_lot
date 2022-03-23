@@ -11,7 +11,7 @@
           <%= label_tag "fltrs", t('mongoid.attributes.user_request.name_email_phone'), class: "control-label" %>
           <%
             if params[:fltrs].present? && params[:fltrs][:user_id].present?
-              user = User.find(params[:fltrs][:user])
+              user = User.find(params[:fltrs][:user_id])
             end
           %>
           <%= select_tag "fltrs[user_id]", options_for_select((params[:fltrs].present? && params[:fltrs][:user_id].present?) ? [[user.ds_name, user.id]] : []), {class: "selectize-remote", data: {params: {fltrs: {role: User.buyer_roles(current_client)}}, url: admin_users_path }} %>
