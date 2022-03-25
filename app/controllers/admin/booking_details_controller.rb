@@ -11,9 +11,10 @@ class Admin::BookingDetailsController < AdminController
 
   def index
     authorize [:admin, BookingDetail]
+    @booking_details = BookingDetail.includes(:project_unit, :user, :booking_detail_schemes).build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
-      format.json { render json: booking_detail_for_json }
-      format.html { booking_details_for_html_request }
+      format.json
+      format.html
     end
   end
 
@@ -261,14 +262,6 @@ class Admin::BookingDetailsController < AdminController
     else
       redirect_to new_admin_booking_detail_receipt_path(@booking_detail.lead, @booking_detail), notice: t('controller.booking_details.set_receipt_missing')
     end
-  end
-
-  def booking_details_for_html_request
-    @booking_details = BookingDetail.includes(:project_unit, :user, :booking_detail_schemes).build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
-  end
-
-  def booking_detail_for_json
-    @booking_details = BookingDetail.build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page]).as_json(methods: [:ds_name])
   end
 
   def get_dataset(out, statuses)
