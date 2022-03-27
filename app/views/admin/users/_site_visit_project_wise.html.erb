@@ -6,30 +6,30 @@
         <tr class="bg-primary white">
           <th><%= Project.model_name.human %></th>
           <th>All<br> <%= SiteVisit.model_name.human(count: 2) %></th>
-          <th>Scheduled<br> <%= SiteVisit.model_name.human(count: 2) %></th>
-          <th>Conducted<br> <%= SiteVisit.model_name.human(count: 2) %></th>
-          <th>Paid<br> <%= SiteVisit.model_name.human(count: 2) %></th>
-          <th>Approved<br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th><%= t('mongoid.attributes.site_visit/status.scheduled') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th><%= t('mongoid.attributes.site_visit/status.conducted') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th><%= t('mongoid.attributes.site_visit/status.paid') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th><%= t('mongoid.attributes.site_visit/approval_status.approved') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
         </tr>
       </thead>
       <tbody>
         <% @projects.where(Project.user_based_scope(current_user)).each do |p| %>
           <tr>
             <td data-title='<%= Project.model_name.human %>'><%= p.name.titleize %></td>
-            <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= @all_site_visits[p.id].try(:count) || 0 %></td>
-            <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= @scheduled_site_visits[p.id].try(:count) || 0 %></td>
-            <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= @conducted_site_visits[p.id].try(:count) || 0 %></td>
-            <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= @paid_site_visits[p.id].try(:count) || 0 %></td>
-            <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= @approved_site_visits[p.id].try(:count) || 0 %></td>
+            <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @all_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: {project_id: p.id}) %></td>
+            <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @scheduled_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: {status: 'scheduled', project_id: p.id}) %></td>
+            <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @conducted_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: {status: 'conducted', project_id: p.id}) %></td>
+            <td data-title='Paid <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @paid_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: {status: 'paid', project_id: p.id}) %></td>
+            <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @approved_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: {approval_status: 'approved', project_id: p.id}) %></td>
           </tr>
         <% end %>
-        <tr >
+        <tr>
           <th data-title="<%= t('global.total') %>"><%= t('global.total') %></th>
-          <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= @all_site_visits.values&.flatten&.count || 0 %></td>
-          <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= @scheduled_site_visits.values&.flatten&.count || 0 %></td>
-          <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= @conducted_site_visits.values&.flatten&.count || 0 %></td>
-          <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= @paid_site_visits.values&.flatten&.count || 0 %></td>
-          <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= @approved_site_visits.values&.flatten&.count || 0 %></td>
+          <td data-title='All <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @all_site_visits.values&.flatten&.count || 0, admin_site_visits_path %></td>
+          <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @scheduled_site_visits.values&.flatten&.count || 0, admin_site_visits_path(fltrs: {status: 'scheduled'}) %></td>
+          <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @conducted_site_visits.values&.flatten&.count || 0, admin_site_visits_path(fltrs: {status: 'conducted'}) %></td>
+          <td data-title='Paid <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @paid_site_visits.values&.flatten&.count || 0, admin_site_visits_path(fltrs: {status: 'paid'}) %></td>
+          <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @approved_site_visits.values&.flatten&.count || 0, admin_site_visits_path(fltrs: {approval_status: 'approved'}) %></td>
         </tr>
       </tbody>
     </table>

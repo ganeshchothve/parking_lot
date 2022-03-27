@@ -4,11 +4,11 @@
   <tr>
     <td></td>
     <td data-title='<%= t("mongoid.attributes.user/role.channel_partner") %>'><%= c.name.titleize %></td>
-    <td data-title='All <%= SiteVisit.model_name.human(count: 2) %>'><%= @all_site_visits[c.id].try(:count) || 0 %></td>
-    <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= @scheduled_site_visits[c.id].try(:count) || 0 %></td>
-    <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= @conducted_site_visits[c.id].try(:count) || 0 %></td>
-    <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= @paid_site_visits[c.id].try(:count) || 0 %></td>
-    <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= @approved_site_visits[c.id].try(:count) || 0 %></td>
-    <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><%= @bookings[c.id].try(:count) || 0 %></td>
+    <td data-title='All <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @all_site_visits[c.id].try(:count) || 0, admin_site_visits_path(fltrs: {manager_id: c.id}) %></td>
+    <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @scheduled_site_visits[c.id].try(:count) || 0, admin_site_visits_path(fltrs: {status: 'scheduled', manager_id: c.id}) %></td>
+    <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @conducted_site_visits[c.id].try(:count) || 0, admin_site_visits_path(fltrs: {status: 'conducted', manager_id: c.id}) %></td>
+    <td data-title='Paid <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @paid_site_visits[c.id].try(:count) || 0, admin_site_visits_path(fltrs: {approval_status: 'paid', manager_id: c.id}) %></td>
+    <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @approved_site_visits[c.id].try(:count) || 0, admin_site_visits_path(fltrs: {approval_status: 'approved', manager_id: c.id}) %></td>
+    <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><%= link_to @bookings[c.id].try(:count) || 0, admin_booking_details_path(fltrs: {manager_id: c.id}) %></td>
   </tr>
 <% end %>

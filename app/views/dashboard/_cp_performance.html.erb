@@ -5,11 +5,11 @@
       <tr class="bg-primary white">
         <th><%= t("mongoid.attributes.user/role.cp") %></th>
         <th><%= Lead.model_name.human(count: 2) %></th>
-        <th>Scheduled<br> <%= SiteVisit.model_name.human(count: 2) %></th>
-        <th>Conducted<br> <%= SiteVisit.model_name.human(count: 2) %></th>
-        <th>Pending<br> <%= SiteVisit.model_name.human(count: 2) %></th>
-        <th>Approved<br> <%= SiteVisit.model_name.human(count: 2) %></th>
-        <th>Rejected<br> <%= SiteVisit.model_name.human(count: 2) %></th>
+        <th><%= t('mongoid.attributes.site_visit/status.scheduled') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
+        <th><%= t('mongoid.attributes.site_visit/status.conducted') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
+        <th><%= t('mongoid.attributes.site_visit/status.pending') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
+        <th><%= t('mongoid.attributes.site_visit/approval_status.approved') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
+        <th><%= t('mongoid.attributes.site_visit/approval_status.rejected') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
         <th><%= BookingDetail.model_name.human(count: 2) %></th>
         <th><%= t('mongoid.attributes.booking_detail.agreement_price') %></th>
       </tr>
@@ -18,13 +18,13 @@
       <% @cps.each do |cp| %>
         <tr>
           <td data-title='Sourcing manager Name'><%= cp.name %></td>
-          <td data-title='Walk ins'><%= @leads[cp.id] || 0 %></td>
-          <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= @site_visits.dig('scheduled', cp.id.to_s) || 0 %></td>
-          <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= @site_visits.dig('conducted', cp.id.to_s) || 0 %></td>
-          <td data-title='Pending <%= SiteVisit.model_name.human(count: 2) %>'><%= @site_visits.dig('pending', cp.id.to_s) || 0 %></td>
-          <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= @site_visits.dig('approved', cp.id.to_s) || 0 %></td>
-          <td data-title='Rejected <%= SiteVisit.model_name.human(count: 2) %>'><%= @site_visits.dig('rejected', cp.id.to_s) || 0 %></td>
-          <td data-title='Bookings'><%= @bookings.dig(cp.id, :count) || 0 %></td>
+          <td data-title='Walk ins'><%= link_to @leads[cp.id] || 0, admin_leads_path(fltrs: {cp_manager_id: cp.id}) %></td>
+          <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @site_visits.dig('scheduled', cp.id.to_s) || 0, admin_site_visits_path(fltrs: {status: 'scheduled', cp_manager_id: cp.id}) %></td>
+          <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @site_visits.dig('conducted', cp.id.to_s) || 0, admin_site_visits_path(fltrs: {status: 'conducted', cp_manager_id: cp.id}) %></td>
+          <td data-title='Pending <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @site_visits.dig('pending', cp.id.to_s) || 0, admin_site_visits_path(fltrs: {approval_status: 'pending', cp_manager_id: cp.id}) %></td>
+          <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @site_visits.dig('approved', cp.id.to_s) || 0, admin_site_visits_path(fltrs: {approval_status: 'approved', cp_manager_id: cp.id}) %></td>
+          <td data-title='Rejected <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @site_visits.dig('rejected', cp.id.to_s) || 0, admin_site_visits_path(fltrs: {approval_status: 'rejected', cp_manager_id: cp.id}) %></td>
+          <td data-title='Bookings'><%= link_to @bookings.dig(cp.id, :count) || 0, admin_booking_details_path(fltrs: {cp_manager_id: cp.id}) %></td>
           <td class='non-action-td' data-title='Agreement Value'><%= number_to_inr(@bookings.dig(cp.id, :sales_revenue) || 0)%></td>
         </tr>
       <% end %>
