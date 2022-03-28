@@ -104,6 +104,7 @@ class Lead
   scope :filter_by_user_id, ->(user_id) { where(user_id: user_id) }
   scope :filter_by_manager_id, ->(manager_id) {where(manager_id: manager_id) }
   scope :filter_by_cp_manager_id, ->(cp_manager_id) {where(cp_manager_id: cp_manager_id) }
+  scope :filter_by_channel_partner_id, ->(channel_partner_id) {where(channel_partner_id: channel_partner_id)}
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
   scope :filter_by_lead_stage, ->(lead_stage) { where(lead_stage: lead_stage) }
