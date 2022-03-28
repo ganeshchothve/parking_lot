@@ -9,6 +9,7 @@ module CpIncentiveLeaderboardDataProvider
       data_group_by_manager.each do |key, value|
         hash = {}
         hash[:manager_id] = key
+        hash[:manager_name] = value.pluck(:manager_name).first.to_s
         hash[:total_capped_incentive] = value.pluck(:capped_incentive).sum
         manager_wise_total_incentive_data << hash
       end

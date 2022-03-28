@@ -5,12 +5,17 @@ module ChannelPartnerLeaderboardConcern
     before_action :get_options, only: [:top_channel_partners_by_incentives, :highest_incentive_per_booking, :average_incentive_per_booking, :incentive_predictions, :achieved_target]
   end
 
+  def channel_partners_leaderboard
+
+  end
+
   def top_channel_partners_by_incentives
     @vis_options.merge!(query: get_query)
     @cp_rank_wise_data = CpIncentiveLeaderboardDataProvider.top_channel_partners(@vis_options)
     respond_to do |format|
       format.json { render json: @cp_rank_wise_data.as_json }
       format.html {}
+      format.js
     end
   end
 
@@ -20,6 +25,7 @@ module ChannelPartnerLeaderboardConcern
     respond_to do |format|
       format.json { render json: @highest_incentive_per_booking_data.as_json }
       format.html {}
+      format.js
     end
   end
 
@@ -29,6 +35,7 @@ module ChannelPartnerLeaderboardConcern
     respond_to do |format|
       format.json { render json: {average_incentive_per_booking: @average_incentive} }
       format.html {}
+      format.js
     end
   end
 
@@ -38,6 +45,7 @@ module ChannelPartnerLeaderboardConcern
     respond_to do |format|
       format.json { render json: @incentive_predictions_data.as_json }
       format.html {}
+      format.js
     end
   end
 
@@ -47,6 +55,7 @@ module ChannelPartnerLeaderboardConcern
     respond_to do |format|
       format.json { render json: @achieved_target_data.as_json }
       format.html {}
+      format.js
     end
   end
 
