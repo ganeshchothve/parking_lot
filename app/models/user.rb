@@ -274,9 +274,9 @@ class User
   end
   scope :filter_by_interested_project, ->(project_ids) do
     if project_ids.is_a?(Array)
-      all.in(id: InterestedProject.approved.in(project_id: project_ids).distinct(:user_id))
+      all.in(id: InterestedProject.approved.in(project_id: project_ids).pluck(:user_id))
     else
-      all.in(id: InterestedProject.approved.where(project_id: project_ids).distinct(:user_id))
+      all.in(id: InterestedProject.approved.where(project_id: project_ids).pluck(:user_id))
     end
   end
 
