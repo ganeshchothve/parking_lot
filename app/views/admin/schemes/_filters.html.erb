@@ -7,27 +7,27 @@
     <%= form_tag admin_schemes_path, method: "get", id: "scheme_search_form" do %>
       <div class="filter-content modal-body ps-0 pe-0">
         <div class="row">
-          <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", Scheme.model_name.human, class: "control-label" %>
             <%= text_field_tag "fltrs[name]", params.dig(:fltrs, :name), class: 'form-control' %>
           </div>
-          <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.scheme.status'), class: "control-label" %>
             <%= select_tag "fltrs[status]", options_for_select(Scheme.aasm.states.collect(&:name).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
           </div>
-          <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.scheme.can_be_applied_by'), class: "control-label" %>
             <%= select_tag "fltrs[can_be_applied_by]", options_for_select( User.available_roles(current_client).map{|role| [User.human_attribute_name("role.#{role}"), role] }, params.dig(:fltrs, :can_be_applied_by)), {prompt: "Select", class: "selectize"} %>
           </div>
-          <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.user.role'), class: "control-label" %>
             <%= select_tag "fltrs[user_role]", options_for_select( User.available_roles(current_client).map{|role| [User.human_attribute_name("role.#{role}"), role] }, params.dig(:fltrs, :user_role)), {prompt: "Select", class: "selectize"} %>
           </div>
-          <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.project_unit.project_id'), class: "control-label" %>
           <%= select_tag "fltrs[project_id]", options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: 'Select', class: "selectize project_select"} %>
         </div>
-          <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", ProjectTower.model_name.human, class: "control-label" %>
             <%= select_tag "fltrs[project_tower_id]", options_for_select(filter_project_tower_options, params.dig(:fltrs, :project_tower_id).present? ? params[:fltrs][:project_tower_id] : ''), {prompt: (params.dig(:fltrs, :project_id).present? ? "Select" : 'Select Project first'), class: "selectize project_tower_select", data: { url: admin_project_towers_path }} %>
           </div>

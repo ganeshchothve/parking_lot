@@ -13,6 +13,7 @@ class SiteVisit
   include IncentiveSchemeAutoApplication
 
   REJECTION_REASONS = ["budget_not_match", "location_not_match", "possession_not_match", "didnt_visit", "different_cp"]
+  DOCUMENT_TYPES = []
 
   belongs_to :project
   belongs_to :lead
@@ -25,8 +26,10 @@ class SiteVisit
   belongs_to :cp_admin, class_name: 'User', optional: true
   has_many :notes, as: :notable
   has_many :invoices, as: :invoiceable
+  has_many :assets, as: :assetable
 
   accepts_nested_attributes_for :notes, reject_if: :all_blank
+  accepts_nested_attributes_for :assets, reject_if: :all_blank
 
   field :scheduled_on, type: DateTime
   field :conducted_on, type: DateTime
@@ -53,9 +56,10 @@ class SiteVisit
   scope :filter_by_conducted_on, ->(date) { start_date, end_date = date.split(' - '); where(conducted_on: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_manager_id, ->(manager_id) {where(manager_id: manager_id) }
   scope :filter_by_cp_manager_id, ->(cp_manager_id) {where(cp_manager_id: cp_manager_id) }
+  scope :filter_by_is_revisit, ->(is_revisit) { where(is_revisit: is_revisit.to_s == 'true') }
   scope :incentive_eligible, ->(category) do
     if category == 'walk_in'
-      where(approval_status: {'$nin': %w(rejected)})
+      where(approval_status: {'$nin': %w(rejected)}, is_revisit: false)
     else
       none
     end
@@ -67,11 +71,12 @@ class SiteVisit
   validate :validate_scheduled_on_datetime
   validates :time_slot, presence: true, if: Proc.new { |sv| sv.site_visit_type == 'token_slot' }
   validates :notes, copy_errors_from_child: true
+  validates :assets, copy_errors_from_child: true
 
   def incentive_eligible?(category=nil)
     if category.present?
       if category == 'walk_in'
-        scheduled?
+        !is_revisit? && scheduled?
       end
     else
       _incentive_eligible?
@@ -81,7 +86,7 @@ class SiteVisit
   def actual_incentive_eligible?(category=nil)
     if category.present?
       if category == 'walk_in'
-        verification_approved? && (conducted? || paid?)
+        !is_revisit? && verification_approved? && (conducted? || paid?)
       end
     else
       _actual_incentive_eligible?
@@ -140,7 +145,7 @@ class SiteVisit
   end
 
   def name
-    "#{project.name} - #{status}"
+    "#{project.name}"
   end
 
   alias :resource_name :name
@@ -169,6 +174,17 @@ class SiteVisit
     when 'conducted'
       'visited'
     end
+  end
+
+  def save_assets(params)
+    site_visit = self
+    errors = []
+    site_visit.assign_attributes(params || {})
+    unless site_visit.save
+      errors = site_visit.errors.full_messages.uniq
+    end
+    site_visit.reload
+    errors
   end
 
   private

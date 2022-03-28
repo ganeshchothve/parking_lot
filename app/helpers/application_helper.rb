@@ -211,4 +211,17 @@ module ApplicationHelper
     client.device_type
   end
 
+  def device_type?(type)
+    case type
+    when 'mobile'
+      device_type.in?(['smartphone', 'feature phone', 'phablet', 'tablet'])
+    when 'desktop'
+      device_type.in?(%w(desktop tv))
+    end
+  end
+
+  def full_page_view?
+    action_name.in?(%w(generate_booking_detail_form generate_invoice sales_board quotation))
+  end
+
 end

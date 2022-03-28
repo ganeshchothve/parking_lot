@@ -7,7 +7,6 @@ class DashboardController < ApplicationController
   include ChannelPartnerLeaderboardConcern
   before_action :authenticate_user!, only: [:index, :documents]
   before_action :set_lead, only: :index, if: proc { current_user.buyer? }
-  around_action :user_time_zone, if: :current_user
 
   layout :set_layout
 
@@ -83,11 +82,11 @@ class DashboardController < ApplicationController
     @users = User.where(User.user_based_scope(current_user, params)).where(role: 'sales').asc(:sales_status)
   end
 
-  private
-
-  def user_time_zone
-    Time.use_zone(current_user.time_zone) { yield }
+  def team_lead_dashboard
+    authorize :dashboard, :team_lead_dashboard?
   end
+
+  private
 
   def set_lead
     unless @lead = current_user.selected_lead

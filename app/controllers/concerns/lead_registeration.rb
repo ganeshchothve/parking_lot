@@ -3,13 +3,12 @@ module LeadRegisteration
 
   included do
     before_action :set_project, :set_user, :set_lead, :set_customer_search, only: :check_and_register
-    around_action :user_time_zone, if: :current_user
   end
 
   def check_and_register
     authorize [:admin, Lead.new(project_id: @project.id)]
     unless request.xhr?
-      redirect_to (user_signed_in? ? after_sign_in_path : root_path)
+      redirect_to (user_signed_in? ? after_sign_in_path_for(current_user) : root_path)
     else
       respond_to do |format|
         if params[:lead_id].blank? && @lead.present?
@@ -39,10 +38,6 @@ module LeadRegisteration
   end
 
   private
-
-  def user_time_zone
-    Time.use_zone(current_user.time_zone) { yield }
-  end
 
   def add_existing_lead_to_project_flow(format)
     @new_lead = @user.leads.new(email: @lead.email, phone: @lead.phone, first_name: @lead.first_name, last_name: @lead.last_name, project_id: @project.id, manager_id: params[:manager_id])

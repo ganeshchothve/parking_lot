@@ -34,8 +34,8 @@
       <% end %>
     <% end %>
   </head>
-  <body class="<%= controller_name %> <%= action_name.in?(%w(generate_booking_detail_form generate_invoice sales_board)) ? 'pt-0' : '' %>">
-    <% if action_name.in?(%w(generate_booking_detail_form generate_invoice sales_board)) %>
+  <body class="<%= controller_name %> <%= full_page_view? ? 'pt-0' : '' %>">
+    <% if full_page_view? %>
       <%= yield %>
     <% else %>
       <%= render "layouts/navbar"%>

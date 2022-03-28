@@ -7,9 +7,14 @@ module RevenueReportDashboardConcern
     projects_hash
 
     @total_amount = 0
+    @total_agreement_price = 0
+    @total_bookings_count = 0
     @project_wise_total_tentative_amount.each do |k, v|
       @total_amount += v.map{|h| h[:amount] }.sum
+      @total_agreement_price += v.map{|h| h[:agreement_price] }.sum
+      @total_bookings_count += v.map{|h| h[:bookings_count] }.sum
     end
+
   end
 
   def project_wise_actual_revenue

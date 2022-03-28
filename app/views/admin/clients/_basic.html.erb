@@ -66,6 +66,12 @@
       <%= f.select :incentive_gst_slabs, f.object.incentive_gst_slabs, {},  class: "selectize-tags", multiple: true, required: true, disabled: !policy([current_user_role_group, @client]).editable_field?("incentive_gst_slabs") %>
     </div>
   </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :tl_dashboard_refresh_timer, class: 'label-required' %>
+      <%= f.number_field :tl_dashboard_refresh_timer, class: 'form-control', required: 'required', disabled:!policy([:admin, @client]).editable_field?("tl_dashboard_refresh_timer"), min: 1, max: 30, placeholder: 'Minimum 1 minute' %>
+    </div>
+  </div>
 </div>
 <div class="row">
   <div class="col-md-6">
@@ -120,12 +126,6 @@
       <%= f.select :mask_lead_data_for_roles, filter_admin_role_options, {}, class: 'selectize', multiple: true, required: 'required', disabled: !(policy([current_user_role_group, f.object]).editable_field?("mask_lead_data_for_roles")) %>
     </div>
   </div>
-  <div class="col-md-12">
-    <div class="mb-3">
-      <%= f.label :partner_regions %>
-      <%= f.select :partner_regions, current_client.partner_regions, {}, class: 'selectize-tags', multiple: true, disabled: !(policy([current_user_role_group, f.object]).editable_field?("partner_regions")) %>
-    </div>
-  </div>
 </div>
 <div class="row">
   <div class="col-md-6">
@@ -148,5 +148,13 @@
       </div>
     </div>
     <% end %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="mb-3">
+      <%= f.label :team_lead_dashboard_access_roles %>
+      <%= f.select :team_lead_dashboard_access_roles, filter_tl_dashboard_access_options, {}, class: 'selectize', multiple: true, disabled: !(policy([current_user_role_group, f.object]).editable_field?("team_lead_dashboard_access_roles")) %>
+    </div>
   </div>
 </div>

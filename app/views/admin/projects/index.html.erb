@@ -5,7 +5,7 @@
       <div class="col-lg-12 row mb-2">
         <div class="col-lg-9 filter-set d-xs-no-flex">
           <% if current_user.role.in?(%w(cp_owner channel_partner)) %>
-            <%= link_to "Projects In My Region", admin_projects_path(fltrs: {regions: current_user.channel_partner&.regions}), class: "filter-link #{params.dig(:fltrs, :regions) == current_user.channel_partner&.regions ? 'active' : ''}" %>
+            <%= link_to "Projects In My Region", admin_projects_path(fltrs: {city: current_user.channel_partner&.city, regions: current_user.channel_partner&.regions}), class: "filter-link #{params.dig(:fltrs, :regions) == current_user.channel_partner&.regions ? 'active' : ''}" %>
           <% end %>
           <% all_projects = "All (#{Project.where(Project.user_based_scope(current_user, params)).count})" %>
           <%= link_to all_projects.html_safe, admin_projects_path, class: "filter-link #{params.dig(:fltrs).blank? ? 'active' : ''}" %>

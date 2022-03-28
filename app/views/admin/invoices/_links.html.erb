@@ -17,7 +17,11 @@
 <% end %>
 
 <% if policy([current_user_role_group, invoice]).move_tentative_to_draft? %>
-  <%= link_to "Move to Draft", change_state_admin_invoiceable_path(invoice, invoiceable_type: invoice.invoiceable_type , invoiceable_id: invoice.invoiceable_id, invoice_calculated: {event: :draft}), method: :patch, class: 'dropdown-item' %>
+  <% if invoice._type == "Invoice::Manual" %>
+    <%= link_to "Move to Draft", change_state_admin_invoiceable_path(invoice, invoiceable_type: invoice.invoiceable_type , invoiceable_id: invoice.invoiceable_id, invoice_manual: {event: :draft}), method: :patch, class: 'dropdown-item' %>
+  <% else %>
+    <%= link_to "Move to Draft", change_state_admin_invoiceable_path(invoice, invoiceable_type: invoice.invoiceable_type , invoiceable_id: invoice.invoiceable_id, invoice_calculated: {event: :draft}), method: :patch, class: 'dropdown-item' %>
+  <% end %>
 <% end %>
 
 <!-- Update GST amount -->

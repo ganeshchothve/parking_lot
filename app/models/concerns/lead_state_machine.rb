@@ -49,13 +49,13 @@ module LeadStateMachine
       if self.state_transitions.present?
         _latest = self.state_transitions.desc(:created_at, sitevisit_id: self.current_site_visit_id).first
         if _latest.status == self.aasm(:customer).from_state.to_s
-          _latest.update(exit_time: DateTime.now)
+          _latest.update(exit_time: DateTime.now, sales_id: self.closing_manager_id)
         else
           _latest.error_list << "There is a log error."
         end
       end
       current_sitevisit = self.current_site_visit
-      self.state_transitions << StateTransition.new(status: self.aasm(:customer).to_state, enter_time: DateTime.now, queue_number: current_sitevisit.queue_number, revisit_queue_number: current_sitevisit.revisit_queue_number, sitevisit_id: current_sitevisit.id)
+      self.state_transitions << StateTransition.new(status: self.aasm(:customer).to_state, enter_time: DateTime.now, queue_number: current_sitevisit.queue_number, revisit_queue_number: current_sitevisit.revisit_queue_number, sitevisit_id: current_sitevisit.id, sales_id: self.closing_manager_id)
     end
 
     def unassign_queue_number
@@ -91,13 +91,27 @@ module LeadStateMachine
       end
     end
 
-    def assign_manager sales_id
+    def assign_manager sales_id, old_sales_id = nil
       sales = User.where(id: sales_id.to_s).first
-      if self.update(closing_manager_id: sales_id.to_s)
+      if self.update(closing_manager_id: sales_id.to_s, accepted_by_sales: nil)
+        if old_sales_id.present?
+          old_sales = User.where(id: old_sales_id.to_s).first
+          old_sales.available! if old_sales.may_available?
+          self.current_site_visit&.set(sales_id: sales_id)
+          reassign_log_status(old_sales_id)
+        end
         return_val = sales.assign_customer!
         SelldoLeadUpdater.perform_async(self.id.to_s, {action: 'reassign_lead', sales_id: sales.selldo_uid}) if sales.selldo_uid.present?
         return_val
       end
+    end
+    
+    def reassign_log_status(last_closing_manager_id = nil, event = "re-assigned")
+      last_closing_manager_id = self.closing_manager_id if last_closing_manager_id.blank?
+      current_sitevisit = self.current_site_visit
+      _latest = self.state_transitions.desc(:created_at, sitevisit_id: self.current_site_visit_id).first
+      _latest.update(exit_time: DateTime.now, sales_id: last_closing_manager_id)
+      self.state_transitions << StateTransition.new(status: self.status, enter_time: DateTime.now, queue_number: current_sitevisit.queue_number, revisit_queue_number: current_sitevisit.revisit_queue_number, sitevisit_id: current_sitevisit.id, sales_id: self.closing_manager_id, event: event)
     end
 
     def check_booking

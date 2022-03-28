@@ -199,7 +199,7 @@
 </div>
 <%= javascript_tag do %>
   var units =
-  <%= raw @units.to_json(methods: [:all_inclusive_price, :calculated_costs, :calculated_data, :calculated_costs]) %>;
+  <%= raw @units.to_json(methods: [:calculate_agreement_price, :calculate_all_inclusive_price, :calculated_costs, :calculated_data, :calculated_costs]) %>;
   var assets = <%= raw Asset.in(assetable_id: @units.pluck(:unit_configuration_id)).to_json %>
 
   $(document).on('click', '[data-jquery-selector="unit-card"]', function(){

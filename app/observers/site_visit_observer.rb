@@ -42,6 +42,15 @@ class SiteVisitObserver < Mongoid::Observer
     if site_visit.created_by.blank?
       site_visit.created_by = site_visit.creator&.role
     end
+
+    # Set revisit
+    if site_visit.is_revisit.nil?
+      if site_visit.lead.site_visits.conducted.count.zero?
+        site_visit.is_revisit = false
+      else
+        site_visit.is_revisit = true
+      end
+    end
   end
 
   def before_save site_visit
@@ -77,8 +86,16 @@ class SiteVisitObserver < Mongoid::Observer
     site_visit.calculate_incentive if site_visit.project.incentive_calculation_type?("calculated")
     # once the site visit is cancelled, the invoice in tentative state should move to rejected state
     if site_visit.approval_status_changed? && site_visit.approval_status == 'rejected'
-      site_visit.invoices.where(status: 'tentative').update_all(status: 'rejected')
+      site_visit.invoices.where(status: 'tentative').update_all(status: 'rejected', rejection_reason: 'Site Visit has been cancelled')
     end
     site_visit.invoices.where(status: 'tentative').update_all(status: 'draft') if site_visit.actual_incentive_eligible?
+
+    # if site visit status is changed to conducted, the site visit is pushed to sell do
+    if site_visit.status_changed? && site_visit.status == 'conducted'
+      crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+      if crm_base.present?
+        api, api_log = site_visit.push_in_crm(crm_base)
+      end
+    end
   end
 end

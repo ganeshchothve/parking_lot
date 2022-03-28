@@ -3,6 +3,7 @@
     <div class="row g-0">
       <div class="col-lg-12 p-0">
         <% leads.each do |lead| %>
+          <% is_assigned_lead = current_user.role?(:sales) && Lead.where(id: lead.id, closing_manager_id: current_user.id).in(customer_status: %w(engaged)).first.present? %>
         <div class="bg-white rounded-3 float-start wd-100 mt-4 shadow-sm position-relative">
           <div class="float-start wd-100">
             <div class="">
@@ -25,6 +26,14 @@
                     <p class="phone-icon small d-inline-block mt-1 ms-2 fn-16 mb-0">
                       <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= lead.masked_phone(current_user) || '' %>
                     </p>
+                    <% end %>
+                    <% if current_user.role?(:sales) && is_assigned_lead && lead.accepted_by_sales.nil? %>
+                      <p class="small d-inline-block mt-1 ms-2 fn-16 mb-0">
+                        <%= link_to 'Accept', accept_lead_admin_lead_path(lead, accepted_by_sales: true, event: 'accepted', format: :json), method: 'patch', remote: true, class: "accept move-to-next-state btn btn-success text-white" %>
+                      </p>
+                      <p class="small d-inline-block mt-1 ms-2 fn-16 mb-0">
+                        <%= link_to 'Reject', accept_lead_admin_lead_path(lead, accepted_by_sales: false, event: 'rejected', format: :json), method: 'patch', remote: true, data: { confirm: 'Are you sure?', disable_with: "Please wait..." }, class: "reject move-to-next-state btn apply-btn btn-primary border-primary" %>
+                      </p>
                     <% end %>
                     <% if lead.manager_id? && current_user.role.in?(%w(admin superadmin)) %>
                     <p class="fn-14 mt-1 mb-0">
@@ -88,3 +97,12 @@
     </div>
   </div>
 </section>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $('a.accept, a.reject').on('ajax:success', function(event) {
+      setTimeout(function() {
+        window.location.reload();
+      }, 1000);
+    });
+  });
+<% end %>

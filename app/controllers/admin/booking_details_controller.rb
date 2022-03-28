@@ -11,9 +11,10 @@ class Admin::BookingDetailsController < AdminController
 
   def index
     authorize [:admin, BookingDetail]
+    @booking_details = BookingDetail.includes(:project_unit, :user, :booking_detail_schemes).build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
-      format.json { render json: booking_detail_for_json }
-      format.html { booking_details_for_html_request }
+      format.json
+      format.html
     end
   end
 
@@ -105,6 +106,14 @@ class Admin::BookingDetailsController < AdminController
     end
   end
 
+  def send_blocked
+    @booking_detail.set(booked_on: Date.current) if @booking_detail.booked_on.blank?
+    @booking_detail.blocked!
+    respond_to do |format|
+      format.html { redirect_to admin_booking_detail_path(@booking_detail) }
+    end
+  end
+
   #
   # This mis_report action for Admin users where Admin will be mailed the report
   #
@@ -177,10 +186,12 @@ class Admin::BookingDetailsController < AdminController
     respond_to do |format|
       if @booking_detail.save
         response.set_header('location', admin_booking_detail_path(@booking_detail) )
-        format.json { render json: {message: "booking_successful"}, status: :ok }
+        format.json { render json: {message: "Booking created successfully"}, status: :ok }
         format.html { redirect_to admin_booking_detail_path(@booking_detail) }
       else
+        flash[:alert] = @booking_detail.errors.full_messages
         format.html { redirect_to dashboard_path, alert: t('controller.booking_details.booking_unsuccessful') }
+        format.json { render json: { errors: flash[:alert] }, status: :unprocessable_entity }
       end
     end
   end
@@ -195,10 +206,12 @@ class Admin::BookingDetailsController < AdminController
     @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
     respond_to do |format|
       if @booking_detail.save
-        format.json { render json: {message: "booking_successful"}, status: :ok }
+        format.json { render json: {message: "Booking updated successfully"}, status: :ok }
         format.html { redirect_to admin_leads_path }
       else
+        flash[:alert] = @booking_detail.errors.full_messages
         format.html { redirect_to dashboard_path, alert: t('controller.booking_details.booking_unsuccessful') }
+        format.json { render json: { errors: flash[:alert] }, status: :unprocessable_entity }
       end
     end
   end
@@ -249,14 +262,6 @@ class Admin::BookingDetailsController < AdminController
     else
       redirect_to new_admin_booking_detail_receipt_path(@booking_detail.lead, @booking_detail), notice: t('controller.booking_details.set_receipt_missing')
     end
-  end
-
-  def booking_details_for_html_request
-    @booking_details = BookingDetail.includes(:project_unit, :user, :booking_detail_schemes).build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
-  end
-
-  def booking_detail_for_json
-    @booking_details = BookingDetail.build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page]).as_json(methods: [:ds_name])
   end
 
   def get_dataset(out, statuses)

@@ -12,6 +12,7 @@ class User
   include SalesUserStateMachine
   include DetailsMaskable
   include IncentiveSchemeAutoApplication
+  include UserStatusInCompanyStateMachine
 
   # Constants
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
@@ -25,6 +26,7 @@ class User
   COMPANY_USERS = %w[employee_user management_user]
   # Added different types of documents which are uploaded on User
   DOCUMENT_TYPES = %w[home_loan_application_form photo_identity_proof residence_address_proof residence_ownership_proof income_proof job_continuity_proof bank_statement advance_processing_cheque financial_documents]
+  TEAM_LEAD_DASHBOARD_ACCESS_USERS = %w[team_lead gre]
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -49,6 +51,7 @@ class User
   field :utm_params, type: Hash, default: {} # {"campaign": '' ,"source": '',"sub_source": '',"medium": '',"term": '',"content": ''}
   field :enable_communication, type: Hash, default: { "email": true, "sms": true }
   field :premium,type: Boolean, default: false
+  field :rejection_reason, type: String
 
   field :encrypted_password, type: String, default: ''
 
@@ -124,6 +127,7 @@ class User
   field :upi_id, type: String
 
   field :referred_on, type: DateTime
+  field :register_in_cp_company_token, type: String
 
   ## Security questionable
 
@@ -159,6 +163,7 @@ class User
   belongs_to :tier, optional: true  # for associating channel partner users with different tiers.
   belongs_to :selected_lead, class_name: 'Lead', optional: true
   belongs_to :selected_project, class_name: 'Project', optional: true
+  belongs_to :temp_channel_partner, class_name: 'ChannelPartner', optional: true
   has_many :leads
   has_many :receipts
   has_many :project_units
@@ -190,10 +195,11 @@ class User
   embeds_many :user_notification_tokens
 
   accepts_nested_attributes_for :portal_stages, :user_notification_tokens, reject_if: :all_blank
+  accepts_nested_attributes_for :interested_projects, reject_if: :all_blank
 
-  validates :first_name, :role, presence: true
+  validates :role, presence: true
+  validates :phone, presence: true, if: proc { |user| user.role.in?(%w(cp_owner channel_partner)) }
   #validates :first_name, :last_name, name: true, allow_blank: true
-  validates :channel_partner_id, presence: true, if: proc { |user| user.role?('channel_partner') }
   validate :phone_or_email_required, if: proc { |user| user.phone.blank? && user.email.blank? }
   validates :phone, :email, uniqueness: { allow_blank: true }
   validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile mobile fixed_line premium_rate] }, allow_blank: true
@@ -219,7 +225,7 @@ class User
   scope :filter_by_role_nin, ->(_role) { _role.is_a?(Array) ? where( role: { "$nin": _role } ) : where(role: _role.as_json) }
   scope :buyers, -> { where(role: {'$in' => BUYER_ROLES } )}
   scope :filter_by_userwise_project_ids, ->(user) { self.in(project_ids: user.project_ids) if user.try(:project_ids).present? }
-  scope :filter_by_sales_status, ->(*sales_status){ where(sales_status: { '$in': sales_status }) }
+  scope :filter_by_sales_status, ->(sales_status){ sales_status.is_a?(Array) ? where( sales_status: { "$in": sales_status }) : where(sales_status: sales_status.as_json) }
   scope :incentive_eligible, ->(category) do
     if category == 'referral'
       nin(referred_by_id: ['', nil]).in(role: BUYER_ROLES + %w(channel_partner cp_owner))
@@ -318,6 +324,16 @@ class User
 
   def phone_or_email_required
     errors.add(:base, 'Email or Phone is required')
+  end
+
+  def status
+    if role?('sales')
+      sales_status
+    elsif ["channel_partner","cp_owner"].include?(role)
+      user_status_in_company
+    else
+      nil
+    end
   end
 
   def unblock_lead!(tag = false)
@@ -722,7 +738,11 @@ class User
         custom_scope = { role: {"$in": User.buyer_roles(user.booking_portal_client)} }
         custom_scope[:'$or'] = [{manager_id: user.id}, {manager_id: nil, referenced_manager_ids: user.id, iris_confirmation: false}]
       elsif user.role?('cp_owner')
-        custom_scope = { role: {'$in': ['channel_partner', 'cp_owner']}, channel_partner_id: user.channel_partner_id }
+        if user.channel_partner_id.present?
+          custom_scope = { role: {'$in': ['channel_partner', 'cp_owner']}, channel_partner_id: user.channel_partner_id }
+        else
+          custom_scope = { id: user.id }
+        end
       elsif user.role?('crm')
         custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) + %w(channel_partner) } }
       elsif user.role?('sales_admin')
@@ -737,10 +757,10 @@ class User
       elsif user.role?('cp')
         custom_scope = { role: { '$in': %w(channel_partner cp_owner) }, manager_id: user.id }
       elsif user.role?('billing_team')
-        custom_scope = { role: 'channel_partner' }
+        custom_scope = { role: { '$in': %w(channel_partner cp_owner) } }
       elsif user.role?('admin')
         custom_scope = { role: { "$ne": 'superadmin' } }
-      elsif user.role?('team_lead')
+      elsif user.role?('team_lead')|| user.role?('gre')
         custom_scope = { role: 'sales', project_ids: user.selected_project_id.to_s }
       end
       custom_scope

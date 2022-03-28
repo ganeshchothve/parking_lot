@@ -1,10 +1,9 @@
 class Admin::UsersController < AdminController
   include UsersConcern
-  before_action :authenticate_user!, except: :resend_confirmation_instructions
+  before_action :authenticate_user!, except: %w[resend_confirmation_instructions change_state]
   before_action :set_user, except: %i[index export new create portal_stage_chart channel_partner_performance partner_wise_performance search_by]
-  before_action :authorize_resource, except: :resend_confirmation_instructions
+  before_action :authorize_resource, except: %w[resend_confirmation_instructions change_state]
   around_action :apply_policy_scope, only: %i[index export]
-  around_action :user_time_zone, if: :current_user, only: %i[channel_partner_performance partner_wise_performance]
 
   layout :set_layout
 
@@ -305,22 +304,33 @@ class Admin::UsersController < AdminController
     end
   end
 
-  # GET /admin/users/search_by
-  #
-  def search_by
-    @users = User.unscoped.build_criteria params
-    @users = @users.paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
-  end
-
-  def move_to_next_state
+  def site_visit_project_wise
+    dates = params[:dates]
+    dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
+    @site_visits = SiteVisit.filter_by_scheduled_on(dates).where(SiteVisit.user_based_scope(current_user, params))
+    @projects = params[:project_ids].present? ? Project.filter_by__id(params[:project_ids]) : Project.filter_by_is_active(true)
+    if params[:project_ids].present?
+      @site_visits = @site_visits.where(project_id: {"$in": params[:project_ids]})
+    elsif
+      @site_visits = @site_visits.where(project_id: {"$in": @projects.pluck(:id)})
+    end
+    if params[:manager_id].present?
+      @site_visits = @site_visits.where(manager_id: params[:manager_id])
+    end
+    if params[:channel_partner_id].present?
+      @site_visits = @site_visits.where(channel_partner_id: params[:channel_partner_id])
+    end
+    if params[:manager_id].blank? && params[:channel_partner_id].blank?
+      @site_visits = @site_visits.ne(manager_id: nil)
+    end
+    @all_site_visits = @site_visits.group_by{|p| p.project_id}
+    @scheduled_site_visits = @site_visits.filter_by_status('scheduled').group_by{|p| p.project_id}
+    @conducted_site_visits = @site_visits.filter_by_status('conducted').group_by{|p| p.project_id}
+    @paid_site_visits = @site_visits.filter_by_status('paid').group_by{|p| p.project_id}
+    @approved_site_visits = @site_visits.filter_by_approval_status('approved').group_by{|p| p.project_id}
     respond_to do |format|
-      if @user.move_to_next_state!(params[:status])
-        format.html{ redirect_to request.referrer || dashboard_url, notice: I18n.t("controller.users.move_to_next_state.#{@user.role}.#{@user.status}", name: @user.name.titleize) }
-        format.json { render json: { message: I18n.t("controller.users.move_to_next_state.#{@user.role}.#{@user.status}", name: @user.name.titleize) }, status: :ok }
-      else
-        format.html{ redirect_to request.referrer || dashboard_url, alert: @user.errors.full_messages.uniq }
-        format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
-      end
+      format.js
+      format.xls { send_data ExcelGenerator::SiteVisitProjectWise.site_visit_project_wise_csv(current_user, @projects, @approved_site_visits, @scheduled_site_visits, @conducted_site_visits, @all_site_visits, @paid_site_visits).string , filename: "site_visit_project_wise_csv-#{Date.today}.xls", type: "application/xls" }
     end
   end
 
@@ -353,11 +363,50 @@ class Admin::UsersController < AdminController
     end
   end
 
-  private
-
-  def user_time_zone
-    Time.use_zone(current_user.time_zone) { yield }
+  # GET /admin/users/search_by
+  #
+  def search_by
+    @users = User.unscoped.build_criteria params
+    @users = @users.paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
   end
+
+  def move_to_next_state
+    respond_to do |format|
+      if @user.move_to_next_state!(params[:status])
+        format.html{ redirect_to request.referrer || dashboard_url, notice: I18n.t("controller.users.move_to_next_state.#{@user.role}.#{@user.status}", name: @user.name.titleize) }
+        format.json { render json: { message: I18n.t("controller.users.move_to_next_state.#{@user.role}.#{@user.status}", name: @user.name.titleize) }, status: :ok }
+      else
+        format.html{ redirect_to request.referrer || dashboard_url, alert: @user.errors.full_messages.uniq }
+        format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # For changing the state of channel_partner user accounts
+  def change_state
+    respond_to do |format|
+      @user.assign_attributes(event: params.dig(:user, :user_status_in_company_event), rejection_reason: params.dig(:user, :rejection_reason))
+      user_current_status_in_company = @user.user_status_in_company
+
+      if user_current_status_in_company == 'pending_approval' && @user.event == 'active'
+        @channel_partner = ChannelPartner.where(id: params.dig(:user, :channel_partner_id)).first
+        unless @channel_partner
+          format.html { redirect_to request.referer, alert: 'Requested partner company not found' }
+          format.json { render json: { errors: ['Requested partner company not found'] }, status: :unprocessable_entity }
+          return
+        end
+      end
+
+      if @user.save
+        format.html { redirect_to (request.referrer.include?('add_user_account') ? root_path : request.referrer), notice: t("controller.users.status_in_company_message.#{user_current_status_in_company}_to_#{@user.user_status_in_company}") }
+      else
+        format.html { redirect_to request.referer, alert: @user.errors.full_messages.uniq }
+        format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  private
 
   def set_user
     @user = if params[:crm_client_id].present? && params[:id].present?
@@ -398,7 +447,9 @@ class Admin::UsersController < AdminController
         end
       else
         fund_account = user.fund_accounts.first
-        fund_account.assign_attributes(params.dig(:user, :fund_accounts).permit(FundAccountPolicy.new(current_user, fund_account).permitted_attributes))
+        if params.dig(:user, :fund_accounts).present?
+          fund_account.assign_attributes(params.dig(:user, :fund_accounts).permit(FundAccountPolicy.new(current_user, fund_account).permitted_attributes))
+        end
       end
 
       # Create/Update fund account in razorpay if its api is configured
@@ -437,7 +488,7 @@ class Admin::UsersController < AdminController
   end
 
   def authorize_resource
-    if %w[index export portal_stage_chart channel_partner_performance partner_wise_performance].include?(params[:action])
+    if %w[index export portal_stage_chart channel_partner_performance partner_wise_performance search_by].include?(params[:action])
       authorize [current_user_role_group, User]
     elsif params[:action] == 'new' || params[:action] == 'create'
       if params.dig(:user, :role).present?

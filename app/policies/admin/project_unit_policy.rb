@@ -2,8 +2,7 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   # def new? def print? def create? def update? def block? def update_co_applicants? def update_project_unit? def payment? def process_payment? def checkout? def send_under_negotiation? from ProjectUnitPolicy
   def index?
     out = current_client.enable_actual_inventory?(user) && !user.buyer?
-    out && user.active_channel_partner?
-    false
+    out && user.active_channel_partner? && !current_client.launchpad_portal
   end
 
   def ds?

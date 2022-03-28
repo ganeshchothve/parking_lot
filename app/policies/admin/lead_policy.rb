@@ -54,7 +54,27 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def asset_create?
-    %w[admin sales sales_admin crm].include?(user.role)
+    valid = %w[admin sales sales_admin crm].include?(user.role)
+    if user.role?(:sales) && is_assigned_lead?
+      valid = is_lead_accepted? && valid
+    end
+    valid
+  end
+
+  def is_lead_accepted?
+    if user.role?(:sales) && record.is_a?(Lead)
+      record.accepted_by_sales?
+    else
+      false
+    end
+  end
+
+  def is_assigned_lead?
+    if user.role?(:sales) && record.is_a?(Lead)
+      Lead.where(id: record.id, closing_manager_id: user.id).in(customer_status: %w(engaged)).first.present?
+    else
+      false
+    end
   end
 
   def show_selldo_links?
@@ -67,23 +87,38 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def search_by?
-    user.role.in?(%w(sales team_lead))
+    user.role.in?(%w(sales gre team_lead))
   end
 
   def assign_sales?
-    user.role.in?(%w(team_lead))
+    user.role.in?(%w(gre team_lead))
   end
 
   def move_to_next_state?
-    (user.role?('team_lead') && (record.is_a?(Lead) || record.role?('sales'))) ||
+    if is_lead_accepted?
+      record.may_dropoff? && (record.closing_manager_id == user.id)
+    else
+      (user.role.in?(%w(gre team_lead)) && (record.is_a?(Lead) || record.role?('sales'))) ||
       user.role?('sales') && (
-        (record.is_a?(Lead) && record.may_dropoff? && (record.closing_manager_id == user.id)) ||
         (!record.is_a?(Lead) && record.role?('sales') && (record.may_break? || record.may_available?))
       )
+    end
   end
 
   def show_existing_customer?
     %w(sales).exclude?(user.role)
+  end
+
+  def reassign_lead?
+    current_client.team_lead_dashboard_access_roles.include?(user.role)
+  end
+
+  def reassign_sales?
+    reassign_lead?
+  end
+
+  def accept_lead?
+    %w(sales).include?(user.role)
   end
 
   def permitted_attributes(params = {})

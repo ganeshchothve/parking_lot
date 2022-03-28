@@ -29,6 +29,9 @@ class Lead
   field :registered_at, type: Date
   field :manager_change_reason, type: String
   field :referenced_manager_ids, type: Array, default: []
+
+  field :source, type: String
+  field :sub_source, type: String
   #
   # Casa specific fields
   field :lead_stage, type: String
@@ -44,6 +47,9 @@ class Lead
   # used for dump latest queue_number or revisit queue number from sitevisit
   field :queue_number, type: Integer
   field :push_to_crm, type: Boolean, default: false
+
+  # lead reassignment specific field
+  field :accepted_by_sales, type: Boolean
 
   embeds_many :state_transitions
   embeds_many :portal_stages

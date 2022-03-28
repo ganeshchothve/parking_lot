@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="col-md-6">
+    <%= form.input :company_name, required: true, disabled: !policy([:admin, form.object]).editable_field?("company_name") %>
+  </div>
+  <div class="col-md-6">
+    <%= form.input :pan_number, disabled: !policy([:admin, form.object]).editable_field?("pan_number") %>
+  </div>
+</div>
+<!-- <div class='row'>
+  <div class="col-md-6">
+    <%#= form.input :interested_services, collection: ChannelPartner::SERVICES.collect{|x| [x, x]}, disabled: !policy([:admin, form.object]).editable_field?("interested_services"), prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
+  </div>
+  <div class="col-md-6">
+    <%#= form.input :regions, collection: current_client.partner_regions.collect{|region| [region,region]}, disabled: !policy([:admin, form.object]).editable_field?("regions"), as: :select, prompt: :translate, input_html: { class: 'selectize', multiple: true } %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <%#= form.label :rera_applicable %>
+    <div class="form-check form-check-inline">
+      <%#= form.radio_button :rera_applicable, true, class: "form-check-input wd-22" %>
+      <%#= form.label :rera_applicable, "Yes", class: "form-check-label d-inline-block ms-2" %>
+    </div>
+    <div class="form-check form-check-inline">
+      <%#= form.radio_button :rera_applicable, false, class: "form-check-input wd-22" %>
+      <%#= form.label :rera_applicable, "No", class: "form-check-label d-inline-block ms-2" %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <%#= form.input :rera_id, disabled: !policy([:admin, form.object]).editable_field?("rera_id") %>
+  </div> -->
+  <% if current_user.manager_id.present? %>
+    <%= form.hidden_field :manager_id, value: current_user.manager_id %>
+  <% end %>
+  <%= form.hidden_field :primary_user_id, value: current_user.id.to_s %>
+</div>
