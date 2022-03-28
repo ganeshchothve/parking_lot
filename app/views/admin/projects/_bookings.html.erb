@@ -82,11 +82,9 @@
 
 <div class="row">
   <div class="col-md-6">
-    <div class="form-group">
-      <div class="form-check form-check-inline">
-        <%= f.check_box :enable_slot_generation, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("enable_slot_generation") }, "Yes", "No" %>
-        <%= f.label :enable_slot_generation, class: "form-check-label d-inline-block ms-2" %>
-      </div>
+    <div class="mb-3">
+      <%= f.label :incentive_calculation, class: 'label-required' %>
+      <%= f.select :incentive_calculation, Client::INCENTIVE_CALCULATION.collect{|x| [x,x]}, {}, class: 'selectize', multiple: true, required: 'required', disabled: !policy([:admin, project]).editable_field?("incentive_calculation") %>
     </div>
   </div>
   <div class="col-md-6">
@@ -98,9 +96,26 @@
 </div>
 <div class='row'>
   <div class="col-md-6">
+    <div class="form-group">
+      <div class="form-check form-check-inline">
+        <%= f.check_box :enable_slot_generation, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("enable_slot_generation") }, "Yes", "No" %>
+        <%= f.label :enable_slot_generation, class: "form-check-label d-inline-block ms-2" %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class='row'>
+  <div class="col-md-12">
     <div class="mb-3">
-      <%= f.label :incentive_calculation, class: 'label-required' %>
-      <%= f.select :incentive_calculation, Client::INCENTIVE_CALCULATION.collect{|x| [x,x]}, {}, class: 'selectize', multiple: true, required: 'required', disabled: !policy([:admin, project]).editable_field?("incentive_calculation") %>
+      <%= f.label :disable_project %>
+      <%= f.fields_for :disable_project do |dp_form| %>
+        <% f.object.disable_project.each do |k, v| %>
+          <div class="form-check form-check-inline">
+            <%= dp_form.check_box k, {class: "form-check-input wd-22", checked: v}, true %>
+            <%= dp_form.label :k, "Disable #{k.titleize}", class: "form-check-label d-inline-block ms-2" %>
+          </div>
+        <% end %>
+      <% end %>
     </div>
   </div>
 </div>

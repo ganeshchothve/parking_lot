@@ -1,6 +1,7 @@
 <% inventory_avl = @project.project_units.count > 0 %>
 <% project_labels = t('mongoid.attributes.project') %>
-<% interest_access = policy([current_user_role_group, InterestedProject]).index? %>
+<% interested_project = InterestedProject.new(user:current_user, project: @project) %>
+<% interest_access = policy([current_user_role_group, interested_project]).create? %>
 <% interest = current_user.interested_projects.in(status: %w(subscribed approved)).where(project_id: @project.id).presence %>
 <section class="prjt-details-sec">
     <div class="px-3">
