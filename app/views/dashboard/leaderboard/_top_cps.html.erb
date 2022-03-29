@@ -280,8 +280,8 @@
                 </g>
               </svg> 
               <p>
-                <%= @cp_rank_wise_data.select{|d| d[:rank] == 2 }.pluck(:manager_name).join(",") rescue "-" %>
-                <span>Rs. <%= @cp_rank_wise_data.select{|d| d[:rank] == 2 }.pluck(:total_capped_incentive).first rescue "-" %></span>
+                <%= @cp_rank_wise_data.select{|d| d[:rank] == 3 }.pluck(:manager_name).join(",") rescue "-" %>
+                <span>Rs. <%= @cp_rank_wise_data.select{|d| d[:rank] == 3 }.pluck(:total_capped_incentive).first rescue "-" %></span>
               </p>                  
             </li>
           </ul>
