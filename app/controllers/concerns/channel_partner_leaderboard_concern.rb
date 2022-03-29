@@ -76,8 +76,5 @@ module ChannelPartnerLeaderboardConcern
     @vis_options = {}
     @vis_options.merge!(user_id: params[:user_id]) if params[:user_id].present?
     @vis_options.merge!(project_ids: params[:project_ids]) if params[:project_ids].present?
-    if ["cp_owner", "channel_partner"].include?(current_user.role)
-      @vis_options.merge!(user_id: current_user.id.to_s)
-    end
   end
 end
