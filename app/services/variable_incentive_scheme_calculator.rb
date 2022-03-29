@@ -61,7 +61,6 @@ class VariableIncentiveSchemeCalculator
       avg_booking_count_per_day = (avg_booking_count_per_day <= 1 ? 1 : avg_booking_count_per_day)
       predicted_booking_count = avg_booking_count_per_day * 7
       (0..7).each do |day|
-        ap day
         booking_detail = BookingDetail.new(booked_on: Date.today + day)
         capped_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(booking_detail, variable_incentive_scheme)
         predicted_incentive += (capped_incentive * avg_booking_count_per_day)
