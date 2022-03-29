@@ -97,7 +97,7 @@ class BookingDetailMisReportWorker
       booking_detail.costs.where(key: 'vat_gst').first.try(:value) || "N/A",
       booking_detail.costs.where(key: 'reg_charges').first.try(:value) || "N/A",
       booking_detail.costs.where(key: 'stamp_duty_charges').first.try(:value) || "N/A",
-      project_unit.present? ? booking_detail.calculate_agreement_price : booking_detail.agreeement_price,
+      project_unit.present? ? booking_detail.calculate_agreement_price : booking_detail.agreement_price,
       booking_detail.calculate_all_inclusive_price,
       booking_detail.try(:booking_detail_scheme).try(:derived_from_scheme).try(:name) || "N/A",
       booking_detail.try(:booking_detail_scheme).try(:status) || "N/A",
