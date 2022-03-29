@@ -35,7 +35,10 @@ class BookingDetailMisReportWorker
       "Unit Name",
       "Unit Type",
       "Type of Apartment",
-      "Project Tower",
+      "Project Tower Name",
+      "Project Tower Id",
+      "Project Name",
+      "Project Id",
       "Lead Id",
       "Lead Name",
       "Lead Email",
@@ -75,6 +78,9 @@ class BookingDetailMisReportWorker
       project_unit.try(:unit_configuration_name) || booking_detail.project_unit_configuration,
       project_unit.try(:bedrooms) || booking_detail.bedrooms,
       project_unit.try(:project_tower_name) || booking_detail.project_tower_name,
+      project_unit.try(:project_tower_id).to_s,
+      project_unit.try(:project_name) || project_unit.try(:project).try(:name)
+      project_unit.try(:project_id).to_s
       lead.id.to_s,
       lead.name || 'N/A',
       lead.email || "N/A",
