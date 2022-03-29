@@ -9,6 +9,10 @@ module ChannelPartnerLeaderboardConcern
 
   end
 
+  def channel_partners_leaderboard_without_layout
+
+  end
+
   def top_channel_partners_by_incentives
     @vis_options.merge!(query: get_query)
     @cp_rank_wise_data = CpIncentiveLeaderboardDataProvider.top_channel_partners(@vis_options)
@@ -32,6 +36,7 @@ module ChannelPartnerLeaderboardConcern
   def average_incentive_per_booking
     @vis_options.merge!(query: get_query)
     @average_incentive = CpIncentiveLeaderboardDataProvider.average_incentive_per_booking(@vis_options)
+    @predicted_average_incentive = VariableIncentiveSchemeCalculator.average_incentive_per_booking_prediction(@vis_options)
     respond_to do |format|
       format.json { render json: {average_incentive_per_booking: @average_incentive} }
       format.html {}

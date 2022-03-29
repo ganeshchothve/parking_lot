@@ -45,6 +45,33 @@ class VariableIncentiveSchemeCalculator
     incentive_data.sort_by!{|data| data[:day] }
   end
 
+  def self.average_incentive_per_booking_prediction(options={})
+    filter_query = options[:query]
+    average_incentive = 0
+    predicted_incentive = 0
+    variable_incentive_scheme = VariableIncentiveScheme.approved.or(filter_query).first
+    if variable_incentive_scheme.present?
+      start_date = Date.today - 5
+      end_date = Date.today
+      # last 5 days booking count
+      booking_count = BookingDetail.in(status: BookingDetail::BOOKING_STAGES, project_id: variable_incentive_scheme.project_ids).where(booked_on: start_date.beginning_of_day..end_date.end_of_day).count
+      # avg booking count per day
+      booking_count = (booking_count <= 1 ? 1 : booking_count)
+      avg_booking_count_per_day = (booking_count.to_f / 5).ceil
+      avg_booking_count_per_day = (avg_booking_count_per_day <= 1 ? 1 : avg_booking_count_per_day)
+      predicted_booking_count = avg_booking_count_per_day * 7
+      (0..7).each do |day|
+        ap day
+        booking_detail = BookingDetail.new(booked_on: Date.today + day)
+        capped_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(booking_detail, variable_incentive_scheme)
+        predicted_incentive += (capped_incentive * avg_booking_count_per_day)
+      end
+
+      average_incentive = (predicted_incentive.to_f / 7).round
+    end
+    average_incentive
+  end
+
   # this method not used yet
   def self.all_channel_partners_incentives(options={})
     # need to discuss this user roles
