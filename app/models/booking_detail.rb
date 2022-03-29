@@ -408,7 +408,7 @@ class BookingDetail
     if category.present?
       case category
       when 'spot_booking'
-        blocked?
+        status.in?(%w(blocked booked_tentative booked_confirmed))
       when 'brokerage'
         if project.present?
           if project.enable_inventory?
