@@ -4,7 +4,7 @@ class Admin::InterestedProjectPolicy < InterestedProjectPolicy
   end
 
   def create?
-    index? && record.project&.is_active?
+    index? && record.project&.is_active? && record.project.walk_ins_enabled?
   end
 
   def subscribe_projects?

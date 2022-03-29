@@ -10,7 +10,7 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def create?
-    return false if record.project && !record.project.is_active?
+    return false if record.project && !(record.project.is_active? && record.project&.invoicing_enabled?)
     user.role.in?(%w(channel_partner cp_owner admin superadmin billing_team)) && enable_incentive_module?(user) && incentive_calculation_type?("manual")
   end
 

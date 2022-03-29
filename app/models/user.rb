@@ -272,8 +272,12 @@ class User
         User.none
       end
   end
-  scope :filter_by_interested_project, ->(project_id) do
-    all.in(id: InterestedProject.approved.where(project_id: project_id).distinct(:user_id))
+  scope :filter_by_interested_project, ->(project_ids) do
+    if project_ids.is_a?(Array)
+      all.in(id: InterestedProject.approved.in(project_id: project_ids).pluck(:user_id))
+    else
+      all.in(id: InterestedProject.approved.where(project_id: project_ids).pluck(:user_id))
+    end
   end
 
   scope :filter_by_interested_project_created_at, ->(date, project) do
