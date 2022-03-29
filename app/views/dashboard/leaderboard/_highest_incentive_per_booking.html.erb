@@ -1,0 +1,7 @@
+<h2><%= @highest_incentive_per_booking_data.first[:manager_name] rescue "-" %></h2>
+<p>
+  <img src="<%= asset_path 'leaderboard/money.svg' %>">
+  Rs. <%= @highest_incentive_per_booking_data.first[:capped_incentive] rescue "-" %>
+  <span>Highest incentive per booking</span>
+</p>
+<img src="<%= asset_path 'leaderboard/leader-person.png' %>" class="leader-person">

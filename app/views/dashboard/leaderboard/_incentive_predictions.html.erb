@@ -1,0 +1,8 @@
+<% 
+    todays_incentive = (@incentive_predictions_data.first[:today_incentive] rescue 0.0)
+    difference = (@incentive_predictions_data.first[:today_incentive] - @incentive_predictions_data.first[:next_week_incentive] rescue 0)
+    gain_difference_percentage = (((difference.to_f / @incentive_predictions_data.first[:today_incentive].to_f) * 100).round(2) rescue 0.0)
+%>
+<h2>Rs. <%= todays_incentive %></h2>
+<span><img src="<%= asset_path 'leaderboard/feather-arrow-up.svg' %>">₹<%= difference %>(<%= gain_difference_percentage %>%)</span>
+<p>Todays Incentive <br>per booking</p>

@@ -35,6 +35,12 @@
   </li>
 <% end %>
 
+<% if policy(:dashboard).leaderboard? %>
+  <li class="nav-item">
+    <%= active_link_to t('controller.dashboard.index.leaderboard'), channel_partners_leaderboard_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  </li>
+<% end %>
+
 
 <% if policy([:admin, Project]).index? %>
   <li class="nav-item">

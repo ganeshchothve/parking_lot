@@ -44,4 +44,8 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
   def team_lead_dashboard?
     user.role.in?(current_client.team_lead_dashboard_access_roles)# || user.role?('team_lead')
   end
+
+  def leaderboard?
+    user.role.in?(%w[superadmin admin channel_partner cp_owner])# || user.role?('team_lead')
+  end
 end
