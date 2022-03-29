@@ -115,6 +115,7 @@ class BookingDetail
   scope :filter_by_lead_id, ->(lead_id){ where(lead_id: lead_id)}
   scope :filter_by_manager_id, ->(manager_id){ where(manager_id: manager_id) }
   scope :filter_by_cp_manager_id, ->(cp_manager_id){ where(cp_manager_id: cp_manager_id) }
+  scope :filter_by_channel_partner_id, ->(channel_partner_id) {where(channel_partner_id: channel_partner_id)}
   scope :filter_by_incentive_scheme_id, ->(incentive_scheme_id){ where(incentive_scheme_id: incentive_scheme_id) }
   scope :filter_by_ladder_stage, ->(stage) { where(ladder_stage: stage.to_i) }
   scope :filter_by_tasks_completed, ->(task) { where(tasks: { '$elemMatch': {key: task, completed: true} }) }
@@ -407,7 +408,7 @@ class BookingDetail
     if category.present?
       case category
       when 'spot_booking'
-        blocked?
+        status.in?(%w(blocked booked_tentative booked_confirmed))
       when 'brokerage'
         if project.present?
           if project.enable_inventory?

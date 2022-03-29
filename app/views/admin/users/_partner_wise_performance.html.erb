@@ -9,11 +9,11 @@
           <% if policy([:admin, Lead]).index? %>
             <th><%= Lead.model_name.human(count: 2) %></th>
           <% end %>
-          <th>Scheduled<br> <%= SiteVisit.model_name.human(count: 2) %></th>
-          <th>Conducted<br> <%= SiteVisit.model_name.human(count: 2) %></th>
-          <th>Pending<br> <%= SiteVisit.model_name.human(count: 2) %></th>
-          <th>Approved<br> <%= SiteVisit.model_name.human(count: 2) %></th>
-          <th>Rejected<br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th><%= t('mongoid.attributes.site_visit/status.scheduled') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th><%= t('mongoid.attributes.site_visit/status.conducted') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th><%= t('mongoid.attributes.site_visit/status.pending') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th><%= t('mongoid.attributes.site_visit/approval_status.approved') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th><%= t('mongoid.attributes.site_visit/approval_status.rejected') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
           <th><%= BookingDetail.model_name.human(count: 2) %></th>
           <th>Total<br> <%= t('mongoid.attributes.booking_detail.agreement_price') %></th>
         </tr>
@@ -27,30 +27,31 @@
             <td data-title='<%= t("mongoid.attributes.user/role.channel_partner") %>'><%= p.name.titleize %></td>
             <td data-title='Sign In Count'><%= p.sign_in_count || 0 %></td>
             <% if policy([:admin, Lead]).index? %>
-              <td data-title='<%= Lead.model_name.human(count: 2) %>'><%= @leads[p.id].try(:count) || 0 %></td>
+              <td data-title='<%= Lead.model_name.human(count: 2) %>'><%= link_to @leads[p.id].try(:count) ? @leads[p.id].try(:count) : 0, admin_leads_path(fltrs: {manager_id: p.id, created_at: params[:dates], project_id: params[:project_id], channel_partner_id: params[:channel_partner_id]}) %></td>
             <% end %>
-            <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= @scheduled_site_visits[p.id].try(:count) || 0 %></td>
-            <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= @conducted_site_visits[p.id].try(:count) || 0 %></td>
-            <td data-title='Pending <%= SiteVisit.model_name.human(count: 2) %>'><%= @pending_site_visits[p.id].try(:count) || 0 %></td>
-            <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= @approved_site_visits[p.id].try(:count) || 0 %></td>
-            <td data-title='Rejected <%= SiteVisit.model_name.human(count: 2) %>'><%= @rejected_site_visits[p.id].try(:count) || 0 %></td>
-            <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><%= @bookings[p.id].try(:count) || 0 %></td>
+            <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @scheduled_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: {status: 'scheduled', manager_id: p.id, scheduled_on: params[:dates], project_id: params[:project_id], channel_partner_id: params[:channel_partner_id]}) %></td>
+            <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @conducted_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: {status: 'conducted', manager_id: p.id, scheduled_on: params[:dates], project_id: params[:project_id], channel_partner_id: params[:channel_partner_id]}) %></td>
+            <td data-title='Pending <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @pending_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: {approval_status: 'pending', manager_id: p.id, scheduled_on: params[:dates], project_id: params[:project_id], channel_partner_id: params[:channel_partner_id]}) %></td>
+            <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @approved_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: {approval_status: 'approved', manager_id: p.id, scheduled_on: params[:dates], project_id: params[:project_id], channel_partner_id: params[:channel_partner_id]}) %></td>
+            <td data-title='Rejected <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @rejected_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: {approval_status: 'rejected', manager_id: p.id, scheduled_on: params[:dates], project_id: params[:project_id], channel_partner_id: params[:channel_partner_id]}) %></td>
+            <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><%= link_to @bookings[p.id].try(:count) ? @bookings[p.id].try(:count) : 0, admin_booking_details_path(fltrs: {manager_id: p.id, created_at: params[:dates], project_id: params[:project_id], channel_partner_id: params[:channel_partner_id]}) %></td>
             <% sum_of_av = (@bookings[p.id].try(:pluck, :agreement_price)&.map(&:to_f)&.sum || 0) %>
             <td class='non-action-td' data-title='<%= t('mongoid.attributes.booking_detail.agreement_price') %>'><%= number_to_indian_currency(sum_of_av) %>(<%= number_to_inr(sum_of_av, {precision: 2, significant: false}) %>)</td>
           </tr>
         <% end %>
+        <% channel_partner = params[:channel_partner_id].present? ? ChannelPartner.where(id: params[:channel_partner_id]).first : current_user %>
         <tr >
           <th data-title="<%= t('global.total') %>"><%= t('global.total') %></th>
           <th data-title="Sign In Count"><%= total_sign_in_count %></th>
           <% if policy([:admin, Lead]).index? %>
-            <td data-title='<%= Lead.model_name.human(count: 2) %>'><%= @leads.values&.flatten&.count || 0 %></td>
+            <td data-title='<%= Lead.model_name.human(count: 2) %>'><%= link_to @leads.values&.flatten&.count || 0, admin_leads_path(fltrs: {channel_partner_id: channel_partner.id, created_at: params[:dates], project_id: params[:project_id], channel_partner_id: params[:channel_partner_id]}) %></td>
           <% end %>
-          <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= @scheduled_site_visits.values&.flatten&.count || 0 %></td>
-          <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= @conducted_site_visits.values&.flatten&.count || 0 %></td>
-          <td data-title='Pending <%= SiteVisit.model_name.human(count: 2) %>'><%= @pending_site_visits.values&.flatten&.count || 0 %></td>
-          <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= @approved_site_visits.values&.flatten&.count || 0 %></td>
-          <td data-title='Rejected <%= SiteVisit.model_name.human(count: 2) %>'><%= @rejected_site_visits.values&.flatten&.count || 0 %></td>
-          <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><%= @bookings.values&.flatten&.count || 0 %></td>
+          <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @scheduled_site_visits.values&.flatten&.count || 0, admin_site_visits_path(fltrs: {status: 'scheduled', channel_partner_id: channel_partner.id, scheduled_on: params[:dates], project_id: params[:project_id], channel_partner_id: params[:channel_partner_id]}) %></td>
+          <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @conducted_site_visits.values&.flatten&.count || 0, admin_site_visits_path(fltrs: {status: 'conducted', channel_partner_id: channel_partner.id, scheduled_on: params[:dates], project_id: params[:project_id], channel_partner_id: params[:channel_partner_id]}) %></td>
+          <td data-title='Pending <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @pending_site_visits.values&.flatten&.count || 0, admin_site_visits_path(fltrs: {approval_status: 'pending', channel_partner_id: channel_partner.id, scheduled_on: params[:dates], project_id: params[:project_id], channel_partner_id: params[:channel_partner_id]}) %></td>
+          <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @approved_site_visits.values&.flatten&.count || 0, admin_site_visits_path(fltrs: {approval_status: 'approved', channel_partner_id: channel_partner.id, scheduled_on: params[:dates], project_id: params[:project_id], channel_partner_id: params[:channel_partner_id]}) %></td>
+          <td data-title='Rejected <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @rejected_site_visits.values&.flatten&.count || 0, admin_site_visits_path(fltrs: {approval_status: 'rejected', channel_partner_id: channel_partner.id, scheduled_on: params[:dates], project_id: params[:project_id], channel_partner_id: params[:channel_partner_id]}) %></td>
+          <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><%= link_to @bookings.values&.flatten&.count || 0, admin_booking_details_path(fltrs: {channel_partner_id: channel_partner.id, created_at: params[:dates], project_id: params[:project_id], channel_partner_id: params[:channel_partner_id]}) %></td>
           <% sum_of_av = (@bookings.values&.flatten&.pluck(:agreement_price)&.map(&:to_f)&.sum || 0) %>
           <td class='non-action-td' data-title='<%= t('mongoid.attributes.booking_detail.agreement_price') %>'><%= number_to_indian_currency(sum_of_av) %>(<%= number_to_inr(sum_of_av, {precision: 2, significant: false}) %>)</td>
         </tr>
