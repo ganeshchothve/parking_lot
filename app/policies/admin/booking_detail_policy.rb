@@ -52,7 +52,9 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def show_add_booking_link?
-    !enable_inventory? && record.try(:user).try(:buyer?) && %w[account_manager channel_partner cp_owner].include?(user.role) && record.lead&.project&.bookings_enabled?
+    out = !enable_inventory? && record.try(:user).try(:buyer?) && %w[account_manager channel_partner cp_owner].include?(user.role) && record.lead&.project&.bookings_enabled?
+    out = false if user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
+    out
   end
 
   def enable_inventory?
