@@ -110,7 +110,7 @@ class ChannelPartner
   validates :pan_number, format: { with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A' }, allow_blank: true
   #validates :first_name, :last_name, name: true, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
-  # validate :user_based_uniqueness, on: :create
+  validate :user_based_uniqueness
   validates :primary_user_id, uniqueness: true, allow_blank: true
 
   validates :experience, inclusion: { in: proc{ ChannelPartner::EXPERIENCE } }, allow_blank: true
@@ -175,13 +175,8 @@ class ChannelPartner
 
   private
   def user_based_uniqueness
-    query = []
-    query << { phone: phone } if phone.present?
-    query << { email: email } if email.present?
-    query << { rera_id: rera_id } if rera_id.present?
-    user = User.or(query).first
-    if user.present? && (!user.role.in?(%w(cp channel_partner)) || user.is_active?)
-      errors.add :base, 'User with Phone, Email or RERA already exists'
+    if email.present? && User.where(email: email).present?
+      errors.add :base, 'Email is already taken'
     end
   end
 
