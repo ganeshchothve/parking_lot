@@ -9,7 +9,7 @@
     <li>
       <div class="list-rank"><%= cp_data[:rank] || "-" %></div>
       <div class="list-name">
-        <img src="<%= asset_path 'user.jpg' %>">
+        <!-- <img src="<%#= asset_path 'user.jpg' %>"> -->
         <p><%= (cp_data[:manager_name] || "-") rescue "-" %></p>
         <!-- <span><%#= @cp_rank_wise_data.select{|d| d[:rank] == rank }.pluck(:company_name).join(",") rescue "-" %></span> -->
       </div>
