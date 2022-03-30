@@ -1,3 +1,8 @@
+<%
+  first_cp = @cp_rank_wise_data.select{|d| d[:rank] == 1 }.pluck(:manager_name).join(",") rescue "-"
+  second_cp = @cp_rank_wise_data.select{|d| d[:rank] == 2 }.pluck(:manager_name).join(",") rescue "-"
+  third_cp = @cp_rank_wise_data.select{|d| d[:rank] == 3 }.pluck(:manager_name).join(",") rescue "-"
+%>
 <div class="container">
     <div class="row">
       <div class="col-12">
@@ -89,8 +94,8 @@
                   </g>
                 </g>
               </svg> 
-              <p>
-                <%= @cp_rank_wise_data.select{|d| d[:rank] == 2 }.pluck(:manager_name).join(",") rescue "-" %>
+              <p title="<%= second_cp %>">
+                <%= second_cp.truncate(13) %>
                 <span>Rs. <%= @cp_rank_wise_data.select{|d| d[:rank] == 2 }.pluck(:total_capped_incentive).first rescue "-" %></span>
               </p>             
             </li>
@@ -183,8 +188,8 @@
                   </g>
                 </g>
               </svg>   
-              <p>
-                <%= @cp_rank_wise_data.select{|d| d[:rank] == 1 }.pluck(:manager_name).join(",") rescue "-" %>
+              <p title="<%= first_cp %>">
+                <%= first_cp.truncate(13) %>
                 <span>Rs. <%= @cp_rank_wise_data.select{|d| d[:rank] == 1 }.pluck(:total_capped_incentive).first rescue "-" %></span>
               </p>                
             </li>
@@ -279,8 +284,8 @@
                   </g>
                 </g>
               </svg> 
-              <p>
-                <%= @cp_rank_wise_data.select{|d| d[:rank] == 3 }.pluck(:manager_name).join(",") rescue "-" %>
+              <p title="<%= third_cp %>">
+                <%= third_cp.truncate(13) %>
                 <span>Rs. <%= @cp_rank_wise_data.select{|d| d[:rank] == 3 }.pluck(:total_capped_incentive).first rescue "-" %></span>
               </p>                  
             </li>
