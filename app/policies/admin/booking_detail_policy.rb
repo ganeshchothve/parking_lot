@@ -8,13 +8,13 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def new?
-    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner].include?(user.role) && eligible_user? && enable_actual_inventory?(user) && record.project&.is_active?
+    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner].include?(user.role) && eligible_user? && enable_actual_inventory?(user) && record.project&.is_active? && record.lead&.project&.bookings_enabled?
     out = false if user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
     out
   end
 
   def create?
-    return true if is_buyer_booking_limit_exceed? && eligible_user? && enable_actual_inventory?(user)
+    return true if is_buyer_booking_limit_exceed? && eligible_user? && enable_actual_inventory?(user) && record.lead&.project&.bookings_enabled?
     @condition = 'allowed_bookings'
     false
   end
@@ -44,7 +44,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def show_booking_link?
-    valid = _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && record.try(:user).try(:buyer?) && enable_inventory?
+    valid = record.lead&.project&.bookings_enabled? && _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && record.try(:user).try(:buyer?) && enable_inventory?
     if is_assigned_lead?
       valid = is_lead_accepted? && valid
     end
@@ -52,7 +52,9 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def show_add_booking_link?
-    !enable_inventory? && record.try(:user).try(:buyer?) && %w[account_manager channel_partner cp_owner].include?(user.role)
+    out = !enable_inventory? && record.try(:user).try(:buyer?) && %w[account_manager channel_partner cp_owner].include?(user.role) && record.lead&.project&.bookings_enabled?
+    out = false if user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
+    out
   end
 
   def enable_inventory?

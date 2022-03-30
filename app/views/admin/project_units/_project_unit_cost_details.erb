@@ -10,7 +10,7 @@
         <% end %>
       </div>
     <% end %>
-    <div class='card-body'>
+    <div class='card-body d-print-none'>
       <% unless request.format.pdf? %>
         <% if @lead %>
           <%= render 'admin/project_units/booking_detail_scheme_form', {booking_detail: @booking_detail, booking_detail_scheme: @booking_detail_scheme, url: current_user.buyer? ? quotation_buyer_project_unit_path(@project_unit) : quotation_admin_lead_project_unit_path(@lead, @project_unit) } %>

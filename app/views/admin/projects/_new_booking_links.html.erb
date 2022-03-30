@@ -1,5 +1,11 @@
+<% lead = Lead.new(user: User.new, project: project) %>
+
 <% if project.enable_inventory? %>
-  <%= link_to t('controller.booking_details.add_booking.link_name'), new_booking_on_project_admin_booking_details_path(project_id: project.id), class: 'modal-remote-form-link prjt-add' %>
+  <% if policy([:admin, BookingDetail.new(user: lead.user, lead: lead, project_unit: ProjectUnit.new(status: 'available', blocking_amount: current_client.blocking_amount))]).show_booking_link? %>
+    <%= link_to t('controller.booking_details.add_booking.link_name'), new_booking_on_project_admin_booking_details_path(project_id: project.id), class: 'modal-remote-form-link prjt-add' %>
+  <% end %>
 <% else %>
-  <%= link_to "Add Booking", new_booking_without_inventory_admin_booking_details_path(project_id: project.id.to_s), class: "modal-remote-form-link prjt-add" %>
+  <% if policy([:admin, BookingDetail.new(user: lead.user, lead: lead)]).show_add_booking_link? %>
+    <%= link_to "Add Booking", new_booking_without_inventory_admin_booking_details_path(project_id: project.id.to_s), class: "modal-remote-form-link prjt-add" %>
+  <% end %>
 <% end %>

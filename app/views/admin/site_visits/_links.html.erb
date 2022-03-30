@@ -16,7 +16,7 @@
   <% site_visit.aasm(:approval_status).events(permitted: true).each do |event| %>
     <% if event.name.to_s == 'reject' %>
       <%= link_to t("controller.site_visits.events.approval_status.#{event.name}"), reject_admin_site_visit_path(site_visit), class: 'dropdown-item modal-remote-form-link' %>
-    <% else %>
+    <% elsif event.name.to_s != 'pending' %>
       <%= link_to t("controller.site_visits.events.approval_status.#{event.name}"), change_state_admin_site_visit_path(site_visit, {site_visit: {approval_event: event.name}}), method: :patch, class: 'dropdown-item' %>
     <% end %>
   <% end %>

@@ -117,6 +117,7 @@ class Project
   field :enable_booking_with_kyc, type: Boolean, default: true
   field :check_sv_availability_in_selldo, type: Boolean, default: false
   field :incentive_calculation, type: Array, default: ["manual"]
+  field :disable_project, type: Hash, default: {walk_ins: false, bookings: false, invoicing: false}
 
 
   field :email_header, type: String, default: '<div class="container">
@@ -200,6 +201,8 @@ class Project
   scope :filter_by_regions, ->(regions) {regions.is_a?(Array) ? where( region: { "$in": regions }) : where(region: regions)}
   scope :filter_by_is_active, ->(is_active) { where(is_active: is_active.to_s == 'true') }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
+  scope :filter_by_disable_project_walk_ins, ->(disabled_walkin) { where('disable_project.walk_ins': (disabled_walkin == 'true')) }
+  scope :filter_by_disable_project_bookings, ->(disabled_bookings) { where('disable_project.bookings': (disabled_bookings == 'true')) }
 
   #def unit_configurations
   #  UnitConfiguration.where(data_attributes: {"$elemMatch" => {"n" => "project_id", "v" => self.selldo_id}})
@@ -260,6 +263,18 @@ class Project
 
   def is_subscribed(user)
     InterestedProject.where(project_id: self.id, user_id: user.id).in(status: %w(subscribed approved)).present?
+  end
+
+  def walk_ins_enabled?
+    !self.disable_project['walk_ins']
+  end
+
+  def bookings_enabled?
+    !self.disable_project['bookings']
+  end
+
+  def invoicing_enabled?
+    !self.disable_project['invoicing']
   end
 
   def self.user_based_scope(user, params = {})

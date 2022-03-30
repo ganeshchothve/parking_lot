@@ -20,6 +20,7 @@ en:
         check_and_register?:
           project_not_subscribed: 'This project is not subscribed'
           project_not_active: 'This project is inactive'
+          walkin_disabled: 'Walkins for this project is not considered now'
 
       project_policy:
         collaterals?:
