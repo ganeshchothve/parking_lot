@@ -30,9 +30,25 @@
           </g>
         </g>
       </g>
-    </svg>              
-    <img src="<%= asset_path 'leaderboard/rocket.png' %>" class="rocket-img">
-    <img src="<%= asset_path 'leaderboard/rocket-power.svg' %>" class="rocket-power-img">
-    <p class="target-value"><%= (@achieved_target_data.first[:achieved_target] rescue "-") %></p>
+    </svg>   
+    <style>
+      .rct-pwr-icon{
+        left:calc(<%= (@achieved_target_data.first[:achieved_target] rescue "-") %>% - 174px);
+      }
+      .target-value-no{
+        left:calc(<%= (@achieved_target_data.first[:achieved_target] rescue "-") %>% + 40px)!important;
+      }
+      @media screen and (max-width: 700px){
+        .rct-pwr-icon{
+        left:calc(<%= (@achieved_target_data.first[:achieved_target] rescue "-") %>% - 56px);
+      }
+      .target-value-no{
+        left:calc(<%= (@achieved_target_data.first[:achieved_target] rescue "-") %>% + 15px)!important;
+      }
+      }
+    </style>
+    <img src="<%= asset_path 'leaderboard/rocket.png' %>" class="rocket-img" style="left:<%= (@achieved_target_data.first[:achieved_target] rescue "-") %>%">
+    <img src="<%= asset_path 'leaderboard/rocket-power.svg' %>" class="rocket-power-img rct-pwr-icon">
+    <p class="target-value target-value-no"><%= (@achieved_target_data.first[:achieved_target] rescue "-") %></p>
   </div>
 </div>
