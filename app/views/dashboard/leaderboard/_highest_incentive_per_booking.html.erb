@@ -1,14 +1,10 @@
 <div id="carouselExampleControls4" class="carousel slide carousel4" data-bs-ride="carousel">
   <div class="carousel-inner">
-    <div class="carousel-item active">
-      <h2><%= @highest_incentive_per_booking_data.first[:manager_name] rescue "-" %></h2>
-    </div>
-    <div class="carousel-item">
-      <h2><%= @highest_incentive_per_booking_data.first[:manager_name] rescue "-" %></h2>
-    </div>
-    <div class="carousel-item">
-      <h2><%= @highest_incentive_per_booking_data.first[:manager_name] rescue "-" %></h2>
-    </div>
+    <% @highest_incentive_per_booking_data.each_with_index do |data, index| %>
+      <div class="carousel-item <%= index.zero? ? 'active' : '' %>">
+        <h2><%= (data[:manager_name] || "-") rescue "-" %></h2>
+      </div>
+    <% end %>
   </div>
   <!-- <button class="carousel-control-prev highest-incentice-prev" type="button" data-bs-target="#carouselExampleControls4" data-bs-slide="prev">
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>

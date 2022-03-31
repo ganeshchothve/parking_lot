@@ -1,7 +1,7 @@
 <%
-  first_cp = @cp_rank_wise_data.select{|d| d[:rank] == 1 }.pluck(:manager_name).join(",") rescue "-"
-  second_cp = @cp_rank_wise_data.select{|d| d[:rank] == 2 }.pluck(:manager_name).join(",") rescue "-"
-  third_cp = @cp_rank_wise_data.select{|d| d[:rank] == 3 }.pluck(:manager_name).join(",") rescue "-"
+  first_cp = @cp_rank_wise_data.select{|d| d[:rank] == 1 } rescue ["-"]
+  second_cp = @cp_rank_wise_data.select{|d| d[:rank] == 2 } rescue ["-"]
+  third_cp = @cp_rank_wise_data.select{|d| d[:rank] == 3 } rescue ["-"]
 %>
 <div class="container">
   <div class="row">
@@ -121,27 +121,15 @@
           </svg>
           <div id="carouselExampleControls" class="carousel slide carousel2" data-bs-ride="carousel">
             <div class="carousel-inner">
-              <div class="carousel-item active">
-                <p title="<%= second_cp %>">
-                  <%= second_cp.truncate(13) %>
-                  <span>Rs.
-                    <%= @cp_rank_wise_data.select{|d| d[:rank] == 2 }.pluck(:total_capped_incentive).first rescue "-" %></span>
-                </p>
-              </div>
-              <div class="carousel-item">
-                <p title="<%= second_cp %>">
-                  <%= second_cp.truncate(13) %>
-                  <span>Rs.
-                    <%= @cp_rank_wise_data.select{|d| d[:rank] == 2 }.pluck(:total_capped_incentive).first rescue "-" %></span>
-                </p>
-              </div>
-              <div class="carousel-item">
-                <p title="<%= second_cp %>">
-                  <%= second_cp.truncate(13) %>
-                  <span>Rs.
-                    <%= @cp_rank_wise_data.select{|d| d[:rank] == 2 }.pluck(:total_capped_incentive).first rescue "-" %></span>
-                </p>
-              </div>
+              <% second_cp.each_with_index do |scp, index| %>
+                <div class="carousel-item <%= index.zero? ? 'active' : '' %>">
+                  <p title="<%= (scp[:manager_name].truncate(13) rescue "-") %>">
+                    <%= scp[:manager_name].truncate(13) rescue "-" %>
+                    <span>Rs.
+                      <%= (scp[:total_capped_incentive] || "-") rescue "-" %></span>
+                  </p>
+                </div>
+              <% end %>
             </div>
             <!-- <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
               data-bs-slide="prev">
@@ -274,27 +262,15 @@
           </svg>
           <div id="carouselExampleControls2" class="carousel slide carousel1" data-bs-ride="carousel">
             <div class="carousel-inner">
-              <div class="carousel-item active">
-                <p title="<%= first_cp %>">
-                  <%= first_cp.truncate(13) %>
-                  <span>Rs.
-                    <%= @cp_rank_wise_data.select{|d| d[:rank] == 1 }.pluck(:total_capped_incentive).first rescue "-" %></span>
-                </p>
-              </div>
-              <div class="carousel-item">
-                <p title="<%= first_cp %>">
-                  <%= first_cp.truncate(13) %>
-                  <span>Rs.
-                    <%= @cp_rank_wise_data.select{|d| d[:rank] == 1 }.pluck(:total_capped_incentive).first rescue "-" %></span>
-                </p>
-              </div>
-              <div class="carousel-item">
-                <p title="<%= first_cp %>">
-                  <%= first_cp.truncate(13) %>
-                  <span>Rs.
-                    <%= @cp_rank_wise_data.select{|d| d[:rank] == 1 }.pluck(:total_capped_incentive).first rescue "-" %></span>
-                </p>
-              </div>
+              <% first_cp.each_with_index do |scp, index| %>
+                <div class="carousel-item <%= index.zero? ? 'active' : '' %>">
+                  <p title="<%= (scp[:manager_name].truncate(13) rescue "-") %>">
+                    <%= scp[:manager_name].truncate(13) rescue "-" %>
+                    <span>Rs.
+                      <%= (scp[:total_capped_incentive] || "-") rescue "-" %></span>
+                  </p>
+                </div>
+              <% end %>
             </div>
             <!-- <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls2"
               data-bs-slide="prev">
@@ -430,27 +406,15 @@
           </svg>
           <div id="carouselExampleControls3" class="carousel slide carousel3" data-bs-ride="carousel">
             <div class="carousel-inner">
-              <div class="carousel-item active">
-                <p title="<%= third_cp %>">
-                  <%= third_cp.truncate(13) %>
-                  <span>Rs.
-                    <%= @cp_rank_wise_data.select{|d| d[:rank] == 3 }.pluck(:total_capped_incentive).first rescue "-" %></span>
-                </p>
-              </div>
-              <div class="carousel-item">
-                <p title="<%= third_cp %>">
-                  <%= third_cp.truncate(13) %>
-                  <span>Rs.
-                    <%= @cp_rank_wise_data.select{|d| d[:rank] == 3 }.pluck(:total_capped_incentive).first rescue "-" %></span>
-                </p>
-              </div>
-              <div class="carousel-item">
-                <p title="<%= third_cp %>">
-                  <%= third_cp.truncate(13) %>
-                  <span>Rs.
-                    <%= @cp_rank_wise_data.select{|d| d[:rank] == 3 }.pluck(:total_capped_incentive).first rescue "-" %></span>
-                </p>
-              </div>
+              <% third_cp.each_with_index do |scp, index| %>
+                <div class="carousel-item <%= index.zero? ? 'active' : '' %>">
+                  <p title="<%= (scp[:manager_name].truncate(13) rescue "-") %>">
+                    <%= scp[:manager_name].truncate(13) rescue "-" %>
+                    <span>Rs.
+                      <%= (scp[:total_capped_incentive] || "-") rescue "-" %></span>
+                  </p>
+                </div>
+              <% end %>
             </div>
             <!--<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls3"
               data-bs-slide="prev">
