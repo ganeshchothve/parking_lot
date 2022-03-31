@@ -1,6 +1,6 @@
 <div id="carouselExampleControls4" class="carousel slide carousel4" data-bs-ride="carousel">
   <div class="carousel-inner">
-    <% @highest_incentive_per_booking_data.each_with_index do |data, index| %>
+    <% @highest_incentive_per_booking_data.uniq{|d| d[:manager_name] }.each_with_index do |data, index| %>
       <div class="carousel-item <%= index.zero? ? 'active' : '' %>">
         <h2><%= (data[:manager_name] || "-") rescue "-" %></h2>
       </div>
