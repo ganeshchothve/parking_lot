@@ -538,22 +538,22 @@ class Admin::UsersController < AdminController
     elsif params[:active_walkins] == 'true' && params[:active_bookings] == 'false'
       user_ids = manager_ids_with_sv_and_no_booking
     elsif params[:active_walkins] == 'false' && params[:active_bookings] == 'true'
-      user_ids = manager_ids_with_booking_and_no_sv #case to be checked
+      user_ids = manager_ids_with_booking_and_no_sv
     elsif params[:active_walkins] == 'false' && params[:active_bookings] == 'false'
-      user_ids = User.nin(id: manager_ids_with_sv_or_booking)
+      user_ids = User.nin(id: manager_ids_with_sv_or_booking).distinct(:id)
     elsif params[:active_walkins] == 'true' && params[:active_bookings] == ''
-      user_ids = User.in(id: site_visit_manager_ids)
+      user_ids = User.in(id: site_visit_manager_ids).distinct(:id)
     elsif params[:active_walkins] == 'false' && params[:active_bookings] == ''
-      user_ids = User.nin(id: @site_visit_manager_ids)
+      user_ids = User.nin(id: @site_visit_manager_ids).distinct(:id)
     elsif params[:active_walkins] == '' && params[:active_bookings] == 'true'
-      user_ids = User.in(id: @booking_detail_manager_ids)
+      user_ids = User.in(id: @booking_detail_manager_ids).distinct(:id)
     elsif params[:active_walkins] == '' && params[:active_bookings] == 'false'
-      user_ids = User.nin(id: @booking_detail_manager_ids)
+      user_ids = User.nin(id: @booking_detail_manager_ids).distinct(:id)
     else
-      user_ids = User.all
+      user_ids = User.distinct(:id)
     end
 
-    manager_ids = {id: user_ids.is_a?(Array) ? user_ids : user_ids.distinct(:id)}
+    manager_ids = {id: user_ids}
     manager_ids
   end
 
