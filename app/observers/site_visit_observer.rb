@@ -88,7 +88,7 @@ class SiteVisitObserver < Mongoid::Observer
     if site_visit.approval_status_changed? && site_visit.approval_status == 'rejected'
       site_visit.invoices.where(status: 'tentative').update_all(status: 'rejected', rejection_reason: 'Site Visit has been cancelled')
     end
-    site_visit.invoices.where(status: 'tentative').update_all(status: 'draft') if site_visit.actual_incentive_eligible?
+    site_visit.invoices.where(status: 'tentative').update_all(status: 'draft') if site_visit.draft_incentive_eligible?
 
     # if site visit status is changed to conducted, the site visit is pushed to sell do
     if site_visit.status_changed? && site_visit.status == 'conducted'

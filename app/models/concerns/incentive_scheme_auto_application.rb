@@ -15,15 +15,15 @@ module IncentiveSchemeAutoApplication
     end
   end
 
-  def _incentive_eligible?
+  def _tentative_incentive_eligible?
     ::IncentiveScheme::CATEGORIES_PER_RESOURCE[self.class.to_s].any? do |category|
-      self.incentive_eligible?(category)
+      self.tentative_incentive_eligible?(category)
     end
   end
 
-  def _actual_incentive_eligible?
+  def _draft_incentive_eligible?
     ::IncentiveScheme::CATEGORIES_PER_RESOURCE[self.class.to_s].any? do |category|
-      self.actual_incentive_eligible?(category)
+      self.draft_incentive_eligible?(category)
     end
   end
 
@@ -49,7 +49,7 @@ module IncentiveSchemeAutoApplication
 
   def calculate_incentive
     ::IncentiveScheme::CATEGORIES_PER_RESOURCE[self.class.to_s].each do |category|
-      if self.incentive_eligible?(category) && self.incentive_categories_auto_applied[category].blank?
+      if self.tentative_incentive_eligible?(category) && self.incentive_categories_auto_applied[category].blank?
 
         # Maintain incentive categories auto application on resource to avoid calculating same incentive more than once
         icategories_auto_applied = self.incentive_categories_auto_applied.clone
