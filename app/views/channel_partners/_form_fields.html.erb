@@ -90,7 +90,7 @@
       </div>
       <div class="col-md-12 status_change_field">
         <%= form.label :status_change_reason, class: '' %>
-        <%= form.text_area :status_change_reason, class: 'form-control summernote', disabled: !policy([:admin, @channel_partner]).editable_field?("status_change_reason") %>
+        <%= form.text_area :status_change_reason, class: 'form-control', rows: 5, disabled: !policy([:admin, @channel_partner]).editable_field?("status_change_reason") %>
       </div>
     </div>
   <% end %>
