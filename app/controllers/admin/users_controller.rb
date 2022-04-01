@@ -273,8 +273,15 @@ class Admin::UsersController < AdminController
     dates = params[:dates]
     dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
     @leads = Lead.filter_by_created_at(dates).where(Lead.user_based_scope(current_user, params))
+
     @site_visits = SiteVisit.filter_by_scheduled_on(dates).where(SiteVisit.user_based_scope(current_user, params))
     @bookings = BookingDetail.booking_stages.filter_by_booked_on(dates).where(BookingDetail.user_based_scope(current_user, params))
+
+    @site_visits_manager_ids = @site_visits.distinct(:manager_id).compact || []
+    @booking_detail_manager_ids = @bookings.distinct(:manager_id).compact || []
+
+    @manager_ids = partner_wise_filters(@site_visits_manager_ids, @booking_detail_manager_ids, params)
+
     if params[:project_id].present?
       @leads = @leads.where(project_id: params[:project_id])
       @site_visits = @site_visits.where(project_id: params[:project_id])
@@ -300,7 +307,7 @@ class Admin::UsersController < AdminController
     user = params[:channel_partner_id].present? ? ChannelPartner.where(id: params[:channel_partner_id]).first&.users&.cp_owner&.first : current_user
     respond_to do |format|
       format.js
-      format.xls { send_data ExcelGenerator::PartnerWisePerformance.partner_wise_performance_csv(user, @leads, @bookings, @all_site_visits, @site_visits, @pending_site_visits, @approved_site_visits, @rejected_site_visits, @scheduled_site_visits, @conducted_site_visits).string , filename: "partner_wise_performance-#{Date.today}.xls", type: "application/xls" }
+      format.xls { send_data ExcelGenerator::PartnerWisePerformance.partner_wise_performance_csv(user, @leads, @bookings, @all_site_visits, @site_visits, @pending_site_visits, @approved_site_visits, @rejected_site_visits, @scheduled_site_visits, @conducted_site_visits, @manager_ids).string , filename: "partner_wise_performance-#{Date.today}.xls", type: "application/xls" }
     end
   end
 
@@ -337,8 +344,15 @@ class Admin::UsersController < AdminController
   def site_visit_partner_wise
     dates = params[:dates]
     dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
+
     @site_visits = SiteVisit.filter_by_scheduled_on(dates).where(SiteVisit.user_based_scope(current_user, params))
     @bookings = BookingDetail.booking_stages.filter_by_booked_on(dates).where(BookingDetail.user_based_scope(current_user, params))
+
+    @site_visits_manager_ids = @site_visits.distinct(:manager_id).compact || []
+    @booking_detail_manager_ids = @bookings.distinct(:manager_id).compact || []
+
+    @manager_ids = partner_wise_filters(@site_visits_manager_ids, @booking_detail_manager_ids, params)
+
     if params[:project_id].present?
       @site_visits = @site_visits.where(project_id: params[:project_id])
       @bookings = @bookings.where(project_id: params[:project_id])
@@ -359,7 +373,7 @@ class Admin::UsersController < AdminController
     user = params[:channel_partner_id].present? ? ChannelPartner.where(id: params[:channel_partner_id]).first&.users&.cp_owner&.first : current_user
     respond_to do |format|
       format.js
-      format.xls { send_data ExcelGenerator::SiteVisitPartnerWise.site_visit_partner_wise_csv(user, @bookings, @all_site_visits, @approved_site_visits, @scheduled_site_visits, @conducted_site_visits, @paid_site_visits).string , filename: "site_visit_partner_wise-#{Date.today}.xls", type: "application/xls" }
+      format.xls { send_data ExcelGenerator::SiteVisitPartnerWise.site_visit_partner_wise_csv(user, @bookings, @all_site_visits, @approved_site_visits, @scheduled_site_visits, @conducted_site_visits, @paid_site_visits, @manager_ids).string , filename: "site_visit_partner_wise-#{Date.today}.xls", type: "application/xls" }
     end
   end
 
@@ -511,4 +525,36 @@ class Admin::UsersController < AdminController
   def generate_password
     ( ('AaF'..'ZzK').to_a.sample + (0..999).to_a.sample.to_s + '@')
   end
+
+  def partner_wise_filters (site_visit_manager_ids, booking_detail_manager_ids, params = {})
+
+    manager_ids_with_sv_and_booking = site_visit_manager_ids & booking_detail_manager_ids
+    manager_ids_with_sv_or_booking = site_visit_manager_ids || booking_detail_manager_ids
+    manager_ids_with_sv_and_no_booking = site_visit_manager_ids - booking_detail_manager_ids
+    manager_ids_with_booking_and_no_sv = booking_detail_manager_ids - site_visit_manager_ids
+
+    if params[:active_walkins] == 'true' && params[:active_bookings] == 'true'
+      users = manager_ids_with_sv_and_booking
+    elsif params[:active_walkins] == 'true' && params[:active_bookings] == 'false'
+      users = manager_ids_with_sv_and_no_booking
+    elsif params[:active_walkins] == 'false' && params[:active_bookings] == 'true'
+      users = manager_ids_with_booking_and_no_sv #case to be checked
+    elsif params[:active_walkins] == 'false' && params[:active_bookings] == 'false'
+      users = User.nin(id: manager_ids_with_sv_or_booking)
+    elsif params[:active_walkins] == 'true' && params[:active_bookings] == ''
+      users = User.in(id: site_visit_manager_ids)
+    elsif params[:active_walkins] == 'false' && params[:active_bookings] == ''
+      users = User.nin(id: @site_visit_manager_ids)
+    elsif params[:active_walkins] == '' && params[:active_bookings] == 'true'
+      users = User.in(id: @booking_detail_manager_ids)
+    elsif params[:active_walkins] == '' && params[:active_bookings] == 'false'
+      users = User.nin(id: @booking_detail_manager_ids)
+    else
+      users = User.all
+    end
+
+    manager_ids = {id: users.is_a?(Array) ? users : users.distinct(:id)}
+    manager_ids
+  end
+
 end

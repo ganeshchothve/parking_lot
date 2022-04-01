@@ -1,6 +1,7 @@
 module ExcelGenerator::PartnerWisePerformance
 
-  def self.partner_wise_performance_csv(user, leads, bookings, all_site_visits, site_visits, pending_site_visits, approved_site_visits, rejected_site_visits, scheduled_site_visits, conducted_site_visits)
+  def self.partner_wise_performance_csv(user, leads, bookings, all_site_visits, site_visits, pending_site_visits, approved_site_visits, rejected_site_visits, scheduled_site_visits, conducted_site_visits, manager_ids)
+
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "PartnerWisePerformance")
     sheet.insert_row(0, ["Channel Partner Performance (User Wise)"])
@@ -10,24 +11,29 @@ module ExcelGenerator::PartnerWisePerformance
     column_size.times { |x| sheet.row(1).set_format(x, title_format) }
     index = 1
     total_sign_in_count = 0
-    User.filter_by_role(%w(cp_owner channel_partner)).where(User.user_based_scope(user)).each do |p|
-      index = index+1 
-      total_sign_in_count += (p.sign_in_count || 0)
-      sheet.insert_row(index, [
-        p.name.titleize,
-        p.sign_in_count || 0,
-        leads[p.id].try(:count) || 0, 
-        scheduled_site_visits[p.id].try(:count) || 0,
-        conducted_site_visits[p.id].try(:count) || 0,
-        pending_site_visits[p.id].try(:count) || 0,
-        approved_site_visits[p.id].try(:count) || 0,
-        rejected_site_visits[p.id].try(:count) || 0,
-        bookings[p.id].try(:count) || 0,
-        (bookings[p.id].try(:pluck, :agreement_price)&.map(&:to_f)&.sum || 0) 
-      ])
+
+    users = User.filter_by_role(%w(cp_owner channel_partner)).where(User.user_based_scope(user)).in(manager_ids)
+
+    users.each do |p|
+    index = index+1
+    total_sign_in_count += (p.sign_in_count || 0)
+    sheet.insert_row(index, [
+      p&.channel_partner&.name&.titleize,
+      p.name.titleize,
+      p.sign_in_count || 0,
+      leads[p.id].try(:count) || 0,
+      scheduled_site_visits[p.id].try(:count) || 0,
+      conducted_site_visits[p.id].try(:count) || 0,
+      pending_site_visits[p.id].try(:count) || 0,
+      approved_site_visits[p.id].try(:count) || 0,
+      rejected_site_visits[p.id].try(:count) || 0,
+      bookings[p.id].try(:count) || 0,
+      (bookings[p.id].try(:pluck, :agreement_price)&.map(&:to_f)&.sum || 0)
+    ])
     end
     total_values = [
       I18n.t('global.total'),
+      "",
       total_sign_in_count,
       leads.values&.flatten&.count || 0,
       scheduled_site_visits.values&.flatten&.count || 0,
@@ -47,6 +53,7 @@ module ExcelGenerator::PartnerWisePerformance
 
   def self.partner_wise_performance_csv_headers
     [
+      "#{I18n.t('mongoid.attributes.channel_partner.company_name')}",
       "#{I18n.t("mongoid.attributes.user/role.channel_partner")}/#{I18n.t("mongoid.attributes.user/role.cp_owner")}",
       "Sign In Count",
       Lead.model_name.human(count: 2),

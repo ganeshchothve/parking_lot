@@ -119,7 +119,7 @@
               </button>
               <div class="dropdown-menu dropdown-menu-right">
                 <%= link_to link_to t("dashboard.exports.link_name", type: t('global.all')), partner_wise_performance_admin_users_path(format: "xls"), class: 'dropdown-item' %>
-                <%= link_to t('dashboard.exports.link_name', type: t('global.active_filter')), partner_wise_performance_admin_users_path(format: "xls", channel_partner_id: params["channel_partner_id"], project_id: params["project_id"], dates: params["dates"]), class: 'dropdown-item', id: 'partner-wise-performance-af-export' %>
+                <%= link_to t('dashboard.exports.link_name', type: t('global.active_filter')), partner_wise_performance_admin_users_path(format: "xls", channel_partner_id: params["channel_partner_id"], project_id: params["project_id"], dates: params["dates"], active_walkins: params["active_walkins"], active_bookings: params["active_bookings"]), class: 'dropdown-item', id: 'partner-wise-performance-af-export' %>
               </div>
             </div>
           </div>
@@ -141,15 +141,22 @@
                         <%= select_tag "project_id", options_for_select(Project.where(Project.user_based_scope(current_user)).map{|pr| [pr.name, pr.id]}), prompt: 'Select', class: "selectize" %>
                       </div>
                       <div class = "mb-3 col-12">
-                        <%= label_tag "channel_partner_id", ChannelPartner.model_name.human, required: true, class: "control-label float-left" %>
-                        <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}, cp_id), required: true, prompt: 'Select', class: "selectize" %>
+                        <%= label_tag "channel_partner_id", ChannelPartner.model_name.human, class: "control-label float-left" %>
+                        <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}, cp_id), prompt: 'Select', class: "selectize" %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", "Active Walk-ins", class: "control-label float-left" %>
+                        <%= select_tag "active_walkins", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_walkins].present? ? params[:active_walkins] : "")), { prompt: 'Select', class: "selectize" } %>
+                      </div>
+                      <div class="mb-3 col-12">
+                        <%= label_tag "fltrs", "Active Bookings", class: "control-label float-left" %>
+                        <%= select_tag "active_bookings", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_bookings].present? ? params[:active_bookings] : "")), { prompt: 'Select', class: "selectize" } %>
                       </div>
                     </div>
                   </div>
                   <div class="filter-footer  modal-footer text-end">
                     <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
                     <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
-                  </div>
                 <% end %>
               </div>
           </div>
@@ -384,7 +391,7 @@
             </button>
             <div class="dropdown-menu dropdown-menu-right">
               <%= link_to link_to t("dashboard.exports.link_name", type: t('global.all')), site_visit_partner_wise_admin_users_path(format: "xls"), class: 'dropdown-item' %>
-              <%= link_to t('dashboard.exports.link_name', type: t('global.active_filter')), site_visit_partner_wise_admin_users_path(format: "xls", channel_partner_id: params["channel_partner_id"], project_id: params["project_id"], dates: params["dates"]), class: 'dropdown-item', id: 'site-visit-partner-wise-af-export' %>
+              <%= link_to t('dashboard.exports.link_name', type: t('global.active_filter')), site_visit_partner_wise_admin_users_path(format: "xls", channel_partner_id: params["channel_partner_id"], project_id: params["project_id"], dates: params["dates"], active_walkins: params["active_walkins"], active_bookings: params["active_bookings"]), class: 'dropdown-item', id: 'site-visit-partner-wise-af-export' %>
             </div>
           </div>
         </div>
@@ -406,8 +413,16 @@
                       <%= select_tag "project_id", options_for_select(Project.where(Project.user_based_scope(current_user)).map{|pr| [pr.name, pr.id]}), prompt: 'Select', class: "selectize" %>
                     </div>
                     <div class = "mb-3 col-12">
-                      <%= label_tag "channel_partner_id", ChannelPartner.model_name.human, required: true, class: "control-label float-left" %>
-                      <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}, cp_id), required: true, prompt: 'Select', class: "selectize" %>
+                      <%= label_tag "channel_partner_id", ChannelPartner.model_name.human, class: "control-label float-left" %>
+                      <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}, cp_id), prompt: 'Select', class: "selectize" %>
+                    </div>
+                    <div class="mb-3 col-12">
+                      <%= label_tag "fltrs", "Active Walk-ins", class: "control-label float-left" %>
+                      <%= select_tag "active_walkins", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_walkins].present? ? params[:active_walkins] : "")), { prompt: 'Select', class: "selectize" } %>
+                    </div>
+                    <div class="mb-3 col-12">
+                      <%= label_tag "fltrs", "Active Bookings", class: "control-label float-left" %>
+                      <%= select_tag "active_bookings", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_bookings].present? ? params[:active_bookings] : "")), { prompt: 'Select', class: "selectize" } %>
                     </div>
                   </div>
                 </div>
