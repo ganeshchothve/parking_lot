@@ -5308,6 +5308,17 @@ table .dropdown-menu.show{
     border-radius: 26px;
     padding: 30px;
     float: left;
+	&:after{
+		height: 100px;
+		width: 100%;
+		position: absolute;
+		bottom: -6px;
+		content: '';
+		background-color: #FCC400;
+		left: 0;
+		z-index: -1;
+		border-radius: 25px;
+	}
     li{
         position: relative;
         z-index: 4;
@@ -5316,6 +5327,7 @@ table .dropdown-menu.show{
         padding: 8px 30px;
         margin-bottom: 12px;
         border-radius: 48px;
+		border: 1px solid #FFE99D;
         &.list-header:before{
             content: '';
             position: absolute;
@@ -5436,6 +5448,17 @@ table .dropdown-menu.show{
         top: 50%;
         transform: translate(-50%,-50%);
     }
+	&:before{
+		background-color: #CFDBE3;
+		content: '';
+		position: absolute;
+		bottom: -6px;
+		left: 0;
+		height: 100%;
+		width: 100%;
+		z-index: -1;
+		border-radius: 24px;
+	}
 	.carousel4{
 		position: absolute;
 			top: 56px;
@@ -5497,9 +5520,8 @@ table .dropdown-menu.show{
 	}
 }
 .incentive-block{
-    width: 90%;
-    margin: 64px -30px 0 5%;
-    
+	width: 92%;
+    margin: 64px -30px 0 4%;    
     h2{
         font-size: 42px;
         line-height: 60px;
@@ -5852,11 +5874,11 @@ table .dropdown-menu.show{
 		transform: unset;
 	}
 	.leaderboard-no-list li .carousel2, .leaderboard-no-list li .carousel1, .leaderboard-no-list li .carousel3{
-		top: -244px;
+		top: -236px;
 	}
 	.leaderboard-no-list li:nth-child(2) .carousel1 {
 		width: 190px;
-		top: -312px;
+		top: -300px;
 	}
 	/* .leaderboard-no-list li p {
 		font-size: 12px;
@@ -5871,9 +5893,8 @@ table .dropdown-menu.show{
 	.leaderboard-top-list {
 		width: 98%;
 		margin: -180px 0 0 1.5%;
-		padding: 10px 0;
+		padding: 0px 0;
 		float: left;
-		overflow-y: auto;
 	}
 	.leaderboard-declare .rebbin-img {
 		width: 80%;
@@ -5888,12 +5909,17 @@ table .dropdown-menu.show{
 		float: left;
 		width: 100%;
 	}
+	.leaderboard-top-list li:first-child{
+		border:0px solid;
+	}
 	.leaderboard-top-list li.list-header:after{
-		bottom: -1px;
-		border-radius: 0;
+		bottom: -6px;
+		border-radius: 15px 15px 0 0;
+		height: 50px;
 	}
 	.leaderboard-top-list li.list-header:before{
-		border-radius: 0;
+		height: 50px;
+		border-radius: 12px 12px 0 0;
 	}
 	.leaderboard-top-list li .list-rank {
 		width: 30px;
@@ -5916,12 +5942,14 @@ table .dropdown-menu.show{
 		width: calc(100% - 125px);
 		float: left;
 		text-align: center;
+		height: auto;
 	}
 	.leaderboard-top-list li.list-header div {
 		color: #fff;
 		font-size: 13px;
 		line-height: 27px;
 		font-weight: 700;
+		height: auto;
 	}
 	.leaderboard-top-list li .list-name img {
 		width: 40px;
@@ -5937,18 +5965,27 @@ table .dropdown-menu.show{
 		margin-bottom: 0;
 		float: left;
 		width: calc(100% - 50px);
-		margin-left: 10px;
+		margin-left: 0px;
+		word-break: break-word;
 	}
 	.leaderboard-top-list li .list-incentive p {
 		font-size: 16px;
-		line-height: 27px;
+		line-height: 26px;
 		font-weight: 600;
+		position: absolute;
+		top: 50%;
+		width: 100%;
+		transform: translateY(-50%);
+		right: 0;
+		margin-bottom: 0;
 	}
 	.leaderboard-top-list li .list-incentive {
 		width: 95px;
 		float: left;
 		text-align: right;
-		padding: 6px 0;
+		padding: 0px 0;
+		position: relative;
+		height: 52px;
 	}
 }
 @media screen and (max-width: 340px){
@@ -5965,5 +6002,9 @@ table .dropdown-menu.show{
 }
 .leaderboard-top-list li.list-header:before{
 	height: 44px;
+}
+.leaderboard-no-list li p span {
+    font-size: 14px !important;
+    line-height: 18px !important;
 }
 }

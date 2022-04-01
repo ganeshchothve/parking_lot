@@ -1,1 +1,296 @@
-<h1>Coming Soon...!</h1>
+<style>
+    .cp-dashboard-mob{
+        padding-top: 50px;
+    background-color: #fff;
+    }
+.cp-profile-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+}
+.cp-name, .sec-title {
+    color: #192951;
+    font-size: 18px;
+    line-height: 21px;
+    letter-spacing: 0.36px;
+}
+.cp-info {
+    font-size: 10px;
+    line-height: 16px;
+    color: #817F9B;
+    margin: 15px 0;
+}
+.yellow{
+    color: #FCE000;
+}
+.event-list{
+    overflow: auto;
+  white-space: nowrap;
+  padding: 0;
+    margin-left: 30px;
+}
+.event-list li {
+    display: inline-block;
+    width: 185px;
+    height: 160px;
+    background-color: #F9F8FF;
+    border-radius: 6px;
+    margin-right: 10px;
+}
+.event-list li:hover{
+    background-color: #FDCD34;
+}
+.event-date {
+    color: #1B2B54;
+    font-size: 8px;
+    line-height: 3px;
+    padding: 0 14px;
+    margin: 18px 0 10px;
+    display: block;
+}
+.event-person, .prjt-name {
+    font-size: 12px;
+    line-height: 16px;
+    color: #192951;
+    margin-bottom: 2px;
+    padding: 0 14px;
+}
+.prjt-title {
+    color: #817F9B;
+    font-size: 10px;
+    line-height: 12px;
+    padding: 0 14px;
+}
+.event-person, .prjt-name {
+    font-size: 12px;
+    line-height: 16px;
+    color: #192951;
+    margin-bottom: 2px;
+    padding: 0 14px;
+}
+.prjt-location {
+    font-size: 10px;
+    line-height: 14px;
+    color: #192951;
+    padding: 0 14px;
+    white-space: break-spaces;
+    margin-bottom: 10px;
+}
+.event-time {
+    border-top: 1px solid #e3e3e3;
+    padding: 0 14px;
+}
+.event-time p{
+    font-size: 10px;
+    line-height: 16px;
+    color: #192951;
+}
+.clock-icon{
+    color: #817F9B;
+    width: 10px!important;
+}
+.mainAnnouncementSlider{
+    padding-left: 30px;
+    padding-right: 30px;
+}
+.mainAnnouncementSlider .carousel-item img{
+    border-radius: 12px;
+}
+.mainAnnouncementSlider .carousel-item span{
+    font-size: 10px;
+    line-height: 14px;
+    color: rgba(129,127,155,0.5);
+    display: block;
+    margin: 10px 0;
+}
+.mainAnnouncementSlider .carousel-item h2{
+    font-size: 12px;
+    line-height: 14px;
+    color: #192951;
+}
+.mainAnnouncementSlider .carousel-item p{
+    font-size: 10px;
+    line-height: 16px;
+    color: #817F9B;
+}
+.mainAnnouncementSlider .carousel-control-next {
+    right: -18px;
+}
+.mainAnnouncementSlider .carousel-control-prev {
+    left: -18px;
+}
+
+
+
+
+</style>
+<section class="cp-dashboard-mob">
+  <div class="container">
+    <div class="col-12">
+      <img src="<%= asset_path 'user.jpg' %>" class="cp-profile-img">
+      <hr>
+      <h2 class="cp-name">Hello, John Doe</h2>
+      <p class="cp-info">Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown.</p>
+      <div class="col-12 mt-4">
+        <i class="fa fa-bell yellow fa-lg"></i>
+        <h3 class="sec-title d-inline px-2">Events</h3>
+        <ul class="event-list mt-3">
+          <li>
+            <div class="cp-events-wrap">
+              <div class="cp-event-inner">
+                <span class="event-date">Today, 20Jan, 2022</span>
+                <h3 class="event-person">Mr. Sanket Sonwane</h3>
+                <span class="prjt-title">Project Name</span>
+                <h3 class="prjt-name">Sukhwani Kingsley</h3>
+                <p class="prjt-location">Near Aditya Birla Hospital, Thergaon</p>
+                <div class="event-time">
+                  <i class="fa fa-clock clock-icon pt-1"></i>
+                  <p class="d-inline px-1">10:00 am - 11:00 am</p>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="cp-events-wrap">
+              <div class="cp-event-inner">
+                <span class="event-date">Today, 20Jan, 2022</span>
+                <h3 class="event-person">Mr. Sanket Sonwane</h3>
+                <span class="prjt-title">Project Name</span>
+                <h3 class="prjt-name">Sukhwani Kingsley</h3>
+                <p class="prjt-location">Near Aditya Birla Hospital, Thergaon</p>
+                <div class="event-time">
+                  <i class="fa fa-clock clock-icon pt-1"></i>
+                  <p class="d-inline px-1">10:00 am - 11:00 am</p>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="cp-events-wrap">
+              <div class="cp-event-inner">
+                <span class="event-date">Today, 20Jan, 2022</span>
+                <h3 class="event-person">Mr. Sanket Sonwane</h3>
+                <span class="prjt-title">Project Name</span>
+                <h3 class="prjt-name">Sukhwani Kingsley</h3>
+                <p class="prjt-location">Near Aditya Birla Hospital, Thergaon</p>
+                <div class="event-time">
+                  <i class="fa fa-clock clock-icon pt-1"></i>
+                  <p class="d-inline px-1">10:00 am - 11:00 am</p>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="col-12 my-5">
+        <i class="fa fa-solid fa-calendar-day yellow fa-lg"></i>
+        <h3 class="sec-title d-inline px-2">Announcements</h3>
+        <div id="mainAnnouncementSlider" class="carousel slide mainAnnouncementSlider mt-3" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <img src="<%= asset_path 'gallery-1.png' %>" class="d-block w-100" alt="...">
+                <span>Event Date: 22Jan, 2022 | Pune</span>
+                <h2>Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s.</h2>
+                <p>Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s.</p>
+              </div>
+              <div class="carousel-item">
+                <img src="<%= asset_path 'gallery-2.png' %>" class="d-block w-100" alt="...">
+                <span>Event Date: 22Jan, 2022 | Pune</span>
+                <h2>Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s.</h2>
+                <p>Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s.</p>
+              </div>
+              <div class="carousel-item">
+                <img src="<%= asset_path 'gallery-4.png' %>" class="d-block w-100" alt="...">
+                <span>Event Date: 22Jan, 2022 | Pune</span>
+                <h2>Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s.</h2>
+                <p>Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s.</p>
+              </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#mainAnnouncementSlider" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#mainAnnouncementSlider" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        </ul>
+      </div>
+      <div class="col-12 text-center pb-5">
+          <a href="javascript:;" class="btn-primary btn theme-btn">View Leaderboard</a>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="row">
+    <div class="col-lg-12mb-4">
+      <div class="app-features">
+        <div class="row px-3 py-3">
+          <div class="col-lg-12">
+            <h2 class="pb-4">Why you would love <%= t('global.brand') %></h2>
+          </div>
+          <div class="col-lg-4 app-features-list">
+            <span>
+                <img src="<%= asset_path 'cp-ex-feat-01.svg' %>" width="45">
+              </span>
+              <p>Early access to <br>new launches</p>
+          </div>
+          <div class="col-lg-4 app-features-list">
+            <span>
+                <img src="<%= asset_path 'cp-ex-feat-06.svg' %>" width="45">
+              </span>
+              <p>Timely payments to <br>streamline cash flows</p>
+          </div>
+          <div class="col-lg-4 app-features-list">
+            <span>
+                <img src="<%= asset_path 'cp-ex-feat-05.svg' %>" width="45">
+              </span>
+              <p>Marketing support<br> & assets</p>
+          </div>
+          <div class="col-lg-4 app-features-list">
+            <span>
+                <img src="<%= asset_path 'cp-ex-feat-11.svg' %>" width="45">
+              </span>
+              <p>Performance-based<br>channel partner ratings</p>
+          </div>
+          <div class="col-lg-4 app-features-list">
+            <span>
+                <img src="<%= asset_path 'cp-ex-feat-02.svg' %>" width="45">
+              </span>
+              <p>Extensive nurturing and<br>calling during launches</p>
+          </div>
+          <div class="col-lg-4 app-features-list">
+            <span>
+                <img src="<%= asset_path 'cp-ex-feat-04.svg' %>" width="45">
+              </span>
+              <p>CRM training<br>& support</p>
+          </div>
+          <div class="col-lg-4 app-features-list">
+            <span>
+                <img src="<%= asset_path 'cp-ex-feat-07.svg' %>" width="45">
+              </span>
+              <p>Fully automated<br>EOI process</p>
+          </div>
+          <div class="col-lg-4 app-features-list">
+            <span>
+                <img src="<%= asset_path 'cp-ex-feat-08.svg' %>" width="45">
+              </span>
+              <p>Online inventory selection,<br> KYC & bookings</p>
+          </div>
+          <div class="col-lg-4 app-features-list">
+              <span>
+                <img src="<%= asset_path 'cp-ex-feat-09.svg' %>" width="45">
+              </span>
+              <p>Complete<br>transparency</p>
+          </div>
+          <div class="col-lg-4 app-features-list">
+            <span>
+                <img src="<%= asset_path 'cp-ex-feat-10.svg' %>" width="45">
+              </span>
+              <p>Unique online <br>broker profile</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
