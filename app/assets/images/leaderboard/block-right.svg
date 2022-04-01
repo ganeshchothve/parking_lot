@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="520" height="350" viewBox="0 0 520 350">
+  <defs>
+    <linearGradient id="linear-gradient" y1="0.023" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ffae00"/>
+      <stop offset="1" stop-color="#f9e866"/>
+    </linearGradient>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_3896" data-name="Rectangle 3896" width="519.5" height="350" rx="14" transform="translate(714.25 2658)" fill="url(#linear-gradient)"/>
+    </clipPath>
+    <linearGradient id="linear-gradient-3" x1="0.769" y1="0.923" x2="0.272" y2="0.085" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#f9e45f"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="radial-gradient" cx="0.518" cy="0.544" r="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#887710"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <g id="Group_6644" data-name="Group 6644" transform="translate(-711.5 -1942.522)">
+    <rect id="Rectangle_3428" data-name="Rectangle 3428" width="519.5" height="350" rx="14" transform="translate(712 1942.522)" fill="url(#linear-gradient)"/>
+    <g id="Group_6631" data-name="Group 6631">
+      <g id="Mask_Group_272" data-name="Mask Group 272" transform="translate(-2.75 -715.478)" clip-path="url(#clip-path)">
+        <g id="Group_5285" data-name="Group 5285">
+          <g id="Group_5283" data-name="Group 5283" transform="translate(162.093 85.853)">
+            <ellipse id="Ellipse_234" data-name="Ellipse 234" cx="76.675" cy="75.773" rx="76.675" ry="75.773" transform="translate(966.046 2798.099)" fill="#ffe99d" opacity="0.551"/>
+            <circle id="Ellipse_235" data-name="Ellipse 235" cx="6.765" cy="6.765" r="6.765" transform="translate(1072.49 2730.445)" fill="#ffe99d"/>
+            <circle id="Ellipse_236" data-name="Ellipse 236" cx="20.296" cy="20.296" r="20.296" transform="translate(1021.974 2587.919)" fill="#ffe99d" opacity="0.25"/>
+            <circle id="Ellipse_237" data-name="Ellipse 237" cx="20.296" cy="20.296" r="20.296" transform="translate(1083.314 2743.976)" fill="#ffe99d" opacity="0.55"/>
+          </g>
+          <g id="Group_5284" data-name="Group 5284" transform="translate(976.863 2594.841) rotate(90)">
+            <ellipse id="Ellipse_238" data-name="Ellipse 238" cx="76.675" cy="75.773" rx="76.675" ry="75.773" transform="translate(0 210.18)" fill="#ffe99d" opacity="0.551"/>
+            <ellipse id="Ellipse_239" data-name="Ellipse 239" cx="6.765" cy="6.765" rx="6.765" ry="6.765" transform="translate(84.444 113.526)" fill="#ffe99d"/>
+            <circle id="Ellipse_240" data-name="Ellipse 240" cx="20.296" cy="20.296" r="20.296" transform="translate(55.928 0)" fill="#ffe99d" opacity="0.25"/>
+            <circle id="Ellipse_241" data-name="Ellipse 241" cx="20.296" cy="20.296" r="20.296" transform="translate(95.268 127.057)" fill="#ffe99d" opacity="0.55"/>
+          </g>
+        </g>
+      </g>
+      <circle id="Ellipse_231" data-name="Ellipse 231" cx="140.5" cy="140.5" r="140.5" transform="translate(925 1996)" fill="url(#linear-gradient-3)" style="mix-blend-mode: multiply;isolation: isolate"/>
+      <g id="Ellipse_232" data-name="Ellipse 232" transform="translate(940 2011)" stroke="#fff" stroke-width="1" fill="url(#linear-gradient-3)" style="mix-blend-mode: multiply;isolation: isolate">
+        <circle cx="125.5" cy="125.5" r="125.5" stroke="none"/>
+        <circle cx="125.5" cy="125.5" r="125" fill="none"/>
+      </g>
+      <circle id="Ellipse_233" data-name="Ellipse 233" cx="110.5" cy="110.5" r="110.5" transform="translate(955 2026)" fill="url(#radial-gradient)" style="mix-blend-mode: multiply;isolation: isolate"/>
+    </g>
+  </g>
+</svg>
