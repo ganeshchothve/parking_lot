@@ -277,8 +277,8 @@ class Admin::UsersController < AdminController
     @site_visits = SiteVisit.filter_by_scheduled_on(dates).where(SiteVisit.user_based_scope(current_user, params))
     @bookings = BookingDetail.booking_stages.filter_by_booked_on(dates).where(BookingDetail.user_based_scope(current_user, params))
 
-    @site_visits_manager_ids = @site_visits.distinct(:manager_id).compact || []
-    @booking_detail_manager_ids = @bookings.distinct(:manager_id).compact || []
+    @site_visits_manager_ids = @site_visits.distinct(:manager_id).compact
+    @booking_detail_manager_ids = @bookings.distinct(:manager_id).compact
 
     @manager_ids = partner_wise_filters(@site_visits_manager_ids, @booking_detail_manager_ids, params)
 
@@ -534,26 +534,26 @@ class Admin::UsersController < AdminController
     manager_ids_with_booking_and_no_sv = booking_detail_manager_ids - site_visit_manager_ids
 
     if params[:active_walkins] == 'true' && params[:active_bookings] == 'true'
-      users = manager_ids_with_sv_and_booking
+      user_ids = manager_ids_with_sv_and_booking
     elsif params[:active_walkins] == 'true' && params[:active_bookings] == 'false'
-      users = manager_ids_with_sv_and_no_booking
+      user_ids = manager_ids_with_sv_and_no_booking
     elsif params[:active_walkins] == 'false' && params[:active_bookings] == 'true'
-      users = manager_ids_with_booking_and_no_sv #case to be checked
+      user_ids = manager_ids_with_booking_and_no_sv #case to be checked
     elsif params[:active_walkins] == 'false' && params[:active_bookings] == 'false'
-      users = User.nin(id: manager_ids_with_sv_or_booking)
+      user_ids = User.nin(id: manager_ids_with_sv_or_booking)
     elsif params[:active_walkins] == 'true' && params[:active_bookings] == ''
-      users = User.in(id: site_visit_manager_ids)
+      user_ids = User.in(id: site_visit_manager_ids)
     elsif params[:active_walkins] == 'false' && params[:active_bookings] == ''
-      users = User.nin(id: @site_visit_manager_ids)
+      user_ids = User.nin(id: @site_visit_manager_ids)
     elsif params[:active_walkins] == '' && params[:active_bookings] == 'true'
-      users = User.in(id: @booking_detail_manager_ids)
+      user_ids = User.in(id: @booking_detail_manager_ids)
     elsif params[:active_walkins] == '' && params[:active_bookings] == 'false'
-      users = User.nin(id: @booking_detail_manager_ids)
+      user_ids = User.nin(id: @booking_detail_manager_ids)
     else
-      users = User.all
+      user_ids = User.all
     end
 
-    manager_ids = {id: users.is_a?(Array) ? users : users.distinct(:id)}
+    manager_ids = {id: user_ids.is_a?(Array) ? user_ids : user_ids.distinct(:id)}
     manager_ids
   end
 
