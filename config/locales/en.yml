@@ -1696,6 +1696,7 @@ en:
     dashboard:
       index:
         link_name: 'Dashboard'
+        leaderboard: CP Leaderboard
         billing_team_link_name: 'Billing Dashboard'
         cp_admin_link_name: 'Channel Partner Head Dashboard'
         cp_owner_link_name: 'Company Owner Dashboard'

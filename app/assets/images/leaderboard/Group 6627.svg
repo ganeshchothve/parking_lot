@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="205.352" height="368.941" viewBox="0 0 205.352 368.941">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.858" y1="0.238" x2="0.532" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#143c7a"/>
+      <stop offset="1" stop-color="#558add"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="0.03" y1="0.5" x2="1" y2="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#598ad3"/>
+      <stop offset="1" stop-color="#002257"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-3" x1="0.754" y1="0.218" x2="0.723" y2="1" xlink:href="#linear-gradient"/>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_293" data-name="Rectangle 293" width="143.092" height="34.96" fill="none"/>
+    </clipPath>
+    <clipPath id="clip-path-4">
+      <path id="Path_291" data-name="Path 291" d="M142.258,17.1c0,9.446-31.848,17.1-71.129,17.1S0,26.549,0,17.1,31.848,0,71.129,0s71.129,7.657,71.129,17.1" fill="none"/>
+    </clipPath>
+    <radialGradient id="radial-gradient" cx="0.5" cy="0.5" r="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#0f1c29"/>
+      <stop offset="0.113" stop-color="#3f4c58"/>
+      <stop offset="0.281" stop-color="#808d9a"/>
+      <stop offset="0.423" stop-color="#b0bdc9"/>
+      <stop offset="0.53" stop-color="#cddae7"/>
+      <stop offset="0.591" stop-color="#d9e6f2"/>
+      <stop offset="0.638" stop-color="#e3ecf5"/>
+      <stop offset="0.733" stop-color="#f3f7fa"/>
+      <stop offset="0.843" stop-color="#fcfdfe"/>
+      <stop offset="1" stop-color="#fff"/>
+    </radialGradient>
+    <linearGradient id="linear-gradient-4" x1="0.463" y1="0.857" x2="0.5" y2="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#143c7a"/>
+      <stop offset="1" stop-color="#558add" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="clip-path-5">
+      <rect id="Rectangle_1617" data-name="Rectangle 1617" width="189.482" height="145.74" fill="#fff"/>
+    </clipPath>
+    <filter id="Ellipse_223" x="64.87" y="0" width="91" height="91" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Group_6627" data-name="Group 6627" transform="translate(-792.13 -295)">
+    <g id="Group_6625" data-name="Group 6625">
+      <path id="Path_823" data-name="Path 823" d="M7111.961-3837.625h183.371l17.6-179.811-83.949-53.548-96.5,37.4Z" transform="translate(-6319.831 4501.566)" fill="url(#linear-gradient)"/>
+      <path id="Path_822" data-name="Path 822" d="M7119.652-4000.772l85.274,55.616,95.059-39.469-83.595-53.565Z" transform="translate(-6306.909 4468.772)" fill="url(#linear-gradient-2)"/>
+      <path id="Path_824" data-name="Path 824" d="M-18.5,138.922-2.647,0" transform="translate(900.892 523.617)" fill="none" stroke="#5f94e6" stroke-width="1"/>
+      <path id="Path_829" data-name="Path 829" d="M-27.407-4.4l-85.638-55.383" transform="translate(925.788 528.358)" fill="none" stroke="#5f94e6" stroke-width="1"/>
+      <path id="Path_830" data-name="Path 830" d="M-121.741-.57l94.33-39.655" transform="translate(1020.211 524.702)" fill="none" stroke="#5f94e6" stroke-width="1"/>
+      <path id="Path_835" data-name="Path 835" d="M6916.011-3366.21l46.954-138.7-16.51,139.97Z" transform="translate(-6065.208 4028.737)" opacity="0.603" fill="url(#linear-gradient-3)"/>
+      <g id="Group_1696" data-name="Group 1696" transform="translate(831.061 460.72)" opacity="0.648" style="mix-blend-mode: multiply;isolation: isolate">
+        <g id="Group_682" data-name="Group 682" transform="translate(0 0)" clip-path="url(#clip-path)">
+          <g id="Group_681" data-name="Group 681">
+            <g id="Group_680" data-name="Group 680" clip-path="url(#clip-path)">
+              <g id="Group_679" data-name="Group 679" style="mix-blend-mode: multiply;isolation: isolate">
+                <g id="Group_678" data-name="Group 678">
+                  <g id="Group_677" data-name="Group 677" clip-path="url(#clip-path)">
+                    <g id="Group_676" data-name="Group 676" transform="translate(0.417 -0.085)">
+                      <g id="Group_675" data-name="Group 675" clip-path="url(#clip-path-4)">
+                        <rect id="Rectangle_290" data-name="Rectangle 290" width="143.092" height="34.96" transform="translate(-0.417 0.085)" fill="url(#radial-gradient)"/>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+      <path id="Path_1573" data-name="Path 1573" d="M7111.961-3837.625h183.371l17.6-179.811-83.949-53.548-96.5,37.4Z" transform="translate(-6319.831 4501.566)" fill="url(#linear-gradient-4)" style="mix-blend-mode: multiply;isolation: isolate"/>
+    </g>
+    <g id="Group_6626" data-name="Group 6626">
+      <g id="Group_1697" data-name="Group 1697" transform="translate(808 314.98)" clip-path="url(#clip-path-5)">
+        <path id="Path_913" data-name="Path 913" d="M179.747,36.878H9.735A9.735,9.735,0,0,0,0,46.613v83.549A9.735,9.735,0,0,0,9.735,139.9h64.2a9.735,9.735,0,0,1,6.884,2.851l7.036,7.036a9.735,9.735,0,0,0,13.767,0l7.036-7.036a9.735,9.735,0,0,1,6.884-2.851h64.2a9.735,9.735,0,0,0,9.735-9.735V46.613a9.735,9.735,0,0,0-9.735-9.735" transform="translate(0 -6.895)" fill="#fff"/>
+      </g>
+      <g id="Group_6635" data-name="Group 6635">
+        <g transform="matrix(1, 0, 0, 1, 792.13, 295)" filter="url(#Ellipse_223)">
+          <circle id="Ellipse_223-2" data-name="Ellipse 223" cx="36.5" cy="36.5" r="36.5" transform="translate(73.87 6)" fill="#fbd960"/>
+        </g>
+        <text id="_3" data-name="3" transform="translate(904 354)" fill="#9f4b04" font-size="44" font-family="Poppins-Bold, Poppins" font-weight="700"><tspan x="-13" y="0">3</tspan></text>
+        <g id="Ellipse_224" data-name="Ellipse 224" transform="translate(871 306)" fill="none" stroke="#fff9af" stroke-width="2">
+          <ellipse cx="32" cy="31.5" rx="32" ry="31.5" stroke="none"/>
+          <ellipse cx="32" cy="31.5" rx="31" ry="30.5" fill="none"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
