@@ -86,6 +86,10 @@ class DashboardController < ApplicationController
     authorize :dashboard, :team_lead_dashboard?
   end
 
+  def dashboard_landing_page
+
+  end
+
   private
 
   def set_lead

@@ -48,4 +48,8 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
   def leaderboard?
     user.role.in?(%w[superadmin admin channel_partner cp_owner])# || user.role?('team_lead')
   end
+
+  def dashboard_landing_page?
+    true
+  end
 end
