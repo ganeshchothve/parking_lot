@@ -1,9 +1,12 @@
 
-<h2 class="text-center">Achieved Booking Target</h2>
+<%
+  achieved_capped_incentive_percentage = (((@achieved_capped_incentive.first[:total_capped_incentive].to_f / @max_capped_incentive) * 100) rescue 0.0)
+%>
+<h2 class="text-center">Incentives Claimed So Far</h2>
 <div class="target-box pt-3">
   <div class="col-12 target-no">
-    <h3 class="target-start">0</h3>
-    <h3 class="target-end"><%= (@achieved_target_data.first[:target] rescue "-") %></h3>
+    <!-- <h3 class="target-start"><%#=  number_to_inr(0, {precision: 2, significant: false}) %></h3> -->
+    <h3 class="target-end"><%= number_to_inr((@max_capped_incentive rescue "-"), {precision: 2, significant: false}) %></h3>
   </div>
   <div class="achieved-target col-12">
     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="26" viewBox="0 0 1015 26">
@@ -33,23 +36,23 @@
     </svg>   
     <style>
       .rct-pwr-icon{
-        left:calc(<%= (@achieved_target_data.first[:achieved_target] rescue "-") %>% - 174px);
+        left:calc(<%= achieved_capped_incentive_percentage %>% - 174px);
       }
       .target-value-no{
-        left:calc(<%= (@achieved_target_data.first[:achieved_target] rescue "-") %>% + 40px)!important;
+        left:calc(<%= achieved_capped_incentive_percentage %>% + 40px)!important;
       }
       @media screen and (max-width: 700px){
         .rct-pwr-icon{
-        left:calc(<%= (@achieved_target_data.first[:achieved_target] rescue "-") %>% - 56px);
+        left:calc(<%= achieved_capped_incentive_percentage %>% - 56px);
       }
       .target-value-no{
-        left:calc(<%= (@achieved_target_data.first[:achieved_target] rescue "-") %>% + 15px)!important;
+        left:calc(<%= achieved_capped_incentive_percentage %>% + 15px)!important;
       }
       }
     </style>
-    <img src="<%= asset_path 'leaderboard/rocket.png' %>" class="rocket-img" style="left:<%= (@achieved_target_data.first[:achieved_target] rescue "-") %>%">
+    <img src="<%= asset_path 'leaderboard/rocket.png' %>" class="rocket-img" style="left:<%= achieved_capped_incentive_percentage.round(2) %>%">
     <img src="<%= asset_path 'leaderboard/rocket-power.svg' %>" class="rocket-power-img rct-pwr-icon">
-    <p class="target-value target-value-no"><%= (@achieved_target_data.first[:achieved_target] rescue "-") %></p>
+    <p class="target-value target-value-no"><%= number_to_inr((@achieved_capped_incentive.first[:total_capped_incentive] rescue "-"), {precision: 2, significant: false}) %></p>
   </div>
 </div>
 

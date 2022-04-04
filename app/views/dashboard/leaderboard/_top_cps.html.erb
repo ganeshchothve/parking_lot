@@ -125,8 +125,8 @@
                 <div class="carousel-item <%= index.zero? ? 'active' : '' %>">
                   <p title="<%= (scp[:manager_name] rescue "-") %>">
                     <%= scp[:manager_name].truncate(13) rescue "-" %>
-                    <span>Rs.
-                      <%= (scp[:total_capped_incentive] || "-") rescue "-" %></span>
+                    <span>
+                      <%= number_to_indian_currency(scp[:total_capped_incentive] || "-") rescue "-" %></span>
                   </p>
                 </div>
               <% end %>
@@ -266,8 +266,8 @@
                 <div class="carousel-item <%= index.zero? ? 'active' : '' %>">
                   <p title="<%= (scp[:manager_name] rescue "-") %>">
                     <%= scp[:manager_name].truncate(13) rescue "-" %>
-                    <span>Rs.
-                      <%= (scp[:total_capped_incentive] || "-") rescue "-" %></span>
+                    <span>
+                      <%= number_to_indian_currency(scp[:total_capped_incentive] || "-") rescue "-" %></span>
                   </p>
                 </div>
               <% end %>
@@ -410,8 +410,8 @@
                 <div class="carousel-item <%= index.zero? ? 'active' : '' %>">
                   <p title="<%= (scp[:manager_name] rescue "-") %>">
                     <%= scp[:manager_name].truncate(13) rescue "-" %>
-                    <span>Rs.
-                      <%= (scp[:total_capped_incentive] || "-") rescue "-" %></span>
+                    <span>
+                      <%= number_to_indian_currency(scp[:total_capped_incentive] || "-") rescue "-" %></span>
                   </p>
                 </div>
               <% end %>

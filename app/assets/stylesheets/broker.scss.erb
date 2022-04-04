@@ -5462,13 +5462,14 @@ table .dropdown-menu.show{
 	.carousel4{
 		position: absolute;
 			top: 56px;
-			width: 270px;
+			left: 60px;
+			width: 350px;
 		h2 {
 			color: #000000;
 			font-size: 32px;
 			line-height: 34px;
 			font-weight: 600;
-			text-align: right;
+			text-align: left;
 		}
 	}
     
@@ -5479,7 +5480,7 @@ table .dropdown-menu.show{
         width: 308px;
         height: 91px;
         top: 46px;
-        left: 295px;
+        left: 450px;
         font-size: 28px;
         font-weight: 700;
         color: #000;
@@ -5557,10 +5558,22 @@ table .dropdown-menu.show{
         margin: 0 15px;
         width: calc(50% - 30px);        
         position: relative;
+        h3{
+					color: #000;
+        }
         .inner-block{
             position: absolute;
             top: 70px;
-            right: 45px;
+            left: 320px;
+            h5{
+							margin-bottom:0;
+            }
+            h2{
+							line-height:46px;
+            }
+            h2.loss{
+							color: #A70000;
+            }
         }
         &:before{
             border-radius: 15px;
@@ -5574,6 +5587,7 @@ table .dropdown-menu.show{
             height: 350px;
             background-repeat: no-repeat;
             background-size: cover;
+            z-index: -1
         }
         &:after{
             position: absolute;
@@ -5583,7 +5597,7 @@ table .dropdown-menu.show{
             height: 209px;
             background-color: #E09301;
             bottom: -9px;
-            z-index: -1;
+            z-index: -2;
         }
     }
     .block-right{
@@ -5593,6 +5607,9 @@ table .dropdown-menu.show{
         margin: 0 15px;
         width: calc(50% - 30px);        
         position: relative;
+        h3{
+        	color: #000;    	
+        }
         &:before{
             border-radius: 15px;
             position: absolute;
@@ -5605,6 +5622,7 @@ table .dropdown-menu.show{
             height: 350px;
             background-repeat: no-repeat;
             background-size: cover;
+            z-index: -1;
         }
         &:after{
             position: absolute;
@@ -5614,12 +5632,21 @@ table .dropdown-menu.show{
             height: 209px;
             background-color: #E09301;
             bottom: -9px;
-            z-index: -1;
+            z-index: -23;
         }
         .inner-block{
             position: absolute;
             top: 70px;
             left: 30px;
+            h5{
+							margin-bottom:0;
+            }
+            h2{
+							line-height:46px;
+            }
+            h2.gain{
+							color: #328538;
+            }
         }
         .money-icon{
             position: absolute;
@@ -5799,7 +5826,7 @@ table .dropdown-menu.show{
 	.incentive-block .block-left .inner-block {
 		position: absolute;
 		top: 44px;
-		right: 15px;
+		left: 200px;
 	}
 	.incentive-block .block-right .inner-block {
 		position: absolute;
