@@ -50,6 +50,6 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
   end
 
   def dashboard_landing_page?
-    true
+    leaderboard?
   end
 end
