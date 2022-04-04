@@ -11,6 +11,7 @@ class UserKyc
   # Add different types of documents which are uploaded on user_kyc
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   DOCUMENT_TYPES = []
+  OCCUPATIONS = ['salaried', 'self_employed', 'business', 'owner', 'retired', 'home_maker', 'other_company']
 
   field :salutation, type: String, default: 'Mr.'
   field :first_name, type: String
@@ -29,6 +30,7 @@ class UserKyc
   field :preferred_floors, type: Array, default: []
   field :budget, type: Integer
   field :comments, type: String
+  field :occupation, type: String
 
   field :nri, type: Boolean, default: false
   field :oci, type: String
@@ -54,8 +56,9 @@ class UserKyc
 
   has_many :assets, as: :assetable
   has_one :bank_detail, as: :bankable, validate: false
-  # has_one :correspondence_address, as: :addressable, class_name: "Address", validate: false
   has_many :addresses, as: :addressable, validate: false
+  has_one :correspondence_address, as: :addressable, class_name: "Address", validate: false
+  has_one :permanent_address, as: :addressable, class_name: 'Address', validate: false
   belongs_to :user
   belongs_to :lead
   belongs_to :receipt, optional: true
@@ -64,7 +67,7 @@ class UserKyc
   has_and_belongs_to_many :booking_details
 
   delegate :name, to: :bank_detail, prefix: true, allow_nil: true
-  accepts_nested_attributes_for :bank_detail # , :correspondence_address
+  accepts_nested_attributes_for :bank_detail, :permanent_address, :correspondence_address
   accepts_nested_attributes_for :addresses, reject_if: proc { |attributes| attributes['one_line_address'].blank? }
 
   validates :first_name, :last_name, :email, :phone, presence: true
@@ -80,7 +83,7 @@ class UserKyc
   validates :preferred_floors, array: {inclusion: {allow_blank: true, in: Proc.new{ |kyc| UserKyc.available_preferred_floors.collect{|x| x[:id]} } }}
   validates :pan_number, format: { with: /[A-Z]{3}[ABCGFHLJPTE][A-Z][0-9]{4}[A-Z]/i, message: 'is not in a format of AAAAA9999A' }, reduce: true, allow_blank: true
   validates :aadhaar, format: { with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number' }, allow_blank: true
-  validates :company_name, :gstn, presence: true, if: proc { |kyc| kyc.is_company? }
+  validates :company_name, presence: true, if: proc { |kyc| kyc.is_company? }
   validates :poa_details, presence: true, if: proc { |kyc| kyc.poa? }
   validates :existing_customer_name, :existing_customer_project, presence: true, if: proc { |kyc| kyc.existing_customer? }
   validates :salutation, inclusion: { in: proc { UserKyc.available_salutations.collect { |x| x[:id] } } }, allow_blank: true
