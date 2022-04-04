@@ -180,7 +180,7 @@
         </ul>
       </div>
       <div class="col-12 text-center pb-5">
-          <%= link_to "View Leaderboard", channel_partners_leaderboard_without_layout_path, class: 'btn-primary btn theme-btn' %>
+          <%= link_to "View Leaderboard", channel_partners_leaderboard_without_layout_path(user_login: params[:user_login], user_token: params[:user_token]), class: 'btn-primary btn theme-btn' %>
       </div>
     </div>
   </div>

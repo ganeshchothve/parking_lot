@@ -39,7 +39,7 @@
 </section>
 <% if params[:action] == 'channel_partners_leaderboard_without_layout' %>
   <div class="col-12 text-center mt-5 backto-home">
-      <%= link_to "Back to Home", dashboard_landing_page_path, class: 'btn-primary btn theme-btn' %>
+      <%= link_to "Back to Home", dashboard_landing_page_path(user_login: params[:user_login], user_token: params[:user_token]), class: 'btn-primary btn theme-btn' %>
   </div>
 <% end %>
 
