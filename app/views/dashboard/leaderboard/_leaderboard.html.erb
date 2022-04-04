@@ -37,9 +37,11 @@
     </div>
   </div>
 </section>
-<div class="col-12 text-center mt-5 backto-home">
-    <%= link_to "Back to Home", dashboard_landing_page_path, class: 'btn-primary btn theme-btn' %>
-</div>
+<% if params[:action] == 'channel_partners_leaderboard_without_layout' %>
+  <div class="col-12 text-center mt-5 backto-home">
+      <%= link_to "Back to Home", dashboard_landing_page_path, class: 'btn-primary btn theme-btn' %>
+  </div>
+<% end %>
 
 <div style="margin:100px 0;"></div>
 
