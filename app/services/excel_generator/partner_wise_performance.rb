@@ -1,6 +1,6 @@
 module ExcelGenerator::PartnerWisePerformance
 
-  def self.partner_wise_performance_csv(user, leads, bookings, all_site_visits, site_visits, pending_site_visits, approved_site_visits, rejected_site_visits, scheduled_site_visits, conducted_site_visits, manager_ids)
+  def self.partner_wise_performance_csv(user, leads, bookings, all_site_visits, site_visits, pending_site_visits, approved_site_visits, rejected_site_visits, scheduled_site_visits, conducted_site_visits, manager_ids_criteria)
 
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "PartnerWisePerformance")
@@ -12,7 +12,7 @@ module ExcelGenerator::PartnerWisePerformance
     index = 1
     total_sign_in_count = 0
 
-    users = User.filter_by_role(%w(cp_owner channel_partner)).where(User.user_based_scope(user)).in(manager_ids)
+    users = User.filter_by_role(%w(cp_owner channel_partner)).where(User.user_based_scope(user)).in(manager_ids_criteria)
 
     users.each do |p|
     index = index+1
