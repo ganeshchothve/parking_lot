@@ -31,18 +31,19 @@ module ExcelGenerator::PartnerWisePerformance
       (bookings[p.id].try(:pluck, :agreement_price)&.map(&:to_f)&.sum || 0)
     ])
     end
+    manager_ids = manager_ids_criteria.values.flatten
     total_values = [
       I18n.t('global.total'),
       "",
       total_sign_in_count,
-      leads.values&.flatten&.count || 0,
-      scheduled_site_visits.values&.flatten&.count || 0,
-      conducted_site_visits.values&.flatten&.count || 0,
-      pending_site_visits.values&.flatten&.count || 0,
-      approved_site_visits.values&.flatten&.count || 0,
-      rejected_site_visits.values&.flatten&.count || 0,
-      bookings.values&.flatten&.count || 0,
-      (bookings.values&.flatten&.pluck(:agreement_price)&.map(&:to_f)&.sum || 0)
+      leads.select{ |manager_id, leads_data| manager_ids.include?(manager_id) }.values&.flatten&.count,
+      scheduled_site_visits.select{ |manager_id, leads_data| manager_ids.include?(manager_id) }.values&.flatten&.count || 0,
+      conducted_site_visits.select{ |manager_id, leads_data| manager_ids.include?(manager_id) }.values&.flatten&.count || 0,
+      pending_site_visits.select{ |manager_id, leads_data| manager_ids.include?(manager_id) }.values&.flatten&.count || 0,
+      approved_site_visits.select{ |manager_id, leads_data| manager_ids.include?(manager_id) }.values&.flatten&.count || 0,
+      rejected_site_visits.select{ |manager_id, leads_data| manager_ids.include?(manager_id) }.values&.flatten&.count || 0,
+      bookings&.select{ |manager_id, leads_data| manager_ids.include?(manager_id) }.values&.flatten&.count || 0,
+      (bookings.select{ |manager_id, leads_data| manager_ids.include?(manager_id) }.values&.flatten&.pluck(:agreement_price)&.map(&:to_f)&.sum || 0)
     ]
     sheet.insert_row(sheet.last_row_index + 1, total_values)
     sheet.merge_cells(0,0,0,9)
