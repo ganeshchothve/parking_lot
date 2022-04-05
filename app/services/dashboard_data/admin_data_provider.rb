@@ -1,12 +1,20 @@
 module DashboardData
   class AdminDataProvider
     class << self
-      def customer_count
-        User.where(role: {"$in": %w[user customer employee]}).count
+      def site_visits_count(user)
+        SiteVisit.where(SiteVisit.user_based_scope(user)).count
       end
 
-      def channel_partner_count
-        ChannelPartner.count
+      def bookings_count(user)
+        BookingDetail.where(BookingDetail.user_based_scope(user)).count
+      end
+
+      def channel_partner_count(user=nil)
+        if user.selected_project.present?
+          InterestedProject.approved.where(project_id: user.selected_project_id).count
+        else
+          User.in(role: %w(channel_partner cp_owner)).count
+        end
       end
 
       def sold_project_units_count
