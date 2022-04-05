@@ -109,7 +109,7 @@ class Admin::InvoicePolicy < InvoicePolicy
         attributes += [:category] if record.new_record?
         attributes += [:agreement_amount] if record.invoiceable_type == 'BookingDetail'
       end
-      attributes += [:rejection_reason] if record.status.in?(%w(pending_approval rejected draft))
+      attributes += [:rejection_reason] if record.status.in?(%w(pending_approval rejected draft raised))
       #attributes += [cheque_detail_attributes: [:id, :total_amount, :payment_identifier, :issued_date, :issuing_bank, :issuing_bank_branch, :handover_date, :creator_id]] if record.status.in?(%w(approved paid))
       attributes += [:event]
     when 'billing_team'
