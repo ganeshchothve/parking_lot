@@ -1,8 +1,8 @@
 <style>
-    .cp-dashboard-mob{
-        padding-top: 50px;
-    background-color: #fff;
-    }
+.cp-dashboard-mob{
+  padding-top: 20px;
+  background-color: #fff;
+}
 .cp-profile-img {
     width: 50px;
     height: 50px;
@@ -73,7 +73,7 @@
     line-height: 14px;
     color: #192951;
     padding: 0 14px;
-    white-space: break-spaces;
+    //white-space: break-spaces;
     margin-bottom: 10px;
 }
 .event-time {
@@ -128,7 +128,7 @@
   <div class="container">
     <div class="col-12">
       <!-- <img src="<%#= asset_path 'user.jpg' %>" class="cp-profile-img"> -->
-      <hr>
+      <!-- <hr> -->
       <h2 class="cp-name">Hello, <%= current_user.name %></h2>
       <!-- <p class="cp-info">Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown.</p> -->
       <div class="col-12 mt-4">
@@ -143,7 +143,7 @@
                   <h3 class="event-person"><%= (meeting.topic || "-") %></h3>
                   <span class="prjt-title">Project Name</span>
                   <h3 class="prjt-name"><%= (meeting.project.try(:name) || "-") %></h3>
-                  <p class="prjt-location"><%= (meeting.project.try(:address).try(:to_sentence) || "-") %></p>
+                  <p class="prjt-location text-truncate"><%= (meeting.project.try(:address).try(:to_sentence) || "-") %></p>
                   <div class="event-time">
                     <i class="fa fa-clock clock-icon pt-1"></i>
                     <p class="d-inline px-1"><%= (meeting.scheduled_on.in_time_zone(current_user.time_zone).strftime("%d/%m/%y %I:%M %p") rescue "-") %></p>
