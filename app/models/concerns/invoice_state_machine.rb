@@ -12,6 +12,7 @@ module InvoiceStateMachine
 
       event :draft do
         transitions from: :tentative, to: :draft
+        transitions from: :rejected, to: :draft, if: :can_draft_from_rejected?
       end
 
       event :raise do
@@ -31,6 +32,7 @@ module InvoiceStateMachine
       event :reject, after: :send_notification do
         transitions from: :raised, to: :rejected, success: %i[after_rejected]
         transitions from: :pending_approval, to: :rejected, success: %i[after_rejected]
+        transitions from: :tentative, to: :rejected
       end
 
       event :tax_invoice_raise do
@@ -151,5 +153,25 @@ module InvoiceStateMachine
         end
       end
     end
+
+    def can_draft_from_rejected?
+      flag = false
+      if invoiceable.class.to_s == "SiteVisit"
+        flag = invoiceable.draft_incentive_eligible?
+      end
+      flag
+    end
+
+    def change_status(event)
+      begin
+        if self.respond_to?("may_#{event}?") && self.send("may_#{event}?")
+          self.aasm.fire!(event.to_sym)
+          self.set(rejection_reason: 'Site Visit has been cancelled') if event == "reject"
+        end
+      rescue StandardError => e
+        Rails.logger.error "[InvoiceStateMachine][#{__method__}][ERR] id-#{id.to_s}, event-#{event} Errors: #{e.message}, Backtrace: #{e.backtrace.join('\n')}"
+      end
+    end
+
   end
 end

@@ -34,6 +34,11 @@ class InvoiceObserver < Mongoid::Observer
         # invoice rejected set to false
         invoice.invoiceable.set(incentive_generated: false)
       end
+
+      if invoice.invoiceable == "SiteVisit"
+        invoice.change_status("draft") if invoice.invoiceable.draft_incentive_eligible?
+      end
+
     end
   end
 end
