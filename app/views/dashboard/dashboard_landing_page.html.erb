@@ -140,7 +140,7 @@
               <div class="cp-events-wrap">
                 <div class="cp-event-inner">
                   <span class="event-date">Today, <%= Time.now.strftime('%d%b, %Y') %></span>
-                  <h3 class="event-person"><%= (meeting.agenda || "-") %></h3>
+                  <h3 class="event-person"><%= (meeting.topic || "-") %></h3>
                   <span class="prjt-title">Project Name</span>
                   <h3 class="prjt-name"><%= (meeting.project.try(:name) || "-") %></h3>
                   <p class="prjt-location"><%= (meeting.project.try(:address).try(:to_sentence) || "-") %></p>
