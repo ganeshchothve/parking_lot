@@ -58,7 +58,7 @@ module ChannelPartnerLeaderboardConcern
   def achieved_target
     @vis_options.merge!(query: get_query)
     # @achieved_target_data = CpIncentiveLeaderboardDataProvider.achieved_target(@vis_options)
-    @max_capped_incentive = (VariableIncentiveSchemeCalculator.maximum_incentive(@vis_options) * 100)
+    @max_capped_incentive = VariableIncentiveSchemeCalculator.total_maximum_capped_incentive(@vis_options)
     @achieved_capped_incentive = VariableIncentiveSchemeCalculator.channel_partner_incentive(@vis_options)
     respond_to do |format|
       format.json { render json: @achieved_capped_incentive.as_json }

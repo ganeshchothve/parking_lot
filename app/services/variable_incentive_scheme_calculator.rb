@@ -82,6 +82,16 @@ class VariableIncentiveSchemeCalculator
     max_capped_incentive
   end
 
+  def self.total_maximum_capped_incentive(options={})
+    filter_query = options[:query]
+    variable_incentive_scheme = VariableIncentiveScheme.approved.or(filter_query).first
+    total_maximum_capped_incentive = 0
+    if variable_incentive_scheme.present?
+      total_maximum_capped_incentive = maximum_incentive(options) * variable_incentive_scheme.total_bookings
+    end
+    total_maximum_capped_incentive
+  end
+
   # this method not used yet
   def self.all_channel_partners_incentives(options={})
     # need to discuss this user roles
