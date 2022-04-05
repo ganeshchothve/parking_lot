@@ -14,7 +14,7 @@ module ExcelGenerator::SiteVisitPartnerWise
 
     users.each do |p|
       index = index+1
-      users = User.where(channel_partner_id: p.channel_partner_id) 
+      users = User.where(channel_partner_id: p.channel_partner_id).in(manager_ids_criteria)
       sheet.insert_row(index, [
         p.channel_partner&.name&.titleize,
         "",
