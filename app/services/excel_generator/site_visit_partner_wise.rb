@@ -10,8 +10,7 @@ module ExcelGenerator::SiteVisitPartnerWise
     column_size.times { |x| sheet.row(1).set_format(x, title_format) }
     index = 1
 
-    users = User.filter_by_role(%w(cp_owner channel_partner)).where(User.user_based_scope(user)).in(manager_ids_criteria)
-
+    users = User.filter_by_role(%w(cp_owner)).where(User.user_based_scope(user)).in(manager_ids_criteria)
     users.each do |p|
       index = index+1
       users = User.where(channel_partner_id: p.channel_partner_id).in(manager_ids_criteria)
