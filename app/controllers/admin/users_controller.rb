@@ -544,11 +544,11 @@ class Admin::UsersController < AdminController
     elsif params[:active_walkins] == 'true' && params[:active_bookings] == ''
       User.in(id: site_visit_manager_ids).distinct(:id)
     elsif params[:active_walkins] == 'false' && params[:active_bookings] == ''
-      User.nin(id: @site_visit_manager_ids).distinct(:id)
+      User.nin(id: site_visit_manager_ids).distinct(:id)
     elsif params[:active_walkins] == '' && params[:active_bookings] == 'true'
-      User.in(id: @booking_detail_manager_ids).distinct(:id)
+      User.in(id: booking_detail_manager_ids).distinct(:id)
     elsif params[:active_walkins] == '' && params[:active_bookings] == 'false'
-      User.nin(id: @booking_detail_manager_ids).distinct(:id)
+      User.nin(id: booking_detail_manager_ids).distinct(:id)
     else
       User.filter_by_role(%w(cp_owner channel_partner)).distinct(:id)
     end
