@@ -139,14 +139,14 @@
             <li>
               <div class="cp-events-wrap">
                 <div class="cp-event-inner">
-                  <span class="event-date">Today, <%= Time.now.strftime('%d%b, %Y') %></span>
+                  <span class="event-date">Today, <%= Time.now.in_time_zone(current_user.time_zone).strftime('%d%b, %Y') %></span>
                   <h3 class="event-person"><%= (meeting.topic || "-") %></h3>
                   <span class="prjt-title">Project Name</span>
                   <h3 class="prjt-name"><%= (meeting.project.try(:name) || "-") %></h3>
                   <p class="prjt-location"><%= (meeting.project.try(:address).try(:to_sentence) || "-") %></p>
                   <div class="event-time">
                     <i class="fa fa-clock clock-icon pt-1"></i>
-                    <p class="d-inline px-1"><%= (meeting.scheduled_on.strftime("%d/%m/%y %I:%M %p") rescue "-") %></p>
+                    <p class="d-inline px-1"><%= (meeting.scheduled_on.in_time_zone(current_user.time_zone).strftime("%d/%m/%y %I:%M %p") rescue "-") %></p>
                   </div>
                 </div>
               </div>
