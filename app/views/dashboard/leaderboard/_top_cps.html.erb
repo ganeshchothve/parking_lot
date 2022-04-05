@@ -123,10 +123,10 @@
             <div class="carousel-inner">
               <% second_cp.each_with_index do |scp, index| %>
                 <div class="carousel-item <%= index.zero? ? 'active' : '' %>">
-                  <p title="<%= (scp[:manager_name] rescue "-") %>">
+                  <p class='text-truncate' title="<%= (scp[:manager_name] rescue "-") %>">
                     <%= scp[:manager_name].truncate(13) rescue "-" %>
-                    <span>Rs.
-                      <%= (scp[:total_capped_incentive] || "-") rescue "-" %></span>
+                    <span>
+                      <%= number_to_indian_currency(scp[:total_capped_incentive] || "-") rescue "-" %></span>
                   </p>
                 </div>
               <% end %>
@@ -264,10 +264,10 @@
             <div class="carousel-inner">
               <% first_cp.each_with_index do |scp, index| %>
                 <div class="carousel-item <%= index.zero? ? 'active' : '' %>">
-                  <p title="<%= (scp[:manager_name] rescue "-") %>">
+                  <p class='text-truncate' title="<%= (scp[:manager_name] rescue "-") %>">
                     <%= scp[:manager_name].truncate(13) rescue "-" %>
-                    <span>Rs.
-                      <%= (scp[:total_capped_incentive] || "-") rescue "-" %></span>
+                    <span>
+                      <%= number_to_indian_currency(scp[:total_capped_incentive] || "-") rescue "-" %></span>
                   </p>
                 </div>
               <% end %>
@@ -408,10 +408,10 @@
             <div class="carousel-inner">
               <% third_cp.each_with_index do |scp, index| %>
                 <div class="carousel-item <%= index.zero? ? 'active' : '' %>">
-                  <p title="<%= (scp[:manager_name] rescue "-") %>">
+                  <p class='text-truncate' title="<%= (scp[:manager_name] rescue "-") %>">
                     <%= scp[:manager_name].truncate(13) rescue "-" %>
-                    <span>Rs.
-                      <%= (scp[:total_capped_incentive] || "-") rescue "-" %></span>
+                    <span>
+                      <%= number_to_indian_currency(scp[:total_capped_incentive] || "-") rescue "-" %></span>
                   </p>
                 </div>
               <% end %>
