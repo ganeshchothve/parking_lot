@@ -93,9 +93,9 @@
                   Residence / Permanent Address
                 </div>
                 <div class="card-body">
-                  <% f.object.build_permanent_address if f.object.permanent_address.blank? %>
-                  <%= f.fields_for :permanent_address do |permanent_address_form| %>
-                    <%= render "addresses/form_fields", f: permanent_address_form %>
+                  <% permanent_address = f.object.addresses.where(address_type: 'permanent').first || f.object.addresses.build(address_type: 'permanent') %>
+                  <%= f.fields_for :addresses, permanent_address do |permanent_address_form| %>
+                    <%= render "addresses/form_fields", f: permanent_address_form, add_type: 'permanent' %>
                   <% end %>
                 </div>
               </div>
@@ -109,9 +109,9 @@
                   Correspondence / Office Address
                 </div>
                 <div class="card-body">
-                  <% f.object.build_correspondence_address if f.object.correspondence_address.blank? %>
-                  <%= f.fields_for :correspondence_address do |correspondence_address_form| %>
-                    <%= render "addresses/form_fields", f: correspondence_address_form %>
+                  <% correspondence_address = f.object.addresses.where(address_type: 'correspondence').first || f.object.addresses.build(address_type: 'correspondence') %>
+                  <%= f.fields_for :addresses, correspondence_address do |correspondence_address_form| %>
+                    <%= render "addresses/form_fields", f: correspondence_address_form, add_type: 'correspondence' %>
                   <% end %>
                 </div>
               </div>

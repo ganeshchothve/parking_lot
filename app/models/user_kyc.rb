@@ -57,8 +57,6 @@ class UserKyc
   has_many :assets, as: :assetable
   has_one :bank_detail, as: :bankable, validate: false
   has_many :addresses, as: :addressable, validate: false
-  has_one :correspondence_address, as: :addressable, class_name: "Address", validate: false
-  has_one :permanent_address, as: :addressable, class_name: 'Address', validate: false
   belongs_to :user
   belongs_to :lead
   belongs_to :receipt, optional: true
@@ -67,8 +65,8 @@ class UserKyc
   has_and_belongs_to_many :booking_details
 
   delegate :name, to: :bank_detail, prefix: true, allow_nil: true
-  accepts_nested_attributes_for :bank_detail, :permanent_address, :correspondence_address
-  accepts_nested_attributes_for :addresses, reject_if: proc { |attributes| attributes['one_line_address'].blank? }
+  accepts_nested_attributes_for :bank_detail
+  accepts_nested_attributes_for :addresses#, reject_if: proc { |attributes| attributes['one_line_address'].blank? }
 
   validates :first_name, :last_name, :email, :phone, presence: true
   # validates :pan_number, presence: true, unless: Proc.new{ |kyc| kyc.nri? }, reduce: true
