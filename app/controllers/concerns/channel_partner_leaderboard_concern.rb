@@ -36,9 +36,10 @@ module ChannelPartnerLeaderboardConcern
   def average_incentive_per_booking
     @vis_options.merge!(query: get_query)
     @average_incentive = CpIncentiveLeaderboardDataProvider.average_incentive_per_booking(@vis_options)
-    @predicted_average_incentive = VariableIncentiveSchemeCalculator.average_incentive_per_booking_prediction(@vis_options)
+    # @predicted_average_incentive = VariableIncentiveSchemeCalculator.average_incentive_per_booking_prediction(@vis_options)
+    @max_capped_incentive = VariableIncentiveSchemeCalculator.maximum_incentive(@vis_options)
     respond_to do |format|
-      format.json { render json: {average_incentive_per_booking: @average_incentive} }
+      format.json { render json: {average_incentive_per_booking: @max_capped_incentive} }
       format.html {}
       format.js
     end
@@ -56,9 +57,11 @@ module ChannelPartnerLeaderboardConcern
 
   def achieved_target
     @vis_options.merge!(query: get_query)
-    @achieved_target_data = CpIncentiveLeaderboardDataProvider.achieved_target(@vis_options)
+    # @achieved_target_data = CpIncentiveLeaderboardDataProvider.achieved_target(@vis_options)
+    @max_capped_incentive = VariableIncentiveSchemeCalculator.total_maximum_capped_incentive(@vis_options)
+    @achieved_capped_incentive = VariableIncentiveSchemeCalculator.channel_partner_incentive(@vis_options)
     respond_to do |format|
-      format.json { render json: @achieved_target_data.as_json }
+      format.json { render json: @achieved_capped_incentive.as_json }
       format.html {}
       format.js
     end
