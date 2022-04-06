@@ -15,17 +15,19 @@
         <div class="col-12">
           <div class="incentive-block">
             <div class="col-6 block-left">
+                <h3 class='px-3 py-3' style='z-index: 9'>Early Booking Incentive</h3>
                 <div class="inner-block" id="incentive_predictions">
 
                 </div>
             </div>
             <div class="col-6 block-right">
+              <h3 class='px-3 py-3' style='z-index: 9'>Average Incentive</h3>
               <div class="inner-block" id="average_incentive_per_booking">
 
               </div>
               <img src="<%= asset_path 'leaderboard/money-icon.png' %>" class="money-icon">
 
-          </div>
+            </div>
           </div>
         </div>
       </div>
@@ -37,6 +39,11 @@
     </div>
   </div>
 </section>
+<% if params[:action] == 'channel_partners_leaderboard_without_layout' %>
+  <div class="col-12 text-center mt-5 backto-home">
+      <%= link_to "Back to Home", dashboard_landing_page_path(user_login: params[:user_login], user_token: params[:user_token]), class: 'btn-primary btn theme-btn' %>
+  </div>
+<% end %>
 
 <div style="margin:100px 0;"></div>
 
