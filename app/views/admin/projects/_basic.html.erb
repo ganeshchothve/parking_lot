@@ -79,8 +79,8 @@
       <%= f.text_field :rera_registration_no, class: 'form-control', required: 'required', disabled: !policy([:admin, project]).editable_field?("rera_registration_no") %>
     </div>
   </div>
-  <div class="col-md-6">
-    <% if policy([:admin, project]).editable_field?("is_active") %>
+  <% if policy([:admin, project]).editable_field?("is_active") %>
+    <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :is_active, class: 'mb-2' %>
       <div class="form-check form-check-inline">
@@ -92,8 +92,8 @@
         <%= f.label :is_active, "No", class: "form-check-label d-inline-block ms-2" %>
       </div>
     </div>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :website_link, class: 'label-required' %>
@@ -170,43 +170,6 @@
     <div class="mb-3">
       <%= f.label :price_upto %>
       <%= f.number_field :price_upto, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("price_upto") %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :incentive_percentage_slabs, class: 'label-required' %>
-      <%= f.select :incentive_percentage_slabs, f.object.incentive_percentage_slabs, {},  class: "selectize-tags", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("incentive_percentage_slabs") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <% if policy([:admin, project]).editable_field?("payment_enabled") %>
-      <div class="mb-3">
-        <%= f.label :payment_enabled, class: 'mb-2' %>
-        <div class="form-check form-check-inline">
-          <%= f.radio_button :payment_enabled, true, class: "form-check-input wd-22" %>
-          <%= f.label :payment_enabled, "Yes", class: "form-check-label d-inline-block ms-2" %>
-        </div>
-        <div class="form-check form-check-inline">
-          <%= f.radio_button :payment_enabled, false, class: "form-check-input wd-22" %>
-          <%= f.label :payment_enabled, "No", class: "form-check-label d-inline-block ms-2" %>
-        </div>
-      </div>
-    <% end %>
-  </div>
-  <div class="col-md-12">
-    <div class="col-md-6">
-      <div class="form-group mb-3">
-        <div class="form-check form-check-inline">
-          <%= f.check_box :gst_slab_applicable, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("gst_slab_applicable") }, "Yes", "No" %>
-          <%= f.label :gst_slab_applicable, class: "form-check-label d-inline-block ms-2 gst-slab-applicable-check" %>
-        </div>
-    </div>
-    </div>
-    <div class="col-md-6">
-      <div class="mb-3">
-        <%= f.label :incentive_gst_slabs, class: 'label-required' %>
-        <%= f.select :incentive_gst_slabs, f.object.incentive_gst_slabs, {},  class: "selectize-tags", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("incentive_gst_slabs") ? false : true) %>
-      </div>
     </div>
   </div>
   <div class="col-md-12">
