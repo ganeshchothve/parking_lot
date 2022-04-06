@@ -21,7 +21,7 @@
       <tbody>
         <% user = params[:channel_partner_id].present? ? ChannelPartner.where(id: params[:channel_partner_id]).first&.users&.cp_owner&.first : current_user %>
         <% total_sign_in_count = 0 %>
-        <% User.filter_by_role(%w(cp_owner channel_partner)).where(User.user_based_scope(user || current_user)).each do |p| %>
+        <% User.filter_by_role(%w(cp_owner channel_partner)).where(User.user_based_scope(user || current_user)).limit(15).each do |p| %>
           <% total_sign_in_count += (p.sign_in_count || 0) %>
           <tr>
             <td data-title='<%= t("mongoid.attributes.user/role.channel_partner") %>'><%= p.name.titleize %></td>
