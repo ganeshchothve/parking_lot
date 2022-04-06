@@ -2,11 +2,11 @@ class Admin::ProjectPolicy < ProjectPolicy
   # def new? def create? def edit? def asset_create? from ClientPolicy
 
   def update?
-    %w[superadmin admin].include?(user.role)
+    %w[superadmin admin sales_admin].include?(user.role)
   end
 
   def asset_create?
-    %w[superadmin admin].include?(user.role)
+    %w[superadmin admin sales_admin].include?(user.role)
   end
 
   def asset_update?
@@ -34,7 +34,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def create?
-    update?
+    update? && %w[superadmin admin].include?(user.role)
   end
 
   def sync_on_selldo?

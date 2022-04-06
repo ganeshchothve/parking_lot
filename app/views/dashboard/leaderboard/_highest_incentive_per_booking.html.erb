@@ -1,0 +1,25 @@
+<div id="carouselExampleControls4" class="carousel slide carousel4" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <% @highest_incentive_per_booking_data.uniq{|d| d[:manager_name] }.each_with_index do |data, index| %>
+      <div class="carousel-item <%= index.zero? ? 'active' : '' %>">
+        <h2><%= ("#{data[:first_name]} #{data[:last_name]}") rescue "-" %></h2>
+        <h5><%= ("#{data[:company_name]}") %></h5>
+      </div>
+    <% end %>
+  </div>
+  <!-- <button class="carousel-control-prev highest-incentice-prev" type="button" data-bs-target="#carouselExampleControls4" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next highest-incentice-next" type="button" data-bs-target="#carouselExampleControls4" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button> -->
+</div>
+
+<p>
+  <img src="<%= asset_path 'leaderboard/money.svg' %>">
+  <%= number_to_indian_currency(@highest_incentive_per_booking_data.first[:capped_incentive]) rescue "-" %>
+  <span>Highest incentive per booking</span>
+</p>
+<img src="<%= asset_path 'leaderboard/leader-person.png' %>" class="leader-person">

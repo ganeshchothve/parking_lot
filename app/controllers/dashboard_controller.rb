@@ -4,7 +4,8 @@ class DashboardController < ApplicationController
   include ChannelPartnerDashboardConcern
   include BookingDetailDashboardConcern
   include RevenueReportDashboardConcern
-  before_action :authenticate_user!, only: [:index, :documents]
+  include ChannelPartnerLeaderboardConcern
+  before_action :authenticate_user!, only: [:index, :documents, :dashboard_landing_page, :channel_partners_leaderboard, :channel_partners_leaderboard_without_layout]
   before_action :set_lead, only: :index, if: proc { current_user.buyer? }
 
   layout :set_layout
@@ -83,6 +84,11 @@ class DashboardController < ApplicationController
 
   def team_lead_dashboard
     authorize :dashboard, :team_lead_dashboard?
+  end
+
+  def dashboard_landing_page
+    @meetings = Meeting.in(roles: ["channel_partner","cp_owner"]).where(scheduled_on: {"$gte": Time.now.beginning_of_day}).scheduled
+    @announcements = Announcement.where(is_active: true)
   end
 
   private

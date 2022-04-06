@@ -16,7 +16,7 @@
       </thead>
       <tbody>
         <% user = params[:channel_partner_id].present? ? ChannelPartner.where(id: params[:channel_partner_id]).first&.users&.cp_owner&.first : current_user %>
-        <% User.filter_by_role(%w(cp_owner)).where(User.user_based_scope(user || current_user)).in(@manager_ids_criteria).each do |p| %>
+        <% User.filter_by_role(%w(cp_owner)).where(User.user_based_scope(user || current_user)).in(@manager_ids_criteria).limit(15).each do |p| %>
           <% users = User.where(channel_partner_id: p.channel_partner_id).in(@manager_ids_criteria) %>
           <tr>
             <td data-title='<%= t("mongoid.attributes.user/role.channel_partner") %>'><%= p.channel_partner.name.titleize %></td>

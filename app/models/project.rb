@@ -189,6 +189,8 @@ class Project
 
   accepts_nested_attributes_for :specifications, :offers, :timeline_updates, :address, :nearby_locations, allow_destroy: true
 
+  default_scope { order(hot: :desc, created_at: :desc) }
+
   scope :filter_by__id, ->(_id) { all.in(_id: (_id.is_a?(Array) ? _id : [_id])) }
   scope :filter_by_category, ->(category) {category.is_a?(Array) ? where(category: {'$in': category}) : where(category: category) }
   scope :filter_by_project_segment, ->(project_segment) {project_segment.is_a?(Array) ? where(project_segment: {'$in': project_segment} ) : where(project_segment: project_segment) }

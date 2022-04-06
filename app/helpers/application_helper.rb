@@ -221,7 +221,7 @@ module ApplicationHelper
   end
 
   def full_page_view?
-    action_name.in?(%w(generate_booking_detail_form generate_invoice sales_board quotation))
+    action_name.in?(%w(generate_booking_detail_form generate_invoice sales_board quotation channel_partners_leaderboard_without_layout dashboard_landing_page))
   end
 
 end
