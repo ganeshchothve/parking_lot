@@ -1,3 +1,3 @@
 $('#site_visit_partner_wise_report').html("<%= j (render partial: 'site_visit_partner_wise' ) %>")
-$("#site-visit-partner-wise-af-export").attr("href", "<%= site_visit_partner_wise_admin_users_path(format: "xls", channel_partner_id: params["channel_partner_id"], project_id: params["project_id"], dates: params["dates"])%>");
+$("#site-visit-partner-wise-af-export").attr("href", "<%= site_visit_partner_wise_admin_users_path(format: "xls", channel_partner_id: params["channel_partner_id"], project_id: params["project_id"], dates: params["dates"], active_walkins: params["active_walkins"], active_bookings: params["active_bookings"])%>");
 

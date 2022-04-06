@@ -1,6 +1,6 @@
 module ExcelGenerator::SiteVisitPartnerWise
 
-  def self.site_visit_partner_wise_csv(user, bookings, all_site_visits, approved_site_visits, scheduled_site_visits, conducted_site_visits, paid_site_visits)
+  def self.site_visit_partner_wise_csv(user, bookings, all_site_visits, approved_site_visits, scheduled_site_visits, conducted_site_visits, paid_site_visits, manager_ids_criteria)
     file = Spreadsheet::Workbook.new
     sheet = file.create_worksheet(name: "SiteVisitPartnerWise")
     sheet.insert_row(0, ["Walk-ins (User Wise)"])
@@ -9,9 +9,11 @@ module ExcelGenerator::SiteVisitPartnerWise
     column_size.times { |x| sheet.row(0).set_format(x, title_format) } #making headers bold 
     column_size.times { |x| sheet.row(1).set_format(x, title_format) }
     index = 1
-    User.filter_by_role(%w(cp_owner)).where(User.user_based_scope(user)).each do |p|
+
+    users = User.filter_by_role(%w(cp_owner)).where(User.user_based_scope(user)).in(manager_ids_criteria)
+    users.each do |p|
       index = index+1
-      users = User.where(channel_partner_id: p.channel_partner_id) 
+      users = User.where(channel_partner_id: p.channel_partner_id).in(manager_ids_criteria)
       sheet.insert_row(index, [
         p.channel_partner&.name&.titleize,
         "",
