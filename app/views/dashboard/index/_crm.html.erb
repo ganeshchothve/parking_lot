@@ -1,76 +1,67 @@
 <div class="px-4 mb-4 admin-dashboard">
   <div class="row">
-    <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
+    <div class="col-lg-<%= current_user.role.in?(%w(admin superadmin)) ? '2' : '4' %> col-xs-6 col-md-4 col-sm-4 mb-3">
       <div class="box-card shadow rounded">
         <div class="box-header bg-theme br-rd-tr-4 rounded-top px-2  position-relative">
-          <h4 class="white pre text-center fn-18 mb-0  position-absolute top-50 start-50 translate-middle wd-100"><%= User.human_attribute_name("role.user", count: 3) %></h4>
+          <h4 class="white pre text-center fn-18 mb-0  position-absolute top-50 start-50 translate-middle wd-100"><%= SiteVisit.model_name.human(count: 3) %></h4>
         </div>
         <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
-          <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.customer_count %></span>
+          <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.site_visits_count(current_user) %></span>
         </div>
       </div>
     </div>
-    <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
+    <div class="col-lg-<%= current_user.role.in?(%w(admin superadmin)) ? '2' : '4' %> col-xs-6 col-md-4 col-sm-4 mb-3">
+      <div class="box-card shadow rounded">
+        <div class="box-header bg-theme br-rd-tr-4 rounded-top position-relative">
+          <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle"><%= BookingDetail.model_name.human(count: 3) %></h4>
+        </div>
+        <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
+          <span class="fn-18 font-medium"> <%= DashboardData::AdminDataProvider.bookings_count(current_user) %> </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-<%= current_user.role.in?(%w(admin superadmin)) ? '2' : '4' %> col-xs-6 col-md-4 col-sm-4 mb-3">
       <div class="box-card shadow rounded">
         <div class="box-header bg-theme br-rd-tr-4 rounded-top  position-relative">
-          <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle wd-100"><%= ChannelPartner.model_name.human(count: 3) %></h4>
+          <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle wd-100"><%= t('mongoid.attributes.user/role.channel_partner').try(:pluralize) %></h4>
         </div>
         <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
-          <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.channel_partner_count %></span>
+          <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.channel_partner_count(current_user) %></span>
         </div>
       </div>
     </div>
-    <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
-      <div class="box-card shadow rounded">
-        <div class="box-header bg-theme br-rd-tr-4 rounded-top position-relative">
-          <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle"><%= ProjectUnit.model_name.human(count: 3) %></h4>
-        </div>
-        <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
-          <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.sold_project_units_count %> / <%= DashboardData::AdminDataProvider.all_project_units_count %></span>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
-      <div class="box-card shadow rounded">
-        <div class="box-header bg-theme br-rd-tr-4 rounded-top position-relative">
-          <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle wd-100"><%= UserRequest.model_name.human(count: 3) %></h4>
-        </div>
-        <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
-          <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.open_user_requests %></span>
+    <% if current_user.role.in?(%w(admin superadmin)) %>
+      <div class="col-lg-<%= current_user.role.in?(%w(admin superadmin)) ? '2' : '4' %> col-xs-6 col-md-4 col-sm-4 mb-3">
+        <div class="box-card shadow rounded">
+          <div class="box-header bg-theme br-rd-tr-4 rounded-top position-relative">
+            <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle"><%= ProjectUnit.model_name.human(count: 3) %></h4>
+          </div>
+          <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
+            <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.sold_project_units_count %> / <%= DashboardData::AdminDataProvider.all_project_units_count %></span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
-      <div class="box-card shadow rounded">
-        <div class="box-header bg-theme br-rd-tr-4 rounded-top position-relative">
-          <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle"><%= Receipt.model_name.human(count: 3) %></h4>
-        </div>
-        <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
-          <span title="<%= Receipt.human_attribute_name("payment_mode.online") %>">
-            <span class="fn-18 font-medium">
-            <i class="fa fa-circle fn-12 success me-1"></i>
-              <%= DashboardData::AdminDataProvider.online_receipts %>
-            </span>
-          </span>
-          <span title="<%= Receipt.human_attribute_name("payment_mode.offline") %>">
-            <span class="fn-18 font-medium">
-            <i class="fa fa-circle fn-12 danger me-1 ms-2"></i>  
-            <%= DashboardData::AdminDataProvider.offline_receipts %>
-            </span>
-          </span>
+      <div class="col-lg-<%= current_user.role.in?(%w(admin superadmin)) ? '2' : '4' %> col-xs-6 col-md-4 col-sm-4 mb-3">
+        <div class="box-card shadow rounded">
+          <div class="box-header bg-theme br-rd-tr-4 rounded-top position-relative">
+            <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle wd-100"><%= UserRequest.model_name.human(count: 3) %></h4>
+          </div>
+          <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
+            <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.open_user_requests %></span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
-      <div class="box-card shadow rounded">
-        <div class="box-header bg-theme br-rd-tr-4 rounded-top position-relative">
-          <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle"><%= Scheme.model_name.human(count: 3) %></h4>
-        </div>
-        <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
-          <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.active_schemes %></span>
+      <div class="col-lg-<%= current_user.role.in?(%w(admin superadmin)) ? '2' : '4' %> col-xs-6 col-md-4 col-sm-4 mb-3">
+        <div class="box-card shadow rounded">
+          <div class="box-header bg-theme br-rd-tr-4 rounded-top position-relative">
+            <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle"><%= Scheme.model_name.human(count: 3) %></h4>
+          </div>
+          <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
+            <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.active_schemes %></span>
+          </div>
         </div>
       </div>
-    </div>
+    <% end %>
   </div>
 </div>
 <%= render 'dashboard/index/partials/booking_detail_data' %>
