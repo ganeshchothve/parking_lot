@@ -166,7 +166,7 @@ module InvoiceStateMachine
       begin
         if self.respond_to?("may_#{event}?") && self.send("may_#{event}?")
           self.aasm.fire!(event.to_sym)
-          self.set(rejection_reason: 'Site Visit has been cancelled') if event == "reject"
+          self.set(rejection_reason: "#{invoiceable.class.try(:model_name).try(:human)} has been cancelled") if event == "reject"
         end
       rescue StandardError => e
         Rails.logger.error "[InvoiceStateMachine][#{__method__}][ERR] id-#{id.to_s}, event-#{event} Errors: #{e.message}, Backtrace: #{e.backtrace.join('\n')}"

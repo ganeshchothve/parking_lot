@@ -65,4 +65,22 @@ module IncentiveSchemeAutoApplication
       end
     end
   end
+
+  Invoice::INVOICE_EVENTS.each do |event|
+    define_method "do_invoices_#{event}" do |status, invoice_category = nil|
+      invoices = self.invoices
+      if invoice_category.present?
+        invoices = invoices.where(category: invoice_category)
+      end
+      invoices.where(status: status).map{|invoice| invoice.change_status(event) }
+    end
+  end
+
+  # If Incentive Scheme Auto Apply is true only that time invoices will move to draft
+  def move_invoices(status, event, resource_class, invoice_category = nil)
+    ::IncentiveScheme::CATEGORIES_PER_RESOURCE[resource_class.to_s].each do |category|
+      self.send("do_invoices_#{event}", status, invoice_category) if self.find_incentive_schemes(category).present? && self.draft_incentive_eligible?(category)
+    end
+  end
+
 end

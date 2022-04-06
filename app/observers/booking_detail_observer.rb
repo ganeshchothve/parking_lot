@@ -59,7 +59,7 @@ class BookingDetailObserver < Mongoid::Observer
         booking_detail.invoices.where(status: 'tentative').update_all(invoiceable_id: new_booking.id)
       else
         # once the booking is swapped, the previous booking invoice is rejected
-        booking_detail.invoices.where(status: 'tentative').update_all(status: 'rejected')
+        booking_detail.move_invoices("tentative", "reject", booking_detail.class.to_s)
       end
     end
     # calculate incentive and generate an invoice for the respective booking detail
@@ -67,10 +67,11 @@ class BookingDetailObserver < Mongoid::Observer
 
     # once the booking is cancelled, the invoice in tentative state should move to rejected state
     if booking_detail.status_changed? && booking_detail.status == 'cancelled'
-      booking_detail.invoices.where(status: 'tentative').update_all(status: 'rejected', rejection_reason: 'Booking has been cancelled')
+      booking_detail.move_invoices("tentative", "reject", booking_detail.class.to_s)
     end
 
-    booking_detail.invoices.where(status: 'tentative', category: 'brokerage').update_all(status: 'draft') if booking_detail.draft_incentive_eligible?('brokerage')
-    booking_detail.invoices.where(status: 'tentative', category: 'spot_booking').update_all(status: 'draft') if booking_detail.draft_incentive_eligible?('spot_booking')
+
+    booking_detail.move_invoices("tentative", "draft", booking_detail.class.to_s, "brokerage")
+    booking_detail.move_invoices("tentative", "draft", booking_detail.class.to_s, "spot_booking")
   end
 end

@@ -35,9 +35,7 @@ class InvoiceObserver < Mongoid::Observer
         invoice.invoiceable.set(incentive_generated: false)
       end
 
-      if invoice.invoiceable == "SiteVisit"
-        invoice.change_status("draft") if invoice.invoiceable.draft_incentive_eligible?
-      end
+      invoice.change_status("draft") if invoice.invoiceable.find_incentive_schemes(invoice.category).present? && invoice.invoiceable.draft_incentive_eligible?(invoice.category)
 
     end
   end

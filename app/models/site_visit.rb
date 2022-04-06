@@ -188,12 +188,6 @@ class SiteVisit
     errors
   end
 
-  Invoice::INVOICE_EVENTS.each do |event|
-    define_method "do_invoices_#{event}" do |status|
-      self.invoices.where(status: status).map{|invoice| invoice.change_status(event) }
-    end
-  end
-
   private
 
   def validate_scheduled_on_datetime
