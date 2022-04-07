@@ -35,14 +35,61 @@ class VariableIncentiveSchemeCalculator
       variable_incentive_schemes.each do |variable_incentive_scheme|
         booking_details = BookingDetail.in(status: BookingDetail::BOOKING_STAGES, project_id: variable_incentive_scheme.project_ids).where(booked_on: variable_incentive_scheme.start_date.beginning_of_day..variable_incentive_scheme.end_date.end_of_day).where(query)
 
-        booking_details.each do |booking_detail|
+        booking_details.includes(:project, :manager).each do |booking_detail|
           day = VariableIncentiveSchemeCalculator.calculate_days(booking_detail, variable_incentive_scheme)
           capped_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(booking_detail, variable_incentive_scheme)
-          incentive_data << {scheme_name: variable_incentive_scheme.name, day: day, project_name: booking_detail.project.try(:name), booking_detail_id: booking_detail.id.to_s, booking_detail_name: booking_detail.name, capped_incentive: capped_incentive, manager_name: booking_detail.manager_name}
+          incentive_data << {scheme_name: variable_incentive_scheme.name, scheme_id: variable_incentive_scheme.id.to_s, total_bookings: variable_incentive_scheme.total_bookings, day: day, project_name: booking_detail.project.try(:name), project_id: booking_detail.project_id.to_s, booking_detail_id: booking_detail.id.to_s, booking_detail_name: booking_detail.name, capped_incentive: capped_incentive, manager_name: booking_detail.manager_name, manager_id: booking_detail.manager_id.to_s, company_name: booking_detail.manager.try(:channel_partner).try(:company_name), first_name: booking_detail.manager.try(:first_name), last_name: booking_detail.manager.try(:last_name)}
         end
       end
     end
     incentive_data.sort_by!{|data| data[:day] }
+  end
+
+  def self.average_incentive_per_booking_prediction(options={})
+    filter_query = options[:query]
+    average_incentive = 0
+    predicted_incentive = 0
+    variable_incentive_scheme = VariableIncentiveScheme.approved.or(filter_query).first
+    if variable_incentive_scheme.present?
+      start_date = Date.today - 5
+      end_date = Date.today
+      # last 5 days booking count
+      booking_count = BookingDetail.in(status: BookingDetail::BOOKING_STAGES, project_id: variable_incentive_scheme.project_ids).where(booked_on: start_date.beginning_of_day..end_date.end_of_day).count
+      # avg booking count per day
+      booking_count = (booking_count <= 1 ? 1 : booking_count)
+      avg_booking_count_per_day = (booking_count.to_f / 5).ceil
+      avg_booking_count_per_day = (avg_booking_count_per_day <= 1 ? 1 : avg_booking_count_per_day)
+      predicted_booking_count = avg_booking_count_per_day * 7
+      (0..7).each do |day|
+        booking_detail = BookingDetail.new(booked_on: Date.today + day)
+        capped_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(booking_detail, variable_incentive_scheme)
+        predicted_incentive += (capped_incentive * avg_booking_count_per_day)
+      end
+
+      average_incentive = (predicted_incentive.to_f / 7).round
+    end
+    average_incentive
+  end
+
+  def self.maximum_incentive(options={})
+    filter_query = options[:query]
+    variable_incentive_scheme = VariableIncentiveScheme.approved.or(filter_query).first
+    max_capped_incentive = 0
+    if variable_incentive_scheme.present?
+      booking_detail = BookingDetail.new(booked_on: variable_incentive_scheme.start_date)
+      max_capped_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(booking_detail, variable_incentive_scheme)
+    end
+    max_capped_incentive
+  end
+
+  def self.total_maximum_capped_incentive(options={})
+    filter_query = options[:query]
+    variable_incentive_scheme = VariableIncentiveScheme.approved.or(filter_query).first
+    total_maximum_capped_incentive = 0
+    if variable_incentive_scheme.present?
+      total_maximum_capped_incentive = maximum_incentive(options) * variable_incentive_scheme.total_bookings
+    end
+    total_maximum_capped_incentive
   end
 
   # this method not used yet

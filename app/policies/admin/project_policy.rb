@@ -2,11 +2,11 @@ class Admin::ProjectPolicy < ProjectPolicy
   # def new? def create? def edit? def asset_create? from ClientPolicy
 
   def update?
-    %w[superadmin admin].include?(user.role)
+    %w[superadmin admin sales_admin].include?(user.role)
   end
 
   def asset_create?
-    %w[superadmin admin].include?(user.role)
+    %w[superadmin admin sales_admin].include?(user.role)
   end
 
   def asset_update?
@@ -34,7 +34,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def create?
-    update?
+    update? && %w[superadmin admin].include?(user.role)
   end
 
   def sync_on_selldo?
@@ -57,17 +57,16 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def permitted_attributes(params = {})
-    attributes = [:name, :developer_name, :micro_market, :city, :possession, :launched_on, :our_expected_possession, :total_buildings, :total_units, :description, :advantages, :video_link, :registration_name, :rera_registration_no, :gst_number, :cin_number, :website_link, :creator_id,
-                  :project_size, :is_active, :payment_enabled, :total_buildings, :logo, :mobile_cover_photo, :cover_photo, :mobile_logo, project_type: [], category: [], project_segment: [], approved_banks: [], configurations: [], amenities: [], usp: [], broker_usp: [], specifications_attributes: SpecificationPolicy.new(user, Specification.new).permitted_attributes, offers_attributes: OfferPolicy.new(user, Offer.new).permitted_attributes, timeline_updates_attributes: TimelineUpdatePolicy.new(user, TimelineUpdate.new).permitted_attributes, address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes, nearby_locations_attributes: NearbyLocationPolicy.new(user, NearbyLocation.new).permitted_attributes]
+    attributes = [:name, :developer_name, :micro_market, :city, :possession, :launched_on, :our_expected_possession, :total_buildings, :total_units, :description, :advantages, :video_link, :registration_name, :rera_registration_no, :gst_number, :cin_number, :website_link, :creator_id, :support_name, :support_mail, :support_phone, :price_starting_from, :price_upto, :project_size, :total_buildings, :logo, :mobile_cover_photo, :cover_photo, :mobile_logo, :embed_map_tag, project_type: [], category: [], project_segment: [], approved_banks: [], configurations: [], amenities: [], usp: [], broker_usp: [], specifications_attributes: SpecificationPolicy.new(user, Specification.new).permitted_attributes, offers_attributes: OfferPolicy.new(user, Offer.new).permitted_attributes, timeline_updates_attributes: TimelineUpdatePolicy.new(user, TimelineUpdate.new).permitted_attributes, address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes, nearby_locations_attributes: NearbyLocationPolicy.new(user, NearbyLocation.new).permitted_attributes]
 
     if user.role?(:superadmin)
       attributes += [
         :selldo_client_id, :selldo_id, :selldo_default_search_list_id, :selldo_form_id, :selldo_gre_form_id,
         :selldo_channel_partner_form_id, :selldo_api_key, :selldo_default_srd, :selldo_cp_srd,
         :allowed_bookings_per_user, :helpdesk_number, :helpdesk_email, :ga_code, :gtm_tag,
-        :notification_email, :notification_numbers, :sender_email, :area_unit,
-        :support_number, :support_email, :channel_partner_support_number, :channel_partner_support_email, :cancellation_amount, :blocking_amount, :region, :sv_incentive, :spot_booking_incentive, :pre_reg_incentive_percentage, :pre_reg_min_bookings, :iris_url, :support_name, :support_mail, :support_phone, :payment_enabled,
-        :blocking_days, :enable_slot_generation, :holding_minutes, :terms_and_conditions, :email_header, :email_footer, :embed_map_tag, :hot, :price_starting_from, :price_upto, :enable_inventory, :enable_booking_with_kyc, :gst_slab_applicable, :check_sv_availability_in_selldo, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes,
+        :notification_email, :notification_numbers, :sender_email, :area_unit, :is_active,
+        :support_number, :support_email, :channel_partner_support_number, :channel_partner_support_email, :cancellation_amount, :blocking_amount, :region, :sv_incentive, :spot_booking_incentive, :pre_reg_incentive_percentage, :pre_reg_min_bookings, :iris_url, :payment_enabled,
+        :blocking_days, :enable_slot_generation, :holding_minutes, :terms_and_conditions, :email_header, :email_footer, :hot, :enable_inventory, :enable_booking_with_kyc, :gst_slab_applicable, :check_sv_availability_in_selldo, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes,
         email_domains: [], booking_portal_domains: [], enable_actual_inventory: [], enable_live_inventory: [], incentive_percentage_slabs: [], incentive_gst_slabs: [], booking_sources: [], incentive_calculation: [], disable_project: [:walk_ins, :bookings, :invoicing]
       ]
     end

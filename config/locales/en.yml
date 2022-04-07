@@ -1156,10 +1156,20 @@ en:
         customer_company_name: 'Company Name'
         configurations: 'Preferences'
         number_of_units: 'Number of Units'
+        loan_required: 'Do you require a loan ?'
+        loan_amount: 'Loan Amount'
+        loan_sanction_days: 'Loan Sanction Days'
         preferred_floors: 'Preferred Floors'
         min_budget: 'Min. Budget (Rs.)'
         max_budget: 'Max. Budget (Rs.)'
         budget: 'Budget (Rs.)'
+      user_kyc/occupation:
+        salaried: Salaried
+        self_employed: Self Employed
+        business_owner: Business Owner
+        retired: Retired
+        home_maker: Home Maker
+        other_company: Other Company
       campaign:
           name: 'Campaign Name'
           description: 'About this Campaign'
@@ -1697,6 +1707,7 @@ en:
     dashboard:
       index:
         link_name: 'Dashboard'
+        leaderboard: CP Leaderboard
         billing_team_link_name: 'Billing Dashboard'
         cp_admin_link_name: 'Channel Partner Head Dashboard'
         cp_owner_link_name: 'Company Owner Dashboard'

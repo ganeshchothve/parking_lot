@@ -10,6 +10,11 @@ json.entries @site_visits do |site_visit|
     json.rejection_reason nil
   end
 
+  # Policies for mobile app
+  json.allow_reschedule allow_reschedule?(site_visit)
+  json.allow_state_change allow_state_change?(site_visit)
+  json.allow_add_notes allow_add_notes?(site_visit)
+
   json.lead do
     json.name site_visit.lead.name
     json.email site_visit.lead.email

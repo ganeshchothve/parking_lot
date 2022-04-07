@@ -66,6 +66,97 @@
             </div>
           <% end %>
 
+          <div class="row">
+            <div class="col-md-6">
+              <%= f.label :anniversary, class: 'control-label' %>
+              <% anniversary = (f.object.anniversary.present? ? f.object.anniversary.strftime("%d/%m/%Y") : "") %>
+              <%= f.text_field :anniversary, class: 'form-control datepicker', type:'text', data: {"default-date": anniversary}, value: anniversary %>
+            </div>
+            <div class="col-md-6">
+              <%= f.label :dob %>
+              <% date = (f.object.dob.present? ? f.object.dob.strftime("%d/%m/%Y") : "") %>
+              <%= f.text_field :dob, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date %>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <%= f.label :occupation, class: 'control-label' %>
+              <%= f.select :occupation, UserKyc::OCCUPATIONS.collect{|x| [ t("mongoid.attributes.user_kyc/occupation.#{x}"), x.to_s]}, {prompt: "Select"}, class: 'selectize', disabled: !policy(@user_kyc).editable_field?("occupation") %>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card mt-3">
+                <div class="card-header">
+                  Residence / Permanent Address
+                </div>
+                <div class="card-body">
+                  <% permanent_address = f.object.addresses.where(address_type: 'permanent').first || f.object.addresses.build(address_type: 'permanent') %>
+                  <%= f.fields_for :addresses, permanent_address do |permanent_address_form| %>
+                    <%= render "addresses/form_fields", f: permanent_address_form, add_type: 'permanent' %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card mt-3">
+                <div class="card-header">
+                  Correspondence / Office Address
+                </div>
+                <div class="card-body">
+                  <% correspondence_address = f.object.addresses.where(address_type: 'correspondence').first || f.object.addresses.build(address_type: 'correspondence') %>
+                  <%= f.fields_for :addresses, correspondence_address do |correspondence_address_form| %>
+                    <%= render "addresses/form_fields", f: correspondence_address_form, add_type: 'correspondence' %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mt-3">
+            <div class="card-header">
+              Corporate Details (If Any)
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <%= f.label :is_company %>
+                <div class="form-check form-check-inline">
+                  <%= f.radio_button :is_company, true, class: "form-check-input wd-22" %>
+                  <%= f.label :is_company, "Yes", class: "form-check-label d-inline-block ms-2" %>
+                </div>
+                <div class="form-check form-check-inline">
+                  <%= f.radio_button :is_company, false, class: "form-check-input wd-22" %>
+                  <%= f.label :is_company, "No", class: "form-check-label d-inline-block ms-2" %>
+                </div>
+              </div>
+              <div class="mb-3 company-fields">
+                <%= f.label :gstn %>
+                <%= f.text_field :gstn, class: 'form-control' %>
+              </div>
+              <div class="mb-3 company-fields">
+                <%= f.label :company_name %>
+                <%= f.text_field :company_name, class: 'form-control' %>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mt-3">
+              <div class="card-header">
+                Bank Details
+              </div>
+              <div class="card-body">
+                <% f.object.build_bank_detail if f.object.bank_detail.blank? %>
+                <%= f.fields_for :bank_detail do |bank_detail_form| %>
+                  <%= render "bank_details/form_fields", f: bank_detail_form %>
+                <% end %>
+              </div>
+            </div>
+
           <% if !defined?(small) || small == false %>
             <div class="card mt-3">
               <div class="card-header">
@@ -73,14 +164,6 @@
               </div>
               <div class="card-body">
                 <div class="row">
-                  <div class="col-md-6">
-                    <div class="mb-3 position-relative">
-                      <!-- TODO: check if you want to restrict the dob to 18 years age -->
-                      <%= f.label :dob %>
-                      <% date = (f.object.dob.present? ? f.object.dob.strftime("%d/%m/%Y") : "") %>
-                      <%= f.text_field :dob, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date %>
-                    </div>
-                  </div>
                   <div class="col-md-6">
                     <div class="mb-3">
                       <%= f.label :education_qualification %>
@@ -145,43 +228,6 @@
                     <%= f.text_field :poa_details_phone_no, class: 'phone form-control' %>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div class="card mt-3">
-              <div class="card-header">
-                Corporate Details (If Any)
-              </div>
-              <div class="card-body">
-                <div class="mb-3">
-                  <%= f.label :is_company %>
-                  <div class="form-check form-check-inline">
-                    <%= f.radio_button :is_company, true, class: "form-check-input wd-22" %>
-                    <%= f.label :is_company, "Yes", class: "form-check-label d-inline-block ms-2" %>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <%= f.radio_button :is_company, false, class: "form-check-input wd-22" %>
-                    <%= f.label :is_company, "No", class: "form-check-label d-inline-block ms-2" %>
-                  </div>
-                </div>
-                <div class="mb-3 company-fields">
-                  <%= f.label :gstn %>
-                  <%= f.text_field :gstn, class: 'form-control' %>
-                </div>
-                <div class="mb-3 company-fields">
-                  <%= f.label :company_name %>
-                  <%= f.text_field :company_name, class: 'form-control' %>
-                </div>
-              </div>
-            </div>
-            <div class="card mt-3">
-              <div class="card-header">
-                Bank Details
-              </div>
-              <div class="card-body">
-                <% f.object.build_bank_detail if f.object.bank_detail.blank? %>
-                <%= f.fields_for :bank_detail do |bank_detail_form| %>
-                  <%= render "bank_details/form_fields", f: bank_detail_form %>
-                <% end %>
               </div>
             </div>
             <div class="card mt-3">
@@ -254,6 +300,13 @@
         $(".customer-fields").show();
       }else{
         $(".customer-fields").hide();
+      }
+    });
+    $('[name="user_kyc[bank_detail_attributes][loan_required]').change(function(){
+      if($(this).val() == "true"){
+        $(".loan-fields").removeClass('hidden');
+      }else{
+        $(".loan-fields").addClass('hidden');
       }
     });
     $('[name="user_kyc[is_company]"]').trigger("change");

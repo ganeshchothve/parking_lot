@@ -1,0 +1,22 @@
+<ul class="leaderboard-top-list">
+  <li class="list-header">
+    <div class="list-rank">Rank</div>
+    <div class="list-name">Name & Company</div>
+    <div class="list-incentive">Incentives</div>
+  </li>
+
+  <% @cp_rank_wise_data.first(10).each do |cp_data| %>
+    <li>
+      <div class="list-rank"><%= cp_data[:rank] || "-" %></div>
+      <div class="list-name">
+        <!-- <img src="<%#= asset_path 'user.jpg' %>"> -->
+        <p><%= (cp_data[:manager_name] || "-") rescue "-" %></p>
+        <!-- <span><%#= @cp_rank_wise_data.select{|d| d[:rank] == rank }.pluck(:company_name).join(",") rescue "-" %></span> -->
+      </div>
+      <div class="list-incentive">
+        <img src="<%= asset_path 'leaderboard/money.svg' %>">
+        <p><%= number_to_indian_currency(cp_data[:total_capped_incentive] || "-") rescue "-" %></p>
+      </div>
+    </li>
+  <% end %>
+</ul>
