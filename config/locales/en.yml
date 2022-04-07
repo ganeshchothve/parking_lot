@@ -1166,8 +1166,7 @@ en:
       user_kyc/occupation:
         salaried: Salaried
         self_employed: Self Employed
-        business: Business
-        owner: Owner
+        business_owner: Business Owner
         retired: Retired
         home_maker: Home Maker
         other_company: Other Company

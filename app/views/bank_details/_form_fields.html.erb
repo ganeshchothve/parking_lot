@@ -54,13 +54,12 @@
     </div>
   <% end %>
 </div>
-
-<div class="row">
-  <div class="col-md-6 loan-fields">
+<div class="row loan-fields <%= f.object.loan_required ? '' : 'hidden' %>">
+  <div class="col-md-6">
     <%= f.label :loan_amount, class: 'control-label' %>
     <%= f.text_field :loan_amount %>
   </div>
-  <div class="col-md-6 loan-fields">
+  <div class="col-md-6">
     <%= f.label :loan_sanction_days %>
     <%= f.number_field :loan_sanction_days %>
   </div>

@@ -11,7 +11,7 @@ class UserKyc
   # Add different types of documents which are uploaded on user_kyc
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   DOCUMENT_TYPES = []
-  OCCUPATIONS = ['salaried', 'self_employed', 'business', 'owner', 'retired', 'home_maker', 'other_company']
+  OCCUPATIONS = ['salaried', 'self_employed', 'business_owner', 'retired', 'home_maker', 'other_company']
 
   field :salutation, type: String, default: 'Mr.'
   field :first_name, type: String

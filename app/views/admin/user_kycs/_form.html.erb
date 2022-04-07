@@ -304,15 +304,14 @@
     });
     $('[name="user_kyc[bank_detail_attributes][loan_required]').change(function(){
       if($(this).val() == "true"){
-        $(".loan-fields").show();
+        $(".loan-fields").removeClass('hidden');
       }else{
-        $(".loan-fields").hide();
+        $(".loan-fields").addClass('hidden');
       }
     });
     $('[name="user_kyc[is_company]"]').trigger("change");
     $('[name="user_kyc[nri]"]').trigger("change");
     $('[name="user_kyc[poa]"]').trigger("change");
     $('[name="user_kyc[existing_customer]"]').trigger("change");
-    $('[name="user_kyc[bank_detail_attributes][loan_required]').trigger("change");
   });
 </script>
