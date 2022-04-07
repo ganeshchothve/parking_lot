@@ -19,13 +19,13 @@
         <div class="mt-3"></div>
         <div class="tab-content theme-form">
           <div class="tab-pane fade <%= @existing_lead ? '' : 'show active' %>" id="nav-lead-new" role="tabpanel">
-            <%= simple_form_for @lead, url: check_and_register_path, remote: true, local: true, html: { class: "modal-remote-form validate-form theme-form", id: 'add-new-lead-form', "data-resource-type": global_labels['lead'], "data-type": "json" } do |f| %>
+            <%= simple_form_for @lead, url: check_and_register_path, remote: true, local: true, html: { class: "modal-remote-form validate-form theme-form", id: 'add-new-lead-form', "data-resource-type": (params[:walkin] ? SiteVisit.model_name.human : Lead.model_name.human), "data-type": "json" } do |f| %>
               <%= render 'admin/leads/non_selldo_form_fields', f: f, lead: @lead %>
             <% end %>
           </div>
           <% if policy([current_user_role_group, Lead.new]).show_existing_customer? %>
             <div class="tab-pane fade <%= @existing_lead ? 'show active' : '' %>" id="nav-lead-existing" role="tabpanel">
-              <%= simple_form_for @lead, url: check_and_register_path, remote: true, local: true, html: { class: "modal-remote-form validate-form theme-form", id: 'add-existing-lead-form', "data-resource-type": global_labels['lead'], "data-type": "json" } do |f| %>
+              <%= simple_form_for @lead, url: check_and_register_path, remote: true, local: true, html: { class: "modal-remote-form validate-form theme-form", id: 'add-existing-lead-form', "data-resource-type": (params[:walkin] ? SiteVisit.model_name.human : Lead.model_name.human), "data-type": "json" } do |f| %>
                 <%= render 'admin/leads/non_selldo_lead_copy_form_fields', f: f, lead: @lead, existing_lead: @existing_lead %>
               <% end %>
             </div>
