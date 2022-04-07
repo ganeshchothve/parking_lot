@@ -25,6 +25,10 @@ class InvoiceObserver < Mongoid::Observer
     invoice.net_amount = invoice.calculate_net_amount
   end
 
+  def after_create invoice
+    invoice.move_manual_invoice_to_draft
+  end
+
   def after_save invoice
     # invoice generated set to trueif invoice.invoiceable.present?
     if invoice.invoiceable.present?
@@ -35,7 +39,10 @@ class InvoiceObserver < Mongoid::Observer
         invoice.invoiceable.set(incentive_generated: false)
       end
 
-      invoice.change_status("draft") if invoice.invoiceable.find_incentive_schemes(invoice.category).present? && invoice.invoiceable.draft_incentive_eligible?(invoice.category)
+
+      if invoice.status.in?(["tentative", "rejected"])
+        invoice.change_status("draft") if invoice.invoiceable.find_incentive_schemes(invoice.category).present? && invoice.invoiceable.draft_incentive_eligible?(invoice.category) && invoice._type == "Invoice::Calculated"
+      end
 
     end
   end

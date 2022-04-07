@@ -12,7 +12,7 @@ module InvoiceStateMachine
 
       event :draft do
         transitions from: :tentative, to: :draft
-        transitions from: :rejected, to: :draft, if: :can_draft_from_rejected?
+        transitions from: :rejected, to: :draft
       end
 
       event :raise do
@@ -154,12 +154,10 @@ module InvoiceStateMachine
       end
     end
 
-    def can_draft_from_rejected?
-      flag = false
-      if invoiceable.class.to_s == "SiteVisit"
-        flag = invoiceable.draft_incentive_eligible?
+    def move_manual_invoice_to_draft
+      if self.tentative? && self._type == "Invoice::Manual"
+        self.draft!
       end
-      flag
     end
 
     def change_status(event)
