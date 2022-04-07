@@ -7,11 +7,13 @@ json.entries @projects do |project|
 
   json.is_subscribed project.is_subscribed(current_user)
 
+  lead = Lead.new(user: User.new, project: project)
+
   # Actions enabled on project
-  json.subscription_enabled policy([current_user_role_group, InterestedProject.new(project: project, user: current_user)]).create?
-  json.walkin_enabled policy([current_user_role_group, Lead.new(project: project)]).new?
-  json.bookings_enabled policy([current_user_role_group, BookingDetail.new(project: project, user: User.new, lead: Lead.new(project: project))]).show_add_booking_link?
-  json.invoicing_enabled policy([current_user_role_group, Invoice.new(project: project)]).new?
+  json.subscription_enabled allow_interest_subscription?(project)
+  json.walkin_enabled allow_walkins?(project)
+  json.bookings_enabled allow_booking_without_inventory?(project, lead)
+  json.invoicing_enabled allow_invoice_create?(project)
 
   json.assets project.assets do |asset|
     json.extract! asset, :document_type, :_id, :file, :file_name, :file_size
