@@ -85,6 +85,7 @@ class Admin::SiteVisitsController < AdminController
       end
       if @site_visit.save
         format.html { redirect_to request.referer, notice: 'Site Visit was successfully updated.' }
+        format.json { render json: @site_visit }
       else
         format.html { render :edit }
         format.json { render json: { errors: @site_visit.errors.full_messages }, status: :unprocessable_entity }
