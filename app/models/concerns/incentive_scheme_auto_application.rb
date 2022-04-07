@@ -67,27 +67,15 @@ module IncentiveSchemeAutoApplication
   end
 
   # If Incentive Scheme Auto Apply is true only that time invoices will move to draft
-  def move_invoices_to_draft(status ,invoice_category = nil)
-    invoices = self.invoices
-    if invoice_category.present?
-      invoices = invoices.where(category: invoice_category)
-    end
-    invoices.where(status: status).each do |invoice|
-      if self.find_incentive_schemes(invoice.category).present? && self.draft_incentive_eligible?(invoice.category) && invoice._type == "Invoice::Calculated"
-        invoice.change_status("draft")
-      end
+  def move_invoices_to_draft
+    self.invoices.each do |invoice|
+      invoice.change_status("draft")
     end
   end
 
-  def move_invoices_to_rejected(status ,invoice_category = nil)
-    invoices = self.invoices
-    if invoice_category.present?
-      invoices = invoices.where(category: invoice_category)
-    end
-    invoices.where(status: status).each do |invoice|
-      if self.find_incentive_schemes(invoice.category).present? && invoice._type == "Invoice::Calculated"
-        invoice.change_status("reject")
-      end
+  def move_invoices_to_rejected
+    self.invoices.each do |invoice|
+      invoice.change_status("reject")
     end
   end
 

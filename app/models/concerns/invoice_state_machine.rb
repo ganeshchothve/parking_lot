@@ -33,6 +33,7 @@ module InvoiceStateMachine
         transitions from: :raised, to: :rejected, success: %i[after_rejected]
         transitions from: :pending_approval, to: :rejected, success: %i[after_rejected]
         transitions from: :tentative, to: :rejected
+        transitions from: :draft, to: :rejected
       end
 
       event :tax_invoice_raise do
@@ -162,9 +163,13 @@ module InvoiceStateMachine
 
     def change_status(event)
       begin
-        if self.respond_to?("may_#{event}?") && self.send("may_#{event}?")
-          self.aasm.fire!(event.to_sym)
-          self.set(rejection_reason: "#{invoiceable.class.try(:model_name).try(:human)} has been cancelled") if event == "reject"
+        if self.respond_to?("may_#{event}?") && self.send("may_#{event}?") && self._type == "Invoice::Calculated" && invoiceable.find_incentive_schemes(self.category).present?
+          self.assign_attributes(rejection_reason: "#{invoiceable.class.try(:model_name).try(:human)} has been cancelled") if event == "reject"
+          self.aasm.fire(event.to_sym)
+
+          unless self.save
+            Rails.logger.error "[InvoiceStateMachine][#{__method__}][ERR] id-#{id.to_s}, event-#{event} Errors: #{self.errors.full_messages.join(',')}"
+          end
         end
       rescue StandardError => e
         Rails.logger.error "[InvoiceStateMachine][#{__method__}][ERR] id-#{id.to_s}, event-#{event} Errors: #{e.message}, Backtrace: #{e.backtrace.join('\n')}"
