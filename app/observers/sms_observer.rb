@@ -40,7 +40,11 @@ class SmsObserver < Mongoid::Observer
         worker = Object.const_get("Communication::Sms::#{sms.booking_portal_client.sms_provider.try(:classify) || 'SmsJust'}Worker")
         if sms.sms_template
           if sms.sms_template.name == 'otp'
-            worker.new.perform(sms.id.to_s)  # Send OTPs inline
+            if sms.booking_portal_client.launchpad_portal?
+              worker.new.perform(sms.id.to_s)  # Send OTPs inline
+            else
+              worker.set(queue: 'otp').perform_async(sms.id.to_s)
+            end
           elsif sms.sms_template.is_active?
             worker.perform_async(sms.id.to_s)
           end
