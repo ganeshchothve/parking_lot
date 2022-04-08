@@ -4,11 +4,11 @@ module SourcingManagerDashboardConcern
     dates = params[:dates]
     dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
     project_ids = params["project_ids"].try(:split, ",").try(:flatten) || (current_user.project_ids || [])
-    fltrs = ActionController::Parameters.new({fltrs: {created_at: dates, project_ids: project_ids }})
-    @active_partners = SiteVisit.build_criteria(fltrs).where({"$and": [SiteVisit.user_based_scope(current_user)]}).distinct(:manager_id).count
-    @booking_active_partners = BookingDetail.build_criteria(fltrs).where({ "$and": [BookingDetail.user_based_scope(current_user), BookingDetail.booking_stages.selector]}).distinct(:manager_id).count
-    @raised_invoices = Invoice.build_criteria(fltrs).where({ "$and": [Invoice.user_based_scope(current_user), status: 'pending_approval']}).count
-    @approved_invoices = Invoice.build_criteria(fltrs).where({ "$and": [Invoice.user_based_scope(current_user), status: 'approved']}).count
+    fltrs = ActionController::Parameters.new({fltrs: {project_ids: project_ids }})
+    @active_partners = SiteVisit.build_criteria(fltrs).filter_by_scheduled_on(dates).where({"$and": [SiteVisit.user_based_scope(current_user)]}).distinct(:manager_id).count
+    @booking_active_partners = BookingDetail.build_criteria(fltrs).filter_by_booked_on(dates).where({ "$and": [BookingDetail.user_based_scope(current_user), BookingDetail.booking_stages.selector]}).distinct(:manager_id).count
+    @raised_invoices = Invoice.build_criteria(fltrs).filter_by_created_at(dates).where({ "$and": [Invoice.user_based_scope(current_user), status: 'pending_approval']}).count
+    @approved_invoices = Invoice.build_criteria(fltrs).filter_by_created_at(dates).where({ "$and": [Invoice.user_based_scope(current_user), status: 'approved']}).count
   end
 
   def invoice_summary
