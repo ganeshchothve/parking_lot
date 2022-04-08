@@ -127,7 +127,7 @@ class Admin::UserPolicy < UserPolicy
     attributes = super
     if user.present?
       attributes += [:is_active] if record.persisted? && record.id != user.id && user.role.in?(%w(cp cp_admin admin superadmin))
-      if %w[admin superadmin].include?(user.role) && record.role.in?(%w(channel_partner cp cp_owner))
+      if %w[admin superadmin].include?(user.role)  && !record.role.in?(%w(channel_partner cp cp_owner))
         attributes += [:manager_id]
       end
       if %w[admin superadmin cp_admin sales_admin].include?(user.role) && record.buyer?
