@@ -19,9 +19,9 @@
 
 # Learn more: http://github.com/javan/whenever
 
-#every 2.minute, roles: [:app, :staging] do
-#  runner "Amura::SidekiqManager.run"
-#end
+every 2.minute, roles: [:app, :staging] do
+  runner "Amura::SidekiqManager.run"
+end
 
 every 4.hour, roles: [:app, :staging] do
   runner "Amura::SidekiqManager.restart"
