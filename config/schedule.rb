@@ -19,17 +19,17 @@
 
 # Learn more: http://github.com/javan/whenever
 
-every 2.minute, roles: [:app, :staging] do
-  runner "Amura::SidekiqManager.run"
-end
+#every 2.minute, roles: [:app, :staging] do
+#  runner "Amura::SidekiqManager.run"
+#end
 
 every 4.hour, roles: [:app, :staging] do
   runner "Amura::SidekiqManager.restart"
 end
 
-every 3.minutes do
-  runner "Gamification::Job.new.execute"
-end
+#every 3.minutes do
+#  runner "Gamification::Job.new.execute"
+#end
 
 every 1.day, at: "4:30 am" do
   runner "ProjectUnitRemindersAndAutoRelease::Job.daily_reminder_for_booking_payment"
