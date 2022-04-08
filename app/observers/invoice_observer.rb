@@ -41,7 +41,7 @@ class InvoiceObserver < Mongoid::Observer
 
 
       if invoice.status.in?(["tentative", "rejected"])
-        invoice.change_status("draft") if invoice.invoiceable.find_incentive_schemes(invoice.category).present? && invoice.invoiceable.draft_incentive_eligible?(invoice.category) && invoice._type == "Invoice::Calculated"
+        invoice.change_status("draft") if invoice.invoiceable.draft_incentive_eligible?(invoice.category)
       end
 
     end

@@ -69,7 +69,7 @@ module IncentiveSchemeAutoApplication
   # If Incentive Scheme Auto Apply is true only that time invoices will move to draft
   def move_invoices_to_draft
     self.invoices.each do |invoice|
-      invoice.change_status("draft")
+      invoice.change_status("draft") if invoice.invoiceable.draft_incentive_eligible?(invoice.category)
     end
   end
 
