@@ -218,17 +218,18 @@ class Admin::UsersController < AdminController
   #TO DO - move to SourcingManagerDashboardConcern
   def channel_partner_performance
     interested_project_matcher = {status: {'$in': ["approved"]}}
-    dates = params[:dates]
-    @interested_project_dates = dates
-    dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
+    @dates = params[:dates]
+    @interested_project_dates = @dates
+    @dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if @dates.blank?
     start_date, end_date = @interested_project_dates.split(' - ') if @interested_project_dates.present?
+    active_project_ids = Project.filter_by_is_active(true).pluck(:_id)
     interested_project_matcher[:created_at] =  {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day } if start_date.present? && end_date.present?
-    @leads = Lead.where(Lead.user_based_scope(current_user, params)).filter_by_created_at(dates)
-    @site_visits = SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).filter_by_scheduled_on(dates)
-    @bookings = BookingDetail.booking_stages.where(BookingDetail.user_based_scope(current_user, params)).filter_by_booked_on(dates)
+    @leads = Lead.where(Lead.user_based_scope(current_user, params)).filter_by_created_at(@dates).filter_by_project_ids(active_project_ids)
+    @site_visits = SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).filter_by_scheduled_on(@dates).filter_by_project_ids(active_project_ids)
+    @bookings = BookingDetail.booking_stages.where(BookingDetail.user_based_scope(current_user, params)).filter_by_booked_on(@dates).filter_by_project_ids(active_project_ids)
     if params[:project_ids].present?
       project_ids = params["project_ids"].try(:split, ",").try(:flatten)
-      project_ids = Project.where(id: {"$in": project_ids}).distinct(:id)
+      project_ids = Project.where(id: {"$in": project_ids}).filter_by_is_active(true).distinct(:id)
       @leads = @leads.filter_by_project_ids(project_ids)
       @site_visits = @site_visits.filter_by_project_ids(project_ids)
       @bookings = @bookings.filter_by_project_ids(project_ids)
@@ -262,6 +263,7 @@ class Admin::UsersController < AdminController
     @rejected_site_visits = @site_visits.filter_by_approval_status('rejected').group_by{|p| p.project_id}
     @bookings = @bookings.group_by{|p| p.project_id}
     @projects = params[:project_ids].present? ? Project.filter_by__id(params[:project_ids]) : Project.all
+    @projects = @projects.filter_by_is_active(true)
     respond_to do |format|
       format.js
       format.xls { send_data ExcelGenerator::ChannelPartnerPerformance.channel_partner_performance_csv(current_user, @projects, @leads, @bookings, @all_site_visits, @site_visits, @pending_site_visits, @approved_site_visits, @rejected_site_visits, @subscribed_count_project_wise, @scheduled_site_visits, @conducted_site_visits).string , filename: "channel_partner_performance-#{Date.today}.xls", type: "application/xls" }
@@ -270,12 +272,12 @@ class Admin::UsersController < AdminController
 
   #TO DO - move to SourcingManagerDashboardConcern
   def partner_wise_performance
-    dates = params[:dates]
-    dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
-    @leads = Lead.filter_by_created_at(dates).where(Lead.user_based_scope(current_user, params))
+    @dates = params[:dates]
+    @dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if @dates.blank?
+    @leads = Lead.filter_by_created_at(@dates).where(Lead.user_based_scope(current_user, params))
 
-    @site_visits = SiteVisit.filter_by_scheduled_on(dates).where(SiteVisit.user_based_scope(current_user, params))
-    @bookings = BookingDetail.booking_stages.filter_by_booked_on(dates).where(BookingDetail.user_based_scope(current_user, params))
+    @site_visits = SiteVisit.filter_by_scheduled_on(@dates).where(SiteVisit.user_based_scope(current_user, params))
+    @bookings = BookingDetail.booking_stages.filter_by_booked_on(@dates).where(BookingDetail.user_based_scope(current_user, params))
 
     @site_visits_manager_ids = @site_visits.distinct(:manager_id).compact
     @booking_detail_manager_ids = @bookings.distinct(:manager_id).compact
@@ -312,10 +314,10 @@ class Admin::UsersController < AdminController
   end
 
   def site_visit_project_wise
-    dates = params[:dates]
-    dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
-    @site_visits = SiteVisit.filter_by_scheduled_on(dates).where(SiteVisit.user_based_scope(current_user, params))
-    @projects = params[:project_ids].present? ? Project.filter_by__id(params[:project_ids]) : Project.filter_by_is_active(true)
+    @dates = params[:dates]
+    @dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if @dates.blank?
+    @site_visits = SiteVisit.filter_by_scheduled_on(@dates).where(SiteVisit.user_based_scope(current_user, params))
+    @projects = params[:project_ids].present? ? Project.filter_by__id(params[:project_ids]).filter_by_is_active(true) : Project.filter_by_is_active(true)
     if params[:project_ids].present?
       @site_visits = @site_visits.where(project_id: {"$in": params[:project_ids]})
     elsif
