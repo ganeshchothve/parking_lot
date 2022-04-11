@@ -120,7 +120,7 @@ class Api::SellDo::LeadsController < Api::SellDoController
   end
 
   def update_rera_number_on_user
-    @lead.manager.set(rera_id: params.dig(:payload, :custom_field, :custom_rera_number)) if params.dig(:payload, :custom_field, :custom_rera_number).present? && @lead.manager.rera_id != params.dig(:payload, :custom_field, :custom_rera_number)
+    @lead.manager.set(rera_id: params.dig(:payload, :custom_rera_number)) if params.dig(:payload, :custom_rera_number).present? && @lead.manager.rera_id != params.dig(:payload, :custom_rera_number)
   end
 
   def create_or_set_site_visit
