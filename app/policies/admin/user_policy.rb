@@ -155,7 +155,7 @@ class Admin::UserPolicy < UserPolicy
     if record.role.in?(%w(cp_owner channel_partner))
       attributes += [:upi_id]
       attributes += [:referral_code] if record.new_record?
-      attributes += [:channel_partner_id] if user.present? && user.role.in?(%w(superadmin cp_owner))
+      attributes += [:channel_partner_id] if user.present? && user.role.in?(%w(cp_owner))
       attributes += [fund_accounts_attributes: FundAccountPolicy.new(user, FundAccount.new).permitted_attributes] if record.persisted?
       attributes += [:rejection_reason]
     end
