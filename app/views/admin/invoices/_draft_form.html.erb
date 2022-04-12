@@ -76,6 +76,7 @@
           <div class="mb-3">
             <%= f.label :status, class: 'control-label label-required' %>
             <% events = available_events(@invoice) %>
+            <% events = ["draft"] if params[:action] == "new" %>
             <%= f.select :event, options_for_select(events.collect{|event| [t("controller.invoices.events.#{event.to_s}"), event.to_s]}, @invoice.status), {prompt: t("mongoid.attributes.invoice/status.#{@invoice.status}")}, class: 'selectize', required: 'required', disabled: !policy([:admin, @invoice]).editable_field?("event") %>
           </div>
         <% end %>

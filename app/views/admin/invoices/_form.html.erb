@@ -15,6 +15,11 @@
           <%= render 'admin/invoices/incentive_deduction', incentive_deduction: incentive_deduction %>
         <% end %>
 
+        <div class="mb-3">
+          <%= f.label :number, class: '' %>
+          <%= f.text_field :number, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("number") %>
+        </div>
+
         <% if policy([:admin, @invoice]).editable_field?("agreement_amount") %>
           <div class="mb-3">
             <%= f.label :agreement_amount, class: '' %>

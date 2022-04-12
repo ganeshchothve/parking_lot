@@ -9,6 +9,7 @@ class Invoice
 
   DOCUMENT_TYPES = []
   INVOICE_REPORT_STAGES = %w(draft raised pending_approval approved tax_invoice_raised paid)
+  INVOICE_EVENTS = Invoice.aasm.events.map(&:name)
 
   field :amount, type: Float, default: 0.0
   field :gst_amount, type: Float, default: 0.0
