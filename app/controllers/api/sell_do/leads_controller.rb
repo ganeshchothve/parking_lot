@@ -105,8 +105,11 @@ class Api::SellDo::LeadsController < Api::SellDoController
 
   def create_or_set_lead
     @lead = @user.leads.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:lead_id].to_s).first
-    update_source_and_sub_source_on_lead if @lead.present?
-    update_rera_number_on_user if @lead.present? && @lead.manager.role.in?(%w(channel_partner cp_owmer))
+    if @lead.present?
+      update_source_and_sub_source_on_lead
+      update_rera_number_on_lead
+    end
+
     unless @lead
       @lead = @user.leads.new(lead_create_attributes)
       render json: { errors: @lead.errors.full_messages.uniq } and return unless @lead.save
@@ -119,8 +122,8 @@ class Api::SellDo::LeadsController < Api::SellDoController
     @lead.set(sub_source: params.dig(:payload, :campaign_info, :sub_source)) if params.dig(:payload, :campaign_info, :sub_source).present? && (@lead.sub_source != params.dig(:payload, :campaign_info, :sub_source))
   end
 
-  def update_rera_number_on_user
-    @lead.manager.set(rera_id: params.dig(:payload, :custom_rera_number)) if params.dig(:payload, :custom_rera_number).present? && @lead.manager.rera_id != params.dig(:payload, :custom_rera_number)
+  def update_rera_number_on_lead
+    @lead.set(rera_id: params.dig(:payload, :custom_rera_number)) if params.dig(:payload, :custom_rera_number).present? && @lead.rera_id != params.dig(:payload, :custom_rera_number)
   end
 
   def create_or_set_site_visit
@@ -145,6 +148,7 @@ class Api::SellDo::LeadsController < Api::SellDoController
       lead_stage: params.dig(:payload, :stage),
       source: params.dig(:payload, :campaign_info, :source),
       sub_source: params.dig(:payload, :campaign_info, :sub_source),
+      rera_id: params.dig(:payload, :custom_rera_number),
       third_party_references_attributes: [{
         crm_id: @crm.id,
         reference_id: params[:lead_id]
