@@ -162,7 +162,7 @@ class Lead
     end
   end
 
-  def incentive_eligible?(category=nil)
+  def tentative_incentive_eligible?(category=nil)
     if category.present?
       if category == 'lead'
         manager_id.present?
@@ -170,11 +170,11 @@ class Lead
         false
       end
     else
-      _incentive_eligible?
+      _tentative_incentive_eligible?
     end
   end
 
-  def actual_incentive_eligible?(category=nil)
+  def draft_incentive_eligible?(category=nil)
     if category.present?
       if category == 'lead'
         manager_id.present?
@@ -182,7 +182,7 @@ class Lead
         false
       end
     else
-      _actual_incentive_eligible?
+      _draft_incentive_eligible?
     end
   end
 
