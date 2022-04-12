@@ -89,10 +89,6 @@ class SiteVisitObserver < Mongoid::Observer
       site_visit.move_invoices_to_rejected
     end
 
-    if site_visit.approval_status_changed? && site_visit.approval_status == "approved" && site_visit.approval_status_was == "rejected"
-      site_visit.move_invoices_to_draft
-    end
-
     site_visit.move_invoices_to_draft
 
     # if site visit status is changed to conducted, the site visit is pushed to sell do
