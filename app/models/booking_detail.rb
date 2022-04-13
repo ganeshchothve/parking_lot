@@ -417,7 +417,7 @@ class BookingDetail
     if category.present?
       case category
       when 'spot_booking'
-        status.in?(%w(blocked booked_tentative booked_confirmed))
+        (status.in?(%w(blocked booked_tentative booked_confirmed)) && approval_status == "approved")
       when 'brokerage'
         if project.present?
           if project.enable_inventory?
@@ -427,7 +427,7 @@ class BookingDetail
               false
             end
           else
-            booked_confirmed?
+            (booked_confirmed? && approval_status == "approved")
           end
         end
       else
