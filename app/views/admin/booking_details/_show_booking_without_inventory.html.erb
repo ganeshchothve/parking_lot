@@ -70,6 +70,19 @@
                           <p class="fn-12 font-medium mb-0"><%= ChannelPartner.human_attribute_name('company_name') %></p>
                           <p class="fn-14"><%= @booking_detail.try(:manager).try(:name) || '-' %></p>
                         </div>
+
+                        <div class="col-3">
+                          <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('approval_status') %></p>
+                          <p class="fn-14"><%= I18n.t("mongoid.attributes.booking_detail/approval_status.#{@booking_detail.approval_status}") || '-' %></p>
+                        </div>
+
+                        <% if @booking_detail.approval_status == "rejected" %>
+                          <div class="col-3">
+                            <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('rejection_reason') %></p>
+                            <p class="fn-14"><%= @booking_detail.rejection_reason || '-' %></p>
+                          </div>
+                        <% end %>
+
                       </div>
                     </div>
                   </div>
