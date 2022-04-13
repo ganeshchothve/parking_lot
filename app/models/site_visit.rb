@@ -74,23 +74,23 @@ class SiteVisit
   validates :notes, copy_errors_from_child: true
   validates :assets, copy_errors_from_child: true
 
-  def incentive_eligible?(category=nil)
+  def tentative_incentive_eligible?(category=nil)
     if category.present?
       if category == 'walk_in'
         !is_revisit? && scheduled?
       end
     else
-      _incentive_eligible?
+      _tentative_incentive_eligible?
     end
   end
 
-  def actual_incentive_eligible?(category=nil)
+  def draft_incentive_eligible?(category=nil)
     if category.present?
       if category == 'walk_in'
         !is_revisit? && verification_approved? && (conducted? || paid?)
       end
     else
-      _actual_incentive_eligible?
+      _draft_incentive_eligible?
     end
   end
 
