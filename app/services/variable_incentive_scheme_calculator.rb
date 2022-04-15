@@ -10,7 +10,7 @@ class VariableIncentiveSchemeCalculator
       booking_details = BookingDetail.in(status: BookingDetail::BOOKING_STAGES, project_id: variable_incentive_scheme.project_ids).where(booked_on: variable_incentive_scheme.start_date.beginning_of_day..variable_incentive_scheme.end_date.end_of_day).where(query)
 
       booking_details.each_with_index do |booking_detail, index|
-        incentive_amount += calculate_capped_incentive(booking_detail, variable_incentive_scheme)
+        incentive_amount += calculate_capped_incentive(booking_detail, variable_incentive_scheme, booking_details.count)
       end
 
       if query[:manager_id].present?
@@ -34,10 +34,11 @@ class VariableIncentiveSchemeCalculator
     if variable_incentive_schemes.present?
       variable_incentive_schemes.each do |variable_incentive_scheme|
         booking_details = BookingDetail.in(status: BookingDetail::BOOKING_STAGES, project_id: variable_incentive_scheme.project_ids).where(booked_on: variable_incentive_scheme.start_date.beginning_of_day..variable_incentive_scheme.end_date.end_of_day).where(query)
+        booking_count = booking_details.count
 
         booking_details.includes(:project, :manager).each do |booking_detail|
           day = VariableIncentiveSchemeCalculator.calculate_days(booking_detail, variable_incentive_scheme)
-          capped_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(booking_detail, variable_incentive_scheme)
+          capped_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(booking_detail, variable_incentive_scheme, booking_count)
           incentive_data << {scheme_name: variable_incentive_scheme.name, scheme_id: variable_incentive_scheme.id.to_s, total_bookings: variable_incentive_scheme.total_bookings, day: day, project_name: booking_detail.project.try(:name), project_id: booking_detail.project_id.to_s, booking_detail_id: booking_detail.id.to_s, booking_detail_name: booking_detail.name, capped_incentive: capped_incentive, manager_name: booking_detail.manager_name, manager_id: booking_detail.manager_id.to_s, company_name: booking_detail.manager.try(:channel_partner).try(:company_name), first_name: booking_detail.manager.try(:first_name), last_name: booking_detail.manager.try(:last_name)}
         end
       end
@@ -62,7 +63,7 @@ class VariableIncentiveSchemeCalculator
       predicted_booking_count = avg_booking_count_per_day * 7
       (0..7).each do |day|
         booking_detail = BookingDetail.new(booked_on: Date.today + day)
-        capped_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(booking_detail, variable_incentive_scheme)
+        capped_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(booking_detail, variable_incentive_scheme, booking_count)
         predicted_incentive += (capped_incentive * avg_booking_count_per_day)
       end
 
@@ -120,15 +121,15 @@ class VariableIncentiveSchemeCalculator
   end
 
   # total_bookings / total_inventory
-  def self.calculate_network_factor(variable_incentive_scheme)
-    network_factor = variable_incentive_scheme.total_bookings.to_f / variable_incentive_scheme.total_inventory.to_f
+  def self.calculate_network_factor(variable_incentive_scheme, booking_count=nil)
+    network_factor = (booking_count || variable_incentive_scheme.total_bookings).to_f / variable_incentive_scheme.total_inventory.to_f
     network_factor
   end
 
   # days_effect * network_factor
-  def self.calculate_days_incentive(booking_detail, variable_incentive_scheme)
+  def self.calculate_days_incentive(booking_detail, variable_incentive_scheme, booking_count=nil)
     days_effect = calculate_days_effect(booking_detail, variable_incentive_scheme)
-    network_factor = calculate_network_factor(variable_incentive_scheme)
+    network_factor = calculate_network_factor(variable_incentive_scheme, booking_count)
     days_incentive = days_effect * network_factor
     days_incentive
   end
@@ -142,23 +143,23 @@ class VariableIncentiveSchemeCalculator
   end
 
   # (total_bookings * total_bookings_multiplier)
-  def self.calculate_network_effect(variable_incentive_scheme)
-    network_effect = variable_incentive_scheme.total_bookings * variable_incentive_scheme.total_bookings_multiplier
+  def self.calculate_network_effect(variable_incentive_scheme, booking_count=nil)
+    network_effect = (booking_count || variable_incentive_scheme.total_bookings) * variable_incentive_scheme.total_bookings_multiplier
     network_effect
   end
 
   # days_factor * network_effect
-  def self.calculate_network_incentive(booking_detail, variable_incentive_scheme)
+  def self.calculate_network_incentive(booking_detail, variable_incentive_scheme, booking_count=nil)
     days_factor = calculate_days_factor(booking_detail, variable_incentive_scheme)
-    network_effect = calculate_network_effect(variable_incentive_scheme)
+    network_effect = calculate_network_effect(variable_incentive_scheme, booking_count)
     network_incentive = days_factor * network_effect
     network_incentive
   end
 
   # Days Incentive + Network Incentive + Min Incentive
-  def self.calculate_total_incentive(booking_detail, variable_incentive_scheme)
-    days_incentive = calculate_days_incentive(booking_detail, variable_incentive_scheme)
-    network_incentive = calculate_network_incentive(booking_detail ,variable_incentive_scheme)
+  def self.calculate_total_incentive(booking_detail, variable_incentive_scheme, booking_count=nil)
+    days_incentive = calculate_days_incentive(booking_detail, variable_incentive_scheme, booking_count)
+    network_incentive = calculate_network_incentive(booking_detail ,variable_incentive_scheme, booking_count)
     min_incentive = variable_incentive_scheme.min_incentive
     total_incentive = days_incentive + network_incentive + min_incentive
     total_incentive
@@ -171,8 +172,8 @@ class VariableIncentiveSchemeCalculator
   end
 
   # [total_incentive, temp_capped_incentive].min
-  def self.calculate_capped_incentive(booking_detail, variable_incentive_scheme)
-    total_incentive = calculate_total_incentive(booking_detail, variable_incentive_scheme)
+  def self.calculate_capped_incentive(booking_detail, variable_incentive_scheme, booking_count=nil)
+    total_incentive = calculate_total_incentive(booking_detail, variable_incentive_scheme, booking_count)
     temp_capped_incentive = calculate_temp_capped_incentive(variable_incentive_scheme)
     capped_incentive = [total_incentive, temp_capped_incentive].min
     capped_incentive.round
