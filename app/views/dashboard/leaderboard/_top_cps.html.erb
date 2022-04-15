@@ -121,15 +121,13 @@
           </svg>
           <div id="carouselExampleControls" class="carousel slide carousel2" data-bs-ride="carousel">
             <div class="carousel-inner">
-              <% second_cp.each_with_index do |scp, index| %>
-                <div class="carousel-item <%= index.zero? ? 'active' : '' %>">
-                  <p class='text-truncate' title="<%= (scp[:manager_name] rescue "-") %>">
-                    <%= scp[:manager_name].truncate(13) rescue "-" %>
-                    <span>
-                      <%= number_to_indian_currency(scp[:total_capped_incentive] || "-") rescue "-" %></span>
-                  </p>
-                </div>
-              <% end %>
+              <div class="carousel-item active">
+                <p class='text-truncate' title="">
+                  <%#= scp[:manager_name].truncate(13) rescue "-" %>
+                  <span>
+                    <%= number_to_indian_currency(second_cp.first[:total_capped_incentive] || "-") rescue "-" %></span>
+                </p>
+              </div>
             </div>
             <!-- <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
               data-bs-slide="prev">
@@ -262,15 +260,13 @@
           </svg>
           <div id="carouselExampleControls2" class="carousel slide carousel1" data-bs-ride="carousel">
             <div class="carousel-inner">
-              <% first_cp.each_with_index do |scp, index| %>
-                <div class="carousel-item <%= index.zero? ? 'active' : '' %>">
-                  <p class='text-truncate' title="<%= (scp[:manager_name] rescue "-") %>">
-                    <%= scp[:manager_name].truncate(13) rescue "-" %>
-                    <span>
-                      <%= number_to_indian_currency(scp[:total_capped_incentive] || "-") rescue "-" %></span>
-                  </p>
-                </div>
-              <% end %>
+              <div class="carousel-item active">
+                <p class='text-truncate' title="">
+                  <%#= scp[:manager_name].truncate(13) rescue "-" %>
+                  <span>
+                    <%= number_to_indian_currency(first_cp.first[:total_capped_incentive] || "-") rescue "-" %></span>
+                </p>
+              </div>
             </div>
             <!-- <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls2"
               data-bs-slide="prev">
@@ -406,15 +402,13 @@
           </svg>
           <div id="carouselExampleControls3" class="carousel slide carousel3" data-bs-ride="carousel">
             <div class="carousel-inner">
-              <% third_cp.each_with_index do |scp, index| %>
-                <div class="carousel-item <%= index.zero? ? 'active' : '' %>">
-                  <p class='text-truncate' title="<%= (scp[:manager_name] rescue "-") %>">
-                    <%= scp[:manager_name].truncate(13) rescue "-" %>
+                <div class="carousel-item active">
+                  <p class='text-truncate' title="">
+                    <%#= scp[:manager_name].truncate(13) rescue "-" %>
                     <span>
-                      <%= number_to_indian_currency(scp[:total_capped_incentive] || "-") rescue "-" %></span>
+                      <%= number_to_indian_currency(third_cp.first[:total_capped_incentive] || "-") rescue "-" %></span>
                   </p>
                 </div>
-              <% end %>
             </div>
             <!--<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls3"
               data-bs-slide="prev">
