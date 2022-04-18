@@ -120,6 +120,7 @@ class ChannelPartnersController < ApplicationController
     @channel_partner.assign_attributes(permitted_attributes([:admin, @channel_partner]))
     respond_to do |format|
       if (params.dig(:channel_partner, :event).present? ? @channel_partner.send("#{params.dig(:channel_partner, :event)}!") : @channel_partner.save)
+        @channel_partner.approve! if (device_type?("mobile") && @channel_partner.may_approve?)
         format.html { redirect_to (request.referer || channel_partners_path), notice: 'Channel Partner was successfully updated.' }
         format.json { render 'channel_partners/show.json' }
       else
