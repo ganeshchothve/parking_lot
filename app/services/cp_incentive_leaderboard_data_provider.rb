@@ -57,10 +57,13 @@ module CpIncentiveLeaderboardDataProvider
     approved_schemes = VariableIncentiveScheme.approved.or(options[:query])
     if approved_schemes.present?
       approved_schemes.each do |variable_incentive_scheme|
-        yesterday_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(yesterday_booking_detail, variable_incentive_scheme)
-        today_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(todays_booking_detail, variable_incentive_scheme)
-        tomorrow_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(tomorrow_booking_detail, variable_incentive_scheme)
-        next_week_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(next_week_booking_detail, variable_incentive_scheme)
+        booking_details = BookingDetail.in(status: BookingDetail::BOOKING_STAGES, project_id: variable_incentive_scheme.project_ids).where(booked_on: variable_incentive_scheme.start_date.beginning_of_day..variable_incentive_scheme.end_date.end_of_day)
+        booking_count = booking_details.count
+
+        yesterday_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(yesterday_booking_detail, variable_incentive_scheme, booking_count)
+        today_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(todays_booking_detail, variable_incentive_scheme, booking_count)
+        tomorrow_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(tomorrow_booking_detail, variable_incentive_scheme, booking_count)
+        next_week_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(next_week_booking_detail, variable_incentive_scheme, booking_count)
 
         incentive_predictions << {variable_incentive_scheme_id: variable_incentive_scheme.id.to_s, project_ids: variable_incentive_scheme.project_ids, yesterday_incentive: yesterday_incentive, today_incentive: today_incentive, tomorrow_incentive: tomorrow_incentive, next_week_incentive: next_week_incentive}
       end
