@@ -37,16 +37,16 @@ module SourcingManagerDashboardConcern
   end
 
   def cp_performance
-    dates = params[:dates]
-    dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
+    @dates = params[:dates]
+    @dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if @dates.blank?
     project_ids = params["project_ids"].try(:split, ",").try(:flatten) || (current_user.project_ids || [])
     project_ids = Project.where(id: {"$in": project_ids}).distinct(:id)
-    start_date, end_date = dates.split(' - ')
+    start_date, end_date = @dates.split(' - ')
     if ["superadmin","admin"].include?(current_user.role) #Channel Partner Manager Performance Dashboard for admin and superadmin
-      @cps = User.where(role: "cp")
+      @cps = User.where(role: "cp").filter_by_is_active("true")
     else
       # @cps = User.filter_by_role("cp").filter_by_userwise_project_ids(current_user)
-      @cps = User.filter_by_role("cp").where(manager_id: current_user.id)
+      @cps = User.filter_by_role("cp").where(manager_id: current_user.id).filter_by_is_active("true")
     end
     @matcher = {matcher: {created_at: {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day }}}
     @matcher[:matcher][:project_id] = {"$in": project_ids} if project_ids.present?
@@ -65,9 +65,9 @@ module SourcingManagerDashboardConcern
     start_date, end_date = @dates.split(' - ')
     matcher = {created_at: {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day }}
     if ["superadmin","admin"].include?(current_user.role) #Channel Partner Manager Performance Dashboard for admin and superadmin
-      @cp_managers = User.where(role: "cp")
+      @cp_managers = User.where(role: "cp").filter_by_is_active("true")
     else
-      @cp_managers = User.filter_by_role(:cp).where(manager_id: current_user.id)
+      @cp_managers = User.filter_by_role(:cp).where(manager_id: current_user.id).filter_by_is_active("true")
     end
 
     @cp_managers_hash = {'No Manager' => 'No Manager'}
