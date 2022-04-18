@@ -77,7 +77,7 @@
       <label class="'label-required control-label'">Channel Partner</label>
       <%= f.select :manager_id,channel_partners.collect{|cp| [(cp.name), cp.id]}, {prompt: true}, class: 'selectize', required: true, id: 'tagged_manager', disabled: !(policy([:admin, @booking_detail]).editable_field?("manager_id"))  %>
 
-      <% unless %w(channel_partner cp_owner).include?(current_user.role) %>
+      <% unless (%w(channel_partner cp_owner).include?(current_user.role) && current_client.launchpad_portal?)  %>
         <%= link_to "Add Channel Partner", new_channel_partner_channel_partners_path(lead_id: f.object.try(:lead).try(:id).to_s), class: 'modal-remote-form-link' %>
       <% end %>
   </div>

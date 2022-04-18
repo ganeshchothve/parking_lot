@@ -1,0 +1,28 @@
+<%= form_for [:move_to_next_approval_state, :admin, @booking_detail], remote: true, local: true, html: { class: "modal-remote-form validate-form", data: { "resource-type" => t('global.booking_detail'), type: "json"}, id: 'booking_detail_reject_form' } do |f| %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="title">
+                <%= t("controller.booking_details.reject.link_name") %>
+            </h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <%= f.label :rejection_reason, class: 'label-required' %>
+            <%= f.text_area :rejection_reason, autofocus: true, class: "form-control", rows: 5, required: 'required', disabled: !policy([current_user_role_group, @booking_detail]).editable_field?("rejection_reason") %>
+          </div>
+          <%= f.hidden_field :approval_event, value: 'reject' %>
+        </div>
+        <div class="modal-footer text-end">
+            <%= f.submit "Reject", class: "btn btn-primary" %>
+        </div>
+    </div>
+</div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#booking_detail_reject_form"));
+});
+<% end %>
