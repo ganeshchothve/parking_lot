@@ -28,7 +28,9 @@ class UserObserver < Mongoid::Observer
         user.role = "employee_user"
       end
     end
-    if user.role.in?(%w(cp_owner channel_partner)) && ENV_CONFIG[:default_cp_manager_id].present?
+    if user.channel_partner_id.present? && user.channel_partner.manager_id.present? && user.role.in?(%w(cp_owner channel_partner))
+      user.manager_id = user.channel_partner.manager_id
+    elsif ENV_CONFIG[:default_cp_manager_id].present?
       user.manager_id = ENV_CONFIG[:default_cp_manager_id]
     end
   end
