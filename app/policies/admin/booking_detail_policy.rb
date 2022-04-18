@@ -97,11 +97,11 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def can_move_booked_tentative?
-    record.agreement_date.present? && move_to_next_state? && record.blocked?
+    record.agreement_date.present? && move_to_next_state? && record.blocked? && record.approval_status == "approved"
   end
 
   def can_move_booked_confirmed?
-    (user.role?(:billing_team) || (current_client.launchpad_portal? && user.role.in?(%w(account_manager_head cp_admin)))) && record.booked_tentative?
+    (user.role?(:billing_team) || (current_client.launchpad_portal? && user.role.in?(%w(account_manager_head cp_admin)))) && record.booked_tentative? && record.approval_status == "approved"
   end
 
   def can_move_cancel?
