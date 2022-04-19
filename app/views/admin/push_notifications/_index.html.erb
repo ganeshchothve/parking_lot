@@ -20,6 +20,14 @@
     <% end %>
   </tbody>
 </table>
-<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">
-  <%= will_paginate push_notifications, list_classes: %w(pagination justify-content-center) %>
+<div class="col-lg-12 py-3 white mb-2 px-2">
+  <div class="row">
+    <div class="col-lg-6">
+      <p class="table-entry mb-0 ps-2 pt-2"><%= page_entries_info push_notifications %></p>
+    </div>
+    <div class="col-lg-6 table-pagination">
+      <%= will_paginate push_notifications, list_classes: %w(pagination justify-content-end) %>
+    </div>
+  </div>
 </div>
+

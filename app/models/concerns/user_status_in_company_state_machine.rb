@@ -14,12 +14,12 @@ module UserStatusInCompanyStateMachine
         transitions from: :inactive, to: :pending_approval, after: :remove_rejection_reason
       end
 
-      event :active, after: [:set_channel_partner, :clear_register_token] do
+      event :active, after: [:set_channel_partner, :clear_register_token, :send_notification] do
         transitions from: :inactive, to: :active
         transitions from: :pending_approval, to: :active
       end
 
-      event :inactive, after: [:unset_channel_partner, :clear_register_token] do
+      event :inactive, after: [:unset_channel_partner, :clear_register_token, :send_notification] do
         transitions from: :active, to: :inactive
         transitions from: :pending_approval, to: :inactive
       end
@@ -49,5 +49,26 @@ module UserStatusInCompanyStateMachine
     def remove_rejection_reason
       self.set(rejection_reason: nil) if self.rejection_reason.present?
     end
+
+    def send_notification
+      template_name = "user_status_#{self.user_status_in_company}_in_company"
+      recipient = self
+      send_push_notification(template_name, recipient) if recipient.present?
+    end
+
+    def send_push_notification template_name, recipient
+      template = Template::NotificationTemplate.where(name: template_name).first
+      if template.present? && self.booking_portal_client.notification_enabled?
+        push_notification = PushNotification.new(
+          notification_template_id: template.id,
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s,
+          recipient_id: recipient.id,
+          booking_portal_client_id: recipient.booking_portal_client.id
+        )
+        push_notification.save
+      end
+    end
+
   end
 end

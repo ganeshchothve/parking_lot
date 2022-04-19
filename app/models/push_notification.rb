@@ -19,13 +19,14 @@ class PushNotification
   scope :filter_by_content, -> (content) { where(content: ::Regexp.new(::Regexp.escape(body), 'i')) }
   scope :filter_by_sent_on, -> (date) { start_date, end_date = date.split(' - '); where(sent_on: start_date..end_date) }
   scope :filter_by_status, -> (status) { where(status: status) }
+  scope :filter_by_project_id, -> (project_id) { where(project_id: project_id) }
 
   # Associations
   belongs_to :recipient, class_name: 'User', inverse_of: :received_notifications, optional: true
   belongs_to :triggered_by, polymorphic: true, optional: true, class_name: 'User'
   belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :notification_template, class_name: 'Template::NotificationTemplate', optional: true
-
+  belongs_to :project, optional: true
   # Validations
   # validates :content, presence: true
   validate :role_or_triggered_by_present?

@@ -1,32 +1,33 @@
-<section class="mb-5">
-  <div class="container">
+<section class="mb-5 mt-3">
+  <div class="px-4">
     <div class="row">
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
-        <div class="table-title pt-1">
-          <h1 class="title icon-set">
-            <%= PushNotification.model_name.human(count: @push_notifications.total_entries) %>
-          </h1>
-        </div>
-      </div>
-      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
-        <div class="table-btn-set float-right pb-3">
-          <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @push_notifications.total_entries %></button>
+      
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-p">
+        <div class="table-btn-set float-right pb-1 text-end mt-2">
+          <!--
+          <div class="filter-search">
+            <input type="text" name="" placeholder="Search Name/Email/Phone">
+          </div>
+          -->
+          <div class="filter-popup">
+            <a class="db-filter-btn fn-500" href="javascript:;">
+              <i class="fa fa-filter fill-theme"></i>
+            </a>
+          </div>
           <% if policy([:admin, PushNotification]).new? %>
-            <%= link_to t('helpers.new.link_name', model: PushNotification.model_name.human), new_admin_push_notification_path, class: 'db-small-btn light-blue bg-white fn-400 modal-remote-form-link btn unset-width' %>
+            <%= link_to t('helpers.new.link_name', model: PushNotification.model_name.human), new_admin_push_notification_path, class: 'modal-remote-form-link p-2 px-3 btn bg-primary border-primary white d-inline-block ms-2 me-2 border rounded' %>
           <% end %>
-          <button class="db-filter-btn white fn-500" type="button">
-            <i class="icon-set icon-filter-light-blue"></i>
-          </button>
         </div>
       </div>
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
         <div class="box-card relative">
-          <%= render 'index', { push_notifications: @push_notifications } %>
+           <%= render 'index', { push_notifications: @push_notifications } %>
           <div class="filter-box">
-            <%#= render "filters" %>
+            <%= render "filters", url: admin_push_notifications_path %>
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+<br/><br/>

@@ -40,7 +40,7 @@ module InvoiceStateMachine
         transitions from: :approved, to: :tax_invoice_raised
       end
 
-      event :paid, after: :mark_invoiceable_paid do
+      event :paid, after: [:mark_invoiceable_paid, :send_notification] do
         transitions from: :tax_invoice_raised, to: :paid
         transitions from: :approved, to: :paid
       end
@@ -106,6 +106,25 @@ module InvoiceStateMachine
             ) if recipient.phone.present?
           end
         end
+      end
+      if recipients.present?
+        recipients.each do |recipient|
+          send_push_notification(template_name, recipient)
+        end
+      end
+    end
+
+    def send_push_notification template_name, recipient
+      template = Template::NotificationTemplate.where(project_id: self.project.id, name: template_name).first
+      if template.present? && recipient.booking_portal_client.notification_enabled?
+        push_notification = PushNotification.new(
+          notification_template_id: template.id,
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s,
+          recipient_id: recipient.id,
+          booking_portal_client_id: recipient.booking_portal_client.id
+        )
+        push_notification.save
       end
     end
 

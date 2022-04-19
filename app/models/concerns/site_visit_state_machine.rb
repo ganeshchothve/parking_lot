@@ -31,10 +31,11 @@ module SiteVisitStateMachine
     end
 
     def send_notification
-      template_name = "site_visit_#{self.status}_notification"
+      template_name = "site_visit_status_#{self.status}_notification"
       # TODO: Send Broadcast message via notification, in-app, Email, etc
+      recipient = self.manager || self.lead.manager
+      send_push_notification(template_name, recipient) if recipient.present?
     end
-
 
     # State machine for approval status maintained on a separate field
     aasm :approval_status, column: :approval_status, whiny_transitions: false, namespace: :verification do
@@ -72,6 +73,22 @@ module SiteVisitStateMachine
     def send_approval_status_notification
       template_name = "site_visit_approval_status_#{self.approval_status}_notification"
       # TODO: Send Broadcast message via notification, in-app, Email, etc
+      recipient = self.manager || self.lead.manager
+      send_push_notification(template_name, recipient) if recipient.present?
+    end
+
+    def send_push_notification template_name, recipient
+      template = Template::NotificationTemplate.where(project_id: self.lead.project_id,name: template_name).first
+      if template.present? && recipient.booking_portal_client.notification_enabled?
+        push_notification = PushNotification.new(
+          notification_template_id: template.id,
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s,
+          recipient_id: recipient.id,
+          booking_portal_client_id: recipient.booking_portal_client.id
+        )
+        push_notification.save
+      end
     end
 
   end
