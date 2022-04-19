@@ -399,6 +399,7 @@ en:
 
       booking_detail:
         name: 'Name'
+        rejection_reason: Rejection Reason
         status: 'Status'
         project_tower: 'Project Tower'
         user: 'User'
@@ -428,10 +429,15 @@ en:
         tentative_agreement_date: Tentative Agreement Date
         agreement_date: Agreement Date
         booked_on: Booked On
+        approval_status: Approval Status
       booking_detail/selldo_status:
         booked_tentative: tentative
         booked_confirmed: confirmed
         cancelled: cancelled
+      booking_detail/approval_status:
+        pending: 'Pending Approval'
+        approved: 'Approved'
+        rejected: 'Rejected'
       booking_detail/status:
         available: 'Available'
         not_available: 'Not Available'
@@ -1631,6 +1637,13 @@ en:
           link_name: Pay Remaining Amount
         show:
           disclaimer: Payments need to be for individual units, clubbed payments are not allowed. Please collect a cheque for individual units only.
+      events:
+        approval_status:
+            approve: 'Approve'
+            reject: 'Reject'
+            pending: Submit for Approval
+      reject:
+        link_name: 'Reject Booking'
 
     invoices:
       index:

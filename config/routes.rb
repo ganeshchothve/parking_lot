@@ -98,6 +98,8 @@ Rails.application.routes.draw do
         get :cost_sheet
         get :doc, path: 'doc/:type'
         patch :move_to_next_state
+        patch :move_to_next_approval_state
+        get :reject
       end
       get :mis_report, on: :collection
       get :searching_for_towers, on: :collection
