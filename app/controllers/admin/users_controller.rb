@@ -76,6 +76,21 @@ class Admin::UsersController < AdminController
     end
   end
 
+  def update_player_ids
+    respond_to do |format|
+      @user.assign_attributes(user_notification_token_params)
+      if @user.save
+        player_id = params.dig(:user, :user_notification_tokens_attributes, :"0", :token)
+        @user.update_onesignal_external_user_id(player_id) if player_id.present?
+        format.html { redirect_to edit_admin_user_path(@user), notice: 'User updated successfully.' }
+        format.json { render json: { user: @user.as_json, message: 'User updated successfully'}, status: :ok }
+      else
+        format.html { render :edit }
+        format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
 
   def set_user
@@ -87,6 +102,10 @@ class Admin::UsersController < AdminController
               current_user
             end
     redirect_to root_path, alert: t('controller.users.set_user_missing') if @user.blank?
+  end
+
+  def user_notification_token_params
+    params.require(:user).permit(user_notification_tokens_attributes: [:token, :os, :device])
   end
 
   def find_user_with_reference_id crm_id, reference_id

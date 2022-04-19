@@ -299,6 +299,7 @@ Rails.application.routes.draw do
         patch :reactivate_account
         patch :move_to_next_state
         patch :change_state
+        patch :update_player_ids
       end
 
       collection do

@@ -123,6 +123,10 @@ class Admin::UserPolicy < UserPolicy
     )
   end
 
+  def update_player_ids?
+    user.role.in?(%w(superadmin admin channel_partner cp_owner))
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     if user.present?
