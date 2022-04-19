@@ -31,7 +31,7 @@
                     <%= f.label :scheduled_on %>
                     <% date = (f.object.scheduled_on.present? ? f.object.scheduled_on : Date.today) %>
                     <%
-                        min_date = Date.current - 4.days
+                        min_date = (Date.current - 4.days).strftime("%d/%m/%Y")
                         site_visit_scheduled_on = f.object.scheduled_on.strftime("%d/%m/%Y")
                         current_date = Time.now.strftime("%d/%m/%Y")
                     %>
