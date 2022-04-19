@@ -30,16 +30,19 @@
                   <div class='col-md-12'>
                     <%= f.label :scheduled_on %>
                     <% date = (f.object.scheduled_on.present? ? f.object.scheduled_on : Date.today) %>
-                    <% site_visit_scheduled_on = f.object.scheduled_on %>
-                    <% current_date = Time.now.strftime("%d/%m/%Y") %>
+                    <%
+                        min_date = Date.current - 4.days
+                        site_visit_scheduled_on = f.object.scheduled_on.strftime("%d/%m/%Y")
+                        current_date = Time.now.strftime("%d/%m/%Y")
+                    %>
                     <% if site_visit_scheduled_on.present? %>
-                        <% if site_visit_scheduled_on.strftime("%d/%m/%Y") >= current_date %>
-                            <% min_date = Date.today %>
-                        <% elsif site_visit_scheduled_on.strftime("%d/%m/%Y") < current_date %>
+                        <% if site_visit_scheduled_on >= current_date %>
+                            <% min_date = current_date %>
+                        <% elsif site_visit_scheduled_on < current_date %>
                             <% min_date = site_visit_scheduled_on %>
                         <% end %>
                     <% end %>
-                    <div class="datetimepicker" id="site_visit_scheduled_on_calendar" data-default-date="<%= date.strftime("%d/%m/%Y ") %>" data-inline=true data-side-by-side=true data-use-current=true data-min-date="<%= min_date.strftime("%d/%m/%Y ") %>" data-max-date="<%= (Date.today + 20.days).strftime("%d/%m/%Y ") %>" data-stepping='30' data-format='DD/MM/YYYY LT'></div>
+                    <div class="datetimepicker" id="site_visit_scheduled_on_calendar" data-default-date="<%= date.strftime("%d/%m/%Y ") %>" data-inline=true data-side-by-side=true data-use-current=true data-min-date="<%= min_date %>" data-max-date="<%= (Date.today + 20.days).strftime("%d/%m/%Y ") %>" data-stepping='30' data-format='DD/MM/YYYY LT'></div>
 
                     <%= f.hidden_field :scheduled_on, class: 'form-control', value: date %>
                     <% if f.object.reject %>
