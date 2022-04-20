@@ -13,8 +13,8 @@ module Communication
         if %w[staging production].include?(Rails.env)
           resp = NotificationNotifier::Base.send_notification(notification)
           notification.sent_on = DateTime.now
-          notification.status = resp[:response]
-          notification.response = resp
+          notification.status = (resp.is_a?(Net::HTTPSuccess) ? "sent" : "failed")
+          notification.response = (JSON.parse(resp.try(:body)) rescue {})
           notification.save
         end
       end
