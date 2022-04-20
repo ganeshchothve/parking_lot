@@ -55,18 +55,6 @@ module NotificationNotifier
       response
     end
 
-    def self.send_to_registration_id(fcm, notification)
-      registration_ids= notification.user_notification_tokens
-      options = { "notification":
-            {
-              "title": notification.title,
-              "body": notification.content,
-              "click_action": notification.url
-            }
-          }
-      fcm.send(registration_ids, options)
-    end
-
     def self.create_notification(notification)
       params = {
                   app_id: ENV_CONFIG[:onesignal][:app_id],
