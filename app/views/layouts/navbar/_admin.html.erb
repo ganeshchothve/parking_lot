@@ -146,12 +146,6 @@
   </li>
 <% end %>
 
-<% if policy([:admin, PushNotification]).index? %>
-  <li class="nav-item">
-    <%= active_link_to t('controller.push_notifications.index.link_name'), admin_push_notifications_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li>
-<% end %>
-
 <%= render 'layouts/navbar/custom_links' %>
 
 <% if current_user %>
