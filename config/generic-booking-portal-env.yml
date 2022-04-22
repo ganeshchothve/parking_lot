@@ -68,5 +68,8 @@ interakt:
   base_url:
 razorpay:
   base_url:
-
+onesignal:
+  base_url: "https://onesignal.com"
+  app_id: "663b85da-cd52-4ebe-bc26-6419082920b4"
+  api_key: "Basic YjI1NWU0YzQtNWJjMi00NmE3LTllZDAtNjg2MDcyYTJmOWJk"
 default_cp_manager_id:

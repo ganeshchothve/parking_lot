@@ -4,6 +4,8 @@
       <tr class="bg-primary white">
         <th><%= t('mongoid.attributes.push_notification.title') %></th>
         <th><%= t('mongoid.attributes.push_notification.content') %></th>
+        <th><%= t('mongoid.attributes.push_notification.data') %></th>
+        <th><%= t('mongoid.attributes.push_notification.status') %></th>
       </tr>
     </thead>
   </thead>
@@ -11,10 +13,16 @@
     <% push_notifications.each do |push_notification| %>
       <tr>
         <td data-title=<%= t('mongoid.attributes.push_notification.title') %> >
-          <%=  push_notification.title %>
+          <%=  (push_notification.title || "-") %>
         </td>
         <td data-title=<%= t('mongoid.attributes.push_notification.content') %> >
-          <%= push_notification.content %>
+          <%= (push_notification.content || "-") %>
+        </td>
+        <td data-title=<%= t('mongoid.attributes.push_notification.data') %> >
+          <%= (push_notification.data || "-") %>
+        </td>
+        <td data-title=<%= t('mongoid.attributes.push_notification.status') %> >
+          <%= (push_notification.status || "-") %>
         </td>
       </tr>
     <% end %>

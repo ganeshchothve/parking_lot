@@ -116,7 +116,7 @@ module InvoiceStateMachine
 
     def send_push_notification template_name, recipient
       template = Template::NotificationTemplate.where(project_id: self.project.id, name: template_name).first
-      if template.present? && recipient.booking_portal_client.notification_enabled?
+      if template.present? && template.is_active? && recipient.booking_portal_client.notification_enabled?
         push_notification = PushNotification.new(
           notification_template_id: template.id,
           triggered_by_id: self.id,
