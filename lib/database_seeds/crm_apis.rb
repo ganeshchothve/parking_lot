@@ -33,11 +33,180 @@ module DatabaseSeeds
         {"_type"=>"Crm::Api::Put", "http_method"=>"patch", "path"=>"/v1/fund_accounts/<%= self.crm_reference_id(ENV_CONFIG.dig(:razorpay, :base_url)) %>", "request_payload"=>"{\n    'active': <%= self.is_active? %>\n}", "resource_class"=>"FundAccount"}
       ]
 
+      onesignal_crm_data = [
+           {
+                                 "event" => "",
+                           "http_method" => "put",
+                             "is_active" => true,
+                                  "path" => "/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>",
+                       "request_payload" => "{tags: {\n    \"first_name\": \"<%= first_name %>\",\n    \"last_name\": \"<%= last_name %>\",\n    \"name\": \"<%= name %>\",\n    \"email\": \"<%= email %>\",\n    \"phone\": \"<%= phone %>\",\n    \"role\": \"<%= role %>\",\n    \"sourcing_manager_projects\": \"<%= Project.in(id: (event_payload&.dig('project_ids', 1) || project_ids)).pluck(:name)&.to_sentence %>\",\n    \"company_name\": \"<%= event_payload&.dig('company_name', 1) || event_payload.dig('channel_partner', 'company_name') || channel_partner&.company_name %>\",\n    \"company_type\": \"<%= event_payload&.dig('company_type', 1) || event_payload.dig('channel_partner', 'company_type') || channel_partner&.company_type %>\",\n    \"company_owner_name\": \"<%= event_payload&.dig('primary_owner', 'first_name') || event_payload&.dig('channel_partner', 'primary_user', 'name') || channel_partner&.primary_user&.name %>\",\n    \"company_owner_phone\": \"<%= event_payload&.dig('primary_owner', 'phone') || event_payload&.dig('channel_partner', 'primary_user', 'phone') || channel_partner&.primary_user&.phone %>\",\n    \"interested_services\": \"<%= (event_payload&.dig('interested_services', 1) || event_payload.dig('channel_partner', 'interested_services') || channel_partner&.interested_services)&.to_sentence %>\",\n    \"developers_worked_for\": \"<%= (event_payload&.dig('developers_worked_for', 1) || event_payload.dig('channel_partner', 'developers_worked_for') || channel_partner&.developers_worked_for)&.to_sentence %>\",\n    \"pan_number\": \"<%= event_payload&.dig('pan_number', 1) || event_payload.dig('channel_partner', 'pan_number') || channel_partner&.pan_number %>\",\n    \"rera_number\": \"<%= event_payload&.dig('rera_id', 1) || event_payload.dig('channel_partner', 'rera_id') || channel_partner&.rera_id %>\",\n    \"gstin_number\": \"<%= event_payload&.dig('gstin_number', 1) || event_payload.dig('channel_partner', 'gstin_number') || channel_partner&.gstin_number %>\",\n    \"manager_name\": \"<%= manager&.name %>\",\n    \"regions\": \"<%= (event_payload&.dig('regions', 1) || event_payload.dig('channel_partner', 'regions') || channel_partner&.regions)&.to_sentence %>\",\n    \"status\": \"<%= event_payload&.dig('status', 1) || event_payload.dig('channel_partner', 'status') || channel_partner&.status %>\",\n    \"referred_by_name\": \"<%= referred_by&.name %>\",\n    \"projects_subscribed\": \"<%= event_payload.dig('interested_projects')&.to_sentence %>\",\n    \"account_status\": \"<%= self.event_payload.dig('is_active', 1).nil? ? (self.is_active? ? 'active' : 'inactive') : (self.event_payload.dig('is_active', 1).present? ?  'active' : 'inactive') %>\",\n    \"sign_in_count\": \"<%= event_payload.dig('sign_in_count', 1) || self.sign_in_count %>\",\n    \"last_sign_in_time\": \"<%= I18n.l((event_payload.dig('current_sign_in_at', 1) || self.current_sign_in_at || Time.now).in_time_zone(self.time_zone)) %>\"\n}}",
+                        "resource_class" => "User",
+              "response_crm_id_location" => nil
+          },
+           {
+                                 "event" => "Company Onboarding State Change",
+                           "http_method" => "put",
+                             "is_active" => true,
+                                  "path" => "/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>",
+                       "request_payload" => "{tags: {\n   \"event\": \"Company Onboarding State Change\",\n   \"status\": \"<%= self.event_payload&.dig('status', 1) || self.channel_partner&.status %>\",\n   \"rejection_reason\": \"<%= self.channel_partner&.rejected? ? (self.event_payload&.dig('status_change_reason', 1) || self.channel_partner&.status_change_reason) : '' %>\", \"createdAt\": \"<%= Time.now.iso8601 %>\"\n}}\n",
+                        "resource_class" => "User",
+              "response_crm_id_location" => nil
+          },
+           {
+                                 "event" => "Manager Changed",
+                           "http_method" => "put",
+                             "is_active" => true,
+                                  "path" => "/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>",
+                       "request_payload" => "{tags: {\n   event: \"Manager Changed\",\n   manager_name: \"<%= self.manager_name %>\",\n   manager_email: \"<%= self.manager&.email %>\",\n   manager_phone: \"<%= self.manager&.phone %>\",\n   createdAt: \"<%= Time.now.iso8601 %>\"\n}}",
+                        "resource_class" => "User",
+              "response_crm_id_location" => nil
+          },
+           {
+                                 "event" => "Region Added",
+                           "http_method" => "put",
+                             "is_active" => true,
+                                  "path" => "/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>",
+                       "request_payload" => "{tags: {\n   event: \"Region Added\",\n   region_name: \"<%= self.event_payload['region_added'] %>\",\n   createdAt: \"<%= Time.now.iso8601 %>\"\n}}",
+                        "resource_class" => "User",
+              "response_crm_id_location" => nil
+          },
+           {
+                                 "event" => "Region Removed",
+                           "http_method" => "put",
+                             "is_active" => true,
+                                  "path" => "/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>",
+                       "request_payload" => "{tags: {\n    event: \"Region Removed\",\n    region_name: \"<%= self.event_payload['region_removed'] %>\",\n    createdAt: \"<%= Time.now.iso8601 %>\"\n}}",
+                        "resource_class" => "User",
+              "response_crm_id_location" => nil
+          },
+           {
+                                 "event" => "Project Subscribed",
+                           "http_method" => "put",
+                             "is_active" => true,
+                                  "path" => "/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>",
+                       "request_payload" => "{tags: {\n    event: \"Project Subscribed\",\n    project_name: \"<%= self.event_payload.dig('project', 'name') %>\",\n    developer_name: \"<%= self.event_payload.dig('project', 'developer_name') %>\",\n    project_region: \"<%= self.event_payload.dig('project', 'region') %>\",\n    project_type: \"<%= self.event_payload.dig('project', 'project_type')&.to_sentence %>\",\n    city: \"<%= self.event_payload.dig('project', 'city') %>\",\n    location: \"<%= self.event_payload.dig('project', 'micro_market') %>\",\n    category: \"<%= self.event_payload.dig('project', 'category')&.to_sentence %>\",\n    segment: \"<%= self.event_payload.dig('project', 'project_segment')&.to_sentence %>\",\n    possession_date: \"<%= self.event_payload.dig('project', 'possession') %>\",\n    launch_date: \"<%= self.event_payload.dig('project', 'launched_on') %>\",\n    rera: \"<%= self.event_payload.dig('project', 'rera_registration_no') %>\",\n    configurations: \"<%= self.event_payload.dig('project', 'configurations')&.to_sentence %>\",\n    starting_price: \"<%= self.event_payload.dig('project', 'price_starting_from') %>\",\n    max_price: \"<%= self.event_payload.dig('project', 'price_upto') %>\",\n    total_units: \"<%= self.event_payload.dig('project', 'total_units') %>\",\n    broker_usp: \"<%= self.event_payload.dig('project', 'broker_usp')&.to_sentence %>\",\n    site_visit_incentive: \"<%= self.event_payload.dig('project', 'sv_incentive') %>\",\n    spot_booking_incentive: \"<%= self.event_payload.dig('project', 'spot_booking_incentive') %>\",\n    pre_registration_incentive_percentage: \"<%= self.event_payload.dig('project', 'pre_reg_incentive_percentage') %>\",\n    pre_registraion_min_bookings: \"<%= self.event_payload.dig('project', 'pre_reg_min_bookings') %>\",\n    logo: \"<%= self.event_payload.dig('project', 'logo_url') %>\",\n    cover_photo: \"<%= self.event_payload.dig('project', 'cover_photo_url') %>\",\n    mobile_logo: \"<%= self.event_payload.dig('project', 'mobile_logo_url') %>\",\n    mobile_cover_photo: \"<%= self.event_payload.dig('project', 'mobile_cover_photo_url') %>\",\n    createdAt: \"<%= Time.now.iso8601 %>\"\n}}",
+                        "resource_class" => "User",
+              "response_crm_id_location" => nil
+          },
+           {
+                                 "event" => "New Walkin Scheduled",
+                           "http_method" => "put",
+                             "is_active" => true,
+                                  "path" => "/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>",
+                       "request_payload" => "{tags: {\n    event: \"New Walkin Scheduled\",\n    project_name: \"<%= self.event_payload.dig('project', 'name') %>\",\n    developer_name: \"<%= self.event_payload.dig('project', 'developer_name') %>\",\n    project_location: \"<%= self.event_payload.dig('project', 'micro_market') %>\",\n    project_city: \"<%= self.event_payload.dig('project', 'city') %>\",\n    customer_name: \"<%= self.event_payload.dig('lead', 'name') %>\",\n    customer_email: \"<%= self.event_payload.dig('lead', 'email') %>\",\n    customer_phone: \"<%= self.event_payload.dig('lead', 'phone') %>\",\n    scheduled_on: \"<%= I18n.l((self.event_payload.dig('scheduled_on', 1) || self.event_payload.dig('site_visit', 'scheduled_on') || Time.now)&.in_time_zone(self.event_payload.dig('manager', 'time_zone'))) %>\",\n    status: \"<%= self.event_payload.dig('status', 1) || self.event_payload.dig('site_visit', 'status') %>\",\n    manager_name: \"<%= self.event_payload.dig('manager', 'name') %>\",\n    manager_phone: \"<%= self.event_payload.dig('manager', 'phone') %>\",\n    manager_email: \"<%= self.event_payload.dig('manager', 'email') %>\",\n    manager_role: \"<%= self.event_payload.dig('manager', 'role') %>\",\n    walkins_count: \"<%= self.event_payload.dig('sv_count') %>\",\n    createdAt: \"<%= Time.now.iso8601 %>\"\n}\n}",
+                        "resource_class" => "User",
+              "response_crm_id_location" => nil
+          },
+           {
+                                 "event" => "Walkin Conducted",
+                           "http_method" => "put",
+                             "is_active" => true,
+                                  "path" => "/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>",
+                       "request_payload" => "{tags: {\n    event: \"Walkin Conducted\",\n    project_name: \"<%= self.event_payload.dig('project', 'name') %>\",\n    developer_name: \"<%= self.event_payload.dig('project', 'developer_name') %>\",\n    project_location: \"<%= self.event_payload.dig('project', 'micro_market') %>\",\n    project_city: \"<%= self.event_payload.dig('project', 'city') %>\",\n    customer_name: \"<%= self.event_payload.dig('lead', 'name') %>\",\n    customer_email: \"<%= self.event_payload.dig('lead', 'email') %>\",\n    customer_phone: \"<%= self.event_payload.dig('lead', 'phone') %>\",\n    scheduled_on: \"<%= I18n.l((self.event_payload.dig('scheduled_on', 1) || self.event_payload.dig('site_visit', 'scheduled_on') || Time.now)&.in_time_zone(self.event_payload.dig('manager', 'time_zone'))) %>\",\n    conducted_on: \"<%= I18n.l((self.event_payload.dig('conducted_on', 1) || self.event_payload.dig('site_visit', 'conducted_on') || Time.now)&.in_time_zone(self.event_payload.dig('manager', 'time_zone'))) %>\",\n    status: \"<%= self.event_payload.dig('status', 1) || self.event_payload.dig('site_visit', 'status') %>\",\n    conducted_by: \"<%= self.event_payload.dig('conducted_by', 1) || self.event_payload.dig('site_visit', 'conducted_by') %>\",\n    manager_name: \"<%= self.event_payload.dig('manager', 'name') %>\",\n    manager_phone: \"<%= self.event_payload.dig('manager', 'phone') %>\",\n    manager_email: \"<%= self.event_payload.dig('manager', 'email') %>\",\n    manager_role: \"<%= self.event_payload.dig('manager', 'role') %>\",\n    createdAt\": \"<%= Time.now.iso8601 %>\n\n}}",
+                        "resource_class" => "User",
+              "response_crm_id_location" => nil
+          },
+           {
+                                 "event" => "Walkin Rescheduled",
+                           "http_method" => "put",
+                             "is_active" => true,
+                                  "path" => "/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>",
+                       "request_payload" => "{tags: {\n    event: \"Walkin Rescheduled\",\n    project_name: \"<%= self.event_payload.dig('project', 'name') %>\",\n    developer_name: \"<%= self.event_payload.dig('project', 'developer_name') %>\",\n    project_location: \"<%= self.event_payload.dig('project', 'micro_market') %>\",\n    project_city: \"<%= self.event_payload.dig('project', 'city') %>\",\n    customer_name: \"<%= self.event_payload.dig('lead', 'name') %>\",\n    customer_email: \"<%= self.event_payload.dig('lead', 'email') %>\",\n    customer_phone: \"<%= self.event_payload.dig('lead', 'phone') %>\",\n    scheduled_on: \"<%= I18n.l((self.event_payload.dig('scheduled_on', 1) || self.event_payload.dig('site_visit', 'scheduled_on') || Time.now)&.in_time_zone(self.event_payload.dig('manager', 'time_zone'))) %>\",\n    status: \"<%= self.event_payload.dig('status', 1) || self.event_payload.dig('site_visit', 'status') %>\",\n    manager_name: \"<%= self.event_payload.dig('manager', 'name') %>\",\n    manager_phone: \"<%= self.event_payload.dig('manager', 'phone') %>\",\n    manager_email: \"<%= self.event_payload.dig('manager', 'email') %>\",\n    manager_role: \"<%= self.event_payload.dig('manager', 'role') %>\",\n    createdAt: \"<%= Time.now.iso8601 %>\"\n}}",
+                        "resource_class" => "User",
+              "response_crm_id_location" => nil
+          },
+           {
+                                 "event" => "Walkin Approved",
+                           "http_method" => "put",
+                             "is_active" => true,
+                                  "path" => "/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>",
+                       "request_payload" => "{tags: {\n    \"event\": \"Walkin Approved\",\n    project_name: \"<%= self.event_payload.dig('project', 'name') %>\",\n    developer_name: \"<%= self.event_payload.dig('project', 'developer_name') %>\",\n    project_location: \"<%= self.event_payload.dig('project', 'micro_market') %>\",\n    project_city: \"<%= self.event_payload.dig('project', 'city') %>\",\n    customer_name: \"<%= self.event_payload.dig('lead', 'name') %>\",\n    customer_email: \"<%= self.event_payload.dig('lead', 'email') %>\",\n    customer_phone: \"<%= self.event_payload.dig('lead', 'phone') %>\",\n    scheduled_on: \"<%= I18n.l((self.event_payload.dig('scheduled_on', 1) || self.event_payload.dig('site_visit', 'scheduled_on') || Time.now)&.in_time_zone(self.event_payload.dig('manager', 'time_zone'))) %>\",\n    conducted_on: \"<%= I18n.l((self.event_payload.dig('conducted_on', 1) || self.event_payload.dig('site_visit', 'conducted_on') || Time.now)&.in_time_zone(self.event_payload.dig('manager', 'time_zone'))) %>\",\n    status: \"<%= self.event_payload.dig('status', 1) || self.event_payload.dig('site_visit', 'status') %>\",\n    conducted_by: \"<%= self.event_payload.dig('conducted_by', 1) || self.event_payload.dig('site_visit', 'conducted_by') %>\",\n    manager_name: \"<%= self.event_payload.dig('manager', 'name') %>\",\n    manager_phone: \"<%= self.event_payload.dig('manager', 'phone') %>\",\n    manager_email: \"<%= self.event_payload.dig('manager', 'email') %>\",\n    manager_role: \"<%= self.event_payload.dig('manager', 'role') %>\",\n    approval_status: \"<%= self.event_payload.dig('approval_status', 1) %>\",\n    createdAt: \"<%= Time.now.iso8601 %>\"\n}}",
+                        "resource_class" => "User",
+              "response_crm_id_location" => nil
+          },
+           {
+                                 "event" => "Walkin Rejected",
+                           "http_method" => "put",
+                             "is_active" => true,
+                                  "path" => "/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>",
+                       "request_payload" => "{tags: {\n    event: \"Walkin Rejected\",\n    project_name: \"<%= self.event_payload.dig('project', 'name') %>\",\n    developer_name: \"<%= self.event_payload.dig('project', 'developer_name') %>\",\n    project_location: \"<%= self.event_payload.dig('project', 'micro_market') %>\",\n    project_city: \"<%= self.event_payload.dig('project', 'city') %>\",\n    customer_name: \"<%= self.event_payload.dig('lead', 'name') %>\",\n    customer_email: \"<%= self.event_payload.dig('lead', 'email') %>\",\n    customer_phone: \"<%= self.event_payload.dig('lead', 'phone') %>\",\n    scheduled_on: \"<%= I18n.l((self.event_payload.dig('scheduled_on', 1) || self.event_payload.dig('site_visit', 'scheduled_on') || Time.now)&.in_time_zone(self.event_payload.dig('manager', 'time_zone'))) %>\",\n    conducted_on: \"<%= I18n.l((self.event_payload.dig('conducted_on', 1) || self.event_payload.dig('site_visit', 'conducted_on') || Time.now)&.in_time_zone(self.event_payload.dig('manager', 'time_zone'))) %>\",\n    status: \"<%= self.event_payload.dig('status', 1) || self.event_payload.dig('site_visit', 'status') %>\",\n    conducted_by: \"<%= self.event_payload.dig('conducted_by', 1) || self.event_payload.dig('site_visit', 'conducted_by') %>\",\n    manager_name: \"<%= self.event_payload.dig('manager', 'name') %>\",\n    manager_phone: \"<%= self.event_payload.dig('manager', 'phone') %>\",\n    manager_email: \"<%= self.event_payload.dig('manager', 'email') %>\",\n    manager_role: \"<%= self.event_payload.dig('manager', 'role') %>\",\n    approval_status: \"<%= self.event_payload.dig('approval_status', 1) %>\",\n    rejection_notes: \"<%= self.event_payload.dig('note', 1) || self.event_payload.dig('site_visit', 'notes')&.collect {|x| x['note']}&.to_sentence %>\",\n    createdAt: \"<%= Time.now.iso8601 %>\"\n}}",
+                        "resource_class" => "User",
+              "response_crm_id_location" => nil
+          },
+           {
+                                 "event" => "Account Active",
+                           "http_method" => "put",
+                             "is_active" => true,
+                                  "path" => "/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>",
+                       "request_payload" => "{tags: {\n    account_status: \"<%= self.event_payload.dig('is_active', 1).present? ? 'active' : 'inactive' %>\",\n    event: \"Account Active\"\n}}",
+                        "resource_class" => "User",
+              "response_crm_id_location" => nil
+          },
+           {
+                                 "event" => "Account Inactive",
+                           "http_method" => "put",
+                             "is_active" => true,
+                                  "path" => "/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>",
+                       "request_payload" => "{tags: {\n    \"event\": \"Account Inactive\",\n    \"account_status\": \"<%= self.event_payload.dig('is_active', 1).present? ? 'active' : 'inactive' %>\"\n}}",
+                        "resource_class" => "User",
+              "response_crm_id_location" => nil
+          },
+           {
+                                 "event" => "First Sign In",
+                           "http_method" => "put",
+                             "is_active" => true,
+                                  "path" => "/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>",
+                       "request_payload" => "{tags: {\n    \"event\": \"First Sign In\",\n    \"sign_in_count\": \"<%= event_payload.dig('sign_in_count', 1) || self.sign_in_count %>\",\n    \"sign_in_time\": \"<%= I18n.l((event_payload.dig('current_sign_in_at', 1) || self.current_sign_in_at || Time.now).in_time_zone(self.time_zone)) %>\"\n}\n}",
+                        "resource_class" => "User",
+              "response_crm_id_location" => nil
+          },
+           {
+                                 "event" => "Event Subscribed",
+                           "http_method" => "put",
+                             "is_active" => true,
+                                  "path" => "/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>",
+                       "request_payload" => "{tags: {\n   \"event\": \"Event Subscribed\",\n   \"topic\": \"<%= self.event_payload.dig('meeting', 'topic') %>\",\n   \"meeting_type\": \"<%= self.event_payload.dig('meeting', 'meeting_type') %>\",\n   \"provider\": \"<%= self.event_payload.dig('meeting', 'provider') %>\",\n   \"provider_url\": \"<%= self.event_payload.dig('meeting', 'provider_url') %>\",\n   \"scheduled_on\": \"<%= self.event_payload.dig('meeting', 'scheduled_on') %>\",\n   \"duration\": \"<%= self.event_payload.dig('meeting', 'duration') %>\",\n   \"agenda\": \"<%= self.event_payload.dig('meeting', 'agenda') %>\",\n   \"project_name\": \"<%= self.event_payload.dig('project', 'name') %>\",\n   \"campaign_name\": \"<%= self.event_payload.dig('campaign', 'name') %>\",\n   \"image_url\": \"<%= (self.event_payload.dig('meeting', 'assets') || []).select {|x| x['document_type'] == 'photo'}.first.try(:[], 'file').try(:[], 'url') %>\"\n}}",
+                        "resource_class" => "User",
+              "response_crm_id_location" => nil
+          },
+           {
+                                 "event" => "Event Unsubscribed",
+                           "http_method" => "put",
+                             "is_active" => true,
+                                  "path" => "/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>",
+                       "request_payload" => "\n{tags: {\n  \"event\": \"Event Unsubscribed\",\n  \"topic\": \"<%= self.event_payload.dig('meeting', 'topic') %>\",\n  \"meeting_type\": \"<%= self.event_payload.dig('meeting', 'meeting_type') %>\",\n  \"provider\": \"<%= self.event_payload.dig('meeting', 'provider') %>\",\n  \"provider_url\": \"<%= self.event_payload.dig('meeting', 'provider_url') %>\",\n  \"scheduled_on\": \"<%= self.event_payload.dig('meeting', 'scheduled_on') %>\",\n  \"duration\": \"<%= self.event_payload.dig('meeting', 'duration') %>\",\n  \"agenda\": \"<%= self.event_payload.dig('meeting', 'agenda') %>\",\n  \"project_name\": \"<%= self.event_payload.dig('project', 'name') %>\",\n  \"campaign_name\": \"<%= self.event_payload.dig('campaign', 'name') %>\",\n  \"image_url\": \"<%= (self.event_payload.dig('meeting', 'assets') || []).select {|x| x['document_type'] == 'photo'}.first.try(:[], 'file').try(:[], 'url') %>\"\n}}",
+                        "resource_class" => "User",
+              "response_crm_id_location" => nil
+          },
+           {
+                                 "event" => "Joined Existing Company",
+                           "http_method" => "put",
+                             "is_active" => true,
+                                  "path" => "/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>",
+                       "request_payload" => "{tags: {\n   event: \"Joined Existing Company\",\n   company_name: \"<%= self.event_payload.dig('channel_partner', 'company_name') %>\",\n   owner_name: \"<%= self.event_payload.dig('channel_partner', 'primary_user', 'name') %>\",\n   owner_email: \"<%= self.event_payload.dig('channel_partner', 'primary_user', 'email') %>\",\n   owner_phone: \"<%= self.event_payload.dig('channel_partner', 'primary_user', 'phone') %>\",\n   manager_name: \"<%= self.event_payload.dig('channel_partner', 'manager', 'name') %>\",\n   manager_email: \"<%= self.event_payload.dig('channel_partner', 'manager', 'email') %>\",\n   manager_phone: \"<%= self.event_payload.dig('channel_partner', 'manager', 'phone') %>\"\n\n}}",
+                        "resource_class" => "User",
+              "response_crm_id_location" => nil
+          },
+           {
+                                 "event" => "Registered New Company",
+                           "http_method" => "put",
+                             "is_active" => true,
+                                  "path" => "/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>",
+                       "request_payload" => "{tags: {\n   event: \"Registered New Company\",\n   company_name: \"<%= self.event_payload.dig('channel_partner', 'company_name') %>\",\n   owner_name: \"<%= self.event_payload.dig('channel_partner', 'primary_user', 'name') %>\",\n   owner_email: \"<%= self.event_payload.dig('channel_partner', 'primary_user', 'email') %>\",\n   owner_phone: \"<%= self.event_payload.dig('channel_partner', 'primary_user', 'phone') %>\",\n   manager_name: \"<%= self.event_payload.dig('channel_partner', 'manager', 'name') %>\",\n   manager_email: \"<%= self.event_payload.dig('channel_partner', 'manager', 'email') %>\",\n   manager_phone: \"<%= self.event_payload.dig('channel_partner', 'manager', 'phone') %>\"\n}}",
+                        "resource_class" => "User",
+              "response_crm_id_location" => nil
+          }
+      ]
+
       if crm_base.present?
         case crm_base.domain
         when ENV_CONFIG.dig(:interakt, :base_url)
           interakt_crm_data.each do |crm_api|
             puts Crm::Api::Post.create(base_id: crm_base_id, path: crm_api['path'], resource_class: crm_api['resource_class'], event: crm_api['event'], request_payload: crm_api['request_payload'])
+          end
+        when ENV_CONFIG.dig(:onesignal, :base_url)
+          onesignal_crm_data.each do |crm_api|
+            puts Crm::Api::Put.create(base_id: crm_base_id, path: '/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>', resource_class: crm_api['resource_class'], event: crm_api['event'], request_payload: crm_api['request_payload'])
           end
         when ENV_CONFIG.dig(:razorpay, :base_url)
           razorpay_crm_data.each do |crm_api|
