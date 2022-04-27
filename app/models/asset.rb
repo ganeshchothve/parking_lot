@@ -15,6 +15,7 @@ class Asset
   field :document_type, type: String
 
   belongs_to :assetable, polymorphic: true
+  belongs_to :parent_asset, class_name: 'Asset', optional: true #for co_branded asset - points to the original document
   has_one :document_sign_detail
 
   scope :filter_by_document_type, ->(type) { where(document_type: type) }
@@ -22,7 +23,7 @@ class Asset
   validates :file_name, uniqueness: { scope: [:document_type, :assetable_id], message: '^File with this name is already uploaded' }
   validates :asset_type, uniqueness: { scope: [:assetable_type, :assetable_id] }, if: proc{|asset| asset.asset_type == 'floor_plan' }
   validate :validate_content, on: :create
-  before_destroy :check_asset_validation
+  before_destroy :check_asset_validation, :remove_file_from_database
   #before_destroy :check_document_validation_on_receipt
 
   def validate_content
@@ -51,6 +52,17 @@ class Asset
         errors.add(:base, "At least 1 proof is required in pending approval.")
         false
         throw(:abort)
+      end
+    end
+  end
+
+  def remove_file_from_database
+    self.remove_file!
+    if self.document_type != 'co_branded_asset'
+      if Rails.env.staging? || Rails.env.production?
+        RemoveFileFromDatabaseWorker.perform_async(self.id)
+      else
+        RemoveFileFromDatabaseWorker.new.perform(self.id)
       end
     end
   end
