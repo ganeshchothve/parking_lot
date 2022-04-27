@@ -70,7 +70,6 @@ class ChannelPartnerObserverWorker
       if onesignal_base
         # Push changes on User
         if (changed_keys = (changes.keys & %w(company_name company_type interested_services manager_id developers_worked_for pan_number rera_id gstin_number regions status)).presence) && changed_keys.all? {|key| channel_partner[key].present?}
-          binding.pry
           channel_partner.users.each do |cp_user|
             Crm::Api::ExecuteWorker.perform_async('put', 'User', cp_user.id, nil, changes, onesignal_base.id.to_s)
           end
