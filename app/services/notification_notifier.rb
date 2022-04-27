@@ -58,7 +58,7 @@ module NotificationNotifier
     def self.create_notification(notification)
       params = {
                   app_id: ENV_CONFIG[:onesignal][:app_id],
-                  contents: {en: "Test notification content"},
+                  contents: {en: notification.content},
                   channel_for_external_user_ids: "push",
                   include_external_user_ids: [notification.recipient_id.to_s],
                   data: notification.data
