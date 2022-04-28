@@ -13,6 +13,7 @@ class Asset
   # type or purpose of the document will be stored here. for eg. - photo_identity proof
   # types of document can be different for different assetables and will stored in DOCUMENT_TYPES in respective models.
   field :document_type, type: String
+  field :expiry_time, type: DateTime
 
   belongs_to :assetable, polymorphic: true
   belongs_to :parent_asset, class_name: 'Asset', optional: true #for co_branded asset - points to the original document
@@ -25,6 +26,8 @@ class Asset
   validate :validate_content, on: :create
   before_destroy :check_asset_validation, :remove_file_from_database
   #before_destroy :check_document_validation_on_receipt
+
+  scope :filter_by_expired_assets, -> { where(expiry_time: {'$lt': DateTime.current}) }
 
   def validate_content
     _file = file.file
