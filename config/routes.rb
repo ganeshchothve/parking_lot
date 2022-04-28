@@ -415,6 +415,7 @@ Rails.application.routes.draw do
     get :booking_details_counts, to: 'dashboard#booking_details_counts'
     get :team_lead_dashboard, to: 'dashboard#team_lead_dashboard'
     get :dashboard_landing_page, to: 'dashboard#dashboard_landing_page'
+    get :payout_dashboard, to: 'dashboard#payout_dashboard'
 
     resource :lead do
       resources :searches, except: [:destroy], controller: 'searches' do
