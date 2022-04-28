@@ -39,17 +39,17 @@ class LocalDevise::SessionsController < Devise::SessionsController
     respond_to do |format|
       if self.resource
         # TODO: handle max attempts to be 3 in 60 min
-        otp_sent_status = self.resource.send_otp
+        @otp_sent_status = self.resource.send_otp
         if Rails.env.development?
           Rails.logger.info "---------------- #{resource.otp_code} ----------------"
         end
-        if otp_sent_status[:status]
-          format.json { render json: {confirmed: resource.confirmed?, phone: resource.phone, errors: []}, status: 200 }
+        if @otp_sent_status[:status]
+          format.json { render 'channel_partners/register.json', status: 200 }
         else
-          format.json { render json: {errors: [otp_sent_status[:error]].flatten}, status: 422 }
+          format.json { render json: {errors: [@otp_sent_status[:error]].flatten}, status: 422 }
         end
       else
-        format.json { render json: {errors: ["Please enter a valid login"]}, status: :unprocessable_entity }
+        format.json { render json: {errors: ["Please enter a valid phone number"]}, status: :unprocessable_entity }
       end
     end
   end

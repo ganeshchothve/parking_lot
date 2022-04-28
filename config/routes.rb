@@ -59,6 +59,9 @@ Rails.application.routes.draw do
     post :create_channel_partner, on: :collection
   end
 
+  # New v2 routes required for mobile apps, when old routes are needed to deprecate
+  post '/v2/channel_partners/register', to: "channel_partners#register_cp_user", format: :json
+
   get '/s/:code', to: 'shortened_urls#redirect_to_url'
 
   namespace :admin do
