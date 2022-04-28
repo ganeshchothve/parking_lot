@@ -92,7 +92,8 @@ class DashboardController < ApplicationController
   end
 
   def payout_dashboard
-    
+    @invoices = Invoice.where(manager_id: current_user.id)
+    @total_earnings = @invoices.where(manager_id: current_user.id).in(status: Invoice::INVOICE_REPORT_STAGES).sum(:net_amount)
   end
 
   private
@@ -101,5 +102,9 @@ class DashboardController < ApplicationController
     unless @lead = current_user.selected_lead
       redirect_to welcome_path, alert: t('controller.application.set_current_client')
     end
+  end
+
+  def set_payout_filters
+
   end
 end
