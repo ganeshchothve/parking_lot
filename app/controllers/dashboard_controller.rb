@@ -91,6 +91,10 @@ class DashboardController < ApplicationController
     @announcements = Announcement.where(is_active: true)
   end
 
+  def payout_dashboard
+    
+  end
+
   private
 
   def set_lead
