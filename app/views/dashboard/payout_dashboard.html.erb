@@ -1,6 +1,6 @@
 <section class="cp-payout-page">
   <div class="container">
-    <div class="row">
+    <div class="row sticky-cp-menu">
       <div class="col-6">
         <h1 class="sec-title-cp">Earnings</h1>
       </div>
@@ -8,7 +8,7 @@
         <a href="javascript:;" class="me-2">
           <i class="fas fa-search white"></i>
         </a>
-        <a href="javascript:;">
+        <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#cp-payout-filter-modal">
           <i class="fas fa-filter white"></i>
         </a>
       </div>
@@ -24,7 +24,7 @@
             <a href="javascript:;">Spot Bookings</a>
           </li>
           <li>
-            <a href="javascript:;">Brokerages</a>
+            <a href="javascript:;" class="brokerage-tab">Brokerages</a>
           </li>
           <li>
             <a href="javascript:;">Others</a>
@@ -60,39 +60,39 @@
 <section class="earning-potential">
   <div class="container">
     <div class="row">
-
-      <div class="col-12">
-        <h2 class="ep-title">Earning Potential</h2>
-      </div>
-
-      <div class="col-12">
-        <ul class="earning-potential-list mt-3">
-          <li>
-            <div class="earn-desc pending-approval bg-white">
-              <label>WAITING APPROVAL</label>
-              <p>₹20,000</p>
-              <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#waiting-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
+        <div class="brokerage-tab-content">
+            <div class="col-12">
+                <h2 class="ep-title">Earning Potential</h2>
             </div>
-          </li>
-          <li>
-            <div class="earn-desc approved bg-success">
-              <label>APPROVED</label>
-              <p>₹20,000</p>
-              <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#approved-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
-            </div>
-          </li>
-          <li>
-            <div class="earn-desc waiting-approval bg-danger">
-              <label>LOST</label>
-              <p>₹20,000</p>
-              <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#lost-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
-            </div>
-          </li>
-        </ul>
-      </div>
 
-      <div class="col-12"><hr></div>
+            <div class="col-12">
+                <ul class="earning-potential-list mt-3">
+                <li>
+                    <div class="earn-desc pending-approval bg-white">
+                    <label>WAITING APPROVAL</label>
+                    <p>₹20,000</p>
+                    <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#waiting-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
+                    </div>
+                </li>
+                <li>
+                    <div class="earn-desc approved bg-success">
+                    <label>APPROVED</label>
+                    <p>₹20,000</p>
+                    <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#approved-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
+                    </div>
+                </li>
+                <li>
+                    <div class="earn-desc waiting-approval bg-danger">
+                    <label>LOST</label>
+                    <p>₹20,000</p>
+                    <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#lost-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
+                    </div>
+                </li>
+                </ul>
+            </div>
 
+            <div class="col-12"><hr></div>
+        </div>
       <div class="col-12">
         <h2 class="ep-title float-start col-6">Transactions</h2>
         <a href="javascript:;" class="text-end float-end col-6">View All</a>
@@ -101,16 +101,16 @@
       <div class="col-12">
         <div class="cp-ep-info-box">
           <div class="row">
-            <div class="col-7 cp-name-info">
+            <div class="col-7 cp-name-info pe-0">
               <span>SM</span>
               <p>Sanjay Mehra</p>
             </div>
-            <div class="col-5 cp-payout-info text-end">
+            <div class="col-5 cp-payout-info text-end ps-0">
               <p>₹20,000</p>
               <span>Spot Booking</span>
             </div>
             <div class="col-12"><hr></div>
-            <div class="col-6 cp-info-list">
+            <div class="col-6 cp-info-list pe-0">
               <div class="building-icon">
                 <i class="fa fa-solid fa-building"></i>
               </div>
@@ -145,11 +145,11 @@
       <div class="col-12">
         <div class="cp-ep-info-box">
           <div class="row">
-            <div class="col-7 cp-name-info">
+            <div class="col-7 cp-name-info pe-0">
               <span>SM</span>
               <p>Sanjay Mehra</p>
             </div>
-            <div class="col-5 cp-payout-info text-end">
+            <div class="col-5 cp-payout-info text-end ps-0">
               <p>₹20,000</p>
               <span>Spot Booking</span>
             </div>
@@ -188,11 +188,11 @@
       <div class="col-12">
         <div class="cp-ep-info-box">
           <div class="row">
-            <div class="col-7 cp-name-info">
+            <div class="col-7 cp-name-info pe-0">
               <span>SM</span>
               <p>Sanjay Mehra</p>
             </div>
-            <div class="col-5 cp-payout-info text-end">
+            <div class="col-5 cp-payout-info text-end ps-0">
               <p>₹20,000</p>
               <span>Spot Booking</span>
             </div>
@@ -303,21 +303,21 @@
 
 
 
-<section class="invoice-page">
+<section class="invoice-page py-5 bg-white">
   <div class="container">
     <div class="col-12">
       <h1 class="page-title">Invoice Details</h1>
     </div>
-    <div class="col-12">
+    <div class="col-12 mt-4">
       <div class="accordion" id="accordionExample">
-        <div class="accordion-item">
+        <div class="accordion-item mb-3 border-0 shadow rounded">
           <h2 class="accordion-header" id="headingOne">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#bookingDetailAccordion" aria-expanded="true" aria-controls="bookingDetailAccordion">
+            <button class="accordion-button rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#bookingDetailAccordion" aria-expanded="true" aria-controls="bookingDetailAccordion">
               Booking Details
             </button>
           </h2>
           <div id="bookingDetailAccordion" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-            <div class="accordion-body">
+            <div class="accordion-body pt-1">
               <div class="inner-invoice-details">
                 <label>Project</label>
                 <p>Sukhwani Kingsley</p>
@@ -341,14 +341,15 @@
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item mb-3 border-0 shadow rounded">
           <h2 class="accordion-header" id="headingTwo">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#cpDetailsAccordion" aria-expanded="false" aria-controls="cpDetailsAccordion">
+            <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#cpDetailsAccordion" aria-expanded="false" aria-controls="cpDetailsAccordion">
               Channel Partner Details
             </button>
           </h2>
           <div id="cpDetailsAccordion" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-            <div class="accordion-body">
+            <div class="accordion-body pt-1">
+                <div class="inner-invoice-details">
               <label>Registration Name (Used in payments)</label>
                 <p>Beyondwalls</p>
                 <label>GST Number</label>
@@ -356,16 +357,18 @@
                 <label>Address</label>
                 <p>Sr. No. 9, H.No:1/2, 4th Floor, Above Maruti Suzuki Suman Kirti Cars Pvt. Ltd Near Ramada Plaza, Mahalunge, Pune, Maharashtra 411045</p>
             </div>
+            </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item mb-3 border-0 shadow rounded">
           <h2 class="accordion-header" id="headingThree">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#paymentDetailsAccourdion" aria-expanded="false" aria-controls="paymentDetailsAccourdion">
+            <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#paymentDetailsAccourdion" aria-expanded="false" aria-controls="paymentDetailsAccourdion">
               Payment Details
             </button>
           </h2>
           <div id="paymentDetailsAccourdion" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-            <div class="accordion-body">
+            <div class="accordion-body pt-1">
+                <div class="inner-invoice-details">
                 <label>Total Amount Paid</label>
                 <p>₹5,900</p>
                 <label>Issuing Bank</label>
@@ -387,16 +390,18 @@
                 <label>Paid Date</label>
                 <p>21/04/2022 13:38</p>
             </div>
+            </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item mb-3 border-0 shadow rounded">
           <h2 class="accordion-header" id="headingThree">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#amountAccordion" aria-expanded="false" aria-controls="amountAccordion">
+            <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#amountAccordion" aria-expanded="false" aria-controls="amountAccordion">
               Amount
             </button>
           </h2>
           <div id="amountAccordion" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-            <div class="accordion-body">
+            <div class="accordion-body pt-1">
+                <div class="inner-invoice-details">
                 <label>Brokerage Amount</label>
                 <p>₹5,000</p>
                 <label>GST Amount</label>
@@ -406,21 +411,24 @@
                 <label>Approved Amount</label>
                 <p>₹5,900</p>
             </div>
+            </div>
           </div>
         </div>
 
-        <div class="accordion-item">
+        <div class="accordion-item border-0 shadow rounded">
           <h2 class="accordion-header" id="headingThree">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#docsAccordion" aria-expanded="false" aria-controls="docsAccordion">
+            <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#docsAccordion" aria-expanded="false" aria-controls="docsAccordion">
               Documents
             </button>
           </h2>
           <div id="docsAccordion" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-            <div class="accordion-body">
+            <div class="accordion-body pt-1">
+                <div class="inner-invoice-details">
                 <label>Cheque</label>
                 <p>Cheque Copy.jpg</p>
                 <label>Invoice</label>
                 <p>Invoice Copy.jpg</p>
+                </div>
             </div>
           </div>
         </div>
@@ -429,3 +437,100 @@
     </div>
   </div>
 </section>
+
+
+<div class="modal fade" id="cp-payout-filter-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header p-3">
+          <h5 class="modal-title fw-bold" id="">Filters</h5>
+          <button type="button" class="btn-close fw-bold" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form class="cp-payout-filter-form">
+            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+                <label>Date Range</label>
+                <%= text_field_tag "fltrs[possession]", (params.dig(:fltrs, :possession).present? ? params[:fltrs][:possession] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy', autocomplete: 'off' %>
+            </div>
+            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+                <label>Sort By</label>
+                <%= select_tag "fltrs[micro_market]", options_for_select(Project.nin(micro_market: [nil, '']).distinct(:micro_market), (params[:fltrs].present? ? params[:fltrs][:micro_market] : "")), { prompt: 'Select', class: "form-control selectize" } %>
+            </div>
+            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+                <label>Projects</label>
+                <%= select_tag "fltrs[micro_market]", options_for_select(Project.nin(micro_market: [nil, '']).distinct(:micro_market), (params[:fltrs].present? ? params[:fltrs][:micro_market] : "")), { prompt: 'Select', class: "form-control selectize" } %>
+            </div>
+            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+                <label>Status</label>
+                <div class="col-12 form-check form-check-inline">
+                    <input type="radio" class="form-control form-check-input" id="status-invoiced" name="cp-status">
+                    <label class="form-check-label d-inline-block ms-1" for="status-invoiced">Invoiced</label>
+                </div>
+                <div class="col-12 form-check form-check-inline">
+                    <input type="radio" class="form-control form-check-input" id="status-approved" name="cp-status">
+                    <label class="form-check-label d-inline-block ms-1" for="status-approved">Approved</label>
+                </div>
+                <div class="col-12 form-check form-check-inline">
+                    <input type="radio" class="form-control form-check-input" id="status-waiting-approval" name="cp-status">
+                    <label class="form-check-label d-inline-block ms-1" for="status-waiting-approval">Waiting Approval</label>
+                </div>
+                <div class="col-12 form-check form-check-inline">
+                    <input type="radio" class="form-control form-check-input" id="status-paid" name="cp-status">
+                    <label class="form-check-label d-inline-block ms-1" for="status-paid">Paid</label>
+                </div>
+                <div class="col-12 form-check form-check-inline">
+                    <input type="radio" class="form-control form-check-input" id="status-lost" name="cp-status">
+                    <label class="form-check-label d-inline-block ms-1" for="status-lost">Lost</label>
+                </div>
+            </div>
+            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+                <label>By Incentive types</label>
+                <div class="col-12 form-check form-check-inline">
+                    <input type="checkbox" class="form-control d-inline-block form-check-input" id="incentive-all" name="incentive-all">
+                    <label class="form-check-label d-inline-block ms-2" for="incentive-all">All</label>
+                </div>
+                <div class="col-12 form-check form-check-inline">
+                    <input type="checkbox" class="form-control d-inline-block form-check-input" id="incentive-site-visit" name="incentive-site-visit">
+                    <label class="form-check-label d-inline-block ms-2" for="incentive-site-visit">Site Visits</label>
+                </div>
+                <div class="col-12 form-check form-check-inline">
+                    <input type="checkbox" class="form-control d-inline-block form-check-input" name="incentive-spot-booking" id="incentive-spot-booking">
+                    <label class="form-check-label d-inline-block ms-2" for="incentive-spot-booking">Spot Bookings</label>
+                </div>
+                <div class="col-12 form-check form-check-inline">
+                    <input type="checkbox" class="form-control d-inline-block form-check-input" name="incentive-brokerages" id="incentive-brokerages">
+                    <label class="form-check-label d-inline-block ms-2" for="incentive-brokerages">Brokerages</label>
+                </div>
+                <div class="col-12 form-check form-check-inline">
+                    <input type="checkbox" class="form-control d-inline-block form-check-input" name="incentive-others" id="incentive-others">
+                    <label class="form-check-label d-inline-block ms-2" for="incentive-others">Others</label>
+                </div>
+            </div>
+            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+                <button class="btn btn-secondary rounded-pill btn-md d-inline-block px-4 py-1 me-2">Reset</button>
+                <button class="btn btn-primary rounded-pill btn-md d-inline-block px-4 py-1">Apply</button>
+            </div>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<script>
+    $('.brokerage-tab').click(function(){
+        $('.brokerage-tab-content').fadeIn();
+        $('.cp-menu-list a').removeClass('active');
+        $(this).addClass('active');
+    });
+    $(window).scroll(function(){
+        var scroll = $(window).scrollTop();
+        if (scroll > 10) {
+            $(".sticky-cp-menu").addClass("fixed-header");
+            $('.cp-payout-page').css('padding','90px 0 55px');
+        } else {
+            $(".sticky-cp-menu").removeClass("fixed-header");
+            $('.cp-payout-page').css('padding','30px 0 55px');
+        }
+    });
+</script>
