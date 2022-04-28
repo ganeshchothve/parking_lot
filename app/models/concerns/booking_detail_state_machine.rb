@@ -347,13 +347,14 @@ module BookingDetailStateMachine
     end
 
     def send_notification
+      recipient = self.manager || self.lead.manager
       template = Template::NotificationTemplate.where(name: get_notification_template_status).first
       if template.present? && template.is_active? && user.booking_portal_client.notification_enabled?
         push_notification = PushNotification.new(
           notification_template_id: template.id,
           triggered_by_id: self.id,
           triggered_by_type: self.class.to_s,
-          recipient_id: self.user.id,
+          recipient_id: recipient.id,
           booking_portal_client_id: self.user.booking_portal_client.id
         )
         push_notification.save

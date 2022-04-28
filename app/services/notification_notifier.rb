@@ -61,7 +61,8 @@ module NotificationNotifier
                   contents: {en: notification.content},
                   channel_for_external_user_ids: "push",
                   include_external_user_ids: [notification.recipient_id.to_s],
-                  data: notification.data
+                  data: notification.data,
+                  priority: 10 # high priority for android
                }
       uri = URI.parse("#{ENV_CONFIG[:onesignal][:base_url]}/api/v1/notifications")
       http = Net::HTTP.new(uri.host, uri.port)
