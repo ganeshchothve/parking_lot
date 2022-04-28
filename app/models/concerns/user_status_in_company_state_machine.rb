@@ -14,12 +14,12 @@ module UserStatusInCompanyStateMachine
         transitions from: :inactive, to: :pending_approval, after: :remove_rejection_reason
       end
 
-      event :active, after: [:set_channel_partner, :clear_register_token, :send_notification] do
+      event :active, after: [:set_channel_partner, :clear_register_token, :after_active_event] do
         transitions from: :inactive, to: :active
         transitions from: :pending_approval, to: :active
       end
 
-      event :inactive, after: [:unset_channel_partner, :clear_register_token, :send_notification] do
+      event :inactive, after: [:unset_channel_partner, :clear_register_token, :after_inactive_event] do
         transitions from: :active, to: :inactive
         transitions from: :pending_approval, to: :inactive
       end
@@ -48,6 +48,16 @@ module UserStatusInCompanyStateMachine
 
     def remove_rejection_reason
       self.set(rejection_reason: nil) if self.rejection_reason.present?
+    end
+
+    def after_active_event
+      send_notification
+    end
+
+    def after_inactive_event
+      if aasm(:company).from_state.in?(%i(pending_approval))
+        send_notification
+      end
     end
 
     def send_notification
