@@ -399,6 +399,7 @@ en:
 
       booking_detail:
         name: 'Name'
+        rejection_reason: Rejection Reason
         status: 'Status'
         project_tower: 'Project Tower'
         user: 'User'
@@ -428,10 +429,15 @@ en:
         tentative_agreement_date: Tentative Agreement Date
         agreement_date: Agreement Date
         booked_on: Booked On
+        approval_status: Approval Status
       booking_detail/selldo_status:
         booked_tentative: tentative
         booked_confirmed: confirmed
         cancelled: cancelled
+      booking_detail/approval_status:
+        pending: 'Pending Approval'
+        approved: 'Approved'
+        rejected: 'Rejected'
       booking_detail/status:
         available: 'Available'
         not_available: 'Not Available'
@@ -1156,10 +1162,20 @@ en:
         customer_company_name: 'Company Name'
         configurations: 'Preferences'
         number_of_units: 'Number of Units'
+        loan_required: 'Do you require a loan ?'
+        loan_amount: 'Loan Amount'
+        loan_sanction_days: 'Loan Sanction Days'
         preferred_floors: 'Preferred Floors'
         min_budget: 'Min. Budget (Rs.)'
         max_budget: 'Max. Budget (Rs.)'
         budget: 'Budget (Rs.)'
+      user_kyc/occupation:
+        salaried: Salaried
+        self_employed: Self Employed
+        business_owner: Business Owner
+        retired: Retired
+        home_maker: Home Maker
+        other_company: Other Company
       campaign:
           name: 'Campaign Name'
           description: 'About this Campaign'
@@ -1620,6 +1636,13 @@ en:
           link_name: Pay Remaining Amount
         show:
           disclaimer: Payments need to be for individual units, clubbed payments are not allowed. Please collect a cheque for individual units only.
+      events:
+        approval_status:
+            approve: 'Approve'
+            reject: 'Reject'
+            pending: Submit for Approval
+      reject:
+        link_name: 'Reject Booking'
 
     invoices:
       index:

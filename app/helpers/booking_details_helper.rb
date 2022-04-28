@@ -78,4 +78,8 @@ module BookingDetailsHelper
     end
   end
 
+  def allow_booking_approval_state_change?(booking_detail)
+    policy([current_user_role_group, booking_detail]).move_to_next_approval_state? && policy([current_user_role_group, booking_detail]).editable_field?('approval_event')
+  end
+
 end

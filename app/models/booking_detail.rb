@@ -4,6 +4,7 @@ class BookingDetail
   include ArrayBlankRejectable
   include InsertionStringMethods
   include BookingDetailStateMachine
+  include BookingDetailApprovalStateMachine
   # include SyncDetails
   include Tasks
   include ApplicationHelper
@@ -40,6 +41,7 @@ class BookingDetail
   field :tentative_agreement_date, type: Date
   field :ladder_stage, type: Array
   field :source, type: String
+  field :rejection_reason, type: String
 
   mount_uploader :tds_doc, DocUploader
 
@@ -105,6 +107,13 @@ class BookingDetail
       where(status: {"$in": status})
     else
       where(status: status)
+    end
+  end
+  scope :filter_by_approval_status, ->(approval_status) do
+    if approval_status.is_a?(Array)
+      where(approval_status: {"$in": approval_status})
+    else
+      where(approval_status: approval_status)
     end
   end
   scope :filter_by_statuses, ->(statuses) { where(status: {"$in": statuses}) }
@@ -379,7 +388,7 @@ class BookingDetail
     end
   end
 
-  def incentive_eligible?(category=nil)
+  def tentative_incentive_eligible?(category=nil)
     if category.present?
       case category
       when 'spot_booking'
@@ -400,15 +409,15 @@ class BookingDetail
         false
       end
     else
-      _incentive_eligible?
+      _tentative_incentive_eligible?
     end
   end
 
-  def actual_incentive_eligible?(category=nil)
+  def draft_incentive_eligible?(category=nil)
     if category.present?
       case category
       when 'spot_booking'
-        status.in?(%w(blocked booked_tentative booked_confirmed))
+        (status.in?(%w(blocked booked_tentative booked_confirmed)) && approval_status == "approved")
       when 'brokerage'
         if project.present?
           if project.enable_inventory?
@@ -418,14 +427,14 @@ class BookingDetail
               false
             end
           else
-            booked_confirmed?
+            (booked_confirmed? && approval_status == "approved")
           end
         end
       else
         false
       end
     else
-      _actual_incentive_eligible?
+      _draft_incentive_eligible?
     end
   end
 

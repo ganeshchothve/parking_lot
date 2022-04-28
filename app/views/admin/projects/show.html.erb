@@ -1,7 +1,5 @@
 <% inventory_avl = @project.project_units.count > 0 %>
 <% project_labels = t('mongoid.attributes.project') %>
-<% interested_project = InterestedProject.new(user:current_user, project: @project) %>
-<% interest_access = policy([current_user_role_group, interested_project]).create? %>
 <% interest = current_user.interested_projects.in(status: %w(subscribed approved)).where(project_id: @project.id).presence %>
 <section class="prjt-details-sec">
     <div class="px-3">
@@ -19,7 +17,7 @@
                             <%= link_to_if (launchbook_url = @project.assets.where(document_type: 'sales_presentation').first&.file&.url&.presence), '<i class="fa fa-lock fill-theme me-3"></i>Launchbook'.html_safe, launchbook_url, class: 'prjt-lauchbook', target:'_blank' do |name|
                               ''
                             end%>
-                            <% if interest_access %>
+                            <% if allow_interest_subscription?(@project) %>
                               <div class="prjt-share-save pt-3 pb-2 d-inline ms-3">
                                 <!--<a href="javascript:;" class="share-location me-3"><i class="fa fa-share-alt fill-theme me-2"></i>Share location</a>-->
                                 <a href="javascript:;" class="prjt-save"></a>
@@ -788,10 +786,8 @@
                            <div class="right-box-footer py-3">
                               <p class="mt-2"><%= InterestedProject.in(status: %w(subscribed approved)).where(project_id: @project.id).count %> partners are interested</p>
 
-                                <% if interest_access %>
-                                  <% unless interest %>
-                                    <%= link_to "I am interested!", admin_user_interested_projects_path(current_user, interested_project: {project_id: @project.id, event: 'subscribe'}), method: :post, class: 'btn-primary theme-btn float-end mb-3' %>
-                                  <% end %>
+                                <% if !interest && allow_interest_subscription?(@project) %>
+                                  <%= link_to "I am interested!", admin_user_interested_projects_path(current_user, interested_project: {project_id: @project.id, event: 'subscribe'}), method: :post, class: 'btn-primary theme-btn float-end mb-3' %>
                                 <% end %>
                             </div>
                         </div>

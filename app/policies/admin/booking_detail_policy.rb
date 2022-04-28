@@ -1,7 +1,7 @@
 class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def index?
-    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner].include?(user.role) && enable_actual_inventory?(user)
+    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner dev_sourcing_manager].include?(user.role) && enable_actual_inventory?(user)
     out = false if user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
     out = true if %w[account_manager account_manager_head billing_team cp_admin].include?(user.role)
     out
@@ -53,7 +53,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def show_add_booking_link?
     out = !enable_inventory? && record.try(:user).try(:buyer?) && %w[account_manager channel_partner cp_owner].include?(user.role) && record.lead&.project&.bookings_enabled?
-    out = false if user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
+    out = false if user.role.in?(%w(cp_owner channel_partner)) && !(user.active_channel_partner? && interested_project_present?)
     out
   end
 
@@ -88,16 +88,27 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     %w[account_manager account_manager_head cp_admin].include?(user.role)
   end
 
+  def move_to_next_approval_state?
+    %w[dev_sourcing_manager channel_partner cp_owner].include?(user.role)
+  end
+
+  def reject?
+    user.role?('dev_sourcing_manager') && record.verification_pending?
+  end
+
   def can_move_booked_tentative?
-    record.agreement_date.present? && move_to_next_state? && record.blocked?
+    record.agreement_date.present? && move_to_next_state? && record.blocked? && record.approval_status == "approved"
   end
 
   def can_move_booked_confirmed?
-    (user.role?(:billing_team) || (current_client.launchpad_portal? && user.role.in?(%w(account_manager_head cp_admin)))) && record.booked_tentative?
+    (user.role?(:billing_team) || (current_client.launchpad_portal? && user.role.in?(%w(account_manager_head cp_admin)))) && record.booked_tentative? && record.approval_status == "approved"
   end
 
   def can_move_cancel?
-    record.booked_tentative? && %w(billing_team).include?(user.role)
+    out = false
+    out = true if (record.booked_tentative? || record.blocked?) && %w(billing_team).include?(user.role)
+    out = true if (record.booked_tentative? || record.blocked?) && (record.approval_status == "rejected") && %w(cp_admin).include?(user.role)
+    out
   end
 
   def send_booking_detail_form_notification?
@@ -107,6 +118,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   def edit_booking_without_inventory?
     out = false
     out = true if record.status.in?(%w(blocked booked_tentative)) && user.role.in?(%w(account_manager account_manager_head cp_admin))
+    out = true if record.approval_status.in?(%w(pending rejected)) && record.status.in?(%w(blocked)) && user.role.in?(%w(cp_owner channel_partner))
     # out = true if %w('booked_tentative', 'booked_confirmed') && user.role?('billing_team')
     out
   end
@@ -130,7 +142,13 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def permitted_attributes
     attributes = super
-    attributes += [:project_tower_name, :agreement_price, :channel_partner_id, :project_unit_configuration, :booking_project_unit_name, :booked_on, :project_id, :primary_user_kyc_id, :project_unit_id, :user_id, :creator_id, :manager_id, :account_manager_id, :lead_id, :source, user_kyc_ids: []] if record.new_record? || (user.role?('account_manager_head') && record.status == 'blocked')
+    attributes += [:project_tower_name, :agreement_price, :channel_partner_id, :project_unit_configuration, :booking_project_unit_name, :booked_on, :project_id, :primary_user_kyc_id, :project_unit_id, :user_id, :creator_id, :manager_id, :account_manager_id, :lead_id, :source, user_kyc_ids: []] if record.new_record? || (user.role.in?(%w(cp_owner channel_partner account_manager_head)) && record.status == 'blocked')
+
+    attributes += [:approval_event] if record.approval_status.in?(%w(pending)) && user.role.in?(%w(dev_sourcing_manager)) && current_client.launchpad_portal? && record.blocked?
+
+    attributes += [:approval_event] if record.approval_status.in?(%w(rejected)) && user.role.in?(%w(cp_owner channel_partner)) && current_client.launchpad_portal? && record.blocked?
+
+    attributes += [:rejection_reason] if user.role.in?(%w(dev_sourcing_manager)) && current_client.launchpad_portal?
 
     attributes += [:agreement_date]
     if eligible_users_for_tasks?

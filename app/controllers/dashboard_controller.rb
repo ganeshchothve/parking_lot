@@ -87,7 +87,7 @@ class DashboardController < ApplicationController
   end
 
   def dashboard_landing_page
-    @meetings = Meeting.in(roles: ["channel_partner","cp_owner"]).where(scheduled_on: {"$gte": Time.now.beginning_of_day}).scheduled
+    @meetings = Meeting.in(roles: ["channel_partner","cp_owner"]).where(scheduled_on: {"$gte": Time.now.beginning_of_day}).scheduled.desc(:scheduled_on)
     @announcements = Announcement.where(is_active: true)
   end
 

@@ -1,6 +1,6 @@
-<% if resource.actual_incentive_eligible? && policy([:admin, Invoice.new(project_id: resource.try(:project_id))]).new? %>
+<% if resource.draft_incentive_eligible? && allow_invoice_create?(resource.try(:project_id)) %>
   <%= link_to t('controller.invoices.new.link_name'), new_admin_invoiceable_path(invoiceable_type: resource.class.model_name.i18n_key.to_s, invoiceable_id: resource.id), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
-<% if (resource.actual_incentive_eligible? || resource.incentive_eligible?) && policy([:admin, Invoice ]).index? %>
+<% if (resource.draft_incentive_eligible? || resource.tentative_incentive_eligible?) && policy([:admin, Invoice ]).index? %>
   <%= link_to t('controller.invoices.index.link_name'), admin_invoiceable_index_path(invoiceable_type: resource.class.model_name.i18n_key.to_s, invoiceable_id: resource.id, fltrs: { invoiceable_id: resource.id }), class: 'dropdown-item' %>
 <% end %>

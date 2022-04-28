@@ -67,9 +67,9 @@ module LeadRegisteration
         check_if_lead_added_by_channel_partner(lead) do |cp_lead_activity|
           if lead.save
             # Update selldo lead stage & push Site visits
+            site_visit = lead.site_visits.first
             if selldo_api && selldo_api.base.present?
               update_selldo_lead_stage(lead)
-              site_visit = lead.site_visits.first
               sv_selldo_api, sv_api_log = site_visit.push_in_crm(selldo_api.base) if site_visit.present?
             end
 
@@ -77,14 +77,14 @@ module LeadRegisteration
               if cp_lead_activity.save
                 update_customer_search_to_sitevisit(lead) if @customer_search.present?
 
-                format.json { render json: {lead: lead, success: "Lead created successfully"}, status: :created }
+                format.json { render json: {lead: lead, success: "#{site_visit.present? ? SiteVisit.model_name.human : Lead.model_name.human} created successfully"}, status: :created }
               else
                 format.json { render json: {errors: 'Something went wrong while adding lead. Please contact support'}, status: :unprocessable_entity }
               end
             else
               update_customer_search_to_sitevisit(lead) if @customer_search.present?
 
-              format.json { render json: {lead: lead, success: "Lead created successfully"}, status: :created }
+              format.json { render json: {lead: lead, success: "#{site_visit.present? ? SiteVisit.model_name.human : Lead.model_name.human} created successfully"}, status: :created }
             end
           else
             format.json { render json: {errors: lead.errors.full_messages.uniq}, status: :unprocessable_entity }

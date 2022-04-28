@@ -302,7 +302,7 @@ class User
     scope admin_roles, ->{ where(role: admin_roles )}
   end
 
-  def incentive_eligible?(category=nil)
+  def tentative_incentive_eligible?(category=nil)
     if category.present?
       if category == 'referral'
         referred_by_id.present? && (self.buyer? || self.role.in?(%w(channel_partner cp_owner)))
@@ -310,11 +310,11 @@ class User
         false
       end
     else
-      _incentive_eligible?
+      _tentative_incentive_eligible?
     end
   end
 
-  def actual_incentive_eligible?(category=nil)
+  def draft_incentive_eligible?(category=nil)
     if category.present?
       if category == 'referral'
         referred_by_id.present? && (self.buyer? || self.role.in?(%w(channel_partner cp_owner)))
@@ -322,7 +322,7 @@ class User
         false
       end
     else
-      _actual_incentive_eligible?
+      _draft_incentive_eligible?
     end
   end
 
@@ -759,7 +759,8 @@ class User
         #custom_scope = { "$or": [{ role: 'cp', _id: {"$in": cp_ids} }, { role: 'channel_partner', manager_id: {"$in": cp_ids} }] }
          custom_scope = { role: { '$in': %w(cp channel_partner cp_owner) } }
       elsif user.role?('cp')
-        custom_scope = { role: { '$in': %w(channel_partner cp_owner) }, manager_id: user.id }
+        # custom_scope = { role: { '$in': %w(channel_partner cp_owner) }, manager_id: user.id }
+        custom_scope[:'$or'] = [{_id: user.id}, { role: { '$in': %w(channel_partner cp_owner) }, manager_id: user.id }]
       elsif user.role?('billing_team')
         custom_scope = { role: { '$in': %w(channel_partner cp_owner) } }
       elsif user.role?('admin')

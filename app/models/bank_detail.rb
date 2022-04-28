@@ -10,6 +10,8 @@ class BankDetail
   field :account_holder_name, type: String
   field :account_number, type: String
   field :loan_required, type: Boolean, default: false
+  field :loan_amount, type: Integer
+  field :loan_sanction_days, type: Integer
   field :zip, type: String
 
   belongs_to :bankable, polymorphic: true, optional: true

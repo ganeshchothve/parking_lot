@@ -108,18 +108,10 @@ module DashboardDataProvider
     data = Lead.collection.aggregate([{
             "$match": matcher
           },{
-            "$lookup":
-            {
-              "from": "users",
-              "localField": "manager_id",
-              "foreignField": "_id",
-              "as": "manager"
-            }
-          },{
             "$project":
             {
               "lead_id": "$id",
-              "cp_id": "$manager.manager_id"
+              "cp_id": "$cp_manager_id"
             }
           },{
             "$group":
@@ -130,7 +122,7 @@ module DashboardDataProvider
           }]).to_a
     out = {}
     data.each do |d|
-      out[d["_id"].first] = d["count"]
+      out[d["_id"]] = d["count"]
     end
     out
   end

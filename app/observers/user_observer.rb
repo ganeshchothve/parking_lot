@@ -28,7 +28,9 @@ class UserObserver < Mongoid::Observer
         user.role = "employee_user"
       end
     end
-    if user.role.in?(%w(cp_owner channel_partner)) && ENV_CONFIG[:default_cp_manager_id].present?
+    if user.channel_partner_id.present? && user.channel_partner.manager_id.present? && user.role.in?(%w(cp_owner channel_partner))
+      user.manager_id = user.channel_partner.manager_id
+    elsif ENV_CONFIG[:default_cp_manager_id].present?
       user.manager_id = ENV_CONFIG[:default_cp_manager_id]
     end
   end
@@ -85,7 +87,7 @@ class UserObserver < Mongoid::Observer
       user.update_external_ids({ reference_id: user.lead_id }, crm.id)
     end
     user.calculate_incentive if user.booking_portal_client.incentive_calculation_type?("calculated")
-    user.invoices.where(status: 'tentative').update_all(status: 'draft') if user.actual_incentive_eligible?
+    user.move_invoices_to_draft
   end
 
   def after_update user
