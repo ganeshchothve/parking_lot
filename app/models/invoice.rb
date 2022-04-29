@@ -58,14 +58,39 @@ class Invoice
 
   scope :filter_by_invoice_type, ->(request_type){ where(_type: /#{request_type}/i)}
   scope :filter_by_status, ->(status) { where(status: status) }
-  scope :filter_by_category, ->(category) { where(category: category) }
+  scope :filter_by_category, ->(category) do
+    if category.is_a?(Array)
+      where(category: {"$in": category})
+    else
+      where(category: category)
+    end
+  end
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
+  scope :filter_by_customer_id, ->(customer_id) { where(customer_id: customer_id) }
   scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }
   scope :filter_by_manager_id, ->(manager_id) { where(manager_id: manager_id) }
   scope :filter_by_channel_partner_id, ->(channel_partner_id) { where(channel_partner_id: channel_partner_id) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_invoiceable_id, ->(invoiceable_id) { where(invoiceable_id: invoiceable_id) }
   scope :filter_by_number, ->(number) { where(number: number) }
+  scope :filter_by_categories, ->(categories) { where(category: category) }
+  scope :filter_by_raised_date, ->(date) { start_date, end_date = date.split(' - '); where(raised_date: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day) }
+
+  #this filter use for Payout dashboard
+  scope :filter_by_payout_status, ->(status) do
+    case status
+    when "invoiced"
+      where('$or': [{category: "brokerage", status: {"$in": ["raised"]}}, {category: {"$in": ["spot_booking", "walk_in"]}, status: {"$in": ["draft"]}}])
+    when "approved"
+      where(status: "approved")
+    when "waiting_for_approval"
+      where(status: "draft")
+    when "paid"
+      where(status: "paid")
+    when "lost"
+      where(status: "rejected")
+    end
+  end
 
   accepts_nested_attributes_for :cheque_detail, reject_if: proc { |attrs| attrs.except('creator_id').values.all?(&:blank?) }
   accepts_nested_attributes_for :payment_adjustment, reject_if: proc { |attrs| attrs['absolute_value'].blank? }
@@ -97,6 +122,27 @@ class Invoice
     else
       0
     end
+  end
+
+  def self.available_payout_statuses
+    [
+      { id: 'invoiced', text: 'Invoiced' },
+      { id: 'approved', text: 'Approved' },
+      { id: 'waiting_for_approval', text: 'Waiting for Approval' },
+      { id: 'paid', text: 'Paid' },
+      { id: 'lost', text: 'Lost' }
+    ]
+  end
+
+  def self.available_sort_options
+    [
+      { id: 'created_at.asc', text: 'Created - Oldest First' },
+      { id: 'created_at.desc', text: 'Created - Newest First' },
+      { id: 'raised_date.asc', text: 'Invoiced Date - Oldest First' },
+      { id: 'raised_date.desc', text: 'Invoiced Date- Newest First' },
+      { id: 'net_amount.asc', text: 'Amount - Low to High' },
+      { id: 'net_amount.desc', text: 'Amount- High to Low' }
+    ]
   end
 
   def calculate_net_amount

@@ -7,6 +7,7 @@ class DashboardController < ApplicationController
   include ChannelPartnerLeaderboardConcern
   before_action :authenticate_user!, only: [:index, :documents, :dashboard_landing_page, :channel_partners_leaderboard, :channel_partners_leaderboard_without_layout]
   before_action :set_lead, only: :index, if: proc { current_user.buyer? }
+  around_action :apply_invoice_policy_scope, only: [:payout_dashboard]
 
   layout :set_layout
 
@@ -93,7 +94,7 @@ class DashboardController < ApplicationController
 
   def payout_dashboard
     authorize :dashboard, :payout_dashboard?
-    @invoices = Invoice.where(manager_id: current_user.id)
+    @invoices = Invoice.build_criteria(params)
     @total_earnings = @invoices.where(manager_id: current_user.id).in(status: Invoice::PAYOUT_DASHBOARD_STAGES).sum(:net_amount)
     @invoiced = @invoices.or([{category: "brokerage", status: {"$in": ["raised", "pending_approval", "approved"]}}, {category: {"$in": ["spot_booking", "walk_in"]}, status: {"$in": ["draft","raised", "pending_approval", "approved"]}}]).sum(:net_amount)
     @paid_invoices = @invoices.where(status: "paid").sum(:net_amount)
@@ -111,9 +112,10 @@ class DashboardController < ApplicationController
     end
   end
 
-  def set_payout_filters
-    query = {}
-    query[:category] = {"$in": params.dig(:fltrs, :category)} if params.dig(:fltrs, :category).present?
-    query[:project_ids] = params.dig(:fltrs, :project_id) if params.dig(:fltrs, :project_id).present?
+  def apply_invoice_policy_scope
+    custom_scope = Invoice.where(Invoice.user_based_scope(current_user, params))
+    Invoice.with_scope(policy_scope(custom_scope)) do
+      yield
+    end
   end
 end
