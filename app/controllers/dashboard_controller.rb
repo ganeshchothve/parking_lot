@@ -92,6 +92,7 @@ class DashboardController < ApplicationController
   end
 
   def payout_dashboard
+    authorize :dashboard, :payout_dashboard?
     @invoices = Invoice.where(manager_id: current_user.id)
     @total_earnings = @invoices.where(manager_id: current_user.id).in(status: Invoice::PAYOUT_DASHBOARD_STAGES).sum(:net_amount)
     @invoiced = @invoices.or([{category: "brokerage", status: {"$in": ["raised", "pending_approval", "approved"]}}, {category: {"$in": ["spot_booking", "walk_in"]}, status: {"$in": ["draft","raised", "pending_approval", "approved"]}}]).sum(:net_amount)
