@@ -146,6 +146,7 @@
 				position: absolute;
 				top: 50%;
 				transform: translateY(-50%);
+                text-transform: capitalize;
             }
             span{
                 font-size: 14px;
@@ -977,6 +978,9 @@ section.cp-payout-page {
 			float: left;
 			padding-left: 10px;
 			margin-bottom: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
 		}
 	}
 	.cp-payout-info {
@@ -999,7 +1003,7 @@ section.cp-payout-page {
 .cp-info-list{
 	.building-icon{
 		width: 20px;
-		height: 41px;
+		height: 30px;
 		float: left;
 		svg{
 			width: 10px;
@@ -1017,6 +1021,9 @@ section.cp-payout-page {
 		font-weight: 700;
 		float: left;
 		width: calc(100% - 20px);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
 	}
 	span{
 		color: #817F9B;
@@ -1075,4 +1082,43 @@ section.cp-payout-page {
 			font-weight:500;
 		}
 	}
+}
+#cp-payout-filter-modal{
+    .modal-dialog{
+        width: 100%;
+        margin:0px;
+    }
+}
+.cp-payout-filter-form{
+    div{
+        label{
+            font-size:12px;
+            line-height:16px;
+            color:#192951;
+        }
+        .form-check{
+            label{
+                font-size:16px;
+                line-height:20px;
+                color:#192951;
+                letter-spacing:0.32px;
+                font-weight:600;
+            }
+            .form-check-input{
+                width: 16px;
+                height: 16px;
+                padding:0;
+                &:checked{
+                    background-color: #fff;
+                    border-color: #D62927;
+                }
+                &.form-check-input[type="checkbox"]:checked{
+                    background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23D62927' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e")
+                }
+                &.form-check-input[type="radio"]:checked{
+                    background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23D62927'/%3e%3c/svg%3e")
+                }
+            }
+        }
+    }
 }
