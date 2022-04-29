@@ -93,7 +93,13 @@ class DashboardController < ApplicationController
 
   def payout_dashboard
     @invoices = Invoice.where(manager_id: current_user.id)
-    @total_earnings = @invoices.where(manager_id: current_user.id).in(status: Invoice::INVOICE_REPORT_STAGES).sum(:net_amount)
+    @total_earnings = @invoices.where(manager_id: current_user.id).in(status: Invoice::PAYOUT_DASHBOARD_STAGES).sum(:net_amount)
+    @invoiced = @invoices.or([{category: "brokerage", status: {"$in": ["raised", "pending_approval", "approved"]}}, {category: {"$in": ["spot_booking", "walk_in"]}, status: {"$in": ["draft","raised", "pending_approval", "approved"]}}]).sum(:net_amount)
+    @paid_invoices = @invoices.where(status: "paid").sum(:net_amount)
+    @waiting_for_registration = @invoices.where(category: "brokerage").tentative.sum(:net_amount)
+    @waiting_for_invoicing = @invoices.where(category: "brokerage").draft.sum(:net_amount)
+    cancelled_booking_detail_ids = BookingDetail.cancelled.where(manager_id: current_user.id).pluck(:id)
+    @rejected_invoices = @invoices.rejected.in(invoiceable_id: cancelled_booking_detail_ids).sum(:net_amount)
   end
 
   private

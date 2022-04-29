@@ -9,6 +9,7 @@ class Invoice
 
   DOCUMENT_TYPES = []
   INVOICE_REPORT_STAGES = %w(draft raised pending_approval approved tax_invoice_raised paid)
+  PAYOUT_DASHBOARD_STAGES = %w(draft raised pending_approval approved paid)
   INVOICE_EVENTS = Invoice.aasm.events.map(&:name)
 
   field :amount, type: Float, default: 0.0
@@ -36,6 +37,7 @@ class Invoice
   belongs_to :cp_admin, class_name: 'User', optional: true
   belongs_to :creator, class_name: 'User'
   belongs_to :account_manager, class_name: 'User', optional: true
+  belongs_to :customer, class_name: 'User', optional: true
   has_one :incentive_deduction
   has_many :assets, as: :assetable
   embeds_one :cheque_detail
