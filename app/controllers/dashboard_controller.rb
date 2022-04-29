@@ -112,6 +112,8 @@ class DashboardController < ApplicationController
   end
 
   def set_payout_filters
-
+    query = {}
+    query[:category] = {"$in": params.dig(:fltrs, :category)} if params.dig(:fltrs, :category).present?
+    query[:project_ids] = params.dig(:fltrs, :project_id) if params.dig(:fltrs, :project_id).present?
   end
 end
