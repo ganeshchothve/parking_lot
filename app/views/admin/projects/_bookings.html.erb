@@ -151,7 +151,7 @@
         <% f.object.disable_project.each do |k, v| %>
           <div class="form-check form-check-inline">
             <%= dp_form.check_box k, {class: "form-check-input wd-22", checked: v}, true %>
-            <%= dp_form.label :k, "Disable #{k.titleize}", class: "form-check-label d-inline-block ms-2" %>
+            <%= dp_form.label :k, "Disable #{k.to_s.titleize}", class: "form-check-label d-inline-block ms-2" %>
           </div>
         <% end %>
       <% end %>
