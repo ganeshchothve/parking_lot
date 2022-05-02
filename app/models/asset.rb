@@ -63,9 +63,9 @@ class Asset
     self.remove_file!
     if self.document_type != 'co_branded_asset'
       if Rails.env.staging? || Rails.env.production?
-        RemoveFileFromDatabaseWorker.perform_async(self.id)
+        RemoveCobrandedAssetWorker.perform_async(self.id)
       else
-        RemoveFileFromDatabaseWorker.new.perform(self.id)
+        RemoveCobrandedAssetWorker.new.perform(self.id)
       end
     end
   end
