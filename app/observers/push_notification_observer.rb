@@ -8,7 +8,7 @@ class PushNotificationObserver < Mongoid::Observer
       if notification.notification_template_id.present?
         if notification_template = Template::NotificationTemplate.where(id: notification.notification_template_id).first
           notification.content = notification_template.parsed_content(notification.triggered_by)
-          notification.data = notification_template.set_request_payload(notification.triggered_by)
+          notification.data = notification_template.parsed_data(notification.triggered_by)
           notification.title = notification_template.parsed_title(notification.triggered_by)
           notification.url = URI.join(base_url, notification_template.parsed_url(notification.triggered_by)).to_s
         end

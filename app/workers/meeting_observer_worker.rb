@@ -17,7 +17,6 @@ class MeetingObserverWorker
         if changes.present? && changes.has_key?('participant_ids')
           event_name = changes.dig('participant_ids', 1)&.map(&:to_s)&.include?(user.id.to_s) ? 'Event Subscribed' : 'Event Unsubscribed'
           Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, event_name, payload)
-          Crm::Api::ExecuteWorker.perform_async('put', 'User', user.id, event_name, payload, onesignal_base.id.to_s) if onesignal_base.present?
         end
       end
     end

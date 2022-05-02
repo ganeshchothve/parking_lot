@@ -17,7 +17,7 @@ module Communication
             request.body = request_payload.to_json
             https.use_ssl = true
             response = https.request(request)
-            api_log = ApiLog.new(request_url: request_url, request: [request_payload], resource: user)
+            api_log = ApiLog.new(request_url: request_url, request: [request_payload], resource: user, response_type: "Hash")
             case response
             when Net::HTTPSuccess
               api_log.status = "Success"
@@ -26,10 +26,10 @@ module Communication
               api_log.status = "Error"
               api_log.response = [(JSON.parse(response.body) rescue {})]
             end
-            api_log.save(validate: false)
+            api_log.save
           end
         rescue StandardError => e
-          Rails.logger.error "update_onesignal_external_user_id user_id - #{user.id.to_s} #{e.message}"
+          Rails.logger.error "[ERR] update_onesignal_external_user_id user_id - #{user.id.to_s} #{e.message}"
         end
       end
     end

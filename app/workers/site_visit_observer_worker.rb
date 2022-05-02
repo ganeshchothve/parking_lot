@@ -24,25 +24,20 @@ class SiteVisitObserverWorker
           if action == 'create'
 
             Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, 'New Walkin Scheduled', payload)
-            Crm::Api::ExecuteWorker.perform_async('put', 'User', user.id, 'New Walkin Scheduled', payload, onesignal_base.id.to_s) if onesignal_base.present?
 
           elsif action == 'update'
 
             if sv.status == 'scheduled' && changes.keys.include?('scheduled_on') && changes.dig('scheduled_on', 1).present?
               Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, 'Walkin Rescheduled', payload)
-              Crm::Api::ExecuteWorker.perform_async('put', 'User', user.id, 'Walkin Rescheduled', payload, onesignal_base.id.to_s) if onesignal_base.present?
             end
             if changes.keys.include?('status') && changes.dig('status', 1) == 'conducted'
               Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, 'Walkin Conducted', payload)
-              Crm::Api::ExecuteWorker.perform_async('put', 'User', user.id, 'Walkin Conducted', payload, onesignal_base.id.to_s) if onesignal_base.present?
             end
             if changes.keys.include?('approval_status') && changes.dig('approval_status', 1) == 'approved'
               Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, 'Walkin Approved', payload)
-              Crm::Api::ExecuteWorker.perform_async('put', 'User', user.id, 'Walkin Approved', payload, onesignal_base.id.to_s) if onesignal_base.present?
             end
             if changes.keys.include?('approval_status') && changes.dig('approval_status', 1) == 'rejected'
               Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, 'Walkin Rejected', payload)
-              Crm::Api::ExecuteWorker.perform_async('put', 'User', user.id, 'Walkin Rejected', payload, onesignal_base.id.to_s) if onesignal_base.present?
             end
 
           end

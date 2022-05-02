@@ -10,6 +10,7 @@ class Template::NotificationTemplate < Template
   field :subject_class, type: String
   field :title, type: String
   field :url, type: String
+  field :data, type: String
   
   validates :name, :subject_class, :title, :url, presence: true
   # validate :url_format

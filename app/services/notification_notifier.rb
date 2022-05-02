@@ -68,7 +68,7 @@ module NotificationNotifier
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
       request = Net::HTTP::Post.new(uri.path, 'Content-Type' => 'application/json;charset=utf-8', 'Authorization' => "#{ENV_CONFIG[:onesignal][:api_key]}")
-      request.body = params.as_json.to_json
+      request.body = params.to_json
       response = http.request(request)
       response
     end

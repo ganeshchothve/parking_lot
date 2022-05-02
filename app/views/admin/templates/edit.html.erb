@@ -62,10 +62,12 @@
           <%= f.text_area :content, rows: 15, class: 'form-control' %>
         </div>
 
-        <div>
-          <%= f.label :data %>
-          <%= f.text_area :data, rows: 10, autofocus: true, class: "form-control h-auto", disabled: !policy([:admin, @template]).editable_field?("data") %>
-        </div>
+        <% if @template.is_a?(::Template::NotificationTemplate) %>
+          <div>
+            <%= f.label :data %>
+            <%= f.text_area :data, rows: 10, autofocus: true, class: "form-control h-auto", disabled: !policy([:admin, @template]).editable_field?("data") %>
+          </div>
+        <% end %>
 
       </div>
       <div class="modal-footer text-end">
