@@ -23,7 +23,7 @@ class GenerateCoBrandingTemplatesWorker
           pdf_content = Template::CoBrandingTemplate.where(name: user_asset.document_type ).first.parsed_content(user)
 
           pdf = WickedPdf.new.pdf_from_string(pdf_content, options)
-          File.open("#{Rails.root}/tmp/#{user_asset}-#{user.id}.pdf", "wb") do |file|
+          File.open("#{Rails.root}/tmp/#{user_asset.document_type}-#{user.id}.pdf", "wb") do |file|
             file << pdf
             user_asset.file = file
           end
