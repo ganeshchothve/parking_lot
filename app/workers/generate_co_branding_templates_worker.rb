@@ -28,7 +28,7 @@ class GenerateCoBrandingTemplatesWorker
           end
           user_asset.save
         else
-          asset = user.assets.build(document_type: cbt, assetable: user, assetable_type: user.class.to_s)
+          asset = user.assets.build(document_type: cbt, assetable: user)
           pdf_content = Template::CoBrandingTemplate.where(name: cbt).first.parsed_content(user)
           pdf = WickedPdf.new.pdf_from_string(pdf_content)
           File.open("#{Rails.root}/tmp/#{cbt}-#{user.id}.pdf", "wb") do |file|
