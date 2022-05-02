@@ -1,0 +1,69 @@
+<div class="modal fade" id="cp-payout-filter-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header p-3">
+        <h5 class="modal-title fw-bold" id="">Filters</h5>
+        <button type="button" class="btn-close fw-bold" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <%= form_tag payout_dashboard_path, method: "get", remote: true, id: "payout_dashboard_filters" do %>
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+              <label>Date Range</label>
+              <%= text_field_tag "fltrs[raised_date]", (params[:fltrs].present? ? params[:fltrs][:raised_date] : ""), class: "daterangefilter form-control", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
+          </div>
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+              <label>Sort By</label>
+              <%= select_tag "fltrs[sort]", options_for_select(Receipt.available_sort_options.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:sort] : Receipt.available_sort_options.first[:id])), {prompt: "Select", class: "selectize"} %>
+          </div>
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+              <label>Projects</label>
+              <%= select_tag :project_ids, options_for_select(Project.all.map { |p| [p.ds_name, p.id] }, (params[:project_ids].present? ? params[:project_ids] : "")), {prompt: "Select", class: "selectize", multiple: true} %>
+          </div>
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+              <label>Status</label>
+              <% Invoice.available_payout_statuses.each do |payout_status| %>
+                <div class="col-12 form-check form-check-inline">
+                    <%= radio_button_tag 'fltrs[payout_status]', payout_status[:id], false, class: "form-check-input" %>
+                    <label class="form-check-label d-inline-block ms-1" for="status-invoiced"><%= payout_status[:text] %></label>
+                </div>
+              <% end %>
+          </div>
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+              <label>By Incentive types</label>
+              <div class="col-12 form-check form-check-inline">
+                  <input type="checkbox" class="d-inline-block form-check-input" id="incentive-all" name="incentive-all">
+                  <label class="form-check-label d-inline-block ms-2" for="incentive-all">All</label>
+              </div>
+              <div class="col-12 form-check form-check-inline">
+                  <input type="checkbox" class="d-inline-block form-check-input" id="incentive-site-visit" name="incentive-site-visit">
+                  <label class="form-check-label d-inline-block ms-2" for="incentive-site-visit">Site Visits</label>
+              </div>
+              <div class="col-12 form-check form-check-inline">
+                  <input type="checkbox" class="d-inline-block form-check-input" name="incentive-spot-booking" id="incentive-spot-booking">
+                  <label class="form-check-label d-inline-block ms-2" for="incentive-spot-booking">Spot Bookings</label>
+              </div>
+              <div class="col-12 form-check form-check-inline">
+                  <input type="checkbox" class="d-inline-block form-check-input" name="incentive-brokerages" id="incentive-brokerages">
+                  <label class="form-check-label d-inline-block ms-2" for="incentive-brokerages">Brokerages</label>
+              </div>
+              <div class="col-12 form-check form-check-inline">
+                  <input type="checkbox" class="d-inline-block form-check-input" name="incentive-others" id="incentive-others">
+                  <label class="form-check-label d-inline-block ms-2" for="incentive-others">Others</label>
+              </div>
+          </div>
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+              <div class="filter-footer modal-footer text-end">
+                <button type="button" class="btn btn-secondary rounded-pill btn-md d-inline-block px-4 py-1 me-2">Cancel</button>
+                <%= submit_tag :Apply, class: "btn btn-primary rounded-pill btn-md d-inline-block px-4 py-1" %>
+              </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#payout_dashboard_filters"));
+  });
+<% end %>

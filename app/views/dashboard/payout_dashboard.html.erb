@@ -15,19 +15,16 @@
       <div class="col-12">
         <ul class="cp-menu-list">
           <li>
-            <a href="javascript:;" class="active">All</a>
+            <%= link_to "All", payout_dashboard_path, class: "#{params.dig(:fltrs, :category).blank? ? 'active' : ''}" %>
           </li>
           <li>
-            <a href="javascript:;">Site Visits</a>
+            <%= link_to "Site Visits", payout_dashboard_path({fltrs: {category: "walk_in"}}), class: "#{params.dig(:fltrs, :category) == "walk_in" ? 'active' : ''}" %>
           </li>
           <li>
-            <a href="javascript:;">Spot Bookings</a>
+            <%= link_to "Spot Bookings", payout_dashboard_path({fltrs: {category: "spot_booking"}}), class: "#{params.dig(:fltrs, :category) == "spot_booking" ? 'active' : ''}" %>
           </li>
           <li>
-            <a href="javascript:;" class="brokerage-tab">Brokerages</a>
-          </li>
-          <li>
-            <a href="javascript:;">Others</a>
+            <%= link_to "Brokerages", payout_dashboard_path({fltrs: {category: "brokerage"}}), class: "#{params.dig(:fltrs, :category) == "brokerage" ? 'active' : ''}" %>
           </li>
         </ul>
       </div>
@@ -38,200 +35,202 @@
     <div class="row px-3">
       <div class="col-12">
         <h2 class="total-earn-txt">TOTAL EARNINGS</h2>
-        <h3 class="total-earn-amount mb-4">₹5,00,000</h3>
+        <h3 class="total-earn-amount mb-4"><%= number_to_indian_currency(@total_earnings) rescue "-" %></h3>
       </div>
       <div class="col-6 pe-1">
         <div class="earn-desc">
           <label>INVOICED</label>
-          <p>₹2,50,000</p>
+          <p><%= number_to_indian_currency(@invoiced) rescue "-" %></p>
           <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#invoiced-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
         </div>
       </div>
       <div class="col-6 ps-1">
         <div class="earn-desc">
           <label>PAID</label>
-          <p>₹2,50,000</p>
+          <p><%= number_to_indian_currency(@paid_invoices) rescue "-" %></p>
           <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#paid-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
         </div>
       </div>
     </div>
   </div>
 </section>
-<section class="earning-potential">
-  <div class="container">
-    <div class="row">
-        <div class="brokerage-tab-content">
-            <div class="col-12">
-                <h2 class="ep-title">Earning Potential</h2>
-            </div>
+<% if params.dig(:fltrs, :category) == "brokerage" %>
+  <section class="earning-potential">
+    <div class="container">
+      <div class="row">
+          <div>
+              <div class="col-12">
+                  <h2 class="ep-title">Earning Potential</h2>
+              </div>
 
-            <div class="col-12">
-                <ul class="earning-potential-list mt-3">
-                <li>
-                    <div class="earn-desc pending-approval bg-white">
-                    <label>WAITING APPROVAL</label>
-                    <p>₹20,000</p>
-                    <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#waiting-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
-                    </div>
-                </li>
-                <li>
-                    <div class="earn-desc approved bg-success">
-                    <label>APPROVED</label>
-                    <p>₹20,000</p>
-                    <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#approved-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
-                    </div>
-                </li>
-                <li>
-                    <div class="earn-desc waiting-approval bg-danger">
-                    <label>LOST</label>
-                    <p>₹20,000</p>
-                    <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#lost-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
-                    </div>
-                </li>
-                </ul>
-            </div>
+              <div class="col-12">
+                  <ul class="earning-potential-list mt-3">
+                  <li>
+                      <div class="earn-desc pending-approval bg-white">
+                      <label>WAITING APPROVAL</label>
+                      <p><%= number_to_indian_currency(@waiting_for_approval) rescue "-" %></p>
+                      <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#waiting-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
+                      </div>
+                  </li>
+                  <li>
+                      <div class="earn-desc approved bg-success">
+                      <label>APPROVED</label>
+                      <p><%= number_to_indian_currency(@approved) rescue "-" %></p>
+                      <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#approved-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
+                      </div>
+                  </li>
+                  <li>
+                      <div class="earn-desc waiting-approval bg-danger">
+                      <label>LOST</label>
+                      <p><%= number_to_indian_currency(@rejected_invoices) rescue "-" %></p>
+                      <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#lost-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
+                      </div>
+                  </li>
+                  </ul>
+              </div>
 
-            <div class="col-12"><hr></div>
+              <div class="col-12"><hr></div>
+          </div>
+        <div class="col-12">
+          <h2 class="ep-title float-start col-6">Transactions</h2>
+          <a href="javascript:;" class="text-end float-end col-6">View All</a>
         </div>
-      <div class="col-12">
-        <h2 class="ep-title float-start col-6">Transactions</h2>
-        <a href="javascript:;" class="text-end float-end col-6">View All</a>
-      </div>
-      
-      <div class="col-12">
-        <div class="cp-ep-info-box">
-          <div class="row">
-            <div class="col-7 cp-name-info pe-0">
-              <span>SM</span>
-              <p>Sanjay Mehra</p>
-            </div>
-            <div class="col-5 cp-payout-info text-end ps-0">
-              <p>₹20,000</p>
-              <span>Spot Booking</span>
-            </div>
-            <div class="col-12"><hr></div>
-            <div class="col-6 cp-info-list pe-0">
-              <div class="building-icon">
-                <i class="fa fa-solid fa-building"></i>
+        
+        <div class="col-12">
+          <div class="cp-ep-info-box">
+            <div class="row">
+              <div class="col-7 cp-name-info pe-0">
+                <span>SM</span>
+                <p>Sanjay Mehra</p>
               </div>
-              <span>Project:</span>
-              <p>Sukhwani Kingsley</p>
-            </div>
-            <div class="col-6 cp-info-list">
-              <div class="building-icon">
-                <i class="fa fa-solid fa-building"></i>
+              <div class="col-5 cp-payout-info text-end ps-0">
+                <p>₹20,000</p>
+                <span>Spot Booking</span>
               </div>
-              <span>Invoiced On:</span>
-              <p>20 Apr 2022</p>
-            </div>
-            <div class="col-6 cp-info-list">
-              <div class="building-icon">
-                <i class="fa fa-solid fa-building"></i>
+              <div class="col-12"><hr></div>
+              <div class="col-6 cp-info-list pe-0">
+                <div class="building-icon">
+                  <i class="fa fa-solid fa-building"></i>
+                </div>
+                <span>Project:</span>
+                <p>Sukhwani Kingsley</p>
               </div>
-              <span>Unit:</span>
-              <p class="mb-0">A-103</p>
-            </div>
-            <div class="col-6 cp-info-list">
-              <div class="building-icon">
-                <i class="fa fa-solid fa-check"></i>
+              <div class="col-6 cp-info-list">
+                <div class="building-icon">
+                  <i class="fa fa-solid fa-building"></i>
+                </div>
+                <span>Invoiced On:</span>
+                <p>20 Apr 2022</p>
               </div>
-              <span>Status:</span>
-              <p class="mb-0">Waiting Approval</p>
+              <div class="col-6 cp-info-list">
+                <div class="building-icon">
+                  <i class="fa fa-solid fa-building"></i>
+                </div>
+                <span>Unit:</span>
+                <p class="mb-0">A-103</p>
+              </div>
+              <div class="col-6 cp-info-list">
+                <div class="building-icon">
+                  <i class="fa fa-solid fa-check"></i>
+                </div>
+                <span>Status:</span>
+                <p class="mb-0">Waiting Approval</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="col-12">
-        <div class="cp-ep-info-box">
-          <div class="row">
-            <div class="col-7 cp-name-info pe-0">
-              <span>SM</span>
-              <p>Sanjay Mehra</p>
-            </div>
-            <div class="col-5 cp-payout-info text-end ps-0">
-              <p>₹20,000</p>
-              <span>Spot Booking</span>
-            </div>
-            <div class="col-12"><hr></div>
-            <div class="col-6 cp-info-list">
-              <div class="building-icon">
-                <i class="fa fa-solid fa-building"></i>
+        <div class="col-12">
+          <div class="cp-ep-info-box">
+            <div class="row">
+              <div class="col-7 cp-name-info pe-0">
+                <span>SM</span>
+                <p>Sanjay Mehra</p>
               </div>
-              <span>Project:</span>
-              <p>Sukhwani Kingsley</p>
-            </div>
-            <div class="col-6 cp-info-list">
-              <div class="building-icon">
-                <i class="fa fa-solid fa-building"></i>
+              <div class="col-5 cp-payout-info text-end ps-0">
+                <p>₹20,000</p>
+                <span>Spot Booking</span>
               </div>
-              <span>Invoiced On:</span>
-              <p>20 Apr 2022</p>
-            </div>
-            <div class="col-6 cp-info-list">
-              <div class="building-icon">
-                <i class="fa fa-solid fa-building"></i>
+              <div class="col-12"><hr></div>
+              <div class="col-6 cp-info-list">
+                <div class="building-icon">
+                  <i class="fa fa-solid fa-building"></i>
+                </div>
+                <span>Project:</span>
+                <p>Sukhwani Kingsley</p>
               </div>
-              <span>Unit:</span>
-              <p class="mb-0">A-103</p>
-            </div>
-            <div class="col-6 cp-info-list">
-              <div class="building-icon">
-                <i class="fa fa-solid fa-check"></i>
+              <div class="col-6 cp-info-list">
+                <div class="building-icon">
+                  <i class="fa fa-solid fa-building"></i>
+                </div>
+                <span>Invoiced On:</span>
+                <p>20 Apr 2022</p>
               </div>
-              <span>Status:</span>
-              <p class="mb-0">Waiting Approval</p>
+              <div class="col-6 cp-info-list">
+                <div class="building-icon">
+                  <i class="fa fa-solid fa-building"></i>
+                </div>
+                <span>Unit:</span>
+                <p class="mb-0">A-103</p>
+              </div>
+              <div class="col-6 cp-info-list">
+                <div class="building-icon">
+                  <i class="fa fa-solid fa-check"></i>
+                </div>
+                <span>Status:</span>
+                <p class="mb-0">Waiting Approval</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-12">
-        <div class="cp-ep-info-box">
-          <div class="row">
-            <div class="col-7 cp-name-info pe-0">
-              <span>SM</span>
-              <p>Sanjay Mehra</p>
-            </div>
-            <div class="col-5 cp-payout-info text-end ps-0">
-              <p>₹20,000</p>
-              <span>Spot Booking</span>
-            </div>
-            <div class="col-12"><hr></div>
-            <div class="col-6 cp-info-list">
-              <div class="building-icon">
-                <i class="fa fa-solid fa-building"></i>
+        <div class="col-12">
+          <div class="cp-ep-info-box">
+            <div class="row">
+              <div class="col-7 cp-name-info pe-0">
+                <span>SM</span>
+                <p>Sanjay Mehra</p>
               </div>
-              <span>Project:</span>
-              <p>Sukhwani Kingsley</p>
-            </div>
-            <div class="col-6 cp-info-list">
-              <div class="building-icon">
-                <i class="fa fa-solid fa-building"></i>
+              <div class="col-5 cp-payout-info text-end ps-0">
+                <p>₹20,000</p>
+                <span>Spot Booking</span>
               </div>
-              <span>Invoiced On:</span>
-              <p>20 Apr 2022</p>
-            </div>
-            <div class="col-6 cp-info-list">
-              <div class="building-icon">
-                <i class="fa fa-solid fa-building"></i>
+              <div class="col-12"><hr></div>
+              <div class="col-6 cp-info-list">
+                <div class="building-icon">
+                  <i class="fa fa-solid fa-building"></i>
+                </div>
+                <span>Project:</span>
+                <p>Sukhwani Kingsley</p>
               </div>
-              <span>Unit:</span>
-              <p class="mb-0">A-103</p>
-            </div>
-            <div class="col-6 cp-info-list">
-              <div class="building-icon">
-                <i class="fa fa-solid fa-check"></i>
+              <div class="col-6 cp-info-list">
+                <div class="building-icon">
+                  <i class="fa fa-solid fa-building"></i>
+                </div>
+                <span>Invoiced On:</span>
+                <p>20 Apr 2022</p>
               </div>
-              <span>Status:</span>
-              <p class="mb-0">Waiting Approval</p>
+              <div class="col-6 cp-info-list">
+                <div class="building-icon">
+                  <i class="fa fa-solid fa-building"></i>
+                </div>
+                <span>Unit:</span>
+                <p class="mb-0">A-103</p>
+              </div>
+              <div class="col-6 cp-info-list">
+                <div class="building-icon">
+                  <i class="fa fa-solid fa-check"></i>
+                </div>
+                <span>Status:</span>
+                <p class="mb-0">Waiting Approval</p>
+              </div>
             </div>
           </div>
         </div>
+        
       </div>
-      
     </div>
-  </div>
-</section>
+  </section>
+<% end %>
 
 <!-- Modal -->
 <div class="modal fade small-modal" id="invoiced-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -439,90 +438,15 @@
 </section>
 
 
-<div class="modal fade" id="cp-payout-filter-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header p-3">
-          <h5 class="modal-title fw-bold" id="">Filters</h5>
-          <button type="button" class="btn-close fw-bold" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <form class="cp-payout-filter-form">
-            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-                <label>Date Range</label>
-                <%= text_field_tag "fltrs[possession]", (params.dig(:fltrs, :possession).present? ? params[:fltrs][:possession] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy', autocomplete: 'off' %>
-            </div>
-            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-                <label>Sort By</label>
-                <%= select_tag "fltrs[micro_market]", options_for_select(Project.nin(micro_market: [nil, '']).distinct(:micro_market), (params[:fltrs].present? ? params[:fltrs][:micro_market] : "")), { prompt: 'Select', class: "form-control selectize" } %>
-            </div>
-            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-                <label>Projects</label>
-                <%= select_tag "fltrs[micro_market]", options_for_select(Project.nin(micro_market: [nil, '']).distinct(:micro_market), (params[:fltrs].present? ? params[:fltrs][:micro_market] : "")), { prompt: 'Select', class: "form-control selectize" } %>
-            </div>
-            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-                <label>Status</label>
-                <div class="col-12 form-check form-check-inline">
-                    <input type="radio" class="form-control form-check-input" id="status-invoiced" name="cp-status">
-                    <label class="form-check-label d-inline-block ms-1" for="status-invoiced">Invoiced</label>
-                </div>
-                <div class="col-12 form-check form-check-inline">
-                    <input type="radio" class="form-control form-check-input" id="status-approved" name="cp-status">
-                    <label class="form-check-label d-inline-block ms-1" for="status-approved">Approved</label>
-                </div>
-                <div class="col-12 form-check form-check-inline">
-                    <input type="radio" class="form-control form-check-input" id="status-waiting-approval" name="cp-status">
-                    <label class="form-check-label d-inline-block ms-1" for="status-waiting-approval">Waiting Approval</label>
-                </div>
-                <div class="col-12 form-check form-check-inline">
-                    <input type="radio" class="form-control form-check-input" id="status-paid" name="cp-status">
-                    <label class="form-check-label d-inline-block ms-1" for="status-paid">Paid</label>
-                </div>
-                <div class="col-12 form-check form-check-inline">
-                    <input type="radio" class="form-control form-check-input" id="status-lost" name="cp-status">
-                    <label class="form-check-label d-inline-block ms-1" for="status-lost">Lost</label>
-                </div>
-            </div>
-            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-                <label>By Incentive types</label>
-                <div class="col-12 form-check form-check-inline">
-                    <input type="checkbox" class="form-control d-inline-block form-check-input" id="incentive-all" name="incentive-all">
-                    <label class="form-check-label d-inline-block ms-2" for="incentive-all">All</label>
-                </div>
-                <div class="col-12 form-check form-check-inline">
-                    <input type="checkbox" class="form-control d-inline-block form-check-input" id="incentive-site-visit" name="incentive-site-visit">
-                    <label class="form-check-label d-inline-block ms-2" for="incentive-site-visit">Site Visits</label>
-                </div>
-                <div class="col-12 form-check form-check-inline">
-                    <input type="checkbox" class="form-control d-inline-block form-check-input" name="incentive-spot-booking" id="incentive-spot-booking">
-                    <label class="form-check-label d-inline-block ms-2" for="incentive-spot-booking">Spot Bookings</label>
-                </div>
-                <div class="col-12 form-check form-check-inline">
-                    <input type="checkbox" class="form-control d-inline-block form-check-input" name="incentive-brokerages" id="incentive-brokerages">
-                    <label class="form-check-label d-inline-block ms-2" for="incentive-brokerages">Brokerages</label>
-                </div>
-                <div class="col-12 form-check form-check-inline">
-                    <input type="checkbox" class="form-control d-inline-block form-check-input" name="incentive-others" id="incentive-others">
-                    <label class="form-check-label d-inline-block ms-2" for="incentive-others">Others</label>
-                </div>
-            </div>
-            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-                <button class="btn btn-secondary rounded-pill btn-md d-inline-block px-4 py-1 me-2">Reset</button>
-                <button class="btn btn-primary rounded-pill btn-md d-inline-block px-4 py-1">Apply</button>
-            </div>
-            </form>
-        </div>
-      </div>
-    </div>
-  </div>
+<%= render "dashboard/payout_dashboard/filters" %>
 
 
 <script>
-    $('.brokerage-tab').click(function(){
-        $('.brokerage-tab-content').fadeIn();
-        $('.cp-menu-list a').removeClass('active');
-        $(this).addClass('active');
-    });
+    // $('.brokerage-tab').click(function(){
+    //     $('.brokerage-tab-content').fadeIn();
+    //     $('.cp-menu-list a').removeClass('active');
+    //     $(this).addClass('active');
+    // });
     $(window).scroll(function(){
         var scroll = $(window).scrollTop();
         if (scroll > 10) {

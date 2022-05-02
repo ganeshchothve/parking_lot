@@ -98,9 +98,14 @@ class DashboardController < ApplicationController
     @total_earnings = @invoices.where(manager_id: current_user.id).in(status: Invoice::PAYOUT_DASHBOARD_STAGES).sum(:net_amount)
     @invoiced = @invoices.or([{category: "brokerage", status: {"$in": ["raised", "pending_approval", "approved"]}}, {category: {"$in": ["spot_booking", "walk_in"]}, status: {"$in": ["draft","raised", "pending_approval", "approved"]}}]).sum(:net_amount)
     @paid_invoices = @invoices.where(status: "paid").sum(:net_amount)
-    @waiting_for_registration = @invoices.where(category: "brokerage").tentative.sum(:net_amount)
-    @waiting_for_invoicing = @invoices.where(category: "brokerage").draft.sum(:net_amount)
-    cancelled_booking_detail_ids = BookingDetail.cancelled.where(manager_id: current_user.id).pluck(:id)
+    @approved = @invoices.where(status: "approved").sum(:net_amount)
+    @waiting_for_registration = @invoices.tentative.where(category: "brokerage").sum(:net_amount)
+    @waiting_for_approval = @invoices.draft.where(category: "brokerage").sum(:net_amount)
+    if current_user.role?(:cp_owner)
+      cancelled_booking_detail_ids = BookingDetail.cancelled.where(channel_partner_id: current_user.channel_partner_id).pluck(:id)
+    else
+      cancelled_booking_detail_ids = BookingDetail.cancelled.where(manager_id: current_user.id, channel_partner_id: current_user.channel_partner_id).pluck(:id)
+    end
     @rejected_invoices = @invoices.rejected.in(invoiceable_id: cancelled_booking_detail_ids).sum(:net_amount)
   end
 
