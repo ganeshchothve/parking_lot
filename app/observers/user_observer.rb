@@ -88,6 +88,14 @@ class UserObserver < Mongoid::Observer
     end
     user.calculate_incentive if user.booking_portal_client.incentive_calculation_type?("calculated")
     user.move_invoices_to_draft
+
+    if user.active? && user.role.in?(%w(cp_owner channel_partner)) && (user.changes.keys & %w(first_name last_name email phone))
+      if Rails.env.staging? || Rails.env.production?
+        GenerateCoBrandingTemplatesWorker.perform_in(60.seconds, user.id.to_s)
+      else
+        GenerateCoBrandingTemplatesWorker.new.perform(user.id)
+      end
+    end
   end
 
   def after_update user
