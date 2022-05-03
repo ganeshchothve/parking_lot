@@ -54,10 +54,10 @@
     </div>
   </div>
 </section>
-<% if params.dig(:fltrs, :category) == "brokerage" %>
   <section class="earning-potential">
     <div class="container">
       <div class="row">
+        <% if params.dig(:fltrs, :category) == "brokerage" %>
           <div>
               <div class="col-12">
                   <h2 class="ep-title">Earning Potential</h2>
@@ -91,6 +91,7 @@
 
               <div class="col-12"><hr></div>
           </div>
+        <% end %>
         <div class="col-12">
           <h2 class="ep-title float-start col-6">Transactions</h2>
           <a href="javascript:;" class="text-end float-end col-6">View All</a>
@@ -230,7 +231,6 @@
       </div>
     </div>
   </section>
-<% end %>
 
 <!-- Modal -->
 <div class="modal fade small-modal" id="invoiced-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
