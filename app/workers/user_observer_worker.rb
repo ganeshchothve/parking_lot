@@ -91,7 +91,7 @@ class UserObserverWorker
               Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, nil, changes, interakt_base.id.to_s)
             end
           end
-s
+
         end # role check
       end # action check
     end # user present
