@@ -130,7 +130,7 @@ class ChannelPartnerObserver < Mongoid::Observer
   end
 
   def after_save channel_partner
-    if (channel_partner.changes.keys & %w(company_name rera_id pan_number))
+    if (channel_partner.changes.keys & %w(company_name rera_id pan_number address))
       cp_users = channel_partner.users
       cp_users.each do |cp_user|
         if Rails.env.staging? || Rails.env.production?
