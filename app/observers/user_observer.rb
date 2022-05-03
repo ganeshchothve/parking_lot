@@ -91,7 +91,7 @@ class UserObserver < Mongoid::Observer
 
     if user.active? && user.role.in?(%w(cp_owner channel_partner)) && (user.changes.keys & %w(first_name last_name email phone address))
       if Rails.env.staging? || Rails.env.production?
-        GenerateCoBrandingTemplatesWorker.perform_async(user.id.to_s)
+        GenerateCoBrandingTemplatesWorker.perform_in(60.seconds, user.id.to_s)
       else
         GenerateCoBrandingTemplatesWorker.new.perform(user.id)
       end

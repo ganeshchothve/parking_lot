@@ -134,7 +134,7 @@ class ChannelPartnerObserver < Mongoid::Observer
       cp_users = channel_partner.users
       cp_users.each do |cp_user|
         if Rails.env.staging? || Rails.env.production?
-          GenerateCoBrandingTemplatesWorker.perform_async(cp_user.id.to_s)
+          GenerateCoBrandingTemplatesWorker.perform_in(60.seconds, cp_user.id.to_s)
         else
           GenerateCoBrandingTemplatesWorker.new.perform(cp_user.id.to_s)
         end
