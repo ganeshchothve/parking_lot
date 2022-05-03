@@ -1,0 +1,134 @@
+<section class="invoice-page py-5 bg-white">
+  <div class="container">
+    <div class="col-12">
+      <h1 class="page-title">Invoice Details</h1>
+    </div>
+    <div class="col-12 mt-4">
+      <div class="accordion" id="accordionExample">
+        <div class="accordion-item mb-3 border-0 shadow rounded">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#bookingDetailAccordion" aria-expanded="true" aria-controls="bookingDetailAccordion">
+              Booking Details
+            </button>
+          </h2>
+          <div id="bookingDetailAccordion" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            <div class="accordion-body pt-1">
+              <div class="inner-invoice-details">
+                <label>Project</label>
+                <p><%= (invoice.try(:project).try(:name) || "-") %></p>
+                <label>Booking Details</label>
+                <p><%= (invoice.try(:invoiceable).try(:booking_project_unit_name) || "-") %></p>
+                <label>Customer Name</label>
+                <p><%= (invoice.try(:customer).try(:name) || "-") %></p>
+                <label>Customer Phone</label>
+                <p><%= (invoice.try(:customer).try(:phone) || "-") %></p>
+                <label>Customer Email</label>
+                <p><%= (invoice.try(:customer).try(:email) || "-") %></p>
+                <label>Status</label>
+                <p><%= (Invoice.human_attribute_name("invoice/status.#{invoice.status}") rescue "-") %></p>
+                <label>Raised Date</label>
+                <p><%= invoice.try(:raised_date).try(:strftime, '%e %b %Y') || "-" %></p>
+                <label>Processing Date</label>
+                <p><%= invoice.try(:processing_date).try(:strftime, '%e %b %Y') || "-" %></p>
+                <label>Approved Date</label>
+                <p><%= invoice.try(:approved_date).try(:strftime, '%e %b %Y') || "-" %></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item mb-3 border-0 shadow rounded">
+          <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#cpDetailsAccordion" aria-expanded="false" aria-controls="cpDetailsAccordion">
+              Channel Partner Details
+            </button>
+          </h2>
+          <div id="cpDetailsAccordion" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+            <div class="accordion-body pt-1">
+                <div class="inner-invoice-details">
+              <label>Registration Name (Used in payments)</label>
+                <p><%= invoice.try(:manager).try(:name) || "-" %></p>
+                <label>GST Number</label>
+                <p><%= invoice.try(:manager).try(:channel_partner).try(:gstin_number) || "-" %></p>
+                <label>Address</label>
+                <p><%= invoice.try(:manager).try(:channel_partner).try(:address).try(:to_sentence) || "-" %></p>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item mb-3 border-0 shadow rounded">
+          <h2 class="accordion-header" id="headingThree">
+            <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#paymentDetailsAccourdion" aria-expanded="false" aria-controls="paymentDetailsAccourdion">
+              Payment Details
+            </button>
+          </h2>
+          <div id="paymentDetailsAccourdion" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+            <div class="accordion-body pt-1">
+                <div class="inner-invoice-details">
+                <label>Total Amount Paid</label>
+                <p><%= (number_to_indian_currency(invoice.try(:net_amount)) rescue "-") %></p>
+                <label>Issuing Bank</label>
+                <p><%= invoice.try(:manager).try(:channel_partner).try(:bank_detail).try(:name) || "-" %></p>
+                <label>Issuing Bank Branch</label>
+                <p><%= invoice.try(:manager).try(:channel_partner).try(:bank_detail).try(:branch) || "-" %></p>
+                <label>Issued Date</label>
+                <p>13/04/2022</p>
+                <label>Handover Date</label>
+                <p>21/04/2022</p>
+                <label>Payment Identifier</label>
+                <p>Online</p>
+                <label>Approved Date</label>
+                <p>21/04/2022 13:38</p>
+                <label>Payout Id</label>
+                <p>pout_JLDvw0nwvXcKHg</p>
+                <label>UPI Id</label>
+                <p>9970300847@ybl</p>
+                <label>Paid Date</label>
+                <p>21/04/2022 13:38</p>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item mb-3 border-0 shadow rounded">
+          <h2 class="accordion-header" id="headingThree">
+            <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#amountAccordion" aria-expanded="false" aria-controls="amountAccordion">
+              Amount
+            </button>
+          </h2>
+          <div id="amountAccordion" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+            <div class="accordion-body pt-1">
+                <div class="inner-invoice-details">
+                <label>Brokerage Amount</label>
+                <p>₹5,000</p>
+                <label>GST Amount</label>
+                <p>₹900</p>
+                <label>OST Slab</label>
+                <p>18.0%</p>
+                <label>Approved Amount</label>
+                <p>₹5,900</p>
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item border-0 shadow rounded">
+          <h2 class="accordion-header" id="headingThree">
+            <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#docsAccordion" aria-expanded="false" aria-controls="docsAccordion">
+              Documents
+            </button>
+          </h2>
+          <div id="docsAccordion" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+            <div class="accordion-body pt-1">
+                <div class="inner-invoice-details">
+                <label>Cheque</label>
+                <p>Cheque Copy.jpg</p>
+                <label>Invoice</label>
+                <p>Invoice Copy.jpg</p>
+                </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>

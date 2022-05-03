@@ -1018,6 +1018,18 @@ en:
         approved: 'Invoice Approved by Developer'
         rejected: 'Dispute Raised by Developer'
         tax_invoice_raised: "Raised Tax Invoice"
+      invoice/payout_status:
+        raised: Invoiced
+        draft: Waiting for Invoicing
+        tentative: "Waiting for Registration"
+        paid: Paid
+        rejected: Cancellation
+      invoice/categories:
+        walk_in: 'Walk-in'
+        spot_booking: 'Spot Booking'
+        lead: 'Lead'
+        referral: 'Referral'
+        brokerage: 'Booking Brokerage'
       cheque_detail:
         total_amount: 'Total Amount'
         payment_identifier: 'Payment Identifier'

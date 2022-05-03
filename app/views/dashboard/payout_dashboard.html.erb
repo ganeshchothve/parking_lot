@@ -15,16 +15,16 @@
       <div class="col-12">
         <ul class="cp-menu-list">
           <li>
-            <%= link_to "All", payout_dashboard_path, class: "#{params.dig(:fltrs, :category).blank? ? 'active' : ''}" %>
+            <%= link_to "All", payout_dashboard_path(user_login: params[:user_login], user_token: params[:user_token]), class: "#{params.dig(:fltrs, :category).blank? ? 'active' : ''}" %>
           </li>
           <li>
-            <%= link_to "Site Visits", payout_dashboard_path({fltrs: {category: "walk_in"}}), class: "#{params.dig(:fltrs, :category) == "walk_in" ? 'active' : ''}" %>
+            <%= link_to "Site Visits", payout_dashboard_path({fltrs: {category: "walk_in"}, user_login: params[:user_login], user_token: params[:user_token]}), class: "#{params.dig(:fltrs, :category) == "walk_in" ? 'active' : ''}" %>
           </li>
           <li>
-            <%= link_to "Spot Bookings", payout_dashboard_path({fltrs: {category: "spot_booking"}}), class: "#{params.dig(:fltrs, :category) == "spot_booking" ? 'active' : ''}" %>
+            <%= link_to "Spot Bookings", payout_dashboard_path({fltrs: {category: "spot_booking"}, user_login: params[:user_login], user_token: params[:user_token]}), class: "#{params.dig(:fltrs, :category) == "spot_booking" ? 'active' : ''}" %>
           </li>
           <li>
-            <%= link_to "Brokerages", payout_dashboard_path({fltrs: {category: "brokerage"}}), class: "#{params.dig(:fltrs, :category) == "brokerage" ? 'active' : ''}" %>
+            <%= link_to "Brokerages", payout_dashboard_path({fltrs: {category: "brokerage"}, user_login: params[:user_login], user_token: params[:user_token]}), class: "#{params.dig(:fltrs, :category) == "brokerage" ? 'active' : ''}" %>
           </li>
         </ul>
       </div>
@@ -57,7 +57,7 @@
   <section class="earning-potential">
     <div class="container">
       <div class="row">
-        <% if params.dig(:fltrs, :category) == "brokerage" %>
+        <% if params.dig(:fltrs, :category).blank? || params.dig(:fltrs, :category) == "brokerage" %>
           <div>
               <div class="col-12">
                   <h2 class="ep-title">Earning Potential</h2>
@@ -67,21 +67,21 @@
                   <ul class="earning-potential-list mt-3">
                   <li>
                       <div class="earn-desc pending-approval bg-white">
-                      <label>WAITING APPROVAL</label>
-                      <p><%= number_to_indian_currency(@waiting_for_approval) rescue "-" %></p>
+                      <label>Waiting for Registration</label>
+                      <p><%= number_to_indian_currency(@waiting_for_registration) rescue "-" %></p>
                       <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#waiting-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
                       </div>
                   </li>
                   <li>
                       <div class="earn-desc approved bg-success">
-                      <label>APPROVED</label>
-                      <p><%= number_to_indian_currency(@approved) rescue "-" %></p>
+                      <label>Waiting for Invoicing</label>
+                      <p><%= number_to_indian_currency(@waiting_for_approval) rescue "-" %></p>
                       <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#approved-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
                       </div>
                   </li>
                   <li>
                       <div class="earn-desc waiting-approval bg-danger">
-                      <label>LOST</label>
+                      <label>Cancellation</label>
                       <p><%= number_to_indian_currency(@rejected_invoices) rescue "-" %></p>
                       <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#lost-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
                       </div>
@@ -94,140 +94,54 @@
         <% end %>
         <div class="col-12">
           <h2 class="ep-title float-start col-6">Transactions</h2>
-          <a href="javascript:;" class="text-end float-end col-6">View All</a>
+          <%= link_to "View All", payout_list_path(fltrs: params.dig(:fltrs)), class: "text-end float-end col-6" %>
         </div>
         
-        <div class="col-12">
-          <div class="cp-ep-info-box">
-            <div class="row">
-              <div class="col-7 cp-name-info pe-0">
-                <span>SM</span>
-                <p>Sanjay Mehra</p>
-              </div>
-              <div class="col-5 cp-payout-info text-end ps-0">
-                <p>₹20,000</p>
-                <span>Spot Booking</span>
-              </div>
-              <div class="col-12"><hr></div>
-              <div class="col-6 cp-info-list pe-0">
-                <div class="building-icon">
-                  <i class="fa fa-solid fa-building"></i>
+        <% @invoices.limit(3).each do |invoice| %>
+          <div class="col-12">
+            <div class="cp-ep-info-box">
+              <div class="row">
+                <div class="col-7 cp-name-info pe-0">
+                  <span><%= (invoice.try(:customer).try(:initials) || invoice.try(:invoiceable).try(:user).try(:initials)) %></span>
+                  <p><%= (invoice.try(:customer).try(:name) || invoice.try(:invoiceable).try(:user).try(:name)) %></p>
                 </div>
-                <span>Project:</span>
-                <p>Sukhwani Kingsley</p>
-              </div>
-              <div class="col-6 cp-info-list">
-                <div class="building-icon">
-                  <i class="fa fa-solid fa-building"></i>
+                <div class="col-5 cp-payout-info text-end ps-0">
+                  <p><%= (number_to_indian_currency(invoice.try(:net_amount)) rescue "-") %></p>
+                  <span>Spot Booking</span>
                 </div>
-                <span>Invoiced On:</span>
-                <p>20 Apr 2022</p>
-              </div>
-              <div class="col-6 cp-info-list">
-                <div class="building-icon">
-                  <i class="fa fa-solid fa-building"></i>
+                <div class="col-12"><hr></div>
+                <div class="col-6 cp-info-list pe-0">
+                  <div class="building-icon">
+                    <i class="fa fa-solid fa-building"></i>
+                  </div>
+                  <span>Project:</span>
+                  <p><%= (invoice.try(:project).try(:name) || "-") %></p>
                 </div>
-                <span>Unit:</span>
-                <p class="mb-0">A-103</p>
-              </div>
-              <div class="col-6 cp-info-list">
-                <div class="building-icon">
-                  <i class="fa fa-solid fa-check"></i>
+                <div class="col-6 cp-info-list">
+                  <div class="building-icon">
+                    <i class="fa fa-solid fa-building"></i>
+                  </div>
+                  <span>Invoiced On:</span>
+                  <p><%= invoice.try(:raised_date).try(:strftime, '%e %b %Y') || "-" %></p>
                 </div>
-                <span>Status:</span>
-                <p class="mb-0">Waiting Approval</p>
+                <div class="col-6 cp-info-list">
+                  <div class="building-icon">
+                    <i class="fa fa-solid fa-building"></i>
+                  </div>
+                  <span>Unit:</span>
+                  <p class="mb-0"><%= (invoice.try(:invoiceable).try(:booking_project_unit_name) || "-") %></p>
+                </div>
+                <div class="col-6 cp-info-list">
+                  <div class="building-icon">
+                    <i class="fa fa-solid fa-check"></i>
+                  </div>
+                  <span>Status:</span>
+                  <p class="mb-0"><%= (Invoice.human_attribute_name("invoice/payout_status.#{invoice.status}") rescue "-") %></p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="col-12">
-          <div class="cp-ep-info-box">
-            <div class="row">
-              <div class="col-7 cp-name-info pe-0">
-                <span>SM</span>
-                <p>Sanjay Mehra</p>
-              </div>
-              <div class="col-5 cp-payout-info text-end ps-0">
-                <p>₹20,000</p>
-                <span>Spot Booking</span>
-              </div>
-              <div class="col-12"><hr></div>
-              <div class="col-6 cp-info-list">
-                <div class="building-icon">
-                  <i class="fa fa-solid fa-building"></i>
-                </div>
-                <span>Project:</span>
-                <p>Sukhwani Kingsley</p>
-              </div>
-              <div class="col-6 cp-info-list">
-                <div class="building-icon">
-                  <i class="fa fa-solid fa-building"></i>
-                </div>
-                <span>Invoiced On:</span>
-                <p>20 Apr 2022</p>
-              </div>
-              <div class="col-6 cp-info-list">
-                <div class="building-icon">
-                  <i class="fa fa-solid fa-building"></i>
-                </div>
-                <span>Unit:</span>
-                <p class="mb-0">A-103</p>
-              </div>
-              <div class="col-6 cp-info-list">
-                <div class="building-icon">
-                  <i class="fa fa-solid fa-check"></i>
-                </div>
-                <span>Status:</span>
-                <p class="mb-0">Waiting Approval</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="cp-ep-info-box">
-            <div class="row">
-              <div class="col-7 cp-name-info pe-0">
-                <span>SM</span>
-                <p>Sanjay Mehra</p>
-              </div>
-              <div class="col-5 cp-payout-info text-end ps-0">
-                <p>₹20,000</p>
-                <span>Spot Booking</span>
-              </div>
-              <div class="col-12"><hr></div>
-              <div class="col-6 cp-info-list">
-                <div class="building-icon">
-                  <i class="fa fa-solid fa-building"></i>
-                </div>
-                <span>Project:</span>
-                <p>Sukhwani Kingsley</p>
-              </div>
-              <div class="col-6 cp-info-list">
-                <div class="building-icon">
-                  <i class="fa fa-solid fa-building"></i>
-                </div>
-                <span>Invoiced On:</span>
-                <p>20 Apr 2022</p>
-              </div>
-              <div class="col-6 cp-info-list">
-                <div class="building-icon">
-                  <i class="fa fa-solid fa-building"></i>
-                </div>
-                <span>Unit:</span>
-                <p class="mb-0">A-103</p>
-              </div>
-              <div class="col-6 cp-info-list">
-                <div class="building-icon">
-                  <i class="fa fa-solid fa-check"></i>
-                </div>
-                <span>Status:</span>
-                <p class="mb-0">Waiting Approval</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        
+        <% end %>
       </div>
     </div>
   </section>
@@ -300,142 +214,6 @@
 </div>
 
 
-
-
-<section class="invoice-page py-5 bg-white">
-  <div class="container">
-    <div class="col-12">
-      <h1 class="page-title">Invoice Details</h1>
-    </div>
-    <div class="col-12 mt-4">
-      <div class="accordion" id="accordionExample">
-        <div class="accordion-item mb-3 border-0 shadow rounded">
-          <h2 class="accordion-header" id="headingOne">
-            <button class="accordion-button rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#bookingDetailAccordion" aria-expanded="true" aria-controls="bookingDetailAccordion">
-              Booking Details
-            </button>
-          </h2>
-          <div id="bookingDetailAccordion" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-            <div class="accordion-body pt-1">
-              <div class="inner-invoice-details">
-                <label>Project</label>
-                <p>Sukhwani Kingsley</p>
-                <label>Booking Details</label>
-                <p>T1-1203</p>
-                <label>Customer Name</label>
-                <p>Rohit Sharma</p>
-                <label>Customer Phone</label>
-                <p>98765 43210</p>
-                <label>Customer Email</label>
-                <p>rohit.s@gamil.com</p>
-                <label>Status</label>
-                <p>Paid</p>
-                <label>Raised Date</label>
-                <p>03/12/2021 20:15</p>
-                <label>Processing Date</label>
-                <p>21/04/2022 13:38</p>
-                <label>Approved Date</label>
-                <p>21/04/2022 13:38</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item mb-3 border-0 shadow rounded">
-          <h2 class="accordion-header" id="headingTwo">
-            <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#cpDetailsAccordion" aria-expanded="false" aria-controls="cpDetailsAccordion">
-              Channel Partner Details
-            </button>
-          </h2>
-          <div id="cpDetailsAccordion" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-            <div class="accordion-body pt-1">
-                <div class="inner-invoice-details">
-              <label>Registration Name (Used in payments)</label>
-                <p>Beyondwalls</p>
-                <label>GST Number</label>
-                <p>1234567890</p>
-                <label>Address</label>
-                <p>Sr. No. 9, H.No:1/2, 4th Floor, Above Maruti Suzuki Suman Kirti Cars Pvt. Ltd Near Ramada Plaza, Mahalunge, Pune, Maharashtra 411045</p>
-            </div>
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item mb-3 border-0 shadow rounded">
-          <h2 class="accordion-header" id="headingThree">
-            <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#paymentDetailsAccourdion" aria-expanded="false" aria-controls="paymentDetailsAccourdion">
-              Payment Details
-            </button>
-          </h2>
-          <div id="paymentDetailsAccourdion" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-            <div class="accordion-body pt-1">
-                <div class="inner-invoice-details">
-                <label>Total Amount Paid</label>
-                <p>₹5,900</p>
-                <label>Issuing Bank</label>
-                <p>HDFC</p>
-                <label>Issuing Bank Branch</label>
-                <p>Baner</p>
-                <label>Issued Date</label>
-                <p>13/04/2022</p>
-                <label>Handover Date</label>
-                <p>21/04/2022</p>
-                <label>Payment Identifier</label>
-                <p>Online</p>
-                <label>Approved Date</label>
-                <p>21/04/2022 13:38</p>
-                <label>Payout Id</label>
-                <p>pout_JLDvw0nwvXcKHg</p>
-                <label>UPI Id</label>
-                <p>9970300847@ybl</p>
-                <label>Paid Date</label>
-                <p>21/04/2022 13:38</p>
-            </div>
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item mb-3 border-0 shadow rounded">
-          <h2 class="accordion-header" id="headingThree">
-            <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#amountAccordion" aria-expanded="false" aria-controls="amountAccordion">
-              Amount
-            </button>
-          </h2>
-          <div id="amountAccordion" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-            <div class="accordion-body pt-1">
-                <div class="inner-invoice-details">
-                <label>Brokerage Amount</label>
-                <p>₹5,000</p>
-                <label>GST Amount</label>
-                <p>₹900</p>
-                <label>OST Slab</label>
-                <p>18.0%</p>
-                <label>Approved Amount</label>
-                <p>₹5,900</p>
-            </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="accordion-item border-0 shadow rounded">
-          <h2 class="accordion-header" id="headingThree">
-            <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#docsAccordion" aria-expanded="false" aria-controls="docsAccordion">
-              Documents
-            </button>
-          </h2>
-          <div id="docsAccordion" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-            <div class="accordion-body pt-1">
-                <div class="inner-invoice-details">
-                <label>Cheque</label>
-                <p>Cheque Copy.jpg</p>
-                <label>Invoice</label>
-                <p>Invoice Copy.jpg</p>
-                </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</section>
 
 
 <%= render "dashboard/payout_dashboard/filters" %>

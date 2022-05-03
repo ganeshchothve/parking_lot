@@ -314,6 +314,10 @@ class User
     end
   end
 
+  def initials
+    "#{(first_name[0] rescue "").capitalize}#{(last_name[0] rescue "").capitalize}"
+  end
+
   def draft_incentive_eligible?(category=nil)
     if category.present?
       if category == 'referral'

@@ -17,7 +17,7 @@
           </div>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
               <label>Projects</label>
-              <%= select_tag :project_ids, options_for_select(Project.all.map { |p| [p.ds_name, p.id] }, (params[:project_ids].present? ? params[:project_ids] : "")), {prompt: "Select", class: "selectize", multiple: true} %>
+              <%= select_tag "fltrs[project_ids]", options_for_select(Project.all.map { |p| [p.ds_name, p.id] }, (params[:project_ids].present? ? params[:project_ids] : "")), {prompt: "Select", class: "selectize", multiple: true} %>
           </div>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
               <label>Status</label>

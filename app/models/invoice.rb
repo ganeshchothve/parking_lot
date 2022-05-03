@@ -81,13 +81,13 @@ class Invoice
     case status
     when "invoiced"
       where('$or': [{category: "brokerage", status: {"$in": ["raised"]}}, {category: {"$in": ["spot_booking", "walk_in"]}, status: {"$in": ["draft"]}}])
-    when "approved"
-      where(status: "approved")
-    when "waiting_for_approval"
+    when "waiting_for_registration"
+      where(status: "tentative")
+    when "waiting_for_invoicing"
       where(status: "draft")
     when "paid"
       where(status: "paid")
-    when "lost"
+    when "cancellation"
       where(status: "rejected")
     end
   end
@@ -127,10 +127,10 @@ class Invoice
   def self.available_payout_statuses
     [
       { id: 'invoiced', text: 'Invoiced' },
-      { id: 'approved', text: 'Approved' },
-      { id: 'waiting_for_approval', text: 'Waiting for Approval' },
+      { id: 'waiting_for_registration', text: 'Waiting for Registration' },
+      { id: 'waiting_for_invoicing', text: 'Waiting for Invoicing' },
       { id: 'paid', text: 'Paid' },
-      { id: 'lost', text: 'Lost' }
+      { id: 'cancellation', text: 'Cancellation' }
     ]
   end
 

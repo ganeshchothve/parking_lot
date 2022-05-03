@@ -7,7 +7,7 @@ class DashboardController < ApplicationController
   include ChannelPartnerLeaderboardConcern
   before_action :authenticate_user!, only: [:index, :documents, :dashboard_landing_page, :channel_partners_leaderboard, :channel_partners_leaderboard_without_layout]
   before_action :set_lead, only: :index, if: proc { current_user.buyer? }
-  around_action :apply_invoice_policy_scope, only: [:payout_dashboard]
+  around_action :apply_invoice_policy_scope, only: [:payout_dashboard, :payout_list]
 
   layout :set_layout
 
@@ -107,6 +107,14 @@ class DashboardController < ApplicationController
       cancelled_booking_detail_ids = BookingDetail.cancelled.where(manager_id: current_user.id, channel_partner_id: current_user.channel_partner_id).pluck(:id)
     end
     @rejected_invoices = @invoices.rejected.in(invoiceable_id: cancelled_booking_detail_ids).sum(:net_amount)
+  end
+
+  def payout_list
+    @invoices = Invoice.build_criteria(params)
+  end
+
+  def payout_show
+    @invoice = Invoice.where(id: params[:invoice_id]).first
   end
 
   private
