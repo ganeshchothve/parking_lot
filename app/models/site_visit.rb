@@ -44,6 +44,7 @@ class SiteVisit
 
   delegate :name, to: :project, prefix: true, allow_nil: true
 
+  scope :filter_by_id, ->(_id) { where(_id: _id) }
   scope :filter_by_status, ->(_status) { where(status: (_status.is_a?(String) ? _status : { '$in' => _status })) }
   scope :filter_by_approval_status, ->(_approval_status) { where(approval_status: (_approval_status.is_a?(String) ? _approval_status : { '$in' => _approval_status })) }
   scope :filter_by_site_visit_type, ->(_site_visit_type) { where(status: (_site_visit_type.is_a?(String) ? _site_visit_type : { '$in' => _site_visit_type })) }

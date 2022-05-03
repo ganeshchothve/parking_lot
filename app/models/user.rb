@@ -405,6 +405,14 @@ class User
     end
   end
 
+  def update_onesignal_external_user_id(player_id)
+    if Rails.env.production?
+      Communication::OneSignal::ExternalUserIdUpdateWorker.perform_async(self.id.to_s, player_id)
+    else
+      Communication::OneSignal::ExternalUserIdUpdateWorker.new.perform(self.id.to_s, player_id)
+    end
+  end
+
   def active_bookings
     booking_details.in(status: BookingDetail::BOOKING_STAGES)
   end

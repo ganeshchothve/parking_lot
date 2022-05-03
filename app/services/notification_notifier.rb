@@ -42,4 +42,36 @@ module NotificationNotifier
     end
   end
 
+  module OneSignal
+    extend ApplicationHelper
+    def self.send_notification(notification)
+      begin
+        if notification.present?
+          response = create_notification(notification)
+        end
+      rescue StandardError => e
+        response = e.message
+      end
+      response
+    end
+
+    def self.create_notification(notification)
+      params = {
+                  app_id: ENV_CONFIG[:onesignal][:app_id],
+                  contents: {en: notification.content},
+                  channel_for_external_user_ids: "push",
+                  include_external_user_ids: [notification.recipient_id.to_s],
+                  data: notification.data,
+                  priority: 10 # high priority for android
+               }
+      uri = URI.parse("#{ENV_CONFIG[:onesignal][:base_url]}/api/v1/notifications")
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      request = Net::HTTP::Post.new(uri.path, 'Content-Type' => 'application/json;charset=utf-8', 'Authorization' => "#{ENV_CONFIG[:onesignal][:api_key]}")
+      request.body = params.to_json
+      response = http.request(request)
+      response
+    end
+  end
+
 end
