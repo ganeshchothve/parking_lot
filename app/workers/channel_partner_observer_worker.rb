@@ -17,19 +17,19 @@ class ChannelPartnerObserverWorker
           end
         end
       end
+    # Push changes on User
+      if (changed_keys = (changes.keys & %w(company_name company_type interested_services manager_id developers_worked_for pan_number rera_id gstin_number regions status)).presence) && changed_keys.all? {|key| channel_partner[key].present?}
+        channel_partner.users.each do |cp_user|
+          Crm::Api::ExecuteWorker.perform_async('post', 'User', cp_user.id, nil, changes, interakt_base.id.to_s) if interakt_base.present?
+          Crm::Api::ExecuteWorker.perform_async('post', 'User', cp_user.id, nil, changes, onesignal_base.id.to_s) if onesignal_base.present?
+        end
+      end
 
       # For calling Interakt APIs
       if interakt_base
-        # Push changes on User
-        if (changed_keys = (changes.keys & %w(company_name company_type interested_services manager_id developers_worked_for pan_number rera_id gstin_number regions status)).presence) && changed_keys.all? {|key| channel_partner[key].present?}
-          channel_partner.users.each do |cp_user|
-            Crm::Api::ExecuteWorker.perform_async('post', 'User', cp_user.id, nil, changes, interakt_base.id.to_s) if interakt_base.present?
-            Crm::Api::ExecuteWorker.perform_async('post', 'User', cp_user.id, nil, changes, onesignal_base.id.to_s) if onesignal_base.present?
-          end
-        end
 
         # Push events based on changed attributes
-        if changes.has_key?('status') && channel_partner.status.present? && interakt_base.present?
+        if changes.has_key?('status') && channel_partner.status.present?
           # Push Registered New Company event on primary cp owner when new channel partner company created.
           if changes.dig('status', 0) == nil && changes.dig('status', 1) == 'inactive'
             payload = {
@@ -43,12 +43,12 @@ class ChannelPartnerObserverWorker
             Crm::Api::ExecuteWorker.perform_async('post', 'User', cp_user.id, 'Company Onboarding State Change', changes, interakt_base.id.to_s)
           end
         end
-        if changes.has_key?('manager_id') && channel_partner.manager_id.present? && interakt_base.present?
+        if changes.has_key?('manager_id') && channel_partner.manager_id.present?
           channel_partner.users.each do |cp_user|
             Crm::Api::ExecuteWorker.perform_async('post', 'User', cp_user.id, 'Manager Changed', changes, interakt_base.id.to_s)
           end
         end
-        if changes.has_key?('regions') && channel_partner.regions.present? && interakt_base.present?
+        if changes.has_key?('regions') && channel_partner.regions.present?
           regions_added = changes['regions'][1] - changes['regions'][0]
           regions_removed = changes['regions'][0] - changes['regions'][1]
           if regions_removed.present?

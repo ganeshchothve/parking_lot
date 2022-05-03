@@ -4,7 +4,6 @@ class SiteVisitObserverWorker
 
   def perform(site_visit_id, action='create', changes={})
     sv = SiteVisit.where(id: site_visit_id).first
-    onesignal_base = Crm::Base.where(domain: ENV_CONFIG.dig(:onesignal, :base_url)).first
     if sv.present?
       lead = sv.lead
       project = sv.project

@@ -1,4 +1,5 @@
 module JSONStringParser
+  extend ActiveSupport::Concern
   def recursive_json_string_parser(data)
     res = data
     case (res ||= data)

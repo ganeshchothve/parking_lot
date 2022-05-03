@@ -4,7 +4,6 @@ class MeetingObserverWorker
 
   def perform(meeting_id, user_id, changes={})
     meeting = Meeting.where(id: meeting_id).first
-    onesignal_base = Crm::Base.where(domain: ENV_CONFIG.dig(:onesignal, :base_url)).first
     if meeting.present?
       user = User.where(id: user_id).first
       if user && user.role.in?(%w(cp_owner channel_partner))
