@@ -1,7 +1,8 @@
 <section class="invoice-page py-5 bg-white">
   <div class="container">
     <div class="col-12">
-      <h1 class="page-title">Invoice Details</h1>
+      <!-- <h1 class="page-title">Invoice Details</h1> -->
+      <%= link_to "<h1 class='page-title'>&#8592; Invoice Details</h1>".html_safe, payout_list_path(user_login: params[:user_login], user_token: params[:user_token]) %>
     </div>
     <div class="col-12 mt-4">
       <div class="accordion" id="accordionExample">
@@ -15,23 +16,23 @@
             <div class="accordion-body pt-1">
               <div class="inner-invoice-details">
                 <label>Project</label>
-                <p><%= (invoice.try(:project).try(:name) || "-") %></p>
+                <p><%= (@invoice.try(:project).try(:name) || "-") %></p>
                 <label>Booking Details</label>
-                <p><%= (invoice.try(:invoiceable).try(:booking_project_unit_name) || "-") %></p>
+                <p><%= (@invoice.try(:invoiceable).try(:booking_project_unit_name) || "-") %></p>
                 <label>Customer Name</label>
-                <p><%= (invoice.try(:customer).try(:name) || "-") %></p>
+                <p><%= (@invoice.try(:customer).try(:name) || "-") %></p>
                 <label>Customer Phone</label>
-                <p><%= (invoice.try(:customer).try(:phone) || "-") %></p>
+                <p><%= (@invoice.try(:customer).try(:phone) || "-") %></p>
                 <label>Customer Email</label>
-                <p><%= (invoice.try(:customer).try(:email) || "-") %></p>
+                <p><%= (@invoice.try(:customer).try(:email) || "-") %></p>
                 <label>Status</label>
                 <p><%= (Invoice.human_attribute_name("invoice/status.#{invoice.status}") rescue "-") %></p>
                 <label>Raised Date</label>
-                <p><%= invoice.try(:raised_date).try(:strftime, '%e %b %Y') || "-" %></p>
+                <p><%= @invoice.try(:raised_date).try(:strftime, '%e %b %Y') || "-" %></p>
                 <label>Processing Date</label>
-                <p><%= invoice.try(:processing_date).try(:strftime, '%e %b %Y') || "-" %></p>
+                <p><%= @invoice.try(:processing_date).try(:strftime, '%e %b %Y') || "-" %></p>
                 <label>Approved Date</label>
-                <p><%= invoice.try(:approved_date).try(:strftime, '%e %b %Y') || "-" %></p>
+                <p><%= @invoice.try(:approved_date).try(:strftime, '%e %b %Y') || "-" %></p>
               </div>
             </div>
           </div>
@@ -44,14 +45,14 @@
           </h2>
           <div id="cpDetailsAccordion" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
             <div class="accordion-body pt-1">
-                <div class="inner-invoice-details">
-              <label>Registration Name (Used in payments)</label>
-                <p><%= invoice.try(:manager).try(:name) || "-" %></p>
+              <div class="inner-invoice-details">
+                <label>Registration Name (Used in payments)</label>
+                <p><%= @invoice.try(:manager).try(:name) || "-" %></p>
                 <label>GST Number</label>
-                <p><%= invoice.try(:manager).try(:channel_partner).try(:gstin_number) || "-" %></p>
+                <p><%= @invoice.try(:manager).try(:channel_partner).try(:gstin_number) || "-" %></p>
                 <label>Address</label>
-                <p><%= invoice.try(:manager).try(:channel_partner).try(:address).try(:to_sentence) || "-" %></p>
-            </div>
+                <p><%= @invoice.try(:manager).try(:channel_partner).try(:address).try(:to_sentence) || "-" %></p>
+              </div>
             </div>
           </div>
         </div>
@@ -63,28 +64,26 @@
           </h2>
           <div id="paymentDetailsAccourdion" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
             <div class="accordion-body pt-1">
-                <div class="inner-invoice-details">
+              <div class="inner-invoice-details">
                 <label>Total Amount Paid</label>
-                <p><%= (number_to_indian_currency(invoice.try(:net_amount)) rescue "-") %></p>
+                <p><%= (number_to_indian_currency(@invoice.cheque_detail.try(:total_amount)) rescue "-") %></p>
                 <label>Issuing Bank</label>
-                <p><%= invoice.try(:manager).try(:channel_partner).try(:bank_detail).try(:name) || "-" %></p>
+                <p><%= @invoice.cheque_detail.try(:issuing_bank) || "-" %></p>
                 <label>Issuing Bank Branch</label>
-                <p><%= invoice.try(:manager).try(:channel_partner).try(:bank_detail).try(:branch) || "-" %></p>
+                <p><%= @invoice.cheque_detail.try(:issuing_bank_branch) || "-" %></p>
                 <label>Issued Date</label>
-                <p>13/04/2022</p>
+                <p><%= @invoice.cheque_detail.try(:issued_date).try(:strftime, '%e %b %Y') || "-" %></p>
                 <label>Handover Date</label>
-                <p>21/04/2022</p>
-                <label>Payment Identifier</label>
-                <p>Online</p>
+                <p><%= @invoice.cheque_detail.try(:handover_date).try(:strftime, '%e %b %Y') || "-" %></p>
                 <label>Approved Date</label>
-                <p>21/04/2022 13:38</p>
+                <p><%= @invoice.try(:approved_date).try(:strftime, '%e %b %Y') || "-" %></p>
                 <label>Payout Id</label>
-                <p>pout_JLDvw0nwvXcKHg</p>
+                <p><%= @invoice.try(:third_party_references).try(:first).try(:reference_id) || "-" %></p>
                 <label>UPI Id</label>
-                <p>9970300847@ybl</p>
+                <p><%= @invoice.try(:manager).try(:fund_accounts).try(:first).try(:address) || "-" %></p>
                 <label>Paid Date</label>
-                <p>21/04/2022 13:38</p>
-            </div>
+                <p><%= @invoice.try(:paid_date).try(:strftime, '%e %b %Y') || "-" %></p>
+              </div>
             </div>
           </div>
         </div>
@@ -96,20 +95,20 @@
           </h2>
           <div id="amountAccordion" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
             <div class="accordion-body pt-1">
-                <div class="inner-invoice-details">
+              <div class="inner-invoice-details">
                 <label>Brokerage Amount</label>
-                <p>₹5,000</p>
+                <p><%= (number_to_indian_currency(@invoice.try(:amount)) rescue "-") %></p>
                 <label>GST Amount</label>
-                <p>₹900</p>
-                <label>OST Slab</label>
-                <p>18.0%</p>
+                <p><%= (number_to_indian_currency(@invoice.try(:gst_amount)) rescue "-") %></p>
+                <label>GST Slab</label>
+                <p><%= @invoice.try(:gst_amount) %>%</p>
                 <label>Approved Amount</label>
-                <p>₹5,900</p>
-            </div>
+                <p><%= (number_to_indian_currency(@invoice.try(:net_amount)) rescue "-") %></p>
+              </div>
             </div>
           </div>
         </div>
-
+        <% if @invoice.assets.present? %>
         <div class="accordion-item border-0 shadow rounded">
           <h2 class="accordion-header" id="headingThree">
             <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#docsAccordion" aria-expanded="false" aria-controls="docsAccordion">
@@ -118,16 +117,15 @@
           </h2>
           <div id="docsAccordion" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
             <div class="accordion-body pt-1">
-                <div class="inner-invoice-details">
-                <label>Cheque</label>
-                <p>Cheque Copy.jpg</p>
-                <label>Invoice</label>
-                <p>Invoice Copy.jpg</p>
-                </div>
+              <div class="inner-invoice-details">
+                <% @invoice.assets.each do |asset| %>
+                <p><%= link_to asset.file_name, asset.file.url, class: "asset-download", download: "" %></p>
+                <% end %>
+              </div>
             </div>
           </div>
         </div>
-
+        <% end %>
       </div>
     </div>
   </div>

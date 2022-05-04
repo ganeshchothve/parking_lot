@@ -18,6 +18,7 @@ class Invoice
   field :raised_date, type: DateTime
   field :processing_date, type: DateTime
   field :approved_date, type: DateTime
+  field :paid_date, type: DateTime
   field :rejection_reason, type: String
   field :comments, type: String
   field :net_amount, type: Float
@@ -37,7 +38,8 @@ class Invoice
   belongs_to :cp_admin, class_name: 'User', optional: true
   belongs_to :creator, class_name: 'User'
   belongs_to :account_manager, class_name: 'User', optional: true
-  belongs_to :customer, class_name: 'User', optional: true
+  belongs_to :user, optional: true
+  belongs_to :lead, optional: true
   has_one :incentive_deduction
   has_many :assets, as: :assetable
   embeds_one :cheque_detail
@@ -67,6 +69,7 @@ class Invoice
   end
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
   scope :filter_by_customer_id, ->(customer_id) { where(customer_id: customer_id) }
+  scope :filter_by_lead_id, ->(lead_id) { where(lead_id: lead_id) }
   scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }
   scope :filter_by_manager_id, ->(manager_id) { where(manager_id: manager_id) }
   scope :filter_by_channel_partner_id, ->(channel_partner_id) { where(channel_partner_id: channel_partner_id) }
@@ -82,9 +85,9 @@ class Invoice
     when "invoiced"
       where('$or': [{category: "brokerage", status: {"$in": ["raised"]}}, {category: {"$in": ["spot_booking", "walk_in"]}, status: {"$in": ["draft"]}}])
     when "waiting_for_registration"
-      where(status: "tentative")
+      where(category: "brokerage", status: "approved")
     when "waiting_for_invoicing"
-      where(status: "draft")
+      where(category: "brokerage", status: "draft")
     when "paid"
       where(status: "paid")
     when "cancellation"
@@ -121,6 +124,20 @@ class Invoice
       (amount * ((gst_slab || 0)/100)).round(2)
     else
       0
+    end
+  end
+
+  def get_payout_status
+    if (category == "brokerage" && raised?) || (["spot_booking", "walk_in"].include?(category) && draft?)
+      "Invoiced"
+    elsif (category == "brokerage" && approved?)
+      "Waiting for Registration"
+    elsif (category == "brokerage" && draft?)
+      "Waiting for Invoicing"
+    elsif paid?
+      "Paid"
+    else rejected?
+      "Cancellation"
     end
   end
 

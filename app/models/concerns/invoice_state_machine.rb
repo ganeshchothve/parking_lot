@@ -155,6 +155,7 @@ module InvoiceStateMachine
       when 'walk_in'
         if invoiceable.is_a?(SiteVisit) && invoiceable.may_paid?
           invoiceable.aasm(:status).fire!(:paid)
+          self.paid_date = Time.now
         end
       end
     end

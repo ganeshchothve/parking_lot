@@ -1021,7 +1021,7 @@ en:
       invoice/payout_status:
         raised: Invoiced
         draft: Waiting for Invoicing
-        tentative: "Waiting for Registration"
+        approved: Waiting for Registration
         paid: Paid
         rejected: Cancellation
       invoice/categories:

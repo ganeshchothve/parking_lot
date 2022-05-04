@@ -95,11 +95,11 @@ class DashboardController < ApplicationController
   def payout_dashboard
     authorize :dashboard, :payout_dashboard?
     @invoices = Invoice.build_criteria(params)
-    @total_earnings = @invoices.where(manager_id: current_user.id).in(status: Invoice::PAYOUT_DASHBOARD_STAGES).sum(:net_amount)
+    @total_earnings = @invoices.in(status: Invoice::PAYOUT_DASHBOARD_STAGES).sum(:net_amount)
     @invoiced = @invoices.or([{category: "brokerage", status: {"$in": ["raised", "pending_approval", "approved"]}}, {category: {"$in": ["spot_booking", "walk_in"]}, status: {"$in": ["draft","raised", "pending_approval", "approved"]}}]).sum(:net_amount)
     @paid_invoices = @invoices.where(status: "paid").sum(:net_amount)
     @approved = @invoices.where(status: "approved").sum(:net_amount)
-    @waiting_for_registration = @invoices.tentative.where(category: "brokerage").sum(:net_amount)
+    @waiting_for_registration = @invoices.approved.where(category: "brokerage").sum(:net_amount)
     @waiting_for_approval = @invoices.draft.where(category: "brokerage").sum(:net_amount)
     if current_user.role?(:cp_owner)
       cancelled_booking_detail_ids = BookingDetail.cancelled.where(channel_partner_id: current_user.channel_partner_id).pluck(:id)
@@ -110,10 +110,12 @@ class DashboardController < ApplicationController
   end
 
   def payout_list
+    authorize :dashboard, :payout_dashboard?
     @invoices = Invoice.build_criteria(params)
   end
 
   def payout_show
+    authorize :dashboard, :payout_dashboard?
     @invoice = Invoice.where(id: params[:invoice_id]).first
   end
 
