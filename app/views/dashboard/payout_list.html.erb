@@ -1,10 +1,10 @@
-<div class="container">
-  <div class="row">
-    <div class="col-12 mt-3">
-      <%= link_to "<h2 class='ep-title float-start'>&#8592; Transactions</h2>".html_safe, payout_dashboard_path(user_login: params[:user_login], user_token: params[:user_token]) %>
-    </div>
-<%#= link_to "< Transactions", payout_dashboard_path(user_login: params[:user_login], user_token: params[:user_token]), class: 'ep-title float-start col-6' %>
-<% @invoices.each do |invoice| %>
+<% if policy([:admin, Invoice]).index? %>
+  <div class="container">
+    <div class="row">
+      <div class="col-12 mt-3">
+        <%= link_to "<h2 class='ep-title float-start'>&#8592; Transactions</h2>".html_safe, payout_dashboard_path(user_login: params[:user_login], user_token: params[:user_token]) %>
+      </div>
+      <% @invoices.each do |invoice| %>
       <% customer_name = (invoice.try(:customer).try(:name) || invoice.try(:invoiceable).try(:user).try(:name)) %>
       <div class="col-12">
         <div class="cp-ep-info-box">
@@ -49,6 +49,7 @@
           </div>
         </div>
       </div>
-    <% end %>
+      <% end %>
+    </div>
   </div>
-</div>
+<% end %>
