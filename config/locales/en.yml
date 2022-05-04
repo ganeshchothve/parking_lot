@@ -312,6 +312,8 @@ en:
         url: "Redirect url"
         title: "Title"
         content: "Content"
+        data: Data
+        status: Status
       crm:
         base:
           name: Name

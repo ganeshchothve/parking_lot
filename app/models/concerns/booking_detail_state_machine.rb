@@ -65,12 +65,12 @@ module BookingDetailStateMachine
         transitions from: :cancellation_rejected, to: :blocked
       end
 
-      event :booked_tentative, after: %i[after_booked_tentative_event update_selldo!] do
+      event :booked_tentative, after: %i[send_notification after_booked_tentative_event update_selldo!] do
         transitions from: :booked_tentative, to: :booked_tentative
         transitions from: :blocked, to: :booked_tentative, success: :sync_booking
       end
 
-      event :booked_confirmed, after: %i[after_booked_confirmed_event update_selldo!] do
+      event :booked_confirmed, after: %i[send_notification after_booked_confirmed_event update_selldo!] do
         transitions from: :booked_confirmed, to: :booked_confirmed
         transitions from: :booked_tentative, to: :booked_confirmed , success: :sync_booking
       end
@@ -303,7 +303,7 @@ module BookingDetailStateMachine
       end
 
       template = Template::NotificationTemplate.where(name: "booking_confirmed").first
-      if template.present? && user.booking_portal_client.notification_enabled?
+      if template.present? && template.is_active? && user.booking_portal_client.notification_enabled?
         push_notification = PushNotification.new(
           notification_template_id: template.id,
           triggered_by_id: self.id,
@@ -344,17 +344,31 @@ module BookingDetailStateMachine
             triggered_by_type: self.class.to_s
           )
       end
+    end
 
-      template = Template::NotificationTemplate.where(name: "booking_blocked").first
-      if template.present? && user.booking_portal_client.notification_enabled?
+    def send_notification
+      recipient = self.manager || self.lead.manager
+      template = Template::NotificationTemplate.where(name: get_notification_template_status).first
+      if template.present? && template.is_active? && user.booking_portal_client.notification_enabled?
         push_notification = PushNotification.new(
           notification_template_id: template.id,
           triggered_by_id: self.id,
           triggered_by_type: self.class.to_s,
-          recipient_id: self.user.id,
+          recipient_id: recipient.id,
           booking_portal_client_id: self.user.booking_portal_client.id
         )
         push_notification.save
+      end
+    end
+
+    def get_notification_template_status
+      case status
+      when "blocked"
+        "booking_blocked"
+      when "booked_tentative"
+        "booking_tentative"
+      when "booked_confirmed"
+        "booking_confirmed"
       end
     end
 

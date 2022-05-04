@@ -10,7 +10,7 @@ class ApiLog
   field :status, type: String
   field :message, type: String
 
-  belongs_to :crm_api, class_name: 'Crm::Api'
+  belongs_to :crm_api, class_name: 'Crm::Api', optional: true
   belongs_to :resource, polymorphic: true
 
   default_scope -> { desc(:created_at) }

@@ -129,6 +129,19 @@ class ChannelPartnerObserver < Mongoid::Observer
     end
   end
 
+  def after_save channel_partner
+    if (channel_partner.changes.keys & %w(company_name rera_id pan_number address))
+      cp_users = channel_partner.users
+      cp_users.each do |cp_user|
+        if Rails.env.staging? || Rails.env.production?
+          GenerateCoBrandingTemplatesWorker.perform_in(60.seconds, cp_user.id.to_s)
+        else
+          GenerateCoBrandingTemplatesWorker.new.perform(cp_user.id.to_s)
+        end
+      end
+    end
+  end
+
   def after_update channel_partner
     if (channel_partner.changed & %w[rera_applicable gst_applicable rera_id gstin_number]).present?
       recipients = []
