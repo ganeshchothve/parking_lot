@@ -57,7 +57,7 @@
   <section class="earning-potential">
     <div class="container">
       <div class="row">
-        <% if params.dig(:fltrs, :category).blank? || params.dig(:fltrs, :category) == "brokerage" %>
+        <% if params.dig(:fltrs, :category).blank? || params.dig(:fltrs, :category) == "brokerage" || params.dig(:fltrs, :category) == ["all"] || params.dig(:fltrs, :category) == ["brokerage"] %>
           <div>
               <div class="col-12">
                   <h2 class="ep-title">Earning Potential</h2>

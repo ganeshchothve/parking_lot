@@ -61,8 +61,10 @@ class Invoice
   scope :filter_by_invoice_type, ->(request_type){ where(_type: /#{request_type}/i)}
   scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_category, ->(category) do
-    if category.is_a?(Array)
+    if (category.is_a?(Array) && !(category == ["all"]))
       where(category: {"$in": category})
+    elsif(category == ["all"])
+      where(category: {"$in": ["spot_booking", "walk_in", "brokerage"]})
     else
       where(category: category)
     end
@@ -83,7 +85,7 @@ class Invoice
   scope :filter_by_payout_status, ->(status) do
     case status
     when "invoiced"
-      where('$or': [{category: "brokerage", status: {"$in": ["raised"]}}, {category: {"$in": ["spot_booking", "walk_in"]}, status: {"$in": ["draft"]}}])
+      where('$or': [{category: "brokerage", status: {"$in": ["raised"]}}, {category: {"$in": ["spot_booking", "walk_in"]}, status: {"$in": ["draft", "raised"]}}])
     when "waiting_for_registration"
       where(category: "brokerage", status: "approved")
     when "waiting_for_invoicing"
@@ -128,7 +130,7 @@ class Invoice
   end
 
   def get_payout_status
-    if (category == "brokerage" && raised?) || (["spot_booking", "walk_in"].include?(category) && draft?)
+    if (category == "brokerage" && raised?) || (["spot_booking", "walk_in"].include?(category) && (draft? || raised?))
       "Invoiced"
     elsif (category == "brokerage" && approved?)
       "Waiting for Registration"
@@ -136,7 +138,7 @@ class Invoice
       "Waiting for Invoicing"
     elsif paid?
       "Paid"
-    else rejected?
+    elsif rejected?
       "Cancellation"
     end
   end
@@ -148,6 +150,15 @@ class Invoice
       { id: 'waiting_for_invoicing', text: 'Waiting for Invoicing' },
       { id: 'paid', text: 'Paid' },
       { id: 'cancellation', text: 'Cancellation' }
+    ]
+  end
+
+  def self.available_payout_categories
+    [
+      { id: 'all', text: 'All' },
+      { id: 'walk_in', text: 'Site Visits' },
+      { id: 'spot_booking', text: 'Spot Bookings' },
+      { id: 'brokerage', text: 'Brokerage' },
     ]
   end
 
