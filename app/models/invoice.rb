@@ -93,7 +93,7 @@ class Invoice
     when "paid"
       where(status: "paid")
     when "cancellation"
-      where(status: "rejected")
+      where(category: "brokerage",status: "rejected")
     end
   end
 
