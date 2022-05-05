@@ -106,7 +106,7 @@ class DashboardController < ApplicationController
     else
       cancelled_booking_detail_ids = BookingDetail.cancelled.where(manager_id: current_user.id, channel_partner_id: current_user.channel_partner_id).pluck(:id)
     end
-    @rejected_invoices = @invoices.rejected.in(invoiceable_id: cancelled_booking_detail_ids).sum(:net_amount)
+    @rejected_invoices = @invoices.where(category: "brokerage").rejected.in(invoiceable_id: cancelled_booking_detail_ids).sum(:net_amount)
   end
 
   def payout_list
