@@ -174,9 +174,9 @@ module InvoiceStateMachine
       when 'walk_in'
         if invoiceable.is_a?(SiteVisit) && invoiceable.may_paid?
           invoiceable.aasm(:status).fire!(:paid)
-          self.paid_date = Time.now
         end
       end
+      self.set(paid_date: Time.now)
     end
 
     def move_manual_invoice_to_draft
