@@ -27,7 +27,8 @@
                   <label>Customer Email</label>
                   <p><%= (@invoice.try(:invoiceable).try(:user).try(:email) || "-") %></p>
                   <label>Status</label>
-                  <p><%= (Invoice.human_attribute_name("invoice/status.#{invoice.status}") rescue "-") %></p>
+                  <% booking_status = @invoice.try(:invoiceable).is_a?(BookingDetail) ? @invoice.try(:invoiceable).try(:status) : "" %>
+                  <p><%= (BookingDetail.human_attribute_name("booking_detail/status.#{booking_status}") rescue "-") %></p>
                   <label>Raised Date</label>
                   <p><%= @invoice.try(:raised_date).try(:strftime, '%e %b %Y') || "-" %></p>
                   <label>Processing Date</label>
