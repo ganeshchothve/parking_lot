@@ -21,11 +21,11 @@
                   <label>Booking Details</label>
                   <p><%= (@invoice.try(:invoiceable).try(:booking_project_unit_name) || "-") %></p>
                   <label>Customer Name</label>
-                  <p><%= (@invoice.try(:customer).try(:name) || "-") %></p>
+                  <p><%= (@invoice.try(:invoiceable).try(:user).try(:name) || "-") %></p>
                   <label>Customer Phone</label>
-                  <p><%= (@invoice.try(:customer).try(:phone) || "-") %></p>
+                  <p><%= (@invoice.try(:invoiceable).try(:user).try(:phone) || "-") %></p>
                   <label>Customer Email</label>
-                  <p><%= (@invoice.try(:customer).try(:email) || "-") %></p>
+                  <p><%= (@invoice.try(:invoiceable).try(:user).try(:email) || "-") %></p>
                   <label>Status</label>
                   <p><%= (Invoice.human_attribute_name("invoice/status.#{invoice.status}") rescue "-") %></p>
                   <label>Raised Date</label>
