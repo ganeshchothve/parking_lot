@@ -103,7 +103,7 @@
                   <label>GST Amount</label>
                   <p><%= (number_to_indian_currency(@invoice.try(:gst_amount)) rescue "-") %></p>
                   <label>GST Slab</label>
-                  <p><%= @invoice.try(:gst_amount) %>%</p>
+                  <p><%= @invoice.try(:gst_slab) %>%</p>
                   <label>Approved Amount</label>
                   <p><%= (number_to_indian_currency(@invoice.try(:net_amount)) rescue "-") %></p>
                 </div>
