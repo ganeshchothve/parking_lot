@@ -130,9 +130,9 @@ module InvoiceStateMachine
 
     def after_raised
       unless category == "brokerage"
-        self.raised_date = Time.now if aasm.to_state.to_s == "draft"
+        self.set(raised_date: Time.now) if aasm.to_state.to_s == "draft"
       else
-        self.raised_date = Time.now if aasm.to_state.to_s == "raised"
+        self.set(raised_date: Time.now) if aasm.to_state.to_s == "raised"
       end
       # self.generate_pdf
     end
