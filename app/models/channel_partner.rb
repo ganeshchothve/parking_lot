@@ -84,6 +84,8 @@ class ChannelPartner
   has_many :assets, as: :assetable
   has_many :site_visits
 
+  mount_uploader :company_logo, DocUploader
+
   #validates :first_name, presence: true, on: :create
   validates *SHORT_FORM, presence: true
   validates *FULL_FORM, presence: true, on: :submit_for_approval
