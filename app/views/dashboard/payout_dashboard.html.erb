@@ -23,9 +23,9 @@
           <li>
             <%= link_to "Brokerages", payout_dashboard_path({fltrs: {category: "brokerage"}, user_login: params[:user_login], user_token: params[:user_token]}), class: "#{params.dig(:fltrs, :category) == "brokerage" ? 'active' : ''}" %>
           </li>
-          <li>
+          <!-- <li>
             <a href="javascript:;">Others</a>
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>
