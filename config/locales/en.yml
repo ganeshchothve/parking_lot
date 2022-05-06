@@ -1415,6 +1415,7 @@ en:
         amenities: 'Amenities'
         certificate: 'Certificate'
         images: 'Images'
+        developer_logo: 'Developer Logo'
       project/help_text:
         document_html: 'Project documents'
         offer_html: 'Project ongoing offers'
@@ -1424,6 +1425,7 @@ en:
         amenities_html: 'Project amenities'
         certificate_html: 'Certificate'
         images_html: 'Images'
+        developer_logo_html: 'Project Developer Logo'
       cp_lead_activity/file_types:
         sitevisit_form: 'Walk-in Form'
       cp_lead_activity/help_text:
