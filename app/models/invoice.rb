@@ -85,7 +85,7 @@ class Invoice
   scope :filter_by_payout_status, ->(status) do
     case status
     when "invoiced"
-      where('$or': [{category: "brokerage", status: {"$in": ["raised"]}}, {category: {"$in": ["spot_booking", "walk_in"]}, status: {"$in": ["draft", "raised"]}}])
+      where('$or': [{category: "brokerage", status: {"$in": ["raised"]}}, {category: {"$in": ["spot_booking", "walk_in"]}, status: {"$in": ["draft"]}}])
     when "waiting_for_registration"
       where(category: "brokerage", status: "approved")
     when "waiting_for_invoicing"
