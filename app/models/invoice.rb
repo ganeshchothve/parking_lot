@@ -130,7 +130,7 @@ class Invoice
   end
 
   def get_payout_status
-    if (category == "brokerage" && raised?) || (["spot_booking", "walk_in"].include?(category) && (draft? || raised?))
+    if (category == "brokerage" && raised?) || (["spot_booking", "walk_in"].include?(category) && ["approved","raised","draft"].include?(status))
       "Invoiced"
     elsif (category == "brokerage" && approved?)
       "Waiting for Registration"
