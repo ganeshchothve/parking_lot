@@ -2,7 +2,7 @@ class Admin::PushNotificationPolicy < PushNotificationPolicy
   # def edit? def update? def new? def create? def permitted_attributes from ApplicationPolicy
 
   def index?
-    user.role?('admin')
+    user.role.in?(%w(admin superadmin))
   end
 
   def new?

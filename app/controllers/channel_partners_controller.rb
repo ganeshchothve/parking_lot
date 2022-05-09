@@ -1,11 +1,11 @@
 class ChannelPartnersController < ApplicationController
   include ChannelPartnerRegisteration
 
-  before_action :authenticate_user!, except: %i[new create find_or_create_cp_user add_user_account], unless: proc { params[:action] == 'index' && params[:ds] == 'true' }
+  before_action :authenticate_user!, except: %i[new create find_or_create_cp_user register_cp_user add_user_account], unless: proc { params[:action] == 'index' && params[:ds] == 'true' }
   before_action :set_channel_partner, only: %i[show edit update destroy change_state asset_form]
   around_action :apply_policy_scope, only: :index, unless: proc { params[:ds] == 'true' }
-  before_action :authorize_resource, except: [:new, :create, :find_or_create_cp_user, :add_user_account]
-  skip_before_action :verify_authenticity_token, only: [:find_or_create_cp_user]
+  before_action :authorize_resource, except: [:new, :create, :find_or_create_cp_user, :register_cp_user, :add_user_account]
+  skip_before_action :verify_authenticity_token, only: [:find_or_create_cp_user, :register_cp_user]
 
   def index
     @channel_partners = ChannelPartner.build_criteria params

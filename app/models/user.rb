@@ -25,7 +25,7 @@ class User
   SALES_USER = %w[sales sales_admin]
   COMPANY_USERS = %w[employee_user management_user]
   # Added different types of documents which are uploaded on User
-  DOCUMENT_TYPES = %w[home_loan_application_form photo_identity_proof residence_address_proof residence_ownership_proof income_proof job_continuity_proof bank_statement advance_processing_cheque financial_documents]
+  DOCUMENT_TYPES = %w[home_loan_application_form photo_identity_proof residence_address_proof residence_ownership_proof income_proof job_continuity_proof bank_statement advance_processing_cheque financial_documents first_page_co_branding last_page_co_branding co_branded_asset]
   TEAM_LEAD_DASHBOARD_ACCESS_USERS = %w[team_lead gre]
 
   # Include default devise modules. Others available are:
@@ -402,6 +402,14 @@ class User
         #  end
         #end
       end
+    end
+  end
+
+  def update_onesignal_external_user_id(player_id)
+    if Rails.env.production?
+      Communication::OneSignal::ExternalUserIdUpdateWorker.perform_async(self.id.to_s, player_id)
+    else
+      Communication::OneSignal::ExternalUserIdUpdateWorker.new.perform(self.id.to_s, player_id)
     end
   end
 

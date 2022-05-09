@@ -33,11 +33,27 @@ module DatabaseSeeds
         {"_type"=>"Crm::Api::Put", "http_method"=>"patch", "path"=>"/v1/fund_accounts/<%= self.crm_reference_id(ENV_CONFIG.dig(:razorpay, :base_url)) %>", "request_payload"=>"{\n    'active': <%= self.is_active? %>\n}", "resource_class"=>"FundAccount"}
       ]
 
+      onesignal_crm_data = [
+           {
+                                 "event" => "",
+                           "http_method" => "put",
+                             "is_active" => true,
+                                  "path" => "/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>",
+                       "request_payload" => "{tags: {\n    \"first_name\": \"<%= first_name %>\",\n    \"last_name\": \"<%= last_name %>\",\n    \"name\": \"<%= name %>\",\n    \"email\": \"<%= email %>\",\n    \"phone\": \"<%= phone %>\",\n    \"role\": \"<%= role %>\",\n    \"sourcing_manager_projects\": \"<%= Project.in(id: (event_payload&.dig('project_ids', 1) || project_ids)).pluck(:name)&.to_sentence %>\",\n    \"company_name\": \"<%= event_payload&.dig('company_name', 1) || event_payload.dig('channel_partner', 'company_name') || channel_partner&.company_name %>\",\n    \"company_type\": \"<%= event_payload&.dig('company_type', 1) || event_payload.dig('channel_partner', 'company_type') || channel_partner&.company_type %>\",\n    \"company_owner_name\": \"<%= event_payload&.dig('primary_owner', 'first_name') || event_payload&.dig('channel_partner', 'primary_user', 'name') || channel_partner&.primary_user&.name %>\",\n    \"company_owner_phone\": \"<%= event_payload&.dig('primary_owner', 'phone') || event_payload&.dig('channel_partner', 'primary_user', 'phone') || channel_partner&.primary_user&.phone %>\",\n    \"interested_services\": \"<%= (event_payload&.dig('interested_services', 1) || event_payload.dig('channel_partner', 'interested_services') || channel_partner&.interested_services)&.to_sentence %>\",\n    \"developers_worked_for\": \"<%= (event_payload&.dig('developers_worked_for', 1) || event_payload.dig('channel_partner', 'developers_worked_for') || channel_partner&.developers_worked_for)&.to_sentence %>\",\n    \"pan_number\": \"<%= event_payload&.dig('pan_number', 1) || event_payload.dig('channel_partner', 'pan_number') || channel_partner&.pan_number %>\",\n    \"rera_number\": \"<%= event_payload&.dig('rera_id', 1) || event_payload.dig('channel_partner', 'rera_id') || channel_partner&.rera_id %>\",\n    \"gstin_number\": \"<%= event_payload&.dig('gstin_number', 1) || event_payload.dig('channel_partner', 'gstin_number') || channel_partner&.gstin_number %>\",\n    \"manager_name\": \"<%= manager&.name %>\",\n    \"regions\": \"<%= (event_payload&.dig('regions', 1) || event_payload.dig('channel_partner', 'regions') || channel_partner&.regions)&.to_sentence %>\",\n    \"status\": \"<%= event_payload&.dig('status', 1) || event_payload.dig('channel_partner', 'status') || channel_partner&.status %>\",\n    \"referred_by_name\": \"<%= referred_by&.name %>\",\n    \"projects_subscribed\": \"<%= event_payload.dig('interested_projects')&.to_sentence %>\",\n    \"account_status\": \"<%= self.event_payload.dig('is_active', 1).nil? ? (self.is_active? ? 'active' : 'inactive') : (self.event_payload.dig('is_active', 1).present? ?  'active' : 'inactive') %>\",\n    \"sign_in_count\": \"<%= event_payload.dig('sign_in_count', 1) || self.sign_in_count %>\",\n    \"last_sign_in_time\": \"<%= I18n.l((event_payload.dig('current_sign_in_at', 1) || self.current_sign_in_at || Time.now).in_time_zone(self.time_zone)) %>\"\n}}",
+                        "resource_class" => "User",
+              "response_crm_id_location" => nil
+          }
+      ]
+
       if crm_base.present?
         case crm_base.domain
         when ENV_CONFIG.dig(:interakt, :base_url)
           interakt_crm_data.each do |crm_api|
             puts Crm::Api::Post.create(base_id: crm_base_id, path: crm_api['path'], resource_class: crm_api['resource_class'], event: crm_api['event'], request_payload: crm_api['request_payload'])
+          end
+        when ENV_CONFIG.dig(:onesignal, :base_url)
+          onesignal_crm_data.each do |crm_api|
+            puts Crm::Api::Put.create(base_id: crm_base_id, path: '/api/v1/apps/<%= ENV_CONFIG[:onesignal][:app_id] %>/users/<%= self.id.to_s %>', resource_class: crm_api['resource_class'], event: crm_api['event'], request_payload: crm_api['request_payload'])
           end
         when ENV_CONFIG.dig(:razorpay, :base_url)
           razorpay_crm_data.each do |crm_api|

@@ -61,6 +61,14 @@
           <%= f.label :content %>
           <%= f.text_area :content, rows: 15, class: 'form-control' %>
         </div>
+
+        <% if @template.is_a?(::Template::NotificationTemplate) %>
+          <div>
+            <%= f.label :data %>
+            <%= f.text_area :data, rows: 10, autofocus: true, class: "form-control h-auto", disabled: !policy([:admin, @template]).editable_field?("data") %>
+          </div>
+        <% end %>
+
       </div>
       <div class="modal-footer text-end">
         <%= f.submit "Save", class: "btn btn-primary" %>
