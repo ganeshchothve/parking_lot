@@ -452,8 +452,9 @@ class BookingDetail
     if lead.present? && lead.booking_details.where(project_id: lead.project_id).count > 1
       recipients = []
       recipients << lead.manager.manager if lead.manager.try(:manager).present?
+      recipients << lead.manager.manager.manager if lead.manager.try(:manager).try(:manager).present?
       recipients << User.admin
-      recipients << User.dev_sourcing_manager
+      recipients << User.dev_sourcing_manager.in(project_ids: lead.project_id)
       recipients = recipients.flatten
       template_name = "second_booking_notification"
       template = Template::EmailTemplate.where(name: template_name).first
