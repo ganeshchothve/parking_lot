@@ -10,7 +10,7 @@
           <div class="accordion-item mb-3 border-0 shadow rounded">
             <h2 class="accordion-header" id="headingOne">
               <button class="accordion-button rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#bookingDetailAccordion" aria-expanded="true" aria-controls="bookingDetailAccordion">
-                Booking Details
+                Details
               </button>
             </h2>
             <div id="bookingDetailAccordion" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
@@ -18,8 +18,10 @@
                 <div class="inner-invoice-details">
                   <label>Project</label>
                   <p><%= (@invoice.try(:project).try(:name) || "-") %></p>
-                  <label>Booking Details</label>
-                  <p><%= (@invoice.try(:invoiceable).try(:booking_project_unit_name) || "-") %></p>
+                  <% if @invoice.invoiceable.is_a?(BookingDetail) %>
+                    <label>Booking Details</label>
+                    <p><%= (@invoice.try(:invoiceable).try(:booking_project_unit_name) || "-") %></p>
+                  <% end %>
                   <label>Customer Name</label>
                   <p><%= (@invoice.try(:invoiceable).try(:user).try(:name) || "-") %></p>
                   <label>Customer Phone</label>
@@ -27,8 +29,11 @@
                   <label>Customer Email</label>
                   <p><%= (@invoice.try(:invoiceable).try(:user).try(:email) || "-") %></p>
                   <label>Status</label>
-                  <% booking_status = @invoice.try(:invoiceable).is_a?(BookingDetail) ? @invoice.try(:invoiceable).try(:status) : "" %>
-                  <p><%= (BookingDetail.human_attribute_name("booking_detail/status.#{booking_status}") rescue "-") %></p>
+                  <% if @invoice.invoiceable.is_a?(BookingDetail) %>
+                    <p><%= (BookingDetail.human_attribute_name("booking_detail/status.#{(@invoice.invoiceable.try(:status) || "-")}") rescue "-") %></p>
+                  <% else %>
+                    <p><%= (Invoice.human_attribute_name(@invoice.invoiceable.try(:status) || "-") rescue "-") %></p>
+                  <% end %>
                   <label>Raised Date</label>
                   <p><%= @invoice.try(:raised_date).try(:strftime, '%e %b %Y') || "-" %></p>
                   <label>Processing Date</label>
