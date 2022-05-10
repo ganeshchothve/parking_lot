@@ -110,6 +110,10 @@ module DatabaseSeeds
           </div>
         </div>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "daily_reminder_for_booking_payment").blank?
       end
+
+      def self.client_based_seed(client_id)
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "BookingDetail", name: "second_booking_notification", subject: "Second booking alert for same project", content: 'Alert - Channel Partner <%= self.manager.try(:name) %> has added more than 1 booking on same customer <%= self.lead.try(:name) %> for project <%= self.try(:project).try(:name) %> on BeyondWalls portal. Please cross verify with channel Partner / channel partner manager before approval.') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: "second_booking_notification").blank?
+      end
     end
   end
 end

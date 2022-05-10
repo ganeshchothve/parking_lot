@@ -33,6 +33,8 @@ class BookingDetailObserver < Mongoid::Observer
     if booking_detail.blocked?
       booking_detail.send_notification
     end
+
+    booking_detail.send_second_booking_notification
     #if booking_detail.project_unit.booking_portal_client.external_api_integration?
     #  Crm::Api::Post.where(resource_class: 'BookingDetail').each do |api|
     #    # api.execute(booking_detail)

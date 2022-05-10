@@ -126,6 +126,9 @@ module DatabaseSeeds
               <% url = "#{Rails.application.routes.url_helpers.add_user_account_channel_partners_url(register_code: self.register_in_cp_company_token, channel_partner_id: self.temp_channel_partner&.id.to_s)}" %>
               <%= short_url(url) %>') if ::Template::SmsTemplate.where(name: "cp_user_register_in_company").blank?
 
+
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "BookingDetail", name: "second_booking_notification", content: 'Alert - Channel Partner <%= self.manager.try(:name) %> has added more than 1 booking on same customer <%= self.lead.try(:name) %> for project <%= self.try(:project).try(:name) %> on BeyondWalls portal. Please cross verify with channel Partner / channel partner manager before approval.') if ::Template::SmsTemplate.where(name: "second_booking_notification").blank?
+
       return Template::SmsTemplate.where(booking_portal_client_id: client_id).count
     end
   end

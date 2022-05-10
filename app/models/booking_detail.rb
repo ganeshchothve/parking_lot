@@ -446,6 +446,44 @@ class BookingDetail
     end
   end
 
+  def send_second_booking_notification
+    booking_detail = self
+    lead = booking_detail.lead
+    if lead.present? && lead.booking_details.where(project_id: lead.project_id).count > 1
+      recipients = []
+      recipients << lead.manager.manager if lead.manager.try(:manager).present?
+      recipients << User.admin.pluck(:email)
+      recipients << User.dev_sourcing_manager.pluck(:email)
+      recipients = recipients.flatten
+      template_name = "second_booking_notification"
+      template = Template::EmailTemplate.where(name: template_name).first
+
+      if template.present? && template.is_active? && recipients.present?
+        email = Email.create!({
+          booking_portal_client_id: user.booking_portal_client_id,
+          email_template_id: template.id,
+          recipients: recipients.flatten,
+          triggered_by_id: booking_detail.id,
+          triggered_by_type: booking_detail.class.to_s
+        })
+        email.sent!
+      end
+      sms_template = Template::SmsTemplate.where(name: template_name).first
+      phones = recipients.collect(&:phone).reject(&:blank?)
+      if sms_template.present? && sms_template.is_active? && phones.present?
+        if phones.present?
+          Sms.create!(
+            booking_portal_client_id: current_client.id,
+            to: phones,
+            sms_template_id: sms_template.id,
+            triggered_by_id: booking_detail.id,
+            triggered_by_type: booking_detail.class.to_s
+          )
+        end
+      end
+    end
+  end
+
   class << self
 
     def user_based_scope(user, params = {})
