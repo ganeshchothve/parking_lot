@@ -64,7 +64,7 @@ class Invoice
     if (category.is_a?(Array) && !(category == ["all"]))
       where(category: {"$in": category})
     elsif(category == ["all"])
-      where(category: {"$in": ["spot_booking", "walk_in", "brokerage"]})
+      where(category: {"$in": IncentiveScheme::CATEGORIES})
     else
       where(category: category)
     end
