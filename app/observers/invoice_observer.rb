@@ -4,8 +4,8 @@ class InvoiceObserver < Mongoid::Observer
     if resource
       invoice.account_manager_id = resource.try(:account_manager_id)
       invoice.manager_id = resource&.invoiceable_manager&.id if resource.manager_id.blank?
-      invoice.user = resource&.user&.id if invoice.user_id.blank?
-      invoice.lead = resource&.lead&.id if invoice.lead_id.blank?
+      invoice.user = resource.user_id if invoice.user_id.blank?
+      invoice.lead = resource.lead_id if invoice.lead_id.blank?
       if invoice.manager
         invoice.channel_partner_id = invoice.manager&.channel_partner_id
         invoice.cp_manager_id = invoice.manager&.manager_id

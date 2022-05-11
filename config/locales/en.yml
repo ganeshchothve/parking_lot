@@ -942,7 +942,7 @@ en:
         payment_to: Payment To
         auto_apply: Auto Apply
         date_range: Date Range
-      incentive_scheme/categories:
+      incentive_scheme/categories: &invoice_category
         walk_in: 'Walk-in'
         spot_booking: 'Spot Booking'
         lead: 'Lead'
@@ -1027,11 +1027,7 @@ en:
         paid: Paid
         rejected: Cancellation
       invoice/categories:
-        walk_in: 'Walk-in'
-        spot_booking: 'Spot Booking'
-        lead: 'Lead'
-        referral: 'Referral'
-        brokerage: 'Booking Brokerage'
+        <<: *invoice_category
       cheque_detail:
         total_amount: 'Total Amount'
         payment_identifier: 'Payment Identifier'

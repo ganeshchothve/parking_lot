@@ -29,11 +29,7 @@
                   <label>Customer Email</label>
                   <p><%= (@invoice.try(:invoiceable).try(:user).try(:email) || "-") %></p>
                   <label>Status</label>
-                  <% if @invoice.invoiceable.is_a?(BookingDetail) %>
-                    <p><%= (BookingDetail.human_attribute_name("booking_detail/status.#{(@invoice.invoiceable.try(:status) || "-")}") rescue "-") %></p>
-                  <% else %>
-                    <p><%= (Invoice.human_attribute_name(@invoice.invoiceable.try(:status) || "-") rescue "-") %></p>
-                  <% end %>
+                  <p><%= (@invoice.invoiceable&.class&.human_attribute_name("#{@invoice.invoiceable&.model_name&.i18n_key.to_s}/status.#{(@invoice.invoiceable.try(:status) || "-")}") rescue "-") %></p>
                   <label>Raised Date</label>
                   <p><%= @invoice.try(:raised_date).try(:strftime, '%e %b %Y') || "-" %></p>
                   <label>Processing Date</label>

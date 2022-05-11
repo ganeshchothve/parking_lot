@@ -78,7 +78,7 @@ class Invoice
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_invoiceable_id, ->(invoiceable_id) { where(invoiceable_id: invoiceable_id) }
   scope :filter_by_number, ->(number) { where(number: number) }
-  scope :filter_by_categories, ->(categories) { where(category: category) }
+  scope :filter_by_categories, ->(categories) { where(category: {"$in": categories}) }
   scope :filter_by_raised_date, ->(date) { start_date, end_date = date.split(' - '); where(raised_date: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day) }
 
   #this filter use for Payout dashboard
@@ -87,7 +87,7 @@ class Invoice
     when "invoiced"
       where('$or': [{category: "brokerage", status: {"$in": ["raised"]}}, {category: {"$in": ["spot_booking", "walk_in"]}, status: {"$in": ["draft"]}}])
     when "waiting_for_registration"
-      where(category: "brokerage", status: "approved")
+      where(category: "brokerage", status: "tentative")
     when "waiting_for_invoicing"
       where(category: "brokerage", status: "draft")
     when "paid"
@@ -132,7 +132,7 @@ class Invoice
   def get_payout_status
     if (category == "brokerage" && raised?) || (["spot_booking", "walk_in"].include?(category) && ["approved","raised","draft"].include?(status))
       "Invoiced"
-    elsif (category == "brokerage" && approved?)
+    elsif (category == "brokerage" && tentative?)
       "Waiting for Registration"
     elsif (category == "brokerage" && draft?)
       "Waiting for Invoicing"
