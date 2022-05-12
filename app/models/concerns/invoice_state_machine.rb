@@ -11,7 +11,7 @@ module InvoiceStateMachine
       state :paid
 
       event :draft do
-        transitions from: :tentative, to: :draft
+        transitions from: :tentative, to: :draft, success: %i[after_raised]
         transitions from: :rejected, to: :draft
       end
 
@@ -129,7 +129,11 @@ module InvoiceStateMachine
     end
 
     def after_raised
-      self.raised_date = Time.now
+      unless category == "brokerage"
+        self.set(raised_date: Time.now) if aasm.to_state.to_s == "draft"
+      else
+        self.set(raised_date: Time.now) if aasm.to_state.to_s == "raised"
+      end
       # self.generate_pdf
     end
 
@@ -172,6 +176,7 @@ module InvoiceStateMachine
           invoiceable.aasm(:status).fire!(:paid)
         end
       end
+      self.set(paid_date: Time.now)
     end
 
     def move_manual_invoice_to_draft

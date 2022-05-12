@@ -1,0 +1,136 @@
+<% if policy([:admin, Invoice]).index? %>
+  <section class="invoice-page py-5 bg-white">
+    <div class="container">
+      <div class="col-12">
+        <!-- <h1 class="page-title">Invoice Details</h1> -->
+        <%= link_to "<h1 class='page-title'>&#8592; Invoice Details</h1>".html_safe, payout_list_path(user_login: params[:user_login], user_token: params[:user_token]) %>
+      </div>
+      <div class="col-12 mt-4">
+        <div class="accordion" id="accordionExample">
+          <div class="accordion-item mb-3 border-0 shadow rounded">
+            <h2 class="accordion-header" id="headingOne">
+              <button class="accordion-button rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#bookingDetailAccordion" aria-expanded="true" aria-controls="bookingDetailAccordion">
+                Details
+              </button>
+            </h2>
+            <div id="bookingDetailAccordion" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+              <div class="accordion-body pt-1">
+                <div class="inner-invoice-details">
+                  <label>Project</label>
+                  <p><%= (@invoice.try(:project).try(:name) || "-") %></p>
+                  <% if @invoice.invoiceable.is_a?(BookingDetail) %>
+                    <label>Booking Details</label>
+                    <p><%= (@invoice.try(:invoiceable).try(:booking_project_unit_name) || "-") %></p>
+                  <% end %>
+                  <label>Customer Name</label>
+                  <p><%= (@invoice.try(:invoiceable).try(:user).try(:name) || "-") %></p>
+                  <label>Customer Phone</label>
+                  <p><%= (@invoice.try(:invoiceable).try(:user).try(:phone) || "-") %></p>
+                  <label>Customer Email</label>
+                  <p><%= (@invoice.try(:invoiceable).try(:user).try(:email) || "-") %></p>
+                  <label>Status</label>
+                  <p><%= (@invoice.invoiceable&.class&.human_attribute_name("#{@invoice.invoiceable&.model_name&.i18n_key.to_s}/status.#{(@invoice.invoiceable.try(:status) || "-")}") rescue "-") %></p>
+                  <label>Raised Date</label>
+                  <p><%= @invoice.try(:raised_date).try(:strftime, '%e %b %Y') || "-" %></p>
+                  <label>Processing Date</label>
+                  <p><%= @invoice.try(:processing_date).try(:strftime, '%e %b %Y') || "-" %></p>
+                  <label>Approved Date</label>
+                  <p><%= @invoice.try(:approved_date).try(:strftime, '%e %b %Y') || "-" %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item mb-3 border-0 shadow rounded">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#cpDetailsAccordion" aria-expanded="false" aria-controls="cpDetailsAccordion">
+                Channel Partner Details
+              </button>
+            </h2>
+            <div id="cpDetailsAccordion" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+              <div class="accordion-body pt-1">
+                <div class="inner-invoice-details">
+                  <label>Registration Name (Used in payments)</label>
+                  <p><%= @invoice.try(:manager).try(:name) || "-" %></p>
+                  <label>GST Number</label>
+                  <p><%= @invoice.try(:manager).try(:channel_partner).try(:gstin_number) || "-" %></p>
+                  <label>Address</label>
+                  <p><%= @invoice.try(:manager).try(:channel_partner).try(:address).try(:to_sentence) || "-" %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item mb-3 border-0 shadow rounded">
+            <h2 class="accordion-header" id="headingThree">
+              <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#paymentDetailsAccourdion" aria-expanded="false" aria-controls="paymentDetailsAccourdion">
+                Payment Details
+              </button>
+            </h2>
+            <div id="paymentDetailsAccourdion" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+              <div class="accordion-body pt-1">
+                <div class="inner-invoice-details">
+                  <label>Total Amount Paid</label>
+                  <p><%= (number_to_indian_currency(@invoice.cheque_detail.try(:total_amount)) rescue "-") %></p>
+                  <label>Issuing Bank</label>
+                  <p><%= @invoice.cheque_detail.try(:issuing_bank) || "-" %></p>
+                  <label>Issuing Bank Branch</label>
+                  <p><%= @invoice.cheque_detail.try(:issuing_bank_branch) || "-" %></p>
+                  <label>Issued Date</label>
+                  <p><%= @invoice.cheque_detail.try(:issued_date).try(:strftime, '%e %b %Y') || "-" %></p>
+                  <label>Handover Date</label>
+                  <p><%= @invoice.cheque_detail.try(:handover_date).try(:strftime, '%e %b %Y') || "-" %></p>
+                  <label>Approved Date</label>
+                  <p><%= @invoice.try(:approved_date).try(:strftime, '%e %b %Y') || "-" %></p>
+                  <label>Payout Id</label>
+                  <p><%= @invoice.try(:third_party_references).try(:first).try(:reference_id) || "-" %></p>
+                  <label>UPI Id</label>
+                  <p><%= @invoice.try(:manager).try(:fund_accounts).try(:first).try(:address) || "-" %></p>
+                  <label>Paid Date</label>
+                  <p><%= @invoice.try(:paid_date).try(:strftime, '%e %b %Y') || "-" %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item mb-3 border-0 shadow rounded">
+            <h2 class="accordion-header" id="headingThree">
+              <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#amountAccordion" aria-expanded="false" aria-controls="amountAccordion">
+                Amount
+              </button>
+            </h2>
+            <div id="amountAccordion" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+              <div class="accordion-body pt-1">
+                <div class="inner-invoice-details">
+                  <label>Brokerage Amount</label>
+                  <p><%= (number_to_indian_currency(@invoice.try(:amount)) rescue "-") %></p>
+                  <label>GST Amount</label>
+                  <p><%= (number_to_indian_currency(@invoice.try(:gst_amount)) rescue "-") %></p>
+                  <label>GST Slab</label>
+                  <p><%= @invoice.try(:gst_slab) %>%</p>
+                  <label>Approved Amount</label>
+                  <p><%= (number_to_indian_currency(@invoice.try(:net_amount)) rescue "-") %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% if @invoice.assets.present? %>
+          <div class="accordion-item border-0 shadow rounded">
+            <h2 class="accordion-header" id="headingThree">
+              <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#docsAccordion" aria-expanded="false" aria-controls="docsAccordion">
+                Documents
+              </button>
+            </h2>
+            <div id="docsAccordion" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+              <div class="accordion-body pt-1">
+                <div class="inner-invoice-details">
+                  <% @invoice.assets.each do |asset| %>
+                  <p><%= link_to asset.file_name, asset.file.url, class: "asset-download", download: "" %></p>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </section>
+<% end %>
