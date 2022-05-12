@@ -20,7 +20,14 @@ json.entries @projects do |project|
     json.invoicing_enabled allow_invoice_create?(project)
 
     json.assets project.assets do |asset|
-      json.extract! asset, :document_type, :_id, :file, :file_name, :file_size
+      json.extract! asset, :document_type, :_id, :file_name, :file_size
+      if asset.document_type.in?(%w(sales_presentation))
+        json.file do
+          json.url "#{ENV_CONFIG.dig(:asset_manager_host)}/users/#{current_user.id.to_s}/assets/#{asset.id.to_s}/process_asset"
+        end
+      else
+        json.file asset.file.as_json
+      end
     end
     json.videos project.videos do |video|
       json.extract! video, :_id, :description, :embedded_video, :thumbnail
