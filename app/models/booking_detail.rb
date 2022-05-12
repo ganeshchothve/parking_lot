@@ -402,7 +402,7 @@ class BookingDetail
               false
             end
           else
-            blocked?
+            (status.in?(%w(blocked booked_tentative)) && approval_status == "approved")
           end
         end
       else

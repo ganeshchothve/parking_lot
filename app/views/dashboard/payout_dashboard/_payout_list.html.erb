@@ -1,0 +1,46 @@
+<% invoices.each do |invoice| %>
+  <% customer_name = (invoice.try(:customer).try(:name) || invoice.try(:invoiceable).try(:user).try(:name)) %>
+  <div class="col-12">
+    <div class="cp-ep-info-box">
+      <div class="row">
+        <div class="col-7 cp-name-info pe-0">
+          <span><%= (invoice.try(:customer).try(:initials) || invoice.try(:invoiceable).try(:user).try(:initials)) %></span>
+          <p><%= link_to customer_name, payout_show_path(invoice_id: invoice.id ,user_login: params[:user_login], user_token: params[:user_token])%></p>
+        </div>
+        <div class="col-5 cp-payout-info text-end ps-0">
+          <p><%= (number_to_indian_currency(invoice.try(:net_amount)) rescue "-") %></p>
+          <span><%= (Invoice.human_attribute_name("invoice/categories.#{invoice.category}") rescue "-") %></span>
+        </div>
+        <div class="col-12"><hr></div>
+        <div class="col-6 cp-info-list pe-0">
+          <div class="building-icon">
+            <i class="fa fa-solid fa-building"></i>
+          </div>
+          <span>Project:</span>
+          <p><%= (invoice.try(:project).try(:name) || "-") %></p>
+        </div>
+        <div class="col-6 cp-info-list">
+          <div class="building-icon">
+            <i class="fa fa-solid fa-building"></i>
+          </div>
+          <span>Invoiced On:</span>
+          <p><%= invoice.try(:raised_date).try(:strftime, '%e %b %Y') || "-" %></p>
+        </div>
+        <div class="col-6 cp-info-list">
+          <div class="building-icon">
+            <i class="fa fa-solid fa-building"></i>
+          </div>
+          <span>Unit:</span>
+          <p class="mb-0"><%= (invoice.try(:invoiceable).try(:booking_project_unit_name) || "-") %></p>
+        </div>
+        <div class="col-6 cp-info-list">
+          <div class="building-icon">
+            <i class="fa fa-solid fa-check"></i>
+          </div>
+          <span>Status:</span>
+          <p class="mb-0"><%= (invoice.get_payout_status rescue "-") %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

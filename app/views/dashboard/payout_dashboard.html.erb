@@ -1,0 +1,196 @@
+<section class="cp-payout-page">
+  <div class="container">
+    <div class="row sticky-cp-menu">
+      <div class="col-6">
+        <h1 class="sec-title-cp">Earnings</h1>
+      </div>
+      <div class="col-6 text-end">
+        <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#cp-payout-filter-modal">
+          <i class="fas fa-filter white"></i>
+        </a>
+      </div>
+      <div class="col-12">
+        <ul class="cp-menu-list">
+          <li>
+            <%= link_to "All", payout_dashboard_path(user_login: params[:user_login], user_token: params[:user_token]), class: "#{params.dig(:fltrs, :category).blank? ? 'active' : ''}" %>
+          </li>
+          <li>
+            <%= link_to "Site Visits", payout_dashboard_path({fltrs: {category: "walk_in"}, user_login: params[:user_login], user_token: params[:user_token]}), class: "#{params.dig(:fltrs, :category) == "walk_in" ? 'active' : ''}" %>
+          </li>
+          <li>
+            <%= link_to "Spot Bookings", payout_dashboard_path({fltrs: {category: "spot_booking"}, user_login: params[:user_login], user_token: params[:user_token]}), class: "#{params.dig(:fltrs, :category) == "spot_booking" ? 'active' : ''}" %>
+          </li>
+          <li>
+            <%= link_to "Brokerages", payout_dashboard_path({fltrs: {category: "brokerage"}, user_login: params[:user_login], user_token: params[:user_token]}), class: "#{params.dig(:fltrs, :category) == "brokerage" ? 'active' : ''}" %>
+          </li>
+          <!-- <li>
+            <a href="javascript:;">Others</a>
+          </li> -->
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-12"><hr class="my-1 hr-color"></div>
+  <div class="contianer">
+    <div class="row px-3">
+      <div class="col-12">
+        <h2 class="total-earn-txt">TOTAL EARNINGS</h2>
+        <h3 class="total-earn-amount mb-4"><%= number_to_indian_currency(@total_earnings) rescue "-" %></h3>
+      </div>
+      <div class="col-6 pe-1">
+        <div class="earn-desc">
+          <label>INVOICED</label>
+          <p><%= number_to_indian_currency(@invoiced) rescue "-" %></p>
+          <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#invoiced-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
+        </div>
+      </div>
+      <div class="col-6 ps-1">
+        <div class="earn-desc">
+          <label>PAID</label>
+          <p><%= number_to_indian_currency(@paid_invoices) rescue "-" %></p>
+          <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#paid-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+  <section class="earning-potential">
+    <div class="container">
+      <div class="row">
+        <% if params.dig(:fltrs, :category).blank? || params.dig(:fltrs, :category) == "brokerage" || params.dig(:fltrs, :category) == ["all"] || params.dig(:fltrs, :category) == ["brokerage"] %>
+          <div>
+              <div class="col-12">
+                  <h2 class="ep-title">Earning Potential</h2>
+              </div>
+
+              <div class="col-12">
+                  <ul class="earning-potential-list mt-3">
+                  <li>
+                      <div class="earn-desc pending-approval bg-white">
+                      <label>Waiting for Registration</label>
+                      <p><%= number_to_indian_currency(@waiting_for_registration) rescue "-" %></p>
+                      <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#waiting-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
+                      </div>
+                  </li>
+                  <li>
+                      <div class="earn-desc approved bg-success">
+                      <label>Waiting for Invoicing</label>
+                      <p><%= number_to_indian_currency(@waiting_for_approval) rescue "-" %></p>
+                      <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#approved-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
+                      </div>
+                  </li>
+                  <li>
+                      <div class="earn-desc waiting-approval bg-danger">
+                      <label>Cancellation</label>
+                      <p><%= number_to_indian_currency(@rejected_invoices) rescue "-" %></p>
+                      <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#lost-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
+                      </div>
+                  </li>
+                  </ul>
+              </div>
+
+              <div class="col-12"><hr></div>
+          </div>
+        <% end %>
+        <% if policy([:admin, Invoice]).index? %>
+          <div class="col-12">
+            <h2 class="ep-title float-start col-6">Transactions</h2>
+            <%= link_to "View All", payout_list_path(fltrs: params.dig(:fltrs), user_login: params[:user_login], user_token: params[:user_token]), class: "text-end float-end col-6" %>
+          </div>
+          
+          <%= render "dashboard/payout_dashboard/payout_list", invoices: @invoices_with_limit %>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+<!-- Modal -->
+<div class="modal fade small-modal" id="invoiced-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header p-3">
+        <h5 class="modal-title" id="">Invoiced</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>This is the total incentive amount generated on all walk-ins & bookings approved by the developer sourcing manager. Your incentive/brokerage will be released shortly.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade small-modal" id="paid-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header p-3">
+        <h5 class="modal-title" id="">Paid</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>This is the total incentive amount paid by Beyondwalls on your approved walk-ins, spot bookings and booking brokerages.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade small-modal" id="waiting-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header p-3">
+        <h5 class="modal-title" id="">Waiting for Registration</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>This is the total brokerage amount of all bookings approved by the developer end. The brokerage release process will start once booking registration is completed.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade small-modal" id="approved-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header p-3">
+        <h5 class="modal-title" id="">Waiting for Invoicing</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>This is the total potential brokerage generated on bookings. The booking details will be submitted to the developer for verification and further brokerage process.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade small-modal" id="lost-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header p-3">
+        <h5 class="modal-title" id="">Cancellation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>This is the total amount of lost brokerage due to missing/incorrect booking details submitted to developer.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<%= render "dashboard/payout_dashboard/filters" %>
+
+
+<script>
+    // $('.brokerage-tab').click(function(){
+    //     $('.brokerage-tab-content').fadeIn();
+    //     $('.cp-menu-list a').removeClass('active');
+    //     $(this).addClass('active');
+    // });
+    $(window).scroll(function(){
+        var scroll = $(window).scrollTop();
+        if (scroll > 10) {
+            $(".sticky-cp-menu").addClass("fixed-header");
+            $('.cp-payout-page').css('padding','90px 0 55px');
+        } else {
+            $(".sticky-cp-menu").removeClass("fixed-header");
+            $('.cp-payout-page').css('padding','30px 0 55px');
+        }
+    });
+</script>
