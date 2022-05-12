@@ -1,4 +1,4 @@
-<% inventory_avl = @project.project_units.count > 0 %>
+<% inventory_avl = @project.enable_inventory %>
 <% project_labels = t('mongoid.attributes.project') %>
 <% interest = current_user.interested_projects.in(status: %w(subscribed approved)).where(project_id: @project.id).presence %>
 <section class="prjt-details-sec">
@@ -104,7 +104,8 @@
                                     <div class="col-lg-5 col-12 overview-left float-start">
                                         <p>
                                             <span>Configuration</span>
-                                            <%= inventory_avl ? DashboardDataProvider.configurations(@project).to_sentence : @project.configurations&.to_sentence %> Flats <%= inventory_avl ? "| #{@project.project_units.min(:saleable)&.round} - #{@project.project_units.max(:saleable)&.round} #{@project.area_unit}" : '' %>
+                                            <% flats_text = @project.project_type.include?("residential") ? " Flats" : "" %>
+                                            <%= inventory_avl ? DashboardDataProvider.configurations(@project).to_sentence + flats_text : @project.configurations&.to_sentence + flats_text %> <%= inventory_avl ? "| #{@project.project_units.min(:saleable)&.round} - #{@project.project_units.max(:saleable)&.round} #{@project.area_unit}" : '' %>
                                         </p>
                                         <p>
                                             <span>Property Value</span>

@@ -22,6 +22,7 @@ module DatabaseSeeds
       DatabaseSeeds::EmailTemplates::Lead.client_seed(client_id)
       DatabaseSeeds::EmailTemplates::ChannelPartner.seed(client_id)
       DatabaseSeeds::EmailTemplates::Reminder.client_based_email_templates_seed(client_id)
+      DatabaseSeeds::EmailTemplates::BookingDetail.client_based_seed(client_id)
     end
 
     def self.project_unit_overview
