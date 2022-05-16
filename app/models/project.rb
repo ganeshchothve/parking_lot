@@ -207,7 +207,6 @@ class Project
   scope :filter_by_disable_project_walk_ins, ->(disabled_walkin) { where('disable_project.walk_ins': (disabled_walkin == 'true')) }
   scope :filter_by_disable_project_bookings, ->(disabled_bookings) { where('disable_project.bookings': (disabled_bookings == 'true')) }
 
-
   #def unit_configurations
   #  UnitConfiguration.where(data_attributes: {"$elemMatch" => {"n" => "project_id", "v" => self.selldo_id}})
   #end
@@ -295,10 +294,8 @@ class Project
         custom_scope.merge!({_id: {"$in": project_ids}})
       end
     end
-
     custom_scope.merge!({ is_active: true }) if (params[:controller] == 'admin/projects' && params[:action] == 'index') || params[:controller] == 'home'
     custom_scope
-
   end
 
 end
