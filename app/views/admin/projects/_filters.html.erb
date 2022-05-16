@@ -13,10 +13,13 @@
 
         <%= render 'admin/regions/filters' %>
 
+
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-          <%= label_tag "fltrs", t('mongoid.attributes.project.category') %>
-          <%= select_tag "fltrs[category]", options_for_select(Project.nin(category: [nil, []]).distinct(:category).map{|category| [t("mongoid.attributes.project/category.#{category}"), category]}, (params[:fltrs].present? ? params[:fltrs][:category] : "")), { prompt: 'Select', class: "selectize", multiple: true } %>
+          <%= label_tag "fltrs", t('mongoid.attributes.project.types') %>
+          <%= select_tag "fltrs[project_type]", options_for_select(Project.nin(project_type: [nil, '']).distinct(:project_type).map{|project_type| [t("mongoid.attributes.project/project_type.#{project_type}"),project_type]}, (params[:fltrs].present? ? params[:fltrs][:types] : "")), { prompt: 'Select', class: "selectize"} %>
         </div>
+
+
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.project.project_segment') %>
           <%= select_tag "fltrs[project_segment]", options_for_select(Project.nin(project_segment: [nil, []]).distinct(:project_segment).map{|segment| [t("mongoid.attributes.project/project_segment.#{segment}"), segment]}, (params[:fltrs].present? ? params[:fltrs][:project_segment] : "")), { prompt: 'Select', class: "selectize", multiple: true } %>

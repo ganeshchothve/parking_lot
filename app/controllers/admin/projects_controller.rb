@@ -12,6 +12,7 @@ class Admin::ProjectsController < AdminController
   #
   def index
     @projects = Project.all.build_criteria(params)
+    
     @projects = @projects.filter_by_is_active(true) unless policy([current_user_role_group, Project.new(is_active: false)]).show?
     @projects = @projects.paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
