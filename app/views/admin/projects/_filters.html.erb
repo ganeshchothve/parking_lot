@@ -12,6 +12,10 @@
         </div>
 
         <%= render 'admin/regions/filters' %>
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.project.category') %>
+          <%= select_tag "fltrs[category]", options_for_select(Project.nin(category: [nil, []]).distinct(:category).map{|category| [t("mongoid.attributes.project/category.#{category}"), category]}, (params[:fltrs].present? ? params[:fltrs][:category] : "")), { prompt: 'Select', class: "selectize", multiple: true } %>
+        </div>
 
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.project.types') %>
