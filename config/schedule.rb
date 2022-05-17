@@ -40,6 +40,10 @@ every 1.day, at: "4:30 am" do
   # runner "ProjectUnitRemindersAndAutoRelease::Job.release_project_unit"
 end
 
+every 1.day, at: "12:00 am" do
+  runner "DestroyExpiredAssetsWorker.perform_async"
+end
+
 # every 1.minute do
 #   runner "UpgradePricing.perform"
 # end

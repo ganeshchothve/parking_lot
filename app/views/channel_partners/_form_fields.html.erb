@@ -44,6 +44,18 @@
 </div>
 
 <div class="row">
+  <div class="col-md-12">
+    <%= form.label :company_logo, class: '' %>
+    <%= form.file_field :company_logo, class: 'btn pl-0 file-input', disabled: !policy([:admin, @channel_partner]).editable_field?("company_logo") %>
+    <% if @channel_partner.company_logo.present? %>
+      <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
+        <img src="<%= @channel_partner.company_logo.url %>" style="max-height: 100%; max-width:100%;" />
+      </div>
+    <% end %>
+    <hr/>
+  </div>
+</div>
+<div class="row">
   <div class="col-md-6">
   <!-- Remove form-control class in select field and selectize  -->
     <%= form.input :expertise, collection: ChannelPartner::EXPERTISE.collect{|x| [x.titleize, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("expertise"), as: :select, prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>

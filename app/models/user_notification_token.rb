@@ -7,5 +7,5 @@ class UserNotificationToken
 
   embedded_in :user
 
-  validates :token, :os, presence: true
+  # validates :token, :os, presence: true
 end

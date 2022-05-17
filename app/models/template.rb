@@ -2,6 +2,7 @@ class Template
   include Mongoid::Document
   include Mongoid::Timestamps
   extend FilterByCriteria
+  include JSONStringParser
 
   field :content, type: String
   field :is_active, type: Boolean, default: false
@@ -22,4 +23,11 @@ class Template
       "We are sorry! #{self.class.name} has some issue. Please Contact to Administrator."
     end
   end
+
+  def parsed_data record
+    _request_erb = ERB.new(data.gsub("\n\s", '')) rescue ERB.new("Hash.new")
+    _data = SafeParser.new(_request_erb.result(record.get_binding)).safe_load rescue {}
+    recursive_json_string_parser(_data)
+  end
+
 end

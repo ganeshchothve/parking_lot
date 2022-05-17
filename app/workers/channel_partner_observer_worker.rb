@@ -7,6 +7,7 @@ class ChannelPartnerObserverWorker
     if channel_partner.present?
       interakt_base = Crm::Base.where(domain: ENV_CONFIG.dig(:interakt, :base_url)).first
       selldo_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+      onesignal_base = Crm::Base.where(domain: ENV_CONFIG.dig(:onesignal, :base_url)).first
 
       # For calling Selldo APIs
       if selldo_base
@@ -16,15 +17,16 @@ class ChannelPartnerObserverWorker
           end
         end
       end
+    # Push changes on User
+      if (changed_keys = (changes.keys & %w(company_name company_type interested_services manager_id developers_worked_for pan_number rera_id gstin_number regions status)).presence) && changed_keys.all? {|key| channel_partner[key].present?}
+        channel_partner.users.each do |cp_user|
+          Crm::Api::ExecuteWorker.perform_async('post', 'User', cp_user.id, nil, changes, interakt_base.id.to_s) if interakt_base.present?
+          Crm::Api::ExecuteWorker.perform_async('post', 'User', cp_user.id, nil, changes, onesignal_base.id.to_s) if onesignal_base.present?
+        end
+      end
 
       # For calling Interakt APIs
       if interakt_base
-        # Push changes on User
-        if (changed_keys = (changes.keys & %w(company_name company_type interested_services manager_id developers_worked_for pan_number rera_id gstin_number regions status)).presence) && changed_keys.all? {|key| channel_partner[key].present?}
-          channel_partner.users.each do |cp_user|
-            Crm::Api::ExecuteWorker.perform_async('post', 'User', cp_user.id, nil, changes, interakt_base.id.to_s)
-          end
-        end
 
         # Push events based on changed attributes
         if changes.has_key?('status') && channel_partner.status.present?
@@ -64,7 +66,8 @@ class ChannelPartnerObserverWorker
             end
           end
         end
-      end # if interakt_base
+      end
+
     end
   end
 end

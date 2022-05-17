@@ -229,6 +229,23 @@ class Admin::BookingDetailsController < AdminController
     end
   end
 
+  def move_to_next_approval_state
+    respond_to do |format|
+      @booking_detail.assign_attributes(rejection_reason: params.dig(:booking_detail, :rejection_reason))
+      if @booking_detail.move_to_next_approval_state!(params.dig(:booking_detail, :approval_event))
+        format.html{ redirect_to request.referrer || dashboard_url, notice: "Booking moved to #{params[:status]} successfully" }
+        format.json { render json: { message: "Booking moved to #{params.dig(:booking_detail, :approval_event).humanize} successfully" }, status: :ok }
+      else
+        format.html{ redirect_to request.referrer || dashboard_url, alert: @booking_detail.errors.full_messages.uniq }
+        format.json { render json: { errors: @booking_detail.errors.full_messages.uniq }, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def reject
+    render layout: false
+  end
+
   private
 
   def set_lead

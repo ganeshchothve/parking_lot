@@ -44,6 +44,7 @@ class SiteVisit
 
   delegate :name, to: :project, prefix: true, allow_nil: true
 
+  scope :filter_by_id, ->(_id) { where(_id: _id) }
   scope :filter_by_status, ->(_status) { where(status: (_status.is_a?(String) ? _status : { '$in' => _status })) }
   scope :filter_by_approval_status, ->(_approval_status) { where(approval_status: (_approval_status.is_a?(String) ? _approval_status : { '$in' => _approval_status })) }
   scope :filter_by_site_visit_type, ->(_site_visit_type) { where(status: (_site_visit_type.is_a?(String) ? _site_visit_type : { '$in' => _site_visit_type })) }
@@ -74,23 +75,23 @@ class SiteVisit
   validates :notes, copy_errors_from_child: true
   validates :assets, copy_errors_from_child: true
 
-  def incentive_eligible?(category=nil)
+  def tentative_incentive_eligible?(category=nil)
     if category.present?
       if category == 'walk_in'
         !is_revisit? && scheduled?
       end
     else
-      _incentive_eligible?
+      _tentative_incentive_eligible?
     end
   end
 
-  def actual_incentive_eligible?(category=nil)
+  def draft_incentive_eligible?(category=nil)
     if category.present?
       if category == 'walk_in'
         !is_revisit? && verification_approved? && (conducted? || paid?)
       end
     else
-      _actual_incentive_eligible?
+      _draft_incentive_eligible?
     end
   end
 

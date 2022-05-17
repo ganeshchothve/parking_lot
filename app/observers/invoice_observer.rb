@@ -4,6 +4,8 @@ class InvoiceObserver < Mongoid::Observer
     if resource
       invoice.account_manager_id = resource.try(:account_manager_id)
       invoice.manager_id = resource&.invoiceable_manager&.id if resource.manager_id.blank?
+      invoice.user = resource.user_id if invoice.user_id.blank?
+      invoice.lead = resource.lead_id if invoice.lead_id.blank?
       if invoice.manager
         invoice.channel_partner_id = invoice.manager&.channel_partner_id
         invoice.cp_manager_id = invoice.manager&.manager_id
@@ -25,6 +27,10 @@ class InvoiceObserver < Mongoid::Observer
     invoice.net_amount = invoice.calculate_net_amount
   end
 
+  def after_create invoice
+    invoice.move_manual_invoice_to_draft
+  end
+
   def after_save invoice
     # invoice generated set to trueif invoice.invoiceable.present?
     if invoice.invoiceable.present?
@@ -34,6 +40,12 @@ class InvoiceObserver < Mongoid::Observer
         # invoice rejected set to false
         invoice.invoiceable.set(incentive_generated: false)
       end
+
+
+      if invoice.status.in?(["tentative", "rejected"])
+        invoice.change_status("draft") if invoice.invoiceable.draft_incentive_eligible?(invoice.category)
+      end
+
     end
   end
 end

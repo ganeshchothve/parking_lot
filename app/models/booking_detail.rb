@@ -4,6 +4,7 @@ class BookingDetail
   include ArrayBlankRejectable
   include InsertionStringMethods
   include BookingDetailStateMachine
+  include BookingDetailApprovalStateMachine
   # include SyncDetails
   include Tasks
   include ApplicationHelper
@@ -40,6 +41,7 @@ class BookingDetail
   field :tentative_agreement_date, type: Date
   field :ladder_stage, type: Array
   field :source, type: String
+  field :rejection_reason, type: String
 
   mount_uploader :tds_doc, DocUploader
 
@@ -105,6 +107,13 @@ class BookingDetail
       where(status: {"$in": status})
     else
       where(status: status)
+    end
+  end
+  scope :filter_by_approval_status, ->(approval_status) do
+    if approval_status.is_a?(Array)
+      where(approval_status: {"$in": approval_status})
+    else
+      where(approval_status: approval_status)
     end
   end
   scope :filter_by_statuses, ->(statuses) { where(status: {"$in": statuses}) }
@@ -379,7 +388,7 @@ class BookingDetail
     end
   end
 
-  def incentive_eligible?(category=nil)
+  def tentative_incentive_eligible?(category=nil)
     if category.present?
       case category
       when 'spot_booking'
@@ -393,22 +402,22 @@ class BookingDetail
               false
             end
           else
-            blocked?
+            (status.in?(%w(blocked booked_tentative)) && approval_status == "approved")
           end
         end
       else
         false
       end
     else
-      _incentive_eligible?
+      _tentative_incentive_eligible?
     end
   end
 
-  def actual_incentive_eligible?(category=nil)
+  def draft_incentive_eligible?(category=nil)
     if category.present?
       case category
       when 'spot_booking'
-        status.in?(%w(blocked booked_tentative booked_confirmed))
+        (status.in?(%w(blocked booked_tentative booked_confirmed)) && approval_status == "approved")
       when 'brokerage'
         if project.present?
           if project.enable_inventory?
@@ -418,14 +427,14 @@ class BookingDetail
               false
             end
           else
-            booked_confirmed?
+            (booked_confirmed? && approval_status == "approved")
           end
         end
       else
         false
       end
     else
-      _actual_incentive_eligible?
+      _draft_incentive_eligible?
     end
   end
 
@@ -434,6 +443,43 @@ class BookingDetail
       self.calculate_agreement_price
     else
       (self.agreement_price)
+    end
+  end
+
+  def send_second_booking_notification
+    booking_detail = self
+    lead = booking_detail.lead
+    if lead.present? && lead.booking_details.where(project_id: lead.project_id).count > 1
+      recipients = []
+      recipients << lead.manager.manager if lead.manager.try(:manager).present?
+      recipients << lead.manager.manager.manager if lead.manager.try(:manager).try(:manager).present?
+      recipients << User.admin
+      recipients << User.dev_sourcing_manager.where(project_ids: lead.project_id.to_s)
+      recipients = recipients.flatten
+      template_name = "second_booking_notification"
+      template = Template::EmailTemplate.where(name: template_name).first
+
+      if template.present? && template.is_active? && recipients.present?
+        email = Email.create!({
+          booking_portal_client_id: booking_detail.user.booking_portal_client_id,
+          email_template_id: template.id,
+          recipients: recipients.flatten,
+          triggered_by_id: booking_detail.id,
+          triggered_by_type: booking_detail.class.to_s
+        })
+        email.sent!
+      end
+      sms_template = Template::SmsTemplate.where(name: template_name).first
+      phones = recipients.collect(&:phone).reject(&:blank?)
+      if sms_template.present? && sms_template.is_active? && phones.present?
+        Sms.create!(
+          booking_portal_client_id: booking_detail.user.booking_portal_client_id,
+          to: phones,
+          sms_template_id: sms_template.id,
+          triggered_by_id: booking_detail.id,
+          triggered_by_type: booking_detail.class.to_s
+        )
+      end
     end
   end
 

@@ -62,7 +62,7 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def asset_create?
-    %w[admin sales sales_admin crm].include?(user.role)
+    %w[superadmin admin sales sales_admin crm].include?(user.role)
   end
 
   def block_lead?
@@ -123,11 +123,15 @@ class Admin::UserPolicy < UserPolicy
     )
   end
 
+  def update_player_ids?
+    user.role.in?(%w(superadmin admin channel_partner cp_owner))
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     if user.present?
       attributes += [:is_active] if record.persisted? && record.id != user.id && user.role.in?(%w(cp cp_admin admin superadmin))
-      if %w[admin superadmin].include?(user.role) && record.role.in?(%w(channel_partner cp cp_owner))
+      if %w[admin superadmin].include?(user.role)  && record.role?('cp')
         attributes += [:manager_id]
       end
       if %w[admin superadmin cp_admin sales_admin].include?(user.role) && record.buyer?
@@ -155,7 +159,7 @@ class Admin::UserPolicy < UserPolicy
     if record.role.in?(%w(cp_owner channel_partner))
       attributes += [:upi_id]
       attributes += [:referral_code] if record.new_record?
-      attributes += [:channel_partner_id] if user.present? && user.role.in?(%w(superadmin cp_owner))
+      attributes += [:channel_partner_id] if user.present? && user.role.in?(%w(cp_owner))
       attributes += [fund_accounts_attributes: FundAccountPolicy.new(user, FundAccount.new).permitted_attributes] if record.persisted?
       attributes += [:rejection_reason]
     end

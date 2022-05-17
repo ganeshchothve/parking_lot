@@ -15,13 +15,8 @@ class Admin::ProjectsController < AdminController
     @projects = @projects.filter_by_is_active(true) unless policy([current_user_role_group, Project.new(is_active: false)]).show?
     @projects = @projects.paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
-      if params[:ds].to_s == 'true'
-        format.json { render json: @projects.collect { |p| { id: p.id, name: p.ds_name } } }
-        format.html {}
-      else
-        format.json
-        format.html {}
-      end
+      format.json
+      format.html {}
     end
   end
 

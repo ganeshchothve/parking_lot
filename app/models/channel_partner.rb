@@ -84,6 +84,8 @@ class ChannelPartner
   has_many :assets, as: :assetable
   has_many :site_visits
 
+  mount_uploader :company_logo, DocUploader
+
   #validates :first_name, presence: true, on: :create
   validates *SHORT_FORM, presence: true
   validates *FULL_FORM, presence: true, on: :submit_for_approval
@@ -91,24 +93,26 @@ class ChannelPartner
   #
   #TODO: Commented for testing on Mobile app
   #validates :pan_number, presence: true, unless: :nri?, on: :submit_for_approval
-  validates :rera_id, presence: true, if: :rera_applicable?
+  #validates :email, uniqueness: true, allow_blank: true
+  #validates :first_name, :last_name, name: true, allow_blank: true
+  #validates :rera_id, format: { with: /\A([A-Za-z])\d{11}\z/i, message: 'is not valid format' }, allow_blank: true
+  #validate :docs_required_for_approval, on: :submit_for_approval
+
+  validates :rera_id, presence: true, uniqueness: true, length: { minimum: 6 }, format: { with: /\A[0-9a-zA-Z\/]*\z/i, message: 'allows only aplabets, numbers & forward slash(/)' }
   validates :gstin_number, presence: true, if: :gst_applicable?
   validates :team_size, :numericality => { :greater_than => 0 }, allow_blank: true
   validates :status_change_reason, presence: true, if: proc { |cp| cp.status == 'rejected' }
   validates :aadhaar, format: { with: /\A\d{12}\z/i, message: 'is not a valid aadhaar number' }, allow_blank: true
-  validates :rera_id, uniqueness: true, allow_blank: true
   validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile] }, allow_blank: true
-  #validates :email, uniqueness: true, allow_blank: true
   validates :status, inclusion: { in: proc { ChannelPartner::STATUS } }
   validates :company_type, inclusion: { in: proc { ChannelPartner::COMPANY_TYPE } }, allow_blank: true
   validates :source, inclusion: { in: proc { ChannelPartner::SOURCE } }, allow_blank: true
   validates :category, inclusion: { in: proc { ChannelPartner::CATEGORY } }, allow_blank: true
-  validates :city, inclusion: { in: current_client.regions.distinct(:city) }, allow_blank: true
-  validates :regions, array: { inclusion: { allow_blank: true, in: current_client.regions.distinct(:partner_regions).flatten || [] } }
+  validates :city, inclusion: { in: current_client.present? ? current_client.regions.distinct(:city) : [] }, allow_blank: true
+  validates :regions, array: { inclusion: { allow_blank: true, in: ((current_client.present? && current_client.regions.present?) ? (current_client.regions.distinct(:partner_regions).flatten || []) : []) } }
   validates :company_name, uniqueness: true
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: { with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A' }, allow_blank: true
-  #validates :first_name, :last_name, name: true, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :user_based_uniqueness
   validates :primary_user_id, uniqueness: true, allow_blank: true
@@ -118,8 +122,6 @@ class ChannelPartner
   validates :address, copy_errors_from_child: true, allow_blank: true
 
   validates :gstin_number, format: { with: /\A([0]{1}[1-9]{1}|[1-2]{1}[0-9]{1}|[3]{1}[0-7]{1})([a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[zZ]{1}[0-9a-zA-Z]{1})+\z/i, message: 'is not valid format' }, allow_blank: true
-  validates :rera_id, format: { with: /\A([A-Za-z])\d{11}\z/i, message: 'is not valid format' }, allow_blank: true
-  #validate :docs_required_for_approval, on: :submit_for_approval
 
   accepts_nested_attributes_for :bank_detail, :address
 

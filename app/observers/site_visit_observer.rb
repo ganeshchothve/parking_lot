@@ -86,9 +86,10 @@ class SiteVisitObserver < Mongoid::Observer
     site_visit.calculate_incentive if site_visit.project.incentive_calculation_type?("calculated") && site_visit.project&.invoicing_enabled?
     # once the site visit is cancelled, the invoice in tentative state should move to rejected state
     if site_visit.approval_status_changed? && site_visit.approval_status == 'rejected'
-      site_visit.invoices.where(status: 'tentative').update_all(status: 'rejected', rejection_reason: 'Site Visit has been cancelled')
+      site_visit.move_invoices_to_rejected
     end
-    site_visit.invoices.where(status: 'tentative').update_all(status: 'draft') if site_visit.actual_incentive_eligible?
+
+    site_visit.move_invoices_to_draft
 
     # if site visit status is changed to conducted, the site visit is pushed to sell do
     if site_visit.status_changed? && site_visit.status == 'conducted'
