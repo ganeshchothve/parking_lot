@@ -87,4 +87,6 @@ production:
         ssl: true
         replica_set: <%= ENV_CONFIG['db']['replica'] %>
         auth_source: <%= ENV_CONFIG['db']['auth_source'] %>
+        read:
+          mode: :primary_preferred
   options:
