@@ -88,7 +88,7 @@ class Admin::ProjectsController < AdminController
   end
 
   def show
-    @incentive_scheme = @project.incentive_schemes.where(status: "approved", :starts_on.lte => Date.current, :ends_on.gte => Date.current, category:"brokerage", resource_class:"BookingDetail", brokerage_type: "sub_brokerage").first
+    @incentive_scheme = @project.incentive_schemes.where(status: "approved", :starts_on.lte => Date.current, :ends_on.gte => Date.current, category: "brokerage", resource_class: "BookingDetail", brokerage_type: "sub_brokerage").first
   end
 
   def collaterals

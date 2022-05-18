@@ -725,8 +725,8 @@
                                   <td colspan="2" class="text-left">Offer valid till : <b><%= @incentive_scheme.ends_on.strftime("%d/%m/%Y") %></b></td>
                                 </tr>
                                 <tr>
-                                  <th>Booking Count</th>
-                                  <th>Brokerage Percentage</th>
+                                  <td><%= t("mongoid.attributes.projects.show.booking_count") %></td>
+                                  <td><%= t("mongoid.attributes.projects.show.brokerage_percentage") %></td>
                                 </tr>
 
                                 <% @incentive_scheme.ladders.each do |ladder| %>

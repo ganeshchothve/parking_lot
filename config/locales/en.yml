@@ -1767,6 +1767,8 @@ en:
         link_name: 'Sync on Sell.do'
       show:
         show_interest_text: 'Subscribe to Project for Adding Walk-Ins'
+        booking_count: 'Booking Count'
+        brokerage_percentage: 'Brokerage Percentage'
 
     project_units:
       send_cost_sheet_and_payment_schedule:
@@ -2308,7 +2310,7 @@ en:
     calculate_agreement_price: 'Agreement Value'
     calculate_all_inclusive_price: 'All Inclusive'
     agreement_price: 'Agreement Value'
-    all_inclusive_price: 'All Inclusive'
+    all_inclusive_price: 'All Inclusive Price'
 
   amenity_icons:
     swimming_pool: 'fa-swimming-pool'
