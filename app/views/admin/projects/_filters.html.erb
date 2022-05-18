@@ -18,7 +18,7 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.project.types') %>
-          <%= select_tag "fltrs[project_type]", options_for_select(Project.nin(project_type: [nil, '']).distinct(:project_type).map{|project_type| [t("mongoid.attributes.project/project_type.#{project_type}"),project_type]}, (params[:fltrs].present? ? params[:fltrs][:types] : "")), { prompt: 'Select', class: "selectize"} %>
+          <%= select_tag "fltrs[project_type]", options_for_select(Project.nin(project_type: [nil, '']).distinct(:project_type).map{|project_type| [t("mongoid.attributes.project/project_type.#{project_type}"),project_type]}, (params[:fltrs].present? ? params[:fltrs][:project_type] : "")), { prompt: 'Select', class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.project.project_segment') %>
