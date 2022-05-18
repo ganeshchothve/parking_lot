@@ -1424,6 +1424,7 @@ en:
         certificate: 'Certificate'
         images: 'Images'
         developer_logo: 'Developer Logo'
+        advertise: 'Advertise Kit'
       project/help_text:
         document_html: 'Project documents'
         offer_html: 'Project ongoing offers'
@@ -1434,6 +1435,7 @@ en:
         certificate_html: 'Certificate'
         images_html: 'Images'
         developer_logo_html: 'Project Developer Logo'
+        advertise_html: 'Advertise Kit'
       cp_lead_activity/file_types:
         sitevisit_form: 'Walk-in Form'
       cp_lead_activity/help_text:
