@@ -715,6 +715,31 @@
                         </div>
                     </div>
                 </div>
+                <% if @incentive_scheme.present? %>
+                  <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card">
+                      <div class="row">
+                          <div class="col-md-12 pt-3 px-4">
+                              <h3 class="card-title">Brokerage Slabs</h3>
+                              <table class="table">
+                                <tr>
+                                  <td colspan="2" class="text-left">Offer valid till : <b><%= @incentive_scheme.ends_on.strftime("%d/%m/%Y") %></b></td>
+                                </tr>
+                                <tr>
+                                  <th>Booking Count</th>
+                                  <th>Brokerage Percentage</th>
+                                </tr>
+
+                                <% @incentive_scheme.ladders.each do |ladder| %>
+                                  <tr>
+                                    <td><%= ladder.start_value %> - <%= ladder.end_value || 'plus' %></td>
+                                    <td><%= ladder.payment_adjustment.formula.present? ? formula_to_human(ladder.payment_adjustment.formula) : ladder.payment_adjustment.absolute_value %></td>
+                                  </tr>
+                                <% end %>
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+                <% end %>
             <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card mb-5">
                     <div class="row">
                         <div class="col-md-12 pt-3 px-4">

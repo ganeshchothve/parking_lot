@@ -2307,6 +2307,8 @@ en:
   formula:
     calculate_agreement_price: 'Agreement Value'
     calculate_all_inclusive_price: 'All Inclusive'
+    agreement_price: 'Agreement Value'
+    all_inclusive_price: 'All Inclusive'
 
   amenity_icons:
     swimming_pool: 'fa-swimming-pool'
