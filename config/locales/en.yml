@@ -1007,7 +1007,7 @@ en:
         agreement_amount: 'Consideration Value For Brokerage'
         incentive_resource: 'Resource'
         category: 'Type'
-        manager_id: 'Partner / Manager / Added by'
+        manager_id: 'Relationship Manager'
         account_manager_id: 'Account Manager'
       invoice/status:
         draft: 'Draft'
@@ -1110,7 +1110,7 @@ en:
         conducted_on: Conducted on
         site_visit_type: Type
         approval_status: Approval Status
-        manager_id: 'Partner / Manager / Added by'
+        manager_id: 'Relationship Manager'
         rejection_reason: Rejection Reason
         is_revisit: Revisit
       site_visit/status:
@@ -1264,7 +1264,7 @@ en:
         lead_id: 'Sell.Do Lead ID'
         manager_name: 'Manager Name'
         manager_role: "Sales Manager / Added by Role"
-        manager_id: "Partner / Manager / Added by"
+        manager_id: "Relationship Manager"
         project_ids: Projects
         manager_change_reason: "Reason for changing Partner"
         name: 'Name'
@@ -1339,7 +1339,7 @@ en:
         phone: 'Phone'
         email: 'Email'
         project_id: 'Project'
-        manager_id: 'Partner / Manager / Added by'
+        manager_id: 'Relationship Manager'
         name_email_phone: 'Name/Email/Phone (Project Name)'
         total_amount_paid: "Total Amount Paid (Inclusive of GST)"
         registered_at: 'Registered At'
