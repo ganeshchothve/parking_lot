@@ -9,7 +9,7 @@ module FileUploaderHelper
       when Client
         %w(PNG png JPEG jpeg JPG jpg PDF pdf CSV csv SVG svg)
       else
-        %w(PNG png JPEG jpeg JPG jpg PDF pdf)
+        %w(PNG png JPEG jpeg JPG jpg PDF pdf zip ZIP)
       end
       exts.join(',')
     elsif uploder_type=="PublicAssetUploader"

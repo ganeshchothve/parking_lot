@@ -3,7 +3,7 @@ class PublicAsset
   include Mongoid::Timestamps
   extend FilterByCriteria
 
-  ALLOWED_EXTENSIONS = %w(PNG png JPEG jpeg JPG jpg PDF pdf SVG svg MP4 mp4)
+  ALLOWED_EXTENSIONS = %w(PNG png JPEG jpeg JPG jpg PDF pdf SVG svg MP4 mp4 zip ZIP)
 
   mount_uploader :file, PublicAssetUploader
 

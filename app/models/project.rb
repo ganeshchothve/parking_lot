@@ -10,7 +10,7 @@ class Project
   extend FilterByCriteria
 
   # Add different types of documents which are uploaded on client
-  DOCUMENT_TYPES = %w[document brochure certificate unit_selection_filter_image sales_presentation images developer_logo].freeze
+  DOCUMENT_TYPES = %w[document brochure certificate unit_selection_filter_image sales_presentation images developer_logo advertise].freeze
   CATEGORIES = %w( pre_launch launch ongoing completed)
   SEGMENTS = %w( affordable value luxury ultra_luxury )
   PROJECT_TYPES = %w( commercial residential )

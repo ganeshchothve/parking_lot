@@ -365,6 +365,51 @@
                                                     filetype = "excel"
                                                     when /^ppt/
                                                     filetype = "ppt"
+                                                    when "application/zip","application/zip-compressed"
+                                                      filetype = "zip"
+                                                    else
+                                                    filetype = "pdf"
+                                                    end
+                                                    %>
+                                                        <li>
+                                                            <div class="docs-wrap">
+                                                                <div class="docs-icon">
+                                                                   <a href="<%= asset.file.url %>" target="_blank"> <img src='<%= asset_path "#{filetype}-icon.png" %>' class="img-fluid"></a>
+                                                                </div>
+                                                                <div class="docs-info">
+                                                                    <span><%= asset.file_name %></span>
+                                                                    <span class="video-download">
+                                                                    <a href="<%= asset.file.url %>" target="_blank">
+                                                                        <i class="fa fa-download"></i>
+                                                                        </a>
+                                                                    </span>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    <% end %>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-3 float-start">
+                                        <div class="prjt-gallery">
+                                            <h2>Advertise Kit</h2>
+                                            <ul class="documents-list">
+                                                <% @assets = @project.assets.where(document_type: "advertise") %>
+                                                    <% @assets.each_with_index do |asset, index|%>
+                                                    <%
+                                                    mime_type = asset.file.content_type
+                                                    case mime_type
+                                                    when "application/pdf"
+                                                    filetype = "pdf"
+                                                    when "application/doc"
+                                                    filetype = "docs"
+                                                    when /^excel/
+                                                    filetype = "excel"
+                                                    when /^ppt/
+                                                    filetype = "ppt"
+                                                    when "application/zip","application/zip-compressed"
+                                                      filetype = "zip"
                                                     else
                                                     filetype = "pdf"
                                                     end

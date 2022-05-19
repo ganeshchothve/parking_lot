@@ -47,7 +47,7 @@ class PublicAssetUploader < CarrierWave::Uploader::Base
   end
 
   def content_type_whitelist
-    ['image/jpeg', 'image/png', 'image/jpg', 'image/svg', 'video/mp4', 'application/pdf']
+    ['image/jpeg', 'image/png', 'image/jpg', 'image/svg', 'video/mp4', 'application/pdf', 'application/x-zip-compressed', 'application/zip']
   end
 
   def extension_whitelist
