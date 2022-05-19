@@ -39,7 +39,7 @@ class LeadExportWorker
       "Number of Re-Visit",
       "Last Revisit date",
       "Queue No.",
-      "Partner / Manager / Added by",
+      "Relationship Manager",
       "Booking Amount Paid",
       "9.90% Received",
       "Registration Done",

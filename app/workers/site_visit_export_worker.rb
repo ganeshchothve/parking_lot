@@ -41,7 +41,7 @@ class SiteVisitExportWorker
       "Conducted on",
       "Approval Status",
       "Channel Partner Manager",
-      "Partner / Manager / Added by",
+      "Relationship Manager",
       "Partner ID (Used for VLOOKUP)",
       "Partner Phone",
       "Partner UPI Address",
