@@ -847,6 +847,10 @@ en:
         name: Name
       projects:
         name: Name
+        show:
+          brokerage_slabs: 'Brokerage Slabs'
+          offer_valid_till: 'Offer valid till'
+          terms_and_conditions: 'Terms & Conditions'
       receipt:
         comments: 'Comments'
         creator_id: "Created by"
@@ -941,6 +945,7 @@ en:
         brokerage_type: Brokerage Type
         payment_to: Payment To
         auto_apply: Auto Apply
+        terms_and_conditions: 'Terms & Conditions'
         date_range: Date Range
       incentive_scheme/categories: &invoice_category
         walk_in: 'Walk-in'
@@ -1767,8 +1772,9 @@ en:
         link_name: 'Sync on Sell.do'
       show:
         show_interest_text: 'Subscribe to Project for Adding Walk-Ins'
-        booking_count: 'Booking Count'
+        booking_count: 'Bookings'
         brokerage_percentage: 'Brokerage Percentage'
+        terms_and_conditions: 'Terms & Conditions'
 
     project_units:
       send_cost_sheet_and_payment_schedule:

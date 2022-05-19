@@ -719,13 +719,11 @@
                   <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card">
                       <div class="row">
                           <div class="col-md-12 pt-3 px-4">
-                              <h3 class="card-title">Brokerage Slabs</h3>
+                              <h3 class="card-title"><%= t("mongoid.attributes.projects.show.brokerage_slabs") %></h3>
+                              <p><%= t("mongoid.attributes.projects.show.offer_valid_till") %> : <%= @incentive_scheme.ends_on.strftime("%d/%m/%Y") %></p>
                               <table class="table">
                                 <tr>
-                                  <td colspan="2" class="text-left">Offer valid till : <b><%= @incentive_scheme.ends_on.strftime("%d/%m/%Y") %></b></td>
-                                </tr>
-                                <tr>
-                                  <td><%= t("mongoid.attributes.projects.show.booking_count") %></td>
+                                  <td><%= t("mongoid.attributes.projects.show.bookings") %></td>
                                   <td><%= t("mongoid.attributes.projects.show.brokerage_percentage") %></td>
                                 </tr>
 
@@ -735,6 +733,7 @@
                                     <td><%= ladder.payment_adjustment.formula.present? ? formula_to_human(ladder.payment_adjustment.formula) : ladder.payment_adjustment.absolute_value %></td>
                                   </tr>
                                 <% end %>
+                                <td colspan="2" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#exampleModal"><small><%= t("mongoid.attributes.projects.show.terms_and_conditions") %><span style="color: red;">*</span></small></td>
                               </table>
                           </div>
                       </div>
@@ -923,3 +922,22 @@
     }
   });
 <% end %>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><%= t("mongoid.attributes.projects.show.terms_and_conditions") %></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <%= @incentive_scheme.terms_and_conditions.html_safe %>
+      </div>
+    </div>
+  </div>
+</div>
