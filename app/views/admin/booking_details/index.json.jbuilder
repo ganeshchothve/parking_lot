@@ -18,4 +18,5 @@ json.entries @booking_details do |booking_detail|
   json.booked_on (booking_detail.booked_on.present? ? l(booking_detail.booked_on) : nil)
   json.ds_name booking_detail.ds_name
   json.lead_name booking_detail.lead&.name
+  json.company_name booking_detail.try(:manager).try(:name)
 end

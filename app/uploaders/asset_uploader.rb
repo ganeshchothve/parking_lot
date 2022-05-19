@@ -21,11 +21,11 @@ class AssetUploader < CarrierWave::Uploader::Base
   end
 
   def content_type_whitelist
-    ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg', 'text/csv', 'application/vnd.ms-excel', 'application/octet-stream']
+    ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg', 'text/csv', 'application/vnd.ms-excel', 'application/octet-stream', 'application/x-zip-compressed', 'application/zip']
   end
 
   def extension_white_list
-    %w(PNG png JPEG jpeg JPG jpg PDF pdf csv)
+    %w(PNG png JPEG jpeg JPG jpg PDF pdf csv zip ZIP)
     # %w(JPEG JFIF Exif TIFF BMP GIF PNG PPM PGM PBM PNM WebP HEIF BAT BPG CD5 DEEP ECW FITS FLIF ICO ILBM IMG IMG JPEG Nrrd PAM PCX PGF PLBM SGI SID TGA VICAR XISF CPT PSD PSP XCF CGM SVG AI CDR DrawingML HPGL HVIF MathML NAPLPS ODG PSTricks PGF TikZ ReGIS VML WMF Xar XPS EPS PDF PostScript PICT SWF XAML jpeg jfif exif tiff bmp gif png ppm pgm pbm pnm webp heif bat bpg cd5 deep ecw fits flif ico ilbm img img jpeg nrrd pam pcx pgf plbm sgi sid tga vicar xisf cpt psd psp xcf cgm svg ai cdr drawingml hpgl hvif mathml naplps odg pstricks pgf tikz regis vml wmf xar xps eps pdf postscript pict swf xaml ZIP zip TAR tar PDF pdf jpg JPG odp ODP)
   end
 

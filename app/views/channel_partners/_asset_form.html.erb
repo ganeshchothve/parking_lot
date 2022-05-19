@@ -4,7 +4,7 @@
       <div class="col-lg-10 col-12">
         <% options = assetable_document_types(assetable) %>
         <%= select_tag "document_type", options_for_select(options, options.first[1]), {prompt: "Select", class: "selectize", required: 'required'} %>
-        <div class = "text-muted small pb-2">Upload documents in following formats - jpg, jpeg, png, pdf </div>
+        <div class = "text-muted small pb-2">Upload documents in following formats - jpg, jpeg, png, pdf, zip</div>
         <div class = "text-muted small pb-2">
           Upload following documents to submit your application
           <%= assetable.doc_types&.map { |doc_type|
