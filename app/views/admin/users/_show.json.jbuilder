@@ -7,4 +7,13 @@ if user.role.in?(['cp_owner', 'channel_partner'])
   json.channel_partner do
     json.partial! "channel_partners/show", channel_partner: user.channel_partner
   end
+
+  json.manager do
+    json.name user.manager&.name
+    json.phone user.manager&.phone
+    json.email user.manager&.email
+  end
+
+  json.helpdesk_number user.booking_portal_client&.channel_partner_support_number
+  json.helpdesk_email user.booking_portal_client&.channel_partner_support_email
 end

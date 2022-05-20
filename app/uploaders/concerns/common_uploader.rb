@@ -1,7 +1,7 @@
 module CommonUploader
 
   def size_range
-    0..10.megabytes
+    0..25.megabytes
   end
 
   # Override the directory where uploaded files will be stored.

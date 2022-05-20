@@ -11,6 +11,8 @@
           <%= f.label :name %>
           <div><%= t("templates.#{@template.name}") rescue @template._type.split("::").last %></div>
         </div>
+
+
         <% if @template.is_a?(::Template::EmailTemplate) %>
           <div class="mb-3">
             <%= f.label :subject %>
@@ -56,6 +58,11 @@
           <%= f.check_box :is_active, class: 'form-check-input wd-22' %>
           <%= f.label :is_active, class: 'form-check-label d-inline-block ms-2' %>
         </div>
+
+        <% if @template.is_a?(::Template::NotificationTemplate) %>
+          <%= f.label :title %>
+          <%= f.text_field :title, class: 'form-control', disabled: !policy([:admin, @template]).editable_field?("title") %>
+        <% end %>
 
         <div>
           <%= f.label :content %>

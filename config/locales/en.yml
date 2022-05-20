@@ -536,7 +536,6 @@ en:
         possession: Possession Date
         hot: 'Hot Property'
         is_active: 'Active?'
-        project_type: Type of Project
         launched_on: Launch Date
         developer_name: Developer Name
         approved_banks: Approved Banks
@@ -588,6 +587,7 @@ en:
         holding_minutes: 'Unit to be held for (Minutes)'
         rera_registration_no: 'RERA Registration Number'
         configurations: 'Configuration Types'
+        types: "Project Type"
         project_size: 'Total Land Area (in Acres)'
         total_buildings: 'Number Of Ongoing Towers'
         amenities: 'Project Amenities'
@@ -620,6 +620,9 @@ en:
           sbi: State Bank of India
           bob: Bank of Baroda
           bajaj_finance: Bajaj Finance
+      project/project_type:
+        residential: Residential
+        commercial: Commercial
       project/category:
         pre_launch: Pre Launch
         launch: Launch
@@ -847,6 +850,10 @@ en:
         name: Name
       projects:
         name: Name
+        show:
+          brokerage_slabs: 'Brokerage Slabs'
+          offer_valid_till: 'Offer valid till'
+          terms_and_conditions: 'Terms & Conditions'
       receipt:
         comments: 'Comments'
         creator_id: "Created by"
@@ -941,6 +948,7 @@ en:
         brokerage_type: Brokerage Type
         payment_to: Payment To
         auto_apply: Auto Apply
+        terms_and_conditions: 'Terms & Conditions'
         date_range: Date Range
       incentive_scheme/categories: &invoice_category
         walk_in: 'Walk-in'
@@ -1007,7 +1015,7 @@ en:
         agreement_amount: 'Consideration Value For Brokerage'
         incentive_resource: 'Resource'
         category: 'Type'
-        manager_id: 'Partner / Manager / Added by'
+        manager_id: 'Relationship Manager'
         account_manager_id: 'Account Manager'
       invoice/status:
         draft: 'Draft'
@@ -1110,7 +1118,7 @@ en:
         conducted_on: Conducted on
         site_visit_type: Type
         approval_status: Approval Status
-        manager_id: 'Partner / Manager / Added by'
+        manager_id: 'Relationship Manager'
         rejection_reason: Rejection Reason
         is_revisit: Revisit
       site_visit/status:
@@ -1264,7 +1272,7 @@ en:
         lead_id: 'Sell.Do Lead ID'
         manager_name: 'Manager Name'
         manager_role: "Sales Manager / Added by Role"
-        manager_id: "Partner / Manager / Added by"
+        manager_id: "Relationship Manager"
         project_ids: Projects
         manager_change_reason: "Reason for changing Partner"
         name: 'Name'
@@ -1339,7 +1347,7 @@ en:
         phone: 'Phone'
         email: 'Email'
         project_id: 'Project'
-        manager_id: 'Partner / Manager / Added by'
+        manager_id: 'Relationship Manager'
         name_email_phone: 'Name/Email/Phone (Project Name)'
         total_amount_paid: "Total Amount Paid (Inclusive of GST)"
         registered_at: 'Registered At'
@@ -1425,6 +1433,7 @@ en:
         certificate: 'Certificate'
         images: 'Images'
         developer_logo: 'Developer Logo'
+        advertise: 'Advertise Kit'
       project/help_text:
         document_html: 'Project documents'
         offer_html: 'Project ongoing offers'
@@ -1435,6 +1444,7 @@ en:
         certificate_html: 'Certificate'
         images_html: 'Images'
         developer_logo_html: 'Project Developer Logo'
+        advertise_html: 'Advertise Kit'
       cp_lead_activity/file_types:
         sitevisit_form: 'Walk-in Form'
       cp_lead_activity/help_text:
@@ -1768,6 +1778,10 @@ en:
         link_name: 'Sync on Sell.do'
       show:
         show_interest_text: 'Subscribe to Project for Adding Walk-Ins'
+        booking_count: 'Bookings'
+        brokerage: 'Brokerage'
+        terms_and_conditions: 'Terms & Conditions'
+        plus: 'Plus'
 
     project_units:
       send_cost_sheet_and_payment_schedule:
@@ -2308,6 +2322,8 @@ en:
   formula:
     calculate_agreement_price: 'Agreement Value'
     calculate_all_inclusive_price: 'All Inclusive'
+    agreement_price: 'Agreement Value'
+    all_inclusive_price: 'All Inclusive Price'
 
   amenity_icons:
     swimming_pool: 'fa-swimming-pool'
