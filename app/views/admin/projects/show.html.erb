@@ -721,16 +721,16 @@
                           <div class="col-md-12 pt-3 px-4">
                               <h3 class="card-title"><%= t("mongoid.attributes.projects.show.brokerage_slabs") %></h3>
                               <p><%= t("mongoid.attributes.projects.show.offer_valid_till") %> : <%= @incentive_scheme.ends_on.strftime("%d/%m/%Y") %></p>
-                              <table class="table">
+                              <table class="table table-sm">
                                 <tr>
                                   <td><%= t("mongoid.attributes.projects.show.bookings") %></td>
-                                  <td><%= t("mongoid.attributes.projects.show.brokerage") %></td>
+                                  <td class="text-end"><%= t("mongoid.attributes.projects.show.brokerage") %></td>
                                 </tr>
 
                                 <% @incentive_scheme.ladders.each do |ladder| %>
                                   <tr>
                                     <td><%= ladder.start_value %> - <%= ladder.end_value || t("mongoid.attributes.projects.show.plus") %></td>
-                                    <td><%= ladder.payment_adjustment.formula.present? ? fetch_percentage(ladder.payment_adjustment.formula) : ladder.payment_adjustment.absolute_value %></td>
+                                    <td class="text-end"><%= ladder.payment_adjustment.formula.present? ? fetch_percentage(ladder.payment_adjustment.formula) : number_to_indian_currency(ladder.payment_adjustment.absolute_value) %></td>
                                   </tr>
                                 <% end %>
                                 <td colspan="2" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#TnCModal"><small><%= t("mongoid.attributes.projects.show.terms_and_conditions") %><span style="color: red;">*</span></small></td>
@@ -925,11 +925,11 @@
 
 <!-- Modal -->
 <% if @incentive_scheme.present? %>
-  <div class="modal fade" id="TnCModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="TnCModal" tabindex="-1" aria-labelledby="TnCModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel"><%= t("mongoid.attributes.projects.show.terms_and_conditions") %></h5>
+          <h5 class="modal-title" id="TnCModalLabel"><%= t("mongoid.attributes.projects.show.terms_and_conditions") %></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">

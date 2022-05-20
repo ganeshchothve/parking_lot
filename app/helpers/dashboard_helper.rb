@@ -23,7 +23,7 @@ module DashboardHelper
   #
 
   def formula_to_human(formula)
-    percentage = formula.scan(/\d+[,.]\d+/)[0]
+    percentage = formula.scan(/\d*[.]\d+/)[0]
     value_of = formula.scan(/agreement_price|all_inclusive_price/)
     result = [percentage, value_of].flatten.map
       .with_index { |x, i| i.zero? ? "<strong>#{number_to_percentage((_x = x.to_f * 100), precision: (_x == _x.to_i ? 0 : 2))}</strong>" : t("formula.#{x}") }.join(' of ').html_safe
