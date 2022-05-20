@@ -16,7 +16,7 @@ class ClientPolicy < ApplicationPolicy
       :terms_and_conditions, :faqs, :rera, :tds_process, :logo, :mobile_logo, :background_image,
       :allow_multiple_bookings_per_user_kyc, :enable_lead_conflicts, :lead_blocking_days,
       :enable_direct_activation_for_cp, :external_api_integration, :invoice_approval_tat, :powered_by_link, :launchpad_portal, :tl_dashboard_refresh_timer,
-      enable_communication: [:email, :sms, :whatsapp],
+      enable_communication: [:email, :sms, :whatsapp, :notification],
       external_inventory_view_config_attributes: ExternalInventoryViewConfigPolicy.new(user, ExternalInventoryViewConfig.new).permitted_attributes,
       address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes,
       checklists_attributes: ChecklistPolicy.new(user, Checklist.new).permitted_attributes,
