@@ -122,7 +122,6 @@
         <div class="row">
           <div class="col-xl-12 col-lg-12">
             <div class="row">
-
               <div class="col-lg-8">
                 <div class="card mb-4 br-rd-8 card-shadow no-br">
                   <div id="total_brokerage">
@@ -130,7 +129,6 @@
                   </div>
                 </div>
               </div>
-
               <div class="col-lg-4">
                 <div class="payment-detls fix-ht">
                   <div class="card br-rd-8 card-shadow  no-br">
@@ -296,15 +294,6 @@
                           <%= "#{meeting.scheduled_on&.strftime('%e %b %Y')}#{meeting.scheduled_on&.to_time&.strftime(', %I:%M%p %Z')}".html_safe %>
                       <% end %>
                       </p>
-                    </div>
-                  </div>
-                </li>
-                <% end %>
-                <% else %>
-                <li class="px-3">
-                  <div class="list-wrap row">
-                    <div class="col-lg-12">
-                      <p class="list-txt event-title mb-0">No New event</p>
                     </div>
                   </div>
                 </li>
