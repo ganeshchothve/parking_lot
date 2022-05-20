@@ -730,7 +730,7 @@
                                 <% @incentive_scheme.ladders.each do |ladder| %>
                                   <tr>
                                     <td><%= ladder.start_value %> - <%= ladder.end_value || 'plus' %></td>
-                                    <td><%= ladder.payment_adjustment.formula.present? ? formula_to_human(ladder.payment_adjustment.formula) : ladder.payment_adjustment.absolute_value %></td>
+                                    <td><%= ladder.payment_adjustment.formula.present? ? fetch_percentage(ladder.payment_adjustment.formula) : ladder.payment_adjustment.absolute_value %></td>
                                   </tr>
                                 <% end %>
                                 <td colspan="2" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#exampleModal"><small><%= t("mongoid.attributes.projects.show.terms_and_conditions") %><span style="color: red;">*</span></small></td>
