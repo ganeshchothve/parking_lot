@@ -196,6 +196,7 @@ class Project
   scope :filter_by_project_segment, ->(project_segment) {project_segment.is_a?(Array) ? where(project_segment: {'$in': project_segment} ) : where(project_segment: project_segment) }
   scope :filter_by_configurations, ->(configurations) { configurations.is_a?(Array) ? where(configurations: {'$in': configurations} ) : where(configurations: configurations) }
   scope :filter_by_city, ->(city) { where(city: city) }
+  scope :filter_by_project_type, ->(project_type) { where(project_type: project_type) }
   scope :filter_by_micro_market, ->(micro_market) { where(micro_market: micro_market) }
   scope :filter_by_possession, ->(date) { start_date, end_date = date.split(' - '); where(possession: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_hot, ->(hot) { where(hot: hot.eql?("true")) }
