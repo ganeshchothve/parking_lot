@@ -1773,8 +1773,9 @@ en:
       show:
         show_interest_text: 'Subscribe to Project for Adding Walk-Ins'
         booking_count: 'Bookings'
-        brokerage_percentage: 'Brokerage Percentage'
+        brokerage: 'Brokerage'
         terms_and_conditions: 'Terms & Conditions'
+        plus: 'Plus'
 
     project_units:
       send_cost_sheet_and_payment_schedule:

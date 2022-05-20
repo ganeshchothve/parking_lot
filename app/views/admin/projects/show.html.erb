@@ -724,12 +724,12 @@
                               <table class="table">
                                 <tr>
                                   <td><%= t("mongoid.attributes.projects.show.bookings") %></td>
-                                  <td><%= t("mongoid.attributes.projects.show.brokerage_percentage") %></td>
+                                  <td><%= t("mongoid.attributes.projects.show.brokerage") %></td>
                                 </tr>
 
                                 <% @incentive_scheme.ladders.each do |ladder| %>
                                   <tr>
-                                    <td><%= ladder.start_value %> - <%= ladder.end_value || 'plus' %></td>
+                                    <td><%= ladder.start_value %> - <%= ladder.end_value || t("mongoid.attributes.projects.show.plus") %></td>
                                     <td><%= ladder.payment_adjustment.formula.present? ? fetch_percentage(ladder.payment_adjustment.formula) : ladder.payment_adjustment.absolute_value %></td>
                                   </tr>
                                 <% end %>
