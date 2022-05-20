@@ -733,7 +733,7 @@
                                     <td><%= ladder.payment_adjustment.formula.present? ? fetch_percentage(ladder.payment_adjustment.formula) : ladder.payment_adjustment.absolute_value %></td>
                                   </tr>
                                 <% end %>
-                                <td colspan="2" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#exampleModal"><small><%= t("mongoid.attributes.projects.show.terms_and_conditions") %><span style="color: red;">*</span></small></td>
+                                <td colspan="2" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#TnCModal"><small><%= t("mongoid.attributes.projects.show.terms_and_conditions") %><span style="color: red;">*</span></small></td>
                               </table>
                           </div>
                       </div>
@@ -925,7 +925,7 @@
 
 <!-- Modal -->
 <% if @incentive_scheme.present? %>
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="TnCModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">

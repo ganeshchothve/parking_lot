@@ -9,7 +9,7 @@ module DashboardHelper
   #
 
   def fetch_percentage(formula)
-    percentage = formula.scan(/\d+[,.]\d+/)[0]
+    percentage = formula.scan(/\d*[,.]\d+/)[0]
     if percentage
       result = number_to_percentage((percentage = (percentage.to_f * 100).round(2)), precision: (percentage == percentage.to_i ? 0 : 2))
     else
