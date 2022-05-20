@@ -30,7 +30,7 @@ class VariableIncentiveExportWorker
     [
       "Variable Incentive Scheme",
       "Day",
-      "Partner / Manager / Added by",
+      "Relationship Manager",
       "Project",
       "Booking",
       "Capped Incentive Amount"

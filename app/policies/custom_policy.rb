@@ -6,6 +6,7 @@ class CustomPolicy < Struct.new(:user, :enable_users)
   end
 
   def inventory?
+    return false if current_client.launchpad_portal
     if user.role?(:channel_partner)
       user.role.in?(current_client.enable_actual_inventory) || (user.role.in?(current_client.enable_live_inventory) && user.enable_live_inventory)
     else

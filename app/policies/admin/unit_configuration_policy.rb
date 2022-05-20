@@ -1,6 +1,6 @@
 class Admin::UnitConfigurationPolicy < UnitConfigurationPolicy
   def index?
-    Admin::ProjectPolicy.new(user, Project.new).index?
+    Admin::ProjectPolicy.new(user, Project.new).index? && !current_client.launchpad_portal
   end
 
   def edit?
