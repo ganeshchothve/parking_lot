@@ -62,7 +62,7 @@ class BrokerageExportWorker
 
   def self.get_invoice_row(invoice)
     invoice_row = [
-      invoice.invoiceable_id,
+      invoice.invoiceable_id.to_s,
       invoice.number,
       invoice.project_name,
       invoice.invoiceable.try(:name),

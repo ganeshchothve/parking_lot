@@ -83,7 +83,7 @@ class Admin::ReceiptsController < AdminController
     authorize([:admin, @receipt])
     @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
     respond_to do |format|
-      if (params.dig(:receipt, :event).present? ? @receipt.send("#{params.dig(:receipt, :event)}!") : @receipt.save)
+      if @receipt.save
         format.html { redirect_to admin_lead_receipts_path(@lead), notice: 'Receipt was successfully updated.' }
       else
         format.html { render :edit }
