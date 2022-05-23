@@ -30,7 +30,7 @@ class VariableIncentiveExportWorker
     [
       "Variable Incentive Scheme",
       "Day",
-      "Relationship Manager",
+      I18n.t('mongoid.attributes.user.manager_id'),
       "Project",
       "Booking",
       "Capped Incentive Amount"
