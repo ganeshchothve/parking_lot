@@ -41,7 +41,7 @@ class SiteVisitExportWorker
       "Conducted on",
       "Approval Status",
       "Channel Partner Manager",
-      "Relationship Manager",
+      I18n.t('mongoid.attributes.site_visit.manager_id'),
       "Partner ID (Used for VLOOKUP)",
       "Partner Phone",
       "Partner UPI Address",
