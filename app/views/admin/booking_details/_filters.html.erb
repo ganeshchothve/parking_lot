@@ -50,6 +50,12 @@
             <%= select_tag "fltrs[cp_manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:cp_manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp' }}}} %>
           </div>
         <% end %>
+        <% unless current_user.role.in?(%w(cp_owner channel_partner)) %>
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+            <%= label_tag "fltrs", ChannelPartner.model_name.human %>
+            <%= select_tag "fltrs[channel_partner_id]", options_from_collection_for_select(params[:fltrs].present? ? ChannelPartner.where(_id: params[:fltrs][:channel_partner_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: channel_partners_path, ds: true }} %>
+          </div>
+        <% end %>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.booked_on'), class: "control-label" %>
           <%= text_field_tag "fltrs[booked_on]", (params[:fltrs].present? ? params[:fltrs][:booked_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>

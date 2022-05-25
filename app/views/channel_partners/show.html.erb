@@ -69,6 +69,12 @@
                 <span><%= t('mongoid.attributes.channel_partner.interested_services') %></span>
                 <p class="break-word"><%= @channel_partner.interested_services.presence.try(:to_sentence) || '-' %></p>
               </li>
+              <% if policy([:admin, @channel_partner]).editable_field?("internal_category") %>
+                <li>
+                  <span><%= t('mongoid.attributes.channel_partner.internal_category') %></span>
+                  <p class="break-word"><%= @channel_partner.internal_category.present? ? t("mongoid.attributes.channel_partner/internal_categories.#{@channel_partner.internal_category}") : '-' %></p>
+                </li>
+              <% end %>
             </ul>
           </div>
         </div>
