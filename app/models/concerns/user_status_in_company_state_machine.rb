@@ -28,7 +28,7 @@ module UserStatusInCompanyStateMachine
     # Add user account in existing company as channel partner
     def set_channel_partner(new_company=false)
       unless new_company
-        attrs = {channel_partner: temp_channel_partner, manager_id: temp_channel_partner.manager_id}
+        attrs = {channel_partner: temp_channel_partner, manager_id: temp_channel_partner.manager_id, category: temp_channel_partner.internal_category}
         attrs[:role] = 'channel_partner'
         self.update(attrs)
       end

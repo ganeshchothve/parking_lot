@@ -16,7 +16,7 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.channel_partner.internal_category'), class: "control-label" %>
-          <%= select_tag "fltrs[internal_category]", options_for_select( ChannelPartner::INTERNAL_CATEGORY.collect{|x| [ t("mongoid.attributes.channel_partner/internal_categories.#{x}"), x]}, params.dig(:fltrs,:status)), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[internal_category]", options_for_select( ChannelPartner::INTERNAL_CATEGORY.collect{|x| [ t("mongoid.attributes.channel_partner/internal_categories.#{x}"), x]}, params.dig(:fltrs,:internal_category)), {prompt: "Select", class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.channel_partner.status'), class: "control-label" %>

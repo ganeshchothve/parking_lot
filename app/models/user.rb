@@ -128,6 +128,8 @@ class User
 
   field :referred_on, type: DateTime
   field :register_in_cp_company_token, type: String
+  # For channel partners, gets copied from partner company
+  field :category, type: String
 
   ## Security questionable
 
@@ -218,6 +220,7 @@ class User
   scope :filter_by_is_active, ->(is_active) { is_active.eql?("true") ? where(is_active: true)
     : where(is_active: false)}
   scope :filter_by_channel_partner_id, ->(channel_partner_id) {where(channel_partner_id: channel_partner_id) }
+  scope :filter_by_category, ->(category) {where(category: category) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_role, ->(_role) { _role.is_a?(Array) ? where( role: { "$in": _role }) : where(role: _role.as_json) }
