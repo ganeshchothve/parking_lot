@@ -21,7 +21,7 @@ class ChannelPartner
   COMPANY_TYPE = ['Sole Proprietorship', 'Partnership', 'Private Limited', 'Public Limited', 'Others']
   CATEGORY = ['CP Company', 'Individual CP', 'ROTN', 'IRDA', 'Chartered accountants', 'IT Profession']
   SOURCE = ['Internal CP', 'External CP']
-
+  INTERNAL_CATEGORY = ['cat_a', 'cat_b', 'cat_c']
   SHORT_FORM = %i(company_name rera_applicable status)
   FULL_FORM = SHORT_FORM.clone + %i(gst_applicable nri) #manager_id)
 
@@ -39,6 +39,7 @@ class ChannelPartner
   field :aadhaar, type: String
   field :status_change_reason, type: String
   field :category, type: String
+  field :internal_category, type: String
   field :source, type: String
   field :website, type: String
   field :city, type: String
@@ -61,6 +62,7 @@ class ChannelPartner
   scope :filter_by_rera_id, ->(rera_id) { where(rera_id: rera_id) }
   scope :filter_by_manager_id, ->(manager_id) { where(manager_id: manager_id) }
   scope :filter_by_status, ->(status) { where(status: status) }
+  scope :filter_by_internal_category, ->(internal_category) { where(internal_category: internal_category) }
   scope :filter_by_city, ->(city) { where(city: city) }
   scope :filter_by_regions, ->(regions) { where( regions: { "$all": regions }) }
   scope :filter_by__id, ->(_id) { where(_id: _id) }
@@ -108,6 +110,7 @@ class ChannelPartner
   validates :company_type, inclusion: { in: proc { ChannelPartner::COMPANY_TYPE } }, allow_blank: true
   validates :source, inclusion: { in: proc { ChannelPartner::SOURCE } }, allow_blank: true
   validates :category, inclusion: { in: proc { ChannelPartner::CATEGORY } }, allow_blank: true
+  validates :internal_category, inclusion: { in: proc { ChannelPartner::INTERNAL_CATEGORY } }, allow_blank: true
   validates :city, inclusion: { in: current_client.present? ? current_client.regions.distinct(:city) : [] }, allow_blank: true
   validates :regions, array: { inclusion: { allow_blank: true, in: ((current_client.present? && current_client.regions.present?) ? (current_client.regions.distinct(:partner_regions).flatten || []) : []) } }
   validates :company_name, uniqueness: true

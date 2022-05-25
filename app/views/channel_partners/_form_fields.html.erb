@@ -16,6 +16,14 @@
   </div>
 </div>
 
+<% if policy([:admin, @channel_partner]).editable_field?("internal_category") %>
+  <div class='row'>
+    <div class="col-md-6">
+      <%= form.input :internal_category, collection: ChannelPartner::INTERNAL_CATEGORY.map {|cat| [t("mongoid.attributes.channel_partner/internal_categories.#{cat}"), cat]}, disabled: !policy([:admin, @channel_partner]).editable_field?("internal_category"), as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
+    </div>
+  </div>
+<% end %>
+
 <div class="row">
   <div class="col-md-6">
     <%= form.input :nri, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: {class: 'wd-22', disabled: !policy([:admin, @channel_partner]).editable_field?("nri") } %>
