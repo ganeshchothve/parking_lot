@@ -224,4 +224,21 @@ module ApplicationHelper
     action_name.in?(%w(generate_booking_detail_form generate_invoice sales_board quotation channel_partners_leaderboard_without_layout dashboard_landing_page payout_dashboard payout_list payout_show))
   end
 
+  def select_icon(content_type = nil)
+    case content_type
+    when "application/pdf"
+      "pdf"
+    when "application/doc"
+      "docs"
+    when /^excel/
+      "excel"
+    when /^ppt/
+      "ppt"
+    when "application/zip", "application/x-zip-compressed"
+      "zip"
+    else
+      "pdf"
+    end
+  end
+
 end

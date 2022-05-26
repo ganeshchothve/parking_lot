@@ -356,20 +356,7 @@
                                                     <% @assets.each_with_index do |asset, index|%>
                                                     <%
                                                     mime_type = asset.file.content_type 
-                                                    case mime_type
-                                                    when "application/pdf"
-                                                    filetype = "pdf"
-                                                    when "application/doc"
-                                                    filetype = "docs"
-                                                    when /^excel/
-                                                    filetype = "excel"
-                                                    when /^ppt/
-                                                    filetype = "ppt"
-                                                    when "application/zip","application/zip-compressed"
-                                                      filetype = "zip"
-                                                    else
-                                                    filetype = "pdf"
-                                                    end
+                                                    filetype = select_icon(mime_type)
                                                     %>
                                                         <li>
                                                             <div class="docs-wrap">
@@ -398,21 +385,8 @@
                                                 <% @assets = @project.assets.where(document_type: "advertise") %>
                                                     <% @assets.each_with_index do |asset, index|%>
                                                     <%
-                                                    mime_type = asset.file.content_type
-                                                    case mime_type
-                                                    when "application/pdf"
-                                                    filetype = "pdf"
-                                                    when "application/doc"
-                                                    filetype = "docs"
-                                                    when /^excel/
-                                                    filetype = "excel"
-                                                    when /^ppt/
-                                                    filetype = "ppt"
-                                                    when "application/zip","application/zip-compressed"
-                                                      filetype = "zip"
-                                                    else
-                                                    filetype = "pdf"
-                                                    end
+                                                      mime_type = asset.file.content_type
+                                                      filetype = select_icon(mime_type)
                                                     %>
                                                         <li>
                                                             <div class="docs-wrap">
