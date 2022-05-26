@@ -102,7 +102,7 @@ class Project
   field :blocking_days, type: Integer, default: 10
   field :holding_minutes, type: Integer, default: 15
   field :terms_and_conditions, type: String
-  field :consideration_value_help_text
+  field :consideration_value_help_text, type: String
   field :ga_code, type: String
   field :gtm_tag, type: String
   field :gst_number, type: String
