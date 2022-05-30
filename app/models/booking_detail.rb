@@ -80,7 +80,6 @@ class BookingDetail
   has_many :related_booking_details, foreign_key: :parent_booking_detail_id, primary_key: :_id, class_name: 'BookingDetail'
   has_many :invoices, as: :invoiceable
   has_and_belongs_to_many :user_kycs, validate: true
-  belongs_to :channel_partner, optional: true
   belongs_to :creator, class_name: 'User', optional: true
   belongs_to :account_manager, class_name: 'User', optional: true
   belongs_to :site_visit, optional: true

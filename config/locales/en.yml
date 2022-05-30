@@ -691,6 +691,7 @@ en:
         cp_code: 'Partner Code'
         company_type: 'Company Type'
         category: 'Category'
+        internal_category: 'Category'
         source: 'Source'
         website: 'Website'
         region: 'Region'
@@ -722,6 +723,11 @@ en:
         confirmed: Confirmed
         pending: Pending Approval
         rejected: Rejected
+
+      channel_partner/internal_categories:
+        cat_a: CAT A
+        cat_b: CAT B
+        cat_c: CAT C
 
       data_attribute:
         name: "Name"

@@ -66,7 +66,7 @@ class Admin::ProjectPolicy < ProjectPolicy
         :allowed_bookings_per_user, :helpdesk_number, :helpdesk_email, :ga_code, :gtm_tag,
         :notification_email, :notification_numbers, :sender_email, :area_unit, :is_active,
         :support_number, :support_email, :channel_partner_support_number, :channel_partner_support_email, :cancellation_amount, :blocking_amount, :region, :sv_incentive, :spot_booking_incentive, :pre_reg_incentive_percentage, :pre_reg_min_bookings, :iris_url, :payment_enabled,
-        :blocking_days, :enable_slot_generation, :holding_minutes, :terms_and_conditions, :email_header, :email_footer, :hot, :enable_inventory, :enable_booking_with_kyc, :gst_slab_applicable, :check_sv_availability_in_selldo, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes,
+        :blocking_days, :enable_slot_generation, :holding_minutes, :terms_and_conditions, :consideration_value_help_text, :email_header, :email_footer, :hot, :enable_inventory, :enable_booking_with_kyc, :gst_slab_applicable, :check_sv_availability_in_selldo, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes,
         email_domains: [], booking_portal_domains: [], enable_actual_inventory: [], enable_live_inventory: [], incentive_percentage_slabs: [], incentive_gst_slabs: [], booking_sources: [], incentive_calculation: [], disable_project: [:walk_ins, :bookings, :invoicing]
       ]
     end
