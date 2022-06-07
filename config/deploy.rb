@@ -42,7 +42,8 @@ set :linked_dirs, %w{log tmp vendor/bundle uploads exports}
 # set :ssh_options, verify_host_key: :secure
 set :passenger_restart_with_touch, true
 
-before 'sidekiq:start', 'deploy:make_sidekiq_pids_dir'
+#before 'sidekiq:start', 'deploy:make_sidekiq_pids_dir'
+after 'deploy:finished', 'deploy:sidekiq_manager_restart'
 
 # Uncomment the following during first deployment on server to initialize the app.
 # Make app environment specific configuration file within config/deploy/ folder with necessary details before running below task.

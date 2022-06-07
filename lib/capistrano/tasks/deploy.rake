@@ -61,4 +61,13 @@ namespace :deploy do
       end
     end
   end
+
+  desc 'Sidekiq Queues restart'
+  task :sidekiq_manager_restart do
+    on roles(:app) do
+      within release_path do
+        execute 'bundle', 'exec', 'bin/rails', 'runner', '-e staging', 'Amura::SidekiqManager.restart'
+      end
+    end
+  end
 end
