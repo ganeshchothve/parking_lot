@@ -50,7 +50,10 @@ en:
     third_party_inventory: '3rd Party Inventory'
     variable_incentive_schemes: Variable Incentive Scheme
     lead: Lead
-
+  kylas_auth:
+    successfully_installed: 'Kylas Application is successfully authenticated'
+    facing_problem: 'There is problem to authenticate the Kylas Application'
+    something_went_wrong: 'Something went wrong' 
   helpers:
     extend_validity:
       link_name: '%{model}'

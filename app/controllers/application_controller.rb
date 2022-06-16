@@ -26,6 +26,9 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActionController::InvalidAuthenticityToken, with: :invalid_authenticity_token
 
+  def auth_request?(url)
+    url&.include?('/kylas-auth?code=')
+  end
 
   def after_sign_in_path_for(resource_or_scope)
     ApplicationLog.user_log(current_user.id, 'sign_in', RequestStore.store[:logging])

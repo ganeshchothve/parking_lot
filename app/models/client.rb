@@ -102,6 +102,10 @@ class Client
   field :mask_lead_data_for_roles, type: Array, default: %w(admin superadmin cp cp_admin dev_sourcing_manager)
   field :incentive_gst_slabs, type: Array, default: [5, 12, 18]
 
+  # kylas tentant id
+  field :kylas_tenant_id, type: String
+  field :kylas_api_key, type: String
+
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
     <div class="mt-3"></div>'

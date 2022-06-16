@@ -494,6 +494,9 @@ Rails.application.routes.draw do
     end
   end
 
+  # Kylas Authentication Logic
+  get 'kylas-auth', to: 'kylas_auth#authenticate'
+
   match '/sell_do/:project_id/lead_created', to: "api/sell_do/leads#lead_created", via: [:get, :post]
   match '/sell_do/:project_id/lead_updated', to: "api/sell_do/leads#lead_updated", via: [:get, :post]
   match '/sell_do/:project_id/site_visit_created', to: "api/sell_do/leads#site_visit_created", via: [:get, :post]

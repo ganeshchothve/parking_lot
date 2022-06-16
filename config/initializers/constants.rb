@@ -11,3 +11,11 @@ else
   ESTATE_SELL_DO_SECRET = 'd4f705fec6104f943b014f5612bcfef4f470c5645227dcb3d7ee05fc1226e2e9'
   ESTATE_SELL_DO_APP_URL = 'http://localhost:8888'
 end
+
+if Rails.env.development? || Rails.env.test? || Rails.env.staging?
+  APP_KYLAS_HOST = 'https://api-qa.sling-dev.com'
+elsif Rails.env.production?
+  APP_KYLAS_HOST = 'https://api.kylas.io'
+end
+
+APP_KYLAS_VERSION = 'v1'

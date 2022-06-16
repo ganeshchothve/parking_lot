@@ -131,8 +131,12 @@ class User
   # For channel partners, gets copied from partner company
   field :category, type: String
 
-  ## Security questionable
+  # Kylas Integration Code
+  field :kylas_access_token, type: String
+  field :kylas_refresh_token, type: String
+  field :kylas_access_token_expires_at, type: DateTime
 
+  ## Security questionable
 
   delegate :name, :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
   delegate :name, :role, :email, to: :confirmed_by, prefix: true, allow_nil: true
@@ -303,6 +307,77 @@ class User
   end
   ADMIN_ROLES.each do |admin_roles|
     scope admin_roles, ->{ where(role: admin_roles )}
+  end
+
+  # Kylas Auth Code
+  def kylas_api_key
+    self.booking_portal_client.kylas_api_key
+  end
+
+  def kylas_api_key?
+    self.booking_portal_client.kylas_api_key.present?
+  end
+
+  def access_token_valid?
+    (kylas_access_token_expires_at.to_i > DateTime.now.to_i)
+  end
+
+  def update_tokens_details!(response = {})
+    return if response.blank?
+
+    update(
+      kylas_access_token: response[:access_token],
+      kylas_refresh_token: response[:refresh_token],
+      kylas_access_token_expires_at: Time.at(DateTime.now.to_i + response[:expires_in])
+    )
+  end
+
+  def update_users_and_tenants_details
+    fetch_and_save_kylas_user_id
+    fetch_and_save_kylas_tenant_id
+  end
+
+  def fetch_access_token
+    return kylas_access_token if access_token_valid?
+
+    response = Kylas::GetAccessToken.new(kylas_refresh_token).call
+
+    return unless response[:success]
+
+    update_tokens_details!(response)
+    kylas_access_token
+  end
+
+  def fetch_and_save_kylas_user_id
+    return if kylas_access_token.blank?
+
+    begin
+      response = Kylas::UserDetails.new(self).call
+      if response[:success]
+        slice_user_id = response.dig(:data, 'id')
+        user = User.find_by(kylas_user_id: slice_user_id)
+        if user.present? && (user.id != self.id)
+          user.update(
+            kylas_user_id: nil, kylas_access_token: nil,
+            kylas_refresh_token: nil, kylas_access_token_expires_at: nil
+          )
+        end
+        update(kylas_user_id: slice_user_id)
+      end
+    rescue StandardError
+      Rails.logger.error 'Kylas::UserDetails - StandardError'
+    end
+  end
+
+  def fetch_and_save_kylas_tenant_id
+    return if kylas_access_token.blank?
+
+    begin
+      response = Kylas::TenantDetails.new(self).call
+      self.booking_portal_client.update(kylas_tenant_id: response.dig(:data, 'id')) if response[:success]
+    rescue StandardError
+      Rails.logger.error 'Kylas::TenantDetails - StandardError'
+    end
   end
 
   def tentative_incentive_eligible?(category=nil)
