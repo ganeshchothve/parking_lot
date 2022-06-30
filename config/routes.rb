@@ -59,6 +59,9 @@ Rails.application.routes.draw do
     post :create_channel_partner, on: :collection
   end
 
+  # New v2 routes required for mobile apps, when old routes are needed to deprecate
+  post '/v2/channel_partners/register', to: "channel_partners#register_cp_user", format: :json
+
   get '/s/:code', to: 'shortened_urls#redirect_to_url'
 
   namespace :admin do
@@ -299,6 +302,7 @@ Rails.application.routes.draw do
         patch :reactivate_account
         patch :move_to_next_state
         patch :change_state
+        patch :update_player_ids
       end
 
       collection do
@@ -417,6 +421,9 @@ Rails.application.routes.draw do
     get :booking_details_counts, to: 'dashboard#booking_details_counts'
     get :team_lead_dashboard, to: 'dashboard#team_lead_dashboard'
     get :dashboard_landing_page, to: 'dashboard#dashboard_landing_page'
+    get :payout_dashboard, to: 'dashboard#payout_dashboard'
+    get :payout_list, to: 'dashboard#payout_list'
+    get :payout_show, to: 'dashboard#payout_show'
 
     resource :lead do
       resources :searches, except: [:destroy], controller: 'searches' do

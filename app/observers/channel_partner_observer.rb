@@ -115,6 +115,9 @@ class ChannelPartnerObserver < Mongoid::Observer
       if channel_partner.manager_id_changed? && channel_partner.manager_id.present?
         channel_partner.users.update_all(manager_id: channel_partner.manager_id)
       end
+      if channel_partner.internal_category_changed? && channel_partner.internal_category.present?
+        channel_partner.users.update_all(category: channel_partner.internal_category)
+      end
     end
     channel_partner.rera_applicable = true if channel_partner.rera_id.present?
     channel_partner.gst_applicable = true if channel_partner.gstin_number.present?
@@ -125,6 +128,19 @@ class ChannelPartnerObserver < Mongoid::Observer
         ChannelPartnerObserverWorker.perform_async(channel_partner.id.to_s, channel_partner.changes)
       else
         ChannelPartnerObserverWorker.new.perform(channel_partner.id, channel_partner.changes)
+      end
+    end
+  end
+
+  def after_save channel_partner
+    if (channel_partner.changes.keys & %w(company_name rera_id pan_number address))
+      cp_users = channel_partner.users
+      cp_users.each do |cp_user|
+        if Rails.env.staging? || Rails.env.production?
+          GenerateCoBrandingTemplatesWorker.perform_in(60.seconds, cp_user.id.to_s)
+        else
+          GenerateCoBrandingTemplatesWorker.new.perform(cp_user.id.to_s)
+        end
       end
     end
   end

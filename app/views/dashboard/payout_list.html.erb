@@ -1,0 +1,10 @@
+<% if policy([:admin, Invoice]).index? %>
+  <div class="container">
+    <div class="row">
+      <div class="col-12 mt-3">
+        <%= link_to "<h2 class='ep-title float-start'>&#8592; Transactions</h2>".html_safe, payout_dashboard_path(user_login: params[:user_login], user_token: params[:user_token]) %>
+      </div>
+      <%= render "dashboard/payout_dashboard/payout_list", invoices: @invoices %>
+    </div>
+  </div>
+<% end %>

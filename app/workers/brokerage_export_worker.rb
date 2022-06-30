@@ -29,6 +29,7 @@ class BrokerageExportWorker
 
   def self.get_column_names
     brokerage_columns = [
+      "Invoiceable ID(Used for VLOOKUP)",
       "Invoice Number",
       "Project Name",
       "Booking Detail",
@@ -61,6 +62,7 @@ class BrokerageExportWorker
 
   def self.get_invoice_row(invoice)
     invoice_row = [
+      invoice.invoiceable_id.to_s,
       invoice.number,
       invoice.project_name,
       invoice.invoiceable.try(:name),

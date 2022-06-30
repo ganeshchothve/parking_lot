@@ -172,7 +172,6 @@ class Lead
     end
   end
 
-
   def tentative_incentive_eligible?(category=nil)
     if category.present?
       if category == 'lead'

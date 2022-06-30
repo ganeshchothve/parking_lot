@@ -8,6 +8,7 @@ class PushNotificationObserver < Mongoid::Observer
       if notification.notification_template_id.present?
         if notification_template = Template::NotificationTemplate.where(id: notification.notification_template_id).first
           notification.content = notification_template.parsed_content(notification.triggered_by)
+          notification.data = notification_template.parsed_data(notification.triggered_by)
           notification.title = notification_template.parsed_title(notification.triggered_by)
           notification.url = URI.join(base_url, notification_template.parsed_url(notification.triggered_by)).to_s
         end
@@ -21,10 +22,11 @@ class PushNotificationObserver < Mongoid::Observer
 
   def after_create notification
     if notification.booking_portal_client.notification_enabled?
-      if Rails.env.production? || Rails.env.staging?
+      if Rails.env.production?
         Communication::Notification::NotificationWorker.perform_async(notification.id.to_s)
       else
-        notification.set(status: 'sent')
+        Communication::Notification::NotificationWorker.new.perform(notification.id.to_s)
+        # notification.set(status: 'sent')
       end
     end
   end

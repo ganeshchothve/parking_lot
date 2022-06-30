@@ -1,6 +1,7 @@
 class Crm::Api
   include Mongoid::Document
   include Mongoid::Timestamps
+  include JSONStringParser
 
   DEFAULT_REQUEST_HEADER = { 'Content-Type' => 'application/json' }
   RESOURCE_CLASS = %w[User UserKyc Receipt BookingDetail ChannelPartner Lead SiteVisit FundAccount Invoice]
@@ -26,27 +27,7 @@ class Crm::Api
     _request_payload = SafeParser.new(_request_erb.result(record.get_binding)).safe_load rescue {}
     _base_request_payload = SafeParser.new(_base_payload_erb.result(record.get_binding)).safe_load rescue {}
     _request_payload.merge(_base_request_payload)
-    safe_parse(_request_payload)
-  end
-
-  def safe_parse(data)
-    res = data
-    case (res ||= data)
-    when Hash
-      res.each do |key, value|
-        _value = (SafeParser.new(value).safe_load rescue nil) || value
-        res[key] = ((_value.is_a?(Hash) || _value.is_a?(Array)) ? safe_parse(_value) : value)
-      end
-      res
-    when Array
-      res.map! do |value|
-        _value = (SafeParser.new(value).safe_load rescue nil) || value
-        (_value.is_a?(Hash) || _value.is_a?(Array)) ? safe_parse(_value) : value
-      end
-      Array.new.push(*res)
-    else
-      res
-    end
+    recursive_json_string_parser(_request_payload)
   end
 
   def validate_url

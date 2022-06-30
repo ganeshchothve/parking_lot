@@ -16,6 +16,14 @@
   </div>
 </div>
 
+<% if policy([:admin, @channel_partner]).editable_field?("internal_category") %>
+  <div class='row'>
+    <div class="col-md-6">
+      <%= form.input :internal_category, collection: ChannelPartner::INTERNAL_CATEGORY.map {|cat| [t("mongoid.attributes.channel_partner/internal_categories.#{cat}"), cat]}, disabled: !policy([:admin, @channel_partner]).editable_field?("internal_category"), as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
+    </div>
+  </div>
+<% end %>
+
 <div class="row">
   <div class="col-md-6">
     <%= form.input :nri, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: {class: 'wd-22', disabled: !policy([:admin, @channel_partner]).editable_field?("nri") } %>
@@ -43,6 +51,18 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="col-md-12">
+    <%= form.label :company_logo, class: '' %>
+    <%= form.file_field :company_logo, class: 'btn pl-0 file-input', disabled: !policy([:admin, @channel_partner]).editable_field?("company_logo") %>
+    <% if @channel_partner.company_logo.present? %>
+      <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
+        <img src="<%= @channel_partner.company_logo.url %>" style="max-height: 100%; max-width:100%;" />
+      </div>
+    <% end %>
+    <hr/>
+  </div>
+</div>
 <div class="row">
   <div class="col-md-6">
   <!-- Remove form-control class in select field and selectize  -->

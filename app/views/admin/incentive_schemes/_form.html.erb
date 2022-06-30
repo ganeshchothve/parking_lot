@@ -67,9 +67,13 @@
             <%= f.radio_button :auto_apply, true, required: 'required', class: "form-check-input wd-22" %>
             <%= f.label :auto_apply, "Yes", class: "form-check-label d-inline-block ms-2" %>
           </div>
-          <div class="form-check form-check-inline">
+          <div class="form-check form-check-inline mb-3">
             <%= f.radio_button :auto_apply, false, required: 'required', class: "form-check-input wd-22" %>
             <%= f.label :auto_apply, "No", class: "form-check-label d-inline-block ms-2" %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :terms_and_conditions, class: 'label-required mb-2' %>
+            <%= f.text_area :terms_and_conditions, rows: 5, autofocus: true, class: "form-control summernote", required: 'required', disabled: !policy([:admin, @incentive_scheme]).editable_field?("terms_and_conditions") %>
           </div>
         </div>
         <div class="mb-3">

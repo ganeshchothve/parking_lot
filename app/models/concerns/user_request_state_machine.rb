@@ -67,7 +67,7 @@ module UserRequestStateMachine
 
     def send_push_notification
       template = Template::NotificationTemplate.where(name: "#{self.class.model_name.element}_request_#{status}").first
-      if template.present? && user.booking_portal_client.notification_enabled?
+      if template.present? && template.is_active? && user.booking_portal_client.notification_enabled?
         push_notification = PushNotification.new(
           notification_template_id: template.id,
           triggered_by_id: self.id,

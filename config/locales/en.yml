@@ -312,6 +312,8 @@ en:
         url: "Redirect url"
         title: "Title"
         content: "Content"
+        data: Data
+        status: Status
       crm:
         base:
           name: Name
@@ -534,7 +536,6 @@ en:
         possession: Possession Date
         hot: 'Hot Property'
         is_active: 'Active?'
-        project_type: Type of Project
         launched_on: Launch Date
         developer_name: Developer Name
         approved_banks: Approved Banks
@@ -586,6 +587,7 @@ en:
         holding_minutes: 'Unit to be held for (Minutes)'
         rera_registration_no: 'RERA Registration Number'
         configurations: 'Configuration Types'
+        types: "Project Type"
         project_size: 'Total Land Area (in Acres)'
         total_buildings: 'Number Of Ongoing Towers'
         amenities: 'Project Amenities'
@@ -618,6 +620,9 @@ en:
           sbi: State Bank of India
           bob: Bank of Baroda
           bajaj_finance: Bajaj Finance
+      project/project_type:
+        residential: Residential
+        commercial: Commercial
       project/category:
         pre_launch: Pre Launch
         launch: Launch
@@ -686,6 +691,7 @@ en:
         cp_code: 'Partner Code'
         company_type: 'Company Type'
         category: 'Category'
+        internal_category: 'Category'
         source: 'Source'
         website: 'Website'
         region: 'Region'
@@ -717,6 +723,11 @@ en:
         confirmed: Confirmed
         pending: Pending Approval
         rejected: Rejected
+
+      channel_partner/internal_categories:
+        cat_a: CAT A
+        cat_b: CAT B
+        cat_c: CAT C
 
       data_attribute:
         name: "Name"
@@ -845,6 +856,10 @@ en:
         name: Name
       projects:
         name: Name
+        show:
+          brokerage_slabs: 'Brokerage Slabs'
+          offer_valid_till: 'Offer valid till'
+          terms_and_conditions: 'Terms & Conditions'
       receipt:
         comments: 'Comments'
         creator_id: "Created by"
@@ -939,8 +954,9 @@ en:
         brokerage_type: Brokerage Type
         payment_to: Payment To
         auto_apply: Auto Apply
+        terms_and_conditions: 'Terms & Conditions'
         date_range: Date Range
-      incentive_scheme/categories:
+      incentive_scheme/categories: &invoice_category
         walk_in: 'Walk-in'
         spot_booking: 'Spot Booking'
         lead: 'Lead'
@@ -1005,7 +1021,7 @@ en:
         agreement_amount: 'Consideration Value For Brokerage'
         incentive_resource: 'Resource'
         category: 'Type'
-        manager_id: 'Partner / Manager / Added by'
+        manager_id: 'Channel Partner'
         account_manager_id: 'Account Manager'
       invoice/status:
         draft: 'Draft'
@@ -1018,6 +1034,14 @@ en:
         approved: 'Invoice Approved by Developer'
         rejected: 'Dispute Raised by Developer'
         tax_invoice_raised: "Raised Tax Invoice"
+      invoice/payout_status:
+        raised: Invoiced
+        draft: Waiting for Invoicing
+        approved: Waiting for Registration
+        paid: Paid
+        rejected: Cancellation
+      invoice/categories:
+        <<: *invoice_category
       cheque_detail:
         total_amount: 'Total Amount'
         payment_identifier: 'Payment Identifier'
@@ -1100,7 +1124,7 @@ en:
         conducted_on: Conducted on
         site_visit_type: Type
         approval_status: Approval Status
-        manager_id: 'Partner / Manager / Added by'
+        manager_id: 'Channel Partner'
         rejection_reason: Rejection Reason
         is_revisit: Revisit
       site_visit/status:
@@ -1254,7 +1278,7 @@ en:
         lead_id: 'Sell.Do Lead ID'
         manager_name: 'Manager Name'
         manager_role: "Sales Manager / Added by Role"
-        manager_id: "Partner / Manager / Added by"
+        manager_id: "Channel Partner"
         project_ids: Projects
         manager_change_reason: "Reason for changing Partner"
         name: 'Name'
@@ -1308,7 +1332,7 @@ en:
           other: 'Customer Accounts'
         gre: 'GRE or Pre-sales'
         cp_admin: 'Channel Partner Head'
-        cp: 'Channel Partner Manager'
+        cp: 'Relationship Manager'
         channel_partner: 'Channel Partner'
         cp_owner: 'Company Owner'
         team_lead: 'Team Lead'
@@ -1329,7 +1353,7 @@ en:
         phone: 'Phone'
         email: 'Email'
         project_id: 'Project'
-        manager_id: 'Partner / Manager / Added by'
+        manager_id: 'Channel Partner'
         name_email_phone: 'Name/Email/Phone (Project Name)'
         total_amount_paid: "Total Amount Paid (Inclusive of GST)"
         registered_at: 'Registered At'
@@ -1414,6 +1438,8 @@ en:
         amenities: 'Amenities'
         certificate: 'Certificate'
         images: 'Images'
+        developer_logo: 'Developer Logo'
+        advertise: 'Advertise Kit'
       project/help_text:
         document_html: 'Project documents'
         offer_html: 'Project ongoing offers'
@@ -1423,6 +1449,8 @@ en:
         amenities_html: 'Project amenities'
         certificate_html: 'Certificate'
         images_html: 'Images'
+        developer_logo_html: 'Project Developer Logo'
+        advertise_html: 'Advertise Kit'
       cp_lead_activity/file_types:
         sitevisit_form: 'Walk-in Form'
       cp_lead_activity/help_text:
@@ -1756,6 +1784,10 @@ en:
         link_name: 'Sync on Sell.do'
       show:
         show_interest_text: 'Subscribe to Project for Adding Walk-Ins'
+        booking_count: 'Bookings'
+        brokerage: 'Brokerage'
+        terms_and_conditions: 'Terms & Conditions'
+        plus: 'Plus'
 
     project_units:
       send_cost_sheet_and_payment_schedule:
@@ -2296,6 +2328,8 @@ en:
   formula:
     calculate_agreement_price: 'Agreement Value'
     calculate_all_inclusive_price: 'All Inclusive'
+    agreement_price: 'Agreement Value'
+    all_inclusive_price: 'All Inclusive Price'
 
   amenity_icons:
     swimming_pool: 'fa-swimming-pool'

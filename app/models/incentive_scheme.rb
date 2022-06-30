@@ -39,6 +39,7 @@ class IncentiveScheme
   field :brokerage_type, type: String, default: 'sub_brokerage'
   field :payment_to, type: String, default: 'channel_partner'
   field :auto_apply, type: Boolean, default: true
+  field :terms_and_conditions, type: String
 
   belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :project, optional: true

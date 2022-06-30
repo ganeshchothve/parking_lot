@@ -80,7 +80,6 @@ class BookingDetail
   has_many :related_booking_details, foreign_key: :parent_booking_detail_id, primary_key: :_id, class_name: 'BookingDetail'
   has_many :invoices, as: :invoiceable
   has_and_belongs_to_many :user_kycs, validate: true
-  belongs_to :channel_partner, optional: true
   belongs_to :creator, class_name: 'User', optional: true
   belongs_to :account_manager, class_name: 'User', optional: true
   belongs_to :site_visit, optional: true
@@ -402,7 +401,7 @@ class BookingDetail
               false
             end
           else
-            blocked?
+            (status.in?(%w(blocked booked_tentative)) && approval_status == "approved")
           end
         end
       else
@@ -443,6 +442,43 @@ class BookingDetail
       self.calculate_agreement_price
     else
       (self.agreement_price)
+    end
+  end
+
+  def send_second_booking_notification
+    booking_detail = self
+    lead = booking_detail.lead
+    if lead.present? && lead.booking_details.where(project_id: lead.project_id).count > 1
+      recipients = []
+      recipients << lead.manager.manager if lead.manager.try(:manager).present?
+      recipients << lead.manager.manager.manager if lead.manager.try(:manager).try(:manager).present?
+      recipients << User.admin
+      recipients << User.dev_sourcing_manager.where(project_ids: lead.project_id.to_s)
+      recipients = recipients.flatten
+      template_name = "second_booking_notification"
+      template = Template::EmailTemplate.where(name: template_name).first
+
+      if template.present? && template.is_active? && recipients.present?
+        email = Email.create!({
+          booking_portal_client_id: booking_detail.user.booking_portal_client_id,
+          email_template_id: template.id,
+          recipients: recipients.flatten,
+          triggered_by_id: booking_detail.id,
+          triggered_by_type: booking_detail.class.to_s
+        })
+        email.sent!
+      end
+      sms_template = Template::SmsTemplate.where(name: template_name).first
+      phones = recipients.collect(&:phone).reject(&:blank?)
+      if sms_template.present? && sms_template.is_active? && phones.present?
+        Sms.create!(
+          booking_portal_client_id: booking_detail.user.booking_portal_client_id,
+          to: phones,
+          sms_template_id: sms_template.id,
+          triggered_by_id: booking_detail.id,
+          triggered_by_type: booking_detail.class.to_s
+        )
+      end
     end
   end
 

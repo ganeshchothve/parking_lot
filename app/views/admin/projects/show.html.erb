@@ -1,4 +1,4 @@
-<% inventory_avl = @project.project_units.count > 0 %>
+<% inventory_avl = @project.enable_inventory %>
 <% project_labels = t('mongoid.attributes.project') %>
 <% interest = current_user.interested_projects.in(status: %w(subscribed approved)).where(project_id: @project.id).presence %>
 <section class="prjt-details-sec">
@@ -104,7 +104,8 @@
                                     <div class="col-lg-5 col-12 overview-left float-start">
                                         <p>
                                             <span>Configuration</span>
-                                            <%= inventory_avl ? DashboardDataProvider.configurations(@project).to_sentence : @project.configurations&.to_sentence %> Flats <%= inventory_avl ? "| #{@project.project_units.min(:saleable)&.round} - #{@project.project_units.max(:saleable)&.round} #{@project.area_unit}" : '' %>
+                                            <% flats_text = @project.project_type.include?("residential") ? " Flats" : "" %>
+                                            <%= inventory_avl ? DashboardDataProvider.configurations(@project).to_sentence + flats_text : @project.configurations&.to_sentence + flats_text %> <%= inventory_avl ? "| #{@project.project_units.min(:saleable)&.round} - #{@project.project_units.max(:saleable)&.round} #{@project.area_unit}" : '' %>
                                         </p>
                                         <p>
                                             <span>Property Value</span>
@@ -355,18 +356,37 @@
                                                     <% @assets.each_with_index do |asset, index|%>
                                                     <%
                                                     mime_type = asset.file.content_type 
-                                                    case mime_type
-                                                    when "application/pdf"
-                                                    filetype = "pdf"
-                                                    when "application/doc"
-                                                    filetype = "docs"
-                                                    when /^excel/
-                                                    filetype = "excel"
-                                                    when /^ppt/
-                                                    filetype = "ppt"
-                                                    else
-                                                    filetype = "pdf"
-                                                    end
+                                                    filetype = select_icon(mime_type)
+                                                    %>
+                                                        <li>
+                                                            <div class="docs-wrap">
+                                                                <div class="docs-icon">
+                                                                   <a href="<%= asset.file.url %>" target="_blank"> <img src='<%= asset_path "#{filetype}-icon.png" %>' class="img-fluid"></a>
+                                                                </div>
+                                                                <div class="docs-info">
+                                                                    <span><%= asset.file_name %></span>
+                                                                    <span class="video-download">
+                                                                    <a href="<%= asset.file.url %>" target="_blank">
+                                                                        <i class="fa fa-download"></i>
+                                                                        </a>
+                                                                    </span>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    <% end %>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-3 float-start">
+                                        <div class="prjt-gallery">
+                                            <h2>Advertise Kit</h2>
+                                            <ul class="documents-list">
+                                                <% @assets = @project.assets.where(document_type: "advertise") %>
+                                                    <% @assets.each_with_index do |asset, index|%>
+                                                    <%
+                                                      mime_type = asset.file.content_type
+                                                      filetype = select_icon(mime_type)
                                                     %>
                                                         <li>
                                                             <div class="docs-wrap">
@@ -714,6 +734,30 @@
                         </div>
                     </div>
                 </div>
+                <% if @incentive_scheme.present? %>
+                  <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card">
+                      <div class="row">
+                          <div class="col-md-12 pt-3 px-4">
+                              <h3 class="card-title"><%= t("mongoid.attributes.projects.show.brokerage_slabs") %></h3>
+                              <p><%= t("mongoid.attributes.projects.show.offer_valid_till") %> : <%= @incentive_scheme.ends_on.strftime("%d/%m/%Y") %></p>
+                              <table class="table table-sm">
+                                <tr>
+                                  <td><%= t("mongoid.attributes.projects.show.bookings") %></td>
+                                  <td class="text-end"><%= t("mongoid.attributes.projects.show.brokerage") %></td>
+                                </tr>
+
+                                <% @incentive_scheme.ladders.each do |ladder| %>
+                                  <tr>
+                                    <td><%= ladder.start_value %> - <%= ladder.end_value || t("mongoid.attributes.projects.show.plus") %></td>
+                                    <td class="text-end"><%= ladder.payment_adjustment.formula.present? ? fetch_percentage(ladder.payment_adjustment.formula) : number_to_indian_currency(ladder.payment_adjustment.absolute_value) %></td>
+                                  </tr>
+                                <% end %>
+                                <td colspan="2" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#TnCModal"><small><%= t("mongoid.attributes.projects.show.terms_and_conditions") %><span style="color: red;">*</span></small></td>
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+                <% end %>
             <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card mb-5">
                     <div class="row">
                         <div class="col-md-12 pt-3 px-4">
@@ -896,4 +940,25 @@
       header.removeClass("fixed-subheader");
     }
   });
+<% end %>
+
+<!-- Modal -->
+<% if @incentive_scheme.present? %>
+  <div class="modal fade" id="TnCModal" tabindex="-1" aria-labelledby="TnCModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="TnCModalLabel"><%= t("mongoid.attributes.projects.show.terms_and_conditions") %></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <% if @incentive_scheme.terms_and_conditions.present? %>
+            <%= @incentive_scheme.terms_and_conditions.html_safe %>
+          <% else %>
+            <p>-</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
 <% end %>

@@ -7,6 +7,7 @@ class DashboardController < ApplicationController
   include ChannelPartnerLeaderboardConcern
   before_action :authenticate_user!, only: [:index, :documents, :dashboard_landing_page, :channel_partners_leaderboard, :channel_partners_leaderboard_without_layout]
   before_action :set_lead, only: :index, if: proc { current_user.buyer? }
+  around_action :apply_invoice_policy_scope, only: [:payout_dashboard, :payout_list]
 
   layout :set_layout
 
@@ -87,8 +88,36 @@ class DashboardController < ApplicationController
   end
 
   def dashboard_landing_page
-    @meetings = Meeting.in(roles: ["channel_partner","cp_owner"]).where(scheduled_on: {"$gte": Time.now.beginning_of_day}).scheduled
+    @meetings = Meeting.in(roles: ["channel_partner","cp_owner"]).where(scheduled_on: {"$gte": Time.now.beginning_of_day}).scheduled.desc(:scheduled_on)
     @announcements = Announcement.where(is_active: true)
+  end
+
+  def payout_dashboard
+    authorize :dashboard, :payout_dashboard?
+    @invoices = Invoice.build_criteria(params)
+    @invoices_with_limit = @invoices.limit(3)
+    @total_earnings = @invoices.in(status: Invoice::PAYOUT_DASHBOARD_STAGES).sum(:net_amount)
+    @invoiced = @invoices.or([{category: "brokerage", status: {"$in": ["raised", "pending_approval", "approved"]}}, {category: {"$in": ["spot_booking", "walk_in"]}, status: {"$in": ["draft","raised", "pending_approval", "approved"]}}]).sum(:net_amount)
+    @paid_invoices = @invoices.where(status: "paid").sum(:net_amount)
+    @approved = @invoices.where(status: "approved").sum(:net_amount)
+    @waiting_for_registration = @invoices.tentative.where(category: "brokerage").sum(:net_amount)
+    @waiting_for_approval = @invoices.draft.where(category: "brokerage").sum(:net_amount)
+    if current_user.role?(:cp_owner)
+      cancelled_booking_detail_ids = BookingDetail.cancelled.where(channel_partner_id: current_user.channel_partner_id).pluck(:id)
+    else
+      cancelled_booking_detail_ids = BookingDetail.cancelled.where(manager_id: current_user.id, channel_partner_id: current_user.channel_partner_id).pluck(:id)
+    end
+    @rejected_invoices = @invoices.where(category: "brokerage").rejected.in(invoiceable_id: cancelled_booking_detail_ids).sum(:net_amount)
+  end
+
+  def payout_list
+    authorize :dashboard, :payout_dashboard?
+    @invoices = Invoice.build_criteria(params)
+  end
+
+  def payout_show
+    authorize :dashboard, :payout_dashboard?
+    @invoice = Invoice.where(id: params[:invoice_id]).first
   end
 
   private
@@ -96,6 +125,13 @@ class DashboardController < ApplicationController
   def set_lead
     unless @lead = current_user.selected_lead
       redirect_to welcome_path, alert: t('controller.application.set_current_client')
+    end
+  end
+
+  def apply_invoice_policy_scope
+    custom_scope = Invoice.where(Invoice.user_based_scope(current_user, params))
+    Invoice.with_scope(policy_scope(custom_scope)) do
+      yield
     end
   end
 end

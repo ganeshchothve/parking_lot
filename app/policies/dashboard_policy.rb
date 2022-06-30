@@ -52,4 +52,8 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
   def dashboard_landing_page?
     leaderboard?
   end
+
+  def payout_dashboard?
+    user.role.in?(%w[channel_partner cp_owner])
+  end
 end

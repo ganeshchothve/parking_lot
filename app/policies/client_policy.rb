@@ -3,7 +3,7 @@ class ClientPolicy < ApplicationPolicy
 
   def permitted_attributes params={}
     [
-      :sms_provider_dlt_entity_id, :sms_provider_telemarketer_id, :name, :selldo_client_id, :selldo_form_id,
+      :sms_provider_dlt_entity_id, :notification_api_key, :sms_provider_telemarketer_id, :name, :selldo_client_id, :selldo_form_id,
       :allowed_bookings_per_user, :selldo_gre_form_id, :selldo_channel_partner_form_id, :selldo_api_key,
       :selldo_api_secret, :selldo_default_srd, :selldo_cp_srd, :helpdesk_number, :helpdesk_email, :ga_code, :gtm_tag,
       :notification_email, :notification_numbers, :sender_email, :registration_name, :cin_number, :website_link,
@@ -16,7 +16,7 @@ class ClientPolicy < ApplicationPolicy
       :terms_and_conditions, :faqs, :rera, :tds_process, :logo, :mobile_logo, :background_image,
       :allow_multiple_bookings_per_user_kyc, :enable_lead_conflicts, :lead_blocking_days,
       :enable_direct_activation_for_cp, :external_api_integration, :invoice_approval_tat, :powered_by_link, :launchpad_portal, :tl_dashboard_refresh_timer,
-      enable_communication: [:email, :sms, :whatsapp],
+      enable_communication: [:email, :sms, :whatsapp, :notification],
       external_inventory_view_config_attributes: ExternalInventoryViewConfigPolicy.new(user, ExternalInventoryViewConfig.new).permitted_attributes,
       address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes,
       checklists_attributes: ChecklistPolicy.new(user, Checklist.new).permitted_attributes,

@@ -25,7 +25,7 @@ class User
   SALES_USER = %w[sales sales_admin]
   COMPANY_USERS = %w[employee_user management_user]
   # Added different types of documents which are uploaded on User
-  DOCUMENT_TYPES = %w[home_loan_application_form photo_identity_proof residence_address_proof residence_ownership_proof income_proof job_continuity_proof bank_statement advance_processing_cheque financial_documents]
+  DOCUMENT_TYPES = %w[home_loan_application_form photo_identity_proof residence_address_proof residence_ownership_proof income_proof job_continuity_proof bank_statement advance_processing_cheque financial_documents first_page_co_branding last_page_co_branding co_branded_asset]
   TEAM_LEAD_DASHBOARD_ACCESS_USERS = %w[team_lead gre]
 
   # Include default devise modules. Others available are:
@@ -128,6 +128,8 @@ class User
 
   field :referred_on, type: DateTime
   field :register_in_cp_company_token, type: String
+  # For channel partners, gets copied from partner company
+  field :category, type: String
 
   ## Security questionable
 
@@ -218,6 +220,7 @@ class User
   scope :filter_by_is_active, ->(is_active) { is_active.eql?("true") ? where(is_active: true)
     : where(is_active: false)}
   scope :filter_by_channel_partner_id, ->(channel_partner_id) {where(channel_partner_id: channel_partner_id) }
+  scope :filter_by_category, ->(category) {where(category: category) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_role, ->(_role) { _role.is_a?(Array) ? where( role: { "$in": _role }) : where(role: _role.as_json) }
@@ -314,6 +317,10 @@ class User
     end
   end
 
+  def initials
+    "#{(first_name[0] rescue "").capitalize}#{(last_name[0] rescue "").capitalize}"
+  end
+
   def draft_incentive_eligible?(category=nil)
     if category.present?
       if category == 'referral'
@@ -402,6 +409,14 @@ class User
         #  end
         #end
       end
+    end
+  end
+
+  def update_onesignal_external_user_id(player_id)
+    if Rails.env.production?
+      Communication::OneSignal::ExternalUserIdUpdateWorker.perform_async(self.id.to_s, player_id)
+    else
+      Communication::OneSignal::ExternalUserIdUpdateWorker.new.perform(self.id.to_s, player_id)
     end
   end
 

@@ -16,6 +16,21 @@ module ChannelPartnerRegisteration
     end
   end
 
+  # New API for mobile apps, after separating login & register screens
+  def register_cp_user
+    respond_to do |format|
+      if request.format.json?
+        create_cp_user
+        if @user.save
+          send_otp
+          format.json { render 'channel_partners/register.json', status: :created }
+        else
+          format.json { render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity }
+        end
+      end
+    end
+  end
+
   # {
   #   "channel_partner": {
   #     "company_name": "FreshCP",
@@ -75,13 +90,17 @@ module ChannelPartnerRegisteration
     create_cp_user unless @user
 
     if @user.persisted? || @user.save
-      @otp_sent_status = @user.send_otp
-      if Rails.env.development?
-        Rails.logger.info "---------------- #{@user.otp_code} ----------------"
-      end
+      send_otp
       format.json { render 'channel_partners/register.json', status: :created }
     else
       format.json { render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity }
+    end
+  end
+
+  def send_otp
+    @otp_sent_status = @user.send_otp
+    if Rails.env.development?
+      Rails.logger.info "---------------- #{@user.otp_code} ----------------"
     end
   end
 

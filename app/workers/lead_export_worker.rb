@@ -39,7 +39,7 @@ class LeadExportWorker
       "Number of Re-Visit",
       "Last Revisit date",
       "Queue No.",
-      "Partner / Manager / Added by",
+      I18n.t('mongoid.attributes.user.manager_id'),
       "Booking Amount Paid",
       "9.90% Received",
       "Registration Done",

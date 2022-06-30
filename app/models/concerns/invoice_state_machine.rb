@@ -11,7 +11,7 @@ module InvoiceStateMachine
       state :paid
 
       event :draft do
-        transitions from: :tentative, to: :draft
+        transitions from: :tentative, to: :draft, success: %i[after_raised]
         transitions from: :rejected, to: :draft
       end
 
@@ -40,7 +40,7 @@ module InvoiceStateMachine
         transitions from: :approved, to: :tax_invoice_raised
       end
 
-      event :paid, after: :mark_invoiceable_paid do
+      event :paid, after: [:mark_invoiceable_paid, :send_notification] do
         transitions from: :tax_invoice_raised, to: :paid
         transitions from: :approved, to: :paid
       end
@@ -107,10 +107,33 @@ module InvoiceStateMachine
           end
         end
       end
+      if recipients.present?
+        recipients.each do |recipient|
+          send_push_notification(template_name, recipient)
+        end
+      end
+    end
+
+    def send_push_notification template_name, recipient
+      template = Template::NotificationTemplate.where(name: template_name).first
+      if template.present? && template.is_active? && recipient.booking_portal_client.notification_enabled?
+        push_notification = PushNotification.new(
+          notification_template_id: template.id,
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s,
+          recipient_id: recipient.id,
+          booking_portal_client_id: recipient.booking_portal_client.id
+        )
+        push_notification.save
+      end
     end
 
     def after_raised
-      self.raised_date = Time.now
+      unless category == "brokerage"
+        self.set(raised_date: Time.now) if aasm.to_state.to_s == "draft"
+      else
+        self.set(raised_date: Time.now) if aasm.to_state.to_s == "raised"
+      end
       # self.generate_pdf
     end
 
@@ -153,6 +176,7 @@ module InvoiceStateMachine
           invoiceable.aasm(:status).fire!(:paid)
         end
       end
+      self.set(paid_date: Time.now)
     end
 
     def move_manual_invoice_to_draft

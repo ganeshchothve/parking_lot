@@ -23,6 +23,10 @@
             <%= label_tag "fltrs", ChannelPartner.model_name.human %>
             <%= select_tag "fltrs[channel_partner_id]", options_from_collection_for_select(params[:fltrs].present? ? ChannelPartner.where(_id: params[:fltrs][:channel_partner_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: channel_partners_path, ds: true }} %>
           </div>
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+            <%= label_tag "fltrs", t('mongoid.attributes.user.category'), class: "control-label" %>
+            <%= select_tag "fltrs[category]", options_for_select( ChannelPartner::INTERNAL_CATEGORY.collect{|x| [ t("mongoid.attributes.channel_partner/internal_categories.#{x}"), x]}, params.dig(:fltrs,:category)), {prompt: "Select", class: "selectize"} %>
+          </div>
         <% end %>
         <% if policy([current_user_role_group, InterestedProject]).report? %>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">

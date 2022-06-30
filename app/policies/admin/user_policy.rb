@@ -62,7 +62,7 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def asset_create?
-    %w[admin sales sales_admin crm].include?(user.role)
+    %w[superadmin admin sales sales_admin crm].include?(user.role)
   end
 
   def block_lead?
@@ -121,6 +121,10 @@ class Admin::UserPolicy < UserPolicy
       user.role.in?(%w(cp cp_admin superadmin)) &&
       record.user_status_in_company.in?(%w(pending_approval))
     )
+  end
+
+  def update_player_ids?
+    user.role.in?(%w(superadmin admin channel_partner cp_owner))
   end
 
   def permitted_attributes(params = {})
