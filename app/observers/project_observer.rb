@@ -25,10 +25,10 @@ class ProjectObserver < Mongoid::Observer
 
   def after_save project
     if project.booking_price_in_percentage_changed? || project.booking_price_factor_changed?
-      if Rails.env.development?
-        BulkUpdateBookingPriceWorker.new.perform(project.id.to_s)
-      else
+      if Rails.env.staging? || Rails.env.production?
         BulkUpdateBookingPriceWorker.perform_async(project.id.to_s, timezone: Time.zone.name)
+      else
+        BulkUpdateBookingPriceWorker.new.perform(project.id.to_s)
       end
     end
   end

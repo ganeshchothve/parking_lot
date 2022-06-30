@@ -29,11 +29,10 @@ module PriceCalculator
   end
 
   def set_booking_price
-    project = self.project
-    if project.booking_price_in_percentage
-      (agreement_price * (project.booking_price_factor/100)).round
+    if self.project.booking_price_in_percentage
+      (agreement_price * (self.project.booking_price_factor/100)).round
     else
-      (project.booking_price_factor).round
+      (self.project.booking_price_factor).round
     end
   end
 
