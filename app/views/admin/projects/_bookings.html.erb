@@ -176,8 +176,8 @@
     </div>
     <div class="col-md-6">
       <div class="mb-3">
-        <%= f.label :booking_price, class: 'label-required' %>
-        <%= f.text_field :booking_price, class: 'form-control', required: true %>
+        <%= f.label :booking_price_factor, class: 'label-required' %>
+        <%= f.text_field :booking_price_factor, class: 'form-control', required: true %>
       </div>
     </div>
   <% end %>
@@ -197,10 +197,10 @@
 
     $('.input-price').find('input, radio_button').change(function() {
       if($('#project_booking_price_in_percentage_true').is(':checked')){
-        $('#project_booking_price').attr("placeholder", "0.1 (10 Percent)");
+        $('#project_booking_price_factor').attr("placeholder", "10 (10 Percent)");
       }
       else{
-        $('#project_booking_price').attr("placeholder", "10000 (Amount)"); // unit_booking_price
+        $('#project_booking_price_factor').attr("placeholder", "1000000 (Amount)"); // unit_booking_price
       }
     }).trigger('change');
 

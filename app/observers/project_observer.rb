@@ -22,4 +22,14 @@ class ProjectObserver < Mongoid::Observer
     token_type = project.token_types.create(name: 'Default', token_amount: (project.blocking_amount || project.booking_portal_client.blocking_amount), token_prefix: (project.name.gsub(/\s+/, '')[0..2].try(:upcase).presence || 'TKN'), token_seed: 0)
     token_type.init if token_type.valid?
   end
+
+  def after_save project
+    if project.booking_price_in_percentage_changed? || project.booking_price_factor_changed?
+      if Rails.env.development?
+        BulkUpdateBookingPriceWorker.new.perform(project.id.to_s)
+      else
+        BulkUpdateBookingPriceWorker.perform_async(project.id.to_s, timezone: Time.zone.name)
+      end
+    end
+  end
 end

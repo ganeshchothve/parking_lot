@@ -28,8 +28,13 @@ module PriceCalculator
     effective_rate
   end
 
-  def booking_price_percent_of_agreement_price
-    agreement_price > 5000000 ? 0.099 : 0.1
+  def set_booking_price
+    project = self.project
+    if project.booking_price_in_percentage
+      (agreement_price * (project.booking_price_factor/100)).round
+    else
+      (project.booking_price_factor).round
+    end
   end
 
   def total_agreement_costs

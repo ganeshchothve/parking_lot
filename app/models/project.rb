@@ -18,9 +18,6 @@ class Project
   DEFAULT_CONFIGURATIONS = %w( 1RK 1BHK 2BHK 2.5BHK 3BHK 3.5BHK 4BHK 5BHK 6BHK )
   ALLOWED_BANKS = %w( sbi hdfc bob bajaj_finance )
 
-  field :booking_price_in_percentage, type: Boolean, default: true
-  field :booking_price, type: String
-
   # filters
   field :name, type: String
   field :developer_name, type: String
@@ -121,7 +118,8 @@ class Project
   field :check_sv_availability_in_selldo, type: Boolean, default: false
   field :incentive_calculation, type: Array, default: ["manual"]
   field :disable_project, type: Hash, default: {walk_ins: false, bookings: false, invoicing: false}
-
+  field :booking_price_in_percentage, type: Boolean, default: true
+  field :booking_price_factor, type: Float, default: 10
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
