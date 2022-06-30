@@ -1,0 +1,109 @@
+<%= nested_form_for [:admin, @discount], remote: true, html: {class: 'modal-remote-form validate-form discount-form', "data-resource-type": global_labels['discounts'], "data-type": "json"} do |f| %>
+  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><%= @discount.new_record? ? "New" : "Edit" %> <%= "#{global_labels['discount']}" %></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-header">
+            <h3 class="title">
+                <% action_name = @discount.new_record? ? 'new' : 'edit' %>
+                <%= t("helpers.#{action_name}.link_name", model: Discount.model_name.human) %>
+            </h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        <div class="modal-body theme-form">
+          <div class="mb-3">
+            <%= f.label :name, class: 'label-required' %>
+            <%= f.text_field :name, autofocus: true, class: "form-control", required: 'required', disabled: !(policy([:admin, @discount]).editable_field?("name")) %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :description %>
+            <%= f.text_field :description, autofocus: true, class: "form-control", disabled: !(policy([:admin, @discount]).editable_field?("description")) %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :start_token_number, class: 'label-required' %>
+            <%= f.text_field :start_token_number, autofocus: true, class: "form-control", required: 'required', disabled: !(policy([:admin, @discount]).editable_field?("start_token_number")) %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :end_token_number, class: 'label-required' %>
+            <%= f.text_field :end_token_number, autofocus: true, class: "form-control", required: 'required', disabled: !(policy([:admin, @discount]).editable_field?("end_token_number")) %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :project_id, class: 'label-required control-label' %>
+            <%= f.select :project_id, Project.all.collect{|p| [p.name, p.id]}, {}, prompt: :translate, class: 'selectize', id: "project-id-dd" %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :token_type_id, class: 'label-required control-label' %>
+            <%= f.select :token_type_id, {}, {}, prompt: :translate, class: 'selectize', id: "project-token-type-dd" %>
+          </div>
+          <!-- Payment adjustment section -->
+          <% editable_payment_adjustment = policy([:admin, @discount]).editable_field?("payment_adjustments_attributes") %>
+          <div class="payment-adjustments">
+            <%= f.fields_for :payment_adjustments, @discount.editable_payment_adjustments do |adj| %>
+              <% if editable_payment_adjustment %>
+                <%= adj.link_to_remove icon("far", "times-circle") %>
+              <% end %>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <%= adj.label :name, class: 'label-required' %>
+                    <%= adj.text_field :name, class: "form-control", required: 'required', disabled: !editable_payment_adjustment %>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <%= adj.label :field, class: 'label-required' %>
+                    <%= adj.select :field, Discount.available_fields.collect{|x| [x.titleize, x]}, {prompt: true}, class: 'selectize-tags', disabled: !editable_payment_adjustment %>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <%= adj.label :absolute_value, class: 'label-required' %>
+                <%= adj.number_field :absolute_value, class: "form-control", disabled: !editable_payment_adjustment %>
+              </div>
+              <div class="mb-3">
+                <%= adj.label :formula %>
+                <%= adj.text_field :formula, class: "form-control", disabled: !editable_payment_adjustment %>
+              </div>
+            <% end %>
+          </div>
+          <% if editable_payment_adjustment %>
+            <%= f.link_to_add "Add Adjustments", :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
+          <% end %>
+          </br>
+          <!-- Payment adjustment section end -->
+        </div>
+        <div class="modal-footer">
+          <%= f.submit "Save", class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($(".discount-form"));
+  $("#project-id-dd").on("change", function(){
+    var projectId = $(this).val();
+    var $select = $("#project-token-type-dd").selectize();
+    var selectize = $select[0].selectize;
+    selectize.clearOptions();
+    var tokenTypes = '<%= raw TokenType.all.map{|token_type| {id: token_type.id.to_s, name: token_type.name, project_id: token_type.project_id} }.to_json %>'
+    tokenTypes = JSON.parse(tokenTypes);
+    var filterTokenTypes =  tokenTypes.filter(function(token_type) {
+      return token_type.project_id == projectId;
+    });
+    $.each(filterTokenTypes, function(index){
+      $.each(filterTokenTypes[index], function (key, val) {
+        selectize.addOption({text: filterTokenTypes[index].name, value: filterTokenTypes[index].id, order: index - 1})
+      });
+    });
+  });
+});
+<% end %>
+
+

@@ -50,6 +50,9 @@ en:
     third_party_inventory: '3rd Party Inventory'
     variable_incentive_schemes: Variable Incentive Scheme
     lead: Lead
+    discount:
+      one: Discount
+      other: Discounts
 
   helpers:
     extend_validity:
@@ -1490,6 +1493,9 @@ en:
           custom_dates: 'Custom Dates'
 
   controller:
+    discounts:
+      index:
+        link_name: 'Discounts'
     videos:
       destroy:
         link_name: 'Delete'
