@@ -58,6 +58,10 @@ document_sign:
   zoho:
     client_id:
     secret_id:
+kylas:
+  client_id: 'c1ea4a48-9cbb-3779-ab99-a352795a958d'
+  client_secret: '8801e9a8ce6cc23a005dd19853d56108'
+  redirect_url: 'http://marketplace.iris.selldoapp.com/kylas-auth'
 sfdc:
   client_id:
   client_secret:

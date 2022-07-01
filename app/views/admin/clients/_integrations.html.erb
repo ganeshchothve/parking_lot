@@ -176,6 +176,12 @@
       <%= f.text_field :mixpanel_token, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("mixpanel_token") ? false : true) %>
     </div>
   </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :kylas_api_key, class: 'label-required' %>
+      <%= f.text_field :kylas_api_key, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("kylas_api_key") ? false : true) %>
+    </div>
+  </div>
 </div>
 <div class="mb-3">
   <%= f.label :enable_communication, class: 'label-required' %>
