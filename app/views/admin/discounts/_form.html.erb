@@ -34,11 +34,11 @@
           </div>
           <div class="mb-3">
             <%= f.label :project_id, class: 'label-required control-label' %>
-            <%= f.select :project_id, Project.all.collect{|p| [p.name, p.id]}, {}, prompt: :translate, class: 'selectize', id: "project-id-dd" %>
+            <%= f.select :project_id, Project.all.collect{|p| [p.name, p.id]}, { selected: @discount.project_id, prompt: "Select" }, class: 'selectize', id: "project-id-dd" %>
           </div>
           <div class="mb-3">
             <%= f.label :token_type_id, class: 'label-required control-label' %>
-            <%= f.select :token_type_id, {}, {}, prompt: :translate, class: 'selectize', id: "project-token-type-dd" %>
+            <%= f.select :token_type_id, {}, { prompt: "Select" }, class: 'selectize', id: "project-token-type-dd" %>
           </div>
           <!-- Payment adjustment section -->
           <% editable_payment_adjustment = policy([:admin, @discount]).editable_field?("payment_adjustments_attributes") %>
@@ -102,7 +102,8 @@ $(document).ready(function(){
         selectize.addOption({text: filterTokenTypes[index].name, value: filterTokenTypes[index].id, order: index - 1})
       });
     });
-  });
+    selectize.setValue('<%=@discount.token_type_id%>');
+  }).trigger("change");
 });
 <% end %>
 

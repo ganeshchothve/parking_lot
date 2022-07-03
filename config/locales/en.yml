@@ -1497,6 +1497,8 @@ en:
     discounts:
       index:
         link_name: 'Discounts'
+      update_coupons:
+        success_message: 'You will receive a mail when MRP numbers are updated'
     videos:
       destroy:
         link_name: 'Delete'
