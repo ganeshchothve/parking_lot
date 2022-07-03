@@ -42,6 +42,7 @@ class BookingDetail
   field :ladder_stage, type: Array
   field :source, type: String
   field :rejection_reason, type: String
+  field :token_discount, type: Float
 
   mount_uploader :tds_doc, DocUploader
 

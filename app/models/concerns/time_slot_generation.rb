@@ -40,12 +40,26 @@ module TimeSlotGeneration
           self.token_prefix = token_type.token_prefix
           self.time_slot = fetch_time_slot if project.enable_slot_generation?
           # for reference, if the token has been made blank by the admin.
+          generate_coupon
           self[:_token_number] = token_number
         else
           errors.add(:token_type, "#{token_type.name} is not activated")
           throw(:abort)
         end
       end
+
+    end
+  end
+
+  def generate_coupon
+    discount = Discount.where(start_token_number: { '$lte': token_number }, end_token_number: { '$gte': token_number }).first
+    if discount
+      attrs = discount.attributes.deep_dup
+      attrs.except! :_id, :created_at, :updated_at, :payment_adjustments, :project_id, :token_type_id
+      attrs.merge!(receipt: self, discount: discount)
+      attrs[:value] = discount.payment_adjustments.nin(absolute_value: [nil, '']).collect{ |payment_adjustment| payment_adjustment.absolute_value }.try(:sum).try(:round, 2)
+      attrs[:variable_discount] = discount.payment_adjustments.nin(formula: [nil, '']).collect{ |payment_adjustment| payment_adjustment.calculate(self) }.try(:sum).try(:round, 2)
+      _coupon = Coupon.create(attrs)
     end
   end
 

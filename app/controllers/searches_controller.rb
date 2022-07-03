@@ -282,6 +282,9 @@ class SearchesController < ApplicationController
 
   def set_booking_detail
     @booking_detail = BookingDetail.where(status: {"$in": BookingDetail::BOOKING_STAGES}, project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead).first
+    if unattached_blocking_receipt = @search.lead.unattached_blocking_receipt(@search.project_unit.blocking_amount)
+      coupon = unattached_blocking_receipt.coupon
+    end
     if @booking_detail.blank?
       @booking_detail = BookingDetail.find_or_initialize_by(project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead, status: 'hold')
       if @booking_detail.new_record?
@@ -296,7 +299,8 @@ class SearchesController < ApplicationController
           costs: @search.project_unit.costs,
           data: @search.project_unit.data,
           manager_id: @search.lead_manager_id,
-          site_visit_id: @search.site_visit_id
+          site_visit_id: @search.site_visit_id,
+          token_discount: coupon.try(:value).to_f
         )
         @booking_detail.search = @search
       end

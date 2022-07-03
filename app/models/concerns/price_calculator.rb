@@ -51,6 +51,8 @@ module PriceCalculator
     if booking_detail_scheme
       all_incl_price += (booking_detail_scheme.payment_adjustments.where(field: "all_inclusive_price").collect{|adj| adj.value(self)}.sum).round
     end
+    return all_incl_price if self.is_a? ProjectUnit
+    all_incl_price += token_discount if token_discount.present?
     all_incl_price
   end
 

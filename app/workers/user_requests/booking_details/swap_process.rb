@@ -35,6 +35,12 @@ module UserRequests
           old_receipt.comments += "Unit Swapped by user. Original Unit ID: #{current_project_unit.id} So cancelling these receipts"
           # Call callback after receipt is set to success so that booking detail status and project unit status get set accordingly
           if new_receipt.save
+             # Copy token discount details over to new receipt & booking.
+            if old_receipt.coupon.present? && new_receipt.token_eligible?
+              new_receipt.generate_coupon
+              new_booking_detail.update(token_discount: new_receipt.coupon.try(:value).to_f)
+            end
+            
             if new_receipt.clearance_pending?
               new_receipt.clearance_pending!
             elsif new_receipt.success?

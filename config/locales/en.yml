@@ -889,6 +889,7 @@ en:
         frequency: 'Frequency'
         dates: 'Dates'
         token: 'Token Number'
+        token_discount: 'Token Discount'
         date: 'Slot Date'
         start_time: 'Slot Start'
         end_time: 'Slot End'

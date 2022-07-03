@@ -187,5 +187,9 @@ module ReceiptStateMachine
         push_notification.save
       end
     end
+
+    def token_eligible?
+      (online? && success?) || (offline? && (pending? || clearance_pending? || success?))
+    end
   end
 end
