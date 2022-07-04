@@ -300,7 +300,8 @@ class SearchesController < ApplicationController
           data: @search.project_unit.data,
           manager_id: @search.lead_manager_id,
           site_visit_id: @search.site_visit_id,
-          token_discount: coupon.try(:value).to_f
+          token_discount: coupon.try(:value).to_f,
+          variable_discount: coupon.try(:variable_discount).to_f
         )
         @booking_detail.search = @search
       end

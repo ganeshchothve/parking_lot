@@ -53,6 +53,7 @@ module PriceCalculator
     end
     return all_incl_price if self.is_a? ProjectUnit
     all_incl_price += token_discount if token_discount.present?
+    all_incl_price += variable_discount if variable_discount.present?
     all_incl_price
   end
 

@@ -43,6 +43,7 @@ class BookingDetail
   field :source, type: String
   field :rejection_reason, type: String
   field :token_discount, type: Float
+  field :variable_discount, type: Float
 
   mount_uploader :tds_doc, DocUploader
 

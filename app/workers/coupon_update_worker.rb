@@ -9,6 +9,8 @@ class CouponUpdateWorker
           value: coupon.discount.payment_adjustments.nin(absolute_value: [nil, '']).collect{ |payment_adjustment| payment_adjustment.absolute_value }.sum.try(:round, 2),
           variable_discount: coupon.discount.payment_adjustments.nin(formula: [nil, '']).collect{ |payment_adjustment| payment_adjustment.calculate(coupon.receipt) }.sum.try(:round, 2)
         )
+        booking_detail = coupon.receipt.try(:booking_detail)
+        booking_detail.update(token_discount: coupon.reload.try(:value).to_f, variable_discount: coupon.reload.try(:variable_discount).to_f) if booking_detail.present?
         TokenDetailsUpdateNotification.perform_async coupon.receipt.user_id, coupon.receipt_id
       end
     end

@@ -58,6 +58,7 @@ class BookingDetailMisReportWorker
       "Agreement price",
       "All Inclusive price",
       "Token discount",
+      "Variable discount"
       "Scheme name",
       "Scheme status",
       "Negotiation - FEILD",
@@ -101,6 +102,7 @@ class BookingDetailMisReportWorker
       project_unit.present? ? booking_detail.calculate_agreement_price : booking_detail.agreement_price,
       booking_detail.calculate_all_inclusive_price,
       booking_detail.token_discount,
+      booking_detail.variable_discount
       booking_detail.try(:booking_detail_scheme).try(:derived_from_scheme).try(:name) || "N/A",
       booking_detail.try(:booking_detail_scheme).try(:status) || "N/A",
       booking_detail.try(:booking_detail_scheme).try(:payment_adjustments).try(:first).try(:field),
