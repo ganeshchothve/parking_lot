@@ -51,8 +51,8 @@ en:
     variable_incentive_schemes: Variable Incentive Scheme
     lead: Lead
     discount:
-      one: Discount
-      other: Discounts
+      one: Token Discount
+      other: Token Discounts
 
   helpers:
     extend_validity:
@@ -1496,9 +1496,11 @@ en:
   controller:
     discounts:
       index:
-        link_name: 'Discounts'
+        link_name: 'Token Discounts'
       update_coupons:
         success_message: 'You will receive a mail when MRP numbers are updated'
+      links:
+        update_coupons: 'Update Token Discounts'
     videos:
       destroy:
         link_name: 'Delete'

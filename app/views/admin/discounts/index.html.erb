@@ -19,7 +19,7 @@
             <%= link_to t('helpers.new.link_name', model: t('global.discount.one')), new_admin_discount_path, class: 'modal-remote-form-link p-2 px-3 btn bg-primary border-primary white d-inline-block ms-2 me-2 border rounded' %>
           <% end %>
           <% if policy([:admin, Discount]).update_coupons? %>
-            <%= link_to t('discounts.links.update_coupons'), update_coupons_admin_discounts_path, class: 'p-2 px-3 btn bg-primary border-primary white d-inline-block ms-2 me-2 border rounded' %>
+            <%= link_to t('controller.discounts.links.update_coupons'), update_coupons_admin_discounts_path, class: 'p-2 px-3 btn bg-primary border-primary white d-inline-block ms-2 me-2 border rounded' %>
           <% end %>
         </div>
       </div>
