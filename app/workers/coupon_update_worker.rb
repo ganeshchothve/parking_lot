@@ -3,7 +3,6 @@ class CouponUpdateWorker
   sidekiq_options queue: 'discount'
 
   def perform current_user_id
-    receipts = Array.new
     Coupon.each do |coupon|
       if coupon.receipt.present? && coupon.receipt.token_eligible?
         coupon.set(
@@ -15,7 +14,7 @@ class CouponUpdateWorker
     end
     receipt_ids = Coupon.pluck(:receipt_id)
     Discount.each do |discount|
-      Receipt.where(token_number: {"$gte": discount.start_token_number, "$lte": discount.end_token_number}, id: {"$nin": receipt_ids}).each do |receipt|
+      Receipt.where(project_id: discount.project_id, token_type_id: discount.token_type_id, token_number: {"$gte": discount.start_token_number, "$lte": discount.end_token_number}, id: {"$nin": receipt_ids}).each do |receipt|
         TokenDetailsUpdateNotification.perform_async receipt.user_id, receipt.id if receipt.token_eligible? && receipt.generate_coupon
       end
     end
