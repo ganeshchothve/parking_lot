@@ -43,7 +43,7 @@ class Admin::DiscountsController < AdminController
     @discount.assign_attributes(permitted_attributes([:admin, @discount]))
     respond_to do |format|
       if @discount.save
-        format.html { redirect_to admin_discounts_path, notice: "#{t('global.discount')} created successfully." }
+        format.html { redirect_to admin_discounts_path, notice: "#{t('global.discount.one')} created successfully." }
         format.json { render json: @discount, status: :created }
       else
         format.html { render :new }
@@ -58,7 +58,7 @@ class Admin::DiscountsController < AdminController
   def destroy
     respond_to do |format|
       if @discount.destroy
-        format.html { redirect_to admin_discounts_path, notice: "#{t('global.discount')} deleted successfully." }
+        format.html { redirect_to admin_discounts_path, notice: "#{t('global.discount.one')} deleted successfully." }
       else
         format.html { redirect_to admin_discounts_path, alert: @discount.errors.full_messages.join(' ') }
       end

@@ -64,7 +64,7 @@
                             <%= link_to "Proceed without payment", send_blocked_admin_lead_booking_detail_path(@lead.id, @booking_detail.id), class: 'btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block', style:'margin-top:0px', onclick: alert, method: :patch %>
                           <% end %>
                         <% else %>
-                          <% if policy([ current_user_role_group, Receipt.new(user: @lead.user, lead: @lead, status: "clearance_pending", booking_detail_id: @booking_detail.id)]).new? %>
+                          <% if policy([ current_user_role_group, Receipt.new(user: @lead.user, lead: @lead, status: "clearance_pending", booking_detail_id: @booking_detail.id)]).new? && @lead.unattached_blocking_receipt(@project_unit.blocking_amount).present? %>
                             <%= link_to "I Agree on behalf of #{@lead.name} and proceed to add
                           payment",new_admin_lead_booking_detail_receipt_path(@lead.id, @booking_detail.id) , class: 'btn submit-payemnt-btn fn-12 fn-500 modal-remote-form-link btn-primary d-inline-block', style:'margin-top:0px', onclick: alert %>
                           <% elsif @booking_detail_scheme.present? && @booking_detail_scheme.editable_payment_adjustments_present? %>
