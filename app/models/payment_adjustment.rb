@@ -17,7 +17,6 @@ class PaymentAdjustment
     (absolute_value.present? ? absolute_value : calculate(object)) rescue 0
   end
 
-  private
 
   def calculate object
     if object.present?
@@ -31,6 +30,8 @@ class PaymentAdjustment
     end
   end
 
+  private
+  
   def formula_or_absolute_value
     if self.formula.blank? && self.absolute_value.blank?
       if self.payable.is_a? Ladder

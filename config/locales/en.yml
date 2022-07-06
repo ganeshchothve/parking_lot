@@ -50,6 +50,9 @@ en:
     third_party_inventory: '3rd Party Inventory'
     variable_incentive_schemes: Variable Incentive Scheme
     lead: Lead
+    discount:
+      one: Token Discount
+      other: Token Discounts
 
   helpers:
     extend_validity:
@@ -886,6 +889,7 @@ en:
         frequency: 'Frequency'
         dates: 'Dates'
         token: 'Token Number'
+        token_discount: 'Token Discount'
         date: 'Slot Date'
         start_time: 'Slot Start'
         end_time: 'Slot End'
@@ -1490,6 +1494,13 @@ en:
           custom_dates: 'Custom Dates'
 
   controller:
+    discounts:
+      index:
+        link_name: 'Token Discounts'
+      update_coupons:
+        success_message: 'You will receive a mail when MRP numbers are updated'
+      links:
+        update_coupons: 'Update Token Discounts'
     videos:
       destroy:
         link_name: 'Delete'

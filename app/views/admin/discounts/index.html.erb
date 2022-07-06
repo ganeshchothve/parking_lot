@@ -1,0 +1,32 @@
+<section class="mb-5 mt-3">
+  <div class="px-4">
+    <div class="row">
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="table-btn-set float-right pb-1 text-end mt-2">
+          <!--
+          <div class="filter-search">
+            <input type="text" name="" placeholder="Search Name/Email/Phone">
+          </div>
+          -->
+          <!-- <div class="filter-popup">
+            <a class="db-filter-btn fn-500" href="javascript:;">
+              <i class="fa fa-filter fill-theme"></i>
+            </a>
+          </div> -->
+          <% if policy([:admin, Lead]).new? %>
+            <%= link_to t('helpers.new.link_name', model: t('global.discount.one')), new_admin_discount_path, class: 'btn-primary fn-400 modal-remote-form-link btn unset-width ms-2' %>
+          <% end %>
+          <% if policy([:admin, Discount]).update_coupons? %>
+            <%= link_to t('controller.discounts.links.update_coupons'), update_coupons_admin_discounts_path, class: 'btn-primary fn-400 btn unset-width ms-2' %>
+          <% end %>
+        </div>
+      </div>
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="box-card relative">
+          <%= render 'index', discounts: @discounts %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<br/><br/>

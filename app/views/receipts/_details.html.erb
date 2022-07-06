@@ -15,7 +15,12 @@
   </span>
   </td>
   <td data-title=<%= t('mongoid.attributes.receipt.token_number') %> >
-    <span class="col-title"><%= receipt.try(:token_number) ? receipt.get_token_number : '--' %></span></td>
+    <span class="col-title"><%= receipt.try(:token_number) ? receipt.get_token_number : '--' %></span>
+    <% if receipt.coupon && policy([current_user_role_group, receipt.coupon]).show? %>
+      <div class = 'small muted'><%= t('mongoid.attributes.receipt.token_discount')%>: <%= number_to_indian_currency(receipt.coupon.try(:value).try(:abs)) %></div>
+      <div class = 'small muted'><%= t('mongoid.attributes.receipt.variable_discount') %>: <%= number_to_indian_currency(receipt.coupon.try(:variable_discount).try(:abs)) %></div>
+    <% end %>
+  </td>
   <td data-title=<%= t('mongoid.attributes.receipt.status') %> >
     <span class="col-title"><i class="fa fa-circle success me-2 fa-xs"></i><%= t("mongoid.attributes.receipt/status.#{receipt.status}") %></span></td>
   <td data-title=<%= t('mongoid.attributes.receipt.total_amount') %> >

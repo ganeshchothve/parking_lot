@@ -65,6 +65,9 @@ Rails.application.routes.draw do
   get '/s/:code', to: 'shortened_urls#redirect_to_url'
 
   namespace :admin do
+    resources :discounts do
+      get 'update_coupons', on: :collection
+    end
     resources :customer_searches, except: :destroy
     resources :campaigns, except: [:destroy]
     resources :meetings, except: [:destroy]
