@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Razorpay - Payment Link Generation</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%#= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'mp_application' %>
+    <%= javascript_include_tag 'mp_application' %>
+  </head>
+
+  <body>
+    <% if user_signed_in? %>
+      <div class="d-flex flex-column h-100" id="app">
+        <span aria-live="assertive" class="redux-toastr">
+          <span>
+            <div class="top-left"></div>
+            <div class="top-right"></div>
+            <div class="top-center"></div>
+            <div class="bottom-left"></div>
+            <div class="bottom-right"></div>
+            <div class="bottom-center"></div>
+          </span>
+        </span>
+        <div class="d-flex flex-column h-100">
+          <%= render 'shared/navbar' %>
+        </div>
+      </div>
+    <% else %>
+      <%= yield %>
+    <% end %>
+  </body>
+</html>

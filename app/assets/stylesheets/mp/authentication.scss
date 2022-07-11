@@ -1,0 +1,97 @@
+@import 'variables';
+
+.authentication-layout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  overflow-y: auto;
+  margin-top: 7rem;
+
+  .main-content {
+    height: 100%;
+  }
+
+  .content-wrapper {
+    width: 80vw;
+    position: relative;
+
+    @media(min-width: map-get($grid-breakpoints, 'xl')) {
+      width: 30vw;
+    }
+  }
+
+  .heading {
+    margin: 2rem 0;
+    font-weight: 500;
+  }
+
+  .authentication-form-wrapper {
+    background-color: $white;
+    padding: 3rem;
+    img {
+      display: none;
+    }
+
+    h1 {
+      font-weight: 300;
+    }
+
+    .sign-in__mobile-help-text {
+      display: none;
+    }
+
+    .bottom-links {
+      display: none;
+    }
+
+    .recaptcha{
+      iframe{
+        height: 78px;
+      }
+    }
+  }
+
+  .acknowledgement {
+    font-size: 0.8rem;
+    color: $gray-600;
+  }
+}
+
+.kylas-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  height: 100vh;
+  background: no-repeat image_url('kylas-mountain.png');
+  background-size: 100% 100%;
+}
+
+@media(max-width: map-get($grid-breakpoints, 'sm')) {
+  .authentication-layout {
+    margin-top: 0 !important;
+
+    .content-wrapper{
+      margin: 1rem;
+    }
+  }
+
+  .navbar{
+    display: none !important;
+  }
+}
+
+.error{
+  color: red
+}
+
+.form-group{
+  margin-bottom: 0px;
+}
+
+.outline-padding-0 {
+  outline: 0;
+  padding: 0;
+}

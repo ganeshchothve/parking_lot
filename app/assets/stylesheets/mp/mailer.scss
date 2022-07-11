@@ -1,0 +1,34 @@
+.mailer{
+  ul li{
+    list-style-position: inside;
+    line-height: 24px;
+    font-size: 15px;
+  }
+  html, body{
+    margin: 0;padding: 0
+  }
+  @media screen and (min-width: 700px) {
+    .mob-img{width: 90px !important}
+    .mob-img2{width: 75px !important}
+  }
+  @media only screen and (max-width: 700px) {
+    body,table,td,p,a,li,blockquote {
+      -webkit-text-size-adjust:none !important;
+    }
+    table {
+      width: 100% !important;
+      margin: 0px 0% !important;
+    }
+    .responsive-image img {
+      height: auto !important;
+      max-width: 100% !important;
+      width: 100% !important;
+    }
+    tr{
+      padding:0px !important;
+    }
+  }
+  email-id{
+    color: white
+  }
+}

@@ -1,0 +1,18 @@
+.navbar{
+  border-bottom: none;
+  font-weight: normal;
+  font-family: "Rubik", sans-serif;
+  font-size: 1rem;
+
+  .nav-item{
+    margin-right: 2rem;
+  }
+
+  .active{
+    border-bottom: 4px solid blue;
+  }
+
+  .navbar-light .navbar-nav .nav-link{
+    color: black;
+  }
+}

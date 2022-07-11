@@ -1,0 +1,60 @@
+@import 'bootstrap-4-6-1';
+@import 'authentication';
+@import 'pre-login';
+@import 'header';
+@import 'mailer';
+@import 'dashboard';
+@import 'navbar';
+@import 'user-profile-menu';
+@import 'jquery-datetimepicker.min';
+
+.xdsoft_disabled {
+  opacity: 0.2 !important;
+}
+
+.text-overflow-option {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.w-150px {
+  width: 150px !important;
+}
+
+.w-200px {
+  width: 200px !important;
+}
+
+.w-310px {
+  width: 310px !important;
+}
+
+.cursor-pointer-imp {
+  cursor: pointer !important;
+}
+
+.font-size-16px {
+  font-size: 16px !important;
+}
+
+.font-size-15px {
+  font-size: 15px !important;
+}
+
+.plus-icon-colour {
+  filter: invert(35%) sepia(89%) saturate(4464%) hue-rotate(203deg) brightness(103%) contrast(104%);
+}
+
+.rotate-90 {
+  -webkit-transform: rotate(90deg) !important;
+  -moz-transform: rotate(90deg) !important;
+  -ms-transform: rotate(90deg) !important;
+  -o-transform: rotate(90deg) !important;
+  transform: rotate(90deg) !important;
+}
+
+.intl-tel-input {
+  display: block;
+  width: 100%;
+}

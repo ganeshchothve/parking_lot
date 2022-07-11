@@ -1,0 +1,2 @@
+module Mp::UsersHelper
+end

@@ -17,6 +17,21 @@ Rails.application.routes.draw do
     omniauth_callbacks: "users/omniauth_callbacks"
   }
 
+  namespace :mp do
+    devise_for :users, skip: [:registrations], controllers: {
+      confirmations: 'mp/local_devise/confirmations',
+      sessions: 'mp/local_devise/sessions',
+      unlocks: 'mp/local_devise/unlocks',
+      passwords: 'mp/local_devise/passwords'
+    }
+    resources :users
+
+    devise_scope :user do
+      post 'users/otp', :to => 'local_devise/sessions#otp', :as => :users_otp
+    end
+
+  end
+
   devise_scope :user do
     post 'users/otp', :to => 'local_devise/sessions#otp', :as => :users_otp
     post 'users/notification_tokens', to: 'users/notification_tokens#update', as: :user_notification_tokens
