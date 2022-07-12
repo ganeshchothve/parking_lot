@@ -134,6 +134,7 @@ class User
   # Kylas Integration Code
   field :kylas_access_token, type: String
   field :kylas_refresh_token, type: String
+  field :kylas_user_id, type: String
   field :kylas_access_token_expires_at, type: DateTime
 
   ## Security questionable
