@@ -241,4 +241,8 @@ module ApplicationHelper
     end
   end
 
+  def is_marketplace?
+    params[:namespace] == 'mp' || params.dig(:user, :namespace) == 'mp'
+  end
+
 end

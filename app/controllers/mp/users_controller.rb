@@ -1,4 +1,4 @@
-class Mp::UsersController < MpController
+class Mp::UsersController < ApplicationController
   before_action :authenticate_user!, except: [:new, :create]
   before_action :set_client, only: [:create]
 

@@ -19,7 +19,8 @@ end %>
               <%= link_to 'Sign up here', new_mp_user_path, class: 'link-primary' %>
             </strong>
           </div>
-          <%= simple_form_for(resource, as: :user, url: mp_users_otp_path, method: :post, authenticity_token: true, remote: true, html: { novalidate: false, class: "validate-form #{}", id: 'otp_user_form', data: { type: :json }, autocomplete: 'off' }) do |f| %>
+          <%= simple_form_for(resource, as: :user, url: users_otp_path, method: :post, authenticity_token: true, remote: true, html: { novalidate: false, class: "validate-form #{}", id: 'otp_user_form', data: { type: :json }, autocomplete: 'off' }) do |f| %>
+            <%= f.hidden_field :namespace, value: 'mp' %>
             <div class="mb-3">
               <%= f.label :phone_number %>
               <%= f.phone_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.phone'), id: 'user_login_phone', autocomplete: false %>
@@ -60,6 +61,7 @@ end %>
             </strong>
           </div>
           <%= form_for(resource, as: :user, url: session_path(:user), html: {class: 'validate-form ', id: "standard_login_form", autocomplete: 'off' }) do |f| %>
+              <%= f.hidden_field :namespace, value: 'mp' %>
               <div class="mb-3">
                 <%= f.label :email %>
                 <%= f.email_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.email'), autocomplete: false %>
@@ -69,7 +71,6 @@ end %>
                 <%= f.password_field :password, autocomplete: false, class: 'form-control', placeholder: t('mongoid.attributes.user.password'), data: { encrypt: true } %>
               </div>
               <div class="mb-2">
-                <%#=render "devise/shared/links" %>
               </div>
               <% if devise_mapping.rememberable? -%>
                 <div class="radioStyle col-lg-12">
@@ -97,23 +98,3 @@ end %>
     </div>
   </div>
 </section>
-
-<%= javascript_tag do %>
-  $(document).ready(function(){
-    <% if params.dig(:user, :login).present? && current_client.preferred_login == "phone" && params[:force].to_s == "true" %>
-      $("#otp_user_form").find('input[type="submit"]').click();
-    <% end %>
-    OtpBasedLogin.init();
-    $('form').submit(function( event ) {
-      var encrypt = new JSEncrypt();
-      $('[data-encrypt]').each(function(){
-        var unencrypted = $(this);
-        encrypt.setKey($('#public_key').attr('data-value'));
-        var encrypted = encrypt.encrypt(unencrypted.val());
-        if(encrypted) {
-          unencrypted.val(encrypted);
-        }
-      })
-    });
-  });
-<% end %>

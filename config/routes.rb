@@ -18,18 +18,8 @@ Rails.application.routes.draw do
   }
 
   namespace :mp do
-    devise_for :users, skip: [:registrations], controllers: {
-      confirmations: 'mp/local_devise/confirmations',
-      sessions: 'mp/local_devise/sessions',
-      unlocks: 'mp/local_devise/unlocks',
-      passwords: 'mp/local_devise/passwords'
-    }
+    get 'about', to: 'dashboard#about'
     resources :users
-
-    devise_scope :user do
-      post 'users/otp', :to => 'local_devise/sessions#otp', :as => :users_otp
-    end
-
   end
 
   devise_scope :user do
