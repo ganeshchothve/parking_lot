@@ -7,9 +7,9 @@
         <div class='mb-4'>
           <strong>
             <span>Having an existing account.</span>
-            <%= link_to 'Sign in here', new_mp_user_session_path, class: 'link-primary' %>
+            <%= link_to 'Sign in here', new_user_session_path(namespace: 'mp'), class: 'link-primary' %>
           </strong>
-          <%= form_for(@user, url: mp_users_path, html: {class: 'validate-form', id: 'mp_user_from'}) do |f| %>
+          <%= form_for(@user, url: mp_users_path(namespace: 'mp'), html: {class: 'validate-form', id: 'mp_user_from'}) do |f| %>
 
             <div class='form-group'>
               <%= f.label :first_name, class: 'label-required' %>

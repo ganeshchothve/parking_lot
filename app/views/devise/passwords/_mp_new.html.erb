@@ -1,0 +1,37 @@
+<div class='authentication-layout'>
+  <div class='kylas-background'></div>
+  <div class='content-wrapper'>
+    <div class='main-content'>
+      <div class='authentication-form-wrapper'>
+        <%= link_to 'Back To Login', new_user_session_path(namespace: 'mp'), class: 'link-primary' %>
+        <h1 class='mt-3'>Forgot your password ?</h1>
+        <p class='mb-4'>
+          Don’t worry. We’ll email you a password reset link with instructions.
+        </p>
+        <%= render 'mp/shared/flash' %>
+        <%= form_for(resource, as: resource_name, url: user_password_path(namespace: 'mp'), html: { method: :post }) do |f| %>
+          <div class='form-group'>
+            <%= f.label :email, :input_html => { :class => 'form-label' } %>
+            <div class='text-field col-undefined'>
+              <div class='form-group required' id='email'>
+                <div class='validate'>
+                  <%= f.email_field :login, autocomplete: 'off', placeholder: 'Email', id: 'input_email', required: true, class: 'form-control' %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% if resource.errors.any? && resource.errors.messages[:email].any? %>
+            <span class='error'>
+              Email
+              <%= resource.errors.messages[:email][0] %>
+            </span>
+          <% end %>
+          <div class='actions'></div>
+          <%= f.submit 'Request Reset Link', class: 'btn btn-md w-100 mb-3 mt-auto btn-primary' %>
+        <% end %>
+
+
+      </div>
+    </div>
+  </div>
+</div>

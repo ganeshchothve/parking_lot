@@ -36,7 +36,11 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_out_path_for(resource_or_scope)
-    new_user_session_path
+    if is_marketplace?
+      new_user_session_path(namespace: 'mp')
+    else
+      new_user_session_path
+    end
   end
 
   def home_path(current_user)
@@ -70,26 +74,6 @@ class ApplicationController < ActionController::Base
 
   def set_layout
     devise_controller? ? devise_layout : application_layout
-  end
-
-  def marketplace_layout
-    'mp/application'
-  end
-
-  def application_layout
-    if is_marketplace?
-      marketplace_layout
-    else
-      'application'
-    end
-  end
-
-  def devise_layout
-    if is_marketplace?
-      marketplace_layout
-    else
-      'devise'
-    end
   end
 
   private
