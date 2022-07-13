@@ -241,4 +241,38 @@ module ApplicationHelper
     end
   end
 
+  def is_marketplace?
+    params[:namespace] == 'mp' || params.dig(:user, :namespace) == 'mp'
+  end
+
+  def marketplace_layout
+    'mp/application'
+  end
+
+  def application_layout
+    if is_marketplace?
+      marketplace_layout
+    else
+      'application'
+    end
+  end
+
+  def devise_layout
+    if is_marketplace?
+      marketplace_layout
+    else
+      'devise'
+    end
+  end
+
+  def create_avatar_name
+    return if current_user.blank?
+
+    current_user.name ? current_user.name[0].upcase! : current_user.email[0].upcase!
+  end
+
+  def active_class(cont_name)
+    controller_name == cont_name ? 'active' : ''
+  end
+
 end

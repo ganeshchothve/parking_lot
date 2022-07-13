@@ -1,0 +1,46 @@
+<header>
+  <nav class='navbar navbar-expand bg-white pb-0 pt-0'>
+    <div class='header-top'>
+      <nav class='navbar navbar-expand-lg navbar-light pb-0 pl-0'>
+        <ul class='navbar-nav mr-auto'>
+          <li class='nav-item <%= active_class('dashboard') %>'>
+            <div class='left-navbar__side-nav__item-section'>
+              <%= link_to 'About', mp_about_path(namespace: 'mp'), class: 'nav-link pl-0' %>
+            </div>
+          </li>
+        </ul>
+      </nav>
+      <div aria-disabled='true' class='header-top-right d-block' id='profile'>
+        <div class='dropdown dropdown-user ml-2'>
+          <button aria-expanded='false' aria-haspopup='true' class='btn dropdown-toggle p-0' data-toggle='dropdown' type='button'><%= create_avatar_name %></button>
+          <div aria-labelledby='userDropdown' class='user-profile-menu dropdown-menu dropdown-menu-right'>
+            <%#= link_to 'My Profile', my_profile_path(current_user), class: 'dropdown-item cursor-pointer' %>
+            <%= link_to 'Logout', destroy_user_session_path(namespace: 'mp'), {method: :delete, class: 'dropdown-item cursor-pointer'} %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<main class='main-content min-height-0 position-relative main-parent-wrapper'>
+  <div class='dashboard-layout'>
+    <div class='dashboard-layout__bucket'>
+      <%= yield %>
+    </div>
+  </div>
+</main>
+<div class='modal fade' id='resendModal' tabindex='-1' aria-labelledby='resendModalLabel' aria-hidden='true' data-backdrop='static'>
+</div>
+<script>
+  $(function(){
+    if(window.top != window.self){
+      $('#profile').hide();
+    }
+  });
+
+  $(document).ready(function() {
+    $('#resendModal').on('hidden.bs.modal', function() {
+      $('#resendModal').html('');
+    });
+  })
+</script>

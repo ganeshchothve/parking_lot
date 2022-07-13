@@ -36,20 +36,28 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_out_path_for(resource_or_scope)
-    new_user_session_path
+    if is_marketplace?
+      new_user_session_path(namespace: 'mp')
+    else
+      new_user_session_path
+    end
   end
 
   def home_path(current_user)
     if current_user
-      if (current_user.buyer? || !current_user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))) && params[:controller] == 'local_devise/sessions'
+      if (current_user.buyer? || !current_user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))) && params[:controller] == 'local_devise/sessions' && !is_marketplace?
         buyer_select_project_path
       else
         _path = admin_site_visits_path if current_user.role?('dev_sourcing_manager')
-        stored_location_for(current_user) || _path || dashboard_path
+        stored_location_for(current_user) || _path || current_dashboard_path
       end
     else
       return root_path
     end
+  end
+
+  def current_dashboard_path
+    is_marketplace? ? mp_about_path(namespace: 'mp') : dashboard_path
   end
 
   protected
@@ -65,7 +73,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_layout
-    devise_controller? ? 'devise' : 'application'
+    devise_controller? ? devise_layout : application_layout
   end
 
   private

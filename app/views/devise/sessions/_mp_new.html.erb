@@ -1,0 +1,42 @@
+<section id="standard_login_section">
+  <div class='authentication-layout'>
+    <div class='kylas-background'></div>
+    <div class='content-wrapper'>
+      <div class='main-content'>
+        <div class='authentication-form-wrapper'>
+          <h1>Sign in using email and password</h1>
+          <p class='sign-in__mobile-help-text'>For better user experience, sign in from a desktop/laptop browser.</p>
+          <div class='mb-4'>
+            <strong class='signup_link'>
+              <span>Don't have an account?</span>
+              <%= link_to 'Sign up here', new_mp_user_path(namespace: 'mp'), class: 'link-primary' %>
+            </strong>
+          </div>
+          <%= form_for(resource, as: :user, url: session_path(:user), html: {class: 'validate-form ', id: "standard_login_form", autocomplete: 'off' }) do |f| %>
+              <%= f.hidden_field :namespace, value: 'mp' %>
+              <div class="mb-3">
+                <%= f.label :email %>
+                <%= f.email_field :login, autofocus: true, class: 'form-control', placeholder: t('mongoid.attributes.user.email'), autocomplete: false %>
+              </div>
+              <div class="mb-3" id='public_key' data-value="<%= @public_key %>">
+                <%= f.label :password %>
+                <%= f.password_field :password, autocomplete: false, class: 'form-control', placeholder: t('mongoid.attributes.user.password'), data: { encrypt: true } %>
+              </div>
+              <div class="mb-2">
+              </div>
+              <div class='loggedin-forgot-password-link-wrapper'>
+                <div class='custom-control custom-checkbox custom-control-inline'>
+                  <input class='custom-control-input' id='customCheckInline1' name='rememberMe' type='checkbox'></input>
+                  <label class='custom-control-label' for='customCheckInline1'>Keep me logged in</label>
+                </div>
+                <%= link_to 'Forgot Password?', new_user_password_path(namespace: 'mp') %>
+              </div>
+              <div class="mt-3">
+                <%= f.submit t("sessions.new.sign_in"), class: 'btn btn-md w-100 mb-3 mt-auto btn-primary',  data:{event_category: 'Section', event_action: 'Click', event_name: 'Log In'} %>
+              </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

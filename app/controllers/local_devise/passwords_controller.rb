@@ -11,4 +11,12 @@ class LocalDevise::PasswordsController < Devise::PasswordsController
     stored_location_for(resource) || signed_in_root_path(resource)
   end
 
+  def after_sending_reset_password_instructions_path_for(resource_name)
+    unless is_marketplace?
+      new_session_path(resource_name)
+    else
+      new_user_session_path(namespace: 'mp')
+    end
+  end
+
 end

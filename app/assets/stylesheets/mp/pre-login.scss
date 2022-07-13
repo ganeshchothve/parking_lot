@@ -1,0 +1,159 @@
+@import 'variables';
+
+$initial-gradient-color:#04255D;
+
+.py-60{
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+@mixin scroll-y(){
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.overflow-scroll {
+  @include scroll-y();
+}
+
+.btn-submit{
+  margin-bottom:$default-margin;
+}
+.white-box {
+  background-color: $white;
+  max-width: 38.3333rem;
+
+  @media (min-width: map-get($grid-breakpoints, 'md')) {
+    @include border-radius(.2667rem);
+  }
+}
+
+.copyright-wrapper{
+  display:flex;
+  justify-content: center;
+  text-transform:capitalize;
+  background-color: $gray-200;
+  padding: 1.5rem 1.5rem 2.667rem;
+}
+.copyright-content{
+  font-size: 0.93333rem;
+  color: $gray-900;
+  .link{
+      padding-left: 1rem;
+      border-left: 0.0666rem solid $gray-900;
+      margin-left: 1rem;
+  }
+}
+
+.app-heading{
+  font-size: 1.6rem;
+  letter-spacing: 0.0666rem;
+  margin-bottom: $default-margin;
+  font-weight: $font-weight-light;
+}
+.app-subheading{
+  font-size: 1.0666rem;
+  letter-spacing: 0.1333rem;
+  line-height: 1.2;
+  font-weight: $font-weight-light;
+}
+.promotional-content{
+  font-size: 0.9333rem;
+  letter-spacing: 0.0666rem;
+  margin-bottom: $default-margin;
+  &:not(.title){
+      font-weight: $font-weight-light;
+  }
+}
+
+.loggedin-forgot-password-link-wrapper{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: .9333rem;
+  margin-bottom: 2.5rem;
+}
+
+.logo-wrapper{
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.pre-login-form-card{
+  .title{
+    margin-bottom: .75rem;
+    font-weight: 400;
+  }
+  .message{
+    margin-bottom: 1rem;
+    font-size: .93333rem;
+    &.last-child{
+      margin-bottom: 2rem;
+    }
+  }
+}
+
+.form-wrappper{
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  background-color: $gray-200;
+}
+.pre-login-form {
+  flex-grow: 1;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.white-box-bottom{
+  padding:1.8666rem 0;
+  border-top:0.0666rem solid $light;
+  font-size: 0.9333rem;
+  text-align: center;
+}
+.pre-login-form-card{
+  padding: 2rem;
+  width: 100vw;
+  height: 100vh;
+
+  .password-update__success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: $success-green;
+    margin-bottom: 3rem;
+    i {
+      margin-bottom: 0.75rem;
+    }
+    span {
+      text-align: center;
+    }
+  }
+
+  &.py-60{
+    @extend .py-60;
+  }
+}
+@media (min-width: map-get($grid-breakpoints, 'md')) {
+  .pre-login-form-card {
+    padding: 3rem 6.2rem;
+    width: 35rem;
+    height: auto;
+    box-shadow: 0 11px 36px rgba($black, 0.5);
+  }
+}
+.signup-page{
+  .scrollable-content{
+    height: 70vh;
+    @extend .overflow-scroll;
+    width: 75%;
+    margin: auto;
+    padding: $default-padding;
+  }
+}
+
+.link-to-signIn {
+  color: $gray-600;
+}

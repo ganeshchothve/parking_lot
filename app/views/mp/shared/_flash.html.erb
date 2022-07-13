@@ -1,0 +1,25 @@
+<% flash.each do |name, msg| %>
+  <% case name.to_s %>
+    <% when 'success' %>
+      <div class="alert alert-success">
+        <a class="close cursor-pointer-imp" data-dismiss="alert">x</a>
+        <%= msg %>
+      </div>
+    <% when 'danger' %>
+      <div class="alert alert-danger">
+        <a class="close cursor-pointer-imp" data-dismiss="alert">x</a>
+        <%= msg %>
+      </div>
+    <% when 'alert' %>
+      <div class="alert alert-danger">
+        <a class="close cursor-pointer-imp" data-dismiss="alert">x</a>
+        <%= msg %>
+      </div>
+    <% when 'notice' %>
+      <div class="alert alert-info">
+        <a class="close cursor-pointer-imp" data-dismiss="alert">x</a>
+        <%= msg %>
+      </div>
+  <% end %>
+<% end %>
+<% flash.clear %>

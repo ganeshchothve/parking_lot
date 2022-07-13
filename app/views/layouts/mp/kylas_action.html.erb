@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Razorpay - Payment Link Generation</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'mp_application' %>
+    <%= javascript_include_tag 'mp_application' %>
+  </head>
+
+  <body>
+    <main class='main-content min-height-0 position-relative main-parent-wrapper'>
+      <div class='dashboard-layout'>
+        <div class='dashboard-layout__bucket mt-1 mb-2'>
+          <%= yield %>
+        </div>
+      </div>
+    </main>
+    <div class='modal fade' id='resendModal' tabindex='-1' aria-labelledby='resendModalLabel' aria-hidden='true' data-backdrop='static'>
+    </div>
+  </body>
+</html>
+<script>
+  $(function(){
+    if(window.top != window.self){
+      $('#profile').hide();
+    }
+  });
+
+  $(document).ready(function() {
+    $('#resendModal').on('hidden.bs.modal', function() {
+      $('#resendModal').html('');
+    });
+  })
+</script>
