@@ -106,8 +106,6 @@ class Client
   field :kylas_tenant_id, type: String
   field :kylas_api_key, type: String
 
-  field :company_name, type: String
-
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
     <div class="mt-3"></div>'
@@ -171,7 +169,7 @@ class Client
   validates :whatsapp_api_key, :whatsapp_api_secret, presence: true, if: :whatsapp_enabled?
   validates :notification_api_key, presence: true, if: :notification_enabled?
   validates :regions, copy_errors_from_child: true
-  validates :company_name, uniqueness: true
+  validates :name, uniqueness: true
 
   accepts_nested_attributes_for :address, :external_inventory_view_config, :checklists
   accepts_nested_attributes_for :regions, allow_destroy: true

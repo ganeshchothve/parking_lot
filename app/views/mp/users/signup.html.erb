@@ -9,7 +9,7 @@
             <span>Having an existing account.</span>
             <%= link_to 'Sign in here', new_user_session_path(namespace: 'mp'), class: 'link-primary' %>
           </strong>
-          <%= form_for(@user, url: mp_users_path(namespace: 'mp'), html: {class: 'validate-form', id: 'mp_user_from'}) do |f| %>
+          <%= form_for(@user, url: register_mp_users_path(namespace: 'mp'), html: {class: 'validate-form', id: 'mp_user_from'}) do |f| %>
 
             <div class='form-group'>
               <%= f.label :first_name, class: 'label-required' %>
@@ -33,7 +33,7 @@
 
             <div class='form-group'>
               <%= f.label :company_name, class: 'label-required' %>
-              <%= f.text_field :company_name, class: 'form-control', autofocus: true, required: 'required' %>
+              <%= f.text_field :name, class: 'form-control', autofocus: true, required: 'required' %>
             </div>
 
             <div class='form-group w-100 mb-0'>
