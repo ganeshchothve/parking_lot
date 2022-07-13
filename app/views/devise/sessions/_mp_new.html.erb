@@ -9,7 +9,7 @@
           <div class='mb-4'>
             <strong class='signup_link'>
               <span>Don't have an account?</span>
-              <%= link_to 'Sign up here', new_mp_user_path(namespace: 'mp'), class: 'link-primary' %>
+              <%= link_to 'Sign up here', signup_mp_users_path(namespace: 'mp'), class: 'link-primary' %>
             </strong>
           </div>
           <%= form_for(resource, as: :user, url: session_path(:user), html: {class: 'validate-form ', id: "standard_login_form", autocomplete: 'off' }) do |f| %>

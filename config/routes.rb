@@ -19,7 +19,12 @@ Rails.application.routes.draw do
 
   namespace :mp do
     get 'about', to: 'dashboard#about'
-    resources :users
+    resources :users do
+      collection do
+        get :signup
+        post :register
+      end
+    end
   end
 
   devise_scope :user do

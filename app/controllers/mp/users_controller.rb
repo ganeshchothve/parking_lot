@@ -1,20 +1,20 @@
 class Mp::UsersController < ApplicationController
-  before_action :authenticate_user!, except: [:new, :create]
-  before_action :set_client, only: [:create]
+  before_action :authenticate_user!, except: [:signup, :register]
+  before_action :set_client, only: [:register]
 
-  def new
+  def signup
     @user = User.new(role: 'admin')
   end
 
-  def create
+  def register
     respond_to do |format|
       @user = User.new(role: 'admin')
       @user.assign_attributes(user_params)
       @user.assign_attributes(booking_portal_client: @client)
       if @user.save
-        format.html { redirect_to new_mp_user_session_path, notice: 'Successfully registered' }
+        format.html { redirect_to new_user_session_path(namespace: 'mp'), notice: 'Successfully registered' }
       else
-        format.html { redirect_to new_mp_user_path, alert: @user.errors.full_messages }
+        format.html { redirect_to signup_mp_users_path(namespace: 'mp'), alert: @user.errors.full_messages }
       end
     end
   end
@@ -22,7 +22,7 @@ class Mp::UsersController < ApplicationController
   private
 
   def set_client
-    @client = Client.where(company_name: params.dig(:user, :company_name)).first
+    @client = Client.where(name: params.dig(:user, :name)).first
     if @client.blank?
       @client = Client.new
       @client.assign_attributes(client_params)
@@ -39,6 +39,6 @@ class Mp::UsersController < ApplicationController
   end
 
   def client_params
-    params.require(:user).permit(:company_name)
+    params.require(:user).permit(:name)
   end
 end
