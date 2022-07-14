@@ -78,6 +78,7 @@ class ChannelPartner
     ]
   )
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :primary_user, class_name: 'User'
   has_many :users

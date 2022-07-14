@@ -21,6 +21,7 @@ class VariableIncentiveScheme
   field :total_inventory, type: Integer, default: 0
   field :status, type: String, default: "draft"
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :approved_by, class_name: "User", optional: true
   belongs_to :created_by, class_name: "User"
 

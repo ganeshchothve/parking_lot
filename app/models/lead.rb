@@ -55,6 +55,8 @@ class Lead
 
   embeds_many :state_transitions
   embeds_many :portal_stages
+
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :user
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true

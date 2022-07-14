@@ -57,6 +57,7 @@ class BookingDetail
   embeds_many :costs, as: :costable
   embeds_many :data, as: :data_attributable
   embeds_many :tasks, cascade_callbacks: true
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :project#, optional: true
   belongs_to :project_tower, optional: true
   belongs_to :project_unit, optional: true

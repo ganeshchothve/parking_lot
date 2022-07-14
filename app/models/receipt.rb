@@ -49,6 +49,7 @@ class Receipt
 
   attr_accessor :swap_request_initiated
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :user
   belongs_to :lead
   belongs_to :project

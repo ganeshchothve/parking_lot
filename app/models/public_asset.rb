@@ -15,6 +15,7 @@ class PublicAsset
   # types of document can be different for different assetables and will stored in DOCUMENT_TYPES in respective models.
   field :document_type, type: String
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :public_assetable, polymorphic: true
 
   scope :filter_by_document_type, ->(type) { where(document_type: type) }

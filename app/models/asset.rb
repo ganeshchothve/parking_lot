@@ -15,6 +15,7 @@ class Asset
   field :document_type, type: String
   field :expiry_time, type: DateTime
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :assetable, polymorphic: true
   belongs_to :parent_asset, class_name: 'Asset', optional: true #for co_branded asset - points to the original document
   has_one :document_sign_detail

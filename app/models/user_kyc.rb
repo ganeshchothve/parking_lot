@@ -57,6 +57,7 @@ class UserKyc
   has_many :assets, as: :assetable
   has_one :bank_detail, as: :bankable, validate: false
   has_many :addresses, as: :addressable, validate: false
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :user
   belongs_to :lead
   belongs_to :receipt, optional: true

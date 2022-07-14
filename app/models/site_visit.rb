@@ -15,6 +15,7 @@ class SiteVisit
   REJECTION_REASONS = ["budget_not_match", "location_not_match", "possession_not_match", "didnt_visit", "different_cp"]
   DOCUMENT_TYPES = []
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :project
   belongs_to :lead
   belongs_to :user

@@ -12,6 +12,7 @@ class InterestedProject
   field :status, type: String, default: 'subscribed'
   field :rejection_reason, type: String
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :user
   belongs_to :project
 

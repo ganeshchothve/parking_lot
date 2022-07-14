@@ -17,6 +17,7 @@ class UserRequest
 
   # belongs_to :booking_detail
   # belongs_to :receipt, optional: true
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :requestable, polymorphic: true, optional: true
   belongs_to :lead, optional: true
   belongs_to :user

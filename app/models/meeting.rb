@@ -22,6 +22,7 @@ class Meeting
   field :roles, type: Array, default: []
   field :broadcast, type: Boolean, default: false
 
+  belongs_to :booking_portal_client, class_name: 'Client', optional: true
   belongs_to :project, optional: true
   belongs_to :campaign, optional: true
   belongs_to :creator, class_name: 'User'

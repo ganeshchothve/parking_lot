@@ -30,6 +30,7 @@ class Invoice
   field :brokerage_type, type: String, default: 'sub_brokerage'
   field :payment_to, type: String, default: 'channel_partner'
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :invoiceable, polymorphic: true
   belongs_to :project, optional: true
   belongs_to :manager, class_name: 'User', optional: true
