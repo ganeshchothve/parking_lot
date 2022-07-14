@@ -366,9 +366,7 @@ class Lead
         #lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
         #custom_scope = {_id: { '$in': lead_ids } }
         custom_scope = {}
-      when :sales
-        custom_scope = {manager_id: user.id, booking_portal_client_id: user.booking_portal_client.id}
-      when :admin
+      when :admin, :sales
         custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
       end
       custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
