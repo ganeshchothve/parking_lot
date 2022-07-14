@@ -513,4 +513,6 @@ Rails.application.routes.draw do
   match '/sell_do/:project_id/site_visit_updated', to: "api/sell_do/leads#site_visit_updated", via: [:get, :post]
   match '/sell_do/pushed_to_sales', to: "api/sell_do/leads#pushed_to_sales", via: [:get, :post]
   match '/zoho/download', to: "api/zoho/assets#download", via: [:get, :post]
+  match '/user/signup', to: "admin/users#signup", via: [:get]
+  match '/user/register', to: "admin/users#register", via: [:post]
 end

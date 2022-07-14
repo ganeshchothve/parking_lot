@@ -250,19 +250,19 @@ module ApplicationHelper
   end
 
   def application_layout
-    if is_marketplace?
-      marketplace_layout
-    else
+    # if is_marketplace?
+    #   marketplace_layout
+    # else
       'application'
-    end
+    # end
   end
 
   def devise_layout
-    if is_marketplace?
-      marketplace_layout
-    else
+    # if is_marketplace?
+    #   marketplace_layout
+    # else
       'devise'
-    end
+    # end
   end
 
   def create_avatar_name
