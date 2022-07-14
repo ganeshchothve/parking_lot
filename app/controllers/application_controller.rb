@@ -45,7 +45,7 @@ class ApplicationController < ActionController::Base
 
   def home_path(current_user)
     if current_user
-      if (current_user.buyer? || !current_user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))) && params[:controller] == 'local_devise/sessions' && !is_marketplace?
+      if (current_user.buyer? || !current_user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))) && params[:controller] == 'local_devise/sessions'
         buyer_select_project_path
       else
         _path = admin_site_visits_path if current_user.role?('dev_sourcing_manager')
@@ -57,7 +57,8 @@ class ApplicationController < ActionController::Base
   end
 
   def current_dashboard_path
-    is_marketplace? ? mp_about_path(namespace: 'mp') : dashboard_path
+    dashboard_path
+    # is_marketplace? ? mp_about_path(namespace: 'mp') : dashboard_path
   end
 
   protected

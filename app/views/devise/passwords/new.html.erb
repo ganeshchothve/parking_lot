@@ -1,4 +1,4 @@
-<% unless is_marketplace? %>
+<%# unless is_marketplace? %>
   <div class="mt-5 pt-5"></div>
   <section class="cp-email-verify mt-5">
     <div class="cp-pwd-create">
@@ -25,6 +25,6 @@
       FormInitializer.init($("#password_form"));
     });
   <% end %>
-<% else %>
-  <%= render 'mp_new'%>
-<% end %>
+<%# else %>
+  <%#= render 'mp_new'%>
+<%# end %>
