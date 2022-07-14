@@ -280,6 +280,10 @@ class Receipt
         #channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
         #custom_scope = { manager_id: { "$in": channel_partner_ids } }
         custom_scope = {cp_manager_id: user.id}
+      elsif user.role?('admin')
+        custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
+      elsif user.role?('sales')
+        custom_scope = { manager_id: user.id, booking_portal_client_id: user.booking_portal_client.id }
       end
     end
 

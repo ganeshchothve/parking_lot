@@ -508,6 +508,10 @@ class BookingDetail
          custom_scope = { project_unit_id: nil }
         when 'billing_team'
          # custom_scope = { project_unit_id: nil, status: { '$nin': %w(blocked) } }
+        when 'admin'
+          custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
+        when 'sales'
+          custom_scope = { manager_id: user.id, booking_portal_client_id: user.booking_portal_client.id }
         end
       end
 
