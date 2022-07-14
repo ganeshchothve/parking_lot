@@ -12,6 +12,7 @@ class SyncLog
   field :action, type: String, default: '' # Update/Create
 
   # Associations
+  belongs_to :booking_portal_client, class_name: 'Client', optional: true
   belongs_to :resource, polymorphic: true # , optional: true
   belongs_to :user_reference, class_name: 'User', inverse_of: :logs
   belongs_to :reference, class_name: 'SyncLog', optional: true

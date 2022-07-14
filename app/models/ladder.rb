@@ -14,7 +14,8 @@ class Ladder
   embedded_in :incentive_scheme
   embeds_one :payment_adjustment, as: :payable, autobuild: true
   has_many :invoices
-
+  belongs_to :booking_portal_client, class_name: 'Client', optional: true
+  
   validates :start_value, :payment_adjustment, presence: true
   validates :stage, uniqueness: true, numericality: { greater_than: 0 }
   validates :start_value, numericality: { greater_than: 0 }

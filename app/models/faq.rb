@@ -10,4 +10,5 @@ class Faq
   field :answer, type: String
   
   belongs_to :questionable, polymorphic: true
+  belongs_to :booking_portal_client, class_name: 'Client', optional: true
 end

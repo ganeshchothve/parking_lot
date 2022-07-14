@@ -8,6 +8,7 @@ class Note
   field :note, type: String
   field :note_type, type: String, default: :internal
 
+  belongs_to :booking_portal_client, class_name: 'Client', optional: true
   belongs_to :notable, polymorphic: true
   has_many :assets, as: :assetable
   belongs_to :creator, class_name: 'User', optional: true # When system generates a note, creator is kept blank as it is not a user object

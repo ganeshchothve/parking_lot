@@ -8,6 +8,7 @@ class TokenType
   field :token_seed_backup, type: Integer
   field :token_amount, type: Integer
 
+  belongs_to :booking_portal_client, class_name: 'Client', optional: true
   belongs_to :project
   has_many :receipts
 

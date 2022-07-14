@@ -18,6 +18,7 @@ class UnitConfiguration
   validates :name, presence: true
   validates :saleable,:carpet,:numericality => {:greater_than => 0}
 
+  belongs_to :booking_portal_client, class_name: 'Client', optional: true
   belongs_to :project
   has_many :project_units
   has_many :assets, as: :assetable

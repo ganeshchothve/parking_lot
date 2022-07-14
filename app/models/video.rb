@@ -7,7 +7,8 @@ class Video
   field :embedded_video, type: String
 
   mount_uploader :thumbnail, DocUploader
-
+  
+  belongs_to :booking_portal_client, class_name: 'Client', optional: true
   belongs_to :videoable, polymorphic: true
 
   validates :description, :embedded_video, presence: true

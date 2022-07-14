@@ -14,6 +14,7 @@ class BankDetail
   field :loan_sanction_days, type: Integer
   field :zip, type: String
 
+  belongs_to :booking_portal_client, class_name: 'Client', optional: true
   belongs_to :bankable, polymorphic: true, optional: true
 
   enable_audit({

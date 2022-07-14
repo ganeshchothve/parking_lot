@@ -12,6 +12,7 @@ class InterestedCampaign
   field :status, type: String, default: 'subscribed'
   field :amount, type: Integer
 
+  belongs_to :booking_portal_client, class_name: 'Client', optional: true
   belongs_to :user
   belongs_to :campaign
 end
