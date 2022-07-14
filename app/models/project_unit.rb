@@ -322,9 +322,9 @@ class ProjectUnit
 
   def self.user_based_scope(user, params = {})
     custom_scope = {}
-    unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
-      custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
-    end
+    # unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
+    #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
+    # end
     custom_scope
   end
 

@@ -518,9 +518,9 @@ class BookingDetail
       custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
       custom_scope = { user_id: user.id, lead_id: user.selected_lead_id } if user.buyer?
 
-      unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
-        custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
-      end
+      # unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
+      #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
+      # end
       custom_scope
     end
 

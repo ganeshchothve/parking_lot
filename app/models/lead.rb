@@ -369,7 +369,7 @@ class Lead
       when :sales
         custom_scope = {manager_id: user.id, booking_portal_client_id: user.booking_portal_client.id}
       when :admin
-        custom_scope = {booking_portal_client_id: user.booking_portal_client.id}
+        custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
       end
       custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
       custom_scope = { user_id: user.id } if user.buyer?
