@@ -9,6 +9,8 @@ class ApplicationController < ActionController::Base
   before_action :set_cache_headers, :set_request_store, :set_cookies
   before_action :load_hold_unit
   before_action :set_current_client
+  before_action :allow_iframe
+
 
   acts_as_token_authentication_handler_for User, if: :token_authentication_valid_params?
 
@@ -30,17 +32,21 @@ class ApplicationController < ActionController::Base
     url&.include?('/kylas-auth?code=')
   end
 
+  def allow_iframe
+    response.headers['X-Frame-Options'] = 'ALLOW-FROM https://app-qa.sling-dev.com/, ALLOW-FROM https://kylas.io/'
+  end
+
   def after_sign_in_path_for(resource_or_scope)
     ApplicationLog.user_log(current_user.id, 'sign_in', RequestStore.store[:logging])
     home_path(current_user)
   end
 
   def after_sign_out_path_for(resource_or_scope)
-    if is_marketplace?
-      new_user_session_path(namespace: 'mp')
-    else
+    # if is_marketplace?
+    #   new_user_session_path(namespace: 'mp')
+    # else
       new_user_session_path
-    end
+    # end
   end
 
   def home_path(current_user)
