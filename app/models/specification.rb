@@ -11,7 +11,7 @@ class Specification
   field :category, type: String
   field :description, type: String
   
-  belongs_to :booking_portal_client, class_name: 'Client', optional: true
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :project
 
   validates :category, :description, presence: true

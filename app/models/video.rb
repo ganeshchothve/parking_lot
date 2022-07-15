@@ -8,7 +8,7 @@ class Video
 
   mount_uploader :thumbnail, DocUploader
   
-  belongs_to :booking_portal_client, class_name: 'Client', optional: true
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :videoable, polymorphic: true
 
   validates :description, :embedded_video, presence: true

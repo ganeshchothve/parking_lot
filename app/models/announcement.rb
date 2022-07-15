@@ -17,7 +17,7 @@ class Announcement
   field :is_active, type: Boolean, default: false
   has_many :assets, as: :assetable
 
-  belongs_to :booking_portal_client, class_name: 'Client', optional: true
+  belongs_to :booking_portal_client, class_name: 'Client'
 
   validates :category, inclusion: { in: CATEGORIES }
 

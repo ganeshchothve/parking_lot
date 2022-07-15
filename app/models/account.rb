@@ -8,7 +8,7 @@ class Account
 
   validates_uniqueness_of :account_number, :name
 
-  belongs_to :booking_portal_client, class_name: 'Client', optional: true
+  belongs_to :booking_portal_client, class_name: 'Client'
   
   has_many :receipts, foreign_key: 'account_number'
   has_many :phases

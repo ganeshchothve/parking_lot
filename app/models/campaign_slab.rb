@@ -12,7 +12,7 @@ class CampaignSlab
   
   embedded_in :campaign
 
-  belongs_to :booking_portal_client, class_name: 'Client', optional: true
+  belongs_to :booking_portal_client, class_name: 'Client'
   
   validates :name, :minimum_investment_amount, presence: true
   validates :minimum_investment_amount, numericality: { greater_than: 0 }

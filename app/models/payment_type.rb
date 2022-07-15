@@ -6,7 +6,7 @@ class PaymentType
   field :formula, type: String
   field :absolute_value, type: Float
 
-  belongs_to :booking_portal_client, class_name: 'Client', optional: true
+  belongs_to :booking_portal_client, class_name: 'Client'
 
   validates :name, presence: true
   validate :formula_or_absolute_value

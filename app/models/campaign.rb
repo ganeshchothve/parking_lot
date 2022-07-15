@@ -28,7 +28,7 @@ class Campaign
   field :sources, type: Array
   field :target_areas, type: Array
   
-  belongs_to :booking_portal_client, class_name: 'Client', optional: true
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :creator, class_name: 'User'
   belongs_to :campaign_manager, class_name: 'User'
   has_and_belongs_to_many :projects

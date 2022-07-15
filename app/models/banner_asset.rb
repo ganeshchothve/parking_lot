@@ -13,7 +13,7 @@ class BannerAsset
   field :url, type: String
   field :publish, type: Boolean, default: true
 
-  belongs_to :booking_portal_client, class_name: 'Client', optional: true
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :uploaded_by, class_name: 'User'
 
   scope :filter_by_publish, ->{ where(publish: true) }

@@ -8,7 +8,7 @@ class PaymentAdjustment
   field :absolute_value, type: Float
   field :editable, type: Boolean
 
-  belongs_to :booking_portal_client, class_name: 'Client', optional: true
+  belongs_to :booking_portal_client, class_name: 'Client'
   embedded_in :payable, polymorphic: true
 
   validates :name, :field, presence: true, unless: -> { payable.class.to_s.in?(%w(Ladder Invoice::Manual Invoice::Calculated)) }

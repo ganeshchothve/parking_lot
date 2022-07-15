@@ -15,7 +15,7 @@ class IncentiveDeduction
   validates :amount, numericality: { less_than_or_equal_to: proc { |deduction| deduction.invoice.amount }, greater_than: 0 }
   validates :assets, presence: true, if: :pending_approval?
 
-  belongs_to :booking_portal_client, class_name: 'Client', optional: true
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :invoice
   belongs_to :creator, class_name: 'User'
   has_many :assets, as: :assetable

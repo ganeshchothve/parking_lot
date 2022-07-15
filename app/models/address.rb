@@ -14,7 +14,7 @@ class Address
   field :address_type, type: String, default: 'work' #TODO: Must be personal, work etc
   field :selldo_id, type: String
 
-  belongs_to :booking_portal_client, class_name: 'Client', optional: true
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :addressable, polymorphic: true, optional: true
 
   #validates :address_type, presence: true

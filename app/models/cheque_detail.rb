@@ -13,7 +13,7 @@ class ChequeDetail
   validates :issuing_bank, :issuing_bank_branch, name: true
   validates :total_amount, numericality: { greater_than: 0 }
 
-  belongs_to :booking_portal_client, class_name: 'Client', optional: true
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :creator, class_name: 'User'
   embedded_in :invoice
 end

@@ -29,7 +29,7 @@ class ProjectTower
   field :completed_floor, type: Integer
   field :project_tower_stage, type: String
 
-  belongs_to :booking_portal_client, class_name: 'Client', optional: true
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :project
   has_many :project_units
   has_many :schemes

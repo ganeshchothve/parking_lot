@@ -9,7 +9,7 @@ class Parameter
   field :key, type: String
   field :value, type: String
 
-  belongs_to :booking_portal_client, class_name: 'Client', optional: true
+  belongs_to :booking_portal_client, class_name: 'Client'
   embedded_in :parameterizable, polymorphic: true
 
   validates :name, :key, :value, presence: true
