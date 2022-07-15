@@ -19,7 +19,12 @@ module Tasks
       if task_hash.keys.include?(checklist.key)
         tasks.find_by(key: checklist.key).set(name: checklist.name, order: checklist.order) if task_hash[checklist.key][:name] != checklist.name || task_hash[checklist.key][:order] != checklist.order
       else
-        tasks << Task.new(name: checklist.name, key: checklist.key, tracked_by: checklist.tracked_by, order: checklist.order)
+        tasks << Task.new(
+                      name: checklist.name,
+                      key: checklist.key,
+                      tracked_by: checklist.tracked_by,
+                      order: checklist.order,
+                      )
       end
     end
   end

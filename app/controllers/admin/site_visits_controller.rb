@@ -31,8 +31,12 @@ class Admin::SiteVisitsController < AdminController
   # GET "/admin/leads/:lead_id/site_visits/new"
   def new
     @site_visit = SiteVisit.new(
-      creator: current_user, user: @lead.user, lead: @lead, project_id: @lead.project_id
-    )
+                            creator: current_user,
+                            user: @lead.user,
+                            lead: @lead,
+                            project_id: @lead.project_id,
+                            booking_portal_client_id: current_user.booking_portal_client.id
+                            )
     authorize([:admin, @site_visit])
     render layout: false
   end
@@ -42,7 +46,13 @@ class Admin::SiteVisitsController < AdminController
   #
   # POST /admin/leads/:lead_id/site_visits
   def create
-    @site_visit = SiteVisit.new(user: @lead.user, lead: @lead, creator: current_user, project: @lead.project)
+    @site_visit = SiteVisit.new(
+                            user: @lead.user,
+                            lead: @lead,
+                            creator: current_user,
+                            project: @lead.project,
+                            booking_portal_client_id: current_user.booking_portal_client.id
+                            )
     authorize([:admin, @site_visit])
     @site_visit.assign_attributes(permitted_attributes([:admin, @site_visit]))
 

@@ -16,9 +16,9 @@ module UserKycsConcern
   #
   def new
     if @lead.user_kyc_ids.blank?
-      @user_kyc = UserKyc.new(creator: current_user, user: @lead.user, lead: @lead, first_name: @lead.first_name, last_name: @lead.last_name, email: @lead.email, phone: @lead.phone)
+      @user_kyc = UserKyc.new(creator: current_user, user: @lead.user, lead: @lead, first_name: @lead.first_name, last_name: @lead.last_name, email: @lead.email, phone: @lead.phone, booking_portal_client_id: @lead.booking_portal_client.id)
     else
-      @user_kyc = UserKyc.new(creator: current_user, user: @lead.user, lead: @lead)
+      @user_kyc = UserKyc.new(creator: current_user, user: @lead.user, lead: @lead, booking_portal_client_id: @lead.booking_portal_client.id)
     end
     render layout: false
   end
@@ -28,6 +28,7 @@ module UserKycsConcern
   #
   def create
     @user_kyc = @lead.user_kycs.build(permitted_attributes([current_user_role_group, UserKyc.new(user: @lead.user, lead: @lead) ]))
+    @user_kyc.assign_attributes(booking_portal_client_id: @lead.booking_portal_client.id)
     set_user_creator
     authorize [current_user_role_group, @user_kyc]
     respond_to do |format|

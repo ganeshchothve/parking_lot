@@ -20,7 +20,7 @@ class Admin::BookingDetailsController < AdminController
 
   def new
     @search = Search.new()
-    @booking_detail = BookingDetail.new(search: @search)
+    @booking_detail = BookingDetail.new(search: @search, booking_portal_client_id: current_user.booking_portal_client.id)
     @project_towers = search_for_towers
     @project_towers.map!{|f| [f[:project_tower_name], f[:project_tower_id]]}
     # authorize [:admin, @booking_detail]
@@ -42,7 +42,7 @@ class Admin::BookingDetailsController < AdminController
   def create
     _project_unit = ProjectUnit.find(params[:booking_detail][:project_unit_id])
     _search = Search.create(user_id: params[:booking_detail][:user_id], lead_id: params[:booking_detail][:lead_id], project_tower_id: params[:project_tower_id] || _project_unit.project_tower.id, project_unit_id: params[:booking_detail][:project_unit_id])
-    @booking_detail = BookingDetail.new(search: _search)
+    @booking_detail = BookingDetail.new(search: _search, booking_portal_client_id: current_user.booking_portal_client.id)
     @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
     @booking_detail.assign_attributes(
       base_rate: _project_unit.base_rate,
@@ -174,12 +174,17 @@ class Admin::BookingDetailsController < AdminController
   end
 
   def new_booking_without_inventory
-    @booking_detail = BookingDetail.new(lead_id: params[:lead_id], project_id: params[:project_id], site_visit_id: params[:site_visit_id])
+    @booking_detail = BookingDetail.new(
+                                    lead_id: params[:lead_id],
+                                    project_id: params[:project_id],
+                                    site_visit_id: params[:site_visit_id],
+                                    booking_portal_client_id: current_user.booking_portal_client.id
+                                    )
     render layout: false
   end
 
   def create_booking_without_inventory
-    @booking_detail = BookingDetail.new
+    @booking_detail = BookingDetail.new(booking_portal_client_id: current_user.booking_portal_client.id)
     @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
     @booking_detail.user = @booking_detail.lead.user
     @booking_detail.status = "blocked"
