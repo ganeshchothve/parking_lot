@@ -578,6 +578,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    secure_headers (6.3.4)
     selenium-webdriver (3.14.0)
       childprocess (~> 0.5)
       rubyzip (~> 1.2)
@@ -740,6 +741,7 @@ DEPENDENCIES
   rspec-sidekiq
   safe_parser
   sass-rails (~> 5.0)
+  secure_headers
   selenium-webdriver
   shoulda (~> 3.5)
   shoulda-matchers (= 3.1.2)
