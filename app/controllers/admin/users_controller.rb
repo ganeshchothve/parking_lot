@@ -3,17 +3,35 @@ class Admin::UsersController < AdminController
   include FundAccountsConcern
   include UserReportsConcern
 
-  before_action :authenticate_user!, except: %w[resend_confirmation_instructions change_state]
-  before_action :set_user, except: %i[index export new create portal_stage_chart channel_partner_performance partner_wise_performance search_by]
+  before_action :authenticate_user!, except: %w[resend_confirmation_instructions change_state signup register]
+  before_action :set_user, except: %i[index export new create portal_stage_chart channel_partner_performance partner_wise_performance search_by signup register]
   before_action :validate_player_ids, only: %i[update_player_ids]
-  before_action :authorize_resource, except: %w[resend_confirmation_instructions change_state]
+  before_action :authorize_resource, except: %w[resend_confirmation_instructions change_state, signup register]
   around_action :apply_policy_scope, only: %i[index export]
+  before_action :set_client, only: [:register]
 
   layout :set_layout
 
   # Update Password
   # update password defined in UsersConcern
   # GET /admin/users/:id/update_password
+
+  def signup
+    @user = User.new(role: 'admin')
+  end
+
+  def register
+    respond_to do |format|
+      @user = User.new(role: 'admin')
+      @user.assign_attributes(user_params)
+      @user.assign_attributes(booking_portal_client: @client)
+      if @user.save
+        format.html { redirect_to new_user_session_path, notice: 'Successfully registered' }
+      else
+        format.html { redirect_to signup_mp_users_path, alert: @user.errors.full_messages }
+      end
+    end
+  end
 
   def index
     @users = User.build_criteria params
@@ -103,6 +121,27 @@ class Admin::UsersController < AdminController
               current_user
             end
     redirect_to root_path, alert: t('controller.users.set_user_missing') if @user.blank?
+  end
+
+  def set_client
+    @client = Client.where(name: params.dig(:user, :name)).first
+    if @client.blank?
+      @client = Client.new
+      @client.assign_attributes(client_params)
+    end
+    unless @client.save
+      respond_to do |format|
+        format.json { render json: { errors: @client.errors.full_messages }, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def user_params
+    params.require(:user).permit(:first_name, :last_name, :email, :phone)
+  end
+
+  def client_params
+    params.require(:user).permit(:name)
   end
 
   def validate_player_ids

@@ -20,12 +20,25 @@
             </div>
           </div>
         </div>
-        <div class="d-inline-block">
-          <%= link_to new_channel_partner_path, class: "reg-chnl-prtnr-btn show-xs p-style" do %>
-          <%= image_tag 'user-alt-black.svg', alt: "User Info" %>
+        <!-- <div class="d-inline-block">
+          <%#= link_to new_channel_partner_path, class: "reg-chnl-prtnr-btn show-xs p-style" do %>
+          <%#= image_tag 'user-alt-black.svg', alt: "User Info" %>
           Register as Channel Partner
-          <% end %>
-        </div>
+          <%# end %>
+        </div> -->
+        <% if devise_controller? && params[:action] == 'new' %>
+          <div class="d-inline-block">
+            <%= link_to user_signup_path, class: "reg-chnl-prtnr-btn show-xs p-style" do %>
+              <%= image_tag 'user-alt-black.svg', alt: "User Info" %>
+            Register Now
+            <% end %>
+          </div>
+        <% end %>
+        <% if params[:action] == 'signup' %>
+          <div class="d-inline-block">
+            <%= link_to 'Sign in', new_user_session_path, {class: 'btn btn-primary', 'data-event-category': 'Header', 'data-event-action': 'Click', 'data-event-name': 'Login'} %>
+          </div>
+        <% end %>
         <% if params[:action] == 'sign_in' %>
         <div class="d-inline-block">
           <%= link_to "Register Now", register_path, class: "btn register-btn bg-primary show-xs p-style ms-3 px-3" %>
