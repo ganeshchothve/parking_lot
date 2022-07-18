@@ -34,7 +34,12 @@ class Admin::UserRequestsController < AdminController
   # POST /admin/:request_type/user_requests
   #
   def create
-    @user_request = associated_class.new(user_id: @user.id, lead: @lead, created_by: current_user)
+    @user_request = associated_class.new(
+                                    user_id: @user.id, 
+                                    lead: @lead, 
+                                    created_by: current_user,
+                                    booking_portal_client_id: current_user.booking_portal_client.id
+                                    )
     @user_request.project = @lead.project if @lead.present?
     @user_request.assign_attributes(permitted_user_request_attributes)
     respond_to do |format|
