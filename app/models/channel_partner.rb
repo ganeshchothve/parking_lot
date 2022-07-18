@@ -199,6 +199,8 @@ class ChannelPartner
          custom_scope = { manager_id: user.id }
         elsif user.role.in?(%w(cp_owner channel_partner))
           custom_scope = { id: user.channel_partner_id }
+        elsif user.role.in?(%w(admin sales))
+          custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
         end
       end
       custom_scope
