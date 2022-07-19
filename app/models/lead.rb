@@ -254,7 +254,7 @@ class Lead
     search = searches
     search = search.where(project_unit_id: project_unit_id) if project_unit_id.present?
     search = search.desc(:created_at).first
-    search = Search.create(lead: self, user: user) if search.blank?
+    search = Search.create(lead: self, user: user, booking_portal_client_id: self.booking_portal_client.id) if search.blank?
     search
   end
 
