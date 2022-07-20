@@ -101,7 +101,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def can_move_booked_confirmed?
-    (user.role?(:billing_team) || (current_client.launchpad_portal? && user.role.in?(%w(account_manager_head cp_admin)))) && record.booked_tentative? && record.approval_status == "approved"
+    (user.role?(:billing_team) || (user.booking_portal_client.launchpad_portal? && user.role.in?(%w(account_manager_head cp_admin)))) && record.booked_tentative? && record.approval_status == "approved"
   end
 
   def can_move_cancel?
@@ -144,11 +144,11 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     attributes = super
     attributes += [:project_tower_name, :agreement_price, :channel_partner_id, :project_unit_configuration, :booking_project_unit_name, :booked_on, :project_id, :primary_user_kyc_id, :project_unit_id, :user_id, :creator_id, :manager_id, :account_manager_id, :lead_id, :source, user_kyc_ids: []] if record.new_record? || (user.role.in?(%w(cp_owner channel_partner account_manager_head)) && record.status == 'blocked')
 
-    attributes += [:approval_event] if record.approval_status.in?(%w(pending)) && user.role.in?(%w(dev_sourcing_manager)) && current_client.launchpad_portal? && record.blocked?
+    attributes += [:approval_event] if record.approval_status.in?(%w(pending)) && user.role.in?(%w(dev_sourcing_manager)) && user.booking_portal_client.launchpad_portal? && record.blocked?
 
-    attributes += [:approval_event] if record.approval_status.in?(%w(rejected)) && user.role.in?(%w(cp_owner channel_partner)) && current_client.launchpad_portal? && record.blocked?
+    attributes += [:approval_event] if record.approval_status.in?(%w(rejected)) && user.role.in?(%w(cp_owner channel_partner)) && user.booking_portal_client.launchpad_portal? && record.blocked?
 
-    attributes += [:rejection_reason] if user.role.in?(%w(dev_sourcing_manager)) && current_client.launchpad_portal?
+    attributes += [:rejection_reason] if user.role.in?(%w(dev_sourcing_manager)) && user.booking_portal_client.launchpad_portal?
 
     attributes += [:agreement_date]
     if eligible_users_for_tasks?

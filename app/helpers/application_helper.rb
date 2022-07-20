@@ -70,12 +70,14 @@ module ApplicationHelper
 
   def current_client
     return @current_client if @current_client.present?
-    if defined?(request) && request && request.subdomain.present? && request.domain.present?
-      domain = (request.subdomain.present? ? "#{request.subdomain}." : "") + "#{request.domain}"
-      @current_client = Client.in(booking_portal_domains: domain).first
-    else
-      @current_client = Client.asc(:created_at).first # GENERICTODO: handle this
-    end
+    # if defined?(request) && request && request.subdomain.present? && request.domain.present?
+    #   domain = (request.subdomain.present? ? "#{request.subdomain}." : "") + "#{request.domain}"
+    #   @current_client = Client.in(booking_portal_domains: domain).first
+    # else
+    #   @current_client = Client.asc(:created_at).first # GENERICTODO: handle this
+    # end
+    return nil if defined?(current_user) && current_user.blank?
+    @current_client = current_user.booking_portal_client
     @current_client
   end
 

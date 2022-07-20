@@ -12,6 +12,6 @@
 </li>
 <li><%= link_to 'T & C', terms_and_conditions_path, active: :exclusive, class: 'footer-link', target: "_blank" %></li>
 <li><%= link_to 'Privacy Policy', privacy_policy_path, active: :exclusive, class: 'footer-link', target: "_blank" %></li>
-<% if current_client.powered_by_link.present? %>
-  <li><%= link_to 'Powered by Sell.do', current_client.powered_by_link, class: 'footer-link', target: "_blank" %></li>
-<% end %>
+<% #if current_client.powered_by_link.present? %>
+  <li><%#= link_to 'Powered by Sell.do', current_client.powered_by_link, class: 'footer-link', target: "_blank" %></li>
+<%# end %>

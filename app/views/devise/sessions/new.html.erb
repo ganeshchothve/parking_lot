@@ -90,9 +90,9 @@ end %>
 
 <%= javascript_tag do %>
   $(document).ready(function(){
-    <% if params.dig(:user, :login).present? && current_client.preferred_login == "phone" && params[:force].to_s == "true" %>
-      $("#otp_user_form").find('input[type="submit"]').click();
-    <% end %>
+    <%# if params.dig(:user, :login).present? && current_client.preferred_login == "phone" && params[:force].to_s == "true" %>
+      <!-- $("#otp_user_form").find('input[type="submit"]').click(); -->
+    <%# end %>
     OtpBasedLogin.init();
     $('form').submit(function( event ) {
       var encrypt = new JSEncrypt();

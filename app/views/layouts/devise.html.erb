@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= current_client.name %></title>
+    <title><%= "IRIS" %></title>
     <meta name="theme-color" content="#172346">
     <link href="<%= asset_path 'favicon.png' %>" rel="icon" type="image/png"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -15,9 +15,9 @@
       if(typeof App === "undefined"){
         App = {};
       }
-      App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login, :enable_referral_bonus]) %>;
-      App.client.enable_actual_inventory = <%= current_client.enable_actual_inventory?(current_user) %>
-      App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;
+      <!-- App.client = <%#= raw current_client.to_json(only: [:name, :_id, :preferred_login, :enable_referral_bonus]) %>; -->
+      <!-- App.client.enable_actual_inventory = <%#= current_client.enable_actual_inventory?(current_user) %> -->
+      <!-- App.project = <%#= raw current_project.to_json(only: [:name, :_id]) %>; -->
       <% if user_signed_in? %>
         App.current_user = <%= raw current_user.to_json %>;
         App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name;
@@ -26,13 +26,13 @@
         Pusher.logToConsole = true;
       <% end %>
     <% end %>
-    <% if current_client.selldo_client_id.present? %>
-      <% if Rails.env.production? %>
-        <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
-      <% else %>
-        <script src='<%= ENV_CONFIG[:selldo][:base_url] %>/t/<%= current_client.selldo_client_id %>.js'></script>
-      <% end %>
-    <% end %>
+    <%# if current_client.selldo_client_id.present? %>
+      <% #if Rails.env.production? %>
+        <!-- <script src='//trkr.scdn1.secure.raxcdn.com/t/<%#= current_client.selldo_client_id %>.js'></script> -->
+      <% #else %>
+        <!-- <script src='<%#= ENV_CONFIG[:selldo][:base_url] %>/t/<%#= current_client.selldo_client_id %>.js'></script> -->
+      <% #end %>
+    <%# end %>
   </head>
   <body>
     <%= render "layouts/navbar" %>
