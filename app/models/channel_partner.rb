@@ -112,8 +112,8 @@ class ChannelPartner
   validates :source, inclusion: { in: proc { ChannelPartner::SOURCE } }, allow_blank: true
   validates :category, inclusion: { in: proc { ChannelPartner::CATEGORY } }, allow_blank: true
   validates :internal_category, inclusion: { in: proc { ChannelPartner::INTERNAL_CATEGORY } }, allow_blank: true
-  validates :city, inclusion: { in: self.booking_portal_client.present? ? self.booking_portal_client.regions.distinct(:city) : [] }, allow_blank: true
-  validates :regions, array: { inclusion: { allow_blank: true, in: ((self.booking_portal_client.present? && self.booking_portal_client.regions.present?) ? (self.booking_portal_client.regions.distinct(:partner_regions).flatten || []) : []) } }
+  # validates :city, inclusion: { in: self.booking_portal_client.present? ? self.booking_portal_client.regions.distinct(:city) : [] }, allow_blank: true
+  # validates :regions, array: { inclusion: { allow_blank: true, in: ((self.booking_portal_client.present? && self.booking_portal_client.regions.present?) ? (self.booking_portal_client.regions.distinct(:partner_regions).flatten || []) : []) } }
   validates :company_name, uniqueness: true
   validates :pan_number, :aadhaar, uniqueness: true, allow_blank: true
   validates :pan_number, format: { with: /[a-z]{3}[cphfatblj][a-z]\d{4}[a-z]/i, message: 'is not in a format of AAAAA9999A' }, allow_blank: true
