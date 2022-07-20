@@ -6,11 +6,16 @@ SecureHeaders::Configuration.default do |config|
   #     none: true # mark all cookies as SameSite=None
   #   }
   # }
-  config.cookies = {
-    samesite: {
-      none: true # mark all cookies as SameSite=None
+  if Rails.env.production? || Rails.env.staging?
+    config.cookies = {
+      secure: true,
+      samesite: {
+        none: true # mark all cookies as SameSite=None
+      }
     }
-  }
+  else
+    config.cookies = SecureHeaders::OPT_OUT
+  end
   config.csp = SecureHeaders::OPT_OUT
   config.hsts = SecureHeaders::OPT_OUT
   config.x_frame_options = 'ALLOW-FROM https://app-qa.sling-dev.com/, ALLOW-FROM https://kylas.io/'

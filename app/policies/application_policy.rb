@@ -99,14 +99,14 @@ class ApplicationPolicy
 
   def enable_actual_inventory?(_user=nil)
     _user ||= user
-    return true if current_client.enable_actual_inventory?(_user)
+    return true if user.booking_portal_client.enable_actual_inventory?(_user)
     @condition = 'enable_actual_inventory'
     false
   end
 
   def enable_incentive_module?(_user=nil)
     _user ||= user
-    return true if current_client.enable_incentive_module?(_user)
+    return true if user.booking_portal_client.enable_incentive_module?(_user)
     @condition = 'enable_incentive_module'
     false
   end

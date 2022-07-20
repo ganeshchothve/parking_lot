@@ -39,7 +39,7 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def enable_direct_payment?
-    return true if current_client.enable_direct_payment? && current_client.payment_gateway.present? && (enable_payment_with_kyc? ? record_user_kyc_ready? : true)
+    return true if user.booking_portal_client.enable_direct_payment? && user.booking_portal_client.payment_gateway.present? && (enable_payment_with_kyc? ? record_user_kyc_ready? : true)
 
     @condition = 'enable_direct_payment' if @condition.blank?
     false
@@ -79,7 +79,7 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def enable_payment_with_kyc?
-    current_client.enable_payment_with_kyc
+    user.booking_portal_client.enable_payment_with_kyc
   end
 
   def enable_booking_with_kyc?

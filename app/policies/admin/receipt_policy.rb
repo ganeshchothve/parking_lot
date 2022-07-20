@@ -3,7 +3,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
 
   def index?
     out = !user.buyer? && (enable_actual_inventory?(user) || enable_direct_payment?)
-    out = out && user.active_channel_partner? && !current_client.launchpad_portal
+    out = out && user.active_channel_partner? && !user.booking_portal_client.launchpad_portal
   end
 
   def export?
@@ -11,7 +11,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
   end
 
   def new?
-    valid = record.user.present? && record.user.buyer? && confirmed_and_ready_user? && user.active_channel_partner? && record.lead&.project&.is_active? && !current_client.launchpad_portal
+    valid = record.user.present? && record.user.buyer? && confirmed_and_ready_user? && user.active_channel_partner? && record.lead&.project&.is_active? && !user.booking_portal_client.launchpad_portal
     if is_assigned_lead?
       valid = valid && is_lead_accepted?
     end
@@ -36,7 +36,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
     valid = record.success? && record.booking_detail_id.blank?
     valid ||= (%w[pending clearance_pending available_for_refund].include?(record.status) && %w[admin crm sales_admin].include?(user.role))
     valid ||= (user.role?('channel_partner') && record.pending?)
-    valid && user.active_channel_partner? && !current_client.launchpad_portal
+    valid && user.active_channel_partner? && !user.booking_portal_client.launchpad_portal
   end
 
   def update?

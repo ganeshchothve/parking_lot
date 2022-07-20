@@ -7,7 +7,7 @@ class Admin::UserPolicy < UserPolicy
 
   def new?(for_edit = false)
     return false unless user
-    if current_client.roles_taking_registrations.include?(user.role)
+    if user.booking_portal_client.roles_taking_registrations.include?(user.role)
       if user.role?('superadmin')
         (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner))) || for_edit
       elsif user.role?('admin')
@@ -78,7 +78,7 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def show_selldo_links?
-    ENV_CONFIG['selldo'].try(:[], 'base_url').present? && record.buyer? && record.lead_id? && current_client.selldo_default_search_list_id?
+    ENV_CONFIG['selldo'].try(:[], 'base_url').present? && record.buyer? && record.lead_id? && user.booking_portal_client.selldo_default_search_list_id?
   end
 
   def show_lead_tagging?
@@ -138,7 +138,7 @@ class Admin::UserPolicy < UserPolicy
         # TODO: Lead conflict module with multi project
         #attributes += [:manager_id]
         #attributes += [:manager_change_reason] if record.persisted?
-        attributes += [:allowed_bookings] if current_client.allow_multiple_bookings_per_user_kyc?
+        attributes += [:allowed_bookings] if user.booking_portal_client.allow_multiple_bookings_per_user_kyc?
       end
 
       attributes += [:premium, :tier_id] if record.role.in?(%w(cp_owner channel_partner)) && user.role?('admin')

@@ -8,12 +8,12 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_cache_headers, :set_request_store, :set_cookies
   before_action :load_hold_unit
-  before_action :set_current_client
   before_action :allow_iframe
 
 
   acts_as_token_authentication_handler_for User, if: :token_authentication_valid_params?
 
+  before_action :set_current_client, if: :current_user
   # Run in current user Time Zone
   around_action :user_time_zone, if: :current_user
   around_action :apply_project_scope, if: :current_user, unless: proc { current_user.role?('channel_partner') && params[:controller] == 'admin/projects' }
@@ -63,7 +63,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_dashboard_path
-    dashboard_path
+    admin_users_path #dashboard_path
     # is_marketplace? ? mp_about_path(namespace: 'mp') : dashboard_path
   end
 
@@ -78,6 +78,12 @@ class ApplicationController < ActionController::Base
       redirect_to welcome_path, alert: t('controller.application.set_current_client')
     end
   end
+
+  # def current_client
+  #   return unless current_user.present?
+  #   @current_client = current_user.booking_portal_client
+  #   @current_client
+  # end
 
   def set_layout
     devise_controller? ? devise_layout : application_layout
@@ -225,11 +231,12 @@ class ApplicationController < ActionController::Base
   end
 
   # For VAPT we want to protect Site with ony permited origins
-  def valid_request_origin? # :doc:
-    _valid = super
+  # Commented as not required anymore for MP, as we are going to run in iframe now.
+  # def valid_request_origin? # :doc:
+  #   _valid = super
 
-    _valid && ( (current_client.try(:booking_portal_domains) || []).include?( URI.parse( request.origin.to_s ).host ) || Rails.env.development? || Rails.env.test? )
-  end
+  #   _valid && ( (current_client.try(:booking_portal_domains) || []).include?( URI.parse( request.origin.to_s ).host ) || Rails.env.development? || Rails.env.test? )
+  # end
 
   def set_locale
     I18n.locale = params[:locale] || I18n.default_locale

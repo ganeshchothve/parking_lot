@@ -22,7 +22,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def index?
-    user.role.in?(%w(channel_partner cp_owner dev_sourcing_manager)) || (!user.buyer? && (current_client.enable_actual_inventory?(user) || enable_incentive_module?(user))) #&& !user.role?('billing_team')
+    user.role.in?(%w(channel_partner cp_owner dev_sourcing_manager)) || (!user.buyer? && (user.booking_portal_client.enable_actual_inventory?(user) || enable_incentive_module?(user))) #&& !user.role?('billing_team')
   end
 
   def third_party_inventory?
@@ -49,7 +49,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def ds?
-    current_client.enable_actual_inventory?(user) || enable_incentive_module?(user)
+    user.booking_portal_client.enable_actual_inventory?(user) || enable_incentive_module?(user)
   end
 
   def switch_project?

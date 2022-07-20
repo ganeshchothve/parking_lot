@@ -1,12 +1,12 @@
 class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   # def new? def print? def create? def update? def block? def update_co_applicants? def update_project_unit? def payment? def process_payment? def checkout? def send_under_negotiation? from ProjectUnitPolicy
   def index?
-    out = current_client.enable_actual_inventory?(user) && !user.buyer?
-    out && user.active_channel_partner? && !current_client.launchpad_portal
+    out = user.booking_portal_client.enable_actual_inventory?(user) && !user.buyer?
+    out && user.active_channel_partner? && !user.booking_portal_client.launchpad_portal
   end
 
   def ds?
-    current_client.enable_actual_inventory?(user)
+    user.booking_portal_client.enable_actual_inventory?(user)
   end
 
   def show?
@@ -26,7 +26,7 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   end
 
   def export?
-    %w[superadmin admin sales_admin crm].include?(user.role) && current_client.enable_actual_inventory?(user)
+    %w[superadmin admin sales_admin crm].include?(user.role) && user.booking_portal_client.enable_actual_inventory?(user)
   end
 
   def mis_report?

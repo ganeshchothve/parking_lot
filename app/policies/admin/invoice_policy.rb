@@ -69,7 +69,7 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def incentive_calculation_type?(_type=nil)
-    return true if current_client.incentive_calculation_type?(_type)
+    return true if user.booking_portal_client.incentive_calculation_type?(_type)
     false
   end
 
