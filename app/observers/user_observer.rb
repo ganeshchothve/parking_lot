@@ -2,8 +2,8 @@ class UserObserver < Mongoid::Observer
   include ApplicationHelper
 
   def before_validation user
-    user.allowed_bookings ||= current_client.allowed_bookings_per_user
-    user.booking_portal_client_id ||= current_client.id
+    user.allowed_bookings ||= user.booking_portal_client.allowed_bookings_per_user
+    # user.booking_portal_client_id ||= user.booking_portal_client.id
     user.phone = Phonelib.parse(user.phone).to_s if user.phone.present?
 
     user.assign_attributes(manager_change_reason: 'Blocking the lead', unblock_at: Date.today + user.booking_portal_client.lead_blocking_days) if user.temporarily_blocked == true && user.unblock_at == nil && user.booking_portal_client.lead_blocking_days.present?
@@ -24,7 +24,7 @@ class UserObserver < Mongoid::Observer
     user.generate_cp_code
     if user.role?("user") && user.email.present?
       email = user.email
-      if current_client.email_domains.include?(email.split("@")[1]) && current_client.enable_company_users?
+      if user.booking_portal_client.email_domains.include?(email.split("@")[1]) && user.booking_portal_client.enable_company_users?
         user.role = "employee_user"
       end
     end
@@ -36,7 +36,7 @@ class UserObserver < Mongoid::Observer
   end
 
   def after_create user
-    if current_client.external_api_integration?
+    if user.booking_portal_client.external_api_integration?
       if user.role.in?(%w(cp_owner channel_partner))
         if Rails.env.staging? || Rails.env.production?
           # Kept create user api call inline to avoid firing update calls before create which will fail to find user to update
@@ -68,7 +68,7 @@ class UserObserver < Mongoid::Observer
     if user.role.in?(%w(cp_owner channel_partner dev_sourcing_manager))
       user.rera_id = user.channel_partner&.rera_id if user.rera_id.blank? && user.role.in?(%w(cp_owner channel_partner))
 
-      if current_client.external_api_integration? && user.persisted? && user.changed?
+      if user.booking_portal_client.external_api_integration? && user.persisted? && user.changed?
         if Rails.env.staging? || Rails.env.production?
           UserObserverWorker.perform_async(user.id.to_s, 'update', user.changes)
         else

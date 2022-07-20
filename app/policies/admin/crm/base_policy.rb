@@ -1,10 +1,10 @@
 class Admin::Crm::BasePolicy < Crm::BasePolicy
 
   def index?
-    %w[superadmin].include?(user.role) && current_client.external_api_integration?
+    %w[superadmin].include?(user.role) && user.booking_portal_client.external_api_integration?
   end
 
   def choose_crm?
-    %w[superadmin admin sales sales_admin].include?(user.role) && current_client.external_api_integration?
+    %w[superadmin admin sales sales_admin].include?(user.role) && user.booking_portal_client.external_api_integration?
   end
 end

@@ -721,7 +721,7 @@ class User
       attrs = {
         booking_portal_client_id: booking_portal_client_id,
         subject: email_template.parsed_subject(self),
-        body: ERB.new(self.booking_portal_client.email_header).result( binding) + email_template.parsed_content(self) + ERB.new(self.booking_portal_client.email_footer).result( binding ),
+        body: email_template.parsed_content(self),
         cc: booking_portal_client.notification_email.to_s.split(',').map(&:strip),
         recipients: [ self ],
         triggered_by_id: id,
