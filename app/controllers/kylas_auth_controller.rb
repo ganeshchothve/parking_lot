@@ -22,7 +22,7 @@ class KylasAuthController < ApplicationController
       flash[:alert] = I18n.t('kylas_auth.something_went_wrong')
     end
 
-    redirect_to dashboard_path
+    redirect_to root_path
   end
 
   private
