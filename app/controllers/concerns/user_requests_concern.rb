@@ -15,7 +15,11 @@ module UserRequestsConcern
   # This is the new action for admin, users where they can fill the details for a new user request.
   #
   def new
-    @user_request = associated_class.new(user_id: @user.id, lead: @lead)
+    @user_request = associated_class.new(
+                                    user_id: @user.id, 
+                                    lead: @lead,
+                                    booking_portal_client_id: current_user.booking_portal_client.id
+                                    )
     @user_request.project = @lead.project if @lead.present?
     @user_request.requestable_id = params[:requestable_id] if params[:requestable_id].present?
     @user_request.requestable_type = params[:requestable_type] if params[:requestable_type].present?

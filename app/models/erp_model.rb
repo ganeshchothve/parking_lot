@@ -25,6 +25,7 @@ class ErpModel
 
   # Associations
   has_many :sync_logs
+  belongs_to :booking_portal_client, class_name: 'Client'
 
   # Validations
   validates :resource_class, inclusion: { in: RESOURCE_CLASS }

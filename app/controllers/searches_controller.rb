@@ -34,13 +34,14 @@ class SearchesController < ApplicationController
   end
 
   def new
-    @search = @lead.searches.new
+    @search = @lead.searches.new(booking_portal_client_id: current_user.booking_portal_client.id)
     set_form_data
     authorize @search
   end
 
   def create
-    @search = @lead.searches.new
+    @search = @lead.searches.new(booking_portal_client_id: current_user.booking_portal_client.id)
+    set_form_data
     @search.assign_attributes(permitted_attributes(@search))
 
     respond_to do |format|
@@ -283,7 +284,7 @@ class SearchesController < ApplicationController
   def set_booking_detail
     @booking_detail = BookingDetail.where(status: {"$in": BookingDetail::BOOKING_STAGES}, project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead).first
     if @booking_detail.blank?
-      @booking_detail = BookingDetail.find_or_initialize_by(project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead, status: 'hold')
+      @booking_detail = BookingDetail.find_or_initialize_by(project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead, status: 'hold', booking_portal_client_id: @lead.booking_portal_client.id)
       if @booking_detail.new_record?
         @booking_detail.assign_attributes(
           base_rate: @search.project_unit.base_rate,

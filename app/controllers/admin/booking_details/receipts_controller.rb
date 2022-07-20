@@ -21,8 +21,14 @@ class Admin::BookingDetails::ReceiptsController < AdminController
     @amount_hash = {}
     PaymentType.in(name: Receipt::PAYMENT_TYPES).map { |x| @amount_hash[x.name.to_sym] = x.value(@project_unit).round }
     @receipt = Receipt.new(
-      creator: current_user, user: @lead.user, lead: @lead, project: @lead.project, booking_detail: @booking_detail, total_amount: (@booking_detail.hold? ? @project_unit.blocking_amount : @booking_detail.pending_balance)
-    )
+                      creator: current_user,
+                      user: @lead.user,
+                      lead: @lead,
+                      project: @lead.project,
+                      booking_detail: @booking_detail,
+                      total_amount: (@booking_detail.hold? ? @project_unit.blocking_amount : @booking_detail.pending_balance),
+                      booking_portal_client_id: @lead.booking_portal_client_id
+                      )
     authorize([:admin, @receipt])
     render layout: false
   end
@@ -32,7 +38,14 @@ class Admin::BookingDetails::ReceiptsController < AdminController
   #
   # POST /admin/users/:user_id/booking_details/:booking_detail_id/receipts
   def create
-    @receipt = Receipt.new(user: @lead.user, lead: @lead, project: @lead.project, creator: current_user, booking_detail: @booking_detail)
+    @receipt = Receipt.new(
+                      user: @lead.user,
+                      lead: @lead,
+                      project: @lead.project,
+                      creator: current_user,
+                      booking_detail: @booking_detail,
+                      booking_portal_client_id: @lead.booking_portal_client_id
+                      )
     @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
     @receipt.payment_gateway ||= current_client.payment_gateway if @receipt.payment_mode == 'online'
     @receipt.account ||= selected_account(current_client.payment_gateway.underscore, @receipt)

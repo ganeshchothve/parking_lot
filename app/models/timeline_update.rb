@@ -12,6 +12,7 @@ class TimelineUpdate
   field :description, type: String
   field :date, type: Date
   
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :project
   has_many :assets, as: :assetable
 

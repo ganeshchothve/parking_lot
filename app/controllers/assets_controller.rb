@@ -11,7 +11,13 @@ class AssetsController < ApplicationController
   end
 
   def create
-    asset = Asset.create(assetable: @assetable, file: params[:files][0], document_type: params[:document_type], url: params[:url])
+    asset = Asset.create(
+                  assetable: @assetable, 
+                  file: params[:files][0], 
+                  document_type: params[:document_type], 
+                  url: params[:url],
+                  booking_portal_client_id: @assetable.booking_portal_client.id
+                  )
     if asset.persisted?
       render partial: "assets/asset.json", locals: {asset: asset}
     else

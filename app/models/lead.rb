@@ -55,6 +55,8 @@ class Lead
 
   embeds_many :state_transitions
   embeds_many :portal_stages
+
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :user
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true
@@ -252,7 +254,7 @@ class Lead
     search = searches
     search = search.where(project_unit_id: project_unit_id) if project_unit_id.present?
     search = search.desc(:created_at).first
-    search = Search.create(lead: self, user: user) if search.blank?
+    search = Search.create(lead: self, user: user, booking_portal_client_id: self.booking_portal_client.id) if search.blank?
     search
   end
 
@@ -364,13 +366,15 @@ class Lead
         #lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
         #custom_scope = {_id: { '$in': lead_ids } }
         custom_scope = {}
+      when :admin, :sales
+        custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
       end
       custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
       custom_scope = { user_id: user.id } if user.buyer?
 
-      unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
-        custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
-      end
+      # unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
+      #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
+      # end
       custom_scope
     end
 

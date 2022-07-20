@@ -30,6 +30,7 @@ class Invoice
   field :brokerage_type, type: String, default: 'sub_brokerage'
   field :payment_to, type: String, default: 'channel_partner'
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :invoiceable, polymorphic: true
   belongs_to :project, optional: true
   belongs_to :manager, class_name: 'User', optional: true
@@ -197,8 +198,8 @@ class Invoice
           custom_scope = { cp_manager_id: user.id, status: { '$nin': %w(tentative) } }
         elsif user.role?('account_manager')
           custom_scope = { account_manager_id: user.id, status: { '$nin': %w(tentative) } }
-        elsif user.role.in?(%w(admin superadmin))
-          custom_scope = { status: { '$in': %w(tentative raised pending_approval approved rejected draft tax_invoice_raised paid) } }
+        elsif user.role.in?(%w(admin superadmin sales))
+          custom_scope = { status: { '$in': %w(tentative raised pending_approval approved rejected draft tax_invoice_raised paid) }, booking_portal_client_id: user.booking_portal_client.id }
         else
           custom_scope = { status: { '$nin': %w(tentative) } }
         end
@@ -208,9 +209,9 @@ class Invoice
       end
       custom_scope = {} if user.buyer?
 
-      unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
-        custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
-      end
+      # unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
+      #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
+      # end
       custom_scope
     end
 

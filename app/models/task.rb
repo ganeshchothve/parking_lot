@@ -13,6 +13,7 @@ class Task
   validates :key, :name, :order, uniqueness: { scope: :booking_detail_id }
   validate :check_system_task
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   embedded_in :booking_detail
   belongs_to :completed_by, class_name: 'User', optional: true
 

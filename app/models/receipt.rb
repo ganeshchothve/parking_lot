@@ -49,6 +49,7 @@ class Receipt
 
   attr_accessor :swap_request_initiated
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :user
   belongs_to :lead
   belongs_to :project
@@ -279,6 +280,8 @@ class Receipt
         #channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
         #custom_scope = { manager_id: { "$in": channel_partner_ids } }
         custom_scope = {cp_manager_id: user.id}
+      elsif user.role.in?(%w(admin sales))
+        custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
       end
     end
 
@@ -287,9 +290,9 @@ class Receipt
 
     custom_scope[:booking_detail_id] = params[:booking_detail_id] if params[:booking_detail_id].present?
 
-    unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
-      custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
-    end
+    # unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
+    #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
+    # end
     custom_scope
   end
 

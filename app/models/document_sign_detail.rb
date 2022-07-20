@@ -13,4 +13,5 @@ class DocumentSignDetail
 
   belongs_to :asset
   belongs_to :document_sign
+  belongs_to :booking_portal_client, class_name: 'Client'
 end

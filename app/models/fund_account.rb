@@ -9,6 +9,7 @@ class FundAccount
   field :is_active, type: Boolean, default: false
   field :old_address, type: String
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :user
 
   validates :address, :account_type, presence: true

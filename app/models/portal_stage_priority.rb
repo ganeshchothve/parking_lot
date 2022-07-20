@@ -8,4 +8,6 @@ class PortalStagePriority
 
   validates :stage, :priority, :role, presence: true
 
+  belongs_to :booking_portal_client, class_name: 'Client'
+
 end

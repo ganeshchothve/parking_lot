@@ -7,7 +7,7 @@ class CustomerSearch
   field :step, type: String, default: 'search'
   belongs_to :customer, class_name: 'Lead', optional: true
   belongs_to :user_kyc, optional: true
-
+  belongs_to :booking_portal_client, class_name: 'Client'
   validates_presence_of :customer_id, on: :customer
   validate :customer_validity, on: :kyc
   validate :customer_kyc_validity, on: :sitevisit

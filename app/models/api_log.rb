@@ -10,6 +10,7 @@ class ApiLog
   field :status, type: String
   field :message, type: String
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :crm_api, class_name: 'Crm::Api', optional: true
   belongs_to :resource, polymorphic: true
 

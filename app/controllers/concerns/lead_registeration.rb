@@ -40,7 +40,7 @@ module LeadRegisteration
   private
 
   def add_existing_lead_to_project_flow(format)
-    @new_lead = @user.leads.new(email: @lead.email, phone: @lead.phone, first_name: @lead.first_name, last_name: @lead.last_name, project_id: @project.id, manager_id: params[:manager_id])
+    @new_lead = @user.leads.new(email: @lead.email, phone: @lead.phone, first_name: @lead.first_name, last_name: @lead.last_name, project_id: @project.id, manager_id: params[:manager_id], booking_portal_client_id: current_user.booking_portal_client.id)
     @new_lead.push_to_crm = params[:push_to_crm] unless params[:push_to_crm].nil?
 
     save_lead(format, @new_lead, true)
@@ -48,11 +48,11 @@ module LeadRegisteration
 
   def add_new_lead_flow(format)
     unless @user.present?
-      @user = User.new(booking_portal_client_id: current_client.id, email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], is_active: false)
+      @user = User.new(booking_portal_client_id: current_user.booking_portal_client.id, email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'])
       @user.skip_confirmation! # TODO: Remove this when customer login needs to be given
     end
 
-    @lead = @user.leads.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], project_id: @project.id, manager_id: params[:manager_id])
+    @lead = @user.leads.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], project_id: @project.id, manager_id: params[:manager_id], booking_portal_client_id: current_user.booking_portal_client.id)
     @lead.push_to_crm = params[:push_to_crm] unless params[:push_to_crm].nil?
 
     save_lead(format, @lead)

@@ -78,6 +78,7 @@ class ChannelPartner
     ]
   )
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :primary_user, class_name: 'User'
   has_many :users
@@ -198,6 +199,8 @@ class ChannelPartner
          custom_scope = { manager_id: user.id }
         elsif user.role.in?(%w(cp_owner channel_partner))
           custom_scope = { id: user.channel_partner_id }
+        elsif user.role.in?(%w(admin sales))
+          custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
         end
       end
       custom_scope

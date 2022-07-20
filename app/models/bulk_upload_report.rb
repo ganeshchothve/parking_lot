@@ -9,6 +9,7 @@ class BulkUploadReport
   field :success_count, type: Integer, default: 0
   field :failure_count, type: Integer, default: 0
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :uploaded_by, class_name: 'User'
   belongs_to :client
   belongs_to :project, optional: true

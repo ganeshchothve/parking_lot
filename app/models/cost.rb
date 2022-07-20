@@ -14,6 +14,7 @@ class Cost
   field :category, type: String
   field :order, type: Integer
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   embedded_in :costable, polymorphic: true
 
   validates :name, :key, :category, presence: true

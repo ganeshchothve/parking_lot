@@ -15,6 +15,7 @@ class CpLeadActivity
   field :sitevisit_status, type: String
   field :sitevisit_date, type: String
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :lead
   belongs_to :user
   belongs_to :channel_partner

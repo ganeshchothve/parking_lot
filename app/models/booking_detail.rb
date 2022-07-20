@@ -57,6 +57,7 @@ class BookingDetail
   embeds_many :costs, as: :costable
   embeds_many :data, as: :data_attributable
   embeds_many :tasks, cascade_callbacks: true
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :project#, optional: true
   belongs_to :project_tower, optional: true
   belongs_to :project_unit, optional: true
@@ -507,15 +508,17 @@ class BookingDetail
          custom_scope = { project_unit_id: nil }
         when 'billing_team'
          # custom_scope = { project_unit_id: nil, status: { '$nin': %w(blocked) } }
+        when 'admin', 'sales'
+          custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
         end
       end
 
       custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
       custom_scope = { user_id: user.id, lead_id: user.selected_lead_id } if user.buyer?
 
-      unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
-        custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
-      end
+      # unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
+      #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
+      # end
       custom_scope
     end
 

@@ -14,6 +14,7 @@ class Offer
   field :description, type: String
   field :provided_by, type: String, default: 'developer'
   
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :project
 
   validates :category, :description, :short_description, :provided_by, presence: true

@@ -15,6 +15,7 @@ class Search
   field :results_count, type: Integer
   # field :result_ids, type: Array
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :lead
   belongs_to :user, optional: true
   belongs_to :project_unit, optional: true

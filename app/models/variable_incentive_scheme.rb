@@ -21,6 +21,7 @@ class VariableIncentiveScheme
   field :total_inventory, type: Integer, default: 0
   field :status, type: String, default: "draft"
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :approved_by, class_name: "User", optional: true
   belongs_to :created_by, class_name: "User"
 
@@ -43,9 +44,12 @@ class VariableIncentiveScheme
 
   def self.user_based_scope(user, params = {})
     custom_scope = {}
-    unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
-      custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
+    if user.role.in?(%w(admin))
+      custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
     end
+    # unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
+    #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
+    # end
     custom_scope
   end
 end

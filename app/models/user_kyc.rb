@@ -57,6 +57,7 @@ class UserKyc
   has_many :assets, as: :assetable
   has_one :bank_detail, as: :bankable, validate: false
   has_many :addresses, as: :addressable, validate: false
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :user
   belongs_to :lead
   belongs_to :receipt, optional: true
@@ -206,6 +207,8 @@ class UserKyc
         elsif user.role?('cp')
           channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
           custom_scope = { lead_id: { "$in": Lead.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
+        elsif user.role.in?(%w(admin sales))
+          custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
         end
       end
 

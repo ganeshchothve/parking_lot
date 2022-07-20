@@ -73,6 +73,7 @@ module UserRequests
           manager: current_booking_detail.try(:manager_id),
           user_kyc_ids: current_booking_detail.user_kyc_ids,
           parent_booking_detail_id: current_booking_detail.id,
+          booking_portal_client_id: alternate_project_unit.booking_portal_client_id,
           search: search,
           lead: search.lead,
           user: search.lead.user

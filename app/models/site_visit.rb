@@ -15,6 +15,7 @@ class SiteVisit
   REJECTION_REASONS = ["budget_not_match", "location_not_match", "possession_not_match", "didnt_visit", "different_cp"]
   DOCUMENT_TYPES = []
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :project
   belongs_to :lead
   belongs_to :user
@@ -137,15 +138,17 @@ class SiteVisit
         custom_scope = {}
       when 'dev_sourcing_manager', 'billing_team'
         custom_scope = { project_id: user.selected_project_id }
+      when 'admin', 'sales'
+        custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
       end
     end
 
     custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
     custom_scope = { user_id: user.id } if user.buyer?
 
-    unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
-      custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
-    end
+    # unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
+    #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
+    # end
     custom_scope
   end
 

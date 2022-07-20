@@ -20,9 +20,15 @@ class Admin::ReceiptsController < AdminController
     @lead.project.token_types.all.select{|tt| tt.incrementor_exists?}.map { |x| @amount_hash[x.id.to_s] = x.token_amount }
 
     @receipt = Receipt.new(
-      creator: current_user, user: @lead.user, lead: @lead, project_id: @lead.project_id, payment_mode: 'cheque', payment_type: 'token',
-      total_amount: current_client.blocking_amount
-    )
+                      creator: current_user,
+                      user: @lead.user,
+                      lead: @lead,
+                      project_id: @lead.project_id,
+                      payment_mode: 'cheque',
+                      payment_type: 'token',
+                      total_amount: current_client.blocking_amount,
+                      booking_portal_client_id: @lead.booking_portal_client_id
+                    )
     authorize([:admin, @receipt])
     render layout: false
   end
@@ -42,7 +48,13 @@ class Admin::ReceiptsController < AdminController
   #
   # POST /admin/leads/:lead_id/receipts
   def create
-    @receipt = Receipt.new(user: @lead.user, lead: @lead, creator: current_user, project: @lead.project)
+    @receipt = Receipt.new(
+                      user: @lead.user,
+                      lead: @lead,
+                      creator: current_user,
+                      project: @lead.project,
+                      booking_portal_client_id: @lead.booking_portal_client_id
+                      )
     @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
     @receipt.payment_gateway = current_client.payment_gateway if @receipt.payment_mode == 'online'
     @receipt.account ||= selected_account(current_client.payment_gateway.underscore, @receipt)

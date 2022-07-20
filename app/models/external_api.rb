@@ -9,7 +9,7 @@ class ExternalApi
 
   # Callbacks
   # before_validation :generate_key # TODO :: call validation
-
+  belongs_to :booking_portal_client, class_name: 'Client'
   # Validations
   validates :domain, uniqueness: true, presence: true
   validates :api_key, uniqueness: true # , presence: true
