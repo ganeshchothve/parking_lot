@@ -65,7 +65,7 @@
   </li>
 <% end %>
 
-<% if current_user.role.in?(User::ALL_PROJECT_ACCESS) %>
+<% if current_user.role.in?(User::KYLAS_MARKETPALCE_USERS) %>
   <% if policy([:admin, User]).index? %>
     <li class="nav-item">
       <%= active_link_to t('controller.users.index.link_name'), admin_users_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>

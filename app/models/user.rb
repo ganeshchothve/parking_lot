@@ -27,6 +27,7 @@ class User
   # Added different types of documents which are uploaded on User
   DOCUMENT_TYPES = %w[home_loan_application_form photo_identity_proof residence_address_proof residence_ownership_proof income_proof job_continuity_proof bank_statement advance_processing_cheque financial_documents first_page_co_branding last_page_co_branding co_branded_asset]
   TEAM_LEAD_DASHBOARD_ACCESS_USERS = %w[team_lead gre]
+  KYLAS_MARKETPALCE_USERS = %w[admin sales]
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -842,8 +843,8 @@ class User
         custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) + %w(channel_partner) } }
       elsif user.role?('sales_admin')
         custom_scope = { "$or": [{ role: { "$in": User.buyer_roles(user.booking_portal_client) } }, { role: 'sales' }, { role: 'channel_partner' }] }
-      elsif user.role?('sales')
-        custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) }, project_ids: user.selected_project_id.to_s, booking_portal_client_id: user.booking_portal_client.id }
+      # elsif user.role?('sales')
+      #   custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) }, project_ids: user.selected_project_id.to_s, booking_portal_client_id: user.booking_portal_client.id }
       elsif user.role?('cp_admin')
         # Removing access to customer accounts for cp/cp_admin, as lead conflict will now work on lead's model & they will have access to their leads.
         #cp_ids = User.where(manager_id: user.id).distinct(:id)
@@ -854,7 +855,7 @@ class User
         custom_scope[:'$or'] = [{_id: user.id}, { role: { '$in': %w(channel_partner cp_owner) }, manager_id: user.id }]
       elsif user.role?('billing_team')
         custom_scope = { role: { '$in': %w(channel_partner cp_owner) } }
-      elsif user.role?('admin')
+      elsif user.role.in?(%w(admin sales))
         custom_scope = { role: { "$ne": 'superadmin' }, booking_portal_client_id: user.booking_portal_client.id }
       elsif user.role?('team_lead')|| user.role?('gre')
         custom_scope = { role: 'sales', project_ids: user.selected_project_id.to_s }
