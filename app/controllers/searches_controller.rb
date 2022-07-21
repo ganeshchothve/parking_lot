@@ -20,7 +20,7 @@ class SearchesController < ApplicationController
   def show
     if @search.project_unit.present? && @search.project_unit.status == 'hold'
       if redirect_to_checkout?
-        redirect_to checkout_user_search_path(@search)
+        redirect_to checkout_lead_search_path(@search)
       end
     end
     # GENERICTODO: Handle current user to be from a user based route path
