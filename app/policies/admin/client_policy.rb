@@ -2,7 +2,7 @@ class Admin::ClientPolicy < ClientPolicy
   # def new? def create? def edit? def asset_create? from ClientPolicy
 
   def update?
-    %w[superadmin].include?(user.role)
+    %w[superadmin admin].include?(user.role)
   end
 
   def asset_create?
@@ -23,7 +23,7 @@ class Admin::ClientPolicy < ClientPolicy
 
   def permitted_attributes(params = {})
     attributes = super
-    if %w[superadmin].include?(user.role)
+    if %w[superadmin admin].include?(user.role)
       attributes += [:twilio_account_sid, :twilio_auth_token, :twilio_virtual_number, :kylas_api_key]
       attributes += [general_user_request_categories: [], partner_regions: [], roles_taking_registrations: [], mask_lead_data_for_roles: [], team_lead_dashboard_access_roles: []]
     end

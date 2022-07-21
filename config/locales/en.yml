@@ -522,6 +522,7 @@ en:
         incentive_gst_slabs: 'Configure Incentive GST Slabs (%)'
         team_lead_dashboard_access_roles: Team Lead Dashboard Access Roles
         tl_dashboard_refresh_timer: Team Lead Dashboard Refresh Timer (Minutes)
+        kylas_api_key: Kylas API Key
       client/payment_gateways:
         Razorpay: Razorpay Payment Gateway
         CCAvenue: CCAvenue Payment Gateway
