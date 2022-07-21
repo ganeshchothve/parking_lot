@@ -9,6 +9,7 @@ class Admin::UsersController < AdminController
   before_action :authorize_resource, except: %w[resend_confirmation_instructions change_state, signup register]
   around_action :apply_policy_scope, only: %i[index export]
   before_action :set_client, only: [:register]
+  before_action :fetch_kylas_users, only: %i[new edit]
 
   layout :set_layout
 
@@ -206,6 +207,10 @@ class Admin::UsersController < AdminController
     User.with_scope(policy_scope(custom_scope)) do
       yield
     end
+  end
+
+  def fetch_kylas_users
+    @kylas_users = Kylas::FetchUsers.new(current_user).call
   end
 
 end
