@@ -57,17 +57,10 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def permitted_attributes(params = {})
-    attributes = [:name, :developer_name, :micro_market, :city, :possession, :launched_on, :our_expected_possession, :total_buildings, :total_units, :description, :advantages, :video_link, :registration_name, :rera_registration_no, :gst_number, :cin_number, :website_link, :creator_id, :support_name, :support_mail, :support_phone, :price_starting_from, :price_upto, :project_size, :total_buildings, :logo, :mobile_cover_photo, :cover_photo, :mobile_logo, :embed_map_tag, project_type: [], category: [], project_segment: [], approved_banks: [], configurations: [], amenities: [], usp: [], broker_usp: [], specifications_attributes: SpecificationPolicy.new(user, Specification.new).permitted_attributes, offers_attributes: OfferPolicy.new(user, Offer.new).permitted_attributes, timeline_updates_attributes: TimelineUpdatePolicy.new(user, TimelineUpdate.new).permitted_attributes, address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes, nearby_locations_attributes: NearbyLocationPolicy.new(user, NearbyLocation.new).permitted_attributes]
+    attributes = [:name, :developer_name, :micro_market, :possession, :registration_name, :rera_registration_no, :gst_number, :cin_number, :creator_id, :price_starting_from, :price_upto, :logo, :cover_photo, :embed_map_tag,   :foyer_link, project_type: [], category: [], project_segment: []]
 
     if user.role.in?(%w(superadmin admin))
-      attributes += [
-        :selldo_client_id, :selldo_id, :selldo_default_search_list_id, :selldo_form_id, :selldo_gre_form_id,
-        :selldo_channel_partner_form_id, :selldo_api_key, :selldo_default_srd, :selldo_cp_srd,
-        :allowed_bookings_per_user, :helpdesk_number, :helpdesk_email, :ga_code, :gtm_tag,
-        :notification_email, :notification_numbers, :sender_email, :area_unit, :is_active,
-        :support_number, :support_email, :channel_partner_support_number, :channel_partner_support_email, :cancellation_amount, :blocking_amount, :region, :sv_incentive, :spot_booking_incentive, :pre_reg_incentive_percentage, :pre_reg_min_bookings, :iris_url, :payment_enabled,
-        :blocking_days, :enable_slot_generation, :holding_minutes, :terms_and_conditions, :consideration_value_help_text, :email_header, :email_footer, :hot, :enable_inventory, :enable_booking_with_kyc, :gst_slab_applicable, :check_sv_availability_in_selldo, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes,
-        email_domains: [], booking_portal_domains: [], enable_actual_inventory: [], enable_live_inventory: [], incentive_percentage_slabs: [], incentive_gst_slabs: [], booking_sources: [], incentive_calculation: [], disable_project: [:walk_ins, :bookings, :invoicing]
+      attributes += [:area_unit, :is_active, :cancellation_amount, :blocking_amount, :payment_enabled, :blocking_days, :holding_minutes, :terms_and_conditions, :enable_booking_with_kyc, :kylas_product_id, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes, disable_project: [:walk_ins, :bookings, :invoicing]
       ]
     end
 
