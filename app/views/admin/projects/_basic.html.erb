@@ -47,63 +47,118 @@
       <%= f.text_field :registration_name, class: 'form-control', required: true, disabled: !policy([:admin, project]).editable_field?("registration_name") %>
     </div>
   </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :rera_registration_no, class: 'label-required' %>
-      <%= f.text_field :rera_registration_no, class: 'form-control', required: 'required', disabled: !policy([:admin, project]).editable_field?("rera_registration_no") %>
-    </div>
-  </div>
-  <% if policy([:admin, project]).editable_field?("is_active") %>
+  <div class="row">
     <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :is_active, class: 'mb-2' %>
-      <div class="form-check form-check-inline">
-        <%= f.radio_button :is_active, true, class: "form-check-input wd-22" %>
-        <%= f.label :is_active, "Yes", class: "form-check-label d-inline-block ms-2" %>
-      </div>
-      <div class="form-check form-check-inline">
-        <%= f.radio_button :is_active, false, class: "form-check-input wd-22" %>
-        <%= f.label :is_active, "No", class: "form-check-label d-inline-block ms-2" %>
+      <div class="mb-3">
+        <%= f.label :rera_registration_no, class: 'label-required' %>
+        <%= f.text_field :rera_registration_no, class: 'form-control', required: 'required', disabled: !policy([:admin, project]).editable_field?("rera_registration_no") %>
       </div>
     </div>
-    </div>
-  <% end %>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :gst_number, class: '' %>
-      <%= f.text_field :gst_number, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("gst_number") %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :cin_number, class: '' %>
-      <%= f.text_field :cin_number, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("cin_number") %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :gst_number, class: '' %>
+        <%= f.text_field :gst_number, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("gst_number") %>
+      </div>
     </div>
   </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :price_starting_from %>
-      <%= f.number_field :price_starting_from, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("price_starting_from") %>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :price_starting_from %>
+        <%= f.number_field :price_starting_from, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("price_starting_from") %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :price_upto %>
+        <%= f.number_field :price_upto, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("price_upto") %>
+      </div>
     </div>
   </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :price_upto %>
-      <%= f.number_field :price_upto, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("price_upto") %>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :area_unit, class: '' %>
+        <%= f.text_field :area_unit, class: 'form-control', disabled: (policy([:admin, @project]).editable_field?("area_unit") ? false : true) %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :cancellation_amount, class: '' %>
+        <%= f.text_field :cancellation_amount, class: 'form-control', disabled: (policy([:admin, @project]).editable_field?("cancellation_amount") ? false : true) %>
+      </div>
     </div>
   </div>
-  <% if policy([current_user_role_group, project]).editable_field?("kylas_product_id") %>
-    <div class="row">
-      <div class="col-md-12">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :blocking_days, class: 'label-required' %>
+        <%= f.number_field :blocking_days, class: 'form-control', required: 'required', disabled: (policy([:admin, @project]).editable_field?("blocking_days") ? false : true), min: 0, max: 30 %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :holding_minutes, class: 'label-required' %>
+        <%= f.text_field :holding_minutes, class: 'form-control', required: 'required', disabled: (policy([:admin, @project]).editable_field?("holding_minutes") ? false : true), min: 0, max: 30 %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :blocking_amount, class: 'label-required' %>
+        <%= f.number_field :blocking_amount, class: 'form-control', required: 'required', disabled: (policy([:admin, @project]).editable_field?("blocking_amount") ? false : true), min: 0 %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :cin_number, class: '' %>
+        <%= f.text_field :cin_number, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("cin_number") %>
+      </div>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div class="col-md-6">
+      <% if policy([:admin, project]).editable_field?("payment_enabled") %>
         <div class="mb-3">
-          <%= f.label :kylas_product_id %>
-          <% kylas_products = @kylas_products.presence || [] %>
-          <% if kylas_products.blank? %>
-          <%= link_to Project.human_attribute_name(:new_product_kylas_crm), SUPPORT_NEW_PRODUCT_CRM_LINK, target: '_blank' %>
-          <% end %>
-          <%= f.select :kylas_product_id, options_for_select(kylas_products, kylas_products.select{ |kylas_product| kylas_product[1].to_s == project.kylas_product_id }.first), { include_blank: 'Select Kylas Product', autocomplete: 'off', class: 'form-control', required: true }, disabled: !(policy([current_user_role_group, project]).editable_field?("kylas_product_id")) %>
+          <%= f.label :payment_enabled, class: 'mb-2' %>
+          <div class="form-check form-check-inline">
+            <%= f.radio_button :payment_enabled, true, class: "form-check-input wd-22" %>
+            <%= f.label :payment_enabled, "Yes", class: "form-check-label d-inline-block ms-2" %>
+          </div>
+          <div class="form-check form-check-inline">
+            <%= f.radio_button :payment_enabled, false, class: "form-check-input wd-22" %>
+            <%= f.label :payment_enabled, "No", class: "form-check-label d-inline-block ms-2" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <% if policy([:admin, project]).editable_field?("is_active") %>
+      <div class="col-md-6">
+        <div class="mb-3">
+          <%= f.label :is_active, class: 'mb-2' %>
+          <div class="form-check form-check-inline">
+            <%= f.radio_button :is_active, true, class: "form-check-input wd-22" %>
+            <%= f.label :is_active, "Yes", class: "form-check-label d-inline-block ms-2" %>
+          </div>
+          <div class="form-check form-check-inline">
+            <%= f.radio_button :is_active, false, class: "form-check-input wd-22" %>
+            <%= f.label :is_active, "No", class: "form-check-label d-inline-block ms-2" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group mb-3">
+        <div class="form-check form-check-inline">
+          <%= f.check_box :enable_booking_with_kyc, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("enable_booking_with_kyc") }, "Yes", "No" %>
+          <%= f.label :enable_booking_with_kyc, class: "form-check-label d-inline-block ms-2 enable-booking-with-kyc" %>
         </div>
       </div>
     </div>
-  <% end %>
+  </div>
 </div>
