@@ -40,7 +40,6 @@ module Kylas
         elsif user.kylas_refresh_token
           post_request['Authorization'] = "Bearer #{user.fetch_access_token}"
         end
-        post_request.body = { fields: %w[name id] }.to_json
         response = https.request(post_request)
         JSON.parse(response.body)
       rescue StandardError => e
