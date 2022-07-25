@@ -623,6 +623,8 @@ en:
           sbi: State Bank of India
           bob: Bank of Baroda
           bajaj_finance: Bajaj Finance
+        kylas_product_id: Kylas Products
+        new_product_kylas_crm: "How to add a new Product in Kylas CRM?"
       project/project_type:
         residential: Residential
         commercial: Commercial
@@ -1310,6 +1312,7 @@ en:
         upi_id: 'UPI Address'
         kylas_user_id: Kylas Users
         new_user_kylas_crm: "How to add a new user in Kylas CRM?"
+        booking_portal_client: Client Name
       user/confirmed:
         :true: 'Confirmed'
         :false: 'Not Confirmed'

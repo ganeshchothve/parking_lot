@@ -21,3 +21,5 @@ end
 APP_KYLAS_VERSION = 'v1'
 
 SUPPORT_NEW_USER_CRM_LINK = 'https://support.kylas.io/portal/en/kb/articles/add-a-new-user'
+
+SUPPORT_NEW_PRODUCT_CRM_LINK = 'https://support.kylas.io/portal/en/kb/articles/add-products-services'
