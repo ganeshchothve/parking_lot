@@ -357,14 +357,14 @@ class User
       response = Kylas::UserDetails.new(self).call
       if response[:success]
         slice_user_id = response.dig(:data, 'id')
-        user = User.find_by(kylas_user_id: slice_user_id)
+        user = User.where(kylas_user_id: slice_user_id).first
         if user.present? && (user.id != self.id)
           user.update(
             kylas_user_id: nil, kylas_access_token: nil,
             kylas_refresh_token: nil, kylas_access_token_expires_at: nil
           )
         end
-        update(kylas_user_id: slice_user_id)
+        self.update(kylas_user_id: slice_user_id)
       end
     rescue StandardError
       Rails.logger.error 'Kylas::UserDetails - StandardError'

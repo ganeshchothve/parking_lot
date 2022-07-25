@@ -120,6 +120,9 @@ class Project
   field :incentive_calculation, type: Array, default: ["manual"]
   field :disable_project, type: Hash, default: {walk_ins: false, bookings: false, invoicing: false}
 
+  # Kylas fields
+  field :kylas_product_id, type: String
+
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
@@ -181,7 +184,7 @@ class Project
   has_many :nearby_locations
   has_many :invoices
 
-  validates :name, :configurations, presence: true
+  validates :name, presence: true
   validates_uniqueness_of :name, :rera_registration_no, allow_blank: true
   validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true

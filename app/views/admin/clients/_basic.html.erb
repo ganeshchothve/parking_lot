@@ -92,17 +92,17 @@
 
   <div class="col-md-6">
     <% if policy(@client).editable_field?("enable_direct_activation_for_cp") %>
-    <div class="mb-3">
-      <%= f.label :enable_direct_activation_for_cp, t('helpers.edit.direct_activation_for_cp_label', model: Client.model_name.human) %>
-      <div class="form-check form-check-inline">
-        <%= f.radio_button :enable_direct_activation_for_cp, true, class: "form-check-input wd-22" %>
-        <%= f.label :enable_direct_activation_for_cp, "Yes", class: "form-check-label d-inline-block ms-2" %>
+      <div class="mb-3">
+        <%= f.label :enable_direct_activation_for_cp, t('helpers.edit.direct_activation_for_cp_label', model: Client.model_name.human) %>
+        <div class="form-check form-check-inline">
+          <%= f.radio_button :enable_direct_activation_for_cp, true, class: "form-check-input wd-22" %>
+          <%= f.label :enable_direct_activation_for_cp, "Yes", class: "form-check-label d-inline-block ms-2" %>
+        </div>
+        <div class="form-check form-check-inline">
+          <%= f.radio_button :enable_direct_activation_for_cp, false, class: "form-check-input wd-22" %>
+          <%= f.label :enable_direct_activation_for_cp, "No", class: "form-check-label d-inline-block ms-2" %>
+        </div>
       </div>
-      <div class="form-check form-check-inline">
-        <%= f.radio_button :enable_direct_activation_for_cp, false, class: "form-check-input wd-22" %>
-        <%= f.label :enable_direct_activation_for_cp, "No", class: "form-check-label d-inline-block ms-2" %>
-      </div>
-    </div>
     <% end %>
   </div>
 </div>
