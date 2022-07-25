@@ -103,6 +103,10 @@
               <p class="fn-14 theme-txt-color"><%= user.portal_stage.try(:stage) || '-' %></p>
             </li>
           <% end %>
+          <li class="col-lg-3">
+            <span class="txt-light-blue fn-12"><%= t("mongoid.attributes.user.booking_portal_client") %></span>
+            <p class="fn-14 theme-txt-color"><%= user.booking_portal_client.name || '-' %></p>
+          </li>
         </ul>
       </div>
     </div>

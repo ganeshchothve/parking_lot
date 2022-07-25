@@ -1311,6 +1311,9 @@ en:
         referral_code: "Referral Code"
         shareable_link: "Shareable Link"
         upi_id: 'UPI Address'
+        kylas_user_id: Kylas Users
+        new_user_kylas_crm: "How to add a new user in Kylas CRM?"
+        booking_portal_client: Client Name
       user/confirmed:
         :true: 'Confirmed'
         :false: 'Not Confirmed'

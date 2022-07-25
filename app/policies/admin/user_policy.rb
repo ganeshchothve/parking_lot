@@ -130,7 +130,7 @@ class Admin::UserPolicy < UserPolicy
   def permitted_attributes(params = {})
     attributes = super
     if user.present?
-      attributes += [:is_active] if record.persisted? && record.id != user.id && user.role.in?(%w(cp cp_admin admin superadmin))
+      attributes += [:is_active] if record.persisted? && record.id != user.id && user.role.in?(%w(admin sales))
       if %w[admin superadmin].include?(user.role)  && record.role?('cp')
         attributes += [:manager_id]
       end
@@ -164,6 +164,7 @@ class Admin::UserPolicy < UserPolicy
       attributes += [:rejection_reason]
     end
     attributes += [:login_otp] if confirm_via_otp?
+    attributes += [:kylas_user_id] if record.role.in?(%w(sales admin))
     attributes.uniq
   end
 end
