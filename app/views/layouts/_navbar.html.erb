@@ -79,7 +79,7 @@
             <% if policy([current_user_role_group, Project.new]).switch_project? %>
               <%= link_to t('controller.home.select_project.link_name'), buyer_select_project_path, class: "dropdown-item" %>
             <% end %>
-            <%= link_to t('sign_out', scope: "devise"), destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
+            <%= link_to t('sign_out', scope: "devise"), destroy_session_path(current_user), class: "dropdown-item", id:"#signout", method: :delete %>
           </div>
         </div>
       </div>
@@ -173,6 +173,10 @@
       Amura.global_success_handler(notice);
     } else if(alert){
       Amura.global_error_handler(alert);
+    }
+
+    if(window.top != window.self){
+      $('#signout').hide();
     }
   });
 <% end %>

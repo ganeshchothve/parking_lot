@@ -1,0 +1,14 @@
+<% if policy([current_user_role_group, project]).editable_field?("kylas_product_id") %>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="mb-3">
+          <%= f.label :kylas_product_id %>
+          <% kylas_products = @kylas_products.presence || [] %>
+          <%= f.select :kylas_product_id, options_for_select(kylas_products, kylas_products.select{ |kylas_product| kylas_product[1].to_s == project.kylas_product_id }.first), { include_blank: 'Select Kylas Product', autocomplete: 'off', class: 'form-control', required: true }, disabled: !(policy([current_user_role_group, project]).editable_field?("kylas_product_id")) %>
+          <% if kylas_products.blank? %>
+          <%= link_to Project.human_attribute_name(:new_product_kylas_crm), SUPPORT_NEW_PRODUCT_CRM_LINK, target: '_blank' %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>

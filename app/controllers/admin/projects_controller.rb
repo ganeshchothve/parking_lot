@@ -2,6 +2,7 @@ class Admin::ProjectsController < AdminController
   before_action :set_project, except: %i[index collaterals new create third_party_inventory]
   before_action :authorize_resource, except: %i[collaterals third_party_inventory]
   around_action :apply_policy_scope, only: %i[index collaterals]
+  before_action :fetch_kylas_products, only: %i[new edit]
   layout :set_layout
 
   #
@@ -146,6 +147,10 @@ class Admin::ProjectsController < AdminController
     Project.with_scope(policy_scope(custom_project_scope)) do
       yield
     end
+  end
+
+  def fetch_kylas_products
+    @kylas_products = Kylas::FetchProducts.new(current_user).call
   end
 
 end
