@@ -57,7 +57,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def permitted_attributes(params = {})
-    attributes = [:name, :developer_name, :micro_market, :possession, :registration_name, :rera_registration_no, :gst_number, :cin_number, :creator_id, :price_starting_from, :price_upto, :logo, :cover_photo, :embed_map_tag,   :foyer_link, project_type: [], category: [], project_segment: []]
+    attributes = [:name, :developer_name, :micro_market, :possession, :registration_name, :rera_registration_no, :gst_number, :cin_number, :creator_id, :price_starting_from, :price_upto, :logo, :cover_photo, :embed_map_tag, :foyer_link, project_type: [], category: [], project_segment: []]
 
     if user.role.in?(%w(superadmin admin))
       attributes += [:area_unit, :is_active, :cancellation_amount, :blocking_amount, :payment_enabled, :blocking_days, :holding_minutes, :terms_and_conditions, :enable_booking_with_kyc, :kylas_product_id, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes, disable_project: [:walk_ins, :bookings, :invoicing]
