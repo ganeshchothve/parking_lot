@@ -188,6 +188,7 @@ class Project
   validates_uniqueness_of :name, :rera_registration_no, allow_blank: true
   validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
+  validates :gst_number, uniqueness: true
   # validates :city, inclusion: { in: proc { current_client.regions.distinct(:city) } }, allow_blank: true
   # validates :region, inclusion: { in: proc { current_client.regions.distinct(:partner_regions).flatten || [] } }, allow_blank: true
 

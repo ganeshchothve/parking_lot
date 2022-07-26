@@ -65,13 +65,13 @@
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :price_starting_from %>
-        <%= f.number_field :price_starting_from, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("price_starting_from") %>
+        <%= f.number_field :price_starting_from, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("price_starting_from"), min: "0" %>
       </div>
     </div>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :price_upto %>
-        <%= f.number_field :price_upto, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("price_upto") %>
+        <%= f.number_field :price_upto, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("price_upto"), min: "0" %>
       </div>
     </div>
   </div>
