@@ -29,7 +29,7 @@ class Admin::UsersController < AdminController
       if @user.save
         format.html { redirect_to new_user_session_path, notice: 'Successfully registered' }
       else
-        format.html { redirect_to signup_mp_users_path, alert: @user.errors.full_messages }
+        format.html { redirect_to new_user_session_path, alert: @user.errors.full_messages }
       end
     end
   end
