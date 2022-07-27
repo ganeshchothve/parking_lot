@@ -78,6 +78,7 @@ class Admin::ProjectsController < AdminController
     respond_to do |format|
       if @project.update(parameters)
         format.html { redirect_to request.referrer || admin_projects_path, notice: 'Project successfully updated.' }
+        format.json { render json: @project, status: 200 }
       else
         errors = @project.errors.full_messages
         errors << @project.specifications.collect{|x| x.errors.full_messages} if @project.specifications.present?

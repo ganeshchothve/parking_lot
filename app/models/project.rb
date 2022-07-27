@@ -25,8 +25,8 @@ class Project
   field :category, type: Array, default: []
   field :project_segment, type: Array, default: []
   field :possession, type: Date
-  field :lat, type: String, default: '100'
-  field :lng, type: String, default: '100'
+  field :latitude, type: String, default: '100'
+  field :longitude, type: String, default: '100'
   field :is_active,type: Boolean, default: true
   field :area_price_data, type: Array, default: []
   field :configurations, type: Array, default: []
@@ -188,7 +188,7 @@ class Project
   validates_uniqueness_of :name, :rera_registration_no, allow_blank: true
   validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
-  validates :gst_number, uniqueness: true
+  validates :gst_number, uniqueness: { allow_blank: true }
   # validates :city, inclusion: { in: proc { current_client.regions.distinct(:city) } }, allow_blank: true
   # validates :region, inclusion: { in: proc { current_client.regions.distinct(:partner_regions).flatten || [] } }, allow_blank: true
 
