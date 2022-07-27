@@ -60,7 +60,7 @@ class Admin::ProjectsController < AdminController
         format.json { render json: @project, status: :created }
       else
         errors = @project.errors.full_messages
-        errors << @project.specifications.collect{|x| x.errors.full_messages}
+        errors << @project.specifications.collect{|x| x.errors.full_messages}  if @project.specifications.present?
         errors.uniq!
         format.html { render :new }
         format.json { render json: { errors: errors }, status: :unprocessable_entity }
