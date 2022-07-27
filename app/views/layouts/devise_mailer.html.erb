@@ -5,8 +5,6 @@
   <%= stylesheet_link_tag "mailer", media: "all" %>
 </head>
 <body class="bg-light">
-  <%= ERB.new(current_client.email_header).result( binding ).html_safe %>
   <%= yield %>
-  <%= ERB.new(current_client.email_footer).result( binding ).html_safe %>
 </body>
 </html>
