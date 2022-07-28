@@ -65,13 +65,13 @@
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :price_starting_from %>
-        <%= f.number_field :price_starting_from, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("price_starting_from") %>
+        <%= f.number_field :price_starting_from, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("price_starting_from"), min: "0" %>
       </div>
     </div>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :price_upto %>
-        <%= f.number_field :price_upto, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("price_upto") %>
+        <%= f.number_field :price_upto, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("price_upto"), min: "0" %>
       </div>
     </div>
   </div>
@@ -118,7 +118,32 @@
       </div>
     </div>
   </div>
-
+  <div class='row'>
+    <div class="mb-3 col-md-6">
+      <%= f.label :latitude, class: 'label-required' %>
+      <%= f.text_field :latitude, class:'form-control', required: 'required', disabled: !policy([:admin, project]).editable_field?("latitude")  %>
+    </div>
+    <div class="mb-3 col-md-6">
+      <%= f.label :longitude, class: 'label-required' %>
+      <%= f.text_field :longitude, class:'form-control', required: 'required',  disabled: !policy([:admin, project]).editable_field?("longitude") %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group mb-3">
+        <div class="form-check form-check-inline">
+          <%= f.check_box :enable_booking_with_kyc, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("enable_booking_with_kyc") }, "Yes", "No" %>
+          <%= f.label :enable_booking_with_kyc, class: "form-check-label d-inline-block ms-2 enable-booking-with-kyc" %>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :foyer_link, class: 'label-required' %>
+        <%= f.text_field :foyer_link, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("foyer_link") %>
+      </div>
+    </div>
+  </div>
   <div class='row'>
     <div class="col-md-6">
       <% if policy([:admin, project]).editable_field?("payment_enabled") %>
@@ -135,29 +160,27 @@
         </div>
       <% end %>
     </div>
-    <% if policy([:admin, project]).editable_field?("is_active") %>
-      <div class="col-md-6">
+    <%# if policy([:admin, project]).editable_field?("is_active") %>
+      <!-- <div class="col-md-6">
         <div class="mb-3">
-          <%= f.label :is_active, class: 'mb-2' %>
+          <%#= f.label :is_active, class: 'mb-2' %>
           <div class="form-check form-check-inline">
-            <%= f.radio_button :is_active, true, class: "form-check-input wd-22" %>
-            <%= f.label :is_active, "Yes", class: "form-check-label d-inline-block ms-2" %>
+            <%#= f.radio_button :is_active, true, class: "form-check-input wd-22" %>
+            <%#= f.label :is_active, "Yes", class: "form-check-label d-inline-block ms-2" %>
           </div>
           <div class="form-check form-check-inline">
-            <%= f.radio_button :is_active, false, class: "form-check-input wd-22" %>
-            <%= f.label :is_active, "No", class: "form-check-label d-inline-block ms-2" %>
+            <%#= f.radio_button :is_active, false, class: "form-check-input wd-22" %>
+            <%#= f.label :is_active, "No", class: "form-check-label d-inline-block ms-2" %>
           </div>
         </div>
-      </div>
-    <% end %>
+      </div> -->
+    <%# end %>
   </div>
   <div class="row">
-    <div class="col-md-6">
-      <div class="form-group mb-3">
-        <div class="form-check form-check-inline">
-          <%= f.check_box :enable_booking_with_kyc, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("enable_booking_with_kyc") }, "Yes", "No" %>
-          <%= f.label :enable_booking_with_kyc, class: "form-check-label d-inline-block ms-2 enable-booking-with-kyc" %>
-        </div>
+    <div class="col-md-12">
+      <div class="mb-3">
+        <%= f.label :terms_and_conditions %>
+        <%= f.text_area :terms_and_conditions, class: 'form-control summernote', disabled: !policy([:admin, @project]).editable_field?("terms_and_conditions") %>
       </div>
     </div>
   </div>

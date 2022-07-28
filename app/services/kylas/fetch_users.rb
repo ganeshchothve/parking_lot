@@ -26,7 +26,7 @@ module Kylas
           count += 1
         end
       end
-      kylas_users_list
+      kylas_users_list.compact
     end
 
     private
@@ -44,7 +44,7 @@ module Kylas
         elsif user.kylas_refresh_token
           post_request['Authorization'] = "Bearer #{user.fetch_access_token}"
         end
-        post_request.body = { fields: %w[firstName lastName id email] }.to_json
+        post_request.body = { fields: %w[firstName lastName id email active] }.to_json
         response = https.request(post_request)
         JSON.parse(response.body)
       rescue StandardError => e
@@ -56,7 +56,9 @@ module Kylas
 
     def parse_kylas_user_data(json_resp)
       json_resp['content']&.map do |content|
-        ["#{content['firstName']} #{content['lastName']} (#{content['email']})", content['id']]
+        if content['active']
+          ["#{content['firstName']} #{content['lastName']} (#{content['email']})", content['id']]
+        end
       end
     end
   end

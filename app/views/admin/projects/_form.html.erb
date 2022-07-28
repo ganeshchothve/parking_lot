@@ -20,7 +20,7 @@
           <nav>
             <div class="nav nav-tabs theme-tab" role="tablist">
               <a class="nav-item nav-link active" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-basic" role="tab">Basic Details</a>
-              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-logos" role="tab">Images & Docs</a>
+              <!-- <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-logos" role="tab">Images & Docs</a> -->
               <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-bookings" role="tab">Kylas Products</a>
             </div>
           </nav>
@@ -29,9 +29,9 @@
             <div class="tab-pane fade show active" id="nav-project-basic" role="tabpanel">
               <%= render 'admin/projects/basic', f: f, project: project %>
             </div>
-            <div class="tab-pane fade" id="nav-project-logos" role="tabpanel">
-              <%= render 'admin/projects/logos', f: f, project: project %>
-            </div>
+            <!-- <div class="tab-pane fade" id="nav-project-logos" role="tabpanel">
+              <%#= render 'admin/projects/logos', f: f, project: project %>
+            </div> -->
             <div class="tab-pane fade" id="nav-project-bookings" role="tabpanel">
               <%= render 'admin/projects/kylas_products', f: f, project: project %>
             </div>

@@ -619,6 +619,7 @@ en:
         check_sv_availability_in_selldo: 'Check Site Visit Availability in Sell.do'
         incentive_gst_slabs: 'Configure Incentive GST Slabs (%)'
         payment_enabled: Enable Payment
+        foyer_link: Foyer Link
         approved_banks/list:
           hdfc: HDFC Bank
           sbi: State Bank of India
