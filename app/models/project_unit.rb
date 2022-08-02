@@ -85,7 +85,7 @@ class ProjectUnit
 
   validates :saleable, :carpet, :base_rate, :agreement_price, :all_inclusive_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bathrooms, :type, :project_name, :project_tower_name, :unit_configuration_name, :bedrooms, presence: true
   validates :status, :name, :erp_id, presence: true
-  validates :status, inclusion: { in: proc { ProjectUnit.available_statuses.collect { |x| x[:id] } } }
+  # validates :status, inclusion: { in: proc { ProjectUnit.available_statuses.collect { |x| x[:id] } } }
   validates :available_for, inclusion: { in: proc { ProjectUnit.available_available_fors.collect { |x| x[:id] } } }
   validates :saleable, :carpet, :base_rate, :numericality => {:greater_than => 0}, if: :valid_status?
   validates :floor_order, uniqueness: { scope: [:project_tower_id, :floor] }
@@ -282,11 +282,11 @@ class ProjectUnit
   end
 
   def blocking_days
-    current_client.blocking_days
+    self.booking_portal_client.blocking_days
   end
 
   def holding_minutes
-    current_client.holding_minutes
+    self.booking_portal_client.holding_minutes
   end
 
   def booking_detail_scheme

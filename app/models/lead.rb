@@ -53,6 +53,10 @@ class Lead
   # lead reassignment specific field
   field :accepted_by_sales, type: Boolean
 
+
+
+  field :kylas_pipeline_id, type: Integer
+
   embeds_many :state_transitions
   embeds_many :portal_stages
 

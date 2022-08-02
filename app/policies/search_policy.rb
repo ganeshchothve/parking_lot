@@ -26,7 +26,7 @@ class SearchPolicy < ApplicationPolicy
   end
 
   def three_d?
-    current_client.external_inventory_view_config.present? && current_client.external_inventory_view_config.enabled? && new?
+    new? #&& current_client.external_inventory_view_config.present? && current_client.external_inventory_view_config.enabled?
   end
 
   def edit?
