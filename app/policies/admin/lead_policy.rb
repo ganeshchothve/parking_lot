@@ -128,6 +128,18 @@ class Admin::LeadPolicy < LeadPolicy
     %w(sales).include?(user.role)
   end
 
+  def new_kylas_associated_lead?
+    %w(superadmin admin sales).include?(user.role)
+  end
+
+  def create_kylas_associated_lead?
+    new_kylas_associated_lead?
+  end
+
+  def deal_associated_contact_details?
+    new_kylas_associated_lead?
+  end
+
   def permitted_attributes(params = {})
     attributes = super || []
     attributes += [:first_name, :last_name, :email, :phone, :project_id, site_visits_attributes: Pundit.policy(user, [:admin, SiteVisit.new]).permitted_attributes] if record.new_record?

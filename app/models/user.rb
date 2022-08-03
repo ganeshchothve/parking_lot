@@ -137,6 +137,7 @@ class User
   field :kylas_refresh_token, type: String
   field :kylas_user_id, type: String
   field :kylas_access_token_expires_at, type: DateTime
+  field :kylas_contact_id, type: String
 
   ## Security questionable
 
@@ -168,6 +169,7 @@ class User
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true
   belongs_to :confirmed_by, class_name: 'User', optional: true
+  belongs_to :created_by, class_name: 'User', optional: true
   belongs_to :tier, optional: true  # for associating channel partner users with different tiers.
   belongs_to :selected_lead, class_name: 'Lead', optional: true
   belongs_to :selected_project, class_name: 'Project', optional: true

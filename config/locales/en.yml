@@ -1383,6 +1383,8 @@ en:
         closing_manager_id: Available Sales Users
         source: Source
         sub_source: Sub-Source
+        kylas_product: Kylas Product
+        kylas_contact: Kylas Contacts
 
       lead/stage:
         incoming: 'Incoming'

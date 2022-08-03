@@ -239,12 +239,12 @@ class ProjectUnit
       { id: 'hold', text: 'Hold' },
       { id: 'blocked', text: 'Blocked' }
     ]
-    if current_client.enable_company_users?
-      out += [
-        { id: 'management', text: 'Management Blocking' },
-        { id: 'employee', text: 'Employee Blocking' }
-      ]
-    end
+    # if current_client.enable_company_users?
+    #   out += [
+    #     { id: 'management', text: 'Management Blocking' },
+    #     { id: 'employee', text: 'Employee Blocking' }
+    #   ]
+    # end
     out
   end
 
@@ -282,11 +282,11 @@ class ProjectUnit
   end
 
   def blocking_days
-    current_client.blocking_days
+    self.booking_portal_client.blocking_days
   end
 
   def holding_minutes
-    current_client.holding_minutes
+    self.booking_portal_client.holding_minutes
   end
 
   def booking_detail_scheme
