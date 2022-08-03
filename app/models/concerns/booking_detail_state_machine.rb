@@ -187,7 +187,7 @@ module BookingDetailStateMachine
       _project_unit.save
       self.set(booked_on: _project_unit.blocked_on)
       # call service to update the pipeline stage in kylas
-      Kylas::UpdateEntityDetailsInKylas.new(self.creator, self.status, 25271, "deals", 5336).update_pipeline_and_entity_value_in_kylas
+      Kylas::UpdateEntityDetailsInKylas.new(self.creator, self.status, self.lead.kylas_deal_id, "deals", self.lead.kylas_pipeline_id).update_pipeline_and_entity_value_in_kylas
 
       if blocked? && get_paid_amount > project_unit.blocking_amount
         booked_tentative!
@@ -200,7 +200,7 @@ module BookingDetailStateMachine
     def after_booked_tentative_event
       return unless project_unit.present?
       # call service to update the pipeline stage in kylas
-      Kylas::UpdateEntityDetailsInKylas.new(self.creator, self.status, 25271, "deals", 5337).update_pipeline_and_entity_value_in_kylas
+      Kylas::UpdateEntityDetailsInKylas.new(self.creator, self.status, self.lead.kylas_deal_id, "deals", self.lead.kylas_pipeline_id).update_pipeline_and_entity_value_in_kylas
 
       if booked_tentative? && (get_paid_amount >= project_unit.booking_price)
         booked_confirmed!
@@ -225,7 +225,7 @@ module BookingDetailStateMachine
       if (self.aasm.from_state == :booked_tentative && self.user.booking_portal_client.document_sign.present?)
         # self.send_booking_form_to_sign
       end
-      Kylas::UpdateEntityDetailsInKylas.new(self.creator, self.status, 25271, "deals", 5337).update_pipeline_and_entity_value_in_kylas
+      Kylas::UpdateEntityDetailsInKylas.new(self.creator, self.status, self.lead.kylas_deal_id, "deals", self.lead.kylas_pipeline_id).update_pipeline_and_entity_value_in_kylas
     end
 
     #
