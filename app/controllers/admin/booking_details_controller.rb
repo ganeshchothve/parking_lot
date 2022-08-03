@@ -45,7 +45,13 @@ class Admin::BookingDetailsController < AdminController
 
   def create
     _project_unit = ProjectUnit.find(params[:booking_detail][:project_unit_id])
-    _search = Search.create(user_id: params[:booking_detail][:user_id], lead_id: params[:booking_detail][:lead_id], project_tower_id: params[:project_tower_id] || _project_unit.project_tower.id, project_unit_id: params[:booking_detail][:project_unit_id])
+    _search = Search.create(
+                    user_id: params[:booking_detail][:user_id],
+                    lead_id: params[:booking_detail][:lead_id],
+                    project_tower_id: params[:project_tower_id] || _project_unit.project_tower.id,
+                    project_unit_id: params[:booking_detail][:project_unit_id],
+                    booking_portal_client_id: current_user.booking_portal_client.id
+                    )
     @booking_detail = BookingDetail.new(
                                     search: _search,
                                     booking_portal_client_id: current_user.booking_portal_client.id,
