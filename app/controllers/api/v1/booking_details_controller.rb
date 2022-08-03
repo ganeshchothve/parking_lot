@@ -96,7 +96,8 @@ class Api::V1::BookingDetailsController < ApisController
                                           data: @project_unit.data,
                                           project_unit_id: @project_unit.id,
                                           lead_id: @lead.id, user_id: @lead.user.id,
-                                          project_id: @project_unit.project_id
+                                          project_id: @project_unit.project_id,
+                                          creator_id: current_user.id
                                         )
   end
 

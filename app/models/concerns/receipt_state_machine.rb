@@ -130,6 +130,7 @@ module ReceiptStateMachine
 
     def change_booking_detail_status
       if booking_detail
+        # call the custom observer from here
         booking_detail.send("after_#{booking_detail.status}_event")
       end
     end
