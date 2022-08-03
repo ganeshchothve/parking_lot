@@ -21,6 +21,8 @@
       <% if user_signed_in? %>
         App.current_user = <%= raw current_user.to_json %>;
         App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name;
+        App.client = <%= raw current_user.booking_portal_client.to_json(only: [:name, :_id, :preferred_login]) %>;
+        App.client.enable_actual_inventory = <%= current_user.booking_portal_client.enable_actual_inventory?(current_user) %>
       <% end %>
       <% if Rails.env.development? || Rails.env.staging? %>
         Pusher.logToConsole = true;

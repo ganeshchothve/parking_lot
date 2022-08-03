@@ -211,7 +211,7 @@ class SearchesController < ApplicationController
     if params[:action] == "index" || params[:action] == 'export' || params[:action] == 'tower'
       authorize Search
     elsif params[:action] == "new" || params[:action] == "create" || params[:action] == 'three_d'
-      authorize Search.new(lead_id: @lead.id)
+      authorize Search.new(lead_id: @lead.id, booking_portal_client: current_user.booking_portal_client)
     else
       authorize @search
     end

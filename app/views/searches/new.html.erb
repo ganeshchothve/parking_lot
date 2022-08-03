@@ -27,7 +27,7 @@
                       <p><i class="fas fa-map-marker-alt fill-primary me-2"></i><%= "#{@lead.project.micro_market.present? ? @lead.project.micro_market&.titleize + ', ': ''}#{@lead.project.city&.titleize}".presence || '-' %></p>
                     </div>
                     <div class="col-4 text-end">
-                      <% if SearchPolicy.new(current_user, Search.new(lead_id: @lead.id)).three_d? %>
+                      <% if SearchPolicy.new(current_user, Search.new(lead_id: @lead.id, booking_portal_client: current_user.booking_portal_client)).three_d? %>
                       <div class="card h-100">
                         <div class="card-body text-center">
                           <h5 class="mb-3">Book in 3D View</h5>

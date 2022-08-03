@@ -19,7 +19,7 @@ class Admin::BookingDetailsController < AdminController
   end
 
   def new
-    @search = Search.new()
+    @search = Search.new(booking_portal_client: current_user.booking_portal_client)
     @booking_detail = BookingDetail.new(search: @search, booking_portal_client_id: current_user.booking_portal_client.id)
     @project_towers = search_for_towers
     @project_towers.map!{|f| [f[:project_tower_name], f[:project_tower_id]]}
