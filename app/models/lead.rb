@@ -55,6 +55,7 @@ class Lead
 
   # Kylas Marketplace specific Fields
   field :kylas_deal_id, type: String
+  field :kylas_pipeline_id, type: String
 
   embeds_many :state_transitions
   embeds_many :portal_stages

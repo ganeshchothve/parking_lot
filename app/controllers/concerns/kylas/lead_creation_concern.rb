@@ -105,6 +105,7 @@ module Kylas
         @lead.booking_portal_client = current_user.booking_portal_client
         @lead.project = @project
         @lead.created_by = current_user
+        @lead.kylas_pipeline_id = (@deal_data.dig(:pipeline, :id).to_s rescue nil)
       end
       if @lead.persisted? || @lead.save
         # redirect to search path
