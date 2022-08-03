@@ -200,7 +200,7 @@ class Client
   def enable_actual_inventory?(user)
     if user.present?
       out = enable_actual_inventory.include?(user.role)
-      out && user.active_channel_partner?
+      out# && user.active_channel_partner?
     else
       false
     end

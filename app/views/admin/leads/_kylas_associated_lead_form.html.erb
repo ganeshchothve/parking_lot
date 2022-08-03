@@ -1,0 +1,41 @@
+<% 
+  kylas_products = {}
+  kylas_products['Deal Product'] = @deal_associated_products if @deal_associated_products.present?
+  kylas_products['Other Products'] = (@kylas_products | @deal_associated_products) - (@kylas_products & @deal_associated_products) if @kylas_products.present?
+%>
+
+<%= f.hidden_field :kylas_deal_id, value: @lead.kylas_deal_id %>
+<div class="mb-3">
+    <%= f.label :kylas_product, class: 'label-required' %>
+    <%= f.select :kylas_product_id, grouped_options_for_select(kylas_products), { include_blank: 'Select Kylas Product'}, autocomplete: 'off', class: 'selectize', required: true, disabled: !(policy([current_user_role_group, @lead]).editable_field?("project_id")) %>
+</div>
+
+<div class="mb-3">
+    <%= f.label :kylas_contact, class: 'label-required' %>
+    <%= f.select :kylas_contact_id, options_for_select(@deal_associated_contacts), { include_blank: 'Select Kylas Contact'}, autocomplete: 'off', class: 'selectize', required: true %>
+</div>
+
+
+<div class="mb-3">
+  <%= f.label :first_name, class: 'label-required' %>
+  <%= f.text_field :first_name, class: 'form-control', autofocus: true, required: true, readonly: true %>
+</div>
+
+<div class="mb-3">
+  <%= f.label :last_name, class: 'label-required' %>
+  <%= f.text_field :last_name, class: 'form-control', autofocus: true, required: true, readonly: true %>
+</div>
+
+<div class="mb-3">
+  <%= f.label :email %>
+  <%= f.select :email, options_for_select([]), { include_blank: 'Select Kylas Email'}, autocomplete: 'off', class: 'selectize email_select', disabled: !(policy([current_user_role_group, @lead]).editable_field?("email")) %>
+</div>
+
+<div class="mb-3">
+  <%= f.label :phone %>
+  <%= f.select :phone, options_for_select([]),  { include_blank: 'Select Kylas Phone'}, autocomplete: 'off', class: 'selectize phone_select', disabled: !(policy([current_user_role_group, @lead]).editable_field?("phone")) %>
+</div>
+
+<div class="modal-footer text-end">
+    <%= f.submit "Save", class: 'btn btn-primary' %>
+</div>
