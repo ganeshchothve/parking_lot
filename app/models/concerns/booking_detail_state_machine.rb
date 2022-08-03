@@ -387,7 +387,7 @@ module BookingDetailStateMachine
       project_unit.make_available
       project_unit.save(validate: false)
       SelldoLeadUpdater.perform_async(lead_id.to_s, {stage: 'cancelled'})
-      Kylas::UpdateEntityDetailsInKylas.new(self.creator, self.status, 25271, "deals", 5337).update_pipeline_and_entity_value_in_kylas
+      Kylas::UpdateEntityDetailsInKylas.new(self.creator, self.status, self.lead.kylas_deal_id, "deals", self.lead.kylas_pipeline_id).update_pipeline_and_entity_value_in_kylas
     end
 
     def update_selldo!
