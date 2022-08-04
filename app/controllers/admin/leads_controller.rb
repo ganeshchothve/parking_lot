@@ -1,10 +1,10 @@
 class Admin::LeadsController < AdminController
-  include Kylas::LeadCreationConcern
   before_action :authenticate_user!
   before_action :set_lead, except: %i[index new export search_by search_inventory new_kylas_associated_lead deal_associated_contact_details create_kylas_associated_lead]
   before_action :authorize_resource
   before_action :set_sales_user, only: :assign_sales
   around_action :apply_policy_scope, only: %i[index search_inventory]
+  include Kylas::LeadCreationConcern
 
   def new
     attrs = {}
