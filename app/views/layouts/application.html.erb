@@ -35,7 +35,7 @@
     <% end %>
   </head>
   <body class="<%= controller_name %> <%= full_page_view? ? 'pt-0' : '' %>">
-    <% if full_page_view? %>
+    <% if full_page_view? || request.host.include?('embed-') %>
       <%= yield %>
     <% else %>
       <%= render "layouts/navbar"%>
