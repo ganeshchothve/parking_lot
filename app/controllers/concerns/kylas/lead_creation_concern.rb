@@ -57,8 +57,8 @@ module Kylas
       fetch_deal_details = Kylas::FetchDealDetails.new(entity_id, current_user).call
       if fetch_deal_details[:success]
         @deal_data = fetch_deal_details[:data].with_indifferent_access
-        @deal_associated_products = @deal_data[:products].collect{|pd| [pd[:name], pd[:id]]}
-        @deal_associated_contacts = @deal_data[:associatedContacts].collect{|pd| [pd[:name], pd[:id]]}
+        @deal_associated_products = @deal_data[:products].collect{|pd| [pd[:name], pd[:id]]} rescue []
+        @deal_associated_contacts = @deal_data[:associatedContacts].collect{|pd| [pd[:name], pd[:id]]} rescue []
       end
     end
 
