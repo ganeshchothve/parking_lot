@@ -27,7 +27,7 @@
                       <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= lead.masked_phone(current_user) || '' %>
                     </p>
                     <% end %>
-                    <% if current_user.role?(:sales) && is_assigned_lead && lead.accepted_by_sales.nil? %>
+                    <% if false #current_user.role?(:sales) && is_assigned_lead && lead.accepted_by_sales.nil? %>
                       <p class="small d-inline-block mt-1 ms-2 fn-16 mb-0">
                         <%= link_to 'Accept', accept_lead_admin_lead_path(lead, accepted_by_sales: true, event: 'accepted', format: :json), method: 'patch', remote: true, class: "accept move-to-next-state btn btn-success text-white" %>
                       </p>

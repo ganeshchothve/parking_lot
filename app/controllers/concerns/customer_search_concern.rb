@@ -47,14 +47,8 @@ module CustomerSearchConcern
     end
     if params[:manager_id].present?
       cp_user = User.all.channel_partner.where(id: params[:manager_id]).first
-      if cp_user
-        cp_lead_activity = CpLeadActivityRegister.create_cp_lead_object(@lead, cp_user)
-        if (cp_lead_activity.present? && !cp_lead_activity.save)
-          render json: {errors: cp_lead_activity.errors.full_messages}, status: :unprocessable_entity and return
-        end
-      else
-        render json: {errors: 'Channel partner not found'}, status: :not_found and return
-      end
+      cp_lead_activity = CpLeadActivityRegister.create_cp_lead_object(@lead, cp_user)
+      cp_lead_activity.save
     end
     @customer_search.assign_attributes(step: 'sitevisit') if @customer_search.customer.present?
   end

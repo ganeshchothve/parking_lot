@@ -62,9 +62,9 @@ class Admin::LeadPolicy < LeadPolicy
 
   def asset_create?
     valid = %w[admin sales sales_admin crm].include?(user.role)
-    if user.role?(:sales) && is_assigned_lead?
-      valid = is_lead_accepted? && valid
-    end
+    # if user.role?(:sales) && is_assigned_lead?
+    #   valid = is_lead_accepted? && valid
+    # end
     valid
   end
 
@@ -101,7 +101,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def move_to_next_state?
-    if is_lead_accepted?
+    if user.role?('sales')
       record.may_dropoff? && (record.closing_manager_id == user.id)
     else
       (user.role.in?(%w(gre team_lead)) && (record.is_a?(Lead) || record.role?('sales'))) ||

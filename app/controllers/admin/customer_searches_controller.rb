@@ -3,6 +3,7 @@ class Admin::CustomerSearchesController < AdminController
   include CustomerSearchConcern
   before_action :set_customer_search, only: %w[show update]
   before_action :authorize_resource
+  before_action :check_cp_user_presence, only: %w[update], if: :search_step_is_customer?
 
 
   def new
@@ -91,8 +92,21 @@ class Admin::CustomerSearchesController < AdminController
       end
     end
   end
+
   def set_customer_search
     @customer_search = CustomerSearch.where(id: params[:id]).first
     redirect_to root_path, alert: t('controller.customer_searches.set_customer_search_missing'), status: 404 if @customer_search.blank?
   end
+
+  def check_cp_user_presence
+    if params[:manager_id].present?
+      cp_user = User.all.channel_partner.where(id: params[:manager_id]).first
+      render json: {errors: 'Channel partner not found'}, status: :not_found and return unless cp_user.present?
+    end
+  end
+
+  def search_step_is_customer?
+    @customer_search.step == "customer" if @customer_search.present?
+  end
+
 end

@@ -9,9 +9,9 @@ class Admin::UserKycPolicy < UserKycPolicy
 
   def new?
     valid = record.lead&.project&.is_active? #record.user.buyer?
-    if is_assigned_lead?
-      valid = is_lead_accepted? && valid
-    end
+    # if is_assigned_lead?
+    #   valid = is_lead_accepted? && valid
+    # end
     valid
   end
 
