@@ -31,7 +31,9 @@ module CrmIntegration
   def push_in_crm(crm_base, force_create=false)
     if crm_base.present?
       crm_id = self.third_party_references.where(crm_id: crm_base.id).first&.reference_id
-      if crm_id.present? && !force_create
+      if self.is_a?(SiteVisit) && self.status == "conducted"
+        api = Crm::Api::Put.where(resource_class: self.class.to_s, base_id: crm_base.id, is_active: true).first
+      elsif crm_id.present? && !force_create
         api = Crm::Api::Put.where(resource_class: self.class.to_s, base_id: crm_base.id, is_active: true).first
       else
         api = Crm::Api::Post.where(resource_class: self.class.to_s, base_id: crm_base.id, is_active: true).first

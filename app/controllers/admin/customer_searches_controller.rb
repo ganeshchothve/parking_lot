@@ -47,6 +47,13 @@ class Admin::CustomerSearchesController < AdminController
             else
               queue_number_notice = "Queue number for #{customer.try(:name)} is #{customer.queue_number}"
             end
+            sitevisit = customer.site_visits.last
+            if sitevisit.status != "conducted"
+              sitevisit.status = "conducted"
+              sitevisit.conducted_on = params[:sitevisit_datetime]
+              sitevisit.conducted_by = current_user.role
+              sitevisit.save
+            end 
             send_notification
             format.html { redirect_to new_admin_customer_search_path(queue_number_notice: queue_number_notice) }
             format.json { render json: {model: @customer_search, location: admin_customer_search_path(@customer_search)} }

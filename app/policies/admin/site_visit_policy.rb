@@ -14,6 +14,7 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
 
   def new?
     SiteVisit.where(lead_id: record.lead_id, status: 'scheduled').blank? && edit? && record.project.walk_ins_enabled?
+    false
   end
 
   def update?

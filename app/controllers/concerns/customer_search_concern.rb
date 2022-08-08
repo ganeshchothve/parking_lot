@@ -60,15 +60,14 @@ module CustomerSearchConcern
   def conduct_sitevisit
     _lead = @customer_search.customer
     if params[:sitevisit_datetime].present?# && params[:cp_code].present?
-      _sitevisit = _lead.site_visits.build(scheduled_on: params[:sitevisit_datetime], status: "arrived", creator: current_user, project: _lead.project, user: _lead.user)#, cp_code: params[:cp_code])
+      _sitevisit = _lead.site_visits.build(scheduled_on: params[:sitevisit_datetime], status: "scheduled", creator: current_user, project: _lead.project, user: _lead.user)#, cp_code: params[:cp_code])
       _sitevisit.is_revisit = _lead.is_revisit?
     elsif params[:sitevisit_id].present?
       _sitevisit = _lead.site_visits.where(id: params[:sitevisit_id]).first
-      _sitevisit.status = 'arrived' if _sitevisit.present?
+      _sitevisit.status = 'scheduled' if _sitevisit.present?
     end
     _lead.current_site_visit = _sitevisit
     _sitevisit.save
-
     #if _sitevisit.try(:cp_code).present?# && !_lead.permanently_blocked? && !_lead.temporarily_blocked
     #  channel_partner = ChannelPartner.where(cp_portal_id: _sitevisit.cp_code).first
     #  _lead.temporarily_block_manager(channel_partner.associated_user_id) if channel_partner.present?

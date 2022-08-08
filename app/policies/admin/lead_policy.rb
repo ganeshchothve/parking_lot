@@ -113,6 +113,7 @@ class Admin::LeadPolicy < LeadPolicy
 
   def show_existing_customer?
     %w(sales).exclude?(user.role)
+    false
   end
 
   def reassign_lead?
