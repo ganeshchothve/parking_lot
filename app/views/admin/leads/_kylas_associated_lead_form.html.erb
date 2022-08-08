@@ -36,6 +36,6 @@
   <%= f.select :phone, options_for_select([]),  { include_blank: 'Select Kylas Phone'}, autocomplete: 'off', class: 'selectize phone_select', disabled: !(policy([current_user_role_group, @lead]).editable_field?("phone")) %>
 </div>
 
-<div class="modal-footer text-end">
-    <%= f.submit "Save", class: 'btn btn-primary lead-form-btn' %>
+<div class="text-end">
+    <%= f.submit "Save", class: 'btn btn-primary float-end w-auto border-primary' %>
 </div>

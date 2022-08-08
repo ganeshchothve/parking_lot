@@ -1,0 +1,37 @@
+<div class="">
+  <%
+    kylas_products = {}
+    kylas_products['Deal Product'] = @deal_associated_products if @deal_associated_products.present?
+    kylas_products['Other Products'] = (@kylas_products | @deal_associated_products) - (@kylas_products & @deal_associated_products) if @kylas_products.present?
+  %>
+
+  <%= f.hidden_field :kylas_deal_id, value: @lead.kylas_deal_id %>
+  <div class="mb-3">
+      <%= f.label :kylas_product, class: 'label-required' %>
+      <%= f.select :kylas_product_id, grouped_options_for_select(kylas_products), { include_blank: 'Select Kylas Product'}, autocomplete: 'off', class: 'selectize', required: true, autofocus: true, disabled: !(policy([current_user_role_group, @lead]).editable_field?("project_id")) %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :first_name, class: 'label-required' %>
+    <%= f.text_field :first_name, class: 'form-control', id: 'new_lead_first_name', autofocus: true, required: true, disabled: !(policy([current_user_role_group, @lead]).editable_field?("first_name")) %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :last_name, class: 'label-required' %>
+    <%= f.text_field :last_name, class: 'form-control', id: 'new_lead_last_name', autofocus: true, required: true, disabled: !(policy([current_user_role_group, @lead]).editable_field?("last_name")) %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :email %>
+    <%= f.email_field :email, class: 'form-control', id: 'new_lead_email', disabled: !policy([current_user_role_group, @lead]).editable_field?("email") %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :phone, class: 'form-label' %>
+    <%= f.text_field :phone, class: 'form-control phone', id: 'new_lead_phone', required: 'required', disabled: !policy([current_user_role_group, @lead]).editable_field?("phone") %>
+  </div>
+
+  <div>
+      <%= f.submit "Save", class: 'btn btn-primary float-end w-auto border-primary' %>
+  </div>
+</div>
