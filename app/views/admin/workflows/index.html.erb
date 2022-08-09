@@ -1,0 +1,19 @@
+<section class="mb-5 mt-3">
+  <div class="px-4">
+    <div class="row">
+
+    <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="table-btn-set float-end pb-3 text-end">
+          <% if policy([current_user_role_group, Workflow.new]).new? %>
+                <%= link_to "Add #{global_labels['workflow']}", new_admin_workflow_path, class: 'border rounded px-3 py-2 px-3 border-primary white bg-primary rounded py-2 ms-2 btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add Workflow'} %>
+              <% end %>
+        </div>
+      </div>
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="box-card relative">
+          <%= render 'admin/workflows/index', {workflows: @workflows} %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

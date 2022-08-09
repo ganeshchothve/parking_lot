@@ -50,6 +50,7 @@ en:
     third_party_inventory: '3rd Party Inventory'
     variable_incentive_schemes: Variable Incentive Scheme
     lead: Lead
+    workflow: Workflow
   kylas_auth:
     successfully_installed: 'Kylas Application is successfully authenticated'
     facing_problem: 'There is problem to authenticate the Kylas Application'
@@ -1500,6 +1501,14 @@ en:
           last_7_weeks: 'Last 7 weeks'
           last_7_months: 'Last 7 months'
           custom_dates: 'Custom Dates'
+      workflow:
+        stage: Event
+        entity_type: Condition
+        actions: Actions
+      workflow/pipeline:
+        name: Pipeline
+        stage: Pipeline Stage
+        reason: Reason
 
   controller:
     videos:
@@ -1684,6 +1693,14 @@ en:
             pending: Submit for Approval
       reject:
         link_name: 'Reject Booking'
+
+    workflows:
+      index:
+        link_name: 'Workflows'
+      new:
+        link_name: 'Add Workflow'
+      edit:
+        link_name: 'Edit Workflow'
 
     invoices:
       index:

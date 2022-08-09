@@ -16,7 +16,7 @@ module Kylas
     end
 
     def update_pipeline_and_entity_value_in_kylas
-      wf = Workflow.where(stage: stage).first
+      wf = Workflow.where(stage: stage, booking_portal_client_id: user.booking_portal_client.id).first
       if wf.present?
         workflow_pipeline = wf.pipelines.where(pipeline_id: pipeline_id).first
         if workflow_pipeline.present?
@@ -26,7 +26,7 @@ module Kylas
           return if kylas_entity.blank?
           #create the request payload
           update_stage_params = {}
-          update_stage_params['reasonForClosing'] = workflow_pipeline.lead_closed_reason
+          update_stage_params['reasonForClosing'] = workflow_pipeline.lead_closed_reason.presence
           update_stage_params['products'] = kylas_entity['products']
           update_stage_params['actualValue'] = nil
           

@@ -13,7 +13,7 @@ module Kylas
       @user = user
       @entity_id = entity_id
       @entity_type = entity_type
-      @pipeline_stage_id = pipeline_stage_id
+      @pipeline_stage_id = pipeline_stage_id.to_s
       @parameters = parameters
     end
 
@@ -22,7 +22,6 @@ module Kylas
 
       response = update_pipeline_stage_kylas_entity
       response = update_pipeline_stage_kylas_entity(auth_using_kylas_api: true) unless response.code.eql?('200')
-
       case response
       when Net::HTTPOK, Net::HTTPSuccess
         { success: true }

@@ -16,7 +16,7 @@ module BookingDetailsHelper
     if %w(blocked hold).include?(project_unit.status)
       project_unit.booking_detail
     else
-      booking_detail = BookingDetail.new(project_unit: project_unit)
+      booking_detail = BookingDetail.new(project_unit: project_unit, creator_id: current_user.id)
       scheme = project_unit.scheme
       booking_detail.booking_detail_schemes.build(
         derived_from_scheme_id: scheme.id,
