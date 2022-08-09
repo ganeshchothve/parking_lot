@@ -34,10 +34,10 @@
       <% if workflow.pipelines.length > 1 %>
         <% workflow&.pipelines&.slice(1, workflow.pipelines.length)&.to_a&.each do |pipeline| %>
           <tr>
-            <td><%= pipeline.entity_type %></td>
-            <td><%= pipeline.pipeline_id %></td>
-            <td><%= pipeline.pipeline_stage_id %></td>
-            <td><%= pipeline.lead_closed_reason.presence || '-' %></td>
+            <td><%= pipeline&.entity_type %></td>
+            <td><%= pipeline&.pipeline_id %></td>
+            <td><%= pipeline&.pipeline_stage_id %></td>
+            <td><%= pipeline&.lead_closed_reason.presence || '-' %></td>
             <td class="action-btn">
               <div class="dropdown show text-right">
                 <a class="btn table-dropdown-btn black-clr" href="javascript:;" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v fill-theme" aria-hidden="true"></i></a>
