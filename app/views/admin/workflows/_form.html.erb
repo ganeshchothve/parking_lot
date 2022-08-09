@@ -107,9 +107,6 @@ $(document).ready(function(selector){
     var $pipeline_stage_select = $current_target.parents('.pipeline-form').find('select.pipeline_stage_select')
     var pipeline_stage_selectize = $pipeline_stage_select[0].selectize;
 
-    var $reasons_select = $current_target.parents('.pipeline-form').find('select.reasons_select')
-    var reasons_selectize = $reasons_select[0].selectize;
-
     $.ajax({
       url: $pipeline_stage_select.data("url"),
       data: {
@@ -124,9 +121,6 @@ $(document).ready(function(selector){
         pipeline_stage_selectize.setValue('');
         pipeline_stage_selectize.clearOptions();
 
-        reasons_selectize.setValue('');
-        reasons_selectize.clearOptions();
-
         var pipeline_stage_options = _.map(data['pipeline_stages'], function(d)
         {
           if(d.forecasting_type == 'CLOSED_UNQUALIFIED' || d.forecasting_type == 'CLOSED_LOST')
@@ -140,19 +134,11 @@ $(document).ready(function(selector){
         pipeline_stage_selectize.refreshOptions(false);
         pipeline_stage_selectize.settings.placeholder = 'Select'
         pipeline_stage_selectize.updatePlaceholder();
-        reasons_selectize.addOption(pipeline_stage_reasons);
-        reasons_selectize.refreshOptions(false);
 
         if(pipeline_stage_val)
         {
           if(!_.isEmpty(pipeline_stage_val.toString())){
             pipeline_stage_selectize.addItem(pipeline_stage_val, false);
-          }
-        }
-        if(reason_val)
-        {
-          if(!_.isEmpty(reason_val.toString())){
-            reasons_selectize.addItem(reason_val, false);
           }
         }
         
