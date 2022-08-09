@@ -72,7 +72,7 @@
                           <% end %>
                         <% end %>
                         <% if current_user.buyer? %>
-                          <%= link_to "I Agree", booking_buyer_booking_detail_path(@booking_detail), method: :patch, class: 'btn submit-payemnt-btn fn-12 fn-500', style:'margin-top:0px', onclick: alert %>
+                          <%= link_to "I Agree", buyer_booking_details_path, class: 'btn submit-payemnt-btn fn-12 fn-500', style:'margin-top:0px', onclick: alert %>
                         <% elsif @lead.unattached_blocking_receipt(@project_unit.blocking_amount).present? %>
                           <%= link_to "I Agree on behalf of #{@lead.name}", booking_admin_lead_booking_detail_path(@lead,@booking_detail), method: :patch, class: 'btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block', style:'margin-top:0px', onclick: alert %>
                         <% else %>

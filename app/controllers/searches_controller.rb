@@ -88,8 +88,7 @@ class SearchesController < ApplicationController
 
   def hold
     @booking_detail.event = 'hold' if @booking_detail.new_record?
-    @booking_detail.assign_attributes( permitted_attributes([ current_user_role_group, @booking_detail]))
-
+    @booking_detail.assign_attributes(permitted_attributes([current_user_role_group, @booking_detail]))
     # Has to be done after user is assigned and before status is updated
     authorize [current_user_role_group, @booking_detail]
     respond_to do |format|

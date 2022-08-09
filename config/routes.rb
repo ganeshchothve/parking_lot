@@ -483,6 +483,20 @@ Rails.application.routes.draw do
       post :generate_code, on: :collection
     end
 
+    resource :lead do
+      resources :searches, except: [:destroy], controller: 'searches' do
+        get :"3d", on: :collection, action: "three_d", as: "three_d"
+        post :hold, on: :member
+        get 'tower/details', on: :collection, action: :tower, as: :tower
+        get :checkout, on: :member
+        post :update_scheme, on: :member
+        post :make_available, on: :member
+        get '/gateway-payment/:receipt_id', to: 'searches#gateway_payment', on: :member
+        get :payment, on: :member
+        get ":step", on: :member, to: "searches#show", as: :step
+      end
+    end
+
   end
 
   namespace :api do

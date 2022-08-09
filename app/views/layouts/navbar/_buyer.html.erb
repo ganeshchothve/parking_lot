@@ -16,13 +16,13 @@
       </li>
     <% end %>
 
-    <% if false #policy([:buyer, BookingDetail]).index? %>
+    <% if policy([:buyer, BookingDetail]).index? %>
       <li class="nav-item">
         <%= active_link_to t('controller.booking_details.index.link_name'), buyer_booking_details_path, active: :inclusive, class: "nav-link" %>
       </li>
     <% end %>
 
-    <% if false #policy([:buyer, Receipt]).index? %>
+    <% if policy([:buyer, Receipt]).index? %>
       <li class="nav-item">
         <%= active_link_to t('controller.receipts.index.link_name'), buyer_receipts_path, active: :inclusive, class: "nav-link" %>
       </li>

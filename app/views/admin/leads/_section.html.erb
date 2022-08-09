@@ -3,7 +3,9 @@
   <div class="">
     <div class="row">
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12" id="<%= hex_id %>">
-        <%= render "admin/leads/index", leads: leads %>
+        <% if !current_user.buyer? %>
+          <%= render "admin/leads/index", leads: leads %>
+        <% end %>
       </div>
     </div>
   </div>
