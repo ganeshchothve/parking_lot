@@ -63,13 +63,11 @@ module BookingDetailStateMachine
         transitions from: :scheme_approved, to: :blocked
         transitions from: :swap_rejected, to: :blocked
         transitions from: :cancellation_rejected, to: :blocked
-        transitions from: :booked_confirmed, to: :booked_tentative
       end
 
       event :booked_tentative, after: %i[send_notification after_booked_tentative_event update_selldo!] do
         transitions from: :booked_tentative, to: :booked_tentative
         transitions from: :blocked, to: :booked_tentative, success: :sync_booking
-        transitions from: :booked_confirmed, to: :booked_tentative
       end
 
       event :booked_confirmed, after: %i[send_notification after_booked_confirmed_event update_selldo!] do

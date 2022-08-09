@@ -130,7 +130,6 @@ module ReceiptStateMachine
 
     def change_booking_detail_status
       if booking_detail
-        booking_detail.blocked! if self.status == 'failed'
         booking_detail.send("after_#{booking_detail.status}_event")
       end
     end
