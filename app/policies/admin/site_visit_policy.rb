@@ -13,7 +13,7 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
   end
 
   def new?
-    SiteVisit.where(lead_id: record.lead_id, status: 'scheduled').blank? && edit? && record.project.walk_ins_enabled?
+    # SiteVisit.where(lead_id: record.lead_id, status: 'scheduled').blank? && edit? && record.project.walk_ins_enabled?
     false
   end
 
