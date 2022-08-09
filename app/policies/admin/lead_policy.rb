@@ -117,7 +117,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def reassign_lead?
-    current_client.team_lead_dashboard_access_roles.include?(user.role)
+    current_client.team_lead_dashboard_access_roles.include?(user.role) || user.role?("team_lead")
   end
 
   def reassign_sales?
