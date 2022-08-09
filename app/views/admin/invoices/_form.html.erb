@@ -138,7 +138,6 @@ $(document).ready(function(){
     $('#invoice_form').find('.amount').html(Amura.formatMoney(amount));
     if (gstApplicable == 'true') {
       var gstPercVal = $('#' + invoiceType + '_gst_slab').val();
-      debugger
       if(!_.isEmpty(gstPercVal)){
         var gstPercentage = parseFloat(gstPercVal);
         _gstAmount = amount * (gstPercentage/100);

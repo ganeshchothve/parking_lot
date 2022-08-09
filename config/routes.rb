@@ -88,7 +88,10 @@ Rails.application.routes.draw do
     resources :checklists
 
     resources :bulk_upload_reports, except: [:edit, :update, :destroy] do
-      get :show_errors, on: :member
+      member do
+        get :show_errors
+        get :upload_error_exports
+      end
     end
 
     resources :banner_assets

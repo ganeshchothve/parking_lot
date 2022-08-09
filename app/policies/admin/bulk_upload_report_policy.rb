@@ -11,6 +11,10 @@ class Admin::BulkUploadReportPolicy < BulkUploadReportPolicy
     index?
   end
 
+  def upload_error_exports?
+    index?
+  end
+
   def new?
     index?
   end

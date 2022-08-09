@@ -1,5 +1,5 @@
 class Admin::BulkUploadReportsController < AdminController
-  before_action :set_bulk_upload_report, only: [:show, :show_errors]
+  before_action :set_bulk_upload_report, only: [:show, :show_errors, :upload_error_exports]
   before_action :authorize_resource
 
   def index
@@ -38,6 +38,16 @@ class Admin::BulkUploadReportsController < AdminController
         format.html { redirect_to admin_bulk_upload_reports_path, alert: @bulk_upload_report.errors.full_messages.uniq }
       end
     end
+  end
+
+  def upload_error_exports
+    if Rails.env.staging? || Rails.env.production?
+      UploadErrorsExportWorker.perform_async(current_user.id.to_s, @bulk_upload_report.id.to_s)
+    else
+      UploadErrorsExportWorker.new.perform(current_user.id.to_s, @bulk_upload_report.id.to_s)
+    end
+    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    redirect_to admin_bulk_upload_report_path
   end
 
   private

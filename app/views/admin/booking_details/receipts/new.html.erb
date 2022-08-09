@@ -17,8 +17,16 @@
 <%= javascript_tag do %>
   $(document).ready(function(){
     var amount_hash = <%= raw @amount_hash.to_json %>;
-    $('#receipt_payment_type').change(function(){
-      $('#receipt_total_amount').val(amount_hash[$(this).val()])
+    var receipt = <%= raw @receipt.to_json %>
+    $('#receipt_payment_type').on('change', function(e){
+      var payment_type = $(e.currentTarget).val();
+      if(payment_type=='agreement')
+      {
+        $('#receipt_total_amount').val(receipt['total_amount'])
+      }else
+      {
+        $('#receipt_total_amount').val('')
+      }
     });
     $('#receipt_form [name="agree"]').change(function(){
       if($(this).is(":checked")){

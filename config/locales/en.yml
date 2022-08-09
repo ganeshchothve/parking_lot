@@ -133,7 +133,7 @@ en:
         other: Bulk Upload Reports
       upload_error:
         one: Upload Errors
-        other: Uplaod Errors
+        other: Upload Errors
       booking_detail:
         one: Booking
         other: Bookings
