@@ -19,10 +19,10 @@
           <td rowspan="<%= workflow.pipelines.count %>" data-title=<%= t('mongoid.attributes.workflow.stage') %>>
             <%= workflow.stage %>
           </td>
-          <td><%= workflow.pipelines.first.entity_type %></td>
-          <td><%= workflow.pipelines.first.pipeline_id %></td>
-          <td><%= workflow.pipelines.first.pipeline_stage_id %></td>
-          <td><%= workflow.pipelines.first.lead_closed_reason.presence || '-' %></td>
+          <td><%= workflow.pipelines&.first&.entity_type %></td>
+          <td><%= workflow.pipelines&.first&.pipeline_id %></td>
+          <td><%= workflow.pipelines&.first&.pipeline_stage_id %></td>
+          <td><%= workflow.pipelines&.first&.lead_closed_reason.presence || '-' %></td>
           <td class="action-btn">
             <div class="dropdown show text-right">
             <a class="btn table-dropdown-btn black-clr" href="javascript:;" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v fill-theme" aria-hidden="true"></i></a>
