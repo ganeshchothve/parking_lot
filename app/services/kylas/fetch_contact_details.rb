@@ -58,13 +58,16 @@ module Kylas
           contact = contact.with_indifferent_access
           contacts_data << {
             id: contact[:id],
-            emails: contact[:emails],
-            phoneNumbers: contact[:phoneNumbers],
+            emails: (contact[:emails] || []),
+            phoneNumbers: (contact[:phoneNumbers] || []),
             firstName: contact[:firstName],
             lastName: contact[:lastName]
           }
         end
-        { success: true, data: contacts_data.first }
+        # single contact response in hash
+        is_single_contact = (contact_ids.count == 1)
+        contacts_data = ((is_single_contact ? contacts_data.first : contacts_data) rescue nil)
+        { success: true, data: contacts_data }
       when Net::HTTPBadRequest
         Rails.logger.error 'FetchContactDetails - 400'
         { success: false, error: 'Invalid Data!' }
