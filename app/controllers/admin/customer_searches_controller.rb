@@ -50,7 +50,7 @@ class Admin::CustomerSearchesController < AdminController
             sitevisit = customer.site_visits.last
             if sitevisit.status != "conducted"
               sitevisit.status = "conducted"
-              sitevisit.conducted_on = params[:sitevisit_datetime]
+              sitevisit.conducted_on = params[:sitevisit_datetime] || Time.current
               sitevisit.conducted_by = current_user.role
               sitevisit.save
             end 
