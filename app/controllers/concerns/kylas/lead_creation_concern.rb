@@ -63,6 +63,8 @@ module Kylas
         @deal_associated_contacts = @deal_data[:associatedContacts].collect{|pd| [pd[:name], pd[:id]]} rescue []
         contact_ids = @deal_data[:associatedContacts].pluck(:id) rescue []
         @contact_details = Kylas::FetchContactDetails.new(current_user, contact_ids).call rescue {}
+        @kylas_emails = @contact_details.dig(:data).pluck(:emails).flatten rescue []
+        @kylas_phones = @contact_details.dig(:data).pluck(:phoneNumbers).flatten rescue []
       else
         redirect_to root_path, alert: 'Deal not found'
       end
