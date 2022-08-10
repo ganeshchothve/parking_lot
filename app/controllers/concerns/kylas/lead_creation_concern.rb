@@ -78,14 +78,8 @@ module Kylas
       kylas_product_id = params.dig(:lead, :kylas_product_id)
       kylas_deal_id = params.dig(:lead, :kylas_deal_id)
       @project = Project.where(kylas_product_id: kylas_product_id).first
-      unless @project.present?
-        kylas_products = @kylas_products.to_h.invert.with_indifferent_access
-        project_name = kylas_products[kylas_product_id.to_i]
-        @project = Project.new
-        @project.assign_attributes(name: project_name, booking_portal_client: current_user.booking_portal_client, creator: current_user, kylas_product_id: params.dig(:lead, :kylas_product_id))
-        unless @project.save
-          redirect_to request.referer, alert: (@project.errors.full_messages.uniq.presence || 'Something went wrong')
-        end
+      if @project.blank?
+        redirect_to root_path, alert: 'Project not found'
       end
       sync_product_to_kylas(current_user, kylas_product_id, kylas_deal_id, @deal_data)
       @project
