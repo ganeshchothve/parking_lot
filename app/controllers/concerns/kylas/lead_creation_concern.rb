@@ -78,11 +78,11 @@ module Kylas
       kylas_product_id = params.dig(:lead, :kylas_product_id)
       kylas_deal_id = params.dig(:lead, :kylas_deal_id)
       @project = Project.where(kylas_product_id: kylas_product_id).first
-      if @project.blank?
+      if @project.present?
+        sync_product_to_kylas(current_user, kylas_product_id, kylas_deal_id, @deal_data)
+      else
         redirect_to root_path, alert: 'Project not found'
       end
-      sync_product_to_kylas(current_user, kylas_product_id, kylas_deal_id, @deal_data)
-      @project
     end
 
     def set_user
