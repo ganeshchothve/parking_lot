@@ -32,10 +32,10 @@
             <%= booking_detail.booked_on ? I18n.l(booking_detail.booked_on) : '-' %>
             <span><%= t('mongoid.attributes.booking_detail.booked_on') %></span>
           </p>
-          <p>
-            <%= booking_detail.tentative_agreement_date ? I18n.l(booking_detail.tentative_agreement_date) : '-' %>
-            <span><%= t('mongoid.attributes.booking_detail.tentative_agreement_date') %></span>
-          </p>
+          <!-- <p>
+            <%#= booking_detail.tentative_agreement_date ? I18n.l(booking_detail.tentative_agreement_date) : '-' %>
+            <span><%#= t('mongoid.attributes.booking_detail.tentative_agreement_date') %></span>
+          </p> -->
           <p>
             <%= booking_detail.agreement_date ? I18n.l(booking_detail.agreement_date) : '-' %>
             <span><%= t('mongoid.attributes.booking_detail.agreement_date') %></span>

@@ -65,10 +65,8 @@ module UserKycsConcern
   private
 
   def set_lead
-    if params[:lead_id].present?
-      @lead = (params[:lead_id].present? ? Lead.find(params[:lead_id]) : current_user.selected_lead)
-      redirect_to dashboard_path, alert: t('controller.application.set_current_client') unless @lead
-    end
+    @lead = (params[:lead_id].present? ? Lead.find(params[:lead_id]) : current_user.selected_lead)
+    redirect_to dashboard_path, alert: t('controller.application.set_current_client') unless @lead
   end
 
   def set_user_kyc
