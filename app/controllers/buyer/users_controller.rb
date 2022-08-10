@@ -14,7 +14,10 @@ class Buyer::UsersController < BuyerController
   # Update Password
   # update password defined in UsersConcern
   # GET /buyer/users/:id/update_password
-
+  def edit
+    render layout: false
+  end
+  
   def update
     @user.assign_attributes(permitted_attributes([:buyer, @user]))
     respond_to do |format|
