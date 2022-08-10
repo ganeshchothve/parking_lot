@@ -20,7 +20,11 @@ class Admin::BookingDetailsController < AdminController
 
   def new
     @search = Search.new(booking_portal_client: current_user.booking_portal_client)
-    @booking_detail = BookingDetail.new(search: @search, booking_portal_client_id: current_user.booking_portal_client.id)
+    @booking_detail = BookingDetail.new(
+                                    search: @search,
+                                    booking_portal_client_id: current_user.booking_portal_client.id,
+                                    creator_id: current_user.id
+                                    )
     @project_towers = search_for_towers
     @project_towers.map!{|f| [f[:project_tower_name], f[:project_tower_id]]}
     # authorize [:admin, @booking_detail]
@@ -41,8 +45,18 @@ class Admin::BookingDetailsController < AdminController
 
   def create
     _project_unit = ProjectUnit.find(params[:booking_detail][:project_unit_id])
-    _search = Search.create(user_id: params[:booking_detail][:user_id], lead_id: params[:booking_detail][:lead_id], project_tower_id: params[:project_tower_id] || _project_unit.project_tower.id, project_unit_id: params[:booking_detail][:project_unit_id])
-    @booking_detail = BookingDetail.new(search: _search, booking_portal_client_id: current_user.booking_portal_client.id)
+    _search = Search.create(
+                    user_id: params[:booking_detail][:user_id],
+                    lead_id: params[:booking_detail][:lead_id],
+                    project_tower_id: params[:project_tower_id] || _project_unit.project_tower.id,
+                    project_unit_id: params[:booking_detail][:project_unit_id],
+                    booking_portal_client_id: current_user.booking_portal_client.id
+                    )
+    @booking_detail = BookingDetail.new(
+                                    search: _search,
+                                    booking_portal_client_id: current_user.booking_portal_client.id,
+                                    creator_id: current_user.id
+                                    )
     @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
     @booking_detail.assign_attributes(
       base_rate: _project_unit.base_rate,

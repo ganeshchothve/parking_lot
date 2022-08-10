@@ -99,6 +99,9 @@ Rails.application.routes.draw do
     end
 
     resources :banner_assets
+    resources :workflows, except: [:destroy] do
+      get 'pipeline_stages', to: 'workflows#pipeline_stages', on: :collection
+    end
 
     resources :booking_details, only: [:index, :show, :new, :create, :edit, :update] do
       member do

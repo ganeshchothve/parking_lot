@@ -1,0 +1,196 @@
+<%= nested_form_for([:admin, @workflow], local: true, html: { class: 'form-horizontal validate-form', id: 'workflow_form' }) do |f| %>
+    
+  <div class="row">
+    <div class="col-md-12">
+      <div class='m-3'>
+        <%= f.label :stage, class: 'label-required' %>
+        <%= f.select :stage, options_for_select(Workflow::WORKFLOW_BOOKING_STAGES.collect {|x| [x.titleize, x]}, @workflow.stage), {prompt: 'Select'}, class: 'selectize stage_type' %>
+      </div>
+    </div>
+  </div>
+  <div class="pipelines m-3">
+    <div class="row">
+      <div class="col-md-12">
+        <div class='float-end'>
+          <%= f.link_to_add "Add Pipeline", :pipelines, :data => { :target => ".pipelines" }, class: 'btn btn-secondary' %>
+        </div>
+      </div>
+    </div>
+    <%= f.fields_for :pipelines do |p| %>
+      <div class="row pipeline-form" data-pipeline-id = "<%= p.object.pipeline_id %>">
+        <div class="col-md-3">
+          <%= p.label :entity_type, class: 'label-required' %>
+          <%= p.select :entity_type, options_for_select([["Update the Deal pipeline stage ", "deals"]], p.object.entity_type), {prompt: 'Select'}, class: 'selectize entity_type_select' %>
+        </div>
+        <div class="col-md-3">
+          <%= p.label :pipeline_id, class: 'label-required' %>
+          <%= p.select :pipeline_id, options_for_select([]), {prompt: 'Select Entity Type'}, class: 'selectize pipeline_select', required: true %>
+        </div>
+        <div class="col-md-3">
+          <%= p.label :pipeline_stage_id, class: 'label-required' %>
+          <%= p.select :pipeline_stage_id, options_for_select([]), {prompt: 'Select Pipeline'}, class: 'selectize pipeline_stage_select', data: { url: pipeline_stages_admin_workflows_path }, required: true %>
+        </div>
+        <div class="col-md-3 reasons_field hidden">
+          <%= p.label :lead_closed_reason, class: 'label-required' %>
+          <%= p.select :lead_closed_reason, options_for_select([]), {prompt: 'Select Reason'}, class: 'selectize reasons_select', data: { url: pipeline_stages_admin_workflows_path } %>
+        </div>
+        <div class="col-md-3">
+          <span class='pl-2'>
+            <%= p.link_to_remove icon("far", "times-circle") %>
+          </span>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="m-3">
+    <%= f.submit "Save", class: "btn btn-primary" %>
+  </div>
+  
+
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(selector){
+  
+  FormInitializer.init($("#workflow_form"));
+
+  var pipeline_stage_reasons = [];
+  var workflow = JSON.parse(`<%= raw @workflow.to_json %>`);
+  var pipelines = <%= raw @pipelines.to_json %>;
+  var editPage = window.location.pathname.includes(`workflows/${workflow['_id']}/edit`)
+
+  var reason_val;
+
+  $('#workflow_form').on('change', 'select.pipeline_stage_select' , function(e){
+    var $current_target = $(e.currentTarget);
+    var pipeline_stage_val =  $current_target.val();
+
+    var $reasons_select = $current_target.parents('.pipeline-form').find('select.reasons_select')
+    var reasons_selectize = $reasons_select[0].selectize;
+
+    var flag = false;
+    for(let i = 0; i < pipeline_stage_reasons.length; i++)
+    {
+      if (pipeline_stage_reasons[i]['id'] == pipeline_stage_val)
+      {
+        reasons_selectize.setValue('');
+        reasons_selectize.clearOptions();
+        var reasons_options = _.map(pipeline_stage_reasons[i]['reasons'], function(d){
+          return { value: d, text: d } 
+        });
+        reasons_selectize.addOption(reasons_options);
+        reasons_selectize.refreshOptions(false);
+        flag = true;
+        break;
+      }
+    }
+
+    if(flag)
+    {
+      $current_target.parents('.pipeline-form').find('div.reasons_field').show()
+    }
+    else
+    {
+      $current_target.parents('.pipeline-form').find('div.reasons_field').hide()
+    }
+
+    if(reason_val)
+    {
+      if(!_.isEmpty(reason_val.toString())){
+        reasons_selectize.addItem(reason_val, true);
+      }
+    }
+  });
+
+  $('#workflow_form').on('change', 'select.pipeline_select' , function(e){
+    var $current_target = $(e.currentTarget);
+    var pipeline_id =  $current_target.val();
+    var $pipeline_stage_select = $current_target.parents('.pipeline-form').find('select.pipeline_stage_select')
+    var pipeline_stage_selectize = $pipeline_stage_select[0].selectize;
+
+    $.ajax({
+      url: $pipeline_stage_select.data("url"),
+      data: {
+        pipeline_id: pipeline_id,
+        workflow_id: workflow._id
+      },
+      type: "get",
+      dataType: "json",
+      success: function(data){
+        pipeline_stage_val = data['selected_stage']
+        reason_val = data['reason']
+        pipeline_stage_selectize.setValue('');
+        pipeline_stage_selectize.clearOptions();
+
+        var pipeline_stage_options = _.map(data['pipeline_stages'], function(d)
+        {
+          if(d.forecasting_type == 'CLOSED_UNQUALIFIED' || d.forecasting_type == 'CLOSED_LOST')
+          {
+            temp_hash = { id: d.pipeline_stage_id, reasons: d.reasons }
+            pipeline_stage_reasons.push(temp_hash);
+          } 
+          return { value: d.pipeline_stage_id, text: d.pipeline_stage_name } 
+        });
+        pipeline_stage_selectize.addOption(pipeline_stage_options);
+        pipeline_stage_selectize.refreshOptions(false);
+        pipeline_stage_selectize.settings.placeholder = 'Select'
+        pipeline_stage_selectize.updatePlaceholder();
+
+        if(pipeline_stage_val)
+        {
+          if(!_.isEmpty(pipeline_stage_val.toString())){
+            pipeline_stage_selectize.addItem(pipeline_stage_val, false);
+          }
+        }
+        
+      }
+    });
+
+  });
+
+  $('#workflow_form').on('change', 'select.entity_type_select', function(e){
+    var $current_target = $(e.currentTarget);
+    var entity_type = $current_target.val();
+    if (entity_type == 'deals')
+    {
+      var pipeline_id = $current_target.parents('.pipeline-form').data('pipeline-id');
+      var pipeline = _.find(pipelines, function(pipeline){
+        return pipeline.pipeline_id == pipeline_id;
+      });
+      if (pipeline != undefined)
+      {
+        var pipeline_val = pipeline.pipeline_id;
+        var pipeline_val = pipeline_val.toString();
+      }
+      var pipeline_select = $current_target.parents('.pipeline-form').find('select.pipeline_select')[0];
+      var pipeline_selectize = pipeline_select.selectize;
+      pipeline_selectize.setValue('');
+      pipeline_selectize.clearOptions();
+
+      var all_pipeline_selects = $('.pipeline-form').find('select.pipeline_select');
+      var selected_pipeline_ids = [];
+      for(let i = 0; i < all_pipeline_selects.length-1; i++)
+      {
+        selected_pipeline_ids.push(all_pipeline_selects[i].selectize.getValue());
+      }
+      var pipeline_options = _.map(pipelines, function(p){
+        if((selected_pipeline_ids.includes(p.pipeline_id.toString())) == false)
+        {
+          return { value: p.pipeline_id, text: p.pipeline_name } 
+        }
+      });
+      pipeline_options = pipeline_options.filter(function( element ) {
+         return element !== undefined;
+      });
+      pipeline_selectize.addOption(pipeline_options);
+      pipeline_selectize.refreshOptions(false);
+      pipeline_selectize.settings.placeholder = 'Select'
+      pipeline_selectize.updatePlaceholder();
+      if(!_.isEmpty(pipeline_val)){
+        pipeline_selectize.addItem(pipeline_val, false);
+      }
+    }
+  });
+
+  $('select.entity_type_select').trigger('change');
+});
+<% end %>
