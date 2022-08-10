@@ -11,7 +11,7 @@
   <div class="sales-team-box curnt-status <%= sales.sales_status %> <%= rejected_border %>">
     <div class="card-header pt-3">
       <div class="d-flex justify-content-start align-items-center">
-        <div class="sales-name-prefix bg-primary rounded-circle p-2 d-inline-block white">
+        <div class="sales-name-prefix bg-primary rounded-circle pe-2 ps-2 d-inline-block white">
           <%= "#{sales.first_name[0]}#{sales.last_name[0]}" %>
         </div>
         <div class="sales-name mx-3" title="<%= sales.name.try(:titleize) %>">
