@@ -95,7 +95,7 @@ class SiteVisitObserver < Mongoid::Observer
     if site_visit.status_changed? && site_visit.status == 'conducted'
       crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
       if crm_base.present?
-        api, api_log = site_visit.push_in_crm(crm_base)
+        api, api_log = site_visit.reload.push_in_crm(crm_base)
       end
     end
   end

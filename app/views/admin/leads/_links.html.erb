@@ -23,7 +23,6 @@
 <% if policy([:admin, Receipt.new(user: lead.user, lead: lead)]).new? %>
   <%= link_to t('controller.receipts.new.link_name'), new_admin_lead_receipt_path(lead), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
-
 <% if policy([:admin, lead]).move_to_next_state? %>
   <%# if lead.may_queued? %>
     <%#= link_to 'Move to Sales Queue', move_to_next_state_admin_lead_path(lead, status: 'queued', format: :json), method: 'patch', remote: true, data: { disable_with: 'Queueing...' }, class: "dropdown-item queued move-to-next-state" %>

@@ -27,14 +27,14 @@
                       <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= lead.masked_phone(current_user) || '' %>
                     </p>
                     <% end %>
-                    <% if current_user.role?(:sales) && is_assigned_lead && lead.accepted_by_sales.nil? %>
-                      <p class="small d-inline-block mt-1 ms-2 fn-16 mb-0">
-                        <%= link_to 'Accept', accept_lead_admin_lead_path(lead, accepted_by_sales: true, event: 'accepted', format: :json), method: 'patch', remote: true, class: "accept move-to-next-state btn btn-success text-white" %>
-                      </p>
-                      <p class="small d-inline-block mt-1 ms-2 fn-16 mb-0">
-                        <%= link_to 'Reject', accept_lead_admin_lead_path(lead, accepted_by_sales: false, event: 'rejected', format: :json), method: 'patch', remote: true, data: { confirm: 'Are you sure?', disable_with: "Please wait..." }, class: "reject move-to-next-state btn apply-btn btn-primary border-primary" %>
-                      </p>
-                    <% end %>
+                    <%# if false #current_user.role?(:sales) && is_assigned_lead && lead.accepted_by_sales.nil? %>
+                      <!-- <p class="small d-inline-block mt-1 ms-2 fn-16 mb-0"> -->
+                        <%#= link_to 'Accept', accept_lead_admin_lead_path(lead, accepted_by_sales: true, event: 'accepted', format: :json), method: 'patch', remote: true, class: "accept move-to-next-state btn btn-success text-white" %>
+                      <!-- </p> -->
+                      <!-- <p class="small d-inline-block mt-1 ms-2 fn-16 mb-0"> -->
+                        <%#= link_to 'Reject', accept_lead_admin_lead_path(lead, accepted_by_sales: false, event: 'rejected', format: :json), method: 'patch', remote: true, data: { confirm: 'Are you sure?', disable_with: "Please wait..." }, class: "reject move-to-next-state btn apply-btn btn-primary border-primary" %>
+                      <!-- </p> -->
+                    <%# end %>
                     <% if lead.manager_id? && current_user.role.in?(%w(admin superadmin)) %>
                     <p class="fn-14 mt-1 mb-0">
                       <%= "#{t('mongoid.attributes.lead.manager_id')} : #{link_to lead.manager_name, [current_user_role_group, lead.manager], class: 'theme-txt-color'}".html_safe %>

@@ -2,7 +2,7 @@ class SchemePolicy < ApplicationPolicy
   # def index? def create? def permitted_attributes from ApplicationPolicy
 
   def new?
-    index?
+    index? && user.role != "sales" 
   end
 
   def edit?

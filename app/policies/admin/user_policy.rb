@@ -102,7 +102,8 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def search_by?
-    user.role.in?(%w(team_lead))
+    # user.role.in?(%w(team_lead))
+    user.role.in?(%w(sales gre team_lead))
   end
 
   def move_to_next_state?
