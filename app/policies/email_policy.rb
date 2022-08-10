@@ -10,7 +10,7 @@ class EmailPolicy < ApplicationPolicy
     # end
 
     def resolve
-      if %w[superadmin admin user].include?(user.role)
+      if %w[superadmin admin].include?(user.role) + User::BUYER_ROLES
         scope.all
       # elsif %w[cp channel_partner cp_admin].include?(user.role)
       #   scope.in(recipient_ids: Scope.find_child_ids(user))

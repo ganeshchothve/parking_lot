@@ -10,7 +10,7 @@ class SmsPolicy < ApplicationPolicy
     # end
 
     def resolve
-      if %w[superadmin admin user].include?(user.role)
+      if %w[superadmin admin].include?(user.role) + User::BUYER_ROLES
         scope.all
       # elsif %w[cp_admin cp channel_partner].include?(user.role)
       #   scope.in(recipient_id: Scope.find_child_ids(user))
