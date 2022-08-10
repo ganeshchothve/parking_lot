@@ -4,7 +4,7 @@
       <div class = 'fn-18 theme-txt-color mb-2'>
         <div class="card-body">
           <%= form_for(@lead, url: create_kylas_associated_lead_admin_leads_path, local: true, html: {class: 'validate-form mr-3 ml-3', id: 'kylas_lead_form'}) do |f| %>
-            <% if @deal_associated_contacts.present? %>
+            <% if @contact_details.dig(:data, :emails).present? || @contact_details.dig(:data, :phoneNumbers).present? %>
               <%= render 'kylas_associated_lead_form', f: f %>
             <% else %>
               <%= render 'form_new_lead_info', f: f %>

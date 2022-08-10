@@ -5,6 +5,7 @@
 %>
 
 <%= f.hidden_field :kylas_deal_id, value: @lead.kylas_deal_id %>
+<%= f.hidden_field :sync_to_kylas, value: 1 %>
 <div class="mb-3">
     <%= f.label :kylas_product, class: 'label-required' %>
     <%= f.select :kylas_product_id, grouped_options_for_select(kylas_products), { include_blank: 'Select Kylas Product'}, autocomplete: 'off', class: 'selectize', required: true, disabled: !(policy([current_user_role_group, @lead]).editable_field?("project_id")) %>

@@ -16,7 +16,7 @@ class Lead
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   DOCUMENT_TYPES = []
 
-  attr_accessor :payment_link, :kylas_contact_id, :kylas_product_id
+  attr_accessor :payment_link, :kylas_contact_id, :kylas_product_id, :sync_to_kylas
 
   field :first_name, type: String, default: ''
   field :last_name, type: String, default: ''

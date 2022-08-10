@@ -1,24 +1,32 @@
 module Kylas
   # Service for fetch products
   class FetchProducts
-    attr_reader :user
+    attr_reader :user, :product_ids
 
-    def initialize(user)
+    def initialize(user, product_ids = nil)
       @user = user
+      @product_ids = product_ids
     end
 
-    def call
+    def call(detail_response = false)
       products_json_response = fetch_products_request
 
       kylas_users_list = []
       if products_json_response && products_json_response['totalPages']
-        kylas_users_list += parse_kylas_product_data(products_json_response)
+        if detail_response
+          kylas_users_list += parse_kylas_product_data_detail_response(products_json_response)
+        else
+          kylas_users_list += parse_kylas_product_data(products_json_response)
+        end
         pages = products_json_response['totalPages']
         count = 1
-
         while count < pages
           json_resp = fetch_products_request({ page: count })
-          kylas_users_list += parse_kylas_product_data(json_resp)
+          if detail_response
+            kylas_users_list += parse_kylas_product_data_detail_response(json_resp)
+          else
+            kylas_users_list += parse_kylas_product_data(json_resp)
+          end
           count += 1
         end
       end
@@ -52,6 +60,12 @@ module Kylas
     def parse_kylas_product_data(json_resp)
       json_resp['content']&.map do |content|
         ["#{content['name']}", content['id']]
+      end
+    end
+
+    def parse_kylas_product_data_detail_response(json_resp)
+      json_resp['content']&.map do |content|
+        content
       end
     end
   end
