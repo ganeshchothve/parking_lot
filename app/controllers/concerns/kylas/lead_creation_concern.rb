@@ -58,9 +58,11 @@ module Kylas
       if fetch_deal_details[:success]
         @deal_data = fetch_deal_details[:data].with_indifferent_access
         @deal_associated_products = @deal_data[:products].collect{|pd| [pd[:name], pd[:id]]} rescue []
+        kylas_product_ids = current_user.booking_portal_client.projects.pluck(:kylas_product_id).compact.map(&:to_i)
+        @deal_associated_products = @deal_associated_products.select{|kp| kylas_product_ids.include?(kp[1]) } rescue []
         @deal_associated_contacts = @deal_data[:associatedContacts].collect{|pd| [pd[:name], pd[:id]]} rescue []
-        contact_ids = @deal_data[:associatedContacts].pluck(:id)
-        @contact_details = Kylas::FetchContactDetails.new(current_user, [contact_ids]).call rescue {}
+        contact_ids = @deal_data[:associatedContacts].pluck(:id) rescue []
+        @contact_details = Kylas::FetchContactDetails.new(current_user, contact_ids).call rescue {}
       else
         redirect_to root_path, alert: 'Deal not found'
       end
@@ -68,6 +70,8 @@ module Kylas
 
     def fetch_kylas_products
       @kylas_products = Kylas::FetchProducts.new(current_user).call
+      kylas_product_ids = current_user.booking_portal_client.projects.pluck(:kylas_product_id).compact.map(&:to_i) rescue []
+      @kylas_products = @kylas_products.select{|kp| kylas_product_ids.include?(kp[1]) } rescue []
     end
 
     def set_project
@@ -79,12 +83,11 @@ module Kylas
         project_name = kylas_products[kylas_product_id.to_i]
         @project = Project.new
         @project.assign_attributes(name: project_name, booking_portal_client: current_user.booking_portal_client, creator: current_user, kylas_product_id: params.dig(:lead, :kylas_product_id))
-        if @project.save
-          sync_product_to_kylas(current_user, kylas_product_id, kylas_deal_id, @deal_data)
-        else
+        unless @project.save
           redirect_to request.referer, alert: (@project.errors.full_messages.uniq.presence || 'Something went wrong')
         end
       end
+      sync_product_to_kylas(current_user, kylas_product_id, kylas_deal_id, @deal_data)
       @project
     end
 

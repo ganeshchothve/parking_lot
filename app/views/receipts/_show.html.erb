@@ -14,14 +14,14 @@
     <div class="row pd-box">
       <div class="col-md-6">
         <div class="logo-wrapper col-lg-3">
-          <%= image_tag current_client.logo.url , class: :'wd-100', alt: :logo  if current_client.logo.file %>
+          <%= image_tag @receipt.booking_portal_client.logo.url , class: :'wd-100', alt: :logo  if @receipt.booking_portal_client.logo.file %>
         </div>
       </div>
     </div>
   </div>
 </div>
 <div class="mt-3"></div>
-<%# render 'sync_logs/sync', { record: @receipt } if current_client.external_api_integration? && policy([current_user_role_group, SyncLog.new]).index? %>
+<%# render 'sync_logs/sync', { record: @receipt } if @receipt.booking_portal_client.external_api_integration? && policy([current_user_role_group, SyncLog.new]).index? %>
 <div class="mt-3"></div>
 <div class="row">
   <% if @receipt.primary_user_kyc %>
@@ -54,18 +54,18 @@
         <div class="pd-box">
           <div class="mb-3">
             <label class="small text-muted">Paid To:</label>
-            <div class="theme-txt-color"><%= current_client.registration_name %></div>
+            <div class="theme-txt-color"><%= @receipt.booking_portal_client.registration_name %></div>
           </div>
-          <% if current_client.cin_number.present? %>
+          <% if @receipt.booking_portal_client.cin_number.present? %>
           <div class="mb-3">
             <label class="small text-muted">CIN Number:</label>
-            <div class="theme-txt-color"><%= current_client.cin_number %></div>
+            <div class="theme-txt-color"><%= @receipt.booking_portal_client.cin_number %></div>
           </div>
           <% end %>
-          <% if current_client.address.present? %>
+          <% if @receipt.booking_portal_client.address.present? %>
           <div class="mb-3">
             <label class="small text-muted">Address: </label>
-            <div class="theme-txt-color"><%= current_client.address.to_sentence %></div>
+            <div class="theme-txt-color"><%= @receipt.booking_portal_client.address.to_sentence %></div>
           </div>
           <% end %>
         </div>
@@ -75,13 +75,13 @@
 </div>
 <div class="mt-3"></div>
 <div class="payment-receipt-wrapper">
-  <%#= current_client.templates.where(_type: "Template::ReceiptTemplate", project_id: @receipt.project_id).first.parsed_content(@receipt) %>
+  <%= @receipt.booking_portal_client.templates.where(_type: "Template::ReceiptTemplate", project_id: @receipt.project_id).first.parsed_content(@receipt) %>
 </div>
 <div class="mt-3 d-block wd-100 float-start"></div>
 <div class="card">
   <div class="card-body">
     <div class="float-right text-right">
-      <strong class="font-medium mb-2 d-block">For <%= current_client.registration_name %></strong>
+      <strong class="font-medium mb-2 d-block">For <%= @receipt.booking_portal_client.registration_name %></strong>
       Authorized Signatory
     </div>
   </div>

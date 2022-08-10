@@ -42,6 +42,7 @@ module Kylas
       when Net::HTTPOK, Net::HTTPSuccess
         api_log.assign_attributes(request_url: url, request: [payload], response: [(JSON.parse(response.body) rescue {})], resource: user, response_type: "Hash", booking_portal_client: user.booking_portal_client)
         api_log.save
+        dump_kylas_contact_id
         response = JSON.parse(response.body)
         { success: true, data: response }
       when Net::HTTPBadRequest
@@ -85,6 +86,16 @@ module Kylas
       rescue StandardError => e
         Rails.logger.error { e.message.to_s }
         { }
+      end
+    end
+
+    # save kylas contact id to user
+    def dump_kylas_contact_id
+      if params[:contact].present?
+        lead = Lead.where(kylas_deal_id: entity_id).first
+        user = lead.user
+        contact = params[:contact].with_indifferent_access
+        user.update(kylas_contact_id: contact[:id])
       end
     end
 
