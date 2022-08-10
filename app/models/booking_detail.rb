@@ -513,6 +513,16 @@ class BookingDetail
         end
       end
 
+      if params[:entityId].present? && params[:entityType] == 'deals' && user.role.in?(%w(admin sales))
+        lead = Lead.where(kylas_deal_id: params[:entityId]).first
+        custom_scope = { booking_portal_client_id: user.booking_portal_client_id, lead_id: lead.try(:id)}
+      end
+
+      if params[:entityId].present? && params[:entityType] == 'contacts' && user.role.in?(%w(admin sales))
+        kylas_contact = User.in(role: User::BUYER_ROLES).where(kylas_contact_id: params[:entityId]).first
+        custom_scope = { booking_portal_client_id: user.booking_portal_client_id, user_id: kylas_contact.try(:id)}
+      end
+
       custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
       custom_scope = { user_id: user.id, lead_id: user.selected_lead_id } if user.buyer?
 
