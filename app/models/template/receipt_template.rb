@@ -55,10 +55,10 @@ class Template::ReceiptTemplate < Template
           </tbody>
          </table>
          <div class="text-muted small px-3 pb-3">Please note that cheque / RTGS / NEFT payments are subject to clearance</div>
-         <% if current_client.disclaimer.present? %>
+         <% if self.booking_portal_client.try(:disclaimer).present? %>
           <div class="text-muted small px-3 pb-3">
             <strong>Disclaimer:</strong><br/>
-            <%= current_client.disclaimer %>
+            <%= self.booking_portal_client.disclaimer %>
           </div>
          <% end %>
        </div>

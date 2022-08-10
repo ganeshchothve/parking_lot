@@ -1,6 +1,20 @@
-<%= form_for(@lead, url: create_kylas_associated_lead_admin_leads_path, local: true, html: {class: 'validate-form mr-3 ml-3', id: 'kylas_lead_form'}) do |f| %>
-  <%= render 'kylas_associated_lead_form', f: f %>
-<% end %>
+<div class="row justify-content-center">
+  <div class="col-md-11">
+    <div class="h-100">
+      <div class = 'fn-18 theme-txt-color mb-2'>
+        <div class="card-body">
+          <%= form_for(@lead, url: create_kylas_associated_lead_admin_leads_path, local: true, html: {class: 'validate-form mr-3 ml-3', id: 'kylas_lead_form'}) do |f| %>
+            <% if @contact_details.dig(:data, :emails).present? || @contact_details.dig(:data, :phoneNumbers).present? %>
+              <%= render 'kylas_associated_lead_form', f: f %>
+            <% else %>
+              <%= render 'form_new_lead_info', f: f %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <%= javascript_tag do %>
   $(document).ready(function(selector){
