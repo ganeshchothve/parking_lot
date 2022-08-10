@@ -29,8 +29,12 @@
           <% end %>
 
           <% stages_details = wf_pipeline.get_pipeline_stage_details(current_user) %>
-          <% stage_data = stages_details.select { |s| s[:pipeline_stage_id]==wf_pipeline.pipeline_stage_id }.first %>
-          <td><%= stage_data[:pipeline_stage_name] %></td>
+          <% if stages_details.present? %>
+            <% stage_data = stages_details.select { |s| s[:pipeline_stage_id]==wf_pipeline.pipeline_stage_id }.first %>
+            <td><%= stage_data[:pipeline_stage_name] %></td>
+          <% else %>
+            <td><%= wf_pipeline.pipeline_stage_id %></td>
+          <% end %>
 
           <td><%= wf_pipeline.lead_closed_reason.presence || '-' %></td>
           <td class="action-btn">
@@ -55,8 +59,12 @@
               <% end %>
 
               <% stages_details = pipeline.get_pipeline_stage_details(current_user) %>
-              <% stage_data = stages_details.select { |s| s[:pipeline_stage_id]==pipeline.pipeline_stage_id }.first %>
-              <td><%= stage_data[:pipeline_stage_name] %></td>
+              <% if stages_details.present? %>
+                <% stage_data = stages_details.select { |s| s[:pipeline_stage_id]==pipeline.pipeline_stage_id }.first %>
+                <td><%= stage_data[:pipeline_stage_name] %></td>
+              <% else %>
+                <td><%= pipeline.pipeline_stage_id %></td>
+              <% end %>
 
               <td><%= pipeline&.lead_closed_reason.presence || '-' %></td>
               <td></td>
