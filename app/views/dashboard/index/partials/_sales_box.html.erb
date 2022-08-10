@@ -32,13 +32,13 @@
           
           <% if customer %>
           <span class="theme-txt-color fn-16 d-block text-truncate"><%= customer.name %></span>
-          <span class="theme-txt-color fn-16 d-block text-truncate">
-            <%= link_to t('controller.leads.reassign_sales'), reassign_lead_admin_lead_path(customer), class: 'modal-remote-form-link text-red' %>
-          </span>
           <% status_log = customer.state_transitions.where(status: 'engaged', sitevisit_id: customer.current_site_visit_id).first %>
           <% unless action_name == 'sales_board' %>
           <span
             class="theme-txt-color fn-16 mb-2 d-block"><%= distance_of_time_in_words_to_now(status_log.enter_time, scope: 'datetime.distance_in_words.short') %></span>
+          <span class="theme-txt-color fn-16 d-block text-truncate"><b>
+            <%= link_to t('controller.leads.reassign_sales'), reassign_lead_admin_lead_path(customer), class: 'modal-remote-form-link text-red' %></b>
+          </span>
           <% end %>
           <% else %>
           <span class="theme-txt-color fn-16 mb-2 d-block">-</span>
