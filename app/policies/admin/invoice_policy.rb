@@ -90,7 +90,7 @@ class Admin::InvoicePolicy < InvoicePolicy
     attributes += [:creator_id]
     case user.role.to_s
     when 'channel_partner', 'cp_owner'
-      if record.status.in?(%w(draft rejected))
+      if record.status.in?(%w(tentative draft rejected))
         attributes += [:number, :amount, :gst_slab, :comments]
         attributes += [:category] if record.new_record?
         attributes += [:agreement_amount] if record.manual? && record.invoiceable_type == 'BookingDetail'

@@ -19,10 +19,10 @@
           <br>
           <br>
           <%# if booking_detail.blocked? %>
-            <span><strong><%= BookingDetail.human_attribute_name('approval_status') %></strong></span><br>
+            <!-- <span><strong><%#= BookingDetail.human_attribute_name('approval_status') %></strong></span><br>
             <span class="font-small fn-14 mb-0 theme-txt-color mb-0"><i
-                class='fa fa-circle status_<%= BookingDetail.human_attribute_name("status.#{booking_detail.approval_status}").downcase.gsub(' ', '_') %>  me-2 fa-sm'></i><%= I18n.t("mongoid.attributes.booking_detail/approval_status.#{booking_detail.approval_status}") %>
-            </span>
+                class='fa fa-circle status_<%#= BookingDetail.human_attribute_name("status.#{booking_detail.approval_status}").downcase.gsub(' ', '_') %>  me-2 fa-sm'></i><%#= I18n.t("mongoid.attributes.booking_detail/approval_status.#{booking_detail.approval_status}") %>
+            </span> -->
           <%# end %>
         </div>
       </div>
