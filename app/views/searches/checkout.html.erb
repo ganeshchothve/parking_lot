@@ -70,7 +70,7 @@
                           <% elsif @booking_detail_scheme.present? && @booking_detail_scheme.editable_payment_adjustments_present? %>
                             <%= link_to "Proceed without payment", send_under_negotiation_admin_lead_booking_detail_path(@lead.id, @booking_detail.id), class: 'btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block', style:'margin-top:0px', onclick: alert, method: :patch %>
                           <% else %>
-                            <%= link_to "I Agree on behalf of #{@lead.name}", booking_admin_lead_booking_detail_path(@lead,@booking_detail), method: :patch, class: 'btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block', style:'margin-top:0px', onclick: alert %>
+                            <%= link_to "I Agree on behalf of #{@lead.name}", send_blocked_admin_lead_booking_detail_path(@lead.id, @booking_detail.id), method: :patch, class: 'btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block', style:'margin-top:0px', onclick: alert %>
                           <% end %>
                         <% end %>
                         <% if current_user.buyer? %>

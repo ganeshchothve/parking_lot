@@ -94,6 +94,7 @@ class Admin::InvoicePolicy < InvoicePolicy
         attributes += [:number, :amount, :gst_slab, :comments]
         attributes += [:category] if record.new_record?
         attributes += [:agreement_amount] if record.manual? && record.invoiceable_type == 'BookingDetail'
+        attributes += [:event]
       end
     when 'cp_admin'
       if record.status.in?(%w(pending_approval approved))
