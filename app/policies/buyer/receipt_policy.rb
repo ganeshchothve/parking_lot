@@ -28,6 +28,10 @@ class Buyer::ReceiptPolicy < ReceiptPolicy
     user.id == record.user_id && confirmed_and_ready_user?
   end
 
+  def asset_update?
+    asset_create?
+  end
+
   def update?
     edit?
   end
