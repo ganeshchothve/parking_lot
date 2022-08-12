@@ -27,7 +27,7 @@ module Kylas
     # action used for ajax call
     def deal_associated_contact_details
       contact_id = params[:contact_id]
-      @contact_details = Kylas::FetchContactDetails.new(current_user, [contact_id]).call
+      @contact_details = Kylas::FetchContactDetails.new(current_user, [contact_id], true).call
       respond_to do |format|
         if @contact_details[:success]
           contact = @contact_details[:data]
