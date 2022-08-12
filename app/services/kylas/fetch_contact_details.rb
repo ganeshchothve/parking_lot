@@ -5,11 +5,12 @@ require 'net/http'
 module Kylas
   # Fetch contact details
   class FetchContactDetails
-    attr_reader :user, :contact_ids
+    attr_reader :user, :contact_ids, :is_single_contact
 
-    def initialize(user, contact_ids)
+    def initialize(user, contact_ids, is_single_contact = false)
       @user = user
       @contact_ids = contact_ids
+      @is_single_contact = is_single_contact
     end
 
     def call
@@ -65,7 +66,6 @@ module Kylas
           }
         end
         # single contact response in hash
-        is_single_contact = (contact_ids.count == 1)
         contacts_data = ((is_single_contact ? contacts_data.first : contacts_data) rescue nil)
         { success: true, data: contacts_data }
       when Net::HTTPBadRequest
