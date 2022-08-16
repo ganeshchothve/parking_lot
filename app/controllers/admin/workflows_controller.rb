@@ -27,7 +27,7 @@ class Admin::WorkflowsController < AdminController
       else
         errors = []
         if @workflow.errors.messages.has_key?(:pipelines) && @workflow.pipelines.first.errors.present?
-          errors << @workflow.pipelines.second.errors.full_messages.to_sentence
+          errors << @workflow.pipelines.first.errors.full_messages.to_sentence
         else
           errors << @workflow.errors.full_messages.uniq  
         end
@@ -44,7 +44,13 @@ class Admin::WorkflowsController < AdminController
       if @workflow.update(permitted_attributes([:admin, @workflow]))
         format.html { redirect_to admin_workflows_path, notice: 'Workflow was successfully updated.' }
       else
-        format.html { render :edit }
+        errors = []
+        if @workflow.errors.messages.has_key?(:pipelines) && @workflow.pipelines.first.errors.present?
+          errors << @workflow.pipelines.first.errors.full_messages.to_sentence
+        else
+          errors << @workflow.errors.full_messages.uniq  
+        end
+        format.html { redirect_to admin_workflows_path, alert: errors }
         format.json { render json: { errors: @workflow.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end

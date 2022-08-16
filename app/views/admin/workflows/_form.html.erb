@@ -20,7 +20,7 @@
       <div class="row pipeline-form" data-pipeline-id = "<%= p.object.pipeline_id %>">
         <div class="col-md-3">
           <%= p.label :entity_type, class: 'label-required' %>
-          <%= p.select :entity_type, options_for_select([["Update the Deal pipeline stage ", "deals"]], p.object.entity_type), {prompt: 'Select'}, class: 'selectize entity_type_select' %>
+          <%= p.select :entity_type, options_for_select([["Update the Deal pipeline stage ", "deals"]], p.object.entity_type), {prompt: 'Select'}, class: 'selectize entity_type_select', required: true %>
         </div>
         <div class="col-md-3">
           <%= p.label :pipeline_id, class: 'label-required' %>
