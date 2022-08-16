@@ -30,7 +30,7 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
   #
   # POST /admin/users/:user_id/booking_details/:booking_detail_id/receipts
   def create
-    @receipt = Receipt.new(user: current_user, creator: current_user,payment_gateway: current_client.payment_gateway, booking_detail_id: @booking_detail.id, payment_type: 'agreement', lead: @booking_detail.lead, project: @booking_detail.project)
+    @receipt = Receipt.new(user: current_user, creator: current_user,payment_gateway: current_client.payment_gateway, booking_detail_id: @booking_detail.id, payment_type: 'agreement', lead: @lead, project: @booking_detail.project)
     @receipt.assign_attributes(permitted_attributes([:buyer, @receipt]))
     @receipt.account = selected_account(current_client.payment_gateway.underscore, @receipt)
     authorize([:buyer, @receipt])
