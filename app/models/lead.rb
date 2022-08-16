@@ -172,6 +172,13 @@ class Lead
     end
   end
 
+  scope :filter_by_token_number, ->(token_number) do
+    lead_ids = Receipt.where(token_number: token_number).distinct(:lead_id)
+    if lead_ids.present?
+      where(id: { '$in': lead_ids })
+    end
+  end
+
   def tentative_incentive_eligible?(category=nil)
     if category.present?
       if category == 'lead'
