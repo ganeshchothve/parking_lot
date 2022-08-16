@@ -2,6 +2,7 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
   before_action :set_booking_detail
   before_action :set_user
   before_action :set_project_unit
+  before_action :set_lead
 
 
   def index
@@ -68,6 +69,11 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
   def set_booking_detail
     @booking_detail = BookingDetail.where(_id: params[:booking_detail_id], user_id: current_user.id).first
     redirect_to root_path, alert: t('controller.booking_details.set_booking_detail_missing'), status: 404 if @booking_detail.blank?
+  end
+
+  def set_lead
+    @lead = @booking_detail.lead if @booking_detail.present?
+    redirect_to root_path, alert: 'Lead Not Found', status: 404 if @lead.blank?
   end
 
 end

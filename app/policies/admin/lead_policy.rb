@@ -89,7 +89,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def send_payment_link?
-    record.user.confirmed?
+    record.user.confirmed? && record.user.in?(User::ADMIN_ROLES)
   end
 
   def search_by?
