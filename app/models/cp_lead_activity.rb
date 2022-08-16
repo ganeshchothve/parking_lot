@@ -17,7 +17,7 @@ class CpLeadActivity
 
   belongs_to :lead
   belongs_to :user
-  belongs_to :channel_partner
+  belongs_to :channel_partner, optional: true
   belongs_to :cp_manager, class_name: 'User', optional: true
   belongs_to :cp_admin, class_name: 'User', optional: true
   has_many :assets, as: :assetable
