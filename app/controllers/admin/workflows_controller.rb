@@ -2,6 +2,7 @@ class Admin::WorkflowsController < AdminController
 
   before_action :fetch_pipeline_details, only: %i[index new edit]
   before_action :set_workflow, only: %i[edit update]
+  around_action :apply_policy_scope, only: :index
 
   def index
     @workflows = Workflow.build_criteria params
@@ -24,7 +25,13 @@ class Admin::WorkflowsController < AdminController
         format.html { redirect_to admin_workflows_path, notice: 'Workflow created successfully.' }
         format.json { render json: @workflow, status: :created }
       else
-        format.html { render :new }
+        errors = []
+        if @workflow.errors.messages.has_key?(:pipelines) && @workflow.pipelines.first.errors.present?
+          errors << @workflow.pipelines.second.errors.full_messages.to_sentence
+        else
+          errors << @workflow.errors.full_messages.uniq  
+        end
+        format.html { redirect_to new_admin_workflow_path, alert: errors }
         format.json { render json: { errors: @workflow.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
@@ -74,5 +81,12 @@ class Admin::WorkflowsController < AdminController
   def set_workflow
     @workflow = Workflow.where(id: params[:id]).first
     redirect_to admin_workflows_path, alert: 'Workflow not found' unless @workflow
+  end
+
+  def apply_policy_scope
+    custom_scope = Workflow.where(Workflow.user_based_scope(current_user, params))
+    Workflow.with_scope(policy_scope(custom_scope)) do
+      yield
+    end
   end
 end

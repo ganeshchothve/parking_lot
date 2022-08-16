@@ -4,7 +4,7 @@
     <div class="col-md-12">
       <div class='m-3'>
         <%= f.label :stage, class: 'label-required' %>
-        <%= f.select :stage, options_for_select(Workflow::WORKFLOW_BOOKING_STAGES.collect {|x| [x.titleize, x]}, @workflow.stage), {prompt: 'Select'}, class: 'selectize stage_type' %>
+        <%= f.select :stage, options_for_select(Workflow::WORKFLOW_BOOKING_STAGES.collect {|x| [x.titleize, x]}, @workflow.stage), {prompt: 'Select'}, class: 'selectize stage_type', required: true %>
       </div>
     </div>
   </div>
@@ -86,11 +86,11 @@ $(document).ready(function(selector){
 
     if(flag)
     {
-      $current_target.parents('.pipeline-form').find('div.reasons_field').show()
+      $current_target.parents('.pipeline-form').find('div.reasons_field').show();
     }
     else
     {
-      $current_target.parents('.pipeline-form').find('div.reasons_field').hide()
+      $current_target.parents('.pipeline-form').find('div.reasons_field').hide();
     }
 
     if(reason_val)
