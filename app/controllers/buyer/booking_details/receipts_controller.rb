@@ -2,6 +2,7 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
   before_action :set_booking_detail
   before_action :set_user
   before_action :set_project_unit
+  before_action :set_lead
 
 
   def index
@@ -29,7 +30,7 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
   #
   # POST /admin/users/:user_id/booking_details/:booking_detail_id/receipts
   def create
-    @receipt = Receipt.new(user: current_user, creator: current_user,payment_gateway: current_client.payment_gateway, booking_detail_id: @booking_detail.id, payment_type: 'agreement')
+    @receipt = Receipt.new(user: current_user, creator: current_user,payment_gateway: current_client.payment_gateway, booking_detail_id: @booking_detail.id, payment_type: 'agreement', lead: @lead, project: @booking_detail.project)
     @receipt.assign_attributes(permitted_attributes([:buyer, @receipt]))
     @receipt.account = selected_account(current_client.payment_gateway.underscore, @receipt)
     authorize([:buyer, @receipt])
@@ -69,4 +70,10 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
     @booking_detail = BookingDetail.where(_id: params[:booking_detail_id], user_id: current_user.id).first
     redirect_to root_path, alert: t('controller.booking_details.set_booking_detail_missing'), status: 404 if @booking_detail.blank?
   end
+
+  def set_lead
+    @lead = @booking_detail.lead if @booking_detail.present?
+    redirect_to root_path, alert: 'Lead Not Found', status: 404 if @lead.blank?
+  end
+
 end
