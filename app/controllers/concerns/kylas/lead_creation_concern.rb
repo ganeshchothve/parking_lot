@@ -117,7 +117,11 @@ module Kylas
       end
       if @lead.persisted? || @lead.save
         sync_contact_to_kylas(current_user, @user, @lead.kylas_deal_id, @deal_data) if params.dig(:lead, :sync_to_kylas).present?
-        format.html { redirect_to new_admin_lead_search_path(@lead.id), notice: 'Lead was successfully created' }
+        if @project.enable_inventory?
+          format.html { redirect_to new_admin_lead_search_path(@lead.id), notice: 'Lead was successfully created' }
+        else
+          format.html { redirect_to new_booking_without_inventory_admin_booking_details_path(lead_id: @lead.id), notice: 'Lead was successfully created' }
+        end
       else
         format.html { redirect_to request.referer, alert: (@lead.errors.full_messages.uniq.presence || 'Something went wrong'), status: :unprocessable_entity }
       end

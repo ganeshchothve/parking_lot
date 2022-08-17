@@ -160,21 +160,23 @@
         </div>
       <% end %>
     </div>
-    <%# if policy([:admin, project]).editable_field?("is_active") %>
-      <!-- <div class="col-md-6">
+
+    <div class="col-md-6">
+      <% if policy([:admin, project]).editable_field?("enable_inventory") %>
         <div class="mb-3">
-          <%#= f.label :is_active, class: 'mb-2' %>
+          <%= f.label :enable_inventory, class: 'mb-2' %>
           <div class="form-check form-check-inline">
-            <%#= f.radio_button :is_active, true, class: "form-check-input wd-22" %>
-            <%#= f.label :is_active, "Yes", class: "form-check-label d-inline-block ms-2" %>
+            <%= f.radio_button :enable_inventory, true, class: "form-check-input wd-22" %>
+            <%= f.label :enable_inventory, "Yes", class: "form-check-label d-inline-block ms-2" %>
           </div>
           <div class="form-check form-check-inline">
-            <%#= f.radio_button :is_active, false, class: "form-check-input wd-22" %>
-            <%#= f.label :is_active, "No", class: "form-check-label d-inline-block ms-2" %>
+            <%= f.radio_button :enable_inventory, false, class: "form-check-input wd-22" %>
+            <%= f.label :enable_inventory, "No", class: "form-check-label d-inline-block ms-2" %>
           </div>
         </div>
-      </div> -->
-    <%# end %>
+      <% end %>
+    </div>
+
   </div>
   <div class="row">
     <div class="col-md-12">
