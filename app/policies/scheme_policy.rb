@@ -18,6 +18,6 @@ class SchemePolicy < ApplicationPolicy
   end
 
   def payment_adjustments_for_unit?
-    false
+    user.active_channel_partner?
   end
 end
