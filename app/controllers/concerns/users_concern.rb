@@ -137,6 +137,7 @@ module UsersConcern
   #
   def search_by
     @users = User.unscoped.build_criteria params
+    @users = @users.where(User.user_based_scope(current_user))
     @users = @users.paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
   end
 
