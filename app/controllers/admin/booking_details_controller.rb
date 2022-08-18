@@ -194,22 +194,24 @@ class Admin::BookingDetailsController < AdminController
                                     site_visit_id: params[:site_visit_id],
                                     booking_portal_client_id: current_user.booking_portal_client.id
                                     )
-    render layout: false
+    # render layout: false
   end
 
   def create_booking_without_inventory
     @booking_detail = BookingDetail.new(booking_portal_client_id: current_user.booking_portal_client.id)
     @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
     @booking_detail.user = @booking_detail.lead.user
+    @booking_detail.name = @booking_detail.booking_project_unit_name
     @booking_detail.status = "blocked"
     respond_to do |format|
       if @booking_detail.save
-        response.set_header('location', admin_booking_detail_path(@booking_detail) )
+        # response.set_header('location', admin_booking_detail_path(@booking_detail) )
         format.json { render json: {message: "Booking created successfully"}, status: :ok }
         format.html { redirect_to admin_booking_detail_path(@booking_detail) }
       else
         flash[:alert] = @booking_detail.errors.full_messages
-        format.html { redirect_to dashboard_path, alert: t('controller.booking_details.booking_unsuccessful') }
+        # format.html { redirect_to dashboard_path, alert: t('controller.booking_details.booking_unsuccessful') }
+        format.html { redirect_to request.referer, alert: t('controller.booking_details.booking_unsuccessful') }
         format.json { render json: { errors: flash[:alert] }, status: :unprocessable_entity }
       end
     end

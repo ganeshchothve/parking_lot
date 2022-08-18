@@ -127,6 +127,10 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     %w[account_manager account_manager_head billing_team cp_admin].include?(user.role)
   end
 
+  def enable_channel_partners?
+    record.booking_portal_client.try(:enable_channel_partners?)
+  end
+
   # def block?
   #   valid = enable_actual_inventory? && only_for_confirmed_user! && only_for_kyc_added_users! && ['hold'].include?(record.status)
   #   if !valid
