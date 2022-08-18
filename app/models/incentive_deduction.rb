@@ -29,6 +29,11 @@ class IncentiveDeduction
         custom_scope = { invoice_id: params[:invoice_id] }
         custom_scope[:status] = { '$ne': 'draft' } if user.role?('billing_team')
       end
+
+      if user.role.in?(%w(superadmin))
+        custom_scope[:booking_portal_client_id] = user.selected_client_id
+      end
+
       custom_scope
     end
   end

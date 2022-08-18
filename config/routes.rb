@@ -390,6 +390,9 @@ Rails.application.routes.draw do
   get 'buyer/projects', to: 'home#select_project', as: :buyer_select_project
   post 'select_project', to: 'home#select_project', as: :select_project
 
+  get 'admin/select_clients', to: 'home#select_client', as: :admin_select_clients
+  post 'select_client', to: 'home#select_client', as: :select_client
+
   get 'signed_up/:user_id', to: 'home#signed_up', as: :signed_up
   get 'cp_signed_up_with_inactive_account/:user_id', to: 'home#cp_signed_up_with_inactive_account', as: :cp_signed_up_with_inactive_account
 

@@ -198,8 +198,10 @@ class Invoice
           custom_scope = { cp_manager_id: user.id, status: { '$nin': %w(tentative) } }
         elsif user.role?('account_manager')
           custom_scope = { account_manager_id: user.id, status: { '$nin': %w(tentative) } }
-        elsif user.role.in?(%w(admin superadmin sales))
+        elsif user.role.in?(%w(admin sales))
           custom_scope = { status: { '$in': %w(tentative raised pending_approval approved rejected draft tax_invoice_raised paid) }, booking_portal_client_id: user.booking_portal_client.id }
+        elsif user.role.in?(%w(superadmin))
+          custom_scope = { status: { '$in': %w(tentative raised pending_approval approved rejected draft tax_invoice_raised paid) }, booking_portal_client_id: user.selected_client_id }
         else
           custom_scope = { status: { '$nin': %w(tentative) } }
         end

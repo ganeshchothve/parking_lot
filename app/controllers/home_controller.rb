@@ -71,6 +71,23 @@ class HomeController < ApplicationController
     end
   end
 
+  def select_client
+    if current_user.role.in?(%w(superadmin))
+      if current_user.client_ids.count == 1
+        current_user.update(selected_client_id: current_user.client_ids.first)
+        redirect_to home_path(current_user)
+      else
+        if request.method == 'POST'
+          current_user.selected_client_id = params[:selected_client_id]
+          current_user.save
+          redirect_to home_path(current_user)
+        else
+          render layout: 'devise'
+        end
+      end
+    end
+  end
+
   def register
     @resource = User.new
     if user_signed_in?

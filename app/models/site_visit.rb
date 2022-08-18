@@ -140,6 +140,8 @@ class SiteVisit
         custom_scope = { project_id: user.selected_project_id }
       when 'admin', 'sales'
         custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
+      when 'superadmin'
+        custom_scope = { booking_portal_client_id: user.selected_client_id }
       end
     end
 

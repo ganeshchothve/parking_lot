@@ -51,8 +51,8 @@ class ApplicationController < ActionController::Base
 
   def home_path(current_user)
     if current_user
-      if (current_user.buyer? || !current_user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))) && params[:controller] == 'local_devise/sessions'
-        current_dashboard_path
+      if current_user.role.in?(%w(superadmin)) && params[:controller] == 'local_devise/sessions'
+        admin_select_clients_path
       else
         _path = admin_site_visits_path if current_user.role?('dev_sourcing_manager')
         stored_location_for(current_user) || _path || current_dashboard_path

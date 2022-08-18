@@ -26,6 +26,8 @@ class Workflow
       custom_scope = {}
       if user.role.in?(User::KYLAS_MARKETPALCE_USERS)
         custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
+      elsif user.role.in?(%w(superadmin))
+        custom_scope = { booking_portal_client_id: user.selected_client_id }
       end
       custom_scope
     end
