@@ -291,6 +291,8 @@ class Project
       custom_scope = { _id: { '$in': user.interested_projects.approved.distinct(:project_id) } } unless params[:controller] == 'admin/projects' && params[:ds].blank?
     elsif user.role.in?(%w(admin sales))
       custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
+    elsif user.role.in?(%w(superadmin))
+      custom_scope = { booking_portal_client_id: user.selected_client_id }
     end
 
     # unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))

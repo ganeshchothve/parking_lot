@@ -324,6 +324,8 @@ class ProjectUnit
     custom_scope = {}
     if user.role.in?(%w(admin sales))
       custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
+    elsif user.role.in?(%w(superadmin))
+      custom_scope = { booking_portal_client_id: user.selected_client_id }
     end
     # unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
     #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})

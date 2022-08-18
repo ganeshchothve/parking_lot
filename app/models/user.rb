@@ -123,6 +123,7 @@ class User
   # For scoping user with roles: (sales, sales_admin, crm, gre, billing_team) under projects
   # For channel partner users, using interested projects association for scoping under projects
   field :project_ids, type: Array, default: []
+  field :client_ids, type: Array, default: []
   field :cp_code, type: String
 
   field :upi_id, type: String
@@ -173,6 +174,7 @@ class User
   belongs_to :tier, optional: true  # for associating channel partner users with different tiers.
   belongs_to :selected_lead, class_name: 'Lead', optional: true
   belongs_to :selected_project, class_name: 'Project', optional: true
+  belongs_to :selected_client, class_name: 'Client', optional: true
   belongs_to :temp_channel_partner, class_name: 'ChannelPartner', optional: true
   has_many :leads
   has_many :receipts
@@ -859,6 +861,8 @@ class User
         custom_scope = { role: { '$in': %w(channel_partner cp_owner) } }
       elsif user.role.in?(%w(admin sales))
         custom_scope = { role: { "$in": ['admin', 'sales'] }, booking_portal_client_id: user.booking_portal_client.id }
+      elsif user.role.in?(%w(superadmin))
+        custom_scope = { role: { "$in": ['admin', 'sales', 'superadmin'] }, booking_portal_client_id: user.selected_client_id }
       elsif user.role?('team_lead')|| user.role?('gre')
         custom_scope = { role: 'sales', project_ids: user.selected_project_id.to_s }
       end
