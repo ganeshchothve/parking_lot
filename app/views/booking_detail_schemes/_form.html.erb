@@ -1,12 +1,12 @@
 <div class="mb-3">
   <% _params = {fltrs: { project_id: booking_detail.project_id, project_tower_id: booking_detail.project_unit.project_tower_id, can_be_applied_by: current_user.role, user_role: booking_detail.user.role, user_id: booking_detail.user_id, status: 'approved' } } %>
-  <% if booking_detail.lead && booking_detail.lead.manager_role?('channel_partner') %>
+  <% if booking_detail.lead && %w(cp_owner channel_partner).include?(booking_detail.lead.manager_role) %>
     <% _params[:fltrs].delete :can_be_applied_by %>
     <% _params[:fltrs][:can_be_applied_by_role] = booking_detail.lead.manager_role %>
     <% _params[:fltrs][:default_for_user_id] = booking_detail.lead.manager_id %>
   <% end %>
   <%= f.label :derived_from_scheme_id, class: 'control-label' %>
-  <%= f.select :derived_from_scheme_id, options_from_collection_for_select(Scheme.where(_id: f.object.derived_from_scheme_id), 'id', 'name', f.object.derived_from_scheme_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: current_user.buyer? ? buyer_schemes_path : admin_schemes_path, params: _params }%>
+  <%= f.select :derived_from_scheme_id, options_from_collection_for_select(Scheme.build_criteria(_params), 'id', 'name', f.object.derived_from_scheme_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: current_user.buyer? ? buyer_schemes_path : admin_schemes_path, params: _params }%>
 </div>
 <%= f.hidden_field :booking_detail_id %>
 <%= f.hidden_field :project_unit_id %>
@@ -115,6 +115,6 @@ $(document).ready(function(){
 
       }
     })
-  });
+  }).trigger('change');
 });
 <% end %>

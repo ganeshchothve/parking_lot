@@ -64,17 +64,19 @@
                             <%= link_to "Proceed without payment", send_blocked_admin_lead_booking_detail_path(@lead.id, @booking_detail.id), class: 'btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block', style:'margin-top:0px', onclick: alert, method: :patch %>
                           <% end %>
                         <% else %>
-                          <% if @lead.unattached_blocking_receipt.blank? %>
-                            <%= link_to "I Agree on behalf of #{@lead.name} and proceed to add
-                          payment",new_admin_lead_booking_detail_receipt_path(@lead.id, @booking_detail.id) , class: 'btn submit-payemnt-btn fn-12 fn-500 modal-remote-form-link btn-primary d-inline-block', style:'margin-top:0px', onclick: alert %>
-                          <% elsif @booking_detail_scheme.present? && @booking_detail_scheme.editable_payment_adjustments_present? %>
-                            <%= link_to "Proceed without payment", send_under_negotiation_admin_lead_booking_detail_path(@lead.id, @booking_detail.id), class: 'btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block', style:'margin-top:0px', onclick: alert, method: :patch %>
-                          <% else %>
-                            <%= link_to "I Agree on behalf of #{@lead.name}", send_blocked_admin_lead_booking_detail_path(@lead.id, @booking_detail.id), method: :patch, class: 'btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block', style:'margin-top:0px', onclick: alert %>
+                          <% if !current_user.buyer? %>
+                            <% if @lead.unattached_blocking_receipt.blank? %>
+                              <%= link_to "I Agree on behalf of #{@lead.name} and proceed to add
+                            payment",new_admin_lead_booking_detail_receipt_path(@lead.id, @booking_detail.id) , class: 'btn submit-payemnt-btn fn-12 fn-500 modal-remote-form-link btn-primary d-inline-block', style:'margin-top:0px', onclick: alert %>
+                            <% elsif @booking_detail_scheme.present? && @booking_detail_scheme.editable_payment_adjustments_present? %>
+                              <%= link_to "Proceed without payment", send_under_negotiation_admin_lead_booking_detail_path(@lead.id, @booking_detail.id), class: 'btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block', style:'margin-top:0px', onclick: alert, method: :patch %>
+                            <% else %>
+                              <%= link_to "I Agree on behalf of #{@lead.name}", send_blocked_admin_lead_booking_detail_path(@lead.id, @booking_detail.id), method: :patch, class: 'btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block', style:'margin-top:0px', onclick: alert %>
+                            <% end %>
                           <% end %>
                         <% end %>
                         <% if current_user.buyer? %>
-                          <%= link_to "I Agree", buyer_booking_details_path, class: 'btn submit-payemnt-btn fn-12 fn-500', style:'margin-top:0px', onclick: alert %>
+                          <%= link_to "I Agree", new_buyer_booking_detail_receipt_path(booking_detail_id: @booking_detail.id), class: 'btn btn-primary submit-payemnt-btn fn-12 fn-500 modal-remote-form-link', style:'margin-top:0px', onclick: alert %>
                         <% else %>
                           <% unless @booking_detail.project.payment_enabled? %>
                             <div class="alert alert-danger">
@@ -82,9 +84,9 @@
                             </div>
                           <% end %>
                         <% end %>
-                        <%# if policy([current_user_role_group, @lead]).send_payment_link? %>
-                          <%#= link_to 'Send Payment link', send_payment_link_admin_lead_path(@lead), class: "btn submit-payemnt-btn fn-12 fn-500" %>
-                        <%# end %>
+                        <% if policy([:admin, @lead]).send_payment_link? %>
+                          <%= link_to 'Send Payment link', send_payment_link_admin_lead_path(@lead), class: "btn submit-payemnt-btn fn-12 fn-500" %>
+                        <% end %>
                         <%= form_for @project_unit, url: make_available_lead_search_path(@search), method: 'post', html: {class: 'validate-form float-start d-inline-block'} do |f| %>
                           <%= f.hidden_field :status, value: 'available' %>
                           <%= f.submit 'Cancel', class: 'btn cancel-btn fn-12 fn-500 border me-2' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'} %>
