@@ -107,7 +107,7 @@ module Kylas
 
 
     def create_or_set_lead(format)
-      @lead = Lead.where(kylas_deal_id: params.dig(:lead, :kylas_deal_id), user_id: @user.id).first
+      @lead = Lead.where(kylas_deal_id: params.dig(:lead, :kylas_deal_id), user_id: @user.id, project_id: @project.id).first
       if @lead.blank?
         @lead = @user.leads.build(lead_params)
         @lead.booking_portal_client = current_user.booking_portal_client
