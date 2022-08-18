@@ -43,6 +43,9 @@ class BookingDetail
   field :source, type: String
   field :rejection_reason, type: String
 
+  #kylas specific field
+  field :kylas_product_id, type: Integer
+
   mount_uploader :tds_doc, DocUploader
 
   enable_audit(
