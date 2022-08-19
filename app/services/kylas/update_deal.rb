@@ -47,7 +47,7 @@ module Kylas
         { success: true, data: response }
       when Net::HTTPBadRequest
         Rails.logger.error 'UpdateDeal - 400'
-        api_log.assign_attributes(request_url: url, request: ([(payload rescue {})]), response: [(JSON.parse(response.body) rescue {})], resource: user, response_type: "Hash", booking_portal_client: user.booking_portal_client)
+        api_log.assign_attributes(request_url: url, request: ([(payload rescue {})]), response: [(JSON.parse(response.message) rescue {})], resource: user, response_type: "Hash", booking_portal_client: user.booking_portal_client)
         api_log.save
         { success: false, error: 'Invalid Data!' }
       when Net::HTTPNotFound

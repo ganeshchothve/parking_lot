@@ -13,7 +13,7 @@ class Admin::WorkflowPolicy < WorkflowPolicy
 
   def permitted_attributes(params = {})
     attributes = []
-    attributes += [:stage, pipelines_attributes: PipelinePolicy.new(user, Pipeline.new).permitted_attributes]
+    attributes += [:stage, :create_product, :deactivate_product, :update_product_on_deal , pipelines_attributes: PipelinePolicy.new(user, Pipeline.new).permitted_attributes]
     attributes.uniq
   end
 end

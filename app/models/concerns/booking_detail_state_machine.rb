@@ -186,8 +186,9 @@ module BookingDetailStateMachine
       _project_unit.auto_release_on +=  _project_unit.blocking_days.days
       _project_unit.save
       self.set(booked_on: _project_unit.blocked_on)
-      # call service to update the pipeline stage in kylas
-      Kylas::UpdateEntityDetailsInKylas.new(self.creator, self.status, self.lead.kylas_deal_id, "deals", self.lead.kylas_pipeline_id).update_pipeline_and_entity_value_in_kylas
+
+      #trigger all workflow events in Kylas
+      Kylas::TriggerWorkflowEvents.new(self).trigger_workflow_events_in_kylas
 
       if blocked? && get_paid_amount > project_unit.blocking_amount
         booked_tentative!
@@ -199,8 +200,8 @@ module BookingDetailStateMachine
     # Updating blocked date of project_unit to today and  auto_release_on will be changed to blocking_days more from current auto_release_on.
     def after_booked_tentative_event
       return unless project_unit.present?
-      # call service to update the pipeline stage in kylas
-      Kylas::UpdateEntityDetailsInKylas.new(self.creator, self.status, self.lead.kylas_deal_id, "deals", self.lead.kylas_pipeline_id).update_pipeline_and_entity_value_in_kylas
+      #trigger all workflow events in Kylas
+      Kylas::TriggerWorkflowEvents.new(self).trigger_workflow_events_in_kylas
 
       if booked_tentative? && (get_paid_amount >= project_unit.booking_price)
         booked_confirmed!
@@ -225,7 +226,8 @@ module BookingDetailStateMachine
       if (self.aasm.from_state == :booked_tentative && self.user.booking_portal_client.document_sign.present?)
         # self.send_booking_form_to_sign
       end
-      Kylas::UpdateEntityDetailsInKylas.new(self.creator, self.status, self.lead.kylas_deal_id, "deals", self.lead.kylas_pipeline_id).update_pipeline_and_entity_value_in_kylas
+      #trigger all workflow events in Kylas
+      Kylas::TriggerWorkflowEvents.new(self).trigger_workflow_events_in_kylas
     end
 
     #
@@ -387,7 +389,8 @@ module BookingDetailStateMachine
       project_unit.make_available
       project_unit.save(validate: false)
       SelldoLeadUpdater.perform_async(lead_id.to_s, {stage: 'cancelled'})
-      Kylas::UpdateEntityDetailsInKylas.new(self.creator, self.status, self.lead.kylas_deal_id, "deals", self.lead.kylas_pipeline_id).update_pipeline_and_entity_value_in_kylas
+      #trigger all workflow events in Kylas
+      Kylas::TriggerWorkflowEvents.new(self).trigger_workflow_events_in_kylas
     end
 
     def update_selldo!

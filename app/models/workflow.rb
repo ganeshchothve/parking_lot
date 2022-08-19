@@ -7,6 +7,11 @@ class Workflow
 
   field :stage, type: String
 
+  # flags to trigger workflow events in Kylas
+  field :create_product, type: Boolean, default: false
+  field :deactivate_product, type: Boolean, default: false
+  field :update_product_on_deal, type: Boolean, default: false
+
   has_many :pipelines
   belongs_to :booking_portal_client, class_name: 'Client'
 

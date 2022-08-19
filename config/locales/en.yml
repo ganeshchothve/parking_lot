@@ -1505,6 +1505,9 @@ en:
         stage: Event
         entity_type: Condition
         actions: Actions
+        create_product: Create product in Kylas?
+        deactivate_product: Deactivate the product in Kylas?
+        update_product_on_deal: Update the product on Deal?
       workflow/pipeline:
         name: Pipeline
         stage: Pipeline Stage
