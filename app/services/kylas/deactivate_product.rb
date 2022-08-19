@@ -21,16 +21,16 @@ module Kylas
       when Net::HTTPOK, Net::HTTPSuccess
         { success: true }
       when Net::HTTPBadRequest
-        Rails.logger.error 'UpdateEntityPipelineStage - 400'
+        Rails.logger.error 'DeactivateProductInKylas - 400'
         { success: false, error: 'Invalid Data!' }
       when Net::HTTPNotFound
-        Rails.logger.error 'UpdateEntityPipelineStage - 404'
+        Rails.logger.error 'DeactivateProductInKylas - 404'
         { success: false, error: 'Invalid Data!' }
       when Net::HTTPServerError
-        Rails.logger.error 'UpdateEntityPipelineStage - 500'
+        Rails.logger.error 'DeactivateProductInKylas - 500'
         { success: false, error: 'Server Error!' }
       when Net::HTTPUnauthorized
-        Rails.logger.error 'UpdateEntityPipelineStage - 401'
+        Rails.logger.error 'DeactivateProductInKylas - 401'
         { success: false, error: 'Unauthorized' }
       else
         { success: false }
