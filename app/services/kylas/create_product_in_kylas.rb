@@ -2,7 +2,7 @@
 require 'net/http'
 
 module Kylas
-  #service to update entity details in kylas
+  #service to create product in kylas
   class CreateProductInKylas
 
     attr_accessor :user, :params
@@ -14,8 +14,6 @@ module Kylas
 
     def call
       return if user.blank? || params.blank?
-
-      url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/products")
 
       response = create_product_in_kylas
       case response

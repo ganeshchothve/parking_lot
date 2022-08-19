@@ -205,6 +205,8 @@ class Admin::BookingDetailsController < AdminController
     @booking_detail.status = "blocked"
     respond_to do |format|
       if @booking_detail.save
+        #trigger all workflow events in Kylas
+        Kylas::TriggerWorkflowEvents.new(@booking_detail).trigger_workflow_events_in_kylas rescue nil
         # response.set_header('location', admin_booking_detail_path(@booking_detail) )
         format.json { render json: {message: "Booking created successfully"}, status: :ok }
         format.html { redirect_to admin_booking_detail_path(@booking_detail) }

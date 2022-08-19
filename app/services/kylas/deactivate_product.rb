@@ -2,7 +2,7 @@
 require 'net/http'
 
 module Kylas
-  #service to update entity details in kylas
+  #service to deactivate product in kylas
   class DeactivateProduct
 
     attr_accessor :user, :entity_id, :params
