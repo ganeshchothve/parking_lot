@@ -198,7 +198,10 @@ class Admin::BookingDetailsController < AdminController
   end
 
   def create_booking_without_inventory
-    @booking_detail = BookingDetail.new(booking_portal_client_id: current_user.booking_portal_client.id)
+    @booking_detail = BookingDetail.new(
+                                        booking_portal_client_id: current_user.booking_portal_client.id,
+                                        creator: current_user
+                                       )
     @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
     @booking_detail.user = @booking_detail.lead.user
     @booking_detail.name = @booking_detail.booking_project_unit_name
