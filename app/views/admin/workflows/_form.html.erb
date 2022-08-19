@@ -73,7 +73,7 @@
         </div>
         <div class="col-md-3 reasons_field hidden">
           <%= p.label :lead_closed_reason, class: 'label-required' %>
-          <%= p.select :lead_closed_reason, options_for_select([]), {prompt: 'Select Reason'}, class: 'selectize reasons_select', data: { url: pipeline_stages_admin_workflows_path } %>
+          <%= p.select :lead_closed_reason, options_for_select([]), {prompt: 'Select Reason'}, class: 'selectize reasons_select', data: { url: pipeline_stages_admin_workflows_path }, required: false %>
         </div>
         <div class="col-md-3">
           <span class='pl-2'>
@@ -128,10 +128,12 @@ $(document).ready(function(selector){
     if(flag)
     {
       $current_target.parents('.pipeline-form').find('div.reasons_field').show();
+      $reasons_select.prop('required', true);
     }
     else
     {
       $current_target.parents('.pipeline-form').find('div.reasons_field').hide();
+      $reasons_select.prop('required', false);
     }
 
     if(reason_val)

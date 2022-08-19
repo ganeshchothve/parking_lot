@@ -19,15 +19,24 @@ module Kylas
         if wf.create_product?
           product_params = create_product_payload
           kylas_product_response = Kylas::CreateProductInKylas.new(entity.creator, product_params).call
-
-          entity.set(kylas_product_id: kylas_product_response[:response]['id']) if kylas_product_response[:success]
         end
-
         # call serice to update the product on that deal
         if wf.update_product_on_deal?
-          update_deal_params = {}
-          update_deal_params[:product] = update_product_payload
-          kylas_deal_response = Kylas::UpdateDeal.new(entity.creator, entity.lead.kylas_deal_id, update_deal_params).call
+          #fetch deal details from Kylas
+          fetch_deal_details = Kylas::FetchDealDetails.new(entity.lead.kylas_deal_id, entity.creator).call
+          if fetch_deal_details[:success]
+            deal_data = fetch_deal_details[:data].with_indifferent_access
+            deal_associated_products = deal_data[:products].collect{|pd| [pd[:name], pd[:id]]} rescue []
+            booking_product_in_kylas = deal_associated_products.select{ |kp| kp.include?(entity.kylas_product_id) } rescue []
+
+            #check whether the product is present on the deal or not
+            if !(booking_product_in_kylas.present?)
+              update_deal_params = {}
+              update_deal_params[:product] = update_product_payload(kylas_product_response[:response]['id']) if kylas_product_response[:success]
+              kylas_deal_response = Kylas::UpdateDeal.new(entity.creator, entity.lead.kylas_deal_id, update_deal_params).call
+              entity.set(kylas_product_id: kylas_product_response[:response]['id']) if kylas_deal_response[:success]
+            end
+          end
         end
 
         # call service to deactivate the product in Kylas
@@ -63,9 +72,9 @@ module Kylas
       payload
     end
 
-    def update_product_payload
+    def update_product_payload product_id
       payload = {
-        'id': entity.kylas_product_id,
+        'id': product_id,
         'name': entity.name,
         'price': {
           'currency': {
