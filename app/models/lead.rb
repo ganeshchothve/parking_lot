@@ -221,7 +221,7 @@ class Lead
 
   def unattached_blocking_receipt(blocking_amount = nil)
     blocking_amount ||= current_client.blocking_amount
-    Receipt.where(lead_id: id).in(status: %w[success clearance_pending]).where(booking_detail_id: nil).where(total_amount: { "$gte": blocking_amount }).asc(:token_number).first
+    Receipt.where(lead_id: id).in(status: %w[success clearance_pending]).where(booking_detail_id: nil).asc(:token_number).first
   end
 
   def is_payment_done?
