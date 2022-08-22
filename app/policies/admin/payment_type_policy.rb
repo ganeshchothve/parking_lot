@@ -15,4 +15,8 @@ class Admin::PaymentTypePolicy < PaymentTypePolicy
     %w[superadmin].include?(user.role)
   end
 
+  def new?
+    index?
+  end
+
 end

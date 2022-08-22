@@ -85,7 +85,7 @@ module PriceCalculator
   end
 
   def get_booking_price
-    payment_type = PaymentType.where(name: 'booking_price', project_id: self.project.id).first
+    payment_type = PaymentType.where(name: 'booking_price', project_id: self.project_id).first
     if payment_type.present?
       payment_type.value(self)
     else

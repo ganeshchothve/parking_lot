@@ -1,0 +1,6 @@
+<% if @payment_type.persisted?
+    _url = admin_payment_type_path(@payment_type)
+  else
+    _url = admin_payment_types_path
+  end %>
+<%= render 'form', payment_type: @payment_type, url: _url %>
