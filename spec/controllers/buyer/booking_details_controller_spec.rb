@@ -41,7 +41,7 @@ RSpec.describe Buyer::BookingDetailsController, type: :controller do
       @booking_detail.under_negotiation!
       receipt = create(:receipt, user: @user, booking_detail: @booking_detail, total_amount: @client.blocking_amount)
       receipt.clearance_pending!
-      receipt1 = create(:receipt, user: @user, booking_detail: @booking_detail, total_amount: @project_unit.booking_price)
+      receipt1 = create(:receipt, user: @user, booking_detail: @booking_detail, total_amount: @project_unit.get_booking_price)
       receipt1.clearance_pending!
       expect(@booking_detail.status).to eq('booked_confirmed')
     end

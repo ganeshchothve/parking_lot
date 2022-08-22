@@ -243,7 +243,7 @@ module DatabaseSeeds
       # @bd is booking_detail
       if Template::UITemplate.where(name: 'booking_details/_details').blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'booking_details/_details', content: '<ul>
-            <li>You need to pay <%= number_to_indian_currency(@bd.project_unit.booking_price) %> to confirm the booking</li>
+            <li>You need to pay <%= number_to_indian_currency(@bd.project_unit.get_booking_price) %> to confirm the booking</li>
             <% unless current_client.cancellation_amount.zero? %>
               <li>Cancellation charges are <%= number_to_indian_currency(current_client.cancellation_amount) %></li>
             <% end %>

@@ -196,7 +196,7 @@ module BookingDetailStateMachine
     # Updating blocked date of project_unit to today and  auto_release_on will be changed to blocking_days more from current auto_release_on.
     def after_booked_tentative_event
       return unless project_unit.present?
-      if booked_tentative? && (get_paid_amount >= project_unit.booking_price)
+      if booked_tentative? && (get_paid_amount >= project_unit.get_booking_price)
         booked_confirmed!
       else
         send_email_and_sms_as_booked

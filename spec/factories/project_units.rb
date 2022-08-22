@@ -4,7 +4,6 @@ FactoryBot.define do
     erp_id { Faker::IDNumber.valid }
     agreement_price { Faker::Number.number(6) }
     all_inclusive_price { Faker::Number.number(8) }
-    booking_price { Faker::Number.number(5) }
     status { 'available' } # { ['available', 'hold', 'blocked', 'booked_confirmed', 'booked_tentative'].sample }
     available_for { 'user' }
     auto_release_on { Faker::Date.between(2.days.ago, Date.today) }

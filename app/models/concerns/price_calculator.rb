@@ -83,4 +83,13 @@ module PriceCalculator
   def calculate_stamp_duty_type_cost
     return (30000 + (0.06 * calculate_agreement_price))
   end
+
+  def get_booking_price
+    payment_type = PaymentType.where(name: 'booking_price', project_id: self.project.id).first
+    if payment_type.present?
+      payment_type.value(self)
+    else
+      ((self.class.to_s == 'ProjectUnit' && self.booking_detail.present?) ? (self.booking_detail.calculate_agreement_price * 0.1) : (self.calculate_agreement_price * 0.1)).round
+    end
+  end
 end

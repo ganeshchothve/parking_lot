@@ -89,6 +89,7 @@ Rails.application.routes.draw do
     end
 
     resources :banner_assets
+    resources :payment_types
 
     resources :booking_details, only: [:index, :show, :new, :create, :edit, :update] do
       member do
