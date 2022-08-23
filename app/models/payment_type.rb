@@ -1,10 +1,13 @@
 class PaymentType
   include Mongoid::Document
   include Mongoid::Timestamps
+  extend FilterByCriteria
 
   field :name, type: String
   field :formula, type: String
   field :absolute_value, type: Float
+
+  belongs_to :project, optional: true
 
   validates :name, presence: true
   validate :formula_or_absolute_value

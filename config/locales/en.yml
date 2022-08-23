@@ -1493,6 +1493,12 @@ en:
           last_7_months: 'Last 7 months'
           custom_dates: 'Custom Dates'
 
+      payment_type:
+        name: Name
+        formula: Formula
+        absolute_value: Absolute Value
+        project: Project
+
   controller:
     discounts:
       index:
@@ -1520,6 +1526,9 @@ en:
         link_name: 'Activate'
       token_de_init:
         link_name: 'Deactivate'
+    payment_types:
+      index:
+        link_name: 'Payment Types'
     time_slots:
       index:
         link_name: 'Time Slots'

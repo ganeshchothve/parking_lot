@@ -119,7 +119,8 @@ class Project
   field :check_sv_availability_in_selldo, type: Boolean, default: false
   field :incentive_calculation, type: Array, default: ["manual"]
   field :disable_project, type: Hash, default: {walk_ins: false, bookings: false, invoicing: false}
-
+  field :booking_price_in_percentage, type: Boolean, default: true
+  field :booking_price_factor, type: Float, default: 10
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />

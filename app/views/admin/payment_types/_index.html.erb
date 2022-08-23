@@ -1,0 +1,37 @@
+<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
+  <thead class="th-default">
+    <thead>
+      <tr class="bg-primary white">
+        <th><%= t('mongoid.attributes.payment_type.name') %></th>
+      <th><%= t('mongoid.attributes.payment_type.formula') %></th>
+      <th><%= t('mongoid.attributes.payment_type.absolute_value') %></th>
+      <th><%= t('mongoid.attributes.payment_type.project') %></th>
+      <th class="text-right wd-22"></th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+    <% payment_types.each do |payment_type| %>
+      <tr>
+        <td data-title=<%= t('mongoid.attributes.payment_type.name') %>><%= payment_type.name %></td>
+        <td data-title=<%= t('mongoid.attributes.payment_type.formula') %>><%= payment_type.formula %></td>
+        <td data-title=<%= t('mongoid.attributes.payment_type.absolute_value') %>><%= payment_type.absolute_value %></td>
+        <td data-title=<%= t('mongoid.attributes.payment_type.project') %>><%= payment_type.project.name %></td>
+        <td>
+          <%= render "#{current_user_role_group}/payment_types/links", payment_type: payment_type, color: 'black' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="col-lg-12 py-3 bg-white mb-2 px-2">
+  <div class="row">
+    <div class="col-lg-6">
+      <p class="table-entry mb-0 ps-2 pt-2"><%= page_entries_info payment_types %></p>
+    </div>
+    <div class="col-lg-6 table-pagination">
+      <%= will_paginate payment_types, list_classes: %w(pagination justify-content-end) %>
+    </div>
+  </div>
+</div>

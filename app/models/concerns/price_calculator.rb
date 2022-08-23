@@ -28,8 +28,12 @@ module PriceCalculator
     effective_rate
   end
 
-  def booking_price_percent_of_agreement_price
-    agreement_price > 5000000 ? 0.099 : 0.1
+  def set_booking_price
+    if self.project.booking_price_in_percentage
+      (agreement_price * (self.project.booking_price_factor/100)).round
+    else
+      (self.project.booking_price_factor).round
+    end
   end
 
   def total_agreement_costs
@@ -81,5 +85,14 @@ module PriceCalculator
 
   def calculate_stamp_duty_type_cost
     return (30000 + (0.06 * calculate_agreement_price))
+  end
+
+  def get_booking_price
+    payment_type = PaymentType.where(name: 'booking_price', project_id: self.project_id).first
+    if payment_type.present?
+      payment_type.value(self)
+    else
+      ((self.class.to_s == 'ProjectUnit' && self.booking_detail.present?) ? (self.booking_detail.calculate_agreement_price * 0.1) : (self.calculate_agreement_price * 0.1)).round
+    end
   end
 end

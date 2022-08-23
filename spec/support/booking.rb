@@ -29,7 +29,7 @@ module Booking
     if status == 'booked_tentative'
       receipt_amount = receipt_amount + 10000
     elsif status == 'booked_confirmed'
-      receipt_amount = project_unit.booking_price + 10000
+      receipt_amount = project_unit.get_booking_price + 10000
     elsif status == 'hold'
       receipt_amount = nil
     end

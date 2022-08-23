@@ -1,7 +1,11 @@
 <% if policy([current_user_role_group, @project_unit]).editable_field?("booking_price") %>
   <div class="mb-3">
-    <%= f.label :booking_price %>
-    <%= f.text_field :booking_price, class: 'form-control', autofocus: true, required: 'required', disabled: (policy([current_user_role_group, @project_unit]).editable_field?("booking_price") ? false : true) %>
+    <div>
+      <%= f.label :booking_price %>
+    </div>
+    <div>
+      <span><%= f.object.get_booking_price %></span>
+    </div>
   </div>
 <% end %>
 <% if policy([current_user_role_group, @project_unit]).editable_field?("blocking_amount") %>

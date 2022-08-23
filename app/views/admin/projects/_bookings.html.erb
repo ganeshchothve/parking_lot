@@ -158,6 +158,31 @@
     </div>
   </div>
 </div>
+
+<div class='row'>
+    <% if policy([:admin, project]).editable_field?("booking_price_in_percentage") %>
+      <div class="col-md-6">
+        <div class="mb-3 input-price">
+          <%= f.label :booking_price_in_percentage, class: 'mb-2' %>
+          <div class="form-check form-check-inline">
+            <%= f.radio_button :booking_price_in_percentage, true, class: "form-check-input wd-22" %>
+            <%= f.label :booking_price_in_percentage, "Yes", class: "form-check-label d-inline-block ms-2" %>
+          </div>
+          <div class="form-check form-check-inline">
+            <%= f.radio_button :booking_price_in_percentage, false, class: "form-check-input wd-22" %>
+            <%= f.label :booking_price_in_percentage, "No", class: "form-check-label d-inline-block ms-2" %>
+          </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :booking_price_factor, class: 'label-required' %>
+        <%= f.text_field :booking_price_factor, class: 'form-control', required: true %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
 <%= javascript_tag do %>
   $(document).ready(function(){
     $('#project_enable_inventory').change(function(){
@@ -168,4 +193,16 @@
       }
     });
   });
+
+
+    $('.input-price').find('input, radio_button').change(function() {
+      if($('#project_booking_price_in_percentage_true').is(':checked')){
+        $('#project_booking_price_factor').attr("placeholder", "10 (10 Percent)");
+      }
+      else{
+        $('#project_booking_price_factor').attr("placeholder", "1000000 (Amount)"); // unit_booking_price
+      }
+    }).trigger('change');
+
+
 <% end %>
