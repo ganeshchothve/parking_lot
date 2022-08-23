@@ -42,7 +42,7 @@ module Kylas
       when Net::HTTPOK, Net::HTTPSuccess
         api_log.assign_attributes(request_url: url, request: [payload], response: [(JSON.parse(response.body) rescue {})], resource: user, response_type: "Hash", booking_portal_client: user.booking_portal_client)
         api_log.save
-        dump_kylas_contact_id
+        # dump_kylas_contact_id
         response = JSON.parse(response.body)
         { success: true, data: response }
       when Net::HTTPBadRequest

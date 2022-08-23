@@ -10,7 +10,6 @@ module Kylas
     def initialize(user, contact)
       @user = user
       @contact = contact
-      @contact = contact
     end
 
     def call
