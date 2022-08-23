@@ -4,6 +4,6 @@
     <% if policy([:admin, payment_type]).edit? %>
       <%= link_to t('helpers.edit.link_name', model: PaymentType.model_name.human), edit_admin_payment_type_path(payment_type), class: 'dropdown-item modal-remote-form-link' %>
     <% end %>
-    <%= link_to t('helpers.show.link_name', model: PaymentType.model_name.human), admin_payment_type_path(payment_type), class: 'dropdown-item' %>
+    <%#= link_to t('helpers.show.link_name', model: PaymentType.model_name.human), admin_payment_type_path(payment_type), class: 'dropdown-item' %>
   </div>
 </div>
