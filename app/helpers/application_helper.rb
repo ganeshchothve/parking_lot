@@ -244,7 +244,7 @@ module ApplicationHelper
   end
 
   def is_marketplace?
-    params[:namespace] == 'mp' || params.dig(:user, :namespace) == 'mp'
+    request.host.include?('marketplace') || request.host.include?('localhost')
   end
 
   def marketplace_layout
@@ -252,19 +252,11 @@ module ApplicationHelper
   end
 
   def application_layout
-    # if is_marketplace?
-    #   marketplace_layout
-    # else
-      'application'
-    # end
+    'application'
   end
 
   def devise_layout
-    # if is_marketplace?
-    #   marketplace_layout
-    # else
-      'devise'
-    # end
+    'devise'
   end
 
   def create_avatar_name

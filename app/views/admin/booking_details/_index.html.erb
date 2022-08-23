@@ -4,7 +4,7 @@
     <div class="booking-prjt-thumb">
       <div class="booking-prjt-thumb-inner position-relative">
         <h5 class="title"><%= link_to booking_detail.lead.name, admin_booking_detail_path(booking_detail) %></h5>
-        <p class="devl-name"><%= booking_detail.project.name ? booking_detail.project.name : '-' %> | <%= booking_detail.project_tower_name ? booking_detail.project_tower_name : '-' %> | <%= booking_detail.name ? booking_detail.name : '-' %> </p>
+        <p class="devl-name"><%= booking_detail.project ? booking_detail.project.name : '-' %> | <%= booking_detail.project_tower_name ? booking_detail.project_tower_name : '-' %> | <%= booking_detail.name ? booking_detail.name : '-' %> </p>
       </div>
     </div>
     <div class="booking-inner-info">
@@ -19,10 +19,10 @@
           <br>
           <br>
           <%# if booking_detail.blocked? %>
-            <span><strong><%= BookingDetail.human_attribute_name('approval_status') %></strong></span><br>
+            <!-- <span><strong><%#= BookingDetail.human_attribute_name('approval_status') %></strong></span><br>
             <span class="font-small fn-14 mb-0 theme-txt-color mb-0"><i
-                class='fa fa-circle status_<%= BookingDetail.human_attribute_name("status.#{booking_detail.approval_status}").downcase.gsub(' ', '_') %>  me-2 fa-sm'></i><%= I18n.t("mongoid.attributes.booking_detail/approval_status.#{booking_detail.approval_status}") %>
-            </span>
+                class='fa fa-circle status_<%#= BookingDetail.human_attribute_name("status.#{booking_detail.approval_status}").downcase.gsub(' ', '_') %>  me-2 fa-sm'></i><%#= I18n.t("mongoid.attributes.booking_detail/approval_status.#{booking_detail.approval_status}") %>
+            </span> -->
           <%# end %>
         </div>
       </div>
@@ -32,10 +32,10 @@
             <%= booking_detail.booked_on ? I18n.l(booking_detail.booked_on) : '-' %>
             <span><%= t('mongoid.attributes.booking_detail.booked_on') %></span>
           </p>
-          <p>
-            <%= booking_detail.tentative_agreement_date ? I18n.l(booking_detail.tentative_agreement_date) : '-' %>
-            <span><%= t('mongoid.attributes.booking_detail.tentative_agreement_date') %></span>
-          </p>
+          <!-- <p>
+            <%#= booking_detail.tentative_agreement_date ? I18n.l(booking_detail.tentative_agreement_date) : '-' %>
+            <span><%#= t('mongoid.attributes.booking_detail.tentative_agreement_date') %></span>
+          </p> -->
           <p>
             <%= booking_detail.agreement_date ? I18n.l(booking_detail.agreement_date) : '-' %>
             <span><%= t('mongoid.attributes.booking_detail.agreement_date') %></span>

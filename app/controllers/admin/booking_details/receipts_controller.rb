@@ -56,7 +56,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
         if @receipt.payment_mode == 'online'
           url = @receipt.payment_gateway_service.gateway_url(@booking_detail.search.id)
         else
-          url = admin_lead_receipts_path(@lead, 'remote-state': assetables_path(assetable_type: @receipt.class.model_name.i18n_key.to_s, assetable_id: @receipt.id))
+          url = admin_booking_detail_receipts_path(@booking_detail, 'remote-state': assetables_path(assetable_type: @receipt.class.model_name.i18n_key.to_s, assetable_id: @receipt.id))
         end
         format.json { render json: @receipt, location: url }
         format.html { redirect_to url }

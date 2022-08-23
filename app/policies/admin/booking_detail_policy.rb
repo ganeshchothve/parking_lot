@@ -45,9 +45,9 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def show_booking_link?
     valid = record.lead&.project&.bookings_enabled? && _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && record.try(:user).try(:buyer?) && enable_inventory?
-    if is_assigned_lead?
-      valid = is_lead_accepted? && valid
-    end
+    # if is_assigned_lead?
+    #   valid = is_lead_accepted? && valid
+    # end
     valid
   end
 

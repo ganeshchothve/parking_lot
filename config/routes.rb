@@ -75,6 +75,9 @@ Rails.application.routes.draw do
   get '/s/:code', to: 'shortened_urls#redirect_to_url'
 
   namespace :admin do
+    resources :discounts do
+      get 'update_coupons', on: :collection
+    end
     resources :customer_searches, except: :destroy
     resources :campaigns, except: [:destroy]
     resources :meetings, except: [:destroy]
@@ -95,7 +98,10 @@ Rails.application.routes.draw do
     resources :checklists
 
     resources :bulk_upload_reports, except: [:edit, :update, :destroy] do
-      get :show_errors, on: :member
+      member do
+        get :show_errors
+        get :upload_error_exports
+      end
     end
 
     resources :banner_assets
@@ -499,6 +505,26 @@ Rails.application.routes.draw do
       post :generate_code, on: :collection
     end
 
+    resources :leads, only: [:index, :show, :edit, :update, :new] do
+      collection do
+        get :export
+        get :search_by
+        post :search_inventory
+      end
+
+      resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
+
+      resources :booking_details, only: [:index, :show] do
+        patch :booking, on: :member
+        patch :send_under_negotiation, on: :member
+        patch :send_blocked, on: :member
+        resources :booking_detail_schemes, only: [:index], controller: 'booking_details/booking_detail_schemes'
+
+        resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
+        # resources :booking_detail_schemes, except: [:destroy]
+        # resources :receipts, only: [:index]
+      end
+    end
   end
 
   namespace :api do

@@ -4,15 +4,15 @@
 <%= render "layouts/partials/before_login_header" %>
 <% else %>
 <header>
-  <!-- <div class="header-leftbar">
+  <div class="header-leftbar">
     <div class="leftbar-wrap">
       <div class="header-menu">
         <ul class="list-unstyled ">
-          <%#= render "layouts/navbar/#{current_user_role_group}" %>
+          <%= render "layouts/navbar/#{current_user_role_group}" %>
         </ul>
       </div>
     </div>
-  </div> -->
+  </div>
   <div class="header-topbar">
     <div class="header-inner">
       <!-- <a href="javascript:;" class="p-2 py-1 float-start toggle-side-menu mt-4 me-3 ms-2">
@@ -23,26 +23,11 @@
           <div class="bar3" data-event-category="Header" data-event-action="Click" data-event-name="Menu"></div>
         </div>
       </a> -->
-      <!-- <div class="header-logo float-start">
-        <%#= link_to (current_client.logo.present? ? (image_tag current_client.logo.url, class: 'img-fluid position-absolute start-50 top-50 translate-middle', alt: "Logo") : "launchpad-logo.png"), dashboard_path, class: 'navbar-brand me-0'%>
-      </div> -->
+      <div class="header-logo float-start">
+        <%= link_to (current_client.logo.present? ? (image_tag current_client.logo.url, class: 'img-fluid position-absolute start-50 top-50 translate-middle', alt: "Logo") : "launchpad-logo.png"), dashboard_path, class: 'navbar-brand me-0'%>
+      </div>
       
       <div class="float-start mt-3">
-        <nav class="navbar navbar-expand-lg shadow-none">
-          <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
-              <% _projects_path = current_user.role.in?(%w(cp_owner channel_partner)) ? admin_projects_path(fltrs: {city: current_user.channel_partner&.city, regions: current_user.channel_partner&.regions}) : admin_projects_path  %>
-              <%= active_link_to t('controller.projects.index.link_name'), _projects_path, active: request.fullpath.scan(/projects/).present? && %w(user_interested_projects third_party_inventory).all? {|x| request.fullpath.scan(/^(?!.*#{x}).*$/).present?}, class: "nav-link pl-0 pr-0" %>
-
-              <%= active_link_to t('controller.users.index.link_name'), admin_users_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-
-              <%= active_link_to t('controller.booking_details.index.link_name'), admin_booking_details_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-
-              <%= active_link_to t('controller.workflows.index.link_name'), admin_workflows_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-            </div>
-          </div>
-        </nav>
         <%# <h1 class="page-title">Dashboard</h1> %>
       </div>
       

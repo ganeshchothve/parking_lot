@@ -48,7 +48,7 @@ module LeadRegisteration
 
   def add_new_lead_flow(format)
     unless @user.present?
-      @user = User.new(booking_portal_client_id: current_user.booking_portal_client.id, email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'])
+      @user = User.new(booking_portal_client_id: current_user.booking_portal_client.id, email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], is_active: true)
       @user.skip_confirmation! # TODO: Remove this when customer login needs to be given
     end
 

@@ -27,14 +27,19 @@ module UserRequests
         current_booking_detail.receipts.in(status: %w[pending clearance_pending success]).desc(:total_amount).each do |old_receipt|
           # TODO: :Error Handling for receipts remaining #SANKET
           new_receipt = old_receipt.dup
-          # Clear token number for swapped receipts.
-          new_receipt.token_number = nil
           new_receipt.booking_detail = new_booking_detail
           new_receipt.comments = "Receipt generated for Swapped Unit. Original Receipt ID: #{old_receipt.id}"
           old_receipt.comments ||= ''
           old_receipt.comments += "Unit Swapped by user. Original Unit ID: #{current_project_unit.id} So cancelling these receipts"
+          old_receipt.set(token_number: nil) if old_receipt.token_number.present?          
           # Call callback after receipt is set to success so that booking detail status and project unit status get set accordingly
           if new_receipt.save
+             # Copy token discount details over to new receipt & booking.
+            if old_receipt.coupon.present? && new_receipt.token_eligible?
+              new_receipt.generate_coupon
+              new_booking_detail.update(token_discount: new_receipt.coupon.try(:value).to_f, variable_discount: new_receipt.coupon.try(:variable_discount).to_f)
+            end
+            
             if new_receipt.clearance_pending?
               new_receipt.clearance_pending!
             elsif new_receipt.success?

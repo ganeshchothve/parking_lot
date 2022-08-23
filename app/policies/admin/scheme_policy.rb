@@ -10,10 +10,6 @@ class Admin::SchemePolicy < SchemePolicy
     current_client.enable_actual_inventory?(user) && ((index? && record.status == 'draft') || %w[superadmin admin].include?(user.role))
   end
 
-  def payment_adjustments_for_unit?
-    user.active_channel_partner?
-  end
-
   def permitted_attributes(_params = {})
     attributes = [:name, can_be_applied_by: []]
     if record.new_record? || record.status == 'draft' || record.status_was == 'draft'

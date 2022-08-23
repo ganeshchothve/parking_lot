@@ -65,6 +65,7 @@ class Receipt
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :user_requests, as: :requestable
   has_one :user_kyc
+  has_one :coupon
 
   scope :filter_by_status, ->(_status) { where(status: { '$in' => _status }) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }

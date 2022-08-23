@@ -129,6 +129,9 @@ module DatabaseSeeds
 
       Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "BookingDetail", name: "second_booking_notification", content: 'Alert - Channel Partner <%= self.manager.try(:name) %> has added more than 1 booking on same customer <%= self.lead.try(:name) %> for project <%= self.try(:project).try(:name) %> on BeyondWalls portal. Please cross verify with channel Partner / channel partner manager before approval.') if ::Template::SmsTemplate.where(name: "second_booking_notification").blank?
 
+      Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "Receipt", name: "updated_token_details", content: "Dear <%= user.name %>, your token has been updated") if Template::SmsTemplate.where(name: "updated_token_details").blank?
+
+
       return Template::SmsTemplate.where(booking_portal_client_id: client_id).count
     end
   end

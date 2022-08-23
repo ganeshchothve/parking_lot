@@ -42,6 +42,8 @@ class BookingDetail
   field :ladder_stage, type: Array
   field :source, type: String
   field :rejection_reason, type: String
+  field :token_discount, type: Float
+  field :variable_discount, type: Float
 
   #kylas specific field
   field :kylas_product_id, type: Integer

@@ -2,7 +2,7 @@ class Buyer::ProjectUnitPolicy < ProjectUnitPolicy
   # def ds? def show? new? def print? def export? def mis_report? def create? def update? def block? def make_available? def update_scheme? def update_co_applicants? def update_project_unit? def payment? def process_payment? def checkout? def send_under_negotiation? from ProjectUnitPolicy
 
   def index?
-    current_client.enable_actual_inventory?(user) && user.buyer?
+    record.booking_portal_client.enable_actual_inventory?(user) && user.buyer?
   end
 
   def edit?

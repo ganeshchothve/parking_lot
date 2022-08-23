@@ -85,6 +85,7 @@ class Admin::LeadsController < AdminController
   #
   def search_by
     @leads = Lead.unscoped.build_criteria params
+    @leads = @leads.where(Lead.user_based_scope(current_user))
     @leads = @leads.paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
   end
 

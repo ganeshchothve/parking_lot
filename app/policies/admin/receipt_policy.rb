@@ -12,9 +12,9 @@ class Admin::ReceiptPolicy < ReceiptPolicy
 
   def new?
     valid = record.user.present? && record.user.buyer? && confirmed_and_ready_user? && user.active_channel_partner? && record.lead&.project&.is_active? && !user.booking_portal_client.launchpad_portal
-    if is_assigned_lead?
-      valid = valid && is_lead_accepted?
-    end
+    # if is_assigned_lead?
+    #   valid = valid && is_lead_accepted?
+    # end
     valid
   end
 

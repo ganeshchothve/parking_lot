@@ -40,10 +40,17 @@
     <% if full_page_view? || request.host.include?('embed-') %>
       <%= yield %>
     <% else %>
-      <%= render "layouts/navbar"%>
-      <main class="page-wrapper">
-        <%= yield %>
-      </main>
+      <% if is_marketplace? %>
+        <%= render "layouts/mp/navbar" %>
+        <main class="mp-page-wrapper">
+          <%= yield %>
+        </main>
+      <% else %>
+        <%= render "layouts/navbar"%>
+        <main class="page-wrapper">
+          <%= yield %>
+        </main>
+      <% end %>
       <%= render "layouts/gamification" %>
       <%= render "layouts/navbar_footer_afterlogin"%>
     <% end %>

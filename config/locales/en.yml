@@ -55,6 +55,10 @@ en:
     successfully_installed: 'Kylas Application is successfully authenticated'
     facing_problem: 'There is problem to authenticate the Kylas Application'
     something_went_wrong: 'Something went wrong' 
+    discount:
+      one: Token Discount
+      other: Token Discounts
+
   helpers:
     extend_validity:
       link_name: '%{model}'
@@ -134,7 +138,7 @@ en:
         other: Bulk Upload Reports
       upload_error:
         one: Upload Errors
-        other: Uplaod Errors
+        other: Upload Errors
       booking_detail:
         one: Booking
         other: Bookings
@@ -894,6 +898,7 @@ en:
         frequency: 'Frequency'
         dates: 'Dates'
         token: 'Token Number'
+        token_discount: 'Token Discount'
         date: 'Slot Date'
         start_time: 'Slot Start'
         end_time: 'Slot End'
@@ -1514,6 +1519,13 @@ en:
         reason: Reason
 
   controller:
+    discounts:
+      index:
+        link_name: 'Token Discounts'
+      update_coupons:
+        success_message: 'You will receive a mail when MRP numbers are updated'
+      links:
+        update_coupons: 'Update Token Discounts'
     videos:
       destroy:
         link_name: 'Delete'
