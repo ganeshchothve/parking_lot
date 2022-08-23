@@ -1,6 +1,7 @@
 class PaymentType
   include Mongoid::Document
   include Mongoid::Timestamps
+  extend FilterByCriteria
 
   field :name, type: String
   field :formula, type: String

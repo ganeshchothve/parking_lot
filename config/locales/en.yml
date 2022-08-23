@@ -1489,6 +1489,12 @@ en:
           last_7_months: 'Last 7 months'
           custom_dates: 'Custom Dates'
 
+      payment_type:
+        name: Name
+        formula: Formula
+        absolute_value: Absolute Value
+        project: Project
+
   controller:
     videos:
       destroy:
