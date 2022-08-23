@@ -21,6 +21,11 @@ class Admin::PaymentTypesController < AdminController
     render layout: false
   end
 
+  def show
+    render 'admin/payment_types/show', layout: false
+  end
+
+
   def update
     attrs = permitted_attributes([current_user_role_group, @payment_type])
     @payment_type.assign_attributes(attrs)

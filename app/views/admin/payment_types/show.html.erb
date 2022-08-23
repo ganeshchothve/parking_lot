@@ -1,0 +1,35 @@
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="title">
+            <%= t("helpers.#{action_name}.link_name", model: PaymentType.model_name.human) %>
+            </h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body theme-form">
+          <%= t('mongoid.attributes.payment_type.name') %>: <%= @payment_type.name %><br/>
+          <%= t('mongoid.attributes.payment_type.formula') %>: <%= @payment_type.formula %><br/>
+          <%= t('mongoid.attributes.payment_type.absolute_value') %>: <%= @payment_type.absolute_value %><br/>
+          <%= t('mongoid.attributes.payment_type.project') %>: <%= @payment_type.project %><br/>
+          <hr />
+
+          <div class="row">
+            <div class="col-lg-8">
+              <h3><%= @payment_type.name %></h3>
+            </div>
+            <div class="col-lg-8">
+              <h3><%= @payment_type.formula %></h3>
+            </div>
+            <div class="col-lg-8">
+              <h3><%= @payment_type.absolute_value %></h3>
+            </div>
+            <div class="col-lg-8">
+              <h3><%= @payment_type.project %></h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
