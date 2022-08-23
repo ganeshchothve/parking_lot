@@ -101,7 +101,7 @@ module Kylas
     def get_query
       query = []
       query << {email: params.dig(:lead, :email)} if params.dig(:lead, :email).present?
-      query << {email: params.dig(:lead, :phone)} if params.dig(:lead, :phone).present?
+      query << {phone: params.dig(:lead, :phone)} if params.dig(:lead, :phone).present?
       query
     end
 
