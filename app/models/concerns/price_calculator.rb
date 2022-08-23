@@ -28,14 +28,6 @@ module PriceCalculator
     effective_rate
   end
 
-  def set_booking_price
-    if self.project.booking_price_in_percentage
-      (agreement_price * (self.project.booking_price_factor/100)).round
-    else
-      (self.project.booking_price_factor).round
-    end
-  end
-
   def total_agreement_costs
     costs.where(category: 'agreement').collect do |cost|
       cost.value
