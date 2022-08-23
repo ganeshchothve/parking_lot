@@ -14,7 +14,10 @@ class Buyer::UsersController < BuyerController
   # Update Password
   # update password defined in UsersConcern
   # GET /buyer/users/:id/update_password
-
+  def edit
+    render layout: false
+  end
+  
   def update
     @user.assign_attributes(permitted_attributes([:buyer, @user]))
     respond_to do |format|
@@ -40,6 +43,17 @@ class Buyer::UsersController < BuyerController
     end
   end
 
+  def show
+    @project_units = @user.project_units.order('created_at DESC').paginate(page: params[:page], per_page: params[:per_page])
+    @booking_details = @user.booking_details.paginate(page: params[:page], per_page: params[:per_page])
+    @receipts = @user.receipts.order('created_at DESC').paginate(page: params[:page], per_page: params[:per_page])
+    @referrals = @user.referrals.order('created_at DESC').paginate(page: params[:page], per_page: params[:per_page])
+    respond_to do |format|
+      format.html { render template: 'admin/users/show' }
+      format.json
+    end
+  end
+  
   private
 
 

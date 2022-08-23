@@ -1,6 +1,6 @@
 class Admin::SiteVisitPolicy < SiteVisitPolicy
   def index?
-    out = user.role.in?(%w(admin superadmin dev_sourcing_manager billing_team sales_admin) + User::CHANNEL_PARTNER_USERS)
+    out = user.role.in?(%w(admin superadmin dev_sourcing_manager billing_team sales_admin))
     out && user.active_channel_partner?
   end
 
@@ -13,7 +13,8 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
   end
 
   def new?
-    SiteVisit.where(lead_id: record.lead_id, status: 'scheduled').blank? && edit? && record.project.walk_ins_enabled?
+    # SiteVisit.where(lead_id: record.lead_id, status: 'scheduled').blank? && edit? && record.project.walk_ins_enabled?
+    false
   end
 
   def update?

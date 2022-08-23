@@ -20,7 +20,7 @@ class SearchesController < ApplicationController
   def show
     if @search.project_unit.present? && @search.project_unit.status == 'hold'
       if redirect_to_checkout?
-        redirect_to checkout_user_search_path(@search)
+        redirect_to checkout_lead_search_path(@search)
       end
     end
     # GENERICTODO: Handle current user to be from a user based route path
@@ -88,8 +88,7 @@ class SearchesController < ApplicationController
 
   def hold
     @booking_detail.event = 'hold' if @booking_detail.new_record?
-    @booking_detail.assign_attributes( permitted_attributes([ current_user_role_group, @booking_detail]))
-
+    @booking_detail.assign_attributes(permitted_attributes([current_user_role_group, @booking_detail]))
     # Has to be done after user is assigned and before status is updated
     authorize [current_user_role_group, @booking_detail]
     respond_to do |format|
@@ -282,6 +281,9 @@ class SearchesController < ApplicationController
 
   def set_booking_detail
     @booking_detail = BookingDetail.where(status: {"$in": BookingDetail::BOOKING_STAGES}, project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead).first
+    if unattached_blocking_receipt = @search.lead.unattached_blocking_receipt(@search.project_unit.blocking_amount)
+      coupon = unattached_blocking_receipt.coupon
+    end
     if @booking_detail.blank?
       @booking_detail = BookingDetail.find_or_initialize_by(project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead, status: 'hold')
       if @booking_detail.new_record?
@@ -296,7 +298,9 @@ class SearchesController < ApplicationController
           costs: @search.project_unit.costs,
           data: @search.project_unit.data,
           manager_id: @search.lead_manager_id,
-          site_visit_id: @search.site_visit_id
+          site_visit_id: @search.site_visit_id,
+          token_discount: coupon.try(:value).to_f,
+          variable_discount: coupon.try(:variable_discount).to_f
         )
         @booking_detail.search = @search
       end

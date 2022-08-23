@@ -1,7 +1,7 @@
 class Admin::LeadPolicy < LeadPolicy
 
   def index?
-    out = !(user.buyer? || user.role.in?(%w(channel_partner cp_owner dev_sourcing_manager)))
+    out = !(user.buyer? || user.role.in?(%w(dev_sourcing_manager)))
     #out = out && user.active_channel_partner?
     #out = false if user.role.in?(%w(channel_partner cp_owner)) && !interested_project_present?
     #out
@@ -62,9 +62,9 @@ class Admin::LeadPolicy < LeadPolicy
 
   def asset_create?
     valid = %w[admin sales sales_admin crm].include?(user.role)
-    if user.role?(:sales) && is_assigned_lead?
-      valid = is_lead_accepted? && valid
-    end
+    # if user.role?(:sales) && is_assigned_lead?
+    #   valid = is_lead_accepted? && valid
+    # end
     valid
   end
 
@@ -89,7 +89,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def send_payment_link?
-    record.user.confirmed?
+    record.user.confirmed? && record.user.in?(User::ADMIN_ROLES)
   end
 
   def search_by?
@@ -101,7 +101,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def move_to_next_state?
-    if is_lead_accepted?
+    if user.role?('sales')
       record.may_dropoff? && (record.closing_manager_id == user.id)
     else
       (user.role.in?(%w(gre team_lead)) && (record.is_a?(Lead) || record.role?('sales'))) ||
@@ -113,10 +113,11 @@ class Admin::LeadPolicy < LeadPolicy
 
   def show_existing_customer?
     %w(sales).exclude?(user.role)
+    false
   end
 
   def reassign_lead?
-    current_client.team_lead_dashboard_access_roles.include?(user.role)
+    current_client.team_lead_dashboard_access_roles.include?(user.role) || user.role?("team_lead")
   end
 
   def reassign_sales?

@@ -190,7 +190,7 @@ GEM
     fcm (0.0.2)
       httparty
       json
-    ffi (1.9.25)
+    ffi (1.15.5)
     fog-aws (3.3.0)
       fog-core (~> 2.1)
       fog-json (~> 1.1)

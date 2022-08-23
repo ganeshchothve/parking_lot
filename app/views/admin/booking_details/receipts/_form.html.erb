@@ -78,7 +78,7 @@
         <div class="col-md-6">
           <div class="mb-3">
             <%= f.label :token_type, class: 'label-required' %>
-            <%= f.select :token_type, @receipt.project.token_types.all.select{|tt| tt.incrementor_exists?}.collect{ |x| [x.name, x.id]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+            <%= f.select :token_type, @receipt.project.token_types.all.select{|tt| tt.incrementor_exists?}.collect{ |x| [x.name, x.id]}, {prompt: true, selected: @receipt.token_type.try(:id)}, class: 'selectize', required: 'required', autofocus: true %>
           </div>
         </div>
       <% end %>
@@ -137,7 +137,7 @@
     </div>
     <div class="form-check mt-1">
       <%= check_box_tag :agree, true, false, class: "form-check-input wd-22" %>
-      <%= label_tag :agree, t("mongoid.models.booking_detail.i_agree_label.#{current_user_role_group}", name: f.object.lead.name), class: "form-check-label d-inline-block ms-2" %>
+      <%= label_tag :agree, t("mongoid.models.booking_detail.i_agree_label.#{current_user_role_group}", name: @lead.name), class: "form-check-label d-inline-block ms-2" %>
     </div>
   </div>
 <% end %>
