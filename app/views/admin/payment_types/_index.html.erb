@@ -16,7 +16,7 @@
         <td data-title=<%= t('mongoid.attributes.payment_type.name') %>><%= payment_type.name %></td>
         <td data-title=<%= t('mongoid.attributes.payment_type.formula') %>><%= payment_type.formula %></td>
         <td data-title=<%= t('mongoid.attributes.payment_type.absolute_value') %>><%= payment_type.absolute_value %></td>
-        <td data-title=<%= t('mongoid.attributes.payment_type.project') %>><%= payment_type.project.name %></td>
+        <td data-title=<%= t('mongoid.attributes.payment_type.project') %>><%= payment_type.project&.name %></td>
         <td>
           <%= render "#{current_user_role_group}/payment_types/links", payment_type: payment_type, color: 'black' %>
         </td>
