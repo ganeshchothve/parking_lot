@@ -18,7 +18,6 @@ class ProjectUnit
   field :erp_id, type: String
   field :agreement_price, type: Integer
   field :all_inclusive_price, type: Integer
-  field :booking_price, type: Integer
   field :status, type: String, default: 'available'
   field :available_for, type: String, default: 'user'
   field :blocked_on, type: Date

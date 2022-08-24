@@ -203,7 +203,7 @@ module BookingDetailStateMachine
       #trigger all workflow events in Kylas
       Kylas::TriggerWorkflowEvents.new(self).trigger_workflow_events_in_kylas
 
-      if booked_tentative? && (get_paid_amount >= project_unit.booking_price)
+      if booked_tentative? && (get_paid_amount >= self.get_booking_price)
         booked_confirmed!
       else
         send_email_and_sms_as_booked

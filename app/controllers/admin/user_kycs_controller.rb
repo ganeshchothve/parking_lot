@@ -1,7 +1,7 @@
 # TODO: replace all messages & flash messages
 class Admin::UserKycsController < AdminController
   include UserKycsConcern
-  before_action :set_lead
+  before_action :set_lead, except: :index
   before_action :set_user_kyc, only: %i[show edit update destroy]
   around_action :apply_policy_scope
   before_action :authorize_resource

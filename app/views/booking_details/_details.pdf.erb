@@ -86,7 +86,7 @@
           </div>
           <div class="alert alert-primary col-md-12 col-lg-12 col-xs-12 col-sm-12">
             <ul>
-              <li>You need to pay <%= number_to_indian_currency(booking_detail.project_unit.booking_price) %> to confirm the booking</li>
+              <li>You need to pay <%= number_to_indian_currency(booking_detail.project_unit.get_booking_price) %> to confirm the booking</li>
               <% unless current_client.cancellation_amount.zero? %>
                 <li>Cancellation charges are <%= number_to_indian_currency(current_client.cancellation_amount) %></li>
               <% end %>

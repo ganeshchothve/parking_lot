@@ -118,8 +118,11 @@ class CustomPolicy < Struct.new(:user, :enable_users)
   #   "#{user.buyer? ? '' : 'Admin::'}CpLeadActivityPolicy".constantize.new(user, CpLeadActivity).index?
   # end
 
+  def payment_types?
+    "#{user.buyer? ? 'Buyer' : 'Admin'}::PaymentTypePolicy".constantize.new(user, PaymentType).index?
+  end
+
   def self.custom_methods
-    %w[schemes incentive_schemes emails smses referrals accounts checklists bulk_upload_reports crms api_logs push_notifications user_kycs sales_board variable_incentive_schemes discounts].sort
-    # add_booking portal_stage_priorities phases audits assets meetings user_requests
+    %w[schemes incentive_schemes emails smses referrals accounts checklists bulk_upload_reports crms api_logs push_notifications user_kycs sales_board variable_incentive_schemes discounts payment_types].sort
   end
 end

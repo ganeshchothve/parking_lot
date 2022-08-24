@@ -109,6 +109,8 @@ Rails.application.routes.draw do
       get 'pipeline_stages', to: 'workflows#pipeline_stages', on: :collection
     end
 
+    resources :payment_types
+
     resources :booking_details, only: [:index, :show, :new, :create, :edit, :update] do
       member do
         patch :booking
