@@ -1,0 +1,107 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :name, class: 'label-required' %>
+      <%= f.text_field :name, class: 'form-control', autofocus: true, required: 'required', disabled: (policy([:admin, @client]).editable_field?("name") ? false : true) %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :registration_name, class: 'label-required' %>
+      <%= f.text_field :registration_name, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("registration_name") ? false : true) %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :cin_number, class: 'label-required' %>
+      <%= f.text_field :cin_number, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("cin_number") ? false : true) %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :disclaimer %>
+      <%= f.text_area :disclaimer, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("disclaimer") ? false : true) %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :preferred_login, class: 'label-required' %>
+      <%= f.select :preferred_login, Client.available_preferred_logins.collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize', required: 'required', disabled: (policy([:admin, @client]).editable_field?("preferred_login") ? false : true) %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :enable_booking_with_kyc %>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_booking_with_kyc, true, class: "form-check-input wd-22" %>
+        <%= f.label :enable_booking_with_kyc, "Yes", class: " form-check-label d-inline-block ms-2" %>
+      </div>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_booking_with_kyc, false, class: "form-check-input wd-22" %>
+        <%= f.label :enable_booking_with_kyc, "No", class: " form-check-label d-inline-block ms-2" %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :blocking_amount, class: 'label-required' %>
+      <%= f.number_field :blocking_amount, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("blocking_amount") ? false : true), min: 0 %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :holding_minutes, class: 'label-required' %>
+      <%= f.text_field :holding_minutes, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("holding_minutes") ? false : true), min: 0, max: 30 %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <% if policy([:admin, @client]).editable_field?("enable_direct_payment") %>
+    <div class="mb-3 direct-payment">
+      <%= f.label :enable_direct_payment %>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_direct_payment, true, class: "form-check-input wd-22" %>
+        <%= f.label :enable_direct_payment, "Yes", class: " form-check-label d-inline-block ms-2" %>
+      </div>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_direct_payment, false, class: "form-check-input wd-22" %>
+        <%= f.label :enable_direct_payment, "No", class: " form-check-label d-inline-block ms-2" %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3 depend-direct-payment">
+      <%= f.label :enable_payment_with_kyc %>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_payment_with_kyc, true, class: "form-check-input wd-22" %>
+        <%= f.label :enable_payment_with_kyc, "Yes", class: " form-check-label d-inline-block ms-2" %>
+      </div>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_payment_with_kyc, false, class: "form-check-input wd-22" %>
+        <%= f.label :enable_payment_with_kyc, "No", class: " form-check-label d-inline-block ms-2" %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :kylas_api_key, class: 'label-required' %>
+      <%= f.text_field :kylas_api_key, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("kylas_api_key") ? false : true) %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :payment_gateway, class: 'label-required' %>
+      <%= f.select :payment_gateway, options_for_select(Client::PAYMENT_GATEWAYS.map {|x| [x.titleize, x]}, f.object.payment_gateway), {prompt: 'Select'}, class: 'selectize', disabled: !policy([:admin, @client]).editable_field?("payment_gateway") %>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="mb-3">
+      <%= f.label :terms_and_conditions, class: '' %>
+      <%= f.text_area :terms_and_conditions, class: 'form-control summernote', disabled: !policy([:admin, @client]).editable_field?("terms_and_conditions") %>
+    </div>
+  </div>
+</div>

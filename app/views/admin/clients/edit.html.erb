@@ -11,38 +11,52 @@
         <div class="modal-body">
           <nav>
             <div class="nav nav-tabs theme-tab" role="tablist">
-              <a class="nav-item nav-link active" data-bs-toggle="tab" href="#nav-client-basic" role="tab">Basic Details</a>
-              <!-- <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-client-bookings" role="tab">Bookings</a>
-              <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-client-contacts" role="tab">Contacts & Notifications</a>
-              <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-client-integrations" role="tab">Integrations</a>
-              <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-client-pages" role="tab">Content Pages</a>
-              <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-client-logos" role="tab">Images & Documents</a>
-              <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-client-regions" role="tab">Cities & Regions</a> -->
+              <% if is_marketplace? %>
+                <a class="nav-item nav-link active" data-bs-toggle="tab" href="#nav-client-basic" role="tab">Basic Details</a>
+              <% else %>
+                <a class="nav-item nav-link active" data-bs-toggle="tab" href="#nav-client-basic" role="tab">Basic Details</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-client-bookings" role="tab">Bookings</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-client-contacts" role="tab">Contacts & Notifications</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-client-integrations" role="tab">Integrations</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-client-pages" role="tab">Content Pages</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-client-logos" role="tab">Images & Documents</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-client-regions" role="tab">Cities & Regions</a>
+              <% end %>
+              <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-client-settings" role="tab">Settings</a>
             </div>
           </nav>
         <div class="mt-3"></div>
           <div class="tab-content theme-form">
-            <div class="tab-pane fade show active" id="nav-client-basic" role="tabpanel">
-              <%= render 'admin/clients/basic', f: f %>
+            <% if is_marketplace? %>
+              <div class="tab-pane fade show active" id="nav-client-basic" role="tabpanel">
+                <%= render 'admin/clients/mp/basic', f: f %>
+              </div>
+            <% else %>
+              <div class="tab-pane fade show active" id="nav-client-basic" role="tabpanel">
+                <%= render 'admin/clients/basic', f: f %>
+              </div>
+              <div class="tab-pane fade" id="nav-client-bookings" role="tabpanel">
+                <%= render 'admin/clients/bookings', f: f %>
+              </div>
+              <div class="tab-pane fade" id="nav-client-contacts" role="tabpanel">
+                <%= render 'admin/clients/contacts', f: f %>
+              </div>
+              <div class="tab-pane fade" id="nav-client-integrations" role="tabpanel">
+                <%= render 'admin/clients/integrations', f: f %>
+              </div>
+              <div class="tab-pane fade" id="nav-client-pages" role="tabpanel">
+                <%= render 'admin/clients/pages', f: f %>
+              </div>
+              <div class="tab-pane fade" id="nav-client-logos" role="tabpanel">
+                <%= render 'admin/clients/logos', f: f %>
+              </div>
+              <div class="tab-pane fade" id="nav-client-regions" role="tabpanel">
+                <%= render 'admin/clients/regions', f: f %>
+              </div>
+            <% end %>
+            <div class="tab-pane fade" id="nav-client-settings" role="tabpanel">
+              <%= render 'admin/clients/settings', f: f %>
             </div>
-            <!-- <div class="tab-pane fade" id="nav-client-bookings" role="tabpanel">
-              <%#= render 'admin/clients/bookings', f: f %>
-            </div>
-            <div class="tab-pane fade" id="nav-client-contacts" role="tabpanel">
-              <%#= render 'admin/clients/contacts', f: f %>
-            </div>
-            <div class="tab-pane fade" id="nav-client-integrations" role="tabpanel">
-              <%#= render 'admin/clients/integrations', f: f %>
-            </div>
-            <div class="tab-pane fade" id="nav-client-pages" role="tabpanel">
-              <%#= render 'admin/clients/pages', f: f %>
-            </div>
-            <div class="tab-pane fade" id="nav-client-logos" role="tabpanel">
-              <%#= render 'admin/clients/logos', f: f %>
-            </div>
-            <div class="tab-pane fade" id="nav-client-regions" role="tabpanel">
-              <%#= render 'admin/clients/regions', f: f %>
-            </div> -->
           </div>
         </div>
         <div class="modal-footer text-end">
