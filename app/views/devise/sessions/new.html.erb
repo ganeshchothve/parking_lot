@@ -75,10 +75,10 @@ end %>
         data-target="#otp_user_section" data-event-category="section" data-event-action="Click" data-event-name="<%= t('sessions.new.login_with_otp_link') %>"><%= t('sessions.new.login_with_otp_link') %></a>
       <% end %>
       <div class="signup-btn-set mt-2">
-        <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
+        <% if devise_mapping.registerable? && controller_name != 'registrations' && current_client.enable_channel_partners? %>
         <div class="p-style opacity-5 d-inline-block"> <%= t("registrations.pre_text") %> </div>
         <%= link_to t("registrations.new.sign_up"), new_channel_partner_path, data:{event_category: 'Section', event_action: 'Click', event_name: 'Sign up'}, class: "p-style fn-500 d-inline-block ms-2" %>
-        <% end -%>
+        <% end %>
       </div>
     </div>
   </div>
