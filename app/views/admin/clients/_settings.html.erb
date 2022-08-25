@@ -1,0 +1,47 @@
+<div class="row">
+  <div class="col-md-4">
+    <% if policy([:admin, @client]).editable_field?("enable_channel_partners") %>
+    <div class="mb-3">
+      <%= f.label :enable_channel_partners %>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_channel_partners, true, class: "form-check-input wd-22" %>
+        <%= f.label :enable_channel_partners, "Yes", class: " form-check-label d-inline-block ms-2" %>
+      </div>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_channel_partners, false, class: "form-check-input wd-22" %>
+        <%= f.label :enable_channel_partners, "No", class: " form-check-label d-inline-block ms-2" %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+  <div class="col-md-4">
+    <% if policy([:admin, @client]).editable_field?("enable_leads") %>
+    <div class="mb-3">
+      <%= f.label :enable_leads %>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_leads, true, class: "form-check-input wd-22" %>
+        <%= f.label :enable_leads, "Yes", class: " form-check-label d-inline-block ms-2" %>
+      </div>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_leads, false, class: "form-check-input wd-22" %>
+        <%= f.label :enable_leads, "No", class: " form-check-label d-inline-block ms-2" %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+  <div class="col-md-4">
+    <% if policy([:admin, @client]).editable_field?("enable_site_visit") %>
+    <div class="mb-3">
+      <%= f.label :enable_site_visit %>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_site_visit, true, class: "form-check-input wd-22" %>
+        <%= f.label :enable_site_visit, "Yes", class: " form-check-label d-inline-block ms-2" %>
+      </div>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_site_visit, false, class: "form-check-input wd-22" %>
+        <%= f.label :enable_site_visit, "No", class: " form-check-label d-inline-block ms-2" %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+</div>
