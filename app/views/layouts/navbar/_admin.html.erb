@@ -8,7 +8,9 @@
         <div id="dashboardMenu" class="accordion-collapse collapse" aria-labelledby="dropdownMenuLeft">
           <%= link_to t('controller.dashboard.index.link_name'), dashboard_path(params: {role: current_user.role}), class: "" %>
           <%= link_to t('controller.dashboard.index.billing_team_link_name'), dashboard_path(params: {role: "billing_team"}), class: "" %>
-          <%= link_to t('controller.dashboard.index.cp_admin_link_name'), dashboard_path(params: {role: "cp_admin"}), class: "" %>
+          <% if current_client.enable_channel_partners? %>
+            <%= link_to t('controller.dashboard.index.cp_admin_link_name'), dashboard_path(params: {role: "cp_admin"}), class: "" %>
+          <% end %>
         </div>
       </div>
     </li>

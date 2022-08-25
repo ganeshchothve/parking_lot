@@ -4,7 +4,9 @@
     <thead class="th-default">
       <tr class="bg-primary white">
         <th><%= t("mongoid.attributes.user/role.cp") %></th>
-        <th><%= Lead.model_name.human(count: 2) %></th>
+        <% if current_client.enable_leads? %>
+          <th><%= Lead.model_name.human(count: 2) %></th>
+        <% end %>
         <th><%= t('mongoid.attributes.site_visit/status.scheduled') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
         <th><%= t('mongoid.attributes.site_visit/status.conducted') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
         <th><%= t('mongoid.attributes.site_visit/status.pending') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
@@ -18,7 +20,9 @@
       <% @cps.each do |cp| %>
         <tr>
           <td data-title='Sourcing manager Name'><%= cp.name %></td>
-          <td data-title='Walk ins'><%= link_to @leads[cp.id] || 0, admin_leads_path(fltrs: {cp_manager_id: cp.id, created_at: params[:dates], project_ids: params[:project_ids]}) %></td>
+          <% if current_client.enable_leads? %>
+            <td data-title='Walk ins'><%= link_to @leads[cp.id] || 0, admin_leads_path(fltrs: {cp_manager_id: cp.id, created_at: params[:dates], project_ids: params[:project_ids]}) %></td>
+          <% end %>
           <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @site_visits.dig('scheduled', cp.id.to_s) || 0, admin_site_visits_path(fltrs: {status: 'scheduled', cp_manager_id: cp.id, scheduled_on: @dates, project_idss: params[:project_idss]}) %></td>
           <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @site_visits.dig('conducted', cp.id.to_s) || 0, admin_site_visits_path(fltrs: {status: 'conducted', cp_manager_id: cp.id, scheduled_on: @dates, project_idss: params[:project_idss]}) %></td>
           <td data-title='Pending <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @site_visits.dig('pending', cp.id.to_s) || 0, admin_site_visits_path(fltrs: {approval_status: 'pending', cp_manager_id: cp.id, scheduled_on: @dates, project_idss: params[:project_idss]}) %></td>
