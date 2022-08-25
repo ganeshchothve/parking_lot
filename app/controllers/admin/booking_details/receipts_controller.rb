@@ -19,7 +19,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
   # GET "/admin/users/:user_id/booking_details/:booking_detail_id/receipts/new"
   def new
     @amount_hash = {}
-    PaymentType.in(name: Receipt::PAYMENT_TYPES).map { |x| @amount_hash[x.name.to_sym] = x.value(@project_unit).round }
+    PaymentType.in(name: Receipt::PAYMENT_TYPES).where(project_id: @project_unit.project_id).map { |x| @amount_hash[x.name.to_sym] = x.value(@project_unit).round }
     @receipt = Receipt.new(
                       creator: current_user,
                       user: @lead.user,
