@@ -57,7 +57,7 @@ class Admin::PaymentTypesController < AdminController
   private
 
   def set_payment_type
-    @payment_type = PaymentType.find(params[:id])
+    @payment_type = PaymentType.where(id: params[:id]).first if params[:id].present?
   end
 
 end
