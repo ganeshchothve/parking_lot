@@ -244,7 +244,7 @@ module ApplicationHelper
   end
 
   def is_marketplace?
-    request.host.include?('marketplace') || request.host.include?('localhost')
+    request.host.include?('marketplace')# || request.host.include?('localhost')
   end
 
   def marketplace_layout
