@@ -436,6 +436,10 @@ en:
         agreement_date: Agreement Date
         booked_on: Booked On
         approval_status: Approval Status
+        template_docs: Documents
+      booking_details/template_docs:
+        booking_detail_form_html: Booking Form
+        allotment_letter: Allotment Letter
       booking_detail/selldo_status:
         booked_tentative: tentative
         booked_confirmed: confirmed
@@ -1674,6 +1678,8 @@ en:
         header: 'Tasks'
       invoices:
         link_name: 'Brokerage Invoices'
+      choose_template_for_print:
+        link_name: Print Template
       send_booking_detail_form_notification: "Booking detail form will be sent to customer shortly."
       set_booking_detail_missing: "Booking detail not found"
       set_project_unit_missing: "Project unit not found"

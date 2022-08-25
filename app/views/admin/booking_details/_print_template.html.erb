@@ -1,0 +1,3 @@
+<% if @template.present? %>
+  <%= ::ERB.new(@template.content).result( binding ).html_safe %>
+<% end %>

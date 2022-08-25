@@ -116,6 +116,8 @@ Rails.application.routes.draw do
         patch :move_to_next_state
         patch :move_to_next_approval_state
         get :reject
+        get :choose_template_for_print
+        get :print_template
       end
       get :mis_report, on: :collection
       get :searching_for_towers, on: :collection
