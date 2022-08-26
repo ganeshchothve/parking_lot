@@ -11,7 +11,7 @@
       </div>
       <div class="modal-body theme-form">
         <%= form_for [:buyer, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.receipt'), type: :json} } do |f| %>
-          <%= render 'admin/booking_details/receipts/form', f: f, direct_payment: true %>
+          <%= render 'admin/booking_details/receipts/form', f: f, direct_payment: params[:booking_detail_id].blank? %>
         <% end %>
       </div>
     </div>
