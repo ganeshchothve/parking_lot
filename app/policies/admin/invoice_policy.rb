@@ -1,7 +1,7 @@
 class Admin::InvoicePolicy < InvoicePolicy
   def index?
     out = false
-    out = (user.role.in?(%w(admin superadmin channel_partner cp_owner billing_team cp cp_admin account_manager account_manager_head)) && enable_incentive_module?(user))
+    out = (user.role.in?(%w(admin superadmin channel_partner cp_owner billing_team cp cp_admin account_manager account_manager_head)) && enable_incentive_module?(user)) && user.booking_portal_client.enable_channel_partners?
     out
   end
 
