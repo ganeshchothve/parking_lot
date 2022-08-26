@@ -65,8 +65,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_dashboard_path
-    admin_users_path #dashboard_path
-    # is_marketplace? ? mp_about_path(namespace: 'mp') : dashboard_path
+    is_marketplace? ? admin_users_path : dashboard_path
   end
 
   protected
