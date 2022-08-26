@@ -1,7 +1,7 @@
 class Admin::LeadPolicy < LeadPolicy
 
   def index?
-    out = !(user.buyer? || user.role.in?(%w(dev_sourcing_manager)))
+    out = !(user.buyer? || user.role.in?(%w(dev_sourcing_manager))) && current_client.enable_leads?
     #out = out && user.active_channel_partner?
     #out = false if user.role.in?(%w(channel_partner cp_owner)) && !interested_project_present?
     #out

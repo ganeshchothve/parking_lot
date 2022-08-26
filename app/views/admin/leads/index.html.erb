@@ -18,7 +18,9 @@
             <div class="dropdown-menu">
               <% if policy([:admin, Lead]).new? %>
                 <%= link_to t('helpers.new.link_name', model: Lead.model_name.human), new_admin_lead_path, class: 'modal-remote-form-link dropdown-item' %>
-                <%= link_to t('helpers.new.link_name', model: t('global.walkin.one')), new_admin_lead_path(walkin: true), class: 'modal-remote-form-link dropdown-item' %>
+                <% if current_client.enable_site_visit? %>
+                  <%= link_to t('helpers.new.link_name', model: t('global.walkin.one')), new_admin_lead_path(walkin: true), class: 'modal-remote-form-link dropdown-item' %>
+                <% end %>
               <% end %>
             </div>
           </div>
