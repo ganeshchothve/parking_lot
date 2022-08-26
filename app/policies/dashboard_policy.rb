@@ -46,7 +46,7 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
   end
 
   def leaderboard?
-    user.role.in?(%w[superadmin admin channel_partner cp_owner]) && user.booking_portal_client.enable_channel_partners?# || user.role?('team_lead')
+    user.role.in?(%w[superadmin admin channel_partner cp_owner]) && current_client.enable_channel_partners? && current_client.enable_vis?# || user.role?('team_lead')
   end
 
   def dashboard_landing_page?
