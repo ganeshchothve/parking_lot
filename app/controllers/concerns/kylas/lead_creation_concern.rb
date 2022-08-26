@@ -15,9 +15,14 @@ module Kylas
 
     def create_kylas_associated_lead
       respond_to do |format|
-        if @user.save
-          @user.confirm
-          create_or_set_lead(format)
+        if @user.valid?
+          sync_contact_to_kylas(current_user, @user, format) if params.dig(:lead, :sync_to_kylas).present?
+          if @user.save
+            @user.confirm
+            create_or_set_lead(format)
+          else
+            format.html { redirect_to request.referer, alert: (@user.errors.full_messages.uniq.presence || 'Something went wrong') }
+          end
         else
           format.html { redirect_to request.referer, alert: (@user.errors.full_messages.uniq.presence || 'Something went wrong') }
         end
@@ -115,26 +120,49 @@ module Kylas
         @lead.created_by = current_user
         @lead.kylas_pipeline_id = (@deal_data.dig(:pipeline, :id).to_s rescue nil)
       end
-      if @lead.persisted? || @lead.save
-        sync_contact_to_kylas(current_user, @user, @lead.kylas_deal_id, @deal_data) if params.dig(:lead, :sync_to_kylas).present?
-        if @project.enable_inventory?
-          format.html { redirect_to new_admin_lead_search_path(@lead.id), notice: 'Lead was successfully created' }
+
+      if @lead.valid?
+        options = {current_user: current_user, kylas_deal_id: params.dig(:lead, :kylas_deal_id), deal_data: @deal_data, contact_response: @contact_response}
+        associate_contact_with_deal(format, options) if params.dig(:lead, :sync_to_kylas).present?
+        if @lead.persisted? || @lead.save
+          if @project.enable_inventory?
+            format.html { redirect_to new_admin_lead_search_path(@lead.id), notice: 'Lead was successfully created' }
+          else
+            format.html { redirect_to new_booking_without_inventory_admin_booking_details_path(lead_id: @lead.id), notice: 'Lead was successfully created' }
+          end
         else
-          format.html { redirect_to new_booking_without_inventory_admin_booking_details_path(lead_id: @lead.id), notice: 'Lead was successfully created' }
+          format.html { redirect_to request.referer, alert: (@lead.errors.full_messages.uniq.presence || 'Something went wrong'), status: :unprocessable_entity }
         end
       else
         format.html { redirect_to request.referer, alert: (@lead.errors.full_messages.uniq.presence || 'Something went wrong'), status: :unprocessable_entity }
       end
     end
 
-    # TODO: Create Separate service for sync to Kylas entity
-    def sync_contact_to_kylas(current_user, kylas_entity, kylas_deal_id, deal_data)
+    def sync_contact_to_kylas(current_user, kylas_contact_entity, format)
+      @contact_response = Kylas::CreateContact.new(current_user, kylas_contact_entity).call
+      unless @contact_response[:success]
+        format.html { redirect_to request.referer, alert: (@contact_response[:error].presence || 'Something went wrong'), status: :unprocessable_entity }
+      end
+    end
+
+    def associate_contact_with_deal(format, options = {})
       params = {}
-      contact_response = Kylas::CreateContact.new(current_user, kylas_entity).call
+      deal_data = options[:deal_data]
+      contact_response = options[:contact_response]
+      current_user = options[:current_user]
+      kylas_deal_id = options[:kylas_deal_id]
       if deal_data.present? && contact_response.present?
         contact = contact_response[:data] rescue {}
         params.merge!(contact: contact)
-        Kylas::UpdateDeal.new(current_user, kylas_deal_id, params).call
+        deal_response = Kylas::UpdateDeal.new(current_user, kylas_deal_id, params).call
+        if deal_response[:success]
+          contact = contact_response[:data].with_indifferent_access
+          @user.update(kylas_contact_id: contact[:id])
+        else
+          format.html { redirect_to request.referer, alert: (deal_response[:error].presence || 'Something went wrong'), status: :unprocessable_entity }
+        end
+      else
+        format.html { redirect_to request.referer, alert: 'Something went wrong', status: :unprocessable_entity }
       end
     end
 
