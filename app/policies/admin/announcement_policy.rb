@@ -1,7 +1,7 @@
 class Admin::AnnouncementPolicy < AnnouncementPolicy
 
   def index?
-    user.role.in?(%w(superadmin admin)) && current_client.enable_channel_partners?
+    user.role.in?(%w(superadmin admin)) && user.booking_portal_client.enable_channel_partners?
   end
   
   def show?

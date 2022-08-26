@@ -1,6 +1,6 @@
 class Admin::VariableIncentiveSchemePolicy < VariableIncentiveSchemePolicy
   def index?
-    %w[superadmin].include?(user.role) & current_client.enable_channel_partners?
+    %w[superadmin].include?(user.role) & user.booking_portal_client.enable_channel_partners?
   end
 
   def create?

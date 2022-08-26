@@ -1,7 +1,7 @@
 class Admin::SiteVisitPolicy < SiteVisitPolicy
   def index?
     out = user.role.in?(%w(admin superadmin dev_sourcing_manager channel_partner cp_owner billing_team sales_admin))
-    out && user.active_channel_partner? && current_client.enable_site_visit?
+    out && user.active_channel_partner? && user.booking_portal_client.enable_site_visit?
   end
 
   def export?
