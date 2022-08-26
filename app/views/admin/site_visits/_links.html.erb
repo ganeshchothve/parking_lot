@@ -4,6 +4,9 @@
 <% if policy([:admin, site_visit]).sync_with_selldo? %>
   <%= link_to t('controller.site_visits.sync_with_selldo.link_name'), sync_with_selldo_admin_site_visit_path(site_visit.id), class: "dropdown-item" %>
 <% end %>
+<% if policy([:admin, Receipt.new(user: site_visit.lead.user, lead: site_visit.lead)]).new? %>
+  <%= link_to t('controller.receipts.new.link_name'), new_admin_lead_receipt_path(site_visit.lead), class: "dropdown-item modal-remote-form-link" %>
+<% end %>
 <% if allow_reschedule?(site_visit) %>
   <%= link_to t('controller.site_visits.edit.link_name'), edit_admin_site_visit_path(site_visit.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
