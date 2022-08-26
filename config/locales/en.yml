@@ -509,6 +509,7 @@ en:
         enable_channel_partners: 'Enable Channel Partners?'
         enable_leads: Enable Lead?
         enable_site_visit: Enable Walk-in?
+        enable_vis: Enable Variable Incentive Scheme?
         blocking_amount: 'Min. Amount for Blocking an Unit'
         blocking_days: 'Unit to be blocked for (Days)'
         holding_minutes: 'Unit to be held for (Minutes)'

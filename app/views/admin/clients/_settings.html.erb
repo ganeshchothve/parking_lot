@@ -45,3 +45,21 @@
     <% end %>
   </div>
 </div>
+
+<div class="row">
+  <div class="col-md-4">
+    <% if policy([:admin, @client]).editable_field?("enable_vis") %>
+    <div class="mb-3">
+      <%= f.label :enable_vis %>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_vis, true, class: "form-check-input wd-22" %>
+        <%= f.label :enable_vis, "Yes", class: " form-check-label d-inline-block ms-2" %>
+      </div>
+      <div class="form-check form-check-inline">
+        <%= f.radio_button :enable_vis, false, class: "form-check-input wd-22" %>
+        <%= f.label :enable_vis, "No", class: " form-check-label d-inline-block ms-2" %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+</div>
