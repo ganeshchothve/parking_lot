@@ -40,18 +40,20 @@
                         <%= label_tag "fltrs", t('mongoid.attributes.project.name') %>
                         <%= select_tag :project_id, options_for_select(Project.all.map { |p| [p.ds_name, p.id] }, (params[:project_id].present? ? params[:project_id] : "")), {prompt: "Select", class: "selectize", multiple: true} %>
                       </div>
-                      <div class="mb-3 col-12">
-                        <%= label_tag "fltrs", t('mongoid.attributes.lead.manager_id') %>
-                        <%= select_tag "manager_id", options_from_collection_for_select(params[:manager_id].present? ? User.where(_id: params[:manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: ['channel_partner', 'cp_owner'] }}}} %>
-                      </div>
-                      <div class="mb-3 col-12">
-                        <%= label_tag "fltrs", t('mongoid.attributes.user/role.cp') %>
-                        <%= select_tag "cp_manager_id", options_from_collection_for_select(params[:cp_manager_id].present? ? User.where(_id: params[:cp_manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp' }}}} %>
-                      </div>
-                      <div class="mb-3 col-12">
-                        <%= label_tag "fltrs", "CP Admin" %>
-                        <%= select_tag "cp_admin_id", options_from_collection_for_select(params[:cp_admin_id].present? ? User.where(_id: params[:cp_admin_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp_admin' }}}} %>
-                      </div>
+                      <% if current_client.enable_channel_partners? %>
+                        <div class="mb-3 col-12">
+                          <%= label_tag "fltrs", t('mongoid.attributes.lead.manager_id') %>
+                          <%= select_tag "manager_id", options_from_collection_for_select(params[:manager_id].present? ? User.where(_id: params[:manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: ['channel_partner', 'cp_owner'] }}}} %>
+                        </div>
+                        <div class="mb-3 col-12">
+                          <%= label_tag "fltrs", t('mongoid.attributes.user/role.cp') %>
+                          <%= select_tag "cp_manager_id", options_from_collection_for_select(params[:cp_manager_id].present? ? User.where(_id: params[:cp_manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp' }}}} %>
+                        </div>
+                        <div class="mb-3 col-12">
+                          <%= label_tag "fltrs", "CP Admin" %>
+                          <%= select_tag "cp_admin_id", options_from_collection_for_select(params[:cp_admin_id].present? ? User.where(_id: params[:cp_admin_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp_admin' }}}} %>
+                        </div>
+                      <% end %>
                       <div class="mb-3 col-12">
                         <%= label_tag "fltrs", t('mongoid.attributes.site_visit.created_at') %>
                         <%= text_field_tag "created_at", (params[:created_at].present? ? params[:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %> 
