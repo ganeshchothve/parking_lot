@@ -28,6 +28,7 @@ class User
   DOCUMENT_TYPES = %w[home_loan_application_form photo_identity_proof residence_address_proof residence_ownership_proof income_proof job_continuity_proof bank_statement advance_processing_cheque financial_documents first_page_co_branding last_page_co_branding co_branded_asset]
   TEAM_LEAD_DASHBOARD_ACCESS_USERS = %w[team_lead gre]
   KYLAS_MARKETPALCE_USERS = %w[admin sales]
+  KYLAS_CUSTOM_FIELDS_ENTITIES = %w[lead deals meetings].freeze
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -139,6 +140,9 @@ class User
   field :kylas_user_id, type: String
   field :kylas_access_token_expires_at, type: DateTime
   field :kylas_contact_id, type: String
+  # Kylas Custom Fields options values fields
+  field :kylas_custom_fields_option_id, type: Hash, default: {}
+
 
   ## Security questionable
 

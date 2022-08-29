@@ -18,4 +18,16 @@ class ClientObserver < Mongoid::Observer
 
     DocumentSign.create(booking_portal_client_id: client.id)
   end
+
+  def after_save client
+    if client.enable_channel_partners.changed? && client.enable_channel_partners?
+      User.in(role: %w[channel_partner cp_owner]).where(user_status_in_company: 'active').each do |cp_user|
+        if Rails.env.production?
+          Kylas::PushCustomFieldsToKylas.perform_async(cp_user.id.to_s)
+        else
+          Kylas::PushCustomFieldsToKylas.new.perform(cp_user.id.to_s)
+        end
+      end
+    end
+  end
 end
