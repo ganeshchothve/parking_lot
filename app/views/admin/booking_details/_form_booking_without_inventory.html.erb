@@ -1,3 +1,4 @@
+<% channel_partners = [] %>
 <div class="modal-header">
   <h3 class="title"><%= t('controller.booking_details.new.header', customer: f.object.lead.try(:name), project: (f.object.lead.try(:project_name) || f.object.project.name)) %></h3>
   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
