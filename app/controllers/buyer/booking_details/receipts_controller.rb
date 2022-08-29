@@ -19,8 +19,11 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
   # GET "/admin/users/:user_id/booking_details/:booking_detail_id/receipts/new"
   def new
     @receipt = Receipt.new({
+      project: current_user.selected_project,
+      lead: current_user.selected_lead,
       creator: current_user, user: current_user, booking_detail: @booking_detail,
-      total_amount: ( @booking_detail.hold? ? @booking_detail.project_unit_blocking_amount : @booking_detail.pending_balance)
+      total_amount: ( @booking_detail.hold? ? @booking_detail.get_booking_price : @booking_detail.pending_balance
+      )
     })
     render layout: false
   end

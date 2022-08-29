@@ -24,7 +24,7 @@ class Buyer::BookingDetailsController < BuyerController
   def booking
     if @receipt.save
       @receipt.change_booking_detail_status
-      redirect_to redirect_to dashboard_path, notice: t('controller.booking_details.booking_successful')
+      redirect_to dashboard_path, notice: t('controller.booking_details.booking_successful')
     else
       redirect_to search_path(@booking_detail.search), alert: @receipt.errors.full_messages
     end

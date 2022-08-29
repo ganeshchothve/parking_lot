@@ -17,10 +17,18 @@ class Buyer::ReceiptsController < BuyerController
   def new
     @amount_hash = {}
     @lead.project.token_types.all.select{|tt| tt.incrementor_exists?}.map { |x| @amount_hash[x.id.to_s] = x.token_amount }
+
+    if params.dig(:booking_detail_id).present?
+      payment_type = "agreement"
+    else
+      payment_type = "token"
+    end
+
     @receipt = @lead.receipts.build({
       user: @lead.user, project_id: @lead.project_id,
       creator: current_user, payment_mode: 'online',
-      payment_type: 'token',
+      payment_type: payment_type,
+      booking_detail_id: params.dig(:booking_detail_id),
       total_amount: @lead.project.blocking_amount
     })
     authorize([:buyer, @receipt])
