@@ -42,7 +42,7 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
   end
 
   def team_lead_dashboard?
-    user.role.in?(user.booking_portal_client.team_lead_dashboard_access_roles) && user.booking_portal_client.enable_site_visit?# || user.role?('team_lead')
+    user.role.in?(user.booking_portal_client.team_lead_dashboard_access_roles) && current_client.enable_site_visit?# || user.role?('team_lead')
   end
 
   def leaderboard?
