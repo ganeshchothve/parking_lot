@@ -34,7 +34,7 @@
 
   <div class="mb-3">
     <%= f.label :manager_id %>
-    <%= f.select :manager_id, options_for_select(@cp_users.collect{|cp| [(cp.name), cp.id]}), {include_blank: 'Select Channel Partner' }, autocomplete: 'off' , class: 'selectize' %>
+    <%= f.select :manager_id, options_from_collection_for_select(@cp_users.present? ? @cp_users : [], "id" , "name" , ((@cp_users.first.id.to_s rescue nil))), {prompt: true }, class: 'selectize-remote' , required: 'required' ,autofocus: true, data: { url: admin_users_path, params: { fltrs: { role: ['channel_partner', 'cp_owner' ], user_status_in_company: 'active' } } }%>
   </div>
 
   <div>
