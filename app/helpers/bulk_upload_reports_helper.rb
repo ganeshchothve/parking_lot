@@ -7,14 +7,14 @@ module BulkUploadReportsHelper
     bulk_upload_docs = BulkUploadReport::DOCUMENT_TYPES
     resultant_docs = []
 
-    if !current_client.enable_channel_partners? && current_client.enable_leads?
-      resultant_docs = reject_cp_docs(bulk_upload_docs)
+    resultant_docs = if !current_client.enable_channel_partners? && current_client.enable_leads?
+      reject_cp_docs(bulk_upload_docs)
     elsif current_client.enable_channel_partners? && !current_client.enable_leads?
-      resultant_docs = reject_lead_docs(bulk_upload_docs)
+      reject_lead_docs(bulk_upload_docs)
     elsif !current_client.enable_channel_partners? && !current_client.enable_leads?
-      resultant_docs = reject_cp_docs(bulk_upload_docs) & reject_lead_docs(bulk_upload_docs)
+      reject_cp_docs(bulk_upload_docs) & reject_lead_docs(bulk_upload_docs)
     else
-      resultant_docs = bulk_upload_docs
+      bulk_upload_docs
     end
     options = resultant_docs.collect{ |doc| [t("mongoid.attributes.bulk_upload_report/file_types.#{doc}"), doc] }
     options
