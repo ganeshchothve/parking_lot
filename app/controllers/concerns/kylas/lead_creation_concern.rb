@@ -70,7 +70,7 @@ module Kylas
         @contact_details = Kylas::FetchContactDetails.new(current_user, contact_ids).call rescue {}
         @kylas_emails = @contact_details.dig(:data).pluck(:emails).flatten rescue []
         @kylas_phones = @contact_details.dig(:data).pluck(:phoneNumbers).flatten rescue []
-        @kylas_cp_id = @deal_data.dig(:customFieldValues, :cfCpList, :id)
+        @kylas_cp_id = @deal_data.dig(:customFieldValues, :cfChannelPartner, :id)
         if @kylas_cp_id.present?
           @cp_users = User.in(role: ['channel_partner', 'cp_owner']).where(booking_portal_client_id: current_user.booking_portal_client_id, user_status_in_company: 'active', 'kylas_custom_fields_option_id.deals': @kylas_cp_id)
         end
