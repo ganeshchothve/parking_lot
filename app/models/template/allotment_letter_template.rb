@@ -1,10 +1,16 @@
 class Template::AllotmentLetterTemplate < Template
+  field :name, type: String, default: 'allotment_letter'
+
+  def self.seed(project_id, client_id)
+    Template::AllotmentLetterTemplate.create(booking_portal_client_id: client_id, project_id: project_id, name: 'allotment_letter', content: Template::AllotmentLetterTemplate.default_content)  if Template::AllotmentLetterTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: 'allotment_letter').blank?
+  end
+
   def self.default_content
     '<div class="card w-100">
       <div class="card-body">
-        <p>Dear <%= self.user.name %>,</p>
+        <p>Dear <%= @booking_detail.user.name %>,</p>
         Congratulations!<br/><br/>
-        Welcome to the <%= project_unit.project_name %>! You\'re now the proud owner of Unit - <%= self.name %>.<br/><br/>
+        Welcome to the <%= @booking_detail.project.name %>! You\'re now the proud owner of Unit - <%= (@booking_detail.name || @booking_detail.booking_project_unit_name)  %>.<br/><br/>
         Our executives will be in touch regarding agreement formalities.
       </div>
     </div>
@@ -16,7 +22,7 @@ class Template::AllotmentLetterTemplate < Template
             <div class="mb-3">
               <label>Name</label>
               <div>
-                <%= self.name %>
+                <%= @booking_detail.name %>
               </div>
             </div>
           </div>
@@ -24,7 +30,7 @@ class Template::AllotmentLetterTemplate < Template
             <div class="mb-3">
               <label>Tower</label>
               <div>
-                <%= self.project_unit.project_tower_name %>
+                <%= @booking_detail.try(:project_unit).try(:project_tower_name) || @booking_detail.try(:project_tower_name) %>
               </div>
             </div>
           </div>
@@ -32,7 +38,7 @@ class Template::AllotmentLetterTemplate < Template
             <div class="mb-3">
               <label>Status</label>
               <div>
-                <%= BookingDetail.human_attribute_name("status.#{self.status}") %>
+                <%= BookingDetail.human_attribute_name("status.#{@booking_detail.status}") %>
               </div>
             </div>
           </div>
@@ -42,7 +48,7 @@ class Template::AllotmentLetterTemplate < Template
             <div class="mb-3">
               <label>Beds / Baths</label>
               <div>
-                <%= self.project_unit.bedrooms %> / <%= self.project_unit.bathrooms %>
+                <%= @booking_detail.try(:project_unit).try(:bedrooms) || (@booking_detail.try(:project_unit_configuration)) %> / <%= @booking_detail.try(:project_unit).try(:bathrooms) %>
               </div>
             </div>
           </div>
@@ -50,7 +56,7 @@ class Template::AllotmentLetterTemplate < Template
             <div class="mb-3">
               <label>Carpet</label>
               <div>
-                <%= self.project_unit.carpet %> <%= current_client.area_unit %>
+                <%= @booking_detail.project_unit.try(:carpet) %> <%= @booking_detail.booking_portal_client.try(:area_unit) %>
               </div>
             </div>
           </div>
@@ -58,41 +64,11 @@ class Template::AllotmentLetterTemplate < Template
             <div class="mb-3">
               <label>Saleable</label>
               <div>
-                <%= self.project_unit.saleable %> <%= current_client.area_unit %>
+                <%= @booking_detail.project_unit.try(:saleable) %> <%= @booking_detail.booking_portal_client.try(:area_unit) %>
               </div>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-4">
-            <div class="mb-3">
-              <label>Effective Rate</label>
-              <div>
-                <%= number_to_indian_currency(self.project_unit.effective_rate) %> <%= current_client.area_unit %>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="mb-3">
-              <label>Agreement Price</label>
-              <div>
-                <%= number_to_indian_currency(self.project_unit.agreement_price) %>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="mt-3"></div>
-    <div class="card">
-      <div class="card-body">
-        <%= self.project_unit.cost_sheet_template.parsed_content(self) %>
-      </div>
-    </div>
-    <div class="mt-3"></div>
-    <div class="card">
-      <div class="card-body">
-        <%= self.project_unit.payment_schedule_template.parsed_content(self) %>
       </div>
     </div>'
   end
