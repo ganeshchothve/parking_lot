@@ -1,6 +1,9 @@
 <% if policy([:admin, booking_detail]).show? && !(params[:controller] == 'admin/booking_details' && params[:action] == 'show') %>
   <%= link_to t('helpers.show.link_name', model: BookingDetail.model_name.human ), admin_booking_detail_path(booking_detail), class: 'dropdown-item' %>
 <% end %>
+<% if policy([:admin, booking_detail]).choose_template_for_print? %>
+  <%= link_to t('controller.booking_details.choose_template_for_print.link_name'), choose_template_for_print_admin_booking_detail_path(booking_detail), class: 'dropdown-item modal-remote-form-link' %>
+<% end %>
 <% if policy([:admin, booking_detail]).edit_booking_without_inventory?  %>
   <%= link_to 'Edit Booking', edit_booking_without_inventory_admin_booking_detail_path(booking_detail), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>

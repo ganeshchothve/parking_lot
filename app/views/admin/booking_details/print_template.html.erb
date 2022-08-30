@@ -1,0 +1,16 @@
+<div class="mb-5 mt-3">
+  <div class="px-4">
+    <div class="row">
+      <div class="col-12">
+        <button onclick='window.print();' class='btn btn-primary d-print-none'>Print</button>
+      </div>
+    </div>
+    <br>
+    <%= render 'admin/booking_details/print_template', locals: {template: @template} %>
+  </div>
+</div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    window.print();
+  });
+<% end %>
