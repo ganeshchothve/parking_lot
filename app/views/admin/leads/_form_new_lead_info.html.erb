@@ -32,6 +32,11 @@
     <%= f.text_field :phone, class: 'form-control phone', id: 'new_lead_phone', disabled: !policy([current_user_role_group, @lead]).editable_field?("phone") %>
   </div>
 
+  <div class="mb-3">
+    <%= f.label :manager_id %>
+    <%= f.select :manager_id, options_for_select(@cp_users.collect{|cp| [(cp.name), cp.id]}), {include_blank: 'Select Channel Partner' }, autocomplete: 'off' , class: 'selectize' %>
+  </div>
+
   <div>
       <%= f.submit "Save", class: 'btn btn-primary float-end w-auto border-primary' %>
   </div>

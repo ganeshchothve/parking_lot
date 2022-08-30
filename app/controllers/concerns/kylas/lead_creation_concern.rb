@@ -54,7 +54,7 @@ module Kylas
     end
 
     def lead_params
-      params.require(:lead).permit(:first_name, :last_name, :email, :phone, :kylas_deal_id, :sync_to_kylas)
+      params.require(:lead).permit(:first_name, :last_name, :email, :phone, :kylas_deal_id, :sync_to_kylas, :manager_id)
     end
 
     def fetch_deal_details
@@ -70,6 +70,12 @@ module Kylas
         @contact_details = Kylas::FetchContactDetails.new(current_user, contact_ids).call rescue {}
         @kylas_emails = @contact_details.dig(:data).pluck(:emails).flatten rescue []
         @kylas_phones = @contact_details.dig(:data).pluck(:phoneNumbers).flatten rescue []
+        @kylas_cp_id = @deal_data.dig(:customFieldValues, :cfCpList, :id)
+        if @kylas_cp_id.present?
+          @cp_users = User.in(role: ['channel_partner', 'cp_owner']).where(booking_portal_client_id: current_user.booking_portal_client_id, user_status_in_company: 'active', 'kylas_custom_fields_option_id.deals': @kylas_cp_id)
+        end
+        @cp_users = User.in(role: ['channel_partner', 'cp_owner']).where(booking_portal_client_id: current_user.booking_portal_client_id, user_status_in_company: 'active') if @cp_users.blank?
+
       else
         redirect_to root_path, alert: 'Deal not found'
       end
@@ -120,11 +126,11 @@ module Kylas
         @lead.created_by = current_user
         @lead.kylas_pipeline_id = (@deal_data.dig(:pipeline, :id).to_s rescue nil)
       end
-
+      @lead.assign_attributes(manager_id: params.dig(:lead, :manager_id)) if (@lead.manager_id.to_s != params.dig(:lead, :manager_id))
       if @lead.valid?
         options = {current_user: current_user, kylas_deal_id: params.dig(:lead, :kylas_deal_id), deal_data: @deal_data, contact_response: @contact_response}
         associate_contact_with_deal(format, options) if params.dig(:lead, :sync_to_kylas).present?
-        if @lead.persisted? || @lead.save
+        if @lead.save
           if @project.enable_inventory?
             format.html { redirect_to new_admin_lead_search_path(@lead.id), notice: 'Lead was successfully created' }
           else

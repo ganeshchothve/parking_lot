@@ -82,11 +82,7 @@ module UserStatusInCompanyStateMachine
 
     # Push Channel Partner to Kylas as a Custom Field
     def push_to_kylas
-      if Rails.env.production?
-        Kylas::PushCustomFieldsToKylas.perform_async(self.id.to_s)
-      else
-        Kylas::PushCustomFieldsToKylas.new.perform(self.id.to_s)
-      end
+      # Kylas::UpdateCustomField.new(self, self, options = {}).call
     end
 
   end
