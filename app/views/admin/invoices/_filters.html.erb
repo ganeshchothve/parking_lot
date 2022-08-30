@@ -16,7 +16,7 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.invoice.category'), class: "control-label" %>
-          <%= select_tag "fltrs[category]", options_for_select(IncentiveScheme::CATEGORIES.collect {|x| [t("mongoid.attributes.invoice/categories.#{x}"), x]}, params.dig(:fltrs, :category)), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[category]", options_for_select(filter_incentive_categories, params.dig(:fltrs, :category)), {prompt: "Select", class: "selectize"} %>
         </div>
         <% unless current_user.role?('channel_partner') %>
           <% if current_client.enable_channel_partners? %>
