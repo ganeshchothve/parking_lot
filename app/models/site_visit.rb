@@ -95,34 +95,6 @@ class SiteVisit
     end
   end
 
-  def self.statuses
-    [
-      { id: 'scheduled', text: 'Scheduled' },
-      { id: 'conducted', text: 'Conducted' },
-      { id: 'pending', text: 'Pending' },
-      { id: 'missed', text: 'Missed' }
-    ]
-  end
-
-  def self.approval_statuses
-    [
-      { id: 'pending', text: 'Pending' },
-      { id: 'approved', text: 'Approved' },
-      { id: 'rejected', text: 'Rejected' }
-    ]
-  end
-
-  def self.available_sort_options
-    [
-      { id: 'created_at.asc', text: 'Created - Oldest First' },
-      { id: 'created_at.desc', text: 'Created - Newest First' },
-      { id: 'scheduled_on.asc', text: 'Scheduled On - Oldest First' },
-      { id: 'scheduled_on.desc', text: 'Scheduled On- Newest First' },
-      { id: 'conducted_on.asc', text: 'Conducted On - Oldest First' },
-      { id: 'conducted_on.desc', text: 'Conducted On - Newest First' }
-    ]
-  end
-
   def self.user_based_scope(user, params = {})
     custom_scope = {}
     if params[:lead_id].blank? && !user.buyer?

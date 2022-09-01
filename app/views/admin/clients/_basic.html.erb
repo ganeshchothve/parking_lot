@@ -45,7 +45,7 @@
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :preferred_login, class: 'label-required' %>
-      <%= f.select :preferred_login, Client.available_preferred_logins.collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize', required: 'required', disabled: (policy([:admin, @client]).editable_field?("preferred_login") ? false : true) %>
+      <%= f.select :preferred_login, I18n.t("mongoid.attributes.client/available_preferred_logins").collect{|k,v| [v, k.to_s]}, {}, class: 'selectize', required: 'required', disabled: (policy([:admin, @client]).editable_field?("preferred_login") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">

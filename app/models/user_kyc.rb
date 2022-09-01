@@ -84,7 +84,7 @@ class UserKyc
   validates :company_name, presence: true, if: proc { |kyc| kyc.is_company? }
   validates :poa_details, presence: true, if: proc { |kyc| kyc.poa? }
   validates :existing_customer_name, :existing_customer_project, presence: true, if: proc { |kyc| kyc.existing_customer? }
-  validates :salutation, inclusion: { in: proc { UserKyc.available_salutations.collect { |x| x[:id] } } }, allow_blank: true
+  validates :salutation, inclusion: { in: proc { I18n.t("mongoid.attributes.user_kyc/salutations").collect{|k,v| k.to_s} } }, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
   validates :addresses, copy_errors_from_child: true
 
@@ -100,7 +100,7 @@ class UserKyc
 
   def name
     begin
-      _salutation = UserKyc.available_salutations.find { |x| x[:id] == salutation }[:text]
+      _salutation = I18n.t("mongoid.attributes.user_kyc/salutations.#{salutation}")
     rescue StandardError
       _salutation = ''
     end
@@ -146,19 +146,6 @@ class UserKyc
   end
 
   class << self
-    def available_salutations
-      [
-        { id: 'Mr.', text: 'Mr.' },
-        { id: 'Mrs.', text: 'Mrs.' },
-        { id: 'Ms.', text: 'Ms.' },
-        { id: 'Brig.', text: 'Brig.' },
-        { id: 'Captain', text: 'Captain' },
-        { id: 'Col', text: 'Col' },
-        { id: 'Dr.', text: 'Dr.' },
-        { id: 'Maharaj', text: 'Maharaj' },
-        { id: 'Prof.', text: 'Prof.' }
-      ]
-    end
 
     def available_configurations(lead_id = nil)
       lead = Lead.where(id: lead_id).first

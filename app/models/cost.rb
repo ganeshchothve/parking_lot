@@ -20,18 +20,9 @@ class Cost
   validates :key, uniqueness: {scope: :costable_id}, format: {with: /\A[a-z_]+\z/, message: "Only small letters & underscore allowed"}
   validates :formula, presence: true, if: Proc.new{|cost| cost.absolute_value.blank? }
   validates :absolute_value, presence: true, if: Proc.new{|cost| cost.formula.blank? }
-  validates :category, inclusion: {in: Proc.new{ Cost.available_categories.collect{|x| x[:id]} } }
+  validates :category, inclusion: {in: Proc.new{ I18n.t("mongoid.attributes.cost/available_categories").collect{|k,v| k.to_s} } }
 
   default_scope -> {asc(:order)}
-
-  def self.available_categories
-    [
-      {id: 'agreement', text: 'Part of Agreement Value'},
-      {id: 'parking', text: 'Partking' },
-      {id: 'outside_agreement', text: 'In addition to Agreement Value'} #,
-      # {id: 'tax', text: 'Government Tax'}
-    ]
-  end
 
   def value
     out = (absolute_value.present? ? absolute_value : calculate) rescue 0

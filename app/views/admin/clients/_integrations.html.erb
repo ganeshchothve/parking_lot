@@ -200,7 +200,7 @@
         <div class="col-md-6">
           <div class="mb-3">
             <%= eivc_form.label :provider %>
-            <%= eivc_form.select :provider, ExternalInventoryViewConfig.available_providers.collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize', disabled: (policy(eivc_form.object).editable_field?("provider") ? false : true) %>
+            <%= eivc_form.select :provider, I18n.t("mongoid.models.external_inventory_view_config.available_providers").collect{|k,v| [v,k.to_s]}, {}, class: 'selectize', disabled: (policy(eivc_form.object).editable_field?("provider") ? false : true) %>
           </div>
         </div>
         <div class="col-md-6">
@@ -212,7 +212,7 @@
       </div>
       <div class="mb-3">
         <%= eivc_form.label :status, class: 'label-required' %>
-        <%= eivc_form.select :status, ExternalInventoryViewConfig.available_statuses.collect{|x| [x[:text], x[:id]]}, {}, class: 'selectize', required: 'required', disabled: (policy(eivc_form.object).editable_field?("status") ? false : true) %>
+        <%= eivc_form.select :status, I18n.t("mongoid.models.external_inventory_view_config.available_statuses").collect{|k,v| [v,k.to_s]}, {}, class: 'selectize', required: 'required', disabled: (policy(eivc_form.object).editable_field?("status") ? false : true) %>
       </div>
     </div>
   </div>

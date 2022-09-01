@@ -265,6 +265,12 @@ en:
       variable_incentive_scheme:
         one: Variable Incentive Scheme
         other: Variable Incentive Schemes
+      external_inventory_view_config:
+        available_providers:
+          Foyr: "Foyr 3D Inventory View"
+        available_statuses:
+          active: "Active"
+          inactive: "Inactive"
 
     attributes:
       announcement:
@@ -524,6 +530,9 @@ en:
         incentive_gst_slabs: 'Configure Incentive GST Slabs (%)'
         team_lead_dashboard_access_roles: Team Lead Dashboard Access Roles
         tl_dashboard_refresh_timer: Team Lead Dashboard Refresh Timer (Minutes)
+      client/available_preferred_logins:
+        phone: Phone Based
+        email: Email Based
       client/payment_gateways:
         Razorpay: Razorpay Payment Gateway
         CCAvenue: CCAvenue Payment Gateway
@@ -662,6 +671,10 @@ en:
         absolute_value: "Absolute Value"
         category: "Category"
         order: "Order"
+      cost/available_categories:
+        agreement: "Part of Agreement Value"
+        parking: "Parking"
+        outside_agreement: "In addition to Agreement Value"
 
       channel_partner:
         name: 'Name'
@@ -857,6 +870,10 @@ en:
         error: 'Error'
         employee: 'Employee Reserved'
         management: 'Management Reserved'
+      project_unit/available_for:
+        user: 'User'
+        management: 'Management'
+        employee: 'Employee'
       developers:
         name: Name
       projects:
@@ -918,6 +935,13 @@ en:
       receipt/payment_types:
         agreement: Agreement
         stamp_duty:  Stamp Duty
+      receipt/sort_options:
+        created_at.asc: 'Created - Oldest First'
+        created_at.desc: 'Created - Newest First'
+        issued_date.asc: 'Issued Date - Oldest First'
+        issued_date.desc: 'Issued Date- Newest First'
+        processed_on.asc: 'Proccessed On - Oldest First'
+        processed_on.desc: 'Proccessed On - Newest First'
 
       search:
         bedrooms: "Beds"
@@ -1048,6 +1072,13 @@ en:
         rejected: Cancellation
       invoice/categories:
         <<: *invoice_category
+      invoice/sort_options:
+        created_at.asc: "Created - Oldest First"
+        created_at.desc: "Created - Newest First"
+        raised_date.asc: "Invoiced Date - Oldest First"
+        raised_date.desc: "Invoiced Date- Newest First"
+        net_amount.asc: "Amount - Low to High"
+        net_amount.desc: "Amount- High to Low"
       cheque_detail:
         total_amount: 'Total Amount'
         payment_identifier: 'Payment Identifier'
@@ -1206,34 +1237,60 @@ en:
         retired: Retired
         home_maker: Home Maker
         other_company: Other Company
+      user_kyc/salutations:
+        Mr.: 'Mr.'
+        Mrs.: 'Mrs.'
+        Ms.: 'Ms.'
+        Brig.: 'Brig.'
+        Captain: 'Captain'
+        Col: 'Col'
+        Dr.: 'Dr.'
+        Maharaj: 'Maharaj'
+        Prof.: 'Prof.'
       campaign:
-          name: 'Campaign Name'
-          description: 'About this Campaign'
-          campaign_manager: 'Campaign Manager'
-          about_campaign_manager: 'About the Campaign Manager'
-          terms_and_conditions: 'Terms & Conditions'
-          campaign_slab_offer_text: 'Offer'
-          campaign_slab_offer_percentage: 'Offer Percentage'
-          campaign_slab_offer_amount: 'Offer Amount (Rs.)'
-          campaign_id: 'Campaign ID'
-          total_budget: 'Total Campaign Budget (Rs.)'
-          total_invested_amount: 'Total Invested Amount (Rs.)'
-          start_date: 'Campaign Start Date'
-          end_date: 'Campaign End Date'
-          campaign_type: 'Type'
-          status: 'Status'
-          estimated_cost_per_lead: 'Estimated Cost per Lead (Rs.)'
-          sources: 'Target Ad Platforms'
-          projects: 'Related Projects'
-          project_ids: 'Related Projects'
-          target_areas: 'Target Areas (Micro-markets)'
-          focus: 'Campaign Focus'
-          campaign_budgets: 'Media Plan'
-          campaign_slabs: 'Campaign Slabs'
-          interested_campaigns: 'Campaigns you are interested in'
-          assets: 'Related Marketing Collateral'
-          meetings: 'Related Events'
-          faqs: 'FAQs'
+        name: 'Campaign Name'
+        description: 'About this Campaign'
+        campaign_manager: 'Campaign Manager'
+        about_campaign_manager: 'About the Campaign Manager'
+        terms_and_conditions: 'Terms & Conditions'
+        campaign_slab_offer_text: 'Offer'
+        campaign_slab_offer_percentage: 'Offer Percentage'
+        campaign_slab_offer_amount: 'Offer Amount (Rs.)'
+        campaign_id: 'Campaign ID'
+        total_budget: 'Total Campaign Budget (Rs.)'
+        total_invested_amount: 'Total Invested Amount (Rs.)'
+        start_date: 'Campaign Start Date'
+        end_date: 'Campaign End Date'
+        campaign_type: 'Type'
+        status: 'Status'
+        estimated_cost_per_lead: 'Estimated Cost per Lead (Rs.)'
+        sources: 'Target Ad Platforms'
+        projects: 'Related Projects'
+        project_ids: 'Related Projects'
+        target_areas: 'Target Areas (Micro-markets)'
+        focus: 'Campaign Focus'
+        campaign_budgets: 'Media Plan'
+        campaign_slabs: 'Campaign Slabs'
+        interested_campaigns: 'Campaigns you are interested in'
+        assets: 'Related Marketing Collateral'
+        meetings: 'Related Events'
+        faqs: 'FAQs'
+      campaign/statuses:
+        draft: Draft
+        funding: Funding
+        funded: Funded
+        live: Live
+        paused: Paused
+        cancelled: Cancelled
+        Completed: Completed
+      campaign/focuses:
+        project_based: Project based
+        area_based: Area based
+      campaign/campaign_types:
+        pool_funded: Pool funded
+      campaign/campaign_sources:
+        google: Google
+        facebook: Facebook
       meeting:
         topic: Topic
         meeting_details: Topic & Agenda
@@ -1252,6 +1309,18 @@ en:
         project_id: Project
         creator: Host
         creator_id: Host
+      meeting/meeting_types:
+        webinar: 'Webinar'
+        offline_event: 'Offline Event'
+      meeting/providers:
+        zoom: 'Zoom'
+        google_meet: 'Google Meet'
+        microsoft_teams: 'Microsoft Teams'
+      meeting/statuses:
+        draft: 'Draft'
+        scheduled: 'Scheduled'
+        cancelled: 'Cancelled'
+        completed: 'Completed'
       meeting/file_types:
         photo: 'Photos'
         collateral: 'Collaterals'
@@ -1311,6 +1380,9 @@ en:
         referral_code: "Referral Code"
         shareable_link: "Shareable Link"
         upi_id: 'UPI Address'
+      user/password:
+        name: 'should not contain name.'
+        length: 'Length should be 8-16 characters and include: 1 uppercase, 1 lowercase, 1 digit and 1 special character.'
       user/confirmed:
         :true: 'Confirmed'
         :false: 'Not Confirmed'

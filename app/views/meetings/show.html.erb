@@ -17,13 +17,13 @@
           <%= render 'meetings/toggle_interest_form', meeting: @meeting, reload: true %>
           <hr />
           <%= @meeting.scheduled_on.strftime("%d %b %Y") rescue "" %><br/>
-          <%= Meeting.statuses.select{|x| x[:id] == @meeting.status}.first[:text] %>
+          <%= I18n.t("mongoid.attributes.meeting/statuses.#{@meeting.status}") %>
           <hr />
           <% if @meeting.provider.present? %>
               Join <%= @meeting.provider %> event at <%= link_to 'this link', @meeting.provider_url, target: '_blank' %><br/>
               <%= image_tag "#{@meeting.provider}.png", style: "width: 150px;" %>
           <% else %>
-              <%= Meeting.meeting_types.select{|x| x[:id] == @meeting.meeting_type}.first[:text] %>
+              <%= I18n.t("mongoid.attributes.meeting/meeting_types.#{@meeting.meeting_type}") %>
           <% end %>
           -->
 
