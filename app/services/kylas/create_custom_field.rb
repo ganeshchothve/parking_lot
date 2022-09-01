@@ -33,26 +33,26 @@ module Kylas
           parsed_response = JSON.parse(response.body)
           parsed_response = parsed_response.with_indifferent_access
           dump_kylas_field_ids(parsed_response)
-          ApiLog.log_responses(url, [custom_field_params], [parsed_response], cp_user, 'Hash', user.booking_portal_client)
+          ApiLog.log_responses(url, [custom_field_params], [parsed_response], (cp_user || user), 'Hash', user.booking_portal_client)
           { success: true, data: parsed_response }
         when Net::HTTPBadRequest
-          ApiLog.log_responses(url, [custom_field_params], [(response.message rescue "Invalid Data!")], cp_user, 'Hash', user.booking_portal_client)
+          ApiLog.log_responses(url, [custom_field_params], [(response.message rescue "Invalid Data!")], (cp_user || user), 'Hash', user.booking_portal_client)
           { success: false, message: "Invalid data!" }
         when Net::HTTPNotFound
-          ApiLog.log_responses(url, [custom_field_params], [(response.message rescue "Invalid Data!")], cp_user, 'Hash', user.booking_portal_client)
+          ApiLog.log_responses(url, [custom_field_params], [(response.message rescue "Invalid Data!")], (cp_user || user), 'Hash', user.booking_portal_client)
           { success: false, message: "Invalid data!" }
         when Net::HTTPServerError
-          ApiLog.log_responses(url, [custom_field_params], [(response.message rescue "Invalid Data!")], cp_user, 'Hash', user.booking_portal_client)
+          ApiLog.log_responses(url, [custom_field_params], [(response.message rescue "Invalid Data!")], (cp_user || user), 'Hash', user.booking_portal_client)
           { success: false, message: "Invalid data!" }
         when Net::HTTPUnauthorized
-          ApiLog.log_responses(url, [custom_field_params], [(response.message rescue "Unauthorized!")], cp_user, 'Hash', user.booking_portal_client)
+          ApiLog.log_responses(url, [custom_field_params], [(response.message rescue "Unauthorized!")], (cp_user || user), 'Hash', user.booking_portal_client)
           { success: false, message: "Unauthorized!" }
         else
-          ApiLog.log_responses(url, [custom_field_params], [(response.message rescue "Invalid data!")], cp_user, 'Hash', user.booking_portal_client)
+          ApiLog.log_responses(url, [custom_field_params], [(response.message rescue "Invalid data!")], (cp_user || user), 'Hash', user.booking_portal_client)
           { success: false, message: "Invalid data!" }
         end
       rescue => e
-        ApiLog.log_responses(url, [custom_field_params], [e.message], cp_user, 'Hash', user.booking_portal_client)
+        ApiLog.log_responses(url, [custom_field_params], [e.message], (cp_user || user), 'Hash', user.booking_portal_client)
         { success: false, error: e.message }
       end
     end
