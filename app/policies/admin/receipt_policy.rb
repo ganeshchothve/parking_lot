@@ -34,7 +34,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
     return false if record.success? && record.booking_detail_id.present?
 
     valid = record.success? && record.booking_detail_id.blank?
-    valid ||= (%w[pending clearance_pending available_for_refund].include?(record.status) && %w[admin crm sales_admin].include?(user.role))
+    valid ||= (%w[pending clearance_pending available_for_refund].include?(record.status) && %w[superadmin admin crm sales_admin].include?(user.role))
     valid ||= (user.role?('channel_partner') && record.pending?)
     valid && user.active_channel_partner? && !current_client.launchpad_portal
   end
