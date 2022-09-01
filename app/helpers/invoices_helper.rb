@@ -6,13 +6,16 @@ module InvoicesHelper
   def filter_incentive_categories
     categories = IncentiveScheme::CATEGORIES
     resultant_categories = []
-    if !current_client.enable_leads?
-      resultant_categories = categories.reject{|x| x == 'lead'}
-    end
-    if resultant_categories.present?
-      resultant_categories.collect {|x| [t("mongoid.attributes.invoice/categories.#{x}"), x]}
+    resultant_categories = if current_client.enable_site_visit? && !current_client.enable_leads?
+      categories.reject{|x| x == 'lead'}
+    elsif !current_client.enable_site_visit? && current_client.enable_leads?
+      categories.reject{|x| x == 'walk_in'}
+    elsif !current_client.enable_site_visit? && !current_client.enable_leads?
+      categories.reject{|x| %(lead walk_in).include?(x)}
     else
-      categories.collect {|x| [t("mongoid.attributes.invoice/categories.#{x}"), x]}
+      categories
     end
+    resultant_categories = resultant_categories.collect {|x| [t("mongoid.attributes.invoice/categories.#{x}"), x]}
+    resultant_categories
   end
 end
