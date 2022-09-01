@@ -1,6 +1,6 @@
 class Admin::VariableIncentiveSchemePolicy < VariableIncentiveSchemePolicy
   def index?
-    %w[superadmin].include?(user.role) & current_client.enable_channel_partners? && current_client.enable_vis?
+    %w[superadmin].include?(user.role) && current_client.enable_vis?
   end
 
   def create?
@@ -20,7 +20,7 @@ class Admin::VariableIncentiveSchemePolicy < VariableIncentiveSchemePolicy
   end
 
   def vis_details?
-    %w[superadmin admin billing_team channel_partner cp_owner].include?(user.role) && current_client.enable_channel_partners?
+    %w[superadmin admin billing_team channel_partner cp_owner].include?(user.role) && current_client.enable_vis?
   end
 
   def export?
