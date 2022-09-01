@@ -35,10 +35,10 @@
                         <%#= link_to 'Reject', accept_lead_admin_lead_path(lead, accepted_by_sales: false, event: 'rejected', format: :json), method: 'patch', remote: true, data: { confirm: 'Are you sure?', disable_with: "Please wait..." }, class: "reject move-to-next-state btn apply-btn btn-primary border-primary" %>
                       <!-- </p> -->
                     <%# end %>
-                    <% if lead.manager_id? && current_user.role.in?(%w(admin superadmin)) %>
-                    <p class="fn-14 mt-1 mb-0">
-                      <%= "#{t('mongoid.attributes.lead.manager_id')} : #{link_to lead.manager_name, [current_user_role_group, lead.manager], class: 'theme-txt-color'}".html_safe %>
-                    </p>
+                    <% if lead.manager_id? && current_user.role.in?(%w(admin superadmin)) && current_client.enable_channel_partners? %>
+                      <p class="fn-14 mt-1 mb-0">
+                        <%= "#{t('mongoid.attributes.lead.manager_id')} : #{link_to lead.manager_name, [current_user_role_group, lead.manager], class: 'theme-txt-color'}".html_safe %>
+                      </p>
                     <% end %>
                   </div>
                   <div class="pe-3 py-3 ps-xs-3">
