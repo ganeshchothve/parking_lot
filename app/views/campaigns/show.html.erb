@@ -83,13 +83,13 @@
             <div class="form-group">
               <label class="small text-muted"><%= campaign_labels[:campaign_type] %></label>
               <div>
-                <%= Campaign.campaign_types.find{|x| x[:id] == @campaign.campaign_type }[:text] %>
+                <%= I18n.t("mongoid.attributes.campaign/statuses.#{@campaign.campaign_type}") %>
               </div>
             </div>
             <div class="form-group">
               <label class="small text-muted"><%= campaign_labels[:status] %></label>
               <div>
-                <%= Campaign.statuses.find{|x| x[:id] == @campaign.status }[:text] %>
+                <%= I18n.t("mongoid.attributes.campaign/statuses.#{@campaign.status}") %>
               </div>
             </div>
             <div class="form-group">
@@ -101,13 +101,13 @@
             <div class="form-group">
               <label class="small text-muted"><%= campaign_labels[:sources] %></label>
               <div>
-                <%= @campaign.sources.collect{|x| Campaign.sources.find{|s| s[:id] == x }[:text] }.to_sentence %>
+                <%= @campaign.sources.collect{|x| I18n.t("mongoid.attributes.campaign/campaign_sources.#{x}")} %>
               </div>
             </div>
             <div class="form-group">
               <label class="small text-muted"><%= campaign_labels[:focus] %></label>
               <div>
-                <%= Campaign.focuses.find{|x| x[:id] == @campaign.focus }[:text] %>
+                <%= I18n.t("mongoid.attributes.campaign/focuses.#{@campaign.focus}") %>
               </div>
             </div>
             <div class="form-group">
@@ -253,18 +253,18 @@
                             <span class="fn-14 font-medium">Type of Campaign <i
                                     class="fa fa-info-circle fill-theme-light" data-bs-toggle="tooltip"
                                     data-bs-placement="bottom" title="Tooltip on bottom"></i></span>
-                            <span class="fn-14 float-end"><%= Campaign.campaign_types.find{|x| x[:id] == @campaign.campaign_type }[:text] %></span>
+                            <span class="fn-14 float-end"><%= I18n.t("mongoid.attributes.campaign/statuses.#{@campaign.campaign_type}") %></span>
                         </div>
                         <div class="col-lg-2"></div>
                         <div class="col-lg-5 border-bottom px-0 my-2 pb-2">
                             <span class="fn-14 font-medium">Campaign Stage <i class="fa fa-info-circle fill-theme-light"
                                     data-bs-toggle="tooltip" data-bs-placement="bottom"
                                     title="Tooltip on bottom"></i></span>
-                            <span class="fn-14 float-end"><%= Campaign.statuses.find{|x| x[:id] == @campaign.status }[:text] %></span>
+                            <span class="fn-14 float-end"><%= I18n.t("mongoid.attributes.campaign/statuses.#{campaign.status}") %></span>
                         </div>
                         <div class="col-lg-5 border-bottom px-0 my-2 pb-2">
                             <span class="fn-14 font-medium">Mediums</span>
-                            <span class="fn-14 float-end"><%= @campaign.sources.collect{|x| Campaign.sources.find{|s| s[:id] == x }[:text] }.to_sentence %></span>
+                            <span class="fn-14 float-end"><%= @campaign.sources.collect{|x| I18n.t("mongoid.attributes.campaign/campaign_sources.#{x}")} %></span>
                         </div>
                         <div class="col-lg-2"></div>
                         <div class="col-lg-5 border-bottom px-0 my-2 pb-2">

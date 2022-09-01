@@ -20,13 +20,13 @@
             <div class="col-md-6">
               <div class="mb-3">
               <%= f.label :meeting_type, class: 'label-required' %>
-                <%= f.select :meeting_type, Meeting.meeting_types.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, meeting]).editable_field?("meeting_type") ? false : true) %>
+                <%= f.select :meeting_type, I18n.t("mongoid.attributes.meeting/meeting_types").collect{ |k,v| [v, k.to_s]}, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, meeting]).editable_field?("meeting_type") ? false : true) %>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
                 <%= f.label :provider %>
-                <%= f.select :provider, Meeting.providers.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', disabled: (policy([current_user_role_group, meeting]).editable_field?("provider") ? false : true) %>
+                <%= f.select :provider, I18n.t("mongoid.attributes.meeting/providers").collect{ |k,v| [v, k.to_s]}, {prompt: true}, class: 'selectize', disabled: (policy([current_user_role_group, meeting]).editable_field?("provider") ? false : true) %>
               </div>
             </div>
           </div>
