@@ -89,7 +89,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def send_payment_link?
-    record.user.confirmed? && user.role.in?(User::ADMIN_ROLES)
+    record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && (current_client.enable_payment_with_kyc ? record.kyc_ready? : true )
   end
 
   def search_by?
