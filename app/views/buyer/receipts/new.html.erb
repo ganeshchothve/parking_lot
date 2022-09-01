@@ -30,6 +30,11 @@
         $('#receipt_form [type="submit"]').attr("disabled", "disabled");
       }
     });
+
+    $('#receipt_payment_type').on('change', function(e){
+      var payment_type = $(e.currentTarget).val();
+      $('#receipt_total_amount').val(amount_hash[payment_type]);
+    });
     FormInitializer.init($('#receipt_form'));
   });
 <% end %>
