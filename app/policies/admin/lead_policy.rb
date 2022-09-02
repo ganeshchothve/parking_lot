@@ -112,8 +112,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def show_existing_customer?
-    %w(sales).exclude?(user.role)
-    false
+    %w(sales).exclude?(user.role) && (current_client.enable_leads || current_client.enable_site_visit?)
   end
 
   def reassign_lead?
