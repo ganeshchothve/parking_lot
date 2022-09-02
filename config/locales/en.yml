@@ -1003,6 +1003,7 @@ en:
         status: Status
         day: Day
         capped_incentive: Capped Incentive Amount
+        message: ["Incentives are higher for early adopters & increase like the stock price", "You book early and get more SuperBrokers to drive Bookings!", "More Network Bookings means Incentive Value goes up for everyone"]
       variable_incentive_scheme/status:
         draft: Draft
         approved: Approved
@@ -1981,7 +1982,9 @@ en:
         link_name: Add Variable Incentive Scheme
         header: Add Variable Incentive Scheme
       vis_details:
-        link_name: Variable Incentive Details
+        link_name: Scheme Booking Details
+      leaderboard:
+        link_name: Leaderboard
     sync_logs:
       index:
         link_name: 'Sync Logs'

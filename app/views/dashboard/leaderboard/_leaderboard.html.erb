@@ -49,27 +49,27 @@
 
 <%= javascript_tag do %>
   $.ajax({
-    url: "<%= top_channel_partners_by_incentives_path %>",
+    url: "<%= top_channel_partners_by_incentives_path(variable_incentive_scheme_ids: [@vis_id]) %>",
     dataType: 'script'
   });
 
   $.ajax({
-    url: "<%= highest_incentive_per_booking_path %>",
+    url: "<%= highest_incentive_per_booking_path(variable_incentive_scheme_ids: [@vis_id]) %>",
     dataType: 'script'
   });
 
   $.ajax({
-    url: "<%= average_incentive_per_booking_path %>",
+    url: "<%= average_incentive_per_booking_path(variable_incentive_scheme_ids: [@vis_id]) %>",
     dataType: 'script'
   });
 
   $.ajax({
-    url: "<%= incentive_predictions_path %>",
+    url: "<%= incentive_predictions_path(variable_incentive_scheme_ids: [@vis_id]) %>",
     dataType: 'script'
   });
 
   $.ajax({
-    url: "<%= achieved_target_path %>",
+    url: "<%= achieved_target_path(variable_incentive_scheme_ids: [@vis_id]) %>",
     dataType: 'script'
   });
 

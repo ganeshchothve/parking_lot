@@ -45,13 +45,13 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
     user.role.in?(user.booking_portal_client.team_lead_dashboard_access_roles) && current_client.enable_site_visit?# || user.role?('team_lead')
   end
 
-  def leaderboard?
-    user.role.in?(%w[superadmin admin channel_partner cp_owner]) && current_client.enable_vis?# || user.role?('team_lead')
-  end
+  # def leaderboard?
+  #   user.role.in?(%w[superadmin admin channel_partner cp_owner]) && current_client.enable_vis?# || user.role?('team_lead')
+  # end
 
-  def dashboard_landing_page?
-    leaderboard?
-  end
+  # def dashboard_landing_page?
+  #   leaderboard?
+  # end
 
   def payout_dashboard?
     user.role.in?(%w[channel_partner cp_owner])
