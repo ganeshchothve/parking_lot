@@ -37,7 +37,7 @@ class Admin::LeadPolicy < LeadPolicy
         valid
       end
     end
-    valid && current_client.enable_leads?
+    valid
   end
 
   def check_and_register?
