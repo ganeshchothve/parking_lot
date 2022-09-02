@@ -8,5 +8,11 @@
     <% if policy([:admin, variable_incentive_scheme]).end_scheme? %>
       <%= link_to t('controller.variable_incentive_schemes.end_scheme.link_name'), end_scheme_admin_variable_incentive_scheme_path(variable_incentive_scheme), class: 'dropdown-item modal-remote-form-link' %>
     <% end %>
+    <% if policy([:admin, variable_incentive_scheme]).leaderboard? %>
+      <%= link_to t('controller.variable_incentive_schemes.leaderboard.link_name'), channel_partners_leaderboard_url(id: variable_incentive_scheme.id), class: 'dropdown-item' %>
+    <% end %>
+    <% if policy([:admin, variable_incentive_scheme]).vis_details? %>
+      <%= link_to t('controller.variable_incentive_schemes.vis_details.link_name'), vis_details_admin_variable_incentive_scheme_path(variable_incentive_scheme), class: 'dropdown-item' %>
+    <% end %>
   </div>
 </div>
