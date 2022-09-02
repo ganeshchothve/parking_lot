@@ -3,7 +3,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
 
   def index?
     out = !user.buyer? && (enable_actual_inventory?(user) || enable_direct_payment?)
-    out = out && user.active_channel_partner? && !current_client.launchpad_portal && current_client.enable_leads?
+    out = out && user.active_channel_partner? && !current_client.launchpad_portal && (current_client.enable_leads? || current_client.enable_site_visit?)
   end
 
   def export?
