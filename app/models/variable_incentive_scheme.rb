@@ -43,9 +43,9 @@ class VariableIncentiveScheme
 
   def self.user_based_scope(user, params = {})
     custom_scope = {}
-    if user.role.in?(User::ALL_PROJECT_ACCESS - %w(cp_owner))
-      custom_scope = { project_id: {"$in": Project.all.pluck(:id)} }
-    elsif user.role.in?(%w(channel_partner cp_owner))
+    if !(user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner)))
+      custom_scope = {project_id: {"$in": Project.all.pluck(:id)}}
+    elsif(user.role.in?(%w(channel_partner cp_owner)))
       custom_scope = { status: 'approved' }
     end
     custom_scope
