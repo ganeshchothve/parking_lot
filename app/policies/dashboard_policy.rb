@@ -38,7 +38,7 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
   end
 
   def sales_board?
-    user.role.in?(%w(team_lead))
+    user.role.in?(%w(team_lead)) && current_client.enable_site_visit?
   end
 
   def team_lead_dashboard?
