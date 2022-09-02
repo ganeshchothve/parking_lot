@@ -44,7 +44,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def send_payment_link?
-    record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && (current_client.enable_payment_with_kyc ? record.kyc_ready? : true )
+    record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && (current_client.enable_payment_with_kyc ? record.kyc_ready? : true ) && record.status.in?(['blocked', 'booked_tentative', 'under_negotiation', 'scheme_approved'])
   end
 
   def show_booking_link?
