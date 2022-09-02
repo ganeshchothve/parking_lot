@@ -8,7 +8,7 @@ class Admin::VariableIncentiveSchemePolicy < VariableIncentiveSchemePolicy
   end
 
   def create?
-    index?
+    new?
   end
 
   def leaderboard?
