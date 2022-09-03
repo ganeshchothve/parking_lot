@@ -51,7 +51,7 @@
               <% if policy([current_user_role_group, campaign]).editable_field?("campaign_type") %>
                 <div class="mb-3">
                   <%= f.label :campaign_type, class: 'label-required control-label' %>
-                  <%= f.select :campaign_type, I18n.t("mongoid.attributes.campaign/campaign_types").collect{|k,v| [k.to_s,v]}, {prompt: :Select}, class: 'selectize form-control' %>
+                  <%= f.select :campaign_type, Campaign.campaign_types.collect{|rec| [rec[:text], rec[:id]]}, {prompt: :Select}, class: 'selectize form-control' %>
                 </div>
               <% end %>
 
@@ -72,10 +72,10 @@
               <% if policy([current_user_role_group, campaign]).editable_field?("focus") %>
               <div class="mb-3">
                 <%= f.label :focus, class: 'control-label' %>
-                <% I18n.t("mongoid.attributes.campaign/focuses").each do |key,value| %>
+                <% Campaign.focuses.each do |focus| %>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :focus, key, class: "label-required form-check-input wd-22" %>
-                    <%= f.label :focus, value, class: "form-check-label d-inline ms-2" %>
+                    <%= f.radio_button :focus, focus[:id], class: "label-required form-check-input wd-22" %>
+                    <%= f.label :focus, focus[:text], class: "form-check-label d-inline ms-2" %>
                   </div>
                 <% end %>
               </div>

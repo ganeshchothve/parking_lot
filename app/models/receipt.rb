@@ -140,7 +140,7 @@ class Receipt
   #validations for fields with default value
   validates :status, :payment_mode, :payment_type, presence: true
   validates :status, inclusion: { in: proc { Receipt.aasm.states.collect(&:name).collect(&:to_s) } }
-  validates :payment_mode, inclusion: { in: proc { I18n.t("mongoid.attributes.receipt/payment_mode").collect{|k,v| k.to_s } } }, allow_blank: true
+  validates :payment_mode, inclusion: { in: proc { Receipt.available_payment_modes.collect { |x| x[:id] } } }, allow_blank: true
   validates :payment_type, inclusion: { in: Receipt::PAYMENT_TYPES }, if: proc { |receipt| receipt.payment_type.present? }
   # non mandatory fields
   #validates :issuing_bank, :issuing_bank_branch, name: true, allow_blank: true
@@ -203,6 +203,28 @@ class Receipt
   #
   def online?
     payment_mode.to_s == 'online'
+  end
+
+  def self.available_payment_modes
+    [
+      { id: 'online', text: 'Online' },
+      { id: 'cheque', text: 'Cheque' },
+      { id: 'rtgs', text: 'RTGS' },
+      { id: 'imps', text: 'IMPS' },
+      { id: 'card_swipe', text: 'Card Swipe' },
+      { id: 'neft', text: 'NEFT' }
+    ]
+  end
+
+  def self.available_sort_options
+    [
+      { id: 'created_at.asc', text: 'Created - Oldest First' },
+      { id: 'created_at.desc', text: 'Created - Newest First' },
+      { id: 'issued_date.asc', text: 'Issued Date - Oldest First' },
+      { id: 'issued_date.desc', text: 'Issued Date- Newest First' },
+      { id: 'processed_on.asc', text: 'Proccessed On - Oldest First' },
+      { id: 'processed_on.desc', text: 'Proccessed On - Newest First' }
+    ]
   end
 
   def primary_user_kyc

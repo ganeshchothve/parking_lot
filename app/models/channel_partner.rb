@@ -134,6 +134,15 @@ class ChannelPartner
     errors.add(:base, 'Email or Phone is required')
   end
 
+  def self.available_statuses
+    [
+      { id: 'active', text: 'Active' },
+      { id: 'inactive', text: 'Inactive' },
+      { id: 'pending', text: 'Pending Approval' },
+      { id: 'rejected', text: 'Rejected Request' }
+    ]
+  end
+
   def name
     company_name
   end

@@ -10,7 +10,7 @@
         </div>
         <div class="modal-body theme-form">
           <div class="row">
-            <%= f.input :salutation, collection: 18n.t("mongoid.attributes.user_kyc/salutations").collect{|k,v| [v, k.to_s]}, prompt: :translate, required: true, wrapper_html: { class: 'col-md-2' } %>
+            <%= f.input :salutation, collection: UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, prompt: :translate, required: true, wrapper_html: { class: 'col-md-2' } %>
 
             <%= f.input :first_name, required: true, wrapper_html: { class: 'col-md-5' } %>
 

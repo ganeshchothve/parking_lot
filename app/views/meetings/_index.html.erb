@@ -21,13 +21,13 @@
           <%#= render 'meetings/toggle_interest_form', meeting: meeting %>
         </td>
         <td data-title=<%= t('mongoid.attributes.meeting.scheduled_on') %>><%= meeting.scheduled_on.strftime("%d %b %Y %I:%M %p") rescue "" %></td>
-        <td data-title=<%= t('mongoid.attributes.meeting.status') %>><%= I18n.t("mongoid.attributes.meeting/statuses.#{meeting.status}") %></td>
+        <td data-title=<%= t('mongoid.attributes.meeting.status') %>><%= Meeting.statuses.select{|x| x[:id] == meeting.status}.first[:text] %></td>
         <td>
             <% if meeting.provider.present? %>
                 Join <%= meeting.provider %> event at <%= link_to 'this link', meeting.provider_url, target: '_blank' %><br/>
                 <%= image_tag "#{meeting.provider}.png", style: "width: 150px;" %>
             <% else %>
-                <%= I18n.t("mongoid.attributes.meeting/statuses.#{meeting.meeting_type}") %>
+                <%= Meeting.meeting_types.select{|x| x[:id] == meeting.meeting_type}.first[:text] %>
             <% end %>
         </td>
         <td class="action-btn">

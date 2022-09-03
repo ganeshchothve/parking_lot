@@ -8,8 +8,7 @@
         <% elsif Admin::CampaignPolicy.new(current_user, campaign).show? %>
         <%= link_to campaign.name, admin_campaign_path(campaign), class: 'theme-txt-color d-inline-block' %>
         <% end %>
-        <%= I18n.t("mongoid.attributes.campaign/statuses.#{campaign.status}") %>
-        <%
+        <%= Campaign.statuses.find{|x| x[:id] == campaign.status}['text'] %>
       </h6>
       <span class="badge bg-warning-light font-normal text-warning fn-14">Not yet started</span>
       <span class="badge bg-danger-light font-normal text-danger fn-14">Paused</span>

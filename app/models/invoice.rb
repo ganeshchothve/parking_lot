@@ -143,6 +143,36 @@ class Invoice
     end
   end
 
+  def self.available_payout_statuses
+    [
+      { id: 'invoiced', text: 'Invoiced' },
+      { id: 'waiting_for_registration', text: 'Waiting for Registration' },
+      { id: 'waiting_for_invoicing', text: 'Waiting for Invoicing' },
+      { id: 'paid', text: 'Paid' },
+      { id: 'cancellation', text: 'Cancellation' }
+    ]
+  end
+
+  def self.available_payout_categories
+    [
+      { id: 'all', text: 'All' },
+      { id: 'walk_in', text: 'Site Visits' },
+      { id: 'spot_booking', text: 'Spot Bookings' },
+      { id: 'brokerage', text: 'Brokerage' },
+    ]
+  end
+
+  def self.available_sort_options
+    [
+      { id: 'created_at.asc', text: 'Created - Oldest First' },
+      { id: 'created_at.desc', text: 'Created - Newest First' },
+      { id: 'raised_date.asc', text: 'Invoiced Date - Oldest First' },
+      { id: 'raised_date.desc', text: 'Invoiced Date- Newest First' },
+      { id: 'net_amount.asc', text: 'Amount - Low to High' },
+      { id: 'net_amount.desc', text: 'Amount- High to Low' }
+    ]
+  end
+
   def calculate_net_amount
     _amount = amount + calculate_gst_amount
     _amount += payment_adjustment.try(:absolute_value).to_i if payment_adjustment.try(:absolute_value).present?

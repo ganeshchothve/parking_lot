@@ -374,10 +374,10 @@ class User
       if password !~ re
         true
       else
-        errors.add :password, I18n.t("mongoid.attributes.user/password.name")
+        errors.add :password, 'should not contain name.'
       end
     else
-      errors.add :password, I18n.t("mongoid.attributes.user/password.length")
+      errors.add :password, 'Length should be 8-16 characters and include: 1 uppercase, 1 lowercase, 1 digit and 1 special character.'
     end
   end
 
@@ -699,6 +699,13 @@ class User
       else
         ['user']
       end
+    end
+
+    def available_confirmation_statuses
+      [
+        { id: 'confirmed', text: 'Confirmed' },
+        { id: 'not_confirmed', text: 'Not Confirmed' }
+      ]
     end
 
     def available_roles(current_client)
