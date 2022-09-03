@@ -65,7 +65,7 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
     @booking_detail_scheme.approved_by = current_user
     respond_to do |format|
       if @booking_detail_scheme.save
-        format.html { redirect_to admin_user_path(@booking_detail.user.id), notice: 'Scheme was successfully updated.' }
+        format.html { redirect_to admin_user_path(@booking_detail.user.id), notice: I18n.t('controller.booking_detail_schemes.scheme_updated') }
         format.json { render json: @booking_detail_scheme }
       else
         format.html { render layout: false, template: 'booking_detail_schemes/edit' }

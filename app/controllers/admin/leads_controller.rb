@@ -48,14 +48,14 @@ class Admin::LeadsController < AdminController
     else
       LeadExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json, timezone: Time.zone.name)
     end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    flash[:notice] = I18n.t('controller.notice.export_scheduled')
     redirect_to admin_leads_path(fltrs: params[:fltrs].as_json)
   end
 
   def update
     respond_to do |format|
       if @lead.update(permitted_attributes([:admin, @lead]))
-        format.html { redirect_to admin_leads_path, notice: 'Lead successfully updated.' }
+        format.html { redirect_to admin_leads_path, notice: I18n.t("controller.notice.updated", name: "Lead") }
       else
         format.html { render :edit }
         format.json { render json: { errors: @lead.errors.full_messages }, status: :unprocessable_entity }
@@ -119,7 +119,7 @@ class Admin::LeadsController < AdminController
           format.json { render json: { errors: [message] }, status: :unprocessable_entity }
         end
       else
-        format.html{ redirect_to request.referrer || dashboard_url, alert: "Sales user not found" }
+        format.html{ redirect_to request.referrer || dashboard_url, alert: I18n.t("controller.errors.not_found", name: "Sales user") }
       end
     end
   end
@@ -200,7 +200,7 @@ class Admin::LeadsController < AdminController
           end
         end
 
-        format.json { render json: { message: "Mail successfully sent to the selected leads" }, status: :ok }
+        format.json { render json: { message:  I18n.t("controller.message.mail_sent", name: "selected leads") }, status: :ok }
       else
         errors = []
         errors << 'Please select some leads' unless @leads.present?
@@ -229,7 +229,7 @@ class Admin::LeadsController < AdminController
   def set_sales_user
     @sales = User.where(id: params[:sales_id], role: 'sales').first
     unless @sales
-      flash.now[:alert] = 'Sales user not found'
+      flash.now[:alert] = I18n.t("controller.errors.not_found", name: "Sales user")
       render 'assign_sales'
     end
   end

@@ -22,7 +22,7 @@ class ChannelPartnersController < ApplicationController
     else
       ChannelPartnerExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json, timezone: Time.zone.name)
     end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    flash[:notice] = I18n.t('controller.notice.export_scheduled')
     redirect_to channel_partners_path(fltrs: params[:fltrs].as_json)
   end
 
@@ -59,7 +59,7 @@ class ChannelPartnersController < ApplicationController
           respond_to do |format|
             if @channel_partner.save
               cookies.delete :srd
-              format.html { redirect_to (user_signed_in? ? channel_partners_path : cp_signed_up_with_inactive_account_path(user_id: @cp_user.id)), notice: 'Registration Successfull' }
+              format.html { redirect_to (user_signed_in? ? channel_partners_path : cp_signed_up_with_inactive_account_path(user_id: @cp_user.id)), notice: I18n.t("controller.notice.registered", name: "Channel Partner") }
               format.json { render json: @channel_partner, status: :created }
             else
               flash.now[:alert] = @channel_partner.errors.full_messages.uniq
@@ -94,7 +94,7 @@ class ChannelPartnersController < ApplicationController
         respond_to do |format|
           if @channel_partner.save
             cookies.delete :srd
-            format.html { redirect_to (user_signed_in? ? channel_partners_path : signed_up_path(user_id: @channel_partner.users.first&.id)), notice: 'Channel partner was successfully created.' }
+            format.html { redirect_to (user_signed_in? ? channel_partners_path : signed_up_path(user_id: @channel_partner.users.first&.id)), notice: I18n.t("controller.notice.created", name: "Channel Partner") }
             format.json { render json: @channel_partner, status: :created }
           else
             flash.now[:alert] = @channel_partner.errors.full_messages.uniq
@@ -121,7 +121,7 @@ class ChannelPartnersController < ApplicationController
     respond_to do |format|
       if (params.dig(:channel_partner, :event).present? ? @channel_partner.send("#{params.dig(:channel_partner, :event)}!") : @channel_partner.save)
         @channel_partner.approve! if (device_type?("mobile") && @channel_partner.may_approve?)
-        format.html { redirect_to (request.referer || channel_partners_path), notice: 'Channel Partner was successfully updated.' }
+        format.html { redirect_to (request.referer || channel_partners_path), notice: I18n.t("controller.notice.updated", name: "Channel Partner") }
         format.json { render 'channel_partners/show.json' }
       else
         format.html { render :edit }
@@ -136,8 +136,8 @@ class ChannelPartnersController < ApplicationController
         format.html { redirect_to request.referer, notice: t("controller.channel_partners.status_message.#{@channel_partner.status}") }
         format.json { render json: @channel_partner }
       else
-        format.html { redirect_to request.referer, alert: (@channel_partner.errors.full_messages.uniq.presence || 'Something went wrong') }
-        format.json { render json: { errors: (@channel_partner.errors.full_messages.uniq.presence || 'Something went wrong') }, status: :unprocessable_entity }
+        format.html { redirect_to request.referer, alert: (@channel_partner.errors.full_messages.uniq.presence || I18n.t("controller.errors.went_wrong")) }
+        format.json { render json: { errors: (@channel_partner.errors.full_messages.uniq.presence || I18n.t("controller.errors.went_wrong")) }, status: :unprocessable_entity }
       end
     end
   end

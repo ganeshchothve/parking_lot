@@ -11,12 +11,12 @@ class Api::V1::ChannelPartnersController < ApisController
     unless ChannelPartner.reference_resource_exists?(@crm.id, params[:channel_partner][:reference_id])
       @channel_partner = ChannelPartner.new(channel_partner_create_params)
       if @channel_partner.save
-        render json: {channel_partner_id: @channel_partner.id, user_id: @channel_partner.associated_user.id ,message: 'Channel Partner successfully created.'}, status: :created
+        render json: {channel_partner_id: @channel_partner.id, user_id: @channel_partner.associated_user.id ,message: I18n.t("controller.notice.created", name:"Channel Partner")}, status: :created
       else
         render json: {errors: @channel_partner.errors.full_messages.uniq}, status: :unprocessable_entity
       end
     else
-      render json: {errors: ["Channel Partner with reference_id '#{params[:channel_partner][:reference_id]}' already exists"]}, status: :unprocessable_entity
+      render json: {errors: [I18n.t("controller.errors.reference_id_already_exists", name1: "Channel Partner" name2: "#{params[:channel_partner][:reference_id]}")]}, status: :unprocessable_entity
     end
   end
 
@@ -29,12 +29,12 @@ class Api::V1::ChannelPartnersController < ApisController
     unless ChannelPartner.reference_resource_exists?(@crm.id, params[:channel_partner][:reference_id])
       @channel_partner.assign_attributes(channel_partner_update_params)
       if @channel_partner.save
-        render json: {channel_partner_id: @channel_partner.id, user_id: @channel_partner.associated_user.id, message: 'Channel Partner successfully updated'}, status: :ok
+        render json: {channel_partner_id: @channel_partner.id, user_id: @channel_partner.associated_user.id, message: I18n.t("controller.notice.updated", name:"Channel Partner")}, status: :ok
       else
         render json: {errors: @channel_partner.errors.full_messages.uniq }, status: :unprocessable_entity
       end
     else
-      render json: {errors: ["Channel Partner with reference_id '#{params[:channel_partner][:reference_id]}' already exists"]}, status: :unprocessable_entity
+      render json: {errors: [I18n.t("controller.errors.reference_id_already_exists", name1: "Channel Partner" name2: "#{params[:channel_partner][:reference_id]}")]}, status: :unprocessable_entity
     end
   end
 
@@ -43,13 +43,13 @@ class Api::V1::ChannelPartnersController < ApisController
 
   # Checks if the required reference_id's are present. reference_id is the third party CRM resource id.
   def reference_ids_present?
-    render json: { errors: ['Channel Partner reference_id is required'] }, status: :bad_request and return unless params.dig(:channel_partner, :reference_id).present?
+    render json: { errors: [I18n.t("controller.errors.reference_id_required", name:"Channel Partner")] }, status: :bad_request and return unless params.dig(:channel_partner, :reference_id).present?
   end
 
   # Sets the channel partner object
   def set_channel_partner
     @channel_partner = ChannelPartner.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params.dig(:id)).first
-    render json: { errors: ['Channel Partner is not registered.'] }, status: :not_found if @channel_partner.blank?
+    render json: { errors: [I18n.t("controller.errors.not_registered", name:"Channel Partner")] }, status: :not_found if @channel_partner.blank?
   end
 
   def add_third_party_reference_params

@@ -25,7 +25,7 @@ class Admin::Projects::UnitConfigurationsController < AdminController
     parameters = permitted_attributes([:admin, @unit_configuration])
     respond_to do |format|
       if @unit_configuration.update(parameters)
-        format.html { redirect_to request.referrer || admin_project_unit_configurations_path, notice: 'Time slot successfully updated.' }
+        format.html { redirect_to request.referrer || admin_project_unit_configurations_path, notice: I18n.t("controller.time_slots.notice.updated") }
       else
         errors = @unit_configuration.errors.full_messages
         errors.uniq!
@@ -39,12 +39,12 @@ class Admin::Projects::UnitConfigurationsController < AdminController
 
   def set_project
     @project = Project.where(id: params[:project_id]).first
-    redirect_to dashboard_path, alert: 'Project not found' unless @project
+    redirect_to dashboard_path, alert: I18n.t('controller.booking_details.set_project_missing') unless @project
   end
 
   def set_unit_configuration
     @unit_configuration = @project.unit_configurations.where(id: params[:id]).first
-    redirect_to dashboard_path, alert: 'Time slot not found' unless @unit_configuration
+    redirect_to dashboard_path, alert: I18n.t("controller.time_slots.alert.time_slot_missing") unless @unit_configuration
   end
 
   def authorize_resource

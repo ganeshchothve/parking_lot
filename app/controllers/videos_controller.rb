@@ -18,7 +18,7 @@ class VideosController < ApplicationController
     @video = Video.new(permitted_attributes([:admin, Video.new(videoable: @videoable)]))
     @video.videoable = @videoable
     if @video.save
-      redirect_to videoables_path(videoable: @videoable), notice: 'Video Successfully created'
+      redirect_to videoables_path(videoable: @videoable), notice: I18n.t("controller.notice.created", name: "Video")
     else
       render json: {errors: @video.errors.full_messages}, status: 406
     end
@@ -35,7 +35,7 @@ class VideosController < ApplicationController
   def update
     @video.assign_attributes(permitted_attributes([:admin, Video.new(videoable: @videoable)]))
     if @video.save
-      redirect_to videoables_path(videoable: @videoable), notice: 'Video Successfully updated'
+      redirect_to videoables_path(videoable: @videoable), notice: I18n.t("controller.notice.updated", name: "Video")
     else
       render json: {errors: @video.errors.full_messages}, status: 406
     end
@@ -44,7 +44,7 @@ class VideosController < ApplicationController
   def destroy
     respond_to do |format|
       if @video.destroy
-        format.html {redirect_to videoables_path(videoable: @videoable), notice: 'Video deleted successfully'}
+        format.html {redirect_to videoables_path(videoable: @videoable), notice: I18n.t("controller.notice.deleted", name: "Video")}
         format.json {render json: {}, status: :ok}
       else
         format.html {render :index, alert: @video.errors.full_messages.to_sentence}

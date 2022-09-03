@@ -44,7 +44,7 @@ class Admin::PhasesController < AdminController
     @phase.assign_attributes(permitted_attributes([:admin, @phase]))
     respond_to do |format|
       if @phase.save
-        format.html { redirect_to admin_phases_path, notice: 'Request registered successfully.' }
+        format.html { redirect_to admin_phases_path, notice: I18n.t('controller.notice.registered', name: "Request") }
         format.json { render json: @phase, status: :created }
       else
         format.html { render :new }
@@ -63,7 +63,7 @@ class Admin::PhasesController < AdminController
 
     respond_to do |format|
       if @phase.save
-        format.html { redirect_to admin_phases_path, notice: 'Request registered successfully.' }
+        format.html { redirect_to admin_phases_path, notice: I18n.t('controller.notice.registered', name: "Request") }
         format.json { render json: @phase, status: :created }
       else
         format.html { render :new }

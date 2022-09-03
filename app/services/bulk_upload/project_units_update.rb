@@ -165,7 +165,7 @@ module BulkUpload
           true
         end
       else
-        (bur.upload_errors.find_or_initialize_by(row: headers).messages << 'Headers not found').uniq
+        (bur.upload_errors.find_or_initialize_by(row: headers).messages << I18n.t("controller.errors.not_found", name: "Headers")).uniq
         false
       end
     end

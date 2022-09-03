@@ -1574,6 +1574,74 @@ en:
         project: Project
 
   controller:
+    notice:
+      logged_in: "You have already been logged in"
+      only_admins: "Only admins can view this page."
+      sent: "%{name} sent Successfully."
+      instructions_sent: "%{name} instructions sent successfully."
+      confirmed: "Confirmation Successul"
+      created: "%{name} created successfully."
+      updated: "%{name} updated successfully."
+      activated: "%{name} activated successfully."
+      deactivated: "%{name} deactivated successfully."
+      deleted: "%{name} deleted successfully"
+      cannot_be_deleted: "%{name} cannot be deleted"
+      registered: "%{name} registered successfully."
+      uploaded: "%{name} uploaded successfully."
+      subscribed: "%{name} subscribed successfully."
+      generated: "%{name} successfully generated."
+      sync_successful: "%{name} synced successfully."
+      reactivated: "%{name} reactivated successfully."
+      unqualified: "%{name} unqualified successfully."
+      booked: "%{name} booked successfully."
+      export_scheduled: "Export scheduled."
+      no_pending: "No pending %{name} found."
+      unable_to_confirm_with_this_link: "Cannot confirm with this link. Please contact administrator"
+    alert:
+      upload_unsuccessful: "%{name} upload unsuccessful"
+      update_unsuccessful: "%{name} update unsuccessful"
+      went_wrong: "Something went wrong. Please contact support for assistance."
+      share_the_code: "Share the error code %{name}."
+      link_expired: "This link is expired. Please ask the channel partner to send request again"
+      ask_support_to_register: "Please ask support team to register your account."
+      not_available: "%{name} not available."
+    errors:
+      not_found: "%{name} not found"
+      not_selected: "%{name} not selected"
+      not_registered: "%{name} not registered."
+      cannot_unqualified: "%{name} cannot unqualified."
+      not_available_for_cancellation: "%{name} is not available for cancellation."
+      already_present: "%{name1} is already present %{name2}."
+      already_exists: "%{name} already exists."
+      required: "%{name1} is required to create %{name2}"
+      count: "Error encountered: %{name}"
+      reference_id_required: "%{name} reference_id is required."
+      reference_id_not_found: "%{name1} with reference id %{name2} is not found."
+      reference_id_in_success: "%{name1} with reference id %{name2} is already in success."
+      reference_id_already_exists: "%{name1} with reference_id %{name2} already exists."
+      date_format: '%{name} date format is invalid. Correct date format is - dd/mm/yyyy'
+      required_for: "%{name1} reference id is required for all %{name2}"
+      not_present_for: "%{name1} not present for %{name2}. Please contact administrator"
+      payment_failure: "We couldn't redirect you to the payment gateway, please try again"
+      boolean_value: "%{name} should be a boolean value - true or false"
+      user_registered: "User with these details is already registered with a different role"
+      failed_to_send_instructions: "Couldn't send %{name} instructions."
+    message:
+      mail_sent: "Mail successfully sent to the selected leads"
+
+    api:
+      notice:
+        configuration_added: 'API configuration is added successfully'
+        configuration_updated: 'API configuration is updated successfully'
+        configuration_removed: 'API configuration is removed successfully'
+        configuration_cannot_removed: 'API configuration is cannot be removed'
+        request_being_processed: 'Request is being processed'
+      alert:
+        not_found: 'API not found'
+      errors:
+        incorrect_key: "Incorrect Key."
+        register_with_application: "Kindly register with our application."
+        parameters_missing: "Required parameters missing."
     discounts:
       index:
         link_name: 'Token Discounts'
@@ -1589,6 +1657,7 @@ en:
         link_name: 'Sales Board'
     customer_searches:
       set_customer_search_missing: 'Customer Search not found.'
+      in_state: "Customer is already in %{name} state"
     token_types:
       index:
         link_name: 'Token Types'
@@ -1613,6 +1682,17 @@ en:
         link_name: 'Edit Slot'
       destroy:
         link_name: 'Delete Slot'
+      notice:
+        created: 'Time slot was successfully created.'
+        updated: 'Time slot successfully updated.'
+        deleted: 'Time slot successfully deleted.'
+      alert:
+        time_slot_missing: 'Time slot not found'
+    token_type:
+      alert:
+        activate: "Not able to activate %{name} Token Type due to some problem"
+        deactivate: "Not able to deactivate %{name} Token Type due to some problem"
+        token_type_missing: 'Token type not found'
     home:
       select_project:
         link_name: 'Switch Project'
@@ -1621,9 +1701,12 @@ en:
         link_name: 'Lead Activities'
       show:
         link_name: 'Show Lead Activities'
+      errors:
+        validity_update_failed: "Lead validity can not be updated. Lead is active for %{name}"
     push_notifications:
       index:
         link_name: "Notifications"
+      will_be_sent: 'Push notification will be sent in some time.'
     api_logs:
       index:
         link_name: 'API Logs'
@@ -1669,9 +1752,6 @@ en:
         link_name: 'New Task'
       edit:
         link_name: 'Edit Task'
-      delete:
-        success: 'Task deleted successfully'
-        failure: 'Task cannot be deleted'
       set_checklist:
         not_found: 'Task not found'
     assets:
@@ -1715,6 +1795,7 @@ en:
         link_name: 'Update Scheme & Discount'
       scheme_approved: 'Scheme applied successfully, please check cost sheet.'
       scheme_under_negotiation: 'Scheme registered successfully and sent for approval.'
+      scheme_updated: 'Scheme was successfully updated.'
     booking_details:
       add_booking:
         link_name: "Add Booking"
@@ -1749,6 +1830,7 @@ en:
       booking_successful: "You have completed the booking successfully."
       booking_unsuccessful: "Your booking was unsuccessful. Please contact administrator to book."
       set_receipt_missing: 'Make new payment'
+      set_lead_missing: 'Lead not found'
       documents:
         link_name: 'Documents'
       receipts:
@@ -1766,6 +1848,9 @@ en:
             pending: Submit for Approval
       reject:
         link_name: 'Reject Booking'
+      errors:
+        booking_scheme_not_found: "Booking scheme is not found for this project unit. Please contact administrator"
+        task_attributes: 'tasks_attributes should be a key, value pair'
 
     invoices:
       index:
@@ -1838,6 +1923,8 @@ en:
       create:
         not_allowed_message: 'Company with these details already exists. Please contact your company admin (%{owner_name}) to create your account.'
         already_present_and_active_msg: 'A user with these details is already present & active under a company'
+      registration:
+        code_missing: 'Registration code is missing'
 
     dashboard:
       index:
@@ -1876,6 +1963,8 @@ en:
         link_name: 'Projects'
       sync_on_selldo:
         link_name: 'Sync on Sell.do'
+        successful: 'Project synced on Sell.do successfully'
+        unsuccessful: "Sell.do Sync Errors"
       show:
         show_interest_text: 'Subscribe to Project for Adding Walk-Ins'
         booking_count: 'Bookings'
@@ -1939,6 +2028,12 @@ en:
         link_name: Payment Details
       show_user_kyc:
         link_name: 'View KYC'
+      notice:
+        receipt_updated: 'Receipt was successfully updated. Please upload documents'
+      errors:
+        payment_identifier_blank: "Payment identifier can't be blank"
+        status_present: "Status should be present"
+        status_clearance_pending: "Status should be clearance_pending or success"
     referrals:
       index:
         link_name: 'Referrals'
@@ -1957,6 +2052,9 @@ en:
         link_name: 'Walk-in Details'
       sync_with_selldo:
         link_name: 'Sync with Sell.Do'
+      selldo_crm_integration:
+        available: 'Sell.do CRM integration available'
+        unavailable: 'Sell.do CRM integration not available'
       reject:
         link_name: 'Reject Walk-in'
         default_note: 'Our developer partner indicated that the customer hasn’t visited the project site and no customer with this name was found in their systems. They have asked us to reject this visit. If you do not agree and in case you know the customer has visited; kindly update the walk-in as conducted. Based on your feedback, we will take this up with our developer partner. If you want to reschedule this visit, you can schedule a new walk-in.'
@@ -2060,6 +2158,11 @@ en:
         link_name: 'Sync'
       show:
         link_name: Details
+      sync_log:
+        queued: "%{name} is queued to sync"
+        resource_absent: 'Sync log resource absent'
+        process_started: 'Sync process has been started.'
+        details_missing: 'Sync details are missing.'
 
     templates:
       index:
@@ -2083,6 +2186,7 @@ en:
         link_name: 'Confirm User'
       confirm_via_otp:
         link_name: 'Confirm Via OTP'
+        confirmed: "User confirmed using OTP by this channel_partner"
       exports:
         link_name: '%{name} Exports'
       edit:
@@ -2155,6 +2259,7 @@ en:
       create_new_lead:
         link_name: 'Add New %{model}'
       reassign_sales: Reassign Lead
+      revisit_count: "Revisit count should be a number"
 
     user_kycs:
       index:
@@ -2201,6 +2306,10 @@ en:
         edit:
           link_name: 'Edit Cancellation'
           header: 'Edit Cancellation'
+      errors:
+        id_required: 'Booking detail id or Receipt id is required for cancellation'
+        request_type_required: "User request type is required"
+        supported_request_type: "Only cancellation user request type is supported"
 
   checklists:
     form:

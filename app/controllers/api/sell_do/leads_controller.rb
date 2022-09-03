@@ -75,7 +75,7 @@ class Api::SellDo::LeadsController < Api::SellDoController
 
   def set_crm
     @crm = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
-    render json: { errors: ["Sell.do CRM integration not available"] } and return unless @crm
+    render json: { errors: [I18n.t('controller.errors.not_found', name: "Site Visit")] } and return unless @crm
   end
 
   def create_or_set_user

@@ -139,7 +139,7 @@ module BulkUpload
                 bur.failure_count += 1
               end
             else
-              (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push('User not found')).uniq
+              (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push(I18n.t("controller.errors.not_found", name: "User"))).uniq
               bur.failure_count += 1
             end
           else

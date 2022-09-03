@@ -47,7 +47,7 @@ class Buyer::ReceiptsController < BuyerController
           format.html{ redirect_to url }
           format.json{ render json: {}, location: url }
         else
-          flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
+          flash[:notice] = I18n.t("controller.errors.payment_failure")
           @receipt.update_attributes(status: "failed")
           url = dashboard_path
           format.json{ render json: @receipt, location: url }
@@ -70,13 +70,13 @@ class Buyer::ReceiptsController < BuyerController
 
   def set_lead
     @lead = current_user.selected_lead
-    redirect_to dashboard_path, alert: 'Lead Not found', status: 404 if @lead.blank?
+    redirect_to dashboard_path, alert: I18n.t("controller.errors.not_found", name: "Lead"), status: 404 if @lead.blank?
   end
 
   def set_receipt
     lead = current_user.selected_lead
     @receipt = lead.receipts.where(_id: params[:id]).first
-    redirect_to dashboard_path, alert: 'No receipts found', status: 404 if @receipt.blank?
+    redirect_to dashboard_path, alert: I18n.t("controller.errors.not_found", name: "Receipts"), status: 404 if @receipt.blank?
   end
 
 end

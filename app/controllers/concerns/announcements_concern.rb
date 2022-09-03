@@ -47,7 +47,7 @@ module AnnouncementsConcern
   def destroy
     respond_to do |format|
       if @announcement.destroy
-        format.html { redirect_to admin_announcements_path, notice: 'Announcement deleted successfully.' }
+        format.html { redirect_to admin_announcements_path, notice: I18n.t("controller.notice.deleted", name:"Announcement") }
         format.json { render json: @announcement, status: :ok }
       else
         format.html { redirect_to admin_announcements_path }
@@ -78,6 +78,6 @@ module AnnouncementsConcern
 
   def set_announcement
     @announcement = Announcement.where(id: params[:id]).first
-    redirect_to root_path, alert: 'Announcement Not Found' if @announcement.blank?
+    redirect_to root_path, alert: I18n.t("controller.errors.not_found", name: "Announcement") if @announcement.blank?
   end
 end

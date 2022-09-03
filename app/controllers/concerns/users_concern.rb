@@ -10,10 +10,10 @@ module UsersConcern
     @user.expired_at = nil
     respond_to do |format|
       if @user.save
-        flash[:notice] = 'User Account reactivated successfully.'
+        flash[:notice] = I18n.t("controller.notice.reactivated", name:"User Account")
         format.html { redirect_to admin_users_path }
       else
-        flash[:alert] = "There was some error while reactivating account. Please contact support for assistance"
+        flash[:alert] = I18n.t("controller.alert.went_wrong")
         format.html { redirect_to admin_users_path }
       end
     end
@@ -23,10 +23,10 @@ module UsersConcern
     @user = User.find(params[:id])
     respond_to do |format|
       if @user.resend_confirmation_instructions
-        flash[:notice] = 'Confirmation instructions sent successfully.'
+        flash[:notice] = I18n.t("controller.notice.instructions_sent", name:"Confirmation")
         format.html { redirect_to request.referer || admin_users_path }
       else
-        flash[:error] = "Couldn't send confirmation instructions."
+        flash[:error] = I18n.t("controller.errors.failed_to_send_instructions", name:"Confirmation")
         format.html { redirect_to request.referer || admin_users_path }
       end
     end
@@ -36,10 +36,10 @@ module UsersConcern
     @user = User.find(params[:id])
     respond_to do |format|
       if @user.send_reset_password_instructions
-        flash[:notice] = 'Reset password instructions sent successfully.'
+        flash[:notice] = I18n.t("controller.notice.instructions_sent", name:"Reset password")
         format.html { redirect_to admin_users_path }
       else
-        flash[:error] = "Couldn't send Reset password instructions."
+        flash[:error] = I18n.t("controller.errors.failed_to_send_instructions", name:"Reset password")
         format.html { redirect_to admin_users_path }
       end
     end
@@ -81,7 +81,7 @@ module UsersConcern
     else
       UserExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json, timezone: Time.zone.name)
     end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    flash[:notice] = I18n.t('controller.notice.export_scheduled')
     redirect_to admin_users_path(fltrs: params[:fltrs].as_json)
   end
 
@@ -95,7 +95,7 @@ module UsersConcern
         @user.iris_confirmation = true
         if current_user.present? && current_user.role?('channel_partner')
           @user.manager_id = current_user.id
-          @user.manager_change_reason = "User confirmed using OTP by this channel_partner"
+          @user.manager_change_reason = I18n.t("controller.users.confirm_via_otp.confirmed")
         end
         @user.save
       end
@@ -124,11 +124,11 @@ module UsersConcern
   def unblock_lead
     respond_to do |format|
       if @user.unblock_lead!
-        format.html{ redirect_to request.referrer || admin_users_path, notice: "Lead unqualified successfully" }
-        format.json{ render json: {notice: "Lead unqualified successfully"}, status: :created }
+        format.html{ redirect_to request.referrer || admin_users_path, notice: I18n.t("controller.notice.unqualified", name:"Lead") }
+        format.json{ render json: {notice: I18n.t("controller.notice.unqualified", name:"Lead")}, status: :created }
       else
-        format.html{ redirect_to request.referrer || admin_users_path, alert: "Lead cannot be unqualified" }
-        format.json{ render json: {alert: "Lead cannot be unqualified"}, status: :unprocessable_entity }
+        format.html{ redirect_to request.referrer || admin_users_path, alert: I18n.t("controller.errors.cannot_unqualified", name:"Lead") }
+        format.json{ render json: {alert: I18n.t("controller.errors.cannot_unqualified", name:"Lead")}, status: :unprocessable_entity }
       end
     end
   end
@@ -162,8 +162,8 @@ module UsersConcern
       if user_current_status_in_company == 'pending_approval' && @user.event == 'active'
         @channel_partner = ChannelPartner.where(id: params.dig(:user, :channel_partner_id)).first
         unless @channel_partner
-          format.html { redirect_to request.referer, alert: 'Requested partner company not found' }
-          format.json { render json: { errors: ['Requested partner company not found'] }, status: :unprocessable_entity }
+          format.html { redirect_to request.referer, alert: I18n.t("controller.errors.not_found", name: "Requested partner company") }
+          format.json { render json: { errors: [I18n.t("controller.errors.not_found", name: "Requested partner company")] }, status: :unprocessable_entity }
           return
         end
       end

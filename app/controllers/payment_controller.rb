@@ -9,7 +9,7 @@ class PaymentController < ApplicationController
     if @receipt.present? && @receipt.payment_gateway_service.present?
       @receipt.payment_gateway_service.response_handler!(params)
     else
-      redirect_to dashboard_path, notice: 'No pending receipt found.'
+      redirect_to dashboard_path, notice: I18n.t("controller.notice.no_pending", name:"Receipt")
     end
   end
 end

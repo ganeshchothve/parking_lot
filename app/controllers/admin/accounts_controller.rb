@@ -50,7 +50,7 @@ class Admin::AccountsController < AdminController
     @account.assign_attributes(permitted_attributes([:admin, @account]))
     respond_to do |format|
       if @account.save
-        format.html { redirect_to admin_accounts_path, notice: 'Request registered successfully.' }
+        format.html { redirect_to admin_accounts_path, notice: I18n.t("controller.notice.registered", name: 'Request') }
         format.json { render json: @account, status: :created }
       else
         format.html { render :new }
@@ -66,9 +66,9 @@ class Admin::AccountsController < AdminController
   def destroy
     respond_to do |format|
       if @account.destroy
-        format.html { redirect_to admin_accounts_path, notice: 'Account deleted successfully.' }
+        format.html { redirect_to admin_accounts_path, notice: I18n.t("controller.notice.deleted", name: 'Account') }
       else
-        format.html { redirect_to admin_accounts_path, notice: 'Account cannot be deleted' }
+        format.html { redirect_to admin_accounts_path, notice: I18n.t("controller.notice.cannot_be_deleted", name: 'Account') }
       end
     end
   end
@@ -82,7 +82,7 @@ class Admin::AccountsController < AdminController
 
     respond_to do |format|
       if @account.save
-        format.html { redirect_to admin_accounts_path, notice: 'Request registered successfully.' }
+        format.html { redirect_to admin_accounts_path, notice: I18n.t("controller.notice.registered", name: 'Request') }
         format.json { render json: @account, status: :created }
       else
         format.html { render :new }

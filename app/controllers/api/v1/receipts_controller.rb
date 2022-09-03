@@ -11,13 +11,13 @@ class Api::V1::ReceiptsController < ApisController
       @receipt = Receipt.new(receipt_create_params)
       if @receipt.save
         response = generate_response
-        response[:message] = 'Receipt successfully created'
+        response[:message] = I18n.t("controller.notice.created", name:"Receipt")
         render json: response, status: :created
       else
         render json: {errors: @receipt.errors.full_messages.uniq}, status: :unprocessable_entity
       end
     else
-      render json: {errors: ["Receipt with reference_id '#{params[:receipt][:reference_id]}' already exists"]}, status: :unprocessable_entity
+      render json: {errors: [I18n.t("controller.errors.reference_id_already_exists", name1: "Receipt" name2: "#{params[:receipt][:reference_id]}")]}, status: :unprocessable_entity
     end
   end
 
@@ -26,22 +26,22 @@ class Api::V1::ReceiptsController < ApisController
       @receipt.assign_attributes(receipt_update_params)
       if @receipt.save
         response = generate_response
-        response[:message] = 'Receipt successfully updated'
+        response[:message] = I18n.t("controller.notice.updated", name:"Receipt")
         render json: response, status: :created
       else
         render json: {errors: @receipt.errors.full_messages.uniq}, status: :unprocessable_entity
       end
     else
-      render json: {errors: ["Receipt with reference_id '#{params[:receipt][:reference_id]}' already exists"]}, status: :unprocessable_entity
+      render json: {errors: [I18n.t("controller.errors.reference_id_already_exists", name1: "Receipt" name2: "#{params[:receipt][:reference_id]}")]}, status: :unprocessable_entity
     end
   end
 
   def reference_ids_present?
     if params[:action] == 'create'
-      render json: { errors: ['reference_id is required to create Receipt'] }, status: :bad_request and return unless params.dig(:receipt, :reference_id).present?
+      render json: { errors: [I18n.t("controller.errors.required", name1:"reference id", name2:"Receipt")] }, status: :bad_request and return unless params.dig(:receipt, :reference_id).present?
       render json: { errors: ['Lead_id is required to create Receipt'] }, status: :bad_request and return unless params.dig(:receipt, :lead_id).present?
     end
-    render json: { errors: ['user kyc reference id is required to create user KYC for receipt'] }, status: :bad_request and return if params.dig(:receipt, :user_kyc_attributes).present? && !params.dig(:receipt, :user_kyc_attributes, :reference_id).present?
+    render json: { errors: [I18n.t("controller.errors.required", name1:"user kyc reference_id", name2:"Receipt")] }, status: :bad_request and return if params.dig(:receipt, :user_kyc_attributes).present? && !params.dig(:receipt, :user_kyc_attributes, :reference_id).present?
   end
 
   def set_lead
@@ -51,8 +51,8 @@ class Api::V1::ReceiptsController < ApisController
 
   def set_receipt_and_lead
     @receipt = Receipt.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
-    render json: { errors: ["Receipt with reference_id '#{ params[:id] }' not found"] }, status: :not_found and return unless @receipt
-    render json: { errors: ["Receipt with reference_id '#{ params[:id] }' is already in success"] }, status: :unprocessable_entity and return if @receipt.success?
+    render json: { errors: [I18n.t("controller.errors.reference_id_not_found", name1:"Receipt", name2:"#{params[:id]}")] }, status: :not_found and return unless @receipt
+    render json: { errors: [I18n.t("controller.errors.reference_id_in_success", name1:"Receipt", name2:"#{ params[:id] }")] }, status: :unprocessable_entity and return if @receipt.success?
     @lead = @receipt.lead
   end
 
@@ -60,7 +60,7 @@ class Api::V1::ReceiptsController < ApisController
     errors = []
     if kyc_attributes = params.dig(:receipt, :user_kyc_attributes)
       if @receipt.present? && @receipt.user_kyc.present?
-        errors << "User KYC is already present on receipt"
+        errors << I18n.t("controller.errors.already_present", name1:"User KYC", name2:"Receipt")
         return { "User kyc errors - ": errors.try(:compact) }
       end
       errors << check_any_user_kyc_params(kyc_attributes)

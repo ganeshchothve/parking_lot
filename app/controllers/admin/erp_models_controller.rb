@@ -22,7 +22,7 @@ class Admin::ErpModelsController < AdminController
   def create
     respond_to do |format|
       if ErpModel.create(permitted_attributes([:admin, ErpModel.new]))
-        format.html { redirect_to admin_erp_models_path, notice: 'Erp Model was successfully created.' }
+        format.html { redirect_to admin_erp_models_path, notice: I18n.t("controller.notice.created", name: "ERP Model") }
         format.json { render json: @erp_model }
       else
         format.html { render :new, alert: @erp_model.errors.full_messages.uniq }
@@ -47,7 +47,7 @@ class Admin::ErpModelsController < AdminController
   def update
     respond_to do |format|
       if @erp_model.update(permitted_attributes([:admin, @erp_model]))
-        format.html { redirect_to admin_erp_models_path, notice: 'Erp Model was successfully updated.' }
+        format.html { redirect_to admin_erp_models_path, notice: I18n.t("controller.notice.updated", name: "ERP Model") }
         format.json { render json: @erp_model }
       else
         format.html { render :edit }

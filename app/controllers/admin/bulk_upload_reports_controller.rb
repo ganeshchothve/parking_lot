@@ -46,7 +46,7 @@ class Admin::BulkUploadReportsController < AdminController
     else
       UploadErrorsExportWorker.new.perform(current_user.id.to_s, @bulk_upload_report.id.to_s)
     end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    flash[:notice] = I18n.t('controller.notice.export_scheduled')
     redirect_to admin_bulk_upload_report_path
   end
 
