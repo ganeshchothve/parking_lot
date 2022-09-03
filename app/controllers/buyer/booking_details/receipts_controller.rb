@@ -41,7 +41,7 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
           format.html{ redirect_to url }
           format.json{ render json: {}, location: url }
         else
-          flash[:notice] = I18n.t("controller.errors.payment_failure")
+          flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
           @receipt.update_attributes(status: "failed")
           format.json{ render json: @receipt, location: dashboard_path }
           format.html{ redirect_to dashboard_path }
@@ -58,7 +58,7 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
   def set_user
     @user = User.where(_id: params[:user_id]).first
     @user = @booking_detail.user if !(@user.present?)
-    redirect_to dashboard_path, alert: I18n.t("controller.errors.not_found", name: "User"), status: 404 if @user.blank?
+    redirect_to dashboard_path, alert: 'User Not found', status: 404 if @user.blank?
   end
 
   def set_project_unit
@@ -73,7 +73,7 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
 
   def set_lead
     @lead = @booking_detail.lead if @booking_detail.present?
-    redirect_to root_path, alert: I18n.t("controller.errors.not_found", name: "Lead"), status: 404 if @lead.blank?
+    redirect_to root_path, alert: 'Lead Not Found', status: 404 if @lead.blank?
   end
 
 end

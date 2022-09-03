@@ -23,15 +23,15 @@ class Admin::ReferralsController < AdminController
         authorize [:admin, @referral]
         @referral.assign_attributes(permitted_attributes([:admin, @referral]))
         if @referral.save
-          flash[:notice] = I18n.t('controller.notice.sent', name: 'Invitation')
+          flash[:notice] = "Invitation sent successfully."
           format.json { render json: @referral }
         else
           flash[:error] = "#{@referral.errors.full_messages.join(',')}"
           format.json { render json: { errors: @referral.errors.full_messages }, status: 422 }
         end
       else
-        flash[:error] = I18n.t("controller.errors.already_present", name1: "#{referral_user.email}", name2:"")
-        format.json { render json: { errors: [I18n.t("controller.errors.already_present", name1: "#{referral_user.email}", name2:"")] }, status: 422 }
+        flash[:error] = "#{referral_user.email} is already present."
+        format.json { render json: { errors: ["#{referral_user.email} is already present."] }, status: 422 }
       end
       format.html{ redirect_to admin_referrals_path }
     end
@@ -44,7 +44,7 @@ class Admin::ReferralsController < AdminController
     @user.generate_referral_code
     respond_to do |format|
       if @user.save
-        format.html { redirect_to request.referrer, notice: I18n.t('controller.notice.generate', name: "Code") }
+        format.html { redirect_to request.referrer, notice: 'Code successfully generated' }
         format.json { render json: @user, status: :created }
         format.js
       else

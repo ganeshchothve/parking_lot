@@ -36,9 +36,8 @@ class Admin::CustomerSearchesController < AdminController
     respond_to do |format|
       customer = @customer_search.customer
       if !customer.customer_status.to_s.in?(%w(registered dropoff payment_done booking_done))
-        format.html { redirect_to admin_customer_search_path(@customer_search), alert: I18n.t('controller.customer_searches.in_state', name: "#{customer.customer_status}") }
-
-        format.json { render json: {errors: I18n.t('controller.customer_searches.in_state', name: "#{customer.customer_status}") }, status: :unprocessable_entity }
+        format.html { redirect_to admin_customer_search_path(@customer_search), alert: "Customer is already in #{customer.customer_status} state" }
+        format.json { render json: {errors: "Customer is already in #{customer.customer_status} state"}, status: :unprocessable_entity }
       else
         update_step
         if @customer_search.save(context: @customer_search.step.to_sym)
@@ -109,7 +108,7 @@ class Admin::CustomerSearchesController < AdminController
   def check_cp_user_presence
     if params[:manager_id].present?
       cp_user = User.where(id: params[:manager_id]).first
-      render json: {errors: I18n.t("controller.errors.not_found", name: "Channel Partner")}, status: :not_found and return unless cp_user.present?
+      render json: {errors: 'Channel partner not found'}, status: :not_found and return unless cp_user.present?
     end
   end
 

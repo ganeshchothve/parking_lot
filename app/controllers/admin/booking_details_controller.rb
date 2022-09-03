@@ -125,7 +125,7 @@ class Admin::BookingDetailsController < AdminController
     else
       BookingDetailMisReportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json)
     end
-    flash[:notice] = I18n.t('controller.notice.export_scheduled')
+    flash[:notice] = 'Your mis-report has been scheduled and will be emailed to you in some time'
     redirect_to admin_booking_details_path(fltrs: params[:fltrs].as_json)
   end
 

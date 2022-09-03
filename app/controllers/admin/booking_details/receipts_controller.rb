@@ -39,7 +39,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
     authorize([:admin, @receipt])
     respond_to do |format|
       if @receipt.save
-        flash[:notice] = I18n.t('controller.receipts.notice.receipt_updated')
+        flash[:notice] = 'Receipt was successfully updated. Please upload documents'
         if @receipt.payment_mode == 'online'
           url = @receipt.payment_gateway_service.gateway_url(@booking_detail.search.id)
         else
@@ -72,7 +72,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
   def set_lead
     @lead = Lead.where(_id: params[:lead_id]).first
     @lead = @booking_detail.lead unless @lead
-    redirect_to dashboard_path, alert: t('controller.booking_details.set_lead_missing'), status: 404 if @lead.blank?
+    redirect_to dashboard_path, alert: 'Lead Not found', status: 404 if @lead.blank?
   end
 
   def set_project_unit

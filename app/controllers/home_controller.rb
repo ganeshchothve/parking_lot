@@ -75,7 +75,7 @@ class HomeController < ApplicationController
     @resource = User.new
     if user_signed_in?
       redirect_to home_path(current_user)
-      flash[:notice] = I18n.t("controller.notice.logged_in")
+      flash[:notice] = "You have already been logged in"
     else
       store_cookies_for_registration
       @lead = Lead.new

@@ -11,7 +11,7 @@ class Api::V1::UsersController < ApisController
     @user = User.new(user_create_params)
     if @user.save
       @user.update_external_ids(third_party_reference_params, @crm.id) if third_party_reference_params
-      render json: {id: @user.id, message: I18n.t("controller.notice.created", name:"User")}, status: :created
+      render json: {id: @user.id, message: 'User successfully created.'}, status: :created
     else
       render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity
     end
@@ -26,7 +26,7 @@ class Api::V1::UsersController < ApisController
     @user.assign_attributes(user_update_params)
     if @user.save
       @user.update_external_ids(third_party_reference_params, @crm.id) if third_party_reference_params
-      render json: {id: @user.id, message: I18n.t("controller.notice.updated", name:"User")}, status: :ok
+      render json: {id: @user.id, message: 'User successfully updated.'}, status: :ok
     else
       render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity
     end
@@ -40,13 +40,13 @@ class Api::V1::UsersController < ApisController
 
   # Checks if the erp-id is present. Erp-id is the external api identification id.
   def reference_id_present?
-    render json: { errors: [I18n.t("controller.errors.required", name1:"Reference id", name2:"User")] }, status: :bad_request unless params.dig(:user, :ids, :reference_id)
+    render json: { errors: ['Reference id is required to create User'] }, status: :bad_request unless params.dig(:user, :ids, :reference_id)
   end
 
   # Sets the user object
   def set_user
     @user = User.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params.dig(:id)).first
-    render json: { errors: [I18n.t("controller.errors.not_registered", name:"User")] }, status: :not_found if @user.blank?
+    render json: { errors: ['User is not registered.'] }, status: :not_found if @user.blank?
   end
 
   # Allows only certain parameters to be saved and updated.

@@ -4,7 +4,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     if @user = User.find_or_create_for_selldo_oauth(omniauth)
       sign_in_and_redirect @user, :event => :authentication #this will throw if @user is not activated
     else
-      flash[:alert] = I18n.t("controller.alert.ask_support_to_register")
+      flash[:alert] = "Please ask support team to register your account."
       redirect_to new_user_session_url
     end
   end

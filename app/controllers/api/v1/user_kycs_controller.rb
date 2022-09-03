@@ -49,12 +49,12 @@ class Api::V1::UserKycsController < ApisController
     unless UserKyc.reference_resource_exists?(@crm.id, params[:user_kyc][:reference_id].to_s)
       @user_kyc = @lead.user_kycs.build(user_kyc_params)
       if @user_kyc.save
-        render json: {user_kyc_id: @user_kyc.id, lead_id: @lead.id, message: I18n.t("controller.notice.created", name:"User KYC")}, status: :created
+        render json: {user_kyc_id: @user_kyc.id, lead_id: @lead.id, message: 'User KYC successfully created.'}, status: :created
       else
         render json: {errors: @user_kyc.errors.full_messages.uniq}, status: :unprocessable_entity
       end
     else
-      render json: {errors: [I18n.t("controller.errors.reference_id_already_exists", name1:"User KYC", name2:"#{params[:user_kyc][:reference_id]}")]}, status: :unprocessable_entity
+      render json: {errors: ["User KYC with reference_id '#{params[:user_kyc][:reference_id]}' already exists"]}, status: :unprocessable_entity
     end
   end
 
@@ -103,12 +103,12 @@ class Api::V1::UserKycsController < ApisController
     unless UserKyc.reference_resource_exists?(@crm.id, params[:user_kyc][:reference_id].to_s)
       @user_kyc.assign_attributes(user_kyc_params)
       if @user_kyc.save
-        render json: {user_kyc_id: @user_kyc.id, message: I18n.t("controller.notice.updated", name:"User KYC")}, status: :ok
+        render json: {user_kyc_id: @user_kyc.id, message: 'User KYC successfully updated.'}, status: :ok
       else
         render json: {errors: @user_kyc.errors.full_messages.uniq}, status: :unprocessable_entity
       end
     else
-      render json: {errors: [I18n.t("controller.errors.reference_id_already_exists", name1:"User KYC", name2:"#{params[:user_kyc][:reference_id]}")]}, status: :unprocessable_entity
+      render json: {errors: ["User KYC with reference_id '#{params[:user_kyc][:reference_id]}' already exists"]}, status: :unprocessable_entity
     end
   end
 
@@ -120,12 +120,12 @@ class Api::V1::UserKycsController < ApisController
 
   # Checks if the required reference_id's are present. reference_id is the third party CRM resource id.
   def reference_ids_present?
-    render json: { errors: [I18n.t("controller.errors.reference_id_required", name:"user kyc")] }, status: :bad_request and return unless params.dig(:user_kyc, :reference_id).present?
+    render json: { errors: ['user kyc reference_id is required'] }, status: :bad_request and return unless params.dig(:user_kyc, :reference_id).present?
   end
 
   def set_lead
     unless lead_reference_id = params.dig(:user_kyc, :lead_id).presence
-      render json: { errors: [I18n.t("controller.errors.required", name1:"Lead id", name2:"KYC")] }, status: :bad_request
+      render json: { errors: ['lead_id is required to create Kyc'] }, status: :bad_request
     else
       @lead = Lead.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": lead_reference_id).first
       render json: { errors: ["Lead with reference id #{lead_reference_id} not found"] }, status: :not_found and return unless @lead
@@ -134,7 +134,7 @@ class Api::V1::UserKycsController < ApisController
 
   def set_user_kyc_and_lead
     @user_kyc = UserKyc.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
-    render json: { errors: [I18n.t("controller.errors.reference_id_not_found", name1:"Lead", name2:"#{params[:id]}")] }, status: :not_found and return unless @user_kyc
+    render json: { errors: ["User Kyc with reference_id '#{params[:id]}' not found"] }, status: :not_found and return unless @user_kyc
     @lead = @user_kyc.lead
   end
 

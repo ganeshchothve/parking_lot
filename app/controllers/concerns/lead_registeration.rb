@@ -14,9 +14,9 @@ module LeadRegisteration
         if params[:lead_id].blank? && @lead.present?
           if current_client.enable_lead_conflicts?
             CpLeadActivityRegister.create_cp_lead_object(@lead, current_user, params[:lead_details]) if current_user&.role.in?(%w(channel_partner cp_owner))
-            format.json { render json: {lead: @lead, success: I18n.t("controller.notice.created", name: "Lead")}, status: :created }
+            format.json { render json: {lead: @lead, success: "Lead created successfully"}, status: :created }
           else
-            format.json { render json: {errors: I18n.t("controller.errors.already_exists", name:"Lead") }, status: :unprocessable_entity }
+            format.json { render json: {errors: "Lead already exists"}, status: :unprocessable_entity }
           end
         else
           if selldo_config_base.present?
@@ -30,7 +30,7 @@ module LeadRegisteration
               add_new_lead_flow(format)
             end
           else
-            format.json { render json: {errors: I18n.t("controller.errors.not_found", name: "Project") }, status: :not_found }
+            format.json { render json: {errors: 'Project not found' }, status: :not_found }
           end
         end
       end
@@ -77,14 +77,14 @@ module LeadRegisteration
               if cp_lead_activity.save
                 update_customer_search_to_sitevisit(lead) if @customer_search.present?
 
-                format.json { render json: {lead: lead, success: I18n.t("controller.notice.created",name: "#{site_visit.present? ? SiteVisit.model_name.human : Lead.model_name.human}"), status: :created }
+                format.json { render json: {lead: lead, success: "#{site_visit.present? ? SiteVisit.model_name.human : Lead.model_name.human} created successfully"}, status: :created }
               else
-                format.json { render json: {errors: I18n.t("controller.alert.went_wrong") }, status: :unprocessable_entity }
+                format.json { render json: {errors: 'Something went wrong while adding lead. Please contact support'}, status: :unprocessable_entity }
               end
             else
               update_customer_search_to_sitevisit(lead) if @customer_search.present?
 
-              format.json { render json: {lead: lead, success: I18n.t("controller.notice.created",name: "#{site_visit.present? ? SiteVisit.model_name.human : Lead.model_name.human}"), status: :created }
+              format.json { render json: {lead: lead, success: "#{site_visit.present? ? SiteVisit.model_name.human : Lead.model_name.human} created successfully"}, status: :created }
             end
           else
             format.json { render json: {errors: lead.errors.full_messages.uniq}, status: :unprocessable_entity }
@@ -180,13 +180,13 @@ module LeadRegisteration
     else
       _query = get_query
       @user = User.or(_query).first if _query.present?
-      render json: {errors: I18n.t("controller.errors.user_registered") }, status: :unprocessable_entity and return if @user.present? && !@user.buyer?
+      render json: {errors: 'User with these details is already registered with a different role' }, status: :unprocessable_entity and return if @user.present? && !@user.buyer?
     end
   end
 
   def set_lead
     if params[:lead_id]
-      render json: {errors: I18n.t("controller.errors.not_found", name: "Lead") }, status: :unprocessable_entity and return if @user.leads.where(project_id: @project.id).present?
+      render json: {errors: 'Lead already exists' }, status: :unprocessable_entity and return if @user.leads.where(project_id: @project.id).present?
     else
       leads = Lead.or(get_query)
       if @project.present?

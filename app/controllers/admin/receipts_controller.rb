@@ -49,7 +49,7 @@ class Admin::ReceiptsController < AdminController
     authorize([:admin, @receipt])
     respond_to do |format|
       if @receipt.save
-        flash[:notice] = I18n.t("controller.receipts.notice.receipt_updated")
+        flash[:notice] = 'Receipt was successfully updated. Please upload documents'
         if @receipt.payment_mode == 'online'
           if @receipt.payment_identifier.blank?
             url = @receipt.payment_gateway_service.gateway_url(@lead.get_search('').id)
@@ -84,7 +84,7 @@ class Admin::ReceiptsController < AdminController
     @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
     respond_to do |format|
       if @receipt.save
-        format.html { redirect_to admin_lead_receipts_path(@lead), notice: I18n.t("controller.notice.created", name: "Receipt") }
+        format.html { redirect_to admin_lead_receipts_path(@lead), notice: 'Receipt was successfully updated.' }
       else
         format.html { render :edit }
         format.json { render json: { errors: @receipt.errors.full_messages }, status: :unprocessable_entity }
@@ -101,7 +101,7 @@ class Admin::ReceiptsController < AdminController
     authorize([:admin, @receipt])
     respond_to do |format|
       if @receipt.update(permitted_attributes([:admin, @receipt]))
-        format.html { redirect_back fallback_location: root_path, notice: I18n.t("controller.notice.created", name: "Receipt") }
+        format.html { redirect_back fallback_location: root_path, notice: 'Receipt was successfully updated.' }
       else
         format.html { render :edit_token_number }
         format.json { render json: { errors: @receipt.errors.full_messages }, status: :unprocessable_entity }
@@ -140,12 +140,12 @@ class Admin::ReceiptsController < AdminController
 
   def set_lead
     @lead = Lead.where(_id: params[:lead_id]).first
-    redirect_to dashboard_path, alert: I18n.t('controller.errors.not_found', name: 'Lead'), status: 404 if @lead.blank?
+    redirect_to dashboard_path, alert: 'Lead Not found', status: 404 if @lead.blank?
   end
 
   def set_receipt
     @receipt = Receipt.where(_id: params[:id]).first
-    redirect_to dashboard_path, alert: I18n.t('controller.errors.not_found', name: 'Receipt'), status: 404 if @receipt.blank?
+    redirect_to dashboard_path, alert: 'Receipt Not found', status: 404 if @receipt.blank?
   end
 
   def get_dataset(out, statuses)

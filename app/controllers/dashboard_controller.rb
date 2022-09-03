@@ -74,7 +74,7 @@ class DashboardController < ApplicationController
             :url_based_filename => true)
       SelldoLeadUpdater.perform_async(current_user.selected_lead_id.to_s, {stage: 'project_info'}) if current_user.buyer? && current_user.selected_lead&.receipts&.count == 0
     else
-      redirect_to dashboard_path, alert: I18n.t("controller.alert.not_available", name: "Brochure")
+      redirect_to dashboard_path, alert: 'Brochure is not available'
     end
   end
 

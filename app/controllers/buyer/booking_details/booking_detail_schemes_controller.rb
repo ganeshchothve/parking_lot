@@ -57,7 +57,7 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
     @scheme.approved_by = current_user
     respond_to do |format|
       if @scheme.save
-        format.html { redirect_to admin_user_path(@booking_detail.user.id), notice: I18n.t("controller.errors.updated", name:"Scheme") }
+        format.html { redirect_to admin_user_path(@booking_detail.user.id), notice: 'Scheme was successfully updated.' }
         format.json { render json: @scheme }
       else
         format.html { render :edit }

@@ -8,7 +8,7 @@ module ChannelPartnerRegisteration
       else
         create_cp_user
         if @user.save
-          format.html { redirect_to new_user_session_path, notice: I18n.t("controller.notice.registered", name:"Channel Partner") }
+          format.html { redirect_to new_user_session_path, notice: 'Successfully registered' }
         else
           format.html { redirect_to new_channel_partner_path, alert: @user.errors.full_messages }
         end
@@ -68,13 +68,13 @@ module ChannelPartnerRegisteration
       @user = User.where(register_in_cp_company_token: params[:register_code]).first
       @channel_partner = ChannelPartner.where(id: params[:channel_partner_id]).first
       unless @user.present?
-        redirect_to root_path, alert: I18n.t("controller.alert.link_expired")
+        redirect_to root_path, alert: 'This link is expired. Please ask the channel partner to send request again'
       end
       unless @channel_partner.present?
-        redirect_to root_path, alert: I18n.t("controller.errors.not_found", name: "#{ChannelPartner.model_name.human}")
+        redirect_to root_path, alert: "#{ChannelPartner.model_name.human} not found"
       end
     else
-      redirect_to root_path, alert: I18n.t("controller.channel_partners.registration.code_missing")
+      redirect_to root_path, alert: 'Registration code is missing'
     end
   end
 
@@ -133,7 +133,7 @@ module ChannelPartnerRegisteration
           format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
         end
       else
-        format.json { render json: { errors: [I18n.t("controller.errors.not_found", name: "Channel Partner Company or User")] }, status: :not_found }
+        format.json { render json: { errors: ['Channel Parnter Company or User not found'] }, status: :not_found }
       end
     end
   end

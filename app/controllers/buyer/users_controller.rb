@@ -25,7 +25,7 @@ class Buyer::UsersController < BuyerController
         if permitted_attributes([:buyer, @user]).key?('password')
           bypass_sign_in(@user)
         end
-        format.html { redirect_to edit_buyer_user_path(@user), notice: I18n.t("controller.notice.updated", name: "User Profile") }
+        format.html { redirect_to edit_buyer_user_path(@user), notice: 'User Profile updated successfully.' }
         format.json { render json: @user }
       else
         format.html { render :edit }
@@ -37,9 +37,9 @@ class Buyer::UsersController < BuyerController
   def iris_confirm
     @user.assign_attributes(manager_id: params[:manager_id], iris_confirmation: true, temporarily_blocked: true)
     if @user.save
-      redirect_to dashboard_url(@user), notice: I18n.t("controller.notice.confirmed")
+      redirect_to dashboard_url(@user), notice: 'Confirmation successful'
     else
-      redirect_to dashboard_url(@user), notice: I18n.t("controller.notice.unable_to_confirm_with_this_link")
+      redirect_to dashboard_url(@user), notice: 'Cannot confirm with this link. Please contact administrator'
     end
   end
 

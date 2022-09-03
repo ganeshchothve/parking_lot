@@ -25,9 +25,9 @@ class Admin::SyncLogsController < AdminController
       record = @sync_log.resource
       erp_model = @sync_log.erp_model
       @sync_log.sync(erp_model, record)
-      notice = I18n.t("controller.sync_logs.sync_log.queued", name: "#{record.class}")
+      notice = "#{record.class} is queued to sync"
     else
-      notice = I18n.t("controller.sync_logs.sync_log.resource_absent")
+      notice = 'Sync log resource absent'
     end
     redirect_back(fallback_location: root_path, notice: notice)
   end
@@ -40,9 +40,9 @@ class Admin::SyncLogsController < AdminController
     respond_to do |format|
       if erp_model.is_active?
         @sync_log.sync(erp_model, record)
-        flash[:notice] = I18n.t("controller.sync_logs.sync_log.process_started")
+        flash[:notice] = 'Sync process has been started.'
       else
-        flash[:alert] = I18n.t("controller.sync_logs.sync_log.details_missing")
+        flash[:alert] = 'Sync details are missing.'
       end
       format.html { redirect_to request.referer || root_path }
     end

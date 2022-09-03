@@ -32,7 +32,7 @@ module UserKycsConcern
     authorize [current_user_role_group, @user_kyc]
     respond_to do |format|
       if @user_kyc.save
-        format.html { redirect_to home_path(current_user), notice: I18n.t("controller.notice.created", name:"User KYC") }
+        format.html { redirect_to home_path(current_user), notice: 'User kyc was successfully created.' }
         format.json { render json: @user_kyc, status: :created }
       else
         format.html { render :new }
@@ -53,7 +53,7 @@ module UserKycsConcern
   def update
     respond_to do |format|
       if @user_kyc.update(permitted_attributes([current_user_role_group, @user_kyc]))
-        format.html { redirect_to home_path(current_user), notice: I18n.t("controller.notice.updated", name:"User KYC") }
+        format.html { redirect_to home_path(current_user), notice: 'User kyc was successfully updated.' }
         format.json { render json: @user_kyc }
       else
         format.html { render :edit }

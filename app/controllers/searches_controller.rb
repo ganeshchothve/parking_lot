@@ -60,7 +60,7 @@ class SearchesController < ApplicationController
     else
       SearchExportWorker.perform_async(current_user.id.to_s)
     end
-    flash[:notice] = I18n.t('controller.notice.export_scheduled')
+    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
     redirect_to admin_searches_path
   end
 
@@ -159,11 +159,11 @@ class SearchesController < ApplicationController
           redirect_to @receipt.payment_gateway_service.gateway_url(@search.id)
         else
           @receipt.update_attributes(status: "failed")
-          flash[:notice] = I18n.t("controller.errors.payment_failure")
+          flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
           redirect_to dashboard_path
         end
       else
-        redirect_to [current_user_role_group, @receipt.user], notice: I18n.t("controller.notice.booked", name: "Unit")
+        redirect_to [current_user_role_group, @receipt.user], notice: 'Unit is booked successfully.'
       end
     else
       redirect_to checkout_lead_search_path(@booking_detail.search)

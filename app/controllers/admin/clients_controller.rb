@@ -11,7 +11,7 @@ class Admin::ClientsController < AdminController
     @client.assign_attributes(permitted_attributes([:admin, @client]))
     respond_to do |format|
       if @client.save
-        format.html { redirect_back fallback_location: root_path, notice: I18n.t('controller.notice.created', name: 'Client') }
+        format.html { redirect_back fallback_location: root_path, notice: 'Client successfully updated.' }
         format.json { render json: @client }
       else
         format.html { render :edit }

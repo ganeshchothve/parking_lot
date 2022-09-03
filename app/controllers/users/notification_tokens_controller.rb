@@ -14,7 +14,7 @@ class Users::NotificationTokensController < ApplicationController
     respond_to do |format|
       if current_user.save
         subscribe_to_topic
-        format.json { render json: {message: I18n.t("controller.notice.updated", name:"Token"), user: current_user }, status: 200 }
+        format.json { render json: {message: 'Token Updated Successfully', user: current_user }, status: 200 }
       else
         format.json { render json: { errors: current_user.user_notification_tokens.collect{|x| x.errors.full_messages}.flatten.uniq }, status: :unprocessable_entity }
       end

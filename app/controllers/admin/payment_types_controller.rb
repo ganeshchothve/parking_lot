@@ -45,7 +45,7 @@ class Admin::PaymentTypesController < AdminController
 
     respond_to do |format|
       if @payment_type.save
-        format.html { redirect_to admin_payment_types_path, notice:  I18n.t('controller.notice.created', name: "PaymentType") }
+        format.html { redirect_to admin_payment_types_path, notice: 'PaymentType was successfully created.' }
         format.json { render json: @payment_type, status: :created }
       else
         format.html { render :new }

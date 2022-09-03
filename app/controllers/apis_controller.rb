@@ -14,13 +14,13 @@ class ApisController < ActionController::API
         if api_key == @crm.api_key
           flag = true
         else
-          message = I18n.t("controller.apis.errors.incorrect_key")
+          message = 'Incorrect key.'
         end
       else
-        message = I18n.t("controller.apis.errors.register_with_application")
+        message = 'Kindly register with our application.'
       end
     else
-      message = I18n.t("controller.apis.errors.parameters_missing")
+      message = 'Required parameters missing.'
     end
     render json: { errors: [message] }, status: :unauthorized unless flag
   end
@@ -36,7 +36,7 @@ class ApisController < ActionController::API
   def create_error_log e
     _error_code = SecureRandom.hex(4)
     Rails.logger.error "[API-V1][ERR] [#{_error_code}] #{e.message} - #{e.backtrace}"
-    render json: { errors: [I18n.t("controller.alert.went_wrong") + '&' + I18n.t("controller.alert.share_the_code", name: "#{_error_code}")] }, status: 500
+    render json: { errors: ["Something went wrong. Please contact support team & share the error code: #{_error_code}"] }, status: 500
   end
 
 end

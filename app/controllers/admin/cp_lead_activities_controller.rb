@@ -23,7 +23,7 @@ class Admin::CpLeadActivitiesController < AdminController
       if true#validity_check?
         @cp_lead_activity.assign_attributes(permitted_attributes([current_user_role_group, @cp_lead_activity]))
         if @cp_lead_activity.save
-          format.html { redirect_to request.referrer || admin_cp_lead_activities_path, notice: I18n.t("controller.notice.updated", name: 'Lead Activity') }
+          format.html { redirect_to request.referrer || admin_cp_lead_activities_path, notice: 'Lead Activity updated successfully.' }
           format.json { render json: @cp_lead_activity }
         else
           format.html { render :edit }
@@ -31,7 +31,7 @@ class Admin::CpLeadActivitiesController < AdminController
         end
       else
         format.html { render :edit }
-        format.json { render json: { errors: I18n.t("controller.cp_lead_activities.errors.validity_update_failed", name: "#{@cp_lead_activity.lead.active_cp_lead_activities.first.try(:user).try(:name)}") }, status: :unprocessable_entity }
+        format.json { render json: { errors: "Lead validity can not be updated. Lead is active for #{@cp_lead_activity.lead.active_cp_lead_activities.first.try(:user).try(:name)}" }, status: :unprocessable_entity }
       end
     end
   end
@@ -51,7 +51,7 @@ class Admin::CpLeadActivitiesController < AdminController
         params[:cp_lead_activity][:expiry_date] = extension_date
         @cp_lead_activity.assign_attributes(permitted_attributes([current_user_role_group, @cp_lead_activity]))
         if @cp_lead_activity.save
-          format.html { redirect_to request.referrer || admin_cp_lead_activities_path, notice: I18n.t("controller.notice.updated", name: 'Lead Activity') }
+          format.html { redirect_to request.referrer || admin_cp_lead_activities_path, notice: 'Lead Activity updated successfully.' }
           format.json { render json: @cp_lead_activity }
         else
           format.html { render :extend_validity }
@@ -59,7 +59,7 @@ class Admin::CpLeadActivitiesController < AdminController
         end
       else
         format.html { render :extend_validity }
-        format.json { render json: { errors: I18n.t("controller.cp_lead_activities.errors.validity_update_failed", name: "#{@cp_lead_activity.lead.active_cp_lead_activities.first.try(:user).try(:name)}") }, status: :unprocessable_entity }
+        format.json { render json: { errors: "Lead validity can not be updated. Lead is active for #{@cp_lead_activity.lead.active_cp_lead_activities.first.try(:user).try(:name)}" }, status: :unprocessable_entity }
       end
     end
   end
@@ -76,7 +76,7 @@ class Admin::CpLeadActivitiesController < AdminController
         params[:cp_lead_activity][:count_status] = 'accompanied_count_to_cp'
         @cp_lead_activity.assign_attributes(permitted_attributes([current_user_role_group, @cp_lead_activity]))
         if @cp_lead_activity.save
-          format.html { redirect_to request.referrer || admin_cp_lead_activities_path, notice: I18n.t("controller.notice.updated", name: 'Lead Activity') }
+          format.html { redirect_to request.referrer || admin_cp_lead_activities_path, notice: 'Lead Activity updated successfully.' }
           format.json { render json: @cp_lead_activity }
         else
           format.html { render :edit }
@@ -84,7 +84,7 @@ class Admin::CpLeadActivitiesController < AdminController
         end
       else
         format.html { render :extend_validity }
-        format.json { render json: { errors: I18n.t("controller.cp_lead_activities.errors.validity_update_failed", name: "#{@cp_lead_activity.lead.active_cp_lead_activities.first.try(:user).try(:name)}") }, status: :unprocessable_entity }
+        format.json { render json: { errors: "Lead validity can not be updated. Lead is active for #{@cp_lead_activity.lead.active_cp_lead_activities.first.try(:user).try(:name)}" }, status: :unprocessable_entity }
       end
     end
   end

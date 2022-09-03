@@ -33,9 +33,9 @@ class Admin::ChecklistsController < AdminController
   def destroy
     respond_to do |format|
       if @checklist.destroy
-        format.html { redirect_to admin_checklists_path, notice: I18n.t('controller.notice.deleted', name: 'Task') }
+        format.html { redirect_to admin_checklists_path, notice: t('controller.checklists.delete.success') }
       else
-        format.html { redirect_to admin_checklists_path, alert: I18n.t('controller.notice.cannot_be_deleted', name: 'Task') }
+        format.html { redirect_to admin_checklists_path, alert: t('controller.checklists.delete.failure') }
       end
     end
   end
@@ -44,7 +44,7 @@ class Admin::ChecklistsController < AdminController
 
   def set_checklist
     @checklist = current_client.checklists.where(id: params[:id]).first
-    @checklist.presence || render(json: { location: admin_checklists_path, errors: I18n.t('controller.errors.not_found', name: 'Task')}, status: :not_found)
+    @checklist.presence || render(json: { location: admin_checklists_path, errors: t('controller.checklists.set_checklist.not_found')}, status: :not_found)
   end
 
   def authorize_resource

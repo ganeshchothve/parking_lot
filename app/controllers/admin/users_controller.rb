@@ -46,7 +46,7 @@ class Admin::UsersController < AdminController
     create_user
     respond_to do |format|
       if @user.save
-        format.html { redirect_to admin_users_path, notice: I18n.t("controller.notice.created", name: "User") }
+        format.html { redirect_to admin_users_path, notice: 'User was successfully created.' }
         format.json { render json: @user, status: :created }
       else
         format.html { render :new }
@@ -67,7 +67,7 @@ class Admin::UsersController < AdminController
           if current_user == @user && permitted_attributes([current_user_role_group, @user]).key?('password')
             bypass_sign_in(@user)
           end
-          format.html { redirect_to edit_admin_user_path(@user), notice: I18n.t("controller.notice.updated", name: "User Profile") }
+          format.html { redirect_to edit_admin_user_path(@user), notice: 'User Profile updated successfully.' }
           format.json { render json: @user }
         else
           format.html { render :edit }
@@ -83,7 +83,7 @@ class Admin::UsersController < AdminController
       if @user.save
         player_id = params.dig(:user, :user_notification_tokens_attributes, :"0", :token)
         @user.update_onesignal_external_user_id(player_id) if player_id.present?
-        format.html { redirect_to edit_admin_user_path(@user), notice: I18n.t("controller.notice.updated", name: "User") }
+        format.html { redirect_to edit_admin_user_path(@user), notice: 'User updated successfully.' }
         format.json { render json: { user: @user.as_json, message: 'User updated successfully'}, status: :ok }
       else
         format.html { render :edit }
@@ -110,8 +110,8 @@ class Admin::UsersController < AdminController
     is_player_id_exists = @user.user_notification_tokens.where(token: player_id).present?
     if is_player_id_exists
       respond_to do |format|
-        format.html { redirect_to edit_admin_user_path(@user), notice: I18n.t("controller.notice.updated", name: "User") }
-        format.json { render json: { user: @user.as_json, message: I18n.t("controller.notice.updated", name: "User") }, status: :ok }
+        format.html { redirect_to edit_admin_user_path(@user), notice: 'User updated successfully.' }
+        format.json { render json: { user: @user.as_json, message: 'User updated successfully'}, status: :ok }
       end
     end
   end

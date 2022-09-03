@@ -24,7 +24,7 @@ class Admin::MeetingsController < AdminController
     
     respond_to do |format|
       if @meeting.save
-        format.html { redirect_to admin_meetings_path, notice: I18n.t('controller.notice.created', name: "Meeting")
+        format.html { redirect_to admin_meetings_path, notice: 'Meeting was successfully created.' }
         format.json { render json: @meeting, status: :created }
       else
         format.html { render :new }

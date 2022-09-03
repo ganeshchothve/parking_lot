@@ -55,7 +55,7 @@ class Admin::ProjectsController < AdminController
 
     respond_to do |format|
       if @project.save
-        format.html { redirect_to admin_projects_path, notice:  I18n.t("controller.notice.created", name: "Project") }
+        format.html { redirect_to admin_projects_path, notice: 'Project was successfully created.' }
         format.json { render json: @project, status: :created }
       else
         errors = @project.errors.full_messages
@@ -76,7 +76,7 @@ class Admin::ProjectsController < AdminController
     parameters = permitted_attributes([:admin, @project])
     respond_to do |format|
       if @project.update(parameters)
-        format.html { redirect_to request.referrer || admin_projects_path, notice:  I18n.t("controller.notice.updated", name: "Project") }
+        format.html { redirect_to request.referrer || admin_projects_path, notice: 'Project successfully updated.' }
       else
         errors = @project.errors.full_messages
         errors << @project.specifications.collect{|x| x.errors.full_messages}
@@ -101,10 +101,10 @@ class Admin::ProjectsController < AdminController
     errors = @project.sync_on_selldo
     respond_to do |format|
       unless errors.present?
-        format.html { redirect_to request.referrer || admin_projects_path, notice: I18n.t("controller.projects.sync_on_selldo.successful") }
+        format.html { redirect_to request.referrer || admin_projects_path, notice: 'Project synced on Sell.do successfully' }
       else
         if errors&.is_a?(Array)
-          Note.create(notable: @project, note: I18n.t("controller.projects.sync_on_selldo.unsuccessful") + "</br>" + errors.to_sentence, creator: current_user)
+          Note.create(notable: @project, note: "Sell.do Sync Errors</br>" + errors.to_sentence, creator: current_user)
           err_msg = 'Project was unable to sync due to some errors. Please check notes for details'
         elsif errors&.is_a?(String)
           err_msg = errors
@@ -119,9 +119,9 @@ class Admin::ProjectsController < AdminController
   def set_project
     @project = Project.where(id: params[:id]).first
     if action_name == 'edit'
-      render json: { errors: I18n.t('controller.errors.not_found', name: "Project") }, status: :not_found unless @project
+      render json: { errors: 'Project not found' }, status: :not_found unless @project
     else
-      redirect_to dashboard_path, alert: I18n.t('controller.errors.not_found', name: "Project") unless @project
+      redirect_to dashboard_path, alert: 'Project not found' unless @project
     end
   end
 
