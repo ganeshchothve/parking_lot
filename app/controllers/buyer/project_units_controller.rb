@@ -34,7 +34,7 @@ class Buyer::ProjectUnitsController < BuyerController
     parameters = permitted_attributes([:buyer, @project_unit])
     respond_to do |format|
       if @project_unit.update(parameters)
-        format.html { redirect_to dashboard_path, notice: 'Unit successfully updated.' }
+        format.html { redirect_to dashboard_path, notice: I18n.t("controller.project_units.notice.updated") }
       else
         format.html { render :edit }
         format.json { render json: { errors: @project_unit.errors.full_messages }, status: :unprocessable_entity }

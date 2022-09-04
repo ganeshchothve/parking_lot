@@ -19,6 +19,6 @@ class CustomController < ApplicationController
 
   def set_project
     @project = Project.where(id: params[:id]).first
-    redirect_to root_path, alert: 'Project not found' unless @project
+    redirect_to root_path, alert: I18n.t("controller.projects.alert.not_found") unless @project
   end
 end

@@ -60,7 +60,7 @@ class SearchesController < ApplicationController
     else
       SearchExportWorker.perform_async(current_user.id.to_s)
     end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    flash[:notice] = I18n.t("global.export_scheduled")
     redirect_to admin_searches_path
   end
 

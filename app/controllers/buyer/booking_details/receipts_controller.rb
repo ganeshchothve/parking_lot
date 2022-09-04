@@ -73,7 +73,7 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
 
   def set_lead
     @lead = @booking_detail.lead if @booking_detail.present?
-    redirect_to root_path, alert: 'Lead Not Found', status: 404 if @lead.blank?
+    redirect_to root_path, alert: I18n.t("controller.leads.alert.not_found"), status: 404 if @lead.blank?
   end
 
 end

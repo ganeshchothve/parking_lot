@@ -30,7 +30,7 @@ module LeadRegisteration
               add_new_lead_flow(format)
             end
           else
-            format.json { render json: {errors: 'Project not found' }, status: :not_found }
+            format.json { render json: {errors: I18n.t("controller.projects.alert.not_found") }, status: :not_found }
           end
         end
       end

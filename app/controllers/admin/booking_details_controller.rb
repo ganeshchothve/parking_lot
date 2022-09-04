@@ -56,7 +56,7 @@ class Admin::BookingDetailsController < AdminController
     respond_to do |format|
       if @booking_detail.booking_detail_scheme.present? && @booking_detail.save
         response.set_header('location', checkout_lead_search_path(_search.id, lead_id: _search.lead_id) )
-        format.json { render json: {message: "booking_successful"}, status: :ok }
+        format.json { render json: {message: t('controller.booking_details.booking_successful')}, status: :ok }
         format.html { redirect_to checkout_lead_search_path(_search.id, lead_id: _search.lead_id) }
       else
         format.html { redirect_to dashboard_path, alert: t('controller.booking_details.booking_unsuccessful') }
@@ -125,7 +125,7 @@ class Admin::BookingDetailsController < AdminController
     else
       BookingDetailMisReportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json)
     end
-    flash[:notice] = 'Your mis-report has been scheduled and will be emailed to you in some time'
+    flash[:notice] = I18n.t("controller.booking_details.notice.export_scheduled")
     redirect_to admin_booking_details_path(fltrs: params[:fltrs].as_json)
   end
 
@@ -143,7 +143,7 @@ class Admin::BookingDetailsController < AdminController
       if towers.present?
         format.json { render json: towers, status: :ok }
       else
-        format.json { render json: {errors: 'Towers not present for this user'}, status: :not_found }
+        format.json { render json: {errors: I18n.t("controller.booking_details.errors.towers_not_present")}, status: :not_found }
       end
     end
   end
@@ -186,7 +186,7 @@ class Admin::BookingDetailsController < AdminController
     respond_to do |format|
       if @booking_detail.save
         response.set_header('location', admin_booking_detail_path(@booking_detail) )
-        format.json { render json: {message: "Booking created successfully"}, status: :ok }
+        format.json { render json: {message: I18n.t("controller.booking_details.notice.created")}, status: :ok }
         format.html { redirect_to admin_booking_detail_path(@booking_detail) }
       else
         flash[:alert] = @booking_detail.errors.full_messages
@@ -206,7 +206,7 @@ class Admin::BookingDetailsController < AdminController
     @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
     respond_to do |format|
       if @booking_detail.save
-        format.json { render json: {message: "Booking updated successfully"}, status: :ok }
+        format.json { render json: {message: I18n.t("controller.booking_details.notice.updated")}, status: :ok }
         format.html { redirect_to admin_leads_path }
       else
         flash[:alert] = @booking_detail.errors.full_messages
@@ -220,8 +220,8 @@ class Admin::BookingDetailsController < AdminController
     @booking_detail = BookingDetail.find_by(id: params[:id])
     respond_to do |format|
       if @booking_detail.move_to_next_state!(params[:status])
-        format.html{ redirect_to request.referrer || dashboard_url, notice: "Booking moved to #{params[:status]} successfully" }
-        format.json { render json: { message: "Booking moved to #{params[:status].humanize} successfully" }, status: :ok }
+        format.html{ redirect_to request.referrer || dashboard_url, notice: I18n.t("controller.booking_details.notice.moved_to", name: "#{params[:status]}") }
+        format.json { render json: { message: I18n.t("controller.booking_details.notice.moved_to", name: "#{params[:status].humanize}") }, status: :ok }
       else
         format.html{ redirect_to request.referrer || dashboard_url, alert: @booking_detail.errors.full_messages.uniq }
         format.json { render json: { errors: @booking_detail.errors.full_messages.uniq }, status: :unprocessable_entity }
@@ -233,8 +233,8 @@ class Admin::BookingDetailsController < AdminController
     respond_to do |format|
       @booking_detail.assign_attributes(rejection_reason: params.dig(:booking_detail, :rejection_reason))
       if @booking_detail.move_to_next_approval_state!(params.dig(:booking_detail, :approval_event))
-        format.html{ redirect_to request.referrer || dashboard_url, notice: "Booking moved to #{params[:status]} successfully" }
-        format.json { render json: { message: "Booking moved to #{params.dig(:booking_detail, :approval_event).humanize} successfully" }, status: :ok }
+        format.html{ redirect_to request.referrer || dashboard_url, notice: I18n.t("controller.booking_details.notice.moved_to", name: "#{params[:status]}") }
+        format.json { render json: { message: I18n.t("controller.booking_details.notice.moved_to", name: "#{params.dig(:booking_detail, :approval_event).humanize}") }, status: :ok }
       else
         format.html{ redirect_to request.referrer || dashboard_url, alert: @booking_detail.errors.full_messages.uniq }
         format.json { render json: { errors: @booking_detail.errors.full_messages.uniq }, status: :unprocessable_entity }
@@ -250,7 +250,7 @@ class Admin::BookingDetailsController < AdminController
 
   def set_lead
     @lead = Lead.where(id: params[:lead_id]).first
-    redirect_to dashboard_path, alert: "Lead not found" if @lead.blank?
+    redirect_to dashboard_path, alert: I18n.t("controller.leads.alert.not_found") if @lead.blank?
   end
 
   def set_project

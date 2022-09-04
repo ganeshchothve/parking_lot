@@ -14,7 +14,7 @@ class Admin::InterestedProjectsController < AdminController
     @interested_project = @user.interested_projects.build(permitted_attributes([:admin, InterestedProject.new]))
     respond_to do |format|
       if @interested_project.save
-        format.html { redirect_to request.referer, notice: 'Project successfully subscribed.' }
+        format.html { redirect_to request.referer, notice: I18n.t("controller.projects.subscribed") }
       else
         format.html { redirect_to request.referer, alert: @interested_project.errors.full_messages }
         format.json { render json: { errors: @interested_project.errors.full_messages }, status: :unprocessable_entity }
@@ -33,7 +33,7 @@ class Admin::InterestedProjectsController < AdminController
         end
       end
     else
-      format.json { render json: { errors:  "Projects not selected"}, status: :unprocessable_entity }
+      format.json { render json: { errors:  I18n.t("controller.projects.errors.not_selected")}, status: :unprocessable_entity }
     end
   end
 
@@ -45,7 +45,7 @@ class Admin::InterestedProjectsController < AdminController
     @interested_project.assign_attributes(permitted_attributes([:admin, @interested_project]))
     respond_to do |format|
       if (params.dig(:interested_project, :event).present? ? @interested_project.send("#{params.dig(:interested_project, :event)}!") : @interested_project.save)
-        format.html { redirect_to admin_leads_path, notice: 'Interested Project successfully updated.' }
+        format.html { redirect_to admin_leads_path, notice: I18n.t("controller.projects.notice.updated") }
       else
         format.html { render :edit }
         format.json { render json: { errors: @interested_project.errors.full_messages }, status: :unprocessable_entity }

@@ -22,7 +22,7 @@ class ChannelPartnersController < ApplicationController
     else
       ChannelPartnerExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json, timezone: Time.zone.name)
     end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    flash[:notice] = I18n.t("global.export_scheduled")
     redirect_to channel_partners_path(fltrs: params[:fltrs].as_json)
   end
 

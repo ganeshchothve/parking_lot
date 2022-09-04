@@ -13,7 +13,7 @@ class Admin::Crm::ApiController < ApplicationController
     @api.assign_attributes(permitted_attributes([current_user_role_group, @api]))
     respond_to do |format|
       if @api.save
-        format.html { redirect_to admin_crm_base_path(@crm), notice: 'API configuration is added successfully' }
+        format.html { redirect_to admin_crm_base_path(@crm), notice: I18n.t("controller.apis.notice.added") }
         format.json { render json: @api, status: :created }
       else
         format.html { render :new }
@@ -30,7 +30,7 @@ class Admin::Crm::ApiController < ApplicationController
     @api.update_attributes(permitted_attributes([current_user_role_group, @api]))
     respond_to do |format|
       if @api.save
-        format.html { redirect_to admin_crm_base_path(@crm), notice: 'API configuration is updated successfully' }
+        format.html { redirect_to admin_crm_base_path(@crm), notice: I18n.t("controller.apis.notice.updated") }
         format.json { render json: @api, status: :created }
       else
         format.html { render :new }
@@ -42,9 +42,9 @@ class Admin::Crm::ApiController < ApplicationController
   def destroy
     respond_to do |format|
       if @api.destroy
-        format.html { redirect_to admin_crm_base_path(@crm), notice: 'API configuration is removed successfully' }
+        format.html { redirect_to admin_crm_base_path(@crm), notice: I18n.t("controller.apis.notice.removed") }
       else
-        format.html { redirect_to admin_crm_base_path(@crm), notice: 'API configuration is cannot be removed' }
+        format.html { redirect_to admin_crm_base_path(@crm), notice: I18n.t("controller.apis.notice.cannot_removed") }
       end
     end
   end
@@ -56,7 +56,7 @@ class Admin::Crm::ApiController < ApplicationController
     if request.xhr?
       render layout: false
     else
-      redirect_to request.referrer || dashboard_path, notice: 'Request is being processed'
+      redirect_to request.referrer || dashboard_path, notice: I18n.t("controller.apis.notice.request_processed")
     end
   end
 
@@ -64,7 +64,7 @@ class Admin::Crm::ApiController < ApplicationController
 
   def set_api
     @api = params[:type].constantize.unscoped.where(id: params[:id]).first
-    redirect_to admin_crm_base_path(@crm), alert: 'API not found' if @api.blank?
+    redirect_to admin_crm_base_path(@crm), alert: I18n.t("controller.apis.alert.not_found") if @api.blank?
   end
 
   def set_crm

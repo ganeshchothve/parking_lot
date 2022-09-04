@@ -47,7 +47,7 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
         _action = 'save'
       end
       if @booking_detail_scheme.send(_action)
-        format.html { redirect_to request.referrer || root_path, notice: @booking_detail_scheme.approved? ? t('controller.booking_detail_schemes.scheme_approved') : t('controller.booking_detail_schemes.scheme_under_negotiation') }
+        format.html { redirect_to request.referrer || root_path, notice: @booking_detail_scheme.approved? ? t('controller.booking_detail_schemes.notice.scheme_approved') : t('controller.booking_detail_schemes.notice.scheme_under_negotiation') }
         format.json { render json: @booking_detail_scheme, status: :created }
       else
         format.html { render :new }
@@ -65,7 +65,7 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
     @booking_detail_scheme.approved_by = current_user
     respond_to do |format|
       if @booking_detail_scheme.save
-        format.html { redirect_to admin_user_path(@booking_detail.user.id), notice: 'Scheme was successfully updated.' }
+        format.html { redirect_to admin_user_path(@booking_detail.user.id), notice: t('controller.booking_detail_schemes.notice.updated') }
         format.json { render json: @booking_detail_scheme }
       else
         format.html { render layout: false, template: 'booking_detail_schemes/edit' }

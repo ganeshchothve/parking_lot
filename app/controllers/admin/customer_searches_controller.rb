@@ -108,7 +108,7 @@ class Admin::CustomerSearchesController < AdminController
   def check_cp_user_presence
     if params[:manager_id].present?
       cp_user = User.where(id: params[:manager_id]).first
-      render json: {errors: 'Channel partner not found'}, status: :not_found and return unless cp_user.present?
+      render json: {errors: I18n.t("controller.channel_partners.alert.not_found")}, status: :not_found and return unless cp_user.present?
     end
   end
 

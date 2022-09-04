@@ -70,7 +70,7 @@ class Buyer::ReceiptsController < BuyerController
 
   def set_lead
     @lead = current_user.selected_lead
-    redirect_to dashboard_path, alert: 'Lead Not found', status: 404 if @lead.blank?
+    redirect_to dashboard_path, alert: I18n.t("controller.leads.alert.not_found"), status: 404 if @lead.blank?
   end
 
   def set_receipt

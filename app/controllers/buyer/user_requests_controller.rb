@@ -32,7 +32,7 @@ class Buyer::UserRequestsController < BuyerController
     @user_request.assign_attributes(permitted_user_request_attributes)
     respond_to do |format|
       if @user_request.save
-        format.html { redirect_to edit_buyer_user_request_path(@user_request, request_type: @user_request.class.model_name.element), notice: 'Request registered successfully.' }
+        format.html { redirect_to edit_buyer_user_request_path(@user_request, request_type: @user_request.class.model_name.element), notice: I18n.t("controller.accounts.notice.registered") }
         format.json { render json: @user_request, status: :created }
       else
         format.html { render :new }

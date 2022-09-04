@@ -53,6 +53,7 @@ en:
     discount:
       one: Token Discount
       other: Token Discounts
+    export_scheduled: 'Your export has been scheduled and will be emailed to you in some time'
 
   helpers:
     extend_validity:
@@ -1574,6 +1575,15 @@ en:
         project: Project
 
   controller:
+    apis:
+      notice:
+        added: 'API configuration is added successfully'
+        updated: 'API configuration is updated successfully'
+        removed: 'API configuration is removed successfully'
+        cannot_removed: 'API configuration is cannot be removed'
+        request_processed: 'Request is being processed'
+      alert:
+        not_found: 'API not found'
     discounts:
       index:
         link_name: 'Token Discounts'
@@ -1581,6 +1591,9 @@ en:
         success_message: 'You will receive a mail when MRP numbers are updated'
       links:
         update_coupons: 'Update Token Discounts'
+      notice:
+        created: "%{name} created successfully."
+        deleted: "%{name} deleted successfully."
     videos:
       destroy:
         link_name: 'Delete'
@@ -1600,9 +1613,22 @@ en:
         link_name: 'Activate'
       token_de_init:
         link_name: 'Deactivate'
+      notice:
+        created: 'Token type successfully created.'
+        updated: 'Token type successfully updated.'
+        activated: 'Token type successfully activated.'
+        deactivated: 'Token type successfully deactivated.'
+      alert:
+        not_found: 'Token type not found'
+        failed_to_activate: "Not able to activate %{name} Token Type due to some problem"
+        failed_to_deactivate: "Not able to deactivate %{name} Token Type due to some problem"
     payment_types:
       index:
         link_name: 'Payment Types'
+      notice:
+        created: 'Payment Type was successfully created.'
+        updated: 'Payment Type was successfully updated.'
+        deleted: 'Payment Type was successfully deleted.'
     time_slots:
       index:
         link_name: 'Time Slots'
@@ -1613,6 +1639,12 @@ en:
         link_name: 'Edit Slot'
       destroy:
         link_name: 'Delete Slot'
+      notice:
+        created: 'Time slot was successfully created.'
+        updated: 'Time slot was successfully updated.'
+        deleted: 'Time slot was successfully deleted.'
+      alert:
+        not_found: 'Time slot not found'
     home:
       select_project:
         link_name: 'Switch Project'
@@ -1621,24 +1653,51 @@ en:
         link_name: 'Lead Activities'
       show:
         link_name: 'Show Lead Activities'
+      notice:
+        created: 'Lead Activity created successfully.'
+        updated: 'Lead Activity updated successfully.'
+        deleted: 'Lead Activity deleted successfully.'
+      errors:
+        cannot_be_updated: "Lead validity can not be updated. Lead is active for %{name}"
     push_notifications:
       index:
         link_name: "Notifications"
+      notice:
+        notifications_sent: 'Push notification will be sent in some time.'
     api_logs:
       index:
         link_name: 'API Logs'
     meetings:
       index:
         link_name: 'Events'
+      notice:
+        created: 'Meeting created successfully.'
+        updated: 'Meeting updated successfully.'
+        deleted: 'Meeting deleted successfully.'
     announcements:
       index:
         link_name: 'Announcements'
+      notice:
+        created: 'Announcement created successfully.'
+        updated: 'Announcement updated successfully.'
+        deleted: 'Announcement deleted successfully.'
     banner_assets:
       index:
         link_name: 'Banner Assets'
+      notice:
+        upload_successful: 'Banner Image uploaded successfully.'
+        update_successful: 'Banner Image updated successfully.'
+        deleted: 'Banner Image deleted successfully.'
+      alert:
+        update_unsuccessful: 'Banner Image update unsuccessful.'
+        upload_unsuccessful: 'Banner Image upload unsuccessful.'
     campaigns:
       index:
         link_name: 'Campaigns'
+      notice:
+        created: 'Campaign created successfully.'
+        updated: 'Campaign updated successfully.'
+        deleted: 'Campaign deleted successfully.'
     crms:
       index:
         link_name: 'CRM Integration'
@@ -1694,7 +1753,11 @@ en:
         link_name: 'Edit Account'
       index:
         link_name: 'Accounts'
-
+      notice:
+        created: 'Account created successfully.'
+        deleted: 'Account deleted successfully.'
+        registered: 'Request registered successfully.'
+        cannot_be_deleted: 'Account cannot be deleted.'
       new:
         button: 'Save'
         header: 'New Account'
@@ -1713,8 +1776,10 @@ en:
         link_name: 'Add Scheme & Discount'
       edit:
         link_name: 'Update Scheme & Discount'
-      scheme_approved: 'Scheme applied successfully, please check cost sheet.'
-      scheme_under_negotiation: 'Scheme registered successfully and sent for approval.'
+      notice:
+        scheme_approved: 'Scheme applied successfully, please check cost sheet.'
+        scheme_under_negotiation: 'Scheme registered successfully and sent for approval.'
+        updated: 'Scheme was successfully updated.'
     booking_details:
       add_booking:
         link_name: "Add Booking"
@@ -1745,7 +1810,7 @@ en:
       send_booking_detail_form_notification: "Booking detail form will be sent to customer shortly."
       set_booking_detail_missing: "Booking detail not found"
       set_project_unit_missing: "Project unit not found"
-      set_project_missing: "Project not found"
+      set_project_missing: I18n.t("controller.projects.alert.not_found")
       booking_successful: "You have completed the booking successfully."
       booking_unsuccessful: "Your booking was unsuccessful. Please contact administrator to book."
       set_receipt_missing: 'Make new payment'
@@ -1766,6 +1831,13 @@ en:
             pending: Submit for Approval
       reject:
         link_name: 'Reject Booking'
+      notice:
+        export_scheduled: 'Your mis-report has been scheduled and will be emailed to you in some time'
+        created: 'Booking created successfully.'
+        updated: 'Booking updated successfully.'
+        moved_to: "Booking moved to %{name} successfully"
+      errors:
+        towers_not_present: 'Towers not present for this user'
 
     invoices:
       index:
@@ -1800,6 +1872,8 @@ en:
         all: 'All'
         manual_invoices: 'Manual Invoices'
         calculated_invoices: 'Calculated Invoices'
+      notice:
+        sent: "Successfully sent."
 
     incentive_deductions:
       index:
@@ -1816,6 +1890,8 @@ en:
       events:
         approved: 'Approve'
         rejected: 'Reject'
+      alert:
+        not_found: 'Incentive deduction not found'
 
     clients:
       new:
@@ -1838,6 +1914,8 @@ en:
       create:
         not_allowed_message: 'Company with these details already exists. Please contact your company admin (%{owner_name}) to create your account.'
         already_present_and_active_msg: 'A user with these details is already present & active under a company'
+      alert:
+        not_found: 'Channel Partner not found'
 
     dashboard:
       index:
@@ -1858,6 +1936,9 @@ en:
         link_name: 'Third Party Integration'
       edit:
         link_name: Edit
+      notice:
+        created: 'Erp Model created successfully.'
+        updated: 'Erp Model updated successfully.'
 
     inventory:
       index:
@@ -1882,6 +1963,17 @@ en:
         brokerage: 'Brokerage'
         terms_and_conditions: 'Terms & Conditions'
         plus: 'Plus'
+      notice:
+        subscribed: 'Project successfully subscribed.'
+        updated: 'Interested Project successfully updated.'
+        created: 'Project created successfully.'
+        synced_on_selldo: 'Project synced on Sell.do successfully'
+      alert:
+        not_found: 'Project not found'
+      errors:
+        not_selected: "Projects not selected"
+        select_projects: 'Please select some projects'
+        failed_to_sync: 'Project was unable to sync due to some errors. Please check notes for details'
 
     project_units:
       send_cost_sheet_and_payment_schedule:
@@ -1901,6 +1993,9 @@ en:
         link_name: 'Get Quotation'
         pdf_footer: 'This cost sheet generated should mention that this is a quotation so that it is not confused with the cost sheet that is generated after the booking'
       unit_released: "The unit has been successfully released."
+      notice:
+        created: 'Project Unit created successfully.'
+        updated: 'Project Unit updated successfully.'
     phases:
       index:
         link_name: 'Phases'
@@ -1920,6 +2015,12 @@ en:
         link_name: 'Change Token'
       exports:
         link_name: '%{name} Exports'
+      notice:
+        created: 'Receipt created successfully.'
+        updated: 'Receipt updated successfully.'
+        receipt_updated: 'Receipt was successfully updated. Please upload documents'
+      alert:
+        not_found: 'Receipt not found.'
 
       index:
         link_name: 'Payments'
@@ -1946,6 +2047,11 @@ en:
         link_name: 'Add Referrals'
       generate_code:
         link_name: 'Generate Referral Code'
+      notice:
+        sent: 'Invitation sent successfully.'
+        code_generated: 'Code generated successfully.'
+      errors:
+        already_present: '%{name} is already present.'
     site_visits:
       index:
         link_name: 'Walk-ins'
@@ -1980,6 +2086,14 @@ en:
         scheduled_this_week: 'This Week'
         scheduled_last_week: 'Last Week'
         scheduled_this_month: 'This Month'
+      notice:
+        created: 'Site visit was successfully created'
+        updated: 'Site visit was successfully updated'
+        synced: 'Site visit was successfully synced'
+      errors:
+        could_not_register: 'Could not register Site Visit on Sell.Do'
+        went_wrong: 'Something went wrong. Please contact support'
+        not_found: 'Site visit not found'
     searches:
       filter:
         header: Select Tower
@@ -2025,6 +2139,9 @@ en:
       new:
         link_name: Add Scheme
         header: Add Scheme
+      notice:
+        scheme_registered: 'Scheme registered successfully and sent for approval.'
+        updated: "Scheme updated successfully."
     incentive_schemes:
       index:
         link_name: Brokerage Schemes
@@ -2038,6 +2155,11 @@ en:
       new:
         link_name: Add Brokerage Scheme
         header: Add Brokerage Scheme
+      notice:
+        created: 'Incentive Scheme created successfully.'
+        updated: 'Incentive Scheme updated successfully.'
+      alert:
+        not_found: 'Incentive Scheme not found.'
     variable_incentive_schemes:
       index:
         link_name: Variable Incentive Schemes
@@ -2060,12 +2182,20 @@ en:
         link_name: 'Sync'
       show:
         link_name: Details
+      notice:
+        resource_absent: 'Sync log resource absent'
+        process_started: 'Sync process has been started.'
+        updated: 'Variable Incentive Scheme updated successfully.'
+      alert:
+        details_missing: 'Sync details are missing.'
 
     templates:
       index:
         link_name: 'Templates'
       show:
         link_name: Template Detail
+      notice:
+        updated: 'Template updated successfully.'
 
     users:
       set_user_missing: 'User not found'
@@ -2127,6 +2257,11 @@ en:
         pending_approval_to_inactive: 'Registration request is rejected'
         pending_approval_to_active: 'Account added successfully'
         active_to_inactive: 'Account removed successfully'
+      notice:
+        created: "User created successfully"
+        profile_updated: "User Profile updated successfully"
+        updated: "User updated successfully"
+
 
     interested_projects:
       set_interested_project_missing: 'Interested Project not found'
@@ -2155,6 +2290,16 @@ en:
       create_new_lead:
         link_name: 'Add New %{model}'
       reassign_sales: Reassign Lead
+      notice:
+        updated: 'Lead successfully updated.'
+      alert:
+        not_found: 'Lead Not found'
+        sales_user_not_found: "Sales user not found"
+      message:
+        mail_sent: "Mail successfully sent to the selected leads"
+      errors:
+        select_leads: 'Please select some leads'
+        failed_to_assign: "Not able to assign %{name} to sales"
 
     user_kycs:
       index:
@@ -2201,6 +2346,18 @@ en:
         edit:
           link_name: 'Edit Cancellation'
           header: 'Edit Cancellation'
+      notice:
+        updated: 'User Request updated successfully'
+    developers:
+      notice:
+        updated: 'Developer updated successfully.'
+      alert:
+        not_found: 'Developer not found'
+    document_signs:
+      notice:
+        connected: "Connected your %{name} Account successfully"
+      errors:
+        could_not_connect: "Couldn't connect with your %{name} Account"
 
   checklists:
     form:
