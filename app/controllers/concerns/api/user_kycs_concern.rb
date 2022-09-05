@@ -5,19 +5,19 @@ module Api
     def check_any_user_kyc_params kyc_attributes
       return if kyc_attributes.blank?
       errors = []
-      errors << "User Kyc with reference id #{kyc_attributes[:reference_id]} is already present" if @lead.user_kycs.reference_resource_exists?(@crm.id, kyc_attributes[:reference_id].to_s)
+      errors << I18n.t("controller.user_kycs.errors.reference_id_already_exists", name:"#{kyc_attributes[:reference_id]}") if @lead.user_kycs.reference_resource_exists?(@crm.id, kyc_attributes[:reference_id].to_s)
       [:dob, :anniversary].each do |date_field|
         begin
           Date.strptime( kyc_attributes[date_field], "%d/%m/%Y") if kyc_attributes[date_field].present?
         rescue ArgumentError
-          errors << "#{date_field.to_s} date format is invalid. Correct date format is - dd/mm/yyyy"
+          errors << I18n.t("global.errors.invalid_date_format", name: "#{date_field.to_s}")
         end
       end
       [:nri, :poa, :is_company, :existing_customer].each do |boolean_field|
-        errors << "#{boolean_field} should be a boolean value - true or false" if kyc_attributes[boolean_field].present? && !kyc_attributes[boolean_field].is_a?(Boolean)
+        errors << I18n.t("global.errors.boolean", name: "#{boolean_field}")if kyc_attributes[boolean_field].present? && !kyc_attributes[boolean_field].is_a?(Boolean)
       end
       [:number_of_units, :budget].each do |integer_field|
-        errors << "#{integer_field} should be a boolean value - true or false" if kyc_attributes[integer_field].present? && !kyc_attributes[integer_field].is_a?(Integer)
+        errors << I18n.t("global.errors.boolean", name: "#{integer_field}") if kyc_attributes[integer_field].present? && !kyc_attributes[integer_field].is_a?(Integer)
       end
       { "UserKyc(#{kyc_attributes[:reference_id]})": errors } if errors.present?
     end

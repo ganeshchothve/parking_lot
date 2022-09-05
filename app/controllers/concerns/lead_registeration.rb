@@ -14,9 +14,9 @@ module LeadRegisteration
         if params[:lead_id].blank? && @lead.present?
           if current_client.enable_lead_conflicts?
             CpLeadActivityRegister.create_cp_lead_object(@lead, current_user, params[:lead_details]) if current_user&.role.in?(%w(channel_partner cp_owner))
-            format.json { render json: {lead: @lead, success: "Lead created successfully"}, status: :created }
+            format.json { render json: {lead: @lead, success: I18n.t("controller.leads.notice.created")}, status: :created }
           else
-            format.json { render json: {errors: "Lead already exists"}, status: :unprocessable_entity }
+            format.json { render json: {errors: I18n.t("controller.leads.errors.already_exists")}, status: :unprocessable_entity }
           end
         else
           if selldo_config_base.present?
@@ -180,13 +180,13 @@ module LeadRegisteration
     else
       _query = get_query
       @user = User.or(_query).first if _query.present?
-      render json: {errors: 'User with these details is already registered with a different role' }, status: :unprocessable_entity and return if @user.present? && !@user.buyer?
+      render json: {errors: I18n.t("controller.users.errors.already_registered") }, status: :unprocessable_entity and return if @user.present? && !@user.buyer?
     end
   end
 
   def set_lead
     if params[:lead_id]
-      render json: {errors: 'Lead already exists' }, status: :unprocessable_entity and return if @user.leads.where(project_id: @project.id).present?
+      render json: {errors: I18n.t("controller.leads.errors.already_exists") }, status: :unprocessable_entity and return if @user.leads.where(project_id: @project.id).present?
     else
       leads = Lead.or(get_query)
       if @project.present?

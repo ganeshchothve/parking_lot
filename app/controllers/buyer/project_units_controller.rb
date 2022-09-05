@@ -21,7 +21,7 @@ class Buyer::ProjectUnitsController < BuyerController
       else
         format.json { render json: @project_units }
       end
-      format.html { redirect_to dashboard_path, notice: 'Only admins can view this page.'}
+      format.html { redirect_to dashboard_path, notice: I18n.t("global.only_admins.this_page")}
     end
   end
 

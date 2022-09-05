@@ -41,7 +41,7 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
           format.html{ redirect_to url }
           format.json{ render json: {}, location: url }
         else
-          flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
+          flash[:notice] = I18n.t("controller.notice.failed_to_redirect_to_payment_gateway")
           @receipt.update_attributes(status: "failed")
           format.json{ render json: @receipt, location: dashboard_path }
           format.html{ redirect_to dashboard_path }
@@ -58,7 +58,7 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
   def set_user
     @user = User.where(_id: params[:user_id]).first
     @user = @booking_detail.user if !(@user.present?)
-    redirect_to dashboard_path, alert: 'User Not found', status: 404 if @user.blank?
+    redirect_to dashboard_path, alert: I18n.t("controller.users.alert.not_found"), status: 404 if @user.blank?
   end
 
   def set_project_unit

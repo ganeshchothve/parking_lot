@@ -50,7 +50,7 @@ class Buyer::UserRequestsController < BuyerController
     @user_request.assign_attributes(permitted_user_request_attributes)
     respond_to do |format|
       if @user_request.save
-        format.html { redirect_to user_buyer_requests_path(@user, request_type: 'all'), notice: 'User Request was successfully updated.' }
+        format.html { redirect_to user_buyer_requests_path(@user, request_type: 'all'), notice: I18n.t("controller.user_requests.notice.updated") }
         format.json { render json: @user_request }
       else
         format.html { render :edit }

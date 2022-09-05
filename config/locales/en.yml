@@ -15,6 +15,9 @@ en:
       date: "%d/%m/%Y"
   welcome: Welcome %{name}
   global:
+    only_admins:
+      this_page: "Only admins can view this page."
+    confirmed: "Confirmation successful."
     brand: BeyondWalls
     all: All
     at: 'At'
@@ -54,6 +57,9 @@ en:
       one: Token Discount
       other: Token Discounts
     export_scheduled: 'Your export has been scheduled and will be emailed to you in some time'
+    errors:
+      invalid_date_format: "%{name} date format is invalid. Correct date format is - dd/mm/yyyy"
+      boolean: "%{name} should be a boolean value - true or false"
 
   helpers:
     extend_validity:
@@ -1575,6 +1581,9 @@ en:
         project: Project
 
   controller:
+    notice:
+      failed_to_redirect_to_payment_gateway: "We couldn't redirect you to the payment gateway, please try again"
+      logged_in: "You have already been logged in"
     apis:
       notice:
         added: 'API configuration is added successfully'
@@ -1584,6 +1593,12 @@ en:
         request_processed: 'Request is being processed'
       alert:
         not_found: 'API not found'
+      errors:
+        went_wrong: "Something went wrong. Please contact support team & share the error code: %{name}"
+      message:
+        incorrect_key: "Incorrect key."
+        register: 'Kindly register with our application.'
+        paramerters_missing: 'Required parameters missing.'
     discounts:
       index:
         link_name: 'Token Discounts'
@@ -1597,6 +1612,10 @@ en:
     videos:
       destroy:
         link_name: 'Delete'
+      notice:
+        created: "Video created successfully"
+        updated: "Video updated successfully"
+        deleted: "Video deleted successfully"
     sales_board:
       index:
         link_name: 'Sales Board'
@@ -1681,6 +1700,8 @@ en:
         created: 'Announcement created successfully.'
         updated: 'Announcement updated successfully.'
         deleted: 'Announcement deleted successfully.'
+      alert:
+        not_found: "Announcement not found"
     banner_assets:
       index:
         link_name: 'Banner Assets'
@@ -1705,6 +1726,8 @@ en:
         link_name: "Get Details from CRM"
       show_response:
         error: 'There was some error while loading the response. Please contact administrator.'
+      errors:
+        not_available: "Sell.do CRM integration not available"
     crm/base:
       create:
         success: 'CRM details added successfully.'
@@ -1780,6 +1803,7 @@ en:
         scheme_approved: 'Scheme applied successfully, please check cost sheet.'
         scheme_under_negotiation: 'Scheme registered successfully and sent for approval.'
         updated: 'Scheme was successfully updated.'
+      rejected_scheme: Scheme for this booking is rejected. Please contact administrator.
     booking_details:
       add_booking:
         link_name: "Add Booking"
@@ -1838,7 +1862,19 @@ en:
         moved_to: "Booking moved to %{name} successfully"
       errors:
         towers_not_present: 'Towers not present for this user'
-
+        already_exists: "Booking with reference_id %{name} already exists"
+        reference_id_required: 'Reference id is required to create Booking'
+        project_unit_id_required: 'Project unit id is required to create Booking'
+        lead_id_required: 'Lead reloaid is required to create Booking'
+        primary_user_kyc_id_required: 'Primary user kyc reference id is required to create Booking'
+        receipt_reference_id_required: 'Receipt reference id is required for all receipts'
+        user_kyc_reference_id_required: 'User KYC reference id is required for all user KYCs'
+        project_does_not_match: "Project for project unit - %{name1} and lead - %{name2} does not match"
+        booking_scheme_not_found: "Booking scheme is not found for this project unit. Please contact administrator"
+        booking_detail_reference_id_not_found: "Booking Detail with reference_id %{name} not found"
+        primary_user_kyc_already_present: "Primary User KYC is already present for booking detail"
+        task_attributes: 'tasks_attributes should be a key, value pair'
+        not_available_for_cancellation: "Booking Detail %{name} is not available for cancellation."
     invoices:
       index:
         link_name: 'Brokerages'
@@ -1914,8 +1950,18 @@ en:
       create:
         not_allowed_message: 'Company with these details already exists. Please contact your company admin (%{owner_name}) to create your account.'
         already_present_and_active_msg: 'A user with these details is already present & active under a company'
+      notice:
+        created: 'Channel Partner successfully created.'
+        updated: 'Channel Partner successfully updated.'
+        registered: 'Channel Partner successfully registered.'
       alert:
         not_found: 'Channel Partner not found'
+      errors:
+        already_exists: "Channel Partner with reference_id %{name} already exists"
+        reference_id_required: 'Channel Partner reference_id is required'
+        not_registered: 'Channel Partner is not registered.'
+        link_expired: 'This link is expired. Please ask the channel partner to send request again'
+        code_missing: "Registration code is missing"
 
     dashboard:
       index:
@@ -1974,6 +2020,7 @@ en:
         not_selected: "Projects not selected"
         select_projects: 'Please select some projects'
         failed_to_sync: 'Project was unable to sync due to some errors. Please check notes for details'
+        project_reference_id_not_found: "Project with Reference Id %{name} not found."
 
     project_units:
       send_cost_sheet_and_payment_schedule:
@@ -1996,6 +2043,8 @@ en:
       notice:
         created: 'Project Unit created successfully.'
         updated: 'Project Unit updated successfully.'
+      errors:
+        project_units_reference_id_not_found: "Project Unit with Reference Id %{name} not found or is already booked."
     phases:
       index:
         link_name: 'Phases'
@@ -2015,13 +2064,6 @@ en:
         link_name: 'Change Token'
       exports:
         link_name: '%{name} Exports'
-      notice:
-        created: 'Receipt created successfully.'
-        updated: 'Receipt updated successfully.'
-        receipt_updated: 'Receipt was successfully updated. Please upload documents'
-      alert:
-        not_found: 'Receipt not found.'
-
       index:
         link_name: 'Payments'
       lost_receipt:
@@ -2040,6 +2082,18 @@ en:
         link_name: Payment Details
       show_user_kyc:
         link_name: 'View KYC'
+      notice:
+        created: 'Receipt created successfully.'
+        updated: 'Receipt updated successfully.'
+        receipt_updated: 'Receipt was successfully updated. Please upload documents'
+        no_pending: 'No pending Receipt found.'
+      alert:
+        not_found: 'Receipt not found.'
+      errors:
+        payment_identifier:
+          blank: "Payment identifier can't be blank"
+        status_should_present: "Status should be present"
+        status_should_success: "Status should be clearance_pending or success"
     referrals:
       index:
         link_name: 'Referrals'
@@ -2050,8 +2104,19 @@ en:
       notice:
         sent: 'Invitation sent successfully.'
         code_generated: 'Code generated successfully.'
+        created: "Receipt created successfully."
+        updated: "Receipt updated successfully."
       errors:
         already_present: '%{name} is already present.'
+        receipt_reference_id_not_found: "Receipt with Reference Id %{name} not found"
+        receipt_reference_id_in_success: "Receipt with Reference Id %{name} is already in success"
+        receipt_reference_id_already_exists: "Receipt with Reference Id %{name} already exists."
+        reference_id_required: 'Reference id is required to create Receipt'
+        project_unit_id_required: 'Project unit id is required to create Receipt'
+        lead_id_required: 'Lead id is required to create Receipt'
+        user_kyc_reference_id_required: 'User KYC reference id is required to create user KYC for receipt'
+        user_kyc_present: "User KYC is already present on Receipt."
+        not_available_for_cancellation: "Receipt %{name} not available for cancellation."
     site_visits:
       index:
         link_name: 'Walk-ins'
@@ -2094,6 +2159,10 @@ en:
         could_not_register: 'Could not register Site Visit on Sell.Do'
         went_wrong: 'Something went wrong. Please contact support'
         not_found: 'Site visit not found'
+        id_missing_in_params: "SiteVisit id is missing in params"
+        invalid_date_format: "Sitevisit date format is invalid. Correct date format is - dd/mm/yyyy"
+        revisit_invalid_date_format: 'Last revisit date format is invalid. Correct date format is - dd/mm/yyyy'
+        revisit_count: "Revisit count should be a number"
     searches:
       filter:
         header: Select Tower
@@ -2261,6 +2330,11 @@ en:
         created: "User created successfully"
         profile_updated: "User Profile updated successfully"
         updated: "User updated successfully"
+        cannot_confirm: 'Cannot confirm with this link. Please contact administrator'
+      alert:
+        not_found: 'User not found'
+      errors:
+        already_registered: 'User with these details is already registered with a different role'
 
 
     interested_projects:
@@ -2297,9 +2371,27 @@ en:
         sales_user_not_found: "Sales user not found"
       message:
         mail_sent: "Mail successfully sent to the selected leads"
+      notice:
+        created: "Lead created successfully."
+        updated: "Lead updated successfully."
+        unqualified: "Lead unqualified successfully."
       errors:
         select_leads: 'Please select some leads'
+        already_exists: "Lead already exists."
         failed_to_assign: "Not able to assign %{name} to sales"
+        lead_reference_id_not_found: "Lead with Reference Id %{name} not found"
+        lead_reference_id_already_exists: "Lead with Reference Id %{name} already exists"
+        project_id_required: 'project_id is required to create Lead'
+        lead_reference_id_required: 'Lead reference_id is required'
+        email_phone_not_match: "User email & phone doesn't match"
+        email_or_phone_required: "User email or phone is required"
+        manager_reference_id_not_found: "Manager with Reference Id %{name} not found"
+        lead_not_present_for_booking: "Lead not present for booking. Please contact administrator"
+        user_account_not_present_for_lead: "User Account not present for lead. Please contact administrator"
+        project_not_present_for_lead: "Project not present for lead. Please contact administrator"
+      alert:
+        unqualified: "Lead cannot be unqualified"
+        company_not_found: 'Requested partner company not found'
 
     user_kycs:
       index:
@@ -2310,6 +2402,13 @@ en:
         link_name: Edit
       show:
         link_name: Detail
+      notice:
+        created: "User KYC created successfully"
+        updated: "User KYC updated successfully"
+      errors:
+        reference_id_already_exists: "User KYC with Reference Id %{name} already exists."
+        reference_id_required: "User KYC Reference Id is required"
+        lead_id_required: "Lead Id is required to create KYC"
     user_requests:
       index:
         link_name: 'Help Center'
@@ -2348,6 +2447,12 @@ en:
           header: 'Edit Cancellation'
       notice:
         updated: 'User Request updated successfully'
+      message:
+        sent_for_cancellation: " %{name} has been sent for cancellation."
+      errors:
+        request_type_required: "User Request type is required."
+        ids_required_for_cancellation: 'Booking detail id or Receipt id is required for cancellation'
+        cancellation_request_type_supported: "Only cancellation user request type is supported"
     developers:
       notice:
         updated: 'Developer updated successfully.'
@@ -2358,6 +2463,12 @@ en:
         connected: "Connected your %{name} Account successfully"
       errors:
         could_not_connect: "Couldn't connect with your %{name} Account"
+    notification_tokens:
+      notice:
+        updated: "Token updated successfully."
+    omniauth_callbacks:
+      alert:
+        register: "Please ask support team to register your account."
 
   checklists:
     form:
@@ -2366,9 +2477,6 @@ en:
   asset:
     image:
       not_found: 'No Image Found'
-
-  booking_detail_schemes:
-    rejected_scheme: Scheme for this booking is rejected. Please contact administrator.
 
   datetime:
     distance_in_words:
@@ -2425,6 +2533,20 @@ en:
       hint: '(you might have some payments pending clearance)'
     total_unattached_balance:
       hint: '(subject to clearance)'
+    notice:
+      created: "User created successfully."
+      updated: "User updated successfully."
+      profile_updated: "User profile updated successfully."
+      reactivated_account: "User Account reactivated successfully."
+      confirmation_sent: 'Confirmation instructions sent successfully.'
+      reset_password_sent: 'Reset password instructions sent successfully.'
+      confirmed_via_otp: "User confirmed using OTP by this channel_partner"
+    errors:
+      reference_id_required: "Reference Id is required to create User."
+      not_registered: "User is not registered."
+      account_reactivation: "There was some error while reactivating account. Please contact support for assistance"
+      could_not_send_confirmation: "Couldn't send confirmation instructions."
+      could_not_send_reset_password: "Couldn't send Reset password instructions."
 
   leads:
     total_amount_paid:
@@ -2444,6 +2566,8 @@ en:
       link:
         pre_text: 'Already have an account?'
         name: 'Login here'
+    notice:
+      phone_number: "Please enter a valid phone number"
 
   registrations:
     pre_text: 'Don’t have account ?'

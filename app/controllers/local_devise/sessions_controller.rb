@@ -49,7 +49,7 @@ class LocalDevise::SessionsController < Devise::SessionsController
           format.json { render json: {errors: [@otp_sent_status[:error]].flatten}, status: 422 }
         end
       else
-        format.json { render json: {errors: ["Please enter a valid phone number"]}, status: :unprocessable_entity }
+        format.json { render json: {errors: [I18n.t("controller.sessions.notice.phone_number")]}, status: :unprocessable_entity }
       end
     end
   end

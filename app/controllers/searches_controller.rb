@@ -159,7 +159,7 @@ class SearchesController < ApplicationController
           redirect_to @receipt.payment_gateway_service.gateway_url(@search.id)
         else
           @receipt.update_attributes(status: "failed")
-          flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
+          flash[:notice] = I18n.t("controller.notice.failed_to_redirect_to_payment_gateway")
           redirect_to dashboard_path
         end
       else

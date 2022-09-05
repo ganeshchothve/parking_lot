@@ -8,7 +8,7 @@ module ChannelPartnerRegisteration
       else
         create_cp_user
         if @user.save
-          format.html { redirect_to new_user_session_path, notice: 'Successfully registered' }
+          format.html { redirect_to new_user_session_path, notice: I18n.t("controller.channel_partners.notice.registered") }
         else
           format.html { redirect_to new_channel_partner_path, alert: @user.errors.full_messages }
         end
@@ -68,13 +68,13 @@ module ChannelPartnerRegisteration
       @user = User.where(register_in_cp_company_token: params[:register_code]).first
       @channel_partner = ChannelPartner.where(id: params[:channel_partner_id]).first
       unless @user.present?
-        redirect_to root_path, alert: 'This link is expired. Please ask the channel partner to send request again'
+        redirect_to root_path, alert: I18n.t("controller.channel_partners.errors.link_expired")
       end
       unless @channel_partner.present?
         redirect_to root_path, alert: "#{ChannelPartner.model_name.human} not found"
       end
     else
-      redirect_to root_path, alert: 'Registration code is missing'
+      redirect_to root_path, alert: I18n.t("controller.channel_partners.errors.code_missing")
     end
   end
 
