@@ -38,6 +38,32 @@ class ChannelPartnersController < ApplicationController
     render layout: false
   end
 
+  def new_company
+    @user = User.new
+    @channel_partner = ChannelPartner.new
+    render layout: false
+  end
+
+  def create_company
+    @user = User.new
+    @user.assign_attributes(user_params)
+    @user.assign_attributes(role: "channel_partner", booking_portal_client_id: current_client.id, manager_id: params.dig(:channel_partner, :manager_id))
+
+    @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
+    @channel_partner.is_existing_company = false
+    @channel_partner.primary_user = @user
+    @channel_partner.status = 'active' if current_client.enable_direct_activation_for_cp?
+    respond_to do |format|
+      if @channel_partner.save
+        format.html { redirect_to channel_partners_path, notice: 'Partner Company Successfully Created'  }
+        format.json { render json: @user, status: :created }
+      else
+        format.html { redirect_to channel_partners_path }
+        format.json { render json: { errors: @channel_partner.errors.full_messages.uniq }, status: :unprocessable_entity }
+      end
+    end
+  end
+
   def edit
     render layout: false
   end
@@ -158,9 +184,9 @@ class ChannelPartnersController < ApplicationController
     unless params[:action] == 'index' && params[:ds] == 'true'
       if params[:action] == 'index' || params[:action] == 'export'
         authorize [:admin, ChannelPartner]
-      elsif ["new","new_channel_partner"].include?(params[:action])
+      elsif ["new","new_channel_partner", "new_company"].include?(params[:action])
         authorize [:admin, ChannelPartner.new]
-      elsif ["create","create_channel_partner"].include?(params[:action])
+      elsif ["create","create_channel_partner", "create_company"].include?(params[:action])
         authorize [:admin, ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))]
       else
         authorize [:admin, @channel_partner]
@@ -173,5 +199,9 @@ class ChannelPartnersController < ApplicationController
     ChannelPartner.with_scope(policy_scope(custom_scope)) do
       yield
     end
+  end
+
+  def user_params
+    params.require(:channel_partner).permit(:first_name, :last_name, :email, :phone)
   end
 end

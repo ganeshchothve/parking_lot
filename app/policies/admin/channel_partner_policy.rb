@@ -44,6 +44,18 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
     new_channel_partner?
   end
 
+  def show_add_company_link?
+    user.role.in?(%w(superadmin admin cp_admin)) && current_client.enable_channel_partners?
+  end
+
+  def new_company?
+    show_add_company_link?
+  end
+
+  def create_company?
+    new_company?
+  end
+
   def permitted_attributes(_params = {})
     attributes = []
     if user.blank? || (user.present? && (%w[superadmin admin cp_admin account_manager_head account_manager].include?(user.role) || (['channel_partner', 'cp_owner'].include?(user.role) && record.id == user.channel_partner_id && ['inactive', 'rejected'].include?(record.status))))
