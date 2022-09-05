@@ -32,9 +32,16 @@ module BulkUpload
           end
         end
         attrs[:interested_services] = ['Lead Management']
-
+        user = User.new(
+                        first_name: attrs[:first_name],
+                        last_name: attrs[:last_name],
+                        email: attrs[:email],
+                        phone: attrs[:phone]
+                      )
         cp = ::ChannelPartner.new(attrs)
+        cp.assign_attributes(primary_user: user)
         if cp.save
+          user.save
           bur.success_count += 1
         else
           (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push(*cp.errors.full_messages)).uniq
