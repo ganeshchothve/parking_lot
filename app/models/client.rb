@@ -62,7 +62,7 @@ class Client
   field :enable_live_inventory, type: Array, default: []
   field :enable_channel_partners, type: Boolean, default: false
   field :enable_leads, type: Boolean, default: false
-  field :enable_site_visit, type: Boolean, default: false
+  field :enable_site_visit, type: Boolean, default: true
   field :enable_vis, type: Boolean, default: false
   field :enable_direct_payment, type: Boolean, default: false
   field :enable_payment_with_kyc, type: Boolean, default: true
