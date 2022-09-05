@@ -53,7 +53,7 @@
     <% end %>
   </div>
   <% if payment_adjustment %>
-    <%= f.link_to_add "Add Adjustments", :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
+    <%= f.link_to_add I18n.t("controller.project_units.adjustments.link_name"), :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
   <% end %>
   </br>
   <%= f.submit "Apply", class: "btn btn-primary d-print-none" %>

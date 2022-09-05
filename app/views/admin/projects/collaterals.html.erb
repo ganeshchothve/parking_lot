@@ -11,7 +11,7 @@
             <% Project::DOCUMENT_TYPES.reject {|x| x == 'unit_selection_filter_image'}.each_with_index do |doc_type, idx| %>
               <a class="nav-item nav-link <%= idx.zero? ? 'active' : '' %>" data-toggle="tab" href="#nav-project-<%= doc_type %>" role="tab"><%= t("mongoid.attributes.project/file_types.#{doc_type}").pluralize %></a>
             <% end %>
-            <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-videos" role="tab">Videos</a>
+            <a class="nav-item nav-link" data-toggle="tab" href="#nav-project-videos" role="tab"><%= I18n.t("controller.projects.link_to.videos") %></a>
           </div>
         </nav>
         <div class="mt-3"></div>

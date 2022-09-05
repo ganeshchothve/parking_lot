@@ -64,32 +64,32 @@
                             <nav class="prjt-menu col-12 float-start">
                                 <ul class="" id="nav-tab">
                                     <li class="">
-                                        <a class="active" id="nav-overview-tab" rel="tab-overview" href="javascript:;">Overview</a>
+                                        <a class="active" id="nav-overview-tab" rel="tab-overview" href="javascript:;"><%= I18n.t("controller.projects.link_to.overview") %></a>
                                     </li>
                                     <li class="">
-                                        <a class="" id="nav-location-tab" rel="tab-location" href="javascript:;">Location</a>
+                                        <a class="" id="nav-location-tab" rel="tab-location" href="javascript:;"><%= I18n.t("controller.projects.link_to.location") %></a>
                                     </li>
                                     <% if inventory_avl %>
                                       <li class="">
-                                          <a class="" id="nav-configure-tab" href="javascript:;" rel="tab-configure">Configurations</a>
+                                          <a class="" id="nav-configure-tab" href="javascript:;" rel="tab-configure"><%= I18n.t("controller.projects.link_to.configurations") %></a>
                                       </li>
                                     <% end %>
                                       <li class="">
-                                          <a class="" id="nav-collaterals-tab" href="javascript:;" rel="tab-collaterals">Collaterals</a>
+                                          <a class="" id="nav-collaterals-tab" href="javascript:;" rel="tab-collaterals"><%= I18n.t("controller.projects.link_to.collaterals") %></a>
                                       </li>
                                     <% if @project.amenities.present? %>
                                       <li class="">
-                                          <a class="" id="nav-amenities-tab" href="javascript:;" rel="tab-amenities">Amenities</a>
+                                          <a class="" id="nav-amenities-tab" href="javascript:;" rel="tab-amenities"><%= I18n.t("controller.projects.link_to.amenities") %></a>
                                       </li>
                                     <% end %>
                                     <% if @project.specifications.present? %>
                                       <li class="">
-                                          <a class="" id="nav-specifications-tab" href="javascript:;" rel="tab-specifications">Specifications</a>
+                                          <a class="" id="nav-specifications-tab" href="javascript:;" rel="tab-specifications"><%= I18n.t("controller.projects.link_to.specifications") %></a>
                                       </li>
                                     <% end %>
                                     <% if @project.timeline_updates.present? %>
                                       <li class="">
-                                          <a class="" id="nav-timeline-tab" href="javascript:;" rel="tab-timeline">Project Timeline</a>
+                                          <a class="" id="nav-timeline-tab" href="javascript:;" rel="tab-timeline"><%= I18n.t("controller.projects.link_to.project_timeline") %></a>
                                       </li>
                                     <% end %>
                                 </ul>
@@ -98,7 +98,7 @@
                         <div class="prjt-desc-tab-wrap col-12 float-start">
                             <div class="prjt-desc-tab col-12 bt-br float-start" id="tab-overview">
                                 <div class="tab-header">
-                                    <h2 class="tab-title">Overview</h2>
+                                    <h2 class="tab-title"><%= I18n.t("controller.projects.link_to.overview") %></h2>
                                 </div>
                                 <div class="tab-body pt-2">
                                     <div class="col-lg-5 col-12 overview-left float-start">
@@ -123,7 +123,7 @@
                             </div>
                             <div class="prjt-desc-tab bt-br col-12 pt-4 pb-4 float-start" id="tab-location">
                                 <div class="tab-header col-12 float-start">
-                                    <h2 class="tab-title float-start">Location</h2>
+                                    <h2 class="tab-title float-start"><%= I18n.t("controller.projects.link_to.location") %></h2>
                                     <!--<a href="javascript:;" class="location-share float-end"><i class="fa fa-share-alt fill-primary me-2"></i>Share location</a>-->
                                 </div>
                                 <div class="tab-body col-12 float-start pt-3">
@@ -151,7 +151,7 @@
                             <% if inventory_avl %>
                             <div class="prjt-desc-tab col-12 pt-4 float-start" id="tab-configure">
                                 <div class="tab-header col-12 float-start position-relative">
-                                    <h2 class="tab-title float-start">Configurations</h2>
+                                    <h2 class="tab-title float-start"><%= I18n.t("controller.projects.link_to.configurations") %></h2>
                                     <a href="javascript:;" class="emi-calc-btn"><p class="float-end">EMI's starting at <strong>₹ 25,000</strong> /month</p>                                   
                                     </a>
                                      <div class="card emi-wrapper position-absolute top-50 end-0">
@@ -184,7 +184,7 @@
 
                                                     <div class="form-group">
                                                         <div class="range_indicator">
-                                                            <label for="loan-duration">Rate of Interest</label>
+                                                            <label for="loan-duration"><%= I18n.t("controller.projects.link_to.rate_of_interest") %></label>
                                                             <div class="indi_rgt"><span id="selected-interest"></span> % </div>
                                                         </div>
                                                         <div id="interest-rate"></div>
@@ -202,7 +202,7 @@
 
                                                     <div class="form-group">
                                                         <div class="range_indicator">
-                                                            <label for="loan-duration">Loan Tenure</label>
+                                                            <label for="loan-duration"><%= I18n.t("controller.projects.link_to.loan_tenure") %></label>
                                                             <div class="indi_rgt"><span id="selected-duration"></span> Years </div>
                                                         </div>
                                                         <div id="loan-duration"></div>
@@ -219,9 +219,9 @@
                                                     </div>
 
                                                     <div class="wid_right list-unstyled d-flex justify-content-between">
-                                                        <div class="fn-14">Total Interest Payable <p class=" fn-20 font-medium">₹ <span class="interestValue"></span></p>
+                                                        <div class="fn-14"><%= I18n.t("controller.projects.link_to.total_payable_interest") %> <p class=" fn-20 font-medium">₹ <span class="interestValue"></span></p>
                                                         </div>
-                                                        <div class="fn-14">Total Amount Payable 
+                                                        <div class="fn-14"><%= I18n.t("controller.projects.link_to.total_amount_payable") %>
                                                             <!-- <p class="fn-14 mb-0">Principal + Interest</p> -->
                                                             <p class="fn-20 font-medium">₹ <span class="TotalValue "></span></p>
                                                         </div>
@@ -279,10 +279,10 @@
                                                         <% if @project.usp.present? %>
                                                           <div class="col-12 bt-bt mt-3 float-start pt-2">
                                                               <div class="col-6 float-start">
-                                                                  <p class="points-list-title">Uniques Selling Points</p>
+                                                                  <p class="points-list-title"><%= I18n.t("controller.projects.link_to.uniques_selling_points") %></p>
                                                               </div>
                                                               <div class="col-6 float-end">
-                                                                  <a href="javascript:;" class="float-end view-all-btn">View All</a>
+                                                                  <a href="javascript:;" class="float-end view-all-btn"><%= I18n.t("controller.projects.link_to.view_all") %></a>
                                                               </div>
                                                               <ul class="points-list col-12 float-start">
                                                                 <% @project.usp.first(3).each do |usp| %>
@@ -305,7 +305,7 @@
                             <% end %>
                             <div class="prjt-desc-tab col-12 bt-bt float-start" id="tab-collaterals">
                                 <div class="tab-header col-12 float-start">
-                                    <h2 class="tab-title float-start">Collaterals</h2>
+                                    <h2 class="tab-title float-start"><%= I18n.t("controller.projects.link_to.collaterals") %></h2>
                                     <!-- <a href="javascript:;" class="location-share float-end mt-2"><i class="fa fa-share-alt fill-primary me-2"></i>Share collaterals</a>-->
                                 </div>
                                 <div class="tab-body">
@@ -332,7 +332,7 @@
                                     
                                     <div class="col-12 mb-3 float-start">
                                         <div class="prjt-gallery">
-                                            <h2>Video</h2>
+                                            <h2><%= I18n.t("controller.projects.link_to.videos") %></h2>
                                             <ul class="collaterals-list">
                                               <% @project.videos.each do |video| %>
                                                 <li>
@@ -350,7 +350,7 @@
                                     </div>
                                     <div class="col-12 mb-3 float-start">
                                         <div class="prjt-gallery">
-                                            <h2>Documents</h2>
+                                            <h2><%= I18n.t("controller.projects.link_to.documents") %></h2>
                                             <ul class="documents-list">
                                                 <% @assets = @project.assets.where(document_type: "document") %>
                                                     <% @assets.each_with_index do |asset, index|%>
@@ -380,7 +380,7 @@
                                     </div>
                                     <div class="col-12 mb-3 float-start">
                                         <div class="prjt-gallery">
-                                            <h2>Advertise Kit</h2>
+                                            <h2><%= I18n.t("controller.projects.link_to.advertise_kit") %></h2>
                                             <ul class="documents-list">
                                                 <% @assets = @project.assets.where(document_type: "advertise") %>
                                                     <% @assets.each_with_index do |asset, index|%>
@@ -413,7 +413,7 @@
                             <% if @project.amenities.present? %>
                             <div class="prjt-desc-tab col-12 bt-bt float-start" id="tab-amenities">
                                 <div class="tab-header col-12 float-start">
-                                    <h2 class="tab-title float-start">Amenities</h2>
+                                    <h2 class="tab-title float-start"><%= I18n.t("controller.projects.link_to.amenities") %></h2>
                                     <!--<p class="drop-amenities float-end">
                                         <span>Now Showing:</span>
                                         <select class="form-control d-inline me-1">
@@ -446,7 +446,7 @@
                             <% if @project.specifications.present? %>
                             <div class="prjt-desc-tab col-12 bt-bt float-start" id="tab-specifications">
                                 <div class="tab-header col-12 float-start">
-                                    <h2 class="tab-title">Specifications</h2>
+                                    <h2 class="tab-title"><%= I18n.t("controller.projects.link_to.specifications") %></h2>
                                 </div>
                                 <div class="tab-body">
                                     <div class="col-12">
@@ -467,7 +467,7 @@
                             <% if @project.timeline_updates.present? %>
                             <div class="prjt-desc-tab col-12 bt-bt float-start" id="tab-timeline">
                                 <div class="tab-header col-12 float-start pb-3">
-                                    <h2 class="tab-title">Project Timeline</h2>
+                                    <h2 class="tab-title"><%= I18n.t("controller.projects.link_to.project_timeline") %></h2>
                                 </div>
                                 <div class="tab-body pb-5">
                                   <% if @project.timeline_updates.present? %>
@@ -761,7 +761,7 @@
             <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card mb-5">
                     <div class="row">
                         <div class="col-md-12 pt-3 px-4">
-                            <h3 class="card-title">Support Contact Details</h3>
+                            <h3 class="card-title"><%= I18n.t("controller.projects.link_to.contact_details") %></h3>
                             <ul class="project-list list-unstyled row mb-0 pb-1">
                                 <li class="px-3 mb-2">
                                     <div class="list-wrap row">
@@ -843,7 +843,7 @@
                 <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card">
                     <div class="row">
                         <div class="col-md-12 pt-3 px-4">
-                            <h3 class="card-title">Customers offers</h3>
+                            <h3 class="card-title"><%= I18n.t("controller.projects.link_to.contact_details") %></h3>
                             <ul class="project-list list-unstyled row mb-0 pb-1">
                               <% @project.offers.each do |offer| %>
                                 <li class="px-3">

@@ -641,6 +641,8 @@ en:
           sbi: State Bank of India
           bob: Bank of Baroda
           bajaj_finance: Bajaj Finance
+        disabled_walkins: Disabled Walk-ins
+        disabled_bookings: Disabled bookings
       project/project_type:
         residential: Residential
         commercial: Commercial
@@ -869,6 +871,11 @@ en:
         configuration: 'Configuration'
         payment_schedule: 'Payment Schedule'
         cost_sheet: 'Cost Sheet'
+        tower_name: 'Tower Name'
+        total_units: 'Total Units'
+        sold_unsold: 'Sold / Unsold'
+        av_sold: 'A.V (Sold)'
+        rhea_miranda: 'Rhea Miranda'
       project_unit/status:
         hold: 'Hold'
         available: 'Available'
@@ -1439,6 +1446,7 @@ en:
         email: 'Email'
         project_id: 'Project'
         manager_id: 'Channel Partner'
+        id: 'Customer'
         name_email_phone: 'Name/Email/Phone (Project Name)'
         total_amount_paid: "Total Amount Paid (Inclusive of GST)"
         registered_at: 'Registered At'
@@ -1644,6 +1652,8 @@ en:
     payment_types:
       index:
         link_name: 'Payment Types'
+      add_payment:
+        link_name: "Add %{name}"
       notice:
         created: 'Payment Type was successfully created.'
         updated: 'Payment Type was successfully updated.'
@@ -1759,6 +1769,9 @@ en:
     assets:
       index:
         link_name: 'Documents'
+      confirm:
+        booking_moved_tentative: "Are you sure? You cannot make changes once booking moved to tentative state"
+        sure: 'Are you sure?'
     public_assets:
       index:
         link_name: 'Public Documents'
@@ -1882,6 +1895,10 @@ en:
         link_name: 'Raise Brokerage Invoice'
       edit:
         link_name: 'Edit Invoice'
+      move_to_draft:
+        link_name: 'Move To Draft'
+      send_invoice:
+        link_name: "Send invoice to Developer"
       update_gst:
         link_name: 'Update GST'
       show:
@@ -1890,6 +1907,8 @@ en:
         link_name: 'Print Invoice'
       asset_create:
         link_name: 'Uploaded Invoice Copy'
+      download:
+        link_name: 'Download'
       status_message:
         draft: 'Invoice raised successfully'
         pending_approval: 'Invoice successfully raised'
@@ -2009,11 +2028,26 @@ en:
         brokerage: 'Brokerage'
         terms_and_conditions: 'Terms & Conditions'
         plus: 'Plus'
+      nearby_location:
+        link_name: 'Add Nearby Location'
+      add_offer:
+        link_name: 'Add Offer'
+      add_specification:
+        link_name: "Add Specification"
+      add_timeline_update:
+        link_name: "Add Timeline Update"
+      region_projects:
+        link_name: "Projects In My Region"
       notice:
         subscribed: 'Project successfully subscribed.'
         updated: 'Interested Project successfully updated.'
         created: 'Project created successfully.'
         synced_on_selldo: 'Project synced on Sell.do successfully'
+      view:
+        all: "All"
+        newly_launched: "Newly Launched"
+        pre_launch: "Pre Launch"
+        hot: "Hot"
       alert:
         not_found: 'Project not found'
       errors:
@@ -2021,12 +2055,44 @@ en:
         select_projects: 'Please select some projects'
         failed_to_sync: 'Project was unable to sync due to some errors. Please check notes for details'
         project_reference_id_not_found: "Project with Reference Id %{name} not found."
+      link_to:
+        basic_details: Basic Details
+        specs: Specs
+        offers: Offers
+        timeline: Timeline
+        location: Location
+        content_pages: Content Pages
+        images_docs: Images & Docs
+        integrations: Integrations
+        bookings: Bookings
+        notifications: Notifications
+        crm: CRM
+        videos: Videos
+        overview: Overview
+        configurations: Configurations
+        collaterals: Collaterals
+        amenities: Amenities
+        project_timeline: Project Timeline
+        rate_of_interest: Rate of Interest
+        loan_tenure: Loan Tenure
+        total_interest_payable: Total Interest Payable
+        total_amount_payable: Total Amount Payable
+        select_type: Select Type
+        uniques_selling_points: Uniques Selling Points
+        view_all: View All
+        advertise_kit: Advertise Kit
+        contact_details: Support Contact Details
+        customers_offers: Customers offers
+        send_projects_link: Send Projects Link
+
 
     project_units:
       send_cost_sheet_and_payment_schedule:
         link_name: 'Send Cost sheet & Payment Schedule to Customer'
         success: 'Cost sheet & payment schedule will be sent to customer shortly.'
         failure: 'Cost sheet & payment schedule cannot be sent. Please contact administrator'
+      dashboard:
+        link_name: 'Dashboard'
       index:
         link_name: 'Apartments'
       show:
@@ -2034,17 +2100,38 @@ en:
       edit:
         header: Edit Apartment
         link_name: Edit
+        customer: Edit Customer
+      create_booking:
+        link_name: Create Booking
       exports:
         link_name: "%{type} Exports"
       quotation:
         link_name: 'Get Quotation'
         pdf_footer: 'This cost sheet generated should mention that this is a quotation so that it is not confused with the cost sheet that is generated after the booking'
+      adjustments:
+        link_name: "Add Adjustments"
       unit_released: "The unit has been successfully released."
+      total_adjustment: "*Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)"
       notice:
         created: 'Project Unit created successfully.'
         updated: 'Project Unit updated successfully.'
       errors:
         project_units_reference_id_not_found: "Project Unit with Reference Id %{name} not found or is already booked."
+      text:
+        kyc_primary_applicant: KYC (Primary Applicant)
+        general_info: General Info
+        bank_details: Bank Details
+        documents: Documents
+        requirement: Requirement
+        booking_details: Booking Details
+        booking: Booking
+        created_on: 'Created On'
+        booked_on: 'Booked On'
+        registration_date: 'Registration Date'
+        history: 'History'
+        kyc_completed: KYC Completed
+        site_visit_conducted: Site Visit Conducted
+        lead_created: Lead created on Launchpad
     phases:
       index:
         link_name: 'Phases'
@@ -2069,6 +2156,7 @@ en:
       lost_receipt:
         header: Lost Payment
         link_name: Lost Payment
+        details: Lost Receipt Details
       new:
         link_name: 'Make Payment'
         header: 'Make Payment'
@@ -2363,6 +2451,10 @@ en:
         link_name: 'Add To Other Project'
       create_new_lead:
         link_name: 'Add New %{model}'
+      drop_customer:
+        link_name: 'Drop Customer'
+      payment_link:
+        link_name: 'Send Payment link'
       reassign_sales: Reassign Lead
       notice:
         updated: 'Lead successfully updated.'

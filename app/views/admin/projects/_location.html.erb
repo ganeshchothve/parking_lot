@@ -8,7 +8,7 @@
   <% editable_locations = policy([:admin, project]).editable_field?("nearby_locations_attributes")%>
   <% if editable_locations %>
     <div class='text-right'>
-      <%= f.link_to_add "Add Nearby Location", :nearby_locations, :data => { :target => ".locations" }, class: 'btn btn-secondary' %>
+      <%= f.link_to_add I18n.t("controller.projects.nearby_location.link_name"), :nearby_locations, :data => { :target => ".locations" }, class: 'btn btn-secondary' %>
     </div>
   <% end %>
   <%= f.fields_for :nearby_locations do |sf|%>

@@ -2,7 +2,7 @@
   <% editable_specifications = policy([:admin, project]).editable_field?("specifications_attributes")%>
   <% if editable_specifications %>
     <div class='text-right'>
-      <%= f.link_to_add "Add Specification", :specifications, :data => { :target => ".specifications" }, class: 'btn btn-secondary' %>
+      <%= f.link_to_add I18n.t("controller.projects.add_specification.link_name"), :specifications, :data => { :target => ".specifications" }, class: 'btn btn-secondary' %>
     </div>
   <% end %>
   <%= f.fields_for :specifications do |sf|%>

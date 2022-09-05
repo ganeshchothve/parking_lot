@@ -3,7 +3,7 @@
     <div class = "col-12">
       <button onclick='window.print();' class='btn btn-primary d-print-none'>Print</button>
       <% if policy([current_user_role_group, @invoice]).generate_invoice? %>
-        <%= link_to 'Download', generate_invoice_admin_invoice_path(@invoice, format: :pdf), class: 'btn btn-primary d-print-none' %>
+        <%= link_to I18n.t("controller.invoices.download.link_name"), generate_invoice_admin_invoice_path(@invoice, format: :pdf), class: 'btn btn-primary d-print-none' %>
       <% end %>
     </div>
   </div>

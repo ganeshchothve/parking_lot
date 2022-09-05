@@ -1,7 +1,7 @@
 <%= content_for :breadcrumbs do %>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<%= home_path(current_user) %>">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="<%= home_path(current_user) %>">I18n.t("controller.project_units.dashboard.link_name")</a></li>
       <% if project_unit.present? %>
         <li class="breadcrumb-item"><a href="<%= admin_project_units_path %>"><%= global_labels['project_units'] %></a></li>
         <li class="breadcrumb-item active" aria-current="page"><%= global_labels['project_unit'] %></li>

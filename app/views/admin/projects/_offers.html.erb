@@ -2,7 +2,7 @@
   <% editable_offers = policy([:admin, project]).editable_field?("offers_attributes")%>
   <% if editable_offers %>
     <div class='text-right'>
-      <%= f.link_to_add "Add Offer", :offers, :data => { :target => ".offers" }, class: 'btn btn-secondary' %>
+      <%= f.link_to_add I18n.t("controller.projects.add_offer.link_name"), :offers, :data => { :target => ".offers" }, class: 'btn btn-secondary' %>
     </div>
   <% end %>
   <%= f.fields_for :offers do |sf|%>

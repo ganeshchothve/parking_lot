@@ -5,7 +5,7 @@
         <div class="col-12 mb-3">
           <div class="d-flex justify-content-between">
             <div>
-              <h6 class="card-title d-inline fn-24 font-medium theme-txt-color me-1">Rhea Miranda</h6>
+              <h6 class="card-title d-inline fn-24 font-medium theme-txt-color me-1"><%= I18n.t('mongoid.attributes.project_unit.rhea_miranda') %></h6>
               <a href="javascript:;" class="email-icon small d-inline-block mt-1 fn-16" data-bs-toggle="popover"
                 title="Email Id" data-bs-trigger="focus" data-bs-placement="bottom" data-bs-content="abc@gmail.com">
                 <i class="fa fa-envelope fill-theme me-2 ms-2 fn-18"></i>
@@ -17,25 +17,23 @@
               </a>
             </div>
             <div>
-              <a href="javascript:;" class="border border-primary rounded primary p-2 fn-14 font-medium px-3">Edit
-                Customer</a>
+              <a href="javascript:;" class="border border-primary rounded primary p-2 fn-14 font-medium px-3"><%= I18n.t('controller.project_units.edit.customer') %></a>
               <a href="javascript:;"
-                class="bg-primary border border-primary rounded white p-2 ms-2 fn-14 font-medium px-3">Create
-                Booking</a>
+                class="bg-primary border border-primary rounded white p-2 ms-2 fn-14 font-medium px-3"><%= I18n.t('controller.project_units.create_booking.link_name') %></a>
             </div>
           </div>
         </div>
         <div class="col-12">
           <div class="row border rounded col-12 me-0 g-0">
-            <p class="fn-14 font-medium p-2 px-3 pb-0">KYC (Primary Applicant)</p>
+            <p class="fn-14 font-medium p-2 px-3 pb-0"><%= I18n.t("controller.project_units.text.kyc_primary_applicant") %></p>
             <div class="d-flex justify-content-between p-2 px-3 pb-0">
-              <p class="fn-16 font-medium">Rhea Miranda</p>
+              <p class="fn-16 font-medium"><%= I18n.t('mongoid.attributes.project_unit.rhea_miranda') %></p>
               <div class="d-flex justify-content-end">
-                <p><i class="fa fa-check-circle fill-success me-1"></i> General Info</p>
+                <p><i class="fa fa-check-circle fill-success me-1"></i> <%= I18n.t("controller.project_units.text.general_info") %></p>
                 <p class="mx-3"><span class="border-bottom border-2 wd-24 align-middle d-inline-block"></span></p>
-                <p><i class="fa fa-check-circle fill-secondory me-1"></i> Bank Details</p>
+                <p><i class="fa fa-check-circle fill-secondory me-1"></i> <%= I18n.t("controller.project_units.text.bank_details") %></p>
                 <p class="mx-3"><span class="border-bottom border-2 wd-24 align-middle d-inline-block"></span></p>
-                <p><i class="fa fa-check-circle fill-secondory me-1"></i> Documents</p>
+                <p><i class="fa fa-check-circle fill-secondory me-1"></i> <%= I18n.t("controller.project_units.text.documents") %></p>
               </div>
             </div>
           </div>
@@ -54,7 +52,7 @@
                   <h2 class="accordion-header" id="headingOne">
                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                      Requirement
+                      <%= I18n.t("controller.project_units.text.requirement") %>
                     </button>
 
                   </h2>
@@ -69,10 +67,10 @@
                   <h2 class="accordion-header d-flex justify-content-between" id="headingTwo">
                     <button class="accordion-button collapsed  shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                      Booking Details
+                      <%= I18n.t("controller.project_units.text.booking_details") %>
                     </button>
                     <a href="javascript:;" class="fn-12 font-medium theme-txt-color w-25 text-end pe-3 py-3"><i
-                        class="fa fa-plus fill-primary me-2 fn-12"></i>Booking</a>
+                        class="fa fa-plus fill-primary me-2 fn-12"></i><%= I18n.t("controller.project_units.text.booking") %></a>
                   </h2>
                   <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                     data-bs-parent="#accordionExample">
@@ -88,7 +86,7 @@
                   <h2 class="accordion-header d-flex justify-content-between" id="headingThree">
                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseThree" aria-expanded="false" aria-controls="headingThree">
-                      Documents
+                      <%= I18n.t("controller.project_units.text.documents") %>
                     </button>
 
                   </h2>
@@ -113,15 +111,15 @@
           <h2 class="fn-16 font-medium mb-3">Internal details</h2>
           <div class="row">
             <div class="col-4">
-              <p class="fn-12 font-medium mb-0 txt-light-gray">Created On</p>
+              <p class="fn-12 font-medium mb-0 txt-light-gray"><%= I18n.t("controller.project_units.text.created_on") %></p>
               <p class="fn-14">July 3rd, 2020</p>
             </div>
             <div class="col-4">
-              <p class="fn-12 font-medium mb-0 txt-light-gray">Booked on</p>
+              <p class="fn-12 font-medium mb-0 txt-light-gray"><%= I18n.t("controller.project_units.text.booked_on") %></p>
               <p class="fn-14">July 3rd, 2020</p>
             </div>
             <div class="col-4">
-              <p class="fn-12 font-medium mb-0 txt-light-gray">Registration Date</p>
+              <p class="fn-12 font-medium mb-0 txt-light-gray"><%= I18n.t("controller.project_units.text.registration_date") %></p>
               <p class="fn-14">Mar 12, 2020</p>
             </div>
           </div>
@@ -131,7 +129,7 @@
         <div class="row">
           <div class="col-12 bg-white border rounded shadow pt-3 mb-3 pb-3">
             <div class="d-flex justify-content-between">
-              <p class="fn-16 font-medium">History</p>
+              <p class="fn-16 font-medium"><%= I18n.t("controller.project_units.text.history") %></p>
             </div>
             <div class="col-12">
               <div class="row">
@@ -140,7 +138,7 @@
                 </div>
                 <div class="col-lg-11">
                   <p class="fn-12 text-muted mb-1">July 5th, 2020</p>
-                  <p class="fn-14 font-medium mb-0 ">New Booking Created</p>
+                  <p class="fn-14 font-medium mb-0 "><%= I18n.t("controller.project_units.text.new_booking") %></p>
                   <div class="border-bottom mb-4 pt-1"></div>
                 </div>
                 <div class="col-lg-1 dotted-line">
@@ -148,7 +146,7 @@
                 </div>
                 <div class="col-lg-11">
                   <p class="fn-12 text-muted mb-1">July 5th, 2020</p>
-                  <p class="fn-14 font-medium mb-0">KYC Completed</p>
+                  <p class="fn-14 font-medium mb-0">I18n.t("controller.project_units.text.kyc_completed")</p>
                   <div class="border-bottom mb-4 pt-1"></div>
                 </div>
                 <div class="col-lg-1 dotted-line">
@@ -156,7 +154,7 @@
                 </div>
                 <div class="col-lg-11">
                   <p class="fn-12 text-muted mb-1">July 4th, 2020</p>
-                  <p class="fn-14 font-medium mb-0">Site Visit Conducted</p>
+                  <p class="fn-14 font-medium mb-0">I18n.t("controller.project_units.text.site_visit_conducted")</p>
                   <div class="border-bottom mb-4 pt-1"></div>
                 </div>
                 <div class="col-lg-1 dotted-line no-dotted">
@@ -164,7 +162,7 @@
                 </div>
                 <div class="col-lg-11">
                   <p class="fn-12 text-muted mb-1">July 4th, 2020</p>
-                  <p class="fn-14 font-medium mb-0">Lead created on Launchpad</p>
+                  <p class="fn-14 font-medium mb-0">I18n.t("controller.project_units.text.lead_created")</p>
                 </div>
               </div>
             </div>
