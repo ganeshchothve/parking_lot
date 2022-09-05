@@ -140,7 +140,7 @@ class Receipt
   #validations for fields with default value
   validates :status, :payment_mode, :payment_type, presence: true
   validates :status, inclusion: { in: proc { Receipt.aasm.states.collect(&:name).collect(&:to_s) } }
-  validates :payment_mode, inclusion: { in: proc { I18n.t("mongoid.attributes.receipt/payment_mode").collect{|k,v| k.to_s } } }, allow_blank: true
+  validates :payment_mode, inclusion: { in: I18n.t("mongoid.attributes.receipt/payment_mode").keys.map(&:to_s) }, allow_blank: true
   validates :payment_type, inclusion: { in: Receipt::PAYMENT_TYPES }, if: proc { |receipt| receipt.payment_type.present? }
   # non mandatory fields
   #validates :issuing_bank, :issuing_bank_branch, name: true, allow_blank: true

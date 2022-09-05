@@ -84,7 +84,7 @@ class UserKyc
   validates :company_name, presence: true, if: proc { |kyc| kyc.is_company? }
   validates :poa_details, presence: true, if: proc { |kyc| kyc.poa? }
   validates :existing_customer_name, :existing_customer_project, presence: true, if: proc { |kyc| kyc.existing_customer? }
-  validates :salutation, inclusion: { in: proc { I18n.t("mongoid.attributes.user_kyc/salutations").collect{|k,v| k.to_s} } }, allow_blank: true
+  validates :salutation, inclusion: { in: I18n.t("mongoid.attributes.user_kyc/salutations").keys.map(&:to_s) }, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
   validates :addresses, copy_errors_from_child: true
 

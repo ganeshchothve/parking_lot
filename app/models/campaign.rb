@@ -41,10 +41,10 @@ class Campaign
   has_many :faqs, as: :questionable, dependent: :destroy
 
   validates :name, :about_campaign_manager, :terms_and_conditions, :total_budget, :total_invested_amount, :start_date, :end_date, :campaign_type, :focus, :status, :estimated_cost_per_lead, :sources, :creator_id, :campaign_manager_id, presence: true
-  validates :sources, array: { inclusion: {allow_blank: false, in: proc { |campaign| I18n.t("mongoid.attributes.campaign/campaign_sources").collect{|k,v| k.to_s } } } }
-  validates :status, inclusion: { in: proc { |campaign| I18n.t("mongoid.attributes.campaign/statuses").collect{|k,v| k.to_s } } }, allow_blank: true
-  validates :focus, inclusion: { in: proc { |campaign| I18n.t("mongoid.attributes.campaign/focuses").collect{|k,v| k.to_s } } }, allow_blank: true
-  validates :campaign_type, inclusion: { in: proc { |campaign| I18n.t("mongoid.attributes.campaign/campaign_types").collect{|k,v| k.to_s } } }, allow_blank: true
+  validates :sources, array: { inclusion: {allow_blank: false, in: I18n.t("mongoid.attributes.campaign/campaign_sources").keys.map(&:to_s) } }
+  validates :status, inclusion: { in: I18n.t("mongoid.attributes.campaign/statuses").keys.map(&:to_s) }, allow_blank: true
+  validates :focus, inclusion: { in: I18n.t("mongoid.attributes.campaign/focuses").keys.map(&:to_s) }, allow_blank: true
+  validates :campaign_type, inclusion: { in: I18n.t("mongoid.attributes.campaign/campaign_types").keys.map(&:to_s) }, allow_blank: true
   validates :total_budget, :estimated_cost_per_lead, numericality: { greater_than: 0, only_integer: true }, allow_blank: true
   validates :total_invested_amount, numericality: { greater_than_or_equal_to: 0, only_integer: true }, allow_blank: true
   validates :campaign_slabs, :campaign_budgets, length: { minimum: 1 }

@@ -84,8 +84,8 @@ class ProjectUnit
 
   validates :saleable, :carpet, :base_rate, :agreement_price, :all_inclusive_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bathrooms, :type, :project_name, :project_tower_name, :unit_configuration_name, :bedrooms, presence: true
   validates :status, :name, :erp_id, presence: true
-  validates :status, inclusion: { in: proc { I18n.t("mongoid.attributes.project_unit/status").collect{|k,v| k.to_s} } }
-  validates :available_for, inclusion: { in: proc { I18n.t("mongoid.attributes.project_unit/available_for").collect{|k,v| k.to_s} } }
+  validates :status, inclusion: { in: I18n.t("mongoid.attributes.project_unit/status").keys.map(&:to_s) }
+  validates :available_for, inclusion: { in: I18n.t("mongoid.attributes.project_unit/available_for").keys.map(&:to_s) }
   validates :saleable, :carpet, :base_rate, :numericality => {:greater_than => 0}, if: :valid_status?
   validates :floor_order, uniqueness: { scope: [:project_tower_id, :floor] }
   validates :erp_id, uniqueness: { scope: [:project_id] }

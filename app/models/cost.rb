@@ -20,7 +20,7 @@ class Cost
   validates :key, uniqueness: {scope: :costable_id}, format: {with: /\A[a-z_]+\z/, message: "Only small letters & underscore allowed"}
   validates :formula, presence: true, if: Proc.new{|cost| cost.absolute_value.blank? }
   validates :absolute_value, presence: true, if: Proc.new{|cost| cost.formula.blank? }
-  validates :category, inclusion: {in: Proc.new{ I18n.t("mongoid.attributes.cost/available_categories").collect{|k,v| k.to_s} } }
+  validates :category, inclusion: {in: I18n.t("mongoid.attributes.cost/available_categories").keys.map(&:to_s) }
 
   default_scope -> {asc(:order)}
 
