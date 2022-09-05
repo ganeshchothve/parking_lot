@@ -1,6 +1,6 @@
 class Admin::VariableIncentiveSchemePolicy < VariableIncentiveSchemePolicy
   def index?
-    %w[superadmin admin billing_team cp_owner channel_partner].include?(user.role) && current_client.enable_vis?
+    %w[superadmin admin billing_team cp_owner channel_partner].include?(user.role) && current_client.enable_vis? && current_client.enable_channel_partners?
   end
 
   def new?
