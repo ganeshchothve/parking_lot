@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3">
           <div class="table-title pt-4">
-            <h1 class="title fn-18">Project Wise Tentative Revenue Reports</h1>
+            <h1 class="title fn-18"><%= I18n.t("global.link_to.project_wise.tentative_revenue_reports") %></h1>
           </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3">
@@ -18,22 +18,22 @@
           <div class="filter-box">
             <div class="filter-inner modal-content ps-2 pe-2 fixed-header-footer">
                 <div class="filter-header modal-header">
-                  <h5 class="modal-title title">Filter</h5>
+                  <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
                   <a href="javascript:;" class="close-filter-btn btn-close"></a>
                 </div>
                 <%= form_tag project_wise_tentative_revenue_path, method: "get", remote: true, id: "project_wise_tentative_reports_filter", class: 'filter-form-modal' do %>
                   <div class="filter-content modal-body ps-0 pe-0 theme-form">
                     <div class="row">
                       <div class="mb-3 col-12">
-                        <%= label_tag "fltrs", "Resource" %>
+                        <%= label_tag "fltrs", I18n.t("global.link_to.resource")%>
                         <%= select_tag "resource", options_for_select(IncentiveScheme::RESOURCE_CLASS.collect{|x| [t("mongoid.attributes.incentive_scheme/resource_class.#{x}"), x]}, (params[:resource].present? ? params[:resource] : "BookingDetail")), {prompt: "Select", class: "selectize resource_class"} %>
                       </div>
                       <div class="mb-3 col-12">
-                        <%= label_tag "fltrs", "Category" %>
+                        <%= label_tag "fltrs", I18n.t("global.link_to.category") %>
                         <%= select_tag "category", options_for_select(IncentiveScheme::CATEGORIES.collect{|x| [t("mongoid.attributes.incentive_scheme/categories.#{x}"), x]}, (params[:category].present? ? params[:category] : "BookingDetail")), {prompt: "Select", class: "selectize category"} %>
                       </div>
                       <div class="mb-3 col-12">
-                        <%= label_tag "fltrs", "Brokerage Type" %>
+                        <%= label_tag "fltrs", I18n.t("global.link_to.brokerage_type") %>
                         <%= select_tag "brokerage_type", options_for_select(IncentiveScheme::BROKERAGE_TYPE.collect{|x| [t("mongoid.attributes.incentive_scheme/brokerage_type.#{x}"), x]}, (params[:brokerage_type].present? ? params[:brokerage_type] : "BookingDetail")), {prompt: "Select", class: "selectize brokerage_type"} %>
                       </div>
                       <div class="mb-3 col-12">
@@ -49,7 +49,7 @@
                         <%= select_tag "cp_manager_id", options_from_collection_for_select(params[:cp_manager_id].present? ? User.where(_id: params[:cp_manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp' }}}} %>
                       </div>
                       <div class="mb-3 col-12">
-                        <%= label_tag "fltrs", "CP Admin" %>
+                        <%= label_tag "fltrs", I18n.t("global.link_to.cp_admin") %>
                         <%= select_tag "cp_admin_id", options_from_collection_for_select(params[:cp_admin_id].present? ? User.where(_id: params[:cp_admin_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp_admin' }}}} %>
                       </div>
                       <div class="mb-3 col-12">

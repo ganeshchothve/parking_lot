@@ -14,9 +14,9 @@
         <% Invoice.all.ne(incentive_scheme_id: nil).filter_by_project_ids(@project_ids).where(Invoice.user_based_scope(current_user)).group_by{|inv| inv.incentive_scheme}.each do |scheme, invoices| %>
           <tr>
             <td data-title='<%= IncentiveScheme.model_name.human %>'><%= scheme.name.titleize %></td>
-            <td data-title='Current Ladder'><%= stage = invoices.map(&:ladder_stage).max %></td>
+            <td data-title='<%= I18n.t("global.link_to.current_ladder") %>'><%= stage = invoices.map(&:ladder_stage).max %></td>
             <% booking_detail_ids = BookingDetail.booking_stages.in(id: invoices.map(&:booking_detail_id).uniq).distinct(:id) %>
-            <td data-title='Total Incentives Generated'><%= number_to_indian_currency(invoices.select {|x| x.booking_detail_id.in?(booking_detail_ids) }.map(&:amount).sum) %></td>
+            <td data-title='<%= I18n.t("global.link_to.total_incentives_generated") %>'><%= number_to_indian_currency(invoices.select {|x| x.booking_detail_id.in?(booking_detail_ids) }.map(&:amount).sum) %></td>
             <td class='non-action-td' data-title='Target Required To Reach Next Ladder'>
               <% ladder = scheme.ladders.where(stage: stage + 1).first %>
               <% if ladder %>

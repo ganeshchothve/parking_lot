@@ -11,7 +11,7 @@
           <div class="dropdown text-left">
             <a class="btn table-dropdown-btn p-0" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-              <%= link_to 'Drop', move_to_next_state_admin_lead_path(user.id, status: 'dropoff', format: :json), method: 'patch', remote: true, data: { confirm: I18n.t("controller.assets.confirm.sure"), disable_with: 'Dropping...'  }, class: 'dropdown-item dropoff move-to-next-state' %>
+              <%= link_to I18n.t("global.link_to.drop"), move_to_next_state_admin_lead_path(user.id, status: 'dropoff', format: :json), method: 'patch', remote: true, data: { confirm: I18n.t("controller.assets.confirm.sure"), disable_with: 'Dropping...'  }, class: 'dropdown-item dropoff move-to-next-state' %>
             </div>
           </div>
         </div>

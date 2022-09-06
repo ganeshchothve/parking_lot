@@ -36,11 +36,11 @@
                     <div class="form-sec-title p-1 text-center">
                       <%= "#{project_tower.project.name} - #{project_tower.name}" %></div>
                     <ul class="book-box-info mb-2">
-                      <li><span class="book-box available-aprt"></span><span>Available</span></li>
-                      <li><span class="book-box booked-aprt"></span><span>Hold</span></li>
-                      <li><span class="book-box soldout-aprt"></span><span>Sold Out</span></li>
-                      <li><span class="book-box bg-danger"></span><span>Not Available</span></li>
-                      <li><span>R</span><span>Refugee Area</span></li>
+                      <li><span class="book-box available-aprt"></span><span><%= I18n.t("global.link_to.available") %></span></li>
+                      <li><span class="book-box booked-aprt"></span><span><%= I18n.t("global.link_to.hold") %></span></li>
+                      <li><span class="book-box soldout-aprt"></span><span><%= I18n.t("global.link_to.sold_out") %></span></li>
+                      <li><span class="book-box bg-danger"></span><span><%= I18n.t("global.link_to.not_available") %></span></li>
+                      <li><span><%= I18n.t("global.link_to.r_refugee_area") %></span></li>
                     </ul>
                     <div class="booking-list">
                       <div class="apartments-no">
@@ -96,11 +96,11 @@
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#project-tower-carousel" data-bs-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
+              <span class="visually-hidden"><%= I18n.t("global.previous") %></span>
             </button>
             <button class="carousel-control-next" type="button" data-bs-target="#project-tower-carousel" data-bs-slide="next">
               <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
+              <span class="visually-hidden"><%= I18n.t("global.next") %></span>
             </button>
           </div>
           <div class="filter-box">

@@ -1,6 +1,6 @@
 <div class="filter-inner modal-content ps-2 pe-2 fixed-header-footer">
   <div class="filter-header modal-header">
-  <h3 class="title">Filter</h3>
+  <h3 class="title"><%= I18n.t("global.filter") %></h3>
       <a href="javascript:;" class="close-filter-btn btn-close"></a>
   </div>
   <%= form_tag admin_cp_lead_activities_path, method: "get", id: "cp_lead_activity_search_form" do %>

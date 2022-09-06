@@ -6,9 +6,9 @@
         <div class="row">
           <div class="col-lg-12">
             <div class="app-review float-start wd-100">
-              <h1 class="notify-title float-start wd-100">Your application is under review</h1>
-              <p class="notify-desc float-start mb-0">We will notify you via email on the status of your application</p>
-              <p class="notify-desc float-end pe-3 mb-0">Our estimated review time is between 24-48 hours</p>
+              <h1 class="notify-title float-start wd-100"><%= I18n.t("mobile.channel_partner.status_message.pending.step1") %></h1>
+              <p class="notify-desc float-start mb-0"><%= I18n.t("mobile.channel_partner.status_message.pending.step2") %></p>
+              <p class="notify-desc float-end pe-3 mb-0"><%= I18n.t("mobile.channel_partner.status_message.pending.step3") %></p>
             </div>
           </div>
         </div>
@@ -21,7 +21,7 @@
             <div class="row">
               <div class="col-lg-12">
                 <div class="app-review app-reject float-start wd-100">
-                  <h1 class="notify-title float-start mb-0 col-12">Your application has been rejected</h1>
+                  <h1 class="notify-title float-start mb-0 col-12"><%= I18n.t("mobile.channel_partner.status_message.application_rejected") %></h1>
                   <div class="fn-12 col-12">
                     <p class="mb-0">Reason:</p>
                     <div class="error-reason">
@@ -37,9 +37,9 @@
     <section class="cp-register-sec mt-3">
       <div class="col-lg-12">
         <div class="cp-reg-header pt-5 pb-5 col-lg-12">
-          <h1 class="sec-title px-3 ms-4">Complete Registration</h1>
+          <h1 class="sec-title px-3 ms-4"><%= I18n.t("mobile.channel_partner.status_message.complete_registration") %></h1>
           <%# <a href="javascript:;" class="skip-step-btn pe-3">Skip for now</a> %>
-        </div>
+        </div> <%= I18n.t("mobile.channel_partner.status_message.complete_registration") %>
         <div class="col-lg-12">
           <div class="cp-step-list pt-3 col-lg-12">
             <ul class="nav nav-tabs px-4 px-xs-0" id='cp-tabs'>
@@ -48,7 +48,7 @@
                   type="button" role="tab">
                   <div class="step-inner">
                     <span>1</span>
-                    <p>Company Info</p>
+                    <p><%= I18n.t("mongoid.attributes.channel_partner.company_info") %></p>
                   </div>
                 </a>
               </li>
@@ -57,7 +57,7 @@
                   type="button" role="tab">
                   <div class="step-inner">
                     <span>2</span>
-                    <p>Company Details</p>
+                    <p><%= I18n.t("mongoid.attributes.channel_partner.company_details") %></p>
                   </div>
                 </a>
               </li>
@@ -66,7 +66,7 @@
                   type="button" role="tab">
                   <div class="step-inner">
                     <span>3</span>
-                    <p>Upload Documents</p>
+                    <p><%= I18n.t("mongoid.attributes.channel_partner.upload_documents") %></p>
                   </div>
                 </a>
               </li>
@@ -113,13 +113,13 @@
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
                     <div class='modal-header'>
-                      <h6 class='modal-title'>Are you sure?</h6>
+                      <h6 class='modal-title'><%= I18n.t("controller.assets.confirm.sure") %></h6>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                       <div class="row">
                         <div class="col-lg-12">
-                          <p class='text-start'>By clicking on 'Complete Registration' you are confirming all the provided information and your application will be submitted for review to the BeyondWalls Partner Engagement Team.</p>
+                          <p class='text-start'><%= I18n.t("controller.assets.confirm.click_to_confirm") %></p>
                         </div>
                       </div>
                     </div>
@@ -127,7 +127,7 @@
                       <div class="row">
                         <div class="col-lg-12 text-end px-0">
                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                          <%= link_to 'Complete Registration', change_state_channel_partner_path(channel_partner, {channel_partner: {event: 'submit_for_approval'}}), method: :post, remote: true, data: {type: 'json', 'disable-with': 'Complete Registration', 'bs-dismiss': 'modal'}, id: 'cp-form-change-state', class: 'btn btn-primary' %>
+                          <%= link_to <%= I18n.t("mobile.channel_partner.status_message.complete_registration") %>, change_state_channel_partner_path(channel_partner, {channel_partner: {event: 'submit_for_approval'}}), method: :post, remote: true, data: {type: 'json', 'disable-with': 'Complete Registration', 'bs-dismiss': 'modal'}, id: 'cp-form-change-state', class: 'btn btn-primary' %>
                         </div>
                       </div>
                     </div>

@@ -7,8 +7,8 @@
           <th class='text-md-center'>No. of <%= Lead.model_name.human(count:2) %></th>
           <th class='text-md-center'>No. of <%= BookingDetail.model_name.human(count:2) %></th>
           <th class='text-md-center'>9.90% Payment Received</th>
-          <th class='text-md-center'>Registration Count</th>
-          <th class='text-md-center'>Total <%= t('global.agreement_value') %></th>
+          <th class='text-md-center'><%= I18n.t("global.link_to.registration_count") %></th>
+          <th class='text-md-center'><%= I18n.t("global.total") + I18n.t('global.agreement_value') %></th>
         </tr>
       </thead>
       <tbody>
@@ -20,16 +20,16 @@
             <td data-title='No. of <%= Lead.model_name.human(count:2) %>' class='text-md-center'><%= @projects_leads.dig('project_wise', project[0], 'count').presence || 0 %></td>
             <td data-title='No. of <%= BookingDetail.model_name.human(count:2) %>' class='text-md-center'><%= @projects_booking_data.dig('project_wise', project[0], 'count').presence || 0 %></td>
             <td data-title="9.90% Payment Received" class='text-md-center'><%= (confirmed = @projects_booking_data.dig('project_wise', project[0], 'confirmed').presence) ? confirmed : '-' %></td>
-            <td data-title="Registration Count" class='text-md-center'><%= (registration_done = @projects_booking_data.dig('project_wise', project[0], 'registration_done').presence) ? registration_done : '-' %></td>
-            <td class='non-action-td text-md-center' data-title="Total <%= t('global.agreement_value') %>"><%= (av = @projects_booking_data.dig('project_wise', project[0], 'av').presence) ? number_to_indian_currency(av) : '-' %></td>
+            <td data-title="<%= I18n.t("global.link_to.registration_count") %>" class='text-md-center'><%= (registration_done = @projects_booking_data.dig('project_wise', project[0], 'registration_done').presence) ? registration_done : '-' %></td>
+            <td class='non-action-td text-md-center' data-title="<%= t('global.agreement_value') %>"><%= (av = @projects_booking_data.dig('project_wise', project[0], 'av').presence) ? number_to_indian_currency(av) : '-' %></td>
           </tr>
         <% end %>
         <tr>
-          <td data-title='Total'><strong>Total</strong></td>
+          <td data-title='<%= I18n.t("global.total") %>'><strong><%= I18n.t("global.total") %></strong></td>
           <td data-title='No. of <%= Lead.model_name.human(count:2) %>' class='text-md-center'><%= @projects_leads['total_count'] || 0 %></td>
           <td data-title='No. of <%= BookingDetail.model_name.human(count:2) %>' class='text-md-center'><%= @projects_booking_data['total_count'] || 0 %></td>
           <td data-title="9.90% Payment Received" class='text-md-center'><%= (total_confirmed = @projects_booking_data['total_confirmed'].presence) ? total_confirmed : '-' %></td>
-          <td data-title="Registration Count" class='text-md-center'><%= (total_registration_done = @projects_booking_data['total_registration_done'].presence) ? total_registration_done : '-' %></td>
+          <td data-title="<%= I18n.t("global.link_to.registration_count") %>" class='text-md-center'><%= (total_registration_done = @projects_booking_data['total_registration_done'].presence) ? total_registration_done : '-' %></td>
           <td class='non-action-td text-md-center' data-title="Total <%= t('global.agreement_value') %>"><%= (total_av = @projects_booking_data['total_av'].presence) ? number_to_indian_currency(total_av) : '-' %></td>
         </tr>
       </tbody>

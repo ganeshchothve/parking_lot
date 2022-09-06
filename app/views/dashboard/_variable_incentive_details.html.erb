@@ -17,7 +17,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <div class="filter-box modal-content px-3 fixed-header-footer">
               <div class="filter-header modal-header">
-                <h5 class="modal-title title">Filter</h5>
+                <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
                 <a href="javascript:;" class="close-filter-btn btn-close"></a>
               </div>
               <%= form_tag variable_incentive_scheme_report_path, method: "get", remote: true, id: "variable_incentive_scheme_report_filter", class: 'filter-form-modal' do %>

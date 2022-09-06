@@ -61,6 +61,14 @@ en:
       invalid_date_format: "%{name} date format is invalid. Correct date format is - dd/mm/yyyy"
       boolean: "%{name} should be a boolean value - true or false"
     filter: Filter
+    project: Project
+    booking_count: Booking Count
+    no_record: No Records Found
+    welcome: Welcome
+    dates: Dates
+    type: Type
+    status: Status
+    count: Count
     link_to:
       not_summary: Note Summary
       crm: CRM
@@ -130,13 +138,49 @@ en:
       support: Support
       fully_automated: Fully automated
       eoi_process: EOI Process
+      eoi_number: EOI Number
       online_inventory_selection: Online inventory selection
       kyc_and_bookigns: KYC & bookings
       complete: Complete
       transparency: Transparency
       unique_online: Unique online
       broker_profile: Broker Profile
-
+      available: Available
+      hold: Hold
+      sold_out: Sold Out
+      not_available: Not Available
+      r_refugee_area: R Refugee Area
+      invoice_ageing_report: Invoice Ageing Report
+      project_wise:
+        incentive_deduction: Project Wise Incentive Deduction Summary
+        overview: Overview
+        booking_count: Project Wise Booking Count
+        actual_revenue_report: Project Wise Actual Revenue Reports
+        tentative_revenue_reports: Project Wise Tentative Revenue Reports
+        applying_filters:
+          step1: Applying filters will only show 15 records irrespective of the total records count. Acitve Filter Export will contain all the filtered records. The
+          step2: count will depend on the filtered results.
+      vis_report: Variable Incentive Scheme Report
+      current_ladder: Current Ladder
+      total_incentives_generated: Total Incentives Generated
+      registration_count: Registration Count
+      projects_available: Projects available
+      upcoming_events: Upcoming Evetns
+      drop: Drop
+      busy_not_available: Busy | Not Available
+      break: Break
+      resource: Resource
+      category: Category
+      brokerage_type: Brokerage Type
+      cp_admin: CP Admin
+      count: Count
+      city_wise:
+        booking_reports: City Wise Booking Reports
+      add_upi: Please add your UPI Address for quick payment. Please click on the link
+      active_walk_ins: Active Walk-ins
+      active_bookings: Active Bookings
+      cancel: Cancel
+      virtual_walkthrough: Begin Virtual Walkthrough below
 
   helpers:
     extend_validity:
@@ -227,6 +271,9 @@ en:
       checklist:
         one: 'Task'
         other: 'Tasks'
+      announcement:
+        one: 'Announcement'
+        other: 'Announcements'
 
       booking_detail_scheme:
         one: Booking Scheme
@@ -803,6 +850,8 @@ en:
         created_at: 'Registered At'
         manager_id: 'Manager'
         document_type: 'Document Type'
+        company_info: 'Company Info'
+        company_details: 'Company Details'
       channel_partner/file_types:
         rera_certificate: 'RERA Certificate'
         gst_certificate: 'GST Certificate'
@@ -1877,6 +1926,7 @@ en:
       confirm:
         booking_moved_tentative: "Are you sure? You cannot make changes once booking moved to tentative state"
         sure: 'Are you sure?'
+        click_to_confirm: "By clicking on 'Complete Registration' you are confirming all the provided information and your application will be submitted for review to the BeyondWalls Partner Engagement Team."
     public_assets:
       index:
         link_name: 'Public Documents'
@@ -1967,6 +2017,17 @@ en:
           link_name: Pay Remaining Amount
         show:
           disclaimer: Payments need to be for individual units, clubbed payments are not allowed. Please collect a cheque for individual units only.
+      link_to:
+        total_bookings: Total Bookings
+        confirmed_bookings: Confirmed Bookings
+        registration_done: Registration Done
+        cancellations: Cancellations
+        my_incentives: My Incentives
+        bookings_eligile: Bookings eligible
+        approved: Approved
+        invoice_raised: Invoice Raised
+        bookings_not_eligible: Bookings not eligible for brokerage
+
       events:
         approval_status:
             approve: 'Approve'
@@ -2830,8 +2891,13 @@ en:
   mobile:
     channel_partner:
       status_message:
-        pending: "Your application is under review. We will notify you via email on the status of your application. Our estimated review time is between 24-48 hours"
+        pending:
+          step1: "Your application is under review."
+          step2: "We will notify you via email on the status of your application."
+          step3: "Our estimated review time is between 24-48 hours"
         rejected: "Reason: %{reason}"
+        applicatin_rejected: "Your application has been rejected"
+        complete_registration: "Complete Registration"
 
   selldo:
     links:

@@ -43,10 +43,10 @@
             <div class="card-body br-rd-bl-4 bg-white fix-ht-420">
               <div class="row pd-box">
                 <ul class="db-user-no-list pt-5 mt-2">
-                  <li><span class="number"><%= @booking_count %></span><p class="title">Total Bookings</p></li>
-                  <li><span class="number"><%= @confirmed_booking_count %></span><p class="title">Confirmed Bookings</p></li>
-                  <li><span class="number"><%= @registration_done_booking_count %></span><p class="title">Registration Done<br>Bookings</p></li>
-                  <li><span class="number"><%= @cancelled_booking_count %></span><p class="title">Cancellations</p></li>
+                  <li><span class="number"><%= @booking_count %></span><p class="title"><%= I18n.t("controller.booking_details.link_to.total_bookings") %></p></li>
+                  <li><span class="number"><%= @confirmed_booking_count %></span><p class="title"><%= I18n.t("controller.booking_details.link_to.confirmed_bookings") %></p></li>
+                  <li><span class="number"><%= @registration_done_booking_count %></span><p class="title"><%= I18n.t("controller.booking_details.link_to.registration_done") %><br><%= I18n.t("global.link_to.bookings") %></p></li>
+                  <li><span class="number"><%= @cancelled_booking_count %></span><p class="title"><%= I18n.t("controller.booking_details.link_to.cancellations") %></p></li>
                 </ul>
               </div>
             </div>
@@ -55,15 +55,15 @@
           <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-5">
           <div class="card col-lg-12">
             <div class="card-header bg-primary rounded-top py-2">
-              <h2 class="fn-18 white"><i class="fa fa-rupee-sign fill-white fn-14 me-2"></i>My Incentives</h2>
+              <h2 class="fn-18 white"><i class="fa fa-rupee-sign fill-white fn-14 me-2"></i><%=  I18n.t("controller.booking_details.link_to.my_incentives") %></h2>
             </div>
             <div class="card-body br-rd-bl-4 bg-white fix-ht-420">
               <div class="row pd-box">
                 <ul class="db-user-no-list pt-3 mt-3">
-                  <li><span class="number"><%= @bookings_eligible_for_brokerage %></span><p class="title">Bookings eligible<br>for brokerage</p></li>
-                  <li><span class="number"><%= @incentive_approved %></span><p class="title">Invoice<br>approved</p></li>
-                  <li><span class="number"><%= @incentive_raised %></span><p class="title">Invoice<br>raised</p></li>
-                  <li><span class="number"><%= @bookins_not_eligible_for_brokerage %></span><p class="title">Bookings not eligible<br>for brokerage</p></li>
+                  <li><span class="number"><%= @bookings_eligible_for_brokerage %></span><p class="title"><%=  I18n.t("controller.booking_details.link_to.bookings_eligible") %><br>for brokerage</p></li>
+                  <li><span class="number"><%= @incentive_approved %></span><p class="title">Invoice<br><%= I18n.t("controller.booking_details.link_to.approved") %></p></li>
+                  <li><span class="number"><%= @incentive_raised %></span><p class="title"><%= I18n.t("controller.booking_details.link_to.invoice_raised") %></p></li>
+                  <li><span class="number"><%= @bookins_not_eligible_for_brokerage %></span><p class="title"><%=  I18n.t("controller.booking_details.link_to.bookings_not_eligible") %></p></li>
                 </ul>
               </div>
             </div>

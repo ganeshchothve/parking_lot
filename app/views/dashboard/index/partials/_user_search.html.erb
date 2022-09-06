@@ -23,7 +23,7 @@
         </div>
         <div class = 'col-sm-5'>
           <div class="form-group">
-            <label for="">EOI Number</label>
+            <label for=""><%= I18n.t("global.link_to.eoi_number") %></label>
             <%= select_tag "fltrs[token_number]",  options_for_select(Receipt.all.distinct(:token_number), (params[:fltrs].present? ? params[:fltrs][:token_number] : "")), prompt: "#{t('mongoid.attributes.receipt.token_number')}", class: "selectize" %>
           </div>
         </div>

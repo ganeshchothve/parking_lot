@@ -3,7 +3,7 @@
   <div class="row mb-4">
     <div class="col-lg-12 mt-1 mb-3">
       <h2 class="sec-title float-start">Hot Selling Projects</h2>
-      <%= link_to("View All", admin_projects_path, class: 'view-all-btn theme-txt-color float-end') %>
+      <%= link_to(I18n.t("global.link_to.view_all"), admin_projects_path, class: 'view-all-btn theme-txt-color float-end') %>
     </div>
     <% hot_projects.each_with_index do |project, index| %>
     <div class="col-lg-4">
