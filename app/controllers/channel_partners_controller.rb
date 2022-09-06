@@ -47,20 +47,10 @@ class ChannelPartnersController < ApplicationController
   def create_company
     @user = User.new
     @user.assign_attributes(user_params)
-    @user.assign_attributes(role: "channel_partner", booking_portal_client_id: current_client.id, manager_id: params.dig(:channel_partner, :manager_id))
+    @user.assign_attributes(booking_portal_client_id: current_client.id)
 
-    @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
-    @channel_partner.is_existing_company = false
-    @channel_partner.primary_user = @user
-    @channel_partner.status = 'active' if current_client.enable_direct_activation_for_cp?
-    respond_to do |format|
-      if @channel_partner.save
-        format.html { redirect_to channel_partners_path, notice: 'Partner Company Successfully Created'  }
-        format.json { render json: @user, status: :created }
-      else
-        format.html { redirect_to channel_partners_path }
-        format.json { render json: { errors: @channel_partner.errors.full_messages.uniq }, status: :unprocessable_entity }
-      end
+    if @user.valid?
+      add_cp_company
     end
   end
 
@@ -202,6 +192,14 @@ class ChannelPartnersController < ApplicationController
   end
 
   def user_params
-    params.require(:channel_partner).permit(:first_name, :last_name, :email, :phone)
+    params[:user] = {
+      first_name: params.dig(:channel_partner, :first_name),
+      last_name: params.dig(:channel_partner, :last_name),
+      phone: params.dig(:channel_partner, :phone),
+      email: params.dig(:channel_partner, :email),
+      manager_id: params.dig(:channel_partner, :manager_id)
+    }
+    params[:channel_partner] = params[:channel_partner].except(:first_name, :last_name, :phone, :email)
+    params.require(:user).permit(:first_name, :last_name, :email, :phone)
   end
 end

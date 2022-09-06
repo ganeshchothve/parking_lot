@@ -1768,6 +1768,8 @@ en:
       create:
         not_allowed_message: 'Company with these details already exists. Please contact your company admin (%{owner_name}) to create your account.'
         already_present_and_active_msg: 'A user with these details is already present & active under a company'
+      new_company:
+        link_name: Add Partner Company
 
     dashboard:
       index:

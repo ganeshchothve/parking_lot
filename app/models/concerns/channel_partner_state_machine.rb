@@ -15,6 +15,7 @@ module ChannelPartnerStateMachine
 
       event :approve, after: %i[update_selldo! send_notification] do
         transitions from: :pending, to: :active
+        transitions from: :inactive, to: :active
       end
 
       event :reject, after: %i[update_selldo! send_notification] do

@@ -7,23 +7,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body theme-form">
-        <div class="row">
-          <div class="col-md-6">
-            <%= form.input :first_name, required: true, autofocus: true, disabled: !policy([:admin, @user]).editable_field?("first_name") %>
-          </div>
-          <div class="col-md-6">
-            <%= form.input :last_name, required: true, autofocus: true, disabled: !policy([:admin, @user]).editable_field?("last_name") %>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-6">
-            <%= form.input :phone, required: true, disabled: !policy([:admin, @user]).editable_field?("phone"), as: :tel, input_html: { class: 'phone' } %>
-          </div>
-          <div class="col-md-6">
-            <%= form.input :email, disabled: !policy([:admin, @user]).editable_field?("email"), input_html: { class: 'email'} %>
-          </div>
-        </div>
+        <%= render 'short_form_fields', {form: form} %>
         <%= render "form_fields", {form: form} %>
       </div>
       <div class="modal-footer text-end">
