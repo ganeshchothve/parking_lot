@@ -293,13 +293,17 @@ class Lead
     activity.present? ? "#{(activity.expiry_date - Date.current).to_i} Days" : '0 Days'
   end
 
-  def send_payment_link
+  def send_payment_link(booking_detail_id = nil)
     url = Rails.application.routes.url_helpers
-    hold_booking_detail = self.booking_details.where(status: 'hold').first
-    if hold_booking_detail.present? && hold_booking_detail.search
-      self.payment_link = url.checkout_user_search_path(hold_booking_detail.search)
+    if booking_detail_id
+      hold_booking_detail = self.booking_details.where(id: booking_detail_id).first
     else
-      self.payment_link = url.dashboard_url("remote-state": url.new_buyer_receipt_path, user_email: user.email, user_token: user.authentication_token)
+      hold_booking_detail = self.booking_details.where(status: 'hold').first
+    end
+    if hold_booking_detail.present? && hold_booking_detail.search && hold_booking_detail.status == "hold"
+      self.payment_link = url.checkout_lead_search_url(hold_booking_detail.search)
+    else
+      self.payment_link = url.dashboard_url("remote-state": url.new_buyer_receipt_path(booking_detail_id: booking_detail_id), user_login: user.email, user_token: user.authentication_token, selected_lead_id: self.id)
     end
     #
     # Send email with payment link

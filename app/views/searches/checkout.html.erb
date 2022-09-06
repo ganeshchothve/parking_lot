@@ -68,6 +68,9 @@
                             <% if @lead.unattached_blocking_receipt.blank? %>
                               <%= link_to "I Agree on behalf of #{@lead.name} and proceed to add
                             payment",new_admin_lead_booking_detail_receipt_path(@lead.id, @booking_detail.id) , class: 'btn submit-payemnt-btn fn-12 fn-500 modal-remote-form-link btn-primary d-inline-block', style:'margin-top:0px', onclick: alert %>
+                              <% if policy([:admin, @lead]).send_payment_link? %>
+                                <%= link_to 'Send Payment link', send_payment_link_admin_lead_path(@lead), class: "btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block" %>
+                              <% end %>
                             <% elsif @booking_detail_scheme.present? && @booking_detail_scheme.editable_payment_adjustments_present? %>
                               <%= link_to "Proceed without payment", send_under_negotiation_admin_lead_booking_detail_path(@lead.id, @booking_detail.id), class: 'btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block', style:'margin-top:0px', onclick: alert, method: :patch %>
                             <% else %>
@@ -90,9 +93,6 @@
                               You do not have access to take a Clearance pending <%= global_labels[:receipt] %> on behalf of <%= @lead.name %>.
                             </div>
                           <% end %>
-                        <% end %>
-                        <% if policy([:admin, @lead]).send_payment_link? %>
-                          <%= link_to 'Send Payment link', send_payment_link_admin_lead_path(@lead), class: "btn submit-payemnt-btn fn-12 fn-500" %>
                         <% end %>
                         <%= form_for @project_unit, url: make_available_lead_search_path(@search), method: 'post', html: {class: 'validate-form float-start d-inline-block'} do |f| %>
                           <%= f.hidden_field :status, value: 'available' %>

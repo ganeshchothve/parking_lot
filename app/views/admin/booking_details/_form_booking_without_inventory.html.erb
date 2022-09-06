@@ -1,3 +1,4 @@
+<% channel_partners = [] %>
 <div class="modal-header">
   <h3 class="title"><%= t('controller.booking_details.new.header', customer: f.object.lead.try(:name), project: (f.object.lead.try(:project_name) || f.object.project.name)) %></h3>
   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -29,7 +30,7 @@
   </div>
   <div class="mb-3 position-relative offline">
     <%= f.label :agreement_price_without_inventory, t("mongoid.attributes.booking_detail.agreement_price_without_inventory"), class: 'label-required'%>
-    <% help_text = @booking_detail.lead.project.consideration_value_help_text %>
+    <% help_text = @booking_detail.lead&.project&.consideration_value_help_text %>
     <% help_text = help_text.presence ? help_text.html_safe : '' %>
     <span data-bs-toggle="tooltip" data-bs-placement="top"
         data-bs-custom-class="custom-tooltip"
@@ -74,21 +75,23 @@
     <% end %>
     <%= f.select :source, booking_sources.collect{|s| [s, s]}, {prompt: true}, class: 'selectize booking_source', disabled: !(policy([:admin, @booking_detail]).editable_field?("source"))  %>
   </div>
-  <div class="mb-3 channel_partner_div">
-    <% if f.object.lead.present? && f.object.lead.manager && %w(channel_partner cp_owner).include?(f.object.lead.manager.role)
-      channel_partners = User.where(id: f.object.lead.manager_id)
-    elsif %w(channel_partner cp_owner).include?(current_user.role)
-      channel_partners = User.where(id: current_user.id)
-    else
-      channel_partners = User.in(role: ['channel_partner', 'cp_owner'] )
-    end %>
-      <label class="'label-required control-label'">Channel Partner</label>
-      <%= f.select :manager_id,channel_partners.collect{|cp| [(cp.name), cp.id]}, {prompt: true}, class: 'selectize', required: true, id: 'tagged_manager', disabled: !(policy([:admin, @booking_detail]).editable_field?("manager_id"))  %>
+  <% if current_client.enable_channel_partners? %>
+    <div class="mb-3 channel_partner_div">
+      <% if f.object.lead.present? && f.object.lead.manager && %w(channel_partner cp_owner).include?(f.object.lead.manager.role)
+        channel_partners = User.where(id: f.object.lead.manager_id)
+      elsif %w(channel_partner cp_owner).include?(current_user.role)
+        channel_partners = User.where(id: current_user.id)
+      else
+        channel_partners = User.in(role: ['channel_partner', 'cp_owner'] )
+      end %>
+        <label class="'label-required control-label'">Channel Partner</label>
+        <%= f.select :manager_id,channel_partners.collect{|cp| [(cp.name), cp.id]}, {prompt: true}, class: 'selectize', required: true, id: 'tagged_manager', disabled: !(policy([:admin, @booking_detail]).editable_field?("manager_id"))  %>
 
-      <% unless (%w(channel_partner cp_owner).include?(current_user.role) && current_client.launchpad_portal?)  %>
-        <%= link_to "Add Channel Partner", new_channel_partner_channel_partners_path(lead_id: f.object.try(:lead).try(:id).to_s), class: 'modal-remote-form-link' %>
-      <% end %>
-  </div>
+        <% unless (%w(channel_partner cp_owner).include?(current_user.role) && current_client.launchpad_portal?)  %>
+          <%= link_to "Add Channel Partner", new_channel_partner_channel_partners_path(lead_id: f.object.try(:lead).try(:id).to_s), class: 'modal-remote-form-link' %>
+        <% end %>
+    </div>
+  <% end %>
 </div>
 <div class="modal-footer text-end">
   <% if edit_access %>

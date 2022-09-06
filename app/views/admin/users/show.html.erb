@@ -64,27 +64,27 @@
                   </div>
                 </div>
                 <% end %>
-                <% if @user.leads.present? %>
-                <div class="accordion-item  border-end-0 border-start-0">
-                  <h2 class="accordion-header d-flex justify-content-between" id="headingLead">
-                    <button class="accordion-button collapsed  shadow-none" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseLead" aria-expanded="false" aria-controls="collapseLead">
-                      Lead
-                    </button>
-                    <!--
-                    <% if policy([:admin, Lead]).new? %>
-                    <%#= link_to t('helpers.new.link_name', model: Lead.model_name.human), new_admin_lead_path(user_id: @user.id), class: 'fn-12 font-medium theme-txt-color w-25 text-end pe-3 py-3 modal-remote-form-link' %>
-                    <% end %>
-                    -->
-                  </h2>
-                  <div id="collapseLead" class="accordion-collapse collapse" aria-labelledby="headingLead"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body pt-0 ps-4">
-                      <% leads = @user.leads %>
-                      <%= render "admin/leads/section", leads: leads , name: Lead.model_name.human(count: leads.count) %>
+                <% if current_client.enable_leads? && @user.leads.present? %>
+                  <div class="accordion-item  border-end-0 border-start-0">
+                    <h2 class="accordion-header d-flex justify-content-between" id="headingLead">
+                      <button class="accordion-button collapsed  shadow-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseLead" aria-expanded="false" aria-controls="collapseLead">
+                        Lead
+                      </button>
+                      <!--
+                      <% if policy([:admin, Lead]).new? %>
+                      <%#= link_to t('helpers.new.link_name', model: Lead.model_name.human), new_admin_lead_path(user_id: @user.id), class: 'fn-12 font-medium theme-txt-color w-25 text-end pe-3 py-3 modal-remote-form-link' %>
+                      <% end %>
+                      -->
+                    </h2>
+                    <div id="collapseLead" class="accordion-collapse collapse" aria-labelledby="headingLead"
+                      data-bs-parent="#accordionExample">
+                      <div class="accordion-body pt-0 ps-4">
+                        <% leads = @user.leads %>
+                        <%= render "admin/leads/section", leads: leads , name: Lead.model_name.human(count: leads.count) %>
+                      </div>
                     </div>
                   </div>
-                </div>
                 <% end %>
                 <% if @user.role?("cp_admin") || @user.role?("cp") %>
                 <!-- User List -->

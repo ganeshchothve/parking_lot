@@ -1,7 +1,7 @@
 class Admin::SiteVisitPolicy < SiteVisitPolicy
   def index?
     out = user.role.in?(%w(admin superadmin dev_sourcing_manager channel_partner cp_owner billing_team sales_admin))
-    out && user.active_channel_partner?
+    out && user.active_channel_partner? && current_client.enable_site_visit?
   end
 
   def export?
@@ -49,9 +49,9 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
   def permitted_attributes params={}
     attributes = super || []
     attributes += [:manager_id] if record.new_record? && user.role.in?(%w(cp_owner channel_partner))
-    attributes += [:event] if record.scheduled? && user.role.in?(%w(cp_owner channel_partner)) && current_client.launchpad_portal?
+    attributes += [:event] if record.scheduled? && user.role.in?(%w(cp_owner channel_partner))
     attributes += [:event] if record.may_paid? && user.role.in?(%w(superadmin admin cp_admin))
-    attributes += [:approval_event] if record.approval_status.in?(%w(pending rejected)) && user.role.in?(%w(dev_sourcing_manager)) && current_client.launchpad_portal?
+    attributes += [:approval_event] if record.approval_status.in?(%w(pending rejected)) && user.role.in?(%w(dev_sourcing_manager))
     attributes += [:rejection_reason] if user.role?(:dev_sourcing_manager)
     attributes
   end

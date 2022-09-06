@@ -26,10 +26,12 @@
           <%= label_tag "fltrs", ProjectTower.model_name.human, class: "control-label" %>
           <%= select_tag "fltrs[project_tower_id]", options_for_select(filter_project_tower_options, params.dig(:fltrs, :project_tower_id).present? ? params[:fltrs][:project_tower_id] : ''), {prompt: (params.dig(:fltrs, :project_id).present? ? "Select" : 'Select Project first'), class: "selectize project_tower_select", data: { url: admin_project_towers_path }} %>
         </div>
-        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-          <%= label_tag "fltrs", t('mongoid.attributes.incentive_scheme.tier_id'), class: "control-label" %>
-          <%= select_tag "fltrs[tier_id]", options_for_select(Tier.all.map{|tier| [tier.name, tier.id] }, params.dig(:fltrs, :tier_id)), {prompt: "Select", class: "selectize"} %>
-        </div>
+        <% if current_client.enable_channel_partners? %>
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+            <%= label_tag "fltrs", t('mongoid.attributes.incentive_scheme.tier_id'), class: "control-label" %>
+            <%= select_tag "fltrs[tier_id]", options_for_select(Tier.all.map{|tier| [tier.name, tier.id] }, params.dig(:fltrs, :tier_id)), {prompt: "Select", class: "selectize"} %>
+          </div>
+        <% end %>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.incentive_scheme.date_range') %>
           <%= text_field_tag "fltrs[date_range]", (params.dig(:fltrs, :date_range).present? ? params[:fltrs][:date_range] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>

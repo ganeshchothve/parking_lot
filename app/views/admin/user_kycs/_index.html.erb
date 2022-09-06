@@ -3,11 +3,13 @@
     <thead>
       <tr class="bg-primary white">
         <th><%= t('mongoid.attributes.user_kyc.name') %></th>
-      <th><%= t('mongoid.attributes.user_kyc.lead_id') %></th>
-      <th><%= "#{ t('mongoid.attributes.user_kyc.phone') } & #{ t('mongoid.attributes.user_kyc.email')}" %></th>
-      <th><%= t('mongoid.attributes.user_kyc.dob') %></th>
-      <th><%= t('mongoid.attributes.user_kyc.pan_number') %></th>
-      <th class="text-right wd-22"></th>
+        <% if current_client.enable_leads? %>
+          <th><%= t('mongoid.attributes.user_kyc.lead_id') %></th>
+        <% end %>
+        <th><%= "#{ t('mongoid.attributes.user_kyc.phone') } & #{ t('mongoid.attributes.user_kyc.email')}" %></th>
+        <th><%= t('mongoid.attributes.user_kyc.dob') %></th>
+        <th><%= t('mongoid.attributes.user_kyc.pan_number') %></th>
+        <th class="text-right wd-22"></th>
       </tr>
     </thead>
   </thead>
@@ -15,13 +17,15 @@
     <% user_kycs.each do |user_kyc| %>
       <tr>
         <td data-title=<%= t('mongoid.attributes.user_kyc.name') %> ><%= user_kyc.name %></td>
-        <td data-title=<%= t('mongoid.attributes.user_kyc.lead_id') %> >
-          <% if policy([:admin, User.new]).show? %>
-            <%= link_to user_kyc.lead.name, admin_lead_path(user_kyc.lead_id) %>
-          <% else %>
-            <%= user_kyc.lead.name %>
-          <% end %>
-        </td>
+        <% if current_client.enable_leads? %>
+          <td data-title=<%= t('mongoid.attributes.user_kyc.lead_id') %> >
+            <% if policy([:admin, User.new]).show? %>
+              <%= link_to user_kyc.lead.name, admin_lead_path(user_kyc.lead_id) %>
+            <% else %>
+              <%= user_kyc.lead.name %>
+            <% end %>
+          </td>
+        <% end %>
         <td  data-title= <%= "#{t('mongoid.attributes.user_kyc.phone')}/#{t('mongoid.attributes.user_kyc.email')}" %> >
           <i class="far fa-envelope"></i> <%= user_kyc.email %><br /> <i class="fas fa-mobile-alt"></i> <%= user_kyc.phone %>
         </td>

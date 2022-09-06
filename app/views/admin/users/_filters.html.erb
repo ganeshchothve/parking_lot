@@ -18,17 +18,19 @@
           <%= label_tag "fltrs", t('mongoid.attributes.user.confirmation') %>
           <%= select_tag "fltrs[confirmation]", options_for_select(User.available_confirmation_statuses.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:confirmation] : "")), {prompt: "Select", class: "selectize"} %>
         </div>
-        <% unless current_user.role.in?(%w(cp_owner channel_partner)) %>
-          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-            <%= label_tag "fltrs", ChannelPartner.model_name.human %>
-            <%= select_tag "fltrs[channel_partner_id]", options_from_collection_for_select(params[:fltrs].present? ? ChannelPartner.where(_id: params[:fltrs][:channel_partner_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: channel_partners_path, ds: true }} %>
-          </div>
-          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-            <%= label_tag "fltrs", t('mongoid.attributes.user.category'), class: "control-label" %>
-            <%= select_tag "fltrs[category]", options_for_select( ChannelPartner::INTERNAL_CATEGORY.collect{|x| [ t("mongoid.attributes.channel_partner/internal_categories.#{x}"), x]}, params.dig(:fltrs,:category)), {prompt: "Select", class: "selectize"} %>
-          </div>
+        <% unless (current_user.role.in?(%w(cp_owner channel_partner))) %>
+          <% if current_client.enable_channel_partners? %>
+            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+              <%= label_tag "fltrs", ChannelPartner.model_name.human %>
+              <%= select_tag "fltrs[channel_partner_id]", options_from_collection_for_select(params[:fltrs].present? ? ChannelPartner.where(_id: params[:fltrs][:channel_partner_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: channel_partners_path, ds: true }} %>
+            </div>
+            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+              <%= label_tag "fltrs", t('mongoid.attributes.user.category'), class: "control-label" %>
+              <%= select_tag "fltrs[category]", options_for_select( ChannelPartner::INTERNAL_CATEGORY.collect{|x| [ t("mongoid.attributes.channel_partner/internal_categories.#{x}"), x]}, params.dig(:fltrs,:category)), {prompt: "Select", class: "selectize"} %>
+            </div>
+          <% end %>
         <% end %>
-        <% if policy([current_user_role_group, InterestedProject]).report? %>
+        <% if policy([current_user_role_group, InterestedProject]).report? && current_client.enable_channel_partners? %>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", InterestedProject.model_name.human %>
             <%= select_tag "fltrs[interested_project]", options_from_collection_for_select(params[:fltrs].present? ? Project.where(_id: params[:fltrs][:interested_project]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_projects_path, ds: true }} %>
