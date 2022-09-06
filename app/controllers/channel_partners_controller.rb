@@ -200,6 +200,6 @@ class ChannelPartnersController < ApplicationController
       manager_id: params.dig(:channel_partner, :manager_id)
     }
     params[:channel_partner] = params[:channel_partner].except(:first_name, :last_name, :phone, :email)
-    params.require(:user).permit(:first_name, :last_name, :email, :phone)
+    params.require(:user).permit(:first_name, :last_name, :email, :phone, :manager_id)
   end
 end
