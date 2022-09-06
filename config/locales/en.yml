@@ -61,6 +61,7 @@ en:
       invalid_date_format: "%{name} date format is invalid. Correct date format is - dd/mm/yyyy"
       boolean: "%{name} should be a boolean value - true or false"
     filter: Filter
+    filters: Filters
     project: Project
     booking_count: Booking Count
     no_record: No Records Found
@@ -69,6 +70,7 @@ en:
     type: Type
     status: Status
     count: Count
+    back_to_home: Back to Home
     link_to:
       not_summary: Note Summary
       crm: CRM
@@ -2159,6 +2161,13 @@ en:
         cp_owner_link_name: 'Company Owner Dashboard'
         team_lead: 'Team Lead Dashboard'
       receipt_frequency: 'Payment Frequency'
+      leaderboard:
+        early_booking_incentive: Early Booking Incentive
+        average_incentive: Average Incentive
+        rank: Rank
+        name_and_company: Name & Company
+        incentives: Incentives
+
     emails:
       index:
         link_name: 'Emails'
