@@ -25,7 +25,7 @@
           <% total_sign_in_count += (p.sign_in_count || 0) %>
           <tr>
             <td data-title='<%= t("mongoid.attributes.user/role.channel_partner") %>'><%= p.name.titleize %></td>
-            <td data-title='Sign In Count'><%= p.sign_in_count || 0 %></td>
+            <td data-title=' <%=I18n.t("global.link_to.sign_in_count") %>'><%= p.sign_in_count || 0 %></td>
             <% if policy([:admin, Lead]).index? %>
               <td data-title='<%= Lead.model_name.human(count: 2) %>'><%= link_to @leads[p.id].try(:count) ? @leads[p.id].try(:count) : 0, admin_leads_path(fltrs: {manager_id: p.id, created_at: @dates, project_id: params[:project_id], channel_partner_id: params[:channel_partner_id]}) %></td>
             <% end %>

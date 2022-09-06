@@ -19,8 +19,8 @@
         <% if policy([:admin, UserRequest.new]).export? %>
           <a class="select-btn border rounded fn-400 dropdown-toggle btn" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
           <div class="dropdown-menu">
-            <%= link_to "All #{global_labels['user_requests']}", export_admin_user_requests_path, class: 'dropdown-item' %>
-            <%= link_to "Active filter #{global_labels['user_requests']}", export_admin_user_requests_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
+            <%= link_to I18n.t("global.all") + "#{global_labels['user_requests']}", export_admin_user_requests_path, class: 'dropdown-item' %>
+            <%= link_to I18n.t("global.active_filter") + "#{global_labels['user_requests']}", export_admin_user_requests_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
           </div>
         <% end %> 
       </div>

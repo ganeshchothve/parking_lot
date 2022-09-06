@@ -176,49 +176,49 @@
                         </div>
                         <div class="col-md-5 text-end p-2">
                             <a href="javascript:;" class="fn-16 d-inline theme-txt-color pe-2"><i
-                                    class="fa fa-heart fill-danger me-2"></i>Saved</a>
+                                    class="fa fa-heart fill-danger me-2"></i><%= I18n.t("global.link_to.saved") =></a>
                             <a href="javascript:;" class="fn-16 d-inline border rounded theme-txt-color px-3 py-2"><i
-                                    class="fa fa-play fill-theme me-3"></i>Launchbook</a>
+                                    class="fa fa-play fill-theme me-3"></i><%= I18n.t("global.link_to.launchbook") %></a>
                         </div>
                     </div>
                 </div>
                 <div class="col-12 float-start mt-3">
                     <div class="float-start">
                         <p class="fn-14 mb-0">Since 1998</p>
-                        <p class="fn-16 font-medium">Embassy Developers</p>
+                        <p class="fn-16 font-medium"><%= I18n.t("global.link_to.embassy_developers") %></p>
                     </div>
                     <div class="float-end">
-                        <p class="fn-12 d-inline-block">Completed Projects <span class="fn-16 d-block">23</span></p>
-                        <p class="fn-12 border-start ps-3 ms-3 d-inline-block">Ongoing Projects <span class="fn-16 d-block">2</span></p>
+                        <p class="fn-12 d-inline-block"><%=  I18n.t("global.link_to.completed_projects") %> <span class="fn-16 d-block">23</span></p>
+                        <p class="fn-12 border-start ps-3 ms-3 d-inline-block"><%=  I18n.t("global.link_to.ongoing_projects") %> <span class="fn-16 d-block">2</span></p>
                     </div>
                     <p class="mt-0 float-start">Founded in 1996, City Group is India’s leading real estate developer known for their impeccable designs, detailed and skilled construction practices, and creating assets that are of long-term investment value. Read More</p>
                 </div>
                 <div class="col-12 float-start benefit-wrap p-3 pt-3 pb-2 mb-4">
-                    <h6 class="fn-14 theme-txt-color">Benefits of investing in this project</h6>
+                    <h6 class="fn-14 theme-txt-color"><%= I18n.t("global.link_to.benefits") %></h6>
                     <ul class="list-unstyled mt-2 mb-0">
                         <li class="d-inline">
                             <p class="mb-2 fn-14 float-start col-3"><i
-                                    class="fa fa-star fa-xs fill-warning me-2"></i>Good Location</p>
+                                    class="fa fa-star fa-xs fill-warning me-2"></i><%= I18n.t("global.link_to.good_location") %></p>
                         </li>
                         <li class="d-inline">
                             <p class="mb-2 fn-14 float-start col-3"><i
-                                    class="fa fa-star fa-xs fill-warning me-2"></i>State of the art Amenities</p>
+                                    class="fa fa-star fa-xs fill-warning me-2"></i><%= I18n.t("global.link_to.amenities_state") %></p>
                         </li>
                         <li class="d-inline">
                             <p class="mb-2 fn-14 float-start col-3"><i
-                                    class="fa fa-star fa-xs fill-warning me-2"></i>Reputed Developer</p>
+                                    class="fa fa-star fa-xs fill-warning me-2"></i><%= I18n.t("global.link_to.reputed_developer") %></p>
                         </li>
                         <li class="d-inline">
                             <p class="mb-2 fn-14 float-start col-3"><i
-                                    class="fa fa-star fa-xs fill-warning me-2"></i>Bank Offers</p>
+                                    class="fa fa-star fa-xs fill-warning me-2"></i><%= I18n.t("global.link_to.bank_offers") %></p>
                         </li>
                         <li class="d-inline">
                             <p class="mb-2 fn-14 float-start col-3"><i
-                                    class="fa fa-star fa-xs fill-warning me-2"></i>Affordable</p>
+                                    class="fa fa-star fa-xs fill-warning me-2"></i><%= I18n.t("global.link_to.affordable") %></p>
                         </li>
                         <li class="d-inline">
                             <p class="mb-2 fn-14 float-start col-3"><i
-                                    class="fa fa-star fa-xs fill-warning me-2"></i>Popular among partners
+                                    class="fa fa-star fa-xs fill-warning me-2"></i><%= I18n.t("global.link_to.popular_among") %>
                             </p>
                         </li>
                     </ul>
@@ -227,10 +227,10 @@
                 <div class="col-12 border-bottom float-start"></div>
                 
                 <div class="col-12 mt-2 float-start">
-                    <h5 class="fn-16 my-3 px-0">Funds Raised</h5>
+                    <h5 class="fn-16 my-3 px-0"><%= I18n.t("global.link_to.funds_raised") %></h5>
                     <div class="">
                         <p class="fn-16 font-medium success mb-1">Rs. 1,00,000</p>
-                        <p class="fn-14 success mb-1">Funds raised so far</p>
+                        <p class="fn-14 success mb-1"><%= I18n.t("global.link_to.funds_raised_so_far") %></p>
                     </div>
                     <div class="progress mb-0 height-05 mt-2">
                         <div class="progress-bar progress-bar-animated bg-success" role="progressbar" style="width:53%" aria-valuenow="53" aria-valuemin="0" aria-valuemax="100"></div>
@@ -238,7 +238,7 @@
                     <div class="col-12 d-flex justify-content-end">
                         <div class="text-center me-5 line-top position-relative mt-2">
                             <p class="fn-16 font-medium mb-1">Rs. 1,80,000</p>
-                            <p class="fn-14 mb-1">Minimum investment</p>
+                            <p class="fn-14 mb-1"><%= I18n.t("global.link_to.minimum_investment") %></p>
                         </div>
                         <div class="text-end ms-5 line-top position-relative last-line mt-2">
                             <p class="fn-16 font-medium mb-1">Rs. <%= @campaign.estimated_cost_per_lead %></p>
@@ -248,16 +248,16 @@
                 </div>
                 <div class="col-12 px-3 float-start">
                     <div class="row">
-                        <h5 class="fn-16 my-3 px-0">Campaign Details</h5>
+                        <h5 class="fn-16 my-3 px-0"><%= I18n.t("controller.campaigns.text.details") %></h5>
                         <div class="col-lg-5 border-bottom px-0 my-2 pb-2">
-                            <span class="fn-14 font-medium">Type of Campaign <i
+                            <span class="fn-14 font-medium"><%= I18n.t("controller.campaigns.text.campaign_type") %><i
                                     class="fa fa-info-circle fill-theme-light" data-bs-toggle="tooltip"
                                     data-bs-placement="bottom" title="Tooltip on bottom"></i></span>
                             <span class="fn-14 float-end"><%= I18n.t("mongoid.attributes.campaign/statuses.#{@campaign.campaign_type}") %></span>
                         </div>
                         <div class="col-lg-2"></div>
                         <div class="col-lg-5 border-bottom px-0 my-2 pb-2">
-                            <span class="fn-14 font-medium">Campaign Stage <i class="fa fa-info-circle fill-theme-light"
+                            <span class="fn-14 font-medium"><%= I18n.t("controller.campaigns.text.campaign_stage") %><i class="fa fa-info-circle fill-theme-light"
                                     data-bs-toggle="tooltip" data-bs-placement="bottom"
                                     title="Tooltip on bottom"></i></span>
                             <span class="fn-14 float-end"><%= I18n.t("mongoid.attributes.campaign/statuses.#{campaign.status}") %></span>
@@ -268,7 +268,7 @@
                         </div>
                         <div class="col-lg-2"></div>
                         <div class="col-lg-5 border-bottom px-0 my-2 pb-2">
-                            <span class="fn-14 font-medium">Campaign Start Date</span>
+                            <span class="fn-14 font-medium"><%= I18n.t("controller.campaigns.text.campaign_start_date") %></span>
                             <span class="fn-14 float-end"><%= @campaign.start_date %></span>
                         </div>
                         <div class="col-lg-5 px-0 my-2 pb-2">
@@ -279,7 +279,7 @@
                         </div>
                         <div class="col-lg-2"></div>
                         <div class="col-lg-5 px-0 my-2 pb-2">
-                            <span class="fn-14 font-medium">Campaign End Date</span>
+                            <span class="fn-14 font-medium"><%= I18n.t("controller.campaigns.text.campaign_end_date") %></span>
                             <span class="fn-14 float-end"><%= @campaign.end_date %></span>
                         </div>
                     </div>
@@ -287,7 +287,7 @@
                 <div class="col-12 border-bottom float-start my-3"></div>
 
                 <div class="col-12">
-                    <h5 class="fn-16 my-3 px-0">Campaign Details</h5>
+                    <h5 class="fn-16 my-3 px-0"><%= I18n.t("controller.campaigns.text.details") %></h5>
                     <!-- <div class="col-12 border-bottom float-start"></div> -->
                     <div class="col-12 border rounded px-3">
                         <h6 class="fn-14 my-3 px-0 border-bottom pb-3"><%= @campaign.name %></h6>
@@ -300,19 +300,19 @@
                 </div>
 
                 <div class="col-12 mt-5">
-                    <h5 class="fn-16 my-3 px-0">Frequently asked Questions</h5>
+                    <h5 class="fn-16 my-3 px-0"><%= I18n.t("controller.campaigns.text.frequently_asked_questions") %></h5>
                     <div class="accordion theme-accordation" id="accordionExample">
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingOne">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    How will I get the leads?
+                                    <%= I18n.t("controller.campaigns.text.get_the_leads") %>
                                 </button>
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <strong>This is the third item's accordion body.</strong> It is hidden by default.
+                                    <strong><%= I18n.t("controller.campaigns.text.third_body") %></strong><%= I18n.t("controller.campaigns.text.hidden_by_default") %>
                                 </div>
                             </div>
                         </div>
@@ -326,7 +326,7 @@
                             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <strong>This is the third item's accordion body.</strong> It is hidden by default.
+                                    <strong><%= I18n.t("controller.campaigns.text.third_body") %></strong><%= I18n.t("controller.campaigns.text.hidden_by_default") %>
                                 </div>
                             </div>
                         </div>
@@ -340,7 +340,7 @@
                             <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <strong>This is the third item's accordion body.</strong> It is hidden by default.
+                                    <strong><%= I18n.t("controller.campaigns.text.third_body") %></strong><%= I18n.t("controller.campaigns.text.hidden_by_default") %>
                                 </div>
                             </div>
                         </div>
@@ -389,8 +389,7 @@
                                 <div id="slab<%=index%>" class="accordion-collapse collapse" aria-labelledby="heading<%=index%>"
                                     data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
-                                        <strong>This is the third item's accordion body.</strong> It is hidden by
-                                        default.
+                                        <strong><%= I18n.t("controller.campaigns.text.third_body") %></strong><%= I18n.t("controller.campaigns.text.hidden_by_default") %>
                                     </div>
                                 </div>
                             </div>
@@ -407,8 +406,7 @@
                                 <div id="slabTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                                     data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
-                                        <strong>This is the third item's accordion body.</strong> It is hidden by
-                                        default.
+                                        <strong><%= I18n.t("controller.campaigns.text.third_body") %></strong><%= I18n.t("controller.campaigns.text.hidden_by_default") %>
                                     </div>
                                 </div>
                             </div>
@@ -460,8 +458,7 @@
                                 <div id="slabfour" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                                     data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
-                                        <strong>This is the third item's accordion body.</strong> It is hidden by
-                                        default.
+                                        <strong><%= I18n.t("controller.campaigns.text.third_body") %></strong><%= I18n.t("controller.campaigns.text.hidden_by_default") %>
                                     </div>
                                 </div>
                             </div>

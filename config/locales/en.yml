@@ -60,6 +60,83 @@ en:
     errors:
       invalid_date_format: "%{name} date format is invalid. Correct date format is - dd/mm/yyyy"
       boolean: "%{name} should be a boolean value - true or false"
+    filter: Filter
+    link_to:
+      not_summary: Note Summary
+      crm: CRM
+      basic_details: Basic Details
+      specs: Specs
+      offers: Offers
+      timeline: Timeline
+      location: Location
+      content_pages: Content Pages
+      images_docs: Images & Docs
+      integrations: Integrations
+      bookings: Bookings
+      notifications: Notifications
+      crm: CRM
+      videos: Videos
+      overview: Overview
+      configurations: Configurations
+      collaterals: Collaterals
+      amenities: Amenities
+      project_timeline: Project Timeline
+      rate_of_interest: Rate of Interest
+      loan_tenure: Loan Tenure
+      total_interest_payable: Total Interest Payable
+      total_amount_payable: Total Amount Payable
+      select_type: Select Type
+      uniques_selling_points: Uniques Selling Points
+      view_all: View All
+      advertise_kit: Advertise Kit
+      contact_details: Support Contact Details
+      customers_offers: Customers offers
+      send_projects_link: Send Projects Link
+      add_comments: Add Comments
+      sign_in_count: Sign in Count
+      recommended: Recommended
+      last_added: Last Added
+      saved: Saved
+      launchbook: Launchbook
+      embassy_developers: Embassy Developers
+      completed_projects: Completed Projects
+      ongoing_projects: Ongoing Projects
+      benefits: Benefits of investing in this project
+      good_location: Good Location
+      amenitites_state: State of the art Amenities
+      reputed_developer: Reputed Developer
+      bank_offers: Bank Offers
+      affordable: Affordable
+      popular_among: Popular among partners
+      funds_raised: Funds Raised
+      funds_raised_so_far: Funds Raised so far
+      minimum_investment: Minimum Investment
+      select_city_first: Select City First
+      export: Export
+      get_started: Get Started
+      this_is_time: Now is the best time to turn your dream into reality
+      love_our_brand: "Why you would love %{name}"
+      early_access: Early access to
+      new_launches: New Launches
+      timely_payments: Timely payments to
+      cash_flows: streamline cash flows
+      marketing_support: Marketing Support
+      and_assets: '& assets'
+      performance_based: Performance-based
+      channel_partner_ratings: Channel Partner ratings
+      extensive_nurturing: Extensive nurturing and
+      calling_during_launches: Calling during launches
+      crm_training: CRM training
+      support: Support
+      fully_automated: Fully automated
+      eoi_process: EOI Process
+      online_inventory_selection: Online inventory selection
+      kyc_and_bookigns: KYC & bookings
+      complete: Complete
+      transparency: Transparency
+      unique_online: Unique online
+      broker_profile: Broker Profile
+
 
   helpers:
     extend_validity:
@@ -725,6 +802,7 @@ en:
         interested_services: 'Services Interested In'
         created_at: 'Registered At'
         manager_id: 'Manager'
+        document_type: 'Document Type'
       channel_partner/file_types:
         rera_certificate: 'RERA Certificate'
         gst_certificate: 'GST Certificate'
@@ -1032,6 +1110,7 @@ en:
         start_date: Start Date
         end_date: End Date
         project_ids: Projects
+        user_id: "Channel Partner"
         approved_by: Approved By
         created_by: Created by
         total_bookings: Total Bookings
@@ -1183,6 +1262,7 @@ en:
         pending: 'Pending'
         missed: 'Missed'
         conducted: 'Conducted'
+        paid: 'Paid'
       site_visit/approval_status:
         pending: 'Pending Approval'
         approved: 'Approved'
@@ -1289,6 +1369,7 @@ en:
         assets: 'Related Marketing Collateral'
         meetings: 'Related Events'
         faqs: 'FAQs'
+        all: 'All Campaigns'
       campaign/statuses:
         draft: Draft
         funding: Funding
@@ -1706,6 +1787,12 @@ en:
     announcements:
       index:
         link_name: 'Announcements'
+      event_name:
+        add: 'Add Announcement'
+        edit: 'Edit Announcement'
+        event: 'Event Announcement'
+      delete:
+        link_name: 'Delete Announcement'
       notice:
         created: 'Announcement created successfully.'
         updated: 'Announcement updated successfully.'
@@ -1725,16 +1812,34 @@ en:
     campaigns:
       index:
         link_name: 'Campaigns'
+      event_name:
+        add: 'Add Campaign'
       notice:
         created: 'Campaign created successfully.'
         updated: 'Campaign updated successfully.'
         deleted: 'Campaign deleted successfully.'
+      message:
+        interested:
+          one: "You are interested in attending this %{name}"
+          many: "You and %{name1} others are interested in attending this %{name2}"
+          be_the_first: "New Event! Be the first to show interest"
+          count: "%{name1} are interested in attending this %{name2}"
+      text:
+        details: 'Campaign Details'
+        campaign_type: 'Type of Campaign'
+        campaign_stage: 'Campaign Stage'
+        campaign_start_date: 'Campaign Start Date'
+        campaign_end_date: 'Campaign End Date'
+        frequently_asked_questions: 'Frequently asked Questions'
+        get_the_leads: 'How will I get the leads?'
+        third_body: "This is the third item's accordion body. "
+        hidden_by_default: 'It is hidden by default.'
     crms:
       index:
         link_name: 'CRM Integration'
       choose_crm:
         link_name: "Get Details from CRM"
-      show_response:
+      show_resposnse:
         error: 'There was some error while loading the response. Please contact administrator.'
       errors:
         not_available: "Sell.do CRM integration not available"
@@ -1812,6 +1917,7 @@ en:
         link_name: 'Add Scheme & Discount'
       edit:
         link_name: 'Update Scheme & Discount'
+        edit: "Edit"
       notice:
         scheme_approved: 'Scheme applied successfully, please check cost sheet.'
         scheme_under_negotiation: 'Scheme registered successfully and sent for approval.'
@@ -1981,6 +2087,7 @@ en:
         not_registered: 'Channel Partner is not registered.'
         link_expired: 'This link is expired. Please ask the channel partner to send request again'
         code_missing: "Registration code is missing"
+      register_request_sent: 'Registration request sent to Company owner'
 
     dashboard:
       index:
@@ -2055,36 +2162,6 @@ en:
         select_projects: 'Please select some projects'
         failed_to_sync: 'Project was unable to sync due to some errors. Please check notes for details'
         project_reference_id_not_found: "Project with Reference Id %{name} not found."
-      link_to:
-        basic_details: Basic Details
-        specs: Specs
-        offers: Offers
-        timeline: Timeline
-        location: Location
-        content_pages: Content Pages
-        images_docs: Images & Docs
-        integrations: Integrations
-        bookings: Bookings
-        notifications: Notifications
-        crm: CRM
-        videos: Videos
-        overview: Overview
-        configurations: Configurations
-        collaterals: Collaterals
-        amenities: Amenities
-        project_timeline: Project Timeline
-        rate_of_interest: Rate of Interest
-        loan_tenure: Loan Tenure
-        total_interest_payable: Total Interest Payable
-        total_amount_payable: Total Amount Payable
-        select_type: Select Type
-        uniques_selling_points: Uniques Selling Points
-        view_all: View All
-        advertise_kit: Advertise Kit
-        contact_details: Support Contact Details
-        customers_offers: Customers offers
-        send_projects_link: Send Projects Link
-
 
     project_units:
       send_cost_sheet_and_payment_schedule:

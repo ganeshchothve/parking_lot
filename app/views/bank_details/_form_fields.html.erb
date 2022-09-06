@@ -39,11 +39,11 @@
         <%= f.label :loan_required %>
         <div class="form-check form-check-inline">
           <%= f.radio_button :loan_required, true, class: "form-check-input wd-22" %>
-          <%= f.label :loan_required, "Yes", class: "form-check-label d-inline-block ms-2" %>
+          <%= f.label :loan_required, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
         </div>
         <div class="form-check form-check-inline">
           <%= f.radio_button :loan_required, false, class: "form-check-input wd-22" %>
-          <%= f.label :loan_required, "No", class: "form-check-label d-inline-block ms-2" %>
+          <%= f.label :loan_required, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
         </div>
       </div>
     <% end %>

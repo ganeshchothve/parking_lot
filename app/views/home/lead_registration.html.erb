@@ -4,7 +4,7 @@
       <div class="login-form-wrapper pt-5 mr-4">
         <div class="box-card">
           <div class="box-header bg-gradient br-rd-tr-4">
-            <h2><strong>Basic Details</strong></h2>
+            <h2><strong><%= I18n.t("global.link_to.basic_details") %></strong></h2>
           </div>
           <div class="box-content br-rd-bl-4 bg-white px-3 pt-3 br-1">
             <%= simple_form_for(@lead, url: admin_leads_path, local: true, html: { id: 'lead_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %>

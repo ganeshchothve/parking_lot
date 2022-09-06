@@ -11,14 +11,13 @@
     message = ''
     if meeting.participant?(current_user)
       if meeting.participant_ids.count == 1
-        message = "You are interested in attending this #{t('mongoid.models.meeting.one')}"
-      else
-        message = "You and #{meeting.participant_ids.count - 1} others are interested in attending this #{t('mongoid.models.meeting.one')}"
+        message = I18n.t("controller.campaigns.message.interested.one", name: I18n.t('mongoid.models.meeting.one') )
+        message = I18n.t("controller.campaigns.message.interested.many", name1: "#{meeting.participant_ids.count -1}", name2: I18n.t('mongoid.models.meeting.one') )
       end
     elsif meeting.participant_ids.blank?
-      message = "New Event! Be the first to show interest"
+      message = I18n.t("controller.campaigns.message.interested.be_the_first")
     else
-      message = "#{meeting.participant_ids.count} are interested in attending this #{t('mongoid.models.meeting.one')}"
+      message = I18n.t("controller.campaigns.message.interested.count", name1: "#{meeting.participant_ids.count}", name2: I18n.t('mongoid.models.meeting.one') )
     end
   %>
   <%= simple_form_for(meeting, local: true, url: url, remote: true, html: { class: 'toggle_interest_form', novalidate: false, type: :json } ) do |f| %>

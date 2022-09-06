@@ -40,7 +40,7 @@
                   <h2 class="accordion-header d-flex justify-content-between" id="headingOverview">
                     <button class="accordion-button shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseOverview" aria-expanded="true" aria-controls="collapseOverview">
-                      Overview
+                      <%= I18n.t("global.link_to.overview") %>
                     </button>
                   </h2>
                   <div id="collapseOverview" class="accordion-collapse collapse show" aria-labelledby="headingOverview"
@@ -55,7 +55,7 @@
                   <h2 class="accordion-header d-flex justify-content-between" id="headingNotes">
                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseNotes" aria-expanded="false" aria-controls="headingNotes">
-                       Note Summary
+                       <%= I18n.t("global.link_to.note_summary") %>
                     </button>
                     <%# if policy([current_user_role_group, Note.new(notable: notable)]).new? %>
                       <%#= link_to t('helpers.new.link_name', model: Note.model_name.human), new_notable_path(notable_type: notable.class.model_name.i18n_key.to_s, notable_id: notable.id), class: ' modal-remote-form-link fn-12 font-medium theme-txt-color w-25 text-end pe-3 py-3' %>
@@ -83,7 +83,7 @@
                     <h2 class="accordion-header d-flex justify-content-between" id="headingBookings">
                       <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseBookings" aria-expanded="false" aria-controls="headingBookings">
-                        Bookings
+                        <%= I18n.t("global.link_to.bookings") %>
                       </button>
                     </h2>
                     <div id="collapseBookings" class="accordion-collapse collapse" aria-labelledby="headingBookings"

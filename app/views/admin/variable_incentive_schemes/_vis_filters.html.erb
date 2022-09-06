@@ -11,11 +11,11 @@
           <%= select_tag :variable_incentive_scheme_ids, options_for_select(VariableIncentiveScheme.approved.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-          <%= label_tag :project_ids, "Projects", class: "control-label float-left" %>
+          <%= label_tag :project_ids, I18n.t("mongoid.attributes.variable_incentive_scheme.project_ids"), class: "control-label float-left" %>
           <%= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-          <%= label_tag :user_id, "Channel Partner", class: "control-label float-left" %>
+          <%= label_tag :user_id, I18n.t("mongoid.attributes.variable_incentive_scheme.user_id"), class: "control-label float-left" %>
           <%= select_tag :user_id, options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), prompt: 'Select', class: "selectize" %>
         </div>
       </div>
