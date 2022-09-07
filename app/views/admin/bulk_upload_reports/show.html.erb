@@ -17,7 +17,7 @@
                 <% if @bulk_upload_report.project.present? %>
                   <div class="col-md-4">
                     <div class="form-group">
-                      <label>Project</label>
+                      <label><%= I18n.t("mongoid.models.project.one") %></label>
                       <div> <%= @bulk_upload_report.project.name %> </div>
                     </div>
                   </div>

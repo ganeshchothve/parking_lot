@@ -10,31 +10,31 @@
           <div class="accordion-item mb-3 border-0 shadow rounded">
             <h2 class="accordion-header" id="headingOne">
               <button class="accordion-button rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#bookingDetailAccordion" aria-expanded="true" aria-controls="bookingDetailAccordion">
-                Details
+                <%= I18n.t("global.link_to.details") %>
               </button>
             </h2>
             <div id="bookingDetailAccordion" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
               <div class="accordion-body pt-1">
                 <div class="inner-invoice-details">
-                  <label>Project</label>
+                  <label><%= I18n.t("mongoid.models.project.one") %></label>
                   <p><%= (@invoice.try(:project).try(:name) || "-") %></p>
                   <% if @invoice.invoiceable.is_a?(BookingDetail) %>
-                    <label>Booking Details</label>
+                    <label><%= I18n.t("controller.project_units.text.booking_details") %></label>
                     <p><%= (@invoice.try(:invoiceable).try(:booking_project_unit_name) || "-") %></p>
                   <% end %>
-                  <label>Customer Name</label>
+                  <label><%= I18n.t("mongoid.attributes.dashboard.payout_dashboard.customer_name") %></label>
                   <p><%= (@invoice.try(:invoiceable).try(:user).try(:name) || "-") %></p>
-                  <label>Customer Phone</label>
+                  <label><%= I18n.t("mongoid.attributes.dashboard.payout_dashboard.customer_phone") %></label>
                   <p><%= (@invoice.try(:invoiceable).try(:user).try(:phone) || "-") %></p>
-                  <label>Customer Email</label>
+                  <label><%= I18n.t("mongoid.attributes.dashboard.payout_dashboard.customer_email") %></label>
                   <p><%= (@invoice.try(:invoiceable).try(:user).try(:email) || "-") %></p>
-                  <label>Status</label>
+                  <label><%= I18n.t("mongoid.attributes.invoice.status") %></label>
                   <p><%= (@invoice.invoiceable&.class&.human_attribute_name("#{@invoice.invoiceable&.model_name&.i18n_key.to_s}/status.#{(@invoice.invoiceable.try(:status) || "-")}") rescue "-") %></p>
-                  <label>Raised Date</label>
+                  <label><%= I18n.t("mongoid.attributes.invoice.raised_date") %></label>
                   <p><%= @invoice.try(:raised_date).try(:strftime, '%e %b %Y') || "-" %></p>
-                  <label>Processing Date</label>
+                  <label><%= I18n.t("mongoid.attributes.invoice.processing_date") %></label>
                   <p><%= @invoice.try(:processing_date).try(:strftime, '%e %b %Y') || "-" %></p>
-                  <label>Approved Date</label>
+                  <label><%= I18n.t("mongoid.attributes.invoice.approved_date") %></label>
                   <p><%= @invoice.try(:approved_date).try(:strftime, '%e %b %Y') || "-" %></p>
                 </div>
               </div>
@@ -43,17 +43,17 @@
           <div class="accordion-item mb-3 border-0 shadow rounded">
             <h2 class="accordion-header" id="headingTwo">
               <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#cpDetailsAccordion" aria-expanded="false" aria-controls="cpDetailsAccordion">
-                Channel Partner Details
+                <%= I18n.t("dashboard.channel_partner.details") %>
               </button>
             </h2>
             <div id="cpDetailsAccordion" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
               <div class="accordion-body pt-1">
                 <div class="inner-invoice-details">
-                  <label>Registration Name (Used in payments)</label>
+                  <label><%= I18n.t("mongoid.attributes.client.registration_name") %></label>
                   <p><%= @invoice.try(:manager).try(:name) || "-" %></p>
-                  <label>GST Number</label>
+                  <label><%= I18n.t("mongoid.attributes.client.gst_number") %></label>
                   <p><%= @invoice.try(:manager).try(:channel_partner).try(:gstin_number) || "-" %></p>
-                  <label>Address</label>
+                  <label><%= I18n.t("mongoid.attributes.client.address") %></label>
                   <p><%= @invoice.try(:manager).try(:channel_partner).try(:address).try(:to_sentence) || "-" %></p>
                 </div>
               </div>
@@ -62,29 +62,29 @@
           <div class="accordion-item mb-3 border-0 shadow rounded">
             <h2 class="accordion-header" id="headingThree">
               <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#paymentDetailsAccourdion" aria-expanded="false" aria-controls="paymentDetailsAccourdion">
-                Payment Details
+                <%= I18n.t("controller.receipts.show.link_name") %>
               </button>
             </h2>
             <div id="paymentDetailsAccourdion" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
               <div class="accordion-body pt-1">
                 <div class="inner-invoice-details">
-                  <label>Total Amount Paid</label>
+                  <label><%= I18n.t("mongoid.attributes.receipt.total_amount_paid") %></label>
                   <p><%= (number_to_indian_currency(@invoice.cheque_detail.try(:total_amount)) rescue "-") %></p>
-                  <label>Issuing Bank</label>
+                  <label><%= I18n.t("mongoid.attributes.receipt.issuing_bank") %></label>
                   <p><%= @invoice.cheque_detail.try(:issuing_bank) || "-" %></p>
-                  <label>Issuing Bank Branch</label>
+                  <label><%= I18n.t("mongoid.attributes.receipt.issuing_bank_branch") %></label>
                   <p><%= @invoice.cheque_detail.try(:issuing_bank_branch) || "-" %></p>
-                  <label>Issued Date</label>
+                  <label><%= I18n.t("mongoid.attributes.receipt.issued_date") %></label>
                   <p><%= @invoice.cheque_detail.try(:issued_date).try(:strftime, '%e %b %Y') || "-" %></p>
-                  <label>Handover Date</label>
+                  <label><%= I18n.t("mongoid.attributes.receipt.handover_date") %></label>
                   <p><%= @invoice.cheque_detail.try(:handover_date).try(:strftime, '%e %b %Y') || "-" %></p>
-                  <label>Approved Date</label>
+                  <label><%= I18n.t("mongoid.attributes.receipt.approved_date") %></label>
                   <p><%= @invoice.try(:approved_date).try(:strftime, '%e %b %Y') || "-" %></p>
-                  <label>Payout Id</label>
+                  <label><%= I18n.t("mongoid.attributes.receipt.payout_id") %></label>
                   <p><%= @invoice.try(:third_party_references).try(:first).try(:reference_id) || "-" %></p>
-                  <label>UPI Id</label>
+                  <label><%= I18n.t("mongoid.attributes.receipt.upi_id") %></label>
                   <p><%= @invoice.try(:manager).try(:fund_accounts).try(:first).try(:address) || "-" %></p>
-                  <label>Paid Date</label>
+                  <label><%= I18n.t("mongoid.attributes.receipt.paid_date") %></label>
                   <p><%= @invoice.try(:paid_date).try(:strftime, '%e %b %Y') || "-" %></p>
                 </div>
               </div>
@@ -99,13 +99,13 @@
             <div id="amountAccordion" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
               <div class="accordion-body pt-1">
                 <div class="inner-invoice-details">
-                  <label>Brokerage Amount</label>
+                  <label><%= I18n.t("mongoid.attributes.invoice.amount") %></label>
                   <p><%= (number_to_indian_currency(@invoice.try(:amount)) rescue "-") %></p>
-                  <label>GST Amount</label>
+                  <label><%= I18n.t("mongoid.attributes.invoice.gst_amount") %></label>
                   <p><%= (number_to_indian_currency(@invoice.try(:gst_amount)) rescue "-") %></p>
-                  <label>GST Slab</label>
+                  <label><%= I18n.t("mongoid.attributes.invoice.gst_slab") %></label>
                   <p><%= @invoice.try(:gst_slab) %>%</p>
-                  <label>Approved Amount</label>
+                  <label><%= I18n.t("mongoid.attributes.invoice.approved_amount") %></label>
                   <p><%= (number_to_indian_currency(@invoice.try(:net_amount)) rescue "-") %></p>
                 </div>
               </div>
@@ -115,7 +115,7 @@
           <div class="accordion-item border-0 shadow rounded">
             <h2 class="accordion-header" id="headingThree">
               <button class="accordion-button collapsed rounded shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#docsAccordion" aria-expanded="false" aria-controls="docsAccordion">
-                Documents
+                <%= I18n.t("global.documents") %>
               </button>
             </h2>
             <div id="docsAccordion" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">

@@ -18,6 +18,7 @@ en:
     only_admins:
       this_page: "Only admins can view this page."
     confirmed: "Confirmation successful."
+    terms_and_conditions: Terms and Conditions
     brand: BeyondWalls
     all: All
     at: 'At'
@@ -71,6 +72,13 @@ en:
     status: Status
     count: Count
     back_to_home: Back to Home
+    name: Name
+    tower: Tower
+    city: City
+    key: Key
+    hello: Hello
+    today: Today
+    documents: Documents
     link_to:
       not_summary: Note Summary
       crm: CRM
@@ -84,6 +92,7 @@ en:
       integrations: Integrations
       bookings: Bookings
       notifications: Notifications
+      details: Details
       crm: CRM
       videos: Videos
       overview: Overview
@@ -181,9 +190,17 @@ en:
       add_upi: Please add your UPI Address for quick payment. Please click on the link
       active_walk_ins: Active Walk-ins
       active_bookings: Active Bookings
+      active_partners: Active Partners
       cancel: Cancel
       virtual_walkthrough: Begin Virtual Walkthrough below
-
+      upload: Upload
+      site_visits: Site Visits
+      spot_bookings: Spot Bookings
+      brokerages: Brokerages
+      total_earnings: Total Earnings
+      earnings: Earnings
+      earning_potential: Earning Potential
+      no_images_available: No Images Available
   helpers:
     extend_validity:
       link_name: '%{model}'
@@ -557,6 +574,7 @@ en:
         comments: 'Comments'
         carpet: Carpet Area
         agreement_price: 'Agreement Price'
+        tentative_amount: 'Tentative Amount'
         all_inclusive_price: 'All Inclusive Price'
         manager_id: Manager
         dates: 'Dates'
@@ -603,6 +621,12 @@ en:
         cancellation_rejected: 'Cancellation Rejected'
         management: 'Management Blocking'
         employee: 'Employee Blocking'
+      booking_detail/count:
+        total_blocked: Total Blocked
+        total_booked_tentative: 'Total Tentative Booked'
+        total_booked_confirmed: 'Total Confirmed Booked'
+        total_under_negotiation: 'Total Under Negotiation'
+        total_cancelled: 'Total Cancelled'
 
       client:
         name: 'Client Name (Used across the app)'
@@ -623,6 +647,8 @@ en:
         email_domains: 'Email Domains (to detect employee users)'
         booking_portal_domains: 'Booking Portal Domains (where the portal is hosted)'
         registration_name: 'Registration Name (Used in Payments)'
+        gst_number: 'GST Number'
+        address: 'Address'
         cin_number: 'CIN Number'
         website_link: 'Website Link (Used in email communication)'
         cp_disclaimer: 'Channel Partner Disclaimer'
@@ -1031,8 +1057,15 @@ en:
         created_at: "Created on"
         created_by: 'Created By'
         issued_date: "Date of issuance (e.g. Cheque Date)"
+        total_amount_paid: Total Amount Paid
         issuing_bank: "Issuing Bank"
         issuing_bank_branch: "Issuing Bank Branch"
+        issued_date: Issued Date
+        handover_date: Handover Date
+        approved_date: Approved Date
+        paid_date: Paid Date
+        payout_id: Payout ID
+        upid_id: UPI ID
         name_email_phone: 'Name/Email/Phone'
         project_id: 'Project'
         project_unit_id: "Apartment"
@@ -1181,6 +1214,7 @@ en:
         gst_amount: GST Amount
         gst_slab: 'GST Slab'
         net_amount: Total Brokerage Amount
+        approved_amount: Approved Amount
         comments: Comments
         rejection_reason: Rejection Reason
         project_id: 'Project'
@@ -1197,6 +1231,8 @@ en:
         category: 'Type'
         manager_id: 'Channel Partner'
         account_manager_id: 'Account Manager'
+        actual_invoice_amount: 'Actual Invoice Amount'
+        tentative_invoice_amount: 'Tentative Invoice Amount'
       invoice/status:
         draft: 'Draft'
         raised: 'Raised'
@@ -1455,6 +1491,7 @@ en:
         project_id: Project
         creator: Host
         creator_id: Host
+        meeting_date: Event Date
       meeting/meeting_types:
         webinar: 'Webinar'
         offline_event: 'Offline Event'
@@ -1702,6 +1739,13 @@ en:
         channel_partners_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
         channel_partner_manager_change_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
         time_slots_update_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
+
+      dashboard:
+        payout_dashboard:
+          customer_name: Customer Name
+          customer_phone: Customer Phone
+          customer_email: Customer Email
+
 
       dashboard/filters:
         payments:
@@ -2167,6 +2211,30 @@ en:
         rank: Rank
         name_and_company: Name & Company
         incentives: Incentives
+        view_leaderboard: View Leaderboard
+      booking_details_overview:
+        beds_baths: 'Beds / Baths'
+        carpet: Carpet
+        saleable: Saleable
+        effective_rate: Effective Rate
+        agreement_price: Agreement Price
+        all_inclusive_price: All Inclusive Price
+        phase: Phase
+        last_sync: "Last Synced At:"
+        last_sync_status: "Last Sync Log Status:"
+        not_synced: Not synced
+        amt_paid: Amount Paid
+        pending_balance: Pending Balance
+        considers_processed: '*Considers processed %{name} only'
+        pay_to_confirm: "You need to pay %{name} to confirm the booking"
+        cancellation_charges: "Cancellation charges are %{name}"
+        make_remaining_payment: "You have %{name1} days (before %{name2}) remaining to confirm this booking. Please make a remaining payment of %{name3}"
+        ladder: Ladder
+      payout_dashboard:
+        total_brokerage_note: "This is the total brokerage amount of all bookings approved by the developer end. The brokerage release process will start once booking registration is completed."
+        potential_brokerage_note: "This is the total potential brokerage generated on bookings. The booking details will be submitted to the developer for verification and further brokerage process."
+        lost_brokerage_amt: "This is the total amount of lost brokerage due to missing/incorrect booking details submitted to developer."
+
 
     emails:
       index:
@@ -2610,6 +2678,7 @@ en:
         sales_user_not_found: "Sales user not found"
       message:
         mail_sent: "Mail successfully sent to the selected leads"
+        no_leads_added: "You have not added any lead yet.\nStart exploring the projects and add your leads."
       notice:
         created: "Lead created successfully."
         updated: "Lead updated successfully."
@@ -2850,6 +2919,7 @@ en:
       incentive_plan_started:
         heading: 'Brokerage Plans Started'
         max_ladder_html: '<strong>Max.</strong> Ladder Reached'
+      details: Channel Partner Details
 
       titles:
         lead_details: 'Customer Account Details'
