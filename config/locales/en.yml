@@ -31,6 +31,7 @@ en:
     custom: 'More'
     change: 'Change'
     dashboard: Dashboard
+    pdf: pdf
     disclaimer: Disclaimer
     default_account_name: Default Account will be considered
     gallery: "Gallery"
@@ -81,7 +82,9 @@ en:
     documents: Documents
     register: Register
     link_to:
+      need_help: Need Help?
       not_summary: Note Summary
+      call: Call
       crm: CRM
       basic_details: Basic Details
       specs: Specs
@@ -205,6 +208,12 @@ en:
       no_images_available: No Images Available
       scroll_down: Scroll Down
       register_now: Register Now
+      t_n_c: T & C
+      privacy_policy: Privacy Policy
+      register_as_channel_partner: Register as Channel Partner
+      powered_by_selldo: Powered by Sell.do
+      take_break: Take Break
+      resume_work: Resume Work
   helpers:
     extend_validity:
       link_name: '%{model}'
@@ -1567,6 +1576,7 @@ en:
         referral_code: "Referral Code"
         shareable_link: "Shareable Link"
         upi_id: 'UPI Address'
+        your_relationship_manager: 'Your Relationship Manager'
       user/password:
         name: 'should not contain name.'
         length: 'Length should be 8-16 characters and include: 1 uppercase, 1 lowercase, 1 digit and 1 special character.'
@@ -3098,6 +3108,8 @@ en:
     keys:
       sign_in: Sign In
       log_in: Log In
+      sign_out: Sign Out
+      register_now: Register Now
       email_verified: Email Verified
       reset_password: Reset Password
       create_password: Create Password
@@ -3143,3 +3155,9 @@ en:
       sent_verification_link: "We have sent an account verification link to %{name}"
   export_mailer:
     export_scheduled: "Please find attached your scheduled export"
+  navbar:
+    text:
+      whatsapp_chat: Chat with us on Whatsapp
+      reach_helpdesk: Reach our Helpdesk
+      write_us: Write to us
+      cp_code: CP Code
