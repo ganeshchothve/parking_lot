@@ -1,7 +1,7 @@
 <div class="mt-5 pt-5"></div>
 <section class="cp-login-otp-sec col-lg-4 mg-auto" id="otp_user_section">
   <div class="cp-login-otp-wrap">
-    <h2 class="px-4 pt-3 pb-3">Reset Password</h2>
+    <h2 class="px-4 pt-3 pb-3"><%= I18n.t("devise.keys.reset_password") %></h2>
     <p class="px-4 pt-3 pb-1 font-weight-medium"></p>
     <div class="cp-signup-form-wrap px-4 cp-form-wrap">
       <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), method: :post, html: { novalidate: false, class: 'validate-form theme-form', id: 'confirmation_form' }) do |f| %>

@@ -6,7 +6,7 @@
     <% end -%>
 
     <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
-      <%= link_to "Forgot your password?", new_password_path(resource_name),  data:{event_category: 'Section', event_action: 'Click', event_name: 'Forgot your password?'}, class: "a-style opacity-5" %>
+      <%= link_to I18n.t("devise.keys.forgot_password"), new_password_path(resource_name),  data:{event_category: 'Section', event_action: 'Click', event_name: 'Forgot your password?'}, class: "a-style opacity-5" %>
     <% end -%>
 
     <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
@@ -19,7 +19,7 @@
     <!--<div class="float-end">
     <%- if devise_mapping.omniauthable? %>
       <%- resource_class.omniauth_providers.each do |provider| %>
-        <%= link_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider), class: "a-style opacity-5" %>
+        <%= link_to <%= I18n.t("devise.help_text.sign_in.omniauth", name: OmniAuth::Utils.camelize(provider)) %>, omniauth_authorize_path(resource_name, provider), class: "a-style opacity-5" %>
       <% end -%>
     <% end -%>
     </div>-->

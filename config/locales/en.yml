@@ -1764,6 +1764,7 @@ en:
         absolute_value: Absolute Value
         project: Project
 
+
   controller:
     notice:
       failed_to_redirect_to_payment_gateway: "We couldn't redirect you to the payment gateway, please try again"
@@ -3029,3 +3030,40 @@ en:
     playschool: 'fa-school'
     table_tennis_court: 'fa-table-tennis'
     sewage_treatment_plant: 'fa-house-flood'
+
+  devise:
+    keys:
+      log_in: Log In
+      email_verified: Email Verified
+      reset_password: Reset Password
+      create_password: Create Password
+      select_password: "Please choose a password of your choice and confirm your account"
+      email_being_changed: "We're contacting you to notify you that your email is being changed to %{name}."
+      email_has_changed: "We're contacting you to notify you that your email has been changed to %{name}."
+      password_changed: "We're contacting you to notify you that your password has been changed."
+      dear_resource: "Dear %{name}"
+      change_password: "Change Password"
+      change_my_password: "Change my Password"
+      change_your_password: "Change your Password"
+      change_password: "Change Password"
+      unlock_my_account: "Unlock my Account"
+      forgot_password: "Forgot your Password?"
+    help_text:
+      sign_in:
+        otp: "Sign in using OTP (One Time Password)"
+        email_and_password: "Sign in using email and password"
+        omniauth: "Sign in with %{name}"
+      enter_password: "Please enter a password of your choice"
+      create_password: "Please create a password for your account"
+      resend_unlock_instructions: "Resend unlock instructions"
+
+    text_msg:
+      thanks_channel_partner: "Thank you for registering as a Channel Partner at %{name}. Please confirm your account by clicking the link below.
+        You can start entering your leads as soon as your account is confirmed."
+      interested:
+        confirm_account: "Thank you for registering at %{name}. Please confirm your account by clicking the link below and book your Home in 4 easy steps!"
+      registerd:
+        confirm_account: "Your interest for %{name1} has been registered by %{name2}. Please confirm your account by clicking the link below and book your Home in 4 easy steps!"
+      click_to_confirm: "Please confirm your account by clicking the link below."
+      reset_password: "Reset your password by clicking the link below. Your password won't change until you access the link above and create a new one."
+      account_locked: "Your account has been locked due to an excessive number of unsuccessful sign in attempts. Click the link below to unlock your account:"

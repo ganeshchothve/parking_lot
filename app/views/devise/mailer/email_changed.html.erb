@@ -5,9 +5,10 @@
     </p>
     <div class="mb-3"></div>
     <% if @resource.try(:unconfirmed_email?) %>
-      <p>We're contacting you to notify you that your email is being changed to <%= @resource.unconfirmed_email %>.</p>
+      <p><%= I18n.t("devise.keys.email_being_changed", name: @resource.unconfirmed_email) %></p>
     <% else %>
-      <p>We're contacting you to notify you that your email has been changed to <%= @resource.email %>.</p>
+      <p><%= I18n.t("devise.keys.email_has_changed", name: @resource.email) %></p>
     <% end %>
   </div>
 </div>
+
