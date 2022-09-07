@@ -1,0 +1,52 @@
+<%= nested_form_for @template, url: admin_client_templates_path, remote: true, local: true, html: { id: "custom_template_form" , class: "modal-remote-form validate-form" , data: { 'resource-type': global_labels['templates'], type: :json } } do |f| %>
+  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="title">
+            <%= @template.new_record? ? "New" : "Edit" %> <%= ::Template.model_name.human %>
+          </h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body theme-form">
+          <% if @template.is_a?(::Template::CustomTemplate) %>
+            <div class="mb-3">
+              <%= f.label :name, class: 'label-required' %>
+              <%= f.text_field :name, autofocus: true, class: "form-control" , required: 'required' %>
+            </div>
+
+            <div class="form-check">
+              <%= f.check_box :is_active, class: 'form-check-input wd-22' %>
+              <%= f.label :is_active, class: 'form-check-label d-inline-block ms-2' %>
+            </div>
+
+            <div class="col-md-12">
+              <%= f.label :project_id %>
+              <%= f.select :project_id, options_from_collection_for_select(f.object.project_id ? Project.where(_id: f.object.project_id) : [], "id" , "ds_name" , f.object.project_id), {prompt: 'Select Project' }, class: 'selectize-remote project_select' , data: {url: admin_projects_path}  %>
+            </div>
+
+            <div>
+              <%= f.label :content %>
+              <%= f.text_area :content, rows: 15, class: 'form-control', required: 'required' %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :subject_class, class: 'label-required' %>
+              <%= f.select :subject_class, ::Template::CustomTemplate::SUBJECT_CLASSES.collect{|x| [I18n.t("mongoid.attributes.template/subject_classes.#{x}"), x] }, {prompt: 'Select' }, class: "selectize" , required: true %>
+            </div>
+
+          <% end %>
+
+        </div>
+        <div class="modal-footer text-end">
+          <%= f.submit "Save" , class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#custom_template_form"));
+  });
+<% end %>

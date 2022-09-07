@@ -40,6 +40,7 @@ en:
     otp: "OTP"
     overview: 'Overview'
     total: 'Total'
+    template: Template
     boolean:
       :true: 'Yes'
       :false: 'No'
@@ -1118,6 +1119,16 @@ en:
         name_email_phone: 'Name/Email/Phone'
         requestable_type: 'Requestable Type'
         request_details: 'Related to'
+      template/subject_classes:
+        User: User
+        ChannelPartner: Channel Partner
+        Scheme: Scheme
+        BookingDetail: Booking
+        Receipt: Payment
+        BookingDetailScheme: Booking Detail Scheme
+        Lead: Lead
+        UserKyc: User Kyc
+        Invoice: Invoice
       user_request/status:
         pending: Pending
         processing: Processing
@@ -2008,6 +2019,8 @@ en:
         link_name: Details
 
     templates:
+      new:
+        link_name: 'Add Template'
       index:
         link_name: 'Templates'
       show:

@@ -1,5 +1,5 @@
 class Admin::TemplatesController < AdminController
-  before_action :set_template, except: [:index]
+  before_action :set_template, except: [:index, :new, :create]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: [:index]
 
@@ -11,6 +11,25 @@ class Admin::TemplatesController < AdminController
     respond_to do |format|
       format.json { render json: @templates }
       format.html {}
+    end
+  end
+
+  def new
+    @template = Template::CustomTemplate.new(booking_portal_client_id: (current_user.selected_client_id || current_client.id))
+    render layout: false
+  end
+
+  def create
+    @template = Template::CustomTemplate.new(booking_portal_client_id: (current_user.selected_client_id || current_client.id))
+    @template.assign_attributes(permitted_attributes([:admin, @template]))
+    respond_to do |format|
+      if @template.save
+        format.html { redirect_to admin_incentive_schemes_path, notice: 'Template created successfully.' }
+        format.json { render json: @template, status: :created }
+      else
+        format.html { render :new }
+        format.json { render json: { errors: @template.errors.full_messages.uniq }, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -38,7 +57,7 @@ class Admin::TemplatesController < AdminController
   end
 
   def authorize_resource
-    if params[:action] == "index"
+    if %w(index new create).include?(params[:action])
       authorize [:admin, ::Template]
     else
       authorize [:admin, @template]
