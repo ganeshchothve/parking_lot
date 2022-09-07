@@ -38,7 +38,7 @@
               <%= f.select :event, options_for_select(statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, @receipt.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @receipt]).editable_field?("event") %>
             </div>
             <div class="mb-3 text-end modal-footer">
-              <%= f.submit "Save", class: 'btn btn-primary' %>
+              <%= f.submit I18n.t("global.save"), class: 'btn btn-primary' %>
             </div>
           <% end %>
       </div>

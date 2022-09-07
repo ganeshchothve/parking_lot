@@ -22,7 +22,7 @@
             <%= f.select :project_id, Project.all.collect{|p| [p.name, p.id] }, { prompt: true }, class: 'selectize' %>
           </div>
         <div class="modal-footer text-end">
-          <%= f.submit "Save", class: "btn btn-primary" %>
+          <%= f.submit I18n.t("global.save"), class: "btn btn-primary" %>
         </div>
       </div>
     </div>

@@ -23,7 +23,7 @@
             <%= f.select :project_id, Project.all.collect{|x| [x.ds_name, x.id]}, {prompt: 'Select'}, class: "selectize-remote", data: {url: admin_projects_path}, disabled: (policy([current_user_role_group, payment_type]).editable_field?("project_id") ? false : true) %>
           </div>
         <div class="modal-footer text-end">
-          <%= f.submit "Save", class: "btn btn-primary" %>
+          <%= f.submit I18n.t("global.save"), class: "btn btn-primary" %>
         </div>
       </div>
     </div>

@@ -22,6 +22,7 @@ en:
     brand: BeyondWalls
     all: All
     at: 'At'
+    save: Save
     action:
       one: Action
       other: Actions

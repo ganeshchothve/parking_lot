@@ -42,7 +42,7 @@
                                     <div class="datepicker" id="site_visit_scheduled_on_calendar" data-default-date="<%= date %>" data-inline=true data-side-by-side=false data-use-current=false data-min-date="<%= min_date.strftime("%d/%m/%Y") %>" data-max-date="<%= (Date.today + 20.days).strftime("%d/%m/%Y") %>"></div>
                                 </div>
                                 <%= f.hidden_field :scheduled_on, class: 'form-control', value: date %>
-                                <%= f.submit "Save", class: "btn btn-primary", id: "submit_site_visit_form", style: "display: none;" %>
+                                <%= f.submit I18n.t("global.save"), class: "btn btn-primary", id: "submit_site_visit_form", style: "display: none;" %>
                             </div>
                         </div>
                         <div class="col-sm-12 col-xs-12 col-md-12 col-lg-6">

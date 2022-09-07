@@ -20,7 +20,7 @@
           <%= f.text_field :agreement_date, class: 'form-control datepicker', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '' %>
         </div>
         <div class="mb-3 text-end">
-          <%= f.submit "Save", class: 'btn btn-primary' %>
+          <%= f.submit I18n.t("global.save"), class: 'btn btn-primary' %>
         </div>
         <% end %>
       </div>

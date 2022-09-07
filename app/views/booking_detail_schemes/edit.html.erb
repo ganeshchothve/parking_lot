@@ -11,7 +11,7 @@
       <%= render 'booking_detail_schemes/form', booking_detail_scheme: @booking_detail_scheme, booking_detail: @booking_detail, f: f %>
       </div>
       <div class="modal-footer text-end">
-        <%= f.submit "Save", class: "btn btn-primary" %>
+        <%= f.submit I18n.t("global.save"), class: "btn btn-primary" %>
       </div>
     </div>
   </div>
