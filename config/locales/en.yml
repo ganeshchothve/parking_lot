@@ -80,6 +80,7 @@ en:
       submit: Save %{model}"
       post:
         create: Upload %{model}
+    save: Save
 
   language:
     en: 'English'
@@ -704,6 +705,7 @@ en:
         interested_services: 'Services Interested In'
         created_at: 'Registered At'
         manager_id: 'Manager'
+        add_company: 'Add Partner Company'
       channel_partner/file_types:
         rera_certificate: 'RERA Certificate'
         gst_certificate: 'GST Certificate'

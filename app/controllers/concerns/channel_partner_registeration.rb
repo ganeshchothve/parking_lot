@@ -82,10 +82,10 @@ module ChannelPartnerRegisteration
     @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
     @channel_partner.assign_attributes(is_existing_company: false, primary_user: @user)
 
-    #auto approve partner company if flag on client is enabled
-    @channel_partner.approve! if current_client.enable_direct_activation_for_cp?
     respond_to do |format|
       if @channel_partner.save
+        #auto approve partner company if flag on client is enabled
+        @channel_partner.approve! if current_client.enable_direct_activation_for_cp?
         format.html { redirect_to channel_partners_path, notice: 'Partner Company Successfully Created' }
         format.json { render json: @channel_partner, status: :created }
       else

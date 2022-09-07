@@ -37,12 +37,7 @@ module BulkUpload
         cp = ::ChannelPartner.new(attrs)
         cp.assign_attributes(primary_user: user)
         if cp.save
-          if user.save
-            bur.success_count += 1
-          else
-            (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push(*user.errors.full_messages)).uniq
-            bur.failure_count += 1
-          end
+          bur.success_count += 1
         else
           (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push(*cp.errors.full_messages)).uniq
           bur.failure_count += 1
