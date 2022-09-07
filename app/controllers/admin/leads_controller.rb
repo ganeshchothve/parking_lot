@@ -75,7 +75,7 @@ class Admin::LeadsController < AdminController
   def send_payment_link
     respond_to do |format|
       format.html do
-        @lead.send_payment_link
+        @lead.send_payment_link(params[:booking_detail_id])
         redirect_to request.referer, notice: t('controller.users.send_payment_link')
       end
     end

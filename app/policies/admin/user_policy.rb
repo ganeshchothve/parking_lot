@@ -165,7 +165,7 @@ class Admin::UserPolicy < UserPolicy
       attributes += [:rejection_reason]
     end
     attributes += [:login_otp] if confirm_via_otp?
-    attributes += [:kylas_user_id] if record.role.in?(%w(sales admin))
+    attributes += [:kylas_user_id] if record.role.in?(%w(sales admin superadmin))
     attributes.uniq
   end
 end

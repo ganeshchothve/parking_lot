@@ -29,7 +29,7 @@
         <div class="box-card relative">
           <%= render 'vis_details', { vis_details: @vis_details } %>
           <div class="filter-box">
-            <%= render "vis_filters" %>
+            <%= render "vis_filters", { vis_id: @vis_id} %>
           </div>
         </div>
       </div>

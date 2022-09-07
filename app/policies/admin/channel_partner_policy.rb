@@ -10,7 +10,12 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   end
 
   def new?
-    %w[cp_admin].include?(user.role)
+    if user.present?
+      user.booking_portal_client.enable_channel_partners?
+    else
+      record.booking_portal_client.enable_channel_partners?
+    end
+    #%w[cp_admin].include?(user.role)
   end
 
   def create?

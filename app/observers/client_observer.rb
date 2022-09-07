@@ -18,4 +18,17 @@ class ClientObserver < Mongoid::Observer
 
     DocumentSign.create(booking_portal_client_id: client.id)
   end
+
+  def after_save client
+    fields = ['channel_partners', 'leads']
+    fields.each do |field|
+      if defined?("enable_#{field}_changed?") && client.send("enable_#{field}_changed?")
+        if Rails.env.staging? || Rails.env.production?
+          ChangeCpStatus.perform_async(client.id.to_s, field)
+        else
+          ChangeCpStatus.new.perform(client.id.to_s, field)
+        end
+      end
+    end
+  end
 end

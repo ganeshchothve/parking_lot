@@ -68,6 +68,14 @@ module ApplicationHelper
     amount.round
   end
 
+  def get_client_from_domain
+    if defined?(request) && request && request.domain.present?
+      domain = (request.subdomain.present? ? "#{request.subdomain}." : "") + "#{request.domain}"
+      client = Client.in(booking_portal_domains: domain).first
+    end
+    client
+  end
+
   def current_client
     return @current_client if @current_client.present?
     # if defined?(request) && request && request.subdomain.present? && request.domain.present?
@@ -244,7 +252,7 @@ module ApplicationHelper
   end
 
   def is_marketplace?
-    request.host.include?('marketplace')#|| request.host.include?('localhost')
+    request.host.include?('marketplace') || request.host.include?('localhost')
   end
 
   def marketplace_layout

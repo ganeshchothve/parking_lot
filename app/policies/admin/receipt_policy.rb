@@ -3,7 +3,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
 
   def index?
     out = !user.buyer? && (enable_actual_inventory?(user) || enable_direct_payment?)
-    out = out && user.active_channel_partner? && !user.booking_portal_client.launchpad_portal
+    out = out && user.active_channel_partner? && !user.booking_portal_client.launchpad_portal && (user.booking_portal_client.enable_leads? || user.booking_portal_client.enable_site_visit?)
   end
 
   def export?
@@ -34,7 +34,7 @@ class Admin::ReceiptPolicy < ReceiptPolicy
     return false if record.success? && record.booking_detail_id.present?
 
     valid = record.success? && record.booking_detail_id.blank?
-    valid ||= (%w[pending clearance_pending available_for_refund].include?(record.status) && %w[admin crm sales_admin].include?(user.role))
+    valid ||= (%w[pending clearance_pending available_for_refund].include?(record.status) && %w[superadmin admin crm sales_admin].include?(user.role))
     valid ||= (user.role?('channel_partner') && record.pending?)
     valid && user.active_channel_partner? && !user.booking_portal_client.launchpad_portal
   end

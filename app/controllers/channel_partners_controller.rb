@@ -4,7 +4,7 @@ class ChannelPartnersController < ApplicationController
   before_action :authenticate_user!, except: %i[new create find_or_create_cp_user register_cp_user add_user_account], unless: proc { params[:action] == 'index' && params[:ds] == 'true' }
   before_action :set_channel_partner, only: %i[show edit update destroy change_state asset_form]
   around_action :apply_policy_scope, only: :index, unless: proc { params[:ds] == 'true' }
-  before_action :authorize_resource, except: [:new, :create, :find_or_create_cp_user, :register_cp_user, :add_user_account]
+  before_action :authorize_resource, except: [:create, :find_or_create_cp_user, :register_cp_user, :add_user_account]
   skip_before_action :verify_authenticity_token, only: [:find_or_create_cp_user, :register_cp_user]
 
   def index
@@ -158,9 +158,9 @@ class ChannelPartnersController < ApplicationController
     unless params[:action] == 'index' && params[:ds] == 'true'
       if params[:action] == 'index' || params[:action] == 'export'
         authorize [:admin, ChannelPartner]
-      elsif ["new","new_channel_partner"].include?params[:action]
-        authorize [:admin, ChannelPartner.new]
-      elsif ["create","create_channel_partner"].include?params[:action]
+      elsif ["new","new_channel_partner"].include?(params[:action])
+        authorize [:admin, ChannelPartner.new(booking_portal_client: get_client_from_domain)]
+      elsif ["create","create_channel_partner"].include?(params[:action])
         authorize [:admin, ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))]
       else
         authorize [:admin, @channel_partner]

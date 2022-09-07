@@ -2,11 +2,11 @@ class Buyer::UserRequest::SwapPolicy < Buyer::UserRequestPolicy
   # def index? from Buyer::UserRequestPolicy
 
   def edit?
-    super && current_client.enable_actual_inventory?(user)
+    super && user.booking_portal_client.enable_actual_inventory?(user)
   end
 
   def new?
-    super && current_client.enable_actual_inventory?(user)
+    super && user.booking_portal_client.enable_actual_inventory?(user)
   end
 
   def create?

@@ -373,6 +373,7 @@ Rails.application.routes.draw do
       member do
         get :end_scheme
         patch :end_scheme
+        get :vis_details
       end
       collection do
         get :vis_details
@@ -431,8 +432,8 @@ Rails.application.routes.draw do
     get :project_wise_leads, to: "dashboard#project_wise_leads"
     get :cp_variable_incentive_scheme_report, to: "dashboard#cp_variable_incentive_scheme_report"
     get :variable_incentive_scheme_report, to: "dashboard#variable_incentive_scheme_report"
-    get :channel_partners_leaderboard, to: "dashboard#channel_partners_leaderboard"
-    get :channel_partners_leaderboard_without_layout, to: "dashboard#channel_partners_leaderboard_without_layout"
+    get "channel_partners_leaderboard/:id", to: "dashboard#channel_partners_leaderboard", as: :channel_partners_leaderboard
+    get "channel_partners_leaderboard_without_layout/:id", to: "dashboard#channel_partners_leaderboard_without_layout", as: :channel_partners_leaderboard_without_layout
     get :top_channel_partners_by_incentives, to: "dashboard#top_channel_partners_by_incentives"
     get :average_incentive_per_booking, to: "dashboard#average_incentive_per_booking"
     get :highest_incentive_per_booking, to: "dashboard#highest_incentive_per_booking"
@@ -447,7 +448,7 @@ Rails.application.routes.draw do
     get :sales_board, to: 'dashboard#sales_board'
     get :booking_details_counts, to: 'dashboard#booking_details_counts'
     get :team_lead_dashboard, to: 'dashboard#team_lead_dashboard'
-    get :dashboard_landing_page, to: 'dashboard#dashboard_landing_page'
+    # get :dashboard_landing_page, to: 'dashboard#dashboard_landing_page'
     get :payout_dashboard, to: 'dashboard#payout_dashboard'
     get :payout_list, to: 'dashboard#payout_list'
     get :payout_show, to: 'dashboard#payout_show'

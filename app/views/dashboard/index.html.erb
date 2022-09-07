@@ -21,11 +21,19 @@
     <% elsif current_user.role?('billing_team') %>
       <%= render 'dashboard/index/billing_team' %>
     <% elsif current_user.role?('team_lead') %>
-      <%= render 'dashboard/index/team_lead' %>
+      <% if current_client.enable_site_visit? %>
+        <%= render 'dashboard/index/team_lead' %>
+      <% else %>
+        <p class="text-center"><strong>Please contact administrator to enable Walk-in from Client Settings</strong></p>
+      <% end %>
     <% elsif ['cp_admin', 'cp'].include?(current_user.role) %>
       <%= render 'dashboard/index/cp_admin' %>
     <% elsif ['gre'].include?(current_user.role) %>
-      <%= render 'dashboard/index/gre' %>
+      <% if current_client.enable_site_visit? %>
+        <%= render 'dashboard/index/gre' %>
+      <% else %>
+        <p class="text-center"><strong>Please contact administrator to enable Walk-in from Client Settings</strong></p>
+      <% end %>
     <% elsif ['dev_sourcing_manager'].include?(current_user.role) %>
       <%= render 'dashboard/index/dev_sourcing_manager' %>
     <% elsif DashboardPolicy.new(current_user, :dashboard).admin_dashboard? %>

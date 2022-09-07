@@ -19,22 +19,76 @@
         <div class="modal-body">
           <nav>
             <div class="nav nav-tabs theme-tab" role="tablist">
-              <a class="nav-item nav-link active" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-basic" role="tab">Basic Details</a>
-              <!-- <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-logos" role="tab">Images & Docs</a> -->
-              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-bookings" role="tab">Kylas Products</a>
+              <% if is_marketplace? %>
+                <a class="nav-item nav-link active" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-basic" role="tab">Basic Details</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-bookings" role="tab">Kylas Products</a>
+              <% else %>
+                <a class="nav-item nav-link active" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-basic" role="tab">Basic Details</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-specifications" role="tab">Specs</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-offers" role="tab">Offers</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-timeline" role="tab">Timeline</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-location" role="tab">Location</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-pages" role="tab">Content Pages</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-logos" role="tab">Images & Docs</a>
+                <% if current_user.role?(:superadmin) %>
+                  <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-integrations" role="tab">Integrations</a>
+                  <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-bookings" role="tab">Bookings</a>
+                  <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-contacts" role="tab">Notifications</a>
+                  <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
+                    <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-crm-ids" role="tab">CRM</a>
+                  <% end %>
+                <% end %>
+              <% end %>
             </div>
           </nav>
         <div class="mt-3"></div>
           <div class="tab-content theme-form">
-            <div class="tab-pane fade show active" id="nav-project-basic" role="tabpanel">
-              <%= render 'admin/projects/basic', f: f, project: project %>
-            </div>
-            <!-- <div class="tab-pane fade" id="nav-project-logos" role="tabpanel">
-              <%#= render 'admin/projects/logos', f: f, project: project %>
-            </div> -->
-            <div class="tab-pane fade" id="nav-project-bookings" role="tabpanel">
-              <%= render 'admin/projects/kylas_products', f: f, project: project %>
-            </div>
+            <% if is_marketplace? %>
+              <div class="tab-pane fade show active" id="nav-project-basic" role="tabpanel">
+                <%= render 'admin/projects/mp/basic', f: f, project: project %>
+              </div>
+              <div class="tab-pane fade" id="nav-project-bookings" role="tabpanel">
+                <%= render 'admin/projects/kylas_products', f: f, project: project %>
+              </div>
+            <% else %>
+              <div class="tab-pane fade show active" id="nav-project-basic" role="tabpanel">
+                <%= render 'admin/projects/basic', f: f, project: project %>
+              </div>
+              <div class="tab-pane fade" id="nav-project-specifications" role="tabpanel">
+                <%= render 'admin/projects/specifications', f: f, project: project %>
+              </div>
+              <div class="tab-pane fade" id="nav-project-offers" role="tabpanel">
+                <%= render 'admin/projects/offers', f: f, project: project %>
+              </div>
+              <div class="tab-pane fade" id="nav-project-timeline" role="tabpanel">
+                <%= render 'admin/projects/timeline-updates', f: f, project: project %>
+              </div>
+              <div class="tab-pane fade" id="nav-project-location" role="tabpanel">
+                <%= render 'admin/projects/location', f: f, project: project %>
+              </div>
+              <div class="tab-pane fade" id="nav-project-pages" role="tabpanel">
+                  <%= render 'admin/projects/pages', f: f, project: project %>
+              </div>
+              <div class="tab-pane fade" id="nav-project-logos" role="tabpanel">
+                <%= render 'admin/projects/logos', f: f, project: project %>
+              </div>
+              <% if current_user.role?(:superadmin) %>
+                <div class="tab-pane fade" id="nav-project-bookings" role="tabpanel">
+                  <%= render 'admin/projects/bookings', f: f, project: project %>
+                </div>
+                <div class="tab-pane fade" id="nav-project-contacts" role="tabpanel">
+                  <%= render 'admin/projects/contacts', f: f, project: project %>
+                </div>
+                <div class="tab-pane fade" id="nav-project-integrations" role="tabpanel">
+                  <%= render 'admin/projects/integrations', f: f, project: project %>
+                </div>
+                <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
+                  <div class="tab-pane fade" id="nav-project-crm-ids" role="tabpanel">
+                    <%= render 'admin/projects/crm_ids', f: f, project: project %>
+                  </div>
+                <% end %>
+              <% end %>
+            <% end %>
           </div>
         </div>
         <div class="modal-footer text-end">

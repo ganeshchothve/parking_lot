@@ -50,25 +50,26 @@
                     </div>
                   </div>
                 </div>
-
-                <div class="accordion-item border-end-0 border-start-0">
-                  <h2 class="accordion-header d-flex justify-content-between" id="headingUsers">
-                    <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseUsers" aria-expanded="false" aria-controls="headingUsers">
-                      Site Visits
-                    </button>
-                  </h2>
-                  <div id="collapseUsers" class="accordion-collapse collapse" aria-labelledby="headingUsers"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body pt-0 ps-4">
-                      <div class="row ps-3">
-                        <div class="col-12">
-                          <%= render 'site_visits_section', site_visits: @lead.site_visits %>
+                <% if current_client.enable_site_visit? %>
+                  <div class="accordion-item border-end-0 border-start-0">
+                    <h2 class="accordion-header d-flex justify-content-between" id="headingUsers">
+                      <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseUsers" aria-expanded="false" aria-controls="headingUsers">
+                        Site Visits
+                      </button>
+                    </h2>
+                    <div id="collapseUsers" class="accordion-collapse collapse" aria-labelledby="headingUsers"
+                      data-bs-parent="#accordionExample">
+                      <div class="accordion-body pt-0 ps-4">
+                        <div class="row ps-3">
+                          <div class="col-12">
+                            <%= render 'site_visits_section', site_visits: @lead.site_visits %>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                <% end %>
 
                 <div class="accordion-item border-end-0 border-start-0">
                   <h2 class="accordion-header d-flex justify-content-between" id="headingRemarks">

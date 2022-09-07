@@ -2,7 +2,7 @@ class Admin::LeadPolicy < LeadPolicy
 
   def index?
     # out = !(user.buyer? || user.role.in?(%w(channel_partner cp_owner dev_sourcing_manager)))
-    out = !(user.buyer? || user.role.in?(%w(dev_sourcing_manager)))
+    out = !(user.buyer? || user.role.in?(%w(dev_sourcing_manager))) && user.booking_portal_client.enable_leads?
     #out = out && user.active_channel_partner?
     #out = false if user.role.in?(%w(channel_partner cp_owner)) && !interested_project_present?
     #out
@@ -90,7 +90,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def send_payment_link?
-    record.user.confirmed? && record.user.in?(User::ADMIN_ROLES)
+    record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && (user.booking_portal_client.enable_payment_with_kyc ? record.kyc_ready? : true )
   end
 
   def search_by?
@@ -113,12 +113,11 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def show_existing_customer?
-    %w(sales).exclude?(user.role)
-    false
+    %w(sales).exclude?(user.role) && (user.booking_portal_client.enable_leads || user.booking_portal_client.enable_site_visit?)
   end
 
   def reassign_lead?
-    current_client.team_lead_dashboard_access_roles.include?(user.role) || user.role?("team_lead")
+    user.booking_portal_client.team_lead_dashboard_access_roles.include?(user.role) || user.role?("team_lead")
   end
 
   def reassign_sales?

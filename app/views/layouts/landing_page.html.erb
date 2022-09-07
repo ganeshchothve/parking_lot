@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title><%= current_client.name %></title>    
+    <title><%= get_client_from_domain.name %></title>    
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta charset="utf-8">
@@ -26,8 +26,8 @@
       if(typeof App === "undefined"){
         App = {};
       }
-      App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login, :enable_referral_bonus]) %>;
-      App.client.enable_actual_inventory = <%= current_client.enable_actual_inventory?(current_user) %>
+      App.client = <%= raw get_client_from_domain.to_json(only: [:name, :_id, :preferred_login, :enable_referral_bonus]) %>;
+      App.client.enable_actual_inventory = <%= get_client_from_domain.enable_actual_inventory?(current_user) %>
       App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;
       <% if user_signed_in? %>
         App.current_user = <%= raw current_user.to_json %>;
@@ -37,11 +37,11 @@
         Pusher.logToConsole = true;
       <% end %>
     <% end %>
-    <% if current_client.selldo_client_id.present? %>
+    <% if get_client_from_domain.selldo_client_id.present? %>
       <% if Rails.env.production? %>
-        <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
+        <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= get_client_from_domain.selldo_client_id %>.js'></script>
       <% else %>
-        <script src='<%= ENV_CONFIG[:selldo][:base_url] %>/t/<%= current_client.selldo_client_id %>.js'></script>
+        <script src='<%= ENV_CONFIG[:selldo][:base_url] %>/t/<%= get_client_from_domain.selldo_client_id %>.js'></script>
       <% end %>
     <% end %>
 
