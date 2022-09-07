@@ -284,7 +284,6 @@ class Project
 
   def self.user_based_scope(user, params = {})
     custom_scope = {}
-    custom_scope = { city: user.city } if user.city.present?
     if user.role.in?(%w(cp_owner channel_partner))
       custom_scope = { _id: { '$in': user.interested_projects.approved.distinct(:project_id) } } unless params[:controller] == 'admin/projects' && params[:ds].blank?
     end
