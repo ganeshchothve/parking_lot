@@ -79,6 +79,7 @@ en:
     hello: Hello
     today: Today
     documents: Documents
+    register: Register
     link_to:
       not_summary: Note Summary
       crm: CRM
@@ -105,6 +106,7 @@ en:
       total_interest_payable: Total Interest Payable
       total_amount_payable: Total Amount Payable
       select_type: Select Type
+      select_project: Select Project
       uniques_selling_points: Uniques Selling Points
       view_all: View All
       advertise_kit: Advertise Kit
@@ -201,6 +203,8 @@ en:
       earnings: Earnings
       earning_potential: Earning Potential
       no_images_available: No Images Available
+      scroll_down: Scroll Down
+      register_now: Register Now
   helpers:
     extend_validity:
       link_name: '%{model}'
@@ -1852,8 +1856,67 @@ en:
       alert:
         not_found: 'Time slot not found'
     home:
+      keys:
+        broker: Broker
+        superbroker: Superbroker
+        partial_brokerage: Partial Brokerage
+        hot_selling: Hot Selling
       select_project:
         link_name: 'Switch Project'
+      text_msg:
+        thanks_for_signing: 'Thank you for signing up with us'
+        found_inactive_account: 'We found an old inactive account with these details. We have activated it, registered a new company & linked your account under it.'
+        be_a_superbroker: 'Be a SUPERBROKER'
+        good_points:
+          others:
+            no_info_new_launches: 'No information about new launches'
+            no_tie_ups: 'No tie-ups with TOP developers'
+            no_promotion_material: 'No Promotion Material of projects'
+            low_qality_leads: 'Low Quality Leads'
+          with_us:
+            full_brokerage: 'FULL Brokerage on time'
+            get_info_new_launches: 'Get ALL information about new launches'
+            work_with_top_devs: 'Work with TOP Developers'
+            best_leads: 'Best quality Leads at Lowest Prices'
+            all_promotion_material: 'All Promotion Materials for every project'
+            pune_market_opportunity: "Pune's residential market opportunity"
+            register_now: "Register Now"
+            lined_up_launches: "Lined Up Launches"
+            brokerage_to_be_paid: "Brokerage to be paid out within the next 6 months"
+            hottest_selling_properties: "Chance to work with Pune's hottest selling properties"
+        what_for_you:
+          title: "What’s in it for You!"
+          pune_projects:
+            title: "Projects in Pune"
+            projects_in_pune_regions: "15 projects in Pune West and East (Mandates)"
+            units: units
+            inventory: INR. 2,000 CR inventory
+            townships: 2 Large Townships (Magarpatta)
+          inventory:
+            title: Inventory of ALL sizes
+            early_access: Exclusive early access to inventory
+            lead_lock_in: Exclusive lead lock-in
+            blocked: Blocked for 45 days after visit
+          rewards:
+            title: Quarterly & Annual Rewards
+            prizes: Total prizes worth Rs. 15L for Top performers (Dec’21 - Mar’22)
+            bangkok_trip: Top 3 Brokers get a Bangkok trip for 3 team members
+            goa_trip: Next 5 Brokers get a Goa trip for 3 team members
+            annual_prize: Annual Bumper prize – SUV(Dec‘21 - Dec ‘22)
+          incentives:
+            title: Special Incentives
+            spot_booking: Spot booking Incentive- INR 5,000
+            site_visit_incentive: Site visit Incentive- INR 500 on First visit
+            other_projects: Rs. 300 for visits to other projects
+            offer: Get 3 Bookings in a project – get 30% of your brokerage paid before registration
+        exclusive_features:
+          title: Exclusive Features to Grow Your Business 5X
+        channel_partner_summit:
+          title: Channel Partner Summit
+        why_beyondwalls:
+          title: Why partner with BeyondWalls
+
+
     cp_lead_activities:
       index:
         link_name: 'Lead Activities'
@@ -3033,6 +3096,7 @@ en:
 
   devise:
     keys:
+      sign_in: Sign In
       log_in: Log In
       email_verified: Email Verified
       reset_password: Reset Password
@@ -3045,17 +3109,26 @@ en:
       change_password: "Change Password"
       change_my_password: "Change my Password"
       change_your_password: "Change your Password"
+      reset_your_password: "Reset your Password"
       change_password: "Change Password"
       unlock_my_account: "Unlock my Account"
       forgot_password: "Forgot your Password?"
+      verify_your_email: "Verify your email"
+      resend: "Click here to resend"
     help_text:
       sign_in:
         otp: "Sign in using OTP (One Time Password)"
         email_and_password: "Sign in using email and password"
         omniauth: "Sign in with %{name}"
+        after_password_reset: "Sign in after resetting your password"
+        after_verify: Sign in after verifying your email and setting up a password
       enter_password: "Please enter a password of your choice"
       create_password: "Please create a password for your account"
       resend_unlock_instructions: "Resend unlock instructions"
+      reset_password:
+        link: "If you can't remember your password, please reset it from using the link below."
+      verify_account:
+        link: "Click the link in your email to verify your account. If you can't find the email check your spam folder or "
 
     text_msg:
       thanks_channel_partner: "Thank you for registering as a Channel Partner at %{name}. Please confirm your account by clicking the link below.
@@ -3067,3 +3140,6 @@ en:
       click_to_confirm: "Please confirm your account by clicking the link below."
       reset_password: "Reset your password by clicking the link below. Your password won't change until you access the link above and create a new one."
       account_locked: "Your account has been locked due to an excessive number of unsuccessful sign in attempts. Click the link below to unlock your account:"
+      sent_verification_link: "We have sent an account verification link to %{name}"
+  export_mailer:
+    export_scheduled: "Please find attached your scheduled export"

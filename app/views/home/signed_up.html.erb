@@ -1,14 +1,14 @@
 <div class="mt-5 pt-5"></div>
 <div class="cp-signup-thank-popup pt-3 pb-3 col-lg-8 mg-auto">
   <div class="cp-popup-inner position-relative p-3">
-    <h3 class="text-start text-light-blue">Thank you for signing up with us</h3>
+    <h3 class="text-start text-light-blue"><%= I18n.t("controller.home.text_msg.thanks_for_signing") %></h3>
     <p class="position-absolute top-0 end-0 pt-3 pe-3">
     <img src="<%= asset_path "email-verify.svg" %>">
     </p>
-    <h4 class="text-start">Verify your email</h4>
-    <p class="popup-desc text-start font-medium">We have sent an account verification link to <%= @user.email %></p>
-    <p class="fn-16">Click the link in your email to verify your account.<br> If you can't find the email check your spam folder or <%= link_to 'click here to resend', resend_confirmation_instructions_admin_user_path(@user), class: 'text-primary' %></p>
-    <p class="fn-16 font-medium theme-txt-color">Sign in after verifying your email and setting up a password</p>
-    <%= link_to 'Sign In', new_user_session_path, class: 'bg-primary btn rounded p-2 px-3 white' %>
+    <h4 class="text-start"><%= I18n.t("devise.keys.verify_your_email") %></h4>
+    <p class="popup-desc text-start font-medium"><%= I18n.t("devise.text_msg.sent_verification_link", name: @user.email) %></p>
+    <p class="fn-16"><%= I18n.t("devise.help_text.verify_account.link") + " " + link_to I18n.t("devise.keys.resend") %>, resend_confirmation_instructions_admin_user_path(@user), class: 'text-primary' %></p>
+    <p class="fn-16 font-medium theme-txt-color"><%= I18n.t("devise.help_text.sign_in.after_verify") %></p>
+    <%= link_to I18n.t("devise.keys.sign_in"), new_user_session_path, class: 'bg-primary btn rounded p-2 px-3 white' %>
   </div>
 </div>

@@ -1,7 +1,7 @@
 <div class="mt-5 pt-5"></div>
 <section class="cp-login-otp-sec col-lg-4 mg-auto" id="otp_user_section">
   <div class="cp-login-otp-wrap">
-    <h2 class="px-4 pt-3 pb-3">Select Project</h2>
+    <h2 class="px-4 pt-3 pb-3"><%= I18n.t("global.link_to.select_project") %></h2>
     <div class="cp-signup-form-wrap px-4 cp-form-wrap">
       <%= form_tag(select_project_path, id: 'select_project_form') do %>
         <div class='mb-3'>

@@ -4,7 +4,7 @@
       <div class="container-launchpad home-container">
         <div class="home-new-caption cwt text-center">
           <!-- <h1 class="new-line-1 text-left f600">DON’T BE A JOKER</h1> -->
-          <h1 class="new-line-3 f600 text-left">BE A SUPERBROKER</h1>
+          <h1 class="new-line-3 f600 text-left"><%= I18n.t("controller.home.text_msg.be_a_superbroker") %></h1>
         </div>
       </div>
     </div>
@@ -18,32 +18,32 @@
   <div id="home-prev" class=""></div>
   <div id="home-next" class=""></div>
   <div class="scroll-down-btn scroll-sec" rel="join-broker-network" data-event-category="Section"
-    data-event-action="Click" data-event-name="Scroll Down">Scroll Down</div>
+    data-event-action="Click" data-event-name="Scroll Down"><%= I18n.t("global.link_to.scroll_down") %></div>
 </section>
 <section class="broker-sec" id="join-broker-network">
   <div class="container">
     <div class="broker-wrapper">
       <div class="broker-left text-right">
-        <h2>BROKER</h2>
+        <h2><%= I18n.t("controller.home.keys.broker").upcase %></h2>
         <ul class="broker-left-list">
-          <li>Partial Brokerage</li>
-          <li>No information about new launches </li>
-          <li>No tie-ups with TOP developers </li>
-          <li>Low Quality Leads</li>
-          <li>No Promotion Material of projects</li>
+          <li><%= I18n.t("controller.home.keys.partial_brokerage") %></li>
+          <li><%= I18n.t("controller.home.text_msg.good_points.others.no_info_new_launches") %></li>
+          <li><%= I18n.t("controller.home.text_msg.good_points.others.no_tie_ups") %></li>
+          <li><%= I18n.t("controller.home.text_msg.good_points.others.low_quality_leads") %></li>
+          <li><%= I18n.t("controller.home.text_msg.good_points.others.no_promotion_material") %></li>
         </ul>
       </div>
       <div class="broker-img">
         <img class="lazy" data-src="<%= asset_path 'broker-img.png' %>">
       </div>
       <div class="broker-right">
-        <h2>SUPERBROKER</h2>
+        <h2><%= I18n.t("controller.home.keys.sueprbroker").upcase %></h2>
         <ul class="broker-right-list text-left">
-          <li>FULL Brokerage on time</li>
-          <li>Get ALL information about new launches</li>
-          <li>Work with TOP Developers</li>
-          <li>Best quality Leads at Lowest Prices</li>
-          <li>ALL Promotion Materials for every project</li>
+          <li><%= I18n.t("controller.home.text_msg.good_points.with_us.full_brokerage") %></li>
+          <li><%= I18n.t("controller.home.text_msg.good_points.with_us.get_info_new_launches") %></li>
+          <li><%= I18n.t("controller.home.text_msg.good_points.with_us.work_with_top_devs") %></li>
+          <li><%= I18n.t("controller.home.text_msg.good_points.with_us.best_leads") %></li>
+          <li><%= I18n.t("controller.home.text_msg.good_points.with_us.all_promotion_material") %></li>
         </ul>
       </div>
     </div>
@@ -53,10 +53,10 @@
 <section class="existingnew-projects-section section-padding" id="existingnew-projects">
   <div class="container">
     <div class="col-12">
-      <p class="text-center cgreen f500">Pune's residential market opportunity</p>
+      <p class="text-center cgreen f500"><%= I18n.t("controller.home.text_msg.good_points.with_us.pune_market_opportunity") %></p>
       <div class="join-broker-network-btn-wrapper text-center">
         <a href="<%= new_channel_partner_path %>" class="green-btn register-btn" data-event-category="Section"
-          data-event-action="Click" data-event-name="Register Now">Register Now</a>
+          data-event-action="Click" data-event-name="Register Now"><%= I18n.t("controller.home.text_msg.good_points.with_us.register_now") %></a>
       </div>
     </div>
     <div class="col-12">
@@ -65,19 +65,19 @@
           <li>
             <div class="stats-inner">
               <img class="lazy" data-src="<%= asset_path 'lined-up.svg' %>">
-              <p>3000+<span>Lined Up Launches</span></p>
+              <p>3000+<span><%= I18n.t("controller.home.text_msg.good_points.with_us.lined_up_launches") %></span></p>
             </div>
           </li>
           <li>
             <div class="stats-inner">
               <img class="lazy" data-src="<%= asset_path 'paid-out.svg' %>">
-              <p>Rs. 200 Cr.<span>Brokerage to be paid out <br>within the next 6 months</span></p>
+              <p>Rs. 200 Cr.<span><%= I18n.t("controller.home.text_msg.good_points.with_us.brokerage_to_be_paid") %></span></p>
             </div>
           </li>
         </ul>
       </div>
     </div>
-    <h2 class="section-heading text-center cgreen">Chance to work with Pune's hottest selling properties</h2>
+    <h2 class="section-heading text-center cgreen"><%= I18n.t("controller.home.text_msg.good_points.with_us.hottest_selling_properties") %></h2>
     <div class="row relative project-listing-wrapper">
       <div class="project-listing-slider">
         <% Project.where(hot: true).limit(15).each do |project| %>
@@ -87,12 +87,13 @@
               <%#= image_tag(project.cover_photo&.url || (asset_path 'default-project.jpg'), class: 'img-full lazy') %>
               <div class="propery-thumb-img position-relative lazy" data-src="<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>">
                 <% if project.hot?%>
-                <span class="hot-sellig-tag"><i class="fa fa-fire fill-danger me-1"></i>Hot Selling</span>
+                <span class="hot-sellig-tag"><i class="fa fa-fire fill-danger me-1"></i><%= I18n.t("controller.home.keys.hot_selling") %></span>
                 <% end %>
               </div>
             </div>
             <div class="property-item-details">
-              <div class="property-name cgreen f600"><%= project.name %></div>
+              <div class="pr'
+              operty-name cgreen f600"><%= project.name %></div>
               <p class="property-location">
                 <%= "#{project.micro_market.present? ? project.micro_market&.titleize + ', ': ''}#{project.city&.titleize}".presence || '-' %>
               </p>
@@ -113,7 +114,7 @@
 
 <section class="incentive-sec section-padding position-relative">
   <div class="container">
-    <h2 class="section-heading text-center cgreen">What’s in it for You!</h2>
+    <h2 class="section-heading text-center cgreen"><%= I18n.t("controller.home.text_msg.what_for_you.title") %></h2>
     <!-- <div class="col-app-4 col-app-xs-12">
       <ul class="incentive-lists">
         <li class="active">
@@ -136,12 +137,12 @@
         <div class="tab-box">
           <img src="<%= asset_path 'incentive-tab-1.jpg' %>">
           <div class="inner-box">
-            <h3>Projects in Pune</h3>
+            <h3><%= I18n.t("controller.home.text_msg.what_for_you.pune_projects.title") %></h3>
             <ul>
-              <li>15 projects in Pune West and East (Mandates)</li>
-              <li>5,000 units</li>
-              <li>INR. 2,000 CR inventory</li>
-              <li>2 Large Townships (Magarpatta)</li>
+              <li><%= I18n.t("controller.home.text_msg.what_for_you.pune_projects.projects_in_pune_regions") %></li>
+              <li><%= I18n.t("controller.home.text_msg.what_for_you.pune_projects.units") %></li>
+              <li><%= I18n.t("controller.home.text_msg.what_for_you.pune_projects.inventory") %></li>
+              <li><%= I18n.t("controller.home.text_msg.what_for_you.pune_projects.townships") %></li>
             </ul>
           </div>          
         </div>
@@ -150,11 +151,11 @@
         <div class="tab-box ">
           <img class="lazy" data-src="<%= asset_path 'incentive-tab-2.jpg' %>">
           <div class="inner-box">
-            <h3>Inventory of ALL sizes</h3>
+            <h3><%= I18n.t("controller.home.text_msg.what_for_you.inventory.title") %></h3>
             <ul>
-              <li>Exclusive early access to inventory</li>
-              <li>Exclusive lead lock-in</li>
-              <li>Blocked for 45 days after visit</li>
+              <li><%= I18n.t("controller.home.text_msg.what_for_you.inventory.early_access") %></li>
+              <li><%= I18n.t("controller.home.text_msg.what_for_you.inventory.lead_lock_in") %></li>
+              <li><%= I18n.t("controller.home.text_msg.what_for_you.inventory.blocked") %></li>
             </ul>
           </div>         
         </div>
@@ -163,12 +164,12 @@
         <div class="tab-box ">
           <img class="lazy" data-src="<%= asset_path 'incentive-tab-4.jpg' %>">
           <div class="inner-box">
-            <h3>Quarterly & Annual Rewards</h3>
+            <h3><%= I18n.t("controller.home.text_msg.what_for_you.rewards.title") %></h3>
             <ul>
-              <li>Total prizes worth Rs. 15L for Top performers (Dec’21 - Mar’22)</li>
-              <li>Top 3 Brokers get a Bangkok trip for 3 team members​</li>
-              <li>Next 5 Brokers get a Goa trip for 3 team members​</li>
-              <li>Annual Bumper prize – SUV(Dec‘21 - Dec ‘22)​</li>
+              <li><%= I18n.t("controller.home.text_msg.what_for_you.rewards.prizes") %></li>
+              <li><%= I18n.t("controller.home.text_msg.what_for_you.rewards.bangkok_trip") %></li>
+              <li><%= I18n.t("controller.home.text_msg.what_for_you.rewards.goa_trip") %></li>
+              <li><%= I18n.t("controller.home.text_msg.what_for_you.rewards.annual_prize") %></li>
             </ul>
           </div>          
         </div>
@@ -177,12 +178,12 @@
         <div class="tab-box ">
           <img class="lazy" data-src="<%= asset_path 'incentive-tab-3.jpg' %>">
           <div class="inner-box">
-            <h3>Special Incentives​</h3>
+            <h3><%= I18n.t("controller.home.text_msg.what_for_you.incentives.title") %></h3>
             <ul>
-              <li>Spot booking Incentive- INR 5,000</li>
-              <li>Site visit Incentive- INR 500 on First visit</li>
-              <li>Rs. 300 for visits to other projects</li>
-              <li>Get 3 Bookings in a project – get 30% of your brokerage paid before registration</li>
+              <li><%= I18n.t("controller.home.text_msg.what_for_you.incentives.spot_booking") %></li>
+              <li><%= I18n.t("controller.home.text_msg.what_for_you.incentives.site_visit_incentive") %></li>
+              <li><%= I18n.t("controller.home.text_msg.what_for_you.incentives.other_projects") %></li>
+              <li><%= I18n.t("controller.home.text_msg.what_for_you.incentives.offer") %></li>
             </ul>
           </div>          
         </div>
@@ -194,7 +195,7 @@
 </section>
 <section class="exclusive-features-section section-padding" id="exclusive-features">
   <div class="container-launchpad">
-    <h2 class="section-heading text-center cgreen">Exclusive Features to Grow Your Business 5X</h2>
+    <h2 class="section-heading text-center cgreen"><%=  I18n.t("controller.home.text_msg.exclusive_features.title") %></h2>
     <!-- <p class="text-center cbk f500">That will help you grow your business</p> -->
     <br />
     <div class="exclusive-features-wrapper relative">
@@ -205,7 +206,7 @@
               <img data-src="<%= asset_path 'cp-ex-feat-01.svg'%>" class="lazy" width="55" />
             </div>
             <div class="exclusive-features-desc">
-              Early access to<br /> new Launches
+              <%= I18n.t("global.link_to.early_access") %><br><%= I18n.t("global.link_to.new_launches") %>
             </div>
           </div>
         </div>
@@ -215,7 +216,7 @@
               <img data-src="<%= asset_path 'cp-ex-feat-06.svg'%>" class="lazy" width="55" />
             </div>
             <div class="exclusive-features-desc">
-              Timely payments to<br /> streamline cash flows
+              <%= I18n.t("global.link_to.timely_payments") %><br><%= I18n.t("global.link_to.cash_flows") %>
             </div>
           </div>
         </div>
@@ -225,7 +226,7 @@
               <img data-src="<%= asset_path 'cp-ex-feat-05.svg'%>" class="lazy" width="55" />
             </div>
             <div class="exclusive-features-desc">
-              Marketing support<br /> &amp; assets
+              <%= I18n.t("global.link_to.marketing_support") %><br><%= I18n.t("global.link_to.and_assets") %>
             </div>
           </div>
         </div>
@@ -235,7 +236,7 @@
               <img data-src="<%= asset_path 'cp-ex-feat-11.svg'%>" class="lazy" width="55" />
             </div>
             <div class="exclusive-features-desc">
-              Performance-based<br /> broker ratings
+              <%= I18n.t("global.link_to.performace_based") %><br><%= I18n.t("global.link_to.channel_partner_ratings") %>
             </div>
           </div>
         </div>
@@ -245,7 +246,7 @@
               <img data-src="<%= asset_path 'cp-ex-feat-02.svg'%>" class="lazy" width="55" />
             </div>
             <div class="exclusive-features-desc">
-              Extensive nurturing and<br> calling during launches
+              <%= I18n.t("global.link_to.extensive_nurturing") %><br><%= I18n.t("global.link_to.calling_during_launches") %>
             </div>
           </div>
         </div>
@@ -265,7 +266,7 @@
               <img data-src="<%= asset_path 'cp-ex-feat-04.svg'%>" class="lazy" width="55" />
             </div>
             <div class="exclusive-features-desc">
-              CRM training<br /> &amp; support
+              <%= I18n.t("global.link_to.crm_training") %><br><%= I18n.t("global.link_to.support") %>
             </div>
           </div>
         </div>
@@ -276,7 +277,7 @@
               <img data-src="<%= asset_path 'cp-ex-feat-07.svg'%>" class="lazy" width="55" />
             </div>
             <div class="exclusive-features-desc">
-              Fully automated<br /> EOI process
+              <%= I18n.t("global.link_to.fully_automated") %><br><%= I18n.t("global.link_to.eoi_process") %>
             </div>
           </div>
         </div>
@@ -286,7 +287,7 @@
               <img data-src="<%= asset_path 'cp-ex-feat-08.svg'%>" class="lazy" width="55" />
             </div>
             <div class="exclusive-features-desc">
-              Online inventory selection,<br /> KYC &amp; bookings
+              <%= I18n.t("global.link_to.online_inventory_selection") %><br><%= I18n.t("global.link_to.kyc_and_bookings") %>
             </div>
           </div>
         </div>
@@ -296,7 +297,7 @@
               <img data-src="<%= asset_path 'cp-ex-feat-09.svg'%>" class="lazy" width="55" />
             </div>
             <div class="exclusive-features-desc">
-              Complete<br /> transparency
+              <%= I18n.t("global.link_to.complete") %><br><%= I18n.t("global.link_to.transparency") %>
             </div>
           </div>
         </div>
@@ -306,7 +307,7 @@
               <img data-src="<%= asset_path 'cp-ex-feat-10.svg'%>" class="lazy" width="55" />
             </div>
             <div class="exclusive-features-desc">
-              Unique online<br /> broker profile
+              <%= I18n.t("global.link_to.unique_online") %><br><%= I18n.t("global.link_to.broker_profile") %>
             </div>
           </div>
         </div>
@@ -314,7 +315,7 @@
           <a href='<%= new_channel_partner_path %>' data-event-category="Section" data-event-action="Click"
             data-event-name="Register Now">
             <div class="exclusive-features-item-inner exclusive-features-last-item register-btn">
-              Register Now<br /><br /><img src="<%= asset_path 'next-arrow.svg'%>" />
+              <%= I18n.t("global.link_to.register_now") %><br /><br /><img src="<%= asset_path 'next-arrow.svg'%>" />
             </div>
           </a>
         </div>
@@ -324,14 +325,14 @@
     </div>
     <div class="visible-xs text-center mobile-exclusive-feature-btn-wrapper">
       <a href="<%= new_channel_partner_path %>" class="green-btn register-btn" data-event-category="Section"
-        data-event-action="Click" data-event-name="Register Now">Register Now</a>
+        data-event-action="Click" data-event-name="Register Now"><%= I18n.t("global.link_to.register_now") %></a>
     </div>
   </div>
 </section>
 <section class="section-padding logo-sec">
   <div class="container">
     <div class="col-12 mb-5 pb-4">
-      <h2 class="section-heading text-center cgreen">Channel Partner Summit</h2>
+      <h2 class="section-heading text-center cgreen"><%= I18n.t("controller.home.text_msg.channel_partner_summit.title") %></h2>
       <div class="gallery-wrapper relative mb-5">
         <ul class="gallery-slider">
           <li>
@@ -380,7 +381,7 @@
       </div>
     </div>
 
-    <h2 class="section-heading text-center cgreen mt-5">Why partner with BeyondWalls</h2>
+    <h2 class="section-heading text-center cgreen mt-5"><%= I18n.t("controller.home.text_msg.why_beyondwalls.title") %></h2>
     <div class="col-12">
       <ul class="website-stats">
         <li>
