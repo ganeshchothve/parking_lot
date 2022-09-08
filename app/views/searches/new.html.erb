@@ -71,7 +71,7 @@
             <%= form_for @search, url: search_next_step_url, html: {class: 'validate-form row theme-form', id: "search_form"} do |f| %>
             <%= render "form_fields", {f: f, data: @data} %>
             <div class="mb-3">
-              <%= f.submit "Search", class: "theme-btn btn-primary px-3 py-1 d-inline-block w-auto" %>
+              <%= f.submit I18n.t("global.search"), class: "theme-btn btn-primary px-3 py-1 d-inline-block w-auto" %>
             </div>
             <% end %>
           </div>

@@ -29,19 +29,19 @@
     <div class="card h-100">
       <div class="card-body">
         <div class="mb-3">
-          <label class="small text-muted">Paid By:</label>
+          <label class="small text-muted"><%= I18n.t("global.link_to.paid_by") %>:</label>
           <div class="theme-txt-color"><%= @receipt.primary_user_kyc.name %></div>
         </div>
         <div class="mb-3">
-          <label class="small text-muted">Email:</label>
+          <label class="small text-muted"><%= I18n.t("mongoid.attributes.user.email") %>:</label>
           <div class="theme-txt-color"><%= @receipt.primary_user_kyc.email %></div>
         </div>
         <div class="mb-3">
-          <label class="small text-muted">Phone:</label>
+          <label class="small text-muted"><%= I18n.t("mongoid.attributes.user.phone") %>:</label>
           <div class="theme-txt-color"><%= @receipt.primary_user_kyc.phone %></div>
         </div>
         <div class="mb-3">
-          <label class="small text-muted">PAN Number:</label>
+          <label class="small text-muted"><%= I18n.t("mongoid.attributes.user.pan_number") %>:</label>
           <div class="theme-txt-color"><%= @receipt.primary_user_kyc.pan_number %></div>
         </div>
       </div>
@@ -53,18 +53,18 @@
       <div class="card-body">
         <div class="pd-box">
           <div class="mb-3">
-            <label class="small text-muted">Paid To:</label>
+            <label class="small text-muted"><%= I18n.t("global.link_to.paid_to") %>:</label>
             <div class="theme-txt-color"><%= current_client.registration_name %></div>
           </div>
           <% if current_client.cin_number.present? %>
           <div class="mb-3">
-            <label class="small text-muted">CIN Number:</label>
+            <label class="small text-muted"><%= I18n.t("mongoid.attributes.client.cin_number") %>:</label>
             <div class="theme-txt-color"><%= current_client.cin_number %></div>
           </div>
           <% end %>
           <% if current_client.address.present? %>
           <div class="mb-3">
-            <label class="small text-muted">Address: </label>
+            <label class="small text-muted"><%= I18n.t("mongoid.attributes.client.address") %>: </label>
             <div class="theme-txt-color"><%= current_client.address.to_sentence %></div>
           </div>
           <% end %>
@@ -81,11 +81,11 @@
 <div class="card">
   <div class="card-body">
     <div class="float-right text-right">
-      <strong class="font-medium mb-2 d-block">For <%= current_client.registration_name %></strong>
+      <strong class="font-medium mb-2 d-block"><%= I18n.t("global.link_to.for") + " " + current_client.registration_name %></strong>
       Authorized Signatory
     </div>
   </div>
 </div>
-<div class="text-center text-muted small mt-3">This is an electronically generated receipt; hence no signature is
-  required.</div>
+<div class="text-center text-muted small mt-3"><%= I18n.t("controller.receipts.text.e_generated_receipt") %></div>
 <div class="pt-3"></div>
+

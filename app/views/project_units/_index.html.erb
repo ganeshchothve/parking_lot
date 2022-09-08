@@ -9,7 +9,7 @@
                 <div>
                   <div class="inner-info d-flex justify-content-between">
                     <div class="ps-3 py-3">
-                      <p class="fn-16 font-medium theme-txt-color mb-0 pt-2"><%= project_unit.project_tower_name %> | <%= project_unit.project_name %> <span class="mx-2">-</span><span class="font-normal">Beds/Baths: <%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></span></p>
+                      <p class="fn-16 font-medium theme-txt-color mb-0 pt-2"><%= project_unit.project_tower_name %> | <%= project_unit.project_name %> <span class="mx-2">-</span><span class="font-normal"><%= I18n.t("controller.dashboard.booking_details_overview.beds_baths") + ": " + project_unit.bedrooms %> / <%= project_unit.bathrooms %></span></p>
                      
                     </div>
                     <div class="pe-3 py-3">
@@ -31,7 +31,7 @@
                   </div>
                   <div class="inner-info">
                     <div class="pe-3 py-3  d-flex justify-content-end">
-                      <p class="fn-16 secondary mb-0 font-medium"><span class="txt-light-blue">Agreement Value:</span> <span class="theme-txt-color"><%= number_to_indian_currency(project_unit.calculate_agreement_price.round) %></span></p>
+                      <p class="fn-16 secondary mb-0 font-medium"><span class="txt-light-blue"><%= I18n.t("mongoid.attributes.booking_detail.agreement_price") %>:</span> <span class="theme-txt-color"><%= number_to_indian_currency(project_unit.calculate_agreement_price.round) %></span></p>
                       <span class="txt-light-blue mx-3">| </span>
                       <p class="font-medium fn-14 mb-0 theme-txt-color mb-0"><i class='fa fa-circle status_<%= t("mongoid.attributes.project_unit/status.#{project_unit.status}").downcase.gsub(' ', '_') %>  me-2 fa-sm'></i><%= t("mongoid.attributes.project_unit/status.#{project_unit.status}") %></p>
                       

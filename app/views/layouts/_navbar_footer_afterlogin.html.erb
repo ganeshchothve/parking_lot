@@ -10,7 +10,7 @@
         <div class="col-lg-6 col-md-8 col-xs-6 col-sm-4 no-pd">
           <% if ['channel_partner', 'cp_owner'].include?(current_user.role) %>
             <ul class="footer-menu float-end mb-0 pe-0">
-              <li class="footer-object me-0"><%= I18n.t("navbar.text.cp_code") + ": " current_user.cp_code %>
+              <li class="footer-object me-0"><%= I18n.t("navbar.text.cp_code") + ": " + current_user.cp_code %>
               </li>
             </ul>
           <% end %>

@@ -11,13 +11,14 @@
     message = ''
     if meeting.participant?(current_user)
       if meeting.participant_ids.count == 1
-        message = I18n.t("controller.campaigns.message.interested.one", name: I18n.t('mongoid.models.meeting.one') )
-        message = I18n.t("controller.campaigns.message.interested.many", name1: "#{meeting.participant_ids.count -1}", name2: I18n.t('mongoid.models.meeting.one') )
+        message = I18n.t("controller.meetings.message.interested.one", name: I18n.t('mongoid.models.meeting.one') )
+      else
+        message = I18n.t("controller.meetings.message.interested.many", name1: "#{meeting.participant_ids.count -1}", name2: I18n.t('mongoid.models.meeting.one') )
       end
     elsif meeting.participant_ids.blank?
-      message = I18n.t("controller.campaigns.message.interested.be_the_first")
+      message = I18n.t("controller.meetings.message.interested.be_the_first")
     else
-      message = I18n.t("controller.campaigns.message.interested.count", name1: "#{meeting.participant_ids.count}", name2: I18n.t('mongoid.models.meeting.one') )
+      message = I18n.t("controller.meetings.message.interested.count", name1: "#{meeting.participant_ids.count}", name2: I18n.t('mongoid.models.meeting.one') )
     end
   %>
   <%= simple_form_for(meeting, local: true, url: url, remote: true, html: { class: 'toggle_interest_form', novalidate: false, type: :json } ) do |f| %>

@@ -46,7 +46,7 @@
             <div class="col-12 mb-4">
               <div class="prjt-gallery">
                 <div class="prjt-gallery-inner">
-                  <h2 class="fn-18 border-top pt-4">Photos</h2>
+                  <h2 class="fn-18 border-top pt-4"><%= I18n.t("global.photos") %></h2>
                   <ul>
                     <% assets = @meeting.assets.where(document_type: 'photo') %>
                     <% assets.limit(6).each_with_index do |asset, ix| %>

@@ -23,10 +23,12 @@ en:
     all: All
     at: 'At'
     save: Save
+    close: Close
     action:
       one: Action
       other: Actions
     active_filter: Active Filter
+    active_filter_element: "Active Filter %{name}"
     channel_partner_application: Application Form
     added_by: Added By
     custom: 'More'
@@ -82,10 +84,13 @@ en:
     today: Today
     documents: Documents
     register: Register
+    search: Search
     link_to:
       need_help: Need Help?
       not_summary: Note Summary
       call: Call
+      here: Here
+      document_type: Document Type
       crm: CRM
       basic_details: Basic Details
       specs: Specs
@@ -215,6 +220,14 @@ en:
       powered_by_selldo: Powered by Sell.do
       take_break: Take Break
       resume_work: Resume Work
+      add_element: "Add %{name}"
+      photos: Photos
+      print: Print
+      paid_by: Paid By
+      paid_to: Paid To
+      for: For
+      total_count: "Total %{name}"
+
   helpers:
     extend_validity:
       link_name: '%{model}'
@@ -894,6 +907,7 @@ en:
         document_type: 'Document Type'
         company_info: 'Company Info'
         company_details: 'Company Details'
+        created_on: 'Created On'
       channel_partner/file_types:
         rera_certificate: 'RERA Certificate'
         gst_certificate: 'GST Certificate'
@@ -1080,6 +1094,7 @@ en:
         paid_date: Paid Date
         payout_id: Payout ID
         upid_id: UPI ID
+        deals: Deals
         name_email_phone: 'Name/Email/Phone'
         project_id: 'Project'
         project_unit_id: "Apartment"
@@ -1954,6 +1969,12 @@ en:
         created: 'Meeting created successfully.'
         updated: 'Meeting updated successfully.'
         deleted: 'Meeting deleted successfully.'
+      message:
+        interested:
+          one: "You are interested in attending this %{name}"
+          many: "You and %{name1} others are interested in attending this %{name2}"
+          be_the_first: "New Event! Be the first to show interest"
+          count: "%{name1} are interested in attending this %{name2}"
     announcements:
       index:
         link_name: 'Announcements'
@@ -1988,12 +2009,6 @@ en:
         created: 'Campaign created successfully.'
         updated: 'Campaign updated successfully.'
         deleted: 'Campaign deleted successfully.'
-      message:
-        interested:
-          one: "You are interested in attending this %{name}"
-          many: "You and %{name1} others are interested in attending this %{name2}"
-          be_the_first: "New Event! Be the first to show interest"
-          count: "%{name1} are interested in attending this %{name2}"
       text:
         details: 'Campaign Details'
         campaign_type: 'Type of Campaign'
@@ -2134,6 +2149,7 @@ en:
         form:
           disclaimer: The %{field} will be generated only after successful processing of payment.
           refund_disclaimer: Refund Payments will be subject to cancellation charges
+          kyc_before_payment: "You might need to complete the user's KYC before you can take payments."
         new:
           link_name: Pay Remaining Amount
         show:
@@ -2270,6 +2286,8 @@ en:
         link_expired: 'This link is expired. Please ask the channel partner to send request again'
         code_missing: "Registration code is missing"
       register_request_sent: 'Registration request sent to Company owner'
+      text:
+        adding_existing_lead: "Above channel partner tried to add already existing lead. Details of the lead are as follows:"
 
     dashboard:
       index:
@@ -2309,7 +2327,11 @@ en:
         total_brokerage_note: "This is the total brokerage amount of all bookings approved by the developer end. The brokerage release process will start once booking registration is completed."
         potential_brokerage_note: "This is the total potential brokerage generated on bookings. The booking details will be submitted to the developer for verification and further brokerage process."
         lost_brokerage_amt: "This is the total amount of lost brokerage due to missing/incorrect booking details submitted to developer."
-
+        thanks_for_payment: "Thank you for your payment of %{name}."
+        email_will_be_sent: "You will receive an email from us with detailed information on next steps."
+        unit_in_blocked_state: "This unit will remain blocked for you for the next %{name} days. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click"
+        payment_failed: "Payment Failed"
+        payment_unsuccessful: "Your payment of was unsuccessful. Please check the credentials and try again."
 
     emails:
       index:
@@ -2472,6 +2494,11 @@ en:
           blank: "Payment identifier can't be blank"
         status_should_present: "Status should be present"
         status_should_success: "Status should be clearance_pending or success"
+      text:
+        e_generated_receipt: "This is an electronically generated receipt; hence no signature is required."
+        account_unconfirmed: "The %{name} has not yet confirmed their account via email."
+        add_to_blocked_units: "Add %{name} to Blocked Units"
+        direct_receipt: "Make Direct %{name}"
     referrals:
       index:
         link_name: 'Referrals'

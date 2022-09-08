@@ -12,14 +12,14 @@
             <div class="col-10 col-md-10">
               <h3 class="card-title font-weight-bold text-uppercase">Congratulations</h3>
               <p>
-                Thank you for your payment of <%= number_to_indian_currency(@receipt.total_amount.round) %>.
+                <%= I18n.t("controller.dashboard.payout_dashboard.thanks_for_payment", name: number_to_indian_currency(@receipt.total_amount.round) %>
                 <br/>
-                <strong>You will receive an email from us with detailed information on next steps.</strong>
+                <strong><%= I18n.t("controller.dashboard.payout_dashboard.email_will_be_sent") %></strong>
                 <br/>
               </p>
               <% if @receipt.blocking_payment? %>
               <p>
-                This unit will remain blocked for you for the next <%= @receipt.project_unit.blocking_days %> days. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click <a href="/dashboard/receipts/new?project_unit_id=<%= @receipt.project_unit_id %>" class="modal-remote-form-link" data-event-category="section" data-event-action="click" data-event-name="make the remaining payment" target="_blank">here</a>
+                <%= I18n.t("controller.dashboard.payout_dashboard.unit_in_blocked_state", name: @receipt.project_unit.blocking_days %> <a href="/dashboard/receipts/new?project_unit_id=<%= @receipt.project_unit_id %>" class="modal-remote-form-link" data-event-category="section" data-event-action="click" data-event-name="make the remaining payment" target="_blank"><%= I18n.t("global.link_to.here") %></a>
               </p>
               <% end %>
             </div>
@@ -31,11 +31,11 @@
       <% when 'failed' %>
         <div class="card">
           <div class="card-header">
-            <span class="card-title">Payment Failed</span>
+            <span class="card-title"><%= I18n.t("controller.dashboard.payout_dashboard.payment_failed") %></span>
           </div>
           <div class="card-body">
             <p>
-              Your payment of was unsuccessful. Please check the credentials and try again.
+              <%= I18n.t("controller.dashboard.payout_dashboard.payment_unsuccessful") %>
             </p>
           </div>
         </div>

@@ -5,7 +5,7 @@
       <%= render 'breadcrumbs', {lead: @lead, project_unit: @project_unit} %>
       <% if current_client.cancellation_amount > 0 %>
       <div class="alert alert-danger">
-        Refund Payments will be subject to cancellation charges
+        <%= I18n.t("controller.booking_details.receipts.form.refund_disclaimer") %>
       </div>
       <% end %>
       <% unless current_user.buyer? %>
@@ -13,12 +13,12 @@
           <% if @lead.user.present? %>
             <div class="alert alert-primary mt-3">
               <% if @lead.user.confirmed? %>
-              You might need to complete the user's KYC before you can take payments.
+              <%= I18n.t("controller.booking_details.receipts.form.kyc_before_payment") %>
               <% if Admin::UserKycPolicy.new(current_user, UserKyc.new(user: @lead.user)).new? %>
-                <%= link_to "Add #{global_labels['user_kyc_details']}", new_admin_lead_user_kyc_path(@lead), class: "modal-remote-form-link" %>
+                <%= link_to I18n.t("global.link_to.add_element", name: global_labels['user_kyc_details']), new_admin_lead_user_kyc_path(@lead), class: "modal-remote-form-link" %>
               <% end %>
               <% else %>
-              The <%= global_labels['customer'] %> has not yet confirmed their account via email.
+              <%= I18n.t("controller.receipts.text.account_unconfirmed", name: global_labels['customer']) %>
               <% end %>
             </div>
           <% end %>
@@ -33,7 +33,7 @@
               <% if units_for_payments.present? %>
               <% unless current_user.buyer? %>
               <div class="dropdown float-left mr-2">
-                <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add <%= global_labels['receipt'] %> to Blocked Units</a>
+                <a class="btn btn-primary dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= I18n.t("controller.receipts.text.add_to_blocked_units", name: global_labels['receipt']) %></a>
                 <div class="dropdown-menu dropdown-menu-right">
                   <% units_for_payments.each do |project_unit| %>
                   <%= link_to "#{project_unit.name}", new_admin_lead_booking_detail_receipt_path(@lead.id, project_unit.booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
@@ -52,22 +52,22 @@
                 end
               %>
               <% if policy( [ :admin, Receipt.new(user: @lead.user) ]).new? %>
-                <%= link_to "Make Direct #{global_labels['receipt']}", url_for_new_receipt, class: 'btn btn-primary modal-remote-form-link' %>
+                <%= link_to I18n.t("controller.receipts.text.direct_receipt", name: global_labels['receipt'] ), url_for_new_receipt, class: 'btn btn-primary modal-remote-form-link' %>
               <% end %>
               <% end %>
 
               <% if policy( current_user_role_group, Receipt ]).export? && @receipt.blank? %>
                 <div class="dropdown">
-                  <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
+                  <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= I18n.t("global.link_to.export") %></a>
                   <div class="dropdown-menu dropdown-menu-right">
-                    <%= link_to "All #{global_labels['receipts']}", export_admin_receipts_path, class: 'dropdown-item' %>
-                    <%= link_to "Active filter #{global_labels['receipts']}", export_admin_receipts_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
+                    <%= link_to I18n.t("global.link_to.add_element", name: global_labels['receipts']), export_admin_receipts_path, class: 'dropdown-item' %>
+                    <%= link_to I18n.t("global.active_filter_element", name: global_labels['receipts']), export_admin_receipts_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
                   </div>
                 </div>
               <% end %>
             </div>
             <div class="col-md-5 text-md-right">
-              <h6 class="mt-2">Total <%= global_labels[:receipts] %>: <%= @receipts.total_entries %></h6>
+              <h6 class="mt-2"><%= I18n.t("global.link_to.total_count", name: global_labels[:receipts] ) %>: <%= @receipts.total_entries %></h6>
             </div>
           </div>
           <%= render 'index', {receipts: @receipts} %>
