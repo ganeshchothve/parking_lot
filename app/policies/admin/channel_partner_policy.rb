@@ -45,7 +45,7 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   end
 
   def show_add_company_link?
-    user.role.in?(%w(superadmin admin cp_admin)) && current_client.enable_channel_partners?
+    user.role.in?(%w(superadmin admin cp_admin)) & user.booking_portal_client.enable_channel_partners?
   end
 
   def new_company?
