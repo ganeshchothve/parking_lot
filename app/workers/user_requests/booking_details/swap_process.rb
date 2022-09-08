@@ -15,10 +15,10 @@ module UserRequests
             @current_project_unit = @current_booking_detail.project_unit
             resolve!
           else
-            reject_user_request('Alternative unit is not available for swapping.')
+            reject_user_request(I18n.t("worker.booking_details.errors.unit_swapping_unavailable"))
           end
         else
-          reject_user_request('Booking Is not available for swapping.')
+          reject_user_request(I18n.t("worker.booking_details.errors.booking_swapping_unavailable"))
         end
       end
 
@@ -28,9 +28,9 @@ module UserRequests
           # TODO: :Error Handling for receipts remaining #SANKET
           new_receipt = old_receipt.dup
           new_receipt.booking_detail = new_booking_detail
-          new_receipt.comments = "Receipt generated for Swapped Unit. Original Receipt ID: #{old_receipt.id}"
+          new_receipt.comments = I18n.t("worker.receipts.comments.swap_receipt_generated", name: old_receipt.id)
           old_receipt.comments ||= ''
-          old_receipt.comments += "Unit Swapped by user. Original Unit ID: #{current_project_unit.id} So cancelling these receipts"
+          old_receipt.comments += I18n.t("worker.receipts.comments.swapped_receipt.cancellation", name: current_project_unit.id)
           old_receipt.set(token_number: nil) if old_receipt.token_number.present?          
           # Call callback after receipt is set to success so that booking detail status and project unit status get set accordingly
           if new_receipt.save
@@ -149,7 +149,7 @@ module UserRequests
           end
         else
           # Reject swap Request because alternative blocking_amount is very high
-          reject_user_request("Alternate Unit booking price is very high. No any receipt with minimum #{ alternate_project_unit.blocking_amount}.", alternate_project_unit_status, new_booking_detail)
+          reject_user_request(I18n.t("worker.booking_details.errors.reject_user_request", name: alternate_project_unit.blocking_amount)", alternate_project_unit_status, new_booking_detail)
         end
       end
     end

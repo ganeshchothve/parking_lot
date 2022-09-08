@@ -2330,8 +2330,8 @@ en:
         ladder: Ladder
       invoice_ageing_report: Invoice Ageing Report
       registration_count: Registration Count
-        payment_failed: "Payment Failed"
-        payment_unsuccessful: "Your payment of was unsuccessful. Please check the credentials and try again."
+      payment_failed: "Payment Failed"
+      payment_unsuccessful: "Your payment of was unsuccessful. Please check the credentials and try again."
       link_to:
         project_wise:
           incentive_deduction: Project Wise Incentive Deduction Summary
@@ -2507,7 +2507,6 @@ en:
           blank: "Payment identifier can't be blank"
         status_should_present: "Status should be present"
         status_should_success: "Status should be clearance_pending or success"
-        cancellation_receipt_unavailable: 'Receipt is not available for cancellation.'
       text:
         e_generated_receipt: "This is an electronically generated receipt; hence no signature is required."
         account_unconfirmed: "The %{name} has not yet confirmed their account via email."
@@ -2900,13 +2899,7 @@ en:
         request_type_required: "User Request type is required."
         ids_required_for_cancellation: 'Booking detail id or Receipt id is required for cancellation'
         cancellation_request_type_supported: "Only cancellation user request type is supported"
-        not_available_for_cancellation: 'Booking is not available for cancellation.'
-        unit_swapping_unavailable: 'Alternative unit is not available for swapping.'
-        booking_swapping_unavailable: 'Booking Is not available for swapping.'
-        reject_user_request: "Alternate Unit booking price is very high. No any receipt with minimum %{name}"
-      comments:
-        swap_receipt_generated: "Receipt generated for Swapped Unit. Original Receipt ID: %{name}"
-        swapped_receipt_cancellation: "Unit Swapped by user. Original Unit ID: %{name} So cancelling these receipts"
+
     developers:
       notice:
         updated: 'Developer updated successfully.'
@@ -3234,3 +3227,31 @@ en:
       reach_helpdesk: Reach our Helpdesk
       write_us: Write to us
       cp_code: CP Code
+  worker:
+    booking_details:
+      errors:
+        booking_cancellation_unavailable: 'Booking Is not available for cancellation.'
+        unit_swapping_unavailable: 'Alternative unit is not available for swapping.'
+        booking_swapping_unavailable: 'Booking Is not available for swapping.'
+        reject_user_request: "Alternate Unit booking price is very high. No any receipt with minimum %{name}."
+    receipts:
+      comments:
+        swap_receipt_generated: "Receipt generated for Swapped Unit. Original Receipt ID: %{name}"
+        swapped_receipt_cancellation: "Unit Swapped by user. Original Unit ID: %{name} So cancelling these receipts"
+      errors:
+        cancellation_receipt_unavailable: 'Receipt is not available for cancellation.'
+    meetings:
+      keys:
+        subscribed: "Event Subscribed"
+        unsubscribed: "Event Unsubscribed"
+    project_units:
+      errors:
+        not_on_hold: 'Project unit not on hold'
+    razorpay:
+      errors:
+        transfer: "Transfer not initiated"
+    selldo:
+      note: "Added BY %{name}"
+      errors:
+        push_note: "Errors while Pushing note to sell.do : %{name}"
+        sitevisit_update_failed: "Sitevisit for %{name1} has not been updated due to following error - %{name2}"

@@ -10,11 +10,11 @@ class SelldoNotePushWorker
         api_key: api_key,
         lead_id: selldo_lead_id,
         client_id: current_user.booking_portal_client.selldo_client_id,
-        note: "Added BY(#{current_user.ds_name})" + ' => ' + note
+        note: I18n.t("worker.selldo.note", name: current_user.ds_name) + ' => ' + note
       }
       RestClient.post(ENV_CONFIG['selldo']['base_url'] + "/api/leads/create.json", params)
     rescue => e
-      Rails.logger.error("Error while Pushing note to sell.do : #{e.inspect}")
+      Rails.logger.error(I18n.t("worker.selldo.errors.push_note", name: e.inspect))
     end
   end
 end
