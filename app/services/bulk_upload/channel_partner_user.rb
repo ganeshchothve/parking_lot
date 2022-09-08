@@ -40,6 +40,9 @@ module BulkUpload
                 (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push("Channel partner Manager not found with Phone no: #{m_phone}")).uniq
                 bur.failure_count += 1
               end
+            else
+              (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push("Channel partner Manager Phone Number not found")).uniq
+              bur.failure_count += 1
             end
           end
         end
