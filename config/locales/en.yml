@@ -1473,7 +1473,8 @@ en:
         inventory_upload: 'Inventory Import'
         leads: 'Leads Import'
         receipts: 'Payments Import'
-        channel_partners: 'Channel Partners Import'
+        channel_partners: 'Partner Company Import'
+        channel_partner_user: 'Channel Partner Users Import'
         channel_partner_manager_change: 'Channel Partner Manager Change'
         time_slots_update: 'Time Slots Bulk Update'
 
