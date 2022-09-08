@@ -626,6 +626,7 @@ en:
         incentive_gst_slabs: 'Configure Incentive GST Slabs (%)'
         payment_enabled: Enable Payment
         foyer_link: Foyer Link
+        booking_custom_template_ids: Booking Templates
         approved_banks/list:
           hdfc: HDFC Bank
           sbi: State Bank of India
@@ -1120,7 +1121,6 @@ en:
         requestable_type: 'Requestable Type'
         request_details: 'Related to'
       template/subject_classes:
-        User: User
         ChannelPartner: Channel Partner
         Scheme: Scheme
         BookingDetail: Booking
@@ -1129,6 +1129,8 @@ en:
         Lead: Lead
         UserKyc: User Kyc
         Invoice: Invoice
+        UserRequest::Cancellation: Cancellation Request
+        UserRequest::Swap: Swap Request
       user_request/status:
         pending: Pending
         processing: Processing

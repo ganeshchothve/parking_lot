@@ -2,7 +2,7 @@ class Template::CustomTemplate < Template
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  SUBJECT_CLASSES = ["User", "ChannelPartner", "Scheme", "BookingDetail", "Receipt", "BookingDetailScheme", "Lead", "UserKyc", "Invoice"].freeze
+  SUBJECT_CLASSES = ["ChannelPartner", "Scheme", "BookingDetail", "Receipt", "BookingDetailScheme", "Lead", "UserKyc", "Invoice", "UserRequest::Cancellation", "UserRequest::Swap"].freeze
 
   field :name, type: String
   field :subject_class, type: String
