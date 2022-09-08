@@ -9,7 +9,7 @@
       <div class="col-md-12 col-lg-12 col-sm-12">
         <ul class="booking-apart-info clear">
           <% if user.utm_params.blank? %>
-          No Tracking Found
+          <%= I18n.t('mongoid.attributes.user.utm.no_tracking') %>
           <% else %>
           <% user.utm_params.each do |key, value| %>
           <li>

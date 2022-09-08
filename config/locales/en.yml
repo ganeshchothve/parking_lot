@@ -1603,6 +1603,14 @@ en:
         shareable_link: "Shareable Link"
         upi_id: 'UPI Address'
         your_relationship_manager: 'Your Relationship Manager'
+        dear_user: "Dear %{name}"
+        change_in_manger:
+          dear_team: Dear Team
+          text: "Channel Partner has been changed on customer %{name1}. New assigned channel partner is %{name2}."
+        reminder:
+          pay: "A gentle reminder to pay your balance amount of %{name}"
+        utm:
+          no_tracking: "No Tracking Found"
       user/password:
         name: 'should not contain name.'
         length: 'Length should be 8-16 characters and include: 1 uppercase, 1 lowercase, 1 digit and 1 special character.'
@@ -3183,6 +3191,7 @@ en:
       forgot_password: "Forgot your Password?"
       verify_your_email: "Verify your email"
       resend: "Click here to resend"
+      confirm_account: "Confirm Account"
     help_text:
       sign_in:
         otp: "Sign in using OTP (One Time Password)"

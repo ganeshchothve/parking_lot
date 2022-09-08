@@ -9,9 +9,9 @@
             <div class="col-md-7">
               <% if UserKycPolicy.new(current_user, UserKyc.new(user: @lead.user, lead: @lead)).new? %>
                 <% if current_user.buyer? %>
-                  <%= link_to "Add #{global_labels['user_kyc']}", new_buyer_user_kyc_path, class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+                  <%= link_to I18n.t("global.link_to.add_element", name: global_labels['user_kyc']), new_buyer_user_kyc_path, class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
                 <% else %>
-                  <%= link_to "Add #{global_labels['user_kyc']}", new_admin_lead_user_kyc_path(@lead), class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+                  <%= link_to I18n.t("global.link_to.add_element", name: global_labels['user_kyc']), new_admin_lead_user_kyc_path(@lead), class: 'btn btn-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
                 <% end %>
               <% end %>
             </div>

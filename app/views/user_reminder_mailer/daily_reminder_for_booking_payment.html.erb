@@ -1,8 +1,8 @@
 <div class="card w-100">
   <div class="card-body">
-    <p>Dear <%= @user.name %>,</p>
+    <p><%= I18n.t('mongoid.attributes.user.dear_user') %>,</p>
     <p>
-      A gentle reminder to pay your balance amount of <%= number_to_indian_currency(@project_unit.booking_detail.pending_balance(strict: true)) %>
+      <%= I18n.t("mongoid.attributes.user.reminder.pay", name: number_to_indian_currency(@project_unit.booking_detail.pending_balance(strict: true))) %>
     </p>
   </div>
 </div>
