@@ -11,8 +11,8 @@
     <table class="table my-customer-table responsive-tbl mb-0 align-middle border rounded">
       <thead class="bg-primary white">
         <tr class="bg-primary white">
-          <th rowspan='2' class='text-center border-end bg-primary white align-middle'>City</th>
-          <th colspan='3' class='text-center bg-primary white'>No. of <%= BookingDetail.model_name.human(count:1) %></th>
+          <th rowspan='2' class='text-center border-end bg-primary white align-middle'><%= I18n.t("global.city") %></th>
+          <th colspan='3' class='text-center bg-primary white'><%= I18n.t("global.no_of") %> + <%= BookingDetail.model_name.human(count:1) %></th>
         </tr>
         <tr>
           <th class="text-center"><%= I18n.t("global.project") %></th>
@@ -37,7 +37,7 @@
               <% end %>
           <% end %>
           <tr>
-            <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong>Total</strong></td>
+            <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong><%= I18n.t("global.total") %></strong></td>
             <td><strong>-</strong></td>
             <td><strong>
                   <%= link_to @total_booking, admin_booking_details_path({ fltrs: { created_at: created_at, status: ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]}}) %>

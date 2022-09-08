@@ -20,6 +20,6 @@
 <p>
   <img src="<%= asset_path 'leaderboard/money.svg' %>">
   <%= number_to_indian_currency(@highest_incentive_per_booking_data.first[:capped_incentive]) rescue "-" %>
-  <span>Highest incentive per booking</span>
+  <span><%= I18n.t("controller.dashboard.leaderboard.text.max_incentive") %></span>
 </p>
 <img src="<%= asset_path 'leaderboard/leader-person.png' %>" class="leader-person">

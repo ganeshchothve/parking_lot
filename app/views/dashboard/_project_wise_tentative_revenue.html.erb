@@ -3,7 +3,7 @@
     <table class="table my-customer-table responsive-tbl mb-0 align-middle border rounded">
       <thead class="bg-primary white">
         <tr class="bg-primary white">
-          <th rowspan='2' class='text-center border-end bg-primary white align-middle'>City</th>
+          <th rowspan='2' class='text-center border-end bg-primary white align-middle'><%= I18n.t("global.city") %></th>
           <th colspan='4' class='text-center bg-primary white'><%= I18n.t("mongoid.attributes.invoice.tentative_invoice_amount") %></th>
         </tr>
         <tr>
@@ -41,7 +41,7 @@
               <% end %>
           <% end %>
           <tr>
-            <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong>Total</strong></td>
+            <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong><%= I18n.t("global.total") %></strong></td>
             <td><strong>-</strong></td>
             <% if params[:resource] == "BookingDetail" %>
               <td><strong>

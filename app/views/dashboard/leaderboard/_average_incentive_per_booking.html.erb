@@ -1,3 +1,3 @@
-<h5>Till date</h5> <h2><%= number_to_indian_currency(@average_incentive.round) %></h2></h3>
-<h5>Maximum Potential</h5><h2 class="gain"><%= number_to_indian_currency(@max_capped_incentive.round) %></h2></h3>
+<h5><%= I18n.t("controller.dashboard.leaderboard.day.till_date") %></h5> <h2><%= number_to_indian_currency(@average_incentive.round) %></h2></h3>
+<h5><%= I18n.t("controller.dashboard.leaderboard.day.max_potential") %></h5><h2 class="gain"><%= number_to_indian_currency(@max_capped_incentive.round) %></h2></h3>
 <!-- <span>Loss: <strong class="px-2"><%#= number_to_indian_currency(difference) %></span> -->

@@ -55,7 +55,7 @@
               <% end %>
           <% end %>
           <tr>
-            <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong>Total</strong></td>
+            <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong><%= I18n.t("global.total") %></strong></td>
             <td><strong>-</strong></td>
             <td><strong><%= number_to_indian_currency((@status_wise_total_amount['draft'] ||=0).round)%></strong></td>
             <td><strong><%= number_to_indian_currency((@status_wise_total_amount['raised'] ||=0).round) %></strong></td>

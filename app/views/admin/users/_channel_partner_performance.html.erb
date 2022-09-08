@@ -15,7 +15,7 @@
           <th><%= t('mongoid.attributes.site_visit/approval_status.rejected') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
           <th><%= BookingDetail.model_name.human(count: 2) %></th>
           <th><%= t("mongoid.attributes.interested_project/status.subscribed") %></th>
-          <th>Total<br> <%= t('mongoid.attributes.booking_detail.agreement_price') %></th>
+          <th><%= I18n.t("global.total") %><br> <%= t('mongoid.attributes.booking_detail.agreement_price') %></th>
         </tr>
       </thead>
       <tbody>

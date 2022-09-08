@@ -9,7 +9,7 @@
       <thead class="th-default">
         <tr class="bg-primary white">
           <th rowspan='2' class='text-center border-end th-border-right align-middle'><%= Project.model_name.human %></th>
-          <th colspan='4' class='text-center'>No. of <%= IncentiveDeduction.model_name.human(count:2) %></th>
+          <th colspan='4' class='text-center'><%= I18n.t("global.no_of") + IncentiveDeduction.model_name.human(count:2) %></th>
         </tr>
         <tr class="bg-primary white text-center">
           <th><%= t('mongoid.attributes.incentive_deduction/status.draft') %></th>
@@ -22,16 +22,16 @@
         <% @deduction_data.sort_by{|x| x[:project_name]}.group_by{|x| x[:project_name]}.each do |project_name, data| %>
           <tr>
             <td data-title='<%= Project.model_name.human %>' class='text-md-left'><%= project_name %></td>
-            <td data-title='No. of <%= "#{IncentiveDeduction.model_name.human(count:2)} (#{t('mongoid.attributes.incentive_deduction/status.draft')})" %>'>
+            <td data-title='<%= I18n.t("global.no_of") + "#{IncentiveDeduction.model_name.human(count:2)} + " " + (#{t('mongoid.attributes.incentive_deduction/status.draft')})" %>'>
               <%= data.find {|x| x[:status] == 'draft'}.try(:[], :count) || 0 %>
             </td>
-            <td data-title='No. of <%= "#{IncentiveDeduction.model_name.human(count:2)} (#{t('mongoid.attributes.incentive_deduction/status.pending_approval')})" %>'>
+            <td data-title='<%= I18n.t("global.no_of") + "#{IncentiveDeduction.model_name.human(count:2)} + " " + (#{t('mongoid.attributes.incentive_deduction/status.pending_approval')})" %>'>
               <%= data.find {|x| x[:status] == 'pending_approval'}.try(:[], :count) || 0 %>
             </td>
-            <td data-title='No. of <%= "#{IncentiveDeduction.model_name.human(count:2)} (#{t('mongoid.attributes.incentive_deduction/status.approved')})" %>'>
+            <td data-title='<%= I18n.t("global.no_of") + "#{IncentiveDeduction.model_name.human(count:2)} + " " + (#{t('mongoid.attributes.incentive_deduction/status.approved')})" %>'>
               <%= data.find {|x| x[:status] == 'approved'}.try(:[], :count) || 0 %>
             </td>
-            <td class='non-action-td' data-title='No. of <%= "#{IncentiveDeduction.model_name.human(count:2)} (#{t('mongoid.attributes.incentive_deduction/status.rejected')})" %>'>
+            <td class='non-action-td' data-title='<%= I18n.t("global.no_of") + "#{IncentiveDeduction.model_name.human(count:2)} + " " + (#{t('mongoid.attributes.incentive_deduction/status.rejected')})" %>'>
               <%= data.find {|x| x[:status] == 'rejected'}.try(:[], :count) || 0 %>
             </td>
           </tr>
