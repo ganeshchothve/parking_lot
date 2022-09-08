@@ -5,7 +5,7 @@ class Api::V1::UserRequestsController < ApisController
   def create
     @user_request = ::UserRequest::Cancellation.new(requestable: @resource, created_by_id: @crm.user_id.to_s, resolved_by_id: @crm.user_id.to_s, lead_id: @lead.id.to_s, user_id: @user.id.to_s, project_id: @project.id.to_s)
     if @user_request.save && @user_request.processing!
-      render json: { "#{@resource.class.to_s.underscore}_id": @resource.id, message: I18n.t("controller.user_requests.message.sent_for_cancellation", name: "#{@resource.class.to_s.titleize}") }, status: :ok
+      render json: { "#{@resource.class.to_s.underscore}_id": @resource.id, message: I18n.t("controller.user_requests.message.sent_for_cancellation", name: I18n.t("mongoid.models.#{@resource.class.to_s}.other")) }, status: :ok
     else
       render json: {errors: @user_request.errors.full_messages.uniq}, status: :unprocessable_entity
     end

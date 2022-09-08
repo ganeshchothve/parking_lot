@@ -5,7 +5,7 @@
     <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
         <div class="table-btn-set float-end pb-3 text-end">
           <% if policy([current_user_role_group, Announcement.new]).new? %>
-                <%= link_to "Add #{global_labels['announcement']}", new_admin_announcement_path, class: 'border rounded px-3 py-2 px-3 border-primary white bg-primary rounded py-2 ms-2 modal-remote-form-link btn', data:{event_category: 'Section', event_action: 'Click', event_name: I18n.t("controller.announcements.event_name.add")} %>
+                <%= link_to I18n.t("global.link_to.add_element", name: global_labels['announcement']), new_admin_announcement_path, class: 'border rounded px-3 py-2 px-3 border-primary white bg-primary rounded py-2 ms-2 modal-remote-form-link btn', data:{event_category: 'Section', event_action: 'Click', event_name: I18n.t("controller.announcements.event_name.add")} %>
               <% end %>
         </div>
       </div>

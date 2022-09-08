@@ -15,7 +15,7 @@
       <div class="row">
         <div class="col-md-11">
           <div class="mb-3">
-            <%= select_tag "receipt_fltrs[group_by]", options_for_select(DashboardDataProvider.receipts_available_group_by.collect{|x| [x[:text], x[:id]]}, (params[:receipt_fltrs].present? && params[:receipt_fltrs][:group_by].present? ? params[:receipt_fltrs][:group_by] : [])), {class: "selectize", prompt: "Select", multiple: true} %>
+            <%= select_tag "receipt_fltrs[group_by]", options_for_select(DashboardDataProvider.receipts_available_group_by.collect{|x| [x[:text], x[:id]]}, (params[:receipt_fltrs].present? && params[:receipt_fltrs][:group_by].present? ? params[:receipt_fltrs][:group_by] : [])), {class: "selectize", prompt:  I18n.t("global.select"), multiple: true} %>
           </div>
         </div>
         <div class="col-md-1">

@@ -27,6 +27,8 @@ en:
     save: Save
     close: Close
     apply: Apply
+    select: Select
+    customer: Customer
     selected: Selected
     action:
       one: Action
@@ -89,6 +91,8 @@ en:
     documents: Documents
     register: Register
     search: Search
+    drop_customer: Drop Customer
+    congratulations: Configurations
     link_to:
       click_to_zoom: Click to Zoom
       need_help: Need Help?
@@ -151,46 +155,25 @@ en:
       get_started: Get Started
       this_is_time: Now is the best time to turn your dream into reality
       love_our_brand: "Why you would love %{name}"
-      early_access: Early access to
-      new_launches: New Launches
-      timely_payments: Timely payments to
-      cash_flows: streamline cash flows
-      marketing_support: Marketing Support
-      and_assets: '& assets'
-      performance_based: Performance-based
-      channel_partner_ratings: Channel Partner ratings
-      extensive_nurturing: Extensive nurturing and
-      calling_during_launches: Calling during launches
-      crm_training: CRM training
-      support: Support
-      fully_automated: Fully automated
-      eoi_process: EOI Process
+      early_access: "Early access to <br> New Launches"
+      timely_payments: "Timely payments to <br> streamline cash flows"
+      marketing_support: "Marketing Support <br> & assets"
+      performance_based: "Performance-based <br> Channel Partner ratings"
+      extensive_nurturing: "Extensive nurturing <br> Calling during launches"
+      crm_training: "CRM training <br> Support"
+      fully_automated: Fully automated <br> EOI Process
       eoi_number: EOI Number
-      online_inventory_selection: Online inventory selection
-      kyc_and_bookigns: KYC & bookings
-      complete: Complete
-      transparency: Transparency
-      unique_online: Unique online
-      broker_profile: Broker Profile
+      online_inventory_selection: Online inventory selection <br> KYC & bookings
+      complete_transparency: Complete <br> Transparency
+      unique_online: Unique online <br> Broker Profile
       available: Available
       hold: Hold
       sold_out: Sold Out
       not_available: Not Available
       r_refugee_area: R Refugee Area
-      invoice_ageing_report: Invoice Ageing Report
-      project_wise:
-        incentive_deduction: Project Wise Incentive Deduction Summary
-        overview: Overview
-        booking_count: Project Wise Booking Count
-        actual_revenue_report: Project Wise Actual Revenue Reports
-        tentative_revenue_reports: Project Wise Tentative Revenue Reports
-        applying_filters:
-          step1: Applying filters will only show 15 records irrespective of the total records count. Acitve Filter Export will contain all the filtered records. The
-          step2: count will depend on the filtered results.
       vis_report: Variable Incentive Scheme Report
       current_ladder: Current Ladder
       total_incentives_generated: Total Incentives Generated
-      registration_count: Registration Count
       projects_available: Projects available
       upcoming_events: Upcoming Evetns
       drop: Drop
@@ -1067,7 +1050,8 @@ en:
         total_units: 'Total Units'
         sold_unsold: 'Sold / Unsold'
         av_sold: 'A.V (Sold)'
-        rhea_miranda: 'Rhea Miranda'
+        tower_name:
+          rhea_miranda: 'Rhea Miranda'
       project_unit/status:
         hold: 'Hold'
         available: 'Available'
@@ -1611,6 +1595,9 @@ en:
           pay: "A gentle reminder to pay your balance amount of %{name}"
         utm:
           no_tracking: "No Tracking Found"
+        upi:
+          add_address: "Please add your UPI Address for quick payment. Please click on the link"
+          update: "Update UPI Address"
       user/password:
         name: 'should not contain name.'
         length: 'Length should be 8-16 characters and include: 1 uppercase, 1 lowercase, 1 digit and 1 special character.'
@@ -2341,15 +2328,20 @@ en:
         cancellation_charges: "Cancellation charges are %{name}"
         make_remaining_payment: "You have %{name1} days (before %{name2}) remaining to confirm this booking. Please make a remaining payment of %{name3}"
         ladder: Ladder
-      payout_dashboard:
-        total_brokerage_note: "This is the total brokerage amount of all bookings approved by the developer end. The brokerage release process will start once booking registration is completed."
-        potential_brokerage_note: "This is the total potential brokerage generated on bookings. The booking details will be submitted to the developer for verification and further brokerage process."
-        lost_brokerage_amt: "This is the total amount of lost brokerage due to missing/incorrect booking details submitted to developer."
-        thanks_for_payment: "Thank you for your payment of %{name}."
-        email_will_be_sent: "You will receive an email from us with detailed information on next steps."
-        unit_in_blocked_state: "This unit will remain blocked for you for the next %{name} days. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click"
+      invoice_ageing_report: Invoice Ageing Report
+      registration_count: Registration Count
         payment_failed: "Payment Failed"
         payment_unsuccessful: "Your payment of was unsuccessful. Please check the credentials and try again."
+      link_to:
+        project_wise:
+          incentive_deduction: Project Wise Incentive Deduction Summary
+          overview: Overview
+          booking_count: Project Wise Booking Count
+          actual_revenue_report: Project Wise Actual Revenue Reports
+          tentative_revenue_reports: Project Wise Tentative Revenue Reports
+          applying_filters:
+            step1: Applying filters will only show 15 records irrespective of the total records count. Acitve Filter Export will contain all the filtered records. The
+            step2: count will depend on the filtered results.
 
     emails:
       index:
@@ -2434,6 +2426,7 @@ en:
       create_booking:
         link_name: Create Booking
       choose_tower: Choose Tower
+      all_towers: All Towers
       filter_project: Filter Project
       exports:
         link_name: "%{type} Exports"
@@ -2514,11 +2507,19 @@ en:
           blank: "Payment identifier can't be blank"
         status_should_present: "Status should be present"
         status_should_success: "Status should be clearance_pending or success"
+        cancellation_receipt_unavailable: 'Receipt is not available for cancellation.'
       text:
         e_generated_receipt: "This is an electronically generated receipt; hence no signature is required."
         account_unconfirmed: "The %{name} has not yet confirmed their account via email."
         add_to_blocked_units: "Add %{name} to Blocked Units"
         direct_receipt: "Make Direct %{name}"
+      process_payment:
+        total_brokerage_note: "This is the total brokerage amount of all bookings approved by the developer end. The brokerage release process will start once booking registration is completed."
+        potential_brokerage_note: "This is the total potential brokerage generated on bookings. The booking details will be submitted to the developer for verification and further brokerage process."
+        lost_brokerage_amt: "This is the total amount of lost brokerage due to missing/incorrect booking details submitted to developer."
+        thanks_for_payment: "Thank you for your payment of %{name}."
+        email_will_be_sent: "You will receive an email from us with detailed information on next steps."
+        unit_in_blocked_state: "This unit will remain blocked for you for the next %{name} days. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click"
     referrals:
       index:
         link_name: 'Referrals'
@@ -2899,6 +2900,13 @@ en:
         request_type_required: "User Request type is required."
         ids_required_for_cancellation: 'Booking detail id or Receipt id is required for cancellation'
         cancellation_request_type_supported: "Only cancellation user request type is supported"
+        not_available_for_cancellation: 'Booking is not available for cancellation.'
+        unit_swapping_unavailable: 'Alternative unit is not available for swapping.'
+        booking_swapping_unavailable: 'Booking Is not available for swapping.'
+        reject_user_request: "Alternate Unit booking price is very high. No any receipt with minimum %{name}"
+      comments:
+        swap_receipt_generated: "Receipt generated for Swapped Unit. Original Receipt ID: %{name}"
+        swapped_receipt_cancellation: "Unit Swapped by user. Original Unit ID: %{name} So cancelling these receipts"
     developers:
       notice:
         updated: 'Developer updated successfully.'

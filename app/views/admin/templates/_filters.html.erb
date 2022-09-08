@@ -9,17 +9,17 @@
         <% [::Template::EmailTemplate, ::Template::SmsTemplate, ::Template::CostSheetTemplate, ::Template::CostSheetTemplate, ::Template::AllotmentLetterTemplate, ::Template::PaymentScheduleTemplate, ::Template::ReceiptTemplate, ::Template::BookingDetailFormTemplate, ::Template::CoBrandingTemplate, ::Template::NotificationTemplate] if Rails.env.development? %>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.template.name'), class: "control-label" %>
-          <%= select_tag "fltrs[name]", options_for_select(::Template.distinct(:name).collect{|x| [(t("templates.#{x}") rescue x.try(:titleize)), x]}, (params[:fltrs].present? ? params[:fltrs][:name] : "")), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[name]", options_for_select(::Template.distinct(:name).collect{|x| [(t("templates.#{x}") rescue x.try(:titleize)), x]}, (params[:fltrs].present? ? params[:fltrs][:name] : "")), {prompt:  I18n.t("global.select"), class: "selectize"} %>
         </div>
       </div>
       <div class='row'>
         <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.template.type'), class: "control-label" %>
-          <%= select_tag "fltrs[_type]", options_for_select(::Template.descendants.collect{|x| [x.to_s.split("::").last.gsub("Template", "").titleize, x.to_s]}.sort, (params[:fltrs].present? ? params[:fltrs][:_type] : "")), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[_type]", options_for_select(::Template.descendants.collect{|x| [x.to_s.split("::").last.gsub("Template", "").titleize, x.to_s]}.sort, (params[:fltrs].present? ? params[:fltrs][:_type] : "")), {prompt:  I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.template.project_id'), class: "control-label" %>
-          <%= select_tag "fltrs[project_id]", options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[project_id]", options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt:  I18n.t("global.select"), class: "selectize"} %>
         </div>
       </div>
     </div>

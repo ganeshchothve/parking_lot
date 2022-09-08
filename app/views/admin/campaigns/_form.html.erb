@@ -44,14 +44,14 @@
                 <% if statuses.present? %>
                   <div class="mb-3">
                     <%= f.label :status, class: '' %>
-                    <%= f.select :event, statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, {prompt: :Select}, class: 'selectize' %>
+                    <%= f.select :event, statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, {prompt: I18n.t("global.select")}, class: 'selectize' %>
                   </div>
                 <% end %>
               <% end %>
               <% if policy([current_user_role_group, campaign]).editable_field?("campaign_type") %>
                 <div class="mb-3">
                   <%= f.label :campaign_type, class: 'label-required control-label' %>
-                  <%= f.select :campaign_type, I18n.t("mongoid.attributes.campaign/campaign_types").collect{|k,v| [k.to_s,v]}, {prompt: :Select}, class: 'selectize form-control' %>
+                  <%= f.select :campaign_type, I18n.t("mongoid.attributes.campaign/campaign_types").collect{|k,v| [k.to_s,v]}, {prompt: I18n.t("global.select")}, class: 'selectize form-control' %>
                 </div>
               <% end %>
 

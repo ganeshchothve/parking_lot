@@ -26,7 +26,7 @@
   <% if policy([current_user_role_group, @project_unit]).editable_field?("status") %>
     <div class="mb-3">
       <%= f.label :status, class: 'title' %>
-      <%= f.select :status, (ProjectUnit::STATUS - ['blocked', 'hold']).collect{|x| [ t("mongoid.attributes.project_unit/status.#{x}"), x] }, {}, {prompt: "Select", class: "selectize", disabled: (policy([current_user_role_group, @project_unit]).editable_field?("status") ? false : true)} %>
+      <%= f.select :status, (ProjectUnit::STATUS - ['blocked', 'hold']).collect{|x| [ t("mongoid.attributes.project_unit/status.#{x}"), x] }, {}, {prompt:  I18n.t("global.select"), class: "selectize", disabled: (policy([current_user_role_group, @project_unit]).editable_field?("status") ? false : true)} %>
     </div>
   <% end %>
   <% if policy([current_user_role_group, @project_unit]).editable_field?("phase_id") %>

@@ -22,11 +22,11 @@
                     <label><%= I18n.t("controller.project_units.text.booking_details") %></label>
                     <p><%= (@invoice.try(:invoiceable).try(:booking_project_unit_name) || "-") %></p>
                   <% end %>
-                  <label><%= I18n.t("mongoid.attributes.dashboard.payout_dashboard.customer_name") %></label>
+                  <label><%= I18n.t("mongoid.attributes.receipts.process_payment.customer_name") %></label>
                   <p><%= (@invoice.try(:invoiceable).try(:user).try(:name) || "-") %></p>
-                  <label><%= I18n.t("mongoid.attributes.dashboard.payout_dashboard.customer_phone") %></label>
+                  <label><%= I18n.t("mongoid.attributes.receipts.process_payment.customer_phone") %></label>
                   <p><%= (@invoice.try(:invoiceable).try(:user).try(:phone) || "-") %></p>
-                  <label><%= I18n.t("mongoid.attributes.dashboard.payout_dashboard.customer_email") %></label>
+                  <label><%= I18n.t("mongoid.attributes.receipts.process_payment.customer_email") %></label>
                   <p><%= (@invoice.try(:invoiceable).try(:user).try(:email) || "-") %></p>
                   <label><%= I18n.t("mongoid.attributes.invoice.status") %></label>
                   <p><%= (@invoice.invoiceable&.class&.human_attribute_name("#{@invoice.invoiceable&.model_name&.i18n_key.to_s}/status.#{(@invoice.invoiceable.try(:status) || "-")}") rescue "-") %></p>

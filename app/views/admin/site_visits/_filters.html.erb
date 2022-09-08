@@ -13,7 +13,7 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.site_visit.project_id'), class: "control-label" %>
-          <%= select_tag "fltrs[project_id]", options_from_collection_for_select(params[:fltrs].present? ? Project.where(_id: params[:fltrs][:project_id]) : [], "id", "ds_name", params.dig(:fltrs, :project_id)), {prompt: "Select", class: "selectize-remote", data: {url: admin_projects_path}} %>
+          <%= select_tag "fltrs[project_id]", options_from_collection_for_select(params[:fltrs].present? ? Project.where(_id: params[:fltrs][:project_id]) : [], "id", "ds_name", params.dig(:fltrs, :project_id)), {prompt:  I18n.t("global.select"), class: "selectize-remote", data: {url: admin_projects_path}} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.site_visit.status') %>
@@ -25,7 +25,7 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.site_visit.site_visit_type'), class: "control-label" %>
-          <%= select_tag "fltrs[site_visit_type]", options_for_select(SiteVisit.nin(site_visit_type: [nil, '']).distinct(:site_visit_type).map(&:titleize), params.dig(:fltrs, :site_visit_type)), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[site_visit_type]", options_for_select(SiteVisit.nin(site_visit_type: [nil, '']).distinct(:site_visit_type).map(&:titleize), params.dig(:fltrs, :site_visit_type)), {prompt:  I18n.t("global.select"), class: "selectize"} %>
         </div>
         <% if current_client.enable_channel_partners? %>
           <% unless current_user.role?('channel_partner') %>
@@ -63,7 +63,7 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.invoice_generated'), class: "control-label" %>
-          <%= select_tag "fltrs[incentive_generated]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :incentive_generated)), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[incentive_generated]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :incentive_generated)), {prompt:  I18n.t("global.select"), class: "selectize"} %>
         </div>
       </div>
     </div>

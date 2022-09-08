@@ -21,7 +21,7 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.project_unit.status'), class: "control-label" %>
-          <%= select_tag "fltrs[status]", options_for_select(ProjectUnit::STATUS.collect{|ps| [ t("mongoid.attributes.project_unit/status.#{ps}"), ps ] }, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[status]", options_for_select(ProjectUnit::STATUS.collect{|ps| [ t("mongoid.attributes.project_unit/status.#{ps}"), ps ] }, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt:  I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.project_unit.project_id'), class: "control-label" %>
@@ -33,19 +33,19 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.project_unit.bedrooms'), class: "control-label" %>
-          <%= select_tag "fltrs[bedrooms]", options_for_select(ProjectUnit.distinct(:bedrooms).sort.collect{|x| [x, x]}, (params[:fltrs].present? ? params[:fltrs][:bedrooms] : "")), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[bedrooms]", options_for_select(ProjectUnit.distinct(:bedrooms).sort.collect{|x| [x, x]}, (params[:fltrs].present? ? params[:fltrs][:bedrooms] : "")), {prompt:  I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.project_unit.floor'), class: "control-label" %>
-          <%= select_tag "fltrs[floor]", options_for_select(ProjectUnit.distinct(:floor).sort.collect{|x| [x, x]}, (params[:fltrs].present? ? params[:fltrs][:floor] : "")), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[floor]", options_for_select(ProjectUnit.distinct(:floor).sort.collect{|x| [x, x]}, (params[:fltrs].present? ? params[:fltrs][:floor] : "")), {prompt:  I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.project_unit.floor_order'), class: "control-label" %>
-          <%= select_tag "fltrs[floor_order]", options_for_select(ProjectUnit.distinct(:floor_order).sort, params[:fltrs].present? ? params[:fltrs][:floor_order] : ""), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[floor_order]", options_for_select(ProjectUnit.distinct(:floor_order).sort, params[:fltrs].present? ? params[:fltrs][:floor_order] : ""), {prompt:  I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.project_unit.unit_facing_direction'), class: "control-label" %>
-          <%= select_tag "fltrs[unit_facing_direction]", options_for_select(ProjectUnit.distinct(:unit_facing_direction).sort.collect{|x| [x, x]}, (params[:fltrs].present? ? params[:fltrs][:unit_facing_direction] : "")), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[unit_facing_direction]", options_for_select(ProjectUnit.distinct(:unit_facing_direction).sort.collect{|x| [x, x]}, (params[:fltrs].present? ? params[:fltrs][:unit_facing_direction] : "")), {prompt:  I18n.t("global.select"), class: "selectize"} %>
         </div>
       </div>
     </div>
