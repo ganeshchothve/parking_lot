@@ -22,8 +22,12 @@ en:
     brand: BeyondWalls
     all: All
     at: 'At'
+    edit: Edit
+    show: Show
     save: Save
     close: Close
+    apply: Apply
+    selected: Selected
     action:
       one: Action
       other: Actions
@@ -86,6 +90,7 @@ en:
     register: Register
     search: Search
     link_to:
+      click_to_zoom: Click to Zoom
       need_help: Need Help?
       not_summary: Note Summary
       call: Call
@@ -227,6 +232,7 @@ en:
       paid_to: Paid To
       for: For
       total_count: "Total %{name}"
+      details_on_click: "Click to view details"
 
   helpers:
     extend_validity:
@@ -722,6 +728,7 @@ en:
       client/payment_gateways:
         Razorpay: Razorpay Payment Gateway
         CCAvenue: CCAvenue Payment Gateway
+        redirecting_to: "You'll be redirected to %{name}, where you can pay using Net Banking, UPI, Credit/Debit Card or Wallet"
       developer:
         name: 'Developer Name'
         selldo_id: 'Sell.Do Developer ID'
@@ -1043,6 +1050,7 @@ en:
         all_inclusive_price: 'All Inclusive Price'
         project_tower: 'Project Tower'
         floor: 'Floor'
+        apartment: 'Apartment'
         floor_order: 'Floor Order'
         facing: 'Facing'
         paid_amount: 'Paid Amt.(Inclusive of GST)'
@@ -1051,6 +1059,7 @@ en:
         last_sync_status: Last Sync Status
         comments: 'Comments'
         carpet: Carpet Area
+        carpet_sq: 'Carpet Area Sq.Ft'
         configuration: 'Configuration'
         payment_schedule: 'Payment Schedule'
         cost_sheet: 'Cost Sheet'
@@ -1399,6 +1408,7 @@ en:
         aadhaar: "Aadhaar Number"
         gstn: "GSTN"
         anniversary: "Anniversary"
+        kyc_info: "KYC Information"
         nri: "Are you an NRI?"
         poa: "Do you have a valid Power of Attorney in India?"
         company_name: "Company Name"
@@ -2415,6 +2425,8 @@ en:
         customer: Edit Customer
       create_booking:
         link_name: Create Booking
+      choose_tower: Choose Tower
+      filter_project: Filter Project
       exports:
         link_name: "%{type} Exports"
       quotation:
@@ -2574,13 +2586,28 @@ en:
         hint: Choose towers that suit your requirements
         error: "We couldn't find any towers for your selection, would you like to change your search?"
         again: Search Again
-      towers:
+      apartments:
+        title: Apartmenets
         link_name: Choose Apartment
+      towers:
+        link_name: Choose Tower
         header: Choose Apartment
         hint: Choose apartment that suit your requirements
       project_unit:
         header: Set up your KYC
         hint: 'Set up your KYC & hold your apartments'
+      cost_sheet_and_payment_schedule:
+        link_name: "View Cost Sheet & Payment Schedule"
+      booking_cancellation_charges: "%{name} processing charges will be applied on cancellation of booking"
+      disclaimer: Disclaimer
+      msg:
+        scheme_approval_first: "As the payment is adjusted, this scheme will go for approval first."
+      proceed_without_payment:
+        link_name: Proceed without payment
+        text: "I Agree on behalf of %{name} and proceed to add payment"
+        agreee_on_behalf: "I Agree on behalf of %{name}"
+        agree_and_procedd: "I Agree and proceed to add payment"
+        user_agree: "I agree"
       new:
         header: 'Search Home'
         link_name: Choose Apartment & Add Booking
@@ -2597,6 +2624,7 @@ en:
         success: 'Your Booking is hold. Please select Scheme and go for Payment.'
       gateway_payment:
         receipt_missing: 'Requested receipt not in pending.'
+      sold_out_filtered: Sold Out and Filtered
     smses:
       index:
         link_name: SMSs
