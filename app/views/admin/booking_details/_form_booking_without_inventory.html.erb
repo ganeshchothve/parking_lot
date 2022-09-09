@@ -1,3 +1,4 @@
+<% channel_partners = [] %>
 <div class="modal-header">
   <h3 class="title"><%= t('controller.booking_details.new.header', customer: f.object.lead.try(:name), project: (f.object.lead.try(:project_name) || f.object.project.name)) %></h3>
   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -29,7 +30,7 @@
   </div>
   <div class="mb-3 position-relative offline">
     <%= f.label :agreement_price_without_inventory, t("mongoid.attributes.booking_detail.agreement_price_without_inventory"), class: 'label-required'%>
-    <% help_text = @booking_detail.lead.project.consideration_value_help_text %>
+    <% help_text = @booking_detail.lead&.project&.consideration_value_help_text %>
     <% help_text = help_text.presence ? help_text.html_safe : '' %>
     <span data-bs-toggle="tooltip" data-bs-placement="top"
         data-bs-custom-class="custom-tooltip"

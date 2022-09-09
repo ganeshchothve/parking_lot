@@ -3,11 +3,11 @@
   <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
   <a href="javascript:;" class="close-filter-btn btn-close"></a>
   </div>
-  <%= form_tag vis_details_admin_variable_incentive_schemes_path, method: "get", id: "vis_details_form" do %>
+  <%= form_tag vis_details_admin_variable_incentive_scheme_path(id: vis_id), method: "get", id: "vis_details_form" do %>
     <div class="filter-content modal-body ps-0 pe-0">
       <div class="row">
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-          <%= label_tag :variable_incentive_scheme_ids, "Variable Incentive Scheme Name", class: "control-label float-left" %>
+          <%= label_tag :variable_incentive_scheme_ids, I18n.t("mongoid.models.variable_incentive_scheme.one"), class: "control-label float-left" %>
           <%= select_tag :variable_incentive_scheme_ids, options_for_select(VariableIncentiveScheme.approved.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt:  I18n.t("global.select"), class: "selectize", multiple: true} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">

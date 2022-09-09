@@ -42,23 +42,25 @@
           <%= label_tag "fltrs", t('mongoid.attributes.lead.registration_done'), class: "control-label" %>
           <%= select_tag "fltrs[registration_done]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :registration_done)), {prompt:  I18n.t("global.select"), class: "selectize"} %>
         </div>
-        <% unless current_user.role?('channel_partner') %>
-          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-            <%= label_tag "fltrs", t('mongoid.attributes.lead.manager_id') %>
-            <%= select_tag "fltrs[manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: ['channel_partner', 'cp_owner'] }}}} %>
-          </div>
-        <% end %>
-        <% unless current_user.role.in?(%w(cp_owner cp channel_partner)) %>
-          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-            <%= label_tag "fltrs", t('mongoid.attributes.user/role.cp') %>
-            <%= select_tag "fltrs[cp_manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:cp_manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp' }}}} %>
-          </div>
-        <% end %>
-        <% unless current_user.role.in?(%w(cp_owner channel_partner)) %>
-          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-            <%= label_tag "fltrs", ChannelPartner.model_name.human %>
-            <%= select_tag "fltrs[channel_partner_id]", options_from_collection_for_select(params[:fltrs].present? ? ChannelPartner.where(_id: params[:fltrs][:channel_partner_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: channel_partners_path, ds: true }} %>
-          </div>
+        <% if current_client.enable_channel_partners? %>
+          <% unless current_user.role?('channel_partner') %>
+            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+              <%= label_tag "fltrs", t('mongoid.attributes.lead.manager_id') %>
+              <%= select_tag "fltrs[manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: ['channel_partner', 'cp_owner'] }}}} %>
+            </div>
+          <% end %>
+          <% unless current_user.role.in?(%w(cp_owner cp channel_partner)) %>
+            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+              <%= label_tag "fltrs", t('mongoid.attributes.user/role.cp') %>
+              <%= select_tag "fltrs[cp_manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:cp_manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp' }}}} %>
+            </div>
+          <% end %>
+          <% unless current_user.role.in?(%w(cp_owner channel_partner)) %>
+            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+              <%= label_tag "fltrs", ChannelPartner.model_name.human %>
+              <%= select_tag "fltrs[channel_partner_id]", options_from_collection_for_select(params[:fltrs].present? ? ChannelPartner.where(_id: params[:fltrs][:channel_partner_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: channel_partners_path, ds: true }} %>
+            </div>
+          <% end %>
         <% end %>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.user.created_at') %>

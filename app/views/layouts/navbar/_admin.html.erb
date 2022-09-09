@@ -37,11 +37,11 @@
   </li>
 <% end %>
 
-<% if policy(:dashboard).leaderboard? %>
-  <li class="nav-item">
-    <%= active_link_to t('controller.dashboard.index.leaderboard'), channel_partners_leaderboard_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li>
-<% end %>
+<%# if policy(:dashboard).leaderboard? %>
+ <!--  <li class="nav-item">
+    <%#= active_link_to t('controller.dashboard.index.leaderboard'), channel_partners_leaderboard_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  </li> -->
+<%# end %>
 
 
 <% if policy([:admin, Project]).index? %>
@@ -125,11 +125,11 @@
   </li>
 <% end %>
 
-<% if policy([:admin, VariableIncentiveScheme]).vis_details? %>
-  <li class="nav-item">
-    <%= active_link_to t('controller.variable_incentive_schemes.vis_details.link_name'), vis_details_admin_variable_incentive_schemes_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li>
-<% end %>
+<%# if policy([:admin, VariableIncentiveScheme]).vis_details? %>
+  <!-- <li class="nav-item">
+    <%#= active_link_to t('controller.variable_incentive_schemes.vis_details.link_name'), vis_details_admin_variable_incentive_schemes_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  </li> -->
+<%# end %>
 
 <% if policy([:admin, Meeting]).index? %>
   <li class="nav-item">

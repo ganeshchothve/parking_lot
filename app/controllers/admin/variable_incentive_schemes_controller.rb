@@ -1,8 +1,8 @@
 class Admin::VariableIncentiveSchemesController < AdminController
   before_action :set_variable_incentive_scheme, except: %i[index new create vis_details export]
-  before_action :get_options, only: %i[vis_details export]
+  before_action :get_options, only: %i[show vis_details export]
   before_action :authorize_resource
-  around_action :apply_policy_scope, only: [:index, :vis_details, :export]
+  around_action :apply_policy_scope, only: [:index, :export]
 
   def index
     @variable_incentive_schemes = VariableIncentiveScheme.build_criteria params
@@ -17,6 +17,9 @@ class Admin::VariableIncentiveSchemesController < AdminController
     @variable_incentive_scheme = VariableIncentiveScheme.new(created_by: current_user)
     authorize [:admin, @variable_incentive_scheme]
     render layout: false
+  end
+
+  def show
   end
 
   def create
@@ -65,6 +68,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
   end
 
   def vis_details
+    @vis_id = params[:id]
     @options.merge!(query: get_query)
     @vis_details = VariableIncentiveSchemeCalculator.vis_details(@options)
     respond_to do |format|
@@ -118,6 +122,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
 
   def get_options
     @options = {}
+    params[:variable_incentive_scheme_ids] = [params[:id]] if params[:id].present?
     @options.merge!(user_id: params[:user_id]) if params[:user_id].present?
     @options.merge!(project_ids: params[:project_ids]) if params[:project_ids].present?
     if ["cp_owner", "channel_partner"].include?(current_user.role)

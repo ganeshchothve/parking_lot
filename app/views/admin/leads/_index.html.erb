@@ -36,9 +36,9 @@
                       <!-- </p> -->
                     <%# end %>
                     <% if lead.manager_id? && current_user.role.in?(%w(admin superadmin)) %>
-                    <p class="fn-14 mt-1 mb-0">
-                      <%= "#{t('mongoid.attributes.lead.manager_id')} : #{link_to lead.manager_name, [current_user_role_group, lead.manager], class: 'theme-txt-color'}".html_safe %>
-                    </p>
+                      <p class="fn-14 mt-1 mb-0">
+                        <%= "#{t('mongoid.attributes.lead.manager_id')} : #{link_to lead.manager_name, [current_user_role_group, lead.manager], class: 'theme-txt-color'}".html_safe %>
+                      </p>
                     <% end %>
                   </div>
                   <div class="pe-3 py-3 ps-xs-3">
