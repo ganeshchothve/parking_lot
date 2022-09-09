@@ -24,16 +24,21 @@ en:
     all: "All"
     all_elements: "All %{name}"
     at: "At"
+    add: "Add"
     edit: "Edit"
     show: "Show"
     save: "Save"
+    upload: "Upload"
     close: "Close"
+    cancel: "Cancel"
     apply: "Apply"
     select: "Select"
     error: "Error"
     customer: "Customer"
     selected: "Selected"
+    success: "Success"
     no_of: "No. Of "
+    enter_url: "Enter Url"
     action:
       one: "Action"
       other: "Actions"
@@ -603,8 +608,8 @@ en:
         tasks_completed_tracked_by: "All Tasks Completed Tracked by"
         registration_done: "Registration Done"
         ladder_stage: "Ladder Stage"
-        primary_user_kyc_id: "Primary User Kyc"
-        user_kyc_ids: "Secondary User Kycs"
+        primary_user_kyc_id: "Primary Applicants"
+        user_kyc_ids: "Secondary Applicants"
         lead_id: "Customer Name"
         agreement_price_without_inventory: "Consideration Value"
         invoice_generated: "Invoice Generated"
@@ -612,6 +617,11 @@ en:
         agreement_date: "Agreement Date"
         booked_on: "Booked On"
         approval_status: "Approval Status"
+        saleable: "Saleable"
+        phase: "Phase"
+        effective_rate: "Effective Rate"
+        base_rate: "Base Rate"
+        floor_rise: "Floor Rise"
       booking_detail/selldo_status:
         booked_tentative: "tentative"
         booked_confirmed: "confirmed"
@@ -647,6 +657,8 @@ en:
         total_booked_confirmed: "Total Confirmed Booked"
         total_under_negotiation: "Total Under Negotiation"
         total_cancelled: "Total Cancelled"
+      booking_detail_scheme:
+        derived_from_scheme_id: "Derived from Scheme"
 
       client:
         name: "Client Name (Used across the app)"
@@ -1054,6 +1066,8 @@ en:
         total_units: "Total Units"
         sold_unsold: "Sold / Unsold"
         av_sold: "A.V (Sold)"
+        saleable: "Saleable"
+        phase: "Phase"
         tower_name:
           rhea_miranda: "Rhea Miranda"
       project_unit/status:
@@ -1146,6 +1160,7 @@ en:
         processed_on.desc: "Proccessed On - Newest First"
 
       search:
+        configuration: "Configuration"
         bedrooms: "Beds"
         agreement_price: "Agreement Value"
         all_inclusive_price: "All Inclusive Price"
@@ -1653,6 +1668,8 @@ en:
       lead:
         name: "Name"
         phone: "Phone"
+        first_name: "First Name"
+        last_name: "Last Name"
         email: "Email"
         project_id: "Project"
         manager_id: "Channel Partner"
@@ -2115,6 +2132,8 @@ en:
       edit:
         link_name: "Update Scheme & Discount"
         edit: "Edit"
+      derived_from_scheme:
+        link_name: "Derived from Scheme"
       notice:
         scheme_approved: "Scheme applied successfully, please check cost sheet."
         scheme_under_negotiation: "Scheme registered successfully and sent for approval."
@@ -2423,6 +2442,7 @@ en:
         select_projects: "Please select some projects"
         failed_to_sync: "Project was unable to sync due to some errors. Please check notes for details"
         project_reference_id_not_found: "Project with Reference Id %{name} not found."
+      filter_project: "Filter Project"
 
     project_units:
       send_cost_sheet_and_payment_schedule:
@@ -2473,6 +2493,7 @@ en:
         kyc_completed: "KYC Completed"
         site_visit_conducted: "Site Visit Conducted"
         lead_created: "Lead created on Launchpad"
+      unit_no: "Unit No. :"
     phases:
       index:
         link_name: "Phases"
@@ -2620,6 +2641,7 @@ en:
       project_unit:
         header: "Set up your KYC"
         hint: "Set up your KYC & hold your apartments"
+        unit_no: "Unit No. :"
       cost_sheet_and_payment_schedule:
         link_name: "View Cost Sheet & Payment Schedule"
       booking_cancellation_charges: "%{name} processing charges will be applied on cancellation of booking"
@@ -2649,6 +2671,8 @@ en:
       gateway_payment:
         receipt_missing: "Requested receipt not in pending."
       sold_out_filtered: "Sold Out and Filtered"
+      text:
+        starting_at: "Starting At"
     smses:
       index:
         link_name: "SMSs"
@@ -3284,3 +3308,9 @@ en:
       errors:
         push_note: "Errors while Pushing note to sell.do %{name}"
         sitevisit_update_failed: "Sitevisit for %{name1} has not been updated due to following error - %{name2}"
+  gamification:
+    text:
+      popular_floor: "This is one of our most popular floors with stunning views"
+      people_viewing_apartments: " other people are viewing the apartments on this floor"
+      people_viewing_home: " other people like you are looking for a home in this tower"
+      first_time_home_buyers: "Popular choice of first-time home buyers"

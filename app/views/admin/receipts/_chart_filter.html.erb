@@ -23,8 +23,8 @@
       </div>
     </div>
     <div class="filter-footer">
-      <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
-      <button type="button" class="f-cancel-btn db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+      <%= submit_tag I18n.t("global.apply"), class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
+      <button type="button" class="f-cancel-btn db-small-btn light-blue bg-white fn-500 float-right"><%= I18n.t("global.cancel") %></button>
     </div>
 <% end %>
 </div>

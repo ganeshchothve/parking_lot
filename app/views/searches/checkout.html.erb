@@ -66,7 +66,7 @@
                         <% else %>
                           <% if !current_user.buyer? %>
                             <% if @lead.unattached_blocking_receipt.blank? %>
-                              <%= link_to <%= I18n.t("controller.searches.proceed_without_payment.text", name: @lead.name) %>,new_admin_lead_booking_detail_receipt_path(@lead.id, @booking_detail.id) , class: 'btn submit-payemnt-btn fn-12 fn-500 modal-remote-form-link btn-primary d-inline-block', style:'margin-top:0px', onclick: alert %>
+                              <%= link_to I18n.t("controller.searches.proceed_without_payment.text", name: @lead.name), new_admin_lead_booking_detail_receipt_path(@lead.id, @booking_detail.id) , class: 'btn submit-payemnt-btn fn-12 fn-500 modal-remote-form-link btn-primary d-inline-block', style:'margin-top:0px', onclick: alert %>
                               <% if policy([:admin, @lead]).send_payment_link? %>
                                 <%= link_to I18n.t("controller.leads.payment_link.link_name"), send_payment_link_admin_lead_path(@lead), class: "btn submit-payemnt-btn fn-12 fn-500 btn-primary d-inline-block" %>
                               <% end %>

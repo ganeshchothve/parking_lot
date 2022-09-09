@@ -92,8 +92,8 @@
                   </div>
                   <div class="row">
                     <div class="filter-footer modal-footer text-end">
-                      <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-                      <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+                      <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                      <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.cancel") %></button>
                     </div>
                   </div>
                 <% end %>

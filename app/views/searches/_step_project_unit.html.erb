@@ -17,13 +17,13 @@
                 <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
                   <div class="mb-3">
                     <%= f.hidden_field :lead_id, value: @lead.id %>
-                    <%= f.label :primary_applicants %>
+                    <%= f.label :primary_user_kyc_id, I18n.t("mongoid.attributes.booking_detail.primary_user_kyc_id") %>
                     <%= f.select :primary_user_kyc_id, options_for_select(@lead.user_kycs.collect{|x| [x.name, x.id]}, @lead.user_kycs.try(:last).try(:id)), {prompt: true}, class: 'selectize primary_kyc_select', required: @unit.project.enable_booking_with_kyc? , autofocus: true %>
                   </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
                   <div class="mb-3">
-                    <%= f.label :secondary_applicants %>
+                    <%= f.label :user_kyc_ids, I18n.t("mongoid.attributes.booking_detail.user_kyc_ids") %>
                     <%= f.select :user_kyc_ids, @lead.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', multiple: true %>
                   </div>
                 </div>
@@ -38,7 +38,7 @@
           <% if @search.previous_step.present? %>
             <%= form_for [:lead, @search], html: {class: 'validate-form previous-form col-4'} do |ff| %>
               <%= ff.hidden_field :step, value: @search.previous_step %>
-              <%= ff.submit "Previous", class: "previous-btn fn-12 fn-300 btn border-primary primary" %>
+              <%= ff.submit I18n.t("global.previous"), class: "previous-btn fn-12 fn-300 btn border-primary primary" %>
             <% end %>
           <% end %>
         </div>

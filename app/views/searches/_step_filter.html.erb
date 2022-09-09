@@ -8,7 +8,7 @@
             
           <div class="d-flex justify-content-start">
             <p class="fn-16 theme-txt-color mb-0"><i class="fa fa-check-circle me-2 fill-success"></i>
-            <%= link_to t('global.filter_project'), edit_search_path, class: "modal-remote-form-link theme-txt-color step-change-btn" %>  
+            <%= link_to I18n.t("controller.projects.filter_project"), edit_search_path, class: "modal-remote-form-link theme-txt-color step-change-btn" %>
             </p>
             <p class="wd-22 border-top border-2 mt-2 mx-3 mb-0"></p>
             <p class="fn-16 txt-light-blue mb-0"><i class="fa fa-check-circle me-2 fill-success"></i><%= I18n.t("controller.searches.towers.link_name") %></p>
@@ -29,7 +29,7 @@
                   <div class="col-8">
                     <h5 class="fn-20 font-normal theme-txt-color"><%= tower[:project_tower_name] %></h5>
                     <p class="fn-14 theme-txt-color"><%= tower[:floors] %> Floors</p>
-                    <p class="fn-14"><%= tower[:total_units] + " " + I18n.t("controller.searches.apartments.title") %> / <span
+                    <p class="fn-14"><%= (tower[:total_units]).to_s + " " + I18n.t("controller.searches.apartments.title") %> / <span
                         class="text-success font-medium"><%= tower[:total_units_available] %>
                         <%= I18n.t("global.link_to.available") %></span></p>
                   </div>

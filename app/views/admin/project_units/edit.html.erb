@@ -39,7 +39,7 @@
                   <%= render "admin/datum/form_fields", f: data_form %>
                   <% end %>
                 </div>
-                <%= f.link_to_add "Add", :data, :data => { :target => "#data_container" } %>
+                <%= f.link_to_add I18n.t("global.add"), :data, :data => { :target => "#data_container" } %>
               </div>
               <% end %>
               <% if policy([:admin, @project_unit]).editable_field?("costs_attributes") %>
@@ -49,7 +49,7 @@
                     <%= render "admin/cost/form_fields", f: costs_form %>
                     <% end %>
                   </div>
-                  <%= f.link_to_add "Add", :costs, :data => { :target => "#costs_container" } %>
+                  <%= f.link_to_add I18n.t("global.add"), :costs, :data => { :target => "#costs_container" } %>
                 </div>
               <% end %>
               <% if policy([ current_user_role_group, Asset.new(assetable: @project_unit)]).create? %>

@@ -35,8 +35,8 @@
                     </div>
                   </div>
                   <div class="filter-footer modal-footer text-end">
-                    <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-                    <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+                    <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                    <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.cancel") %></button>
                   </div>
                 <% end %>
             </div>
@@ -82,8 +82,8 @@
                     </div>
                   </div>
                   <div class="filter-footer">
-                    <%#= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right close-filter-btn" %>
-                    <button type="button" class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+                    <%#= submit_tag I18n.t("global.apply"), class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right close-filter-btn" %>
+                    <button type="button" class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right"><%= I18n.t("global.cancel") %></button>
                   </div>
                 <%# end %>
               </div>
@@ -162,7 +162,7 @@
                   </div>
                 </div>
                 <div class="filter-footer  modal-footer text-end">
-                  <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                  <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
                   <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.link_to.cancel") %></button>
                 </div>
               <% end %>
@@ -226,7 +226,7 @@
                     </div>
                   </div>
                   <div class="filter-footer  modal-footer text-end">
-                    <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                    <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
                     <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.link_to.cancel") %></button>
                   </div>
                 <% end %>
@@ -302,8 +302,8 @@
                         </div>
                       </div>
                       <div class="filter-footer  modal-footer text-end">
-                        <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-                        <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+                        <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                        <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.cancel") %></button>
                       </div>
                     <% end %>
                 </div>
@@ -364,7 +364,7 @@
                         </div>
                       </div>
                       <div class="filter-footer  modal-footer text-end">
-                        <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                        <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
                         <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.link_to.cancel") %></button>
                       </div>
                     <% end %>
@@ -399,7 +399,7 @@
               <%= link_to t("dashboard.exports.link_name", type: nil) %>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-              <%= link_to link_to t("dashboard.exports.link_name", type: t('global.all')), site_visit_partner_wise_admin_users_path(format: "xls"), class: 'dropdown-item' %>
+              <%= link_to t("dashboard.exports.link_name", type: t('global.all')), site_visit_partner_wise_admin_users_path(format: "xls"), class: 'dropdown-item' %>
               <%= link_to t('dashboard.exports.link_name', type: t('global.active_filter')), site_visit_partner_wise_admin_users_path(format: "xls", channel_partner_id: params["channel_partner_id"], project_id: params["project_id"], dates: params["dates"], active_walkins: params["active_walkins"], active_bookings: params["active_bookings"]), class: 'dropdown-item', id: 'site-visit-partner-wise-af-export' %>
             </div>
           </div>
@@ -443,8 +443,8 @@
                   </div>
                 </div>
                 <div class="filter-footer  modal-footer text-end">
-                  <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-                  <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+                  <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                  <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.cancel") %></button>
                 </div>
               <% end %>
             </div>
@@ -508,8 +508,8 @@
                   </div>
                 </div>
                 <div class="filter-footer  modal-footer text-end">
-                  <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-                  <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+                  <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                  <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.cancel") %></button>
                 </div>
               <% end %>
             </div>

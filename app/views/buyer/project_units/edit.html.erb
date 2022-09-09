@@ -31,13 +31,13 @@
                   <%= render "admin/datum/form_fields", f: data_form %>
                   <% end %>
                 </div>
-                <%= f.link_to_add "Add", :data, :data => { :target => "#data_container" } %>
+                <%= f.link_to_add I18n.t("global.add"), :data, :data => { :target => "#data_container" } %>
               </div>
               <% end %>
             </div>
           </div>
           <div class="modal-footer text-end">
-            <%= f.submit "Submit", class: 'btn btn-primary' %>
+            <%= f.submit I18n.t("global.submit"), class: 'btn btn-primary' %>
           </div>
         </div>
       </div>

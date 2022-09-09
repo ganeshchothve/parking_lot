@@ -126,7 +126,7 @@
                     <div class="modal-footer col-lg-12">
                       <div class="row">
                         <div class="col-lg-12 text-end px-0">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><%= I18n.t("global.cancel") %></button>
                           <%= link_to <%= I18n.t("mobile.channel_partner.status_message.complete_registration") %>, change_state_channel_partner_path(channel_partner, {channel_partner: {event: 'submit_for_approval'}}), method: :post, remote: true, data: {type: 'json', 'disable-with': 'Complete Registration', 'bs-dismiss': 'modal'}, id: 'cp-form-change-state', class: 'btn btn-primary' %>
                         </div>
                       </div>

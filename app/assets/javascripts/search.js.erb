@@ -14,7 +14,7 @@ var showUnitData = function(unit, assets){
   $form.find('[name="search[project_unit_id]"]').val(unit._id);
   $form.find('input[type="submit"]').removeAttr("disabled");
 
-  $("#unit-description").find('[data-placeholder="name"]').html('Unit No.: ' + unit.name);
+  $("#unit-description").find('[data-placeholder="name"]').html("<%= I18n.t('controller.searches.project_unit.unit_no') %>" + unit.name);
   $("#unit-description").find('[data-placeholder="floor"]').html(unit.floor);
   $("#unit-description").find('[data-placeholder="floor_order"]').html(unit.floor_order);
   $("#unit-description").find('[data-placeholder="bedrooms"]').html(unit.bedrooms + " BHK");

@@ -103,7 +103,7 @@
                                 <div class="tab-body pt-2">
                                     <div class="col-lg-5 col-12 overview-left float-start">
                                         <p>
-                                            <span>Configuration</span>
+                                            <span><%= I18n.t("mongoid.attributes.project_unit.configuration") %></span>
                                             <% flats_text = @project.project_type.include?("residential") ? " Flats" : "" %>
                                             <%= inventory_avl ? DashboardDataProvider.configurations(@project).to_sentence + flats_text : @project.configurations&.to_sentence + flats_text %> <%= inventory_avl ? "| #{@project.project_units.min(:saleable)&.round} - #{@project.project_units.max(:saleable)&.round} #{@project.area_unit}" : '' %>
                                         </p>
