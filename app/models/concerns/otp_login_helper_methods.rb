@@ -63,13 +63,14 @@ module OtpLoginHelperMethods
 
       if self.otp_limit_crossed?
         valid = false
-        error_message = "Maximum limit reached to get OTP code. Please try again after #{(self.last_otp_sent_at + self.class.otp_locked_time.seconds).in_time_zone(self.time_zone).strftime("%d/%m/%Y %l:%M %p")}"
+        error_message = I18n.t("sessions.errors.max_otp_tries", name: (self.last_otp_sent_at + self.class.otp_locked_time.seconds).in_time_zone(self.time_zone).strftime("%d/%m/%Y %l:%M %p") )
+
 
       end
 
       if self.check_otp_duration
         valid = false
-        error_message = "Please wait for #{self.class.otp_resend_wait_time} seconds to resend OTP."
+        error_message = I18n.t("sessions.errors.wait_for_otp", name: self.class.otp_resend_wait_time )
       end
       {status: valid, error: error_message}
     end

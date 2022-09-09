@@ -17,6 +17,7 @@ en:
   global:
     only_admins:
       this_page: "Only admins can view this page."
+    please_wait: "Please wait..."
     confirmed: "Confirmation successful."
     terms_and_conditions: "Terms and Conditions"
     brand: "BeyondWalls"
@@ -29,6 +30,7 @@ en:
     close: "Close"
     apply: "Apply"
     select: "Select"
+    error: "Error"
     customer: "Customer"
     selected: "Selected"
     no_of: "No. Of "
@@ -92,7 +94,6 @@ en:
     today: "Today"
     loss: "Loss"
     documents: "Documents"
-    register: "Register"
     search: "Search"
     drop_customer: "Drop Customer"
     congratulations: "Configurations"
@@ -206,9 +207,8 @@ en:
       no_images_available: "No Images Available"
       scroll_down: "Scroll Down"
       register_now: "Register Now"
-      t_n_c: "T & C"
+      tnc: "T & C"
       privacy_policy: "Privacy Policy"
-      register_as_channel_partner: "Register as Channel Partner"
       powered_by_selldo: "Powered by Sell.do"
       take_break: "Take Break"
       resume_work: "Resume Work"
@@ -1570,6 +1570,7 @@ en:
         name_email_phone: "Name/Email/Phone"
         pan_number: "PAN Number"
         phone: "Phone"
+        phone_number: "Phone Number"
         password: "Password"
         portal_stage: "Portal Stage"
         password_confirmation: "Password Confirmation"
@@ -3029,6 +3030,10 @@ en:
         name: "Login here"
     notice:
       phone_number: "Please enter a valid phone number"
+      otp_sent_to: "Otp sent to "
+    errors:
+      max_otp_tries: "Maximum limit reached to get OTP code. Please try again after %{name}"
+      wait_for_otp: "Please wait for %{name} seconds to resend OTP."
 
   registrations:
     pre_text: "Don’t have account ?"
@@ -3188,6 +3193,7 @@ en:
       sign_in: "Sign In"
       log_in: "Log In"
       sign_out: "Sign Out"
+      register: "Register"
       register_now: "Register Now"
       email_verified: "Email Verified"
       reset_password: "Reset Password"
@@ -3204,9 +3210,16 @@ en:
       change_password: "Change Password"
       unlock_my_account: "Unlock my Account"
       forgot_password: "Forgot your Password?"
-      verify_your_email: "Verify your email"
+      verify_your_email: "Verify your Email"
+      verify_your_account: "Verify your Account"
+      logging_in: "Logging in"
+      verifying_login: "Verifying & Logging you in"
       resend: "Click here to resend"
       confirm_account: "Confirm Account"
+      register_as:
+        customer: "Register as Customer"
+        channel_partner: "Register as Channel Partner"
+      sms_unreceived: "Didn’t Receive SMS?"
     help_text:
       sign_in:
         otp: "Sign in using OTP (One Time Password)"

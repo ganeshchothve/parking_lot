@@ -11,7 +11,7 @@
 
               <%= render "home/form_fields", {form: form} %>
               <div class="signin-btn col-lg-12 pl-0 pr-0 pb-4">
-                <%= form.submit "Register", class: "sign-in-btn", data: { disable_with: "Please wait..." } %>
+                <%= form.submit I18n.t("devise.keys.register"), class: "sign-in-btn", data: { disable_with: "Please wait..." } %>
               </div>
               <%= render "devise/shared/links" %>
             <% end %>
