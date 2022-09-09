@@ -44,7 +44,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def send_payment_link?
-    record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && (user.booking_portal_client.enable_payment_with_kyc ? record.kyc_ready? : true ) && record.status.in?(['blocked', 'booked_tentative', 'under_negotiation', 'scheme_approved'])
+    record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && (user.booking_portal_client.enable_payment_with_kyc ? record.lead.kyc_ready? : true ) && record.status.in?(['blocked', 'booked_tentative', 'under_negotiation', 'scheme_approved'])
   end
 
   def show_booking_link?
@@ -176,7 +176,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def need_unattached_booking_receipts_for_channel_partner
-    if user.role?('channel_partner')
+    if user.role.in?(['channel_partner', 'cp_owner'])
       return true if record.lead.unattached_blocking_receipt(record.project_unit.blocking_amount).present?
       @condition = "blocking_amount_receipt"
       false
