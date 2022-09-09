@@ -67,11 +67,11 @@
           <%= text_field_tag "fltrs[created_at]", (params.dig(:fltrs, :created_at).present? ? params[:fltrs][:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-          <%= label_tag "fltrs", 'KYC Done?', class: "control-label" %>
+          <%= label_tag "fltrs", t('mongoid.attributes.user.kyc_done'), class: "control-label" %>
           <%= select_tag "fltrs[kyc_done]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :kyc_done)), {prompt:  I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-          <%= label_tag "fltrs", 'Queue No.', class: "control-label" %>
+          <%= label_tag "fltrs", t('mongoid.attributes.user.queue_no'), class: "control-label" %>
           <%= number_field_tag "fltrs[queue_number]", (params.dig(:fltrs, :queue_number).present? ? params[:fltrs][:queue_number] : ""), class: "form-control" %>
         </div>
       </div>

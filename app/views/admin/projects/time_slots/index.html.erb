@@ -7,7 +7,7 @@
           <input type="text" name="" placeholder="Search time slot">
         </div>
          <% if policy([current_user_role_group, TimeSlot.new]).new? %>
-                <%= link_to "Add #{global_labels['time_slot']}", new_admin_project_time_slot_path, class: 'btn btn-primary modal-remote-form-link ms-2', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add Event'} %>
+                <%= link_to I18n.t("global.link_to.add_element", name: global_labels['time_slot']), new_admin_project_time_slot_path, class: 'btn btn-primary modal-remote-form-link ms-2', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add Event'} %>
               <% end %>
         </div>
       </div>
