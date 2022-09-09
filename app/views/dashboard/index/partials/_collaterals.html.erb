@@ -2,7 +2,7 @@
   <% if hot_projects.present? %>
   <div class="row mb-4">
     <div class="col-lg-12 mt-1 mb-3">
-      <h2 class="sec-title float-start">Hot Selling Projects</h2>
+      <h2 class="sec-title float-start"><%= I18n.t("mongoid.attributes.project.hot_selling") %> Projects</h2>
       <%= link_to(I18n.t("global.link_to.view_all"), admin_projects_path, class: 'view-all-btn theme-txt-color float-end') %>
     </div>
     <% hot_projects.each_with_index do |project, index| %>
@@ -25,7 +25,7 @@
           <div class="project-info">
             <div class="project-info-inner">
               <h2 class="prjt-title position-relative"><%= link_to_if current_user.active_channel_partner?, project.name, admin_project_path(project), class: 'text-white' %> <% if project.hot?%>
-                    <span class="hot-sellig-tag position-relative top-0 font-normal"><i class="fa fa-fire fill-danger me-1"></i>Hot Selling</span>
+                    <span class="hot-sellig-tag position-relative top-0 font-normal"><i class="fa fa-fire fill-danger me-1"></i><%= I18n.t("mongoid.attributes.project.hot_selling") %></span>
                     <% end %></h2>
               <p class="prjt-devlprs"><%= project.developer_name || '-' %></p>
               <p class="prjt-location"><i
@@ -100,7 +100,7 @@
             <div class="project-info">
               <div class="project-info-inner">
                 <h2 class="prjt-title"><%= project.name %><% if project.hot?%>
-                      <span class="hot-sellig-tag position-relative top-0 font-normal"><i class="fa fa-fire fill-danger me-1"></i>Hot Selling</span>
+                      <span class="hot-sellig-tag position-relative top-0 font-normal"><i class="fa fa-fire fill-danger me-1"></i><%= I18n.t("mongoid.attributes.project.hot_selling") %></span>
                       <% end %></h2>
                 <p class="prjt-devlprs"><%= project.developer_name || '-' %></p>
                 <p class="prjt-location"><i

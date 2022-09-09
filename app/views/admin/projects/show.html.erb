@@ -108,11 +108,11 @@
                                             <%= inventory_avl ? DashboardDataProvider.configurations(@project).to_sentence + flats_text : @project.configurations&.to_sentence + flats_text %> <%= inventory_avl ? "| #{@project.project_units.min(:saleable)&.round} - #{@project.project_units.max(:saleable)&.round} #{@project.area_unit}" : '' %>
                                         </p>
                                         <p>
-                                            <span>Property Value</span>
+                                            <span><%= I18n.t("mongoid.attributes.project.property_value") %></span>
                                             <%= number_to_inr(@project.price_starting_from) %> - <%= number_to_inr(@project.price_upto) %>
                                         </p>
                                         <p>
-                                            <span>Possession Date</span>
+                                            <span><%= I18n.t("mongoid.attributes.project.possession") %></span>
                                             <%= @project.possession.present? ? @project.possession.strftime('%d %b, %Y') :  '-' %>
                                         </p>
                                     </div>
@@ -152,7 +152,7 @@
                             <div class="prjt-desc-tab col-12 pt-4 float-start" id="tab-configure">
                                 <div class="tab-header col-12 float-start position-relative">
                                     <h2 class="tab-title float-start"><%= I18n.t("global.link_to.configurations") %></h2>
-                                    <a href="javascript:;" class="emi-calc-btn"><p class="float-end">EMI's starting at <strong>₹ 25,000</strong> /month</p>                                   
+                                    <a href="javascript:;" class="emi-calc-btn"><p class="float-end"><%= I18n.t("controller.projects.text.emis_per_month").html_safe %></p>                                   
                                     </a>
                                      <div class="card emi-wrapper position-absolute top-50 end-0">
                                         <div class="card-header bg-primary py-4  d-flex justify-content-between">
@@ -235,7 +235,7 @@
                                 <div class="tab-body col-12 float-start">
                                     <div class="col-12">
                                         <div class="prjt-configure-list">
-                                            <h2>Select Type</h2>
+                                            <h2><%= I18n.t("global.link_to.select_type") %></h2>
                                             <div class="tower-type tab-link nav nav-tabs border-bottom-0" role="tablist">
                                               <% @project.unit_configurations.each_with_index do | uc, index | %>
                                                 <a href="javascript:;" class="nav-item nav-link mb-1 <%= (index == 0) ? "active" : "" %>" data-bs-toggle="tab" data-bs-target="#floor_<%= uc.name.gsub(/[()\s]*/, '').underscore + uc.saleable.to_i.to_s %>" role="tab"><%= uc.name %> | (<%= uc.saleable %> sq.ft)</a>
@@ -311,7 +311,7 @@
                                 <div class="tab-body">
                                     <div class="col-12 mb-3 float-start">
                                         <div class="prjt-gallery">
-                                            <h2>Gallery</h2>
+                                            <h2><%= I18n.t("global.gallery") %></h2>
                                             <div class="prjt-gallery-inner">
                                                 <ul>
                                                     <% @assets = @project.assets.where(document_type: "images") %>
@@ -350,7 +350,7 @@
                                     </div>
                                     <div class="col-12 mb-3 float-start">
                                         <div class="prjt-gallery">
-                                            <h2><%= I18n.t("global.link_to.documents") %></h2>
+                                            <h2><%= I18n.t("global.documents") %></h2>
                                             <ul class="documents-list">
                                                 <% @assets = @project.assets.where(document_type: "document") %>
                                                     <% @assets.each_with_index do |asset, index|%>
@@ -618,7 +618,7 @@
                                     </div>
                                     <p class="img-tag bg-danger"><i class="fa fa-fire fill-white"></i><%= project.category&.first&.titleize || 'Just Launch' %></p>
                                         <% if project.hot?%>
-                                        <p class="img-tag bg-danger" style="top:65px"><i class="fa fa-fire fill-white"></i>Hot Selling</p>
+                                        <p class="img-tag bg-danger" style="top:65px"><i class="fa fa-fire fill-white"></i><%= I18n.t("mongoid.attributes.project.hot_selling") %></p>
                                         <% end %>
                                 </div>
                                 <div class="project-info">
@@ -685,25 +685,25 @@
                 <div class="card br-rd-8 card-shadow no-br mt-3 opportunity-card">
                     <div class="row">
                         <div class="col-md-12 pt-3 px-4">
-                            <h3 class="card-title">Benefits for You</h3>
+                            <h3 class="card-title"><%= I18n.t("controller.projects.benefits_for_you.link_name") %></h3>
                             <ul class="project-list list-unstyled row mb-0 pb-1">
                                 <li class="px-3 mb-2">
                                     <div class="list-wrap row">
                                         <div class="col-lg-6 col-8 pe-0">
-                                            <p class="list-txt mb-0">Site Visit Incentive</p>
+                                            <p class="list-txt mb-0"><%= I18n.t("controller.projects.incentives.site_visit") %></p>
                                         </div>
                                         <div class="col-lg-6 col-4 ps-0">
-                                          <%= @project.sv_incentive.present? ? "<h2 class='fn-18 mb-0 text-end'>#{number_to_indian_currency(@project.sv_incentive)}</h2>".html_safe : "<h2 class='fn-14 mb-0 text-end'>Coming Soon</h2>".html_safe %></h2>
+                                          <%= @project.sv_incentive.present? ? "<h2 class='fn-18 mb-0 text-end'>#{number_to_indian_currency(@project.sv_incentive)}</h2>".html_safe : "<h2 class='fn-14 mb-0 text-end'> #{I18n.t('global.coming_soon')} </h2>".html_safe %></h2>
                                         </div>
                                     </div>
                                 </li>
                                 <li class="px-3 mb-2">
                                     <div class="list-wrap row">
                                         <div class="col-lg-6 col-8 pe-0">
-                                           <p class="list-txt mb-0">Spot Booking Incentive</p>
+                                           <p class="list-txt mb-0"><%= I18n.t("controller.projects.incentives.spot_booking") %></p>
                                         </div>
                                         <div class="col-lg-6 col-4 ps-0">
-                                          <h2 class="fn-18 mb-0 text-end"><%= @project.spot_booking_incentive.present? ? "<h2 class='fn-18 mb-0 text-end'>#{number_to_indian_currency(@project.spot_booking_incentive)}</h2>".html_safe : "<h2 class='fn-14 mb-0 text-end'>Coming Soon</h2>".html_safe %></h2>
+                                          <h2 class="fn-18 mb-0 text-end"><%= @project.spot_booking_incentive.present? ? "<h2 class='fn-18 mb-0 text-end'>#{number_to_indian_currency(@project.spot_booking_incentive)}</h2>".html_safe : "<h2 class='fn-14 mb-0 text-end'> #{I18n.t("global.coming_soon")} </h2>".html_safe %></h2>
                                         </div>
                                     </div>
                                 </li>
@@ -711,7 +711,7 @@
                                   <li class="px-3 mb-3">
                                       <div class="list-wrap row">
                                           <div class="col-lg-9 col-8 pe-0">
-                                             <p class="list-txt mb-0">Pre-Registration Incentive<br><span class="fn-12 theme-txt-color">for min. <%= @project.pre_reg_min_bookings %> bookings</span></p>
+                                             <p class="list-txt mb-0"><%= I18n.t("controller.projects.incentives.pre_registration_incentive") %><br><span class="fn-12 theme-txt-color">for min. <%= @project.pre_reg_min_bookings %> <%= I18n.t("mongoid.models.booking_detail.other") %></span></p>
                                           </div>
                                           <div class="col-lg-3 col-4 ps-0">
                                               <h2 class="fn-18 mb-0 text-end"><%= number_to_percentage(@project.pre_reg_incentive_percentage, precision: 0) %></h2>
@@ -722,10 +722,10 @@
                                   <li class="px-3 mb-3">
                                       <div class="list-wrap row">
                                           <div class="col-lg-7 col-8 pe-0">
-                                             <p class="list-txt mb-0">Pre-Registration Incentive</p>
+                                             <p class="list-txt mb-0"><%= I18n.t("controller.projects.incentives.pre_registration_incentive") %></p>
                                           </div>
                                           <div class="col-lg-5 col-4 ps-0">
-                                              <h2 class="fn-14 mb-0 text-end">Coming Soon</h2>
+                                              <h2 class="fn-14 mb-0 text-end"><%= I18n.t("global.coming_soon") %></h2>
                                           </div>
                                       </div>
                                   </li>

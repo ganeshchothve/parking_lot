@@ -1,8 +1,8 @@
 <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-  <%= label_tag "fltrs", 'City' %>
+  <%= label_tag "fltrs", I18n.t("global.city") %>
   <%= select_tag "fltrs[city]", options_for_select(current_client.regions.distinct(:city), (params[:fltrs].present? ? params[:fltrs][:city] : nil)), { prompt: 'Select', class: "selectize city_select" } %>
 </div>
 <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-  <%= label_tag "fltrs", 'Regions' %>
+  <%= label_tag "fltrs", I18n.t("global.regions") %>
   <%= select_tag "fltrs[regions][]", options_for_select((params.dig(:fltrs, :city).present? ? current_client.regions.where(city: params.dig(:fltrs, :city)).distinct(:partner_regions).first : []), (params[:fltrs].present? ? params[:fltrs][:regions] : "")), { prompt:  I18n.t("global.link_to.select_city_first"), class: "selectize regions_select", multiple: true, data: { url: get_regions_admin_client_path } } %>
 </div>

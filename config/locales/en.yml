@@ -18,6 +18,7 @@ en:
     only_admins:
       this_page: "Only admins can view this page."
     please_wait: "Please wait..."
+    coming_soon: "Coming Soon"
     confirmed: "Confirmation successful."
     terms_and_conditions: "Terms and Conditions"
     brand: "BeyondWalls"
@@ -38,6 +39,7 @@ en:
     selected: "Selected"
     success: "Success"
     no_of: "No. Of "
+    gallery: "Gallery"
     enter_url: "Enter Url"
     action:
       one: "Action"
@@ -94,6 +96,7 @@ en:
     name: "Name"
     tower: "Tower"
     city: "City"
+    regions: "Regions"
     key: "Key"
     hello: "Hello"
     today: "Today"
@@ -740,7 +743,37 @@ en:
         micro_market: "Location"
         city: "City"
         possession: "Possession Date"
+        property_value: "Property Value"
         hot: "Hot Property"
+        hot_selling: "Hot Selling"
+        spot_booking_incentive: "Spot Booking Incentive"
+        pre_reg_incentive_percentage: "Pre-registration Incentive %"
+        pre_reg_min_bookings: "Pre-registration Minimum Bookings"
+        iris_url: "IRIS URL"
+        sv_incentive: "Sitevisit Incentive"
+        video_link: "Video Link"
+        description: "Description"
+        advantages: "Advantages"
+        terms_and_conditions: "Terms and Conditions"
+        consideration_value_help_text: "Consideration Value Help Text"
+        email_header: "Email Header"
+        email_footer: "Email Footer"
+        logo: "Logos"
+        mobile_logo: "Mobile Logo"
+        cover_photo: "Cover Photo"
+        mobile_cover_photo: "Mobile Cover Photo"
+        enable_inventory: "Enable Inventory"
+        enable_booking_with_kyc: "Enable Booking with KYC"
+        enable_live_inventory: "Enable Live Inventory"
+        incentive_calculation: "Incentive Calculation"
+        booking_sources: "Booking Sources"
+        incentive_percentage_slabs: "Incentive Percentage Slabs"
+        gst_slab_applicable: "GST Slab Applicable"
+        enable_slot_generation: "Enable Slot Generation"
+        disable_project: "Disable Project"
+        disable_walkins: "Disable Walk-ins"
+        disable_bookings: "Disable Bookings"
+        disable_invoicing: "Disable Invoicing"
         is_active: "Active?"
         launched_on: "Launch Date"
         developer_name: "Developer Name"
@@ -2164,6 +2197,8 @@ en:
       tasks:
         link_name: "Tasks"
         header: "Tasks"
+      links:
+        print_booking_form: "Print Booking Form"
       invoices:
         link_name: "Brokerage Invoices"
       send_booking_detail_form_notification: "Booking detail form will be sent to customer shortly."
@@ -2425,6 +2460,8 @@ en:
         link_name: "Add Timeline Update"
       region_projects:
         link_name: "Projects In My Region"
+      benefits_for_you:
+        link_name: "Benefits for You"
       notice:
         subscribed: "Project successfully subscribed."
         updated: "Interested Project successfully updated."
@@ -2443,6 +2480,13 @@ en:
         failed_to_sync: "Project was unable to sync due to some errors. Please check notes for details"
         project_reference_id_not_found: "Project with Reference Id %{name} not found."
       filter_project: "Filter Project"
+      incentives:
+        site_visit: "Site Visit Incentive"
+        spot_booking: "Spot Booking Incentive"
+        pre_registration_incentive: "Pre-registration Incentive"
+      text:
+        emis_per_month: "EMI's starting at <strong>₹ 25,000</strong> /month"
+        search_token: "Search Token"
 
     project_units:
       send_cost_sheet_and_payment_schedule:
