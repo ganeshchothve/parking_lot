@@ -9,7 +9,7 @@
         <%= form_for(@booking_detail, url: print_template_admin_booking_detail_path, method: :get, html: {class: 'validate-form modal-remote-form', id: 'choose_template_form'}) do |f| %>
           <div class="mb-3">
             <%= f.label :template_docs %>
-            <%= f.select :template_docs, BookingDetail::TEMPLATE_TYPES.collect{|x| [I18n.t("mongoid.attributes.booking_details/template_docs.#{x}"), x]}, {prompt: true}, class: 'selectize', required: true, autofocus: true %>
+            <%= f.select :template_docs, available_booking_custom_templates(@booking_detail), {prompt: true}, class: 'selectize', required: true, autofocus: true %>
           </div>
 
           <div class="mb-3 text-end">

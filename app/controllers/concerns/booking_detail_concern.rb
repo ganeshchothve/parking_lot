@@ -11,7 +11,7 @@ module BookingDetailConcern
 
   def print_template
     respond_to do |format|
-      @template = Template.where(name: params.dig(:booking_detail, :template_docs), project_id: @booking_detail.project_id, booking_portal_client_id: @booking_detail.booking_portal_client_id).first
+      @template = Template.where(id: params.dig(:booking_detail, :template_docs), project_id: @booking_detail.project_id, booking_portal_client_id: @booking_detail.booking_portal_client_id).first
       if @template.present?
         format.html { render template: 'admin/booking_details/print_template' }
       else

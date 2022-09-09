@@ -15,4 +15,10 @@ module ProjectsHelper
   def allow_invoice_create?(project)
     policy([current_user_role_group, Invoice.new(project: project)]).new?
   end
+
+  def booking_custom_templates(project)
+    booking_custom_templates = ::Template::CustomTemplate.where(project_id: project.id, subject_class: 'BookingDetail', is_active: true).pluck(:name, :id)
+    booking_custom_templates
+  end
+
 end
