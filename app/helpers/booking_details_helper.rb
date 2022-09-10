@@ -79,7 +79,7 @@ module BookingDetailsHelper
   end
 
   def available_booking_custom_templates(booking_detail)
-    templates = Template.in(id: booking_detail.project.booking_custom_template_ids).collect{|t| [t.name.titleize, t.id]}
+    templates = ::Template::CustomTemplate.where(subject_class: 'BookingDetail', project_id: booking_detail.project.id, is_active: true).collect{|t| [t.name.titleize, t.id]}
     booking_form_and_allotment_letter_templates = Template.where(project_id: booking_detail.project.id, is_active: true).in(name: ['allotment_letter', 'booking_detail_form_html']).map{|t| [t.name.try(:titleize), t.id]}
     booking_form_and_allotment_letter_templates + templates
   end
