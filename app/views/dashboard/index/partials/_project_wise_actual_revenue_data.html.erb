@@ -26,19 +26,19 @@
                     <div class="row">
                       <div class="mb-3 col-12">
                         <%= label_tag "fltrs",  I18n.t("global.link_to.resource") %>
-                        <%= select_tag "resource", options_for_select(IncentiveScheme::RESOURCE_CLASS.collect{|x| [t("mongoid.attributes.incentive_scheme/resource_class.#{x}"), x]}, (params[:resource].present? ? params[:resource] : "BookingDetail")), {prompt:  I18n.t("global.select"), class: "selectize resource"} %>
+                        <%= select_tag "resource", options_for_select(IncentiveScheme::RESOURCE_CLASS.collect{|x| [t("mongoid.attributes.incentive_scheme/resource_class.#{x}"), x]}, (params[:resource].present? ? params[:resource] : "BookingDetail")), {prompt: I18n.t("global.select"), class: "selectize resource"} %>
                       </div>
                       <div class="mb-3 col-12">
                         <%= label_tag "fltrs", I18n.t("global.link_to.category") %>
-                        <%= select_tag "category", options_for_select(IncentiveScheme::CATEGORIES.collect{|x| [t("mongoid.attributes.incentive_scheme/categories.#{x}"), x]}, (params[:category].present? ? params[:category] : "BookingDetail")), {prompt:  I18n.t("global.select"), class: "selectize category_class"} %>
+                        <%= select_tag "category", options_for_select(IncentiveScheme::CATEGORIES.collect{|x| [t("mongoid.attributes.incentive_scheme/categories.#{x}"), x]}, (params[:category].present? ? params[:category] : "BookingDetail")), {prompt: I18n.t("global.select"), class: "selectize category_class"} %>
                       </div>
                       <div class="mb-3 col-12">
                         <%= label_tag "fltrs", I18n.t("global.link_to.brokerage_type") %>
-                        <%= select_tag "brokerage_type", options_for_select(IncentiveScheme::BROKERAGE_TYPE.collect{|x| [t("mongoid.attributes.incentive_scheme/brokerage_type.#{x}"), x]}, (params[:brokerage_type].present? ? params[:brokerage_type] : "BookingDetail")), {prompt:  I18n.t("global.select"), class: "selectize brokerage_type_class"} %>
+                        <%= select_tag "brokerage_type", options_for_select(IncentiveScheme::BROKERAGE_TYPE.collect{|x| [t("mongoid.attributes.incentive_scheme/brokerage_type.#{x}"), x]}, (params[:brokerage_type].present? ? params[:brokerage_type] : "BookingDetail")), {prompt: I18n.t("global.select"), class: "selectize brokerage_type_class"} %>
                       </div>
                       <div class="mb-3 col-12">
                         <%= label_tag "fltrs", t('mongoid.attributes.project.name') %>
-                        <%= select_tag :project_id, options_for_select(Project.all.map { |p| [p.ds_name, p.id] }, (params[:project_id].present? ? params[:project_id] : "")), {prompt:  I18n.t("global.select"), class: "selectize", multiple: true} %>
+                        <%= select_tag :project_id, options_for_select(Project.all.map { |p| [p.ds_name, p.id] }, (params[:project_id].present? ? params[:project_id] : "")), {prompt: I18n.t("global.select"), class: "selectize", multiple: true} %>
                       </div>
 
                       <% if current_client.enable_channel_partners? %>
@@ -56,7 +56,7 @@
                         </div>
                       <% end %>
                       <div class="mb-3 col-12">
-                        <%= label_tag "fltrs", t('mongoid.attributes.site_visit.created_at') %>
+                        <%= label_tag "fltrs", I18n.t("global.created_at") %>
                         <%= text_field_tag "created_at", (params[:created_at].present? ? params[:created_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %> 
                       </div>
                     </div>
@@ -71,7 +71,7 @@
                       </div>
                       <div class="mb-3 col-12">
                         <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.status'), class: "control-label" %>
-                        <%= select_tag "booking_detail_status", options_for_select(BookingDetail::BOOKING_STAGES.collect{|x| [ t("mongoid.attributes.booking_detail/status.#{x}"), x.to_s]}, (params[:booking_detail_status] || "")), {prompt:  I18n.t("global.select"), class: "selectize"} %>
+                        <%= select_tag "booking_detail_status", options_for_select(BookingDetail::BOOKING_STAGES.collect{|x| [ t("mongoid.attributes.booking_detail/status.#{x}"), x.to_s]}, (params[:booking_detail_status] || "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
                       </div>
                     </div>
                     <div class="row site_visit_filters">
@@ -85,7 +85,7 @@
                       </div>
                       <div class="mb-3 col-12">
                         <%= label_tag "fltrs", t('mongoid.attributes.site_visit.status') %>
-                        <%= select_tag "site_visit_status", options_for_select(SiteVisit.aasm(:status).states.collect(&:name).map {|x| [x.to_s.titleize, x.to_s]}, (params[:site_visit_status].present? ? params[:site_visit_status] : "")), { prompt: 'Select', class: "selectize" } %>
+                        <%= select_tag "site_visit_status", options_for_select(SiteVisit.aasm(:status).states.collect(&:name).map {|x| [x.to_s.titleize, x.to_s]}, (params[:site_visit_status].present? ? params[:site_visit_status] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
                       </div>
                     </div>
                   </div>

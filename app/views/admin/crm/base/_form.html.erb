@@ -43,7 +43,7 @@
           <div class = "col-12">
             <div class="mb-3">
               <%= f.label :user, class: 'control-label' %>
-              <%= f.select :user_id, options_from_collection_for_select(User.where(role: 'admin'), "id", "ds_name", f.object.user_id), {prompt: 'Select'}, class: "selectize-remote", data: { url: admin_users_path, params: {fltrs: {role: 'admin' } } } %>
+              <%= f.select :user_id, options_from_collection_for_select(User.where(role: 'admin'), "id", "ds_name", f.object.user_id), {prompt: I18n.t("global.select")}, class: "selectize-remote", data: { url: admin_users_path, params: {fltrs: {role: 'admin' } } } %>
             </div>
           </div>
         </div>

@@ -8,29 +8,29 @@
       <div class="row">
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.project.name') %>
-          <%= select_tag "fltrs[_id]", options_for_select(Project.where(Project.user_based_scope(current_user, params)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:_id] : "")), {prompt:  I18n.t("global.select"), class: "selectize"} %>
+          <%= select_tag "fltrs[_id]", options_for_select(Project.where(Project.user_based_scope(current_user, params)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:_id] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
 
         <%= render 'admin/regions/filters' %>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.project.category') %>
-          <%= select_tag "fltrs[category]", options_for_select(Project.nin(category: [nil, []]).distinct(:category).map{|category| [t("mongoid.attributes.project/category.#{category}"), category]}, (params[:fltrs].present? ? params[:fltrs][:category] : "")), { prompt: 'Select', class: "selectize", multiple: true } %>
+          <%= select_tag "fltrs[category]", options_for_select(Project.nin(category: [nil, []]).distinct(:category).map{|category| [t("mongoid.attributes.project/category.#{category}"), category]}, (params[:fltrs].present? ? params[:fltrs][:category] : "")), { prompt: I18n.t("global.select"), class: "selectize", multiple: true } %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.project.types') %>
-          <%= select_tag "fltrs[project_type]", options_for_select(Project.nin(project_type: [nil, '']).distinct(:project_type).map{|project_type| [t("mongoid.attributes.project/project_type.#{project_type}"),project_type]}, (params[:fltrs].present? ? params[:fltrs][:project_type] : "")), { prompt: 'Select', class: "selectize"} %>
+          <%= select_tag "fltrs[project_type]", options_for_select(Project.nin(project_type: [nil, '']).distinct(:project_type).map{|project_type| [t("mongoid.attributes.project/project_type.#{project_type}"),project_type]}, (params[:fltrs].present? ? params[:fltrs][:project_type] : "")), { prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.project.project_segment') %>
-          <%= select_tag "fltrs[project_segment]", options_for_select(Project.nin(project_segment: [nil, []]).distinct(:project_segment).map{|segment| [t("mongoid.attributes.project/project_segment.#{segment}"), segment]}, (params[:fltrs].present? ? params[:fltrs][:project_segment] : "")), { prompt: 'Select', class: "selectize", multiple: true } %>
+          <%= select_tag "fltrs[project_segment]", options_for_select(Project.nin(project_segment: [nil, []]).distinct(:project_segment).map{|segment| [t("mongoid.attributes.project/project_segment.#{segment}"), segment]}, (params[:fltrs].present? ? params[:fltrs][:project_segment] : "")), { prompt: I18n.t("global.select"), class: "selectize", multiple: true } %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.project.configurations') %>
-          <%= select_tag "fltrs[configurations]", options_for_select(Project.nin(configurations: [nil, []]).distinct(:configurations).sort_by{|s| s.scan(/\d+(?:\.\d+)?/).first.to_f}, (params[:fltrs].present? ? params[:fltrs][:configurations] : "")), { prompt: 'Select', class: "selectize", multiple: true } %>
+          <%= select_tag "fltrs[configurations]", options_for_select(Project.nin(configurations: [nil, []]).distinct(:configurations).sort_by{|s| s.scan(/\d+(?:\.\d+)?/).first.to_f}, (params[:fltrs].present? ? params[:fltrs][:configurations] : "")), { prompt: I18n.t("global.select"), class: "selectize", multiple: true } %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.project.micro_market') %>
-          <%= select_tag "fltrs[micro_market]", options_for_select(Project.nin(micro_market: [nil, '']).distinct(:micro_market), (params[:fltrs].present? ? params[:fltrs][:micro_market] : "")), { prompt: 'Select', class: "selectize" } %>
+          <%= select_tag "fltrs[micro_market]", options_for_select(Project.nin(micro_market: [nil, '']).distinct(:micro_market), (params[:fltrs].present? ? params[:fltrs][:micro_market] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.project.possession') %>
@@ -39,17 +39,17 @@
         <% if policy([:admin, Project.new(is_active: false)]).show? %>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.project.is_active') %>
-            <%= select_tag "fltrs[is_active]", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:fltrs].present? ? params[:fltrs][:is_active] : "")), { prompt: 'Select', class: "selectize" } %>
+            <%= select_tag "fltrs[is_active]", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:fltrs].present? ? params[:fltrs][:is_active] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
           </div>
         <% end %>
         <% if policy([:admin, Project.new]).show? %>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", I18n.t("mongoid.attributes.project.disabled_walkins") %>
-            <%= select_tag "fltrs[disable_project_walk_ins]", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:fltrs].present? ? params[:fltrs][:disable_project_walk_ins] : "")), { prompt: 'Select', class: "selectize" } %>
+            <%= select_tag "fltrs[disable_project_walk_ins]", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:fltrs].present? ? params[:fltrs][:disable_project_walk_ins] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
           </div>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", I18n.t("mongoid.attributes.project.disabled_bookings") %>
-            <%= select_tag "fltrs[disable_project_bookings]", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:fltrs].present? ? params[:fltrs][:disable_project_bookings] : "")), { prompt: 'Select', class: "selectize" } %>
+            <%= select_tag "fltrs[disable_project_bookings]", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:fltrs].present? ? params[:fltrs][:disable_project_bookings] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
           </div>
         <% end %>
       </div>

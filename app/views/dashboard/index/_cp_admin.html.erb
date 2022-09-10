@@ -30,7 +30,7 @@
                       </div>
                       <div class="mb-3 col-12">
                         <%= label_tag :project_ids, I18n.t("mongoid.models.project.other"), class: "control-label float-left" %>
-                        <%= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt:  I18n.t("global.select"), class: "selectize", multiple: true} %>
+                        <%= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: I18n.t("global.select"), class: "selectize", multiple: true} %>
                       </div>
                     </div>
                   </div>
@@ -77,7 +77,7 @@
                     <div class="row">
                       <div class="mb-3 col-12">
                         <%#= label_tag :project_ids, "Projects", class: "control-label float-left" %>
-                        <%#= select_tag :project_ids, options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt:  I18n.t("global.select"), class: "selectize", multiple: true} %>
+                        <%#= select_tag :project_ids, options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: I18n.t("global.select"), class: "selectize", multiple: true} %>
                       </div>
                     </div>
                   </div>
@@ -118,7 +118,7 @@
                 <%= link_to t("dashboard.exports.link_name", type: nil) %>
               </button>
               <div class="dropdown-menu dropdown-menu-right">
-                <%= link_to link_to t("dashboard.exports.link_name", type: t('global.all')), partner_wise_performance_admin_users_path(format: "xls"), class: 'dropdown-item' %>
+                <%= link_to t("dashboard.exports.link_name", type: t('global.all')), partner_wise_performance_admin_users_path(format: "xls"), class: 'dropdown-item' %>
                 <%= link_to t('dashboard.exports.link_name', type: t('global.active_filter')), partner_wise_performance_admin_users_path(format: "xls", channel_partner_id: params["channel_partner_id"], project_id: params["project_id"], dates: params["dates"], active_walkins: params["active_walkins"], active_bookings: params["active_bookings"]), class: 'dropdown-item', id: 'partner-wise-performance-af-export' %>
               </div>
             </div>
@@ -145,19 +145,19 @@
                     </div>
                     <div class = "mb-3 col-12">
                       <%= label_tag "project_id", I18n.t("mongoid.models.project.one"), class: "control-label float-left" %>
-                      <%= select_tag "project_id", options_for_select(Project.where(Project.user_based_scope(current_user)).map{|pr| [pr.name, pr.id]}), prompt: 'Select', class: "selectize" %>
+                      <%= select_tag "project_id", options_for_select(Project.where(Project.user_based_scope(current_user)).map{|pr| [pr.name, pr.id]}), prompt: I18n.t("global.select"), class: "selectize" %>
                     </div>
                     <div class = "mb-3 col-12">
                       <%= label_tag "channel_partner_id", ChannelPartner.model_name.human, class: "control-label float-left" %>
-                      <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}, cp_id), prompt: 'Select', class: "selectize" %>
+                      <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}, cp_id), prompt: I18n.t("global.select"), class: "selectize" %>
                     </div>
                     <div class="mb-3 col-12">
-                      <%= label_tag "fltrs", I18n.t("global.link_to.active_walk_ins"), class: "control-label float-left" %>
-                      <%= select_tag "active_walkins", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_walkins].present? ? params[:active_walkins] : "")), { prompt: 'Select', class: "selectize" } %>
+                      <%= label_tag "fltrs", I18n.t("global.link_to.active_walkins"), class: "control-label float-left" %>
+                      <%= select_tag "active_walkins", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_walkins].present? ? params[:active_walkins] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
                     </div>
                     <div class="mb-3 col-12">
                       <%= label_tag "fltrs", I18n.t("global.link_to.active_bookings"), class: "control-label float-left" %>
-                      <%= select_tag "active_bookings", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_bookings].present? ? params[:active_bookings] : "")), { prompt: 'Select', class: "selectize" } %>
+                      <%= select_tag "active_bookings", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_bookings].present? ? params[:active_bookings] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
                     </div>
                   </div>
                 </div>
@@ -193,7 +193,7 @@
                 <%= link_to t("dashboard.exports.link_name", type: nil) %>
               </button>
               <div class="dropdown-menu dropdown-menu-right">
-                <%= link_to link_to t("dashboard.exports.link_name", type: t('global.all')), channel_partner_performance_admin_users_path(format: "xls"), class: 'dropdown-item' %>
+                <%= link_to t("dashboard.exports.link_name", type: t('global.all')), channel_partner_performance_admin_users_path(format: "xls"), class: 'dropdown-item' %>
                 <%= link_to t('dashboard.exports.link_name', type: t('global.active_filter')), channel_partner_performance_admin_users_path(format: "xls", channel_partner_id: params["channel_partner_id"], dates: params["dates"], project_ids: params["project_ids"], manager_id: params["manager_id"]), class: 'dropdown-item', id: 'channel-partner-performance-af-export' %>
               </div>
             </div>
@@ -213,15 +213,15 @@
                       </div>
                       <div class = "mb-3 col-12">
                         <%= label_tag "channel_partner_id", ChannelPartner.model_name.human, required: true, class: "control-label float-left" %>
-                        <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}), prompt: 'Select', class: "selectize" %>
+                        <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}), prompt: I18n.t("global.select"), class: "selectize" %>
                       </div>
                       <div class = "mb-3 col-12">
                         <%= label_tag "manager_id", I18n.t("mongoid.attributes.user.manager_id"), class: "control-label float-left" %>
-                        <%= select_tag "manager_id", options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), prompt: 'Select', class: "selectize" %>
+                        <%= select_tag "manager_id", options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), prompt: I18n.t("global.select"), class: "selectize" %>
                       </div>
                       <div class="mb-3 col-12">
                         <%= label_tag :project_ids, I18n.t("mongoid.models.project.other"), class: "control-label float-left" %>
-                        <%= select_tag :project_ids, options_for_select(Project.filter_by_is_active(true).where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt:  I18n.t("global.select"), class: "selectize", multiple: true} %>
+                        <%= select_tag :project_ids, options_for_select(Project.filter_by_is_active(true).where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: I18n.t("global.select"), class: "selectize", multiple: true} %>
                       </div>
                     </div>
                   </div>
@@ -277,7 +277,7 @@
                     <%= link_to t("dashboard.exports.link_name", type: nil) %>
                   </button>
                   <div class="dropdown-menu dropdown-menu-right">
-                    <%= link_to link_to t("dashboard.exports.link_name", type: t('global.all')), cp_performance_path(format: "xls"), class: 'dropdown-item' %>
+                    <%= link_to t("dashboard.exports.link_name", type: t('global.all')), cp_performance_path(format: "xls"), class: 'dropdown-item' %>
                     <%= link_to t('dashboard.exports.link_name', type: t('global.active_filter')), cp_performance_path(format: "xls", dates: params["dates"], project_ids: params["project_ids"]), class: 'dropdown-item', id: 'cp-performance-af-export' %>
                   </div>
                 </div>
@@ -297,7 +297,7 @@
                           </div>
                           <div class="mb-3 col-12">
                             <%= label_tag :project_ids, I18n.t("mongoid.models.project.other"), class: "control-label float-left" %>
-                            <%= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt:  I18n.t("global.select"), class: "selectize", multiple: true} %>
+                            <%= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: I18n.t("global.select"), class: "selectize", multiple: true} %>
                           </div>
                         </div>
                       </div>
@@ -359,7 +359,7 @@
                           </div>
                           <div class="mb-3 col-12">
                             <%#= label_tag :project_ids, "Projects", class: "control-label float-left" %>
-                            <%#= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt:  I18n.t("global.select"), class: "selectize", multiple: true} %>
+                            <%#= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: I18n.t("global.select"), class: "selectize", multiple: true} %>
                           </div>
                         </div>
                       </div>
@@ -426,19 +426,19 @@
                     </div>
                     <div class = "mb-3 col-12">
                       <%= label_tag "project_id", I18n.t("mongoid.models.project.one"), class: "control-label float-left" %>
-                      <%= select_tag "project_id", options_for_select(Project.where(Project.user_based_scope(current_user)).map{|pr| [pr.name, pr.id]}), prompt: 'Select', class: "selectize" %>
+                      <%= select_tag "project_id", options_for_select(Project.where(Project.user_based_scope(current_user)).map{|pr| [pr.name, pr.id]}), prompt: I18n.t("global.select"), class: "selectize" %>
                     </div>
                     <div class = "mb-3 col-12">
                       <%= label_tag "channel_partner_id", ChannelPartner.model_name.human, class: "control-label float-left" %>
-                      <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}, cp_id), prompt: 'Select', class: "selectize" %>
+                      <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}, cp_id), prompt: I18n.t("global.select"), class: "selectize" %>
                     </div>
                     <div class="mb-3 col-12">
                       <%= label_tag "fltrs", I18n.t("global.link_to.active_walkins"), class: "control-label float-left" %>
-                      <%= select_tag "active_walkins", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_walkins].present? ? params[:active_walkins] : "")), { prompt: 'Select', class: "selectize" } %>
+                      <%= select_tag "active_walkins", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_walkins].present? ? params[:active_walkins] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
                     </div>
                     <div class="mb-3 col-12">
                       <%= label_tag "fltrs", I18n.t("global.link_to.active_bookings"), class: "control-label float-left" %>
-                      <%= select_tag "active_bookings", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_bookings].present? ? params[:active_bookings] : "")), { prompt: 'Select', class: "selectize" } %>
+                      <%= select_tag "active_bookings", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_bookings].present? ? params[:active_bookings] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
                     </div>
                   </div>
                 </div>
@@ -475,7 +475,7 @@
               <%= link_to t("dashboard.exports.link_name", type: nil) %>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-              <%= link_to link_to t("dashboard.exports.link_name", type: t('global.all')), site_visit_project_wise_admin_users_path(format: "xls"), class: 'dropdown-item' %>
+              <%= link_to t("dashboard.exports.link_name", type: t('global.all')), site_visit_project_wise_admin_users_path(format: "xls"), class: 'dropdown-item' %>
               <%= link_to t('dashboard.exports.link_name', type: t('global.active_filter')), site_visit_project_wise_admin_users_path(format: "xls", channel_partner_id: params["channel_partner_id"], dates: params["dates"], project_ids: params["project_ids"], manager_id: params["manager_id"]), class: 'dropdown-item', id: 'site-visit-project_wise-af-export' %>
             </div>
           </div>
@@ -495,15 +495,15 @@
                     </div>
                     <div class = "mb-3 col-12">
                       <%= label_tag "channel_partner_id", ChannelPartner.model_name.human, required: true, class: "control-label float-left" %>
-                      <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}), prompt: 'Select', class: "selectize" %>
+                      <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}), prompt: I18n.t("global.select"), class: "selectize" %>
                     </div>
                     <div class = "mb-3 col-12">
                       <%= label_tag "manager_id", I18n.t("mongoid.attributes.user.manager_id"), class: "control-label float-left" %>
-                      <%= select_tag "manager_id", options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), prompt: 'Select', class: "selectize" %>
+                      <%= select_tag "manager_id", options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), prompt: I18n.t("global.select"), class: "selectize" %>
                     </div>
                     <div class="mb-3 col-12">
                       <%= label_tag :project_ids, I18n.t("mongoid.models.project.other"), class: "control-label float-left" %>
-                      <%= select_tag :project_ids, options_for_select(Project.filter_by_is_active(true).where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt:  I18n.t("global.select"), class: "selectize", multiple: true} %>
+                      <%= select_tag :project_ids, options_for_select(Project.filter_by_is_active(true).where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: I18n.t("global.select"), class: "selectize", multiple: true} %>
                     </div>
                   </div>
                 </div>

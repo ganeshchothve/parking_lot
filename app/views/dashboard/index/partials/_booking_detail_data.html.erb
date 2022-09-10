@@ -31,13 +31,13 @@
                     </div>
                     <div class="mb-3 col-12">
                       <%= label_tag :project_ids, I18n.t("mongoid.models.project.other"), class: "control-label float-left" %>
-                      <%= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt:  I18n.t("global.select"), class: "selectize", multiple: true} %>
+                      <%= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: I18n.t("global.select"), class: "selectize", multiple: true} %>
                     </div>
 
                     <% if current_client.enable_channel_partners? %>
                       <div class="mb-3 col-12">
                         <%= label_tag :source, I18n.t("mongoid.attributes.channel_partner.source"), class: "control-label float-left" %>
-                        <%= select_tag :source, options_for_select(BookingDetail.pluck(:source).uniq.compact.collect{|x| [x, x]}), {prompt:  I18n.t("global.select"), class: "selectize"} %>
+                        <%= select_tag :source, options_for_select(BookingDetail.pluck(:source).uniq.compact.collect{|x| [x, x]}), {prompt: I18n.t("global.select"), class: "selectize"} %>
                       </div>
                     <% end %>
                   </div>

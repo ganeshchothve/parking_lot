@@ -11,19 +11,19 @@
         <hr/>
         <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", "Subject Class", class: "control-label" %>
-          <%= select_tag "fltrs[subject_class]", options_for_select(Audit::Record.distinct(:subject_class), (params[:fltrs].present? ? params[:fltrs][:subject_class] : "")), {prompt:  I18n.t("global.select"), class: "selectize"} %>
+          <%= select_tag "fltrs[subject_class]", options_for_select(Audit::Record.distinct(:subject_class), (params[:fltrs].present? ? params[:fltrs][:subject_class] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", "Changed By", class: "control-label" %>
-          <%= select_tag "fltrs[user_name]", options_for_select(Audit::Record.distinct(:user_name), (params[:fltrs].present? ? params[:fltrs][:user_name] : "")), {prompt:  I18n.t("global.select"), class: "selectize"} %>
+          <%= select_tag "fltrs[user_name]", options_for_select(Audit::Record.distinct(:user_name), (params[:fltrs].present? ? params[:fltrs][:user_name] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", "Action type", class: "control-label" %>
-          <%= select_tag "fltrs[change_type]", options_for_select(Audit::Record.distinct(:change_type), (params[:fltrs].present? ? params[:fltrs][:change_type] : "")), {prompt:  I18n.t("global.select"), class: "selectize"} %>
+          <%= select_tag "fltrs[change_type]", options_for_select(Audit::Record.distinct(:change_type), (params[:fltrs].present? ? params[:fltrs][:change_type] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <!-- <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%#= label_tag "fltrs", "Time", class: "control-label" %>
-          <%#= select_tag "fltrs[modified_at]", options_for_select(AuditRecord.distinct(:modified_at), (params[:fltrs].present? ? params[:fltrs][:modified_at] : "")), {prompt:  I18n.t("global.select"), class: "selectize"} %>
+          <%#= select_tag "fltrs[modified_at]", options_for_select(AuditRecord.distinct(:modified_at), (params[:fltrs].present? ? params[:fltrs][:modified_at] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div> -->
       </div>
     <% end %>

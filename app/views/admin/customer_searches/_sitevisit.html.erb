@@ -10,7 +10,7 @@
           <% if sitevisits = @customer_search.customer.site_visits.where(status: {"$in": %w[scheduled pending]}, scheduled_on: (DateTime.current.beginning_of_day..DateTime.current.end_of_day)).presence %>
             <div class="form-group">
               <%= label_tag :sitevisit_id %><br/>
-              <%= select_tag :sitevisit_id, options_for_select(sitevisits.collect{|rec| ["#{rec.scheduled_on.in_time_zone("Mumbai").strftime("%d/%m/%Y - %l:%M %P")} - #{rec&.lead&.manager&.name ||'no channel partner'}", rec.id]}), {prompt:  I18n.t("global.select"), class: "selectize"} %>
+              <%= select_tag :sitevisit_id, options_for_select(sitevisits.collect{|rec| ["#{rec.scheduled_on.in_time_zone("Mumbai").strftime("%d/%m/%Y - %l:%M %P")} - #{rec&.lead&.manager&.name ||'no channel partner'}", rec.id]}), {prompt: I18n.t("global.select"), class: "selectize"} %>
             </div>
           <% else %>
             <p class="theme-txt-color">Schedule a sitevisit at - <%= DateTime.now.in_time_zone("Mumbai").strftime("%d/%m/%Y - %l:%M %P") %></p>

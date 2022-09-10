@@ -24,8 +24,8 @@
                 <div class="filter-content modal-body ps-0 pe-0 theme-form">
                   <div class="row">
                     <div class = "mb-3 col-12">
-                      <%= label_tag "user_id", "Channel Partner", class: "control-label float-left" %>
-                      <%= select_tag "user_id", options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), prompt: 'Select', class: "selectize" %>
+                      <%= label_tag "user_id", I18n.t("mongoid.attributes.user.manager_id"), class: "control-label float-left" %>
+                      <%= select_tag "user_id", options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), prompt: I18n.t("global.select"), class: "selectize" %>
                     </div>
                   </div>
                 </div>

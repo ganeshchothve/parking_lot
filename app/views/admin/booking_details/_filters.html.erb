@@ -23,16 +23,16 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.status'), class: "control-label" %>
-          <%= select_tag "fltrs[status]", options_for_select(BookingDetail.user_based_available_statuses(current_user).collect{|x| [ t("mongoid.attributes.booking_detail/status.#{x}"), x.to_s]}, (params.dig(:fltrs, :status) || "")), {prompt:  I18n.t("global.select"), class: "selectize"} %>
+          <%= select_tag "fltrs[status]", options_for_select(BookingDetail.user_based_available_statuses(current_user).collect{|x| [ t("mongoid.attributes.booking_detail/status.#{x}"), x.to_s]}, (params.dig(:fltrs, :status) || "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
 
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.approval_status'), class: "control-label" %>
-          <%= select_tag "fltrs[approval_status]", options_for_select(BookingDetail.aasm(:approval_status).states.map(&:name).collect{|x| [ t("mongoid.attributes.booking_detail/approval_status.#{x}"), x.to_s]}, (params.dig(:fltrs, :status) || "")), {prompt:  I18n.t("global.select"), class: "selectize"} %>
+          <%= select_tag "fltrs[approval_status]", options_for_select(BookingDetail.aasm(:approval_status).states.map(&:name).collect{|x| [ t("mongoid.attributes.booking_detail/approval_status.#{x}"), x.to_s]}, (params.dig(:fltrs, :status) || "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.project_unit.project_id'), class: "control-label" %>
-          <%= select_tag "fltrs[project_id]", options_from_collection_for_select(params[:fltrs].present? ? Project.where(_id: params[:fltrs][:project_id]) : [], "id", "ds_name", params.dig(:fltrs, :project_id)), {prompt:  I18n.t("global.select"), class: "selectize-remote project_select", data: {url: admin_projects_path}} %>
+          <%= select_tag "fltrs[project_id]", options_from_collection_for_select(params[:fltrs].present? ? Project.where(_id: params[:fltrs][:project_id]) : [], "id", "ds_name", params.dig(:fltrs, :project_id)), {prompt: I18n.t("global.select"), class: "selectize-remote project_select", data: {url: admin_projects_path}} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", ProjectTower.model_name.human, class: "control-label" %>
@@ -73,7 +73,7 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%#= label_tag "fltrs", t('mongoid.attributes.booking_detail.ladder_stage'), class: "control-label" %>
-          <%#= select_tag "fltrs[ladder_stage]", options_for_select(IncentiveScheme.distinct(:"ladders.stage"), params.dig(:fltrs, :ladder_stage).present? ? params[:fltrs][:ladder_stage] : ''), {class: "selectize", prompt: 'Select'} %>
+          <%#= select_tag "fltrs[ladder_stage]", options_for_select(IncentiveScheme.distinct(:"ladders.stage"), params.dig(:fltrs, :ladder_stage).present? ? params[:fltrs][:ladder_stage] : ''), {class: "selectize", prompt: I18n.t("global.select")} %>
         </div>
         -->
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
@@ -90,7 +90,7 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.invoice_generated'), class: "control-label" %>
-          <%= select_tag "fltrs[incentive_generated]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :incentive_generated)), {prompt:  I18n.t("global.select"), class: "selectize"} %>
+          <%= select_tag "fltrs[incentive_generated]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :incentive_generated)), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
       </div>
     </div>

@@ -45,7 +45,7 @@ class Admin::BulkUploadReportsController < AdminController
       UploadErrorsExportWorker.perform_async(current_user.id.to_s, @bulk_upload_report.id.to_s)
     else
       UploadErrorsExportWorker.new.perform(current_user.id.to_s, @bulk_upload_report.id.to_s)
-    end I18n.t("controller.bulk_upload_reports.notice.export_scheduled")
+    end
     flash[:notice] = I18n.t("global.export_scheduled")
     redirect_to admin_bulk_upload_report_path
   end

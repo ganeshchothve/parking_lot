@@ -41,6 +41,7 @@ en:
     no_of: "No. Of "
     gallery: "Gallery"
     enter_url: "Enter Url"
+    created_at: "Created At"
     action:
       one: "Action"
       other: "Actions"
@@ -201,7 +202,7 @@ en:
       city_wise:
         booking_reports: "City Wise Booking Reports"
       add_upi: "Please add your UPI Address for quick payment. Please click on the link"
-      active_walk_ins: "Active Walk-ins"
+      active_walkins: "Active Walk-ins"
       active_bookings: "Active Bookings"
       active_partners: "Active Partners"
       cancel: "Cancel"
@@ -740,6 +741,7 @@ en:
         name: "Project Name"
         region: "Region"
         category: "Category"
+        project_type: "Project Type"
         project_segment: "Segment"
         configurations: "Configurations"
         micro_market: "Location"
@@ -876,6 +878,21 @@ en:
         value: "Value"
         luxury: "Luxury"
         ultra_luxury: "Ultra Luxury"
+      project/default_amenities:
+        auditorium: "Auditorium"
+        gym: "Gym"
+        internal_roads: "Internal Roads"
+        movie_theatre: "Movie Theatre"
+        playschool: "Playschool"
+        sewage_treatment_plant: "Sewage Treatment Plant"
+        swimming_pool: "Swimming Pool"
+        table_tennis_court: "Table Tennis Court"
+      project/allowed_banks:
+        bajaj_finance: "Bajaj Finance"
+        bob: "Bank of Baroda"
+        hdfc: "HDFC Bank"
+        sbi: "State Bank of India"
+
       nearby_location:
         distance: "Distance to destination"
         destination: "Destination"
@@ -907,6 +924,8 @@ en:
 
       channel_partner:
         name: "Name"
+        first_name: "First Name"
+        last_name: "Last Name"
         company_name: "CP Company Name/ Organisation Name/ CP Name"
         company_owner_name: "Organisation CEO/MD/Owner Name"
         company_owner_phone: "Organisation CEO/MD/Owner's Contact No."
@@ -1596,6 +1615,8 @@ en:
         booking_detail: "Booking Detail"
         document: "Document'  "
       user:
+        first_name: "First Name"
+        last_name: "Last Name"
         temporarily_blocked: "Qualify lead"
         iris_confirmation: "Lead Tagging"
         aadhaar: "Aadhaar"
@@ -1859,6 +1880,30 @@ en:
         formula: "Formula"
         absolute_value: "Absolute Value"
         project: "Project"
+
+      specification:
+        category: "Category"
+        description: "Description"
+      specification/categories:
+          flooring: "Flooring"
+          kitchen: "Kitchen"
+          painting: "Painting"
+          structure: "Structure"
+          toilets: "Toilets"
+
+      offer:
+        category: "Category"
+        provided_by: "Provided By"
+        short_description: "Short Description"
+        description: "Description"
+      offer/categories:
+        rate: "Rate"
+        white_goods: "White Goods"
+        direct: "Direct"
+        tax: "Tax"
+      offer/provided_by:
+        developer: "Developer"
+        launchpad: "Launchpad"
 
 
   controller:
@@ -2461,7 +2506,7 @@ en:
         link_name: "Add Offer"
       add_specification:
         link_name: "Add Specification"
-      add_timeline_update:
+      c:
         link_name: "Add Timeline Update"
       region_projects:
         link_name: "Projects In My Region"

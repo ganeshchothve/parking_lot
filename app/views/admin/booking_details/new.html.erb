@@ -17,7 +17,7 @@
         </div>
         <div class="mb-3">
           <%= f.label :project_tower_id, class: 'control-label' %>
-          <%= select_tag "project_tower_id", options_for_select(@project_towers), {prompt:  I18n.t("global.select"), class: "selectize", required: 'required'} %>
+          <%= select_tag "project_tower_id", options_for_select(@project_towers), {prompt: I18n.t("global.select"), class: "selectize", required: 'required'} %>
         </div>
         <div class="mb-3 unit">
           <%= f.label :project_unit_id, class: 'control-label' %>

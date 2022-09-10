@@ -32,8 +32,8 @@
           <div class="card-body bg-white">
             <div class="row">
             <div class="col-lg-6 col-xs-12 col-sm-12 col-md-12 pt-3 pb-3">
-              <% max_floor = @all_units.collect{|x| x[:_id]}.max %>
-              <% max_per_floor = @all_units.collect{|x| x[:floor_order].max}.max %>
+              <% max_floor = @all_units.collect{|x| x[:_id]}.max || 0 %>
+              <% max_per_floor = @all_units.collect{|x| x[:floor_order].max}.max || 0 %>
               <% width = ((100.to_f - (4 * max_per_floor)) / max_per_floor).round(2) %>
               <%
                   height = (280.to_f / max_floor).round(2)
@@ -48,8 +48,8 @@
                 <div class="booking-list">
                   <div class="apartments-no">
                     <ul class="aprt-no-list">
-                      <% max_floor = @all_units.collect{|x| x[:_id]}.max %>
-                      <% max_per_floor = @all_units.collect{|x| x[:floor_order].max}.max %>
+                      <% max_floor = @all_units.collect{|x| x[:_id]}.max || 0 %>
+                      <% max_per_floor = @all_units.collect{|x| x[:floor_order].max}.max || 0 %>
                       <% width = ((100.to_f - (4 * max_per_floor)) / max_per_floor).round(2) %>
                       <%
                                 height = (280.to_f / max_floor).round(2)

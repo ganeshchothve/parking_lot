@@ -37,7 +37,7 @@
           </div>
           <%= f.label :gst_slab %>
           <% gst_slabs = @invoice.invoiceable.try(:project)&.incentive_gst_slabs || @invoice.invoiceable.booking_portal_client.try(:gst_slabs) || [] %>
-          <%= f.select :gst_slab, options_for_select(gst_slabs.collect{|gst| ["#{gst} %", gst]} || [], @invoice.gst_slab), {prompt: 'Select'}, class: "selectize", disabled: !policy([:admin, @invoice]).editable_field?("gst_slab") %>
+          <%= f.select :gst_slab, options_for_select(gst_slabs.collect{|gst| ["#{gst} %", gst]} || [], @invoice.gst_slab), {prompt: I18n.t("global.select")}, class: "selectize", disabled: !policy([:admin, @invoice]).editable_field?("gst_slab") %>
         </div>
         <div class="mb-3">
           <%= f.label :gst_amount %>

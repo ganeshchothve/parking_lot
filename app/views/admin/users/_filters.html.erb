@@ -12,11 +12,11 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.user.role') %>
-          <%= select_tag "fltrs[role][]", options_for_select( user_filter_role_options, params.dig(:fltrs, :role)), {prompt:  I18n.t("global.select"), class: "selectize", multiple: 'multiple'} %>
+          <%= select_tag "fltrs[role][]", options_for_select( user_filter_role_options, params.dig(:fltrs, :role)), {prompt: I18n.t("global.select"), class: "selectize", multiple: 'multiple'} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.user.confirmation') %>
-          <%= select_tag "fltrs[confirmation]", options_for_select(I18n.t("mongoid.attributes.user/confirmed").collect{|k,v| [v, k.to_s]}, (params[:fltrs].present? ? params[:fltrs][:confirmation] : "")), {prompt:  I18n.t("global.select"), class: "selectize"} %>
+          <%= select_tag "fltrs[confirmation]", options_for_select(I18n.t("mongoid.attributes.user/confirmed").collect{|k,v| [v, k.to_s]}, (params[:fltrs].present? ? params[:fltrs][:confirmation] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <% unless (current_user.role.in?(%w(cp_owner channel_partner))) %>
           <% if current_client.enable_channel_partners? %>
@@ -26,7 +26,7 @@
             </div>
             <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
               <%= label_tag "fltrs", t('mongoid.attributes.user.category'), class: "control-label" %>
-              <%= select_tag "fltrs[category]", options_for_select( ChannelPartner::INTERNAL_CATEGORY.collect{|x| [ t("mongoid.attributes.channel_partner/internal_categories.#{x}"), x]}, params.dig(:fltrs,:category)), {prompt:  I18n.t("global.select"), class: "selectize"} %>
+              <%= select_tag "fltrs[category]", options_for_select( ChannelPartner::INTERNAL_CATEGORY.collect{|x| [ t("mongoid.attributes.channel_partner/internal_categories.#{x}"), x]}, params.dig(:fltrs,:category)), {prompt: I18n.t("global.select"), class: "selectize"} %>
             </div>
           <% end %>
         <% end %>
