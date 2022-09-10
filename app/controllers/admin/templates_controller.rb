@@ -65,7 +65,7 @@ class Admin::TemplatesController < AdminController
   end
 
   def apply_policy_scope
-    custom_scope = Template.criteria
+    custom_scope = Template.where(Template.user_based_scope(current_user, params))
     Template.with_scope(policy_scope(custom_scope)) do
       yield
     end

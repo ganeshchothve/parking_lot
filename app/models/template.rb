@@ -30,4 +30,11 @@ class Template
     recursive_json_string_parser(_data)
   end
 
+  def self.user_based_scope(user, params = {})
+    custom_scope = {}
+    if user.role.in?(%w(superadmin))
+      custom_scope = { booking_portal_client_id: user.selected_client_id }
+    end
+  end
+
 end
