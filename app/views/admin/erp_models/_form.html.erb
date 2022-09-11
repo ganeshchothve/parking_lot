@@ -13,14 +13,14 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <%= f.label :resource_class %>
-                <%= f.select :resource_class, ErpModel::RESOURCE_CLASS.collect{ |res_class| [ t("erp_models.resource_class.#{res_class}"), res_class] }, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @erp_model]).editable_field?("resource_class") %>
+                <%= f.select :resource_class, ErpModel::RESOURCE_CLASS.collect{ |res_class| [ t("erp_models.resource_class.#{res_class}"), res_class] }, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy([:admin, @erp_model]).editable_field?("resource_class") %>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
                 <%= f.label :domain %>
                 <%= f.text_field :domain, class: 'form-control', disabled: !policy([:admin, @erp_model]).editable_field?("domain") %>
-                <%#= f.select :domain, ErpModel::DOMAIN, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @erp_model]).editable_field?("domain") %>
+                <%#= f.select :domain, ErpModel::DOMAIN, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy([:admin, @erp_model]).editable_field?("domain") %>
               </div>
             </div>
           </div>
@@ -28,13 +28,13 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <%= f.label :action_name %>
-                <%= f.select :action_name, ErpModel::ACTION_NAME.collect{ |action_name| [ t("erp_models.action_name.#{action_name}"), action_name] }, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @erp_model]).editable_field?("action_name") %>
+                <%= f.select :action_name, ErpModel::ACTION_NAME.collect{ |action_name| [ t("erp_models.action_name.#{action_name}"), action_name] }, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy([:admin, @erp_model]).editable_field?("action_name") %>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
                 <%= f.label :http_verb %>
-                <%= f.select :http_verb, ErpModel::HTTP_VERB.collect{ |http_verb| [ t("erp_models.resource_class.#{http_verb}"), http_verb] }, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @erp_model]).editable_field?("http_verb") %>
+                <%= f.select :http_verb, ErpModel::HTTP_VERB.collect{ |http_verb| [ t("erp_models.resource_class.#{http_verb}"), http_verb] }, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy([:admin, @erp_model]).editable_field?("http_verb") %>
               </div>
             </div>
           </div>
@@ -69,7 +69,7 @@
             <div class="col-md-4">
               <div class="mb-3">
                 <%= f.label :request_type %>
-                <%= f.select :request_type, ErpModel::REQUEST_TYPE.collect{ |request_type| [ t("erp_models.resource_class.#{request_type}"), request_type] }, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @erp_model]).editable_field?("request_type") %>
+                <%= f.select :request_type, ErpModel::REQUEST_TYPE.collect{ |request_type| [ t("erp_models.resource_class.#{request_type}"), request_type] }, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy([:admin, @erp_model]).editable_field?("request_type") %>
               </div>
             </div>
           </div>

@@ -17,11 +17,11 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.site_visit.status') %>
-          <%= select_tag "fltrs[status]", options_for_select(SiteVisit.aasm(:status).states.collect(&:name).map {|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
+          <%= select_tag "fltrs[status]", options_for_select(I18n.t("mongoid.attributes.site_visit/status").collect {|k,v| [v, k.to_s]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.site_visit.approval_status') %>
-          <%= select_tag "fltrs[approval_status]", options_for_select(SiteVisit.aasm(:approval_status).states.collect(&:name).map{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:approval_status] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
+          <%= select_tag "fltrs[approval_status]", options_for_select(I18n.t("mongoid.attributes.site_visit/approval_status").collect {|k,v| [v, k.to_s]}, (params[:fltrs].present? ? params[:fltrs][:approval_status] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.site_visit.site_visit_type'), class: "control-label" %>
@@ -63,7 +63,7 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.invoice_generated'), class: "control-label" %>
-          <%= select_tag "fltrs[incentive_generated]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :incentive_generated)), {prompt: I18n.t("global.select"), class: "selectize"} %>
+          <%= select_tag "fltrs[incentive_generated]", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], params.dig(:fltrs, :incentive_generated)), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
       </div>
     </div>

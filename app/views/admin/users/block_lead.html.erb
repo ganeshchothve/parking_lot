@@ -18,7 +18,7 @@
             <div class = 'col-md-12 pt-3'>
               <div class="mb-3">
                 <%= f.label (f.object.role == 'channel_partner' ? :manager_id_channel_partner : :manager_id), class: 'label-required' %>
-                <%= f.select :manager_id, options_from_collection_for_select(@referenced_managers, 'id', 'name', f.object.manager_id),{prompt: true}, class: 'selectize', disabled: !(policy([current_user_role_group, @user]).editable_field?("manager_id")), required: true %>
+                <%= f.select :manager_id, options_from_collection_for_select(@referenced_managers, 'id', 'name', f.object.manager_id),{prompt: I18n.t("global.select")}, class: 'selectize', disabled: !(policy([current_user_role_group, @user]).editable_field?("manager_id")), required: true %>
               </div>
             </div>
           </div>

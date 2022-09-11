@@ -84,7 +84,7 @@
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :incentive_calculation, class: 'label-required' %>
-      <%= f.select :incentive_calculation, Client::INCENTIVE_CALCULATION.collect{|x| [x,x]}, {}, class: 'selectize', multiple: true, required: 'required', disabled: !policy([:admin, project]).editable_field?("incentive_calculation") %>
+      <%= f.select :incentive_calculation, I18n.t("mongoid.attributes.client/incentive_calculation").collect {|k,v| [v,k.to_s]}, {}, class: 'selectize', multiple: true, required: 'required', disabled: !policy([:admin, project]).editable_field?("incentive_calculation") %>
     </div>
   </div>
   <div class="col-md-6">

@@ -13,7 +13,7 @@
         </div>
 
         <div class="mb-3 pt-3 pb-3">
-          <button class="btn btn-primary" type="submit">Submit</button>
+          <button class="btn btn-primary" type="submit"><%= I18n.t("global.submit") %></button>
           <%= link_to t('sign_out', scope: "devise"), destroy_session_path(current_user), class: "btn btn-secondary", method: :delete %>
         </div>
       <% end %>

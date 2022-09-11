@@ -32,15 +32,15 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.lead.blocking_amount_paid'), class: "control-label" %>
-          <%= select_tag "fltrs[blocking_amount]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :blocking_amount)), {prompt: I18n.t("global.select"), class: "selectize"} %>
+          <%= select_tag "fltrs[blocking_amount]", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], params.dig(:fltrs, :blocking_amount)), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.lead.payment_done'), class: "control-label" %>
-          <%= select_tag "fltrs[booking_price]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :booking_price)), {prompt: I18n.t("global.select"), class: "selectize"} %>
+          <%= select_tag "fltrs[booking_price]", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], params.dig(:fltrs, :booking_price)), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.lead.registration_done'), class: "control-label" %>
-          <%= select_tag "fltrs[registration_done]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :registration_done)), {prompt: I18n.t("global.select"), class: "selectize"} %>
+          <%= select_tag "fltrs[registration_done]", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], params.dig(:fltrs, :registration_done)), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <% if current_client.enable_channel_partners? %>
           <% unless current_user.role?('channel_partner') %>
@@ -68,7 +68,7 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.user.kyc_done'), class: "control-label" %>
-          <%= select_tag "fltrs[kyc_done]", options_for_select([['Yes', 'yes'], ['No', 'no']], params.dig(:fltrs, :kyc_done)), {prompt: I18n.t("global.select"), class: "selectize"} %>
+          <%= select_tag "fltrs[kyc_done]", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], params.dig(:fltrs, :kyc_done)), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.user.queue_no'), class: "control-label" %>

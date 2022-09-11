@@ -11,7 +11,7 @@
         <div class="modal-body theme-form">
           <div class="mb-3">
             <%= f.label :category, class: 'label-required' %>
-              <%= f.select :category, Announcement::CATEGORIES.map{|x| [t("mongoid.attributes.announcement.category.#{x}"), x] }, {prompt: true}, class: 'selectize', required: true, disabled: (policy([current_user_role_group, announcement]).editable_field?("category") ? false : true) %>
+              <%= f.select :category, Announcement::CATEGORIES.map{|x| [t("mongoid.attributes.announcement.category.#{x}"), x] }, {prompt: I18n.t("global.select")}, class: 'selectize', required: true, disabled: (policy([current_user_role_group, announcement]).editable_field?("category") ? false : true) %>
           </div>
           <div class="mb-3">
             <%= f.input :title, required: true, disabled: !policy([current_user_role_group, announcement]).editable_field?("title") %>
@@ -35,7 +35,7 @@
           </div>
           <!-- <div class="mb-3">
             <%#= f.label :roles, class: 'label-required' %>
-            <%#= f.select :roles, User.available_roles(current_client).collect{ |r| [User.human_attribute_name("role.#{r}"), r] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, meeting]).editable_field?("roles") ? false : true), multiple: true %>
+            <%#= f.select :roles, User.available_roles(current_client).collect{ |r| [User.human_attribute_name("role.#{r}"), r] }, {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, meeting]).editable_field?("roles") ? false : true), multiple: true %>
           </div> -->
 
           <!-- <div class="mb-3">

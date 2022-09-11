@@ -18,13 +18,13 @@
                   <div class="mb-3">
                     <%= f.hidden_field :lead_id, value: @lead.id %>
                     <%= f.label :primary_user_kyc_id, I18n.t("mongoid.attributes.booking_detail.primary_user_kyc_id") %>
-                    <%= f.select :primary_user_kyc_id, options_for_select(@lead.user_kycs.collect{|x| [x.name, x.id]}, @lead.user_kycs.try(:last).try(:id)), {prompt: true}, class: 'selectize primary_kyc_select', required: @unit.project.enable_booking_with_kyc? , autofocus: true %>
+                    <%= f.select :primary_user_kyc_id, options_for_select(@lead.user_kycs.collect{|x| [x.name, x.id]}, @lead.user_kycs.try(:last).try(:id)), {prompt: I18n.t("global.select")}, class: 'selectize primary_kyc_select', required: @unit.project.enable_booking_with_kyc? , autofocus: true %>
                   </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
                   <div class="mb-3">
                     <%= f.label :user_kyc_ids, I18n.t("mongoid.attributes.booking_detail.user_kyc_ids") %>
-                    <%= f.select :user_kyc_ids, @lead.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', multiple: true %>
+                    <%= f.select :user_kyc_ids, @lead.user_kycs.collect{|x| [x.name, x.id]}, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true %>
                   </div>
                 </div>
               </div>

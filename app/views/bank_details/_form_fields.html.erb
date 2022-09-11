@@ -9,7 +9,7 @@
 
 <div class="row">
   <div class="col-md-6">
-    <%= f.input :account_type, collection: BankDetail.available_account_types.collect{|x| [x[:text], x[:id]]}, prompt: :translate, as: :select %>
+    <%= f.input :account_type, collection: I18n.t("mongoid.attributes.bank_detail/account_types").collect {|k,v| [v, k.to_s]}, prompt: :translate, as: :select %>
   </div>
 
   <div class="col-md-6">

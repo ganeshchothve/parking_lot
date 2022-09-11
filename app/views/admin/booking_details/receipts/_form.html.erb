@@ -7,7 +7,7 @@
 </div>
 <div class="mb-3">
   <%= f.label :payment_mode, class: 'label-required' %>
-  <%= f.select :payment_mode, payment_mode_options, {prompt: true, selected: @receipt.payment_mode}, class: 'selectize', required: 'required', autofocus: true, disabled: !policy([current_user_role_group, @receipt]).editable_field?("payment_mode") %>
+  <%= f.select :payment_mode, payment_mode_options, {prompt: I18n.t("global.select"), selected: @receipt.payment_mode}, class: 'selectize', required: 'required', autofocus: true, disabled: !policy([current_user_role_group, @receipt]).editable_field?("payment_mode") %>
 </div>
 
 <div class="row offline">
@@ -50,7 +50,7 @@
     <%
       statuses = available_statuses(@receipt)
     %>
-    <%= f.select :event, options_for_select(statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, @receipt.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([current_user_role_group, @receipt]).editable_field?("event") %>
+    <%= f.select :event, options_for_select(statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, @receipt.status), {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: !policy([current_user_role_group, @receipt]).editable_field?("event") %>
   <% end %>
 </div>
 
@@ -64,7 +64,7 @@
           <% lead_booking_details = @receipt.lead.booking_details.in(status: BookingDetail::BOOKING_STAGES) %>
         <% end %>
         <% if lead_booking_details.present? %>
-          <%= f.select :booking_detail_id, lead_booking_details.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize' %>
+          <%= f.select :booking_detail_id, lead_booking_details.collect{|x| [x.name, x.id]}, {prompt: I18n.t("global.select")}, class: 'selectize' %>
         <% end %>
     <% end %>
   </div>
@@ -78,7 +78,7 @@
         <div class="col-md-6">
           <div class="mb-3">
             <%= f.label :token_type, class: 'label-required' %>
-            <%= f.select :token_type, @receipt.project.token_types.all.select{|tt| tt.incrementor_exists?}.collect{ |x| [x.name, x.id]}, {prompt: true, selected: @receipt.token_type.try(:id)}, class: 'selectize', required: 'required', autofocus: true %>
+            <%= f.select :token_type, @receipt.project.token_types.all.select{|tt| tt.incrementor_exists?}.collect{ |x| [x.name, x.id]}, {prompt: I18n.t("global.select"), selected: @receipt.token_type.try(:id)}, class: 'selectize', required: 'required', autofocus: true %>
           </div>
         </div>
       <% end %>
@@ -86,7 +86,7 @@
       <div class="col-md-6">
         <div class="mb-3">
           <%= f.label :payment_type, class: 'label-required' %>
-          <%= f.select :payment_type, Receipt::PAYMENT_TYPES.reject{|x| x == 'token'}.collect{ |x| [t("receipts.payment_types.#{x}"), x]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+          <%= f.select :payment_type, Receipt::PAYMENT_TYPES.reject{|x| x == 'token'}.collect{ |x| [t("receipts.payment_types.#{x}"), x]}, {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', autofocus: true %>
         </div>
       </div>
     <% end %>

@@ -57,7 +57,7 @@
                 <div class="col-md-6">
                   <div class="mb-3">
                     <%= adj.label :field, class: 'label-required' %>
-                    <%= adj.select :field, Discount.available_fields.collect{|x| [x.titleize, x]}, {prompt: true}, class: 'selectize-tags', disabled: !editable_payment_adjustment %>
+                    <%= adj.select :field, Discount.available_fields.collect{|x| [x.titleize, x]}, {prompt: I18n.t("global.select")}, class: 'selectize-tags', disabled: !editable_payment_adjustment %>
                   </div>
                 </div>
               </div>

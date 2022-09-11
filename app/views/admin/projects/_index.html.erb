@@ -20,7 +20,10 @@
       <p class="location"><i class="fa fa-map-marker-alt fill-primary me-2"></i><%= project.micro_market %>,
         <%= project.city %></p>
       <% end %>
-      <% meeting_str = "#{meeting.present? ? '1' : 'No'} #{meeting.present? && meeting.completed? ? 'Past' : 'New'} event <span>#{meeting&.scheduled_on&.strftime('%b %e %Y')}#{meeting&.scheduled_on&.to_time&.in_time_zone(current_user.time_zone)&.strftime(', %I:%M%p %Z')}</span>".html_safe %>
+      <% meeting_str = "#{meeting.present? ? '1' : 'No'} #{meeting.present? && meeting.completed? ? 'Past' : 'New'} event "
+        meeting_str = I18n.t("mongoid.attributes.meeting/new_event.#{meeting_str.parameterize.underscore}")
+        meeting_str += "<span>#{meeting&.scheduled_on&.strftime('%b %e %Y')}#{meeting&.scheduled_on&.to_time&.in_time_zone(current_user.time_zone)&.strftime(', %I:%M%p %Z')}</span>"
+        meeting_str = meeting_str.html_safe %>
       <p class="prjt-event">
         <%= link_to_if (meeting.present? && Admin::MeetingPolicy.new(current_user, meeting).show?), meeting_str, (meeting.present? ? admin_meeting_path(meeting) : admin_meetings_path), class: 'modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Event details'} %>
       </p>

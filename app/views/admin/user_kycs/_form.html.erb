@@ -90,7 +90,7 @@
             <div class="col-md-12">
               <div class="card mt-3">
                 <div class="card-header">
-                  Residence / Permanent Address
+                  <%= I18n.t("global.tabs.residence/permanent_address") %>
                 </div>
                 <div class="card-body">
                   <% permanent_address = f.object.addresses.where(address_type: 'permanent').first || f.object.addresses.build(address_type: 'permanent') %>
@@ -106,7 +106,7 @@
             <div class="col-md-12">
               <div class="card mt-3">
                 <div class="card-header">
-                  Correspondence / Office Address
+                  <%= I18n.t("global.tabs.correspondence/office_address") %>
                 </div>
                 <div class="card-body">
                   <% correspondence_address = f.object.addresses.where(address_type: 'correspondence').first || f.object.addresses.build(address_type: 'correspondence') %>
@@ -120,18 +120,18 @@
 
           <div class="card mt-3">
             <div class="card-header">
-              Corporate Details (If Any)
+              <%= I18n.t("global.tabs.corporate_details") %>
             </div>
             <div class="card-body">
               <div class="mb-3">
                 <%= f.label :is_company %>
                 <div class="form-check form-check-inline">
                   <%= f.radio_button :is_company, true, class: "form-check-input wd-22" %>
-                  <%= f.label :is_company, "Yes", class: "form-check-label d-inline-block ms-2" %>
+                  <%= f.label :is_company, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
                 </div>
                 <div class="form-check form-check-inline">
                   <%= f.radio_button :is_company, false, class: "form-check-input wd-22" %>
-                  <%= f.label :is_company, "No", class: "form-check-label d-inline-block ms-2" %>
+                  <%= f.label :is_company, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
                 </div>
               </div>
               <div class="mb-3 company-fields">
@@ -147,7 +147,7 @@
 
           <div class="card mt-3">
               <div class="card-header">
-                Bank Details
+                <%= I18n.t("global.tabs.bank_details") %>
               </div>
               <div class="card-body">
                 <% f.object.build_bank_detail if f.object.bank_detail.blank? %>
@@ -160,7 +160,7 @@
           <% if !defined?(small) || small == false %>
             <div class="card mt-3">
               <div class="card-header">
-                Other Details
+                <%= I18n.t("global.tabs.other_details") %>
               </div>
               <div class="card-body">
                 <div class="row">
@@ -189,7 +189,7 @@
             </div>
             <div class="card mt-3">
               <div class="card-header">
-                NRI Related Details
+                <%= I18n.t("global.tabs.nri_ralated_details") %>
               </div>
               <div class="card-body">
                 <div class="mb-3">
@@ -232,7 +232,7 @@
             </div>
             <div class="card mt-3">
               <div class="card-header">
-                Existing Customer?
+                <%= I18n.t("global.tabs.existing_customer") %>
               </div>
               <div class="card-body">
                 <div class="mb-3">

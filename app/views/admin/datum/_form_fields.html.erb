@@ -32,7 +32,7 @@
       <div class="col-md-6">
         <div class="mb-3">
           <%= f.label :order %>
-          <%= f.select :order, (1..30).collect{|x| [x, x]}, {prompt: true}, class: 'selectize' %>
+          <%= f.select :order, (1..30).collect{|x| [x, x]}, {prompt: I18n.t("global.select")}, class: 'selectize' %>
         </div>
       </div>
     </div>

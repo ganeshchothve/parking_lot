@@ -67,7 +67,7 @@
             <%
                 statuses = available_statuses(@variable_incentive_scheme)
               %>
-            <%= f.select :event, options_for_select(statuses.collect{|rec| [t("mongoid.attributes.variable_incentive_scheme/status.#{rec.to_s}"), rec.to_s]}, @variable_incentive_scheme.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @variable_incentive_scheme]).editable_field?("event") %>
+            <%= f.select :event, options_for_select(statuses.collect{|rec| [t("mongoid.attributes.variable_incentive_scheme/status.#{rec.to_s}"), rec.to_s]}, @variable_incentive_scheme.status), {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: !policy([:admin, @variable_incentive_scheme]).editable_field?("event") %>
           <% end %>
         </div>
       </div>

@@ -32,7 +32,7 @@
   <% if policy([current_user_role_group, @project_unit]).editable_field?("phase_id") %>
     <div class="mb-3">
       <%= f.label :phase, class: 'title' %>
-      <%= f.select :phase_id, Phase.all.collect{|phase| [ phase.name, phase.id ]}, { prompt: true}, {class: "selectize", disabled: !policy([current_user_role_group, @project_unit]).editable_field?("phase_id") } %>
+      <%= f.select :phase_id, Phase.all.collect{|phase| [ phase.name, phase.id ]}, { prompt: I18n.t("global.select")}, {class: "selectize", disabled: !policy([current_user_role_group, @project_unit]).editable_field?("phase_id") } %>
     </div>
   <% end %>
   <% if policy([current_user_role_group, @project_unit]).editable_field?("comments") %>

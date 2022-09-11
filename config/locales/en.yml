@@ -29,6 +29,7 @@ en:
     edit: "Edit"
     show: "Show"
     save: "Save"
+    submit: "Submit"
     upload: "Upload"
     close: "Close"
     cancel: "Cancel"
@@ -66,6 +67,9 @@ en:
     otp: "OTP"
     overview: "Overview"
     total: "Total"
+    options:
+      yes: "Yes"
+      no: "No"
     boolean:
       :true: "Yes"
       :false: "No"
@@ -106,6 +110,31 @@ en:
     search: "Search"
     drop_customer: "Drop Customer"
     congratulations: "Configurations"
+    email_id: "Email Id"
+    phone_no: "Phone No."
+    tabs:
+      overview: "Overview"
+      site_visits: "Walk-ins"
+      remarks_from_selldo: "Remarks From SellDo"
+      lead_activities: "Lead Activities"
+      bookings: "Bookings"
+      payments: "Payments"
+      time_slot: "Time Slot"
+      note_summary: "Note Summary"
+      crm: "CRM"
+      lead: "Lead"
+      users: "Users"
+      notes: "Notes"
+      interested_projects: "Interested Projects"
+      my_referrals: "My Referrals"
+      utm_params: "UTM Params"
+      residence/permanent_address: "Residence / Permanent Address"
+      correspondence/office_address: "Correspondence / Office Address"
+      corporate_details: "Corporate Details (If Any)"
+      bank_details: "Bank Details"
+      other_details: "Other Details"
+      nri_related_details: "NRI Related Details"
+      existing_customer: "Existing Customer?"
     link_to:
       actions: "Actions"
       click_to_zoom: "Click to Zoom"
@@ -587,6 +616,9 @@ en:
         ifsc_code: "IFSC Code"
         account_number: "Account Number"
         loan_required: "Do you need a loan?"
+      bank_detail/account_types:
+        savings: "Savings"
+        current: "Current"
 
       booking_detail:
         name: "Name"
@@ -734,6 +766,9 @@ en:
         Razorpay: "Razorpay Payment Gateway"
         CCAvenue: "CCAvenue Payment Gateway"
         redirecting_to: "You'll be redirected to %{name}, where you can pay using Net Banking, UPI, Credit/Debit Card or Wallet"
+      client/incentive_calculation:
+        manual: "manual"
+        calculated: "calculated"
       developer:
         name: "Developer Name"
         selldo_id: "Sell.Do Developer ID"
@@ -896,6 +931,10 @@ en:
       nearby_location:
         distance: "Distance to destination"
         destination: "Destination"
+        unit: "Unit"
+      nearby_locations/units:
+        km: "Km"
+        min: "Min"
       token_type:
         name: "Name"
         token_prefix: "Token Prefix"
@@ -1183,7 +1222,7 @@ en:
         date: "Slot Date"
         start_time: "Slot Start"
         end_time: "Slot End"
-
+        token_type: "Token Type"
       receipt/status:
         pending: "Pending"
         clearance_pending: "Clearance Pending"
@@ -1250,6 +1289,7 @@ en:
         project_tower_id: "Project Tower"
         tier_id: "Channel Partner Tier"
         status: "Status"
+        description: "Description"
         date_range: "Date Filter"
         resource_class: "Resource"
         category: "Category"
@@ -1258,6 +1298,9 @@ en:
         auto_apply: "Auto Apply"
         terms_and_conditions: "Terms & Conditions"
         date_range: "Date Range"
+        ladder_strategy: "Ladder Strategy"
+        starts_on: "Starts On"
+        ends_on: "Ends On"
       incentive_scheme/categories:
         walk_in: "Walk-in"
         spot_booking: "Spot Booking"
@@ -1274,6 +1317,9 @@ en:
       incentive_scheme/payment_to:
         company: "Partner Company"
         channel_partner: "Channel Partner"
+      incentive_scheme/strategies:
+        number_of_items: "No of Items"
+        sum_of_units: "Sum of Units"
       incentive_scheme/resource_class:
         SiteVisit: "Walk-in"
         Lead: "Lead"
@@ -1461,6 +1507,9 @@ en:
         name: "Name"
         email: "Email"
         phone: "Phone"
+        salutation: "Salutation"
+        first_name: "First Name"
+        last_name: "Last Name"
         dob: "Date of Birth"
         dob_short: "DOB"
         pan_number: "PAN Number"
@@ -1509,6 +1558,7 @@ en:
         min_budget: "Min. Budget (Rs.)"
         max_budget: "Max. Budget (Rs.)"
         budget: "Budget (Rs.)"
+        occupation: "Occupation"
       user_kyc/occupation:
         salaried: "Salaried"
         self_employed: "Self Employed"
@@ -1608,6 +1658,11 @@ en:
       meeting/help_text:
         photo_html: "<ul><li>Photos of the Event</li></ul>"
         collateral_html: "<ul><li>Event Collaterals</li></ul>"
+      meeting/new_event:
+        1_new_event: "1 New Event"
+        1_past_event: "1 Past Event"
+        no_new_event: "No New Event"
+        no_past_event: "No Past Event"
       booking_detail/file_types:
         booking_detail: "Booking Detail"
         document: "Document"
@@ -1752,6 +1807,7 @@ en:
         closing_manager_id: "Available Sales Users"
         source: "Source"
         sub_source: "Sub-Source"
+        portal_stage: "Portal Stage"
 
       lead/stage:
         incoming: "Incoming"
@@ -1905,6 +1961,14 @@ en:
         developer: "Developer"
         launchpad: "Launchpad"
 
+      timeline_update:
+        name: "Name"
+        description: "Description"
+        date: "Date"
+      ladder:
+        stage: "Stage"
+        start_value: "Start Value"
+        end_value: "End Value"
 
   controller:
     notice:
@@ -1992,6 +2056,8 @@ en:
         deleted: "Time slot was successfully deleted."
       alert:
         not_found: "Time slot not found"
+      text:
+        search_time_slot: "Search time slot"
     home:
       keys:
         broker: "Broker"
@@ -2506,7 +2572,7 @@ en:
         link_name: "Add Offer"
       add_specification:
         link_name: "Add Specification"
-      c:
+      add_timeline_update:
         link_name: "Add Timeline Update"
       region_projects:
         link_name: "Projects In My Region"
@@ -2719,6 +2785,8 @@ en:
         invalid_date_format: "Sitevisit date format is invalid. Correct date format is - dd/mm/yyyy"
         revisit_invalid_date_format: "Last revisit date format is invalid. Correct date format is - dd/mm/yyyy"
         revisit_count: "Revisit count should be a number"
+      text:
+        schedule: "Schedule a Site Visit"
     searches:
       filter:
         header: "Select Tower"
@@ -2799,11 +2867,17 @@ en:
       new:
         link_name: "Add Brokerage Scheme"
         header: "Add Brokerage Scheme"
+      add_ladder:
+        link_name: "Add Ladder"
+        ladder_stage: "Ladder - Stage "
       notice:
         created: "Incentive Scheme created successfully."
         updated: "Incentive Scheme updated successfully."
       alert:
         not_found: "Incentive Scheme not found."
+      text:
+        incentive_calculation: "Incentive Calculation"
+        formula_help_text: "This will be evaluated in the context of resource (which can be a Booking, Payment, etc)"
     variable_incentive_schemes:
       index:
         link_name: "Variable Incentive Schemes"
@@ -2974,6 +3048,13 @@ en:
       alert:
         unqualified: "Lead cannot be unqualified"
         company_not_found: "Requested partner company not found"
+      total_amount_paid:
+        hint: "(you might have some payments pending clearance)"
+      total_balance_pending:
+        hint: "(you might have some payments pending clearance)"
+      total_unattached_balance:
+        hint: "(subject to clearance)"
+        text: "Total Unattached Balance"
 
     user_kycs:
       index:
@@ -3130,14 +3211,6 @@ en:
       account_reactivation: "There was some error while reactivating account. Please contact support for assistance"
       could_not_send_confirmation: "Couldn't send confirmation instructions."
       could_not_send_reset_password: "Couldn't send Reset password instructions."
-
-  leads:
-    total_amount_paid:
-      hint: "(you might have some payments pending clearance)"
-    total_balance_pending:
-      hint: "(you might have some payments pending clearance)"
-    total_unattached_balance:
-      hint: "(subject to clearance)"
 
   sessions:
     new:

@@ -433,7 +433,7 @@
                                                         <span class="text-center d-block">
                                                           <i class="fad <%= t("amenity_icons.#{type}") %> fn-20 mx-auto"></i>
                                                         </span>
-                                                    <p><%= type.titleize %></p>
+                                                    <p><%= I18n.t("mongoid.attributes.project/default_amenities.#{type}") %></p>
                                                     </div>
                                                     </li>
                                                 <% end %>

@@ -9,11 +9,11 @@
       <div class="modal-body">
         <div class="mb-3">
           <%= f.label :user_id, class: 'control-label' %>
-          <%= f.select :user_id, options_from_collection_for_select(User.where(_id: f.object.user_id), 'id', 'name'), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_users_path, params: { fltrs: { role: { '$in' => User::BUYER_ROLES }} } }%>
+          <%= f.select :user_id, options_from_collection_for_select(User.where(_id: f.object.user_id), 'id', 'name'), {prompt: I18n.t("global.select") }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_users_path, params: { fltrs: { role: { '$in' => User::BUYER_ROLES }} } }%>
         </div>
         <div class="mb-3">
           <%= f.label :primary_user_kyc_id, class: 'control-label' %>
-          <%= f.select :primary_user_kyc_id, options_from_collection_for_select(UserKyc.where(_id: f.object.primary_user_kyc_id), 'id', 'name', f.object.primary_user_kyc_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_user_kycs_url, params: { fltrs: {user_id: User.find_by(user_kyc_id: f.object.primary_user_kyc_id).id } } } %>
+          <%= f.select :primary_user_kyc_id, options_from_collection_for_select(UserKyc.where(_id: f.object.primary_user_kyc_id), 'id', 'name', f.object.primary_user_kyc_id), {prompt: I18n.t("global.select") }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_user_kycs_url, params: { fltrs: {user_id: User.find_by(user_kyc_id: f.object.primary_user_kyc_id).id } } } %>
         </div>
         <div class="mb-3">
           <%= f.label :project_tower_id, class: 'control-label' %>
@@ -21,7 +21,7 @@
         </div>
         <div class="mb-3 unit">
           <%= f.label :project_unit_id, class: 'control-label' %>
-          <%= f.select :project_unit_id, options_from_collection_for_select(ProjectUnit.where(_id: f.object.project_unit_id), 'id', 'first_name', f.object.project_unit_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_project_units_path, params: { status: 'available', fltrs: { project_tower_id: '-' } } }%>
+          <%= f.select :project_unit_id, options_from_collection_for_select(ProjectUnit.where(_id: f.object.project_unit_id), 'id', 'first_name', f.object.project_unit_id), {prompt: I18n.t("global.select") }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_project_units_path, params: { status: 'available', fltrs: { project_tower_id: '-' } } }%>
         </div>
       </div>
       <div class="modal-footer text-end">

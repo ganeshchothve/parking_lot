@@ -32,13 +32,13 @@
       <div class="col-md-6">
         <div class="mb-3">
           <%= f.label :category, class: 'label-required' %>
-          <%= f.select :category, I18n.t("mongoid.attributes.cost/available_categories").collect{|k,v| [v,k.to_s]}, {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+          <%= f.select :category, I18n.t("mongoid.attributes.cost/available_categories").collect{|k,v| [v,k.to_s]}, {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', autofocus: true %>
         </div>
       </div>
       <div class="col-md-6">
         <div class="mb-3">
           <%= f.label :order %>
-          <%= f.select :order, (1..30).collect{|x| [x, x]}, {prompt: true}, class: 'selectize' %>
+          <%= f.select :order, (1..30).collect{|x| [x, x]}, {prompt: I18n.t("global.select")}, class: 'selectize' %>
         </div>
       </div>
     </div>

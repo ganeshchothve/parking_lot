@@ -4,7 +4,7 @@
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
         <div class="table-btn-set float-end pb-3 text-end">
        <div class="filter-search">
-          <input type="text" name="" placeholder="Search time slot">
+          <input type="text" name="" placeholder=<%= I18n.t("controller.time_slots.text.search_time_slot") %>>
         </div>
          <% if policy([current_user_role_group, TimeSlot.new]).new? %>
                 <%= link_to I18n.t("global.link_to.add_element", name: global_labels['time_slot']), new_admin_project_time_slot_path, class: 'btn btn-primary modal-remote-form-link ms-2', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add Event'} %>

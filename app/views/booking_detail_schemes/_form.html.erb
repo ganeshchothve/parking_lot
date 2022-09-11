@@ -1,7 +1,7 @@
 <div class="mb-3">
   <% _params = {fltrs: { project_id: booking_detail.project_id, project_tower_id: booking_detail.project_unit.project_tower_id, can_be_applied_by: current_user.role, user_role: booking_detail.user.role, user_id: booking_detail.user_id, status: 'approved' } } %>
   <%= f.label :derived_from_scheme_id, class: 'control-label' %>
-  <%= f.select :derived_from_scheme_id, options_from_collection_for_select(Scheme.build_criteria(_params), 'id', 'name', f.object.derived_from_scheme_id), {prompt: true }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: current_user.buyer? ? buyer_schemes_path : admin_schemes_path, params: _params }%>
+  <%= f.select :derived_from_scheme_id, options_from_collection_for_select(Scheme.build_criteria(_params), 'id', 'name', f.object.derived_from_scheme_id), {prompt: I18n.t("global.select") }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: current_user.buyer? ? buyer_schemes_path : admin_schemes_path, params: _params }%>
 </div>
 <%= f.hidden_field :booking_detail_id %>
 <%= f.hidden_field :project_unit_id %>
@@ -41,7 +41,7 @@
       <div class="col-md-6">
         <div class="mb-3">
           <%= adj.label :field, class: 'label-required' %>
-          <%= adj.select :field, Scheme::FIELDS.collect{|sf| [t("mongoid.attributes.payment_adjustment/field.#{sf}"), sf]}, {prompt: true}, class: 'selectize-tags', disabled: !editable_payment_adjustment %>
+          <%= adj.select :field, Scheme::FIELDS.collect{|sf| [t("mongoid.attributes.payment_adjustment/field.#{sf}"), sf]}, {prompt: I18n.t("global.select")}, class: 'selectize-tags', disabled: !editable_payment_adjustment %>
         </div>
       </div>
     </div>
@@ -68,7 +68,7 @@
       events = booking_detail_scheme.aasm.events(permitted: true).collect{|x| x.name.to_s}
       events = events.collect{|x| [x.to_s.titleize, x.to_s] }
     %>
-    <%= f.select :event, options_for_select(events, booking_detail_scheme.status), {prompt: true}, class: 'selectize', required: "required" %>
+    <%= f.select :event, options_for_select(events, booking_detail_scheme.status), {prompt: I18n.t("global.select")}, class: 'selectize', required: "required" %>
   </div>
 <% end %>
 
