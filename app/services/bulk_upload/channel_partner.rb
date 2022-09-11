@@ -32,6 +32,7 @@ module BulkUpload
           end
         end
         attrs[:interested_services] = ['Lead Management']
+        attrs[:booking_portal_client_id] = bur.client_id
 
         cp = ::ChannelPartner.new(attrs)
         if cp.save

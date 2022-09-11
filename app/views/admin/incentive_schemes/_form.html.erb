@@ -47,7 +47,7 @@
         <% end %>
         <div class="mb-3">
           <%= f.label :resource_class, class: 'label-required' %>
-          <%= f.select :resource_class, IncentiveScheme::RESOURCE_CLASS.collect{|x| [t("mongoid.attributes.incentive_scheme/resource_class.#{x}"), x]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @incentive_scheme]).editable_field?("resource_class") %>
+          <%= f.select :resource_class, filter_incentive_scheme_resources, {prompt: 'Select'}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @incentive_scheme]).editable_field?("resource_class") %>
         </div>
         <div class="mb-3">
           <%= f.label :category, class: 'label-required' %>

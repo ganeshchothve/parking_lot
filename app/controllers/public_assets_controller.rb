@@ -11,7 +11,12 @@ class PublicAssetsController < ApplicationController
   end
 
   def create
-    public_asset = PublicAsset.create(public_assetable: @public_assetable, file: params[:files][0], document_type: params[:document_type])
+    public_asset = PublicAsset.create(
+                                    public_assetable: @public_assetable,
+                                    file: params[:files][0],
+                                    document_type: params[:document_type],
+                                    booking_portal_client_id: @public_assetable.booking_portal_client.id
+                                    )
     if public_asset.persisted?
       render partial: "assets/asset.json", locals: {asset: public_asset}
     else

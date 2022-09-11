@@ -6,9 +6,14 @@
   <%= form_tag channel_partners_path, method: "get", id: "channel_partner_search_form" do %>
      <div class="filter-content modal-body ps-0 pe-0">
       <div class="row">
+        <% if current_user.role?(:superadmin) %>
+          <% client_id = current_user.selected_client_id %>
+        <% else %>
+          <% client_id = current_user.booking_portal_client_id %>
+        <% end %>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.channel_partner.name_email_phone'), class: "control-label" %>
-          <%= select_tag "fltrs[_id]", params.dig(:fltrs,:_id), {class: "selectize-remote", data: {url: channel_partners_path }} %>
+          <%= select_tag "fltrs[_id]", params.dig(:fltrs,:_id), {class: "selectize-remote", data: {url: channel_partners_path, params: { fltrs: {booking_portal_client_id: client_id } } }} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.channel_partner.rera_id'), class: "control-label" %>

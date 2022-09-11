@@ -24,8 +24,13 @@ class Admin::BulkUploadReportsController < AdminController
   end
 
   def create
-    @bulk_upload_report = BulkUploadReport.new(client_id: current_client.id, uploaded_by: current_user)
+    @bulk_upload_report = BulkUploadReport.new(uploaded_by: current_user)
     @bulk_upload_report.assign_attributes(permitted_attributes([:admin, @bulk_upload_report]))
+    if current_user.role?(:admin)
+      @bulk_upload_report.assign_attributes(client_id: current_user.booking_portal_client)
+    elsif current_user.role?(:superadmin)
+      @bulk_upload_report.assign_attributes(client_id: current_user.selected_client_id)
+    end
     respond_to do |format|
       if @bulk_upload_report.save
         if Rails.env.development?

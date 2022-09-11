@@ -68,6 +68,7 @@ class ChannelPartner
   scope :filter_by__id, ->(_id) { where(_id: _id) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(company_name: regex) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
+  scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
 
   default_scope -> { desc(:created_at) }
 

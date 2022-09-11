@@ -26,16 +26,16 @@ class Crm::Api::Post < Crm::Api
     case response
     when Net::HTTPSuccess
       res = process_response(response, record)
-      update_api_log(api_log, _request_payload, _url, res, "Success")
+      update_api_log(api_log, _request_payload, _url, res, "Success", record)
       return {notice: "Object successfully pushed on CRM."}
     else
-      update_api_log(api_log, _request_payload, _url, (JSON.parse(response.body) rescue {}), "Error", response.message)
+      update_api_log(api_log, _request_payload, _url, (JSON.parse(response.body) rescue {}), "Error", record, response.message)
       Rails.logger.error "-------- #{response.message} --------"
       return {alert: response.message}
     end
 
   rescue StandardError => e
-    update_api_log(api_log, _request_payload, _url, (JSON.parse(response.try(:body)) rescue {}), "Error", e.message)
+    update_api_log(api_log, _request_payload, _url, (JSON.parse(response.try(:body)) rescue {}), "Error", record, e.message)
     Rails.logger.error "-------- #{e.message} --------"
     return {alert: e.message}
   end
@@ -77,7 +77,7 @@ class Crm::Api::Post < Crm::Api
     response
   end
 
-  def update_api_log api_log, request, request_url, response, status, message = nil
+  def update_api_log api_log, request, request_url, response, status, record, message = nil
     req = request.is_a?(Hash) ? [request] : request
     resp = if response.is_a?(Hash)
              response_type = 'Hash'
@@ -93,7 +93,8 @@ class Crm::Api::Post < Crm::Api
       response: resp,
       response_type: response_type,
       status: status,
-      message: message
+      message: message,
+      booking_portal_client: record.booking_portal_client
     )
   end
 end

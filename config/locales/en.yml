@@ -51,13 +51,13 @@ en:
     variable_incentive_schemes: Variable Incentive Scheme
     lead: Lead
     workflow: Workflow
+    discount:
+      one: Token Discount
+      other: Token Discounts
   kylas_auth:
     successfully_installed: 'Kylas Application is successfully authenticated'
     facing_problem: 'There is problem to authenticate the Kylas Application'
     something_went_wrong: 'Something went wrong' 
-    discount:
-      one: Token Discount
-      other: Token Discounts
 
   helpers:
     extend_validity:

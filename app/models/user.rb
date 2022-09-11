@@ -859,8 +859,10 @@ class User
         custom_scope[:'$or'] = [{_id: user.id}, { role: { '$in': %w(channel_partner cp_owner) }, manager_id: user.id }]
       elsif user.role?('billing_team')
         custom_scope = { role: { '$in': %w(channel_partner cp_owner) } }
-      elsif user.role.in?(%w(admin sales))
-        custom_scope = { role: { "$in": ['admin', 'sales'] }, booking_portal_client_id: user.booking_portal_client.id }
+      elsif user.role.in?(%w(admin))
+        custom_scope = { role: { "$ne": 'superadmin' }, booking_portal_client_id: user.booking_portal_client.id }
+      elsif user.role.in?(%w(sales))
+        custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
       elsif user.role.in?(%w(superadmin))
         custom_scope = { role: { "$in": ['admin', 'sales', 'superadmin'] }, booking_portal_client_id: user.selected_client_id }
       elsif user.role?('team_lead')|| user.role?('gre')
