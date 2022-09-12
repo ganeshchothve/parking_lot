@@ -70,7 +70,7 @@
             <% if statuses.present? %>
               <div class="mb-3">
                 <%= f.label :status %>
-                <%= f.select :event, statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, {prompt: I18n.t("global.select")}, class: 'selectize' %>
+                <%= f.select :event, statuses.collect{|rec| [I18n.t("mongoid.attributes.meeting/edit_status.#{rec.to_s}"), rec.to_s]}, {prompt: I18n.t("global.select")}, class: 'selectize' %>
               </div>
             <% end %>
           <% end %>

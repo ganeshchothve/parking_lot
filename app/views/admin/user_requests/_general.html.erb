@@ -26,12 +26,12 @@
 <div class="row">
   <% if policy([:admin, @user_request]).editable_field?("department") %>
     <div class="col-md-6">
-      <%= f.input :department, collection: UserRequest::General::DEPARTMENTS.collect{|x| [x.titleize, x]}, disabled: !policy([:admin, @user_request]).editable_field?("department"), prompt: :translate, as: :select, input_html: {class: 'selectize'} %>
+      <%= f.input :department, collection: UserRequest::General::DEPARTMENTS.collect{|x| [I18n.t("mongoid.attributes.user_request/general_departments.#{x}"), x]}, disabled: !policy([:admin, @user_request]).editable_field?("department"), prompt: :translate, as: :select, input_html: {class: 'selectize'} %>
     </div>
   <% end %>
   <% if policy([:admin, @user_request]).editable_field?("priority") %>
     <div class="col-md-6">
-      <%= f.input :priority, collection: UserRequest::General::PRIORITIES.collect{|x| [x.titleize, x]}, disabled: !policy([:admin, @user_request]).editable_field?("priority"), prompt: :translate, as: :select, input_html: {class: 'selectize'} %>
+      <%= f.input :priority, collection: UserRequest::General::PRIORITIES.collect{|x| [I18n.t("mongoid.attributes.user_request/general_priorities.#{x}"), x]}, disabled: !policy([:admin, @user_request]).editable_field?("priority"), prompt: :translate, as: :select, input_html: {class: 'selectize'} %>
     </div>
   <% end %>
 </div>

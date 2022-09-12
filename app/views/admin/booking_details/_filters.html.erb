@@ -86,7 +86,7 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.tasks_completed_tracked_by'), class: "control-label" %>
-          <%= select_tag "fltrs[tasks_completed_tracked_by]", options_for_select(Checklist::TRACKED_BY.collect{|x| [x.titleize, x]}, params.dig(:fltrs, :tasks_completed_tracked_by)), prompt: '', class: "selectize" %>
+          <%= select_tag "fltrs[tasks_completed_tracked_by]", options_for_select(Checklist::TRACKED_BY.collect{|x| [I18n.t("mongoid.attributes.checklist/tracked_by.#{x}"), x]}, params.dig(:fltrs, :tasks_completed_tracked_by)), prompt: '', class: "selectize" %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.invoice_generated'), class: "control-label" %>

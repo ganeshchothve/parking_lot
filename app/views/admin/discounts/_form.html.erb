@@ -72,7 +72,7 @@
             <% end %>
           </div>
           <% if editable_payment_adjustment %>
-            <%= f.link_to_add "Add Adjustments", :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
+            <%= f.link_to_add I18n.t("controller.discounts.links.add_adjustments"), :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
           <% end %>
           </br>
           <!-- Payment adjustment section end -->

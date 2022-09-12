@@ -95,9 +95,9 @@
 </div>
 <div class="modal-footer text-end">
   <% if edit_access %>
-    <%= f.submit "Submit", class: "btn btn-primary" %>
+    <%= f.submit I18n.t("global.submit"), class: "btn btn-primary" %>
   <% else %>
-    <%= f.submit "Submit", data: { :confirm => 'You won’t be able to edit it, Are you sure?'}, class: "btn btn-primary" %>
+    <%= f.submit I18n.t("global.submit"), data: { :confirm => 'You won’t be able to edit it, Are you sure?'}, class: "btn btn-primary" %>
   <% end %>
 
 </div>

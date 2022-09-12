@@ -189,18 +189,18 @@
             </div>
             <div class="card mt-3">
               <div class="card-header">
-                <%= I18n.t("global.tabs.nri_ralated_details") %>
+                <%= I18n.t("global.tabs.nri_related_details") %>
               </div>
               <div class="card-body">
                 <div class="mb-3">
                   <%= f.label :nri %>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :nri, true, class: "form-check-input wd-22" %>
-                    <%= f.label :nri, "Yes", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :nri, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :nri, false, class: "form-check-input wd-22" %>
-                    <%= f.label :nri, "No", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :nri, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
                 <div class="mb-3 nri-fields">
@@ -211,11 +211,11 @@
                   <%= f.label :poa %>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :poa, true, class: "form-check-input wd-22" %>
-                    <%= f.label :poa, "Yes", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :poa, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :poa, false, class: "form-check-input wd-22" %>
-                    <%= f.label :poa, "No", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :poa, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
                 <div class="nri-fields">
@@ -239,11 +239,11 @@
                   <%= f.label :existing_customer %>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :existing_customer, true, class: "form-check-input wd-22" %>
-                    <%= f.label :existing_customer, "Yes", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :existing_customer, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :existing_customer, false, class: "form-check-input wd-22" %>
-                    <%= f.label :existing_customer, "No", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :existing_customer, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
                 <div class="mb-3 customer-fields">

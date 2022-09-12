@@ -110,7 +110,7 @@
                     <h2 class="accordion-header d-flex justify-content-between" id="headingTwo">
                       <button class="accordion-button collapsed  shadow-none" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        Booking Details
+                        <%= I18n.t("global.tabs.booking_details") %>
                       </button>
                     </h2>
                     <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
@@ -118,8 +118,7 @@
                       <div class="accordion-body pt-0 ps-4">
                         <div class="row ps-3">
                           <div class="col-12">
-                            <p class="fn-12 font-medium"><span class="txt-light-gray">Blocked
-                                On:</span> <%= @booking_detail.booked_on.try(:strftime, '%b %d, %Y') %></p>
+                            <p class="fn-12 font-medium"><span class="txt-light-gray"><%= I18n.t("mongoid.attributes.project_unit.blocked_on") %>:</span> <%= @booking_detail.booked_on.try(:strftime, '%b %d, %Y') %></p>
                             <h3 class="fn-16 font-medium txt-drk-b-lt"><%= project_unit.project_name %>,
                               <%= project_unit.project_tower.name %>,
                               Flat no. <%= @booking_detail.name %></h3>

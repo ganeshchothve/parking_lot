@@ -25,6 +25,7 @@ en:
     all: "All"
     all_elements: "All %{name}"
     at: "At"
+    file: "File"
     add: "Add"
     edit: "Edit"
     show: "Show"
@@ -93,6 +94,7 @@ en:
     project: "Project"
     booking_count: "Booking Count"
     no_record: "No Records Found"
+    no_records: "No Records."
     welcome: "Welcome"
     dates: "Dates"
     type: "Type"
@@ -114,11 +116,13 @@ en:
     email_id: "Email Id"
     phone_no: "Phone No."
     tabs:
+      amount: "Amount"
       overview: "Overview"
       site_visits: "Walk-ins"
       remarks_from_selldo: "Remarks From SellDo"
       lead_activities: "Lead Activities"
       bookings: "Bookings"
+      booking_details: "Booking Details"
       payments: "Payments"
       time_slot: "Time Slot"
       note_summary: "Note Summary"
@@ -136,6 +140,8 @@ en:
       other_details: "Other Details"
       nri_related_details: "NRI Related Details"
       existing_customer: "Existing Customer?"
+      address: "Address"
+      crm_ids: "CRM IDs"
     link_to:
       actions: "Actions"
       click_to_zoom: "Click to Zoom"
@@ -481,8 +487,17 @@ en:
         available_statuses:
           active: "Active"
           inactive: "Inactive"
+      banner_asset:
+        one: "Banner Asset"
+        other: "Banner Assets"
 
     attributes:
+      api_log:
+        request: "Request"
+        request_url: "Request Url"
+        response: "Response"
+        status: "Status"
+        message: "Message"
       announcement:
         title: "Title"
         content: "Details"
@@ -501,6 +516,25 @@ en:
       announcement/help_text:
         photo_html: "<ul><li>Photos of the Announcement</li></ul>"
         collateral_html: "<ul><li>Announcement Collaterals</li></ul>"
+      crm/base:
+        name: "Name"
+        domain: "Domain"
+        request_headers: "Request Headerssss"
+        request_payload: "Request Payload"
+        oauth2_authentication: "Oauth2 Authentication"
+        user: "User"
+      discount:
+        name: "Name"
+        description: "Description"
+        start_token_number: "Start Token Number"
+        end_token_number: "End Token Number"
+        project_id: "Project"
+        token_type_id: "Token Type"
+        project: "Project"
+        token_type: "Token Type"
+        field: "Field"
+        absolute_value: "Absolute Value"
+        formula: "Formula"
       video:
         thumbnail: "Thumbnail"
         description: "Title"
@@ -580,6 +614,12 @@ en:
         description: "Description"
         tracked_by: "Tracked By"
         order: "Order"
+      checklist/tracked_by:
+        manual: "Manual"
+        calculated: "Calculated"
+        system: "System"
+      checklist/status:
+        registration_done: "Registration Done"
       asset:
         assetable_id: "Assetable ID"
         assetable_type: "Assetable Type"
@@ -594,6 +634,7 @@ en:
         country: "Country"
         state: "State / Region"
         zip: "Zip / Pin Code"
+        address_type: "Address Type"
 
       account:
         account_number: "Account Number"
@@ -604,6 +645,7 @@ en:
         name: "Name"
         secret: "Secret"
         working_key: "Working Key"
+        names: "Names"
       account/by_default:
         :true: "Yes"
         :false: "No"
@@ -661,6 +703,7 @@ en:
         effective_rate: "Effective Rate"
         base_rate: "Base Rate"
         floor_rise: "Floor Rise"
+        booking_project_unit_name: "Booking Project Unit Name"
       booking_detail/selldo_status:
         booked_tentative: "tentative"
         booked_confirmed: "confirmed"
@@ -763,6 +806,9 @@ en:
       client/available_preferred_logins:
         phone: "Phone Based"
         email: "Email Based"
+      client/payment_gateway:
+        Razorpay: "Razorpay"
+        CCAvenue: "CCAvenue"
       client/payment_gateways:
         Razorpay: "Razorpay Payment Gateway"
         CCAvenue: "CCAvenue Payment Gateway"
@@ -971,6 +1017,7 @@ en:
         company_owner_phone: "Organisation CEO/MD/Owner's Contact No."
         additional_name: "Additional Name"
         address: "Address"
+        company_logo: "Company Logo"
         bank_detail: "Bank Details"
         email: "Email"
         alternate_email: "Alternate Email"
@@ -978,6 +1025,7 @@ en:
         alternate_phone: "Alternate Phone"
         rera_id: "RERA No."
         city: "City"
+        regions: "Regions"
         associated_user_id: "Associated User"
         status: "Status"
         gstin_number: "GST Number"
@@ -1052,6 +1100,7 @@ en:
         subject: "Subject"
         body: "Body"
         status: "Status"
+        project_id: "Project"
       email/status:
         draft: "Draft"
         scheduled: "Scheduled"
@@ -1336,6 +1385,7 @@ en:
         User: "User (Referral)"
       variable_incentive_scheme:
         name: "Name"
+        vis_name: "Variable Incentive Scheme Name"
         days_multiplier: "Days Multiplier"
         total_bookings_multiplier: "Total Bookings Multiplier"
         min_incentive: "Minimum Incentive"
@@ -1385,9 +1435,11 @@ en:
         account_manager_id: "Account Manager"
         actual_invoice_amount: "Actual Invoice Amount"
         tentative_invoice_amount: "Tentative Invoice Amount"
+        brokerage_type: "Brokerage Type"
       invoice/status:
         draft: "Draft"
         raised: "Raised"
+        tentative: "Tentative"
         pending_approval: "Pending Approval"
         paid: "Paid"
         approve: "Approved"
@@ -1403,7 +1455,11 @@ en:
         paid: "Paid"
         rejected: "Cancellation"
       invoice/categories:
-        <<: "*invoice_category"
+        walk_in: "Walk In"
+        spot_booking: "Spot Booking"
+        lead: "Lead"
+        referral: "Referral"
+        brokerage: "Brokerage"
       invoice/sort_options:
         created_at.asc: "Created - Oldest First"
         created_at.desc: "Created - Newest First"
@@ -1456,6 +1512,8 @@ en:
         dlt_temp_id: "DLT Template ID"
         project_id: "Project"
       user_request:
+        project_id: "Project"
+        category: "Category."
         request_type: "Request type"
         _type: "Request type"
         user_id: "Customer"
@@ -1468,13 +1526,19 @@ en:
         due_date: "Due Date"
         details: "Details"
         status: "Status"
+        project_id: "Project"
         project_unit_id: "Related Apartment"
+        alternate_project_unit_id: "Alternate Project Unit"
         receipt_id: "Related Payment"
         created_at: "Created at"
         resolved_at: "Processed on"
         name_email_phone: "Name/Email/Phone"
         requestable_type: "Requestable Type"
         request_details: "Related to"
+        comments: "Comments"
+        resolved_by: "Resolved By"
+        created_by: "Created By"
+        request: "Request"
       user_request/status:
         pending: "Pending"
         processing: "Processing"
@@ -1484,6 +1548,14 @@ en:
       user_request/requestable_type:
         Receipt: "Receipt"
         BookingDetail: "Booking"
+      user_request/general_departments:
+        billing: "Billing"
+        sourcing: "Sourcing"
+        sales: "Sales"
+      user_request/general_priorities:
+        low: "Low"
+        medium: "Medium"
+        high: "High"
       site_visit:
         project: "Project"
         lead: "Lead"
@@ -1576,15 +1648,15 @@ en:
         home_maker: "Home Maker"
         other_company: "Other Company"
       user_kyc/salutations:
-        Mr.: "Mr."
-        Mrs.: "Mrs."
-        Ms.: "Ms."
-        Brig.: "Brig."
+        Mr: "Mr."
+        Mrs: "Mrs."
+        Ms: "Ms."
+        Brig: "Brig."
         Captain: "Captain"
         Col: "Col"
-        Dr.: "Dr."
+        Dr: "Dr."
         Maharaj: "Maharaj"
-        Prof.: "Prof."
+        Prof: "Prof."
       campaign:
         name: "Campaign Name"
         description: "About this Campaign"
@@ -1649,6 +1721,8 @@ en:
         creator: "Host"
         creator_id: "Host"
         meeting_date: "Event Date"
+        campaign_id: "Campaign"
+        roles: "Roles"
       meeting/meeting_types:
         webinar: "Webinar"
         offline_event: "Offline Event"
@@ -1656,6 +1730,9 @@ en:
         zoom: "Zoom"
         google_meet: "Google Meet"
         microsoft_teams: "Microsoft Teams"
+      meeting/edit_status:
+        cancel: "Cancel"
+        complete: "Complete"
       meeting/statuses:
         draft: "Draft"
         scheduled: "Scheduled"
@@ -1817,6 +1894,7 @@ en:
         source: "Source"
         sub_source: "Sub-Source"
         portal_stage: "Portal Stage"
+        total_balance_pending: "Pending Balance"
 
       lead/stage:
         incoming: "Incoming"
@@ -1945,6 +2023,7 @@ en:
         formula: "Formula"
         absolute_value: "Absolute Value"
         project: "Project"
+        project_id: "Project"
 
       specification:
         category: "Category"
@@ -2005,6 +2084,7 @@ en:
         success_message: "You will receive a mail when MRP numbers are updated"
       links:
         update_coupons: "Update Token Discounts"
+        add_adjustments: "Add adjustments"
       notice:
         created: "%{name} created successfully."
         deleted: "%{name} deleted successfully."
@@ -2148,6 +2228,8 @@ en:
     api_logs:
       index:
         link_name: "API Logs"
+      text:
+        response_type: "Response Type"
     meetings:
       index:
         link_name: "Events"
@@ -2186,6 +2268,10 @@ en:
       alert:
         update_unsuccessful: "Banner Image update unsuccessful."
         upload_unsuccessful: "Banner Image upload unsuccessful."
+      links:
+        edit: "Edit Banner Image"
+        delete: "Delete Banner Image"
+        upload: "Upload Banner Image"
     campaigns:
       index:
         link_name: "Campaigns"
@@ -2230,6 +2316,11 @@ en:
         link_name: "Bulk Uploads"
       create:
         success: "%{upload_type} has been scheduled. Will complete shortly."
+      links:
+        upload: "New Bulk Upload"
+      text:
+        bulk_upload_type: "Bulk Upload Type"
+        file_uploaded_by: "File Uploaded By"
     checklists:
       index:
         link_name: "Tasks"
@@ -2252,6 +2343,7 @@ en:
       text: 
         upload_formats_text: "Upload documents in following formats - jpg, jpeg, png, pdf, zip"
         valid_documents_for: "Valid documents for"
+        upload_following_docs: "Upload following documents to submit your application"
 
     public_assets:
       index:
@@ -2547,6 +2639,8 @@ en:
         link_name: "Emails"
       show:
         link_name: "Details"
+      links:
+        monthly_count: "Monthly Count"
     erp_models:
       index:
         link_name: "Third Party Integration"
@@ -2853,6 +2947,8 @@ en:
         link_name: "SMSs"
       show:
         link_name: "Details"
+      links:
+        sms_pulse: "SMS Pulse"
     schemes:
       index:
         link_name: "Schemes"
@@ -2905,9 +3001,9 @@ en:
         link_name: "Add Variable Incentive Scheme"
         header: "Add Variable Incentive Scheme"
       vis_details:
-        link_name: Scheme Booking Details
+        link_name: "Scheme Booking Details"
       leaderboard:
-        link_name: Leaderboard
+        link_name: "Leaderboard"
     sync_logs:
       index:
         link_name: "Sync Logs"
@@ -2995,6 +3091,7 @@ en:
         profile_updated: "User Profile updated successfully"
         updated: "User updated successfully"
         cannot_confirm: "Cannot confirm with this link. Please contact administrator"
+        resend_password_sent: "Password instructions send successfully."
       alert:
         not_found: "User not found"
       errors:
@@ -3134,6 +3231,11 @@ en:
         request_type_required: "User Request type is required."
         ids_required_for_cancellation: "Booking detail id or Receipt id is required for cancellation"
         cancellation_request_type_supported: "Only cancellation user request type is supported"
+      text:
+        requested_for: "Requested for %{name}"
+        reason: "Reason"
+        alternate_project_unit: "Alternate Project Unit"
+
 
     developers:
       notice:
@@ -3499,6 +3601,9 @@ en:
       people_viewing_apartments: " other people are viewing the apartments on this floor"
       people_viewing_home: " other people like you are looking for a home in this tower"
       first_time_home_buyers: "Popular choice of first-time home buyers"
+  amura:
+    text:
+      support: "There was some issue with the system. Please contact %{name} support"
   javascript:
     global:
       please_wait: "Please Wait..."

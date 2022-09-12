@@ -9,7 +9,7 @@
           <%= note_field.hidden_field :note_type, value: (note_field.object.note_type.present? ? note_field.object.note_type : "user") if note_field.object.creator.role == "user" %>
           <%= note_field.hidden_field :creator_id %>
         </div>
-        <%= f.submit "Submit", class: 'btn btn-primary', disabled: ((@user_request.new_record? && @user_request.is_a?(UserRequest::Cancellation)) ? true : false), id: "submit_request", data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
+        <%= f.submit I18n.t("global.submit"), class: 'btn btn-primary', disabled: ((@user_request.new_record? && @user_request.is_a?(UserRequest::Cancellation)) ? true : false), id: "submit_request", data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
       <% end %>
     <% end %>
   <% end %>
