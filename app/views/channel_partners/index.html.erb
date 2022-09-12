@@ -13,8 +13,8 @@
             <i class="fa fa-filter fill-theme"></i>
           </a>
         </div>
-        <% if false && policy([:admin, ChannelPartner.new]).new? %>
-          <%= link_to 'Add New', new_channel_partner_path(from_cp_admin: true), class: 'bg-primary white border-primary py-2 px-3 border rounded ht-40 modal-remote-form-link d-inline-block ms-2' %>
+        <% if policy([:admin, ChannelPartner.new]).show_add_company_link? %>
+          <%= link_to t('helpers.new.link_name', model: 'Partner Company'), new_company_channel_partners_path, class: 'border rounded px-3 py-2 px-3 border-primary white bg-primary rounded py-2 ms-2 modal-remote-form-link btn' %>
         <% end %>
         <div class="new-menu display-initial d-inline me-2 ms-1" >
             <button class="select-btn fn-400 dropdown-toggle px-3 border rounded py-2" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</button>

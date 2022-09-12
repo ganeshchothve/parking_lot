@@ -38,6 +38,22 @@ class ChannelPartnersController < ApplicationController
     render layout: false
   end
 
+  def new_company
+    @user = User.new
+    @channel_partner = ChannelPartner.new
+    render layout: false
+  end
+
+  def create_company
+    @user = User.new
+    @user.assign_attributes(user_params)
+    @user.assign_attributes(booking_portal_client_id: current_client.id)
+
+    if @user.valid?
+      add_cp_company
+    end
+  end
+
   def edit
     render layout: false
   end
@@ -158,9 +174,9 @@ class ChannelPartnersController < ApplicationController
     unless params[:action] == 'index' && params[:ds] == 'true'
       if params[:action] == 'index' || params[:action] == 'export'
         authorize [:admin, ChannelPartner]
-      elsif ["new","new_channel_partner"].include?(params[:action])
+      elsif ["new","new_channel_partner", "new_company"].include?(params[:action])
         authorize [:admin, ChannelPartner.new]
-      elsif ["create","create_channel_partner"].include?(params[:action])
+      elsif ["create","create_channel_partner", "create_company"].include?(params[:action])
         authorize [:admin, ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))]
       else
         authorize [:admin, @channel_partner]
@@ -173,5 +189,17 @@ class ChannelPartnersController < ApplicationController
     ChannelPartner.with_scope(policy_scope(custom_scope)) do
       yield
     end
+  end
+
+  def user_params
+    params[:user] = {
+      first_name: params.dig(:channel_partner, :first_name),
+      last_name: params.dig(:channel_partner, :last_name),
+      phone: params.dig(:channel_partner, :phone),
+      email: params.dig(:channel_partner, :email),
+      manager_id: params.dig(:channel_partner, :manager_id)
+    }
+    params[:channel_partner] = params[:channel_partner].except(:first_name, :last_name, :phone, :email)
+    params.require(:user).permit(:first_name, :last_name, :email, :phone, :manager_id)
   end
 end
