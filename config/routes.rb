@@ -67,6 +67,9 @@ Rails.application.routes.draw do
     # TODO: Change this routes
     get :new_channel_partner, on: :collection
     post :create_channel_partner, on: :collection
+
+    get :new_company, on: :collection
+    post :create_company, on: :collection
   end
 
   # New v2 routes required for mobile apps, when old routes are needed to deprecate

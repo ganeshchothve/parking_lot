@@ -2,7 +2,7 @@ module BulkUpload
   class ChannelPartner < Base
     def initialize(bulk_upload_report)
       super(bulk_upload_report)
-      @correct_headers = ['First Name', 'Last Name', 'Phone', 'Company', 'Email', 'Pan', 'Aadhaar', 'Rera', 'Channel Partner Manager Phone']
+      @correct_headers = ['First Name', 'Last Name', 'Phone', 'Company', 'Email', 'Pan', 'Aadhaar', 'Rera', 'City', 'Channel Partner Manager Phone']
     end
 
     def process_csv(csv)
@@ -21,10 +21,11 @@ module BulkUpload
         attrs[:pan_number] = row.field(5).to_s.strip
         attrs[:aadhaar] = row.field(6).to_s.strip
         attrs[:rera_id] = row.field(7).to_s.strip
-        if m_phone = row.field(8).to_s.strip.presence
+        attrs[:city] = row.field(8).to_s.strip
+        if m_phone = row.field(9).to_s.strip.presence
           _manager_phone = Phonelib.parse(m_phone)
           manager_phone = (_manager_phone.country_code == '91' && _manager_phone.sanitized.length == 10 ? "+91#{_manager_phone.sanitized}" : "+#{_manager_phone.sanitized}")
-          manager = User.where(phone: manager_phone, role: {'$in': ['cp', 'cp_admin']}).first if manager_phone.present?
+          manager = User.where(phone: manager_phone, role: {'$in': ['cp']}).first if manager_phone.present?
           if manager
             attrs[:manager_id] = manager.id
           else
@@ -34,7 +35,10 @@ module BulkUpload
         attrs[:interested_services] = ['Lead Management']
         attrs[:booking_portal_client_id] = bur.client_id
 
+        user = User.new(phone: attrs[:phone])
+
         cp = ::ChannelPartner.new(attrs)
+        cp.assign_attributes(primary_user: user)
         if cp.save
           bur.success_count += 1
         else
