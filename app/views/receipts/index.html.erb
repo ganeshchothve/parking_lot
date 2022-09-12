@@ -58,7 +58,7 @@
 
               <% if policy( current_user_role_group, Receipt ]).export? && @receipt.blank? %>
                 <div class="dropdown">
-                  <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= I18n.t("global.link_to.export") %></a>
+                  <a class="btn btn-light dropdown-toggle" href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= I18n.t("global.export") %></a>
                   <div class="dropdown-menu dropdown-menu-right">
                     <%= link_to I18n.t("global.link_to.add_element", name: global_labels['receipts']), export_admin_receipts_path, class: 'dropdown-item' %>
                     <%= link_to I18n.t("global.active_filter_elements", name: global_labels['receipts']), export_admin_receipts_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>

@@ -142,6 +142,7 @@ en:
       existing_customer: "Existing Customer?"
       address: "Address"
       crm_ids: "CRM IDs"
+      export: "Export"
     link_to:
       actions: "Actions"
       click_to_zoom: "Click to Zoom"
@@ -202,7 +203,7 @@ en:
       funds_raised_so_far: "Funds Raised so far"
       minimum_investment: "Minimum Investment"
       select_city_first: "Select City First"
-      export: "Export"
+      mis_active_filter: "MIS Active Filter"
       get_started: "Get Started"
       this_is_time: "Now is the best time to turn your dream into reality"
       love_our_brand: "Why you would love %{name}"

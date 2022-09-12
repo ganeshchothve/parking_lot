@@ -5,7 +5,7 @@
       <thead class="th-default">
         <tr class="bg-primary white">
           <th><%= Project.model_name.human %></th>
-          <th>All<br> <%= SiteVisit.model_name.human(count: 2) %></th>
+          <th><%= I18n.t("global.all") %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
           <th><%= t('mongoid.attributes.site_visit/status.scheduled') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
           <th><%= t('mongoid.attributes.site_visit/status.conducted') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>
           <th><%= t('mongoid.attributes.site_visit/status.paid') %><br> <%= SiteVisit.model_name.human(count: 2) %></th>

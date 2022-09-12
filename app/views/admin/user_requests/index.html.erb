@@ -17,7 +17,7 @@
           <%= link_to t('controller.user_requests.new.link_name'), new_admin_user_request_path(request_type: 'general'), class: 'btn btn-primary fn-400 modal-remote-form-link me-2 ms-2 me-xs-0' %>
         <% end %>
         <% if policy([:admin, UserRequest.new]).export? %>
-          <a class="select-btn border rounded fn-400 dropdown-toggle btn" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</a>
+          <a class="select-btn border rounded fn-400 dropdown-toggle btn" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= I18n.t("global.export") %></a>
           <div class="dropdown-menu">
             <%= link_to I18n.t("global.all") + "#{global_labels['user_requests']}", export_admin_user_requests_path, class: 'dropdown-item' %>
             <%= link_to I18n.t("global.active_filter") + "#{global_labels['user_requests']}", export_admin_user_requests_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>

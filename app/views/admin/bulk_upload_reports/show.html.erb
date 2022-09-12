@@ -52,7 +52,7 @@
         </div>
       </div>
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12">
-        <%= link_to I18n.t("global.link_to.export"), upload_error_exports_admin_bulk_upload_report_path, class: "btn fn-400 border rounded float-end me-4" %>
+        <%= link_to I18n.t("global.export"), upload_error_exports_admin_bulk_upload_report_path, class: "btn fn-400 border rounded float-end me-4" %>
       </div>
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd collapse show" id="collapseUploadErrors">
         <%= render 'admin/upload_errors/index', {upload_errors: @bulk_upload_report.upload_errors.paginate(page: params[:page] || 1, per_page: params[:per_page])} %>

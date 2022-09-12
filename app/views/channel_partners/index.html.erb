@@ -17,7 +17,7 @@
           <%= link_to I18n.t("global.link_to.add_new"), new_channel_partner_path(from_cp_admin: true), class: 'bg-primary white border-primary py-2 px-3 border rounded ht-40 modal-remote-form-link d-inline-block ms-2' %>
         <% end %>
         <div class="new-menu display-initial d-inline me-2 ms-1" >
-            <button class="select-btn fn-400 dropdown-toggle px-3 border rounded py-2" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= I18n.t("global.link_to.export") %></button>
+            <button class="select-btn fn-400 dropdown-toggle px-3 border rounded py-2" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= I18n.t("global.export") %></button>
             <div class="dropdown-menu">
               <%= link_to  I18n.t("global.all_elements", name: global_labels['channel_partners']), export_channel_partners_path, class: 'dropdown-item' %>
               <%= link_to I18n.t("global.active_filter_elements", name: global_labels['channel_partners']), export_channel_partners_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
