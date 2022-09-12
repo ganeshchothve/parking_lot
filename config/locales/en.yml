@@ -36,6 +36,7 @@ en:
     apply: "Apply"
     select: "Select"
     error: "Error"
+    print: "Print"
     customer: "Customer"
     selected: "Selected"
     success: "Success"
@@ -1162,6 +1163,14 @@ en:
         av_sold: "A.V (Sold)"
         saleable: "Saleable"
         phase: "Phase"
+        booking_price: "Booking Price"
+        blocking_amount: "Blocking Amount"
+        name: "Name"
+        key: "Key"
+        category: "Category"
+        absolute_value: "Absolute Value"
+        formula: "Formula"
+        order: "Order"
         tower_name:
           rhea_miranda: "Rhea Miranda"
       project_unit/status:
@@ -2240,6 +2249,10 @@ en:
         booking_moved_tentative: "Are you sure? You cannot make changes once booking moved to tentative state"
         sure: "Are you sure?"
         click_to_confirm: "By clicking on 'Complete Registration' you are confirming all the provided information and your application will be submitted for review to the BeyondWalls Partner Engagement Team."
+      text: 
+        upload_formats_text: "Upload documents in following formats - jpg, jpeg, png, pdf, zip"
+        valid_documents_for: "Valid documents for"
+
     public_assets:
       index:
         link_name: "Public Documents"
@@ -2986,7 +2999,12 @@ en:
         not_found: "User not found"
       errors:
         already_registered: "User with these details is already registered with a different role"
-
+      text:
+        payment_done: "Payment Done"
+        payment_pending: "Payment Pending"
+        customer_signature: "Customer Signature"
+        authorized_signatory: "Authorized Signatory"
+        e_customer_form: "This is an electronically generated customer form."
 
     interested_projects:
       set_interested_project_missing: "Interested Project not found"

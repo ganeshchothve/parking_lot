@@ -68,11 +68,11 @@
                       <%= fa_form.label :is_active %>
                       <div class="form-check form-check-inline">
                         <%= fa_form.radio_button :is_active, true, class: "form-check-input wd-22" %>
-                        <%= fa_form.label :is_active, "Yes", class: "form-check-label d-inline-block ms-2" %>
+                        <%= fa_form.label :is_active, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
                       </div>
                       <div class="form-check form-check-inline">
                         <%= fa_form.radio_button :is_active, false, class: "form-check-input wd-22" %>
-                        <%= fa_form.label :is_active, "No", class: "form-check-label d-inline-block ms-2" %>
+                        <%= fa_form.label :is_active, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
                       </div>
                     </div>
                   </div>
