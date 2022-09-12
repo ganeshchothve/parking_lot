@@ -9,24 +9,25 @@
       <%# end %>
       </div>
       <% unless user_signed_in? %>  
-      <div class="text-end">
-        <% if get_client_from_domain.enable_channel_partners? %>
-          <div class="dropdown hide-xs float-end register-dropdown">
-            <div class="d-inline-block">
-              <a class="dropdown-toggle p-style" href="javascript:;" id="navbarDropdown" role="button"
-                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Register</a>
-              <div class="dropdown-menu menu-top mobile-home-menu" aria-labelledby="navbarDropdown">
-                <%= link_to "Register as Channel Partner", new_channel_partner_path, class: "btn btn-primary btn-as-channel-partner text-start" %>
-                <%#= link_to "Register as Customer", register_path, class: "btn btn-primary btn-as-customer-partner text-start" %>
+        <div class="text-end">
+          <% if get_client_from_domain.enable_channel_partners? %>
+            <div class="dropdown hide-xs float-end register-dropdown">
+              <div class="d-inline-block">
+                <a class="dropdown-toggle p-style" href="javascript:;" id="navbarDropdown" role="button"
+                  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Register</a>
+                <div class="dropdown-menu menu-top mobile-home-menu" aria-labelledby="navbarDropdown">
+                  <%= link_to "Register as Channel Partner", new_channel_partner_path, class: "btn btn-primary btn-as-channel-partner text-start" %>
+                  <%#= link_to "Register as Customer", register_path, class: "btn btn-primary btn-as-customer-partner text-start" %>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="d-inline-block">
-            <%= link_to new_channel_partner_path, class: "reg-chnl-prtnr-btn show-xs p-style" do %>
-            <%= image_tag 'user-alt-black.svg', alt: "User Info" %>
-            Register as Channel Partner
-            <% end %>
-          </div>
+            <div class="d-inline-block">
+              <%= link_to new_channel_partner_path, class: "reg-chnl-prtnr-btn show-xs p-style" do %>
+              <%= image_tag 'user-alt-black.svg', alt: "User Info" %>
+              Register as Channel Partner
+              <% end %>
+            </div>
+          <% end %>
           <% if devise_controller? && params[:action] == 'new' %>
             <div class="d-inline-block">
               <%= link_to user_signup_path, class: "reg-chnl-prtnr-btn show-xs p-style" do %>
@@ -40,21 +41,18 @@
               <%= link_to 'Sign in', new_user_session_path, {class: 'btn btn-primary', 'data-event-category': 'Header', 'data-event-action': 'Click', 'data-event-name': 'Login'} %>
             </div>
           <% end %>
-        </div>
-        <% end %>
-        <% if params[:action] == 'sign_in' %>
-          <div class="d-inline-block">
-            <%= link_to "Register Now", register_path, class: "btn register-btn bg-primary show-xs p-style ms-3 px-3" %>
-          </div>
-          
-          <div class="user-info login-btn d-inline-block show-xs mt-2">
+          <% if params[:action] == 'sign_in' %>
             <div class="d-inline-block">
-              <img src="<%= asset_path 'lock-black.svg' %>" alt="User Info">
-              <%= link_to "Log in", new_session_path("user"), class: "p-style primary" %>
+              <%= link_to "Register Now", register_path, class: "btn register-btn bg-primary show-xs p-style ms-3 px-3" %>
             </div>
-          </div>
-        <% end %>
-      </div>
+            <div class="user-info login-btn d-inline-block show-xs mt-2">
+              <div class="d-inline-block">
+                <img src="<%= asset_path 'lock-black.svg' %>" alt="User Info">
+                <%= link_to "Log in", new_session_path("user"), class: "p-style primary" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
       <% end %>
     </div>
   </nav>
