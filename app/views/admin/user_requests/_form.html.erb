@@ -40,6 +40,7 @@
                   <%= note_field.text_area :note, class: "form-control" %>
                   <%= note_field.hidden_field :note_type, value: (note_field.object.note_type.present? ? note_field.object.note_type : "user") if note_field.object.creator.role == "user" %>
                   <%= note_field.hidden_field :creator_id %>
+                  <%= note_field.hidden_field :booking_portal_client_id, value: current_user.booking_portal_client.id %>
                 </div>
               <% else %>
                 <div>
