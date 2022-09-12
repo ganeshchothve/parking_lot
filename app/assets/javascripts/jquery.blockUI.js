@@ -112,7 +112,7 @@
 		// override these in your code to change the default behavior and style
 		$.blockUI.defaults = {
 			// message displayed when blocking (use null for no message)
-			message: '<h1  class="load-page-title fn-18 theme-txt-color"><%= I18n.t("global.please_wait") %></h1><span class="load-dotted"><i></i><i></i></span>',
+			message: '<h1  class="load-page-title fn-18 theme-txt-color">Please wait...</h1><span class="load-dotted"><i></i><i></i></span>',
 
 			title: null,		// title string; only used when theme == true
 			draggable: true,	// only used when theme == true (requires jquery-ui.js to be loaded)

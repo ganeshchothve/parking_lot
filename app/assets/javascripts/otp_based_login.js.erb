@@ -3,9 +3,9 @@
 var OtpBasedLogin = (function(){
   var handleSendOtpSuccess = function(elem, data, resend){
     if (resend != undefined && resend) {
-      Amura.global_success_handler("<%= I18n.t("sessions.notice.otp_sent_to") %>" + data.phone);
+      Amura.global_success_handler('<%= I18n.t("sessions.notice.otp_sent_to") %>' + data.phone);
     }
-    $('.top-message').html("<%= I18n.t("sessions.notice.otp_sent_to") %>" + data.phone).closest('.top-notification').removeAttr('hidden');
+    $('.top-message').html('<%= I18n.t("sessions.notice.otp_sent_to") %>' + data.phone).closest('.top-notification').removeAttr('hidden');
     $(elem).find('[name="user[login]"]').closest(".mb-3").attr("hidden", "hidden");
     $(elem).find('[name="user[login_otp]"]').closest(".mb-3").removeAttr("hidden");
     $(elem).find('[name="user[login_otp]"]').focus();
@@ -14,9 +14,9 @@ var OtpBasedLogin = (function(){
     $(elem).removeAttr("data-type").removeAttr("data-remote");
     setTimeout(function(){
       if(data.confirmed){
-        $(elem).find('input[type="submit"]').val("<%= I18n.t("devise.keys.log_in") %>").attr("data-disable-with", "<%= I18n.t("devise.keys.logging_in") %>");
+        $(elem).find('input[type="submit"]').val('<%= I18n.t("devise.keys.log_in") %>').attr("data-disable-with", "<%= I18n.t("devise.keys.logging_in") %>");
       }else{
-        $(elem).find('input[type="submit"]').val("<%= I18n.t("devise.keys.verify_your_account") %>").attr("data-disable-with", "<%= I18n.t("devise.keys.verifying_login") %>");
+        $(elem).find('input[type="submit"]').val('<%= I18n.t("devise.keys.verify_your_account") %>').attr("data-disable-with", "<%= I18n.t("devise.keys.verifying_login") %>");
       }
     }, 200);
 

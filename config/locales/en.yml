@@ -3499,3 +3499,6 @@ en:
       people_viewing_apartments: " other people are viewing the apartments on this floor"
       people_viewing_home: " other people like you are looking for a home in this tower"
       first_time_home_buyers: "Popular choice of first-time home buyers"
+  javascript:
+    global:
+      please_wait: "Please Wait..."
