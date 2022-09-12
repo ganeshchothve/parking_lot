@@ -171,7 +171,7 @@ Rails.application.routes.draw do
     end
     resources :push_notifications, only: %i[index show new create]
     resource :client, except: [:new, :create] do
-      resources :templates, only: [:edit, :update, :index]
+      resources :templates, only: [:edit, :update, :index, :new, :create]
       get 'document_sign/prompt'
       get 'document_sign/callback'
       get 'get_regions'
