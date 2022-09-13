@@ -80,8 +80,7 @@ module ChannelPartnerRegisteration
 
   def add_cp_company
     @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
-    @channel_partner.assign_attributes(is_existing_company: false, primary_user: @user)
-
+    @channel_partner.assign_attributes(is_existing_company: false, primary_user: @user, booking_portal_client: @user.booking_portal_client)
     respond_to do |format|
       if @channel_partner.save
         #auto approve partner company if flag on client is enabled
