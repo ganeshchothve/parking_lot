@@ -59,7 +59,6 @@
       <%= f.text_field :agreement_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '',  disabled: !(policy([:admin, @booking_detail]).editable_field?("agreement_date")) %>
     <% end %>
   </div>
-<<<<<<< HEAD
   <% if policy([:admin, @booking_detail]).enable_channel_partners? %>
     <div class="mb-3">
       <%= f.label :source, class: 'label-required control-label' %>
@@ -70,18 +69,8 @@
       <% end %>
       <%= f.select :source, booking_sources.collect{|s| [s, s]}, {prompt: true}, class: 'selectize booking_source', disabled: !(policy([:admin, @booking_detail]).editable_field?("source"))  %>
     </div>
-=======
-  <div class="mb-3">
-    <%= f.label :source, class: 'label-required control-label' %>
-    <% if %w(channel_partner cp_owner).include?(current_user.role) %>
-      <% booking_sources = ["Channel Partner"]%>
-    <% else %>
-      <% booking_sources = ( f.object.lead.present? ? f.object.lead.project.booking_sources : f.object.project.booking_sources ) %>
-    <% end %>
-    <%= f.select :source, booking_sources.collect{|s| [s, s]}, {prompt: true}, class: 'selectize booking_source', disabled: !(policy([:admin, @booking_detail]).editable_field?("source"))  %>
-  </div>
+  <% end %>
   <% if current_client.enable_channel_partners? %>
->>>>>>> lp-mandates
     <div class="mb-3 channel_partner_div">
       <% if f.object.lead.present? && f.object.lead.manager && %w(channel_partner cp_owner).include?(f.object.lead.manager.role)
         channel_partners = User.where(id: f.object.lead.manager_id)
@@ -98,10 +87,7 @@
         <% end %>
     </div>
   <% end %>
-<<<<<<< HEAD
-=======
 </div>
->>>>>>> lp-mandates
 <div class="modal-footer text-end">
   <% if edit_access %>
     <%= f.submit "Submit", class: "btn btn-primary" %>

@@ -30,7 +30,7 @@
                   </div>
                   <div class='col-sm-12 mb-3'>
                     <%= label_tag "_id", "Name / Email / Phone", class: "control-label" %>
-                    <%= select_tag "_id", options_from_collection_for_select(params[:_id].present? ? Lead.where(_id: params[:_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: { url: admin_leads_path } } %>
+                    <%= select_tag "_id", options_from_collection_for_select(params[:_id].present? ? Lead.where(_id: params[:_id]) : [], "id", "search_name"), {class: "selectize-remote", data: { url: admin_leads_path } } %>
                   </div>
                 </div>
                 <div class="pt-2 border-top d-flex justify-content-between col-12">

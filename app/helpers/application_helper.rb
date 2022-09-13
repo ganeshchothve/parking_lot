@@ -85,7 +85,11 @@ module ApplicationHelper
     #   @current_client = Client.asc(:created_at).first # GENERICTODO: handle this
     # end
     return nil if defined?(current_user) && current_user.blank?
-    @current_client = current_user.booking_portal_client
+    if current_user.role?(:superadmin)
+      @current_client = current_user.selected_client
+    else
+      @current_client = current_user.booking_portal_client
+    end
     @current_client
   end
 

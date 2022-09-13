@@ -1,6 +1,8 @@
 class Admin::BookingDetailsController < AdminController
   include BookingDetailConcern
   include SearchConcern
+  include ApplicationHelper
+
   around_action :apply_policy_scope, only: [:index, :mis_report]
   before_action :set_booking_detail, except: [:index, :mis_report, :new, :create, :searching_for_towers, :status_chart, :new_booking_without_inventory, :create_booking_without_inventory, :edit_booking_without_inventory, :update_booking_without_inventory, :move_to_next_state, :new_booking_on_project, :process_booking_on_project]
   before_action :authorize_resource, except: [:index, :mis_report, :new, :create, :searching_for_towers, :status_chart, :new_booking_without_inventory, :create_booking_without_inventory, :edit_booking_without_inventory, :update_booking_without_inventory, :move_to_next_state, :new_booking_on_project, :process_booking_on_project]
@@ -194,7 +196,9 @@ class Admin::BookingDetailsController < AdminController
                                     site_visit_id: params[:site_visit_id],
                                     booking_portal_client_id: current_user.booking_portal_client.id
                                     )
-    # render layout: false
+    if !is_marketplace?
+      render layout: false
+    end
   end
 
   def create_booking_without_inventory
