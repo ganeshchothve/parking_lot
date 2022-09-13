@@ -22,18 +22,18 @@
             <span class="theme-txt-color fn-16 mb-2 d-block"><%= user.queue_number %></span>
           </div>
           <div class="user-site-visit col-6">
-            <p class="fn-14 txt-light-blue mb-0">Wait Time</p>
+            <p class="fn-14 txt-light-blue mb-0"><%= I18n.t("controller.site_visits.text.wait_time") %></p>
             <% status_log = user.state_transitions.where(status: user.customer_status, sitevisit_id: user.current_site_visit_id).first %>
             <span class="theme-txt-color fn-16 mb-2 d-block"><%= distance_of_time_in_words_to_now(status_log.try(:enter_time) || Time.now, scope: 'datetime.distance_in_words.short') %></span>
           </div>
           <% sitevisit = user.site_visits.where(_id: user.current_site_visit_id).desc(:created_at).last %>
           <% if sitevisit.present? %>
             <div class="user-site-visit col-6">
-              <p class="fn-14 txt-light-blue mb-0">Last site visit date</p>
+              <p class="fn-14 txt-light-blue mb-0"><%= I18n.t("controller.site_visits.text.last_visit_date") %></p>
               <span class="theme-txt-color fn-16 mb-0 d-block"><%= sitevisit.scheduled_on.in_time_zone("Mumbai").strftime("%d/%m/%Y - %l:%M %P") %></span>
             </div>
             <div class="user-site-visit col-6">
-              <p class="fn-14 txt-light-blue mb-0">Last site visit status</p>
+              <p class="fn-14 txt-light-blue mb-0"><%= I18n.t("controller.site_visits.text.last_visit_status") %></p>
               <span class="theme-txt-color fn-16 mb-0 d-block"><%= sitevisit.status.titleize %></span>
             </div>
           <% end %>

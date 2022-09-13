@@ -19,7 +19,7 @@
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
           <%= label_tag "fltrs", t('mongoid.attributes.user_request._type'), class: "control-label" %>
-          <%= select_tag "fltrs[_type]", options_for_select(::UserRequest.descendants.collect{|x| [x.to_s.split('::').last, x]}, params.dig(:fltrs, :_type) || " "), {prompt: '', class: "selectize"} %>
+          <%= select_tag "fltrs[_type]", options_for_select(::UserRequest.descendants.collect{|x| [I18n.t("mongoid.attributes.user_request/request_type.#{x.to_s.split('::').last.downcase}"), x]}, params.dig(:fltrs, :_type) || " "), {prompt: '', class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.user_request.project_id'), class: "control-label" %>

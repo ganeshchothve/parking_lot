@@ -30,9 +30,14 @@ en:
     edit: "Edit"
     show: "Show"
     save: "Save"
+    check_in: "Check In"
+    submit_application: "Submit Application"
+    resubmit_applicatin: "Resubmit Application"
+    save_draft: "Save Draft"
     submit: "Submit"
     upload: "Upload"
     close: "Close"
+    proceed: "Proceed"
     cancel: "Cancel"
     apply: "Apply"
     select: "Select"
@@ -40,11 +45,13 @@ en:
     print: "Print"
     customer: "Customer"
     selected: "Selected"
+    reason: "Reason"
     success: "Success"
     no_of: "No. Of "
     gallery: "Gallery"
     enter_url: "Enter Url"
     created_at: "Created At"
+    wait_time: "Wait Time"
     action:
       one: "Action"
       other: "Actions"
@@ -93,6 +100,7 @@ en:
     filters: "Filters"
     project: "Project"
     booking_count: "Booking Count"
+    no_users: "No Users Found"
     no_record: "No Records Found"
     no_records: "No Records."
     welcome: "Welcome"
@@ -116,6 +124,11 @@ en:
     email_id: "Email Id"
     phone_no: "Phone No."
     actions: "Actions"
+    name_email_phone: "Name / Email / Phone"
+    search_by: "Search By %{name}"
+    logical_conditions:
+      or: "OR"
+    export: "Export"
     tabs:
       amount: "Amount"
       overview: "Overview"
@@ -288,6 +301,8 @@ en:
       dropping: "Dropping..."
 
   helpers:
+    mark_conducted:
+      link_name: "Mark as Conducted"
     extend_validity:
       link_name: "%{model}"
     accompanied_credit:
@@ -725,6 +740,15 @@ en:
         base_rate: "Base Rate"
         floor_rise: "Floor Rise"
         booking_project_unit_name: "Booking Project Unit Name"
+        project_tower_name: "Project Tower Name"
+        project_unit_name: "Project Unit Name"
+        project_unit_configuration: "Project Unit Configuration"
+        site_visit_id: "Site Visit"
+        project_id: "Project"
+        lead_id: "Lead"
+        other_costs: "Other costs"
+        source: "Source"
+        manager_id: "Channel Partner"
       booking_detail/selldo_status:
         booked_tentative: "tentative"
         booked_confirmed: "confirmed"
@@ -1078,6 +1102,7 @@ en:
         company_details: "Company Details"
         created_on: "Created On"
         add_company: "Add Partner Company"
+        upload_documents: "Upload Documents"
       channel_partner/file_types:
         rera_certificate: "RERA Certificate"
         gst_certificate: "GST Certificate"
@@ -1096,14 +1121,12 @@ en:
         form_10f_html: "<ul><li>Form 10F</li></ul>"
         tax_residency_certificate_html: "<ul><li>Tax Residency Certificate</li></ul>"
         pe_declaration_html: "<ul><li>PE Declaration (No permanent Establishment in India)</li></ul>"
-
       channel_partner/status:
         active: "Approved"
         inactive: "Signed Up"
         confirmed: "Confirmed"
         pending: "Pending Approval"
         rejected: "Rejected"
-
       channel_partner/internal_categories:
         cat_a: "CAT A"
         cat_b: "CAT B"
@@ -1112,6 +1135,12 @@ en:
         current_ladder: "Current Ladder"
         incentives_generated: "Total Incentives Generated<br>(includes rejected invoices)"
         target_for_next_laddeer: "Target Required To Reach Next Ladder"
+      channel_partner/expertise:
+        rentals: "Rentals"
+        retail: "Retail"
+        residential: "Residential"
+        commercial: "Commercial"
+
       data_attribute:
         name: "Name"
         formula: "Formula"
@@ -1314,6 +1343,7 @@ en:
         start_time: "Slot Start"
         end_time: "Slot End"
         token_type: "Token Type"
+        sort_by: "Sort By"
       receipt/status:
         pending: "Pending"
         clearance_pending: "Clearance Pending"
@@ -1583,6 +1613,8 @@ en:
         resolved_by: "Resolved By"
         created_by: "Created By"
         request: "Request"
+      user_request/swap:
+        project_unit_id: "Project Unit"
       user_request/status:
         pending: "Pending"
         processing: "Processing"
@@ -1600,6 +1632,10 @@ en:
         low: "Low"
         medium: "Medium"
         high: "High"
+      user_request/request_type:
+        cancellation: "Cancellation"
+        swap: "Swap"
+        general: "General"
       site_visit:
         project: "Project"
         lead: "Lead"
@@ -1863,6 +1899,8 @@ en:
         upi:
           add_address: "Please add your UPI Address for quick payment. Please click on the link"
           update: "Update UPI Address"
+        revisit_queue_number: "Revisit Queue Number"
+
       user/password:
         name: "should not contain name."
         length: "Length should be 8-16 characters and include: 1 uppercase, 1 lowercase, 1 digit and 1 special character."
@@ -2115,6 +2153,11 @@ en:
         start_value: "Start Value"
         end_value: "End Value"
 
+      customer_search:
+        lead_id: "Sell.Do Lead ID"
+        token_number: "Token Number"
+        id: "Name / Email / Phone"
+
   controller:
     notice:
       failed_to_redirect_to_payment_gateway: "We couldn't redirect you to the payment gateway, please try again"
@@ -2157,6 +2200,8 @@ en:
         link_name: "Sales Board"
     customer_searches:
       set_customer_search_missing: "Customer Search not found."
+      links:
+        add_new_customer: "Add New Customer"
     token_types:
       index:
         link_name: "Token Types"
@@ -2541,6 +2586,10 @@ en:
         inclusive_price: "All Inclusive Price"
         total_amount_paid: "Total Amount Paid (Inclusive of GST)"
         pending_balance: "Pending Balance"
+      move_to:
+        booked_tentative: "Move to Booked Tentative"
+        booked_confirmed: "Move to Booked Confirmed"
+        cancel_booking: "Cancel Booking"
     invoices:
       index:
         link_name: "Brokerages"
@@ -2600,7 +2649,14 @@ en:
         rejected: "Reject"
       alert:
         not_found: "Incentive deduction not found"
-
+    
+    team_leads:
+      headers:
+        sales_team: "Sales Team"
+      text:
+        with: "With"
+        queue_no: "Queue Number"
+        search_user: "Search User by Queue No."
     clients:
       new:
         link_name: "Add Client"
@@ -2609,6 +2665,8 @@ en:
       show:
         link_name: "Client Detail"
     channel_partners:
+      add:
+        link_name: "Add Channel Partner"
       new:
         link_name: "Add New ChannelPartner"
       index:
@@ -2637,6 +2695,14 @@ en:
       register_request_sent: "Registration request sent to Company owner"
       text:
         adding_existing_lead: "Above channel partner tried to add already existing lead. Details of the lead are as follows:"
+        company_registration: "Company Registration"
+        reason: "Reason"
+        application_rejected_by: "Your application has been rejected by <strong> %{name} %></strong>"
+        get_registered: "Get Yourself Registered in Existing Company"
+        register_company: "Register a New Company"
+        reg_req_sent: "Your registration request has been sent to respective company owner"
+        approve_ac: "Please get your account approved by contacting the owner"
+        cancel_reg_req: "If you want to cancel above registration request in company, please contact your channel partner representative in %{name} "
       new_company:
         link_name: Add Partner Company
 
@@ -2960,6 +3026,15 @@ en:
         revisit_count: "Revisit count should be a number"
       text:
         schedule: "Schedule a Site Visit"
+        scheduled_at: "Schedule a sitevisit at - %{name}"
+        wait_time: "Wait Time"
+        last_visit_date: "Last site visit date"
+        last_visit_status: "Last site visit status"
+
+      headings:
+        customer_site_visit: "Customer Site Visit"
+        customer_details: "Customer Details"
+        details: "Site Visit Details"
     searches:
       filter:
         header: "Select Tower"
@@ -3301,6 +3376,7 @@ en:
         requested_for: "Requested for %{name}"
         reason: "Reason"
         alternate_project_unit: "Alternate Project Unit"
+        cancellation_request_text: "Your unit will be released once the cancellation request is processed. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability."
 
 
     developers:

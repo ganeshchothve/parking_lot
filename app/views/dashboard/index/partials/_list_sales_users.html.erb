@@ -3,7 +3,7 @@
     <div class="d-flex justify-content-between ">
       <div class="">
         <h2 class="mb-0 mt-0 lh-1">
-          <%= active_link_to 'Sales Team', search_by_admin_users_path(fltrs: {role: 'sales', sort: 'sales_status.asc'}, element: '#sales-users-list', template: 'dashboard/index/partials/list_sales_users', per_page: 50, format: :js), remote: true, active: { fltrs: { 'role' => 'sales', 'sort' => 'sales_status.asc' } } , class: 'theme-txt-color fn-20' %>
+          <%= active_link_to I18n.t("controller.team_leads.headers.sales_team"), search_by_admin_users_path(fltrs: {role: 'sales', sort: 'sales_status.asc'}, element: '#sales-users-list', template: 'dashboard/index/partials/list_sales_users', per_page: 50, format: :js), remote: true, active: { fltrs: { 'role' => 'sales', 'sort' => 'sales_status.asc' } } , class: 'theme-txt-color fn-20' %>
         </h2>
       </div>
       <div class="">
@@ -36,7 +36,7 @@
   </div>
   <% end %>
   <% else %>
-  <p>No Users found </p>
+  <p><%= I18n.t("global.no_users") %></p>
   <% end %>
 </div>
   </div>

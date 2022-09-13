@@ -22,10 +22,10 @@
     <div class="sales-info card-body">
       <div class="row">
         <div class="user-queue-no col-lg-12">
-          <p class="fn-14 txt-light-blue mb-0"><span>With</span> 
+          <p class="fn-14 txt-light-blue mb-0"><span><%= I18n.t("controller.team_leads.text.with") %></span> 
           <% if customer %>
             <span class="badge rounded-pill bg-danger ms-2 align-top"><%= customer.try(:queue_number) || '-' %>
-              <span class="visually-hidden">Queue Number</span>
+              <span class="visually-hidden"><%= I18n.t("controller.team_leads.text.queue_no") %></span>
               </span>
           <% end %>
           </p>

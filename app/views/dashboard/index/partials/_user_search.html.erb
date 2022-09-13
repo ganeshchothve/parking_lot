@@ -1,6 +1,6 @@
 <div class="card h-100 search-customer-card">
   <div class='card-header m-0 px-4'>
-    Search <%= global_labels[:customer] %> By
+    <%= I18n.t("global.search_by", name: global_labels[:customer]) %>
   </div>
   <div class="card-body">
     <% url = search_by_admin_leads_path %>
@@ -10,7 +10,7 @@
         <%= hidden_field_tag :template, 'index' %>
         <div class = 'col-sm-5'>
           <div class="form-group">
-            <label for="">Name / Email / Phone</label>
+            <label for=""><%= I18n.t("global.name_email_phone") %></label>
             <% if lead_id.present? %>
               <%= select_tag "fltrs[_id]", options_for_select(([ [Lead.where(id: lead_id).first.try(:ds_name, current_user), lead_id] ]), lead_id ), prompt: "#{t('mongoid.attributes.lead.search_by_name')}", class: "selectize-remote", data: {url: admin_leads_path } %>
             <% else %>
@@ -19,7 +19,7 @@
           </div>
         </div>
         <div class ='col-sm-1 pt-2 text-center'>
-          <p class="or-txt">OR</p>
+          <p class="or-txt"><%= I18n.t("global.logical_conditions.or") %></p>
         </div>
         <div class = 'col-sm-5'>
           <div class="form-group">

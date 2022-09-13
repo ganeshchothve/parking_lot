@@ -1,7 +1,7 @@
 <p class="fn-16 theme-txt-color mb-0"><i class="fa fa-check-circle me-2 fill-success"></i>
   <% if @customer_search.crossed_step("search") %>
-  <%= link_to "Search", new_admin_customer_search_path, class: "theme-txt-color" %>
+  <%= link_to I18n.t("global.search"), new_admin_customer_search_path, class: "theme-txt-color" %>
   <% else %>
-  Search
+  <%= I18n.t("global.search") %>
   <% end %>
 </p>
