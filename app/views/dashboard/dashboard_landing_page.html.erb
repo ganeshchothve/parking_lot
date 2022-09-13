@@ -154,7 +154,7 @@
             <li>
               <div class="cp-events-wrap">
                 <div class="cp-event-inner">
-                  <span class="event-date"><%= I18n.t('global.hello') + ', ' + Time.now.in_time_zone(current_user.time_zone).strftime('%d%b, %Y') %></span>
+                  <span class="event-date"><%= I18n.t('global.today') + ', ' + Time.now.in_time_zone(current_user.time_zone).strftime('%d%b, %Y') %></span>
                   <h3 class="event-person"><%= (meeting.topic || "-") %></h3>
                   <span class="prjt-title"><%= I18n.t("mongoid.attributes.project.name") %></span>
                   <h3 class="prjt-name"><%= (meeting.project.try(:name) || "-") %></h3>

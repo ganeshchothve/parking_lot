@@ -8,7 +8,7 @@
       </tr>
       <tr class="bg-primary white text-center"> 
         <% @max_ladders.times do |l| %>
-          <th><%=( I18n.t("controller.dashboard.booking_details_overview.ladder")) + " # #{l + 1}%></th>
+          <th><%= I18n.t("controller.dashboard.booking_details_overview.ladder") </th>
         <% end %>
       </tr>
     </thead>

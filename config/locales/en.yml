@@ -2251,8 +2251,8 @@ en:
         search_time_slot: "Search time slot"
     home:
       keys:
-        broker: "Broker"
-        superbroker: "Superbroker"
+        broker: "BROKER"
+        superbroker: "SUPERBROKER"
         partial_brokerage: "Partial Brokerage"
         hot_selling: "Hot Selling"
       select_project:
