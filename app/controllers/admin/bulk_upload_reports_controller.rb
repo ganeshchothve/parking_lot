@@ -27,7 +27,7 @@ class Admin::BulkUploadReportsController < AdminController
     @bulk_upload_report = BulkUploadReport.new(uploaded_by: current_user)
     @bulk_upload_report.assign_attributes(permitted_attributes([:admin, @bulk_upload_report]))
     if current_user.role?(:admin)
-      @bulk_upload_report.assign_attributes(client_id: current_user.booking_portal_client)
+      @bulk_upload_report.assign_attributes(client_id: current_user.booking_portal_client_id)
     elsif current_user.role?(:superadmin)
       @bulk_upload_report.assign_attributes(client_id: current_user.selected_client_id)
     end
