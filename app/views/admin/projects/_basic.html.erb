@@ -189,15 +189,6 @@
   <div class="row">
     <div class="col-md-12">
       <div class="mb-3">
-        <%= f.label :booking_custom_template_ids, class: 'label-required' %>
-        <%= f.select :booking_custom_template_ids, booking_custom_templates(project), {prompt: 'Select' }, class: "selectize" , multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("booking_custom_template_ids") ? false : true) %>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      <div class="mb-3">
         <%= f.label :terms_and_conditions %>
         <%= f.text_area :terms_and_conditions, class: 'form-control summernote', disabled: !policy([:admin, @project]).editable_field?("terms_and_conditions") %>
       </div>

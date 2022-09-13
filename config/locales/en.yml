@@ -627,7 +627,6 @@ en:
         incentive_gst_slabs: 'Configure Incentive GST Slabs (%)'
         payment_enabled: Enable Payment
         foyer_link: Foyer Link
-        booking_custom_template_ids: Booking Templates
         approved_banks/list:
           hdfc: HDFC Bank
           sbi: State Bank of India
