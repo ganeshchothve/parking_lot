@@ -18,4 +18,12 @@ class ApiLog
   scope :filter_by_resource_id, ->(_resource_id) { where(resource_id: _resource_id) }
   scope :filter_by_status, ->(_status) { where(status: _status) }
 
+  class << self
+    def log_responses(request_url, request, response, resource, response_type, booking_portal_client, status = nil, message = nil)
+      api_log = ApiLog.new
+      api_log.assign_attributes(request_url: request_url, request: request, response: response, resource: resource, response_type: response_type, booking_portal_client: booking_portal_client, status: status, message: message)
+      api_log.save
+    end
+  end
+
 end
