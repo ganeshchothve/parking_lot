@@ -52,6 +52,14 @@ Rails.application.routes.draw do
       patch :create, on: :collection
     end
   end
+
+  scope "*subject_class/:subject_class_id" do
+    resources :templates, only: [], controller: :templates, as: :custom_templates do
+      get :choose_template_for_print, on: :collection
+
+    end
+  end
+
   scope "*notable_type/:notable_id" do
     resources :notes, controller: :notes, as: :notables
   end
@@ -171,7 +179,9 @@ Rails.application.routes.draw do
     end
     resources :push_notifications, only: %i[index show new create]
     resource :client, except: [:new, :create] do
-      resources :templates, only: [:edit, :update, :index, :new, :create]
+      resources :templates, only: [:edit, :update, :index, :new, :create] do
+        get :print_template, on: :member
+      end
       get 'document_sign/prompt'
       get 'document_sign/callback'
       get 'get_regions'

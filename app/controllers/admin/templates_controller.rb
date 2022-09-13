@@ -51,6 +51,12 @@ class Admin::TemplatesController < AdminController
     end
   end
 
+  def choose_template_for_print
+  end
+
+  def print_template
+  end
+
   private
   def set_template
     @template = ::Template.find(params[:id])

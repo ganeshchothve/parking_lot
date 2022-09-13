@@ -10,6 +10,7 @@ class Template::CustomTemplate < Template
   validates :name, :content, :subject_class, presence: true
 
   belongs_to :booking_portal_client, class_name: 'Client'
+  has_and_belongs_to_many :projects, class_name: 'Project', inverse_of: nil
 
   validates :subject_class, inclusion: { in: proc { Template::CustomTemplate::SUBJECT_CLASSES } }, allow_blank: true
 
