@@ -46,7 +46,7 @@
       <thead class="th-default">
         <tr class="bg-primary white">
           <th rowspan='2' class='text-center border-end th-border-right align-middle'><%= Project.model_name.human %></th>
-          <th colspan='4' class='text-center'>Total <%= t('mongoid.attributes.incentive_deduction.amount') %></th>
+          <th colspan='4' class='text-center'><%= I18n.t("global.total", name: I18n.t('mongoid.attributes.incentive_deduction.amount')) %></th>
         </tr>
         <tr class="bg-primary white text-center">
           <th><%= t('mongoid.attributes.incentive_deduction/status.draft') %></th>
@@ -59,16 +59,16 @@
         <% @deduction_data.sort_by{|x| x[:project_name]}.group_by{|x| x[:project_name]}.each do |project_name, data| %>
           <tr>
             <td data-title='<%= Project.model_name.human %>' class='text-md-left'><%= project_name %></td>
-            <td data-title='Total <%= "#{t('mongoid.attributes.incentive_deduction.amount')} (#{t('mongoid.attributes.incentive_deduction/status.draft')})" %>'>
+            <td data-title='<%= I18n.t("global.total", name: (I18n.t("mongoid.attributes.incentive_deduction.amount") + I18n.t("mongoid.attributes.incentive_deduction/status.draft"))) %>'>
               <%= number_to_indian_currency(data.find {|x| x[:status] == 'draft'}.try(:[], :amount) || 0) %>
             </td>
-            <td data-title='Total <%= "#{t('mongoid.attributes.incentive_deduction.amount')} (#{t('mongoid.attributes.incentive_deduction/status.pending_approval')})" %>'>
+            <td data-title='<%= I18n.t("global.total", name: (I18n.t("mongoid.attributes.incentive_deduction.amount") + I18n.t("mongoid.attributes.incentive_deduction/status.pending_approval"))) %>'>
               <%= number_to_indian_currency(data.find {|x| x[:status] == 'pending_approval'}.try(:[], :amount) || 0) %>
             </td>
-            <td data-title='Total <%= "#{t('mongoid.attributes.incentive_deduction.amount')} (#{t('mongoid.attributes.incentive_deduction/status.approved')})" %>'>
+            <td data-title='<%= I18n.t("global.total", name: (I18n.t("mongoid.attributes.incentive_deduction.amount") + I18n.t("mongoid.attributes.incentive_deduction/status.approved"))) %>'>
               <%= number_to_indian_currency(data.find {|x| x[:status] == 'approved'}.try(:[], :amount) || 0) %>
             </td>
-            <td class='non-action-td' data-title='Total <%= "#{t('mongoid.attributes.incentive_deduction.amount')} (#{t('mongoid.attributes.incentive_deduction/status.rejected')})" %>'>
+            <td class='non-action-td' data-title='<%= I18n.t("global.total", name: (I18n.t("mongoid.attributes.incentive_deduction.amount") + I18n.t("mongoid.attributes.incentive_deduction/status.rejected"))) %>'>
               <%= number_to_indian_currency(data.find {|x| x[:status] == 'rejected'}.try(:[], :amount) || 0) %>
             </td>
           </tr>

@@ -32,13 +32,13 @@
           <thead>
             <tr class="bg-primary white">
               <% if (params[:receipt_fltrs] && params[:receipt_fltrs][:group_by] && params[:receipt_fltrs][:group_by].include?("status")) || params[:receipt_fltrs].nil? %>
-              <th>Status</th>
+              <th><%= I18n.t("mongoid.attributes.receipt/headers.status") %></th>
               <% end %>
               <% if (params[:receipt_fltrs] && params[:receipt_fltrs][:group_by] && params[:receipt_fltrs][:group_by].include?("payment_mode")) || params[:receipt_fltrs].nil? %>
-              <th>Payment Mode</th>
+              <th><%= I18n.t("mongoid.attributes.receipt/headers.payment_mode") %></th>
               <% end %>
-              <th class="text-right">Count</th>
-              <th class="text-right">Total Amount</th>
+              <th class="text-right"><%= I18n.t("mongoid.attributes.receipt/headers.count") %></th>
+              <th class="text-right"><%= I18n.t("mongoid.attributes.receipt/headers.total_amount") %></th>
             </tr>
           </thead>
           <tbody>

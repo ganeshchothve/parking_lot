@@ -121,35 +121,28 @@
                             <p class="fn-12 font-medium"><span class="txt-light-gray"><%= I18n.t("mongoid.attributes.project_unit.blocked_on") %>:</span> <%= @booking_detail.booked_on.try(:strftime, '%b %d, %Y') %></p>
                             <h3 class="fn-16 font-medium txt-drk-b-lt"><%= project_unit.project_name %>,
                               <%= project_unit.project_tower.name %>,
-                              Flat no. <%= @booking_detail.name %></h3>
+                              <%= I18n.t("controller.booking_details.text.flat_no") %> <%= @booking_detail.name %></h3>
                             <p class="fn-14"><%= project_unit.bedrooms %> BHK · <%= project_unit.carpet %>
                               <%= current_client.area_unit %>.</p>
                             <div class="col-8 row">
                               <div class="col-6">
-                                <p class="fn-12 font-medium mb-0 txt-light-gray">Agreement
-                                  Value
+                                <p class="fn-12 font-medium mb-0 txt-light-gray"><%= I18n.t("controller.booking_details.text.agreement_price") %>
                                 </p>
                                 <p class="fn-14">
                                   <%= number_to_indian_currency(@booking_detail.calculate_agreement_price.round) %></p>
                               </div>
                               <div class="col-6">
-                                <p class="fn-12 font-medium mb-0 txt-light-gray">All
-                                  Inclusive
-                                  Price</p>
+                                <p class="fn-12 font-medium mb-0 txt-light-gray"><%= I18n.t("controller.booking_details.text.inclusive_price") %></p>
                                 <p class="fn-14">
                                   <%= number_to_indian_currency(@booking_detail.calculate_all_inclusive_price.round) %>
                                 </p>
                               </div>
                               <div class="col-6">
-                                <p class="fn-12 font-medium mb-0 txt-light-gray">Total
-                                  Amount
-                                  Paid (Inclusive of GST)</p>
+                                <p class="fn-12 font-medium mb-0 txt-light-gray"><%= I18n.t("controller.booking_details.text.total_amount_paid") %></p>
                                 <p class="fn-14"><%= number_to_indian_currency(@booking_detail.total_amount_paid) %></p>
                               </div>
                               <div class="col-6">
-                                <p class="fn-12 font-medium mb-0 txt-light-gray">Pending
-                                  Balance
-                                </p>
+                                <p class="fn-12 font-medium mb-0 txt-light-gray"><%= I18n.t("controller.booking_details.text.pending_balance") %></p>
                                 <p class="fn-14">
                                   <%= number_to_indian_currency(@booking_detail.pending_balance({strict: true})) %></p>
                               </div>
@@ -187,21 +180,20 @@
                             </div>
                             <% if @scheme.payment_adjustments.present? %>
                             <div class="col-6">
-                              <p class="fn-16 font-medium mb-0 txt-light-gray mb-2 mt-3">Payment Adjustments</p>
+                              <p class="fn-16 font-medium mb-0 txt-light-gray mb-2 mt-3"><%= I18n.t("mongoid.models.payment_adjustment.other") %></p>
                             </div>
                             <% @scheme.payment_adjustments.each do |adjustment| %>
                             <div class="col-4">
-                              <p class="fn-12 font-medium mb-0 txt-light-gray mb-2">Name
-                              </p>
+                              <p class="fn-12 font-medium mb-0 txt-light-gray mb-2"><%= I18n.t("mongoid.attributes.payment_adjustment.name") %></p>
                               <p class="fn-14 font-medium"><%= adjustment.name %></p>
                             </div>
                             <div class="col-4">
-                              <p class="fn-12 font-medium mb-0 txt-light-gray mb-2">Field
+                              <p class="fn-12 font-medium mb-0 txt-light-gray mb-2"><%= I18n.t("mongoid.attributes.payment_adjustment.field") %>
                               </p>
                               <p class="fn-14 font-medium"><%= adjustment.field.titleize %></p>
                             </div>
                             <div class="col-4">
-                              <p class="fn-12 font-medium mb-0 txt-light-gray mb-2">Value
+                              <p class="fn-12 font-medium mb-0 txt-light-gray mb-2"><%= I18n.t("mongoid.attributes.payment_adjustment.value") %>
                               </p>
                               <p class="fn-14 font-medium"><%= adjustment.value(@booking_detail.project_unit) %></p>
                             </div>
@@ -243,7 +235,7 @@
                       <button class="accordion-button collapsed shadow-none rounded-bottom" type="button"
                         data-bs-toggle="collapse" data-bs-target="#collapse-ps" aria-expanded="false"
                         aria-controls="headingFour">
-                        Payment Schedule
+                        <%= I18n.t("global.tabs.payment_schedule") %>
                       </button>
                     </h2>
                     <div id="collapse-ps" class="accordion-collapse collapse rounded-bottom"
@@ -266,7 +258,7 @@
                       <button class="accordion-button collapsed shadow-none rounded-bottom" type="button"
                         data-bs-toggle="collapse" data-bs-target="#collapse-crm" aria-expanded="false"
                         aria-controls="headingFive">
-                        Get Details from CRM
+                        <%= I18n.t("global.tabs.get_details_from_crm") %>
                       </button>
                     </h2>
                     <div id="collapse-crm" class="accordion-collapse collapse rounded-bottom"

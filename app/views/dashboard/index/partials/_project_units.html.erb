@@ -30,17 +30,17 @@
             <thead>
               <tr class="bg-primary white">
                 <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("project_tower_id")) || params[:unit_fltrs].nil? %>
-                <th>Tower</th>
+                <th><%= I18n.t("mongoid.attributes.project_unit/headers.tower") %></th>
                 <% end %>
                 <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("bedrooms")) || params[:unit_fltrs].nil? %>
-                <th>Bedrooms</th>
+                <th><%= I18n.t("mongoid.attributes.project_unit/headers.bedrooms") %></th>
                 <% end %>
                 <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("status")) || params[:unit_fltrs].nil? %>
-                <th>Status</th>
+                <th><%= I18n.t("mongoid.attributes.project_unit/headers.status") %></th>
                 <% end %>
-                <th class="text-right">Count</th>
-                <th class="text-right">Total Agreement Price</th>
-                <th class="text-right">Total All Inclusive Price</th>
+                <th class="text-right"><%= I18n.t("mongoid.attributes.project_unit/headers.count") %></th>
+                <th class="text-right"><%= I18n.t("mongoid.attributes.project_unit/headers.total_agreement_price") %></th>
+                <th class="text-right"><%= I18n.t("mongoid.attributes.project_unit/headers.total_inclusive_price") %></th>
                 <th class="text-right"><%= I18n.t("global.actions") %></th>
               </tr>
             </thead>

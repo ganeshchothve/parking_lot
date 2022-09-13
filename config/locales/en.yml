@@ -151,6 +151,8 @@ en:
       images_docs: "Images & Docs"
       cities_regions: "Cities & Regions"
       settings: "Settings"
+      payment_schedule: "Payment Schedule"
+      get_details_from_crm: "Get Details.from CRM"
     units:
       sq_ft: "sq.ft"
     fetch_errors:
@@ -263,6 +265,7 @@ en:
       spot_bookings: "Spot Bookings"
       brokerages: "Brokerages"
       total_earnings: "Total Earnings"
+      total_errors: "Total Errors"
       earnings: "Earnings"
       earning_potential: "Earning Potential"
       no_images_available: "No Images Available"
@@ -1105,7 +1108,10 @@ en:
         cat_a: "CAT A"
         cat_b: "CAT B"
         cat_c: "CAT C"
-
+      channel_partner/incentive_plans_headers:
+        current_ladder: "Current Ladder"
+        incentives_generated: "Total Incentives Generated<br>(includes rejected invoices)"
+        target_for_next_laddeer: "Target Required To Reach Next Ladder"
       data_attribute:
         name: "Name"
         formula: "Formula"
@@ -1165,6 +1171,7 @@ en:
         formula: "Formula"
         absolute_value: "Absolute Value"
         editable: "Editable"
+        value: "Value"
       payment_adjustment/field:
         agreement_price: "Agreement Value"
         all_inclusive_price: "All Inclusive Value"
@@ -1253,6 +1260,13 @@ en:
         user: "User"
         management: "Management"
         employee: "Employee"
+      project_unit/headers:
+        tower: "Tower"
+        bedrooms: "Bedrooms"
+        status: "Status"
+        count: "Count"
+        total_agreement_price: "Total Agreement Price"
+        total_inclusive_price: "Total All Inclusive Price"
       developers:
         name: "Name"
       projects:
@@ -1329,6 +1343,10 @@ en:
         issued_date.desc: "Issued Date- Newest First"
         processed_on.asc: "Proccessed On - Oldest First"
         processed_on.desc: "Proccessed On - Newest First"
+      receipt/headers:
+        status: "Status"
+        payment_mode: "Payment Mode"
+        total_amount: "Total Amount"
 
       search:
         configuration: "Configuration"
@@ -2517,6 +2535,12 @@ en:
         primary_user_kyc_already_present: "Primary User KYC is already present for booking detail"
         task_attributes: "tasks_attributes should be a key, value pair"
         not_available_for_cancellation: "Booking Detail %{name} is not available for cancellation."
+      text:
+        flat_no: "Flat No."
+        agreement_price: "Agreement Value"
+        inclusive_price: "All Inclusive Price"
+        total_amount_paid: "Total Amount Paid (Inclusive of GST)"
+        pending_balance: "Pending Balance"
     invoices:
       index:
         link_name: "Brokerages"

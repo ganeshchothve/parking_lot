@@ -4,9 +4,9 @@
       <thead class="th-default">
         <tr class="bg-primary white">
           <th><%= IncentiveScheme.model_name.human %></th>
-          <th>Current Ladder</th>
-          <th>Total Incentives Generated<br>(includes rejected invoices)</th>
-          <th>Target Required To Reach Next Ladder</th>
+          <th><%= I18n.t("mongoid.attributes.channel_partner/incentive_plans_headers.current_ladder") %></th>
+          <th><%= I18n.t("mongoid.attributes.channel_partner/incentive_plans_headers.incentives_generated").html_safe %></th>
+          <th><%= I18n.t("mongoid.attributes.channel_partner/incentive_plans_headers.target_for_next_ladder") %></th>
         </tr>
       </thead>
       <tbody>
@@ -17,7 +17,7 @@
             <td data-title='<%= I18n.t("global.link_to.current_ladder") %>'><%= stage = invoices.map(&:ladder_stage).max %></td>
             <% booking_detail_ids = BookingDetail.booking_stages.in(id: invoices.map(&:booking_detail_id).uniq).distinct(:id) %>
             <td data-title='<%= I18n.t("global.link_to.total_incentives_generated") %>'><%= number_to_indian_currency(invoices.select {|x| x.booking_detail_id.in?(booking_detail_ids) }.map(&:amount).sum) %></td>
-            <td class='non-action-td' data-title='Target Required To Reach Next Ladder'>
+            <td class='non-action-td' data-title='<%= I18n.t("mongoid.attributes.channel_partner/incentive_plans_headers.target_for_next_ladder") %>'>
               <% ladder = scheme.ladders.where(stage: stage + 1).first %>
               <% if ladder %>
                 <% if scheme.ladder_strategy == 'number_of_items' %>
