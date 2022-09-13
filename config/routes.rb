@@ -332,6 +332,7 @@ Rails.application.routes.draw do
         get :search_by
         get :site_visit_project_wise
         get :site_visit_partner_wise
+        get :sync_kylas_users
       end
 
       match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]
