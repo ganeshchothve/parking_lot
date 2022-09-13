@@ -52,8 +52,11 @@ class Admin::ProjectsController < AdminController
     @project = Project.new
     @project.assign_attributes(permitted_attributes([current_user_role_group, @project]))
     @project.creator = current_user
-    @project.booking_portal_client_id = current_user.booking_portal_client_id
-
+    if current_user.role?(:superadmin)
+      @project.booking_portal_client_id = current_user.selected_client_id
+    else
+      @project.booking_portal_client_id = current_user.booking_portal_client_id
+    end
     respond_to do |format|
       if @project.save
         format.html { redirect_to admin_projects_path, notice: 'Project was successfully created.' }

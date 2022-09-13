@@ -31,9 +31,9 @@ class SelldoLeadUpdater
     priority = PortalStagePriority.where(role: 'channel_partner').collect{|x| [x.stage, x.priority]}.to_h
     if stage.present? && priority[stage].present?
       if user.portal_stages.empty?
-        user.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
+        user.portal_stages << PortalStage.new(stage: stage, priority: priority[stage], booking_portal_client_id: user.booking_portal_client_id)
       elsif user.portal_stage.priority.to_i <= priority[stage].to_i
-        user.portal_stages.where(stage:  stage).present? ? user.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : user.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
+        user.portal_stages.where(stage:  stage).present? ? user.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : user.portal_stages << PortalStage.new(stage: stage, priority: priority[stage], booking_portal_client_id: user.booking_portal_client_id)
       end
       if Rails.env.production?
         params = { portal_stage: stage }
@@ -94,9 +94,9 @@ class SelldoLeadUpdater
     if stage.present? && priority[stage].present?
       params = {}
       if lead.portal_stages.empty?
-        lead.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
+        lead.portal_stages << PortalStage.new(stage: stage, priority: priority[stage], booking_portal_client_id: user.booking_portal_client_id)
       elsif lead.portal_stage.priority.to_i <= priority[stage].to_i
-        lead.portal_stages.where(stage:  stage).present? ? lead.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : lead.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
+        lead.portal_stages.where(stage:  stage).present? ? lead.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : lead.portal_stages << PortalStage.new(stage: stage, priority: priority[stage], booking_portal_client_id: user.booking_portal_client_id)
       end
       params[:custom_portal_stage] = lead.portal_stage.stage if lead.portal_stage.present?
 
