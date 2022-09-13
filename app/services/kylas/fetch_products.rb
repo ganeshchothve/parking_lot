@@ -59,7 +59,7 @@ module Kylas
 
     def parse_kylas_product_data(json_resp)
       json_resp['content']&.map do |content|
-        ["#{content['name']}", content['id']]
+        ["#{content['name']}", content['id'], content.dig('price', 'value')]
       end
     end
 

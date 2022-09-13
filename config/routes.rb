@@ -212,6 +212,7 @@ Rails.application.routes.draw do
       get :collaterals, on: :collection
       post :sync_on_selldo, on: :member
       get :third_party_inventory, on: :collection
+      get :sync_kylas_products, on: :collection
 
       resources :unit_configurations, only: [:index, :edit, :update], controller: 'projects/unit_configurations'
       resources :token_types, except: [:destroy, :show], controller: 'projects/token_types' do

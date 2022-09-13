@@ -104,6 +104,7 @@ class Client
   field :incentive_gst_slabs, type: Array, default: [5, 12, 18]
 
   field :sync_user, type: Boolean, default: true
+  field :sync_product, type: Boolean, default: true
   # kylas tentant id
   field :kylas_tenant_id, type: String
   field :kylas_api_key, type: String

@@ -1,6 +1,6 @@
 class Admin::ProjectsController < AdminController
-  before_action :set_project, except: %i[index collaterals new create third_party_inventory]
-  before_action :authorize_resource, except: %i[collaterals third_party_inventory]
+  before_action :set_project, except: %i[index collaterals new create third_party_inventory sync_kylas_products]
+  before_action :authorize_resource, except: %i[collaterals third_party_inventory sync_kylas_products]
   around_action :apply_policy_scope, only: %i[index collaterals]
   before_action :fetch_kylas_products, only: %i[new edit]
   layout :set_layout
@@ -114,6 +114,16 @@ class Admin::ProjectsController < AdminController
         format.html { redirect_to request.referrer || admin_projects_path, alert: err_msg}
       end
     end
+  end
+
+  def sync_kylas_products
+    if Rails.env.development?
+      job_id = SyncKylasProductsWorker.new.perform(current_user.id.to_s)
+    else
+      job_id = SyncKylasProductsWorker.perform_async(current_user.id.to_s)
+    end
+    flash[:notice] = 'Kylas Products Syncing has been initiated'
+    redirect_to admin_projects_path
   end
 
   private
