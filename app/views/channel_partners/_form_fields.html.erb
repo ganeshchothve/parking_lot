@@ -38,7 +38,7 @@
     <%= form.input :rera_applicable, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: {class: 'wd-22', disabled: !policy([:admin, @channel_partner]).editable_field?("rera_applicable") } %>
   </div>
   <div class="col-md-6">
-    <%= form.input :rera_id, disabled: !policy([:admin, @channel_partner]).editable_field?("rera_id") %>
+    <%= form.input :rera_id, disabled: !policy([:admin, @channel_partner]).editable_field?("rera_id"), required: true %>
   </div>
 </div>
 

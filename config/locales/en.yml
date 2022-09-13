@@ -310,6 +310,7 @@ en:
       submit: "Save %{model}"
       post:
         create: "Upload %{model}"
+    save: "Save"
 
   language:
     en: "English"
@@ -1073,6 +1074,7 @@ en:
         company_info: "Company Info"
         company_details: "Company Details"
         created_on: "Created On"
+        add_company: "Add Partner Company"
       channel_partner/file_types:
         rera_certificate: "RERA Certificate"
         gst_certificate: "GST Certificate"
@@ -2024,6 +2026,7 @@ en:
         channel_partners: "Channel Partners Import"
         channel_partner_manager_change: "Channel Partner Manager Change"
         time_slots_update: "Time Slots Bulk Update"
+        channel_partner_user: 'Channel Partner Users Import'
 
       bulk_upload_report/help_text:
         receipts_status_update_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
@@ -2376,7 +2379,7 @@ en:
         booking_moved_tentative: "Are you sure? You cannot make changes once booking moved to tentative state"
         sure: "Are you sure?"
         click_to_confirm: "By clicking on 'Complete Registration' you are confirming all the provided information and your application will be submitted for review to the BeyondWalls Partner Engagement Team."
-      text: 
+      text:
         upload_formats_text: "Upload documents in following formats - jpg, jpeg, png, pdf, zip"
         valid_documents_for: "Valid documents for"
         upload_following_docs: "Upload following documents to submit your application"
@@ -2610,6 +2613,8 @@ en:
       register_request_sent: "Registration request sent to Company owner"
       text:
         adding_existing_lead: "Above channel partner tried to add already existing lead. Details of the lead are as follows:"
+      new_company:
+        link_name: Add Partner Company
 
     dashboard:
       index:
@@ -3290,7 +3295,7 @@ en:
     omniauth_callbacks:
       alert:
         register: "Please ask support team to register your account."
-  
+
   records:
     text:
       subject_class: "Subject Class"

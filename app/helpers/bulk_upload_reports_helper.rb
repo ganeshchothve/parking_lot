@@ -21,7 +21,7 @@ module BulkUploadReportsHelper
   end
 
   def reject_cp_docs bulk_upload_docs
-    resultant_cp_docs = bulk_upload_docs.reject{|doc| %w(channel_partners channel_partner_manager_change).include?(doc)}
+    resultant_cp_docs = bulk_upload_docs.reject{|doc| %w(channel_partners channel_partner_manager_change channel_partner_user).include?(doc)}
   end
 
   def reject_lead_docs bulk_upload_docs
