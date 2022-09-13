@@ -12,6 +12,7 @@
             <div class="new_asset">
               <div class="row mb-4">
                 <div class="col-10">
+                  <%= adj.hidden_field :booking_portal_client_id, value: current_user.booking_portal_client_id %>
                   <%= adj.select :document_type, options_for_select(filter_bulk_upload_report, filter_bulk_upload_report.first[1]), {}, {prompt: "Select", class: "selectize document_type", required: 'required'} %>
                   <div class = "text-muted small pb-2"></div>
                   <div class = "text-muted small"><div class="help_text"></div></div>

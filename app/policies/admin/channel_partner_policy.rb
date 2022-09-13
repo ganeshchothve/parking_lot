@@ -1,7 +1,11 @@
 class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   # def export? def new? def edit? from ChannelPartnerPolicy
   def index?
-    user.booking_portal_client.enable_channel_partners? && %w[superadmin admin cp_admin cp].include?(user.role)
+    if user.role?(:superadmin)
+      user.selected_client.enable_channel_partners?
+    else
+      user.booking_portal_client.enable_channel_partners? && %w[admin cp_admin cp].include?(user.role)
+    end
   end
 
   def show?

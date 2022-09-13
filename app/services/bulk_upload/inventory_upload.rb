@@ -64,7 +64,7 @@ module BulkUpload
 
           project_tower = ProjectTower.where(name: project_tower_name).where(project_id: project.id).first
           unless project_tower.present?
-            project_tower = ProjectTower.new(name: project_tower_name, project_id: project.id, total_floors: 1)
+            project_tower = ProjectTower.new(name: project_tower_name, project_id: project.id, total_floors: 1, booking_portal_client_id: booking_portal_client.id)
             unless project_tower.save
               (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push(*project_tower.errors.full_messages.map{|er| "ProjectTower: " + er })).uniq
               bur.failure_count += 1 if bur.upload_errors.where(row: row.fields).present?
@@ -78,7 +78,7 @@ module BulkUpload
             {data_attributes: {'$elemMatch': {n: 'carpet', v: carpet.to_f}}}
           ]}).first
           unless unit_configuration.present?
-            unit_configuration = UnitConfiguration.new(name: unit_configuration_name, project_id: project.id, saleable: saleable.to_f, carpet: carpet.to_f)
+            unit_configuration = UnitConfiguration.new(name: unit_configuration_name, project_id: project.id, saleable: saleable.to_f, carpet: carpet.to_f, booking_portal_client_id: booking_portal_client.id)
             unless unit_configuration.save
               (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push(*unit_configuration.errors.full_messages.map{ |er| "Unit Configuration: " + er })).uniq
               bur.failure_count += 1 if bur.upload_errors.where(row: row.fields).present?
