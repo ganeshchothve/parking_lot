@@ -94,7 +94,7 @@
         <% end %>
         <% if policy([:admin, Invoice]).index? %>
           <div class="col-12">
-            <h2 class="ep-title float-start col-6">Trans<%= I18n.t("global.link_to.actions") %></h2>
+            <h2 class="ep-title float-start col-6">Trans<%= I18n.t("global.actions") %></h2>
             <%= link_to "View All", payout_list_path(fltrs: params.dig(:fltrs), user_login: params[:user_login], user_token: params[:user_token]), class: "text-end float-end col-6" %>
           </div>
           

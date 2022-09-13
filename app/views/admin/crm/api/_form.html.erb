@@ -17,7 +17,7 @@
           <div class = 'col-12'>
             <div class="mb-3">
               <%= f.label :resource_class, class: 'label-required' %>
-              <%= f.select :resource_class, Crm::Api::RESOURCE_CLASS.collect{|x| [x, x]}, {prompt: I18n.t("global.select"), selected: @api.resource_class}, class: 'selectize', required: 'required' %>
+              <%= f.select :resource_class, Crm::Api::RESOURCE_CLASS.collect{|x| [x, x]}, {prompt: true, selected: @api.resource_class}, class: 'selectize', required: 'required' %>
             </div>
           </div>
           <div class = 'col-12'>
@@ -42,7 +42,7 @@
         </div>
       </div>
       <div class="modal-footer text-end">
-        <%= f.submit I18n.t("global.save"), class: "btn btn-primary" %>
+        <%= f.submit "Save", class: "btn btn-primary" %>
       </div>
     </div>
   </div>

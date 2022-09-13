@@ -238,7 +238,7 @@
                                             <h2><%= I18n.t("global.link_to.select_type") %></h2>
                                             <div class="tower-type tab-link nav nav-tabs border-bottom-0" role="tablist">
                                               <% @project.unit_configurations.each_with_index do | uc, index | %>
-                                                <a href="javascript:;" class="nav-item nav-link mb-1 <%= (index == 0) ? "active" : "" %>" data-bs-toggle="tab" data-bs-target="#floor_<%= uc.name.gsub(/[()\s]*/, '').underscore + uc.saleable.to_i.to_s %>" role="tab"><%= uc.name %> | (<%= uc.saleable %> sq.ft)</a>
+                                                <a href="javascript:;" class="nav-item nav-link mb-1 <%= (index == 0) ? "active" : "" %>" data-bs-toggle="tab" data-bs-target="#floor_<%= uc.name.gsub(/[()\s]*/, '').underscore + uc.saleable.to_i.to_s %>" role="tab"><%= uc.name %> | (<%= uc.saleable %> <%= I18n.t("global.units.sq_ft") %>)</a>
                                             <% end %>
                                             </div>
                                         </div>
@@ -268,12 +268,12 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-6 float-start">
-                                                            <p class="prjt-short-info"><%= uc.name %> (<%= uc.saleable %> sq.ft) <%= number_to_inr(unit.all_inclusive_price) %></p>
+                                                            <p class="prjt-short-info"><%= uc.name %> (<%= uc.saleable %> <%= I18n.t("global.units.sq_ft") %>) <%= number_to_inr(unit.all_inclusive_price) %></p>
                                                         </div>
                                                         <% avl_unit = units.where(status: 'available').first.presence %>
                                                         <% if avl_unit %>
                                                           <div class="col-6 float-end">
-                                                              <%= link_to 'View Cost Sheet', quotation_admin_project_unit_path(avl_unit, layout: false), class: 'cost-sheet-btn float-end modal-remote-form-link', style: 'height: auto' %>
+                                                              <%= link_to I18n.t("controller.projects.view.cost_sheet"), quotation_admin_project_unit_path(avl_unit, layout: false), class: 'cost-sheet-btn float-end modal-remote-form-link', style: 'height: auto' %>
                                                           </div>
                                                         <% end %>
                                                         <% if @project.usp.present? %>

@@ -144,7 +144,7 @@ $(document).ready(function(){
           }
         },
         error: function(){
-          Amura.global_error_handler("Error in fetching the project payment schedules...")
+          Amura.global_error_handler('<%= I18n.t("global.fetch_errors.payment_schedules") %>')
         }
       });
 
@@ -172,7 +172,7 @@ $(document).ready(function(){
           }
         },
         error: function(){
-          Amura.global_error_handler("Error in fetching the project cost sheet templates...")
+          Amura.global_error_handler('<%= I18n.t("global.fetch_errors.cost_sheet_templates") %>')
         }
       });
     }

@@ -13,7 +13,7 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <%= f.label :sitevisit_status, class: 'control-label' %>
-                <%= f.select :sitevisit_status, CpLeadActivity::SITEVISIT_STATUS.collect{|x| [x.titleize, x] }, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy(@cp_lead_activity).editable_field?("sitevisit_status") %>
+                <%= f.select :sitevisit_status, CpLeadActivity::SITEVISIT_STATUS.collect{|x| [I18n.t("mongoid.attributes.cp_lead_activity/site_visit_status.#{x}"), x] }, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy(@cp_lead_activity).editable_field?("sitevisit_status") %>
               </div>
             </div>
             <div class="col-md-6">
@@ -27,7 +27,7 @@
           <div class="row">
             <div class="col-md-6">
               <%= f.label :count_status, class: 'control-label' %>
-              <%= f.select :count_status, CpLeadActivity::COUNT_STATUS.collect{|x| [x.titleize, x] }, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy(@cp_lead_activity).editable_field?("count_status") %>
+              <%= f.select :count_status, CpLeadActivity::COUNT_STATUS.collect{|x| [I18n.t("mongoid.attributes.cp_lead_activity/count_status.#{x}"), x] }, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy(@cp_lead_activity).editable_field?("count_status") %>
             </div>
             <div class="col-md-6">
               <div class="mb-3 position-relative">

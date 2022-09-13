@@ -62,7 +62,7 @@
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :sms_provider, class: 'label-required' %>
-      <%= f.select :sms_provider, options_for_select(Sms::SMS_GATEWAYS.map {|x| [x.titleize, x]}, f.object.sms_provider), {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy([:admin, @client]).editable_field?("sms_provider") %>
+      <%= f.select :sms_provider, options_for_select(Sms::SMS_GATEWAYS.map {|x| [I18n.t("mongoid.attributes.sms/gateway.#{x}"), x]}, f.object.sms_provider), {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy([:admin, @client]).editable_field?("sms_provider") %>
     </div>
   </div>
   <div class="col-md-6">

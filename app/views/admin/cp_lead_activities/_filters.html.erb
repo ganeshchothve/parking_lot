@@ -18,11 +18,11 @@
         <% end %>
         <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.cp_lead_activity.count_status') %>
-          <%= select_tag "fltrs[count_status]", options_for_select(CpLeadActivity::COUNT_STATUS.collect{|x| [x.titleize, x]}, (params[:fltrs].present? ? params[:fltrs][:count_status] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
+          <%= select_tag "fltrs[count_status]", options_for_select(CpLeadActivity::COUNT_STATUS.collect{|x| [I18n.t("mongoid.attributes.cp_lead_activity/count_status.#{x}"), x]}, (params[:fltrs].present? ? params[:fltrs][:count_status] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.cp_lead_activity.lead_status') %>
-          <%= select_tag "fltrs[lead_status]", options_for_select(CpLeadActivity::LEAD_STATUS.collect{|x| [x.titleize, x]}, (params[:fltrs].present? ? params[:fltrs][:lead_status] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
+          <%= select_tag "fltrs[lead_status]", options_for_select(CpLeadActivity::LEAD_STATUS.collect{|x| [I18n.t("mongoid.attributes.cp_lead_activity/lead_status.#{x}"), x]}, (params[:fltrs].present? ? params[:fltrs][:lead_status] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.cp_lead_activity.expiry_date') %>

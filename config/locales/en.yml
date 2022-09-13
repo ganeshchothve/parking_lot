@@ -115,6 +115,7 @@ en:
     congratulations: "Configurations"
     email_id: "Email Id"
     phone_no: "Phone No."
+    actions: "Actions"
     tabs:
       amount: "Amount"
       overview: "Overview"
@@ -143,8 +144,21 @@ en:
       address: "Address"
       crm_ids: "CRM IDs"
       export: "Export"
-    link_to:
       actions: "Actions"
+      contacts_n_notifications: "Contacts & Notifications"
+      itegrations: "Integrations"
+      content_pages: "Content Pages"
+      images_docs: "Images & Docs"
+      cities_regions: "Cities & Regions"
+      settings: "Settings"
+    units:
+      sq_ft: "sq.ft"
+    fetch_errors:
+      project_towers: "Error in fetching the project towers..."
+      regions: "Error in fetching the regions..."
+      payment_schedules: "Error in fetching the project payment schedules..."
+      cost_sheet_templates: "Error in fetching the project cost sheet templates..."
+    link_to:
       click_to_zoom: "Click to Zoom"
       add_new: "Add New"
       need_help: "Need Help?"
@@ -267,6 +281,8 @@ en:
       for: "For"
       total_count: "Total %{name}"
       details_on_click: "Click to view details"
+    text:
+      dropping: "Dropping..."
 
   helpers:
     extend_validity:
@@ -1329,6 +1345,7 @@ en:
         project_unit_id: "Apartment"
         user_id: "User"
         user_role: "User Role"
+        user: "User"
         value: "Adjustment (Rs.)"
         status: "Status"
         approved_at: "Approved At"
@@ -1337,6 +1354,8 @@ en:
         default_for_users: "Default for Channel Partners"
         can_be-applied_by: "Can be applied by"
         customer_role: "Customer Role"
+        payment_schedule_template_id: "Payment Schedule Template"
+        cost_sheet_template_id: "Cost Sheet Template"
       scheme/status:
         draft: "Draft"
         approved: "Approved"
@@ -1500,6 +1519,10 @@ en:
         scheduled: "Scheduled"
         sent: "Sent"
         failed: "Failed"
+      sms/gateway:
+        knowlarity: "Knowlarity"
+        sms_just: "Sms Just"
+        twilio: "Twilio"
 
       sync_log:
         last_sync_at: "Last Synced"
@@ -1917,7 +1940,19 @@ en:
         expiry_date: "Lead Expiry Date"
         sitevisit_date: "Walk-in Date"
         sitevisit_status: "Walk-in Status"
-
+      cp_lead_activity/count_status:
+        fresh_lead: "Fresh Lead"
+        active_in_same_cp: "Active In Same Cp"
+        no_count: "No Count"
+        accompanied_credit: "Accompanied Credit"
+        accompanied_count_to_cp: "Accompanied Count To Cp"
+        count_given: "Count Given"
+      cp_lead_activity/lead_status:
+        already_exists: "Already Exists"
+        registered: "Registered"
+      cp_lead_activity/site_visit_status:
+        scheduled: "Scheduled"
+        conducted: "Conducted"
       user/file_types:
         home_loan_application_form: "Home Loan Application Form"
         photo_identity_proof: "Photo Identity Proof"
@@ -2696,6 +2731,7 @@ en:
         newly_launched: "Newly Launched"
         pre_launch: "Pre Launch"
         hot: "Hot"
+        cost_sheet: "View Cost Sheet"
       alert:
         not_found: "Project not found"
       errors:
@@ -3254,7 +3290,13 @@ en:
     omniauth_callbacks:
       alert:
         register: "Please ask support team to register your account."
-
+  
+  records:
+    text:
+      subject_class: "Subject Class"
+      changed_by: "Changed By"
+      action_type: "Action Type"
+      audit_entries: "Audit Entries"
   checklists:
     form:
       key_helptext: "Only small letters, numbers & underscore allowed"
