@@ -80,11 +80,11 @@
       <%= f.label :enable_lead_conflicts %>
       <div class="form-check form-check-inline">
         <%= f.radio_button :enable_lead_conflicts, true, class: "form-check-input wd-22" %>
-        <%= f.label :enable_lead_conflicts, "Yes", class: "form-check-label d-inline-block ms-2" %>
+        <%= f.label :enable_lead_conflicts, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
       </div>
       <div class="form-check form-check-inline">
         <%= f.radio_button :enable_lead_conflicts, false, class: "form-check-input wd-22" %>
-        <%= f.label :enable_lead_conflicts, "No", class: "form-check-label d-inline-block ms-2" %>
+        <%= f.label :enable_lead_conflicts, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
       </div>
     </div>
     <% end %>
@@ -96,11 +96,11 @@
       <%= f.label :enable_direct_activation_for_cp, t('helpers.edit.direct_activation_for_cp_label', model: Client.model_name.human) %>
       <div class="form-check form-check-inline">
         <%= f.radio_button :enable_direct_activation_for_cp, true, class: "form-check-input wd-22" %>
-        <%= f.label :enable_direct_activation_for_cp, "Yes", class: "form-check-label d-inline-block ms-2" %>
+        <%= f.label :enable_direct_activation_for_cp, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
       </div>
       <div class="form-check form-check-inline">
         <%= f.radio_button :enable_direct_activation_for_cp, false, class: "form-check-input wd-22" %>
-        <%= f.label :enable_direct_activation_for_cp, "No", class: "form-check-label d-inline-block ms-2" %>
+        <%= f.label :enable_direct_activation_for_cp, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
       </div>
     </div>
     <% end %>
@@ -140,11 +140,11 @@
       <%= f.label :launchpad_portal %>
       <div class="form-check form-check-inline">
         <%= f.radio_button :launchpad_portal, true, class: "form-check-input wd-22" %>
-        <%= f.label :launchpad_portal, "Yes", class: "form-check-label d-inline-block ms-2" %>
+        <%= f.label :launchpad_portal, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
       </div>
       <div class="form-check form-check-inline">
         <%= f.radio_button :launchpad_portal, false, class: "form-check-input wd-22" %>
-        <%= f.label :launchpad_portal, "No", class: "form-check-label d-inline-block ms-2" %>
+        <%= f.label :launchpad_portal, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
       </div>
     </div>
     <% end %>

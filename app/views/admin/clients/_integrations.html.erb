@@ -149,11 +149,11 @@
       <%= f.label :external_api_integration %>
       <div class="form-check form-check-inline">
         <%= f.radio_button :external_api_integration, true, class: "form-check-input wd-22" %>
-        <%= f.label :external_api_integration, "Yes", class: "form-check-label d-inline-block ms-2" %>
+        <%= f.label :external_api_integration, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
       </div>
       <div class="form-check form-check-inline">
         <%= f.radio_button :external_api_integration, false, class: "form-check-input wd-22" %>
-        <%= f.label :external_api_integration, "No", class: "form-check-label d-inline-block ms-2" %>
+        <%= f.label :external_api_integration, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
       </div>
     </div>
     <% end %>
@@ -183,7 +183,7 @@
     <% f.object.enable_communication.each do |k, v| %>
       <div class="form-check form-check-inline">
         <%= ec_form.check_box k, {class: "form-check-input wd-22", checked: v}, true %>
-        <%= ec_form.label :k, "Enable #{k}", class: "form-check-label  d-inline-block ms-2" %>
+        <%= ec_form.label :k, I18n.t("global.enable") + I18n.t("mongoid.attributes.client/enable_communication.#{k}"), class: "form-check-label  d-inline-block ms-2" %>
       </div>
     <% end %>
   <% end %>
@@ -193,7 +193,7 @@
 <%= f.fields_for :external_inventory_view_config do |eivc_form| %>
   <div class="card">
     <div class="card-header">
-      External Inventory View Configuration
+      <%= I18n.t("global.tabs.external_inventory_view") %>
     </div>
     <div class="card-body">
       <div class="row">

@@ -44,11 +44,11 @@
             <%= f.label :rera_applicable, class: 'label-required' %><br>
             <div class="form-check form-check-inline">
               <%= f.radio_button :rera_applicable, true, class: "form-check-input wd-22", disabled: !policy([:admin, @channel_partner]).editable_field?("rera_applicable") %>
-              <%= f.label :rera_applicable, "Yes", class: " form-check-label d-inline-block ms-2", disabled: true %>
+              <%= f.label :rera_applicable, I18n.t("global.boolean.true"), class: " form-check-label d-inline-block ms-2", disabled: true %>
             </div>
             <div class="form-check form-check-inline">
               <%= f.radio_button :rera_applicable, false, class: "form-check-input wd-22", disabled: !policy([:admin, @channel_partner]).editable_field?("rera_applicable") %>
-              <%= f.label :rera_applicable, "No", class: " form-check-label d-inline-block ms-2" %>
+              <%= f.label :rera_applicable, I18n.t("global.boolean.false"), class: " form-check-label d-inline-block ms-2" %>
             </div>
           </div>
           <div class="mb-3 position-relative offline">

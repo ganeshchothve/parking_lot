@@ -127,11 +127,11 @@
                   <%= f.label :is_active %>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :is_active, true, class: "form-check-input wd-22" %>
-                    <%= f.label :is_active, "Yes", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :is_active, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :is_active, false, class: "form-check-input wd-22" %>
-                    <%= f.label :is_active, "No", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :is_active, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
               </div>
@@ -163,11 +163,11 @@
                   <%= f.label :enable_live_inventory %>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :enable_live_inventory, true, class: "form-check-input wd-22" %>
-                    <%= f.label :enable_live_inventory, "Yes", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :enable_live_inventory, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :enable_live_inventory, false, class: "form-check-input wd-22" %>
-                    <%= f.label :enable_live_inventory, "No", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :enable_live_inventory, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
               </div>

@@ -3,7 +3,7 @@
     <div class="form-group text-end">
       <div class="form-check form-check-inline">
         <%= f.label :hot, class: "form-check-label d-inline-block ms-2" %>
-        <%= f.check_box :hot, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("hot") }, "Yes", "No" %>
+        <%= f.check_box :hot, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("hot") }, I18n.t("global.boolean.true"), I18n.t("global.boolean.false") %>
       </div>
     </div>
   </div>
@@ -85,11 +85,11 @@
       <%= f.label :is_active, class: 'mb-2' %>
       <div class="form-check form-check-inline">
         <%= f.radio_button :is_active, true, class: "form-check-input wd-22" %>
-        <%= f.label :is_active, "Yes", class: "form-check-label d-inline-block ms-2" %>
+        <%= f.label :is_active, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
       </div>
       <div class="form-check form-check-inline">
         <%= f.radio_button :is_active, false, class: "form-check-input wd-22" %>
-        <%= f.label :is_active, "No", class: "form-check-label d-inline-block ms-2" %>
+        <%= f.label :is_active, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
       </div>
     </div>
     </div>

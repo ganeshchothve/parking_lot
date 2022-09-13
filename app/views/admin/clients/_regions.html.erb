@@ -2,7 +2,7 @@
   <% editable_regions = policy([:admin, @client]).editable_field?("regions_attributes")%>
   <% if editable_regions %>
     <div class='text-right'>
-      <%= f.link_to_add "Add New City & Regions", :regions, :data => { :target => ".regions" }, class: 'btn btn-secondary' %>
+      <%= f.link_to_add I18n.t("global.add_city_regions"), :regions, :data => { :target => ".regions" }, class: 'btn btn-secondary' %>
     </div>
   <% end %>
   <%= f.fields_for :regions do |sf|%>
