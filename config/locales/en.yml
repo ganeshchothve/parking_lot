@@ -303,7 +303,7 @@ en:
       for: "For"
       total_count: "Total %{name}"
       details_on_click: "Click to view details"
-      add_city_regions: ""Add New City & Regions""
+      add_city_regions: "Add New City & Regions"
     text:
       dropping: "Dropping..."
 
