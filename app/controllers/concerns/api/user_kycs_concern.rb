@@ -14,7 +14,7 @@ module Api
         end
       end
       [:nri, :poa, :is_company, :existing_customer].each do |boolean_field|
-        errors << I18n.t("global.errors.boolean", name: I18n.t("mongoid.attributes.user_kyc.#{boolean_field}")if kyc_attributes[boolean_field].present? && !kyc_attributes[boolean_field].is_a?(Boolean)
+        errors << I18n.t("global.errors.boolean", name: I18n.t("mongoid.attributes.user_kyc.#{boolean_field}")) if kyc_attributes[boolean_field].present? && !kyc_attributes[boolean_field].is_a?(Boolean)
       end
       [:number_of_units, :budget].each do |integer_field|
         errors << I18n.t("global.errors.boolean", name: I18n.t("mongoid.attributes.user_kyc.#{integer_field}")) if kyc_attributes[integer_field].present? && !kyc_attributes[integer_field].is_a?(Integer)

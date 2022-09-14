@@ -49,7 +49,7 @@ class Api::V1::ChannelPartnersController < ApisController
   # Sets the channel partner object
   def set_channel_partner
     @channel_partner = ChannelPartner.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params.dig(:id)).first
-    render json: { errors: [I18n.t("controller.channel_partners.errors.not_registered"] }, status: :not_found if @channel_partner.blank?
+    render json: { errors: [I18n.t("controller.channel_partners.errors.not_registered")] }, status: :not_found if @channel_partner.blank?
   end
 
   def add_third_party_reference_params

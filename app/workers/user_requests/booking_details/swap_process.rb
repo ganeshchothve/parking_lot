@@ -149,7 +149,7 @@ module UserRequests
           end
         else
           # Reject swap Request because alternative blocking_amount is very high
-          reject_user_request(I18n.t("worker.booking_details.errors.reject_user_request", name: alternate_project_unit.blocking_amount)", alternate_project_unit_status, new_booking_detail)
+          reject_user_request(I18n.t("worker.booking_details.errors.reject_user_request", name: alternate_project_unit.blocking_amount), alternate_project_unit_status, new_booking_detail)
         end
       end
     end
