@@ -2024,7 +2024,7 @@ en:
         sub_source: "Sub-Source"
         portal_stage: "Portal Stage"
         total_balance_pending: "Pending Balance"
-
+        total_unattached_balance: "Total Unattached Balance"
       lead/stage:
         incoming: "Incoming"
         booked: "Booked"

@@ -183,7 +183,7 @@
           </div>
           <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
             <br>
-            <h5>CRM IDs</h5>
+            <h5><%= I18n.t("global.tabs.crm_ids") %></h5>
             <hr/>
             <%= render 'admin/crm/shared/third_party_references_form', f: f %>
           <% end %>
