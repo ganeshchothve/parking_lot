@@ -30,13 +30,13 @@
   <div class="card-body">
   <div class="row sales-users">
   <% if users.present? %>
-  <% users.each do |sales| %>
-  <div class="col-lg-4 col-xs-12 col-sm-6 col-md-6 sales-box" id="<%= sales.id.to_s %>">
-    <%= render 'dashboard/index/partials/sales_box', sales: sales %>
-  </div>
-  <% end %>
+    <% users.each do |sales| %>
+      <div class="col-lg-4 col-xs-12 col-sm-6 col-md-6 sales-box" id="<%= sales.id.to_s %>">
+        <%= render 'dashboard/index/partials/sales_box', sales: sales %>
+      </div>
+    <% end %>
   <% else %>
-  <p>No Users found </p>
+    <p>No Users found </p>
   <% end %>
 </div>
   </div>

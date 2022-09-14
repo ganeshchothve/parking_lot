@@ -79,6 +79,7 @@
       else
         channel_partners = User.in(role: ['channel_partner', 'cp_owner'] )
       end %>
+        <% channel_partners = channel_partners.where(booking_portal_client_id: current_client.id) %>
         <label class="'label-required control-label'">Channel Partner</label>
         <%= f.select :manager_id,channel_partners.collect{|cp| [(cp.name), cp.id]}, {prompt: true}, class: 'selectize', required: true, id: 'tagged_manager', disabled: !(policy([:admin, @booking_detail]).editable_field?("manager_id"))  %>
 

@@ -866,7 +866,7 @@ class User
       elsif user.role.in?(%w(superadmin))
         custom_scope = { booking_portal_client_id: user.selected_client_id }
       elsif user.role?('team_lead')|| user.role?('gre')
-        custom_scope = { role: 'sales', project_ids: user.selected_project_id.to_s }
+        custom_scope = { role: 'sales', project_ids: user.selected_project_id.to_s, booking_portal_client_id: user.booking_portal_client_id }
       end
       custom_scope
     end

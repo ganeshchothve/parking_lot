@@ -22,8 +22,8 @@
   </div>
 </div>
 <%#= f.input :project_id, as: :hidden, input_html: {name: 'project_id'}, value: current_user.selected_project_id %>
-<% if Project.count == 1 || params[:project_id].present? %>
-  <%= f.input :project_id, as: :hidden, input_html: { name: 'project_id' } %>
+<% if Project.count == 1 || params[:project_id].present? || current_user.selected_project %>
+  <%= f.input :project_id, as: :hidden, input_html: { name: 'project_id', value: current_user.selected_project_id } %>
 <% else %>
   <div class='row'>
     <div class="col-md-12">
