@@ -3,9 +3,9 @@
 var OtpBasedLogin = (function(){
   var handleSendOtpSuccess = function(elem, data, resend){
     if (resend != undefined && resend) {
-      Amura.global_success_handler('<%= I18n.t("sessions.notice.otp_sent_to") %>' + data.phone);
+      Amura.global_success_handler('<%= I18n.t("sessions.notice.otp_sent_to") %>' + (data.phone || data.user.phone));
     }
-    $('.top-message').html('<%= I18n.t("sessions.notice.otp_sent_to") %>' + data.phone).closest('.top-notification').removeAttr('hidden');
+    $('.top-message').html('<%= I18n.t("sessions.notice.otp_sent_to") %>' + (data.phone || data.user.phone)).closest('.top-notification').removeAttr('hidden');
     $(elem).find('[name="user[login]"]').closest(".mb-3").attr("hidden", "hidden");
     $(elem).find('[name="user[login_otp]"]').closest(".mb-3").removeAttr("hidden");
     $(elem).find('[name="user[login_otp]"]').focus();

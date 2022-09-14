@@ -1,5 +1,5 @@
 <li class='nav-item'>
-  <!--<div class="btn-group dropup">
+  <div class="btn-group dropup">
     <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="javascript:;">
       <%= t("language.#{params[:locale] || I18n.default_locale }", default: "language.en")%>
     </a>
@@ -8,10 +8,10 @@
         <%= link_to t("language.#{language}"), url_for(params.permit!.merge(locale: language) ), class: 'dropdown-item' %>
       <% end %>
     </div>
-  </div>-->
+  </div>
 </li>
-<li><%= link_to  I18n.t("global.link_to.tnc"), terms_and_conditions_path, active: :exclusive, class: 'footer-link', target: "_blank" %></li>
-<li><%= link_to I18n.t("global.link_to.privacy_policy"), privacy_policy_path, active: :exclusive, class: 'footer-link', target: "_blank" %></li>
+<!-- <li><%#= link_to  I18n.t("global.link_to.tnc"), terms_and_conditions_path, active: :exclusive, class: 'footer-link', target: "_blank" %></li>
+<li><%#= link_to I18n.t("global.link_to.privacy_policy"), privacy_policy_path, active: :exclusive, class: 'footer-link', target: "_blank" %></li>
 <% if current_client.powered_by_link.present? %>
-  <li><%= link_to I18n.t("global.link_to.powered_by_selldo"), current_client.powered_by_link, class: 'footer-link', target: "_blank" %></li>
+  <li><%#= link_to I18n.t("global.link_to.powered_by_selldo"), current_client.powered_by_link, class: 'footer-link', target: "_blank" %></li> -->
 <% end %>
