@@ -32,7 +32,7 @@ Amura.global_success_handler = function(message){
       timeout: 5000,
       callbacks: {
       onTemplate: function() {
-            this.barDom.innerHTML = '<div class="custom-noty-temp shadow success-temp noty_body d-flex content-justify-between"><i class="fa fa-check-circle fill-success mt-2"></i><div class="noty-info ms-3"><h3 class="success fn-20 font-medium">"<%= I18n.t("global.success") %>"!</h3><p class="theme-txt-color fn-14 mb-0">' + this.options.text + '</p></div><div>';
+            this.barDom.innerHTML = `<div class="custom-noty-temp shadow success-temp noty_body d-flex content-justify-between"><i class="fa fa-check-circle fill-success mt-2"></i><div class="noty-info ms-3"><h3 class="success fn-20 font-medium">'<%= I18n.t("global.success") %>'!</h3><p class="theme-txt-color fn-14 mb-0">` + this.options.text + '</p></div><div>';
         }
       }
     }).show();
