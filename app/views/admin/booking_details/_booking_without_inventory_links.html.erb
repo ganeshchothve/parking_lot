@@ -5,9 +5,9 @@
   <%= link_to t('helpers.edit.link_name', model: BookingDetail.model_name.human ), edit_booking_without_inventory_admin_booking_detail_path(booking_detail), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 <% if policy([:admin, booking_detail]).can_move_booked_tentative? %>
-  <%= link_to I18n.t("controller.booking_details.move_to.booked_tentative"), move_to_next_state_admin_booking_detail_path(booking_detail, status: 'booked_tentative', format: :json), method: 'patch', remote: true, data: { confirm: I18n.t("controller.assets.confirm.booking_moved_tentative"), disable_with: "Please wait..." }, class: "dropdown-item queued move-to-next-state" %>
+  <%= link_to I18n.t("controller.booking_details.move_to.booked_tentative"), move_to_next_state_admin_booking_detail_path(booking_detail, status: 'booked_tentative', format: :json), method: 'patch', remote: true, data: { confirm: I18n.t("controller.assets.confirm.booking_moved_tentative"), disable_with: I18n.t("global.please_wait") }, class: "dropdown-item queued move-to-next-state" %>
 <% elsif policy([:admin, booking_detail]).can_move_booked_confirmed? %>
-  <%= link_to I18n.t("controller.booking_details.move_to.booked_confirmed"), move_to_next_state_admin_booking_detail_path(booking_detail, status: 'booked_confirmed', format: :json), method: 'patch', remote: true, data: {disable_with: "Please wait...", confirm: I18n.t("controller.assets.confirm.sure")  }, class: "dropdown-item queued move-to-next-state" %>
+  <%= link_to I18n.t("controller.booking_details.move_to.booked_confirmed"), move_to_next_state_admin_booking_detail_path(booking_detail, status: 'booked_confirmed', format: :json), method: 'patch', remote: true, data: {disable_with: I18n.t("global.please_wait"), confirm: I18n.t("controller.assets.confirm.sure")  }, class: "dropdown-item queued move-to-next-state" %>
 <% end %>
 <% if policy([:admin, booking_detail]).can_move_cancel? %>
   <%= link_to I18n.t("controller.booking_details.move_to.cancel_booking"), move_to_next_state_admin_booking_detail_path(booking_detail, status: 'cancel', format: :json), method: 'patch', remote: true, data: { confirm: I18n.t("controller.assets.confirm.sure"), disable_with: 'Cancelling...' }, class: 'dropdown-item dropoff move-to-next-state' %>

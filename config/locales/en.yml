@@ -28,6 +28,7 @@ en:
     file: "File"
     add: "Add"
     edit: "Edit"
+    send: "Send"
     show: "Show"
     save: "Save"
     enable: "Enable "
@@ -2635,6 +2636,7 @@ en:
         inclusive_price: "All Inclusive Price"
         total_amount_paid: "Total Amount Paid (Inclusive of GST)"
         pending_balance: "Pending Balance"
+        confirm: "You won't be able to edit it, Are you sure?"
       move_to:
         booked_tentative: "Move to Booked Tentative"
         booked_confirmed: "Move to Booked Confirmed"
@@ -2650,6 +2652,7 @@ en:
         link_name: "Move To Draft"
       send_invoice:
         link_name: "Send invoice to Developer"
+        to_poc: "Send invoice to POC"
       update_gst:
         link_name: "Update GST"
       show:
