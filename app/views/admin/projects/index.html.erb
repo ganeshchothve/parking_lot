@@ -28,7 +28,7 @@
           <% if policy([:admin, Project]).new? %>
             <%= link_to t('helpers.new.link_name', model: Project.model_name.human), new_admin_project_path, class: 'modal-remote-form-link p-2 px-3 btn bg-primary border-primary white d-inline-block ms-2 me-2 border rounded' %>
           <% end %>
-          <%= link_to_if current_client.sync_product?, (current_client.sync_product? ? "Sync Products" : "Sync In Progress"), sync_kylas_products_admin_projects_path, class: 'border rounded p-2 px-3 btn border-primary white bg-primary rounded py-2 ms-2', id: 'sync_users' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Sync Products'} %>
+          <%= link_to_if current_client.sync_product?, (current_client.sync_product? ? "Sync Products" : "Sync In Progress"), sync_kylas_products_admin_projects_path, class: 'border rounded p-2 px-3 border-primary white bg-primary rounded py-2 ms-2', id: 'sync_projects' %>
         </div>
         <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
           <div class="box-card relative">
@@ -72,3 +72,15 @@
     </div>
   </div>
 </section>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    var client = <%= raw current_user.booking_portal_client.to_json %>;
+    if (!client['sync_product'])
+    {
+      setInterval(function(){
+        location.reload();
+      }, 10000)
+    }
+  });
+<% end %>

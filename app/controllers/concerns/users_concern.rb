@@ -87,9 +87,9 @@ module UsersConcern
 
   def sync_kylas_users
     if Rails.env.development?
-      job_id = SyncKylasUsersWorker.new.perform(current_user.id.to_s)
+      SyncKylasUsersWorker.new.perform(current_user.id.to_s)
     else
-      job_id = SyncKylasUsersWorker.perform_async(current_user.id.to_s)
+      SyncKylasUsersWorker.perform_async(current_user.id.to_s)
     end
     flash[:notice] = 'Kylas Users Syncing has been initiated'
     redirect_to admin_users_path

@@ -118,9 +118,9 @@ class Admin::ProjectsController < AdminController
 
   def sync_kylas_products
     if Rails.env.development?
-      job_id = SyncKylasProductsWorker.new.perform(current_user.id.to_s)
+      SyncKylasProductsWorker.new.perform(current_user.id.to_s)
     else
-      job_id = SyncKylasProductsWorker.perform_async(current_user.id.to_s)
+      SyncKylasProductsWorker.perform_async(current_user.id.to_s)
     end
     flash[:notice] = 'Kylas Products Syncing has been initiated'
     redirect_to admin_projects_path
