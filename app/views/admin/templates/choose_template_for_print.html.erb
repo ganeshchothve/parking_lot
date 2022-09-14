@@ -11,7 +11,7 @@
         <%= form_tag print_template_admin_client_templates_path, method: "get" , id: "custom_choose_template_form" do %>
           <div class="modal-body">
             <% if templates.present? %>
-              <%= label_tag :template_id, ::Template.human_attribute_name('print_document') , class: "control-label float-left" %>
+              <%= label_tag :template_id, ::Template.human_attribute_name('custom_document') , class: "control-label float-left" %>
               <%= select_tag :template_id, options_for_select(templates), {prompt: "Select", class: "selectize"} %>
 
               <%= hidden_field_tag :subject_class, params[:subject_class] %>
