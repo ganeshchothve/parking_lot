@@ -14,7 +14,6 @@ class BookingDetail
   include CrmIntegration
   include IncentiveSchemeAutoApplication
 
-  attr_accessor :template_docs
 
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   STATUSES = %w[hold blocked booked_tentative booked_confirmed under_negotiation scheme_rejected scheme_approved swap_requested swapping swapped swap_rejected cancellation_requested cancelling cancelled cancellation_rejected]

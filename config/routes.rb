@@ -53,13 +53,6 @@ Rails.application.routes.draw do
     end
   end
 
-  scope "*subject_class/:subject_class_id" do
-    resources :templates, only: [], controller: :templates, as: :custom_templates do
-      get :choose_template_for_print, on: :collection
-
-    end
-  end
-
   scope "*notable_type/:notable_id" do
     resources :notes, controller: :notes, as: :notables
   end
@@ -97,6 +90,12 @@ Rails.application.routes.draw do
       end
     end
 
+    scope "*subject_class/:subject_class_id" do
+      resources :templates, only: [], controller: :templates, as: :custom_templates do
+        get :choose_template_for_print, on: :collection
+      end
+    end
+
     resources :portal_stage_priorities, only: [:index] do
       patch :reorder, on: :collection
     end
@@ -124,8 +123,6 @@ Rails.application.routes.draw do
         patch :move_to_next_state
         patch :move_to_next_approval_state
         get :reject
-        get :choose_template_for_print
-        get :print_template
       end
       get :mis_report, on: :collection
       get :searching_for_towers, on: :collection
@@ -180,7 +177,7 @@ Rails.application.routes.draw do
     resources :push_notifications, only: %i[index show new create]
     resource :client, except: [:new, :create] do
       resources :templates, only: [:edit, :update, :index, :new, :create] do
-        get :print_template, on: :member
+        get :print_template, on: :collection
       end
       get 'document_sign/prompt'
       get 'document_sign/callback'

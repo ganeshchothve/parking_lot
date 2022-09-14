@@ -1,11 +1,11 @@
 class Template::CustomTemplatePolicy < TemplatePolicy
 
   def new?
-    user.role.in?(%w(superadmin))
+    false
   end
 
   def create?
-    new?
+    false
   end
 
 end

@@ -12,11 +12,11 @@ class TemplatePolicy < ApplicationPolicy
   end
 
   def new?
-    Admin::Template::CustomTemplatePolicy.new(user, Template::CustomTemplate.new).new?
+    false
   end
 
   def create?
-    new?
+    false
   end
 
   def permitted_attributes params={}
