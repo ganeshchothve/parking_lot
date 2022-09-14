@@ -11,7 +11,7 @@ class Admin::CustomerSearchesController < AdminController
   end
 
   def create
-    @customer_search = CustomerSearch.new
+    @customer_search = CustomerSearch.new(booking_portal_client: current_user.booking_portal_client)
     search_for_customer
     respond_to do |format|
       if @customer_search.save

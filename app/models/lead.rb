@@ -119,6 +119,7 @@ class Lead
   scope :filter_by_lead_stage, ->(lead_stage) { where(lead_stage: lead_stage) }
   scope :filter_by_customer_status, ->(*customer_status){ where(customer_status: { '$in': customer_status }) }
   scope :filter_by_queue_number, ->(queue_number){ where(queue_number: queue_number) }
+  scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
   scope :incentive_eligible, ->(category) do
     if category == 'lead'
       nin(manager_id: ['', nil])
