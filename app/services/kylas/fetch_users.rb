@@ -45,7 +45,7 @@ module Kylas
         elsif user.kylas_api_key?
           post_request['api-key'] = user.kylas_api_key
         end
-        post_request.body = { fields: %w[firstName lastName id email phoneNumbers] }.to_json
+        post_request.body = { fields: %w[firstName lastName id email phoneNumbers active] }.to_json
         response = https.request(post_request)
         JSON.parse(response.body)
       rescue StandardError => e
@@ -57,7 +57,7 @@ module Kylas
 
     def parse_kylas_user_data(json_resp)
       json_resp['content']&.map do |content|
-        [content['firstName'], content['lastName'], content['email'], content['phoneNumbers'][0], content['id']]
+        [content['firstName'], content['lastName'], content['email'], content['phoneNumbers'][0], content['id'], content['active']]
       end
     end
   end
