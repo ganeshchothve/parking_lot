@@ -42,7 +42,7 @@
             </div>
           <% end %>
           <% if policy([:admin, User.new]).sync_kylas_user? %>
-            <%= link_to_if current_client.sync_user?, (current_client.sync_user? ? "Sync Users" : "Sync In Progress"), sync_kylas_users_admin_users_path, class: 'border rounded px-3 p-2 border-primary white bg-primary rounded py-2 ms-2', id: 'sync_users' %>
+            <%= link_to_if current_client.sync_user?, (current_client.sync_user? ? "Sync Users" : "Syncing In Progress"), sync_kylas_users_admin_users_path, class: 'border rounded px-3 p-2 border-primary white bg-primary rounded py-2 ms-2', id: 'sync_users' %>
           <% end %>
         </div>
       </div>
