@@ -170,9 +170,6 @@ en:
       get_details_from_crm: "Get Details.from CRM"
       integrations: "Integrations"
       external_inventory_view: "External Inventory View Configuration"
-      provider: "Provider"
-      url: "Url"
-      status: "Status"
     units:
       sq_ft: "sq.ft"
     fetch_errors:

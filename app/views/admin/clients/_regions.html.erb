@@ -2,7 +2,7 @@
   <% editable_regions = policy([:admin, @client]).editable_field?("regions_attributes")%>
   <% if editable_regions %>
     <div class='text-right'>
-      <%= f.link_to_add I18n.t("global.add_city_regions"), :regions, :data => { :target => ".regions" }, class: 'btn btn-secondary' %>
+      <%= f.link_to_add I18n.t("global.link_to.add_city_regions"), :regions, :data => { :target => ".regions" }, class: 'btn btn-secondary' %>
     </div>
   <% end %>
   <%= f.fields_for :regions do |sf|%>
@@ -12,11 +12,11 @@
       </div>
     <% end %>
     <div class="mb-3">
-      <%= sf.label :city, class: 'label-required' %>
+      <%= sf.label :city, I18n.t("mongoid.attributes.client.city"), class: 'label-required' %>
       <%= sf.text_field :city, class:'form-control', required: 'required', disabled: !editable_regions %>
     </div>
     <div class="mb-3">
-      <%= sf.label :partner_regions %>
+      <%= sf.label :partner_regions, I18n.t("mongoid.attributes.client.partner_regions") %>
       <%= sf.select :partner_regions, (sf.object.partner_regions || []), {}, class: 'selectize-tags', required: 'required', multiple: true, disabled: !editable_regions %>
     </div>
   <% end %>
