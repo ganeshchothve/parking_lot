@@ -2683,6 +2683,9 @@ en:
         calculated_invoices: "Calculated Invoices"
       notice:
         sent: "Successfully sent."
+      text:
+        confirm:
+          send_email: "Are you sure you want to send the email to developer?"
 
     incentive_deductions:
       index:
