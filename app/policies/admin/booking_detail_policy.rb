@@ -47,8 +47,12 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && (current_client.enable_payment_with_kyc ? record.lead.kyc_ready? : true ) && record.status.in?(['blocked', 'booked_tentative', 'under_negotiation', 'scheme_approved'])
   end
 
+  def new_booking_on_project?
+    enable_actual_inventory? && record&.project&.bookings_enabled? && enable_inventory?
+  end
+
   def show_booking_link?
-    valid = record.lead&.project&.bookings_enabled? && _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && record.try(:user).try(:buyer?) && enable_inventory?
+    valid = record.lead&.project&.bookings_enabled? && _role_based_check && only_for_confirmed_user! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && record.try(:user).try(:buyer?) && enable_inventory? && enable_actual_inventory?
     # if is_assigned_lead?
     #   valid = is_lead_accepted? && valid
     # end
@@ -56,7 +60,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def show_add_booking_link?
-    out = !enable_inventory? && record.try(:user).try(:buyer?) && %w[account_manager channel_partner cp_owner].include?(user.role) && record.lead&.project&.bookings_enabled?
+    out = !enable_inventory? && record.try(:user).try(:buyer?) && record.lead&.project&.bookings_enabled? && enable_actual_inventory?
     out = false if user.role.in?(%w(cp_owner channel_partner)) && !(user.active_channel_partner? && interested_project_present?)
     out
   end

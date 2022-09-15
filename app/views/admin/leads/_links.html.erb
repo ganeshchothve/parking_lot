@@ -6,13 +6,11 @@
   <%= link_to t('controller.site_visits.new.link_name'), new_admin_lead_site_visit_path(lead.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
-<% if current_client.enable_actual_inventory.include?(current_user.role) %>
-  <% if policy([:admin, BookingDetail.new(user: lead.user, lead: lead, project_unit: ProjectUnit.new(status: 'available', blocking_amount: current_client.blocking_amount))]).show_booking_link? %>
-    <%= link_to t('controller.searches.new.link_name'), new_admin_lead_search_path(lead.id), class: "dropdown-item" %>
-  <% end %>
-  <% if policy([:admin, BookingDetail.new(user: lead.user, lead: lead)]).show_add_booking_link? %>
-    <%= link_to "Add Booking", new_booking_without_inventory_admin_booking_details_path(lead_id: lead.id), class: "dropdown-item modal-remote-form-link" %>
-  <% end %>
+<% if policy([:admin, BookingDetail.new(user: lead.user, lead: lead, project_unit: ProjectUnit.new(status: 'available', blocking_amount: current_client.blocking_amount))]).show_booking_link? %>
+  <%= link_to t('controller.searches.new.link_name'), new_admin_lead_search_path(lead.id), class: "dropdown-item" %>
+<% end %>
+<% if policy([:admin, BookingDetail.new(user: lead.user, lead: lead)]).show_add_booking_link? %>
+  <%= link_to "Add Booking", new_booking_without_inventory_admin_booking_details_path(lead_id: lead.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
 <% hold_booking = lead.booking_details.where(status: 'hold').first %>
