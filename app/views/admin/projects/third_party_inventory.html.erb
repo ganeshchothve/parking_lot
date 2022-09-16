@@ -1,5 +1,5 @@
 <section class="mt-3 mb-5">
-  <div class="px-4">
+  <div class="">
     <% if ENV_CONFIG.dig('third_party_inventory', 'base_url').present? %>
       <iframe src="<%= "#{ENV_CONFIG.dig('third_party_inventory', 'base_url')}?domain=#{request.host}" %>" name='third_party_inventory_iframe' height='500px' width='100%' title='Third Party Inventory Iframe' id='third_party_inventory_iframe'></iframe>
     <% end %>
