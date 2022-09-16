@@ -128,13 +128,23 @@ class SearchesController < ApplicationController
     authorize [current_user_role_group, @project_unit]
     respond_to do |format|
       result = ProjectUnitUnholdWorker.new.perform(@project_unit.id)
-      if !(result.is_a?(Hash) && result.has_key?(:errors))
-        format.html { redirect_to dashboard_path, notice: 'Booking cancelled' }
-        format.json { render json: {project_unit: @project_unit}, status: 200 }
+      if marketplace?
+        if !(result.is_a?(Hash) && result.has_key?(:errors))
+          format.html { redirect_to new_kylas_associated_lead_admin_leads_path(entityId: @search.lead.kylas_deal_id), notice: 'Booking cancelled' }
+          format.json { render json: {project_unit: @project_unit}, status: 200 }
+        else
+          format.html { redirect_to new_kylas_associated_lead_admin_leads_path(entityId: @search.lead.kylas_deal_id), alert: result[:errors] }
+          format.json { render json: { errors: result[:errors] }, status: 422 }
+        end
       else
-        format.html { redirect_to (request.referer.present? ? request.referer : dashboard_path), alert: result[:errors] }
-        format.json { render json: { errors: result[:errors] }, status: 422 }
-      end 
+        if !(result.is_a?(Hash) && result.has_key?(:errors))
+          format.html { redirect_to dashboard_path, notice: 'Booking cancelled' }
+          format.json { render json: {project_unit: @project_unit}, status: 200 }
+        else
+          format.html { redirect_to (request.referer.present? ? request.referer : dashboard_path), alert: result[:errors] }
+          format.json { render json: { errors: result[:errors] }, status: 422 }
+        end
+      end
     end
   end
 
