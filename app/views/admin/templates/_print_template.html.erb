@@ -1,0 +1,4 @@
+<% if @template.present? %>
+  <%#= ::ERB.new(@template.content).result( binding ).html_safe %>
+  <%= @template.parsed_content(@subject_class_resource) %>
+<% end %>

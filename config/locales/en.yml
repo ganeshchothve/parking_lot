@@ -1100,6 +1100,11 @@ en:
         dlt_tag_id: "DLT Tag ID"
         dlt_temp_id: "DLT Template ID"
         project_id: 'Project'
+        project_ids: 'Projects'
+        print_document: Print Document
+        custom_document: Documents
+        document_not_available: Document not available
+        print: Print
       user_request:
         request_type: 'Request type'
         _type: 'Request type'
@@ -1121,13 +1126,9 @@ en:
         requestable_type: 'Requestable Type'
         request_details: 'Related to'
       template/subject_classes:
-        ChannelPartner: Channel Partner
-        Scheme: Scheme
         BookingDetail: Booking
         Receipt: Payment
-        BookingDetailScheme: Booking Detail Scheme
         Lead: Lead
-        UserKyc: User Kyc
         Invoice: Invoice
         UserRequest::Cancellation: Cancellation Request
         UserRequest::Swap: Swap Request
@@ -2027,6 +2028,8 @@ en:
         link_name: 'Templates'
       show:
         link_name: Template Detail
+      choose_template_for_print:
+        link_name: Print Documents
 
     users:
       set_user_missing: 'User not found'
