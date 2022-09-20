@@ -111,6 +111,11 @@ class ApplicationPolicy
     false
   end
 
+  def marketplace_portal?
+    marketplace_portal = record.try(:booking_portal_client).try(:kylas_tenant_id).present?
+    marketplace_portal
+  end
+
   def only_for_confirmed_user!
     return true if record.user.present? && record.user.confirmed?
     @condition = 'only_for_confirmed_user'
