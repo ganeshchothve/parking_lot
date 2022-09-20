@@ -513,7 +513,7 @@ class User
 
   def generate_cp_code
     if ['channel_partner', 'cp_owner'].include?(self.role) && self.cp_code.blank?
-      self.cp_code = "#{SecureRandom.hex(3)[0..-2]}"
+      self.cp_code = self.channel_partner&.cp_code.present? ? self.channel_partner&.cp_code : "#{SecureRandom.hex(3)[0..-2]}"
     end
   end
 
