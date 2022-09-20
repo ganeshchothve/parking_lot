@@ -1,5 +1,5 @@
 class Api::V1::ChannelPartnersController < ApisController
-  before_action :reference_ids_present?, only: :create
+  before_action :reference_ids_present?, :set_primary_user, only: :create
   before_action :set_channel_partner, except: :create
   before_action :add_third_party_reference_params #, :modify_params
   #
@@ -10,8 +10,11 @@ class Api::V1::ChannelPartnersController < ApisController
   def create
     unless ChannelPartner.reference_resource_exists?(@crm.id, params[:channel_partner][:reference_id])
       @channel_partner = ChannelPartner.new(channel_partner_create_params)
+      @channel_partner.primary_user = @primary_user
+      @channel_partner.is_existing_company = false
       if @channel_partner.save
-        render json: {channel_partner_id: @channel_partner.id, user_id: @channel_partner.associated_user.id ,message: 'Channel Partner successfully created.'}, status: :created
+        @channel_partner.approve! if @crm.user.booking_portal_client.try(:enable_direct_activation_for_cp?)
+        render json: {channel_partner_id: @channel_partner.id, user_id: @channel_partner.primary_user.id ,message: 'Channel Partner successfully created.'}, status: :created
       else
         render json: {errors: @channel_partner.errors.full_messages.uniq}, status: :unprocessable_entity
       end
@@ -29,7 +32,7 @@ class Api::V1::ChannelPartnersController < ApisController
     unless ChannelPartner.reference_resource_exists?(@crm.id, params[:channel_partner][:reference_id])
       @channel_partner.assign_attributes(channel_partner_update_params)
       if @channel_partner.save
-        render json: {channel_partner_id: @channel_partner.id, user_id: @channel_partner.associated_user.id, message: 'Channel Partner successfully updated'}, status: :ok
+        render json: {channel_partner_id: @channel_partner.id, user_id: @channel_partner.primary_user.id, message: 'Channel Partner successfully updated'}, status: :ok
       else
         render json: {errors: @channel_partner.errors.full_messages.uniq }, status: :unprocessable_entity
       end
@@ -104,6 +107,24 @@ class Api::V1::ChannelPartnersController < ApisController
   # }
   def channel_partner_update_params
     params.require(:channel_partner).permit(:first_name, :last_name, :rera_id, :gstin_number, :aadhaar, :pan_number, :company_name, :cp_code, :team_size, third_party_references_attributes: [:id, :reference_id])
+  end
+
+  def set_primary_user
+    @primary_user = User.new
+    @primary_user.assign_attributes(user_params)
+    @primary_user.assign_attributes(booking_portal_client_id: @crm.user.booking_portal_client_id)
+  end
+
+  def user_params
+    params[:user] = {
+      first_name: params.dig(:channel_partner, :first_name),
+      last_name: params.dig(:channel_partner, :last_name),
+      phone: params.dig(:channel_partner, :phone),
+      email: params.dig(:channel_partner, :email),
+      manager_id: params.dig(:channel_partner, :manager_id)
+    }
+    params[:channel_partner] = params[:channel_partner].except(:first_name, :last_name, :phone, :email)
+    params.require(:user).permit(:first_name, :last_name, :email, :phone, :manager_id)
   end
 
 end
