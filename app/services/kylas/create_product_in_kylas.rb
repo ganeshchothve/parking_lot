@@ -3,7 +3,7 @@ require 'net/http'
 
 module Kylas
   #service to create product in kylas
-  class CreateProductInKylas
+  class CreateProductInKylas < BaseService
 
     attr_accessor :user, :params
 
@@ -42,14 +42,7 @@ module Kylas
 
         https = Net::HTTP.new(url.host, url.port)
         https.use_ssl = true
-        request = Net::HTTP::Post.new(url)
-
-        if user.kylas_api_key?
-          request['api-key'] = user.kylas_api_key
-        elsif user.kylas_refresh_token
-          request['Authorization'] = "Bearer #{user.fetch_access_token}"
-        end
-
+        request = Net::HTTP::Post.new(url, request_headers)
         request['Content-Type'] = 'application/json'
         request['Accept'] = 'application/json'
         payload = product_payload

@@ -1,5 +1,5 @@
 module Kylas
-  class UpdateCustomField
+  class UpdateCustomField < BaseService
 
     attr_reader :user, :cp_user, :options
 
@@ -15,14 +15,7 @@ module Kylas
         url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/entities/#{options[:entity]}/fields/#{options[:field_id]}?fieldId=#{options[:field_id]}")
         https = Net::HTTP.new(url.host, url.port)
         https.use_ssl = true
-        request = Net::HTTP::Put.new(url)
-        if user.kylas_api_key?
-          request['api-key'] = user.kylas_api_key
-        else
-          request['Authorization'] = "Bearer #{user.fetch_access_token}"
-        end
-        request['Content-Type'] = 'application/json'
-        request['Accept'] = 'application/json'
+        request = Net::HTTP::Put.new(url, request_headers)
         request.body = JSON.dump(custom_field_params)
         response = https.request(request)
 

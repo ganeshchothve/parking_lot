@@ -4,7 +4,7 @@ require 'net/http'
 
 module Kylas
   # Service for fetch users
-  class FetchUsers
+  class FetchUsers < BaseService
     attr_reader :user
 
     def initialize(user)

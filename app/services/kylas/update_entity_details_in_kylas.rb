@@ -3,7 +3,7 @@ require 'net/http'
 
 module Kylas
   #service to update entity details in kylas
-  class UpdateEntityDetailsInKylas
+  class UpdateEntityDetailsInKylas < BaseService
 
     attr_accessor :user, :stage, :entity_id, :entity_type, :pipeline_id
 
