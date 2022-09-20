@@ -48,7 +48,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def new_booking_on_project?
-    enable_actual_inventory? && record&.project&.bookings_enabled? && enable_inventory?
+    enable_actual_inventory? && record.lead&.project&.bookings_enabled? && enable_inventory?
   end
 
   def show_booking_link?
