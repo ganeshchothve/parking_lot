@@ -40,7 +40,7 @@ class Admin::BookingDetailsController < AdminController
         format.html { redirect_to new_admin_lead_search_path(@lead.id) }
       else
         format.json { render json: {errors: I18n.t("controller.booking_details.errors.unable_to_proceed")}, status: :unprocessable_entity }
-        format.html { redirect_to admin_project_units_path, alert: I18n.t("controller.booking_details.errors.unable_to_proceed") }
+        format.html { render :process_booking_on_project, status: I18n.t("controller.booking_details.errors.unable_to_proceed") }
       end
     end
   end
