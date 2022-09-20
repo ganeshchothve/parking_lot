@@ -219,6 +219,7 @@ Rails.application.routes.draw do
       get :collaterals, on: :collection
       post :sync_on_selldo, on: :member
       get :third_party_inventory, on: :collection
+      get :sync_kylas_products, on: :collection
 
       resources :unit_configurations, only: [:index, :edit, :update], controller: 'projects/unit_configurations'
       resources :token_types, except: [:destroy, :show], controller: 'projects/token_types' do
@@ -339,6 +340,7 @@ Rails.application.routes.draw do
         get :search_by
         get :site_visit_project_wise
         get :site_visit_partner_wise
+        get :sync_kylas_users
       end
 
       match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]

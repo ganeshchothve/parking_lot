@@ -6,7 +6,7 @@ class Admin::UsersController < AdminController
   before_action :authenticate_user!, except: %w[resend_confirmation_instructions change_state signup register]
   before_action :set_user, except: %i[index export new create portal_stage_chart channel_partner_performance partner_wise_performance search_by signup register]
   before_action :validate_player_ids, only: %i[update_player_ids]
-  before_action :authorize_resource, except: %w[resend_confirmation_instructions change_state, signup register]
+  before_action :authorize_resource, except: %w[resend_confirmation_instructions change_state, signup register sync_kylas_users]
   around_action :apply_policy_scope, only: %i[index export]
   before_action :set_client, only: [:register]
   before_action :fetch_kylas_users, only: %i[new edit]

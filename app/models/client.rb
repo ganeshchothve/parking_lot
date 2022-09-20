@@ -103,6 +103,8 @@ class Client
   field :mask_lead_data_for_roles, type: Array, default: %w(admin superadmin cp cp_admin dev_sourcing_manager)
   field :incentive_gst_slabs, type: Array, default: [5, 12, 18]
 
+  field :sync_user, type: Boolean, default: true
+  field :sync_product, type: Boolean, default: true
   # kylas tentant id
   field :kylas_tenant_id, type: String
   field :kylas_api_key, type: String

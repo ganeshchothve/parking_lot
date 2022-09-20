@@ -7,7 +7,7 @@ class Admin::UserPolicy < UserPolicy
 
   def new?(for_edit = false)
     return false unless user
-    if user.booking_portal_client.roles_taking_registrations.include?(user.role)
+    if user.booking_portal_client.roles_taking_registrations.include?(user.role) && user.booking_portal_client.kylas_tenant_id.present?
       if user.role?('superadmin')
         (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner))) || for_edit
       elsif user.role?('admin')
@@ -125,6 +125,10 @@ class Admin::UserPolicy < UserPolicy
 
   def update_player_ids?
     user.role.in?(%w(superadmin admin channel_partner cp_owner))
+  end
+
+  def sync_kylas_user?
+    user.booking_portal_client.kylas_tenant_id.present?
   end
 
   def permitted_attributes(params = {})

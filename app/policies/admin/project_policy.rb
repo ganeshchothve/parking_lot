@@ -56,6 +56,10 @@ class Admin::ProjectPolicy < ProjectPolicy
     user.role.in?(User::SELECTED_PROJECT_ACCESS) && user.project_ids.count > 1
   end
 
+  def sync_kylas_product?
+    user.booking_portal_client.kylas_tenant_id.present?
+  end
+
   def permitted_attributes(params = {})
     attributes = [:name, :developer_name, :micro_market, :possession, :latitude, :longitude, :registration_name, :rera_registration_no, :gst_number, :cin_number, :creator_id, :price_starting_from, :price_upto, :logo, :cover_photo, :embed_map_tag, :foyer_link, project_type: [], category: [], project_segment: [], booking_sources: []]
 
