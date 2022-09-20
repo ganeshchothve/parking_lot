@@ -14,7 +14,7 @@
                         </div>
                         <div class="col-lg-6 col-12 float-end text-end  px-0 pt-2">
                           <div class="d-block">
-                            <%= link_to_if (launchbook_url = @project.assets.where(document_type: 'sales_presentation').first&.file&.url&.presence), '<i class="fa fa-lock fill-theme me-3"></i>Launchbook'.html_safe, launchbook_url, class: 'prjt-lauchbook', target:'_blank' do |name|
+                            <%= link_to_if (launchbook_url = @project.assets.where(document_type: 'sales_presentation').first&.file&.url&.presence), "(<i class='fa fa-lock fill-theme me-3'></i> #{I18n.t('global.link_to.launchbook')})".html_safe, launchbook_url, class: 'prjt-lauchbook', target:'_blank' do |name|
                               ''
                             end%>
                             <% if allow_interest_subscription?(@project) %>
@@ -104,7 +104,7 @@
                                     <div class="col-lg-5 col-12 overview-left float-start">
                                         <p>
                                             <span><%= I18n.t("mongoid.attributes.project_unit.configuration") %></span>
-                                            <% flats_text = @project.project_type.include?("residential") ? " Flats" : "" %>
+                                            <% flats_text = @project.project_type.include?("residential") ? I18n.t("mongoid.attributes.project_unit.flats") : "" %>
                                             <%= inventory_avl ? DashboardDataProvider.configurations(@project).to_sentence + flats_text : @project.configurations&.to_sentence + flats_text %> <%= inventory_avl ? "| #{@project.project_units.min(:saleable)&.round} - #{@project.project_units.max(:saleable)&.round} #{@project.area_unit}" : '' %>
                                         </p>
                                         <p>
@@ -849,7 +849,7 @@
                                 <li class="px-3">
                                     <div class="list-wrap row">
                                         <div class="col-lg-12">
-                                          <p class="list-title mt-2">From <%= offer.provided_by&.titleize %></p>
+                                          <p class="list-title mt-2"><%= I18n.t("global.keys.from") %> <%= offer.provided_by&.titleize %></p>
                                         </div>
                                         <div class="col-lg-1">
                                             <i class="fa fa-badge-percent fill-success fa-sm align-text-top"></i>

@@ -131,6 +131,8 @@ en:
     logical_conditions:
       or: "OR"
     export: "Export"
+    keys:
+      from: "From "
     tabs:
       amount: "Amount"
       overview: "Overview"
@@ -138,6 +140,7 @@ en:
       remarks_from_selldo: "Remarks From SellDo"
       lead_activities: "Lead Activities"
       bookings: "Bookings"
+      basic_details: "Basic Details"
       booking_details: "Booking Details"
       payments: "Payments"
       time_slot: "Time Slot"
@@ -1080,6 +1083,9 @@ en:
         token_amount: "Token Amount"
         token_seed: "Token Seed"
         status: "Status"
+      token_type/status:
+        active: "Active"
+        disabled: "Disabled"
 
       time_slot:
         number: "ID"
@@ -1183,10 +1189,22 @@ en:
         incentives_generated: "Total Incentives Generated<br>(includes rejected invoices)"
         target_for_next_laddeer: "Target Required To Reach Next Ladder"
       channel_partner/expertise:
-        rentals: "Rentals"
-        retail: "Retail"
-        residential: "Residential"
-        commercial: "Commercial"
+        rentals: "rentals"
+        retail: "retail"
+        residential: "residential"
+        commercial: "commercial"
+      channel_partner/services:
+        work_on_mandates: "Work on Mandates"
+        sales_training: "Sales Training & Branded Collaterals"
+        lead_generation_help: "Lead Generation Help"
+        crm: "CRM"
+      channel_partner/experience:
+        zero_to_one: "0-1 yrs"
+        one_to_five: "1-5 yrs"
+        five_to_ten: "5-10 yrs"
+        ten_to_fifteen: "10-15 yrs"
+        fifteen_to_twenty: "15-20 yrs"
+        twenty_plus: "20+ yrs"
 
       data_attribute:
         name: "Name"
@@ -1276,6 +1294,7 @@ en:
       project_unit:
         costs: "Costs"
         data: "Data"
+        floor_plan: "Floor Plan"
         bedrooms: "Beds"
         bathrooms: "Baths"
         status: "Status"
@@ -1322,6 +1341,7 @@ en:
         absolute_value: "Absolute Value"
         formula: "Formula"
         order: "Order"
+        auto_release_on: "Auto Release On"
         tower_name:
           rhea_miranda: "Rhea Miranda"
       project_unit/status:
@@ -1391,6 +1411,7 @@ en:
         end_time: "Slot End"
         token_type: "Token Type"
         sort_by: "Sort By"
+        booking_detail_id: "Booking Detail"
       receipt/status:
         pending: "Pending"
         clearance_pending: "Clearance Pending"
@@ -1860,6 +1881,7 @@ en:
       meeting/edit_status:
         cancel: "Cancel"
         complete: "Complete"
+        draft: "Draft"
       meeting/statuses:
         draft: "Draft"
         scheduled: "Scheduled"
@@ -1936,6 +1958,8 @@ en:
         upi_id: "UPI Address"
         your_relationship_manager: "Your Relationship Manager"
         dear_user: "Dear %{name}"
+        allowed_bookings: "Allowed Bookings"
+        category: "Category"
         change_in_manger:
           dear_team: "Dear Team"
           text: "Channel Partner has been changed on customer %{name1}. New assigned channel partner is %{name2}."
@@ -2031,6 +2055,13 @@ en:
         opportunity: "Opportunity"
         prospect: "Prospect"
         unqualified: "Unqualified"
+      lead/customer_status:
+        booking_done: "Booking Done"
+        dropoff: "Dropoff"
+        engaged: "Engaged"
+        payment_done: "Payment Done"
+        queued: "Queued"
+        registered: "Registered"
 
       cp_lead_activity:
         lead_id: "Lead Id"
@@ -2806,6 +2837,11 @@ en:
       registration_count: "Registration Count"
       payment_failed: "Payment Failed"
       payment_unsuccessful: "Your payment of was unsuccessful. Please check the credentials and try again."
+      headers:
+        site_visit_active_partners: "Walk-in Active Partners"
+        booking_active_partners: "Booking Active Partners"
+        raised_invoices: "Raised Invoices"
+        approved_invoices: "Approved Invoices"
       link_to:
         project_wise:
           incentive_deduction: "Project Wise Incentive Deduction Summary"
@@ -3389,6 +3425,10 @@ en:
         link_name: "Detail"
       new:
         link_name: "Add"
+      link_to:
+        cancellation_request: "Cancellation Request"
+        swap_request: "Swap Request"
+        general_request: "General Request"
       general:
         index:
           link_name: "General Requests"

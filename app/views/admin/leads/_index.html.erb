@@ -43,7 +43,7 @@
                   </div>
                   <div class="pe-3 py-3 ps-xs-3">
                     <p class="font-medium fn-12 mb-0 d-inline-block me-2"><i
-                        class="fa fa-circle info me-2 fa-sm"></i><%= lead.lead_stage&.titleize || '-' %></p>
+                        class="fa fa-circle info me-2 fa-sm"></i><%= (I18n.t("mongoid.attributes.lead/stage.#{lead.lead_stage}") if lead.lead_stage != nil) || '-' %></p>
                     <div class="dropdown d-inline-block top-right-action">
                       <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">

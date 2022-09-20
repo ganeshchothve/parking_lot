@@ -12,18 +12,18 @@
           <div class="modal-body theme-form">
             <nav>
               <div class="nav nav-tabs theme-tab" role="tablist">
-                <a class="nav-item nav-link active" data-bs-toggle="tab" href="#nav-project-unit-basic" role="tab"><%= I18n.t("global.link_to.basic_details") %></a>
+                <a class="nav-item nav-link active" data-bs-toggle="tab" href="#nav-project-unit-basic" role="tab"><%= I18n.t("global.tabs.basic_details") %></a>
                 <% if policy([:admin, @project_unit]).editable_field?("data_attributes") %>
-                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-project-unit-data" role="tab">Data</a>
+                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-project-unit-data" role="tab"><%= I18n.t("mongoid.attributes.project_unit.data") %></a>
                 <% end %>
                 <% if policy([:admin, @project_unit]).editable_field?("costs_attributes") %>
-                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-project-unit-costs" role="tab">Costs</a>
+                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-project-unit-costs" role="tab"><%= I18n.t("mongoid.attributes.project_unit.costs") %></a>
                 <% end %>
                 <% if policy([ current_user_role_group, Asset.new(assetable: @project_unit)]).create? %>
-                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-project-unit-floor_plan" role="tab">Floor Plan</a>
+                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-project-unit-floor_plan" role="tab"><%= I18n.t("mongoid.attributes.project_unit.floor_plan") %></a>
                 <% end %>
                 <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
-                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-project-unit-crm-ids" role="tab">CRM IDs</a>
+                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-project-unit-crm-ids" role="tab"><%= I18n.t("global.tabs.crm_ids") %></a>
                 <% end %>
               </div>
             </nav>

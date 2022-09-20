@@ -66,10 +66,10 @@
 <div class="row">
   <div class="col-md-6">
   <!-- Remove form-control class in select field and selectize  -->
-    <%= form.input :expertise, collection: ChannelPartner::EXPERTISE.collect{|x| [x.titleize, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("expertise"), as: :select, prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
+    <%= form.input :expertise, collection: I18n.t("mongoid.attributes.channel_partner/expertise").collect {|k,v| [v,v]}, disabled: !policy([:admin, @channel_partner]).editable_field?("expertise"), as: :select, prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
   </div>
   <div class="col-md-6">
-    <%= form.input :experience, collection: ChannelPartner::EXPERIENCE.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("experience"), as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
+    <%= form.input :experience, collection: I18n.t("mongoid.attributes.channel_partner/experience").collect {|k,v| [v,v]}, disabled: !policy([:admin, @channel_partner]).editable_field?("experience"), as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
   </div>
 </div>
 
@@ -89,7 +89,7 @@
   </div>
   <div class="col-md-12">
   <!-- Remove form-control class in select field and selectize  -->
-    <%= form.input :interested_services, collection: ChannelPartner::SERVICES.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("interested_services"), prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
+    <%= form.input :interested_services, collection: I18n.t("mongoid.attributes.channel_partner/services").collect {|k,v| [v,v]}, disabled: !policy([:admin, @channel_partner]).editable_field?("interested_services"), prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
   </div>
 </div>
 <div class="row">
@@ -106,7 +106,7 @@
   <% if statuses.present? %>
     <div class="row">
       <div class="col-md-6">
-        <%= form.input :event, collection: statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, as: :select, prompt: :translate, input_html: { class: 'selectize', disabled: !policy([:admin, @channel_partner]).editable_field?("event") } %>
+        <%= form.input :event, collection: I18n.t("mongoid.attributes.channel_partner/status").collect {|k,v| [k.to_s.titleize, k.to_s]}, as: :select, prompt: :translate, input_html: { class: 'selectize', disabled: !policy([:admin, @channel_partner]).editable_field?("event") } %>
       </div>
       <div class="col-md-12 status_change_field">
         <%= form.label :status_change_reason, class: '' %>

@@ -15,7 +15,7 @@
       <tr>
         <td data-title=<%= labels['details'] %> style="width:40%">
           <% if !current_user.buyer? && policy([:admin, user_request]).show? && !(params[:controller] == 'admin/user_requests' && params[:action] == 'show') %>
-            <%= link_to "#{user_request.class.model_name.element.titleize} Request", admin_user_request_path(request_type: user_request.class.model_name.element, id: user_request.id), class: "theme-txt-color" %>
+            <%= link_to I18n.t("controller.user_requests.link_to.#{user_request.class.model_name.element}_request"), admin_user_request_path(request_type: user_request.class.model_name.element, id: user_request.id), class: "theme-txt-color" %>
           <% end %>
           <% if user_request.requestable_id.present? %>
             <div class="small mt-1">
