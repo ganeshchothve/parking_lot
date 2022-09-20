@@ -38,8 +38,8 @@ class Admin::BookingDetailsController < AdminController
         response.set_header('location', new_admin_lead_search_path(@lead.id) )
         format.json { render json: { status: :ok } }
       else
-        format.html { redirect_to admin_project_units_path, alert: "Booking unable to proceed further" }
-        format.json { render json: {errors: "Booking unable to proceed further"}, status: :unprocessable_entity }
+        format.html { redirect_to admin_project_units_path, alert: I18n.t("controller.booking_details.errors.unable_to_proceed") }
+        format.json { render json: {errors: I18n.t("controller.booking_details.errors.unable_to_proceed")}, status: :unprocessable_entity }
       end
     end
   end

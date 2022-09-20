@@ -1699,6 +1699,8 @@ en:
             pending: Submit for Approval
       reject:
         link_name: 'Reject Booking'
+      errors:
+        unable_to_proceed: "You cannot proceed further"
 
     invoices:
       index:
