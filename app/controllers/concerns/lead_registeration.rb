@@ -77,14 +77,14 @@ module LeadRegisteration
               if cp_lead_activity.save
                 update_customer_search_to_sitevisit(lead) if @customer_search.present?
 
-                format.json { render json: {lead: lead, success: "#{site_visit.present? ? SiteVisit.model_name.human : Lead.model_name.human} created successfully"}, status: :created }
+                format.json { render json: {lead: lead, success: site_visit.present? ? I18n.t("controller.site_visits.notice.created") : I18n.t("controller.leads.notice.created")}, status: :created }
               else
                 format.json { render json: {errors: 'Something went wrong while adding lead. Please contact support'}, status: :unprocessable_entity }
               end
             else
               update_customer_search_to_sitevisit(lead) if @customer_search.present?
 
-              format.json { render json: {lead: lead, success: "#{site_visit.present? ? SiteVisit.model_name.human : Lead.model_name.human} created successfully"}, status: :created }
+              format.json { render json: {lead: lead, success: success: site_visit.present? ? I18n.t("controller.site_visits.notice.created") : I18n.t("controller.leads.notice.created")}, status: :created }
             end
           else
             format.json { render json: {errors: lead.errors.full_messages.uniq}, status: :unprocessable_entity }

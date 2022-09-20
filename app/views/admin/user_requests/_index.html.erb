@@ -19,23 +19,23 @@
           <% end %>
           <% if user_request.requestable_id.present? %>
             <div class="small mt-1">
-              <span class=""><%= t("user_requests.requestable_type.#{user_request.requestable_type}") %>:</span> <%= user_request.requestable.try(:name) || '-' %>
+              <span class=""><%= t("mongoid.attributes.user_request/requestable_type.#{user_request.requestable_type}") %>:</span> <%= user_request.requestable.try(:name) || '-' %>
             </div>
           <% end %>
           <% if user_request.is_a?(UserRequest::General) %>
             <% if ['superadmin', 'admin', 'crm'].include?(current_user.role) %>
               <div class="small mt-1">
-                <span class=""><%= t("user_requests.requestable_type.department")  %>: </span><%= user_request.department.try(:titleize) || '-' %>
+                <span class=""><%= t("mongoid.attributes.user_request/requestable_type.department")  %>: </span><%= user_request.department.try(:titleize) || '-' %>
               </div>
             <% end %>
             <% if ['superadmin', 'admin', 'crm'].include?(current_user.role) %>
               <div class="small mt-1">
-                <span class=""><%= t("user_requests.requestable_type.priority")  %>:</span> <%= user_request.priority.try(:titleize) || '-' %>
+                <span class=""><%= t("mongoid.attributes.user_request/requestable_type.priority")  %>:</span> <%= user_request.priority.try(:titleize) || '-' %>
               </div>
             <% end %>
             <% if ['superadmin', 'admin', 'crm'].include?(current_user.role) %>
               <div class="small mt-1">
-                <span class=""><%= t("user_requests.requestable_type.due_date")  %>:</span> <%= user_request.due_date.try(:in_time_zone, current_user.time_zone).try(:strftime, '%d/%m/%Y') || '-' %>
+                <span class=""><%= t("mongoid.attributes.user_request/requestable_type.due_date")  %>:</span> <%= user_request.due_date.try(:in_time_zone, current_user.time_zone).try(:strftime, '%d/%m/%Y') || '-' %>
               </div>
             <% end %>
           <% end %>

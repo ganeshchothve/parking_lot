@@ -189,7 +189,7 @@ $(document).ready(function(){
       var options = _.map(allowed_categories, function(d) { return { value: d, text: categories_translations[d] } });
       category_select.addOption(options)
       category_select.refreshOptions(false);
-      category_select.settings.placeholder = 'Select Category';
+      category_select.settings.placeholder = '<%= I18n.t("global.link_to.select_category") %>';
       category_select.updatePlaceholder();
       if(!_.isEmpty(category)){
         category_select.addItem(category, true);

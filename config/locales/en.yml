@@ -211,6 +211,7 @@ en:
       loan_tenure: "Loan Tenure"
       total_interest_payable: "Total Interest Payable"
       total_amount_payable: "Total Amount Payable"
+      select_category: "Select Category"
       select_type: "Select Type"
       select_project: "Select Project"
       uniques_selling_points: "Uniques Selling Points"
@@ -1690,8 +1691,11 @@ en:
         rejected: "Rejected"
         failed: "Failed"
       user_request/requestable_type:
-        Receipt: "Receipt"
-        BookingDetail: "Booking"
+        receipt: "Receipt"
+        bookingdetail: "Booking"
+        department: "Department"
+        priority: "Priority"
+        due_date: "Due Date"
       user_request/general_departments:
         billing: "Billing"
         sourcing: "Sourcing"
@@ -2280,6 +2284,8 @@ en:
       set_customer_search_missing: "Customer Search not found."
       links:
         add_new_customer: "Add New Customer"
+      notice:
+        cannot_be_queued: "%{name} cannot be queued"
     token_types:
       index:
         link_name: "Token Types"
@@ -3365,6 +3371,8 @@ en:
       reassign_sales: "Reassign Lead"
       notice:
         updated: "Lead successfully updated."
+        assigned_to: "%{name1} assigned to sales %{name2}"
+        not_assigned_to: "%{name1} not assigned to sales %{name2}"
       alert:
         not_found: "Lead Not found"
         sales_user_not_found: "Sales user not found"

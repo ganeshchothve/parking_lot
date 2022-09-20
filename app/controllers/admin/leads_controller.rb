@@ -92,7 +92,7 @@ class Admin::LeadsController < AdminController
     if @lead.may_assign_sales?(params[:sales_id])
       if @lead.assign_manager(params[:sales_id])
         @lead.current_site_visit&.set(sales_id: params[:sales_id])
-        flash.now[:notice] = "#{@lead.name} assigned to sales #{@sales.name}"
+        flash.now[:notice] = I18n.t("controller.leads.notice.assigned_to", name1: @lead.name, name2: @sales.name)
       else
         flash.now[:alert] = I18n.t("controller.leads.errors.failed_to_assign", name: "#{@lead.name}")
       end
@@ -110,11 +110,11 @@ class Admin::LeadsController < AdminController
     respond_to do |format|
       if @sales.present?
         if @lead.assign_manager(params.dig(:lead, :closing_manager_id), @lead.closing_manager_id)
-          message = "#{@lead.name} assigned to sales #{@sales.name}"
+          message = I18n.t("controller.leads.notice.assigned_to", name1: @lead.name, name2: @sales.name)
           format.html { redirect_to request.referrer || dashboard_url, notice: message }
           format.json { render json: { message: message }, status: :ok }
         else
-          message = "#{@lead.name} not assigned to sales #{@sales.name}"
+          message = I18n.t("controller.leads.notice.not_assigned_to", name1: @lead.name, name2: @sales.name)
           format.html{ redirect_to request.referrer || dashboard_url, alert: message }
           format.json { render json: { errors: [message] }, status: :unprocessable_entity }
         end
