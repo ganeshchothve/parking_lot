@@ -120,6 +120,7 @@ class ChannelPartner
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :user_based_uniqueness
   validates :primary_user_id, uniqueness: true, allow_blank: true
+  validates :cp_code, uniqueness: true, allow_blank: true
 
   validates :experience, inclusion: { in: proc{ ChannelPartner::EXPERIENCE } }, allow_blank: true
   validates :expertise, array: { inclusion: {allow_blank: true, in: ChannelPartner::EXPERTISE } }
