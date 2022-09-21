@@ -18,4 +18,17 @@ class ApiLog
   scope :filter_by_resource_id, ->(_resource_id) { where(resource_id: _resource_id) }
   scope :filter_by_status, ->(_status) { where(status: _status) }
 
+
+  class << self
+
+    def user_based_scope user, params = {}
+      if user.role?(:superadmin)
+        custom_scope = { booking_portal_client: user.selected_client }
+      else
+        custom_scope = { booking_portal_client: user.booking_portal_client }
+      end
+      custom_scope
+    end
+
+  end
 end

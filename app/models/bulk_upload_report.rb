@@ -25,4 +25,17 @@ class BulkUploadReport
     self.errors.add :base, 'File cannot be blank' if self.asset.try(:file).blank?
     self.errors.add :project_id, 'cannot be blank' if self.asset.try(:document_type).try(:in?, PROJECT_SCOPED) && self.project_id.blank?
   end
+
+  class << self
+
+    def user_based_scope user, params={}
+      if user.role?(:superadmin)
+        custom_scope = { client: user.selected_client }
+      else
+        custom_scope = { client: user.booking_portal_client }
+      end
+      custom_scope
+    end
+
+  end
 end

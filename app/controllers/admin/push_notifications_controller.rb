@@ -2,7 +2,7 @@ class Admin::PushNotificationsController < AdminController
   include PushNotificationConcern
   before_action :set_notification, only: [:new, :show, :create] #set_notification written in NotificationConcern
   before_action :authorize_resource
-  # around_action :apply_policy_scope, only: :index
+  around_action :apply_policy_scope, only: :index
 
   # index defined in NotificationConcern
   # GET /admin/notifications
@@ -41,6 +41,13 @@ class Admin::PushNotificationsController < AdminController
       authorize [:admin, PushNotification]
     else
       authorize [:admin, @push_notification]
+    end
+  end
+
+  def apply_policy_scope
+    custom_scope = PushNotification.where(PushNotification.user_based_scope(current_user, params))
+    PushNotification.with_scope(policy_scope(custom_scope)) do
+      yield
     end
   end
 end

@@ -1,6 +1,7 @@
 class Admin::BulkUploadReportsController < AdminController
   before_action :set_bulk_upload_report, only: [:show, :show_errors, :upload_error_exports]
   before_action :authorize_resource
+  around_action :apply_policy_scope, only: %i[index]
 
   def index
     @bulk_upload_reports = BulkUploadReport.all.order('created_at DESC')
@@ -71,5 +72,12 @@ class Admin::BulkUploadReportsController < AdminController
 
   def set_bulk_upload_report
     @bulk_upload_report = BulkUploadReport.find(params[:id])
+  end
+
+  def apply_policy_scope
+    custom_scope = BulkUploadReport.where(BulkUploadReport.user_based_scope(current_user, params))
+    BulkUploadReport.with_scope(policy_scope(custom_scope)) do
+      yield
+    end
   end
 end
