@@ -12,6 +12,7 @@ class Admin::InterestedProjectsController < AdminController
 
   def create
     @interested_project = @user.interested_projects.build(permitted_attributes([:admin, InterestedProject.new]))
+    @interested_project.assign_attributes(booking_portal_client: @user.booking_portal_client)
     respond_to do |format|
       if @interested_project.save
         format.html { redirect_to request.referer, notice: 'Project successfully subscribed.' }

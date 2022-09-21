@@ -207,7 +207,7 @@ class UserKyc
         elsif user.role?('cp')
           channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
           custom_scope = { lead_id: { "$in": Lead.in(referenced_manager_ids: channel_partner_ids).distinct(:id) } }
-        elsif user.role.in?(%w(admin sales))
+        elsif user.role.in?(%w(admin sales gre))
           custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
         elsif user.role.in?(%w(superadmin))
           custom_scope = { booking_portal_client_id: user.selected_client_id }

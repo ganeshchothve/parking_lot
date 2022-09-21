@@ -72,13 +72,12 @@
     <%= form.input :experience, collection: ChannelPartner::EXPERIENCE.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("experience"), as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-6">
     <%= form.input :average_quarterly_business, required: false, disabled: !policy([:admin, @channel_partner]).editable_field?("average_quarterly_business"), as: :float %>
   </div>
   <div class="col-md-6">
-    <%= form.input :manager_id, collection: User.where(is_active: true, confirmed_at: {'$ne': nil}, role: "cp").collect{|x| [x.ds_name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), required: true, as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
+    <%= form.input :manager_id, collection: User.where(is_active: true, confirmed_at: {'$ne': nil}, role: "cp", booking_portal_client_id: current_client.id).collect{|x| [x.ds_name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), required: true, as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
   </div>
 </div>
 

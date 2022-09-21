@@ -6,6 +6,7 @@
     </div>
   <% end %>
   <%= f.fields_for :timeline_updates do |sf|%>
+    <%= sf.hidden_field :booking_portal_client_id, value: current_client.id %>
     <% if editable_timeline_updates %>
       <div class='pl-2 text-right'>
         <%= sf.link_to_remove icon("far", "times-circle") %>
