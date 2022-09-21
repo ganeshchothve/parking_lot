@@ -92,6 +92,14 @@ module DatabaseSeeds
             </p>
           </div>
         </div>') if ::Template::EmailTemplate.where(name: "cp_user_register_in_company").blank?
+
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: "marketplace_app_session_expired", subject: 'Marketplace app session expired', content: 'Hello <%= self.name %>,
+
+          Your logged in session on <%= self.booking_portal_client.name %> Booking Marketplace app is expired.
+          Kindly reinstall the app & login again to regain access.
+
+          Thanks,
+          <%= self.booking_portal_client.name %> Booking Marketplace App.') if ::Template::EmailTemplate.where(name: "marketplace_app_session_expired", booking_portal_client_id: client_id).blank?
       end
     end
   end

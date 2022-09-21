@@ -391,6 +391,24 @@ class User
     end
   end
 
+  def send_marketplace_token_expired_email
+    if kylas_api_key? && !access_token_valid?
+      email_template = Template::EmailTemplate.where(name: "marketplace_app_session_expired", booking_portal_client_id: booking_portal_client_id).first
+      if email_template.present? && email_template.is_active?
+        attrs = {
+                  booking_portal_client_id: booking_portal_client_id,
+                  subject: email_template.parsed_subject(self),
+                  body: email_template.parsed_content(self),
+                  recipients: [ self ],
+                  triggered_by_id: id,
+                  triggered_by_type: self.class.to_s
+                }
+        email = Email.create!(attrs)
+        email.sent!
+      end
+    end
+  end
+
   def tentative_incentive_eligible?(category=nil)
     if category.present?
       if category == 'referral'
