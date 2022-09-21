@@ -3343,8 +3343,6 @@ en:
         updated: "User updated successfully"
         cannot_confirm: "Cannot confirm with this link. Please contact administrator"
         resend_password_sent: "Password instructions send successfully."
-        created: "User created successfully."
-        updated: "User updated successfully."
         profile_updated: "User profile updated successfully."
         reactivated_account: "User Account reactivated successfully."
         confirmation_sent: "Confirmation instructions sent successfully."
