@@ -63,10 +63,9 @@
             <%= link_to 'Resume Work', move_to_next_state_admin_user_path(current_user, status: 'available', format: :json), method: 'patch', remote: true, data: { disable_with: 'Resuming Work...' }, class: 'dropdown-item available move-to-next-state' %>
             <% end %>
             <% end %>
-            <%# if policy([current_user_role_group, Project.new]).switch_project? %>
-              <%#= link_to t('controller.home.select_project.link_name'), buyer_select_project_path, class: "dropdown-item" %>
-            <%# end %>
-
+            <% if policy([current_user_role_group, Project.new]).switch_project? %>
+              <%= link_to t('controller.home.select_project.link_name'), buyer_select_project_path, class: "dropdown-item" %>
+            <% end %>
             <% if policy([current_user_role_group, Client.new]).switch_client? %>
               <%= link_to t('controller.home.select_client.link_name'), admin_select_clients_path, class: "dropdown-item" %>
             <% end %>
