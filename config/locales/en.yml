@@ -173,6 +173,7 @@ en:
       get_details_from_crm: "Get Details.from CRM"
       integrations: "Integrations"
       external_inventory_view: "External Inventory View Configuration"
+      specifications: "Specifications"
     units:
       sq_ft: "sq.ft"
     fetch_errors:
@@ -308,6 +309,8 @@ en:
       add_city_regions: "Add New City & Regions"
     text:
       dropping: "Dropping..."
+    operators:
+      plus: "Plus"
 
   helpers:
     mark_conducted:
@@ -338,6 +341,7 @@ en:
       post:
         create: "Upload %{model}"
     save: "Save"
+    need_help: "Need Help? Contact Us - %{name}"
 
   language:
     en: "English"
@@ -1295,6 +1299,7 @@ en:
       project_unit:
         costs: "Costs"
         data: "Data"
+        flats: "Flats"
         floor_plan: "Floor Plan"
         bedrooms: "Beds"
         bathrooms: "Baths"
@@ -1471,7 +1476,7 @@ en:
         approved_by: "Approved By"
         created_by: "Created By"
         default_for_users: "Default for Channel Partners"
-        can_be-applied_by: "Can be applied by"
+        can_be_applied_by: "Can be applied by"
         customer_role: "Customer Role"
         payment_schedule_template_id: "Payment Schedule Template"
         cost_sheet_template_id: "Cost Sheet Template"
@@ -1736,6 +1741,9 @@ en:
         possession_not_match: "Possession didn't match"
         didnt_visit: "Didn't visit"
         different_cp: "Walk In with different CP"
+      site_visit/site_visit_type:
+        token_slot: "Token Slot"
+        visit: "Visit"
       user_kyc:
         name: "Name"
         email: "Email"
@@ -1964,6 +1972,7 @@ en:
         dear_user: "Dear %{name}"
         allowed_bookings: "Allowed Bookings"
         category: "Category"
+        cp_code: "Cp Code"
         change_in_manger:
           dear_team: "Dear Team"
           text: "Channel Partner has been changed on customer %{name1}. New assigned channel partner is %{name2}."
@@ -2720,6 +2729,7 @@ en:
       text:
         confirm:
           send_email: "Are you sure you want to send the email to developer?"
+        change_gst_slab: "Please change the GST Slab % as per the Slabs"
 
     incentive_deductions:
       index:
@@ -2782,6 +2792,8 @@ en:
         link_expired: "This link is expired. Please ask the channel partner to send request again"
         code_missing: "Registration code is missing"
       register_request_sent: "Registration request sent to Company owner"
+      tabs:
+        new: "New Channel Partner"
       text:
         adding_existing_lead: "Above channel partner tried to add already existing lead. Details of the lead are as follows:"
         company_registration: "Company Registration"
@@ -2933,6 +2945,8 @@ en:
         site_visit: "Site Visit Incentive"
         spot_booking: "Spot Booking Incentive"
         pre_registration_incentive: "Pre-registration Incentive"
+      links:
+        project_details: "Project Details"
       text:
         emis_per_month: "EMI's starting at <strong>₹ 25,000</strong> /month"
         search_token: "Search Token"
@@ -3260,6 +3274,8 @@ en:
         link_name: "Template Detail"
       notice:
         updated: "Template updated successfully."
+      errors:
+        contact_admin: "We are sorry! %{name} has some issue. Please Contact to Administrator."
 
     users:
       set_user_missing: "User not found"
@@ -3327,6 +3343,20 @@ en:
         updated: "User updated successfully"
         cannot_confirm: "Cannot confirm with this link. Please contact administrator"
         resend_password_sent: "Password instructions send successfully."
+        created: "User created successfully."
+        updated: "User updated successfully."
+        profile_updated: "User profile updated successfully."
+        reactivated_account: "User Account reactivated successfully."
+        confirmation_sent: "Confirmation instructions sent successfully."
+        reset_password_sent: "Reset password instructions sent successfully."
+        confirmed_via_otp: "User confirmed using OTP by this channel_partner"
+      errors:
+        reference_id_required: "Reference Id is required to create User."
+        not_registered: "User is not registered."
+        account_reactivation: "There was some error while reactivating account. Please contact support for assistance"
+        could_not_send_confirmation: "Couldn't send confirmation instructions."
+        could_not_send_reset_password: "Couldn't send Reset password instructions."
+
       alert:
         not_found: "User not found"
       errors:
@@ -3565,20 +3595,6 @@ en:
       hint: "(you might have some payments pending clearance)"
     total_unattached_balance:
       hint: "(subject to clearance)"
-    notice:
-      created: "User created successfully."
-      updated: "User updated successfully."
-      profile_updated: "User profile updated successfully."
-      reactivated_account: "User Account reactivated successfully."
-      confirmation_sent: "Confirmation instructions sent successfully."
-      reset_password_sent: "Reset password instructions sent successfully."
-      confirmed_via_otp: "User confirmed using OTP by this channel_partner"
-    errors:
-      reference_id_required: "Reference Id is required to create User."
-      not_registered: "User is not registered."
-      account_reactivation: "There was some error while reactivating account. Please contact support for assistance"
-      could_not_send_confirmation: "Couldn't send confirmation instructions."
-      could_not_send_reset_password: "Couldn't send Reset password instructions."
 
   sessions:
     new:

@@ -52,7 +52,7 @@
   </div>
   <div class="mb-3 position-relative offline">
     <% if %w(channel_partner cp_owner).include?(current_user.role) %>
-      <%= f.label 'Tentative agreement date', class: 'label-required' %>
+      <%= f.label :tentative_agreement_date, class: 'label-required' %>
     <% else %>
       <%= f.label :agreement_date, class: 'label-required' %>
     <% end %>

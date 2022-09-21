@@ -6,6 +6,6 @@
   <% end %>
 <% else %>
   <% if allow_booking_without_inventory?(project, lead) %>
-    <%= link_to "Add Booking", new_booking_without_inventory_admin_booking_details_path(project_id: project.id.to_s), class: "modal-remote-form-link prjt-add" %>
+    <%= link_to I18n.t("controller.booking_details.add_booking.link_name"), new_booking_without_inventory_admin_booking_details_path(project_id: project.id.to_s), class: "modal-remote-form-link prjt-add" %>
   <% end %>
 <% end %>

@@ -38,7 +38,7 @@
     </div>
     <div class="prjt-date-info">
       <div class="inner-date">
-        <p><%= project.launched_on.strftime('%d %b, %Y') rescue "-" %></p>
+        <p><%= I18n.l(project.launched_on.strftime('%d %b, %Y')) rescue "-" %></p>
         <span><%= I18n.t("mongoid.attributes.project.launched_on") %></span>
       </div>
     </div>

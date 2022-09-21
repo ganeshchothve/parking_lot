@@ -50,7 +50,7 @@
         </div>
         <div class="mb-3">
           <div class="alert alert-warning" role="alert">
-            Please change the GST Slab % as per the Slabs
+            <%= I18n.t("controller.invoices.text.change_gst_slab") %>
           </div>
           <%= f.label :gst_slab %>
           <% gst_slabs = @resource.try(:project)&.incentive_gst_slabs || @resource.booking_portal_client.try(:gst_slabs) || [] %>

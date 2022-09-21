@@ -84,7 +84,7 @@
                                     <% end %>
                                     <% if @project.specifications.present? %>
                                       <li class="">
-                                          <a class="" id="nav-specifications-tab" href="javascript:;" rel="tab-specifications"><%= I18n.t("global.link_to.specifications") %></a>
+                                          <a class="" id="nav-specifications-tab" href="javascript:;" rel="tab-specifications"><%= I18n.t("global.tabs.specifications") %></a>
                                       </li>
                                     <% end %>
                                     <% if @project.timeline_updates.present? %>
@@ -446,7 +446,7 @@
                             <% if @project.specifications.present? %>
                             <div class="prjt-desc-tab col-12 bt-bt float-start" id="tab-specifications">
                                 <div class="tab-header col-12 float-start">
-                                    <h2 class="tab-title"><%= I18n.t("global.link_to.specifications") %></h2>
+                                    <h2 class="tab-title"><%= I18n.t("global.tabs.specifications") %></h2>
                                 </div>
                                 <div class="tab-body">
                                     <div class="col-12">
@@ -742,13 +742,13 @@
                               <p><%= t("mongoid.attributes.projects.show.offer_valid_till") %> : <%= @incentive_scheme.ends_on.strftime("%d/%m/%Y") %></p>
                               <table class="table table-sm">
                                 <tr>
-                                  <td><%= t("mongoid.attributes.projects.show.bookings") %></td>
-                                  <td class="text-end"><%= t("mongoid.attributes.projects.show.brokerage") %></td>
+                                  <td><%= t("mongoid.models.booking_detail.other") %></td>
+                                  <td class="text-end"><%= t("controller.invoices.index.link_name") %></td>
                                 </tr>
 
                                 <% @incentive_scheme.ladders.each do |ladder| %>
                                   <tr>
-                                    <td><%= ladder.start_value %> - <%= ladder.end_value || t("mongoid.attributes.projects.show.plus") %></td>
+                                    <td><%= ladder.start_value %> - <%= ladder.end_value || I18n.t("global.operators.plus") %></td>
                                     <td class="text-end"><%= ladder.payment_adjustment.formula.present? ? fetch_percentage(ladder.payment_adjustment.formula) : number_to_indian_currency(ladder.payment_adjustment.absolute_value) %></td>
                                   </tr>
                                 <% end %>

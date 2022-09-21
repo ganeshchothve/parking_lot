@@ -14,7 +14,7 @@ class Admin::InterestedProjectsController < AdminController
     @interested_project = @user.interested_projects.build(permitted_attributes([:admin, InterestedProject.new]))
     respond_to do |format|
       if @interested_project.save
-        format.html { redirect_to request.referer, notice: I18n.t("controller.projects.subscribed") }
+        format.html { redirect_to request.referer, notice: I18n.t("controller.projects.notice.subscribed") }
       else
         format.html { redirect_to request.referer, alert: @interested_project.errors.full_messages }
         format.json { render json: { errors: @interested_project.errors.full_messages }, status: :unprocessable_entity }
