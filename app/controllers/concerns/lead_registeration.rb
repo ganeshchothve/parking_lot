@@ -84,7 +84,7 @@ module LeadRegisteration
             else
               update_customer_search_to_sitevisit(lead) if @customer_search.present?
 
-              format.json { render json: {lead: lead, success: success: site_visit.present? ? I18n.t("controller.site_visits.notice.created") : I18n.t("controller.leads.notice.created")}, status: :created }
+              format.json { render json: {lead: lead, success: site_visit.present? ? I18n.t("controller.site_visits.notice.created") : I18n.t("controller.leads.notice.created")}, status: :created }
             end
           else
             format.json { render json: {errors: lead.errors.full_messages.uniq}, status: :unprocessable_entity }

@@ -58,7 +58,7 @@ class Admin::CustomerSearchesController < AdminController
             format.html { redirect_to new_admin_customer_search_path(queue_number_notice: queue_number_notice) }
             format.json { render json: {model: @customer_search, location: admin_customer_search_path(@customer_search)} }
           elsif @customer_search.step == 'not_queued'
-            format.html { redirect_to new_admin_customer_search_path(queue_number_notice: I18n.t("controller.customer_searches.notice.cannot_be_queued", name: customer.try(:name)) }
+            format.html { redirect_to new_admin_customer_search_path(queue_number_notice: I18n.t("controller.customer_searches.notice.cannot_be_queued", name: customer.try(:name))) }
             format.json { render json: {model: @customer_search, location: admin_customer_search_path(@customer_search)} }
           else
             format.html { redirect_to admin_customer_search_path(@customer_search) }
