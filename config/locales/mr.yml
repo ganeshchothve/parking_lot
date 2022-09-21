@@ -131,6 +131,8 @@ mr:
     logical_conditions:
       or: "mr--OR"
     export: "mr--Export"
+    keys:
+      from: "mr--From "
     tabs:
       amount: "mr--Amount"
       overview: "mr--Overview"
@@ -138,6 +140,7 @@ mr:
       remarks_from_selldo: "mr--Remarks From SellDo"
       lead_activities: "mr--Lead Activities"
       bookings: "mr--Bookings"
+      basic_details: "mr--Basic Details"
       booking_details: "mr--Booking Details"
       payments: "mr--Payments"
       time_slot: "mr--Time Slot"
@@ -170,6 +173,7 @@ mr:
       get_details_from_crm: "mr--Get Details.from CRM"
       integrations: "mr--Integrations"
       external_inventory_view: "mr--External Inventory View Configuration"
+      specifications: "mr--Specifications"
     units:
       sq_ft: "mr--sq.ft"
     fetch_errors:
@@ -208,6 +212,7 @@ mr:
       loan_tenure: "mr--Loan Tenure"
       total_interest_payable: "mr--Total Interest Payable"
       total_amount_payable: "mr--Total Amount Payable"
+      select_category: "mr--Select Category"
       select_type: "mr--Select Type"
       select_project: "mr--Select Project"
       uniques_selling_points: "mr--Uniques Selling Points"
@@ -304,6 +309,8 @@ mr:
       add_city_regions: "mr--Add New City & Regions"
     text:
       dropping: "mr--Dropping..."
+    operators:
+      plus: "mr--Plus"
 
   helpers:
     mark_conducted:
@@ -334,6 +341,7 @@ mr:
       post:
         create: "mr--Upload %{model}"
     save: "mr--Save"
+    need_help: "mr--Need Help? Contact Us - %{name}"
 
   language:
     en: "mr--English"
@@ -1080,6 +1088,9 @@ mr:
         token_amount: "mr--Token Amount"
         token_seed: "mr--Token Seed"
         status: "mr--Status"
+      token_type/status:
+        active: "mr--Active"
+        disabled: "mr--Disabled"
 
       time_slot:
         number: "mr--ID"
@@ -1183,10 +1194,22 @@ mr:
         incentives_generated: "mr--Total Incentives Generated<br>(includes rejected invoices)"
         target_for_next_laddeer: "mr--Target Required To Reach Next Ladder"
       channel_partner/expertise:
-        rentals: "mr--Rentals"
-        retail: "mr--Retail"
-        residential: "mr--Residential"
-        commercial: "mr--Commercial"
+        rentals: "mr--rentals"
+        retail: "mr--retail"
+        residential: "mr--residential"
+        commercial: "mr--commercial"
+      channel_partner/services:
+        work_on_mandates: "mr--Work on Mandates"
+        sales_training: "mr--Sales Training & Branded Collaterals"
+        lead_generation_help: "mr--Lead Generation Help"
+        crm: "mr--CRM"
+      channel_partner/experience:
+        zero_to_one: "mr--0-1 yrs"
+        one_to_five: "mr--1-5 yrs"
+        five_to_ten: "mr--5-10 yrs"
+        ten_to_fifteen: "mr--10-15 yrs"
+        fifteen_to_twenty: "mr--15-20 yrs"
+        twenty_plus: "mr--20+ yrs"
 
       data_attribute:
         name: "mr--Name"
@@ -1276,6 +1299,8 @@ mr:
       project_unit:
         costs: "mr--Costs"
         data: "mr--Data"
+        flats: "mr--Flats"
+        floor_plan: "mr--Floor Plan"
         bedrooms: "mr--Beds"
         bathrooms: "mr--Baths"
         status: "mr--Status"
@@ -1322,6 +1347,7 @@ mr:
         absolute_value: "mr--Absolute Value"
         formula: "mr--Formula"
         order: "mr--Order"
+        auto_release_on: "mr--Auto Release On"
         tower_name:
           rhea_miranda: "mr--Rhea Miranda"
       project_unit/status:
@@ -1391,6 +1417,7 @@ mr:
         end_time: "mr--Slot End"
         token_type: "mr--Token Type"
         sort_by: "mr--Sort By"
+        booking_detail_id: "mr--Booking Detail"
       receipt/status:
         pending: "mr--Pending"
         clearance_pending: "mr--Clearance Pending"
@@ -1449,7 +1476,7 @@ mr:
         approved_by: "mr--Approved By"
         created_by: "mr--Created By"
         default_for_users: "mr--Default for Channel Partners"
-        can_be-applied_by: "mr--Can be applied by"
+        can_be_applied_by: "mr--Can be applied by"
         customer_role: "mr--Customer Role"
         payment_schedule_template_id: "mr--Payment Schedule Template"
         cost_sheet_template_id: "mr--Cost Sheet Template"
@@ -1669,8 +1696,11 @@ mr:
         rejected: "mr--Rejected"
         failed: "mr--Failed"
       user_request/requestable_type:
-        Receipt: "mr--Receipt"
-        BookingDetail: "mr--Booking"
+        receipt: "mr--Receipt"
+        bookingdetail: "mr--Booking"
+        department: "mr--Department"
+        priority: "mr--Priority"
+        due_date: "mr--Due Date"
       user_request/general_departments:
         billing: "mr--Billing"
         sourcing: "mr--Sourcing"
@@ -1711,6 +1741,9 @@ mr:
         possession_not_match: "mr--Possession didn't match"
         didnt_visit: "mr--Didn't visit"
         different_cp: "mr--Walk In with different CP"
+      site_visit/site_visit_type:
+        token_slot: "mr--Token Slot"
+        visit: "mr--Visit"
       user_kyc:
         name: "mr--Name"
         email: "mr--Email"
@@ -1860,6 +1893,7 @@ mr:
       meeting/edit_status:
         cancel: "mr--Cancel"
         complete: "mr--Complete"
+        draft: "mr--Draft"
       meeting/statuses:
         draft: "mr--Draft"
         scheduled: "mr--Scheduled"
@@ -1936,6 +1970,9 @@ mr:
         upi_id: "mr--UPI Address"
         your_relationship_manager: "mr--Your Relationship Manager"
         dear_user: "mr--Dear %{name}"
+        allowed_bookings: "mr--Allowed Bookings"
+        category: "mr--Category"
+        cp_code: "mr--Cp Code"
         change_in_manger:
           dear_team: "mr--Dear Team"
           text: "mr--Channel Partner has been changed on customer %{name1}. New assigned channel partner is %{name2}."
@@ -2031,6 +2068,13 @@ mr:
         opportunity: "mr--Opportunity"
         prospect: "mr--Prospect"
         unqualified: "mr--Unqualified"
+      lead/customer_status:
+        booking_done: "mr--Booking Done"
+        dropoff: "mr--Dropoff"
+        engaged: "mr--Engaged"
+        payment_done: "mr--Payment Done"
+        queued: "mr--Queued"
+        registered: "mr--Registered"
 
       cp_lead_activity:
         lead_id: "mr--Lead Id"
@@ -2249,6 +2293,8 @@ mr:
       set_customer_search_missing: "mr--Customer Search not found."
       links:
         add_new_customer: "mr--Add New Customer"
+      notice:
+        cannot_be_queued: "mr--%{name} cannot be queued"
     token_types:
       index:
         link_name: "mr--Token Types"
@@ -2683,6 +2729,7 @@ mr:
       text:
         confirm:
           send_email: "mr--Are you sure you want to send the email to developer?"
+        change_gst_slab: "mr--Please change the GST Slab % as per the Slabs"
 
     incentive_deductions:
       index:
@@ -2745,6 +2792,8 @@ mr:
         link_expired: "mr--This link is expired. Please ask the channel partner to send request again"
         code_missing: "mr--Registration code is missing"
       register_request_sent: "mr--Registration request sent to Company owner"
+      tabs:
+        new: "mr--New Channel Partner"
       text:
         adding_existing_lead: "mr--Above channel partner tried to add already existing lead. Details of the lead are as follows:"
         company_registration: "mr--Company Registration"
@@ -2806,6 +2855,11 @@ mr:
       registration_count: "mr--Registration Count"
       payment_failed: "mr--Payment Failed"
       payment_unsuccessful: "mr--Your payment of was unsuccessful. Please check the credentials and try again."
+      headers:
+        site_visit_active_partners: "mr--Walk-in Active Partners"
+        booking_active_partners: "mr--Booking Active Partners"
+        raised_invoices: "mr--Raised Invoices"
+        approved_invoices: "mr--Approved Invoices"
       link_to:
         project_wise:
           incentive_deduction: "mr--Project Wise Incentive Deduction Summary"
@@ -2891,6 +2945,8 @@ mr:
         site_visit: "mr--Site Visit Incentive"
         spot_booking: "mr--Spot Booking Incentive"
         pre_registration_incentive: "mr--Pre-registration Incentive"
+      links:
+        project_details: "mr--Project Details"
       text:
         emis_per_month: "mr--EMI's starting at <strong>₹ 25,000</strong> /month"
         search_token: "mr--Search Token"
@@ -3218,6 +3274,8 @@ mr:
         link_name: "mr--Template Detail"
       notice:
         updated: "mr--Template updated successfully."
+      errors:
+        contact_admin: "mr--We are sorry! %{name} has some issue. Please Contact to Administrator."
 
     users:
       set_user_missing: "mr--User not found"
@@ -3285,6 +3343,18 @@ mr:
         updated: "mr--User updated successfully"
         cannot_confirm: "mr--Cannot confirm with this link. Please contact administrator"
         resend_password_sent: "mr--Password instructions send successfully."
+        profile_updated: "mr--User profile updated successfully."
+        reactivated_account: "mr--User Account reactivated successfully."
+        confirmation_sent: "mr--Confirmation instructions sent successfully."
+        reset_password_sent: "mr--Reset password instructions sent successfully."
+        confirmed_via_otp: "mr--User confirmed using OTP by this channel_partner"
+      errors:
+        reference_id_required: "mr--Reference Id is required to create User."
+        not_registered: "mr--User is not registered."
+        account_reactivation: "mr--There was some error while reactivating account. Please contact support for assistance"
+        could_not_send_confirmation: "mr--Couldn't send confirmation instructions."
+        could_not_send_reset_password: "mr--Couldn't send Reset password instructions."
+
       alert:
         not_found: "mr--User not found"
       errors:
@@ -3329,6 +3399,8 @@ mr:
       reassign_sales: "mr--Reassign Lead"
       notice:
         updated: "mr--Lead successfully updated."
+        assigned_to: "mr--%{name1} assigned to sales %{name2}"
+        not_assigned_to: "mr--%{name1} not assigned to sales %{name2}"
       alert:
         not_found: "mr--Lead Not found"
         sales_user_not_found: "mr--Sales user not found"
@@ -3389,6 +3461,10 @@ mr:
         link_name: "mr--Detail"
       new:
         link_name: "mr--Add"
+      link_to:
+        cancellation_request: "mr--Cancellation Request"
+        swap_request: "mr--Swap Request"
+        general_request: "mr--General Request"
       general:
         index:
           link_name: "mr--General Requests"
@@ -3517,20 +3593,6 @@ mr:
       hint: "mr--(you might have some payments pending clearance)"
     total_unattached_balance:
       hint: "mr--(subject to clearance)"
-    notice:
-      created: "mr--User created successfully."
-      updated: "mr--User updated successfully."
-      profile_updated: "mr--User profile updated successfully."
-      reactivated_account: "mr--User Account reactivated successfully."
-      confirmation_sent: "mr--Confirmation instructions sent successfully."
-      reset_password_sent: "mr--Reset password instructions sent successfully."
-      confirmed_via_otp: "mr--User confirmed using OTP by this channel_partner"
-    errors:
-      reference_id_required: "mr--Reference Id is required to create User."
-      not_registered: "mr--User is not registered."
-      account_reactivation: "mr--There was some error while reactivating account. Please contact support for assistance"
-      could_not_send_confirmation: "mr--Couldn't send confirmation instructions."
-      could_not_send_reset_password: "mr--Couldn't send Reset password instructions."
 
   sessions:
     new:
