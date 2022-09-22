@@ -3833,6 +3833,8 @@ mr:
       reset_password: "mr--Reset your password by clicking the link below. Your password won't change until you access the link above and create a new one."
       account_locked: "mr--Your account has been locked due to an excessive number of unsuccessful sign in attempts. Click the link below to unlock your account:"
       sent_verification_link: "mr--We have sent an account verification link to %{name}"
+    errors:
+      invalid_phone_number: "mr--Invalid Phone Number"
   export_mailer:
     export_scheduled: "mr--Please find attached your scheduled export"
   navbar:
