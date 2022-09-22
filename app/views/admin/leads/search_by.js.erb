@@ -3,5 +3,5 @@
   var url = '<%= "#{ENV_CONFIG['selldo']['base_url']}/client/0/#{current_client.selldo_default_search_list_id}/#{@leads.first.lead_id}/f/ScheduleSiteVisit#id:#{@leads.first.arrived_sitevist.try(:selldo_id).to_s},status:conducted,to-confirm:undefined" %>'
   $('#goToLead').html("<a href='"+ url + "' target='_blank' class='btn btn-primary'>Mark site visit conducted</a>")
 <% else %>
-  $('<%= params[:element] %>').html("<p>No Users found </p>");
+  $('<%= params[:element] %>').html("<p>" + App.locale.global.no_users + "</p>");
 <% end %>
