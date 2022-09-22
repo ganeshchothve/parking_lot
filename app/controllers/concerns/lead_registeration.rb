@@ -91,7 +91,7 @@ module LeadRegisteration
           end
         end
       else
-        format.json { render json: {errors: (@project.errors.full_messages.uniq.map{|e| "Project - "+ e } rescue []) + (@user.errors.full_messages.uniq.map{|e| "User - "+ e } rescue [])}, status: :unprocessable_entity }
+        format.json { render json: {errors: (@project.errors.full_messages.uniq.map{|e| "#{I18n.t('mongoid.models.project.one')} - "+ e } rescue []) + (@user.errors.full_messages.uniq.map{|e| "#{ I18n.t('mongoid.models.user.one')} - "+ e } rescue [])}, status: :unprocessable_entity }
       end
     end
   end
