@@ -1,6 +1,6 @@
 module Kylas
   # Service for fetch products
-  class FetchProducts
+  class FetchProducts < BaseService
     attr_reader :user, :product_ids
 
     def initialize(user, product_ids = nil)
@@ -41,13 +41,7 @@ module Kylas
         url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/products/search?sort=updatedAt,desc&page=#{page}&size=100")
         https = Net::HTTP.new(url.host, url.port)
         https.use_ssl = true
-        post_request = Net::HTTP::Post.new(url)
-        post_request['Content-Type'] = 'application/json'
-        if user.kylas_api_key?
-          post_request['api-key'] = user.kylas_api_key
-        elsif user.kylas_refresh_token
-          post_request['Authorization'] = "Bearer #{user.fetch_access_token}"
-        end
+        post_request = Net::HTTP::Post.new(url, request_headers)
         response = https.request(post_request)
         JSON.parse(response.body)
       rescue StandardError => e

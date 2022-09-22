@@ -4,7 +4,7 @@ require 'net/http'
 
 module Kylas
   # Fetch contact details
-  class FetchContactDetails
+  class FetchContactDetails < BaseService
     attr_reader :user, :contact_ids, :is_single_contact
 
     def initialize(user, contact_ids, is_single_contact = false)
@@ -18,14 +18,7 @@ module Kylas
 
       https = Net::HTTP.new(url.host, url.port)
       https.use_ssl = true
-      request = Net::HTTP::Post.new(url)
-      if user.kylas_api_key?
-        request['api-key'] = user.kylas_api_key
-      elsif user.kylas_refresh_token
-        request['Authorization'] = "Bearer #{user.fetch_access_token}"
-      end
-      request['Content-Type'] = 'application/json'
-      request['Accept'] = 'application/json'
+      request = Net::HTTP::Post.new(url, request_headers)
 
       request.body = JSON.dump(
         {

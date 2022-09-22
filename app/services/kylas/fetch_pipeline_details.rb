@@ -6,7 +6,7 @@ require 'net/http'
 
 module Kylas
   # Service for fetch pipelines
-  class FetchPipelineDetails
+  class FetchPipelineDetails < BaseService
     attr_reader :user
 
     def initialize(user)
@@ -36,8 +36,7 @@ module Kylas
       begin
         page = data[:page] || 0
 
-        response = kylas_request(page: page) if user.kylas_refresh_token.present?
-        response = kylas_request(api_key: true, page: page) unless response&.code.eql?('200')
+        response = kylas_request(page: page)
         if response&.code.eql?('200')
           JSON.parse(response.body)
         else
@@ -50,21 +49,13 @@ module Kylas
       end
     end
 
-    def kylas_request(api_key: false, page: 0)
+    def kylas_request(page: 0)
       url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/pipelines/search?sort=updatedAt,desc&page=#{page}&size=100")
 
       https = Net::HTTP.new(url.host, url.port)
       https.use_ssl = true
 
-      request = Net::HTTP::Post.new(url)
-
-      if api_key
-        request['Api-Key'] = user.kylas_api_key
-      else
-        request['Authorization'] = "Bearer #{user.fetch_access_token}"
-      end
-      request['Content-Type'] = 'application/json'
-      request['Accept'] = 'application/json'
+      request = Net::HTTP::Post.new(url, request_headers)
       request.body = JSON.dump(
         {
           'fields': %w[name entityType active id],

@@ -4,7 +4,7 @@ require 'net/http'
 
 module Kylas
   # Fetch pipeline stages details
-  class FetchPipelineStageDetails
+  class FetchPipelineStageDetails < BaseService
     attr_reader :user_id, :pipeline_id
 
     def initialize(user_id, pipeline_id)
@@ -16,8 +16,7 @@ module Kylas
       @user = User.find_by(id: user_id)
       return { success: false, error: I18n.t('user_not_found') } if @user.blank?
 
-      response = kylas_request if @user.kylas_refresh_token.present?
-      response = kylas_request(api_key: true) unless response&.code.eql?('200')
+      response = kylas_request
 
       case response
       when Net::HTTPOK, Net::HTTPSuccess
@@ -61,21 +60,13 @@ module Kylas
       { stages_details: stages_details }
     end
 
-    def kylas_request(api_key: false)
+    def kylas_request
       url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/pipelines/#{pipeline_id}")
 
       https = Net::HTTP.new(url.host, url.port)
       https.use_ssl = true
 
-      request = Net::HTTP::Get.new(url)
-      if api_key
-        request['Api-Key'] = @user.kylas_api_key
-      else
-        request['Authorization'] = "Bearer #{@user.fetch_access_token}"
-      end
-      request['Content-Type'] = 'application/json'
-      request['Accept'] = 'application/json'
-
+      request = Net::HTTP::Get.new(url, request_headers)
       https.request(request)
     end
   end

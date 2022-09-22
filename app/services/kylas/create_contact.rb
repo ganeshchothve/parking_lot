@@ -4,7 +4,7 @@ require 'net/http'
 
 module Kylas
   # service used for create contact in Kylas
-  class CreateContact
+  class CreateContact < BaseService
     attr_reader :user, :contact
 
     def initialize(user, contact)
@@ -13,20 +13,13 @@ module Kylas
     end
 
     def call
-      return if user.blank? || contact.blank?
+      return if user.blank? || contact.blank? || request_headers.blank?
 
       url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/contacts")
 
       https = Net::HTTP.new(url.host, url.port)
       https.use_ssl = true
-      request = Net::HTTP::Post.new(url)
-      if user.kylas_api_key?
-        request['api-key'] = user.kylas_api_key
-      elsif user.kylas_refresh_token
-        request['Authorization'] = "Bearer #{user.fetch_access_token}"
-      end
-      request['Content-Type'] = 'application/json'
-      request['Accept'] = 'application/json'
+      request = Net::HTTP::Post.new(url, request_headers)
       request.body = JSON.dump(parse_contact(contact))
       response = https.request(request)
       api_log = ApiLog.new
