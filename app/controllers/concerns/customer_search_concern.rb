@@ -46,7 +46,7 @@ module CustomerSearchConcern
       @lead.update(permitted_attributes([:admin, @lead]))
     end
     if params[:manager_id].present?
-      cp_user = User.all.channel_partner.where(id: params[:manager_id]).first
+      cp_user = User.where(id: params[:manager_id]).first
       cp_lead_activity = CpLeadActivityRegister.create_cp_lead_object(@lead, cp_user) if cp_user.present?
       cp_lead_activity.save if cp_lead_activity.present?
     end
