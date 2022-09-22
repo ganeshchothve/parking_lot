@@ -33,15 +33,15 @@
     </div>
   </div>
 </div>
-<div class="row inventory-role-fields <%= f.object.enable_inventory  ?   '' :  'd-none'  %>">
+<!-- <div class="row inventory-role-fields <%#= f.object.enable_inventory  ?   '' :  'd-none'  %>">
   <div class="col-md-12">
     <div class="mb-3">
-      <%= f.label :enable_actual_inventory %>
-      <%= f.select :enable_actual_inventory, User.available_roles(@project.booking_portal_client).collect{|x| [ User.human_attribute_name("role.#{x}"), x]}, {}, class: 'selectize', multiple: true, disabled: !policy([:admin, f.object]).editable_field?("enable_actual_inventory") %>
-      <!-- TODO: throwing error on resolving conflict  -->
+      <%#= f.label :enable_actual_inventory %>
+      <%#= f.select :enable_actual_inventory, User.available_roles(@project.booking_portal_client).collect{|x| [ User.human_attribute_name("role.#{x}"), x]}, {}, class: 'selectize', multiple: true, disabled: !policy([:admin, f.object]).editable_field?("enable_actual_inventory") %>
+       TODO: throwing error on resolving conflict
     </div>
   </div>
-</div>
+</div> -->
 <div class="row inventory-role-fields <%= f.object.enable_inventory  ?   '' :  'd-none'  %>">
   <div class="col-md-12">
     <div class="mb-3">
