@@ -2681,6 +2681,7 @@ mr:
         primary_user_kyc_already_present: "mr--Primary User KYC is already present for booking detail"
         task_attributes: "mr--tasks_attributes should be a key, value pair"
         not_available_for_cancellation: "mr--Booking Detail %{name} is not available for cancellation."
+        unable_to_proceed: "mr--You cannot proceed further"
       text:
         flat_no: "mr--Flat No."
         agreement_price: "mr--Agreement Value"
@@ -2692,6 +2693,7 @@ mr:
         booked_tentative: "mr--Move to Booked Tentative"
         booked_confirmed: "mr--Move to Booked Confirmed"
         cancel_booking: "mr--Cancel Booking"
+
     invoices:
       index:
         link_name: "mr--Brokerages"
