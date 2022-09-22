@@ -45,16 +45,16 @@ var Gamification = (function(){
         }
       });
     }else if(rand == 3 && unit.floor > 5){
-      show('<%= I18n.t("gamification.text.popular_floor") %>', $container);
+      show(App.locale.gamification.text.popular_floor, $container);
     }else if((rand == 4 || rand == 5) && parseInt(unit.bedrooms) > 1){
-      show('<%= I18n.t("gamification.text.first_time_home_buyers") %>', $container);
+      show(App.locale.gamification.text.first_time_home_buyers, $container);
     }else{
-      show((_.random(5) + 8) + '<%= I18n.t("gamification.text.people_viewing_apartments") %>' , $container);
+      show((_.random(5) + 8) + App.locale.gamification.text.people_viewing_apartments , $container);
     }
   }
 
   var gamifyTowerSelection = function(tower, $container){
-    show((_.random(25) + 23) + '<%= I18n.t("gamification.text.people_viewing_home") %>', $container);
+    show((_.random(25) + 23) + App.locale.gamification.text.people_viewing_home, $container);
   }
 
   return {

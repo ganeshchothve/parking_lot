@@ -286,7 +286,7 @@ FormInitializer = (function(){
               }
             },
             error: function(){
-              Amura.global_error_handler('<%= I18n.t("global.fetch_errors.project_towers") %>')
+              Amura.global_error_handler(App.locale.global.fetch_errors.project_towers)
             }
           });
         }
@@ -332,7 +332,7 @@ FormInitializer = (function(){
               }
             },
             error: function(){
-              Amura.global_error_handler('<%= I18n.t("global.fetch_errors.regions") %>')
+              Amura.global_error_handler(App.locale.global.fetch_errors.regions)
             }
           });
         }
