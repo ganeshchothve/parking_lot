@@ -133,19 +133,19 @@ $(document).ready(function(){
 FormInitializer.init($("#billing_team_dashboard_filter"));
 FormInitializer.init($("#city_wise_booking_report_filter"));
 // $.ajax({
-// url: "/dashboard/project_wise_invoice_summary",
+// url: "<%= project_wise_invoice_summary_path %>",
 // type: "get"
 // });
 $.ajax({
-url: "/dashboard/project_wise_incentive_deduction_summary",
+url: "<%= project_wise_incentive_deduction_summary_path %>",
 type: "get"
 });
 $.ajax({
-url: "/dashboard/invoice_ageing_report",
+url: "<%= invoice_ageing_report_path %>",
 type: "get"
 });
 $.ajax({
-url: "/dashboard/city_wise_booking_report",
+url: "<%= city_wise_booking_report_path %>",
 type: "get"
 });
 });
