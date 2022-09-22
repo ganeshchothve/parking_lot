@@ -182,6 +182,8 @@ mr:
       payment_schedules: "mr--Error in fetching the project payment schedules..."
       cost_sheet_templates: "mr--Error in fetching the project cost sheet templates..."
     link_to:
+      all_exports: "mr--All Exports"
+      active_filter_exports: "mr--Active Filter Exports"
       click_to_zoom: "mr--Click to Zoom"
       add_new: "mr--Add New"
       need_help: "mr--Need Help?"
@@ -799,6 +801,9 @@ mr:
         total_cancelled: "mr--Total Cancelled"
       booking_detail_scheme:
         derived_from_scheme_id: "mr--Derived from Scheme"
+        name: "mr--Name"
+        field: "mr--Field"
+        value: "mr--Value"
 
       client:
         name: "mr--Client Name (Used across the app)"
@@ -867,6 +872,7 @@ mr:
         payment_gateway: "mr--Payment Gateway"
         enable_referral_bonus: "mr--Enable Referral Bonus"
         enable_payment_with_kyc: "mr--Enable Payment With KYC"
+        enable_live_inventory: "mr--Enable Live Inventory"
         enable_booking_with_kyc: "mr--Enabe Booking With KYC"
         allow_multiple_bookings_per_user_kyc: "mr--Allow Multiple Bookings per User KYC"
         incentive_calculation: "mr--Incentive Calculation"
@@ -1660,6 +1666,7 @@ mr:
         dlt_temp_id: "mr--DLT Template ID"
         project_id: "mr--Project"
       user_request:
+        project_unit: "mr--Project Unit"
         project_id: "mr--Project"
         category: "mr--Category."
         request_type: "mr--Request type"
@@ -2615,6 +2622,7 @@ mr:
         header: "mr--Tasks"
       links:
         print_booking_form: "mr--Print Booking Form"
+        edit_booking_detail: "mr--Edit Booking Detail"
       invoices:
         link_name: "mr--Brokerage Invoices"
       send_booking_detail_form_notification: "mr--Booking detail form will be sent to customer shortly."
@@ -3505,6 +3513,8 @@ mr:
         reason: "mr--Reason"
         alternate_project_unit: "mr--Alternate Project Unit"
         cancellation_request_text: "mr--Your unit will be released once the cancellation request is processed. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability."
+        i_agree: "mr--I agree"
+        i_agree_on_behalf_of: "mr--I Agree on behalf of %{name}"
 
 
     developers:
@@ -3869,3 +3879,7 @@ mr:
   javascript:
     global:
       please_wait: "mr--Please Wait..."
+  will_paginate:
+    page_entries_info:
+      single_page_html: "mr--Single Page Html"
+      multi_page_html: "mr--Multi Page Html"
