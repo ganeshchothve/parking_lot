@@ -34,8 +34,14 @@ class Admin::BookingDetailsController < AdminController
 
   def process_booking_on_project
     respond_to do |format|
-      response.set_header('location', new_admin_lead_search_path(@lead.id) )
-      format.json { render json: { status: :ok } }
+      if policy([:admin, BookingDetail.new(user: @lead.user, lead: @lead, project_unit: ProjectUnit.new(status: 'available', blocking_amount: current_client.blocking_amount))]).show_booking_link?
+        response.set_header('location', new_admin_lead_search_path(@lead.id) )
+        format.json { render json: { status: :ok } }
+        format.html { redirect_to new_admin_lead_search_path(@lead.id) }
+      else
+        format.json { render json: {errors: I18n.t("controller.booking_details.errors.unable_to_proceed")}, status: :unprocessable_entity }
+        format.html { render :process_booking_on_project, alert: I18n.t("controller.booking_details.errors.unable_to_proceed") }
+      end
     end
   end
 
