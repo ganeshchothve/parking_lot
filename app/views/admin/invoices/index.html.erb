@@ -22,8 +22,8 @@
               role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <%= t('controller.invoices.exports.link_name', name: nil) %> </button>
             <div class="dropdown-menu dropdown-menu-right">
-              <%= link_to t('controller.invoices.exports.link_name', name: t('global.all')), export_admin_invoices_path, class: 'dropdown-item' %>
-              <%= link_to t('controller.invoices.exports.link_name', name: t('global.active_filter')), export_admin_invoices_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
+              <%= link_to I18n.t("global.link_to.all_exports"), export_admin_invoices_path, class: 'dropdown-item' %>
+              <%= link_to I18n.t("global.link_to.active_filter_exports"), export_admin_invoices_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
             </div>
           </div>
           <% end %>

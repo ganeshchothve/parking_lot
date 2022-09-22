@@ -10,15 +10,15 @@
       <% booking_detail_scheme.non_editable_payment_adjustments.each do |payment_adjustment| %>
         <div class="row">
           <div class="col-md-4">
-            <p>Name</p>
+            <p><%= I18n.t("mongoid.attributes.booking_detail_scheme.name") %></p>
             <p><%= payment_adjustment.name %></p>
           </div>
           <div class="col-md-4">
-            <p>Field</p>
+            <p><%= I18n.t("mongoid.attributes.booking_detail_scheme.field") %></p>
             <p><%= payment_adjustment.field.humanize %></p>
           </div>
           <div class="col-md-4">
-            <p>Value</p>
+            <p><%= I18n.t("mongoid.attributes.booking_detail_scheme.value") %></p>
             <p><%= payment_adjustment.value(booking_detail.project_unit) %></p>
           </div>
         </div>

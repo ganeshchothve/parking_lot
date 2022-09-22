@@ -551,20 +551,20 @@
         type: "get",
       });
       $.ajax({
-        url: "/dashboard/dashboard_counts",
+        url: "<%= dashboard_counts_path %>",
         type: "get"
       });
       //$.ajax({
-      //  url: "/dashboard/invoice_summary",
+      //  url: "<%= invoice_summary_path %>",
       //  type: "get"
       //});
       <% if (["cp_admin","admin","superadmin"].include?current_user.role) %>
         $.ajax({
-          url: "/dashboard/cp_status",
+          url: "<%= cp_status_path %>",
           type: "get"
         });
         $.ajax({
-          url: "/dashboard/cp_performance",
+          url: "<%= cp_performance_path %>",
           type: "get"
         });
       <% end %>

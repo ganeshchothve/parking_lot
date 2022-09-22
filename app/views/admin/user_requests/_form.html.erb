@@ -61,7 +61,7 @@
                 <%= I18n.t("controller.user_requests.text.cancellation_request_text") %><br/>
                 <div class="form-check mt-3">
                   <input type="checkbox" id="accepted" class="form-check-input wd-22" />
-                  <label class="form-check-label d-inline-block ms-2">I Agree <%= @user_request.user_id == current_user.id ? "" : " on behalf of #{@user_request.lead.name}" %></label>
+                  <label class="form-check-label d-inline-block ms-2"><%= @user_request.user_id == current_user.id ? I18n.t("controller.user_requests.text.i_agree") : I18n.t("controller.user_requests.text.i_agree_on_behalf_of", name: @user_request.lead.name) %></label>
                 </div>
               </div>
             </div>

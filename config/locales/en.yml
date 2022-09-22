@@ -182,6 +182,8 @@ en:
       payment_schedules: "Error in fetching the project payment schedules..."
       cost_sheet_templates: "Error in fetching the project cost sheet templates..."
     link_to:
+      all_exports: "All Exports"
+      active_filter_exports: "Active Filter Exports"
       click_to_zoom: "Click to Zoom"
       add_new: "Add New"
       need_help: "Need Help?"
@@ -799,6 +801,9 @@ en:
         total_cancelled: "Total Cancelled"
       booking_detail_scheme:
         derived_from_scheme_id: "Derived from Scheme"
+        name: "Name"
+        field: "Field"
+        value: "Value"
 
       client:
         name: "Client Name (Used across the app)"
@@ -867,6 +872,7 @@ en:
         payment_gateway: "Payment Gateway"
         enable_referral_bonus: "Enable Referral Bonus"
         enable_payment_with_kyc: "Enable Payment With KYC"
+        enable_live_inventory: "Enable Live Inventory"
         enable_booking_with_kyc: "Enabe Booking With KYC"
         allow_multiple_bookings_per_user_kyc: "Allow Multiple Bookings per User KYC"
         incentive_calculation: "Incentive Calculation"
@@ -1660,6 +1666,7 @@ en:
         dlt_temp_id: "DLT Template ID"
         project_id: "Project"
       user_request:
+        project_unit: "Project Unit"
         project_id: "Project"
         category: "Category."
         request_type: "Request type"
@@ -2615,6 +2622,7 @@ en:
         header: "Tasks"
       links:
         print_booking_form: "Print Booking Form"
+        edit_booking_detail: "Edit Booking Detail"
       invoices:
         link_name: "Brokerage Invoices"
       send_booking_detail_form_notification: "Booking detail form will be sent to customer shortly."
@@ -3505,6 +3513,8 @@ en:
         reason: "Reason"
         alternate_project_unit: "Alternate Project Unit"
         cancellation_request_text: "Your unit will be released once the cancellation request is processed. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability."
+        i_agree: "I agree"
+        i_agree_on_behalf_of: "I Agree on behalf of %{name}"
 
 
     developers:
@@ -3869,3 +3879,7 @@ en:
   javascript:
     global:
       please_wait: "Please Wait..."
+  will_paginate:
+    page_entries_info:
+      single_page_html: "Single Page Html"
+      multi_page_html: "Multi Page Html"
