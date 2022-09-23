@@ -3,8 +3,7 @@
     <%= I18n.t("global.search_by", name: global_labels[:customer]) %>
   </div>
   <div class="card-body">
-    <% url = search_by_admin_leads_path %>
-    <%= form_tag url, method: "get", id: "lead_search_form", remote: true do %>
+    <%= form_tag search_by_admin_leads_path, method: "get", id: "lead_search_form", remote: true do %>
       <div class = "row" >
         <%= hidden_field_tag :element, '#users' %>
         <%= hidden_field_tag :template, 'index' %>

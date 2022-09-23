@@ -379,6 +379,10 @@ en:
         zero: "Document"
         one: "Document"
         other: "Documents"
+      public_asset:
+        zero: "Public Asset"
+        one: "Public Asset"
+        other: "Public Assets"
       video:
         zero: "Video"
         one: "Video"
@@ -3148,6 +3152,7 @@ en:
         wait_time: "Wait Time"
         last_visit_date: "Last site visit date"
         last_visit_status: "Last site visit status"
+        mark_conducted: "Mark site visit conducted"
 
       headings:
         customer_site_visit: "Customer Site Visit"
@@ -3745,6 +3750,10 @@ en:
     booking_details/_details: "Bottom Text in Booking detail overview section"
     assets/_videos: "Videos in Collaterals Section on Dashboard"
     project_units/_section: "Projects Section on Dashboard"
+    quotation_pdf: "Quotation PDF"
+    terms_and_conditions: "Terms and Conditions"
+    privacy_policy: "Privacy Policy"
+    assets/_videos: "Assets Videos"
 
   number:
     human:
