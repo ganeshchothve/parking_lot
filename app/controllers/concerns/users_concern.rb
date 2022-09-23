@@ -86,7 +86,7 @@ module UsersConcern
   end
 
   def sync_kylas_users
-    if Rails.env.development?
+    if Rails.env.development? || Rails.env.staging?
       SyncKylasUsersWorker.new.perform(current_user.id.to_s)
     else
       SyncKylasUsersWorker.perform_async(current_user.id.to_s)
