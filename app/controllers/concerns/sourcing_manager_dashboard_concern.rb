@@ -65,9 +65,9 @@ module SourcingManagerDashboardConcern
     start_date, end_date = @dates.split(' - ')
     matcher = {created_at: {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day }}
     if ["superadmin","admin"].include?(current_user.role) #Channel Partner Manager Performance Dashboard for admin and superadmin
-      @cp_managers = User.where(role: "cp").filter_by_is_active("true")
+      @cp_managers = User.where(role: "cp", booking_portal_client_id: current_client.id).filter_by_is_active("true")
     else
-      @cp_managers = User.filter_by_role(:cp).where(manager_id: current_user.id).filter_by_is_active("true")
+      @cp_managers = User.filter_by_role(:cp).where(manager_id: current_user.id, booking_portal_client_id: current_client.id).filter_by_is_active("true")
     end
 
     @cp_managers_hash = {'No Manager' => 'No Manager'}
