@@ -129,7 +129,11 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def sync_kylas_user?
-    user.booking_portal_client.kylas_tenant_id.present?
+    if user.role?(:superadmin)
+      user.selected_client.kylas_tenant_id.present?
+    else
+      user.booking_portal_client.kylas_tenant_id.present?
+    end
   end
 
   def permitted_attributes(params = {})

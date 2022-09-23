@@ -81,7 +81,8 @@ module UserRequests
           booking_portal_client_id: alternate_project_unit.booking_portal_client_id,
           search: search,
           lead: search.lead,
-          user: search.lead.user
+          user: search.lead.user,
+          creator_id: current_booking_detail.try(:creator).try(:id)
         )
       end
 

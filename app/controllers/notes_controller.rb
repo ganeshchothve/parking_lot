@@ -5,12 +5,15 @@ class NotesController < ApplicationController
   around_action :apply_policy_scope, only: :index
 
   def new
-    @note = Note.new(notable: @notable)
+    @note = Note.new(notable: @notable, booking_portal_client: current_client)
     render layout: false
   end
 
   def create
-    @note = Note.new(notable: @notable, creator: current_user)
+    @note = Note.new(
+                  notable: @notable, 
+                  creator: current_user,
+                  booking_portal_client: current_client)
     @note.assign_attributes(permitted_attributes([current_user_role_group, Note.new]))
     authorize [current_user_role_group, @note]
     respond_to do |format|
