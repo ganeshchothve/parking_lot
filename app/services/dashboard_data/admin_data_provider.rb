@@ -55,7 +55,7 @@ module DashboardData
         if user.selected_client.present?
           Scheme.approved.where(booking_portal_client: user.selected_client).count
         else
-          Scheme.approved.count
+          Scheme.approved.count(booking_portal_client: user.booking_portal_client).count
         end
       end
 

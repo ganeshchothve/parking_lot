@@ -40,7 +40,7 @@
             <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong>Total</strong></td>
             <td><strong>-</strong></td>
             <td><strong>
-                  <%= link_to @total_booking, admin_booking_details_path({ fltrs: { created_at: created_at, status: ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]}}) %>
+                  <%= link_to @total_booking, admin_booking_details_path({ fltrs: { project_ids: params[:project_ids] , created_at: created_at, status: ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"], }}) %>
             </strong></td>
           </tr>
         <% else %>
