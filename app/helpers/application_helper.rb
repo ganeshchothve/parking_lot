@@ -85,10 +85,10 @@ module ApplicationHelper
     #   @current_client = Client.asc(:created_at).first # GENERICTODO: handle this
     # end
     return nil if defined?(current_user) && current_user.blank?
-    if current_user.role?(:superadmin)
-      @current_client = current_user.selected_client
+    @current_client = if current_user.role?('superadmin')
+      (Client.where(id: current_user.selected_client_id).first || current_user.booking_portal_client)
     else
-      @current_client = current_user.booking_portal_client
+      current_user.booking_portal_client
     end
     @current_client
   end
@@ -97,6 +97,10 @@ module ApplicationHelper
     return @current_project if @current_project.present?
     # TODO: for now we are considering one project per client only so loading first client project here
     @current_project = current_client.projects.first if current_client.present?
+  end
+
+  def marketplace?
+    current_client.kylas_tenant_id.present?
   end
 
   def bottom_navigation(classes='')
@@ -235,7 +239,7 @@ module ApplicationHelper
   end
 
   def full_page_view?
-    action_name.in?(%w(generate_booking_detail_form generate_invoice sales_board quotation channel_partners_leaderboard_without_layout dashboard_landing_page payout_dashboard payout_list payout_show))
+    action_name.in?(%w(generate_booking_detail_form generate_invoice sales_board quotation channel_partners_leaderboard_without_layout dashboard_landing_page payout_dashboard payout_list payout_show print_template))
   end
 
   def select_icon(content_type = nil)

@@ -19,11 +19,12 @@ module BookingDetailDashboardConcern
     if params[:project_ids].present?
       options[:matcher][:project_id] = {"$in": params[:project_ids].map{|id| BSON::ObjectId(id) }}
     else
-      options[:matcher][:project_id] = {"$in": Project.all.pluck(:_id).uniq }
+      options[:matcher][:project_id] = {"$in": Project.where(Project.user_based_scope(current_user)).pluck(:_id).uniq }
     end
     if params[:source].present?
       options[:matcher][:source] = params[:source]
     end
+    options[:booking_portal_client_id] = current_client.id
     options
   end
 

@@ -12,7 +12,7 @@ class Template::BookingDetailFormTemplate < Template
     "<div class='container pt-3 bg-white'>
     <div class='row' align='center'>
       <div class='col-sm' align='center'>
-        <img src='<%= @booking_detail.project.logo&.url || current_client&.logo&.url %>' class='img-responsive'>
+        <img src='<%= @booking_detail.project.logo&.url || @booking_detail&.booking_portal_client&.logo&.url %>' class='img-responsive'>
       </div>
     </div>
     <div class='row' align='center'>
@@ -432,7 +432,7 @@ Yours faithfully,</br><strong>For <%= @booking_detail.project.developer_name %>,
   def self.pdf_content
 "<table style='width:100%'>
   <tr align='center'>
-    <td align='center'><%#= wicked_pdf_image_tag @booking_detail.project&.logo&.url || current_client&.logo&.url %></td>
+    <td align='center'><%#= wicked_pdf_image_tag @booking_detail.project&.logo&.url || @booking_detail&.booking_portal_client&.logo&.url %></td>
   </tr>
   <tr align='center'>
     <td align='center'><h4><%= @booking_detail.project_name %></h4> </td>

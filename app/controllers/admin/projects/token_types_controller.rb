@@ -23,7 +23,7 @@ class Admin::Projects::TokenTypesController < AdminController
   # GET /admin/projects/:project_id/token_types
   #
   def new
-    @token_type = @project.token_types.build
+    @token_type = @project.token_types.build(booking_portal_client: current_client)
     render layout: false
   end
 
@@ -39,7 +39,7 @@ class Admin::Projects::TokenTypesController < AdminController
   # POST /admin/projects/:project_id/token_types/:id
   #
   def create
-    @token_type = @project.token_types.build
+    @token_type = @project.token_types.build(booking_portal_client: current_client)
     @token_type.assign_attributes(permitted_attributes([current_user_role_group, @token_type]))
 
     respond_to do |format|

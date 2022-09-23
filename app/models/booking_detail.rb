@@ -14,10 +14,12 @@ class BookingDetail
   include CrmIntegration
   include IncentiveSchemeAutoApplication
 
+
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   STATUSES = %w[hold blocked booked_tentative booked_confirmed under_negotiation scheme_rejected scheme_approved swap_requested swapping swapped swap_rejected cancellation_requested cancelling cancelled cancellation_rejected]
   BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed under_negotiation scheme_approved]
   DOCUMENT_TYPES = %w[booking_detail_form document]
+  TEMPLATE_TYPES = %w[booking_detail_form_html allotment_letter]
   SKIPPED_BOOKING_STAGES = %w[swapped cancelled]
 
   field :status, type: String

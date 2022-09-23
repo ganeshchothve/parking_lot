@@ -2,7 +2,7 @@ module RevenueReportDashboardConcern
 
   def project_wise_tentative_revenue
     @project_wise_total_tentative_amount={}
-    @project_wise_total_tentative_amount = RevenueReportDashboardDataProvider.tentative_reports(current_user, params)
+    @project_wise_total_tentative_amount = RevenueReportDashboardDataProvider.tentative_reports(current_user, params, current_client)
 
     projects_hash
 
@@ -19,7 +19,7 @@ module RevenueReportDashboardConcern
 
   def project_wise_actual_revenue
     @project_wise_total_invoice_amount={}
-    @project_wise_total_invoice_amount = RevenueReportDashboardDataProvider.actual_reports(current_user, params)
+    @project_wise_total_invoice_amount = RevenueReportDashboardDataProvider.actual_reports(current_user, params, current_client)
 
     projects_hash
 

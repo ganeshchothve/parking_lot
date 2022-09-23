@@ -15,7 +15,7 @@ module DashboardData
         elsif user.selected_client.present?
           User.in(role: %w(channel_partner cp_owner)).where(booking_portal_client: user.selected_client).count
         else
-          User.in(role: %w(channel_partner cp_owner)).count
+          User.in(role: %w(channel_partner cp_owner)).where(booking_portal_client: user.booking_portal_client).count
         end
       end
 
@@ -23,7 +23,7 @@ module DashboardData
         if user.selected_client.present?
           BookingDetail.where(status: {"$in": %w[blocked booked_tentative booked_confirmed under_negotiation]}, booking_portal_client: user.selected_client).count
         else
-          BookingDetail.where(status: {"$in": %w[blocked booked_tentative booked_confirmed under_negotiation]}).count
+          BookingDetail.where(status: {"$in": %w[blocked booked_tentative booked_confirmed under_negotiation]}, booking_portal_client: user.booking_portal_client).count
         end
       end
 
@@ -31,7 +31,7 @@ module DashboardData
         if user.selected_client.present?
           ProjectUnit.not_in(status: 'not_available').where(booking_portal_client: user.selected_client).count
         else
-          ProjectUnit.not_in(status: 'not_available').count
+          ProjectUnit.not_in(status: 'not_available').where(booking_portal_client: user.booking_portal_client).count
         end
       end
 
@@ -39,7 +39,7 @@ module DashboardData
         if user.selected_client.present?
           UserRequest.where(status: 'pending', booking_portal_client: user.selected_client).count
         else
-          UserRequest.where(status: 'pending').count
+          UserRequest.where(status: 'pending', booking_portal_client: user.booking_portal_client).count
         end
       end
 

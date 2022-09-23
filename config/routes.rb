@@ -52,6 +52,7 @@ Rails.application.routes.draw do
       patch :create, on: :collection
     end
   end
+
   scope "*notable_type/:notable_id" do
     resources :notes, controller: :notes, as: :notables
   end
@@ -92,6 +93,12 @@ Rails.application.routes.draw do
         patch 'update_extension'
         get 'accompanied_credit'
         patch 'update_accompanied_credit'
+      end
+    end
+
+    scope "*subject_class/:subject_class_id" do
+      resources :templates, only: [], controller: :templates, as: :custom_templates do
+        get :choose_template_for_print, on: :collection
       end
     end
 
@@ -180,7 +187,9 @@ Rails.application.routes.draw do
     end
     resources :push_notifications, only: %i[index show new create]
     resource :client, except: [:new, :create] do
-      resources :templates, only: [:edit, :update, :index]
+      resources :templates, only: [:edit, :update, :index, :new, :create] do
+        get :print_template, on: :collection
+      end
       get 'document_sign/prompt'
       get 'document_sign/callback'
       get 'get_regions'
@@ -221,6 +230,7 @@ Rails.application.routes.draw do
       get :collaterals, on: :collection
       post :sync_on_selldo, on: :member
       get :third_party_inventory, on: :collection
+      get :sync_kylas_products, on: :collection
 
       resources :unit_configurations, only: [:index, :edit, :update], controller: 'projects/unit_configurations'
       resources :token_types, except: [:destroy, :show], controller: 'projects/token_types' do
@@ -341,6 +351,7 @@ Rails.application.routes.draw do
         get :search_by
         get :site_visit_project_wise
         get :site_visit_partner_wise
+        get :sync_kylas_users
       end
 
       match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]

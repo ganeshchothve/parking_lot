@@ -28,6 +28,7 @@ class User
   DOCUMENT_TYPES = %w[home_loan_application_form photo_identity_proof residence_address_proof residence_ownership_proof income_proof job_continuity_proof bank_statement advance_processing_cheque financial_documents first_page_co_branding last_page_co_branding co_branded_asset]
   TEAM_LEAD_DASHBOARD_ACCESS_USERS = %w[team_lead gre]
   KYLAS_MARKETPALCE_USERS = %w[admin sales]
+  KYLAS_CUSTOM_FIELDS_ENTITIES = %w[lead deals meetings].freeze
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -139,6 +140,9 @@ class User
   field :kylas_user_id, type: String
   field :kylas_access_token_expires_at, type: DateTime
   field :kylas_contact_id, type: String
+  # Kylas Custom Fields options values fields
+  field :kylas_custom_fields_option_id, type: Hash, default: {}
+
 
   ## Security questionable
 
@@ -240,6 +244,7 @@ class User
   scope :filter_by_userwise_project_ids, ->(user) { self.in(project_ids: user.project_ids) if user.try(:project_ids).present? }
   scope :filter_by_sales_status, ->(sales_status){ sales_status.is_a?(Array) ? where( sales_status: { "$in": sales_status }) : where(sales_status: sales_status.as_json) }
   scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
+  scope :filter_by_user_status_in_company, ->(user_status_in_company){ user_status_in_company.is_a?(Array) ? where( user_status_in_company: { "$in": user_status_in_company }) : where(user_status_in_company: user_status_in_company.as_json) }
   scope :incentive_eligible, ->(category) do
     if category == 'referral'
       nin(referred_by_id: ['', nil]).in(role: BUYER_ROLES + %w(channel_partner cp_owner))

@@ -13,12 +13,12 @@ class Admin::MeetingsController < AdminController
   end
 
   def new
-    @meeting = Meeting.new
+    @meeting = Meeting.new(booking_portal_client_id: current_client.id)
     render layout: false
   end
 
   def create
-    @meeting = Meeting.new
+    @meeting = Meeting.new(booking_portal_client_id: current_client.id)
     @meeting.assign_attributes(permitted_attributes([current_user_role_group, @meeting]))
     @meeting.creator = current_user
     

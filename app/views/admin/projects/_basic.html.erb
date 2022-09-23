@@ -229,12 +229,14 @@
         <%= f.email_field :support_mail, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("support_mail") %>
       </div>
     </div>
+    <div class="row">
     <div class="col-md-12">
       <div class="mb-3">
         <%= f.label :support_phone %>
         <%= f.text_field :support_phone, class: 'form-control phone', disabled: !policy([:admin, project]).editable_field?("support_phone") %>
       </div>
     </div>
+  </div>
   </div>
 </div>
 <div class="card mt-3">

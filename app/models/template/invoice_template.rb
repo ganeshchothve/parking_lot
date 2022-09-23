@@ -257,7 +257,7 @@ class Template::InvoiceTemplate < Template
                   <td colspan="2">To,</td>
                 </tr>
                 <tr>
-                  <td width="70%"><b><%= invoice.project.try(:registration_name) || current_client.try(:registration_name) %></b></td>
+                  <td width="70%"><b><%= invoice.project.try(:registration_name) || invoice.try(:booking_portal_client).try(:registration_name) %></b></td>
                   <td>Place of Supply : <%= client_address.try(:to_sentence) %></td>
                 </tr>
                 <tr>

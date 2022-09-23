@@ -13,12 +13,12 @@ class Admin::AnnouncementsController < AdminController
   end
 
   def new
-    @announcement = Announcement.new
+    @announcement = Announcement.new(booking_portal_client_id: current_client.id)
     render layout: false
   end
 
   def create
-    @announcement = Announcement.new
+    @announcement = Announcement.new(booking_portal_client_id: current_client.id)
     @announcement.assign_attributes(permitted_attributes([current_user_role_group, @announcement]))
     respond_to do |format|
       if @announcement.save

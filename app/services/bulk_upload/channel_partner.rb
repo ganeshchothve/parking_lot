@@ -33,9 +33,8 @@ module BulkUpload
           end
         end
         attrs[:interested_services] = ['Lead Management']
-        attrs[:booking_portal_client_id] = bur.client_id
-
-        user = User.new(phone: attrs[:phone])
+        attrs[:booking_portal_client] = bur.client
+        user = User.new(phone: attrs[:phone], booking_portal_client: bur.client)
 
         cp = ::ChannelPartner.new(attrs)
         cp.assign_attributes(primary_user: user)

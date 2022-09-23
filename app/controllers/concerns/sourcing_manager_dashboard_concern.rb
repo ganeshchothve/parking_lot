@@ -43,12 +43,12 @@ module SourcingManagerDashboardConcern
     project_ids = Project.where(id: {"$in": project_ids}).distinct(:id)
     start_date, end_date = @dates.split(' - ')
     if ["superadmin","admin"].include?(current_user.role) #Channel Partner Manager Performance Dashboard for admin and superadmin
-      @cps = User.where(role: "cp").filter_by_is_active("true")
+      @cps = User.where(role: "cp", booking_portal_client_id: current_client.id).filter_by_is_active("true")
     else
       # @cps = User.filter_by_role("cp").filter_by_userwise_project_ids(current_user)
-      @cps = User.filter_by_role("cp").where(manager_id: current_user.id).filter_by_is_active("true")
+      @cps = User.filter_by_role("cp").where(manager_id: current_user.id, booking_portal_client_id: current_client.id).filter_by_is_active("true")
     end
-    @matcher = {matcher: {created_at: {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day }}}
+    @matcher = {matcher: {created_at: {"$gte": Date.parse(start_date).beginning_of_day, "$lte": Date.parse(end_date).end_of_day }, booking_portal_client_id: current_client.id}}
     @matcher[:matcher][:project_id] = {"$in": project_ids} if project_ids.present?
     @leads = DashboardDataProvider.cp_performance_walkins(current_user, @matcher)
     @site_visits = DashboardDataProvider.cp_performance_site_visits(current_user, @matcher)

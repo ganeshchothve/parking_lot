@@ -78,6 +78,12 @@ module BookingDetailsHelper
     end
   end
 
+  def available_booking_custom_templates(booking_detail)
+    templates = ::Template::CustomTemplate.where(subject_class: 'BookingDetail', project_id: booking_detail.project.id, is_active: true).collect{|t| [t.name.titleize, t.id]}
+    booking_form_and_allotment_letter_templates = Template.where(project_id: booking_detail.project.id, is_active: true).in(name: ['allotment_letter', 'booking_detail_form_html']).map{|t| [t.name.try(:titleize), t.id]}
+    booking_form_and_allotment_letter_templates + templates
+  end
+
   def allow_booking_approval_state_change?(booking_detail)
     policy([current_user_role_group, booking_detail]).move_to_next_approval_state? && policy([current_user_role_group, booking_detail]).editable_field?('approval_event')
   end

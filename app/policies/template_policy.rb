@@ -11,6 +11,14 @@ class TemplatePolicy < ApplicationPolicy
     index?
   end
 
+  def new?
+    false
+  end
+
+  def create?
+    false
+  end
+
   def permitted_attributes params={}
     attributes = [:content, :subject, :is_active, :data]
     attributes

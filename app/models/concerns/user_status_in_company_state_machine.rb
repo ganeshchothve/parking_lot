@@ -14,7 +14,7 @@ module UserStatusInCompanyStateMachine
         transitions from: :inactive, to: :pending_approval, after: :remove_rejection_reason
       end
 
-      event :active, after: [:set_channel_partner, :clear_register_token, :after_active_event] do
+      event :active, after: [:set_channel_partner, :clear_register_token, :after_active_event, :push_to_kylas] do
         transitions from: :inactive, to: :active
         transitions from: :pending_approval, to: :active
       end
@@ -78,6 +78,11 @@ module UserStatusInCompanyStateMachine
         )
         push_notification.save
       end
+    end
+
+    # Push Channel Partner to Kylas as a Custom Field
+    def push_to_kylas
+      # Kylas::UpdateCustomField.new(self, self, options = {}).call
     end
 
   end

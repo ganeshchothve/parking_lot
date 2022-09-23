@@ -73,19 +73,16 @@
   <% if current_client.enable_channel_partners? %>
     <div class="mb-3 channel_partner_div">
       <% if f.object.lead.present? && f.object.lead.manager && %w(channel_partner cp_owner).include?(f.object.lead.manager.role)
-        channel_partners = User.where(id: f.object.lead.manager_id)
+        channel_partners = User.where(id: f.object.lead.manager_id, booking_portal_client_id: current_user.booking_portal_client_id, user_status_in_company: 'active')
       elsif %w(channel_partner cp_owner).include?(current_user.role)
         channel_partners = User.where(id: current_user.id)
       else
-        channel_partners = User.in(role: ['channel_partner', 'cp_owner'] )
+        channel_partners = User.in(role: ['channel_partner', 'cp_owner']).where(booking_portal_client_id: current_user.booking_portal_client_id, user_status_in_company: 'active')
       end %>
         <% channel_partners = channel_partners.where(booking_portal_client_id: current_client.id) %>
         <label class="'label-required control-label'">Channel Partner</label>
         <%= f.select :manager_id,channel_partners.collect{|cp| [(cp.name), cp.id]}, {prompt: true}, class: 'selectize', required: true, id: 'tagged_manager', disabled: !(policy([:admin, @booking_detail]).editable_field?("manager_id"))  %>
 
-        <% unless (%w(channel_partner cp_owner).include?(current_user.role) && current_client.launchpad_portal?)  %>
-          <%= link_to "Add Channel Partner", new_channel_partner_channel_partners_path(lead_id: f.object.try(:lead).try(:id).to_s), class: 'modal-remote-form-link' %>
-        <% end %>
     </div>
   <% end %>
 </div>

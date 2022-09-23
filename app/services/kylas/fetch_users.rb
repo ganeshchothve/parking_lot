@@ -39,12 +39,13 @@ module Kylas
         https.use_ssl = true
         post_request = Net::HTTP::Post.new(url)
         post_request['Content-Type'] = 'application/json'
-        if user.kylas_api_key?
-          post_request['api-key'] = user.kylas_api_key
-        elsif user.kylas_refresh_token
+
+        if user.kylas_refresh_token
           post_request['Authorization'] = "Bearer #{user.fetch_access_token}"
+        elsif user.kylas_api_key?
+          post_request['api-key'] = user.kylas_api_key
         end
-        post_request.body = { fields: %w[firstName lastName id email active] }.to_json
+        post_request.body = { fields: %w[firstName lastName id email phoneNumbers active] }.to_json
         response = https.request(post_request)
         JSON.parse(response.body)
       rescue StandardError => e
@@ -56,9 +57,7 @@ module Kylas
 
     def parse_kylas_user_data(json_resp)
       json_resp['content']&.map do |content|
-        if content['active']
-          ["#{content['firstName']} #{content['lastName']} (#{content['email']})", content['id']]
-        end
+        [content['firstName'], content['lastName'], content['email'], content['phoneNumbers'][0], content['id'], content['active']]
       end
     end
   end

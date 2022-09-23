@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= current_project.present? ? "#{current_project.name} | " : "" %><%= current_client.name %></title>
+    <title><%= @booking_detail.project_unit.project.present? ? "#{@booking_detail.project_unit.project.name} | " : "" %><%= @booking_detail.creator&.booking_portal_client&.name %></title>
     <%= wicked_pdf_stylesheet_link_tag 'dashboard' %>
     <%= wicked_pdf_stylesheet_link_tag "pdf" -%>
   </head>

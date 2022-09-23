@@ -9,9 +9,23 @@
       <div class="modal-body theme-form">
         <div class="mb-3">
           <%= f.label :name %>
-          <div><%= t("templates.#{@template.name}") rescue @template._type.split("::").last %></div>
+          <% if @template.is_a?(::Template::CustomTemplate) %>
+            <%= f.text_field :name, autofocus: true, class: "form-control" %>
+          <% else %>
+              <div> <%= t("templates.#{@template.name}") rescue @template._type.split("::").last %> </div>
+          <% end %>
         </div>
 
+        <% if @template.is_a?(::Template::CustomTemplate) %>
+          <div class="col-md-12">
+            <%= f.label :project_ids %>
+            <%= f.select :project_ids, options_from_collection_for_select(f.object.project_ids.present? ? Project.in(id: f.object.project_ids) : [], "id" , "ds_name" , f.object.project_ids), {}, class: 'selectize-remote' , multiple: true, data: {url: admin_projects_path} %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :subject_class, class: 'label-required' %>
+            <%= f.select :subject_class, ::Template::CustomTemplate::SUBJECT_CLASSES.collect{|x| [I18n.t("mongoid.attributes.template/subject_classes.#{x}"), x] }, {prompt: 'Select' }, class: "selectize" , required: true %>
+          </div>
+        <% end %>
 
         <% if @template.is_a?(::Template::EmailTemplate) %>
           <div class="mb-3">

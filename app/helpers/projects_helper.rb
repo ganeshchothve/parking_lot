@@ -15,4 +15,5 @@ module ProjectsHelper
   def allow_invoice_create?(project)
     policy([current_user_role_group, Invoice.new(project: project)]).new?
   end
+
 end

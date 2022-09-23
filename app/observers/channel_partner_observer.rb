@@ -155,7 +155,7 @@ class ChannelPartnerObserver < Mongoid::Observer
         template = Template::EmailTemplate.where(name: template_name).first
         if template.present?
           email = Email.create!({
-            booking_portal_client_id: current_client.id,
+            booking_portal_client_id: channel_partner.booking_portal_client.id,
             email_template_id: template.id,
             recipients: recipients.flatten,
             triggered_by_id: channel_partner.id,
@@ -168,7 +168,7 @@ class ChannelPartnerObserver < Mongoid::Observer
           phones = recipients.collect(&:phone).reject(&:blank?)
           if phones.present?
             Sms.create!(
-              booking_portal_client_id: current_client.id,
+              booking_portal_client_id: channel_partner.booking_portal_client.id,
               to: phones,
               sms_template_id: sms_template.id,
               triggered_by_id: channel_partner.id,

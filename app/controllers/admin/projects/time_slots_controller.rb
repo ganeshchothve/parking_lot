@@ -16,14 +16,14 @@ class Admin::Projects::TimeSlotsController < AdminController
   # GET /admin/projects/:project_id/time_slots
   #
   def new
-    @time_slot = @project.time_slots.build
+    @time_slot = @project.time_slots.build(booking_portal_client: current_client)
     render layout: false
   end
 
   # POST /admin/projects/:project_id/time_slots/:id
   #
   def create
-    @time_slot = @project.time_slots.build
+    @time_slot = @project.time_slots.build(booking_portal_client: current_client)
     @time_slot.assign_attributes(permitted_attributes([current_user_role_group, @time_slot]))
 
     respond_to do |format|

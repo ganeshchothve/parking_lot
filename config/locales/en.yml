@@ -40,6 +40,7 @@ en:
     otp: "OTP"
     overview: 'Overview'
     total: 'Total'
+    template: Template
     boolean:
       :true: 'Yes'
       :false: 'No'
@@ -441,6 +442,11 @@ en:
         agreement_date: Agreement Date
         booked_on: Booked On
         approval_status: Approval Status
+        template_docs: Documents
+        print_document: Print Document
+      booking_details/template_docs:
+        booking_detail_form_html: Booking Form
+        allotment_letter: Allotment Letter
       booking_detail/selldo_status:
         booked_tentative: tentative
         booked_confirmed: confirmed
@@ -1105,6 +1111,11 @@ en:
         dlt_tag_id: "DLT Tag ID"
         dlt_temp_id: "DLT Template ID"
         project_id: 'Project'
+        project_ids: 'Projects'
+        print_document: Print Document
+        custom_document: Documents
+        document_not_available: Document not available
+        print: Print
       user_request:
         request_type: 'Request type'
         _type: 'Request type'
@@ -1125,6 +1136,13 @@ en:
         name_email_phone: 'Name/Email/Phone'
         requestable_type: 'Requestable Type'
         request_details: 'Related to'
+      template/subject_classes:
+        BookingDetail: Booking
+        Receipt: Payment
+        Lead: Lead
+        Invoice: Invoice
+        UserRequest::Cancellation: Cancellation Request
+        UserRequest::Swap: Swap Request
       user_request/status:
         pending: Pending
         processing: Processing
@@ -1702,6 +1720,8 @@ en:
         header: 'Tasks'
       invoices:
         link_name: 'Brokerage Invoices'
+      choose_template_for_print:
+        link_name: Print Documents
       send_booking_detail_form_notification: "Booking detail form will be sent to customer shortly."
       set_booking_detail_missing: "Booking detail not found"
       set_project_unit_missing: "Project unit not found"
@@ -2034,10 +2054,14 @@ en:
         link_name: Details
 
     templates:
+      new:
+        link_name: 'Add Template'
       index:
         link_name: 'Templates'
       show:
         link_name: Template Detail
+      choose_template_for_print:
+        link_name: Print Documents
 
     users:
       set_user_missing: 'User not found'

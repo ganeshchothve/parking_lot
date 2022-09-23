@@ -39,6 +39,7 @@ class ProjectUnitPolicy < ApplicationPolicy
 
   def make_available?
     valid = (record.status == 'hold' && user.booking_portal_client.enable_actual_inventory?(user))
+    _role_based_check(valid)
   end
 
   def update_scheme?
