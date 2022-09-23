@@ -42,6 +42,9 @@
                         <% if policy([ current_user_role_group, Asset.new(assetable: channel_partner)]).index? %>
                         <%= link_to t('controller.assets.index.link_name'), assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'dropdown-item modal-remote-form-link' %>
                         <% end %>
+                        <% if policy([current_user_role_group, channel_partner]).choose_template_for_print? %>
+                          <%= link_to t('controller.templates.choose_template_for_print.link_name'), choose_template_for_print_admin_custom_templates_path(subject_class: channel_partner.class.model_name.i18n_key.to_s, subject_class_id: channel_partner.id.to_s), class: 'dropdown-item modal-remote-form-link' %>
+                        <% end %>
                       </div>
                     </div>
                   </div>

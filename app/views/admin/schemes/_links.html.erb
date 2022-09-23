@@ -4,5 +4,8 @@
     <% if policy([:admin, scheme]).edit? %>
       <%= link_to t('helpers.edit.link_name', model: Scheme.model_name.human), edit_admin_scheme_path(scheme), class: 'dropdown-item modal-remote-form-link' %>
     <% end %>
+    <% if policy([:admin, scheme]).choose_template_for_print? %>
+      <%= link_to t('controller.templates.choose_template_for_print.link_name'), choose_template_for_print_admin_custom_templates_path(subject_class: scheme.class.model_name.i18n_key.to_s, subject_class_id: scheme.id.to_s), class: 'dropdown-item modal-remote-form-link' %>
+    <% end %>
   </div>
 </div>

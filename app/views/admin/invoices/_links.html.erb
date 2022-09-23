@@ -24,6 +24,10 @@
   <% end %>
 <% end %>
 
+<% if policy([current_user_role_group, invoice]).choose_template_for_print? %>
+  <%= link_to t('controller.templates.choose_template_for_print.link_name'), choose_template_for_print_admin_custom_templates_path(subject_class: invoice.class.model_name.i18n_key.to_s, subject_class_id: invoice.id.to_s), class: 'dropdown-item modal-remote-form-link' %>
+<% end %>
+
 <!-- Update GST amount -->
 <%# if policy([current_user_role_group, invoice]).update_gst? %>
   <%#= link_to t("controller.invoices.update_gst.link_name"), update_gst_admin_invoice_path(invoice), class: 'dropdown-item modal-remote-form-link' %>
