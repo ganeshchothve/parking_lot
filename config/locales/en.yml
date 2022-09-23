@@ -1126,10 +1126,22 @@ en:
         requestable_type: 'Requestable Type'
         request_details: 'Related to'
       template/subject_classes:
+        SiteVisit: Walk-in
+        VariableIncentiveScheme: Variable Incentive Scheme
+        Workflow: Workflow
+        ProjectUnit: Project Unit
+        IncentiveScheme: Incentive Scheme
+        User: User
+        ProjectTower: Project Tower
+        Project: Project
         BookingDetail: Booking
-        Receipt: Payment
         Lead: Lead
+        Scheme: Scheme
+        Receipt: Payment
+        ChannelPartner: Channel Partner
+        UserKyc: User KYC
         Invoice: Invoice
+        Client: Client
         UserRequest::Cancellation: Cancellation Request
         UserRequest::Swap: Swap Request
       user_request/status:

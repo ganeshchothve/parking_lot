@@ -40,6 +40,14 @@ class ApplicationPolicy
     update?
   end
 
+  def choose_template_for_print?
+    user.role.in?(%w(admin sales superadmin))
+  end
+
+  def print_template?
+    choose_template_for_print?
+  end
+
   def permitted_attributes params={}
     []
   end
@@ -112,7 +120,7 @@ class ApplicationPolicy
   end
 
   def marketplace_portal?
-    marketplace_portal = record.try(:booking_portal_client).try(:kylas_tenant_id).present?
+    marketplace_portal = user.try(:booking_portal_client).try(:kylas_tenant_id).present?
     marketplace_portal
   end
 
