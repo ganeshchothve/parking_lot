@@ -379,6 +379,10 @@ mr:
         zero: "mr--Document"
         one: "mr--Document"
         other: "mr--Documents"
+      public_asset:
+        zero: "mr--Public Asset"
+        one: "mr--Public Asset"
+        other: "mr--Public Assets"
       video:
         zero: "mr--Video"
         one: "mr--Video"
@@ -3148,6 +3152,7 @@ mr:
         wait_time: "mr--Wait Time"
         last_visit_date: "mr--Last site visit date"
         last_visit_status: "mr--Last site visit status"
+        mark_conducted: "mr--Mark site visit conducted"
 
       headings:
         customer_site_visit: "mr--Customer Site Visit"
@@ -3732,19 +3737,23 @@ mr:
       schedule_followup: "mr--Schedule Followup"
 
   templates:
-    users/_welcome: "mr--Customer Dashboard"
-    index/inactive_channel_partner: "mr--Channel Partner Dashboard before Approval"
-    index/_channel_partner: "mr--Channel Partner Dashboard"
-    dashboard/index/_admin: "mr--Admin Dashboard"
-    sales_dashboard: "mr--Sales Dashboard"
-    devise/sessions/new: "mr--Landing Page"
-    home/register: "mr--Customer Registration Page"
-    channel_partner/new: "mr--Channel Partner Registration"
-    layouts/_navbar_footer: "mr--Footer Rera Line"
-    searches/checkout: "mr--Holding minutes Text on Checkout page"
-    booking_details/_details: "mr--Bottom Text in Booking detail overview section"
-    assets/_videos: "mr--Videos in Collaterals Section on Dashboard"
-    project_units/_section: "mr--Projects Section on Dashboard"
+    users/_welcome: "Customer Dashboard"
+    index/inactive_channel_partner: "Channel Partner Dashboard before Approval"
+    index/_channel_partner: "Channel Partner Dashboard"
+    dashboard/index/_admin: "Admin Dashboard"
+    sales_dashboard: "Sales Dashboard"
+    devise/sessions/new: "Landing Page"
+    home/register: "Customer Registration Page"
+    channel_partner/new: "Channel Partner Registration"
+    layouts/_navbar_footer: "Footer Rera Line"
+    searches/checkout: "Holding minutes Text on Checkout page"
+    booking_details/_details: "Bottom Text in Booking detail overview section"
+    assets/_videos: "Videos in Collaterals Section on Dashboard"
+    project_units/_section: "Projects Section on Dashboard"
+    quotation_pdf: "Quotation PDF"
+    terms_and_conditions: "Terms and Conditions"
+    privacy_policy: "Privacy Policy"
+    assets/_videos: "Assets Videos"
 
   number:
     human:
