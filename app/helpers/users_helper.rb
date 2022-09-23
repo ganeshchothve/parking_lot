@@ -36,6 +36,23 @@ module UsersHelper
     User::TEAM_LEAD_DASHBOARD_ACCESS_USERS.collect{|role| [User.human_attribute_name("role.#{role}"), role]}
   end
 
+  def marketplace_roles
+    %w[admin sales gre sales_admin].collect{|role| [User.human_attribute_name("role.#{role}"), role]}
+  end
+
+  def mandates_roles
+    User.available_roles(current_client).reject{|role| User.buyer_roles(current_client).include?(role) || role.in?(%w(cp_owner channel_partner))}.collect{ |r| [User.human_attribute_name("role.#{r}"), r] }
+  end
+
+  def filter_roles
+    if marketplace?
+      marketplace_roles
+    else
+      mandates_roles
+    end
+  end
+
+
   def user_edit_role_options(_user)
     if _user.id == current_user.id
       [[ User.human_attribute_name("role.#{_user.role}"), _user.role]]
