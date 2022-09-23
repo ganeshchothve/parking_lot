@@ -5,7 +5,7 @@
 <%= hidden_field_tag :project_id, project.id %>
 <div class="modal-body">
   <div class="mb-3">
-    <%= f.label "Lead", class: 'label-required control-label' %>
+    <%= f.label I18n.t("mongoid.models.lead.one") , class: 'label-required control-label' %>
     <%= select_tag "lead_id", options_for_select(filter_lead_options), { class: "selectize-remote", data: { url: admin_leads_path(fltrs: {project_id: project.id}) } } %>
   </div>
 </div>

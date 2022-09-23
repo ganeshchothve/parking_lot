@@ -28,7 +28,7 @@
                 <div class="row">
                   <div class="col-8">
                     <h5 class="fn-20 font-normal theme-txt-color"><%= tower[:project_tower_name] %></h5>
-                    <p class="fn-14 theme-txt-color"><%= tower[:floors] %> Floors</p>
+                    <p class="fn-14 theme-txt-color"><%= tower[:floors] %><%= I18n.t("mongoid.attributes.project_unit.floors") %></p>
                     <p class="fn-14"><%= (tower[:total_units]).to_s + " " + I18n.t("controller.searches.apartments.title") %> / <span
                         class="text-success font-medium"><%= tower[:total_units_available] %>
                         <%= I18n.t("global.link_to.available") %></span></p>

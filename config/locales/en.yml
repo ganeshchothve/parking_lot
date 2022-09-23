@@ -1330,6 +1330,7 @@ en:
         all_inclusive_price: "All Inclusive Price"
         project_tower: "Project Tower"
         floor: "Floor"
+        floors: "Floors"
         apartment: "Apartment"
         floor_order: "Floor Order"
         facing: "Facing"
@@ -3184,7 +3185,7 @@ en:
       proceed_without_payment:
         link_name: "Proceed without payment"
         text: "I Agree on behalf of %{name} and proceed to add payment"
-        agreee_on_behalf: "I Agree on behalf of %{name}"
+        agree_on_behalf: "I Agree on behalf of %{name}"
         agree_and_procedd: "I Agree and proceed to add payment"
         user_agree: "I agree"
       new:
