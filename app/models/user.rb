@@ -828,13 +828,15 @@ class User
       custom_scope = {}
       if user.role?('cp_admin')
         #cp_ids = User.where(manager_id: user.id).distinct(:id)
-        custom_scope = {role: { '$in': %w(channel_partner cp_owner) } } #, manager_id: {"$in": cp_ids}
+        custom_scope = { role: { '$in': %w(channel_partner cp_owner) } } #, manager_id: {"$in": cp_ids}
       elsif user.role?('cp')
-        custom_scope = {role: { '$in': %w(channel_partner cp_owner) } } #, manager_id: user.id
+        custom_scope = { role: { '$in': %w(channel_partner cp_owner) } } #, manager_id: user.id
       elsif user.role?('cp_owner')
         custom_scope = { role: {'$in': ['channel_partner', 'cp_owner']}, channel_partner_id: user.channel_partner_id }
-      elsif ["admin","superadmin"].include?(user.role)
-        custom_scope = {role: { '$in': %w(channel_partner cp_owner) } }
+      elsif ["admin"].include?(user.role)
+        custom_scope = { role: { '$in': %w(channel_partner cp_owner) }, booking_portal_client_id: user.booking_portal_client.id }
+      elsif ["superadmin"].include?(user.role)
+        custom_scope = { role: { '$in': %w(channel_partner cp_owner) }, booking_portal_client_id: user.selected_client_id }
       end
     end
 

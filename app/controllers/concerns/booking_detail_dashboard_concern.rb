@@ -24,7 +24,7 @@ module BookingDetailDashboardConcern
     if params[:source].present?
       options[:matcher][:source] = params[:source]
     end
-    options[:booking_portal_client_id] = current_client.id
+    options[:matcher][:booking_portal_client_id] = current_client.id
     options
   end
 
