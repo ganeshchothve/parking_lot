@@ -117,7 +117,7 @@ class Admin::ProjectsController < AdminController
   end
 
   def sync_kylas_products
-    if Rails.env.development? || Rails.env.staging?
+    if Rails.env.development?
       SyncKylasProductsWorker.new.perform(current_user.id.to_s)
     else
       SyncKylasProductsWorker.perform_async(current_user.id.to_s)
