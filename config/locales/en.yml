@@ -3420,6 +3420,8 @@ en:
       alert:
         not_found: "Lead Not found"
         sales_user_not_found: "Sales user not found"
+        unqualified: "Lead cannot be unqualified"
+        company_not_found: "Requested partner company not found"
       message:
         mail_sent: "Mail successfully sent to the selected leads"
         no_leads_added: "You have not added any lead yet.\nStart exploring the projects and add your leads."
@@ -3441,9 +3443,6 @@ en:
         lead_not_present_for_booking: "Lead not present for booking. Please contact administrator"
         user_account_not_present_for_lead: "User Account not present for lead. Please contact administrator"
         project_not_present_for_lead: "Project not present for lead. Please contact administrator"
-      alert:
-        unqualified: "Lead cannot be unqualified"
-        company_not_found: "Requested partner company not found"
       total_amount_paid:
         hint: "(you might have some payments pending clearance)"
       total_balance_pending:
