@@ -52,7 +52,7 @@ module UsersConcern
       format.html do
         if @user.save
           SelldoLeadUpdater.perform_async(@user.leads.first&.id, {stage: 'confirmed'}) if @user.buyer?
-          email_template = ::Template::EmailTemplate.find_by(name: "account_confirmation")
+          email_template = ::Template::EmailTemplate.where(name: "account_confirmation", booking_portal_client_id: @user.booking_portal_client_id).first
           email = Email.create!({
             booking_portal_client_id: @user.booking_portal_client_id,
             body: ERB.new(@user.booking_portal_client.email_header).result( binding) + email_template.parsed_content(@user) + ERB.new(@user.booking_portal_client.email_footer).result( binding ),
