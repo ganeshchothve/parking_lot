@@ -108,6 +108,7 @@ class Client
   # kylas tentant id
   field :kylas_tenant_id, type: String
   field :kylas_api_key, type: String
+  field :is_able_sync_products_and_users, type: Boolean, default: true
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
