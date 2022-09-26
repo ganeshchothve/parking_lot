@@ -2686,7 +2686,7 @@ en:
         primary_user_kyc_already_present: "Primary User KYC is already present for booking detail"
         task_attributes: "tasks_attributes should be a key, value pair"
         not_available_for_cancellation: "Booking Detail %{name} is not available for cancellation."
-        unable_to_proceed: "You cannot proceed further"
+        unable_to_proceed: " Lead user should be confirmed, Lead should have kyc if kyc setting is on"
       text:
         flat_no: "Flat No."
         agreement_price: "Agreement Value"
