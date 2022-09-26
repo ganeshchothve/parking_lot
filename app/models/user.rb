@@ -140,6 +140,7 @@ class User
   field :kylas_user_id, type: String
   field :kylas_access_token_expires_at, type: DateTime
   field :kylas_contact_id, type: String
+  field :is_active_in_kylas, type: Boolean, default: true
   # Kylas Custom Fields options values fields
   field :kylas_custom_fields_option_id, type: Hash, default: {}
 
@@ -686,7 +687,7 @@ class User
   end
 
   def active_for_authentication?
-    super && is_active
+    super && is_active && is_active_in_kylas?
   end
 
   def inactive_message
