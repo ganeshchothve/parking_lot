@@ -39,18 +39,6 @@
               </div>
             </div>
           <% end %>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="mb-3">
-                <%= f.label :kylas_user_id %>
-                <% kylas_users = @kylas_users.presence || [] %>
-                <%= f.select :kylas_user_id, options_for_select(kylas_users, kylas_users.select{ |kylas_user| kylas_user[1].to_s == @user.kylas_user_id }.first), { include_blank: 'Select Kylas User', autocomplete: 'off', class: 'form-control', required: true }, disabled: !(policy([current_user_role_group, @user]).editable_field?("kylas_user_id")) %>
-                <% if kylas_users.blank? %>
-                  <%= link_to t('mongoid.attributes.user.new_user_kylas_crm'), SUPPORT_NEW_USER_CRM_LINK, target: '_blank' %>
-                <% end %>
-              </div>
-            </div>
-          </div>
           <%= f.hidden_field :role, value: @user.role %>
           <% if policy([current_user_role_group, @user]).editable_field?("project_ids") %>
             <div class="row mt-">
