@@ -12,14 +12,14 @@
             <div class="col-10 col-md-10">
               <h3 class="card-title font-weight-bold text-uppercase"><%= I18n.t("global.configurations") %></h3>
               <p>
-                <%= I18n.t("controller.receipts.process_payment.thanks_for_payment", name: number_to_indian_currency(@receipt.total_amount.round) %>
+                <%= I18n.t("controller.receipts.process_payment.thanks_for_payment", name: number_to_indian_currency(@receipt.total_amount.round)) %>
                 <br/>
                 <strong><%= I18n.t("controller.receipts.process_payment.email_will_be_sent") %></strong>
                 <br/>
               </p>
               <% if @receipt.blocking_payment? %>
               <p>
-                <%= I18n.t("controller.receipts.process_payment.unit_in_blocked_state", name: @receipt.project_unit.blocking_days %> <a href="/dashboard/receipts/new?project_unit_id=<%= @receipt.project_unit_id %>" class="modal-remote-form-link" data-event-category="section" data-event-action="click" data-event-name="make the remaining payment" target="_blank"><%= I18n.t("global.link_to.here") %></a>
+                <%= I18n.t("controller.receipts.process_payment.unit_in_blocked_state", name: @receipt.project_unit.blocking_days) %> <a href="/dashboard/receipts/new?project_unit_id=<%= @receipt.project_unit_id %>" class="modal-remote-form-link" data-event-category="section" data-event-action="click" data-event-name="make the remaining payment" target="_blank"><%= I18n.t("global.link_to.here") %></a>
               </p>
               <% end %>
             </div>
