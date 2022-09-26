@@ -87,7 +87,7 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
         _action = 'save'
       end
       if @booking_detail_scheme.send(_action)
-        format.html { redirect_to request.referrer || root_path , notice: @booking_detail_scheme.approved? ? t('controller.booking_detail_schemes.scheme_approved') : t('controller.booking_detail_schemes.scheme_under_negotiation') }
+        format.html { redirect_to request.referrer || root_path , notice: @booking_detail_scheme.approved? ? t('controller.booking_detail_schemes.notice.scheme_approved') : t('controller.booking_detail_schemes.notice.scheme_under_negotiation') }
       else
         format.html { render :edit }
         format.json { render json: @booking_detail_scheme.errors, status: :unprocessable_entity }
