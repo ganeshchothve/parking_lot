@@ -27,7 +27,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
     @variable_incentive_scheme.assign_attributes(permitted_attributes([:admin, @variable_incentive_scheme]))
     respond_to do |format|
       if @variable_incentive_scheme.save
-        format.html { redirect_to admin_incentive_schemes_path, notice: 'Incentive Scheme created successfully.' }
+        format.html { redirect_to admin_incentive_schemes_path, notice: I18n.t("controller.incentive_schemes.notice.created") }
         format.json { render json: @variable_incentive_scheme, status: :created }
       else
         format.html { render :new }
@@ -44,7 +44,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
     respond_to do |format|
       @variable_incentive_scheme.approved_by = current_user if params.dig(:variable_incentive_scheme, :event).present? && params.dig(:variable_incentive_scheme, :event) == 'approved' && @variable_incentive_scheme.status != 'approved'
       if @variable_incentive_scheme.update(permitted_attributes([:admin, @variable_incentive_scheme]))
-        format.html { redirect_to admin_incentive_schemes_path, notice: 'Incentive Scheme was successfully updated.' }
+        format.html { redirect_to admin_incentive_schemes_path, notice: I18n.t("controller.incentive_schemes.notice.updated") }
       else
         format.html { render :edit }
         format.json { render json: { errors: @variable_incentive_scheme.errors.full_messages.uniq }, status: :unprocessable_entity }
@@ -58,7 +58,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
     elsif request.patch?
       respond_to do |format|
         if @variable_incentive_scheme.update(end_date: params.dig(:variable_incentive_scheme, :end_date))
-          format.html { redirect_to admin_variable_incentive_schemes_path, notice: 'Variable Incentive Scheme was successfully updated.' }
+          format.html { redirect_to admin_variable_incentive_schemes_path, notice: I18n.t("controller.variable_incentive_schemes.notice.updated")  }
         else
           format.html { render :edit }
           format.json { render json: { errors: @variable_incentive_scheme.errors.full_messages.uniq }, status: :unprocessable_entity }
@@ -84,7 +84,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
     else
       VariableIncentiveExportWorker.perform_async(current_user.id.to_s, @options.as_json)
     end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    flash[:notice] = I18n.t("global.export_scheduled")
     filters = params.as_json.slice("user_id", "project_ids", "variable_incentive_scheme_ids", "user_id")
     redirect_to vis_details_admin_variable_incentive_schemes_path(filters)
   end
@@ -93,7 +93,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
 
   def set_variable_incentive_scheme
     @variable_incentive_scheme = VariableIncentiveScheme.where(id: params[:id]).first
-    redirect_to dashboard_path, alert: 'Incentive scheme not found' unless @variable_incentive_scheme
+    redirect_to dashboard_path, alert: I18n.t("controller.incentive_schemes.alert.not_found") unless @variable_incentive_scheme
   end
 
   def authorize_resource

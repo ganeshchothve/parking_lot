@@ -46,10 +46,10 @@
               <i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
               <% if policy([:admin, banner_asset]).edit? %>
-                <%= link_to "Edit Banner Image", edit_admin_banner_asset_path(banner_asset), class: 'modal-remote-form-link dropdown-item' %>
+                <%= link_to I18n.t("controller.banner_assets.links.edit"), edit_admin_banner_asset_path(banner_asset), class: 'modal-remote-form-link dropdown-item' %>
               <% end %>
               <% if policy([:admin, banner_asset]).destroy? %>
-                <%= link_to "Delete Banner Image", admin_banner_asset_path(banner_asset), class: 'modal-remote-form-link dropdown-item', method: :delete %>
+                <%= link_to I18n.t("controller.banner_assets.links.delete"), admin_banner_asset_path(banner_asset), class: 'modal-remote-form-link dropdown-item', method: :delete %>
               <% end %>
             </div>
           </div>

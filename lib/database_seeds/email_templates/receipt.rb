@@ -24,7 +24,7 @@ module DatabaseSeeds
                 <% if self.payment_mode == "online" %>
                   Your online payment of <%= number_to_indian_currency(self.total_amount) %> failed. We request you to re-attempt your payment. For any other mode of payment, please get in touch with our team for further details.
                 <% else %>
-                  Your payment of <%= number_to_indian_currency(self.total_amount) %> was dishonoured by your bank. Please check with them regarding your payment. We request you to re-issue a different <%= Receipt.available_payment_modes.find{|x| x[:id] == self.payment_mode}[:text] %> payment.
+                  Your payment of <%= number_to_indian_currency(self.total_amount) %> was dishonoured by your bank. Please check with them regarding your payment. We request you to re-issue a different <%= I18n.t("mongoid.attributes.receipt/payment_mode.#{self.payment_mode}") %>payment.
                 <% end %>
               </p>
             </div>

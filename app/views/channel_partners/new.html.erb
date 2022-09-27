@@ -10,8 +10,8 @@
   <div class="cp-login-otp-wrap mx-3">  
     <div class="row">
       <div class="col-lg-7 pe-0 br-rt-1 ps-0 ps-sm-2">
-        <h1 class="sec-title text-center pt-2 pb-1">Get Started</h1>
-        <p class="sec-desc text-center pb-2">Now is the best time to turn your dream into reality</p>
+        <h1 class="sec-title text-center pt-2 pb-1"><%= I18n.t("global.export") %></h1>
+        <p class="sec-desc text-center pb-2"><%= I18n.t("global.link_to.this_is_time") %></p>
         <div class="cp-signup-form-wrap pb-3 cp-form-wrap px-2 px-sm-3">
           <%= simple_form_for(@user, url: register_channel_partners_path, local: true, html: { id: 'channel_partner_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %> 
             <% if params[:action] == 'find_or_create_cp_user' && @user.errors.present? %>
@@ -19,7 +19,7 @@
             <% end %>
             <%= render "channel_partners/short_form_fields", {form: form} %>
             <div class="signin-btn pl-0 pr-0 pb-4">
-              <%= form.submit "Register", class: "green-btn sign-in-btn", data: { disable_with: "Please wait...", event_category: 'Footer', event_action: 'Click', event_name: 'Submit' } %>
+              <%= form.submit I18n.t("devise.keys.register"), class: "green-btn sign-in-btn", data: { disable_with: I18n.t("global.please_wait"), event_category: 'Footer', event_action: 'Click', event_name: 'Submit' } %>
             </div>
             <hr/>
             <%= render "devise/shared/links" %>
@@ -28,14 +28,14 @@
       </div>
       <div class="col-lg-5 px-0 px-sm-2">
         <div class="cp-signup-features px-2">
-          <h2 class="pt-2 pb-2">Why you would love <%= t('global.brand') %></h2>
+          <h2 class="pt-2 pb-2"><%= I18n.t("global.link_to.love_our_brand", name: I18n.t("global.brand")) %></h2>
           <ul class="list-unstyled mt-4 cp-benefit-list cp-benefit-2row">
             <li>
               <div class="features-wrap">
                 <span>
                   <img src="<%= asset_path 'cp-ex-feat-01.svg' %>">
                 </span>
-                <p>Early access to <br> new launches</p>
+                <p><%= I18n.t("global.link_to.early_access").html_safe %> <br></p>
               </div>
             </li>
             <li>
@@ -43,7 +43,7 @@
                 <span>
                   <img src="<%= asset_path 'cp-ex-feat-06.svg' %>">
                 </span>
-                <p>Timely payments to <br> streamline cash flows</p>
+                <p><%= I18n.t("global.link_to.timely_payments").html_safe %></p>
               </div>
             </li>
             <li>
@@ -51,7 +51,7 @@
                 <span>
                   <img src="<%= asset_path 'cp-ex-feat-05.svg' %>">
                 </span>
-                <p>Marketing support<br> & assets</p>
+                <p><%= I18n.t("global.link_to.marketing_support").html_safe %></p>
               </div>
             </li>
             <li>
@@ -59,7 +59,7 @@
                 <span>
                   <img src="<%= asset_path 'cp-ex-feat-11.svg' %>">
                 </span>
-                <p>Performance-based<br> channel partner ratings</p>
+                <p><%= I18n.t("global.link_to.performance_based").html_safe %></p>
               </div>
             </li>
             <li>
@@ -67,7 +67,7 @@
                 <span>
                   <img src="<%= asset_path 'cp-ex-feat-02.svg' %>">
                 </span>
-                <p>Extensive nurturing and<br> calling during launches</p>
+                <p><%= I18n.t("global.link_to.extensive_nurturing").html_safe %></p>
               </div>
             </li>
             <li>
@@ -75,7 +75,7 @@
                 <span>
                   <img src="<%= asset_path 'cp-ex-feat-04.svg' %>">
                 </span>
-                <p>CRM training<br> & support</p>
+                <p><%= I18n.t("global.link_to.crm_training").html_safe %></p>
               </div>
             </li>
             <li>
@@ -83,7 +83,7 @@
                 <span>
                   <img src="<%= asset_path 'cp-ex-feat-07.svg' %>">
                 </span>
-                <p>Fully automated<br> EOI process</p>
+                <p><%= I18n.t("global.link_to.fully_automated").html_safe %></p>
               </div>
             </li>
             <li>
@@ -91,7 +91,7 @@
                 <span>
                   <img src="<%= asset_path 'cp-ex-feat-08.svg' %>">
                 </span>
-                <p>Online inventory selection,<br> KYC & bookings</p>
+                <p><%= I18n.t("global.link_to.online_inventory_selection").html_safe %></p>
               </div>
             </li>
             <li>
@@ -99,7 +99,7 @@
                 <span>
                   <img src="<%= asset_path 'cp-ex-feat-09.svg' %>">
                 </span>
-                <p>Complete<br> transparency</p>
+                <p><%= I18n.t("global.link_to.complete_transparency").html_safe %></p>
               </div>
             </li>
             <li>
@@ -107,7 +107,7 @@
                 <span>
                   <img src="<%= asset_path 'cp-ex-feat-10.svg' %>">
                 </span>
-                <p>Unique online <br>broker profile</p>
+                <p><%= I18n.t("global.link_to.unique_online").html_safe %></p>
               </div>
             </li>
           </ul>

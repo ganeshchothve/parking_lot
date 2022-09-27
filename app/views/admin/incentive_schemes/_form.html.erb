@@ -24,11 +24,11 @@
           </div>
           <div class="mb-3">
             <%= f.label :project_tower_id %>
-            <%= f.select :project_tower_id, ProjectTower.all.collect{|pt| [pt.name, pt.id ]}, {prompt: true}, class: 'selectize project_tower_select', disabled: !policy([:admin, @incentive_scheme]).editable_field?("project_tower_id"), data: { url: admin_project_towers_path } %>
+            <%= f.select :project_tower_id, ProjectTower.all.collect{|pt| [pt.name, pt.id ]}, {prompt: I18n.t("global.select")}, class: 'selectize project_tower_select', disabled: !policy([:admin, @incentive_scheme]).editable_field?("project_tower_id"), data: { url: admin_project_towers_path } %>
           </div>
           <div class="mb-3">
             <%= f.label :tier_id %>
-            <%= f.select :tier_id, Tier.all.collect{|tier| [tier.name, tier.id ]}, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @incentive_scheme]).editable_field?("tier_id") %>
+            <%= f.select :tier_id, Tier.all.collect{|tier| [tier.name, tier.id ]}, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy([:admin, @incentive_scheme]).editable_field?("tier_id") %>
           </div>
           <div class='row'>
             <div class='col-md-6'>
@@ -47,29 +47,29 @@
         <% end %>
         <div class="mb-3">
           <%= f.label :resource_class, class: 'label-required' %>
-          <%= f.select :resource_class, IncentiveScheme::RESOURCE_CLASS.collect{|x| [t("mongoid.attributes.incentive_scheme/resource_class.#{x}"), x]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @incentive_scheme]).editable_field?("resource_class") %>
+          <%= f.select :resource_class, IncentiveScheme::RESOURCE_CLASS.collect{|x| [t("mongoid.attributes.incentive_scheme/resource_class.#{x}"), x]}, {prompt: I18n.t("global.select")}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @incentive_scheme]).editable_field?("resource_class") %>
         </div>
         <div class="mb-3">
           <%= f.label :category, class: 'label-required' %>
-          <%= f.select :category, IncentiveScheme::CATEGORIES.collect{|x| [t("mongoid.attributes.incentive_scheme/categories.#{x}"), x]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @incentive_scheme]).editable_field?("category") %>
+          <%= f.select :category, IncentiveScheme::CATEGORIES.collect{|x| [t("mongoid.attributes.incentive_scheme/categories.#{x}"), x]}, {prompt: I18n.t("global.select")}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @incentive_scheme]).editable_field?("category") %>
         </div>
         <div class="mb-3">
           <%= f.label :brokerage_type, class: 'label-required' %>
-          <%= f.select :brokerage_type, IncentiveScheme::BROKERAGE_TYPE.collect{|x| [t("mongoid.attributes.incentive_scheme/brokerage_type.#{x}"), x]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @incentive_scheme]).editable_field?("brokerage_type") %>
+          <%= f.select :brokerage_type, IncentiveScheme::BROKERAGE_TYPE.collect{|x| [t("mongoid.attributes.incentive_scheme/brokerage_type.#{x}"), x]}, {prompt: I18n.t("global.select")}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @incentive_scheme]).editable_field?("brokerage_type") %>
         </div>
         <div class="mb-3">
           <%= f.label :payment_to, class: 'label-required' %>
-          <%= f.select :payment_to, IncentiveScheme::PAYMENT_TO.collect{|x| [t("mongoid.attributes.incentive_scheme/payment_to.#{x}"), x]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @incentive_scheme]).editable_field?("payment_to") %>
+          <%= f.select :payment_to, IncentiveScheme::PAYMENT_TO.collect{|x| [t("mongoid.attributes.incentive_scheme/payment_to.#{x}"), x]}, {prompt: I18n.t("global.select")}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @incentive_scheme]).editable_field?("payment_to") %>
         </div>
         <div class="mb-3">
           <%= f.label :auto_apply, class: 'label-required mb-2' %>
           <div class="form-check form-check-inline">
             <%= f.radio_button :auto_apply, true, required: 'required', class: "form-check-input wd-22" %>
-            <%= f.label :auto_apply, "Yes", class: "form-check-label d-inline-block ms-2" %>
+            <%= f.label :auto_apply, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
           </div>
           <div class="form-check form-check-inline mb-3">
             <%= f.radio_button :auto_apply, false, required: 'required', class: "form-check-input wd-22" %>
-            <%= f.label :auto_apply, "No", class: "form-check-label d-inline-block ms-2" %>
+            <%= f.label :auto_apply, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
           </div>
           <div class="mb-3">
             <%= f.label :terms_and_conditions, class: 'label-required mb-2' %>
@@ -78,7 +78,7 @@
         </div>
         <div class="mb-3">
           <%= f.label :ladder_strategy, class: 'label-required' %>
-          <%= f.select :ladder_strategy, IncentiveScheme::STRATEGY.collect {|x| [x.titleize, x]}, {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @incentive_scheme]).editable_field?("ladder_strategy") %>
+          <%= f.select :ladder_strategy, I18n.t("mongoid.attributes.incentive_scheme/strategies").collect{|k,v| [v,k.to_s]}, {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: !policy([:admin, @incentive_scheme]).editable_field?("ladder_strategy") %>
         </div>
         <div class="mb-3">
           <% if f.object.new_record? %>
@@ -88,18 +88,18 @@
             <%
                 statuses = available_statuses(@incentive_scheme)
               %>
-            <%= f.select :event, options_for_select(statuses.collect{|rec| [t("mongoid.attributes.incentive_scheme/status.#{rec.to_s}"), rec.to_s]}, @incentive_scheme.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @incentive_scheme]).editable_field?("event") %>
+            <%= f.select :event, options_for_select(statuses.collect{|rec| [t("mongoid.attributes.incentive_scheme/status.#{rec.to_s}"), rec.to_s]}, @incentive_scheme.status), {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: !policy([:admin, @incentive_scheme]).editable_field?("event") %>
           <% end %>
         </div>
         <div class="ladders mt-3">
           <% editable_ladders = policy([:admin, @incentive_scheme]).editable_field?("ladders_attributes")%>
           <% if editable_ladders %>
             <div class='text-right'>
-              <%= f.link_to_add "Add Ladder", :ladders, :data => { :target => ".ladders" }, class: 'btn btn-secondary' %>
+              <%= f.link_to_add I18n.t("controller.incentive_schemes.add_ladder.link_name"), :ladders, :data => { :target => ".ladders" }, class: 'btn btn-secondary' %>
             </div>
           <% end %>
           <%= f.fields_for :ladders do |lad|%>
-            <h5 class="mt-3">Ladder - Stage <span class='stage'><%= lad.object.stage %></span>
+            <h5 class="mt-3"><%= I18n.t("controller.incentive_schemes.add_ladder.ladder_stage") %><span class='stage'><%= lad.object.stage %></span>
               <% if editable_ladders %>
                 <span class='pl-2 text-right'>
                   <%= lad.link_to_remove icon("far", "times-circle") %>
@@ -127,11 +127,11 @@
                   <%#= lad.label :inclusive, class: 'label-required' %>
                   <div class="form-check form-check-inline">
                     <%#= lad.radio_button :inclusive, true, required: 'required', class: "form-check-input" %>
-                    <%#= lad.label :inclusive, "Yes", class: "form-check-label" %>
+                    <%#= lad.label :inclusive, I18n.t("global.boolean.true"), class: "form-check-label" %>
                   </div>
                   <div class="form-check form-check-inline">
                     <%#= lad.radio_button :inclusive, false, required: 'required', class: "form-check-input" %>
-                    <%#= lad.label :inclusive, "No", class: "form-check-label" %>
+                    <%#= lad.label :inclusive, I18n.t("global.boolean.false"), class: "form-check-label" %>
                   </div>
                 </div>
               </div>
@@ -139,7 +139,7 @@
             </div>
             <div class="payment-adjustment">
               <%= lad.fields_for :payment_adjustment do |adj|%>
-                <h6 class="mt-3">Incentive Calculation</h6>
+                <h6 class="mt-3"><%= I18n.t("controller.incentive_schemes.text.incentive_calculation") %></h6>
                 <div class="row">
                   <div class="col-md-12">
                     <div class="mb-3">
@@ -151,7 +151,7 @@
                     <div class="mb-3">
                       <%= adj.label :formula, class: '' %>
                       <%= adj.text_field :formula, class: "form-control", disabled: !editable_ladders %>
-                      <p class="small text-muted">This will be evaluated in the context of resource (which can be a Booking, Payment, etc)</p>
+                      <p class="small text-muted"><%= I18n.t("controller.incentive_schemes.text.formula_help_text") %></p>
                     </div>
                   </div>
                 </div>
@@ -163,7 +163,7 @@
       </div>
 
       <div class="modal-footer text-end">
-        <%= f.submit "Save", class: "btn btn-primary" %>
+        <%= f.submit I18n.t("global.save"), class: "btn btn-primary" %>
       </div>
 
     </div>
@@ -189,7 +189,7 @@ $(document).ready(function(){
       var options = _.map(allowed_categories, function(d) { return { value: d, text: categories_translations[d] } });
       category_select.addOption(options)
       category_select.refreshOptions(false);
-      category_select.settings.placeholder = 'Select Category';
+      category_select.settings.placeholder = '<%= I18n.t("global.link_to.select_category") %>';
       category_select.updatePlaceholder();
       if(!_.isEmpty(category)){
         category_select.addItem(category, true);

@@ -3,8 +3,8 @@
 <% payment_adjustment = policy([ current_user_role_group, booking_detail_scheme]).editable_field?("payment_adjustments_attributes") %>
 <% if payment_adjustment %>
   <% booking_detail_scheme.editable_payment_adjustments.each do |adj| %>
-    <label class='control-label'>Payment Adjustments</label>
+    <label class='control-label'><%= I18n.t("mongoid.models.payment_adjustment.other") %></label>
     <p><%= adj.field.humanize %> <%= adj.value(booking_detail.project_unit) %></p>
-    <p class="small text-muted">*Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)</p>
+    <p class="small text-muted">I18n.t("controller.project_units.total_adjustment")</p>
   <% end %>
 <% end %>

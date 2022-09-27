@@ -6484,7 +6484,7 @@ var HelpDialog = /** @class */ (function () {
         var body = [
             '<p class="text-center">',
             '<a href="http://summernote.org/" target="_blank">Summernote 0.8.9</a> · ',
-            '<a href="https://github.com/summernote/summernote" target="_blank">Project</a> · ',
+            '<a href="https://github.com/summernote/summernote" target="_blank"><%= I18n.t("mongoid.models.project.one") %></a> · ',
             '<a href="https://github.com/summernote/summernote/issues" target="_blank">Issues</a>',
             '</p>'
         ].join('');

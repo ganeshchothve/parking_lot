@@ -13,7 +13,7 @@ class Api::V1::BookingDetailsController < ApisController
       if @booking_detail.save
         if @booking_detail.under_negotiation!
           response = generate_response
-          response[:message] = 'Booking successfully created.'
+          response[:message] = I18n.t("controller.booking_details.notice.created")
           render json: response, status: :created
         else
           render json: {errors: @booking_detail.errors.full_messages.uniq}, status: :unprocessable_entity
@@ -22,7 +22,7 @@ class Api::V1::BookingDetailsController < ApisController
         render json: {errors: @booking_detail.errors.full_messages.uniq}, status: :unprocessable_entity
       end
     else
-      render json: {errors: ["Booking with reference_id '#{params[:booking_detail][:reference_id]}' already exists"]}, status: :unprocessable_entity
+      render json: {errors: [I18n.t("controller.booking_details.errors.already_exists", name: "#{params[:booking_detail][:reference_id]}")]}, status: :unprocessable_entity
     end
   end
 
@@ -31,45 +31,45 @@ class Api::V1::BookingDetailsController < ApisController
       @booking_detail.assign_attributes(booking_detail_update_params)
       if @booking_detail.save
         response = generate_response
-        response[:message] = 'Booking successfully updated.'
+        response[:message] = I18n.t("controller.booking_details.notice.updated")
         render json: response, status: :ok
       else
         render json: {errors: @booking_detail.errors.full_messages.uniq}, status: :unprocessable_entity
       end
     else
-      render json: {errors: ["Booking with reference_id '#{params[:booking_detail][:reference_id]}' already exists"]}, status: :unprocessable_entity
+      render json: {errors: [I18n.t("controller.booking_details.errors.already_exists", name: "#{params[:booking_detail][:reference_id]}")]}, status: :unprocessable_entity
     end
   end
 
   def reference_ids_present?
     if params[:action] == 'create'
-      render json: { errors: ['reference_id is required to create Booking'] }, status: :bad_request and return unless params.dig(:booking_detail, :reference_id).present?
-      render json: { errors: ['project_unit_id is required to create Booking'] }, status: :bad_request and return unless params.dig(:booking_detail, :project_unit_id).present?
-      render json: { errors: ['Lead_id is required to create Booking'] }, status: :bad_request and return unless params.dig(:booking_detail, :lead_id).present?
+      render json: { errors: [I18n.t("controller.booking_details.errors.reference_id_required")] }, status: :bad_request and return unless params.dig(:booking_detail, :reference_id).present?
+      render json: { errors: [I18n.t("controller.booking_details.errors.project_unit_id_required")] }, status: :bad_request and return unless params.dig(:booking_detail, :project_unit_id).present?
+      render json: { errors: [I18n.t("controller.booking_details.errors.lead_id_required")] }, status: :bad_request and return unless params.dig(:booking_detail, :lead_id).present?
     end
-    render json: { errors: ['Primary user kyc reference id is required to create Booking'] }, status: :bad_request and return if params.dig(:booking_detail, :primary_user_kyc_attributes).present? && !params.dig(:booking_detail, :primary_user_kyc_attributes, :reference_id).present?
+    render json: { errors: [I18n.t("controller.booking_details.errors.primary_user_kyc_id_required")] }, status: :bad_request and return if params.dig(:booking_detail, :primary_user_kyc_attributes).present? && !params.dig(:booking_detail, :primary_user_kyc_attributes, :reference_id).present?
     if params.dig(:booking_detail, :receipts_attributes).present?
       params.dig(:booking_detail, :receipts_attributes).each do |receipt_attributes|
-        render json: { errors: ['Receipt reference id is required for all receipts'] }, status: :bad_request and return unless receipt_attributes.dig(:reference_id).present?
+        render json: { errors: [I18n.t("controller.booking_details.errors.receipt_reference_id_required")] }, status: :bad_request and return unless receipt_attributes.dig(:reference_id).present?
       end
     end
     params.dig(:booking_detail, :user_kycs_attributes).each do |user_kyc_attributes|
-      render json: { errors: ['User KYC reference id is required for all user KYCs'] }, status: :bad_request and return unless user_kyc_attributes.dig(:reference_id).present?
+      render json: { errors: [I18n.t("controller.booking_details.errors.user_kyc_reference_id_required")] }, status: :bad_request and return unless user_kyc_attributes.dig(:reference_id).present?
     end if params.dig(:booking_detail, :user_kycs_attributes).present?
   end
 
   def set_lead
     @lead = Lead.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:booking_detail][:lead_id]).first
-    render json: { errors: ["Lead with reference_id '#{ params[:booking_detail][:lead_id] }' not found"] }, status: :not_found and return unless @lead
+    render json: { errors: [I18n.t("controller.leads.errors.lead_reference_id_not_found", name: "#{ params[:booking_detail][:lead_id] }")] }, status: :not_found and return unless @lead
   end
 
   def set_project_unit
     @project_unit = ProjectUnit.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:booking_detail][:project_unit_id], status: 'available').first
-    render json: { errors: ["Project Unit with reference_id '#{ params[:booking_detail][:project_unit_id] }' not found or is already booked"] }, status: :not_found and return unless @project_unit
+    render json: { errors: [I18n.t("controller.project_units.errors.project_unit_reference_id_not_found", name: "#{ params[:booking_detail][:project_uni_id] }")] }, status: :not_found and return unless @project_unit
   end
 
   def check_project
-    render json: { errors: ["Project for project unit - #{ params[:booking_detail][:project_unit_id] } and lead - #{ params[:booking_detail][:lead_id] } does not match"] }, status: :not_found and return if @lead.project_id != @project_unit.project_id
+    render json: { errors: [I18n.t("controller.booking_details.errors.project_does_not_match", name1: "#{ params[:booking_detail][:project_unit_id] }", name2: "#{ params[:booking_detail][:lead_id] }")] }, status: :not_found and return if @lead.project_id != @project_unit.project_id
   end
 
   def check_scheme
@@ -79,7 +79,7 @@ class Api::V1::BookingDetailsController < ApisController
       filters = {fltrs: { can_be_applied_by_role: @lead.manager_role, project_tower: @project_unit.project_tower_id, user_role: @lead.user_role, user_id: @lead.user_id, status: 'approved', default_for_user_id: @lead.manager_id } }
       scheme = Scheme.build_criteria(filters).first
     end
-    render json: { errors: ["Booking scheme is not found for this project unit. Please contact administrator"] }, status: :not_found and return unless scheme.present?
+    render json: { errors: [I18n.t("controller.booking_details.errors.booking_scheme_not_found")] }, status: :not_found and return unless scheme.present?
   end
 
   def build_booking_detail
@@ -102,7 +102,7 @@ class Api::V1::BookingDetailsController < ApisController
 
   def set_booking_detail_project_unit_and_lead
     @booking_detail = BookingDetail.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
-    render json: { errors: ["Booking Detail with reference_id '#{ params[:id] }' not found"] }, status: :not_found and return unless @booking_detail.present?
+    render json: { errors: [I18n.t("controller.booking_details.errors.booking_detail_reference_id_not_found", name: "#{ params[:id] }")] }, status: :not_found and return unless @booking_detail.present?
     @lead = @booking_detail.lead
     @project_unit = @booking_detail.project_unit
   end
@@ -126,7 +126,7 @@ class Api::V1::BookingDetailsController < ApisController
     errors = []
     if kyc_attributes = params.dig(:booking_detail, :primary_user_kyc_attributes)
       if @booking_detail.present? && @booking_detail.primary_user_kyc.present?
-        errors << "Primary User KYC is already present for booking detail"
+        errors << I18n.t("controller.booking_details.errors.primary_user_kyc_already_present")
         return { "Primary user kycs errors - ": errors.try(:compact) }
       end
       errors << check_any_user_kyc_params(kyc_attributes)
@@ -159,7 +159,7 @@ class Api::V1::BookingDetailsController < ApisController
           errors << check_any_task_params(task.to_s, value)
         end
       else
-        errors << 'tasks_attributes should be a key, value pair'
+        errors << I18n.t("controller.booking_details.errors.task_attributes")
       end
     end
     { "Tasks errors": errors.compact } if errors.try(:compact).present?

@@ -4,7 +4,7 @@
 <% if policy([current_user_role_group, invoice]).change_state? && policy([current_user_role_group, invoice]).editable_field?('event') %>
   <% invoice.aasm.events(permitted: true).each do |event| %>
     <% if event.name == :raise %>
-      <%= link_to t("controller.invoices.events.#{event.name}"), raise_invoice_admin_invoiceable_path(invoice, invoiceable_type: invoice.invoiceable_type, invoiceable_id: invoice.invoiceable_id), class: 'dropdown-item modal-remote-form-link', data: { disable_with: "Please wait..." }  %>
+      <%= link_to t("controller.invoices.events.#{event.name}"), raise_invoice_admin_invoiceable_path(invoice, invoiceable_type: invoice.invoiceable_type, invoiceable_id: invoice.invoiceable_id), class: 'dropdown-item modal-remote-form-link', data: { disable_with: I18n.t("global.please_wait") }  %>
     <%# else %>
       <%#= link_to t("controller.invoices.events.#{event.name}"), change_state_admin_invoiceable_path(invoice, invoiceable_type: resource.class.model_name.i18n_key.to_s, invoiceable_id: resource.id, {invoice: {event: event.name}}), method: :patch, class: 'dropdown-item' %>
     <% end %>
@@ -18,9 +18,9 @@
 
 <% if policy([current_user_role_group, invoice]).move_tentative_to_draft? %>
   <% if invoice._type == "Invoice::Manual" %>
-    <%= link_to "Move to Draft", change_state_admin_invoiceable_path(invoice, invoiceable_type: invoice.invoiceable_type , invoiceable_id: invoice.invoiceable_id, invoice_manual: {event: :draft}), method: :patch, class: 'dropdown-item' %>
+    <%= link_to I18n.t("controller.invoices.move_to_draft.link_name"), change_state_admin_invoiceable_path(invoice, invoiceable_type: invoice.invoiceable_type , invoiceable_id: invoice.invoiceable_id, invoice_manual: {event: :draft}), method: :patch, class: 'dropdown-item' %>
   <% else %>
-    <%= link_to "Move to Draft", change_state_admin_invoiceable_path(invoice, invoiceable_type: invoice.invoiceable_type , invoiceable_id: invoice.invoiceable_id, invoice_calculated: {event: :draft}), method: :patch, class: 'dropdown-item' %>
+    <%= link_to I18n.t("controller.invoices.move_to_draft.link_name"), change_state_admin_invoiceable_path(invoice, invoiceable_type: invoice.invoiceable_type , invoiceable_id: invoice.invoiceable_id, invoice_calculated: {event: :draft}), method: :patch, class: 'dropdown-item' %>
   <% end %>
 <% end %>
 
@@ -33,7 +33,7 @@
   <%= link_to t("controller.invoices.generate_invoice.link_name"), generate_invoice_admin_invoice_path(invoice), class: 'dropdown-item', target: '_blank' %>
 <% end %>
 <% if policy([current_user_role_group, invoice]).new_send_invoice_to_poc? %>
-  <%= link_to "Send invoice to Developer", new_send_invoice_to_poc_admin_invoice_path(invoice), class: 'dropdown-item modal-remote-form-link', target: '_blank' %>
+  <%= link_to I18n.t("controller.invoices.send_invoice.link_name"), new_send_invoice_to_poc_admin_invoice_path(invoice), class: 'dropdown-item modal-remote-form-link', target: '_blank' %>
 <% end %>
 
 <!-- Raise incentive deduction for cp_admin -->

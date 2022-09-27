@@ -55,7 +55,7 @@ class Admin::ProjectsController < AdminController
 
     respond_to do |format|
       if @project.save
-        format.html { redirect_to admin_projects_path, notice: 'Project was successfully created.' }
+        format.html { redirect_to admin_projects_path, notice: I18n.t("controller.projects.notice.created") }
         format.json { render json: @project, status: :created }
       else
         errors = @project.errors.full_messages
@@ -76,7 +76,7 @@ class Admin::ProjectsController < AdminController
     parameters = permitted_attributes([:admin, @project])
     respond_to do |format|
       if @project.update(parameters)
-        format.html { redirect_to request.referrer || admin_projects_path, notice: 'Project successfully updated.' }
+        format.html { redirect_to request.referrer || admin_projects_path, notice: I18n.t("controller.projects.notice.updated") }
       else
         errors = @project.errors.full_messages
         errors << @project.specifications.collect{|x| x.errors.full_messages}
@@ -101,7 +101,7 @@ class Admin::ProjectsController < AdminController
     errors = @project.sync_on_selldo
     respond_to do |format|
       unless errors.present?
-        format.html { redirect_to request.referrer || admin_projects_path, notice: 'Project synced on Sell.do successfully' }
+        format.html { redirect_to request.referrer || admin_projects_path, notice: I18n.t("controller.projects.notice.synced_on_selldo") }
       else
         if errors&.is_a?(Array)
           Note.create(notable: @project, note: "Sell.do Sync Errors</br>" + errors.to_sentence, creator: current_user)
@@ -119,9 +119,9 @@ class Admin::ProjectsController < AdminController
   def set_project
     @project = Project.where(id: params[:id]).first
     if action_name == 'edit'
-      render json: { errors: 'Project not found' }, status: :not_found unless @project
+      render json: { errors: I18n.t("controller.projects.alert.not_found") }, status: :not_found unless @project
     else
-      redirect_to dashboard_path, alert: 'Project not found' unless @project
+      redirect_to dashboard_path, alert: I18n.t("controller.projects.alert.not_found") unless @project
     end
   end
 

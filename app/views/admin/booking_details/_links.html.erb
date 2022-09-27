@@ -3,7 +3,7 @@
 <% end %>
 
 <% if policy([:admin, booking_detail]).send_payment_link? %>
-  <%= link_to 'Send Payment link', send_payment_link_admin_lead_path(booking_detail.lead, {booking_detail_id: booking_detail.id.to_s}), class: "dropdown-item" %>
+  <%= link_to I18n.t('controller.users.send_payment_link'), send_payment_link_admin_lead_path(booking_detail.lead, {booking_detail_id: booking_detail.id.to_s}), class: "dropdown-item" %>
 <% end %>
 
 <% if policy([:admin, booking_detail]).show? && !(params[:controller] == 'admin/booking_details' && params[:action] == 'show') %>
@@ -31,7 +31,7 @@
 <% end %>
 
 <% if policy([current_user_role_group, booking_detail]).generate_booking_detail_form? %>
-  <%= link_to t('booking_details.links.print_booking_form'), generate_booking_detail_form_admin_booking_detail_path(booking_detail), class: 'dropdown-item', target: '_blank' %>
+  <%= link_to I18n.t('controller.booking_details.links.print_booking_form'), generate_booking_detail_form_admin_booking_detail_path(booking_detail), class: 'dropdown-item', target: '_blank' %>
   <% end %>
 
 <% unless params[:controller] == 'admin/booking_details' && action_name == 'show' %>

@@ -51,7 +51,7 @@ class Admin::SiteVisitsController < AdminController
     respond_to do |format|
       if selldo_api.blank? || (api_log.present? && api_log.status == 'Success')
         if @site_visit.save
-          flash[:notice] = 'Site visit was successfully created'
+          flash[:notice] = I18n.t("controller.site_visits.notice.created")
           url = admin_lead_path(@lead)
           format.json { render json: @site_visit, location: url }
           format.html { redirect_to url }
@@ -63,7 +63,7 @@ class Admin::SiteVisitsController < AdminController
       else
         flash[:alert] = @site_visit.errors.full_messages
         errors = @site_visit.errors.full_messages
-        errors = ['Could not register Site Visit on Sell.Do'] if errors.blank?
+        errors = [I18n.t("controller.site_visits.errors.could_not_register")] if errors.blank?
         format.json { render json: { errors: errors }, status: :unprocessable_entity }
         format.html { render 'new' }
       end
@@ -84,7 +84,7 @@ class Admin::SiteVisitsController < AdminController
         @site_visit.send("#{params.dig(:site_visit, :event)}!")
       end
       if @site_visit.save
-        format.html { redirect_to request.referer, notice: 'Site Visit was successfully updated.' }
+        format.html { redirect_to request.referer, notice: I18n.t("controller.site_visits.notice.updated") }
         format.json { render json: @site_visit }
       else
         format.html { render :edit }
@@ -132,7 +132,7 @@ class Admin::SiteVisitsController < AdminController
         case resp
         when Net::HTTPSuccess
           if @site_visit.update_data_from_selldo(JSON.parse(resp.read_body))
-            format.html { redirect_to request.referer, notice: 'Site Visit synced successfully.' }
+            format.html { redirect_to request.referer, notice: I18n.t("controller.site_visits.notice.synced") }
           else
             format.html { redirect_to request.referer, alert: @site_visit.errors.full_messages }
           end
@@ -142,7 +142,7 @@ class Admin::SiteVisitsController < AdminController
         end
       rescue StandardError => e
         Rails.logger.error "[SiteVisit][SyncWithSelldo][ERR][#{@site_visit.id}]: #{e.message}"
-        format.html { redirect_to request.referer, alert: 'Something went wrong. Please contact support' }
+        format.html { redirect_to request.referer, alert: I18n.t("controller.site_visits.errors.went_wrong") }
       end
     end
   end
@@ -153,7 +153,7 @@ class Admin::SiteVisitsController < AdminController
     else
       SiteVisitExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json, timezone: Time.zone.name)
     end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    flash[:notice] = I18n.t("global.export_scheduled")
     redirect_to admin_site_visits_path(fltrs: params[:fltrs].as_json)
   end
 
@@ -166,12 +166,12 @@ class Admin::SiteVisitsController < AdminController
 
   def set_lead
     @lead = Lead.where(_id: params[:lead_id]).first
-    redirect_to request.referer, alert: 'Lead Not found' if @lead.blank?
+    redirect_to request.referer, alert: I18n.t("controller.leads.alert.not_found") if @lead.blank?
   end
 
   def set_site_visit
     @site_visit = SiteVisit.where(_id: params[:id]).first
-    redirect_to request.referer || home_path(current_user), alert: 'Site visit Not found' if @site_visit.blank?
+    redirect_to request.referer || home_path(current_user), alert: I18n.t("controller.site_visits.errors.not_found") if @site_visit.blank?
     @lead = @site_visit.lead if @site_visit && @lead.blank?
   end
 

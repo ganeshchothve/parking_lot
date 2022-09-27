@@ -144,19 +144,19 @@
     <div class="col-12">
       <!-- <img src="<%#= asset_path 'user.jpg' %>" class="cp-profile-img"> -->
       <!-- <hr> -->
-      <h2 class="cp-name">Hello, <%= current_user.name %></h2>
+      <h2 class="cp-name"><%= I18n.t('global.hello') + ', ' + current_user.name %></h2>
       <!-- <p class="cp-info">Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown.</p> -->
       <div class="col-12 mt-4">
         <i class="fa fa-bell yellow fa-lg"></i>
-        <h3 class="sec-title d-inline px-2">Events</h3>
+        <h3 class="sec-title d-inline px-2"><%= I18n.t('mongoid.models.meeting.other') %></h3>
         <ul class="event-list mt-3">
           <% @meetings.each do |meeting| %>
             <li>
               <div class="cp-events-wrap">
                 <div class="cp-event-inner">
-                  <span class="event-date">Today, <%= Time.now.in_time_zone(current_user.time_zone).strftime('%d%b, %Y') %></span>
+                  <span class="event-date"><%= I18n.t('global.today') + ', ' + Time.now.in_time_zone(current_user.time_zone).strftime('%d%b, %Y') %></span>
                   <h3 class="event-person"><%= (meeting.topic || "-") %></h3>
-                  <span class="prjt-title">Project Name</span>
+                  <span class="prjt-title"><%= I18n.t("mongoid.attributes.project.name") %></span>
                   <h3 class="prjt-name"><%= (meeting.project.try(:name) || "-") %></h3>
                   <p class="prjt-location text-truncate"><%= (meeting.project.try(:address).try(:to_sentence) || "-") %></p>
                   <div class="event-time">
@@ -171,13 +171,13 @@
       </div>
       <div class="col-12 my-5">
         <i class="fa fa-solid fa-calendar-day yellow fa-lg"></i>
-        <h3 class="sec-title d-inline px-2">Announcements</h3>
+        <h3 class="sec-title d-inline px-2"><%= I18n.t("mongoid.models.announcement.other") %></h3>
         <div id="mainAnnouncementSlider" class="carousel slide mainAnnouncementSlider mt-3" data-bs-ride="carousel">
             <div class="carousel-inner">
               <% @announcements.each_with_index do |announcement, index| %>
                 <div class="carousel-item <%= index.zero? ? 'active' : '' %>">
                   <img src="<%= announcement.try(:assets).try(:first).try(:file).try(:url) %>" class="d-block w-100" alt="...">
-                  <span>Event Date: <%= announcement.date %></span>
+                  <span><%= I18n.t("mongoid.attributes.meeting.meeting_date") + ': ' + announcement.date %></span>
                   <h2><%= announcement.title %></h2>
                   <p><%= announcement.content %></p>
                 </div>
@@ -185,17 +185,17 @@
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#mainAnnouncementSlider" data-bs-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
+              <span class="visually-hidden"><%= I18n.t("global.previous") %></span>
             </button>
             <button class="carousel-control-next" type="button" data-bs-target="#mainAnnouncementSlider" data-bs-slide="next">
               <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
+              <span class="visually-hidden"><%= I18n.t("global.next") %></span>
             </button>
           </div>
         </ul>
       </div>
       <div class="col-12 text-center pb-5">
-          <%= link_to "View Leaderboard", channel_partners_leaderboard_without_layout_path(user_login: params[:user_login], user_token: params[:user_token]), class: 'btn-primary btn theme-btn' %>
+          <%= link_to I18n.t("controller.dashboard.leaderboard.view_leaderboard"), channel_partners_leaderboard_without_layout_path(user_login: params[:user_login], user_token: params[:user_token]), class: 'btn-primary btn theme-btn' %>
       </div>
     </div>
   </div>
@@ -205,67 +205,67 @@
       <div class="app-features">
         <div class="row px-3 py-3">
           <div class="col-lg-12">
-            <h2 class="pb-4">Why you would love <%= t('global.brand') %></h2>
+            <h2 class="pb-4"><%= I18n.t("global.link_to.love_our_brand", name: I18n.t("global.brand")) %></h2>
           </div>
           <div class="col-lg-4 app-features-list">
             <span>
                 <img src="<%= asset_path 'cp-ex-feat-01.svg' %>" width="45">
               </span>
-              <p>Early access to <br>new launches</p>
+              <p><%= I18n.t("global.link_to.early_access").html_safe %></p>
           </div>
           <div class="col-lg-4 app-features-list">
             <span>
                 <img src="<%= asset_path 'cp-ex-feat-06.svg' %>" width="45">
               </span>
-              <p>Timely payments to <br>streamline cash flows</p>
+              <p><%= I18n.t("global.link_to.timely_payments").html_safe %></p>
           </div>
           <div class="col-lg-4 app-features-list">
             <span>
                 <img src="<%= asset_path 'cp-ex-feat-05.svg' %>" width="45">
               </span>
-              <p>Marketing support<br> & assets</p>
+              <p><%= I18n.t("global.link_to.marketing_support").html_safe %></p>
           </div>
           <div class="col-lg-4 app-features-list">
             <span>
                 <img src="<%= asset_path 'cp-ex-feat-11.svg' %>" width="45">
               </span>
-              <p>Performance-based<br>channel partner ratings</p>
+              <p><%= I18n.t("global.link_to.performance_based").html_safe %></p>
           </div>
           <div class="col-lg-4 app-features-list">
             <span>
                 <img src="<%= asset_path 'cp-ex-feat-02.svg' %>" width="45">
               </span>
-              <p>Extensive nurturing and<br>calling during launches</p>
+              <p><%= I18n.t("global.link_to.extensive_nurturing").html_safe %></p>
           </div>
           <div class="col-lg-4 app-features-list">
             <span>
                 <img src="<%= asset_path 'cp-ex-feat-04.svg' %>" width="45">
               </span>
-              <p>CRM training<br>& support</p>
+              <p><%= I18n.t("global.link_to.crm_training").html_safe %></p>
           </div>
           <div class="col-lg-4 app-features-list">
             <span>
                 <img src="<%= asset_path 'cp-ex-feat-07.svg' %>" width="45">
               </span>
-              <p>Fully automated<br>EOI process</p>
+              <p><%= I18n.t("global.link_to.fully_automated").html_safe %></p>
           </div>
           <div class="col-lg-4 app-features-list">
             <span>
                 <img src="<%= asset_path 'cp-ex-feat-08.svg' %>" width="45">
               </span>
-              <p>Online inventory selection,<br> KYC & bookings</p>
+              <p><%= I18n.t("global.link_to.online_inventory_selection").html_safe %></p>
           </div>
           <div class="col-lg-4 app-features-list">
               <span>
                 <img src="<%= asset_path 'cp-ex-feat-09.svg' %>" width="45">
               </span>
-              <p>Complete<br>transparency</p>
+              <p><%= I18n.t("global.link_to.complete_transparency").html_safe %></p>
           </div>
           <div class="col-lg-4 app-features-list">
             <span>
                 <img src="<%= asset_path 'cp-ex-feat-10.svg' %>" width="45">
               </span>
-              <p>Unique online <br>broker profile</p>
+              <p><%= I18n.t("global.link_to.unique_online").html_safe %></p>
           </div>
         </div>
       </div>

@@ -25,16 +25,16 @@
             <%= f.label :publish %>
             <div class="form-check form-check-inline">
               <%= f.radio_button :publish, true, class: "form-check-input wd-22" %>
-              <%= f.label "Yes", class: "form-check-label d-inline-block ms-2" %>
+              <%= f.label I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
             </div>
             <div class="form-check form-check-inline">
               <%= f.radio_button :publish, false, class: "form-check-input wd-22" %>
-              <%= f.label "No", class: "form-check-label d-inline-block ms-2" %>
+              <%= f.label I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
             </div>
          </div>
         </div>
         <div class="modal-footer text-end">
-          <%= f.submit "Submit", id: "save", class: "btn btn-primary" %>
+          <%= f.submit I18n.t("global.submit"), id: "save", class: "btn btn-primary" %>
         </div>
       <% end %>
     </div>

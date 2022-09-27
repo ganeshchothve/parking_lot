@@ -5,7 +5,7 @@ class ProjectUnitCancelWorker
   def perform(user_request_id)
     @user_request = UserRequest.find(user_request_id)
     @booking_detail = user_request.try(:booking_detail)
-    @booking_detail.blank? ? reject_user_request([], [], 'Booking Is not available for cancellation.') : resolve
+    @booking_detail.blank? ? reject_user_request([], [], I18n.t("worker.booking_details.errors.booking_cancellation_unavailable")) : resolve
   end
 
   # This function updates the status of current receipts according to requirement

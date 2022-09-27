@@ -35,12 +35,12 @@ class Api::V1::LeadsController < ApisController
       end
 
       if @lead.save
-        render json: {user_id: @user.id, lead_id: @lead.id, message: 'Lead successfully created.'}, status: :created
+        render json: {user_id: @user.id, lead_id: @lead.id, message: I18n.t("controller.leads.notice.created")}, status: :created
       else
         render json: {errors: @lead.errors.full_messages.uniq}, status: :unprocessable_entity
       end
     else
-      render json: {errors: ["Lead with reference_id '#{params[:lead][:reference_id]}' already exists"]}, status: :unprocessable_entity
+      render json: {errors: [I18n.t("controller.leads.errors.lead_reference_id_already_exists", name: "#{params[:lead][:reference_id]}")]}, status: :unprocessable_entity
     end
   end
 
@@ -65,12 +65,12 @@ class Api::V1::LeadsController < ApisController
     unless Lead.reference_resource_exists?(@crm.id, params[:lead][:reference_id])
       @lead.assign_attributes(lead_update_params)
       if @lead.save
-        render json: {user_id: @lead.user_id, lead_id: @lead.id, message: 'Lead successfully updated.'}, status: :ok
+        render json: {user_id: @lead.user_id, lead_id: @lead.id, message: I18n.t("controller.leads.notice.updated")}, status: :ok
       else
         render json: {errors: @lead.errors.full_messages.uniq}, status: :unprocessable_entity
       end
     else
-      render json: {errors: ["Lead with reference_id '#{params[:lead][:reference_id]}' already exists"]}, status: :unprocessable_entity
+      render json: {errors: [I18n.t("controller.leads.errors.lead_reference_id_already_exists", name: "#{params[:lead][:reference_id]}")]}, status: :unprocessable_entity
     end
   end
 
@@ -78,8 +78,8 @@ class Api::V1::LeadsController < ApisController
 
   # Checks if the required reference_id's are present. reference_id is the third party CRM resource id.
   def reference_ids_present?
-    render json: { errors: ['project_id is required to create Lead'] }, status: :bad_request and return unless params.dig(:lead, :project_id).present?
-    render json: { errors: ['Lead reference_id is required'] }, status: :bad_request and return unless params.dig(:lead, :reference_id).present?
+    render json: { errors: [I18n.t("controller.leads.errors.project_id_required")] }, status: :bad_request and return unless params.dig(:lead, :project_id).present?
+    render json: { errors: [I18n.t("controller.leads.errors.lead_reference_id_required")] }, status: :bad_request and return unless params.dig(:lead, :reference_id).present?
   end
 
   # Sets or creates the user object if it doesn't exists.
@@ -101,20 +101,20 @@ class Api::V1::LeadsController < ApisController
     query << {email: params.dig(:lead, :email).to_s.downcase} if params.dig(:lead, :email).present?
     query << {phone: params.dig(:lead, :phone)} if params.dig(:lead, :phone).present?
     if query.present?
-      render json: {errors: ["User email & phone doesn't match"]}, status: :bad_request and return if User.or(query).count > 1
+      render json: {errors: [I18n.t("controller.leads.errors.email_phone_not_match")]}, status: :bad_request and return if User.or(query).count > 1
     else
-      render json: { errors: ['User email or phone is required'] }, status: :bad_request and return
+      render json: { errors: [I18n.t("controller.leads.errors.email_or_phone_required")] }, status: :bad_request and return
     end
     query
   end
 
   def set_project
     unless project_reference_id = params.dig(:lead, :project_id).presence
-      render json: { errors: ['project_id is required for creating lead'] }, status: :bad_request
+      render json: { errors: [I18n.t("controller.leads.errors.project_id_required")] }, status: :bad_request
     else
       # set project
       @project = Project.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": project_reference_id).first
-      render json: { errors: ["Project with reference id '#{project_reference_id}' not found"] }, status: :not_found and return unless @project
+      render json: { errors: [I18n.t("controller.projects.errors.project_reference_id_not_found", name: "#{project_reference_id}")] }, status: :not_found and return unless @project
 
       # modify params
       params[:lead][:project_id] = @project.id.to_s
@@ -138,7 +138,7 @@ class Api::V1::LeadsController < ApisController
 
   def set_lead_and_user
     @lead = Lead.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
-    render json: { errors: ["Lead with reference_id '#{params[:id]}' not found"] }, status: :not_found unless @lead
+    render json: { errors: [I18n.t("controller.projects.errors.lead_reference_id_not_found", name: "#{params[:id]}")] }, status: :not_found unless @lead
     @user = @lead.user
   end
 
@@ -170,7 +170,7 @@ class Api::V1::LeadsController < ApisController
         # modify params
         params[:lead][:manager_id] = @manager.id.to_s
       else
-        render json: {errors: ["Manager with reference id '#{manager_reference_id}' not found"]}, status: :not_found and return
+        render json: {errors: [I18n.t("controller.projects.errors.manager_reference_id_not_found", name: "#{params[:id]}")]}, status: :not_found and return
       end
     end
   end
@@ -180,14 +180,14 @@ class Api::V1::LeadsController < ApisController
     begin
       params[:lead][:sitevisit_date] = Date.strptime(params[:lead][:sitevisit_date], "%d/%m/%Y") if params[:lead][:sitevisit_date].present?
     rescue ArgumentError
-      errors << 'Sitevisit date format is invalid. Correct date format is - dd/mm/yyyy'
+      errors << I18n.t("controller.site_visits.errors.invalid_date_format")
     end
     begin
       params[:lead][:last_revisit_date] = Date.strptime(params[:lead][:last_revisit_date], "%d/%m/%Y") if params[:lead][:last_revisit_date].present?
     rescue ArgumentError
-      errors << 'Last revisit date format is invalid. Correct date format is - dd/mm/yyyy'
+      errors << I18n.t("controller.site_visits.errors.revisit_invalid_date_format")
     end
-    errors << "Revisit count should be a number" if params[:lead][:revisit_count].present? && !params[:lead][:revisit_count].is_a?(Integer)
+    errors << I18n.t("controller.site_visits.errors.revisit_count")if params[:lead][:revisit_count].present? && !params[:lead][:revisit_count].is_a?(Integer)
     render json: { errors: errors },status: :unprocessable_entity and return if errors.present?
   end
 

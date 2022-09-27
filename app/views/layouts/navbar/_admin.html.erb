@@ -51,7 +51,7 @@
   </li>
   <% if policy([current_user_role_group, InterestedProject]).index? && InterestedProject.where(user_id: current_user.id).in(status: %w(subscribed approved)).present? %>
     <li class='nav-item'>
-      <%= active_link_to 'Interested Projects', admin_projects_path(fltrs: {user_interested_projects: current_user.id}), active: /user_interested_projects/, class: "nav-link pl-0 pr-0" %>
+      <%= active_link_to I18n.t("mongoid.models.interested_project.other"), admin_projects_path(fltrs: {user_interested_projects: current_user.id}), active: /user_interested_projects/, class: "nav-link pl-0 pr-0" %>
     </li>
   <% end %>
   <% if ENV_CONFIG.dig('third_party_inventory', 'base_url').present? && policy([:admin, Project]).third_party_inventory? %>

@@ -1,7 +1,7 @@
 <% labels = t('mongoid.attributes.sms').with_indifferent_access %>
 <div class="filter-inner modal-content ps-2 pe-2 fixed-header-footer">
     <div class="modal-header filter-header">
-  <h5 class="modal-title title">Filter</h5>
+  <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
   <a href="javascript:;" class="close-filter-btn btn-close"></a>
   </div>
   <%= form_tag url, method: "get", id: "sms_search_form" do %>
@@ -9,7 +9,7 @@
       <div class="row">
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.sms.project_id'), class: "control-label" %>
-          <%= select_tag "fltrs[project_id]", options_from_collection_for_select(params[:fltrs].present? ? Project.where(_id: params[:fltrs][:project_id]) : [], "id", "ds_name", params.dig(:fltrs, :project_id)), {prompt: "Select", class: "selectize-remote", data: {url: admin_projects_path}} %>
+          <%= select_tag "fltrs[project_id]", options_from_collection_for_select(params[:fltrs].present? ? Project.where(_id: params[:fltrs][:project_id]) : [], "id", "ds_name", params.dig(:fltrs, :project_id)), {prompt: I18n.t("global.select"), class: "selectize-remote", data: {url: admin_projects_path}} %>
         </div>
         <% unless true #current_user.buyer? %>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
@@ -32,8 +32,8 @@
       </div>
     </div>
     <div class="filter-footer modal-footer text-end">
-      <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-      <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+      <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
+      <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.cancel") %></button>
     </div>
   <% end %>
 </div>

@@ -29,7 +29,7 @@ module BulkUpload
             bur.failure_count += 1
           end
         else
-          (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push('Channel Partner not found')).uniq
+          (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push(I18n.t("controller.channel_partners.alert.not_found"))).uniq
           bur.failure_count += 1
         end
       end

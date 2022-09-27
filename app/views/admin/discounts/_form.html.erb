@@ -34,11 +34,11 @@
           </div>
           <div class="mb-3">
             <%= f.label :project_id, class: 'label-required control-label' %>
-            <%= f.select :project_id, Project.all.collect{|p| [p.name, p.id]}, { selected: @discount.project_id, prompt: "Select" }, class: 'selectize', id: "project-id-dd", disabled: (params[:action] == 'edit') %>
+            <%= f.select :project_id, Project.all.collect{|p| [p.name, p.id]}, { selected: @discount.project_id, prompt: I18n.t("global.select") }, class: 'selectize', id: "project-id-dd", disabled: (params[:action] == 'edit') %>
           </div>
           <div class="mb-3">
             <%= f.label :token_type_id, class: 'label-required control-label' %>
-            <%= f.select :token_type_id, {}, { prompt: "Select" }, class: 'selectize', id: "project-token-type-dd", disabled: (params[:action] == 'edit') %>
+            <%= f.select :token_type_id, {}, { prompt: I18n.t("global.select") }, class: 'selectize', id: "project-token-type-dd", disabled: (params[:action] == 'edit') %>
           </div>
           <!-- Payment adjustment section -->
           <% editable_payment_adjustment = policy([:admin, @discount]).editable_field?("payment_adjustments_attributes") %>
@@ -57,7 +57,7 @@
                 <div class="col-md-6">
                   <div class="mb-3">
                     <%= adj.label :field, class: 'label-required' %>
-                    <%= adj.select :field, Discount.available_fields.collect{|x| [x.titleize, x]}, {prompt: true}, class: 'selectize-tags', disabled: !editable_payment_adjustment %>
+                    <%= adj.select :field, Discount.available_fields.collect{|x| [x.titleize, x]}, {prompt: I18n.t("global.select")}, class: 'selectize-tags', disabled: !editable_payment_adjustment %>
                   </div>
                 </div>
               </div>
@@ -72,13 +72,13 @@
             <% end %>
           </div>
           <% if editable_payment_adjustment %>
-            <%= f.link_to_add "Add Adjustments", :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
+            <%= f.link_to_add I18n.t("controller.discounts.links.add_adjustments"), :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
           <% end %>
           </br>
           <!-- Payment adjustment section end -->
         </div>
         <div class="modal-footer">
-          <%= f.submit "Save", class: "btn btn-primary" %>
+          <%= f.submit I18n.t("global.save"), class: "btn btn-primary" %>
         </div>
       </div>
     </div>

@@ -6,7 +6,7 @@
       <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3">
           <div class="table-title pt-4">
-            <h1 class="title fn-18">Project Wise Booking Count</h1>
+            <h1 class="title fn-18"><%= I18n.t("controller.dashboard.link_to.project_wise.booking_count") %></h1>
           </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3">
@@ -19,31 +19,32 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <div class="filter-box modal-content px-3 fixed-header-footer">
               <div class="filter-header modal-header">
-                <h5 class="modal-title title">Filter</h5>
+                <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
                 <a href="javascript:;" class="close-filter-btn btn-close"></a>
               </div>
               <%= form_tag booking_details_counts_path, method: "get", remote: true, id: "booking_details_counts_filter", class: 'filter-form-modal' do %>
                 <div class="filter-content modal-body ps-0 pe-0 theme-form">
                   <div class="row">
                     <div class="mb-3 col-12">
-                      <%= label_tag "dates", "Dates", class: "control-label float-left" %>
+                      <%= label_tag "dates", I18n.t("global.dates"), class: "control-label float-left" %>
                       <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-start-date": start_date || '', "data-end-date": end_date || '', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
                     </div>
                     <div class="mb-3 col-12">
-                      <%= label_tag :project_ids, "Projects", class: "control-label float-left" %>
-                      <%= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
+                      <%= label_tag :project_ids, I18n.t("mongoid.models.project.other"), class: "control-label float-left" %>
+                      <%= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: I18n.t("global.select"), class: "selectize", multiple: true} %>
                     </div>
+
                     <% if current_client.enable_channel_partners? %>
                       <div class="mb-3 col-12">
-                        <%= label_tag :source, "Source", class: "control-label float-left" %>
-                        <%= select_tag :source, options_for_select(BookingDetail.pluck(:source).uniq.compact.collect{|x| [x, x]}), {prompt: "Select", class: "selectize"} %>
+                        <%= label_tag :source, I18n.t("mongoid.attributes.channel_partner.source"), class: "control-label float-left" %>
+                        <%= select_tag :source, options_for_select(BookingDetail.pluck(:source).uniq.compact.collect{|x| [x, x]}), {prompt: I18n.t("global.select"), class: "selectize"} %>
                       </div>
                     <% end %>
                   </div>
                 </div>
                 <div class="filter-footer modal-footer text-end">
-                  <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-                  <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+                  <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                  <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.cancel") %></button>
                 </div>
               <% end %>
           </div>

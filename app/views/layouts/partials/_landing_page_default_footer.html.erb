@@ -3,7 +3,7 @@
       <div class="container-launchpad">
         <div class="col-app-8 col-app-xs-12">
           Copyrights &copy; K2V2 Technologies Pvt. Ltd. <%= Date.current.year %>. 
-          <!--<a href="javascript:;" rel="about-us" class="footer-link scroll-sec">About Us</a><span> | </span> <%= link_to 'Privacy Policy', privacy_policy_path, class: 'footer-link' %> <span> | </span> <%= link_to 'Terms and Conditions', terms_and_conditions_path, class: 'footer-link' %>-->
+          <!--<a href="javascript:;" rel="about-us" class="footer-link scroll-sec">About Us</a><span> | </span> <%= link_to I18n.t("global.link_to.privacy_policy"), privacy_policy_path, class: 'footer-link' %> <span> | </span> <%= link_to I18n.t("global.terms_and_conditions"), terms_and_conditions_path, class: 'footer-link' %>-->
         </div>
         <div class="col-app-4 col-app-xs-12">
           <div class="social-links">
@@ -26,10 +26,10 @@
 
     <div class="mobile-footer visible-xs visible-portrait fixed text-center col-app-12">
         <div class="mob-number col-app-6">             
-        <%= link_to 'Sign in', new_user_session_path, {class: 'sign-in-footer', 'data-event-category': 'Footer', 'data-event-action': 'Click', 'data-event-name': 'Login'} %>
+        <%= link_to I18n.t("devise.keys.sign_in"), new_user_session_path, {class: 'sign-in-footer', 'data-event-category': 'Footer', 'data-event-action': 'Click', 'data-event-name': 'Login'} %>
         </div>
         <div class="enquiry col-app-6">
-            <a href='<%= new_channel_partner_path %>' class="green-btn mobile-enquire-button relative register-btn" data-event-category="Footer" data-event-action="Click" data-event-name="Register Now">Register Now</a>
+            <a href='<%= new_channel_partner_path %>' class="green-btn mobile-enquire-button relative register-btn" data-event-category="Footer" data-event-action="Click" data-event-name="Register Now"><%= I18n.t("devise.keys.register_now") %></a>
         </div>            
     </div>
   </footer>

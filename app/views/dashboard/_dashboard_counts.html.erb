@@ -3,7 +3,7 @@
   <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 mt-3">
   <div class="shadow rounded">
     <div class="box-header bg-theme rounded-top br-rd-tr-4 text-center position-relative">
-      <h2 class="fn-18 font-normal white py-1 position-absolute top-50 start-50 translate-middle wd-100 text-white"><%= SiteVisit.model_name.human %> Active Partners</h2>
+      <h2 class="fn-18 font-normal white py-1 position-absolute top-50 start-50 translate-middle wd-100 text-white"><%= I18n.t("controller.dashboard.headers.site_visit_active_partners") %></h2>
     </div>
     <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
       <span class='cp-dashboard-box-font fn-24'>
@@ -15,7 +15,7 @@
   <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 mt-3">
   <div class="shadow rounded">
     <div class="box-header bg-theme rounded-top br-rd-tr-4 text-center position-relative">
-      <h2 class="fn-18 font-normal white py-1 position-absolute top-50 start-50 translate-middle wd-100 text-white"><%= BookingDetail.model_name.human %> Active Partners</h2>
+      <h2 class="fn-18 font-normal white py-1 position-absolute top-50 start-50 translate-middle wd-100 text-white"><%= I18n.t("controller.dashboard.headers.booking_active_partners") %></h2>
     </div>
     <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
       <span class='cp-dashboard-box-font fn-24' id = "booking_active_partners" >
@@ -27,7 +27,7 @@
   <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 mt-3">
   <div class="shadow rounded">
     <div class="box-header bg-theme rounded-top br-rd-tr-4 text-center position-relative">
-      <h2 class="fn-18 font-normal white py-1 position-absolute top-50 start-50 translate-middle wd-100 text-white">Raised <%= Invoice.model_name.human(count: 2) %></h2>
+      <h2 class="fn-18 font-normal white py-1 position-absolute top-50 start-50 translate-middle wd-100 text-white"><%= I18n.t("controller.dashboard.headers.raised_invoices") %></h2>
     </div>
     <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
       <span class='cp-dashboard-box-font fn-24'>
@@ -39,7 +39,7 @@
   <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 mt-3">
   <div class="shadow rounded">
     <div class="box-header bg-theme rounded-top br-rd-tr-4 text-center position-relative">
-      <h2 class="fn-18 font-normal white py-1 position-absolute top-50 start-50 translate-middle wd-100 text-white">Approved <%= Invoice.model_name.human(count: 2) %></h2>
+      <h2 class="fn-18 font-normal white py-1 position-absolute top-50 start-50 translate-middle wd-100 text-white"><%= I18n.t("controller.dashboard.headers.approved_invoices") %></h2>
     </div>
     <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
       <span class='cp-dashboard-box-font fn-24'>

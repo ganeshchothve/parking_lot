@@ -75,7 +75,7 @@
     <div class="form-group">
       <div class="form-check form-check-inline">
         <%= f.label :check_sv_availability_in_selldo, class: "form-check-label d-inline-block ms-2" %>
-        <%= f.check_box :check_sv_availability_in_selldo, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("check_sv_availability_in_selldo") }, "Yes", "No" %>
+        <%= f.check_box :check_sv_availability_in_selldo, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("check_sv_availability_in_selldo") }, I18n.t("global.boolean.true"), I18n.t("global.boolean.false") %>
       </div>
     </div>
   </div>

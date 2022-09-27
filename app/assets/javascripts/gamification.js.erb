@@ -45,16 +45,16 @@ var Gamification = (function(){
         }
       });
     }else if(rand == 3 && unit.floor > 5){
-      show("This is one of our most popular floors with stunning views", $container);
+      show(App.locale.gamification.text.popular_floor, $container);
     }else if((rand == 4 || rand == 5) && parseInt(unit.bedrooms) > 1){
-      show("Popular choice of first-time home buyers", $container);
+      show(App.locale.gamification.text.first_time_home_buyers, $container);
     }else{
-      show((_.random(5) + 8) + " other people are viewing the apartments on this floor", $container);
+      show((_.random(5) + 8) + App.locale.gamification.text.people_viewing_apartments , $container);
     }
   }
 
   var gamifyTowerSelection = function(tower, $container){
-    show((_.random(25) + 23) + " other people like you are looking for a home in this tower", $container);
+    show((_.random(25) + 23) + App.locale.gamification.text.people_viewing_home, $container);
   }
 
   return {

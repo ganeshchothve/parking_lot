@@ -19,19 +19,19 @@
         <div class="modal-body">
           <nav>
             <div class="nav nav-tabs theme-tab" role="tablist">
-              <a class="nav-item nav-link active" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-basic" role="tab">Basic Details</a>
-              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-specifications" role="tab">Specs</a>
-              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-offers" role="tab">Offers</a>
-              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-timeline" role="tab">Timeline</a>
-              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-location" role="tab">Location</a>
-              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-pages" role="tab">Content Pages</a>
-              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-logos" role="tab">Images & Docs</a>
+              <a class="nav-item nav-link active" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-basic" role="tab"><%= I18n.t("global.link_to.basic_details") %></a>
+              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-specifications" role="tab"><%= I18n.t("global.link_to.specs") %></a>
+              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-offers" role="tab"><%= I18n.t("global.link_to.offers") %></a>
+              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-timeline" role="tab"><%= I18n.t("global.link_to.timeline") %></a>
+              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-location" role="tab"><%= I18n.t("global.link_to.location") %></a>
+              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-pages" role="tab"><%= I18n.t("global.link_to.content_pages") %></a>
+              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-logos" role="tab"><%= I18n.t("global.link_to.images_docs") %></a>
               <% if current_user.role?(:superadmin) %>
-                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-integrations" role="tab">Integrations</a>
-                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-bookings" role="tab">Bookings</a>
-                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-contacts" role="tab">Notifications</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-integrations" role="tab"><%= I18n.t("global.link_to.integrations") %></a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-bookings" role="tab"><%= I18n.t("global.link_to.bookings") %></a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-contacts" role="tab"><%= I18n.t("global.link_to.notifications") %></a>
                 <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
-                  <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-crm-ids" role="tab">CRM</a>
+                  <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-crm-ids" role="tab"><%= I18n.t("global.link_to.crm") %></a>
                 <% end %>
               <% end %>
             </div>
@@ -78,7 +78,7 @@
           </div>
         </div>
         <div class="modal-footer text-end">
-          <%= f.submit "Save", class: 'btn btn-primary' %>
+          <%= f.submit I18n.t("global.save"), class: 'btn btn-primary' %>
         </div>
       </div>
     </div>

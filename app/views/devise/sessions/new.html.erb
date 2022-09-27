@@ -13,8 +13,8 @@ end %>
 </div>
 <section class="cp-login-otp-sec col-lg-4 mg-auto <%= otp_signin_class %>" id="otp_user_section">
   <div class="cp-login-otp-wrap">
-    <h2 class="px-4 pt-3 pb-3">Log In</h2>
-    <p class="px-4 pt-3 pb-1 font-weight-medium">Sign in using OTP (One Time Password)</p>
+    <h2 class="px-4 pt-3 pb-3"><%= I18n.t("devise.keys.log_in") %></h2>
+    <p class="px-4 pt-3 pb-1 font-weight-medium"><%= I18n.t("devise.help_text.sign_in.otp") %></p>
     <div class="cp-signup-form-wrap px-4 cp-form-wrap">
       <%= simple_form_for(resource, as: resource_name, url: users_otp_path, method: :post, authenticity_token: true, remote: true, html: { novalidate: false, class: "validate-form #{}", id: 'otp_user_form', data: { type: :json }, autocomplete: 'off' }) do |f| %>
       <div class="mb-3">
@@ -25,7 +25,7 @@ end %>
         <%= f.label :login_otp %>
         <%= f.number_field :login_otp, class: 'form-control', maxlength: resource_class.otp_length, minlength: resource_class.otp_length, autocomplete: false %>
         <label class="d-none mt-2">
-          Didn’t Receive SMS? <a href="javascript:;" class="a-style opacity-5 resend-otp primary" data-resend-time="<%= User.otp_resend_wait_time %>", data-max-limit="<%= User.otp_resend_max_limit %>" data-counter=0 data-disable-with="<%= t('sessions.new.otp_resend') %>"><%= t('sessions.new.otp_resend') %></a>
+          <%= I18n.t("devise.keys.sms_unreceived") %> <a href="javascript:;" class="a-style opacity-5 resend-otp primary" data-resend-time="<%= User.otp_resend_wait_time %>", data-max-limit="<%= User.otp_resend_max_limit %>" data-counter=0 data-disable-with="<%= t('sessions.new.otp_resend') %>"><%= t('sessions.new.otp_resend') %></a>
         </label>
       </div>
       <div class="mb-3 pt-3 pb-3">
@@ -41,8 +41,8 @@ end %>
 </section>
 <section class="cp-login-email-sec col-lg-4 mg-auto <%= username_signin_class %>" id="standard_login_section">
   <div class="cp-login-email-wrap">
-    <h2 class="px-4 pt-3 pb-3">Log In</h2>
-    <p class="px-4 pt-3 pb-1 font-weight-medium">Sign in using email and password</p>
+    <h2 class="px-4 pt-3 pb-3"><%= I18n.t("devise.keys.log_in") %></h2>
+    <p class="px-4 pt-3 pb-1 font-weight-medium"><%= I18n.t("devise.help_text.sign_in.email_and_password") %></p>
     <div class="cp-signup-form-wrap cp-form-wrap px-4">
       <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'validate-form ', id: "standard_login_form", autocomplete: 'off' }) do |f| %>
       <div class="mb-3">

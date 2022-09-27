@@ -4,11 +4,11 @@
     <thead class="th-default">
       <tr class="bg-primary white">
         <th rowspan='2' class='th-border-right'><%= IncentiveScheme.model_name.human %> Name</th>
-        <th colspan='<%= @max_ladders %>' class='text-center'>No. of <%= ChannelPartner.model_name.human(count:2) %></th>
+        <th colspan='<%= @max_ladders %>' class='text-center'><%= I18n.t("global.no_of") %> <%= ChannelPartner.model_name.human(count:2) %></th>
       </tr>
       <tr class="bg-primary white text-center"> 
         <% @max_ladders.times do |l| %>
-          <th>Ladder #<%= l + 1 %></th>
+          <th><%= I18n.t("controller.dashboard.booking_details_overview.ladder") </th>
         <% end %>
       </tr>
     </thead>
@@ -18,7 +18,7 @@
           <tr>
             <td data-toggle="popover" data-content="<%= incentive_scheme_tooltip(scheme) %>" data-title="Details for <%= scheme.name %>" class='text-md-left'><span class='d-none d-md-inline'><%= scheme.name %></span> <span class='small ml-md-3 d-md-inline d-block'><%= project %></span></td>
             <% scheme.ladders.asc(:stage).each do |ladder| %>
-              <td class='non-action-td' data-title="No. of Partners in Ladder #<%= ladder.stage %>"><%= @invoices[ladder.id] || 0 %></td>
+              <td class='non-action-td' data-title="<%= I18n.t("controller.dashboard.invoice_summary.partners_count", name: ladder.stage ) %>"><%= @invoices[ladder.id] || 0 %></td>
             <% end %>
             <% (@max_ladders - scheme.ladders.max(:stage)).times do |td| %>
               <td class='d-none d-md-table-cell'>-</td>

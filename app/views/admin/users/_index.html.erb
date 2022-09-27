@@ -56,7 +56,7 @@
                     <% end %>
                     <% if user.buyer? %>
                       <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color ms-xs-0"><i
-                          class='fa fn-16 fa-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= user.is_payment_done? ? 'Payment Done' : 'Payment Pending' %>
+                          class='fa fn-16 fa-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= user.is_payment_done? ? I18n.t("controller.users.text.payment_done") : I18n.t("controller.users.text.payment_pending") %>
                       </p>
                       <% if user.portal_stage.present? %>
                         <p class="font-medium fn-14 mb-0 theme-txt-color"><i

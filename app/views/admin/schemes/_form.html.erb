@@ -13,28 +13,28 @@
         </div>
         <div class="mb-3">
           <%= f.label :project_id, class: 'label-required' %>
-          <%= f.select :project_id, options_for_select(Project.all.collect{|p| [p.name, p.id ]}, (f.object.new_record? ? Project.first.id : f.object.project_id)) , {prompt: true}, class: 'selectize project_select', required: 'required', disabled: !policy([:admin, @scheme]).editable_field?("project_id") %>
+          <%= f.select :project_id, options_for_select(Project.all.collect{|p| [p.name, p.id ]}, (f.object.new_record? ? Project.first.id : f.object.project_id)) , {prompt: I18n.t("global.select")}, class: 'selectize project_select', required: 'required', disabled: !policy([:admin, @scheme]).editable_field?("project_id") %>
         </div>
         <div class="mb-3">
           <%= f.label :project_tower_id, class: 'label-required' %>
-          <%= f.select :project_tower_id, ProjectTower.all.collect{|pt| [pt.name, pt.id ]} , {prompt: true}, class: 'selectize project_tower_select', required: 'required', disabled: !policy([:admin, @scheme]).editable_field?("project_tower_id"), data: { url: admin_project_towers_path } %>
+          <%= f.select :project_tower_id, ProjectTower.all.collect{|pt| [pt.name, pt.id ]} , {prompt: I18n.t("global.select")}, class: 'selectize project_tower_select', required: 'required', disabled: !policy([:admin, @scheme]).editable_field?("project_tower_id"), data: { url: admin_project_towers_path } %>
         </div>
         <div class="mb-3">
           <%= f.label :user_role, class: 'control-label' %>
-          <%= f.select :user_role, User.available_roles(current_client).select{|role| User.buyer_roles(current_client).include?(role)}.collect{|x| [ t("mongois.attributes.user/role.#{x}"), x] }, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @scheme]).editable_field?("user_role") %>
+          <%= f.select :user_role, User.available_roles(current_client).select{|role| User.buyer_roles(current_client).include?(role)}.collect{|x| [ t("mongois.attributes.user/role.#{x}"), x] }, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy([:admin, @scheme]).editable_field?("user_role") %>
         </div>
         <div class="mb-3">
           <%= f.label :user, class: 'control-label' %>
-          <%= f.select :user_ids, options_from_collection_for_select(User.where(role: 'user'), "id", "ds_name", f.object.user_ids), {prompt: true}, multiple: "multiple", class: "selectize-remote", data: { url: admin_users_path, params: {fltrs: {role: {"$eq": 'user' } } } } %>
+          <%= f.select :user_ids, options_from_collection_for_select(User.where(role: 'user'), "id", "ds_name", f.object.user_ids), {prompt: I18n.t("global.select")}, multiple: "multiple", class: "selectize-remote", data: { url: admin_users_path, params: {fltrs: {role: {"$eq": 'user' } } } } %>
         </div>
 
         <div class="mb-3">
           <%= f.label :can_be_applied_by, class: '' %>
-          <%= f.select :can_be_applied_by, filter_user_role_options, {prompt: true}, class: 'selectize', multiple: "multiple", disabled: !policy([:admin, @scheme]).editable_field?("can_be_applied_by") %>
+          <%= f.select :can_be_applied_by, filter_user_role_options, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: "multiple", disabled: !policy([:admin, @scheme]).editable_field?("can_be_applied_by") %>
         </div>
         <div class="mb-3">
           <%= f.label :default_for_users, class: 'control-label' %>
-          <%= f.select :default_for_user_ids, options_from_collection_for_select(User.where(role: 'channel_partner'), "id", "ds_name", f.object.default_for_user_ids), {prompt: true}, multiple: "multiple", class: "selectize-remote", data: { url: admin_users_path, params: {fltrs: {role: {"$eq": 'channel_partner' } } } } %>
+          <%= f.select :default_for_user_ids, options_from_collection_for_select(User.where(role: 'channel_partner'), "id", "ds_name", f.object.default_for_user_ids), {prompt: I18n.t("global.select")}, multiple: "multiple", class: "selectize-remote", data: { url: admin_users_path, params: {fltrs: {role: {"$eq": 'channel_partner' } } } } %>
         </div>
         <div class="row">
           <div class="col-md-6">
@@ -53,7 +53,7 @@
         <div class="payment-adjustments">
           <% editable_payment_adjustment = policy([:admin, @scheme]).editable_field?("payment_adjustments_attributes")%>
           <% if editable_payment_adjustment %>
-            <%= f.link_to_add "Add", :payment_adjustments, :data => { :target => ".payment-adjustments" }, class: "btn btn-primary d-inline-block" %>
+            <%= f.link_to_add I18n.t("global.add"), :payment_adjustments, :data => { :target => ".payment-adjustments" }, class: "btn btn-primary d-inline-block" %>
           <% end %>
           <%= f.fields_for :payment_adjustments do |adj|%>
             <% if editable_payment_adjustment %>
@@ -69,19 +69,19 @@
               <div class="col-md-6">
                 <div class="mb-3">
                   <%= adj.label :field, class: 'label-required' %>
-                  <%= adj.select :field, Scheme::FIELDS.collect{|sf| [t("mongoid.attributes.payment_adjustment/field.#{sf}"), sf]}, {prompt: true}, class: 'selectize-tags', disabled: !editable_payment_adjustment %>
+                  <%= adj.select :field, Scheme::FIELDS.collect{|sf| [t("mongoid.attributes.payment_adjustment/field.#{sf}"), sf]}, {prompt: I18n.t("global.select")}, class: 'selectize-tags', disabled: !editable_payment_adjustment %>
                 </div>
               </div>
             </div>
             <div class="mb-3">
               <%= adj.label :absolute_value, class: 'label-required' %>
               <%= adj.number_field :absolute_value, class: "form-control", disabled: !editable_payment_adjustment %>
-              <p class="small text-muted">Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)</p>
+              <p class="small text-muted"><%= I18n.t("controller.project_units.total_adjustment") %></p>
             </div>
             <div class="mb-3">
               <%= adj.label :formula, class: 'label-required' %>
               <%= adj.text_field :formula, class: "form-control", disabled: !editable_payment_adjustment %>
-              <p class="small text-muted">Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)</p>
+              <p class="small text-muted"><%= I18n.t("controller.project_units.total_adjustment") %></p>
             </div>
           <% end %>
         </div>
@@ -92,12 +92,12 @@
               events = @scheme.aasm.events(permitted: true).collect{|x| x.name.to_s}
               events = events.collect{|x| [x.to_s.titleize, x.to_s] }
             %>
-            <%= f.select :event, options_for_select(events, @scheme.status), {prompt: true}, class: 'selectize', required: "required" %>
+            <%= f.select :event, options_for_select(events, @scheme.status), {prompt: I18n.t("global.select")}, class: 'selectize', required: "required" %>
           </div>
         <% end %>
       </div>
       <div class="modal-footer text-end">
-        <%= f.submit "Save", class: "btn btn-primary" %>
+        <%= f.submit I18n.t("global.save"), class: "btn btn-primary" %>
       </div>
     </div>
   </div>
@@ -144,7 +144,7 @@ $(document).ready(function(){
           }
         },
         error: function(){
-          Amura.global_error_handler("Error in fetching the project payment schedules...")
+          Amura.global_error_handler('<%= I18n.t("global.fetch_errors.payment_schedules") %>')
         }
       });
 
@@ -172,7 +172,7 @@ $(document).ready(function(){
           }
         },
         error: function(){
-          Amura.global_error_handler("Error in fetching the project cost sheet templates...")
+          Amura.global_error_handler('<%= I18n.t("global.fetch_errors.cost_sheet_templates") %>')
         }
       });
     }

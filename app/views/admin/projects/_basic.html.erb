@@ -3,7 +3,7 @@
     <div class="form-group text-end">
       <div class="form-check form-check-inline">
         <%= f.label :hot, class: "form-check-label d-inline-block ms-2" %>
-        <%= f.check_box :hot, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("hot") }, "Yes", "No" %>
+        <%= f.check_box :hot, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("hot") }, I18n.t("global.boolean.true"), I18n.t("global.boolean.false") %>
       </div>
     </div>
   </div>
@@ -22,19 +22,19 @@
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :project_type, class: 'label-required' %>
-      <%= f.select :project_type, Project::PROJECT_TYPES.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("project_type") ? false : true) %>
+      <%= f.select :project_type, I18n.t("mongoid.attributes.project/project_type").collect{|k,v| [v, k.to_s]}.sort{|x, y| x[0] <=> y[0]}, {prompt: I18n.t("global.select")}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("project_type") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :category, class: 'label-required' %>
-      <%= f.select :category, Project::CATEGORIES.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("category") ? false : true) %>
+      <%= f.select :category, I18n.t("mongoid.attributes.project/category").collect{|k,v| [v, k.to_s]}.sort{|x, y| x[0] <=> y[0]}, {prompt: I18n.t("global.select")}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("category") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :project_segment, class: 'label-required' %>
-      <%= f.select :project_segment, Project::SEGMENTS.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("project_segment") ? false : true) %>
+      <%= f.select :project_segment, I18n.t("mongoid.attributes.project/project_segment").collect{|k,v| [v, k.to_s]}.sort{|x, y| x[0] <=> y[0]}, {prompt: I18n.t("global.select")}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("project_segment") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
@@ -46,13 +46,13 @@
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :city, class: 'label-required' %>
-      <%= f.select :city, current_client.regions.pluck(:city), {prompt: 'Select'}, class: 'selectize city_select', required: true,  disabled: !policy([:admin, @project]).editable_field?("city") %>
+      <%= f.select :city, current_client.regions.pluck(:city), {prompt: I18n.t("global.select")}, class: 'selectize city_select', required: true,  disabled: !policy([:admin, @project]).editable_field?("city") %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :region %>
-      <%= f.select :region, (@project.region.present? ? current_client.regions.where(city: @project.city).pluck(:partner_regions).first : []), {prompt: 'Select City First'}, class: 'selectize regions_select', required: true,  disabled: !policy([:admin, @project]).editable_field?("region"), data: { url: get_regions_admin_client_path } %>
+      <%= f.select :region, (@project.region.present? ? current_client.regions.where(city: @project.city).pluck(:partner_regions).first : []), {prompt:  I18n.t("global.link_to.select_city_first")}, class: 'selectize regions_select', required: true,  disabled: !policy([:admin, @project]).editable_field?("region"), data: { url: get_regions_admin_client_path } %>
     </div>
   </div>
   <div class="col-md-6">
@@ -85,11 +85,11 @@
       <%= f.label :is_active, class: 'mb-2' %>
       <div class="form-check form-check-inline">
         <%= f.radio_button :is_active, true, class: "form-check-input wd-22" %>
-        <%= f.label :is_active, "Yes", class: "form-check-label d-inline-block ms-2" %>
+        <%= f.label :is_active, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
       </div>
       <div class="form-check form-check-inline">
         <%= f.radio_button :is_active, false, class: "form-check-input wd-22" %>
-        <%= f.label :is_active, "No", class: "form-check-label d-inline-block ms-2" %>
+        <%= f.label :is_active, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
       </div>
     </div>
     </div>
@@ -127,13 +127,13 @@
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :amenities, class: 'label-required' %>
-      <%= f.select :amenities, Project::DEFAULT_AMENITIES.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {}, required: true, class: 'selectize-tags', multiple: true, disabled: !policy([:admin, project]).editable_field?("amenities") %>
+      <%= f.select :amenities, I18n.t("mongoid.attributes.project/default_amenities").collect{|k,v| [v, k.to_s]}, {}, required: true, class: 'selectize-tags', multiple: true, disabled: !policy([:admin, project]).editable_field?("amenities") %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :approved_banks, class: 'label-required' %>
-      <%= f.select :approved_banks, Project::ALLOWED_BANKS.collect{|x| [t("mongoid.attributes.project.approved_banks/list.#{x}"), x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("approved_banks") ? false : true) %>
+      <%= f.select :approved_banks, I18n.t("mongoid.attributes.project/allowed_banks").collect{|k,v| [v, k.to_s]}, {prompt: I18n.t("global.select")}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("approved_banks") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
@@ -214,7 +214,7 @@
 </div>
 <div class="card mt-3">
   <div class="card-header">
-    Support Contact Details
+    <%= I18n.t("global.link_to.contact_details") %>
   </div>
   <div class="card-body">
     <div class="col-md-12">
@@ -239,7 +239,7 @@
 </div>
 <div class="card mt-3">
   <div class="card-header">
-    Address
+    <%= I18n.t("mongoid.attributes.project.address") %>
   </div>
   <div class="card-body">
     <%

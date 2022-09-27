@@ -34,7 +34,7 @@
       <div class="row pd-box">
         <div class="col-md-4">
           <div class="mb-3">
-            <label class="small text-muted"><%= User.human_attribute_name('eamil') %></label>
+            <label class="small text-muted"><%= User.human_attribute_name('email') %></label>
             <div><%= @user.email %></div>
           </div>
         </div>
@@ -111,16 +111,16 @@
       <div class="row pd-box">
         <div class="col-md-6">
           <div class="mb-5 mt-5"></div>
-          Customer Signature
+          <%= I18n.t("controller.users.text.customer_signature") %>
         </div>
         <div class="col-md-6 text-right">
           <div class="mb-5 mt-5"></div>
-          Authorized Signatory
+          <%= I18n.t("controller.users.text.authorized_signatory") %>
         </div>
       </div>
     </div>
   </div>
-  <div class="text-center text-muted small mt-3">This is an electronically generated customer form.</div>
+  <div class="text-center text-muted small mt-3"><%= I18n.t("controller.users.text.e_customer_form") %></div>
   <div class="pt-3"></div>
 </div>
 <%= javascript_tag do %>

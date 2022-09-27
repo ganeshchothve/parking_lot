@@ -2,10 +2,10 @@
   <thead class="th-default">
     <thead>
       <tr class="bg-primary white">
-        <th>Subject Class</th>
-        <th>Changed By</th>
-        <th>Action Type</th>
-        <th>Actions</th>
+        <th><%= I18n.t("controller.records.text.subject_class") %></th>
+        <th><%= I18n.t("controller.records.text.changed_by") %></th>
+        <th><%= I18n.t("controller.records.text.action_type") %></th>
+        <th><%= I18n.t("global.actions") %></th>
       </tr>
     </thead>
   </thead>
@@ -22,12 +22,12 @@
           <%= audit.change_type %>
         </td>
         <td>
-          <%= link_to "Show","javascript:;", data: {toggle: "modal", target: "#audit_entry_modal_#{audit.id}"}, class: "db-small-btn light-blue bg-white fn-400 btn" %>
+          <%= link_to I18n.t("global.show"),"javascript:;", data: {toggle: "modal", target: "#audit_entry_modal_#{audit.id}"}, class: "db-small-btn light-blue bg-white fn-400 btn" %>
           <div class="modal fade right fixed-header-footer" role="dialog" id="audit_entry_modal_<%= audit.id %>">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h3 class="title">Audit Entries</h3>
+                  <h3 class="title"><%= I18n.t("controller.records.text.audit_entries") %></h3>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body theme-form">

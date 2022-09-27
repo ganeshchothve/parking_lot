@@ -19,13 +19,13 @@
             <div class="col-md-12">
               <div class="form-group">
                 <%= f.label :time_slot %></br>
-                <%= f.select :time_slot_id, options_for_select(@receipt.project.time_slots.collect{ |x| [x.to_s, x.id]}, @receipt.time_slot_id), {prompt: true}, class: 'selectize', autofocus: true %>
+                <%= f.select :time_slot_id, options_for_select(@receipt.project.time_slots.collect{ |x| [x.to_s, x.id]}, @receipt.time_slot_id), {prompt: I18n.t("global.select")}, class: 'selectize', autofocus: true %>
               </div>
             </div>
           </div>
         </div>
         <div class="modal-footer text-end">
-          <%= f.submit "Save", class: 'btn btn-primary' %>
+          <%= f.submit I18n.t("global.save"), class: 'btn btn-primary' %>
         </div>
       </div>
     </div>

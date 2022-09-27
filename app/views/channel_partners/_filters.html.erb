@@ -1,6 +1,6 @@
 <div class="filter-inner modal-content ps-2 pe-2 fixed-header-footer">
   <div class="modal-header filter-header">
-  <h5 class="modal-title title">Filter</h5>
+  <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
     <a href="javascript:;" class="close-filter-btn btn-close"></a>
   </div>
   <%= form_tag channel_partners_path, method: "get", id: "channel_partner_search_form" do %>
@@ -16,11 +16,11 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.channel_partner.internal_category'), class: "control-label" %>
-          <%= select_tag "fltrs[internal_category]", options_for_select( ChannelPartner::INTERNAL_CATEGORY.collect{|x| [ t("mongoid.attributes.channel_partner/internal_categories.#{x}"), x]}, params.dig(:fltrs,:internal_category)), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[internal_category]", options_for_select( ChannelPartner::INTERNAL_CATEGORY.collect{|x| [ t("mongoid.attributes.channel_partner/internal_categories.#{x}"), x]}, params.dig(:fltrs,:internal_category)), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.channel_partner.status'), class: "control-label" %>
-          <%= select_tag "fltrs[status]", options_for_select( ChannelPartner::STATUS.collect{|x| [ t("mongoid.attributes.channel_partner/status.#{x}"), x]}, params.dig(:fltrs,:status)), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[status]", options_for_select( ChannelPartner::STATUS.collect{|x| [ t("mongoid.attributes.channel_partner/status.#{x}"), x]}, params.dig(:fltrs,:status)), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.channel_partner.created_at'), class: "control-label" %>
@@ -29,15 +29,15 @@
 
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.channel_partner.manager_id'), class: "control-label" %>
-          <%= select_tag "fltrs[manager_id]", options_for_select( User.where(is_active: true, confirmed_at: {'$ne': nil}, role: "cp").collect{|x| [ x.ds_name, x.id.to_s]}, params.dig(:fltrs,:manager_id)), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[manager_id]", options_for_select( User.where(is_active: true, confirmed_at: {'$ne': nil}, role: "cp").collect{|x| [ x.ds_name, x.id.to_s]}, params.dig(:fltrs,:manager_id)), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
 
         <%= render 'admin/regions/filters' %>
       </div>
     </div>
     <div class="filter-footer modal-footer text-end">
-      <%= submit_tag :Apply, class: "btn btn-primary f-save-btn db-small-btn bg-light-blue fn-500 float-end" %>
-      <button type="button" class="btn btn-secondary f-cancel-btn float-end">Cancel</button>
+      <%= submit_tag I18n.t("global.apply"), class: "btn btn-primary f-save-btn db-small-btn bg-light-blue fn-500 float-end" %>
+      <button type="button" class="btn btn-secondary f-cancel-btn float-end"><%= I18n.t("global.cancel") %></button>
     </div>
   <% end %>
 </div>

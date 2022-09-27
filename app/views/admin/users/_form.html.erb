@@ -42,12 +42,12 @@
           <% if @user.role.blank? %>
           <div class="mb-3">
             <%= f.label :role, class: 'label-required' %>
-            <%= f.select :role, User.available_roles(current_client).reject{|role| User.buyer_roles(current_client).include?(role) || role.in?(%w(cp_owner channel_partner))}.collect{ |r| [User.human_attribute_name("role.#{r}"), r] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("role") ? false : true) %>
+            <%= f.select :role, User.available_roles(current_client).reject{|role| User.buyer_roles(current_client).include?(role) || role.in?(%w(cp_owner channel_partner))}.collect{ |r| [User.human_attribute_name("role.#{r}"), r] }, {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("role") ? false : true) %>
           </div>
           <% elsif policy([current_user_role_group, @user]).editable_field?("role") %>
           <div class="mb-3">
             <%= f.label :role, class: 'label-required' %>
-            <%= f.select :role, user_edit_role_options(f.object), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([current_user_role_group, @user]).editable_field?("role") %>
+            <%= f.select :role, user_edit_role_options(f.object), {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: !policy([current_user_role_group, @user]).editable_field?("role") %>
           </div>
           <% else %>
           <%= f.hidden_field :role %>
@@ -68,11 +68,11 @@
                       <%= fa_form.label :is_active %>
                       <div class="form-check form-check-inline">
                         <%= fa_form.radio_button :is_active, true, class: "form-check-input wd-22" %>
-                        <%= fa_form.label :is_active, "Yes", class: "form-check-label d-inline-block ms-2" %>
+                        <%= fa_form.label :is_active, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
                       </div>
                       <div class="form-check form-check-inline">
                         <%= fa_form.radio_button :is_active, false, class: "form-check-input wd-22" %>
-                        <%= fa_form.label :is_active, "No", class: "form-check-label d-inline-block ms-2" %>
+                        <%= fa_form.label :is_active, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
                       </div>
                     </div>
                   </div>
@@ -84,7 +84,7 @@
           <% if policy([current_user_role_group, @user]).editable_field?("allowed_bookings") && @user.buyer? %>
             <div class="mb-3">
               <%= f.label :allowed_bookings, class: 'label-required' %>
-              <%= f.select :allowed_bookings, [1,2,3,4,5,6,100], {prompt: true}, class: 'select', required: 'required' %>
+              <%= f.select :allowed_bookings, [1,2,3,4,5,6,100], {prompt: I18n.t("global.select")}, class: 'select', required: 'required' %>
             </div>
           <% end %>
 
@@ -93,13 +93,13 @@
           <% else %>
             <div class="mb-3">
               <%= f.label :channel_partner_id %>
-              <%= f.select :channel_partner_id, options_for_select(ChannelPartner.all.collect {|cp| [cp.ds_name, cp.id]}, @user.channel_partner_id), {prompt: true}, class: 'selectize', disabled: (policy([current_user_role_group, @user]).editable_field?("channel_partner_id") ? false : true) %>
+              <%= f.select :channel_partner_id, options_for_select(ChannelPartner.all.collect {|cp| [cp.ds_name, cp.id]}, @user.channel_partner_id), {prompt: I18n.t("global.select")}, class: 'selectize', disabled: (policy([current_user_role_group, @user]).editable_field?("channel_partner_id") ? false : true) %>
             </div>
           <% end %>
 
           <div class="mb-3">
             <%= f.label :manager_id, class: "control-label" %>
-            <%= f.select :manager_id, f.object.manager_id.present? ? [ [ f.object.manager_name, f.object.manager_id]] : [], {prompt: true}, class: 'selectize-remote', autofocus: true, disabled: !(policy([current_user_role_group, @user]).editable_field?("manager_id")), "data-url": admin_users_path, "data-params": {fltrs: {role: fetch_manager_role(@user), confirmation: 'confirmed', is_active: true }}.to_json, 'data-ds': 'ds' %>
+            <%= f.select :manager_id, f.object.manager_id.present? ? [ [ f.object.manager_name, f.object.manager_id]] : [], {prompt: I18n.t("global.select")}, class: 'selectize-remote', autofocus: true, disabled: !(policy([current_user_role_group, @user]).editable_field?("manager_id")), "data-url": admin_users_path, "data-params": {fltrs: {role: fetch_manager_role(@user), confirmation: 'confirmed', is_active: true }}.to_json, 'data-ds': 'ds' %>
           </div>
 
           <% if policy([current_user_role_group, @user]).editable_field?("project_ids") %>
@@ -127,11 +127,11 @@
                   <%= f.label :is_active %>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :is_active, true, class: "form-check-input wd-22" %>
-                    <%= f.label :is_active, "Yes", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :is_active, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :is_active, false, class: "form-check-input wd-22" %>
-                    <%= f.label :is_active, "No", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :is_active, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
               </div>
@@ -153,7 +153,7 @@
               <div class='col-md-6'>
                 <div class="mb-3">
                   <%= f.label :tier_id %>
-                  <%= f.select :tier_id, Tier.all.collect{|tier| [tier.name, tier.id ]}, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @user]).editable_field?("tier_id") %>
+                  <%= f.select :tier_id, Tier.all.collect{|tier| [tier.name, tier.id ]}, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy([:admin, @user]).editable_field?("tier_id") %>
                 </div>
               </div>
             <% end %>
@@ -163,11 +163,11 @@
                   <%= f.label :enable_live_inventory %>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :enable_live_inventory, true, class: "form-check-input wd-22" %>
-                    <%= f.label :enable_live_inventory, "Yes", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :enable_live_inventory, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :enable_live_inventory, false, class: "form-check-input wd-22" %>
-                    <%= f.label :enable_live_inventory, "No", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :enable_live_inventory, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
               </div>
@@ -183,13 +183,13 @@
           </div>
           <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
             <br>
-            <h5>CRM IDs</h5>
+            <h5><%= I18n.t("global.tabs.crm_ids") %></h5>
             <hr/>
             <%= render 'admin/crm/shared/third_party_references_form', f: f %>
           <% end %>
         </div>
         <div class="modal-footer theme-end">
-          <%= f.submit "Save", class: 'btn btn-primary float-end' %>
+          <%= f.submit I18n.t("global.save"), class: 'btn btn-primary float-end' %>
         </div>
       </div>
     </div>

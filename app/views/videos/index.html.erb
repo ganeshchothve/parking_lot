@@ -9,7 +9,7 @@
         </div>
           -->
         <% if policy([current_user_role_group, Video.new(videoable: @videoable)]).new? %>
-          <%= link_to "Add #{global_labels['video']}", new_videoable_path(videoable: @videoable), class: 'btn btn-primary modal-remote-form-link ms-2', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add Event'} %>
+          <%= link_to I18n.t("global.link_to.add_element", name: global_labels['video']), new_videoable_path(videoable: @videoable), class: 'btn btn-primary modal-remote-form-link ms-2', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add Event'} %>
         <% end %>
         </div>
       </div>

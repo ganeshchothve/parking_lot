@@ -1,8 +1,8 @@
 <div class="mt-5 pt-5"></div>
 <section class="cp-email-verify mt-5">
 	<div class="cp-pwd-create">
-		<h2 class="text-center pt-3">Reset Password</h2>
-		<p class="text-center pb-3">Please create a password for your account</p>
+		<h2 class="text-center pt-3"><%= I18n.t("devise.keys.reset_password") %></h2>
+		<p class="text-center pb-3"><%= I18n.t("devise.help_text.create_password") %></p>
 		<div class="cp-signup-form-wrap pt-2 pb-3 px-4 cp-form-wrap">
 			<%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), method: :post, html: { novalidate: false, class: 'validate-form', id: 'password_form' }) do |f| %>
 				<div class="mb-3">

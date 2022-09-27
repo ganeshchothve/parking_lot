@@ -2,14 +2,14 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="title"> Lost Receipt Details </h3>
+        <h3 class="title"><%= I18n.t("controller.receipts.lost_receipt.details") %> </h3>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body theme-form">
           <%= form_for [:admin, @lead, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.receipt'), type: :json} } do |f| %>
             <div class="mb-3">
               <%= f.label :payment_mode, class: 'label-required' %>
-                <%= f.select :payment_mode, ['online'], {prompt: true, selected: @receipt.payment_mode}, class: 'selectize', required: 'required', autofocus: true, disabled: !policy([:admin, @receipt]).editable_field?("payment_mode") %>
+                <%= f.select :payment_mode, ['online'], {prompt: I18n.t("global.select"), selected: @receipt.payment_mode}, class: 'selectize', required: 'required', autofocus: true, disabled: !policy([:admin, @receipt]).editable_field?("payment_mode") %>
             </div>
             <div class="mb-3">
               <%= f.label :payment_identifier, class: 'label-required' %>
@@ -18,7 +18,7 @@
             <div class="mb-3">
               <%= f.label :account, class: 'label-required' %>
 
-                <%= f.select :account_number ,Account.all.collect{|x| [ x.account_number, x.id]} , {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+                <%= f.select :account_number ,Account.all.collect{|x| [ x.account_number, x.id]} , {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', autofocus: true %>
             </div>
             <div class="mb-3">
               <%= f.label :total_amount, class: 'label-required' %>
@@ -35,10 +35,10 @@
               <%
                 statuses = ["pending"]
               %>
-              <%= f.select :event, options_for_select(statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, @receipt.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @receipt]).editable_field?("event") %>
+              <%= f.select :event, options_for_select(statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, @receipt.status), {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: !policy([:admin, @receipt]).editable_field?("event") %>
             </div>
             <div class="mb-3 text-end modal-footer">
-              <%= f.submit "Save", class: 'btn btn-primary' %>
+              <%= f.submit I18n.t("global.save"), class: 'btn btn-primary' %>
             </div>
           <% end %>
       </div>

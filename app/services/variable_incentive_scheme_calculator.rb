@@ -17,7 +17,7 @@ class VariableIncentiveSchemeCalculator
         user = User.where(_id: query[:manager_id]).first
         user_hash = {user_id: user.try(:id).to_s, user_name: user.name}
       else
-        user_hash = {user_id: nil, user_name: "All"}
+        user_hash = {user_id: nil, user_name: I18n.t("global.all") }
       end
       incentive_data << {variable_incentive_scheme_id: variable_incentive_scheme.id.to_s, variable_incentive_scheme_name: variable_incentive_scheme.name, total_capped_incentive: incentive_amount}.merge(user_hash)
       incentive_amount = 0

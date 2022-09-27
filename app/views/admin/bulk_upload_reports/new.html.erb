@@ -12,7 +12,7 @@
             <div class="new_asset">
               <div class="row mb-4">
                 <div class="col-10">
-                  <%= adj.select :document_type, options_for_select(filter_bulk_upload_report, filter_bulk_upload_report.first[1]), {}, {prompt: "Select", class: "selectize document_type", required: 'required'} %>
+                  <%= adj.select :document_type, options_for_select(filter_bulk_upload_report, filter_bulk_upload_report.first[1]), {}, {prompt: I18n.t("global.select"), class: "selectize document_type", required: 'required'} %>
                   <div class = "text-muted small pb-2"></div>
                   <div class = "text-muted small"><div class="help_text"></div></div>
                 </div>
@@ -20,7 +20,7 @@
                   <div class="col-2">
                     <div class="mb-3">
                       <div class="btn btn-primary fileinput-button pull-right">
-                        <span>Upload</span>
+                        <span><%= I18n.t("global.upload") %></span>
                         <%= adj.file_field :file, class: "btn btn-primary fileupload", accept: '.csv' %>
                       </div>
                     </div>
@@ -36,7 +36,7 @@
           </div>
         </div>
         <div class="modal-footer text-end">
-          <%= f.submit "Submit", id: "save", class: "btn btn-primary" %>
+          <%= f.submit I18n.t("global.submit"), id: "save", class: "btn btn-primary" %>
         </div>
       <% end %>
     </div>

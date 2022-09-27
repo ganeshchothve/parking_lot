@@ -14,29 +14,29 @@
           <div class="dropdown hide-xs float-end register-dropdown">
             <div class="d-inline-block">
               <a class="dropdown-toggle p-style" href="javascript:;" id="navbarDropdown" role="button"
-                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Register</a>
+                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= I18n.t("devise.keys.register") %></a>
               <div class="dropdown-menu menu-top mobile-home-menu" aria-labelledby="navbarDropdown">
-                <%= link_to "Register as Channel Partner", new_channel_partner_path, class: "btn btn-primary btn-as-channel-partner text-start" %>
-                <%#= link_to "Register as Customer", register_path, class: "btn btn-primary btn-as-customer-partner text-start" %>
+                <%= link_to I18n.t("devise.keys.register_as.channel_partner"), new_channel_partner_path, class: "btn btn-primary btn-as-channel-partner text-start" %>
+                <%#= link_to I18n.t("devise.keys.register_as.customer"), register_path, class: "btn btn-primary btn-as-customer-partner text-start" %>
               </div>
             </div>
           </div>
           <div class="d-inline-block">
             <%= link_to new_channel_partner_path, class: "reg-chnl-prtnr-btn show-xs p-style" do %>
               <%= image_tag 'user-alt-black.svg', alt: "User Info" %>
-              Register as Channel Partner
+              <%=  I18n.t("devise.keys.register_as.channel_partner") %>
             <% end %>
           </div>
         <% end %>
         <% if params[:action] == 'sign_in' %>
           <div class="d-inline-block">
-            <%= link_to "Register Now", register_path, class: "btn register-btn bg-primary show-xs p-style ms-3 px-3" %>
+            <%= link_to I18n.t("global.link_to.register_now"), register_path, class: "btn register-btn bg-primary show-xs p-style ms-3 px-3" %>
           </div>
           
           <div class="user-info login-btn d-inline-block show-xs mt-2">
             <div class="d-inline-block">
               <img src="<%= asset_path 'lock-black.svg' %>" alt="User Info">
-              <%= link_to "Log in", new_session_path("user"), class: "p-style primary" %>
+              <%= link_to I18n.t("devise.keys.log_in"), new_session_path("user"), class: "p-style primary" %>
             </div>
           </div>
         <% end %>
