@@ -42,7 +42,7 @@ module Kylas
         # call service to deactivate the product in Kylas
         if wf.deactivate_product?
           product_deactivate_params = deactivate_product_params
-          Kylas::DeactivateProduct.new(entity.creator, entity.kylas_product_id, product_deactivate_params)
+          Kylas::DeactivateProduct.new(entity.creator, entity.kylas_product_id, product_deactivate_params).call
         end
 
         # call service to update the pipeline stage in kylas
