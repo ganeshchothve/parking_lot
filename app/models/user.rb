@@ -140,6 +140,7 @@ class User
   field :kylas_user_id, type: String
   field :kylas_access_token_expires_at, type: DateTime
   field :kylas_contact_id, type: String
+  field :is_active_in_kylas, type: Boolean, default: true
   # Kylas Custom Fields options values fields
   field :kylas_custom_fields_option_id, type: Hash, default: {}
 
@@ -389,6 +390,24 @@ class User
       self.booking_portal_client.update(kylas_tenant_id: response.dig(:data, 'id')) if response[:success]
     rescue StandardError
       Rails.logger.error 'Kylas::TenantDetails - StandardError'
+    end
+  end
+
+  def send_marketplace_token_expired_email
+    if kylas_api_key? && !access_token_valid?
+      email_template = Template::EmailTemplate.where(name: "marketplace_app_session_expired", booking_portal_client_id: booking_portal_client_id).first
+      if email_template.present? && email_template.is_active?
+        attrs = {
+                  booking_portal_client_id: booking_portal_client_id,
+                  subject: email_template.parsed_subject(self),
+                  body: email_template.parsed_content(self),
+                  recipients: [ self ],
+                  triggered_by_id: id,
+                  triggered_by_type: self.class.to_s
+                }
+        email = Email.create!(attrs)
+        email.sent!
+      end
     end
   end
 
@@ -669,7 +688,7 @@ class User
   end
 
   def active_for_authentication?
-    super && is_active
+    super && is_active && is_active_in_kylas?
   end
 
   def inactive_message

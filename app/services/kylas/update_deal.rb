@@ -4,7 +4,7 @@ require 'net/http'
 
 module Kylas
   # Used for update deal
-  class UpdateDeal
+  class UpdateDeal < BaseService
     attr_reader :user, :entity_id, :params
 
     def initialize(user, entity_id, params = {})
@@ -20,14 +20,7 @@ module Kylas
 
       https = Net::HTTP.new(url.host, url.port)
       https.use_ssl = true
-      request = Net::HTTP::Patch.new(url)
-      if user.kylas_api_key?
-        request['api-key'] = user.kylas_api_key
-      elsif user.kylas_refresh_token
-        request['Authorization'] = "Bearer #{user.fetch_access_token}"
-      end
-      request['Content-Type'] = 'application/json'
-      request['Accept'] = 'application/json'
+      request = Net::HTTP::Patch.new(url, request_headers)
       payload = deal_payload
       request.body = JSON.dump(
         {

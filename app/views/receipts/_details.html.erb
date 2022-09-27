@@ -51,6 +51,9 @@
         <% if receipt.user_kyc.present? && policy([current_user_role_group, receipt.user_kyc]).show? %>
           <%= link_to t('controller.receipts.show_user_kyc.link_name'), admin_user_kyc_path(receipt.user_kyc), class: 'dropdown-item' %>
         <% end %>
+        <% if policy([current_user_role_group, receipt]).choose_template_for_print? %>
+          <%= link_to t('controller.templates.choose_template_for_print.link_name'), choose_template_for_print_admin_custom_templates_path(subject_class: receipt.class.model_name.i18n_key.to_s, subject_class_id: receipt.id.to_s), class: 'dropdown-item modal-remote-form-link' %>
+        <% end %>
      </div>
   </div>
   </td>

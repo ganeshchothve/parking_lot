@@ -4,7 +4,7 @@ require 'net/http'
 
 module Kylas
   # Fetch deal details
-  class FetchDealDetails
+  class FetchDealDetails < BaseService
     attr_reader :entity_id, :user
 
     def initialize(entity_id, user)
@@ -18,14 +18,7 @@ module Kylas
       https = Net::HTTP.new(url.host, url.port)
       https.use_ssl = true
 
-      request = Net::HTTP::Get.new(url)
-      if user.kylas_api_key?
-        request['api-key'] = user.kylas_api_key
-      elsif user.kylas_refresh_token
-        request['Authorization'] = "Bearer #{user.fetch_access_token}"
-      end
-      request['Content-Type'] = 'application/json'
-      request['Accept'] = 'application/json'
+      request = Net::HTTP::Get.new(url, request_headers)
 
       response = https.request(request)
 

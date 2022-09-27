@@ -105,6 +105,14 @@ module DatabaseSeeds
         ') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: "updated_token_details").blank?
 
         Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: "update_token_details_completed", subject: "Update token details completed", content: '<p>Your request of update token details completed.</p>') if ::Template::EmailTemplate.where(name: "update_token_details_completed").blank?
+
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: "marketplace_app_session_expired", subject: 'Marketplace app session expired', content: 'Hello <%= self.name %>,
+
+          Your logged in session on <%= self.booking_portal_client.name %> Booking Marketplace app is expired.
+          Kindly reinstall the app & login again to regain access.
+
+          Thanks,
+          <%= self.booking_portal_client.name %> Booking Marketplace App.') if ::Template::EmailTemplate.where(name: "marketplace_app_session_expired", booking_portal_client_id: client_id).blank?
       end
     end
   end

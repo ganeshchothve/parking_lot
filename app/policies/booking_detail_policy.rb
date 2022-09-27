@@ -23,14 +23,6 @@ class BookingDetailPolicy < ApplicationPolicy
     Template::BookingDetailFormTemplate.where(booking_portal_client_id: record.project.booking_portal_client_id, project_id: record.project_id, name: 'booking_detail_form_html').first.try(:is_active?)
   end
 
-  def choose_template_for_print?
-    user.role.in?(%w(admin sales superadmin))
-  end
-
-  def print_template?
-    choose_template_for_print?
-  end
-
   private
 
   def only_single_unit_can_hold!

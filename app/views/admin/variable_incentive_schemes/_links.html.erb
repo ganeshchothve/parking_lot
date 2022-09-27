@@ -13,6 +13,8 @@
     <% end %>
     <% if policy([:admin, variable_incentive_scheme]).vis_details? %>
       <%= link_to t('controller.variable_incentive_schemes.vis_details.link_name'), vis_details_admin_variable_incentive_scheme_path(variable_incentive_scheme), class: 'dropdown-item' %>
+    <% if policy([:admin, variable_incentive_scheme]).choose_template_for_print? %>
+      <%= link_to t('controller.templates.choose_template_for_print.link_name'), choose_template_for_print_admin_custom_templates_path(subject_class: variable_incentive_scheme.class.model_name.i18n_key.to_s, subject_class_id: variable_incentive_scheme.id.to_s), class: 'dropdown-item modal-remote-form-link' %>
     <% end %>
   </div>
 </div>

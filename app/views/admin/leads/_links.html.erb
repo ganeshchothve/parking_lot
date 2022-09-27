@@ -20,6 +20,10 @@
   <%= link_to t('controller.booking_details.continue_booking.link_name'), checkout_lead_search_path(lead.get_search(hold_booking.project_unit_id)), class: "dropdown-item" %>
 <% end %>
 
+<% if policy([:admin, lead]).choose_template_for_print? %>
+  <%= link_to t('controller.templates.choose_template_for_print.link_name'), choose_template_for_print_admin_custom_templates_path(subject_class: lead.class.model_name.i18n_key.to_s, subject_class_id: lead.id.to_s), class: 'dropdown-item modal-remote-form-link' %>
+<% end %>
+
 <% if policy([:admin, Receipt.new(user: lead.user, lead: lead)]).new? %>
   <%= link_to t('controller.receipts.new.link_name'), new_admin_lead_receipt_path(lead), class: "dropdown-item modal-remote-form-link" %>
 <% end %>

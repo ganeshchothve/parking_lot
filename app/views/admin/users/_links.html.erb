@@ -19,6 +19,10 @@
   <%= link_to"Confirm User", confirm_user_admin_user_path(user), method: :patch, class: "dropdown-item" %>
 <% end %>
 
+<% if policy([:admin, user]).choose_template_for_print? %>
+  <%= link_to t('controller.templates.choose_template_for_print.link_name'), choose_template_for_print_admin_custom_templates_path(subject_class: user.class.model_name.i18n_key.to_s, subject_class_id: user.id.to_s), class: 'dropdown-item modal-remote-form-link' %>
+<% end %>
+
 <% if policy([:admin, user]).print? %>
   <%= link_to t('controller.users.print.link_name'), print_admin_user_path(user.id), class: "dropdown-item", target: "_blank" %>
 <% end %>
