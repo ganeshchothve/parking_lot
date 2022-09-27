@@ -43,7 +43,7 @@ module Kylas
 
         https = Net::HTTP.new(url.host, url.port)
         https.use_ssl = true
-        request = Net::HTTP::Post.new(url, request_headers)
+        request = Net::HTTP::Put.new(url, request_headers)
         payload = deactivate_product_payload
         request.body = JSON.dump(payload)
         https.request(request)
