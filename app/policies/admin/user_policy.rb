@@ -7,7 +7,7 @@ class Admin::UserPolicy < UserPolicy
 
   def new?(for_edit = false)
     return false unless user
-    if user.booking_portal_client.roles_taking_registrations.include?(user.role) && user.booking_portal_client.kylas_tenant_id.present?
+    if user.booking_portal_client.roles_taking_registrations.include?(user.role) && !marketplace_portal?
       if user.role?('superadmin')
         (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner))) || for_edit
       elsif user.role?('admin')
@@ -33,7 +33,7 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def edit?
-    super || new?(true)
+    super || new?(true) || marketplace_portal?
   end
 
   def confirm_user?

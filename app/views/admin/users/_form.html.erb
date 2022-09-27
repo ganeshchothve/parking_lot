@@ -39,7 +39,10 @@
               </div>
             </div>
           <% end %>
-          <%= f.hidden_field :role, value: @user.role %>
+          <div class="mb-3">
+            <%= f.label :role, class: 'label-required' %>
+            <%= f.select :role, filter_roles, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("role") ? false : true) %>
+          </div>
           <% if policy([current_user_role_group, @user]).editable_field?("project_ids") %>
             <div class="row mt-">
               <div class="col-md-12">
