@@ -60,6 +60,7 @@ class SiteVisit
   scope :filter_by_cp_manager_id, ->(cp_manager_id) {where(cp_manager_id: cp_manager_id) }
   scope :filter_by_channel_partner_id, ->(channel_partner_id) {where(channel_partner_id: channel_partner_id)}
   scope :filter_by_is_revisit, ->(is_revisit) { where(is_revisit: is_revisit.to_s == 'true') }
+  scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
   scope :incentive_eligible, ->(category) do
     if category == 'walk_in'
       where(approval_status: {'$nin': %w(rejected)}, is_revisit: false)
