@@ -331,6 +331,7 @@ Rails.application.routes.draw do
       member do
         get :resend_confirmation_instructions
         get :update_password
+        get :reset_password_after_first_login
         get :resend_password_instructions
         get :print
         patch :confirm_user

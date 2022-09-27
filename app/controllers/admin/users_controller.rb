@@ -86,10 +86,15 @@ class Admin::UsersController < AdminController
           if current_user == @user && permitted_attributes([current_user_role_group, @user]).key?('password')
             bypass_sign_in(@user)
           end
-          format.html { redirect_to edit_admin_user_path(@user), notice: 'User Profile updated successfully.' }
+          _path = params.dig(:user, :is_first_login).present? ? root_path : edit_admin_user_path(@user)
+          format.html { redirect_to _path, notice: 'User Profile updated successfully.' }
           format.json { render json: @user }
         else
-          format.html { render :edit }
+          if params.dig(:user, :is_first_login).present?
+            format.html { redirect_to reset_password_after_first_login_admin_user_path(@user), alert: @user.errors.full_messages }
+          else
+            format.html { render :edit }
+          end
           format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
         end
       end

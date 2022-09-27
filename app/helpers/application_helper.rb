@@ -239,7 +239,7 @@ module ApplicationHelper
   end
 
   def full_page_view?
-    action_name.in?(%w(generate_booking_detail_form generate_invoice sales_board quotation channel_partners_leaderboard_without_layout dashboard_landing_page payout_dashboard payout_list payout_show print_template))
+    action_name.in?(%w(generate_booking_detail_form generate_invoice sales_board quotation channel_partners_leaderboard_without_layout dashboard_landing_page payout_dashboard payout_list payout_show print_template reset_password_after_first_login))
   end
 
   def select_icon(content_type = nil)

@@ -48,6 +48,11 @@ class ApplicationPolicy
     choose_template_for_print?
   end
 
+  def marketplace_portal?
+    marketplace_portal = user.try(:booking_portal_client).try(:kylas_tenant_id).present?
+    marketplace_portal
+  end
+
   def permitted_attributes params={}
     []
   end
@@ -117,11 +122,6 @@ class ApplicationPolicy
     return true if user.booking_portal_client.enable_incentive_module?(_user)
     @condition = 'enable_incentive_module'
     false
-  end
-
-  def marketplace_portal?
-    marketplace_portal = user.try(:booking_portal_client).try(:kylas_tenant_id).present?
-    marketplace_portal
   end
 
   def only_for_confirmed_user!

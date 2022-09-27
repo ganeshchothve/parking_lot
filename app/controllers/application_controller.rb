@@ -56,8 +56,12 @@ class ApplicationController < ActionController::Base
       elsif (current_user.buyer? || !current_user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))) && params[:controller] == 'local_devise/sessions'
         buyer_select_project_path
       else
-        _path = admin_site_visits_path if current_user.role?('dev_sourcing_manager')
-        stored_location_for(current_user) || _path || current_dashboard_path
+        if (current_user.sign_in_count == 1 && marketplace?)
+          reset_password_after_first_login_admin_user_path(current_user)
+        else
+          _path = admin_site_visits_path if current_user.role?('dev_sourcing_manager')
+          stored_location_for(current_user) || _path || current_dashboard_path
+        end
       end
     else
       return root_path
