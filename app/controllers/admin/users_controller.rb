@@ -30,7 +30,6 @@ class Admin::UsersController < AdminController
       @user.assign_attributes(password: @user.temporary_password, password_confirmation: @user.password_confirmation)
       @user.skip_confirmation_notification!
       if @user.save
-        binding.pry
         @user.confirm
         @user.send_generated_password_email
         format.html { redirect_to new_user_session_path, notice: 'Successfully registered' }
