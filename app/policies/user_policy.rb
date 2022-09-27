@@ -21,6 +21,10 @@ class UserPolicy < ApplicationPolicy
     edit? && (!user.role?('cp_owner') || user.id == record.id)
   end
 
+  def reset_password_after_first_login?
+    marketplace_portal? && edit?
+  end
+
   def resend_confirmation_instructions?
     edit?
   end

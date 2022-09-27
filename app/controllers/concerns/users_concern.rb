@@ -5,6 +5,12 @@ module UsersConcern
     render layout: false, template: 'users/update_password'
   end
 
+  def reset_password_after_first_login
+    respond_to do |format|
+      format.html
+    end
+  end
+
   def reactivate_account
     @user.update_last_activity!
     @user.expired_at = nil
