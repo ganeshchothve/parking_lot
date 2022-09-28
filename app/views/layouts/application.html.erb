@@ -15,6 +15,12 @@
       if(typeof App === "undefined"){
         App = {};
       }
+      <% if !is_marketplace? %>
+        App.locale = <%= current_translations.to_json.html_safe %>
+        App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login]) %>;
+        App.client.enable_actual_inventory = <%= current_client.enable_actual_inventory?(current_user) %>
+        App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;
+      <% end %>
       <!-- App.client = <%#= raw current_client.to_json(only: [:name, :_id, :preferred_login]) %>; -->
       <!-- App.client.enable_actual_inventory = <%#= current_client.enable_actual_inventory?(current_user) %> -->
       <!-- App.project = <%#= raw current_project.to_json(only: [:name, :_id]) %>; -->
@@ -40,10 +46,17 @@
     <% if full_page_view? || request.host.include?('embed-') %>
       <%= yield %>
     <% else %>
-      <%= render "layouts/navbar"%>
-      <main class="page-wrapper">
-        <%= yield %>
-      </main>
+      <% if is_marketplace? %>
+        <%= render "layouts/mp/navbar" %>
+        <main class="mp-page-wrapper">
+          <%= yield %>
+        </main>
+      <% else %>
+        <%= render "layouts/navbar"%>
+        <main class="page-wrapper">
+          <%= yield %>
+        </main>
+      <% end %>
       <%= render "layouts/gamification" %>
       <%= render "layouts/navbar_footer_afterlogin"%>
     <% end %>

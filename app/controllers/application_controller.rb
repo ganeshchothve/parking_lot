@@ -53,6 +53,8 @@ class ApplicationController < ActionController::Base
     if current_user
       if current_user.role.in?(%w(superadmin)) && params[:controller] == 'local_devise/sessions'
         admin_select_clients_path
+      elsif (current_user.buyer? || !current_user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))) && params[:controller] == 'local_devise/sessions'
+        buyer_select_project_path
       else
         if (current_user.sign_in_count == 1 && marketplace?)
           reset_password_after_first_login_admin_user_path(current_user)
@@ -67,8 +69,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_dashboard_path
-    admin_users_path #dashboard_path
-    # is_marketplace? ? mp_about_path(namespace: 'mp') : dashboard_path
+    is_marketplace? ? admin_users_path : dashboard_path
   end
 
   protected

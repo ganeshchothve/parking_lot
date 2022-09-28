@@ -1,7 +1,7 @@
 <div class="mt-5 pt-5"></div>
 <section class="cp-login-otp-sec mt-5 col-lg-4" id="otp_user_section">
   <div class="cp-login-otp-wrap">
-    <h2 class="px-4 pt-3 pb-3">Register</h2>
+    <h2 class="px-4 pt-3 pb-3"><%= I18n.t("devise.keys.register") %></h2>
     <%# <p  class="px-4 pt-3 pb-1 font-weight-medium"></p> %>
     <div class="cp-signup-form-wrap px-4 cp-form-wrap py-3">
           <% template = ::Template::UITemplate.where(name: 'home/register').first %>

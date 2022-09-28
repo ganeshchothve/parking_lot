@@ -9,7 +9,7 @@
           <th>Status</th>
           <th>Message</th>
           <% if policy([:admin, SyncLog.new]).resync? %>
-            <th class="text-right">Actions</th>
+            <th class="text-right"><%= I18n.t("global.actions") %></th>
           <% end %>
         </tr>
       </thead>

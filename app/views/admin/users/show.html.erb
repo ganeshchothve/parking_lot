@@ -11,12 +11,12 @@
                 <i class="fa fa-circle red" aria-hidden="true"></i>
                 <% end %><%= @user.name || '-' %></h6>
               <a href="javascript:;" class="email-icon small d-inline-block mt-1 fn-16" data-bs-toggle="popover"
-                title="Email Id" data-bs-placement="bottom"
+                title=<%= I18n.t("global.email_id") %> data-bs-placement="bottom"
                 data-bs-content="<%= (@user.buyer? ? @user.masked_email(current_user) : @user.email) || '-' %>">
                 <i class="fa fa-envelope fill-theme me-2 ms-2 fn-18"></i>
               </a>
               <a href="javascript:;" class="phone-icon small d-inline-block mt-1 fn-16" data-bs-container="body"
-                data-bs-placement="bottom" data-bs-toggle="popover" title="Phone No."
+                data-bs-placement="bottom" data-bs-toggle="popover" title=<%= I18n.t("global.phone_no") %>
                 data-bs-content="<%= (@user.buyer? ? @user.masked_phone(current_user) : @user.phone) || '-' %>">
                 <i class="fa fa-phone-alt fill-theme me-2 fn-18"></i>
               </a>
@@ -37,7 +37,7 @@
                   <h2 class="accordion-header d-flex justify-content-between" id="headingOverview">
                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseOverview" aria-expanded="true" aria-controls="collapseOverview">
-                      Overview
+                      <%= I18n.t("global.tabs.overview") %>
                     </button>
 
                   </h2>
@@ -53,7 +53,7 @@
                   <h2 class="accordion-header d-flex justify-content-between" id="headingCRM">
                     <button class="accordion-button collapsed  shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseCRM" aria-expanded="false" aria-controls="collapseCRM">
-                      CRM
+                      <%= I18n.t("global.tabs.crm") %>
                     </button>
                   </h2>
                   <div id="collapseCRM" class="accordion-collapse collapse" aria-labelledby="headingCRM"
@@ -64,27 +64,27 @@
                   </div>
                 </div>
                 <% end %>
-                <% if @user.leads.present? %>
-                <div class="accordion-item  border-end-0 border-start-0">
-                  <h2 class="accordion-header d-flex justify-content-between" id="headingLead">
-                    <button class="accordion-button collapsed  shadow-none" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseLead" aria-expanded="false" aria-controls="collapseLead">
-                      Lead
-                    </button>
-                    <!--
-                    <% if policy([:admin, Lead]).new? %>
-                    <%#= link_to t('helpers.new.link_name', model: Lead.model_name.human), new_admin_lead_path(user_id: @user.id), class: 'fn-12 font-medium theme-txt-color w-25 text-end pe-3 py-3 modal-remote-form-link' %>
-                    <% end %>
-                    -->
-                  </h2>
-                  <div id="collapseLead" class="accordion-collapse collapse" aria-labelledby="headingLead"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body pt-0 ps-4">
-                      <% leads = @user.leads %>
-                      <%= render "admin/leads/section", leads: leads , name: Lead.model_name.human(count: leads.count) %>
+                <% if current_client.enable_leads? && @user.leads.present? %>
+                  <div class="accordion-item  border-end-0 border-start-0">
+                    <h2 class="accordion-header d-flex justify-content-between" id="headingLead">
+                      <button class="accordion-button collapsed  shadow-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseLead" aria-expanded="false" aria-controls="collapseLead">
+                        <%= I18n.t("global.tabs.lead") %>
+                      </button>
+                      <!--
+                      <% if policy([:admin, Lead]).new? %>
+                      <%#= link_to t('helpers.new.link_name', model: Lead.model_name.human), new_admin_lead_path(user_id: @user.id), class: 'fn-12 font-medium theme-txt-color w-25 text-end pe-3 py-3 modal-remote-form-link' %>
+                      <% end %>
+                      -->
+                    </h2>
+                    <div id="collapseLead" class="accordion-collapse collapse" aria-labelledby="headingLead"
+                      data-bs-parent="#accordionExample">
+                      <div class="accordion-body pt-0 ps-4">
+                        <% leads = @user.leads %>
+                        <%= render "admin/leads/section", leads: leads , name: Lead.model_name.human(count: leads.count) %>
+                      </div>
                     </div>
                   </div>
-                </div>
                 <% end %>
                 <% if @user.role?("cp_admin") || @user.role?("cp") %>
                 <!-- User List -->
@@ -93,7 +93,7 @@
                   <h2 class="accordion-header d-flex justify-content-between" id="headingUsers">
                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseUsers" aria-expanded="false" aria-controls="headingUsers">
-                      Users
+                      <%= I18n.t("global.tabs.users") %>
                     </button>
 
                   </h2>
@@ -116,7 +116,7 @@
                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseInterestedPrjt" aria-expanded="false"
                       aria-controls="headingInterestedPrjt">
-                      Interested Projects
+                      <%= I18n.t("global.tabs.interested_projects") %>
                     </button>
 
                   </h2>
@@ -138,7 +138,7 @@
                   <h2 class="accordion-header d-flex justify-content-between" id="headingNotes">
                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseNotes" aria-expanded="false" aria-controls="headingNotes">
-                      Notes
+                      <%= I18n.t("global.tabs.notes") %>
                     </button>
                     
                   </h2>
@@ -158,7 +158,7 @@
                   <h2 class="accordion-header d-flex justify-content-between" id="headingThree">
                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseThree" aria-expanded="false" aria-controls="headingThree">
-                      My Referrals
+                      <%= I18n.t("global.tabs.my_referrals") %>
                     </button>
 
                   </h2>
@@ -178,7 +178,7 @@
                   <h2 class="accordion-header d-flex justify-content-between" id="headingThree">
                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseThree" aria-expanded="false" aria-controls="headingThree">
-                      UTM Params
+                      <%= I18n.t("global.tabs.utm_params") %>
                     </button>
                   </h2>
                   <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"

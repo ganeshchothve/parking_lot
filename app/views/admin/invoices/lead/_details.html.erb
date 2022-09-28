@@ -3,14 +3,14 @@
   <div class="row">
     <div class="col-md-4">
       <div class="mb-3">
-        <label class="small"><%= t('mongoid.models.user.name') %></label>
+        <label class="small"><%= t('mongoid.attributes.user.name') %></label>
         <div><%= resource.name_in_invoice %></div>
       </div>
     </div>
     <div class="col-md-4">
       <div class="mb-3">
         <label class="small">
-          <%= Lead.human_attribute_name('project') %>
+          <%= I18n.t("mongoid.models.project.one") %>
         </label>
         <div><%= resource.project.try(:name) || '-' %></div>
       </div>
@@ -18,7 +18,7 @@
     <div class="col-md-4">
       <div class="mb-3">
         <label class="small">
-          <%= Lead.human_attribute_name('created_at') %>
+          <%= I18n.t("global.created_at") %>
         </label>
         <div><%= resource.invoiceable_date.try(:strftime,'%b %e %Y') || '-' %></div>
       </div>

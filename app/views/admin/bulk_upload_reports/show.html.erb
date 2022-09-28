@@ -4,33 +4,33 @@
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
         <div class="box-card">
           <div class="box-header bg-gradient br-rd-tr-4">
-            <h2 class="">File Uploaded By : <%= @bulk_upload_report.uploaded_by.name %></h2>
+            <h2 class=""><%= I18n.t("controller.bulk_upload_reports.text.file_uploaded_by") %>: <%= @bulk_upload_report.uploaded_by.name %></h2>
           </div>
           <div class="box-content br-rd-bl-4 bg-white br-1 py-2 px-2">
             <div class="row pd-box">
                 <div class="col-md-4">
                   <div class="mb-3">
-                    <label>Bulk Upload Type</label>
+                    <label><%= I18n.t("controller.bulk_upload_reports.text.bulk_upload_type") %></label>
                     <div> <%= t("mongoid.attributes.bulk_upload_report.#{@bulk_upload_report.asset.try(:document_type)}") %> </div>
                   </div>
                 </div>
                 <% if @bulk_upload_report.project.present? %>
                   <div class="col-md-4">
                     <div class="form-group">
-                      <label>Project</label>
+                      <label><%= I18n.t("mongoid.models.project.one") %></label>
                       <div> <%= @bulk_upload_report.project.name %> </div>
                     </div>
                   </div>
                 <% end %>
                 <div class="col-md-4">
                   <div class="mb-3">
-                    <label>File Uploaded By</label>
+                    <label><%= I18n.t("controller.bulk_upload_reports.text.file_uploaded_by") %></label>
                     <div> <%= @bulk_upload_report.uploaded_by.name %> </div>
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="mb-3">
-                    <label>File</label>
+                    <label><%= I18n.t("global.file") %></label>
                     <div><%= link_to @bulk_upload_report.asset.try(:file_name), @bulk_upload_report.asset.try(:file).try(:url), class: "primary" %></div>
                   </div>
                 </div>
@@ -50,6 +50,9 @@
             <%= UploadError.model_name.human(count: @bulk_upload_report.upload_errors.count )%>
           </h2>
         </div>
+      </div>
+      <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12">
+        <%= link_to I18n.t("global.export"), upload_error_exports_admin_bulk_upload_report_path, class: "btn fn-400 border rounded float-end me-4" %>
       </div>
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd collapse show" id="collapseUploadErrors">
         <%= render 'admin/upload_errors/index', {upload_errors: @bulk_upload_report.upload_errors.paginate(page: params[:page] || 1, per_page: params[:per_page])} %>

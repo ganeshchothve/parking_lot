@@ -44,6 +44,8 @@ class BookingDetail
   field :ladder_stage, type: Array
   field :source, type: String
   field :rejection_reason, type: String
+  field :token_discount, type: Float
+  field :variable_discount, type: Float
 
   #kylas specific field
   field :kylas_product_id, type: Integer
@@ -142,6 +144,7 @@ class BookingDetail
   }
   scope :filter_by_agreement_date, ->(date) { start_date, end_date = date.split(' - '); where(agreement_date: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day)
   }
+  scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
   scope :incentive_eligible, ->(category) do
     case category
     when 'spot_booking'
@@ -333,9 +336,9 @@ class BookingDetail
         receipts_total = receipts_total.in(status: ['clearance_pending', "success"])
       end
       receipts_total = receipts_total.sum(:total_amount)
-      return (self.project_unit.booking_price - receipts_total)
+      return (self.get_booking_price - receipts_total)
     else
-      return self.project_unit.booking_price
+      return self.get_booking_price
     end
   end
 

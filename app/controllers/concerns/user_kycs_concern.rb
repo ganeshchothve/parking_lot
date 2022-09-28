@@ -33,7 +33,7 @@ module UserKycsConcern
     authorize [current_user_role_group, @user_kyc]
     respond_to do |format|
       if @user_kyc.save
-        format.html { redirect_to home_path(current_user), notice: 'User kyc was successfully created.' }
+        format.html { redirect_to home_path(current_user), notice: I18n.t("controller.user_kycs.notice.created") }
         format.json { render json: @user_kyc, status: :created }
       else
         format.html { render :new }
@@ -54,7 +54,7 @@ module UserKycsConcern
   def update
     respond_to do |format|
       if @user_kyc.update(permitted_attributes([current_user_role_group, @user_kyc]))
-        format.html { redirect_to home_path(current_user), notice: 'User kyc was successfully updated.' }
+        format.html { redirect_to home_path(current_user), notice: I18n.t("controller.user_kycs.notice.updated") }
         format.json { render json: @user_kyc }
       else
         format.html { render :edit }
@@ -66,10 +66,8 @@ module UserKycsConcern
   private
 
   def set_lead
-    if params[:lead_id].present?
-      @lead = (params[:lead_id].present? ? Lead.find(params[:lead_id]) : current_user.selected_lead)
-      redirect_to dashboard_path, alert: t('controller.application.set_current_client') unless @lead
-    end
+    @lead = (params[:lead_id].present? ? Lead.find(params[:lead_id]) : current_user.selected_lead)
+    redirect_to dashboard_path, alert: t('controller.application.set_current_client') unless @lead
   end
 
   def set_user_kyc

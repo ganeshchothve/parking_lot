@@ -12,21 +12,35 @@ module DashboardData
       def channel_partner_count(user=nil)
         if user.selected_project.present?
           InterestedProject.approved.where(project_id: user.selected_project_id).count
+        elsif user.selected_client.present?
+          User.in(role: %w(channel_partner cp_owner)).where(booking_portal_client: user.selected_client).count
         else
-          User.in(role: %w(channel_partner cp_owner)).count
+          User.in(role: %w(channel_partner cp_owner)).where(booking_portal_client: user.booking_portal_client).count
         end
       end
 
-      def sold_project_units_count
-        BookingDetail.where(status: {"$in": %w[blocked booked_tentative booked_confirmed under_negotiation]}).count
+      def sold_project_units_count(user=nil)
+        if user.selected_client.present?
+          BookingDetail.where(status: {"$in": %w[blocked booked_tentative booked_confirmed under_negotiation]}, booking_portal_client: user.selected_client).count
+        else
+          BookingDetail.where(status: {"$in": %w[blocked booked_tentative booked_confirmed under_negotiation]}, booking_portal_client: user.booking_portal_client).count
+        end
       end
 
-      def all_project_units_count
-        ProjectUnit.not_in(status: 'not_available').count
+      def all_project_units_count(user=nil)
+        if user.selected_client.present?
+          ProjectUnit.not_in(status: 'not_available').where(booking_portal_client: user.selected_client).count
+        else
+          ProjectUnit.not_in(status: 'not_available').where(booking_portal_client: user.booking_portal_client).count
+        end
       end
 
-      def open_user_requests
-        UserRequest.where(status: 'pending').count
+      def open_user_requests(user=nil)
+        if user.selected_client.present?
+          UserRequest.where(status: 'pending', booking_portal_client: user.selected_client).count
+        else
+          UserRequest.where(status: 'pending', booking_portal_client: user.booking_portal_client).count
+        end
       end
 
       def online_receipts
@@ -37,8 +51,12 @@ module DashboardData
         Receipt.not_in(payment_mode: 'online').count
       end
 
-      def active_schemes
-        Scheme.approved.count
+      def active_schemes(user=nil)
+        if user.selected_client.present?
+          Scheme.approved.where(booking_portal_client: user.selected_client).count
+        else
+          Scheme.approved.where(booking_portal_client: user.booking_portal_client).count
+        end
       end
 
       def receipt_block(params)

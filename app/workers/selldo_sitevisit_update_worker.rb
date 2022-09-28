@@ -75,6 +75,6 @@ class SelldoSitevisitUpdateWorker
       end
     end
     rescue StandardError => e
-      Rails.logger.error "Sitevisit for #{lead.try(:name)} has not been updated due to following error - #{e.message}"
+      Rails.logger.error I18n.t("worker.selldo.errors.sitevisit_update_failed", name1: lead.try(:name), name2: e.message)
   end
 end

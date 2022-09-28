@@ -16,7 +16,7 @@ class AssetsController < ApplicationController
                   file: params[:files][0], 
                   document_type: params[:document_type], 
                   url: params[:url],
-                  booking_portal_client_id: @assetable.booking_portal_client.id
+                  booking_portal_client_id: current_client.id
                   )
     if asset.persisted?
       render partial: "assets/asset.json", locals: {asset: asset}

@@ -27,16 +27,16 @@
           <a class="btn table-dropdown-btn black-clr" href="javascript:;" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v fill-theme" aria-hidden="true"></i></a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
             <% if Admin::AnnouncementPolicy.new(current_user, announcement).edit? %>
-              <%= link_to t('helpers.edit.link_name', model: Announcement.model_name.human), edit_admin_announcement_path(announcement), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit Announcement'} %>
+              <%= link_to t('helpers.edit.link_name', model: Announcement.model_name.human), edit_admin_announcement_path(announcement), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: I18n.t("controller.announcements.event_name.edit.edit")} %>
             <% end %>
             <% if Admin::AnnouncementPolicy.new(current_user, announcement).show? %>
-              <%= link_to t('helpers.show.link_name', model: Announcement.model_name.human), admin_announcement_path(announcement), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Event Announcement'} %>
+              <%= link_to t('helpers.show.link_name', model: Announcement.model_name.human), admin_announcement_path(announcement), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: I18n.t("controller.announcements.event_name.edit.event")} %>
             <% end %>
             <% if policy([:admin, announcement]).asset_create? %>
               <%= link_to Asset.model_name.human(count: 2), admin_announcements_path('remote-state': assetables_path(assetable_type: announcement.class.model_name.i18n_key.to_s, assetable_id: announcement.id) ), class: "dropdown-item" %>
             <% end %>
             <% if Admin::AnnouncementPolicy.new(current_user, announcement).destroy? %>
-               <%= link_to "Delete Announcement", admin_announcement_path(announcement), method: :delete, class: 'dropdown-item modal-remote-form-link' %>
+               <%= link_to I18n.t("controller.announcements.delete.link_name"), admin_announcement_path(announcement), method: :delete, class: 'dropdown-item modal-remote-form-link' %>
             <% end %>
            </div>
         </div>

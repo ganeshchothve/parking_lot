@@ -13,9 +13,9 @@
           <div class="modal-body theme-form">
             <nav>
               <div class="nav nav-tabs" role="tablist">
-                <a class="nav-item nav-link active" data-bs-toggle="tab" href="#nav-project-unit-basic" role="tab">Basic Details</a>
+                <a class="nav-item nav-link active" data-bs-toggle="tab" href="#nav-project-unit-basic" role="tab"><%= I18n.t("global.link_to.basic_details") %></a>
                 <% if policy([:buyer, @project_unit]).editable_field?("data_attributes") %>
-                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-project-unit-data" role="tab">Data</a>
+                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-project-unit-data" role="tab"><%= I18n.t("mongoid.attributes.project_unit.data") %></a>
                 <% end %>
               </div>
             </nav>
@@ -31,13 +31,13 @@
                   <%= render "admin/datum/form_fields", f: data_form %>
                   <% end %>
                 </div>
-                <%= f.link_to_add "Add", :data, :data => { :target => "#data_container" } %>
+                <%= f.link_to_add I18n.t("global.add"), :data, :data => { :target => "#data_container" } %>
               </div>
               <% end %>
             </div>
           </div>
           <div class="modal-footer text-end">
-            <%= f.submit "Submit", class: 'btn btn-primary' %>
+            <%= f.submit I18n.t("global.submit"), class: 'btn btn-primary' %>
           </div>
         </div>
       </div>

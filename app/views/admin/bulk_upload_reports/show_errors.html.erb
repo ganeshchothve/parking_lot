@@ -6,7 +6,7 @@
           <div class="card-body">
             <div class="row mb-3">
               <div class="col-md-5">
-                <h6 class="mt-2">Total Errors: <%= @upload_error.messages.count %></h6>
+                <h6 class="mt-2"><%= I18n.t("global.link_to.total_errors") %> <%= @upload_error.messages.count %></h6>
               </div>
             </div>
             <%= render 'admin/upload_errors/show', {errors: @upload_error.messages } %>

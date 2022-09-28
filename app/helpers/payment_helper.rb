@@ -1,11 +1,11 @@
 module PaymentHelper
   def payment_mode_options
     if current_user.buyer?
-      Receipt.available_payment_modes.select{|x| x[:id] == 'online'}.collect{|x| [x[:text], x[:id]]}
+      I18n.t("mongoid.attributes.receipt/payment_mode").select{|k,v| k.to_s == 'online'}.collect{|k,v| [v, k.to_s] }
     elsif ['admin','sales','sales_admin'].include?(current_user.role)
-      Receipt.available_payment_modes.collect{|x| [x[:text], x[:id]]}
+      I18n.t("mongoid.attributes.receipt/payment_mode").collect{|k,v| [v, k.to_s] }
     else
-      Receipt.available_payment_modes.reject{|x| x[:id] == 'online'}.collect{|x| [x[:text], x[:id]]}
+      I18n.t("mongoid.attributes.receipt/payment_mode").reject{|k,v| k.to_s == 'online'}.collect{|k,v| [v, k.to_s] }
     end
   end
 end

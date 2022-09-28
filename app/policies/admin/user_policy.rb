@@ -102,7 +102,8 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def search_by?
-    user.role.in?(%w(team_lead))
+    # user.role.in?(%w(team_lead))
+    user.role.in?(%w(sales gre team_lead))
   end
 
   def move_to_next_state?
@@ -128,7 +129,11 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def sync_kylas_user?
-    user.booking_portal_client.kylas_tenant_id.present?
+    if user.role?(:superadmin)
+      user.selected_client.kylas_tenant_id.present?
+    else
+      user.booking_portal_client.kylas_tenant_id.present?
+    end
   end
 
   def permitted_attributes(params = {})
@@ -168,6 +173,7 @@ class Admin::UserPolicy < UserPolicy
       attributes += [:rejection_reason]
     end
     attributes += [:login_otp] if confirm_via_otp?
+    attributes += [:kylas_user_id] if record.role.in?(%w(sales admin superadmin))
     attributes.uniq
   end
 end

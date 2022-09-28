@@ -12,7 +12,7 @@ module UserRequests
       if @booking_detail && @booking_detail.cancelling?
         resolve
       else
-        reject_user_request([], [], 'Booking Is not available for cancellation.')
+        reject_user_request([], [], I18n.t("worker.booking_details.errors.booking_cancellation_unavailable"))
       end
     end
 

@@ -1,7 +1,11 @@
 class Admin::LeadPolicy < LeadPolicy
 
   def index?
-    false
+    if user.role?(:superadmin)
+      out = !(user.buyer? || user.role.in?(%w(dev_sourcing_manager))) && user.selected_client.enable_leads?
+    else
+      out = !(user.buyer? || user.role.in?(%w(dev_sourcing_manager))) && user.booking_portal_client.enable_leads?
+    end
     # out = !(user.buyer? || user.role.in?(%w(channel_partner cp_owner dev_sourcing_manager)))
     #out = out && user.active_channel_partner?
     #out = false if user.role.in?(%w(channel_partner cp_owner)) && !interested_project_present?
@@ -63,9 +67,9 @@ class Admin::LeadPolicy < LeadPolicy
 
   def asset_create?
     valid = %w[admin sales sales_admin crm].include?(user.role)
-    if user.role?(:sales) && is_assigned_lead?
-      valid = is_lead_accepted? && valid
-    end
+    # if user.role?(:sales) && is_assigned_lead?
+    #   valid = is_lead_accepted? && valid
+    # end
     valid
   end
 
@@ -90,7 +94,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def send_payment_link?
-    record.user.confirmed?
+    record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && (user.booking_portal_client.enable_payment_with_kyc ? record.kyc_ready? : true )
   end
 
   def search_by?
@@ -102,7 +106,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def move_to_next_state?
-    if is_lead_accepted?
+    if user.role?('sales')
       record.may_dropoff? && (record.closing_manager_id == user.id)
     else
       (user.role.in?(%w(gre team_lead)) && (record.is_a?(Lead) || record.role?('sales'))) ||
@@ -113,11 +117,11 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def show_existing_customer?
-    %w(sales).exclude?(user.role)
+    %w(sales).exclude?(user.role) && (user.booking_portal_client.enable_leads || user.booking_portal_client.enable_site_visit?)
   end
 
   def reassign_lead?
-    current_client.team_lead_dashboard_access_roles.include?(user.role)
+    user.booking_portal_client.team_lead_dashboard_access_roles.include?(user.role) || user.role?("team_lead")
   end
 
   def reassign_sales?

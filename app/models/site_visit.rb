@@ -60,6 +60,7 @@ class SiteVisit
   scope :filter_by_cp_manager_id, ->(cp_manager_id) {where(cp_manager_id: cp_manager_id) }
   scope :filter_by_channel_partner_id, ->(channel_partner_id) {where(channel_partner_id: channel_partner_id)}
   scope :filter_by_is_revisit, ->(is_revisit) { where(is_revisit: is_revisit.to_s == 'true') }
+  scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
   scope :incentive_eligible, ->(category) do
     if category == 'walk_in'
       where(approval_status: {'$nin': %w(rejected)}, is_revisit: false)
@@ -94,34 +95,6 @@ class SiteVisit
     else
       _draft_incentive_eligible?
     end
-  end
-
-  def self.statuses
-    [
-      { id: 'scheduled', text: 'Scheduled' },
-      { id: 'conducted', text: 'Conducted' },
-      { id: 'pending', text: 'Pending' },
-      { id: 'missed', text: 'Missed' }
-    ]
-  end
-
-  def self.approval_statuses
-    [
-      { id: 'pending', text: 'Pending' },
-      { id: 'approved', text: 'Approved' },
-      { id: 'rejected', text: 'Rejected' }
-    ]
-  end
-
-  def self.available_sort_options
-    [
-      { id: 'created_at.asc', text: 'Created - Oldest First' },
-      { id: 'created_at.desc', text: 'Created - Newest First' },
-      { id: 'scheduled_on.asc', text: 'Scheduled On - Oldest First' },
-      { id: 'scheduled_on.desc', text: 'Scheduled On- Newest First' },
-      { id: 'conducted_on.asc', text: 'Conducted On - Oldest First' },
-      { id: 'conducted_on.desc', text: 'Conducted On - Newest First' }
-    ]
   end
 
   def self.user_based_scope(user, params = {})

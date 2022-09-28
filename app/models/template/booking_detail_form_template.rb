@@ -12,7 +12,7 @@ class Template::BookingDetailFormTemplate < Template
     "<div class='container pt-3 bg-white'>
     <div class='row' align='center'>
       <div class='col-sm' align='center'>
-        <img src='<%= @booking_detail.project.logo&.url || current_client&.logo&.url %>' class='img-responsive'>
+        <img src='<%= @booking_detail.project.logo&.url || @booking_detail&.booking_portal_client&.logo&.url %>' class='img-responsive'>
       </div>
     </div>
     <div class='row' align='center'>
@@ -111,7 +111,7 @@ class Template::BookingDetailFormTemplate < Template
           <p>Alternate Mobile No: <%= (@booking_detail.user.user_kycs.to_a - @booking_detail.primary_user_kyc.to_a)[0].try(:phone) %></p>
         </div>
         <div class='col-sm border pt-3'>
-          <p>Email Id:&nbsp<%= @booking_detail.user.email %></p>
+          <p><%= I18n.t('global.email_id') %> :&nbsp<%= @booking_detail.user.email %></p>
         </div>
       </div>
     </div>
@@ -432,7 +432,7 @@ Yours faithfully,</br><strong>For <%= @booking_detail.project.developer_name %>,
   def self.pdf_content
 "<table style='width:100%'>
   <tr align='center'>
-    <td align='center'><%#= wicked_pdf_image_tag @booking_detail.project&.logo&.url || current_client&.logo&.url %></td>
+    <td align='center'><%#= wicked_pdf_image_tag @booking_detail.project&.logo&.url || @booking_detail&.booking_portal_client&.logo&.url %></td>
   </tr>
   <tr align='center'>
     <td align='center'><h4><%= @booking_detail.project_name %></h4> </td>
@@ -490,7 +490,7 @@ Yours faithfully,</br><strong>For <%= @booking_detail.project.developer_name %>,
   <tr>
     <td><p>Mobile No:&nbsp<%= @booking_detail.user.phone %></p></td>
     <td><p>Alternate Mobile No: <%= (@booking_detail.user.user_kycs.to_a - @booking_detail.primary_user_kyc.to_a)[0].try(:phone) %></p></td>
-    <td><p>Email Id:&nbsp<%= @booking_detail.user.email %></p></td>
+    <td><p><%= I18n.t('global.email_id') %>:&nbsp<%= @booking_detail.user.email %></p></td>
   </tr>
 </table>
 </br>

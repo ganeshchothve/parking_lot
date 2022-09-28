@@ -2,6 +2,10 @@
   <%= link_to t('controller.booking_details.continue_booking.link_name'), checkout_lead_search_path(booking_detail.search), class: 'dropdown-item' %>
 <% end %>
 
+<% if policy([:admin, booking_detail]).send_payment_link? %>
+  <%= link_to I18n.t('controller.users.send_payment_link'), send_payment_link_admin_lead_path(booking_detail.lead, {booking_detail_id: booking_detail.id.to_s}), class: "dropdown-item" %>
+<% end %>
+
 <% if policy([:admin, booking_detail]).show? && !(params[:controller] == 'admin/booking_details' && params[:action] == 'show') %>
   <%= link_to t('helpers.show.link_name', model: BookingDetail.model_name.human ), admin_booking_detail_path(booking_detail), class: 'dropdown-item' %>
 <% end %>
@@ -27,7 +31,7 @@
 <% end %>
 
 <% if policy([current_user_role_group, booking_detail]).generate_booking_detail_form? %>
-  <%= link_to t('booking_details.links.print_booking_form'), generate_booking_detail_form_admin_booking_detail_path(booking_detail), class: 'dropdown-item', target: '_blank' %>
+  <%= link_to I18n.t('controller.booking_details.links.print_booking_form'), generate_booking_detail_form_admin_booking_detail_path(booking_detail), class: 'dropdown-item', target: '_blank' %>
   <% end %>
 
 <% if policy([current_user_role_group, booking_detail]).choose_template_for_print? %>

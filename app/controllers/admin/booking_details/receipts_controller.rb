@@ -19,7 +19,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
   # GET "/admin/users/:user_id/booking_details/:booking_detail_id/receipts/new"
   def new
     @amount_hash = {}
-    PaymentType.in(name: Receipt::PAYMENT_TYPES).map { |x| @amount_hash[x.name.to_sym] = x.value(@project_unit).round }
+    PaymentType.in(name: Receipt::PAYMENT_TYPES).where(project_id: @project_unit.project_id).map { |x| @amount_hash[x.name.to_sym] = x.value(@project_unit).round }
     @receipt = Receipt.new(
                       creator: current_user,
                       user: @lead.user,
@@ -52,11 +52,11 @@ class Admin::BookingDetails::ReceiptsController < AdminController
     authorize([:admin, @receipt])
     respond_to do |format|
       if @receipt.save
-        flash[:notice] = 'Receipt was successfully updated. Please upload documents'
+        flash[:notice] = t("controller.receipts.notice.updated")
         if @receipt.payment_mode == 'online'
           url = @receipt.payment_gateway_service.gateway_url(@booking_detail.search.id)
         else
-          url = admin_lead_receipts_path(@lead, 'remote-state': assetables_path(assetable_type: @receipt.class.model_name.i18n_key.to_s, assetable_id: @receipt.id))
+          url = admin_booking_detail_receipts_path(@booking_detail, 'remote-state': assetables_path(assetable_type: @receipt.class.model_name.i18n_key.to_s, assetable_id: @receipt.id))
         end
         format.json { render json: @receipt, location: url }
         format.html { redirect_to url }
@@ -85,7 +85,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
   def set_lead
     @lead = Lead.where(_id: params[:lead_id]).first
     @lead = @booking_detail.lead unless @lead
-    redirect_to dashboard_path, alert: 'Lead Not found', status: 404 if @lead.blank?
+    redirect_to dashboard_path, alert: t("controller.leads.alert.not_found"), status: 404 if @lead.blank?
   end
 
   def set_project_unit

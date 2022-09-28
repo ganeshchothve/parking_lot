@@ -73,7 +73,7 @@ class UserRequest
       custom_scope = { user_id: user.id, lead_id: user.selected_lead_id } if user.buyer?
 
       custom_scope[:requestable_id] = params[:requestable_id] if params[:requestable_id].present?
-      custom_scope[:_type] = 'UserRequest::General' unless current_client.enable_actual_inventory?(user)
+      custom_scope[:_type] = 'UserRequest::General' unless user.booking_portal_client.enable_actual_inventory?(user)
 
       # unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
       #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})

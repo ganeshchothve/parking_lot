@@ -10,8 +10,8 @@
   <%= link_to t('controller.searches.new.link_name'), new_admin_lead_search_path(lead.id), class: "dropdown-item" %>
 <% end %>
 
-<% if policy([:admin, BookingDetail.new(user: lead.user, lead: lead)]).show_add_booking_link? && current_user.role?('account_manager')%>
-  <%= link_to "Add Booking", new_booking_without_inventory_admin_booking_details_path(lead_id: lead.id), class: "dropdown-item modal-remote-form-link" %>
+<% if policy([:admin, BookingDetail.new(user: lead.user, lead: lead)]).show_add_booking_link? %>
+  <%= link_to I18n.t("controller.booking_details.add_booking.link_name"), new_booking_without_inventory_admin_booking_details_path(lead_id: lead.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
 <% hold_booking = lead.booking_details.where(status: 'hold').first %>
@@ -27,12 +27,11 @@
 <% if policy([:admin, Receipt.new(user: lead.user, lead: lead)]).new? %>
   <%= link_to t('controller.receipts.new.link_name'), new_admin_lead_receipt_path(lead), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
-
 <% if policy([:admin, lead]).move_to_next_state? %>
   <%# if lead.may_queued? %>
     <%#= link_to 'Move to Sales Queue', move_to_next_state_admin_lead_path(lead, status: 'queued', format: :json), method: 'patch', remote: true, data: { disable_with: 'Queueing...' }, class: "dropdown-item queued move-to-next-state" %>
   <% if lead.may_dropoff? %>
-    <%= link_to 'Drop Customer', move_to_next_state_admin_lead_path(lead, status: 'dropoff', format: :json), method: 'patch', remote: true, data: { confirm: 'Are you sure?', disable_with: 'Dropping...' }, class: 'dropdown-item dropoff move-to-next-state' %>
+    <%= link_to I18n.t("global.drop_customer"), move_to_next_state_admin_lead_path(lead, status: 'dropoff', format: :json), method: 'patch', remote: true, data: { confirm: I18n.t("controller.assets.confirm.sure"), disable_with: I18n.t("gobal.text.dropping") }, class: 'dropdown-item dropoff move-to-next-state' %>
   <% end %>
 <% end %>
 
@@ -61,7 +60,7 @@
 <% end %>
 
 <% if policy([:admin, lead]).send_payment_link? %>
-  <%= link_to 'Send Payment link', send_payment_link_admin_lead_path(lead), class: "dropdown-item" %>
+  <%= link_to I18n.t("controller.leads.payment_link.link_name"), send_payment_link_admin_lead_path(lead), class: "dropdown-item" %>
 <% end %>
 
 <% if policy([:admin, Note.new(notable: lead)]).new? %>

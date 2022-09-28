@@ -18,25 +18,25 @@
           <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="filter-box modal-content px-3 fixed-header-footer">
                 <div class="filter-header modal-header">
-                  <h5 class="modal-title title">Filter</h5>
+                  <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
                   <a href="javascript:;" class="close-filter-btn btn-close"></a>
                 </div>
                 <%= form_tag dashboard_counts_path, method: "get", remote: true, id: "dashboard_count_filter", class: 'filter-form-modal' do %>
                   <div class="filter-content modal-body ps-0 pe-0 theme-form">
                     <div class="row">
                       <div class="mb-3 col-12">
-                        <%= label_tag "dates", "Dates", class: "control-label float-left" %>
+                        <%= label_tag "dates", I18n.t("global.dates"), class: "control-label float-left" %>
                         <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-start-date": start_date || '', "data-end-date": end_date || '', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
                       </div>
                       <div class="mb-3 col-12">
-                        <%= label_tag :project_ids, "Projects", class: "control-label float-left" %>
-                        <%= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
+                        <%= label_tag :project_ids, I18n.t("mongoid.models.project.other"), class: "control-label float-left" %>
+                        <%= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: I18n.t("global.select"), class: "selectize", multiple: true} %>
                       </div>
                     </div>
                   </div>
                   <div class="filter-footer modal-footer text-end">
-                    <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-                    <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+                    <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                    <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.cancel") %></button>
                   </div>
                 <% end %>
             </div>
@@ -69,7 +69,7 @@
             <div class="filter-box">
               <div class="filter-inner">
                 <div class="filter-header">
-                  <span class="title">Filter</span>
+                  <span class="title"><%= I18n.t("global.filter") %></span>
                   <a href="javascript:;" class="close-filter-btn">&times;</a>
                 </div>
                 <%#= form_tag invoice_summary_path, method: "get", remote: true, id: "invoice_summary_filter", class: 'filter-form-modal' do %>
@@ -77,13 +77,13 @@
                     <div class="row">
                       <div class="mb-3 col-12">
                         <%#= label_tag :project_ids, "Projects", class: "control-label float-left" %>
-                        <%#= select_tag :project_ids, options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
+                        <%#= select_tag :project_ids, options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: I18n.t("global.select"), class: "selectize", multiple: true} %>
                       </div>
                     </div>
                   </div>
                   <div class="filter-footer">
-                    <%#= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right close-filter-btn" %>
-                    <button type="button" class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+                    <%#= submit_tag I18n.t("global.apply"), class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right close-filter-btn" %>
+                    <button type="button" class="f-cancel-btn status_chart_filter_cancel db-small-btn light-blue bg-white fn-500 float-right"><%= I18n.t("global.cancel") %></button>
                   </div>
                 <%# end %>
               </div>
@@ -118,7 +118,7 @@
                 <%= link_to t("dashboard.exports.link_name", type: nil) %>
               </button>
               <div class="dropdown-menu dropdown-menu-right">
-                <%= link_to link_to t("dashboard.exports.link_name", type: t('global.all')), partner_wise_performance_admin_users_path(format: "xls"), class: 'dropdown-item' %>
+                <%= link_to t("dashboard.exports.link_name", type: t('global.all')), partner_wise_performance_admin_users_path(format: "xls"), class: 'dropdown-item' %>
                 <%= link_to t('dashboard.exports.link_name', type: t('global.active_filter')), partner_wise_performance_admin_users_path(format: "xls", channel_partner_id: params["channel_partner_id"], project_id: params["project_id"], dates: params["dates"], active_walkins: params["active_walkins"], active_bookings: params["active_bookings"]), class: 'dropdown-item', id: 'partner-wise-performance-af-export' %>
               </div>
             </div>
@@ -126,7 +126,7 @@
           <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
            <div class="filter-box modal-content px-3 fixed-header-footer">
               <div class="filter-header modal-header">
-                <h5 class="modal-title title">Filter</h5>
+                <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
                 <a href="javascript:;" class="close-filter-btn btn-close"></a>  
               </div>
               <%= form_tag partner_wise_performance_admin_users_path, method: "get", remote: true, id: "partner_wise_performance_form", class: 'filter-form-modal' do %>
@@ -134,36 +134,36 @@
                   <div class="row">
                     <div class="mb-3 col-12">
                       <div class="alert alert-primary">
-                        <span class="small"><i class="fa fa-info-circle me-2"></i>Applying filters will only show 15 records irrespective of the total records count. Acitve Filter Export will contain all the filtered records. The <strong>Total</strong> count will depend on the filtered results. </span>
+                        <span class="small"><i class="fa fa-info-circle me-2"></i><%= I18n.t("controller.dashboard.link_to.project_wise.applying_filters.step1") %> <strong><%= I18n.t("global.total") %></strong> <%= I18n.t("controller.dashboard.link_to.project_wise.applying_filters.step2") %> </span>
                       </div>
                     </div>
                   </div>
                   <div class="row">
                     <div class="mb-3 col-12">
-                      <%= label_tag "dates", "Dates", class: "control-label float-left" %>
+                      <%= label_tag "dates", I18n.t("global.dates"), class: "control-label float-left" %>
                       <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-start-date": start_date || '', "data-end-date": end_date || '', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
                     </div>
                     <div class = "mb-3 col-12">
-                      <%= label_tag "project_id", "Project", class: "control-label float-left" %>
-                      <%= select_tag "project_id", options_for_select(Project.where(Project.user_based_scope(current_user)).map{|pr| [pr.name, pr.id]}), prompt: 'Select', class: "selectize" %>
+                      <%= label_tag "project_id", I18n.t("mongoid.models.project.one"), class: "control-label float-left" %>
+                      <%= select_tag "project_id", options_for_select(Project.where(Project.user_based_scope(current_user)).map{|pr| [pr.name, pr.id]}), prompt: I18n.t("global.select"), class: "selectize" %>
                     </div>
                     <div class = "mb-3 col-12">
                       <%= label_tag "channel_partner_id", ChannelPartner.model_name.human, class: "control-label float-left" %>
-                      <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}, cp_id), prompt: 'Select', class: "selectize" %>
+                      <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}, cp_id), prompt: I18n.t("global.select"), class: "selectize" %>
                     </div>
                     <div class="mb-3 col-12">
-                      <%= label_tag "fltrs", "Active Walk-ins", class: "control-label float-left" %>
-                      <%= select_tag "active_walkins", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_walkins].present? ? params[:active_walkins] : "")), { prompt: 'Select', class: "selectize" } %>
+                      <%= label_tag "fltrs", I18n.t("global.link_to.active_walkins"), class: "control-label float-left" %>
+                      <%= select_tag "active_walkins", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_walkins].present? ? params[:active_walkins] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
                     </div>
                     <div class="mb-3 col-12">
-                      <%= label_tag "fltrs", "Active Bookings", class: "control-label float-left" %>
-                      <%= select_tag "active_bookings", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_bookings].present? ? params[:active_bookings] : "")), { prompt: 'Select', class: "selectize" } %>
+                      <%= label_tag "fltrs", I18n.t("global.link_to.active_bookings"), class: "control-label float-left" %>
+                      <%= select_tag "active_bookings", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_bookings].present? ? params[:active_bookings] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
                     </div>
                   </div>
                 </div>
                 <div class="filter-footer  modal-footer text-end">
-                  <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-                  <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+                  <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                  <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.link_to.cancel") %></button>
                 </div>
               <% end %>
           </div>
@@ -193,7 +193,7 @@
                 <%= link_to t("dashboard.exports.link_name", type: nil) %>
               </button>
               <div class="dropdown-menu dropdown-menu-right">
-                <%= link_to link_to t("dashboard.exports.link_name", type: t('global.all')), channel_partner_performance_admin_users_path(format: "xls"), class: 'dropdown-item' %>
+                <%= link_to t("dashboard.exports.link_name", type: t('global.all')), channel_partner_performance_admin_users_path(format: "xls"), class: 'dropdown-item' %>
                 <%= link_to t('dashboard.exports.link_name', type: t('global.active_filter')), channel_partner_performance_admin_users_path(format: "xls", channel_partner_id: params["channel_partner_id"], dates: params["dates"], project_ids: params["project_ids"], manager_id: params["manager_id"]), class: 'dropdown-item', id: 'channel-partner-performance-af-export' %>
               </div>
             </div>
@@ -201,33 +201,33 @@
           <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
            <div class="filter-box modal-content px-3 fixed-header-footer">
                 <div class="filter-header modal-header">
-                  <h5 class="modal-title title">Filter</h5>
+                  <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
                   <a href="javascript:;" class="close-filter-btn btn-close"></a>
                 </div>
                 <%= form_tag channel_partner_performance_admin_users_path, method: "get", remote: true, id: "channel_partner_performance_form", class: 'filter-form-modal' do %>
                   <div class="filter-content  modal-body ps-0 pe-0 theme-form">
                     <div class="row">
                       <div class="mb-3 col-12">
-                        <%= label_tag "dates", "Dates", class: "control-label float-left" %>
+                        <%= label_tag "dates", I18n.t("global.dates"), class: "control-label float-left" %>
                         <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-start-date": start_date || '', "data-end-date": end_date || '', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
                       </div>
                       <div class = "mb-3 col-12">
                         <%= label_tag "channel_partner_id", ChannelPartner.model_name.human, required: true, class: "control-label float-left" %>
-                        <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}), prompt: 'Select', class: "selectize" %>
+                        <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}), prompt: I18n.t("global.select"), class: "selectize" %>
                       </div>
                       <div class = "mb-3 col-12">
-                        <%= label_tag "manager_id", "Channel Partner", class: "control-label float-left" %>
-                        <%= select_tag "manager_id", options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), prompt: 'Select', class: "selectize" %>
+                        <%= label_tag "manager_id", I18n.t("mongoid.attributes.user.manager_id"), class: "control-label float-left" %>
+                        <%= select_tag "manager_id", options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), prompt: I18n.t("global.select"), class: "selectize" %>
                       </div>
                       <div class="mb-3 col-12">
-                        <%= label_tag :project_ids, "Projects", class: "control-label float-left" %>
-                        <%= select_tag :project_ids, options_for_select(Project.filter_by_is_active(true).where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
+                        <%= label_tag :project_ids, I18n.t("mongoid.models.project.other"), class: "control-label float-left" %>
+                        <%= select_tag :project_ids, options_for_select(Project.filter_by_is_active(true).where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: I18n.t("global.select"), class: "selectize", multiple: true} %>
                       </div>
                     </div>
                   </div>
                   <div class="filter-footer  modal-footer text-end">
-                    <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-                    <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+                    <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                    <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.link_to.cancel") %></button>
                   </div>
                 <% end %>
               </div>
@@ -238,20 +238,22 @@
     </div>
   </section>
 
-  <section class="user-db-sec-6 device-pd <%= current_user.role?('cp') ? 'mb-5 pb-5' : '' %>">
-    <div class="px-4">
-      <div class='box-card'>
-        <div class="row">
-          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3">
-            <div class="table-title pt-4">
-              <h1 class="title fn-18">Variable Incentive Scheme Report</h1>
+  <% if current_client.enable_vis? %>
+    <section class="user-db-sec-6 device-pd <%= current_user.role?('cp') ? 'mb-5 pb-5' : '' %>">
+      <div class="px-4">
+        <div class='box-card'>
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3">
+              <div class="table-title pt-4">
+                <h1 class="title fn-18"><%= I18n.t("global.link_to.vis_report") %></h1>
+              </div>
             </div>
           </div>
+          <div class="row" id = "variable_incentive_scheme_performance"></div>
         </div>
-        <div class="row" id = "variable_incentive_scheme_performance"></div>
       </div>
-    </div>
-  </section>
+    </section>
+  <% end %>
 
   <% if (["cp_admin","admin","superadmin"].include?current_user.role) %>
     <div class='mb-5 pb-5'>
@@ -275,7 +277,7 @@
                     <%= link_to t("dashboard.exports.link_name", type: nil) %>
                   </button>
                   <div class="dropdown-menu dropdown-menu-right">
-                    <%= link_to link_to t("dashboard.exports.link_name", type: t('global.all')), cp_performance_path(format: "xls"), class: 'dropdown-item' %>
+                    <%= link_to t("dashboard.exports.link_name", type: t('global.all')), cp_performance_path(format: "xls"), class: 'dropdown-item' %>
                     <%= link_to t('dashboard.exports.link_name', type: t('global.active_filter')), cp_performance_path(format: "xls", dates: params["dates"], project_ids: params["project_ids"]), class: 'dropdown-item', id: 'cp-performance-af-export' %>
                   </div>
                 </div>
@@ -283,25 +285,25 @@
               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="filter-box modal-content px-3 fixed-header-footer">
                     <div class="filter-header modal-header">
-                  <h5 class="modal-title title">Filter</h5>
+                  <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
                       <a href="javascript:;" class="close-filter-btn btn-close"></a>
                     </div>
                     <%= form_tag cp_performance_path, method: "get", remote: true, id: "cp_performance_form", class: 'filter-form-modal' do %>
                       <div class="filter-content  modal-body ps-0 pe-0 theme-form">
                         <div class="row">
                           <div class="mb-3 col-12">
-                            <%= label_tag "dates", "Dates", class: "control-label float-left" %>
+                            <%= label_tag "dates", I18n.t("global.dates"), class: "control-label float-left" %>
                             <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-start-date": start_date || '', "data-end-date": end_date || '', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
                           </div>
                           <div class="mb-3 col-12">
-                            <%= label_tag :project_ids, "Projects", class: "control-label float-left" %>
-                            <%= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
+                            <%= label_tag :project_ids, I18n.t("mongoid.models.project.other"), class: "control-label float-left" %>
+                            <%= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: I18n.t("global.select"), class: "selectize", multiple: true} %>
                           </div>
                         </div>
                       </div>
                       <div class="filter-footer  modal-footer text-end">
-                        <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-                        <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+                        <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                        <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.cancel") %></button>
                       </div>
                     <% end %>
                 </div>
@@ -345,25 +347,25 @@
               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-pd">
                 <div class="filter-box modal-content px-3 fixed-header-footer">
                     <div class="filter-header modal-header">
-                  <h5 class="modal-title title">Filter</h5>
+                  <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
                       <a href="javascript:;" class="close-filter-btn btn-close"></a>
                     </div>
                     <%= form_tag cp_status_path, method: "get", remote: true, id: "cp_status_form", class: 'filter-form-modal' do %>
                       <div class="filter-content  modal-body ps-0 pe-0 theme-form">
                         <div class="row">
                           <div class="mb-3 col-12">
-                            <%= label_tag "dates", "Dates", class: "control-label float-left" %>
+                            <%= label_tag "dates", I18n.t("global.dates"), class: "control-label float-left" %>
                             <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-start-date": start_date || '', "data-end-date": end_date || '', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
                           </div>
                           <div class="mb-3 col-12">
                             <%#= label_tag :project_ids, "Projects", class: "control-label float-left" %>
-                            <%#= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
+                            <%#= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: I18n.t("global.select"), class: "selectize", multiple: true} %>
                           </div>
                         </div>
                       </div>
                       <div class="filter-footer  modal-footer text-end">
-                        <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-                        <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+                        <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                        <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.link_to.cancel") %></button>
                       </div>
                     <% end %>
                 </div>
@@ -397,7 +399,7 @@
               <%= link_to t("dashboard.exports.link_name", type: nil) %>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-              <%= link_to link_to t("dashboard.exports.link_name", type: t('global.all')), site_visit_partner_wise_admin_users_path(format: "xls"), class: 'dropdown-item' %>
+              <%= link_to t("dashboard.exports.link_name", type: t('global.all')), site_visit_partner_wise_admin_users_path(format: "xls"), class: 'dropdown-item' %>
               <%= link_to t('dashboard.exports.link_name', type: t('global.active_filter')), site_visit_partner_wise_admin_users_path(format: "xls", channel_partner_id: params["channel_partner_id"], project_id: params["project_id"], dates: params["dates"], active_walkins: params["active_walkins"], active_bookings: params["active_bookings"]), class: 'dropdown-item', id: 'site-visit-partner-wise-af-export' %>
             </div>
           </div>
@@ -405,7 +407,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
          <div class="filter-box modal-content px-3 fixed-header-footer">
               <div class="filter-header modal-header">
-                <h5 class="modal-title title">Filter</h5>
+                <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
                 <a href="javascript:;" class="close-filter-btn btn-close"></a>  
               </div>
               <%= form_tag site_visit_partner_wise_admin_users_path, method: "get", remote: true, id: "site_visit_partner_wise_form", class: 'filter-form-modal' do %>
@@ -413,36 +415,36 @@
                   <div class="row">
                     <div class="mb-3 col-12">
                       <div class="alert alert-primary">
-                        <span class="small"><i class="fa fa-info-circle me-2"></i>Applying filters will only show 15 records irrespective of the total records count. Acitve Filter Export will contain all the filtered records. The <strong>Total</strong> count will depend on the filtered results. </span>
+                        <span class="small"><i class="fa fa-info-circle me-2"></i><%= I18n.t("controller.dashboard.link_to.project_wise.applying_filters.step1") %> <strong><%= I18n.t("global.total") %></strong> <%= I18n.t("controller.dashboard.link_to.project_wise.applying_filters.step2") %></span>
                       </div>
                     </div>
                   </div>
                   <div class="row">
                     <div class="mb-3 col-12">
-                      <%= label_tag "dates", "Dates", class: "control-label float-left" %>
+                      <%= label_tag "dates", I18n.t("global.dates"), class: "control-label float-left" %>
                       <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-start-date": start_date || '', "data-end-date": end_date || '', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
                     </div>
                     <div class = "mb-3 col-12">
-                      <%= label_tag "project_id", "Project", class: "control-label float-left" %>
-                      <%= select_tag "project_id", options_for_select(Project.where(Project.user_based_scope(current_user)).map{|pr| [pr.name, pr.id]}), prompt: 'Select', class: "selectize" %>
+                      <%= label_tag "project_id", I18n.t("mongoid.models.project.one"), class: "control-label float-left" %>
+                      <%= select_tag "project_id", options_for_select(Project.where(Project.user_based_scope(current_user)).map{|pr| [pr.name, pr.id]}), prompt: I18n.t("global.select"), class: "selectize" %>
                     </div>
                     <div class = "mb-3 col-12">
                       <%= label_tag "channel_partner_id", ChannelPartner.model_name.human, class: "control-label float-left" %>
-                      <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}, cp_id), prompt: 'Select', class: "selectize" %>
+                      <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}, cp_id), prompt: I18n.t("global.select"), class: "selectize" %>
                     </div>
                     <div class="mb-3 col-12">
-                      <%= label_tag "fltrs", "Active Walk-ins", class: "control-label float-left" %>
-                      <%= select_tag "active_walkins", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_walkins].present? ? params[:active_walkins] : "")), { prompt: 'Select', class: "selectize" } %>
+                      <%= label_tag "fltrs", I18n.t("global.link_to.active_walkins"), class: "control-label float-left" %>
+                      <%= select_tag "active_walkins", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_walkins].present? ? params[:active_walkins] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
                     </div>
                     <div class="mb-3 col-12">
-                      <%= label_tag "fltrs", "Active Bookings", class: "control-label float-left" %>
-                      <%= select_tag "active_bookings", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_bookings].present? ? params[:active_bookings] : "")), { prompt: 'Select', class: "selectize" } %>
+                      <%= label_tag "fltrs", I18n.t("global.link_to.active_bookings"), class: "control-label float-left" %>
+                      <%= select_tag "active_bookings", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_bookings].present? ? params[:active_bookings] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
                     </div>
                   </div>
                 </div>
                 <div class="filter-footer  modal-footer text-end">
-                  <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-                  <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+                  <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                  <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.cancel") %></button>
                 </div>
               <% end %>
             </div>
@@ -473,7 +475,7 @@
               <%= link_to t("dashboard.exports.link_name", type: nil) %>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-              <%= link_to link_to t("dashboard.exports.link_name", type: t('global.all')), site_visit_project_wise_admin_users_path(format: "xls"), class: 'dropdown-item' %>
+              <%= link_to t("dashboard.exports.link_name", type: t('global.all')), site_visit_project_wise_admin_users_path(format: "xls"), class: 'dropdown-item' %>
               <%= link_to t('dashboard.exports.link_name', type: t('global.active_filter')), site_visit_project_wise_admin_users_path(format: "xls", channel_partner_id: params["channel_partner_id"], dates: params["dates"], project_ids: params["project_ids"], manager_id: params["manager_id"]), class: 'dropdown-item', id: 'site-visit-project_wise-af-export' %>
             </div>
           </div>
@@ -481,33 +483,33 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
          <div class="filter-box modal-content px-3 fixed-header-footer">
               <div class="filter-header modal-header">
-                <h5 class="modal-title title">Filter</h5>
+                <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
                 <a href="javascript:;" class="close-filter-btn btn-close"></a>
               </div>
               <%= form_tag site_visit_project_wise_admin_users_path, method: "get", remote: true, id: "site_visit_project_wise_form", class: 'filter-form-modal' do %>
                 <div class="filter-content  modal-body ps-0 pe-0 theme-form">
                   <div class="row">
                     <div class="mb-3 col-12">
-                      <%= label_tag "dates", "Dates", class: "control-label float-left" %>
+                      <%= label_tag "dates", I18n.t("global.dates"), class: "control-label float-left" %>
                       <%= text_field_tag :dates, "", class: 'form-control daterangefilter', "data-start-date": start_date || '', "data-end-date": end_date || '', "data-opens": 'right', placeholder: 'dd/mm/yyyy - dd/mm/yyyy', id: "dates", auto: false, autocomplete: 'disabled' %>
                     </div>
                     <div class = "mb-3 col-12">
                       <%= label_tag "channel_partner_id", ChannelPartner.model_name.human, required: true, class: "control-label float-left" %>
-                      <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}), prompt: 'Select', class: "selectize" %>
+                      <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}), prompt: I18n.t("global.select"), class: "selectize" %>
                     </div>
                     <div class = "mb-3 col-12">
-                      <%= label_tag "manager_id", "Channel Partner", class: "control-label float-left" %>
-                      <%= select_tag "manager_id", options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), prompt: 'Select', class: "selectize" %>
+                      <%= label_tag "manager_id", I18n.t("mongoid.attributes.user.manager_id"), class: "control-label float-left" %>
+                      <%= select_tag "manager_id", options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), prompt: I18n.t("global.select"), class: "selectize" %>
                     </div>
                     <div class="mb-3 col-12">
-                      <%= label_tag :project_ids, "Projects", class: "control-label float-left" %>
-                      <%= select_tag :project_ids, options_for_select(Project.filter_by_is_active(true).where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: "Select", class: "selectize", multiple: true} %>
+                      <%= label_tag :project_ids, I18n.t("mongoid.models.project.other"), class: "control-label float-left" %>
+                      <%= select_tag :project_ids, options_for_select(Project.filter_by_is_active(true).where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: I18n.t("global.select"), class: "selectize", multiple: true} %>
                     </div>
                   </div>
                 </div>
                 <div class="filter-footer  modal-footer text-end">
-                  <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-                  <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+                  <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
+                  <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.cancel") %></button>
                 </div>
               <% end %>
             </div>
@@ -549,20 +551,20 @@
         type: "get",
       });
       $.ajax({
-        url: "/dashboard/dashboard_counts",
+        url: "<%= dashboard_counts_path %>",
         type: "get"
       });
       //$.ajax({
-      //  url: "/dashboard/invoice_summary",
+      //  url: "<%= invoice_summary_path %>",
       //  type: "get"
       //});
       <% if (["cp_admin","admin","superadmin"].include?current_user.role) %>
         $.ajax({
-          url: "/dashboard/cp_status",
+          url: "<%= cp_status_path %>",
           type: "get"
         });
         $.ajax({
-          url: "/dashboard/cp_performance",
+          url: "<%= cp_performance_path %>",
           type: "get"
         });
       <% end %>

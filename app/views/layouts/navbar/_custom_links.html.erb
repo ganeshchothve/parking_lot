@@ -31,6 +31,6 @@
 <% end %>
 <% if current_client.terms_and_conditions.present? %>
   <li class='nav-item d-lg-none'>
-    <%= link_to 'T & C', dashboard_terms_and_condition_path, active: :exclusive, class: 'nav-link pl-0 pr-0', target: "_blank" %>
+    <%= link_to I18n.t("global.link_to.tnc"), dashboard_terms_and_condition_path, active: :exclusive, class: 'nav-link pl-0 pr-0', target: "_blank" %>
   </li>
 <% end %>

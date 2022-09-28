@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="modal-footer text-end">
-        <%= f.submit "Add #{global_labels['note']}", class: "btn btn-primary" %>
+        <%= f.submit I18n.t("global.link_to.add_element", name: global_labels['notes']), class: "btn btn-primary" %>
       </div>
     </div>
   </div>

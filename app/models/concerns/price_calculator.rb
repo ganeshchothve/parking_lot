@@ -28,10 +28,6 @@ module PriceCalculator
     effective_rate
   end
 
-  def booking_price_percent_of_agreement_price
-    agreement_price > 5000000 ? 0.099 : 0.1
-  end
-
   def total_agreement_costs
     costs.where(category: 'agreement').collect do |cost|
       cost.value
@@ -51,6 +47,9 @@ module PriceCalculator
     if booking_detail_scheme
       all_incl_price += (booking_detail_scheme.payment_adjustments.where(field: "all_inclusive_price").collect{|adj| adj.value(self)}.sum).round
     end
+    return all_incl_price if self.is_a? ProjectUnit
+    all_incl_price += token_discount if token_discount.present?
+    all_incl_price += variable_discount if variable_discount.present?
     all_incl_price
   end
 
@@ -78,5 +77,14 @@ module PriceCalculator
 
   def calculate_stamp_duty_type_cost
     return (30000 + (0.06 * calculate_agreement_price))
+  end
+
+  def get_booking_price
+    payment_type = PaymentType.where(name: 'booking_price', project_id: self.project_id).first
+    if payment_type.present?
+      payment_type.value(self)
+    else
+      ((self.class.to_s == 'ProjectUnit' && self.booking_detail.present?) ? (self.booking_detail.calculate_agreement_price * 0.1) : (self.calculate_agreement_price * 0.1)).round
+    end
   end
 end

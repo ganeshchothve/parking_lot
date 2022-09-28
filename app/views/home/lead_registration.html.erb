@@ -4,14 +4,14 @@
       <div class="login-form-wrapper pt-5 mr-4">
         <div class="box-card">
           <div class="box-header bg-gradient br-rd-tr-4">
-            <h2><strong>Basic Details</strong></h2>
+            <h2><strong><%= I18n.t("global.link_to.basic_details") %></strong></h2>
           </div>
           <div class="box-content br-rd-bl-4 bg-white px-3 pt-3 br-1">
             <%= simple_form_for(@lead, url: admin_leads_path, local: true, html: { id: 'lead_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %>
 
               <%= render "home/form_fields", {form: form} %>
               <div class="signin-btn col-lg-12 pl-0 pr-0 pb-4">
-                <%= form.submit "Register", class: "sign-in-btn", data: { disable_with: "Please wait..." } %>
+                <%= form.submit I18n.t("devise.keys.register"), class: "sign-in-btn", data: { disable_with: I18n.t("global.please_wait") } %>
               </div>
               <%= render "devise/shared/links" %>
             <% end %>

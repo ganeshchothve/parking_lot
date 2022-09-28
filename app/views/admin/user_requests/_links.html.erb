@@ -1,9 +1,9 @@
 <% if policy([:admin, Asset.new(assetable: user_request)]).index? %>
-  <%= link_to 'Documents', assetables_path(assetable_type: user_request.class.model_name.i18n_key.to_s, assetable_id: user_request.id), class: 'dropdown-item modal-remote-form-link' %>
+  <%= link_to I18n.t("global.documents"), assetables_path(assetable_type: user_request.class.model_name.i18n_key.to_s, assetable_id: user_request.id), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 
 <% if !current_user.buyer? && policy([:admin, user_request]).show? && !(params[:controller] == 'admin/user_requests' && params[:action] == 'show') %>
-  <%= link_to 'Details', admin_user_request_path(request_type: user_request.class.model_name.element, id: user_request.id), class: 'dropdown-item' %>
+  <%= link_to I18n.t("global.link_to.details"), admin_user_request_path(request_type: user_request.class.model_name.element, id: user_request.id), class: 'dropdown-item' %>
 <% end %>
 
 <% if Object.const_get("Admin::#{user_request.class.model_name.name}Policy").new(current_user, user_request).edit? %>

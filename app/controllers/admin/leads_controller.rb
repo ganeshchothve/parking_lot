@@ -49,14 +49,14 @@ class Admin::LeadsController < AdminController
     else
       LeadExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json, timezone: Time.zone.name)
     end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    flash[:notice] = I18n.t("global.export_scheduled")
     redirect_to admin_leads_path(fltrs: params[:fltrs].as_json)
   end
 
   def update
     respond_to do |format|
       if @lead.update(permitted_attributes([:admin, @lead]))
-        format.html { redirect_to admin_leads_path, notice: 'Lead successfully updated.' }
+        format.html { redirect_to admin_leads_path, notice: I18n.t("controller.leads.notice.updated") }
       else
         format.html { render :edit }
         format.json { render json: { errors: @lead.errors.full_messages }, status: :unprocessable_entity }
@@ -75,7 +75,7 @@ class Admin::LeadsController < AdminController
   def send_payment_link
     respond_to do |format|
       format.html do
-        @lead.send_payment_link
+        @lead.send_payment_link(params[:booking_detail_id])
         redirect_to request.referer, notice: t('controller.users.send_payment_link')
       end
     end
@@ -85,6 +85,7 @@ class Admin::LeadsController < AdminController
   #
   def search_by
     @leads = Lead.unscoped.build_criteria params
+    @leads = @leads.where(Lead.user_based_scope(current_user))
     @leads = @leads.paginate(page: params[:page] || 1, per_page: params[:per_page] || 15)
   end
 
@@ -92,12 +93,12 @@ class Admin::LeadsController < AdminController
     if @lead.may_assign_sales?(params[:sales_id])
       if @lead.assign_manager(params[:sales_id])
         @lead.current_site_visit&.set(sales_id: params[:sales_id])
-        flash.now[:notice] = "#{@lead.name} assigned to sales #{@sales.name}"
+        flash.now[:notice] = I18n.t("controller.leads.notice.assigned_to", name1: @lead.name, name2: @sales.name)
       else
-        flash.now[:alert] = "Not able to assign #{@lead.name} to sales"
+        flash.now[:alert] = I18n.t("controller.leads.errors.failed_to_assign", name: "#{@lead.name}")
       end
     else
-      flash.now[:alert] = "Not able to assign #{@lead.name} to sales"
+      flash.now[:alert] = I18n.t("controller.leads.errors.failed_to_assign", name: "#{@lead.name}")
     end
   end
 
@@ -110,16 +111,16 @@ class Admin::LeadsController < AdminController
     respond_to do |format|
       if @sales.present?
         if @lead.assign_manager(params.dig(:lead, :closing_manager_id), @lead.closing_manager_id)
-          message = "#{@lead.name} assigned to sales #{@sales.name}"
+          message = I18n.t("controller.leads.notice.assigned_to", name1: @lead.name, name2: @sales.name)
           format.html { redirect_to request.referrer || dashboard_url, notice: message }
           format.json { render json: { message: message }, status: :ok }
         else
-          message = "#{@lead.name} not assigned to sales #{@sales.name}"
+          message = I18n.t("controller.leads.notice.not_assigned_to", name1: @lead.name, name2: @sales.name)
           format.html{ redirect_to request.referrer || dashboard_url, alert: message }
           format.json { render json: { errors: [message] }, status: :unprocessable_entity }
         end
       else
-        format.html{ redirect_to request.referrer || dashboard_url, alert: "Sales user not found" }
+        format.html{ redirect_to request.referrer || dashboard_url, alert: I18n.t("controller.leads.alert.sales_user_not_found") }
       end
     end
   end
@@ -200,11 +201,11 @@ class Admin::LeadsController < AdminController
           end
         end
 
-        format.json { render json: { message: "Mail successfully sent to the selected leads" }, status: :ok }
+        format.json { render json: { message: I18n.t("controller.leads.message.mail_sent") }, status: :ok }
       else
         errors = []
-        errors << 'Please select some leads' unless @leads.present?
-        errors << 'Please select some projects' unless @project_ids.present?
+        errors << I18n.t("controller.leads.errors.select_leads") unless @leads.present?
+        errors << I18n.t("controller.projects.errors.select_projects") unless @project_ids.present?
         format.json { render json: { errors: errors }, status: :unprocessable_entity }
       end
     end

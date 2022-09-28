@@ -61,7 +61,7 @@ class SiteVisitObserver < Mongoid::Observer
       end
     end
 
-    if current_client.external_api_integration?
+    if site_visit.booking_portal_client.external_api_integration?
       if Rails.env.staging? || Rails.env.production?
         SiteVisitObserverWorker.perform_async(site_visit.id.to_s, 'update', site_visit.changes.merge(site_visit.notes.select {|x| x.new_record? && x.changes.present?}.first&.changes&.slice('note') || {}))
       else
@@ -73,7 +73,7 @@ class SiteVisitObserver < Mongoid::Observer
   def after_create site_visit
     site_visit.third_party_references.each(&:update_references)
 
-    if current_client.external_api_integration?
+    if site_visit.booking_portal_client.external_api_integration?
       if Rails.env.staging? || Rails.env.production?
         SiteVisitObserverWorker.perform_async(site_visit.id.to_s, 'create', site_visit.changes)
       else
@@ -96,7 +96,7 @@ class SiteVisitObserver < Mongoid::Observer
     if site_visit.status_changed? && site_visit.status == 'conducted'
       crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
       if crm_base.present?
-        api, api_log = site_visit.push_in_crm(crm_base)
+        api, api_log = site_visit.reload.push_in_crm(crm_base)
       end
     end
   end

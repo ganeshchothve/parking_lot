@@ -41,38 +41,157 @@
           <% end %>
           <div class="mb-3">
             <%= f.label :role, class: 'label-required' %>
-            <%= f.select :role, filter_roles, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("role") ? false : true) %>
+            <%= f.select :role, User.available_roles(current_client).reject{|role| User.buyer_roles(current_client).include?(role) || role.in?(%w(cp_owner channel_partner))}.collect{ |r| [User.human_attribute_name("role.#{r}"), r] }, {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("role") ? false : true) %>
           </div>
-          <% if policy([current_user_role_group, @user]).editable_field?("project_ids") %>
-            <div class="row mt-">
-              <div class="col-md-12">
+          <% unless !is_marketplace? %>
+            <% if policy([current_user_role_group, @user]).editable_field?("fund_accounts_attributes") %>
+              <%= f.fields_for :fund_accounts, @user.fund_accounts.first || @user.fund_accounts.build do |fa_form| %>
+                <div class='row'>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <%= fa_form.label :address, class: "control-label" %>
+                      <%= fa_form.text_field :address, class: 'form-control', disabled: !policy(fa_form.object).editable_field?("address") %>
+                    </div>
+                  </div>
+                  <% if policy(fa_form.object).editable_field?("is_active") %>
+                    <div class='col-md-6'>
+                      <div class="mb-3">
+                        <%= fa_form.label :is_active %>
+                        <div class="form-check form-check-inline">
+                          <%= fa_form.radio_button :is_active, true, class: "form-check-input wd-22" %>
+                          <%= fa_form.label :is_active, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <%= fa_form.radio_button :is_active, false, class: "form-check-input wd-22" %>
+                          <%= fa_form.label :is_active, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              <% end %>
+
+              <% if policy([current_user_role_group, @user]).editable_field?("allowed_bookings") && @user.buyer? %>
                 <div class="mb-3">
-                  <%= f.label :project_ids, class: "control-label" %>
-                  <%= f.select :project_ids, options_from_collection_for_select(@user.project_ids.present? ? Project.in(id: @user.project_ids) : [], "id", "ds_name", @user.project_ids), {}, class: 'selectize-remote', multiple: true, data: {url: admin_projects_path}, disabled: !(policy([current_user_role_group, f.object]).editable_field?("project_ids")) %>
+                  <%= f.label :allowed_bookings, class: 'label-required' %>
+                  <%= f.select :allowed_bookings, [1,2,3,4,5,6,100], {prompt: true}, class: 'select', required: 'required' %>
+                </div>
+              <% end %>
+              <% if current_user.role?('cp_owner') %>
+                <%= f.hidden_field :channel_partner_id, value: current_user.channel_partner_id %>
+              <% else %>
+                <div class="mb-3">
+                  <%= f.label :channel_partner_id %>
+                  <%= f.select :channel_partner_id, options_for_select(ChannelPartner.all.collect {|cp| [cp.ds_name, cp.id]}, @user.channel_partner_id), {prompt: true}, class: 'selectize', disabled: (policy([current_user_role_group, @user]).editable_field?("channel_partner_id") ? false : true) %>
+                </div>
+              <% end %>
+              <div class="mb-3">
+                <%= f.label :manager_id, class: "control-label" %>
+                <%= f.select :manager_id, f.object.manager_id.present? ? [ [ f.object.manager_name, f.object.manager_id]] : [], {prompt: I18n.t("global.select")}, class: 'selectize-remote', autofocus: true, disabled: !(policy([current_user_role_group, @user]).editable_field?("manager_id")), "data-url": admin_users_path, "data-params": {fltrs: {role: fetch_manager_role(@user), confirmation: 'confirmed', is_active: true }}.to_json, 'data-ds': 'ds' %>
+              </div>
+
+            <% if policy([current_user_role_group, @user]).editable_field?("project_ids") %>
+              <div class="mb-3">
+                <%= f.label :project_ids, class: "control-label" %>
+                <%= f.select :project_ids, options_from_collection_for_select(@user.project_ids.present? ? Project.in(id: @user.project_ids) : [], "id", "ds_name", @user.project_ids), {}, class: 'selectize-remote', multiple: true, data: {url: admin_projects_path}, disabled: !(policy([current_user_role_group, f.object]).editable_field?("project_ids")) %>
+              </div>
+            <% end %>
+            <% if policy([current_user_role_group, @user]).editable_field?("manager_change_reason") %>
+              <div class="mb-3">
+                <%= f.label :manager_change_reason, class: "control-label" %>
+                <%= f.text_area :manager_change_reason, class: 'form-control', disabled: (policy([current_user_role_group, @user]).editable_field?("manager_change_reason") ? false : true) %>
+              </div>
+            <% end %>
+            <% if policy([current_user_role_group, @user]).editable_field?("project_ids") %>
+              <div class="row mt-">
+                <div class="col-md-12">
+                  <div class="mb-3">
+                    <%= f.label :time_zone, class: "control-label" %>
+                    <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.all.sort, {}, class: 'selectize', disabled: (policy([current_user_role_group, @user]).editable_field?("time_zone") ? false : true) %>
+                  </div>
                 </div>
               </div>
-            </div>
-          <% end %>
-          <div class="row">
+            <% end %>
             <% if policy([current_user_role_group, @user]).editable_field?("is_active") %>
               <div class="col-md-6">
                 <div class="mb-3">
                   <%= f.label :is_active %>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :is_active, true, class: "form-check-input wd-22" %>
-                    <%= f.label :is_active, "Yes", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :is_active, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :is_active, false, class: "form-check-input wd-22" %>
-                    <%= f.label :is_active, "No", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :is_active, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
               </div>
             <% end %>
+            <div class="row">
+              <% if current_user_role_group.to_s == 'admin' && !@user.buyer? && current_user == @user %>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <%= f.label t('mongoid.attributes.user.shareable_link'), class: 'control-label' %>
+                    <%= f.text_field nil, value: new_channel_partner_url(manager_id: @user.id, layout: true), disabled: true, class: 'form-control' %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            <div class="row">
+              <% if policy([current_user_role_group, @user]).editable_field?('tier_id') %>
+                <div class='col-md-6'>
+                  <div class="mb-3">
+                    <%= f.label :tier_id %>
+                    <%= f.select :tier_id, Tier.all.collect{|tier| [tier.name, tier.id ]}, {prompt: true}, class: 'selectize', disabled: !policy([:admin, @user]).editable_field?("tier_id") %>
+                  </div>
+                </div>
+              <% end %>
+              <% if policy([current_user_role_group, @user]).editable_field?("enable_live_inventory") %>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <%= f.label :enable_live_inventory %>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :enable_live_inventory, true, class: "form-check-input wd-22" %>
+                      <%= f.label :enable_live_inventory, "Yes", class: "form-check-label d-inline-block ms-2" %>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <%= f.radio_button :enable_live_inventory, false, class: "form-check-input wd-22" %>
+                      <%= f.label :enable_live_inventory, "No", class: "form-check-label d-inline-block ms-2" %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+              <% if policy([current_user_role_group, @user]).editable_field?("premium") %>
+                <div class="col-md-6">
+                  <div class="mb-3 form-check-inline mt-4">
+                    <%= f.check_box :premium, { class: "form-check-label", checked: f.object.premium? }, true %>
+                    <%= f.label :premium, class: "form-check-label ml-2" %>
+              </div>
+            <% end %>
+            <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
+              <br>
+              <h5><%= I18n.t("global.tabs.crm_ids") %></h5>
+              <hr/>
+              <%= render 'admin/crm/shared/third_party_references_form', f: f %>
+            <% end %>
+          <%# else %>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="mb-3">
+                  <%#= f.label :kylas_user_id %>
+                  <%# kylas_users = @kylas_users.presence || [] %>
+                  <%#= f.select :kylas_user_id, options_for_select(kylas_users, kylas_users.select{ |kylas_user| kylas_user[1].to_s == @user.kylas_user_id }.first), { include_blank: 'Select Kylas User', autocomplete: 'off', class: 'form-control', required: true }, disabled: !(policy([current_user_role_group, @user]).editable_field?("kylas_user_id")) %>
+                  <%# if kylas_users.blank? %>
+                    <%#= link_to t('mongoid.attributes.user.new_user_kylas_crm'), SUPPORT_NEW_USER_CRM_LINK, target: '_blank' %>
+                  <%# end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
           </div>
         </div>
         <div class="modal-footer theme-end">
-          <%= f.submit "Save", class: 'btn btn-primary float-end' %>
+          <%= f.submit I18n.t("global.save"), class: 'btn btn-primary float-end' %>
         </div>
       </div>
     </div>

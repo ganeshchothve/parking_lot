@@ -39,7 +39,7 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
     @booking_detail_scheme.approved!
     respond_to do |format|
       if @scheme.save
-        format.html { redirect_to request.referrer || root_path, notice: t('controller.booking_detail_schemes.scheme_approved') }
+        format.html { redirect_to request.referrer || root_path, notice: t('controller.booking_detail_schemes.notice.scheme_approved') }
         format.json { render json: @scheme, status: :created }
       else
         format.html { render :new }
@@ -57,7 +57,7 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
     @scheme.approved_by = current_user
     respond_to do |format|
       if @scheme.save
-        format.html { redirect_to admin_user_path(@booking_detail.user.id), notice: 'Scheme was successfully updated.' }
+        format.html { redirect_to admin_user_path(@booking_detail.user.id), notice: I18n.t("controller.booking_detail_schemes.notice.updated") }
         format.json { render json: @scheme }
       else
         format.html { render :edit }
@@ -71,7 +71,7 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
     @scheme.assign_attributes(permitted_attributes([:buyer, @scheme]))
     respond_to do |format|
       if @scheme.save
-        format.html { redirect_to request.referrer || root_path , notice: t('controller.booking_detail_schemes.scheme_approved') }
+        format.html { redirect_to request.referrer || root_path , notice: t('controller.booking_detail_schemes.notice.scheme_approved') }
       else
         format.html { render :edit }
         format.json { render json: @scheme.errors, status: :unprocessable_entity }

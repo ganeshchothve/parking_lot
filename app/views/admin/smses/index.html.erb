@@ -14,7 +14,7 @@
             </a>
           </div>
           <% if policy([:admin, Sms]).sms_pulse? %>
-            <%= link_to "SMS Pulse", sms_pulse_admin_smses_path, class: 'btn-primary border px-3 py-2 border-primary white rounded py-2 ms-2 btn' %>
+            <%= link_to I18n.t("controller.smses.links.sms_pulse"), sms_pulse_admin_smses_path, class: 'btn-primary border px-3 py-2 border-primary white rounded py-2 ms-2 btn' %>
           <% end %>
         </div>
       </div>

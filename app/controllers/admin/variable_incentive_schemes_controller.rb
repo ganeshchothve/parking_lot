@@ -1,8 +1,8 @@
 class Admin::VariableIncentiveSchemesController < AdminController
   before_action :set_variable_incentive_scheme, except: %i[index new create vis_details export]
-  before_action :get_options, only: %i[vis_details export]
+  before_action :get_options, only: %i[show vis_details export]
   before_action :authorize_resource
-  around_action :apply_policy_scope, only: [:index, :vis_details, :export]
+  around_action :apply_policy_scope, only: [:index, :export]
 
   def index
     @variable_incentive_schemes = VariableIncentiveScheme.build_criteria params
@@ -19,12 +19,15 @@ class Admin::VariableIncentiveSchemesController < AdminController
     render layout: false
   end
 
+  def show
+  end
+
   def create
     @variable_incentive_scheme = VariableIncentiveScheme.new(created_by: current_user)
     @variable_incentive_scheme.assign_attributes(permitted_attributes([:admin, @variable_incentive_scheme]))
     respond_to do |format|
       if @variable_incentive_scheme.save
-        format.html { redirect_to admin_incentive_schemes_path, notice: 'Incentive Scheme created successfully.' }
+        format.html { redirect_to admin_incentive_schemes_path, notice: I18n.t("controller.incentive_schemes.notice.created") }
         format.json { render json: @variable_incentive_scheme, status: :created }
       else
         format.html { render :new }
@@ -41,7 +44,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
     respond_to do |format|
       @variable_incentive_scheme.approved_by = current_user if params.dig(:variable_incentive_scheme, :event).present? && params.dig(:variable_incentive_scheme, :event) == 'approved' && @variable_incentive_scheme.status != 'approved'
       if @variable_incentive_scheme.update(permitted_attributes([:admin, @variable_incentive_scheme]))
-        format.html { redirect_to admin_incentive_schemes_path, notice: 'Incentive Scheme was successfully updated.' }
+        format.html { redirect_to admin_incentive_schemes_path, notice: I18n.t("controller.incentive_schemes.notice.updated") }
       else
         format.html { render :edit }
         format.json { render json: { errors: @variable_incentive_scheme.errors.full_messages.uniq }, status: :unprocessable_entity }
@@ -55,7 +58,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
     elsif request.patch?
       respond_to do |format|
         if @variable_incentive_scheme.update(end_date: params.dig(:variable_incentive_scheme, :end_date))
-          format.html { redirect_to admin_variable_incentive_schemes_path, notice: 'Variable Incentive Scheme was successfully updated.' }
+          format.html { redirect_to admin_variable_incentive_schemes_path, notice: I18n.t("controller.variable_incentive_schemes.notice.updated")  }
         else
           format.html { render :edit }
           format.json { render json: { errors: @variable_incentive_scheme.errors.full_messages.uniq }, status: :unprocessable_entity }
@@ -65,6 +68,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
   end
 
   def vis_details
+    @vis_id = params[:id]
     @options.merge!(query: get_query)
     @vis_details = VariableIncentiveSchemeCalculator.vis_details(@options)
     respond_to do |format|
@@ -80,7 +84,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
     else
       VariableIncentiveExportWorker.perform_async(current_user.id.to_s, @options.as_json)
     end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    flash[:notice] = I18n.t("global.export_scheduled")
     filters = params.as_json.slice("user_id", "project_ids", "variable_incentive_scheme_ids", "user_id")
     redirect_to vis_details_admin_variable_incentive_schemes_path(filters)
   end
@@ -89,7 +93,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
 
   def set_variable_incentive_scheme
     @variable_incentive_scheme = VariableIncentiveScheme.where(id: params[:id]).first
-    redirect_to dashboard_path, alert: 'Incentive scheme not found' unless @variable_incentive_scheme
+    redirect_to dashboard_path, alert: I18n.t("controller.incentive_schemes.alert.not_found") unless @variable_incentive_scheme
   end
 
   def authorize_resource
@@ -118,6 +122,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
 
   def get_options
     @options = {}
+    params[:variable_incentive_scheme_ids] = [params[:id]] if params[:id].present?
     @options.merge!(user_id: params[:user_id]) if params[:user_id].present?
     @options.merge!(project_ids: params[:project_ids]) if params[:project_ids].present?
     if ["cp_owner", "channel_partner"].include?(current_user.role)

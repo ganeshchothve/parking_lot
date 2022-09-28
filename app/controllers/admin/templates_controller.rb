@@ -43,7 +43,7 @@ class Admin::TemplatesController < AdminController
     _params = Rack::Utils.parse_nested_query(URI(request.referrer).query)
     respond_to do |format|
       if @template.save
-        format.html { redirect_to admin_client_templates_path, notice: 'Template was successfully updated.' }
+        format.html { redirect_to admin_client_templates_path, notice: I18n.t("controller.templates.notice.updated") }
         format.json { render json: @template, location: admin_client_templates_path(fltrs: _params['fltrs'] || {}, page: _params['page'] || 1) }
       else
         format.html { render :edit }

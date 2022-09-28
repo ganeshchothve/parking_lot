@@ -6,10 +6,10 @@
         <div class="pull-right right-header">
             <div class="pull-right upper-right-header hidden-xs hidden-portrait">
               <div class="pull-right ml-2">
-                <%= link_to 'Sign in', new_user_session_path, {class: 'green-btn sign-in-button alt-btn', 'data-event-category': 'Header', 'data-event-action': 'Click', 'data-event-name': 'Login'} %>
+                <%= link_to  I18n.t("devise.keys.sign_in"), new_user_session_path, {class: 'green-btn sign-in-button alt-btn', 'data-event-category': 'Header', 'data-event-action': 'Click', 'data-event-name': 'Login'} %>
               </div>
               <div class="enquire-now-wrapper pull-right">
-                <a data-event-category="Header" data-event-action="Click" data-event-name="Register Now" class="enquire-now-btn green-btn register-btn" href='<%= new_channel_partner_path %>'>Register Now</a>
+                <a data-event-category="Header" data-event-action="Click" data-event-name="Register Now" class="enquire-now-btn green-btn register-btn" href='<%= new_channel_partner_path %>'><%=  I18n.t("devise.keys.register_now") %></a>
               </div>
             </div>
             <div class="clearfix"></div>

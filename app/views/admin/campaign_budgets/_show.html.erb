@@ -8,7 +8,7 @@
     </thead>
   </thead>
   <tbody>
-    <td><%= Campaign.sources.find{|x| x[:id] == campaign_budget.source }[:text] %></td>
+    <td><%= I18n.t("mongoid.attributes.campaign/campaign_sources.#{campaign_budget.source}") %></td>
     <td><%= campaign_budget.total_budget %></td>
   </tbody>
 </table>

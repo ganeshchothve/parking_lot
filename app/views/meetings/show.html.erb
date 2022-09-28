@@ -17,13 +17,13 @@
           <%= render 'meetings/toggle_interest_form', meeting: @meeting, reload: true %>
           <hr />
           <%= @meeting.scheduled_on.strftime("%d %b %Y") rescue "" %><br/>
-          <%= Meeting.statuses.select{|x| x[:id] == @meeting.status}.first[:text] %>
+          <%= I18n.t("mongoid.attributes.meeting/statuses.#{@meeting.status}") %>
           <hr />
           <% if @meeting.provider.present? %>
               Join <%= @meeting.provider %> event at <%= link_to 'this link', @meeting.provider_url, target: '_blank' %><br/>
               <%= image_tag "#{@meeting.provider}.png", style: "width: 150px;" %>
           <% else %>
-              <%= Meeting.meeting_types.select{|x| x[:id] == @meeting.meeting_type}.first[:text] %>
+              <%= I18n.t("mongoid.attributes.meeting/meeting_types.#{@meeting.meeting_type}") %>
           <% end %>
           -->
 
@@ -46,7 +46,7 @@
             <div class="col-12 mb-4">
               <div class="prjt-gallery">
                 <div class="prjt-gallery-inner">
-                  <h2 class="fn-18 border-top pt-4">Photos</h2>
+                  <h2 class="fn-18 border-top pt-4"><%= I18n.t("global.photos") %></h2>
                   <ul>
                     <% assets = @meeting.assets.where(document_type: 'photo') %>
                     <% assets.limit(6).each_with_index do |asset, ix| %>

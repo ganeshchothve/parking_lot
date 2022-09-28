@@ -236,16 +236,16 @@ module DatabaseSeeds
 
       # To change text above timer when booking a unit
       if Template::UITemplate.where(name: 'searches/checkout').blank?
-        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'searches/checkout', content: '<p class="p-style white"> To be fair to other user interested in this apartments, we have held this unit for some time. Please go through the costs and payments schedule before you make a payment of <%= number_to_indian_currency(@project_unit.blocking_amount || current_client.blocking_amount) %></p>' })
+        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'searches/checkout', content: '<p class="p-style white"> To be fair to other user interested in this apartments, we have held this unit for some time. Please go through the costs and payments schedule before you make a payment of <%= number_to_indian_currency(@project_unit.blocking_amount || @project_unit.booking_portal_client.blocking_amount) %></p>' })
       end
 
       # To change text on show booking detail for user & channel_partner
       # @bd is booking_detail
       if Template::UITemplate.where(name: 'booking_details/_details').blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'booking_details/_details', content: '<ul>
-            <li>You need to pay <%= number_to_indian_currency(@bd.project_unit.booking_price) %> to confirm the booking</li>
-            <% unless current_client.cancellation_amount.zero? %>
-              <li>Cancellation charges are <%= number_to_indian_currency(current_client.cancellation_amount) %></li>
+            <li>You need to pay <%= number_to_indian_currency(@bd.project_unit.get_booking_price) %> to confirm the booking</li>
+            <% unless @bd.booking_portal_client.cancellation_amount.zero? %>
+              <li>Cancellation charges are <%= number_to_indian_currency(@bd.booking_portal_client.cancellation_amount) %></li>
             <% end %>
             <% if @bd.project_unit.auto_release_on %>
               <li>You have <%= (@bd.project_unit.auto_release_on - Date.today).to_i %> days (before <%= I18n.l(@bd.project_unit.auto_release_on) %>) remaining to confirm this booking. Please make a remaining payment of <%= number_to_indian_currency(@bd.pending_balance.round) %></li>
@@ -257,7 +257,7 @@ module DatabaseSeeds
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'quotation_pdf',
  content: <<-'QUOTATION_PDF'
             <div class='text-center'>
-              <img src='<%= current_client.logo.url.try(:gsub, "https", "http") || '' %>' class='mb-3' width=120>
+              <img src='<%= @booking_detail.booking_portal_client.logo.url.try(:gsub, "https", "http") || '' %>' class='mb-3' width=120>
               <h2><%= current_project.name %></h2>
             </div>
             <%= render 'admin/project_units/project_unit_cost_details', locals: { booking_detail: @booking_detail } %>

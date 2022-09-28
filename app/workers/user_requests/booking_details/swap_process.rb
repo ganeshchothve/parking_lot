@@ -15,10 +15,10 @@ module UserRequests
             @current_project_unit = @current_booking_detail.project_unit
             resolve!
           else
-            reject_user_request('Alternative unit is not available for swapping.')
+            reject_user_request(I18n.t("worker.booking_details.errors.unit_swapping_unavailable"))
           end
         else
-          reject_user_request('Booking Is not available for swapping.')
+          reject_user_request(I18n.t("worker.booking_details.errors.booking_swapping_unavailable"))
         end
       end
 
@@ -27,14 +27,19 @@ module UserRequests
         current_booking_detail.receipts.in(status: %w[pending clearance_pending success]).desc(:total_amount).each do |old_receipt|
           # TODO: :Error Handling for receipts remaining #SANKET
           new_receipt = old_receipt.dup
-          # Clear token number for swapped receipts.
-          new_receipt.token_number = nil
           new_receipt.booking_detail = new_booking_detail
-          new_receipt.comments = "Receipt generated for Swapped Unit. Original Receipt ID: #{old_receipt.id}"
+          new_receipt.comments = I18n.t("worker.receipts.comments.swap_receipt_generated", name: old_receipt.id)
           old_receipt.comments ||= ''
-          old_receipt.comments += "Unit Swapped by user. Original Unit ID: #{current_project_unit.id} So cancelling these receipts"
+          old_receipt.comments += I18n.t("worker.receipts.comments.swapped_receipt.cancellation", name: current_project_unit.id)
+          old_receipt.set(token_number: nil) if old_receipt.token_number.present?          
           # Call callback after receipt is set to success so that booking detail status and project unit status get set accordingly
           if new_receipt.save
+             # Copy token discount details over to new receipt & booking.
+            if old_receipt.coupon.present? && new_receipt.token_eligible?
+              new_receipt.generate_coupon
+              new_booking_detail.update(token_discount: new_receipt.coupon.try(:value).to_f, variable_discount: new_receipt.coupon.try(:variable_discount).to_f)
+            end
+            
             if new_receipt.clearance_pending?
               new_receipt.clearance_pending!
             elsif new_receipt.success?
@@ -76,7 +81,8 @@ module UserRequests
           booking_portal_client_id: alternate_project_unit.booking_portal_client_id,
           search: search,
           lead: search.lead,
-          user: search.lead.user
+          user: search.lead.user,
+          creator_id: current_booking_detail.try(:creator).try(:id)
         )
       end
 
@@ -88,6 +94,8 @@ module UserRequests
         # Assign derived_from_scheme to tower default scheme in case of new tower selected in swap.
         unless current_project_unit.project_tower.id == alternate_project_unit.project_tower.id
           new_booking_detail_scheme.derived_from_scheme = new_booking_detail.project_unit.project_tower.default_scheme
+          new_booking_detail_scheme.payment_schedule_template_id = new_booking_detail_scheme.derived_from_scheme.payment_schedule_template_id
+          new_booking_detail_scheme.cost_sheet_template_id = new_booking_detail_scheme.derived_from_scheme.cost_sheet_template_id
         end
         new_booking_detail_scheme
       end
@@ -145,7 +153,7 @@ module UserRequests
           end
         else
           # Reject swap Request because alternative blocking_amount is very high
-          reject_user_request("Alternate Unit booking price is very high. No any receipt with minimum #{ alternate_project_unit.blocking_amount}.", alternate_project_unit_status, new_booking_detail)
+          reject_user_request(I18n.t("worker.booking_details.errors.reject_user_request", name: alternate_project_unit.blocking_amount), alternate_project_unit_status, new_booking_detail)
         end
       end
     end

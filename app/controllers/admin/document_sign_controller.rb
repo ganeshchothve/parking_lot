@@ -9,9 +9,9 @@ class Admin::DocumentSignController < AdminController
   def callback
     begin
       current_client.document_sign.authorize_first_token!(params[:code])
-      flash = "Connected your #{current_client.document_sign.vendor_class} Account successfully"
+      flash = I18n.t("controller.document_signs.notice.connected", name: "#{current_client.document_sign.vendor_class}")
     rescue StandardError => e
-      flash = "Couldn't connect with your #{current_client.document_sign.vendor_class} Account"
+      flash = I18n.t("controller.document_signs.errors.could_not_connect", name: "#{current_client.document_sign.vendor_class}")
     end
     redirect_to home_path(current_user), notice: flash
   end

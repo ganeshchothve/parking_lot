@@ -1,26 +1,26 @@
 <div class="filter-inner modal-content ps-2 pe-2 fixed-header-footer">
   <div class="modal-header filter-header">
-    <h5 class="modal-title title">Filter</h5>
+    <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
     <a href="javascript:;" class="close-filter-btn btn-close"></a>
   </div>
   <%= form_tag buyer_booking_details_path, method: "get", id: "scheme_search_form" do %>
     <div class="filter-content modal-body ps-0 pe-0">
       <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
         <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.name'), class: "control-label" %>
-        <%= select_tag "fltrs[name]", options_for_select(BookingDetail.where(user_id: current_user.id).collect(&:name).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:name] : "")), {prompt: "Select", class: "selectize"} %>
+        <%= select_tag "fltrs[name]", options_for_select(BookingDetail.where(user_id: current_user.id).collect(&:name).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:name] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
       </div>
       <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
         <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.status'), class: "control-label" %>
-        <%= select_tag "fltrs[status]", options_for_select(BookingDetail.aasm.states.collect(&:name).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
+        <%= select_tag "fltrs[status]", options_for_select(BookingDetail.aasm.states.collect(&:name).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
       </div>
       <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
         <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.project_tower_id'), class: "control-label" %>
-        <%= select_tag "fltrs[project_tower_id]", options_for_select(ProjectTower.all.map{|f| [f.name, f.id]}, (params[:fltrs].present? ? params[:fltrs][:project_tower] : "")), {prompt: "Select", class: "selectize"} %>
+        <%= select_tag "fltrs[project_tower_id]", options_for_select(ProjectTower.all.map{|f| [f.name, f.id]}, (params[:fltrs].present? ? params[:fltrs][:project_tower] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
       </div>
     </div>
     <div class="filter-footer modal-footer text-end">
-      <%= submit_tag :Apply, class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
-      <button type="button" class="f-cancel-btn db-small-btn light-blue bg-white fn-500 float-right">Cancel</button>
+      <%= submit_tag I18n.t("global.apply"), class: "f-save-btn db-small-btn white bg-light-blue fn-500 float-right" %>
+      <button type="button" class="f-cancel-btn db-small-btn light-blue bg-white fn-500 float-right"><%= I18n.t("global.cancel") %></button>
     </div>
   <% end %>
 </div>

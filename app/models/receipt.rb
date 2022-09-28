@@ -65,6 +65,7 @@ class Receipt
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :user_requests, as: :requestable
   has_one :user_kyc
+  has_one :coupon
 
   scope :filter_by_status, ->(_status) { where(status: { '$in' => _status }) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
@@ -140,7 +141,7 @@ class Receipt
   #validations for fields with default value
   validates :status, :payment_mode, :payment_type, presence: true
   validates :status, inclusion: { in: proc { Receipt.aasm.states.collect(&:name).collect(&:to_s) } }
-  validates :payment_mode, inclusion: { in: proc { Receipt.available_payment_modes.collect { |x| x[:id] } } }, allow_blank: true
+  validates :payment_mode, inclusion: { in: I18n.t("mongoid.attributes.receipt/payment_mode").keys.map(&:to_s) }, allow_blank: true
   validates :payment_type, inclusion: { in: Receipt::PAYMENT_TYPES }, if: proc { |receipt| receipt.payment_type.present? }
   # non mandatory fields
   #validates :issuing_bank, :issuing_bank_branch, name: true, allow_blank: true
@@ -205,28 +206,6 @@ class Receipt
     payment_mode.to_s == 'online'
   end
 
-  def self.available_payment_modes
-    [
-      { id: 'online', text: 'Online' },
-      { id: 'cheque', text: 'Cheque' },
-      { id: 'rtgs', text: 'RTGS' },
-      { id: 'imps', text: 'IMPS' },
-      { id: 'card_swipe', text: 'Card Swipe' },
-      { id: 'neft', text: 'NEFT' }
-    ]
-  end
-
-  def self.available_sort_options
-    [
-      { id: 'created_at.asc', text: 'Created - Oldest First' },
-      { id: 'created_at.desc', text: 'Created - Newest First' },
-      { id: 'issued_date.asc', text: 'Issued Date - Oldest First' },
-      { id: 'issued_date.desc', text: 'Issued Date- Newest First' },
-      { id: 'processed_on.asc', text: 'Proccessed On - Oldest First' },
-      { id: 'processed_on.desc', text: 'Proccessed On - Newest First' }
-    ]
-  end
-
   def primary_user_kyc
     if booking_detail.present? && booking_detail.user_id == user_id
       booking_detail.primary_user_kyc
@@ -280,8 +259,10 @@ class Receipt
         #channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
         #custom_scope = { manager_id: { "$in": channel_partner_ids } }
         custom_scope = {cp_manager_id: user.id}
-      elsif user.role.in?(%w(admin sales))
+      elsif user.role?(:admin)
         custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
+      elsif user.role.in?(%w(sales gre))
+        custom_scope = { booking_portal_client_id: user.booking_portal_client_id, project_id: user.selected_project_id }
       elsif user.role.in?(%w(superadmin))
         custom_scope = { booking_portal_client_id: user.selected_client_id }
       end

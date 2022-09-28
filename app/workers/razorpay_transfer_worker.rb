@@ -14,10 +14,10 @@ class RazorpayTransferWorker
           end
         else
           Rails.logger.error "Error - #{response.message}"
-          receipt.status_message = "Transfer not initiated"
+          receipt.status_message = I18n.t("worker.razorpay.errors.transfer")
         end
       else
-        receipt.status_message = "Transfer not initiated"
+        receipt.status_message = I18n.t("worker.razorpay.errors.transfer")
       end
       receipt.save
     end

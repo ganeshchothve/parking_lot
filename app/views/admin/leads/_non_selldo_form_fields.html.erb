@@ -21,12 +21,13 @@
     <%= f.input :phone, required: true, disabled: !policy([:admin, lead]).editable_field?("phone"), as: :tel, input_html: { class: 'phone', name: 'phone' } %>
   </div>
 </div>
-<% if Project.count == 1 || params[:project_id].present? %>
-  <%= f.input :project_id, as: :hidden, input_html: { name: 'project_id' } %>
+<%#= f.input :project_id, as: :hidden, input_html: {name: 'project_id'}, value: current_user.selected_project_id %>
+<% if Project.count == 1 || params[:project_id].present? || current_user.selected_project %>
+  <%= f.input :project_id, as: :hidden, input_html: { name: 'project_id', value: current_user.selected_project_id } %>
 <% else %>
   <div class='row'>
     <div class="col-md-12">
-      <%= f.input :project_id, collection: [], required: true, disabled: !policy([:admin, lead]).editable_field?("project_id"), as: :select, prompt: :translate, input_html: { class: 'selectize-remote', name: 'project_id', data: {url: admin_projects_path} } %>
+      <%= f.input :project_id, collection: [], required: false, disabled: !policy([:admin, lead]).editable_field?("project_id"), as: :select, prompt: :translate, input_html: { class: 'selectize-remote', name: 'project_id', data: {url: admin_projects_path} } %>
     </div>
   </div>
 <% end %>

@@ -50,12 +50,12 @@ module InventoryImport
 
         project_tower = ProjectTower.where(name: project_tower_name).where(project_id: project.id).first
         unless project_tower.present?
-          project_tower = ProjectTower.create!(name: project_tower_name, project_id: project.id, client_id: client_id, total_floors: 1)
+          project_tower = ProjectTower.create!(name: project_tower_name, project_id: project.id, client_id: client_id, total_floors: 1, booking_portal_client_id: booking_portal_client.id)
         end
 
         unit_configuration = UnitConfiguration.where(name: unit_configuration_name).where(project_id: project.id).where(project_tower_id: project_tower.id).first
         unless unit_configuration.present?
-          unit_configuration = UnitConfiguration.create!(name: unit_configuration_name, project_id: project.id, project_tower_id: project_tower.id, client_id: client_id, saleable: saleable.to_f, carpet: carpet.to_f, base_rate: base_rate.to_f)
+          unit_configuration = UnitConfiguration.create!(name: unit_configuration_name, project_id: project.id, project_tower_id: project_tower.id, client_id: client_id, saleable: saleable.to_f, carpet: carpet.to_f, base_rate: base_rate.to_f, booking_portal_client_id: booking_portal_client.id)
         end
         if(ProjectUnit.where(erp_id: erp_id).blank?)
           project_unit = ProjectUnit.new

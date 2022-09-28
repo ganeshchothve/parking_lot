@@ -4,7 +4,7 @@
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
         <div class="table-btn-set float-end pb-2 text-end">
           <% if (Admin::BulkUploadReportPolicy.new(current_user, BulkUploadReport.new)).bulk_upload? %>
-            <%= link_to "New Bulk Upload", admin_bulk_upload_reports_path('remote-state': new_admin_bulk_upload_report_path), class: 'border rounded px-3 py-2 px-3 border-primary white bg-primary rounded py-2 ms-2 modal-remote-form-link btn' %>
+            <%= link_to I18n.t("controller.bulk_upload_reports.links.upload"), new_admin_bulk_upload_report_path, class: 'border rounded px-3 py-2 px-3 border-primary white bg-primary rounded py-2 ms-2 modal-remote-form-link btn' %>
           <% end %>
         </div>
       </div>

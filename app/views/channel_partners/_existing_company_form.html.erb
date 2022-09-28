@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-12">
     <%= label_tag t('mongoid.attributes.channel_partner.company_name') %>
-    <%= select_tag :channel_partner_id, options_for_select([]), required: true, prompt: 'Select', class: 'selectize-remote', data: {url: channel_partners_path(fltrs: {status: {'$nin': %w(rejected)}})}, name: 'channel_partner_id' %>
+    <%= select_tag :channel_partner_id, options_for_select([]), required: true, prompt: I18n.t("global.select"), class: 'selectize-remote', data: {url: channel_partners_path(fltrs: {status: {'$nin': %w(rejected)}})}, name: 'channel_partner_id' %>
   </div>
 </div>
 <%= hidden_field_tag :user_id, current_user.id.to_s %>

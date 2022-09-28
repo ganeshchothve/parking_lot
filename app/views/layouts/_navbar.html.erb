@@ -4,15 +4,15 @@
 <%= render "layouts/partials/before_login_header" %>
 <% else %>
 <header>
-  <!-- <div class="header-leftbar">
+  <div class="header-leftbar">
     <div class="leftbar-wrap">
       <div class="header-menu">
         <ul class="list-unstyled ">
-          <%#= render "layouts/navbar/#{current_user_role_group}" %>
+          <%= render "layouts/navbar/#{current_user_role_group}" %>
         </ul>
       </div>
     </div>
-  </div> -->
+  </div>
   <div class="header-topbar">
     <div class="header-inner">
       <!-- <a href="javascript:;" class="p-2 py-1 float-start toggle-side-menu mt-4 me-3 ms-2">
@@ -23,26 +23,11 @@
           <div class="bar3" data-event-category="Header" data-event-action="Click" data-event-name="Menu"></div>
         </div>
       </a> -->
-      <!-- <div class="header-logo float-start">
-        <%#= link_to (current_client.logo.present? ? (image_tag current_client.logo.url, class: 'img-fluid position-absolute start-50 top-50 translate-middle', alt: "Logo") : "launchpad-logo.png"), dashboard_path, class: 'navbar-brand me-0'%>
-      </div> -->
+      <div class="header-logo float-start">
+        <%= link_to (current_client.logo.present? ? (image_tag current_client.logo.url, class: 'img-fluid position-absolute start-50 top-50 translate-middle', alt: "Logo") : "launchpad-logo.png"), dashboard_path, class: 'navbar-brand me-0'%>
+      </div>
       
       <div class="float-start mt-3">
-        <nav class="navbar navbar-expand-lg shadow-none">
-          <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
-              <% _projects_path = current_user.role.in?(%w(cp_owner channel_partner)) ? admin_projects_path(fltrs: {city: current_user.channel_partner&.city, regions: current_user.channel_partner&.regions}) : admin_projects_path  %>
-              <%= active_link_to t('controller.projects.index.link_name'), _projects_path, active: request.fullpath.scan(/projects/).present? && %w(user_interested_projects third_party_inventory).all? {|x| request.fullpath.scan(/^(?!.*#{x}).*$/).present?}, class: "nav-link pl-0 pr-0" %>
-
-              <%= active_link_to t('controller.users.index.link_name'), admin_users_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-
-              <%= active_link_to t('controller.booking_details.index.link_name'), admin_booking_details_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-
-              <%= active_link_to t('controller.workflows.index.link_name'), admin_workflows_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-            </div>
-          </div>
-        </nav>
         <%# <h1 class="page-title">Dashboard</h1> %>
       </div>
       
@@ -59,7 +44,7 @@
         <div class="account-menu d-sm-inline-block dropdown">
           <% if current_user.role.in?(%w(cp_owner channel_partner)) %>
             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#needHelpModal">
-              Need Help?
+              <%= I18n.t("global.link_to.need_help") %>
             </button>
           <% end %>
           <a href="javascript:;" class="dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown"
@@ -73,19 +58,18 @@
             <%= link_to t('controller.users.change_password.link_name'), [:update_password, current_user_role_group, current_user], class: "dropdown-item modal-remote-form-link" %>
             <% if policy([:admin, current_user]).move_to_next_state? %>
             <% if current_user.may_break? %>
-            <%= link_to 'Take Break', move_to_next_state_admin_user_path(current_user, status: 'break', format: :json), method: 'patch', remote: true, data: { disable_with: 'Taking Break...' }, class: 'dropdown-item break move-to-next-state' %>
+            <%= link_to I18n.t("global.link_to.take_break"), move_to_next_state_admin_user_path(current_user, status: 'break', format: :json), method: 'patch', remote: true, data: { disable_with: 'Taking Break...' }, class: 'dropdown-item break move-to-next-state' %>
             <% elsif current_user.may_available? %>
-            <%= link_to 'Resume Work', move_to_next_state_admin_user_path(current_user, status: 'available', format: :json), method: 'patch', remote: true, data: { disable_with: 'Resuming Work...' }, class: 'dropdown-item available move-to-next-state' %>
+            <%= link_to I18n.t("global.link_to.resume_work"), move_to_next_state_admin_user_path(current_user, status: 'available', format: :json), method: 'patch', remote: true, data: { disable_with: 'Resuming Work...' }, class: 'dropdown-item available move-to-next-state' %>
             <% end %>
             <% end %>
-            <%# if policy([current_user_role_group, Project.new]).switch_project? %>
-              <%#= link_to t('controller.home.select_project.link_name'), buyer_select_project_path, class: "dropdown-item" %>
-            <%# end %>
-
+            <% if policy([current_user_role_group, Project.new]).switch_project? %>
+              <%= link_to t('controller.home.select_project.link_name'), buyer_select_project_path, class: "dropdown-item" %>
+            <% end %>
             <% if policy([current_user_role_group, Client.new]).switch_client? %>
               <%= link_to t('controller.home.select_client.link_name'), admin_select_clients_path, class: "dropdown-item" %>
             <% end %>
-            <%= link_to t('sign_out', scope: "devise"), destroy_session_path(current_user), class: "dropdown-item", id:"signout", method: :delete %>
+            <%= link_to t(I18n.t("devise.keys.sign_out"), scope: "devise"), destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
           </div>
         </div>
       </div>
@@ -103,7 +87,7 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Need Help?</h5>
+          <h5 class="modal-title" id="exampleModalLabel"><%= I18n.t("global.link_to.need_help") %></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -111,20 +95,20 @@
           <% if manager.present? %>
             <div class="card mb-3">
               <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted">Your Relationship Manager</h6>
+                <h6 class="card-subtitle mb-2 text-muted"><%= I18n.t("mongoid.attributes.user.your_relationship_manager") %></h6>
                 <div class="mt-3">
-                  <label class="small text-muted">Name</label>
+                  <label class="small text-muted"><%= I18n.t("mongoid.attributes.user.name") %></label>
                   <div><%= manager.name %></div>
                 </div>
                 <div class="row mt-3">
                   <div class="col-6">
-                    <label class="small text-muted"><i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i> Email</label>
+                    <label class="small text-muted"><i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i><%= I18n.t("mongoid.attributes.user.email") %></label>
                     <div>
                       <a href="mailto: <%= manager.email %>" class=""><%= manager.email %></a>
                     </div>
                   </div>
                   <div class="col-6">
-                    <label class="small text-muted"><i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i>Call</label>
+                    <label class="small text-muted"><i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= I18n.t("global.link_to.call") %></label>
                     <div>
                       <a href="tel: <%= manager.phone %>" class=""><%= manager.phone %></a>
                     </div>
@@ -138,7 +122,7 @@
               <h5 class="card-subtitle my-2 text-muted">
                 <a href="https://api.whatsapp.com/send?phone=918956327120&text=Hi" target="_blank">
                   <svg style="height: 50px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>&nbsp;&nbsp;
-                  Chat with us on WhatsApp
+                  <%= I18n.t("navbar.text.whatsapp_chat") %>
                 </a>
               </h5>
             </div>
@@ -146,7 +130,7 @@
           <div class="card mb-3">
             <div class="card-body">
               <h6 class="card-subtitle text-muted">
-                <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i>Reach our Helpdesk
+                <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= I18n.t("navbar.text.reach_helpdesk") %>
                 <div class="mt-3">
                   <a href="tel: <%= current_client.channel_partner_support_number %>">
                     <%= current_client.channel_partner_support_number %>
@@ -157,7 +141,7 @@
           </div>
           <div class="card mb-3">
             <div class="card-body">
-              <h6 class="card-subtitle mb-2 text-muted"><i class="fa fa-envelope fill-theme me-2 fa-sm"></i>Write to us</h6>
+              <h6 class="card-subtitle mb-2 text-muted"><i class="fa fa-envelope fill-theme me-2 fa-sm"></i><%= I18n.t("navbar.text.write_us") %></h6>
               <div>
                 <a href="mailto: +<%= current_client.channel_partner_support_email %>" target="_blank">
                   <%= current_client.channel_partner_support_email %>

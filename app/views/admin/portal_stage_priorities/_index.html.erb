@@ -16,5 +16,5 @@
 </table>
 <%= form_tag reorder_admin_portal_stage_priorities_path, method: "patch", id: 'change_priority_form' do %>
   <%= hidden_field_tag "order", id: 'order' %>
-  <%= submit_tag 'Submit', class: "db-small-btn light-blue bg-white fn-400 float-right" %>
+  <%= submit_tag I18n.t("global.submit"), class: "db-small-btn light-blue bg-white fn-400 float-right" %>
 <% end %>

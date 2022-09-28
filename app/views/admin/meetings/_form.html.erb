@@ -20,13 +20,13 @@
             <div class="col-md-6">
               <div class="mb-3">
               <%= f.label :meeting_type, class: 'label-required' %>
-                <%= f.select :meeting_type, Meeting.meeting_types.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, meeting]).editable_field?("meeting_type") ? false : true) %>
+                <%= f.select :meeting_type, I18n.t("mongoid.attributes.meeting/meeting_types").collect{ |k,v| [v, k.to_s]}, {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, meeting]).editable_field?("meeting_type") ? false : true) %>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
                 <%= f.label :provider %>
-                <%= f.select :provider, Meeting.providers.collect{|x| [x[:text], x[:id]]}, {prompt: true}, class: 'selectize', disabled: (policy([current_user_role_group, meeting]).editable_field?("provider") ? false : true) %>
+                <%= f.select :provider, I18n.t("mongoid.attributes.meeting/providers").collect{ |k,v| [v, k.to_s]}, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: (policy([current_user_role_group, meeting]).editable_field?("provider") ? false : true) %>
               </div>
             </div>
           </div>
@@ -37,12 +37,12 @@
 
           <div class="mb-3">
             <%= f.label :project_id %>
-            <%= f.select :project_id, Project.where(id: f.object.project_id).collect{|x| [x.ds_name, x.id]}, {prompt: 'Select'}, class: "selectize-remote", data: {url: admin_projects_path}, disabled: (policy([current_user_role_group, meeting]).editable_field?("project_id") ? false : true) %>
+            <%= f.select :project_id, Project.where(id: f.object.project_id).collect{|x| [x.ds_name, x.id]}, {prompt: I18n.t("global.select")}, class: "selectize-remote", data: {url: admin_projects_path}, disabled: (policy([current_user_role_group, meeting]).editable_field?("project_id") ? false : true) %>
           </div>
 
           <div class="mb-3">
             <%= f.label :campaign_id %>
-            <%= f.select :campaign_id, Campaign.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", disabled: (policy([current_user_role_group, meeting]).editable_field?("campaign_id") ? false : true) %>
+            <%= f.select :campaign_id, Campaign.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, {prompt: I18n.t("global.select")}, class: "selectize", disabled: (policy([current_user_role_group, meeting]).editable_field?("campaign_id") ? false : true) %>
           </div>
 
           <div class="row">
@@ -62,7 +62,7 @@
 
           <div class="mb-3">
             <%= f.label :roles, class: 'label-required' %>
-            <%= f.select :roles, User.available_roles(current_client).collect{ |r| [User.human_attribute_name("role.#{r}"), r] }, {prompt: true}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, meeting]).editable_field?("roles") ? false : true), multiple: true %>
+            <%= f.select :roles, User.available_roles(current_client).collect{ |r| [User.human_attribute_name("role.#{r}"), r] }, {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, meeting]).editable_field?("roles") ? false : true), multiple: true %>
           </div>
 
           <% if policy([current_user_role_group, @meeting]).editable_field?("event") %>
@@ -70,7 +70,7 @@
             <% if statuses.present? %>
               <div class="mb-3">
                 <%= f.label :status %>
-                <%= f.select :event, statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, {prompt: :Select}, class: 'selectize' %>
+                <%= f.select :event, statuses.collect{|rec| [I18n.t("mongoid.attributes.meeting/edit_status.#{rec.to_s}"), rec.to_s]}, {prompt: I18n.t("global.select")}, class: 'selectize' %>
               </div>
             <% end %>
           <% end %>
@@ -81,7 +81,7 @@
         </div>
 
         <div class="modal-footer text-end">
-          <%= f.submit "Save", class: "btn btn-primary" %>
+          <%= f.submit I18n.t("global.save"), class: "btn btn-primary" %>
         </div>
       </div>
     </div>

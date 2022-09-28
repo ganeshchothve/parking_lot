@@ -34,6 +34,7 @@ class ChannelPartnerObserver < Mongoid::Observer
       attrs[:manager_id] = channel_partner.manager_id if channel_partner.manager_id
       attrs[:channel_partner_id] = channel_partner.id
       attrs[:role] = 'cp_owner'
+      attrs[:cp_code] = channel_partner.cp_code
       user.assign_attributes(attrs)
     end
 
@@ -61,7 +62,7 @@ class ChannelPartnerObserver < Mongoid::Observer
     end
 
     # For pushing inactive status event in Interakt
-    if current_client.external_api_integration?
+    if user.booking_portal_client.external_api_integration?
       if Rails.env.staging? || Rails.env.production?
         ChannelPartnerObserverWorker.perform_async(channel_partner.id.to_s, { 'status' => [nil, channel_partner.status] })
       else
@@ -76,7 +77,7 @@ class ChannelPartnerObserver < Mongoid::Observer
     recipients << channel_partner.manager.manager if channel_partner.manager.try(:manager).present?
     if template.present? && recipients.present?
       email = Email.create!({
-        booking_portal_client_id: current_client.id,
+        booking_portal_client_id: channel_partner.booking_portal_client.id,
         email_template_id: template.id,
         recipients: recipients.flatten,
         triggered_by_id: channel_partner.id,
@@ -89,7 +90,7 @@ class ChannelPartnerObserver < Mongoid::Observer
       phones = recipients.collect(&:phone).reject(&:blank?)
       if phones.present?
         Sms.create!(
-          booking_portal_client_id: current_client.id,
+          booking_portal_client_id: channel_partner.booking_portal_client.id,
           to: phones,
           sms_template_id: sms_template.id,
           triggered_by_id: channel_partner.id,
@@ -123,7 +124,7 @@ class ChannelPartnerObserver < Mongoid::Observer
     channel_partner.gst_applicable = true if channel_partner.gstin_number.present?
 
     # For calling Selldo & Interakt APIs
-    if current_client.external_api_integration? && channel_partner.persisted? && channel_partner.changed?
+    if channel_partner.booking_portal_client.external_api_integration? && channel_partner.persisted? && channel_partner.changed?
       if Rails.env.staging? || Rails.env.production?
         ChannelPartnerObserverWorker.perform_async(channel_partner.id.to_s, channel_partner.changes)
       else
@@ -155,7 +156,7 @@ class ChannelPartnerObserver < Mongoid::Observer
         template = Template::EmailTemplate.where(name: template_name).first
         if template.present?
           email = Email.create!({
-            booking_portal_client_id: current_client.id,
+            booking_portal_client_id: channel_partner.booking_portal_client.id,
             email_template_id: template.id,
             recipients: recipients.flatten,
             triggered_by_id: channel_partner.id,
@@ -168,7 +169,7 @@ class ChannelPartnerObserver < Mongoid::Observer
           phones = recipients.collect(&:phone).reject(&:blank?)
           if phones.present?
             Sms.create!(
-              booking_portal_client_id: current_client.id,
+              booking_portal_client_id: channel_partner.booking_portal_client.id,
               to: phones,
               sms_template_id: sms_template.id,
               triggered_by_id: channel_partner.id,

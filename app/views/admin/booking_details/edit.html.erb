@@ -2,25 +2,25 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"> Edit <%= t('global.booking_detail') %></h5>
+        <h5 class="modal-title"><%= I18n.t('controller.booking_details.links.edit_booking_detail') %></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <%= form_for [:admin, @booking_detail], local: true, remote: true, html: {id: 'booking_detail_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.booking_detail'), type: :json} } do |f| %>
           <div class="mb-3">
           <%= f.label :primary_user_kyc_id %>
-          <%= f.select :primary_user_kyc_id, @booking_detail.lead.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', required: @booking_detail.user.user_kycs.present? ? 'required' : nil,  autofocus: true %>
+          <%= f.select :primary_user_kyc_id, @booking_detail.lead.user_kycs.collect{|x| [x.name, x.id]}, {prompt: I18n.t("global.select")}, class: 'selectize', required: @booking_detail.user.user_kycs.present? ? 'required' : nil,  autofocus: true %>
         </div>
         <div class="mb-3">
           <%= f.label :user_kyc_ids %>
-          <%= f.select :user_kyc_ids, @booking_detail.lead.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', multiple: true %>
+          <%= f.select :user_kyc_ids, @booking_detail.lead.user_kycs.collect{|x| [x.name, x.id]}, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true %>
         </div>
         <div class="mb-3">
           <%= f.label :agreement_date %>
           <%= f.text_field :agreement_date, class: 'form-control datepicker', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '' %>
         </div>
         <div class="mb-3 text-end">
-          <%= f.submit "Save", class: 'btn btn-primary' %>
+          <%= f.submit I18n.t("global.save"), class: 'btn btn-primary' %>
         </div>
         <% end %>
       </div>

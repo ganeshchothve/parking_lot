@@ -1,8 +1,8 @@
 <div class="card w-100">
   <div class="card-body">
-    <p>Dear Team,</p>
+    <p><%= I18n.t('mongoid.attributes.user.change_in_manager.dear_team') %>,</p>
     <p>
-      Channel Partner has been changed on customer <strong><%= @user.name %></strong>. New assigned channel partner is <strong><%= @user.manager_name %></strong>
+      <%= I18n.t('mongoid.attributes.user.change_in_manager.text', name1: @user.name, name2: @user.manager_name) %>
     </p>
     <% if @user.manager_change_reason.present? %>
       <br/>

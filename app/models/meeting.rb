@@ -41,30 +41,6 @@ class Meeting
     participant_ids.include?(user_id.is_a?(User) ? user_id.id : user_id)
   end
 
-  def self.meeting_types
-    [
-      { id: 'webinar', text: 'Webinar' },
-      { id: 'offline_event', text: 'Offline Event' }
-    ]
-  end
-
-  def self.providers
-    [
-      { id: 'zoom', text: 'Zoom' },
-      { id: 'google_meet', text: 'Google Meet' },
-      { id: 'microsoft_teams', text: 'Microsoft Teams' }
-    ]
-  end
-
-  def self.statuses
-    [
-      { id: 'draft', text: 'Draft' },
-      { id: 'scheduled', text: 'Scheduled' },
-      { id: 'cancelled', text: 'Cancelled' },
-      { id: 'completed', text: 'Completed' }
-    ]
-  end
-
   def self.user_based_scope(user, params = {})
     custom_scope = {}
     custom_scope[:roles] = {'$in': [user.role] }  unless user.role == 'superadmin' || user.role == 'admin'

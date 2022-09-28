@@ -244,6 +244,7 @@ class User
   scope :buyers, -> { where(role: {'$in' => BUYER_ROLES } )}
   scope :filter_by_userwise_project_ids, ->(user) { self.in(project_ids: user.project_ids) if user.try(:project_ids).present? }
   scope :filter_by_sales_status, ->(sales_status){ sales_status.is_a?(Array) ? where( sales_status: { "$in": sales_status }) : where(sales_status: sales_status.as_json) }
+  scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
   scope :filter_by_user_status_in_company, ->(user_status_in_company){ user_status_in_company.is_a?(Array) ? where( user_status_in_company: { "$in": user_status_in_company }) : where(user_status_in_company: user_status_in_company.as_json) }
   scope :incentive_eligible, ->(category) do
     if category == 'referral'
@@ -479,10 +480,10 @@ class User
       if password !~ re
         true
       else
-        errors.add :password, 'should not contain name.'
+        errors.add :password, I18n.t("mongoid.attributes.user/password.name")
       end
     else
-      errors.add :password, 'Length should be 8-16 characters and include: 1 uppercase, 1 lowercase, 1 digit and 1 special character.'
+      errors.add :password, I18n.t("mongoid.attributes.user/password.length")
     end
   end
 
@@ -506,7 +507,7 @@ class User
       stage = self.channel_partner&.status
       priority = PortalStagePriority.where(role: 'channel_partner').collect{|x| [x.stage, x.priority]}.to_h
       if stage.present? && priority[stage].present?
-        self.portal_stages.where(stage:  stage).present? ? self.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : self.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
+        self.portal_stages.where(stage:  stage).present? ? self.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : self.portal_stages << PortalStage.new(stage: stage, priority: priority[stage], booking_portal_client_id: self.booking_portal_client_id)
         #push_to_crm = self.booking_portal_client.external_api_integration?
         #if push_to_crm
         #  Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
@@ -618,7 +619,7 @@ class User
 
   def generate_cp_code
     if ['channel_partner', 'cp_owner'].include?(self.role) && self.cp_code.blank?
-      self.cp_code = "#{SecureRandom.hex(3)[0..-2]}"
+      self.cp_code = self.channel_partner&.cp_code.present? ? self.channel_partner&.cp_code : "#{SecureRandom.hex(3)[0..-2]}"
     end
   end
 
@@ -806,13 +807,6 @@ class User
       end
     end
 
-    def available_confirmation_statuses
-      [
-        { id: 'confirmed', text: 'Confirmed' },
-        { id: 'not_confirmed', text: 'Not Confirmed' }
-      ]
-    end
-
     def available_roles(current_client)
       roles = ADMIN_ROLES + BUYER_ROLES
       roles -= CHANNEL_PARTNER_USERS unless current_client.try(:enable_channel_partners?)
@@ -846,13 +840,15 @@ class User
       custom_scope = {}
       if user.role?('cp_admin')
         #cp_ids = User.where(manager_id: user.id).distinct(:id)
-        custom_scope = {role: { '$in': %w(channel_partner cp_owner) } } #, manager_id: {"$in": cp_ids}
+        custom_scope = { role: { '$in': %w(channel_partner cp_owner) } } #, manager_id: {"$in": cp_ids}
       elsif user.role?('cp')
-        custom_scope = {role: { '$in': %w(channel_partner cp_owner) } } #, manager_id: user.id
+        custom_scope = { role: { '$in': %w(channel_partner cp_owner) } } #, manager_id: user.id
       elsif user.role?('cp_owner')
         custom_scope = { role: {'$in': ['channel_partner', 'cp_owner']}, channel_partner_id: user.channel_partner_id }
-      elsif ["admin","superadmin"].include?(user.role)
-        custom_scope = {role: { '$in': %w(channel_partner cp_owner) } }
+      elsif ["admin"].include?(user.role)
+        custom_scope = { role: { '$in': %w(channel_partner cp_owner) }, booking_portal_client_id: user.booking_portal_client.id }
+      elsif ["superadmin"].include?(user.role)
+        custom_scope = { role: { '$in': %w(channel_partner cp_owner) }, booking_portal_client_id: user.selected_client_id }
       end
     end
 
@@ -883,12 +879,14 @@ class User
         custom_scope[:'$or'] = [{_id: user.id}, { role: { '$in': %w(channel_partner cp_owner) }, manager_id: user.id }]
       elsif user.role?('billing_team')
         custom_scope = { role: { '$in': %w(channel_partner cp_owner) } }
-      elsif user.role.in?(%w(admin sales))
-        custom_scope = { role: { "$in": ['admin', 'sales'] }, booking_portal_client_id: user.booking_portal_client.id }
+      elsif user.role.in?(%w(admin))
+        custom_scope = { role: { "$ne": 'superadmin' }, booking_portal_client_id: user.booking_portal_client.id }
+      elsif user.role.in?(%w(sales))
+        custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
       elsif user.role.in?(%w(superadmin))
-        custom_scope = { role: { "$in": ['admin', 'sales', 'superadmin'] }, booking_portal_client_id: user.selected_client_id }
+        custom_scope = { booking_portal_client_id: user.selected_client_id }
       elsif user.role?('team_lead')|| user.role?('gre')
-        custom_scope = { role: 'sales', project_ids: user.selected_project_id.to_s }
+        custom_scope = { role: 'sales', project_ids: user.selected_project_id.to_s, booking_portal_client_id: user.booking_portal_client_id }
       end
       custom_scope
     end

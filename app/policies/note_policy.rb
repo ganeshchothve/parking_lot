@@ -28,6 +28,6 @@ class NotePolicy < ApplicationPolicy
   end
 
   def permitted_attributes(_params = {})
-    %i[id note note_type creator_id]
+    %i[id note note_type creator_id booking_portal_client_id]
   end
 end

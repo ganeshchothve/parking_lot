@@ -11,7 +11,7 @@
           <% if @project_unit.present? && @project_unit.status == "hold" %>
             <%= form_for @project_unit, url: make_available_lead_search_path(@search), method: 'post', html: {class: 'validate-form'} do |f| %>
               <%= f.hidden_field :status, value: 'available' %>
-              <%= f.submit 'Cancel', class: 'btn btn-danger float-left ml-md-2 mt-md-0 mt-2' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'}%>
+              <%= f.submit I18n.t("global.cancel"), class: 'btn btn-danger float-left ml-md-2 mt-md-0 mt-2' , data:{event_category: 'Section', event_action: 'Click', event_name: 'Cancel'}%>
             <% end %>
           <% end %>
           <form method="post" name="redirect" action="<%= @receipt.payment_gateway_service.ccavenue_url %>">

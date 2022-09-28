@@ -123,7 +123,6 @@ class Project
   # Kylas fields
   field :kylas_product_id, type: String
 
-
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
     <div class="mt-3"></div>'
@@ -288,21 +287,24 @@ class Project
   def self.user_based_scope(user, params = {})
     custom_scope = {}
     if user.role.in?(%w(cp_owner channel_partner))
-      custom_scope = { _id: { '$in': user.interested_projects.approved.distinct(:project_id) } } unless params[:controller] == 'admin/projects' && params[:ds].blank?
-    elsif user.role.in?(%w(admin sales))
+      custom_scope =  { _id: { '$in': user.interested_projects.approved.distinct(:project_id) }, booking_portal_client_id: user.booking_portal_client.id }
+      # custom_scope = { _id: { '$in': user.interested_projects.approved.distinct(:project_id) } } unless params[:controller] == 'admin/projects' && params[:ds].blank?
+    elsif user.role.in?(%w(admin))
       custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
+    elsif user.role.in?(%w(gre sales))
+      custom_scope = { booking_portal_client_id: user.booking_portal_client_id }
     elsif user.role.in?(%w(superadmin))
       custom_scope = { booking_portal_client_id: user.selected_client_id }
     end
 
-    # unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
-    #   if user.selected_project_id.present? && params[:select_project].blank?
-    #     custom_scope.merge!({_id: user.selected_project_id})
-    #   elsif user.project_ids.present?
-    #     project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
-    #     custom_scope.merge!({_id: {"$in": project_ids}})
-    #   end
-    # end
+    unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
+      if user.selected_project_id.present? && params[:select_project].blank?
+        custom_scope.merge!({_id: user.selected_project_id})
+      elsif user.project_ids.present?
+        project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
+        custom_scope.merge!({_id: {"$in": project_ids}})
+      end
+    end
     custom_scope.merge!({ is_active: true }) if (params[:controller] == 'admin/projects' && params[:action] == 'index') || params[:controller] == 'home'
     custom_scope
   end

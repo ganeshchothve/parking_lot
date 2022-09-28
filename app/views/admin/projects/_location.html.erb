@@ -8,10 +8,11 @@
   <% editable_locations = policy([:admin, project]).editable_field?("nearby_locations_attributes")%>
   <% if editable_locations %>
     <div class='text-right'>
-      <%= f.link_to_add "Add Nearby Location", :nearby_locations, :data => { :target => ".locations" }, class: 'btn btn-secondary' %>
+      <%= f.link_to_add I18n.t("controller.projects.nearby_location.link_name"), :nearby_locations, :data => { :target => ".locations" }, class: 'btn btn-secondary' %>
     </div>
   <% end %>
   <%= f.fields_for :nearby_locations do |sf|%>
+    <%= sf.hidden_field :booking_portal_client_id, value: current_client.id %>
     <% if editable_locations %>
       <div class='pl-2 text-right'>
         <%= sf.link_to_remove icon("far", "times-circle") %>
@@ -24,7 +25,7 @@
       </div>
       <div class="mb-3 col-md-6">
         <%= sf.label :unit, class: 'label-required' %>
-        <%= sf.select :unit, NearbyLocation::UNITS.collect{|x| [x.titleize, x]}, {prompt: true}, class:'selectize', required: 'required', disabled: !editable_locations %>
+        <%= sf.select :unit, I18n.t("mongoid.attributes.nearby_locations/units").collect{|k,v| [v,k.to_s]}, {prompt: I18n.t("global.select")}, class:'selectize', required: 'required', disabled: !editable_locations %>
       </div>
       <div class="mb-3 col-md-12">
         <%= sf.label :destination, class: 'label-required' %>

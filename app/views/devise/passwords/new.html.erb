@@ -1,30 +1,26 @@
-<%# unless is_marketplace? %>
-  <div class="mt-5 pt-5"></div>
-  <section class="cp-email-verify mt-5">
-    <div class="cp-pwd-create">
-      <h2 class="text-center pt-3">Reset Password</h2>
-      <p class="text-center pb-3">Please create a password for your account</p>
-      <div class="cp-signup-form-wrap pt-2 pb-3 px-4 cp-form-wrap">
-        <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), method: :post, html: { novalidate: false, class: 'validate-form', id: 'password_form' }) do |f| %>
-          <div class="mb-3">
-              <%= f.input :login, autofocus: true, autocomplete: false, class: 'form-control' %>
-          </div>
-          <div class="mb-3 pt-3">
-            <%= f.submit "Send reset password instructions", class: 'btn cp-btn sign-in-btn',  data:{event_category: 'Section', event_action: 'Click', event_name: 'Send me reset password instructions'}  %>
-          </div>
-        <% end %>
-      </div>
-        <div class="signin-footer text-center">
-            <%= render "devise/shared/links" %>
-          </div>
-    </div>
-  </section>
-  <%= javascript_tag do %>
-    $(document).ready(function(){
-      $('section.login-page').css('height', $( window ).height() - $('section.login-page').offset().top );
-      FormInitializer.init($("#password_form"));
-    });
-  <% end %>
-<%# else %>
-  <%#= render 'mp_new'%>
-<%# end %>
+<div class="mt-5 pt-5"></div>
+<section class="cp-email-verify mt-5">
+	<div class="cp-pwd-create">
+		<h2 class="text-center pt-3"><%= I18n.t("devise.keys.reset_password") %></h2>
+		<p class="text-center pb-3"><%= I18n.t("devise.help_text.create_password") %></p>
+		<div class="cp-signup-form-wrap pt-2 pb-3 px-4 cp-form-wrap">
+			<%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), method: :post, html: { novalidate: false, class: 'validate-form', id: 'password_form' }) do |f| %>
+				<div class="mb-3">
+					  <%= f.input :login, autofocus: true, autocomplete: false, class: 'form-control' %>
+				</div>
+				<div class="mb-3 pt-3">
+					<%= f.submit "Send reset password instructions", class: 'btn cp-btn sign-in-btn',  data:{event_category: 'Section', event_action: 'Click', event_name: 'Send me reset password instructions'}  %>
+				</div>
+			<% end %>
+		</div>
+    	<div class="signin-footer text-center">
+        	<%= render "devise/shared/links" %>
+      	</div>
+	</div>
+</section>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $('section.login-page').css('height', $( window ).height() - $('section.login-page').offset().top );
+    FormInitializer.init($("#password_form"));
+  });
+<% end %>

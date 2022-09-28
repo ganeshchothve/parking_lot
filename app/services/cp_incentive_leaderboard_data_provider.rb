@@ -53,6 +53,7 @@ module CpIncentiveLeaderboardDataProvider
     todays_booking_detail = BookingDetail.new(booked_on: Date.today)
     tomorrow_booking_detail = BookingDetail.new(booked_on: Date.today + 1)
     next_week_booking_detail = BookingDetail.new(booked_on: Date.today + 7)
+    random_days_booking_detail = BookingDetail.new(booked_on: Date.today + options[:random_days]) if options[:random_days].present?
     # TODO: Need to give project id filter for approved_schemes
     approved_schemes = VariableIncentiveScheme.approved.or(options[:query])
     if approved_schemes.present?
@@ -64,8 +65,8 @@ module CpIncentiveLeaderboardDataProvider
         today_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(todays_booking_detail, variable_incentive_scheme, booking_count)
         tomorrow_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(tomorrow_booking_detail, variable_incentive_scheme, booking_count)
         next_week_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(next_week_booking_detail, variable_incentive_scheme, booking_count)
-
-        incentive_predictions << {variable_incentive_scheme_id: variable_incentive_scheme.id.to_s, project_ids: variable_incentive_scheme.project_ids, yesterday_incentive: yesterday_incentive, today_incentive: today_incentive, tomorrow_incentive: tomorrow_incentive, next_week_incentive: next_week_incentive}
+        random_days_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(random_days_booking_detail, variable_incentive_scheme, booking_count) if options[:random_days].present?
+        incentive_predictions << {variable_incentive_scheme_id: variable_incentive_scheme.id.to_s, project_ids: variable_incentive_scheme.project_ids, yesterday_incentive: yesterday_incentive, today_incentive: today_incentive, tomorrow_incentive: tomorrow_incentive, next_week_incentive: next_week_incentive, random_days: random_days_incentive}
       end
     end
     incentive_predictions

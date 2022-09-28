@@ -41,7 +41,7 @@ RSpec.describe Buyer::BookingDetailsController, type: :controller do
       @booking_detail.under_negotiation!
       receipt = create(:receipt, user: @user, booking_detail: @booking_detail, total_amount: @client.blocking_amount)
       receipt.clearance_pending!
-      receipt1 = create(:receipt, user: @user, booking_detail: @booking_detail, total_amount: @project_unit.booking_price)
+      receipt1 = create(:receipt, user: @user, booking_detail: @booking_detail, total_amount: @project_unit.get_booking_price)
       receipt1.clearance_pending!
       expect(@booking_detail.status).to eq('booked_confirmed')
     end
@@ -71,7 +71,7 @@ RSpec.describe Buyer::BookingDetailsController, type: :controller do
         patch :booking, params: { id: @booking_detail.id }
         receipt = assigns(:receipt)
         expect(receipt.status).to eq('failed')
-        expect(response.request.flash[:notice]).to eq("We couldn't redirect you to the payment gateway, please try again")
+        expect(response.request.flash[:notice]).to eq(I18n.t("controller.notice.failed_to_redirect_to_payment_gateway"))
         expect(response).to redirect_to(dashboard_path)
       end
 

@@ -61,6 +61,9 @@ class Client
   field :enable_actual_inventory, type: Array, default: ['admin', 'sales']
   field :enable_live_inventory, type: Array, default: []
   field :enable_channel_partners, type: Boolean, default: false
+  field :enable_leads, type: Boolean, default: false
+  field :enable_site_visit, type: Boolean, default: true
+  field :enable_vis, type: Boolean, default: false
   field :enable_direct_payment, type: Boolean, default: false
   field :enable_payment_with_kyc, type: Boolean, default: true
   field :enable_booking_with_kyc, type: Boolean, default: true
@@ -167,8 +170,8 @@ class Client
 
   # validates :name, :allowed_bookings_per_user, :helpdesk_email, :helpdesk_number, :notification_email, :notification_numbers, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :website_link, :support_email, :support_number, :payment_gateway, :cin_number, :mailgun_private_api_key, :mailgun_email_domain, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true
   validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
-  validates :preferred_login, inclusion: {in: Proc.new{ Client.available_preferred_logins.collect{|x| x[:id]} } }
-  validates :payment_gateway, inclusion: {in: Proc.new{ Client::PAYMENT_GATEWAYS } }, allow_blank: true
+  validates :preferred_login, inclusion: {in: I18n.t("mongoid.attributes.client/available_preferred_logins").keys.map(&:to_s) }
+  validates :payment_gateway, inclusion: {in: Client::PAYMENT_GATEWAYS }, allow_blank: true
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
   validates :whatsapp_api_key, :whatsapp_api_secret, presence: true, if: :whatsapp_enabled?
   validates :notification_api_key, presence: true, if: :notification_enabled?
@@ -177,13 +180,6 @@ class Client
 
   accepts_nested_attributes_for :address, :external_inventory_view_config, :checklists
   accepts_nested_attributes_for :regions, allow_destroy: true
-
-  def self.available_preferred_logins
-    [
-      {id: 'phone', text: 'Phone Based'},
-      {id: 'email', text: 'Email Based'}
-    ]
-  end
 
   def sms_enabled?
     self.enable_communication["sms"]

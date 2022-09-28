@@ -19,7 +19,7 @@
 <div class="row">
   <div class="col-md-6">
   <!-- Remove form-control class in select field and selectize  -->
-    <%= form.input :expertise, collection: ChannelPartner::EXPERTISE.collect{|x| [x.titleize, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("expertise"), as: :select, prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
+    <%= form.input :expertise, collection: ChannelPartner::EXPERTISE.collect{|x| [I18n.t("mongoid.attributes.channel_partner/expertise.#{x}"), x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("expertise"), as: :select, prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
   </div>
   <div class="col-md-6">
     <%= form.input :experience, collection: ChannelPartner::EXPERIENCE.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("experience"), as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
@@ -38,7 +38,7 @@
 <% if policy([:admin, @channel_partner]).editable_field?("bank_detail_attributes") %>
   <div class="box-card mt-3">
     <div class="box-header bg-gradient br-rd-tr-4">
-      <h2><strong>Bank Details</strong></h2>
+      <h2><strong><%= I18n.t("global.tabs.bank_details") %></strong></h2>
     </div>
     <div class="box-content br-rd-bl-4 bg-white p-0 pt-1">
       <div class="mb-3">
@@ -52,7 +52,7 @@
 <% end %>
 <% if action_name == 'edit' && policy(ThirdPartyReference).editable_field?('reference_id') %>
   <br>
-  <h5>CRM IDs</h5>
+  <h5><%= I18n.t("global.tabs.crm_ids") %></h5>
   <hr/>
   <%= render 'admin/crm/shared/third_party_references_form', f: form %>
 <% end %>

@@ -2,7 +2,11 @@
   <thead class="th-default">
     <thead>
       <tr class="bg-primary white">
-        <th><%= Lead.model_name.human %></th>
+        <% if current_client.enable_leads? %>
+          <th><%= Lead.model_name.human %></th>
+        <% else %>
+          <th><%= SiteVisit.model_name.human %></th>
+        <% end %>
         <th><%= t('mongoid.attributes.receipt.project_id') %></th>
         <th><%= t('mongoid.attributes.receipt.receipt_id') %></th>
         <th><%= t('mongoid.attributes.receipt.token_number')%></th>

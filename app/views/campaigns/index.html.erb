@@ -4,7 +4,7 @@
             <div class="col-lg-12 row">
                 <div class="col-lg-4 filter-set mt-2">
                     <select class="theme-btn form-control">
-                        <option>All Campaigns</option>
+                        <option> <%= I18n.t("mongoid.attributes.campaign.all") %></option>
                     </select>
                 </div>
                 <div class="col-lg-8 text-end px-0">
@@ -17,11 +17,11 @@
                     </div>
                     <div class="filter-sort-list d-inline">
                         <% if policy([current_user_role_group, Campaign.new]).new? %>
-                          <%= link_to "Add #{global_labels['campaign']}", new_admin_campaign_path, class: 'btn btn-primary modal-remote-form-link float-end ms-2', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add Campaign'} %>
+                          <%= link_to "Add #{global_labels['campaign']}", new_admin_campaign_path, class: 'btn btn-primary modal-remote-form-link float-end ms-2', data:{event_category: 'Section', event_action: 'Click', event_name: I18n.t("controller.campaigns.event_name.add")} %>
                         <% end %>
                         <select class="theme-btn form-control float-end ms-2">
-                            <option>Recommended</option>
-                            <option>Last Added</option>
+                            <option>I18n.t("global.link_to.recommended")</option>
+                            <option>I18n.t("global.link_to.last_added")</option>
                         </select>
                     </div>
                 </div>
