@@ -41,7 +41,7 @@ class ApplicationPolicy
   end
 
   def choose_template_for_print?
-    user.role.in?(%w(admin sales superadmin))
+    user.role.in?(%w(admin sales superadmin)) && available_templates(record.class.to_s, record).present?
   end
 
   def print_template?
