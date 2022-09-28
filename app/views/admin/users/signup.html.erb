@@ -31,9 +31,20 @@
         </div>
 
         <div class="mb-3">
+          <%= f.label :password, class: 'label-required' %>
+          <%= f.password_field :password, class: 'form-control', autofocus: true, required: 'required' %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :password_confirmation, class: 'label-required' %>
+          <%= f.password_field :password_confirmation, class: 'form-control', autofocus: true, required: 'required' %>
+        </div>
+
+        <div class="mb-3">
           <%= f.label :company_name, class: 'label-required' %>
           <%= f.text_field :name, class: 'form-control', autofocus: true, required: 'required' %>
         </div>
+
 
         <div class="mt-3">
           <%= f.submit 'Register', class: 'sign-in-btn btn btn-primary d-block m-auto' %>
