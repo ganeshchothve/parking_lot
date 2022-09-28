@@ -52,7 +52,7 @@ module UsersConcern
   end
 
   def confirm_user
-    @user.temporary_password = generate_password * 2
+    @user.temporary_password = generate_password
     @user.assign_attributes(confirmed_by: current_user, confirmed_at: DateTime.now, password: @user.temporary_password, password_confirmation: @user.password_confirmation)
     respond_to do |format|
       format.html do
@@ -195,7 +195,11 @@ module UsersConcern
   private
 
   def generate_password
-    ( ('AaF'..'ZzK').to_a.sample + (0..999).to_a.sample.to_s + '@')
+    if Rails.env.production?
+    ((('AaF'..'ZzK').to_a.sample + (0..999).to_a.sample.to_s + '@') * 2)
+    else
+      "Iris@2022"
+    end
   end
 
 end
