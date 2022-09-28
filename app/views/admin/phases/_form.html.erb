@@ -14,15 +14,15 @@
 
           <div class="mb-3">
             <%= f.label :account, class: 'label-required' %>
-            <%= f.select :account_id, Account.all.collect{|account| [account.ds_name, account.id] }, { prompt: true }, class: 'selectize' %>
+            <%= f.select :account_id, Account.all.collect{|account| [account.ds_name, account.id] }, { prompt: I18n.t("global.select") }, class: 'selectize' %>
           </div>
 
           <div class="mb-3">
             <%= f.label :project, class: 'label-required' %>
-            <%= f.select :project_id, Project.all.collect{|p| [p.name, p.id] }, { prompt: true }, class: 'selectize' %>
+            <%= f.select :project_id, Project.all.collect{|p| [p.name, p.id] }, { prompt: I18n.t("global.select") }, class: 'selectize' %>
           </div>
         <div class="modal-footer text-end">
-          <%= f.submit "Save", class: "btn btn-primary" %>
+          <%= f.submit I18n.t("global.save"), class: "btn btn-primary" %>
         </div>
       </div>
     </div>

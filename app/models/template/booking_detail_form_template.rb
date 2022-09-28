@@ -111,7 +111,7 @@ class Template::BookingDetailFormTemplate < Template
           <p>Alternate Mobile No: <%= (@booking_detail.user.user_kycs.to_a - @booking_detail.primary_user_kyc.to_a)[0].try(:phone) %></p>
         </div>
         <div class='col-sm border pt-3'>
-          <p>Email Id:&nbsp<%= @booking_detail.user.email %></p>
+          <p><%= I18n.t('global.email_id') %> :&nbsp<%= @booking_detail.user.email %></p>
         </div>
       </div>
     </div>
@@ -490,7 +490,7 @@ Yours faithfully,</br><strong>For <%= @booking_detail.project.developer_name %>,
   <tr>
     <td><p>Mobile No:&nbsp<%= @booking_detail.user.phone %></p></td>
     <td><p>Alternate Mobile No: <%= (@booking_detail.user.user_kycs.to_a - @booking_detail.primary_user_kyc.to_a)[0].try(:phone) %></p></td>
-    <td><p>Email Id:&nbsp<%= @booking_detail.user.email %></p></td>
+    <td><p><%= I18n.t('global.email_id') %>:&nbsp<%= @booking_detail.user.email %></p></td>
   </tr>
 </table>
 </br>

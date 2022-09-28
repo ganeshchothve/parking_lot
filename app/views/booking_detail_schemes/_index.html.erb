@@ -5,7 +5,7 @@
       <tr>
         <th><%= labels['name'] %></th>
         <th><%= labels['status'] %></th>
-        <th class="text-right">Actions</th>
+        <th class="text-right"><%= I18n.t("global.actions") %></th>
       </tr>
     </thead>
     <tbody>
@@ -28,7 +28,7 @@
               <a class="btn btn-light" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
               <div class="dropdown-menu dropdown-menu-right">
                 <% if Admin::SchemePolicy.new(current_user, scheme).edit? %>
-                  <%= link_to 'Edit', edit_admin_scheme_path(scheme), class: 'dropdown-item modal-remote-form-link' %>
+                  <%= link_to I18n.t("global.edit"), edit_admin_scheme_path(scheme), class: 'dropdown-item modal-remote-form-link' %>
                 <% end %>
               </div>
             </div>

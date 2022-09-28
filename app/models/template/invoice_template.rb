@@ -290,7 +290,7 @@ class Template::InvoiceTemplate < Template
                   <td align="right"><%= number_to_indian_currency(invoice.gst_amount) %></td>
                 </tr>
                 <tr>
-                  <td align="right">Total </td>
+                  <td align="right">#{I18n("global.total")} </td>
                   <td align="right"><%= number_to_indian_currency(invoice.net_amount) %></td>
                 </tr>
               </tbody>

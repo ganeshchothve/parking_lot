@@ -20,7 +20,7 @@ class Template
     begin
       return ERB.new(self.content).result( object.get_binding ).html_safe
     rescue Exception => e
-      "We are sorry! #{self.class.name} has some issue. Please Contact to Administrator."
+      I18n.t("controller.templates.errors.contact_admin", name: self.class.name)
     end
   end
 

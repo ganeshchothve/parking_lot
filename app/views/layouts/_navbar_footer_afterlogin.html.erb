@@ -7,10 +7,15 @@
             <%= bottom_navigation %>
           </ul>
         </div>
+        <!-- <div class="col-lg-6 col-md-4 col-xs-6 col-sm-8 no-pd">
+          <ul class="footer-menu mb-0 text-end text-right">
+            <%#= render "layouts/language" %>
+          </ul>
+        </div> -->
         <div class="col-lg-6 col-md-8 col-xs-6 col-sm-4 no-pd">
           <% if ['channel_partner', 'cp_owner'].include?(current_user.role) %>
             <ul class="footer-menu float-end mb-0 pe-0">
-              <li class="footer-object me-0">CP Code: <%= current_user.cp_code %>
+              <li class="footer-object me-0"><%= I18n.t("navbar.text.cp_code") + ": " + (current_user.cp_code.present? ? current_user.cp_code : '') %>
               </li>
             </ul>
           <% end %>
@@ -30,6 +35,13 @@
         </div>
       </div>
     </div>
+    <%# unless defined?(current_user) && current_user %>
+      <!-- <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 no-pd">
+        <ul class="footer-menu mb-0 text-end text-right">
+          <%#= render "layouts/language" %>
+        </ul>
+      </div> -->
+    <%# end %>
   </div>
 </footer>
 

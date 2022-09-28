@@ -11,7 +11,7 @@
         <div class="modal-body theme-form">
           <nav>
             <div class="nav nav-tabs theme-tab" role="tablist">
-              <a class="nav-item nav-link active" data-bs-toggle="tab" href="#nav-campaigns-basic" role="tab">Basic Details</a>
+              <a class="nav-item nav-link active" data-bs-toggle="tab" href="#nav-campaigns-basic" role="tab"><%= I18n.t("global.link_to.basic_details") %></a>
               <% if policy([:admin, campaign]).editable_field?("campaign_slabs_attributes") %>
                 <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-campaigns-slabs" role="tab">Slabs</a>
               <% end %>
@@ -44,14 +44,14 @@
                 <% if statuses.present? %>
                   <div class="mb-3">
                     <%= f.label :status, class: '' %>
-                    <%= f.select :event, statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, {prompt: :Select}, class: 'selectize' %>
+                    <%= f.select :event, statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, {prompt: I18n.t("global.select")}, class: 'selectize' %>
                   </div>
                 <% end %>
               <% end %>
               <% if policy([current_user_role_group, campaign]).editable_field?("campaign_type") %>
                 <div class="mb-3">
                   <%= f.label :campaign_type, class: 'label-required control-label' %>
-                  <%= f.select :campaign_type, Campaign.campaign_types.collect{|rec| [rec[:text], rec[:id]]}, {prompt: :Select}, class: 'selectize form-control' %>
+                  <%= f.select :campaign_type, I18n.t("mongoid.attributes.campaign/campaign_types").collect{|k,v| [k.to_s,v]}, {prompt: I18n.t("global.select")}, class: 'selectize form-control' %>
                 </div>
               <% end %>
 
@@ -72,10 +72,10 @@
               <% if policy([current_user_role_group, campaign]).editable_field?("focus") %>
               <div class="mb-3">
                 <%= f.label :focus, class: 'control-label' %>
-                <% Campaign.focuses.each do |focus| %>
+                <% I18n.t("mongoid.attributes.campaign/focuses").each do |key,value| %>
                   <div class="form-check form-check-inline">
-                    <%= f.radio_button :focus, focus[:id], class: "label-required form-check-input wd-22" %>
-                    <%= f.label :focus, focus[:text], class: "form-check-label d-inline ms-2" %>
+                    <%= f.radio_button :focus, key, class: "label-required form-check-input wd-22" %>
+                    <%= f.label :focus, value, class: "form-check-label d-inline ms-2" %>
                   </div>
                 <% end %>
               </div>
@@ -131,7 +131,7 @@
           <div class="py-4"></div>
         </div>
         <div class="modal-footer text-end">
-          <%= f.submit "Save", class: "btn btn-primary" %>
+          <%= f.submit I18n.t("global.save"), class: "btn btn-primary" %>
         </div>
       </div>
     </div>

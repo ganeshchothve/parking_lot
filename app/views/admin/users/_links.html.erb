@@ -16,7 +16,7 @@
   <%= link_to t('controller.users.confirm_via_otp.link_name'), confirm_via_otp_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 <% if policy([:admin, user]).confirm_user? %>
-  <%= link_to"Confirm User", confirm_user_admin_user_path(user), method: :patch, class: "dropdown-item" %>
+  <%= link_to t('controller.users.confirm_user.link_name'), confirm_user_admin_user_path(user), method: :patch, class: "dropdown-item" %>
 <% end %>
 
 <% if policy([:admin, user]).choose_template_for_print? %>

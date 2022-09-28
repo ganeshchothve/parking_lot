@@ -1,5 +1,5 @@
 <% if policy([:admin, project]).show? %>
-  <%= link_to t('helpers.show.link_name', model: Project.model_name.human), admin_project_path(project), class: 'dropdown-item' %>
+  <%= link_to I18n.t("controller.projects.links.project_details"), admin_project_path(project), class: 'dropdown-item' %>
 <% end %>
 <% if policy([:admin, project]).edit? %>
   <%= link_to t('helpers.edit.link_name', model: Project.model_name.human), edit_admin_project_path(project), class: 'dropdown-item modal-remote-form-link' %>

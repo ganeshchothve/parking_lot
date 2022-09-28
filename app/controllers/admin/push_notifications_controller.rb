@@ -18,7 +18,7 @@ class Admin::PushNotificationsController < AdminController
     @push_notification.assign_attributes(permitted_attributes([:admin, @push_notification]))
     respond_to do |format|
       if @push_notification.save
-        format.html { redirect_to admin_push_notifications_path, notice: 'Push notification will be sent in some time.' }
+        format.html { redirect_to admin_push_notifications_path, notice: I18n.t("controller.push_notifications.notice.notifications_sent") }
         format.json { render json: @push_notification, status: :created }
       else
         format.html { render :new }

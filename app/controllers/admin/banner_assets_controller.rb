@@ -21,10 +21,10 @@ class Admin::BannerAssetsController < ApplicationController
     @banner_asset.assign_attributes(permitted_attributes([:admin, @banner_asset]))
     respond_to do |format|
       if @banner_asset.save
-        format.html { redirect_to admin_banner_assets_path, notice: "Banner Image Upload Successfull" }
+        format.html { redirect_to admin_banner_assets_path, notice: I18n.t("controller.banner_assets.notice.upload_successful") }
         format.json { render json: @banner_asset, status: :created }
       else
-        format.html { redirect_to admin_banner_assets_path, alert: "Banner Image Upload Unsuccessfull" }
+        format.html { redirect_to admin_banner_assets_path, alert: I18n.t("controller.banner_assets.alert.upload_unsuccessful") }
         format.json { render json: { errors: @banner_asset.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
@@ -38,10 +38,10 @@ class Admin::BannerAssetsController < ApplicationController
     @banner_asset.assign_attributes(permitted_attributes([:admin, @banner_asset]))
     respond_to do |format|
       if @banner_asset.save
-        format.html { redirect_to admin_banner_assets_path, notice: "Banner Image Update Successfull" }
+        format.html { redirect_to admin_banner_assets_path, notice: I18n.t("controller.banner_assets.notice.update_successful") }
         format.json { render json: @banner_asset, status: :created }
       else
-        format.html { redirect_to admin_banner_assets_path, alert: "Banner Image Update Unsuccessfull" }
+        format.html { redirect_to admin_banner_assets_path, alert: I18n.t("controller.banner_assets.alert.update_unsuccessful") }
         format.json { render json: { errors: @banner_asset.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
@@ -51,7 +51,7 @@ class Admin::BannerAssetsController < ApplicationController
     respond_to do |format|
       if @banner_asset.destroy
         format.json {render json: {}, status: :ok}
-        format.html { redirect_to admin_banner_assets_path, notice: "Banner Image Deleted Successfully" }
+        format.html { redirect_to admin_banner_assets_path, notice: I18n.t("controller.banner_assets.notice.deleted") }
       else
         format.json {render json: {errors: @banner_asset.errors.full_messages.to_sentence}, status: :unprocessable_entity}
         format.html { redirect_to admin_banner_assets_path, alert: @banner_asset.errors.full_messages.uniq }

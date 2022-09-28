@@ -6,29 +6,30 @@
   <body>
    <table>
    	<tr>
-   		<td> Name: </td>
+   		<td> <%= I18n.t("mongoid.attributes.user.name") %>: </td>
    		<td> <%= @channel_partner.name %> </td>
    	</tr>
    	<tr>
-   		<td> Email: </td>
+   		<td> <%= I18n.t("mongoid.attributes.user.email") %>: </td>
    		<td> <%= @channel_partner.email %></td>
    	</tr>
    </table>
 
-   <p> Above channel partner tried to add already existing lead. Details of the lead are as follows: </p>
+   <p><%= I18n.t("controller.channel_partners.text.adding_existing_lead") %> </p>
    <table>
    	<tr>
-   		<td> Name: </td>
+   		<td> <%= I18n.t("mongoid.attributes.user.name") %>: </td>
    		<td> <%= @user.name %> </td>
    	</tr>
    	<tr>
-   		<td> Email: </td>
+   		<td> <%= I18n.t("mongoid.attributes.user.email") %>: </td>
    		<td> <%= @user.email %></td>
    	</tr>
    	<tr>
-   		<td> Created on: </td>
+   		<td><%= I18n.t("mongoid.attributes.channel_partner.created_on") %> </td>
    		<td> <%= @user.created_at.utc.to_date.strftime("%_m/%d") %></td>
    	</tr>
    </table>
   </body>
 </html>
+

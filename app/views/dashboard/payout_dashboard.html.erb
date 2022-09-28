@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row sticky-cp-menu">
       <div class="col-6">
-        <h1 class="sec-title-cp">Earnings</h1>
+        <h1 class="sec-title-cp"><%= I18n.t("global.earnings" %></h1>
       </div>
       <div class="col-6 text-end">
         <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#cp-payout-filter-modal">
@@ -12,16 +12,16 @@
       <div class="col-12">
         <ul class="cp-menu-list">
           <li>
-            <%= link_to "All", payout_dashboard_path(user_login: params[:user_login], user_token: params[:user_token]), class: "#{params.dig(:fltrs, :category).blank? ? 'active' : ''}" %>
+            <%= link_to I18n.t("global.all"), payout_dashboard_path(user_login: params[:user_login], user_token: params[:user_token]), class: "#{params.dig(:fltrs, :category).blank? ? 'active' : ''}" %>
           </li>
           <li>
-            <%= link_to "Site Visits", payout_dashboard_path({fltrs: {category: "walk_in"}, user_login: params[:user_login], user_token: params[:user_token]}), class: "#{params.dig(:fltrs, :category) == "walk_in" ? 'active' : ''}" %>
+            <%= link_to I18n.t("global.link_to.site_visits"), payout_dashboard_path({fltrs: {category: "walk_in"}, user_login: params[:user_login], user_token: params[:user_token]}), class: "#{params.dig(:fltrs, :category) == "walk_in" ? 'active' : ''}" %>
           </li>
           <li>
-            <%= link_to "Spot Bookings", payout_dashboard_path({fltrs: {category: "spot_booking"}, user_login: params[:user_login], user_token: params[:user_token]}), class: "#{params.dig(:fltrs, :category) == "spot_booking" ? 'active' : ''}" %>
+            <%= link_to I18n.t("global.link_to.spot_bookings"), payout_dashboard_path({fltrs: {category: "spot_booking"}, user_login: params[:user_login], user_token: params[:user_token]}), class: "#{params.dig(:fltrs, :category) == "spot_booking" ? 'active' : ''}" %>
           </li>
           <li>
-            <%= link_to "Brokerages", payout_dashboard_path({fltrs: {category: "brokerage"}, user_login: params[:user_login], user_token: params[:user_token]}), class: "#{params.dig(:fltrs, :category) == "brokerage" ? 'active' : ''}" %>
+            <%= link_to I18n.t("global.link_to.brokerages"), payout_dashboard_path({fltrs: {category: "brokerage"}, user_login: params[:user_login], user_token: params[:user_token]}), class: "#{params.dig(:fltrs, :category) == "brokerage" ? 'active' : ''}" %>
           </li>
           <!-- <li>
             <a href="javascript:;">Others</a>
@@ -34,19 +34,19 @@
   <div class="contianer">
     <div class="row px-3">
       <div class="col-12">
-        <h2 class="total-earn-txt">TOTAL EARNINGS</h2>
+        <h2 class="total-earn-txt"><%= I18n.t("global.link_to.total_earnings") %></h2>
         <h3 class="total-earn-amount mb-4"><%= number_to_indian_currency(@total_earnings) rescue "-" %></h3>
       </div>
       <div class="col-6 pe-1">
         <div class="earn-desc">
-          <label>INVOICED</label>
+          <label><%= I18n.t("mongoid.attributes.invoice/payout_status.raised") %></label>
           <p><%= number_to_indian_currency(@invoiced) rescue "-" %></p>
           <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#invoiced-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
         </div>
       </div>
       <div class="col-6 ps-1">
         <div class="earn-desc">
-          <label>PAID</label>
+          <label><%= I18n.t("mongoid.attributes.invoice/payout_status.paid") %></label>
           <p><%= number_to_indian_currency(@paid_invoices) rescue "-" %></p>
           <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#paid-modal"><i class="fas fa-info-circle text-yellow"></i></a>       
         </div>
@@ -60,7 +60,7 @@
         <% if params.dig(:fltrs, :category).blank? || params.dig(:fltrs, :category) == "brokerage" || params.dig(:fltrs, :category) == ["all"] || params.dig(:fltrs, :category) == ["brokerage"] %>
           <div>
               <div class="col-12">
-                  <h2 class="ep-title">Earning Potential</h2>
+                  <h2 class="ep-title"><%= I18n.t("global.earning_potential %></h2>
               </div>
 
               <div class="col-12">
@@ -94,7 +94,7 @@
         <% end %>
         <% if policy([:admin, Invoice]).index? %>
           <div class="col-12">
-            <h2 class="ep-title float-start col-6">Transactions</h2>
+            <h2 class="ep-title float-start col-6">Trans<%= I18n.t("global.actions") %></h2>
             <%= link_to "View All", payout_list_path(fltrs: params.dig(:fltrs), user_login: params[:user_login], user_token: params[:user_token]), class: "text-end float-end col-6" %>
           </div>
           
@@ -109,7 +109,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header p-3">
-        <h5 class="modal-title" id="">Invoiced</h5>
+        <h5 class="modal-title" id=""><%= I18n.t("mongoid.attributes.invoice/payout_status.raised") %></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -122,7 +122,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header p-3">
-        <h5 class="modal-title" id="">Paid</h5>
+        <h5 class="modal-title" id=""><%= I18n.t("mongoid.attributes.invoice/payout_status.paid") %></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -135,11 +135,11 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header p-3">
-        <h5 class="modal-title" id="">Waiting for Registration</h5>
+        <h5 class="modal-title" id=""><%= I18n.t("mongoid.attributes.invoice/payout_status.approved") %></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>This is the total brokerage amount of all bookings approved by the developer end. The brokerage release process will start once booking registration is completed.</p>
+        <p><%= I18n.t("controller.receipts.process_payment.total_brokerage_note") %></p>
       </div>
     </div>
   </div>
@@ -148,11 +148,11 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header p-3">
-        <h5 class="modal-title" id="">Waiting for Invoicing</h5>
+        <h5 class="modal-title" id=""><%= I18n.t("mongoid.attributes.invoice/payout_status.draft") %></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>This is the total potential brokerage generated on bookings. The booking details will be submitted to the developer for verification and further brokerage process.</p>
+        <p><%= I18n.t("controller.receipts.process_payment.potential_brokerage_note") %></p>
       </div>
     </div>
   </div>
@@ -161,11 +161,11 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header p-3">
-        <h5 class="modal-title" id="">Cancellation</h5>
+        <h5 class="modal-title" id=""><%= I18n.t("mongoid.attributes.invoice/payout_status.rejected") %></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>This is the total amount of lost brokerage due to missing/incorrect booking details submitted to developer.</p>
+        <p><%= I18n.t("controller.receipts.process_payment.lost_brokerage_amt") %></p>
       </div>
     </div>
   </div>

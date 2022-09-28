@@ -14,7 +14,7 @@
             </a>
           </div>
           <% if policy([:admin, Email]).monthly_count? %>
-          <%= link_to "Monthly Count", monthly_count_admin_emails_path, class: 'border rounded px-3 py-2 theme-txt-color ms-2 d-inline-block' %>
+          <%= link_to I18n.t("controller.emails.links.monthly_count"), monthly_count_admin_emails_path, class: 'border rounded px-3 py-2 theme-txt-color ms-2 d-inline-block' %>
           <% end %>
         </div>
       </div>

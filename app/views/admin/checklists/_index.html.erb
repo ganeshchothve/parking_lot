@@ -55,7 +55,7 @@
                 <i class="fa fa-ellipsis-v primary" aria-hidden="true"></i></a>
               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                 <% if policy([:admin, checklist]).edit? %>
-                <%= link_to 'Edit', edit_admin_checklist_path(checklist), class: 'dropdown-item modal-remote-form-link' %>
+                <%= link_to I18n.t("global.edit"), edit_admin_checklist_path(checklist), class: 'dropdown-item modal-remote-form-link' %>
                 <% end %>
               </div>
             </div>

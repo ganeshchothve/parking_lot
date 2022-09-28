@@ -5,7 +5,7 @@
         <div class="col-lg-12">
           <div class="card-header bg-white pb-0">
             <div class="p-2 py-3">
-              <h2 class="fn-24 theme-txt-color font-normal mb-4">Customer Site Visit</h2>
+              <h2 class="fn-24 theme-txt-color font-normal mb-4"><%= I18n.t("controller.site_visits.headings.customer_site_visit") %></h2>
               <%= render 'admin/customer_searches/render_tabs' %>
             </div>
           </div>
@@ -21,21 +21,21 @@
                 <%= form_for @customer_search, url: admin_customer_searches_url, html: {class: 'validate-form theme-form', id: "search_form"} do |f| %>
                   <div class='row'>
                     <div class='col-sm-6 mb-3'>
-                      <%= label_tag "lead_id", "Sell.Do Lead ID", class: "control-label" %>
+                      <%= label_tag "lead_id", I18n.t("mongoid.attributes.customer_search.lead_id"), class: "control-label" %>
                       <%= number_field_tag "lead_id", (params.present? ? params[:lead_id] : ""), class: "form-control" %>
                     </div>
                     <div class='col-sm-6 mb-3'>
-                      <%= label_tag "token_number", "Token Number", class: "control-label" %>
+                      <%= label_tag "token_number", I18n.t("mongoid.attributes.customer_search.token_number"), class: "control-label" %>
                       <%= text_field_tag "token_number", (params[:fltrs].present? ? params[:fltrs][:token_number] : ""), class: "form-control" %>
                     </div>
                     <div class='col-sm-12 mb-3'>
-                      <%= label_tag "_id", "Name / Email / Phone", class: "control-label" %>
-                      <%= select_tag "_id", options_from_collection_for_select(params[:_id].present? ? Lead.where(_id: params[:_id]) : [], "id", "search_name"), {class: "selectize-remote", data: { url: admin_leads_path, params: { fltrs: {booking_portal_client_id: current_user.booking_portal_client_id } } } } %>
+                      <%= label_tag "_id", I18n.t("mongoid.attributes.customer_search.id"), class: "control-label" %>
+                      <%= select_tag "_id", options_from_collection_for_select(params[:_id].present? ? Lead.where(_id: params[:_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: { url: admin_leads_path } } %>
                     </div>
                   </div>
                   <div class="pt-2 border-top d-flex justify-content-between col-12">
-                    <%= link_to "Add New Customer", admin_customer_searches_url(new: true), method: :post, class: "btn btn-primary w-auto" %>
-                    <%= f.submit "Search", class: "btn btn-primary w-auto border-primary" %>                  
+                    <%= link_to I18n.t("controller.customer_searches.links.add_new_customer"), admin_customer_searches_url(new: true), method: :post, class: "btn btn-primary w-auto" %>
+                    <%= f.submit I18n.t("global.search"), class: "btn btn-primary w-auto border-primary" %>
                   </div>
                 <% end %>
               </div>

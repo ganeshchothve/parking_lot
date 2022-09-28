@@ -159,7 +159,7 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
       post :create, params: { receipt: receipt_params, user_id: @user.id }
       receipt = Receipt.first
       search_id = receipt.user.searches.desc(:created_at).first.id
-      expect(response.request.flash[:notice]).to eq('Receipt was successfully updated. Please upload documents')
+      expect(response.request.flash[:notice]).to eq(I18n.t("controller.receipts.notice.receipt_updated"))
       expect(response).to redirect_to("/dashboard/user/searches/#{search_id}/gateway-payment/#{receipt.receipt_id}")
     end
 
@@ -191,7 +191,7 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
           receipt_params = FactoryBot.attributes_for(:offline_payment, payment_mode: payment_mode.to_s)
           post :create, params: { receipt: receipt_params, user_id: @user.id }
           receipt = assigns(:receipt)
-          expect(response.request.flash[:notice]).to eq('Receipt was successfully updated. Please upload documents')
+          expect(response.request.flash[:notice]).to eq(I18n.t("controller.receipts.notice.receipt_updated"))
           expect(response).to redirect_to(admin_user_receipts_url(@user, 'remote-state': assetables_path(assetable_type: receipt.class.model_name.i18n_key.to_s, assetable_id: receipt.id)))
         end
 
@@ -199,7 +199,7 @@ RSpec.describe Admin::ReceiptsController, type: :controller do
           receipt = create(:offline_payment, payment_mode: payment_mode, user_id: @user.id, total_amount: 50_000, status: 'clearance_pending')
           receipt_params = { event: 'success', tracking_id: '123211', processed_on: receipt.issued_date }
           patch :update, params: { receipt: receipt_params, user_id: @user.id, id: receipt.id }
-          expect(response.request.flash[:notice]).to eq('Receipt was successfully updated.')
+          expect(response.request.flash[:notice]).to eq(I18n.t("controller.receipts.notice.updated"))
           expect(response).to redirect_to(admin_user_receipts_path(@user))
         end
 

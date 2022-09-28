@@ -8,12 +8,12 @@
               <h6 class="card-title d-inline fn-24 font-medium theme-txt-color me-1">
                 <%= @lead.name || '-' %></h6>
               <a href="javascript:;" class="email-icon small d-inline-block mt-1 fn-16" data-bs-toggle="popover"
-                title="Email Id" data-bs-trigger="focus" data-bs-placement="bottom"
+                title=<%= I18n.t("global.email_id") %> data-bs-trigger="focus" data-bs-placement="bottom"
                 data-bs-content="<%= @lead.masked_email(current_user) || '-' %>">
                 <i class="fa fa-envelope fill-theme me-2 ms-2 fn-18"></i>
               </a>
               <a href="javascript:;" class="phone-icon small d-inline-block mt-1 fn-16" data-bs-container="body"
-                data-bs-placement="bottom" data-bs-trigger="focus" data-bs-toggle="popover" title="Phone No."
+                data-bs-placement="bottom" data-bs-trigger="focus" data-bs-toggle="popover" title=<%= I18n.t("global.phone_no") %>
                 data-bs-content="<%= @lead.masked_phone(current_user) || '-' %>">
                 <i class="fa fa-phone-alt fill-theme me-2 fn-18"></i>
               </a>
@@ -31,7 +31,7 @@
         <div class="col-12 float-start mt-3 pb-0">
           <div class="card">
             <div class="card-header theme-light-bg py-3">
-              <p class="fn-12 theme-txt-color mb-0 ">Project</p>
+              <p class="fn-12 theme-txt-color mb-0 "><%= I18n.t("mongoid.models.project.one") %></p>
               <h6 class="fn-20 theme-txt-color mb-0"><%= (@lead.project.try(:name) || '-') %></h6>
             </div>
             <div class="card-body p-0 rounded-0 border-0">
@@ -40,7 +40,7 @@
                   <h2 class="accordion-header d-flex justify-content-between" id="headingOverview">
                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseOverview" aria-expanded="false" aria-controls="collapseOverview">
-                      Overview
+                      <%= I18n.t("global.tabs.overview") %>
                     </button>
                   </h2>
                   <div id="collapseOverview" class="accordion-collapse collapse" aria-labelledby="headingOverview"
@@ -55,8 +55,8 @@
                     <h2 class="accordion-header d-flex justify-content-between" id="headingUsers">
                       <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseUsers" aria-expanded="false" aria-controls="headingUsers">
-                        Site Visits
-                      </button>
+                        <%= I18n.t("global.tabs.site_visits") %>
+                    </button>
                     </h2>
                     <div id="collapseUsers" class="accordion-collapse collapse" aria-labelledby="headingUsers"
                       data-bs-parent="#accordionExample">
@@ -75,7 +75,7 @@
                   <h2 class="accordion-header d-flex justify-content-between" id="headingRemarks">
                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseRemarks" aria-expanded="false" aria-controls="headingRemarks">
-                      Remarks From SellDo
+                      <%= I18n.t("global.tabs.remarks_from_selldo") %>
                     </button>
                   </h2>
                   <div id="collapseRemarks" class="accordion-collapse collapse" aria-labelledby="headingRemarks"
@@ -94,7 +94,7 @@
                   <h2 class="accordion-header d-flex justify-content-between" id="headingLead">
                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseLead" aria-expanded="false" aria-controls="headingLead">
-                      Lead Activities
+                      <%= I18n.t("global.tabs.lead_activities") %>
                     </button>
                   </h2>
                   <div id="collapseLead" class="accordion-collapse collapse" aria-labelledby="headingLead"
@@ -114,7 +114,7 @@
                   <h2 class="accordion-header d-flex justify-content-between" id="headingBookings">
                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseBookings" aria-expanded="false" aria-controls="headingBookings">
-                      Bookings
+                      <%= I18n.t("global.tabs.bookings") %>
                     </button>
                   </h2>
                   <div id="collapseBookings" class="accordion-collapse collapse" aria-labelledby="headingBookings"
@@ -132,7 +132,7 @@
                   <h2 class="accordion-header d-flex justify-content-between" id="headingPayments">
                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapsePayments" aria-expanded="false" aria-controls="headingPayments">
-                      Payments
+                      <%= I18n.t("global.tabs.payments") %>
                     </button>
 
                   </h2>
@@ -152,7 +152,7 @@
                   <h2 class="accordion-header d-flex justify-content-between" id="headingTimeslot">
                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseTimeslot" aria-expanded="false" aria-controls="headingTimeslot">
-                      Time Slot
+                      <%= I18n.t("global.tabs.time_slot") %>
                     </button>
 
                   </h2>
@@ -174,7 +174,7 @@
                   <h2 class="accordion-header d-flex justify-content-between" id="headingNotes">
                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseNotes" aria-expanded="false" aria-controls="headingNotes">
-                      Note Summary
+                      <%= I18n.t("global.tabs.note_summary") %>
                     </button>
                     <%# if policy([current_user_role_group, Note.new(notable: notable)]).new? %>
                       <%#= link_to t('helpers.new.link_name', model: Note.model_name.human), new_notable_path(notable_type: notable.class.model_name.i18n_key.to_s, notable_id: notable.id), class: ' modal-remote-form-link fn-12 font-medium theme-txt-color w-25 text-end pe-3 py-3' %>
@@ -197,7 +197,7 @@
                   <h2 class="accordion-header d-flex justify-content-between" id="headingCRM">
                     <button class="accordion-button collapsed  shadow-none" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseCRM" aria-expanded="false" aria-controls="collapseCRM">
-                      CRM
+                      <%= I18n.t("global.tabs.crm") %>
                     </button>
                   </h2>
                   <div id="collapseCRM" class="accordion-collapse collapse" aria-labelledby="headingCRM"

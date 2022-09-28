@@ -12,9 +12,9 @@
     <table class="table my-customer-table responsive-tbl mb-0 align-middle border rounded">
       <thead class="bg-primary white">
         <tr>
-          <th class="text-center">Company Owner/Channel Partner</th>
-          <th class="text-center">Variable Incentive Scheme</th>
-          <th class="text-center">Capped Incentive</th>
+          <th class="text-center"><%= I18n.t("mongoid.attributes.user/role.cp_owner")+ '/' + I18n.t("mongoid.attributes.user/role.channel_partner") %></th>
+          <th class="text-center"><%= I18n.t("mongoid.models.variable_incentive_scheme.one") %></th>
+          <th class="text-center"><%= I18n.t("mongoid.attributes.variable_incentive_scheme.capped_incentive") %></th>
         </tr>
       </thead>
       <tbody class='text-md-center'>
@@ -34,7 +34,7 @@
             </tr>
           <% end %>
           <tr>
-            <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong>Total</strong></td>
+            <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong><%= I18n.t("global.total") %></strong></td>
             <td><strong>-</strong></td>
             <td><strong>
                   <%#= number_to_indian_currency(total_incentive_amount) %>
@@ -43,7 +43,7 @@
           </tr>
         <% else %>
           <tr>
-            <td colspan="3">No Records Found</td>
+            <td colspan="3"><%= I18n.t("global.no_record") %></td>
           </tr>
         <% end %>
       </tbody>

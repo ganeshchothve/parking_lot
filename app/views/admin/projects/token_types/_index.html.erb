@@ -27,7 +27,7 @@
         <%= number_to_indian_currency(token_type.token_amount) %>
       </td>
       <td data-title=<%= t('mongoid.attributes.token_type.status') %>>
-        <%= token_type.incrementor_exists? ? 'Active' : 'Disabled' %>
+        <%= token_type.incrementor_exists? ? I18n.t("mongoid.attributes.token_type/status.active") : I18n.t("mongoid.attributes.token_type/status.disabled") %>
       </td>
       <td>
         <div class="dropdown d-inline-block">

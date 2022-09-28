@@ -5,10 +5,10 @@
 <%= hidden_field_tag :project_id, project.id %>
 <div class="modal-body">
   <div class="mb-3">
-    <%= f.label "Lead", class: 'label-required control-label' %>
+    <%= f.label I18n.t("mongoid.models.lead.one"), class: 'label-required control-label' %>
     <%= select_tag "lead_id", options_for_select(filter_lead_options), { class: "selectize-remote", data: { url: admin_leads_path(fltrs: {project_id: project.id}) } } %>
   </div>
 </div>
 <div class="modal-footer text-end">
-    <%= f.submit "Submit", class: "btn btn-primary" %>
+    <%= f.submit I18n.t("global.submit"), class: "btn btn-primary" %>
 </div>

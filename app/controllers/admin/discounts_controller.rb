@@ -43,7 +43,7 @@ class Admin::DiscountsController < AdminController
     @discount.assign_attributes(permitted_attributes([:admin, @discount]))
     respond_to do |format|
       if @discount.save
-        format.html { redirect_to admin_discounts_path, notice: "#{t('global.discount.one')} created successfully." }
+        format.html { redirect_to admin_discounts_path, notice: I18n.t("controller.discounts.notice.created", name: "#{I18n.t('global.discount.one')}") }
         format.json { render json: @discount, status: :created }
       else
         format.html { render :new }
@@ -58,7 +58,7 @@ class Admin::DiscountsController < AdminController
   def destroy
     respond_to do |format|
       if @discount.destroy
-        format.html { redirect_to admin_discounts_path, notice: "#{t('global.discount.one')} deleted successfully." }
+        format.html { redirect_to admin_discounts_path, notice: I18n.t("controller.discounts.notice.deleted", name: "#{I18n.t('global.discount.one')}") }
       else
         format.html { redirect_to admin_discounts_path, alert: @discount.errors.full_messages.join(' ') }
       end
@@ -72,7 +72,7 @@ class Admin::DiscountsController < AdminController
     @discount.assign_attributes(permitted_attributes([:admin, @discount]))
     respond_to do |format|
       if @discount.save
-        format.html { redirect_to admin_discounts_path, notice: "#{t('global.discount')} updated successfully." }
+        format.html { redirect_to admin_discounts_path, notice: I18n.t("controller.discounts.notice.updated", name: "#{I18n.t('global.discount.one')}") }
         format.json { render json: @discount, status: :ok }
       else
         format.html { render :new }

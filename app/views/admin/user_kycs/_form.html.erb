@@ -10,7 +10,7 @@
         </div>
         <div class="modal-body theme-form">
           <div class="row">
-            <%= f.input :salutation, collection: UserKyc.available_salutations.collect{|x| [x[:text], x[:id]]}, prompt: :translate, required: true, wrapper_html: { class: 'col-md-2' } %>
+            <%= f.input :salutation, collection: I18n.t("mongoid.attributes.user_kyc/salutations").collect{|k,v| [v, k.to_s]}, prompt: :translate, required: true, wrapper_html: { class: 'col-md-2' } %>
 
             <%= f.input :first_name, required: true, wrapper_html: { class: 'col-md-5' } %>
 
@@ -30,7 +30,7 @@
           <div class="row">
             <div class="col-md-6">
               <%= f.label :configurations, class: 'control-label' %>
-              <%= f.select :configurations, UserKyc.available_configurations(@user_kyc.lead_id.to_s).collect{|x| [x[:text], x[:id]] }, {prompt: "Select"}, class: 'selectize', multiple: true, disabled: !policy(@user_kyc).editable_field?("configurations") %>
+              <%= f.select :configurations, UserKyc.available_configurations(@user_kyc.lead_id.to_s).collect{|x| [x[:text], x[:id]] }, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true, disabled: !policy(@user_kyc).editable_field?("configurations") %>
 
             </div>
             <div class="col-md-6">
@@ -43,7 +43,7 @@
           <div class="row">
             <div class="col-md-6">
               <%= f.label :preferred_floors, class: 'control-label' %>
-              <%= f.select :preferred_floors, UserKyc.available_preferred_floors.collect{|x| [x[:text], x[:id]]}, {prompt: "Select"}, class: 'selectize', multiple: true, disabled: !policy(@user_kyc).editable_field?("preferred_floors") %>
+              <%= f.select :preferred_floors, UserKyc.available_preferred_floors.collect{|x| [x[:text], x[:id]]}, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true, disabled: !policy(@user_kyc).editable_field?("preferred_floors") %>
             </div>
             <div class="col-md-6">
               <%= f.input :number_of_units %>
@@ -62,7 +62,7 @@
           <% if @lead.project_unit_ids.present? && (@user_kyc.persisted? || !current_user.buyer?) %>
             <div class="mb-3 position-relative">
               <%= f.label :project_unit_ids %>
-              <%= f.select :project_unit_ids, @lead.project_units.collect{|x| [x.name, x.id]}, {prompt: "Select"}, class: 'selectize', multiple: true %>
+              <%= f.select :project_unit_ids, @lead.project_units.collect{|x| [x.name, x.id]}, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true %>
             </div>
           <% end %>
 
@@ -82,7 +82,7 @@
           <div class="row mt-3">
             <div class="col-md-6">
               <%= f.label :occupation, class: 'control-label' %>
-              <%= f.select :occupation, UserKyc::OCCUPATIONS.collect{|x| [ t("mongoid.attributes.user_kyc/occupation.#{x}"), x.to_s]}, {prompt: "Select"}, class: 'selectize', disabled: !policy(@user_kyc).editable_field?("occupation") %>
+              <%= f.select :occupation, UserKyc::OCCUPATIONS.collect{|x| [ t("mongoid.attributes.user_kyc/occupation.#{x}"), x.to_s]}, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy(@user_kyc).editable_field?("occupation") %>
             </div>
           </div>
 
@@ -90,7 +90,7 @@
             <div class="col-md-12">
               <div class="card mt-3">
                 <div class="card-header">
-                  Residence / Permanent Address
+                  <%= I18n.t("global.tabs.residence/permanent_address") %>
                 </div>
                 <div class="card-body">
                   <% permanent_address = f.object.addresses.where(address_type: 'permanent').first || f.object.addresses.build(address_type: 'permanent') %>
@@ -106,7 +106,7 @@
             <div class="col-md-12">
               <div class="card mt-3">
                 <div class="card-header">
-                  Correspondence / Office Address
+                  <%= I18n.t("global.tabs.correspondence/office_address") %>
                 </div>
                 <div class="card-body">
                   <% correspondence_address = f.object.addresses.where(address_type: 'correspondence').first || f.object.addresses.build(address_type: 'correspondence') %>
@@ -120,18 +120,18 @@
 
           <div class="card mt-3">
             <div class="card-header">
-              Corporate Details (If Any)
+              <%= I18n.t("global.tabs.corporate_details") %>
             </div>
             <div class="card-body">
               <div class="mb-3">
                 <%= f.label :is_company %>
                 <div class="form-check form-check-inline">
                   <%= f.radio_button :is_company, true, class: "form-check-input wd-22" %>
-                  <%= f.label :is_company, "Yes", class: "form-check-label d-inline-block ms-2" %>
+                  <%= f.label :is_company, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
                 </div>
                 <div class="form-check form-check-inline">
                   <%= f.radio_button :is_company, false, class: "form-check-input wd-22" %>
-                  <%= f.label :is_company, "No", class: "form-check-label d-inline-block ms-2" %>
+                  <%= f.label :is_company, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
                 </div>
               </div>
               <div class="mb-3 company-fields">
@@ -147,7 +147,7 @@
 
           <div class="card mt-3">
               <div class="card-header">
-                Bank Details
+                <%= I18n.t("global.tabs.bank_details") %>
               </div>
               <div class="card-body">
                 <% f.object.build_bank_detail if f.object.bank_detail.blank? %>
@@ -160,7 +160,7 @@
           <% if !defined?(small) || small == false %>
             <div class="card mt-3">
               <div class="card-header">
-                Other Details
+                <%= I18n.t("global.tabs.other_details") %>
               </div>
               <div class="card-body">
                 <div class="row">
@@ -189,18 +189,18 @@
             </div>
             <div class="card mt-3">
               <div class="card-header">
-                NRI Related Details
+                <%= I18n.t("global.tabs.nri_related_details") %>
               </div>
               <div class="card-body">
                 <div class="mb-3">
                   <%= f.label :nri %>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :nri, true, class: "form-check-input wd-22" %>
-                    <%= f.label :nri, "Yes", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :nri, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :nri, false, class: "form-check-input wd-22" %>
-                    <%= f.label :nri, "No", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :nri, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
                 <div class="mb-3 nri-fields">
@@ -211,11 +211,11 @@
                   <%= f.label :poa %>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :poa, true, class: "form-check-input wd-22" %>
-                    <%= f.label :poa, "Yes", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :poa, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :poa, false, class: "form-check-input wd-22" %>
-                    <%= f.label :poa, "No", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :poa, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
                 <div class="nri-fields">
@@ -232,18 +232,18 @@
             </div>
             <div class="card mt-3">
               <div class="card-header">
-                Existing Customer?
+                <%= I18n.t("global.tabs.existing_customer") %>
               </div>
               <div class="card-body">
                 <div class="mb-3">
                   <%= f.label :existing_customer %>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :existing_customer, true, class: "form-check-input wd-22" %>
-                    <%= f.label :existing_customer, "Yes", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :existing_customer, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                   <div class="form-check form-check-inline">
                     <%= f.radio_button :existing_customer, false, class: "form-check-input wd-22" %>
-                    <%= f.label :existing_customer, "No", class: "form-check-label d-inline-block ms-2" %>
+                    <%= f.label :existing_customer, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
                 </div>
                 <div class="mb-3 customer-fields">
@@ -264,7 +264,7 @@
           <% end %>
         </div>
         <div class="modal-footer text-end">
-          <%= f.submit "Save", class: "btn btn-primary" %>
+          <%= f.submit I18n.t("global.save"), class: "btn btn-primary" %>
         </div>
       </div>
     </div>

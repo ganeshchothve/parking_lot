@@ -47,7 +47,7 @@ class Admin::ProjectUnitsController < AdminController
     parameters = permitted_attributes([:admin, @project_unit])
     respond_to do |format|
       if @project_unit.update(parameters)
-        format.html { redirect_to admin_project_units_path, notice: 'Unit successfully updated.' }
+        format.html { redirect_to admin_project_units_path, notice: I18n.t("controller.project_units.notice.updated") }
       else
         format.html { render :edit }
         format.json { render json: { errors: @project_unit.errors.full_messages }, status: :unprocessable_entity }
@@ -66,7 +66,7 @@ class Admin::ProjectUnitsController < AdminController
     else
       ProjectUnitExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json)
     end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    flash[:notice] = I18n.t("global.export_scheduled")
     redirect_to admin_project_units_path(fltrs: params[:fltrs].as_json)
   end
 

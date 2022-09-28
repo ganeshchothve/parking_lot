@@ -1,8 +1,8 @@
 <ul class="leaderboard-top-list">
   <li class="list-header">
-    <div class="list-rank">Rank</div>
-    <div class="list-name">Name & Company</div>
-    <div class="list-incentive">Incentives</div>
+    <div class="list-rank"><%= I18n.t("controller.dashboard.leaderboard.rank") %></div>
+    <div class="list-name"><%= I18n.t("controller.dashboard.leaderboard.name_and_company") %></div>
+    <div class="list-incentive"><%= I18n.t("controller.dashboard.leaderboard.incentives") %></div>
   </li>
 
   <% @cp_rank_wise_data.first(10).each do |cp_data| %>

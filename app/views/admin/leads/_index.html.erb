@@ -32,7 +32,7 @@
                         <%#= link_to 'Accept', accept_lead_admin_lead_path(lead, accepted_by_sales: true, event: 'accepted', format: :json), method: 'patch', remote: true, class: "accept move-to-next-state btn btn-success text-white" %>
                       <!-- </p> -->
                       <!-- <p class="small d-inline-block mt-1 ms-2 fn-16 mb-0"> -->
-                        <%#= link_to 'Reject', accept_lead_admin_lead_path(lead, accepted_by_sales: false, event: 'rejected', format: :json), method: 'patch', remote: true, data: { confirm: 'Are you sure?', disable_with: "Please wait..." }, class: "reject move-to-next-state btn apply-btn btn-primary border-primary" %>
+                        <%#= link_to 'Reject', accept_lead_admin_lead_path(lead, accepted_by_sales: false, event: 'rejected', format: :json), method: 'patch', remote: true, data: { confirm: I18n.t("controller.assets.confirm.sure"), disable_with: I18n.t("global.please_wait") }, class: "reject move-to-next-state btn apply-btn btn-primary border-primary" %>
                       <!-- </p> -->
                     <%# end %>
                     <% if lead.manager_id? && current_user.role.in?(%w(admin superadmin)) %>
@@ -43,7 +43,7 @@
                   </div>
                   <div class="pe-3 py-3 ps-xs-3">
                     <p class="font-medium fn-12 mb-0 d-inline-block me-2"><i
-                        class="fa fa-circle info me-2 fa-sm"></i><%= lead.lead_stage&.titleize || '-' %></p>
+                        class="fa fa-circle info me-2 fa-sm"></i><%= (I18n.t("mongoid.attributes.lead/stage.#{lead.lead_stage}") if lead.lead_stage != nil) || '-' %></p>
                     <div class="dropdown d-inline-block top-right-action">
                       <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">

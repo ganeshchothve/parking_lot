@@ -14,13 +14,13 @@
                 <div class="row">
                     <div class="col-md-4">
                     <div class="mb-3">
-                        <label class="small text-muted">Lead</label>
+                        <label class="small text-muted"><%= I18n.t("mongoid.models.lead.one") %></label>
                         <div><%= @lead.name %></div>
                     </div>
                     </div>
                     <div class="col-md-4">
                     <div class="mb-3">
-                        <label class="small text-muted">Project</label>
+                        <label class="small text-muted"><%= I18n.t("mongoid.models.project.one") %></label>
                         <div><%= project.name %></div>
                     </div>
                     </div>
@@ -53,7 +53,7 @@
             </div>
         </div>
         <div class="modal-footer text-end">
-            <%= f.submit "Save", class: "btn btn-primary" %>
+            <%= f.submit I18n.t("global.save"), class: "btn btn-primary" %>
         </div>
     </div>
 </div>

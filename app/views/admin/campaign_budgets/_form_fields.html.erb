@@ -2,7 +2,7 @@
   <div class="col-md-6">
     <div class="form-group">
       <%= f.label :source, class: 'control-label' %>
-      <%= f.select :source, Campaign.sources.collect{|x| [x[:text], x[:id]]}, {}, prompt: :translate, class: 'form-control selectize', required: true %>
+      <%= f.select :source, I18n.t("mongoid.attributes.campaign/campaign_sources").collect{|k,v| [v, k.to_s] }, {}, prompt: :translate, class: 'form-control selectize', required: true %>
     </div>
   </div>
   <div class="col-md-6">

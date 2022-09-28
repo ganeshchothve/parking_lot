@@ -2,11 +2,11 @@
 <p class="fn-16 <%= (@customer_search.crossed_step("customer") || @customer_search.step == 'customer') ? 'theme-txt-color': 'txt-light-blue'%> mb-0"><i class="fa fa-check-circle me-2 fill-<%= (@customer_search.crossed_step("customer") || @customer_search.step == 'customer') ? 'success': 'theme'%>"></i>
 <% if @customer_search.crossed_step("customer") %>
     <%= form_for [:admin, @customer_search], html: {id: "change_to_customer", class: "validate-form", "data-resource-type": global_labels['user'], "data-type": "json"} do |f| %>
-        <%= f.hidden_field :step, value: "customer" %>
-        <%= link_to 'Customer Details', "", :onclick => "$('#change_to_customer').submit()", class: "theme-txt-color", disabled: 'disabled' %>
+        <%= f.hidden_field :step, value: I18n.t("global.customer") %>
+        <%= link_to I18n.t("controller.site_visits.headings.customer_details"), "", :onclick => "$('#change_to_customer').submit()", class: "theme-txt-color", disabled: 'disabled' %>
     <% end %>   
 <% else %>
-Customer Details
+<%= I18n.t("controller.site_visits.headings.customer_details") %>
 <% end %>
 </p>
     

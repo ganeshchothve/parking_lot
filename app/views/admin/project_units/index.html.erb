@@ -17,8 +17,8 @@
                 <%= t('controller.project_units.exports.link_name', type: nil) %>
               </button>
               <div class="dropdown-menu dropdown-menu-right">
-                <%= link_to t('controller.project_units.exports.link_name', type: t('global.all')), export_admin_project_units_path, class: 'dropdown-item' %>
-                <%= link_to t('controller.project_units.exports.link_name', type: t('global.active_filter')), export_admin_project_units_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
+                <%= link_to I18n.t("global.link_to.all_exports"), export_admin_project_units_path, class: 'dropdown-item' %>
+                <%= link_to I18n.t("global.link_to.active_filter_exports"), export_admin_project_units_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
               </div>
             </div>
           <% end %>

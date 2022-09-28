@@ -56,7 +56,7 @@ module ExcelGenerator::PartnerWisePerformance
     [
       "#{I18n.t('mongoid.attributes.channel_partner.company_name')}",
       "#{I18n.t("mongoid.attributes.user/role.channel_partner")}/#{I18n.t("mongoid.attributes.user/role.cp_owner")}",
-      "Sign In Count",
+      I18n.t("global.link_to.sign_in_count"),
       Lead.model_name.human(count: 2),
       "Scheduled #{SiteVisit.model_name.human(count: 2)}",
       "Conducted #{SiteVisit.model_name.human(count: 2)}",
@@ -64,7 +64,7 @@ module ExcelGenerator::PartnerWisePerformance
       "Approved #{SiteVisit.model_name.human(count: 2)}",
       "Rejected #{SiteVisit.model_name.human(count: 2)}",
       BookingDetail.model_name.human(count: 2),
-      "Total #{I18n.t('mongoid.attributes.booking_detail.agreement_price')}"
+      "#{I18n.t("global.total")}" + " " + "#{I18n.t('mongoid.attributes.booking_detail.agreement_price')}"
     ]  
   end
 

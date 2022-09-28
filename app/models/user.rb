@@ -480,10 +480,10 @@ class User
       if password !~ re
         true
       else
-        errors.add :password, 'should not contain name.'
+        errors.add :password, I18n.t("mongoid.attributes.user/password.name")
       end
     else
-      errors.add :password, 'Length should be 8-16 characters and include: 1 uppercase, 1 lowercase, 1 digit and 1 special character.'
+      errors.add :password, I18n.t("mongoid.attributes.user/password.length")
     end
   end
 
@@ -619,7 +619,7 @@ class User
 
   def generate_cp_code
     if ['channel_partner', 'cp_owner'].include?(self.role) && self.cp_code.blank?
-      self.cp_code = "#{SecureRandom.hex(3)[0..-2]}"
+      self.cp_code = self.channel_partner&.cp_code.present? ? self.channel_partner&.cp_code : "#{SecureRandom.hex(3)[0..-2]}"
     end
   end
 
@@ -824,13 +824,6 @@ class User
       else
         ['user']
       end
-    end
-
-    def available_confirmation_statuses
-      [
-        { id: 'confirmed', text: 'Confirmed' },
-        { id: 'not_confirmed', text: 'Not Confirmed' }
-      ]
     end
 
     def available_roles(current_client)

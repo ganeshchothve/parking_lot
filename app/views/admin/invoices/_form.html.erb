@@ -36,11 +36,11 @@
         </div>
         <div class="mb-3">
           <div class="alert alert-warning" role="alert">
-            Please change the GST Slab % as per the Slabs
+            <%= I18n.t("controller.invoices.text.change_gst_slab") %>
           </div>
           <%= f.label :gst_slab %>
           <% gst_slabs = @resource.try(:project)&.incentive_gst_slabs || @resource.booking_portal_client.try(:gst_slabs) || [] %>
-          <%= f.select :gst_slab, options_for_select(gst_slabs.collect{|gst| ["#{gst} %", gst]} || [], @invoice.gst_slab), {prompt: 'Select'}, class: "selectize", disabled: !policy([:admin, @invoice]).editable_field?("gst_slab") %>
+          <%= f.select :gst_slab, options_for_select(gst_slabs.collect{|gst| ["#{gst} %", gst]} || [], @invoice.gst_slab), {prompt: I18n.t("global.select")}, class: "selectize", disabled: !policy([:admin, @invoice]).editable_field?("gst_slab") %>
         </div>
         <div class="mb-3">
           <%= f.label :gst_amount, class: '' %>
@@ -108,7 +108,7 @@
       </div>
 
       <div class="modal-footer text-end">
-        <%= f.submit "Save", class: "btn btn-primary" %>
+        <%= f.submit I18n.t("global.save"), class: "btn btn-primary" %>
       </div>
 
     </div>

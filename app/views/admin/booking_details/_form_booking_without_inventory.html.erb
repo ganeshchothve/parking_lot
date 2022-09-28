@@ -13,7 +13,7 @@
   <% if !f.object.lead.present? && f.object.project.present? %>
     <div class="mb-3">
       <%= f.label :lead_id, class: 'label-required control-label' %>
-      <%= f.select :lead_id, options_for_select(filter_lead_options), {prompt: 'Select'},  required: 'required', class: "selectize-remote", data: { url: admin_leads_path(fltrs: {project_id: f.object.project.id, ds: true}) } %>
+      <%= f.select :lead_id, options_for_select(filter_lead_options), {prompt: I18n.t("global.select")},  required: 'required', class: "selectize-remote", data: { url: admin_leads_path(fltrs: {project_id: f.object.project.id, ds: true}) } %>
     </div>
   <% end %>
   <div class="mb-3 position-relative offline">
@@ -51,7 +51,11 @@
     <%= f.text_field :booked_on, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.booked_on.present? ? f.object.booked_on.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), value: f.object.booked_on.present? ? f.object.booked_on.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), disabled: !(policy([:admin, @booking_detail]).editable_field?("booked_on")) %>
   </div>
   <div class="mb-3 position-relative offline">
-    <%= f.label :agreement_date, class: 'label-required' %>
+    <% if %w(channel_partner cp_owner).include?(current_user.role) %>
+      <%= f.label :tentative_agreement_date, class: 'label-required' %>
+    <% else %>
+      <%= f.label :agreement_date, class: 'label-required' %>
+    <% end %>
     <% if %w(channel_partner account_manager cp_owner).include?(current_user.role) %>
       <%= f.hidden_field :creator_id, value: current_user.id %>
       <%= f.text_field :agreement_date, class: 'form-control datepicker', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '',  disabled: !(policy([:admin, @booking_detail]).editable_field?("agreement_date")) %>
@@ -79,18 +83,21 @@
       else
         channel_partners = User.in(role: ['channel_partner', 'cp_owner']).where(booking_portal_client_id: current_user.booking_portal_client_id, user_status_in_company: 'active')
       end %>
-        <% channel_partners = channel_partners.where(booking_portal_client_id: current_client.id) %>
-        <label class="'label-required control-label'">Channel Partner</label>
-        <%= f.select :manager_id,channel_partners.collect{|cp| [(cp.name), cp.id]}, {prompt: true}, class: 'selectize', required: true, id: 'tagged_manager', disabled: !(policy([:admin, @booking_detail]).editable_field?("manager_id"))  %>
+      <% channel_partners = channel_partners.where(booking_portal_client_id: current_client.id) %>
+      <label class="'label-required control-label'"><%= I18n.t("mongoid.attributes.user/role.channel_partner") %></label>
+      <%= f.select :manager_id, channel_partners.collect{|cp| [(cp.name), cp.id]}, {prompt: I18n.t("global.select")}, class: 'selectize', required: true, id: 'tagged_manager', disabled: !(policy([:admin, @booking_detail]).editable_field?("manager_id"))  %>
 
+        <%# unless (%w(channel_partner cp_owner).include?(current_user.role) && current_client.launchpad_portal?)  %>
+          <%#= link_to I18n.t("controller.channel_partners.add.link_name"), new_channel_partner_channel_partners_path(lead_id: f.object.try(:lead).try(:id).to_s), class: 'modal-remote-form-link' %>
+        <%# end %>
     </div>
   <% end %>
 </div>
 <div class="modal-footer text-end">
   <% if edit_access %>
-    <%= f.submit "Submit", class: "btn btn-primary" %>
+    <%= f.submit I18n.t("global.submit"), class: "btn btn-primary" %>
   <% else %>
-    <%= f.submit "Submit", data: { :confirm => 'You won’t be able to edit it, Are you sure?'}, class: "btn btn-primary" %>
+    <%= f.submit I18n.t("global.submit"), data: { :confirm => I18n.t("controller.booking_details.text.confirm")}, class: "btn btn-primary" %>
   <% end %>
 
 </div>

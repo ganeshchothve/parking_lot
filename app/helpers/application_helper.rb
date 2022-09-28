@@ -167,12 +167,12 @@ module ApplicationHelper
     end
     if current_user.buyer? && current_client.support_number.present?
       html += "<li class = 'footer-object'>
-        Need Help? Contact Us - #{current_client.support_number}
+      #{I18n.t("helpers.need_help", name: current_client.support_number)}
       </li>"
     end
     if current_user.channel_partner? && current_client.channel_partner_support_number.present?
       html += "<li  class = 'footer-object'>
-        Need Help? Contact Us - #{current_client.channel_partner_support_number}
+      #{I18n.t("helpers.need_help", name: current_client.channel_partner_support_number)}
       </li>"
     end
     html.html_safe
@@ -260,7 +260,7 @@ module ApplicationHelper
   end
 
   def is_marketplace?
-    request.host.include?('marketplace')# || request.host.include?('localhost')
+    request.host.include?('marketplace') || request.host.include?('localhost')
   end
 
   def marketplace_layout
@@ -285,4 +285,8 @@ module ApplicationHelper
     controller_name == cont_name ? 'active' : ''
   end
 
+  def current_translations
+    @translations ||= I18n.backend.send(:translations)
+    @translations[I18n.locale].with_indifferent_access
+  end
 end

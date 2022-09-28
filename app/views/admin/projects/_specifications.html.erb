@@ -2,7 +2,7 @@
   <% editable_specifications = policy([:admin, project]).editable_field?("specifications_attributes")%>
   <% if editable_specifications %>
     <div class='text-right'>
-      <%= f.link_to_add "Add Specification", :specifications, :data => { :target => ".specifications" }, class: 'btn btn-secondary' %>
+      <%= f.link_to_add I18n.t("controller.projects.add_specification.link_name"), :specifications, :data => { :target => ".specifications" }, class: 'btn btn-secondary' %>
     </div>
   <% end %>
   <%= f.fields_for :specifications do |sf|%>
@@ -14,7 +14,7 @@
     <% end %>
     <div class="mb-3">
       <%= sf.label :category, class: 'label-required' %>
-      <%= sf.select :category, Specification::CATEGORIES.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", required: true, disabled: !editable_specifications %>
+      <%= sf.select :category, I18n.t("mongoid.attributes.specification/categories").collect{|k,v| [v, k.to_s]}, {prompt: I18n.t("global.select")}, class: "selectize", required: true, disabled: !editable_specifications %>
     </div>
     <div class="mb-3">
       <%= sf.label :description, class: 'label-required' %>
@@ -23,3 +23,4 @@
   <% end %>
   <hr>
 </div>
+

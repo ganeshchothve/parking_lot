@@ -11,10 +11,10 @@ module UserRequests
           if @receipt.cancel!
             @user_request.resolved!
           else
-            reject_user_request('Receipt is not available for cancellation.')
+            reject_user_request(I18n.t("controller.receipts.errors.cancellation_receipt_unavailable"))
           end
         else
-          reject_user_request('Receipt is not available for cancellation.')
+          reject_user_request(I18n.t("controller.receipts.errors.cancellation_receipt_unavailable"))
         end
       end
 

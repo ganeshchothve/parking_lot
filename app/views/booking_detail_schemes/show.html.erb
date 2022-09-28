@@ -12,7 +12,7 @@
           <div class="col-12">
             <div class="clearfix"></div>
             <div>
-              Derived from scheme: <b><%= @scheme.derived_from_scheme.name %></b>
+              <%= I18n.t("controller.booking_detail_schemes.derived_from_scheme.link_name") %>: <b><%= @scheme.derived_from_scheme.name %></b>
             </div>
             <br/>
             <h5>Payment adjustments</h5>

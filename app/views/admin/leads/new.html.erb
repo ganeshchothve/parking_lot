@@ -19,7 +19,7 @@
               <%= render 'admin/leads/non_selldo_lead_copy_form_fields', f: f, lead: @lead, existing_lead: @existing_lead %>
             </div>
             <div class="modal-footer text-end">
-              <%= submit_tag "Save", class: 'btn btn-primary' %>
+              <%= submit_tag I18n.t("global.save"), class: 'btn btn-primary' %>
             </div>
           <% end %>
         </div>

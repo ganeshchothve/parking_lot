@@ -22,7 +22,7 @@ class Admin::AnnouncementsController < AdminController
     @announcement.assign_attributes(permitted_attributes([current_user_role_group, @announcement]))
     respond_to do |format|
       if @announcement.save
-        format.html { redirect_to admin_announcements_path, notice: 'Announcement was successfully created.' }
+        format.html { redirect_to admin_announcements_path, notice: I18n.t("controller.announcements.notice.created") }
         format.json { render json: @announcement, status: :created }
       else
         format.html { render :new }

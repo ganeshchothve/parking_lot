@@ -10,13 +10,13 @@
         </div>
         <div class="modal-body theme-form">
           <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
-            <h5>CRM IDs</h5>
+            <h5><%= I18n.t("global.tabs.crm_ids") %></h5>
             <hr/>
             <%= render 'admin/crm/shared/third_party_references_form', f: f %>
           <% end %>
         </div>
         <div class="modal-footer text-end">
-          <%= f.submit "Save", class: 'btn btn-primary float-end' %>
+          <%= f.submit I18n.t("global.save"), class: 'btn btn-primary float-end' %>
         </div>
       </div>
     </div>

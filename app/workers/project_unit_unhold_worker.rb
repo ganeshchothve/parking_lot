@@ -10,7 +10,7 @@ class ProjectUnitUnholdWorker
       project_unit.make_available(lead)
       project_unit.save ? true : { errors: project_unit.errors.full_messages.uniq.join('\n') }
    else
-     { errors: 'Project unit not on hold' }
+     { errors: I18n.t("worker.project_units.errors.not_on_hold") }
     end
   end
 end

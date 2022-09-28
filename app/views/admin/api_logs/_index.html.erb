@@ -17,7 +17,7 @@
         <td class="text-break"><%= api_log.request_url %></td>
         <td class="text-break">
           <% if api_log.response_type.present? %>
-            <small><strong>Response Type:</strong> <%= api_log.response_type %></small><br>
+            <small><strong><%= I18n.t("controller.api_logs.text.response_type") %>:</strong> <%= api_log.response_type %></small><br>
           <% end %>
           <%= api_log.response %>
         </td>

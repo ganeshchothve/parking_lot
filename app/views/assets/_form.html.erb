@@ -2,15 +2,16 @@
   <div class="row mb-4">
     <div class="col-10">
       <% options = assetable_document_types(assetable) %>
-      <%= select_tag "document_type", options_for_select(options, options.first[1]), {prompt: "Select", class: "selectize doc_type", required: 'required'} %>
-      <%= text_field_tag "url", nil, class: "form-control url", placeholder: "Enter URL" %>
-      <div class = "text-muted small pb-2">Upload documents in following formats - jpg, jpeg, png, pdf, zip </div>
+      <%= select_tag "document_type", options_for_select(options, options.first[1]), {prompt: I18n.t("global.select"), class: "selectize doc_type", required: 'required'} %>
+      <%= text_field_tag "url", nil, class: "form-control url", placeholder: I18n.t("global.enter_url") %>
+      <div class = "text-muted small pb-2"><%= I18n.t("controller.assets.text.upload_formats_text") %> </div>
       <div class = "text-muted small"><div class="help_text"></div></div>
     </div>
     <div class="col-2">
       <div class="mb-3">
         <div class="btn btn-primary fileinput-button pull-right">
-          <input type="file" name="files[]" class="btn btn-primary fileupload" data-extensions="<%= allowed_file_extensions('AssetUploader', assetable) %>" data-url="<%= assetables_path(assetable_type: assetable.class.model_name.i18n_key.to_s, assetable_id: assetable.id) %>" multiple=true <%= policy([ current_user_role_group, Asset.new(assetable: assetable)]).update? ? "" : "disabled=disabled" %> data-klass = 'Asset' data-field_name = 'file' data-form-data = '{"document_type": "<%= assetable.class::DOCUMENT_TYPES[0] %>", "url": "<%= nil %>"}' />
+          <label for="fileupload"><%= I18n.t("global.upload") %></label><br>
+          <input type="file" name="files[]" class="btn btn-primary fileupload" id="fileupload" data-extensions="<%= allowed_file_extensions('AssetUploader', assetable) %>"  data-url="<%= assetables_path(assetable_type: assetable.class.model_name.i18n_key.to_s, assetable_id: assetable.id) %>" multiple=true <%= policy([ current_user_role_group, Asset.new(assetable: assetable)]).update? ? "" : "disabled=disabled" %> data-klass = 'Asset' data-field_name = 'file' data-form-data = '{"document_type": "<%= assetable.class::DOCUMENT_TYPES[0] %>", "url": "<%= nil %>"}' />
         </div>
       </div>
     </div>
@@ -31,7 +32,7 @@
       formData.document_type = $('.doc_type').val()
       $(this).closest('.new_asset').find(".fileupload").data('form-data', formData)
       currentType = $('.doc_type').val();
-      $('.help_text').html("Valid documents for <b>" + types[currentType] + "</b> - </br>" + helpText[currentType + "_html"])
+      $('.help_text').html("<%= I18n.t('controller.assets.text.valid_documents_for') %> <b>" + types[currentType] + "</b> - </br>" + helpText[currentType + "_html"])
     }).trigger('change');
 
     $('.url').on("change", function(){
