@@ -775,6 +775,25 @@ class User
     self.selldo_access_token = oauth_data.credentials.token if oauth_data
   end
 
+  def send_generated_password_email
+    user = self
+    email_template = ::Template::EmailTemplate.where(name: "account_confirmation").first
+    begin
+      email = Email.create!({
+        booking_portal_client_id: user.booking_portal_client_id,
+        body: email_template.parsed_content(user),
+        subject: email_template.parsed_subject(user),
+        recipients: [ user ],
+        cc: user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
+        triggered_by_id: user.id,
+        triggered_by_type: user.class.to_s
+      })
+      email.sent!
+    rescue => e
+      Rails.logger.info "Error in sending email: #{e.message}"
+    end
+  end
+
   #def push_srd_to_selldo
   #  _selldo_api_key = Client.selldo_api_clients.dig(:website, :api_key)
 

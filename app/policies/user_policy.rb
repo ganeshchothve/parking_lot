@@ -54,6 +54,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def permitted_attributes(_params = {})
+    attributes = []
     attributes = %i[first_name last_name phone] unless marketplace_portal?
     attributes += %i[lead_id password password_confirmation time_zone iris_confirmation temporarily_blocked]
     # Only allow admin to change email.

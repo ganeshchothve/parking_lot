@@ -26,7 +26,12 @@ class Admin::UsersController < AdminController
       @user = User.new(role: 'admin')
       @user.assign_attributes(user_params)
       @user.assign_attributes(booking_portal_client: @client)
+      @user.temporary_password = generate_password
+      @user.assign_attributes(password: @user.temporary_password, password_confirmation: @user.password_confirmation)
+      @user.skip_confirmation_notification!
       if @user.save
+        @user.confirm
+        @user.send_generated_password_email
         format.html { redirect_to new_user_session_path, notice: 'Successfully registered' }
       else
         format.html { redirect_to user_signup_path, alert: @user.errors.full_messages }
