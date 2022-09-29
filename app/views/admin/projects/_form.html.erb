@@ -16,24 +16,28 @@
           <button type="button" class="close btn-close" data-bs-dismiss="modal" aria-label="Close">
           </button>
         </div>
-        <div class="modal-body">
-          <nav>
-            <div class="nav nav-tabs theme-tab" role="tablist">
-              <a class="nav-item nav-link active" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-basic" role="tab">Basic Details</a>
-              <!-- <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-logos" role="tab">Images & Docs</a> -->
-              <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-bookings" role="tab">Kylas Products</a>
-            </div>
-          </nav>
-        <div class="mt-3"></div>
-          <div class="tab-content theme-form">
-            <div class="tab-pane fade show active" id="nav-project-basic" role="tabpanel">
-              <%= render 'admin/projects/basic', f: f, project: project %>
-            </div>
-            <!-- <div class="tab-pane fade" id="nav-project-logos" role="tabpanel">
-              <%#= render 'admin/projects/logos', f: f, project: project %>
-            </div> -->
-            <div class="tab-pane fade" id="nav-project-bookings" role="tabpanel">
-              <%= render 'admin/projects/kylas_products', f: f, project: project %>
+        <div class="modal-body row p-0">
+          <div class="col-lg-4 filter-left-section">
+              <ul>
+                <li>
+                  <a class="nav-item nav-link active" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-basic" role="tab">Basic Details</a></li>
+                <li>
+                  <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-bookings" role="tab">Kylas Products</a>
+                </li>
+              </ul>
+          </div>
+          <div class="col-lg-8">
+            <div class="mt-1"></div>
+            <div class="tab-content theme-form">
+              <div class="tab-pane fade show active" id="nav-project-basic" role="tabpanel">
+                <h2 class="tab-title">Basic Details</h2>
+                <%= render 'admin/projects/basic', f: f, project: project %>
+              </div>
+              <hr>
+              <div class="tab-pane fade show active" id="nav-project-bookings" role="tabpanel">
+                <h2 class="tab-title">Kylas Products</h2>
+                <%= render 'admin/projects/kylas_products', f: f, project: project %>
+              </div>
             </div>
           </div>
         </div>

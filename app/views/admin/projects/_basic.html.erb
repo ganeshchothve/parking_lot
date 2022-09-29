@@ -47,7 +47,6 @@
       <%= f.text_field :registration_name, class: 'form-control', required: true, disabled: !policy([:admin, project]).editable_field?("registration_name") %>
     </div>
   </div>
-  <div class="row">
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :rera_registration_no, class: 'label-required' %>
@@ -60,8 +59,6 @@
         <%= f.text_field :gst_number, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("gst_number") %>
       </div>
     </div>
-  </div>
-  <div class="row">
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :price_starting_from %>
@@ -74,8 +71,6 @@
         <%= f.number_field :price_upto, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("price_upto"), min: "0" %>
       </div>
     </div>
-  </div>
-  <div class="row">
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :area_unit, class: '' %>
@@ -88,8 +83,6 @@
         <%= f.text_field :cancellation_amount, class: 'form-control', disabled: (policy([:admin, @project]).editable_field?("cancellation_amount") ? false : true) %>
       </div>
     </div>
-  </div>
-  <div class="row">
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :blocking_days, class: 'label-required' %>
@@ -102,9 +95,6 @@
         <%= f.text_field :holding_minutes, class: 'form-control', required: 'required', disabled: (policy([:admin, @project]).editable_field?("holding_minutes") ? false : true), min: 0, max: 30 %>
       </div>
     </div>
-  </div>
-
-  <div class="row">
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :blocking_amount, class: 'label-required' %>
@@ -117,8 +107,6 @@
         <%= f.text_field :cin_number, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("cin_number") %>
       </div>
     </div>
-  </div>
-  <div class='row'>
     <div class="mb-3 col-md-6">
       <%= f.label :latitude, class: 'label-required' %>
       <%= f.text_field :latitude, class:'form-control', required: 'required', disabled: !policy([:admin, project]).editable_field?("latitude")  %>
@@ -127,8 +115,6 @@
       <%= f.label :longitude, class: 'label-required' %>
       <%= f.text_field :longitude, class:'form-control', required: 'required',  disabled: !policy([:admin, project]).editable_field?("longitude") %>
     </div>
-  </div>
-  <div class="row">
     <div class="col-md-6">
       <div class="form-group mb-3">
         <div class="form-check form-check-inline">
@@ -143,8 +129,6 @@
         <%= f.text_field :foyer_link, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("foyer_link") %>
       </div>
     </div>
-  </div>
-  <div class='row'>
     <div class="col-md-6">
       <% if policy([:admin, project]).editable_field?("payment_enabled") %>
         <div class="mb-3">
@@ -204,5 +188,3 @@
       </div>
     </div>
   </div>
-
-</div>
