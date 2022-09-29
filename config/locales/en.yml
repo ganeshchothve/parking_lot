@@ -768,6 +768,8 @@ en:
         other_costs: "Other costs"
         source: "Source"
         manager_id: "Channel Partner"
+        template_docs: Documents
+        print_document: Print Document
       booking_detail/selldo_status:
         booked_tentative: "tentative"
         booked_confirmed: "confirmed"
@@ -908,6 +910,7 @@ en:
         city: "City"
         partner_regions: "Partner Regions"
         enable_vis: "Enable vis"
+        kylas_api_key: Kylas API Key
       client/available_preferred_logins:
         phone: "Phone Based"
         email: "Email Based"
@@ -1055,6 +1058,8 @@ en:
           sbi: "State Bank of India"
           bob: "Bank of Baroda"
           bajaj_finance: "Bajaj Finance"
+        kylas_product_id: Kylas Products
+        new_product_kylas_crm: "How to add a new Product in Kylas CRM?"
         disabled_walkins: "Disabled Walk-ins"
         disabled_bookings: "Disabled bookings"
       project/project_type:
@@ -1670,6 +1675,11 @@ en:
         dlt_tag_id: "DLT Tag ID"
         dlt_temp_id: "DLT Template ID"
         project_id: "Project"
+        project_ids: 'Projects'
+        print_document: Print Document
+        custom_document: Documents
+        document_not_available: Document not available
+        print: Print
       user_request:
         project_unit: "Project Unit"
         project_id: "Project"
@@ -1699,6 +1709,25 @@ en:
         resolved_by: "Resolved By"
         created_by: "Created By"
         request: "Request"
+      template/subject_classes:
+        SiteVisit: Walk-in
+        VariableIncentiveScheme: Variable Incentive Scheme
+        Workflow: Workflow
+        ProjectUnit: Project Unit
+        IncentiveScheme: Incentive Scheme
+        User: User
+        ProjectTower: Project Tower
+        Project: Project
+        BookingDetail: Booking
+        Lead: Lead
+        Scheme: Scheme
+        Receipt: Payment
+        ChannelPartner: Channel Partner
+        UserKyc: User KYC
+        Invoice: Invoice
+        Client: Client
+        UserRequest::Cancellation: Cancellation Request
+        UserRequest::Swap: Swap Request
       user_request/swap:
         project_unit_id: "Project Unit"
       user_request/status:
@@ -1985,6 +2014,9 @@ en:
         allowed_bookings: "Allowed Bookings"
         category: "Category"
         cp_code: "Cp Code"
+        kylas_user_id: Kylas Users
+        new_user_kylas_crm: "How to add a new user in Kylas CRM?"
+        booking_portal_client: Client Name
         change_in_manger:
           dear_team: "Dear Team"
           text: "Channel Partner has been changed on customer %{name1}. New assigned channel partner is %{name2}."
@@ -2074,6 +2106,8 @@ en:
         portal_stage: "Portal Stage"
         total_balance_pending: "Pending Balance"
         total_unattached_balance: "Total Unattached Balance"
+        kylas_product: Kylas Product
+        kylas_contact: Kylas Contacts
       lead/stage:
         incoming: "Incoming"
         booked: "Booked"
@@ -2215,6 +2249,17 @@ en:
           last_7_weeks: "Last 7 weeks"
           last_7_months: "Last 7 months"
           custom_dates: "Custom Dates"
+        workflow:
+          stage: Event
+          entity_type: Condition
+          actions: Actions
+          create_product: Create product in Kylas?
+          deactivate_product: Deactivate the product in Kylas?
+          update_product_on_deal: Update the product on Deal?
+        workflow/pipeline:
+          name: Pipeline
+          stage: Pipeline Stage
+          reason: Reason
 
       payment_type:
         name: "Name"
@@ -2362,6 +2407,8 @@ en:
         hot_selling: "Hot Selling"
       select_project:
         link_name: "Switch Project"
+      select_client:
+        link_name: 'Switch Client'
       text_msg:
         thanks_for_signing: "Thank you for signing up with us"
         found_inactive_account: "We found an old inactive account with these details. We have activated it, registered a new company & linked your account under it."
@@ -2630,6 +2677,8 @@ en:
         edit_booking_detail: "Edit Booking Detail"
       invoices:
         link_name: "Brokerage Invoices"
+      choose_template_for_print:
+        link_name: Print Documents
       send_booking_detail_form_notification: "Booking detail form will be sent to customer shortly."
       set_booking_detail_missing: "Booking detail not found"
       set_project_unit_missing: "Project unit not found"
@@ -2699,6 +2748,13 @@ en:
         booked_confirmed: "Move to Booked Confirmed"
         cancel_booking: "Cancel Booking"
 
+    workflows:
+      index:
+        link_name: 'Workflows'
+      new:
+        link_name: 'Add Workflow'
+      edit:
+        link_name: 'Edit Workflow'
     invoices:
       index:
         link_name: "Brokerages"
@@ -3284,6 +3340,8 @@ en:
         details_missing: "Sync details are missing."
 
     templates:
+      new:
+        link_name: 'Add Template'
       index:
         link_name: "Templates"
       show:
@@ -3292,6 +3350,8 @@ en:
         updated: "Template updated successfully."
       errors:
         contact_admin: "We are sorry! %{name} has some issue. Please Contact to Administrator."
+      choose_template_for_print:
+        link_name: Print Documents
 
     users:
       set_user_missing: "User not found"
