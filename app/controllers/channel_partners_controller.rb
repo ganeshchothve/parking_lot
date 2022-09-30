@@ -175,7 +175,7 @@ class ChannelPartnersController < ApplicationController
       if params[:action] == 'index' || params[:action] == 'export'
         authorize [:admin, ChannelPartner]
       elsif ["new","new_channel_partner", "new_company"].include?(params[:action])
-        authorize [:admin, ChannelPartner.new(booking_portal_client: get_client_from_domain)]
+        authorize [:admin, ChannelPartner.new(booking_portal_client: current_client)]
       elsif ["create","create_channel_partner", "create_company"].include?(params[:action])
         authorize [:admin, ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))]
       else

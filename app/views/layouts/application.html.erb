@@ -16,7 +16,6 @@
         App = {};
       }
       <% if !is_marketplace? %>
-        App.locale = <%= current_translations.to_json.html_safe %>
         App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login]) %>;
         App.client.enable_actual_inventory = <%= current_client.enable_actual_inventory?(current_user) %>
         App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;
@@ -24,6 +23,7 @@
       <!-- App.client = <%#= raw current_client.to_json(only: [:name, :_id, :preferred_login]) %>; -->
       <!-- App.client.enable_actual_inventory = <%#= current_client.enable_actual_inventory?(current_user) %> -->
       <!-- App.project = <%#= raw current_project.to_json(only: [:name, :_id]) %>; -->
+      App.locale = <%= current_translations.to_json.html_safe %>
       <% if user_signed_in? %>
         App.current_user = <%= raw current_user.to_json %>;
         App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name;

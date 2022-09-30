@@ -157,7 +157,7 @@ class Admin::UserPolicy < UserPolicy
       end
 
       attributes += [project_ids: []] if %w[admin superadmin].include?(user.role) && record.role.in?(User::SELECTED_PROJECT_ACCESS)
-      if %w[superadmin admin sales_admin].include?(user.role)
+      if %w[superadmin admin sales_admin].include?(user.role) && !marketplace_portal?
         attributes += [:erp_id]
         attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
       end
@@ -165,7 +165,7 @@ class Admin::UserPolicy < UserPolicy
       attributes += [:enable_live_inventory] if user.role?(:superadmin) && record.role?(:channel_partner)
     end # user.present?
 
-    if record.role.in?(%w(cp_owner channel_partner))
+    if record.role.in?(%w(cp_owner channel_partner)) && !marketplace_portal?
       attributes += [:upi_id]
       attributes += [:referral_code] if record.new_record?
       attributes += [:channel_partner_id] if user.present? && user.role.in?(%w(cp_owner))
@@ -173,7 +173,6 @@ class Admin::UserPolicy < UserPolicy
       attributes += [:rejection_reason]
     end
     attributes += [:login_otp] if confirm_via_otp?
-    attributes += [:kylas_user_id] if record.role.in?(%w(sales admin superadmin))
     attributes.uniq
   end
 end

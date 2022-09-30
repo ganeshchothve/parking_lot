@@ -55,8 +55,8 @@ class UserPolicy < ApplicationPolicy
 
   def permitted_attributes(_params = {})
     attributes = []
-    attributes = %i[first_name last_name phone] unless marketplace_portal?
-    attributes += %i[lead_id password password_confirmation time_zone iris_confirmation temporarily_blocked]
+    attributes = %i[first_name last_name phone time_zone] unless marketplace_portal?
+    attributes += %i[lead_id password password_confirmation iris_confirmation temporarily_blocked]
     # Only allow admin to change email.
     attributes += [user_notification_tokens_attributes: [UserNotificationTokenPolicy.new(user, UserNotificationToken.new).permitted_attributes]]
     attributes += %i[email] if ((record.new_record? || user.role?('admin')) && !marketplace_portal?)

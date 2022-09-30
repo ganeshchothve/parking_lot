@@ -103,7 +103,7 @@ class Client
   field :selldo_default_search_list_id, type: String
   field :powered_by_link, type: String
   field :launchpad_portal, type: Boolean, default: false
-  field :mask_lead_data_for_roles, type: Array, default: %w(admin superadmin cp cp_admin dev_sourcing_manager)
+  field :mask_lead_data_for_roles, type: Array, default: []
   field :incentive_gst_slabs, type: Array, default: [5, 12, 18]
 
   field :sync_user, type: Boolean, default: true
@@ -180,6 +180,13 @@ class Client
 
   accepts_nested_attributes_for :address, :external_inventory_view_config, :checklists
   accepts_nested_attributes_for :regions, allow_destroy: true
+
+  def self.available_preferred_logins
+    [
+      {id: 'phone', text: 'Phone Based'},
+      {id: 'email', text: 'Email Based'}
+    ]
+  end
 
   def sms_enabled?
     self.enable_communication["sms"]

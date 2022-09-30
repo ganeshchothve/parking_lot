@@ -10,7 +10,7 @@
       </div>
       <% unless user_signed_in? %>  
         <div class="text-end">
-          <% if get_client_from_domain.enable_channel_partners? && !is_marketplace? %>
+          <% if current_client.try(:enable_channel_partners?) && !is_marketplace? %>
             <div class="dropdown hide-xs float-end register-dropdown">
               <div class="d-inline-block">
                 <a class="dropdown-toggle p-style" href="javascript:;" id="navbarDropdown" role="button"

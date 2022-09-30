@@ -53,15 +53,19 @@ module UsersHelper
   end
 
 
-  def user_edit_role_options(_user)
-    if _user.id == current_user.id
-      [[ User.human_attribute_name("role.#{_user.role}"), _user.role]]
-    elsif _user.buyer?
-      filter_buyer_role_options
-    elsif current_user.role?('cp_owner') || _user.role.in?(%w(channel_partner cp_owner))
-      %w(cp_owner channel_partner).collect { |x| [User.human_attribute_name("role.#{x}"), x] }
+  def user_edit_role_options(_user = nil)
+    if marketplace?
+      marketplace_roles
     else
-      User.available_roles(current_client).reject {|x| x.in?(%w(cp_owner channel_partner))}.collect{|role| [ User.human_attribute_name("role.#{role}"), role ]}
+      if _user.id == current_user.id
+      [[ User.human_attribute_name("role.#{_user.role}"), _user.role]]
+      elsif _user.buyer?
+        filter_buyer_role_options
+      elsif current_user.role?('cp_owner') || _user.role.in?(%w(channel_partner cp_owner))
+        %w(cp_owner channel_partner).collect { |x| [User.human_attribute_name("role.#{x}"), x] }
+      else
+        User.available_roles(current_client).reject {|x| x.in?(%w(cp_owner channel_partner))}.collect{|role| [ User.human_attribute_name("role.#{role}"), role ]}
+      end
     end
   end
 

@@ -24,8 +24,9 @@
               <%= active_link_to t('controller.projects.index.link_name'), _projects_path, active: request.fullpath.scan(/projects/).present? && %w(user_interested_projects third_party_inventory).all? {|x| request.fullpath.scan(/^(?!.*#{x}).*$/).present?}, class: "nav-link pl-0 pr-0" %>
 
               <%= active_link_to t('controller.users.index.link_name'), admin_users_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-
+              <% if policy([:admin, ChannelPartner]).index? %>
                 <%= active_link_to t('controller.channel_partners.index.link_name'), channel_partners_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+              <% end %>
 
               <%= active_link_to t('controller.booking_details.index.link_name'), admin_booking_details_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
 
@@ -163,14 +164,6 @@
 
 <%= javascript_tag do %>
   $('document').ready(function(){
-    var alert = <%= raw alert.to_json %>
-    var notice = <%= raw notice.to_json %>
-    if(notice){
-      Amura.global_success_handler(notice);
-    } else if(alert){
-      Amura.global_error_handler(alert);
-    }
-
     if(window.top != window.self){
       $('#signout').hide();
     }
