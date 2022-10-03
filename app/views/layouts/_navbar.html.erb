@@ -24,7 +24,7 @@
         </div>
       </a> -->
       <div class="header-logo float-start">
-        <%= link_to (current_client.logo.present? ? (image_tag current_client.logo.url, class: 'img-fluid position-absolute start-50 top-50 translate-middle', alt: "Logo") : "launchpad-logo.png"), dashboard_path, class: 'navbar-brand me-0'%>
+        <%= link_to ((current_client.present? && current_client.logo.present?) ? (image_tag current_client.logo.url, class: 'img-fluid position-absolute start-50 top-50 translate-middle', alt: "Logo") : "launchpad-logo.png"), dashboard_path, class: 'navbar-brand me-0'%>
       </div>
       
       <div class="float-start mt-3">
@@ -127,28 +127,32 @@
               </h5>
             </div>
           </div>
-          <div class="card mb-3">
-            <div class="card-body">
-              <h6 class="card-subtitle text-muted">
-                <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= I18n.t("navbar.text.reach_helpdesk") %>
-                <div class="mt-3">
-                  <a href="tel: <%= current_client.channel_partner_support_number %>">
-                    <%= current_client.channel_partner_support_number %>
-                  </a>
-                </div>
-              </h6>
-            </div>
-          </div>
-          <div class="card mb-3">
-            <div class="card-body">
-              <h6 class="card-subtitle mb-2 text-muted"><i class="fa fa-envelope fill-theme me-2 fa-sm"></i><%= I18n.t("navbar.text.write_us") %></h6>
-              <div>
-                <a href="mailto: +<%= current_client.channel_partner_support_email %>" target="_blank">
-                  <%= current_client.channel_partner_support_email %>
-                </a>
+          <% if current_client.present? %>
+            <div class="card mb-3">
+              <div class="card-body">
+                <h6 class="card-subtitle text-muted">
+                  <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= I18n.t("navbar.text.reach_helpdesk") %>
+                  <div class="mt-3">
+                    <a href="tel: <%= current_client.channel_partner_support_number %>">
+                      <%= current_client.channel_partner_support_number %>
+                    </a>
+                  </div>
+                </h6>
               </div>
             </div>
-          </div>
+          <% end %>
+          <% if current_client.present? %>
+            <div class="card mb-3">
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted"><i class="fa fa-envelope fill-theme me-2 fa-sm"></i><%= I18n.t("navbar.text.write_us") %></h6>
+                <div>
+                  <a href="mailto: +<%= current_client.channel_partner_support_email %>" target="_blank">
+                    <%= current_client.channel_partner_support_email %>
+                  </a>
+                </div>
+              </div>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>

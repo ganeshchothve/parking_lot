@@ -98,7 +98,7 @@ module ApplicationHelper
   end
 
   def marketplace?
-    current_client.kylas_tenant_id.present?
+    current_user.try(:booking_portal_client).try(:kylas_tenant_id).present?
   end
 
   def available_templates(subject_class, subject_class_resource)
@@ -119,65 +119,67 @@ module ApplicationHelper
     #  #{active_link_to 'Docs', dashboard_documents_path, active: :exclusive, class: 'footer-link'}
     #  </li>"
     #end
-    if current_client.gallery.present? && current_client.gallery.assets.select{|x| x.persisted?}.present?
-      html += "<li >
-        #{active_link_to 'Gallery', dashboard_gallery_path, active: :exclusive, class: 'footer-link'}
-      </li>"
-    end
-    if current_client.faqs.present?
-      html += "<li >
-        #{active_link_to 'FAQs', dashboard_faqs_path, active: :exclusive, class: 'footer-link'}
-      </li>"
-    end
-    if current_client.rera.present?
-      html += "<li >
-        #{active_link_to 'RERA', dashboard_rera_path, active: :exclusive, class: 'footer-link'}
-      </li>"
-    end
-    if current_client.tds_process.present?
-      html += "<li >
-        #{active_link_to 'TDS', dashboard_tds_process_path, active: :exclusive, class: 'footer-link'}
-      </li>"
-    end
-    #if current_client.terms_and_conditions.present?
-    #  html += "<li >
-    #    #{active_link_to 'T & C', dashboard_terms_and_condition_path, active: :exclusive, class: 'footer-link'}
-    #  </li>"
-    #end
-    if current_user && policy([current_user_role_group, current_client]).edit?
-      html += "<li >
-        #{link_to( t('controller.clients.edit.link_name'), edit_admin_client_path, class: 'footer-link modal-remote-form-link')}
-      </li>"
-    end
-    if current_user && current_client.gallery.present? && policy([current_user_role_group, Asset.new(assetable: current_client.gallery)]).index? && current_user.role?("superadmin")
-      html += "<li >
-        #{link_to( t('controller.assets.new.link_name'), assetables_path(assetable_type: current_client.gallery.class.model_name.i18n_key.to_s, assetable_id: current_client.gallery.id), class: 'footer-link modal-remote-form-link')}
-      </li>"
-    end
-    if current_user && TemplatePolicy.new(current_user, Template).index?
-      html += "<li >
-        #{link_to(t('helpers.show.link_name', model: ::Template.model_name.human), admin_client_templates_path, class: 'footer-link')}
-      </li>"
-    end
-    if current_user && policy([current_user_role_group, Asset.new(assetable: current_client)]).index? && current_user.role?("superadmin")
-      html += "<li >
-        #{link_to( t('controller.assets.index.link_name'), assetables_path(assetable_type: current_client.class.model_name.i18n_key.to_s, assetable_id: current_client.id), class: 'footer-link modal-remote-form-link')}
-      </li>"
-    end
-    if current_user && policy([current_user_role_group, PublicAsset.new(public_assetable: current_client)]).index? && current_user.role?("superadmin")
-      html += "<li >
-        #{link_to( t('controller.public_assets.index.link_name'), public_assetables_path(public_assetable_type: current_client.class.model_name.i18n_key.to_s, public_assetable_id: current_client.id), class: 'footer-link modal-remote-form-link')}
-      </li>"
-    end
-    if current_user.buyer? && current_client.support_number.present?
-      html += "<li class = 'footer-object'>
-      #{I18n.t("helpers.need_help", name: current_client.support_number)}
-      </li>"
-    end
-    if current_user.channel_partner? && current_client.channel_partner_support_number.present?
-      html += "<li  class = 'footer-object'>
-      #{I18n.t("helpers.need_help", name: current_client.channel_partner_support_number)}
-      </li>"
+    if current_client.present?
+      if current_client.gallery.present? && current_client.gallery.assets.select{|x| x.persisted?}.present?
+        html += "<li >
+          #{active_link_to 'Gallery', dashboard_gallery_path, active: :exclusive, class: 'footer-link'}
+        </li>"
+      end
+      if current_client.faqs.present?
+        html += "<li >
+          #{active_link_to 'FAQs', dashboard_faqs_path, active: :exclusive, class: 'footer-link'}
+        </li>"
+      end
+      if current_client.rera.present?
+        html += "<li >
+          #{active_link_to 'RERA', dashboard_rera_path, active: :exclusive, class: 'footer-link'}
+        </li>"
+      end
+      if current_client.tds_process.present?
+        html += "<li >
+          #{active_link_to 'TDS', dashboard_tds_process_path, active: :exclusive, class: 'footer-link'}
+        </li>"
+      end
+      #if current_client.terms_and_conditions.present?
+      #  html += "<li >
+      #    #{active_link_to 'T & C', dashboard_terms_and_condition_path, active: :exclusive, class: 'footer-link'}
+      #  </li>"
+      #end
+      if current_user && policy([current_user_role_group, current_client]).edit?
+        html += "<li >
+          #{link_to( t('controller.clients.edit.link_name'), edit_admin_client_path, class: 'footer-link modal-remote-form-link')}
+        </li>"
+      end
+      if current_user && current_client.gallery.present? && policy([current_user_role_group, Asset.new(assetable: current_client.gallery)]).index? && current_user.role?("superadmin")
+        html += "<li >
+          #{link_to( t('controller.assets.new.link_name'), assetables_path(assetable_type: current_client.gallery.class.model_name.i18n_key.to_s, assetable_id: current_client.gallery.id), class: 'footer-link modal-remote-form-link')}
+        </li>"
+      end
+      if current_user && TemplatePolicy.new(current_user, Template).index?
+        html += "<li >
+          #{link_to(t('helpers.show.link_name', model: ::Template.model_name.human), admin_client_templates_path, class: 'footer-link')}
+        </li>"
+      end
+      if current_user && policy([current_user_role_group, Asset.new(assetable: current_client)]).index? && current_user.role?("superadmin")
+        html += "<li >
+          #{link_to( t('controller.assets.index.link_name'), assetables_path(assetable_type: current_client.class.model_name.i18n_key.to_s, assetable_id: current_client.id), class: 'footer-link modal-remote-form-link')}
+        </li>"
+      end
+      if current_user && policy([current_user_role_group, PublicAsset.new(public_assetable: current_client)]).index? && current_user.role?("superadmin")
+        html += "<li >
+          #{link_to( t('controller.public_assets.index.link_name'), public_assetables_path(public_assetable_type: current_client.class.model_name.i18n_key.to_s, public_assetable_id: current_client.id), class: 'footer-link modal-remote-form-link')}
+        </li>"
+      end
+      if current_user.buyer? && current_client.support_number.present?
+        html += "<li class = 'footer-object'>
+        #{I18n.t("helpers.need_help", name: current_client.support_number)}
+        </li>"
+      end
+      if current_user.channel_partner? && current_client.channel_partner_support_number.present?
+        html += "<li  class = 'footer-object'>
+        #{I18n.t("helpers.need_help", name: current_client.channel_partner_support_number)}
+        </li>"
+      end
     end
     html.html_safe
   end
