@@ -78,15 +78,15 @@ module ApplicationHelper
 
   def current_client
     return @current_client if @current_client.present?
-    if defined?(request) && request && request.subdomain.present? && request.domain.present?
-      domain = (request.subdomain.present? ? "#{request.subdomain}." : "") + "#{request.domain}"
-      @current_client = Client.in(booking_portal_domains: domain).first
-    elsif defined?(current_user) && current_user.present?
+    if defined?(current_user) && current_user.present?
       @current_client = if current_user.role?('superadmin')
         (Client.where(id: current_user.selected_client_id).first || current_user.booking_portal_client)
       else
         current_user.booking_portal_client
       end
+    elsif defined?(request) && request && request.subdomain.present? && request.domain.present?
+      domain = (request.subdomain.present? ? "#{request.subdomain}." : "") + "#{request.domain}"
+      @current_client = Client.in(booking_portal_domains: domain).first
     end
     @current_client
   end
