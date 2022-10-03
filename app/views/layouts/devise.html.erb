@@ -15,7 +15,7 @@
       if(typeof App === "undefined"){
         App = {};
       }
-      <% unless is_marketplace? %>
+      <% if !is_marketplace? && current_client.present? %>
         App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login, :enable_referral_bonus]) %>;
         App.client.enable_actual_inventory = <%= current_client.enable_actual_inventory?(current_user) %>-
         App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;
