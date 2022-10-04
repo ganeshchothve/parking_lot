@@ -49,7 +49,11 @@ class ApplicationPolicy
   end
 
   def marketplace_portal?
-    marketplace_portal = user.try(:booking_portal_client).try(:kylas_tenant_id).present?
+    if user.role?('superadmin')
+      marketplace_portal = user.try(:selected_client).try(:kylas_tenant_id).present?
+    else
+      marketplace_portal = user.try(:booking_portal_client).try(:kylas_tenant_id).present?
+    end
     marketplace_portal
   end
 
