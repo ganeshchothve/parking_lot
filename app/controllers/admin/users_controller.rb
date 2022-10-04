@@ -29,7 +29,7 @@ class Admin::UsersController < AdminController
       @user.skip_confirmation_notification!
       if @user.save
         @user.confirm
-        format.html { redirect_to (stored_location_for(current_user) || new_user_session_path), notice: 'Successfully registered' }
+        format.html { redirect_to (stored_location_for(@user) || new_user_session_path), notice: 'Successfully registered' }
       else
         format.html { redirect_to user_signup_path, alert: @user.errors.full_messages }
       end
@@ -88,7 +88,7 @@ class Admin::UsersController < AdminController
           if current_user == @user && permitted_attributes([current_user_role_group, @user]).key?('password')
             bypass_sign_in(@user)
           end
-          _path = params.dig(:user, :is_first_login).present? ? root_path : edit_admin_user_path(@user)
+          _path = params.dig(:user, :is_first_login).present? ? home_path(current_user) : edit_admin_user_path(@user)
           format.html { redirect_to _path, notice: I18n.t("controller.users.notice.profile_updated") }
           format.json { render json: @user }
         else
