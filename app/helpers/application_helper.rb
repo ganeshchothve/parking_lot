@@ -107,7 +107,7 @@ module ApplicationHelper
 
   # Kylas i-Frame URL
   def embedded_marketplace?
-    request.host == ENV[:embedded_marketplace_host]
+    request.host == ENV_CONFIG[:embedded_marketplace_host].to_s
   end
 
   def available_templates(subject_class, subject_class_resource)
