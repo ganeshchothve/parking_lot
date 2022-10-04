@@ -20,7 +20,7 @@ class Template::ReceiptTemplate < Template
             <% end %>
             <tr>
               <td><%= labels["payment_mode"] %></td>
-              <td class="text-right"><%= I18n.t("mongoid.attributes.receipt/payment_mode.#{payment_mode}") %></td>
+              <td class="text-right"><%= I18n.t("mongoid.attributes.receipt/payment_mode.#{self.payment_mode}", default: "-") %></td>
             </tr>
             <% if self.payment_mode != "online" %>
               <tr>
