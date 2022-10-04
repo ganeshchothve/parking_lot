@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   include Pundit
   include ApplicationHelper
 
-  #before_action :store_user_location!, if: :storable_location?
+  before_action :store_user_location!, if: :storable_location?
   before_action :set_locale
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_cache_headers, :set_request_store, :set_cookies
@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
   helper_method :home_path
   protect_from_forgery with: :exception, prepend: true
   skip_before_action :verify_authenticity_token, if: -> { params[:user_token].present? }
-  
+
   layout :set_layout
 
   rescue_from ActionController::InvalidAuthenticityToken, with: :invalid_authenticity_token
@@ -56,12 +56,8 @@ class ApplicationController < ActionController::Base
       elsif (current_user.buyer? || !current_user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))) && params[:controller] == 'local_devise/sessions'
         buyer_select_project_path
       else
-        if (current_user.sign_in_count == 1 && marketplace?)
-          reset_password_after_first_login_admin_user_path(current_user)
-        else
-          _path = admin_site_visits_path if current_user.role?('dev_sourcing_manager')
-          stored_location_for(current_user) || _path || current_dashboard_path
-        end
+        _path = admin_site_visits_path if current_user.role?('dev_sourcing_manager')
+        stored_location_for(current_user) || _path || current_dashboard_path
       end
     else
       return root_path
@@ -113,9 +109,10 @@ class ApplicationController < ActionController::Base
         params[:controller].in?([
           'buyer/receipts',
           'buyer/booking_details/receipts',
-          'admin/users'
+          'admin/users',
+          'kylas_auth'
         ]) &&
-        params[:action].in?(%w(index show new))
+        params[:action].in?(%w(index show new authenticate))
       )
   end
 

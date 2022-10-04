@@ -25,11 +25,11 @@ class Admin::UsersController < AdminController
     respond_to do |format|
       @user = User.new(role: 'admin')
       @user.assign_attributes(user_params)
-      @user.assign_attributes(booking_portal_client: @client)
+      @user.assign_attributes(booking_portal_client: @client, tenant_owner: true)
       @user.skip_confirmation_notification!
       if @user.save
         @user.confirm
-        format.html { redirect_to new_user_session_path, notice: 'Successfully registered' }
+        format.html { redirect_to (stored_location_for(current_user) || new_user_session_path), notice: 'Successfully registered' }
       else
         format.html { redirect_to user_signup_path, alert: @user.errors.full_messages }
       end

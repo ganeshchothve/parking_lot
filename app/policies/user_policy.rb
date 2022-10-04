@@ -22,7 +22,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def reset_password_after_first_login?
-    marketplace_portal? && edit?
+    marketplace_portal? && user.sign_in_count == 1 && !user.tenant_owner?
   end
 
   def resend_confirmation_instructions?
