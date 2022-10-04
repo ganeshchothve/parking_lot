@@ -13,6 +13,7 @@ class BookingDetail
   include PriceCalculator
   include CrmIntegration
   include IncentiveSchemeAutoApplication
+  extend DocumentsConcern
 
 
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)

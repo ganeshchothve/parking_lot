@@ -7,6 +7,7 @@ class UserKyc
   # include SyncDetails
   include CrmIntegration
   extend FilterByCriteria
+  extend DocumentsConcern
 
   # Add different types of documents which are uploaded on user_kyc
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)

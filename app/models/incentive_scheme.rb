@@ -6,6 +6,7 @@ class IncentiveScheme
   include InsertionStringMethods
   include IncentiveSchemeStateMachine
   extend FilterByCriteria
+  extend DocumentsConcern
 
   STRATEGY = %w(number_of_items sum_of_value)
   DOCUMENT_TYPES = []

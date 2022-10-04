@@ -5,6 +5,7 @@ class Invoice
   include InvoiceStateMachine
   extend FilterByCriteria
   include CrmIntegration
+  extend DocumentsConcern
   # include NumberIncrementor
 
   DOCUMENT_TYPES = []

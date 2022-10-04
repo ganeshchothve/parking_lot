@@ -1,6 +1,7 @@
 class Note
   include Mongoid::Document
   include Mongoid::Timestamps
+  extend DocumentsConcern
 
   # Add different types of documents which are uploaded on note.
   DOCUMENT_TYPES = []

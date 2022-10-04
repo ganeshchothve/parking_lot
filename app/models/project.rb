@@ -8,6 +8,7 @@ class Project
   extend ApplicationHelper
   include ProjectOnboardingOnSelldo
   extend FilterByCriteria
+  extend DocumentsConcern
 
   # Add different types of documents which are uploaded on client
   DOCUMENT_TYPES = %w[document brochure certificate unit_selection_filter_image sales_presentation images developer_logo advertise].freeze

@@ -4,6 +4,7 @@ class IncentiveDeduction
   include NumberIncrementor
   include InsertionStringMethods
   include IncentiveDeductionStateMachine
+  extend DocumentsConcern
 
   DOCUMENT_TYPES = []
 

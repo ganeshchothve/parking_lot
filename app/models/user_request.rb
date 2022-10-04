@@ -6,6 +6,7 @@ class UserRequest
   include UserRequestStateMachine
   extend FilterByCriteria
   extend ApplicationHelper
+  extend DocumentsConcern
 
   STATUS = %w[pending processing resolved rejected failed]
   # Add different types of documents which are uploaded on user_request

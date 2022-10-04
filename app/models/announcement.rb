@@ -6,6 +6,7 @@ class Announcement
   include ApplicationHelper
   extend ApplicationHelper
   extend FilterByCriteria
+  extend DocumentsConcern
 
   DOCUMENT_TYPES = ['photo', 'collateral']
   CATEGORIES = %w(general new_launch events brokerage_alert)

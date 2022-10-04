@@ -4,6 +4,7 @@ class ProjectTower
   include ArrayBlankRejectable
   include CrmIntegration
   extend FilterByCriteria
+  extend DocumentsConcern
 
   # Add different types of documents which are uploaded on project_tower
   DOCUMENT_TYPES = []

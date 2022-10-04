@@ -13,6 +13,7 @@ class User
   include DetailsMaskable
   include IncentiveSchemeAutoApplication
   include UserStatusInCompanyStateMachine
+  extend DocumentsConcern
 
   # Constants
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
@@ -920,6 +921,14 @@ class User
         end
       else
         User.where(matcher).first
+      end
+    end
+
+    def doc_types(client)
+      if client.try(:launchpad_portal)
+        DOCUMENT_TYPES
+      else
+        DOCUMENT_TYPES - %w[first_page_co_branding last_page_co_branding co_branded_asset]
       end
     end
   end

@@ -5,6 +5,7 @@ class TimelineUpdate
   include InsertionStringMethods
   include ApplicationHelper
   extend ApplicationHelper
+  extend DocumentsConcern
 
   DOCUMENT_TYPES = %w[images].freeze
 

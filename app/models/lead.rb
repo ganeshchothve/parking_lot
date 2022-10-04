@@ -12,6 +12,7 @@ class Lead
   include LeadStateMachine
   include DetailsMaskable
   include IncentiveSchemeAutoApplication
+  extend DocumentsConcern
 
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   DOCUMENT_TYPES = []

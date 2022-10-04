@@ -62,7 +62,7 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def asset_create?
-    %w[superadmin admin sales sales_admin crm].include?(user.role)
+    User::BUYER_ROLES.include?(user.role)
   end
 
   def block_lead?

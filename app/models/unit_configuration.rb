@@ -2,6 +2,7 @@ class UnitConfiguration
   include Mongoid::Document
   include Mongoid::Timestamps
   include ArrayBlankRejectable
+  extend DocumentsConcern
 
   # Add different types of documents which are uploaded on unit_configuration
   DOCUMENT_TYPES = ['floor_plan', 'image']

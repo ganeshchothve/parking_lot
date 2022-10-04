@@ -8,6 +8,7 @@ class ProjectUnit
   include PriceCalculator
   extend FilterByCriteria
   include CrmIntegration
+  extend DocumentsConcern
 
   STATUS = %w(available employee management not_available hold blocked error)
   # Add different types of documents which are uploaded on project_unit

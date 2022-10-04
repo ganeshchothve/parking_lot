@@ -8,6 +8,7 @@ class Meeting
   include ApplicationHelper
   extend ApplicationHelper
   extend FilterByCriteria
+  extend DocumentsConcern
 
   DOCUMENT_TYPES = ['photo', 'collateral']
 

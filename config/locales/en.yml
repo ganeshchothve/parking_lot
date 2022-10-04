@@ -18,6 +18,7 @@ en:
     only_admins:
       this_page: "Only admins can view this page."
     please_wait: "Please wait..."
+    congratulations: "Congratulations"
     coming_soon: "Coming Soon"
     confirmed: "Confirmation successful."
     terms_and_conditions: "Terms and Conditions"

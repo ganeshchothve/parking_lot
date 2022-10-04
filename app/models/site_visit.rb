@@ -11,6 +11,7 @@ class SiteVisit
   include Mongoid::Autoinc
   include QueueNumberAssignment
   include IncentiveSchemeAutoApplication
+  extend DocumentsConcern
 
   REJECTION_REASONS = ["budget_not_match", "location_not_match", "possession_not_match", "didnt_visit", "different_cp"]
   DOCUMENT_TYPES = []

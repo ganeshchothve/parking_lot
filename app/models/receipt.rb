@@ -12,6 +12,7 @@ class Receipt
   include TimeSlotGeneration
   include CrmIntegration
   extend FilterByCriteria
+  extend DocumentsConcern
 
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   OFFLINE_PAYMENT_MODE = %w[cheque rtgs imps card_swipe neft]

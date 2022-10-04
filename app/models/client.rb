@@ -3,6 +3,7 @@ class Client
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include InsertionStringMethods
+  extend DocumentsConcern
 
   PAYMENT_GATEWAYS = %w(Razorpay CCAvenue)
   # Add different types of documents which are uploaded on client

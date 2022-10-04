@@ -8,6 +8,7 @@ class ChannelPartner
   include ChannelPartnerStateMachine
   include ApplicationHelper
   extend ApplicationHelper
+  extend DocumentsConcern
 
   STATUS = %w(active inactive pending rejected)
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)

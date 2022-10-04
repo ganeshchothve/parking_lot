@@ -2,6 +2,7 @@ class CpLeadActivity
   include Mongoid::Document
   include Mongoid::Timestamps
   extend FilterByCriteria
+  extend DocumentsConcern
 
   COUNT_STATUS = %w(fresh_lead active_in_same_cp no_count accompanied_credit accompanied_count_to_cp count_given)
   LEAD_STATUS = %w(already_exists registered)

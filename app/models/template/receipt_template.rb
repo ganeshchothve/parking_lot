@@ -20,7 +20,7 @@ class Template::ReceiptTemplate < Template
             <% end %>
             <tr>
               <td><%= labels["payment_mode"] %></td>
-              <td class="text-right"><%= self.class.available_payment_modes.find{|x| x[:id] == self.payment_mode}[:text] %></td>
+              <td class="text-right"><%= I18n.t("mongoid.attributes.receipt/payment_mode.#{payment_mode}") %></td>
             </tr>
             <% if self.payment_mode != "online" %>
               <tr>

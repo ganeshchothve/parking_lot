@@ -2,7 +2,7 @@
   <div class = "new_asset">
     <div class="row mb-4">
       <div class="col-lg-10 col-12">
-        <% options = assetable_document_types(assetable) %>
+        <% options = assetable_document_types(assetable, current_client) %>
         <%= select_tag I18n.t("mongoid.models.channel_partners.document_type"), options_for_select(options, options.first[1]), {prompt: I18n.t("global.select"), class: "selectize", required: 'required'} %>
         <div class = "text-muted small pb-2"><%= I18n.t("controller.assets.text.upload_formats_text") %></div>
         <div class = "text-muted small pb-2">
