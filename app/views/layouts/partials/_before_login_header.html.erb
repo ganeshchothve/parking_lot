@@ -28,7 +28,7 @@
               <% end %>
             </div>
           <% end %>
-          <% if devise_controller? && params[:action] == 'new' %>
+          <% if devise_controller? && params[:action] == 'new' && marketplace? %>
             <%= link_to user_signup_path, class: "reg-chnl-prtnr-btn show-xs p-style" do %>
               <%= image_tag 'user-alt-black.svg', alt: "User Info" %>
               <%=  I18n.t("devise.keys.register_now") %>

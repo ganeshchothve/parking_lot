@@ -98,7 +98,16 @@ module ApplicationHelper
   end
 
   def marketplace?
-    current_user.try(:booking_portal_client).try(:kylas_tenant_id).present?
+    valid = current_client.try(:kylas_tenant_id).present?
+    unless valid
+      valid = request.host == ENV_CONFIG[:marketplace_host].to_s
+    end
+    valid
+  end
+
+  # Kylas i-Frame URL
+  def embedded_marketplace?
+    request.host == ENV[:embedded_marketplace_host]
   end
 
   def available_templates(subject_class, subject_class_resource)
@@ -266,7 +275,7 @@ module ApplicationHelper
   end
 
   def is_marketplace?
-    request.host.include?('marketplace') || request.host.include?('localhost')
+    marketplace?
   end
 
   def marketplace_layout
