@@ -17,7 +17,8 @@ class SyncKylasProductsWorker
                 name: kylas_product[:name],
                 creator: user,
                 booking_portal_client: user.booking_portal_client,
-                is_active: kylas_product[:isActive]
+                is_active: kylas_product[:isActive],
+                kylas_product_id: kylas_product[:id].to_s
             )
             project.save
           else

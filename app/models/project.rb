@@ -115,7 +115,7 @@ class Project
   field :price_starting_from, type: Integer
   field :price_upto, type: Integer
   field :broker_usp, type: Array, default: []
-  field :enable_inventory, type: Boolean, default: true
+  field :enable_inventory, type: Boolean, default: false
   field :enable_booking_with_kyc, type: Boolean, default: true
   field :check_sv_availability_in_selldo, type: Boolean, default: false
   field :incentive_calculation, type: Array, default: ["manual"]
