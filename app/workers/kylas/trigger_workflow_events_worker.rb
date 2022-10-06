@@ -3,15 +3,15 @@ require 'net/http'
 
 module Kylas
   #service to trigger all the workflow events
-  class TriggerWorkflowEvents
+  class TriggerWorkflowEventsWorker
+    include Sidekiq::Worker
 
-    attr_accessor :entity
-
-    def initialize entity
-      @entity = entity
+    def perform(entity_id, entity_class)
+      entity = entity_class.constantize.where(id: entity_id).first
+      trigger_workflow_events_in_kylas(entity) if entity.present?
     end
 
-    def trigger_workflow_events_in_kylas
+    def trigger_workflow_events_in_kylas(entity)
       wf = Workflow.where(stage: entity.status, booking_portal_client_id: entity.creator.booking_portal_client.id).first
       if wf.present?
 

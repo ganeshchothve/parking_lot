@@ -2048,6 +2048,9 @@ en:
       user/is_active:
         :true: "Active"
         :false: "Inactive"
+      user/is_active_in_kylas:
+        :true: "Active in Kylas"
+        :false: "Inactive in Kylas"
       user/role:
         superadmin: "Superadmin"
         admin: "Administrator"
@@ -3368,6 +3371,8 @@ en:
       cannot_confirm_user: "Cannot confirm user"
       confirm_user:
         link_name: "Confirm User"
+      invite_user:
+        link_name: "Invite User"
       confirm_via_otp:
         link_name: "Confirm Via OTP"
       exports:

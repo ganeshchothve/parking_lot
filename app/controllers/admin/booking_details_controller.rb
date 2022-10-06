@@ -220,7 +220,11 @@ class Admin::BookingDetailsController < AdminController
       if @booking_detail.save
         if @booking_detail.try(:booking_portal_client).try(:kylas_tenant_id).present?
           #trigger all workflow events in Kylas
-          Kylas::TriggerWorkflowEvents.new(@booking_detail).trigger_workflow_events_in_kylas rescue nil
+          if Rails.env.production?
+            Kylas::TriggerWorkflowEventsWorker.perform_async(@booking_detail.id.to_s, @booking_detail.class.to_s)
+          else
+            Kylas::TriggerWorkflowEventsWorker.new.perform(@booking_detail.id.to_s, @booking_detail.class.to_s)
+          end
         else
           response.set_header('location', admin_booking_detail_path(@booking_detail) )
         end

@@ -7,51 +7,51 @@
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :developer_name, class: 'label-required' %>
-      <%= f.text_field :developer_name, class: 'form-control', autofocus: true, required: 'required', disabled: !policy([:admin, project]).editable_field?("developer_name") %>
+      <%= f.label :developer_name %>
+      <%= f.text_field :developer_name, class: 'form-control', autofocus: true, disabled: !policy([:admin, project]).editable_field?("developer_name") %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :project_type, class: 'label-required' %>
-      <%= f.select :project_type, Project::PROJECT_TYPES.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("project_type") ? false : true) %>
+      <%= f.label :project_type %>
+      <%= f.select :project_type, Project::PROJECT_TYPES.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", multiple: true, disabled: (policy([current_user_role_group, project]).editable_field?("project_type") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :category, class: 'label-required' %>
-      <%= f.select :category, Project::CATEGORIES.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("category") ? false : true) %>
+      <%= f.label :category %>
+      <%= f.select :category, Project::CATEGORIES.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", multiple: true, disabled: (policy([current_user_role_group, project]).editable_field?("category") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :project_segment, class: 'label-required' %>
-      <%= f.select :project_segment, Project::SEGMENTS.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("project_segment") ? false : true) %>
+      <%= f.label :project_segment %>
+      <%= f.select :project_segment, Project::SEGMENTS.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", multiple: true, disabled: (policy([current_user_role_group, project]).editable_field?("project_segment") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :micro_market, class: 'label-required' %>
-      <%= f.text_field :micro_market, class: 'form-control', required: true, disabled: !policy([:admin, project]).editable_field?("micro_market") %>
+      <%= f.label :micro_market %>
+      <%= f.text_field :micro_market, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("micro_market") %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :possession, class: 'label-required' %>
-      <%= f.text_field :possession, class: 'form-control datepicker', required: true, disabled: !policy([:admin, project]).editable_field?("possession"), value: f.object.possession.present? ? f.object.possession.strftime("%d/%m/%Y") : nil %>
+      <%= f.label :possession %>
+      <%= f.text_field :possession, class: 'form-control datepicker', disabled: !policy([:admin, project]).editable_field?("possession"), value: f.object.possession.present? ? f.object.possession.strftime("%d/%m/%Y") : nil %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :registration_name, class: 'label-required' %>
-      <%= f.text_field :registration_name, class: 'form-control', required: true, disabled: !policy([:admin, project]).editable_field?("registration_name") %>
+      <%= f.label :registration_name %>
+      <%= f.text_field :registration_name, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("registration_name") %>
     </div>
   </div>
   <div class="row">
     <div class="col-md-6">
       <div class="mb-3">
-        <%= f.label :rera_registration_no, class: 'label-required' %>
-        <%= f.text_field :rera_registration_no, class: 'form-control', required: 'required', disabled: !policy([:admin, project]).editable_field?("rera_registration_no") %>
+        <%= f.label :rera_registration_no %>
+        <%= f.text_field :rera_registration_no, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("rera_registration_no") %>
       </div>
     </div>
     <div class="col-md-6">
@@ -92,13 +92,13 @@
   <div class="row">
     <div class="col-md-6">
       <div class="mb-3">
-        <%= f.label :blocking_days, class: 'label-required' %>
+        <%= f.label :blocking_days %>
         <%= f.number_field :blocking_days, class: 'form-control', required: 'required', disabled: (policy([:admin, @project]).editable_field?("blocking_days") ? false : true), min: 0, max: 30 %>
       </div>
     </div>
     <div class="col-md-6">
       <div class="mb-3">
-        <%= f.label :holding_minutes, class: 'label-required' %>
+        <%= f.label :holding_minutes %>
         <%= f.text_field :holding_minutes, class: 'form-control', required: 'required', disabled: (policy([:admin, @project]).editable_field?("holding_minutes") ? false : true), min: 0, max: 30 %>
       </div>
     </div>
@@ -107,7 +107,7 @@
   <div class="row">
     <div class="col-md-6">
       <div class="mb-3">
-        <%= f.label :blocking_amount, class: 'label-required' %>
+        <%= f.label :blocking_amount %>
         <%= f.number_field :blocking_amount, class: 'form-control', required: 'required', disabled: (policy([:admin, @project]).editable_field?("blocking_amount") ? false : true), min: 0 %>
       </div>
     </div>
@@ -120,11 +120,11 @@
   </div>
   <div class='row'>
     <div class="mb-3 col-md-6">
-      <%= f.label :latitude, class: 'label-required' %>
+      <%= f.label :latitude %>
       <%= f.text_field :latitude, class:'form-control', required: 'required', disabled: !policy([:admin, project]).editable_field?("latitude")  %>
     </div>
     <div class="mb-3 col-md-6">
-      <%= f.label :longitude, class: 'label-required' %>
+      <%= f.label :longitude %>
       <%= f.text_field :longitude, class:'form-control', required: 'required',  disabled: !policy([:admin, project]).editable_field?("longitude") %>
     </div>
   </div>
@@ -139,7 +139,7 @@
     </div>
     <div class="col-md-6">
       <div class="mb-3">
-        <%= f.label :foyer_link, class: 'label-required' %>
+        <%= f.label :foyer_link %>
         <%= f.text_field :foyer_link, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("foyer_link") %>
       </div>
     </div>

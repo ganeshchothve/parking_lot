@@ -189,7 +189,11 @@ module BookingDetailStateMachine
 
       if self.booking_portal_client.kylas_tenant_id.present?
         #trigger all workflow events in Kylas
-        Kylas::TriggerWorkflowEvents.new(self).trigger_workflow_events_in_kylas
+        if Rails.env.production?
+          Kylas::TriggerWorkflowEventsWorker.perform_async(self.id.to_s, self.class.to_s)
+        else
+          Kylas::TriggerWorkflowEventsWorker.new.perform(self.id.to_s, self.class.to_s)
+        end
       end
 
       if blocked? && get_paid_amount > project_unit.blocking_amount
@@ -205,7 +209,11 @@ module BookingDetailStateMachine
       
       if self.booking_portal_client.kylas_tenant_id.present?
         #trigger all workflow events in Kylas
-        Kylas::TriggerWorkflowEvents.new(self).trigger_workflow_events_in_kylas
+        if Rails.env.production?
+          Kylas::TriggerWorkflowEventsWorker.perform_async(self.id.to_s, self.class.to_s)
+        else
+          Kylas::TriggerWorkflowEventsWorker.new.perform(self.id.to_s, self.class.to_s)
+        end
       end
 
       if booked_tentative? && (get_paid_amount >= self.get_booking_price)
@@ -233,7 +241,11 @@ module BookingDetailStateMachine
       end
       if self.booking_portal_client.kylas_tenant_id.present?
         #trigger all workflow events in Kylas
-        Kylas::TriggerWorkflowEvents.new(self).trigger_workflow_events_in_kylas
+        if Rails.env.production?
+          Kylas::TriggerWorkflowEventsWorker.perform_async(self.id.to_s, self.class.to_s)
+        else
+          Kylas::TriggerWorkflowEventsWorker.new.perform(self.id.to_s, self.class.to_s)
+        end
       end
     end
 
@@ -398,7 +410,11 @@ module BookingDetailStateMachine
       SelldoLeadUpdater.perform_async(lead_id.to_s, {stage: 'cancelled'})
       if self.booking_portal_client.kylas_tenant_id.present?
         #trigger all workflow events in Kylas
-        Kylas::TriggerWorkflowEvents.new(self).trigger_workflow_events_in_kylas
+        if Rails.env.production?
+          Kylas::TriggerWorkflowEventsWorker.perform_async(self.id.to_s, self.class.to_s)
+        else
+          Kylas::TriggerWorkflowEventsWorker.new.perform(self.id.to_s, self.class.to_s)
+        end
       end
     end
 

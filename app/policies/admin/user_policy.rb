@@ -38,7 +38,11 @@ class Admin::UserPolicy < UserPolicy
 
   def confirm_user?
     if %w[admin superadmin].include?(user.role) && !record.confirmed?
-      true
+      if marketplace_portal?
+        record.is_active_in_kylas?
+      else
+        true
+      end
     else
       @condition = 'cannot_confirm_user'
       false
@@ -139,7 +143,11 @@ class Admin::UserPolicy < UserPolicy
   def permitted_attributes(params = {})
     attributes = super
     if user.present?
-      attributes += [:is_active] if record.persisted? && record.id != user.id && user.role.in?(%w(admin))
+      if marketplace_portal?
+        attributes += [:is_active] if record.persisted? && record.id != user.id && record.is_active_in_kylas? && user.role.in?(%w(admin))
+      else
+        attributes += [:is_active] if record.persisted? && record.id != user.id && user.role.in?(%w(admin))
+      end
       if %w[admin superadmin].include?(user.role)  && record.role?('cp')
         attributes += [:manager_id]
       end
