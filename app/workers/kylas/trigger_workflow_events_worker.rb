@@ -17,7 +17,7 @@ module Kylas
 
         # call serice to update the product on that deal
         if wf.create_product?
-          product_params = create_product_payload
+          product_params = create_product_payload(entity)
           kylas_product_response = Kylas::CreateProductInKylas.new(entity.creator, product_params).call
         end
         # call serice to update the product on that deal
@@ -32,7 +32,7 @@ module Kylas
             #check whether the product is present on the deal or not
             if !(booking_product_in_kylas.present?)
               update_deal_params = {}
-              update_deal_params[:product] = update_product_payload(kylas_product_response[:response]['id']) if kylas_product_response[:success]
+              update_deal_params[:product] = update_product_payload(kylas_product_response[:response]['id'], entity) if kylas_product_response[:success]
               kylas_deal_response = Kylas::UpdateDeal.new(entity.creator, entity.lead.kylas_deal_id, update_deal_params).call
               entity.set(kylas_product_id: kylas_product_response[:response]['id']) if kylas_deal_response[:success]
             end
@@ -41,7 +41,7 @@ module Kylas
 
         # call service to deactivate the product in Kylas
         if wf.deactivate_product?
-          product_deactivate_params = deactivate_product_params
+          product_deactivate_params = deactivate_product_params(entity)
           Kylas::DeactivateProduct.new(entity.creator, entity.kylas_product_id, product_deactivate_params).call
         end
 
@@ -54,7 +54,7 @@ module Kylas
           return if kylas_entity.blank?
 
           #create the request payload
-          update_stage_params = update_pipeline_stage_params(workflow_pipeline, kylas_entity)
+          update_stage_params = update_pipeline_stage_params(workflow_pipeline, kylas_entity, entity)
           
           #service to update the entity pipeline stage
           Kylas::UpdateEntityPipelineStage.new(
@@ -64,7 +64,7 @@ module Kylas
       end
     end
 
-    def create_product_payload
+    def create_product_payload(entity)
       payload = {
         project_unit_name: entity.name,
         agreement_price: entity.agreement_price
@@ -72,7 +72,7 @@ module Kylas
       payload
     end
 
-    def update_product_payload product_id
+    def update_product_payload(product_id, entity)
       payload = {
         'id': product_id,
         'name': entity.name,
@@ -86,7 +86,7 @@ module Kylas
       payload
     end
 
-    def deactivate_product_params
+    def deactivate_product_params(entity)
       payload = {
         kylas_product_id: entity.kylas_product_id,
         project_unit_name: entity.name,
@@ -95,7 +95,7 @@ module Kylas
       payload
     end
 
-    def update_pipeline_stage_params(workflow_pipeline, kylas_entity)
+    def update_pipeline_stage_params(workflow_pipeline, kylas_entity, entity)
       payload = {
         reasonForClosing: workflow_pipeline.lead_closed_reason.presence,
         products: kylas_entity['products'],
