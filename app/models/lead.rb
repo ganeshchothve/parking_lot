@@ -49,7 +49,7 @@ class Lead
   # used for dump latest queue_number or revisit queue number from sitevisit
   field :queue_number, type: Integer
   field :kyc_done, type: Boolean, default: false
-  field :push_to_crm, type: Boolean, default: true
+  field :push_to_crm, type: Boolean, default: false
 
   # lead reassignment specific field
   field :accepted_by_sales, type: Boolean
