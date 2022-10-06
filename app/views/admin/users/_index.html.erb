@@ -51,7 +51,7 @@
                   <div class="pe-3 py-3 d-flex justify-content-sm-end justify-content-start ps-xs-3">
                     <% if policy([:admin, user]).editable_field?('is_active') %>
                       <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i
-                          class='fa fn-16 fa-<%= (user.is_active? && user.is_active_in_kylas?) ? "check" : "times" %> fill-<%= (user.is_active? && user.is_active_in_kylas?) ? "success" : "danger" %> me-12 fa-lg'></i><%= t("mongoid.attributes.user/is_active.#{user.is_active?}") %>
+                          class='fa fn-16 fa-<%= (user.active_for_authentication?) ? "check" : "times" %> fill-<%= (user.active_for_authentication?) ? "success" : "danger" %> me-12 fa-lg'></i><%= t("mongoid.attributes.user/is_active.#{user.active_for_authentication?}") %>
                       </p>
                     <% end %>
                     <% if user.buyer? %>
