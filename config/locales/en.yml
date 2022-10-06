@@ -3220,6 +3220,7 @@ en:
         customer_details: "Customer Details"
         details: "Site Visit Details"
     searches:
+      booking_cancelled: Booking Cancelled
       filter:
         header: "Select Tower"
         hint: "Choose towers that suit your requirements"

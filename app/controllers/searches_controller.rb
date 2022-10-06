@@ -126,23 +126,14 @@ class SearchesController < ApplicationController
     @project_unit = ProjectUnit.find(@search.project_unit_id)
     authorize [current_user_role_group, @project_unit]
     respond_to do |format|
+      @search.set(step: 'filter', project_unit_id: nil, project_tower_id: nil)
       result = ProjectUnitUnholdWorker.new.perform(@project_unit.id)
-      if marketplace?
-        if !(result.is_a?(Hash) && result.has_key?(:errors))
-          format.html { redirect_to new_kylas_associated_lead_admin_leads_path(entityId: @search.lead.kylas_deal_id), notice: 'Booking cancelled' }
-          format.json { render json: {project_unit: @project_unit}, status: 200 }
-        else
-          format.html { redirect_to new_kylas_associated_lead_admin_leads_path(entityId: @search.lead.kylas_deal_id), alert: result[:errors] }
-          format.json { render json: { errors: result[:errors] }, status: 422 }
-        end
+      if !(result.is_a?(Hash) && result.has_key?(:errors))
+        format.html { redirect_to step_lead_search_path(@search, step: @search.step), notice: t('controller.searches.booking_cancelled') }
+        format.json { render json: {project_unit: @project_unit}, status: 200 }
       else
-        if !(result.is_a?(Hash) && result.has_key?(:errors))
-          format.html { redirect_to dashboard_path, notice: 'Booking cancelled' }
-          format.json { render json: {project_unit: @project_unit}, status: 200 }
-        else
-          format.html { redirect_to (request.referer.present? ? request.referer : dashboard_path), alert: result[:errors] }
-          format.json { render json: { errors: result[:errors] }, status: 422 }
-        end
+        format.html { redirect_to (request.referer.present? ? request.referer : (marketplace? ? new_kylas_associated_lead_admin_leads_path(entityId: @search.lead.kylas_deal_id) : dashboard_path)), alert: result[:errors] }
+        format.json { render json: { errors: result[:errors] }, status: 422 }
       end
     end
   end
