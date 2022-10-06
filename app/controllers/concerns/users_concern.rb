@@ -92,6 +92,7 @@ module UsersConcern
   end
 
   def sync_kylas_users
+    current_client.set(sync_user: false)
     if Rails.env.development?
       SyncKylasUsersWorker.new.perform(current_user.id.to_s)
     else

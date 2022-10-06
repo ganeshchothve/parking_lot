@@ -120,6 +120,7 @@ class Admin::ProjectsController < AdminController
   end
 
   def sync_kylas_products
+    current_client.set(sync_product: false)
     if Rails.env.development?
       SyncKylasProductsWorker.new.perform(current_user.id.to_s)
     else
