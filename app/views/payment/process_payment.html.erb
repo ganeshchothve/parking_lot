@@ -12,7 +12,7 @@
             <div class="col-10 col-md-10">
               <h3 class="card-title font-weight-bold text-uppercase"><%= I18n.t("global.congratulations") %></h3>
               <p>
-                <%= I18n.t("controller.receipts.process_payment.thanks_for_payment", name: number_to_indian_currency(@receipt.total_amount.round)) %>
+                <%= I18n.t("controller.receipts.process_payment.thanks_for_payment", name: number_to_indian_currency(@receipt.total_amount.round, :indian)) %>
                 <br/>
                 <strong><%= I18n.t("controller.receipts.process_payment.email_will_be_sent") %></strong>
                 <br/>

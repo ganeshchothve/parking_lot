@@ -302,8 +302,8 @@ class Project
       if user.selected_project_id.present? && params[:select_project].blank?
         custom_scope.merge!({_id: user.selected_project_id})
       elsif user.project_ids.present?
-        project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
-        custom_scope.merge!({_id: {"$in": project_ids}})
+        project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) } if user.project_ids.present?
+        custom_scope.merge!({_id: {"$in": (project_ids || [])}})
       end
     end
     custom_scope.merge!({ is_active: true }) if (params[:controller] == 'admin/projects' && params[:action] == 'index') || params[:controller] == 'home'

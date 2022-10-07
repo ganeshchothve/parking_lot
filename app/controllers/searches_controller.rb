@@ -98,10 +98,10 @@ class SearchesController < ApplicationController
           format.html { redirect_to checkout_lead_search_path(@search) }
         else
           ProjectUnitUnholdWorker.new.perform(@search.project_unit_id)
-          format.html { redirect_to dashboard_path, alert: t('controller.searches.hold.scheme_for_channel_partner_not_found') }
+          format.html { redirect_to home_path(current_user), alert: t('controller.searches.hold.scheme_for_channel_partner_not_found') }
         end
       else
-        format.html { redirect_to dashboard_path, alert: t('controller.searches.hold.booking_detail_error') }
+        format.html { redirect_to home_path(current_user), alert: t('controller.searches.hold.booking_detail_error') }
       end
     end
   end

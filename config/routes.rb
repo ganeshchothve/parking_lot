@@ -409,6 +409,7 @@ Rails.application.routes.draw do
   get :terms_and_conditions, as: :terms_and_conditions, to: 'home#terms_and_conditions'
   get :privacy_policy, as: :privacy_policy, to: 'home#privacy_policy'
   get :"cp-enquiryform", as: :cp_enquiryform, to: 'home#cp_enquiryform'
+  get :not_authorized, to: 'home#not_authorized', as: :not_authorized
 
   # Lead selection while login for buyers
   get 'buyer/projects', to: 'home#select_project', as: :buyer_select_project

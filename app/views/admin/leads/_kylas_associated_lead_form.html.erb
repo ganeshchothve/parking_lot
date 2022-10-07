@@ -36,10 +36,12 @@
   <%= f.select :phone, options_for_select([]),  { include_blank: 'Select Kylas Phone'}, autocomplete: 'off', class: 'selectize phone_select', disabled: !(policy([current_user_role_group, @lead]).editable_field?("phone")) %>
 </div>
 
-<div class="mb-3">
-  <%= f.label :manager_id %>
-  <%= f.select :manager_id, options_from_collection_for_select(@cp_users.present? ? @cp_users : [], "id" , "name", ((@cp_users.first.id.to_s rescue nil))), {prompt: true }, class: 'selectize-remote', data: { url: admin_users_path, params: { fltrs: { role: ['channel_partner', 'cp_owner' ], user_status_in_company: 'active' } } }%>
-</div>
+<% if (policy([current_user_role_group, @lead]).editable_field?("manager_id")) %>
+  <div class="mb-3">
+    <%= f.label :manager_id %>
+    <%= f.select :manager_id, options_from_collection_for_select(@cp_users.present? ? @cp_users : [], "id" , "name", ((@cp_users.first.id.to_s rescue nil))), {prompt: true }, class: 'selectize-remote', data: { url: admin_users_path, params: { fltrs: { role: ['channel_partner', 'cp_owner' ], user_status_in_company: 'active' } } }%>
+  </div>
+<% end %>
 
 <div class="text-end">
     <%= f.submit "Save", class: 'btn btn-primary float-end w-auto border-primary' %>

@@ -55,7 +55,7 @@ class ApplicationController < ActionController::Base
       if current_user.role.in?(%w(superadmin)) && params[:controller] == 'local_devise/sessions'
         admin_select_clients_path
       elsif (current_user.buyer? || !current_user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))) && (params[:controller] == 'local_devise/sessions' || (params[:controller] == 'admin/users' && params.dig(:user, :is_first_login).present?))
-        if stored_path.present? &&  stored_path == kylas_auth_path
+        if stored_path.present? &&  stored_path.include?("kylas-auth")
           stored_path
         else
           buyer_select_project_path
@@ -70,7 +70,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_dashboard_path
-    is_marketplace? ? admin_users_path : dashboard_path
+    (is_marketplace? ? (embedded_marketplace? ? not_authorized_path : admin_users_path) : dashboard_path)
   end
 
   protected
@@ -206,7 +206,7 @@ class ApplicationController < ActionController::Base
     alert = t policy_name, scope: "pundit", default: :default
     respond_to do |format|
       unless request.referer && request.referer.include?('remote-state') && request.method == 'GET'
-        format.html { redirect_to (user_signed_in? ? dashboard_path : root_path), alert: alert }
+        format.html { redirect_to (not_authorized_path), alert: alert }
         format.json { render json: { errors: alert }, status: 403 }
       else
         # Handle response for remote-state url requests.

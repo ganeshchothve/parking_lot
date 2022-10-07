@@ -148,7 +148,8 @@ class Admin::LeadPolicy < LeadPolicy
     attributes = super || []
     attributes += [:first_name, :last_name, :email, :phone, :project_id, site_visits_attributes: Pundit.policy(user, [:admin, SiteVisit.new]).permitted_attributes] if record.new_record?
     if user.present? && user.role.in?(%w(superadmin admin gre sales))
-      attributes += [:manager_id, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
+      attributes += [:manager_id] if user.booking_portal_client.try(:enable_channel_partners?)
+      attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
     end
     attributes.uniq
   end
