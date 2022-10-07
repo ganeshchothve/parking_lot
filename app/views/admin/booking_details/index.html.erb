@@ -11,7 +11,7 @@
             <i class="fa fa-filter fill-theme"></i>
           </a>
         </div>
-        <% if policy([:admin, BookingDetail.new]).mis_report? %>
+        <% if policy([:admin, BookingDetail.new]).mis_report?(embedded_marketplace?) %>
           <div class="export-menu display-initial d-inline text-end">
             <button class="select-btn fn-400 dropdown-toggle px-3 border rounded py-2 ms-2" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= t('controller.users.exports.link_name', name: nil) %></button>
             <div class="dropdown-menu">

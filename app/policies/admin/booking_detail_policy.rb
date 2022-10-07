@@ -35,7 +35,8 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     record.project&.is_active? && %w[cancelled swapped].exclude?(record.status) && (eligible_users_for_tasks? || enable_incentive_module?(user))
   end
 
-  def mis_report?
+  def mis_report?(embedded_marketplace = false)
+    return false if embedded_marketplace
     %w[superadmin admin sales_admin crm cp_admin billing_team cp].include?(user.role)
   end
 
