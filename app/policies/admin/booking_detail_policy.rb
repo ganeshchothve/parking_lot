@@ -40,6 +40,11 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     %w[superadmin admin sales_admin crm cp_admin billing_team cp].include?(user.role)
   end
 
+  def filter?(embedded_marketplace = false)
+    return false if embedded_marketplace
+    true
+  end
+
   def hold?
     record.project&.is_active? && _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && eligible_user? && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && buyer_kyc_booking_limit_exceed?
   end
