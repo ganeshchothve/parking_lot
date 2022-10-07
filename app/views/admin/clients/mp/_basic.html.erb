@@ -90,6 +90,7 @@
       <%= f.select :payment_gateway, options_for_select(Client::PAYMENT_GATEWAYS.map {|x| [x.titleize, x]}, f.object.payment_gateway), {prompt: 'Select'}, class: 'selectize', disabled: !policy([:admin, @client]).editable_field?("payment_gateway") %>
     </div>
   </div>
+</div>
 
   <div class="col-md-12">
     <div class="mb-3">
