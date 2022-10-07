@@ -4,11 +4,11 @@ class Admin::WorkflowPolicy < WorkflowPolicy
   end
 
   def create?
-    index?
+    %w[superadmin admin].include?(user.role)
   end
 
   def update?
-    create?
+    %w[superadmin admin].include?(user.role)
   end
 
   def permitted_attributes(params = {})

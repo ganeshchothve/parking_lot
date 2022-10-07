@@ -111,11 +111,14 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def move_to_next_state?
-    (user.role?('team_lead') && (record.buyer? || record.role?('sales'))) ||
+    valid = false
+    valid = (user.role?('team_lead') && (record.buyer? || record.role?('sales'))) ||
       user.role?('sales') && (
         (record.buyer? && record.may_dropoff? && (record.closing_manager_id == user.id)) ||
         (!record.is_a?(Lead) && record.role?('sales') && (record.may_break? || record.may_available?))
-      )
+    )
+    valid = false if marketplace_portal?
+    valid
   end
 
   def change_state?

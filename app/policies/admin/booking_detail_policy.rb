@@ -93,7 +93,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def move_to_next_state?
-    %w[account_manager account_manager_head cp_admin].include?(user.role)
+    %w[account_manager account_manager_head cp_admin admin].include?(user.role)
   end
 
   def move_to_next_approval_state?
@@ -109,13 +109,13 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def can_move_booked_confirmed?
-    (user.role.in?(%w(account_manager_head cp_admin dev_sourcing_manager billing_team))) && record.booked_tentative? && record.approval_status == "approved"
+    (user.role.in?(%w(account_manager_head cp_admin dev_sourcing_manager billing_team admin))) && record.booked_tentative? && record.approval_status == "approved"
   end
 
   def can_move_cancel?
     out = false
-    out = true if (record.booked_tentative? || record.blocked?) && %w(billing_team).include?(user.role)
-    out = true if (record.booked_tentative? || record.blocked?) && (record.approval_status == "rejected") && %w(cp_admin).include?(user.role)
+    out = true if (record.booked_tentative? || record.blocked?) && %w(billing_team admin).include?(user.role)
+    out = true if (record.booked_tentative? || record.blocked?) && (record.approval_status == "rejected") && %w(cp_admin admin).include?(user.role)
     out
   end
 

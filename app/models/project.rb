@@ -289,19 +289,14 @@ class Project
     custom_scope = {}
     if user.role.in?(%w(cp_owner channel_partner))
       custom_scope =  { _id: { '$in': user.interested_projects.approved.distinct(:project_id) }, booking_portal_client_id: user.booking_portal_client.id }
-      # custom_scope = { _id: { '$in': user.interested_projects.approved.distinct(:project_id) } } unless params[:controller] == 'admin/projects' && params[:ds].blank?
-    elsif user.role.in?(%w(admin))
+    elsif user.role.in?(%w(admin superadmin))
       custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
-    elsif user.role.in?(%w(gre sales))
-      custom_scope = { booking_portal_client_id: user.booking_portal_client_id }
-    elsif user.role.in?(%w(superadmin))
-      custom_scope = { booking_portal_client_id: user.selected_client_id }
     end
 
     unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
       if user.selected_project_id.present? && params[:select_project].blank?
         custom_scope.merge!({_id: user.selected_project_id})
-      elsif user.project_ids.present?
+      else
         project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) } if user.project_ids.present?
         custom_scope.merge!({_id: {"$in": (project_ids || [])}})
       end
