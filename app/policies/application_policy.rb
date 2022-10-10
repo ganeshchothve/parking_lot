@@ -49,6 +49,7 @@ class ApplicationPolicy
   end
 
   def marketplace_portal?
+    return false if user.blank?
     if user.role?('superadmin')
       marketplace_portal = user.try(:selected_client).try(:kylas_tenant_id).present?
     else
