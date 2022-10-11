@@ -76,12 +76,12 @@ class Admin::Projects::TimeSlotsController < AdminController
 
   def set_project
     @project = Project.where(id: params[:project_id]).first
-    redirect_to dashboard_path, alert: I18n.t("controller.projects.alert.not_found") unless @project
+    redirect_to home_path(current_user), alert: I18n.t("controller.projects.alert.not_found") unless @project
   end
 
   def set_time_slot
     @time_slot = @project.time_slots.where(id: params[:id]).first
-    redirect_to dashboard_path, alert: I18n.t("controller.time_slots.alert.not_found") unless @time_slot
+    redirect_to home_path(current_user), alert: I18n.t("controller.time_slots.alert.not_found") unless @time_slot
   end
 
   def authorize_resource

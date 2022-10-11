@@ -20,6 +20,7 @@
       <%#= form.input :referral_code, disabled: !policy([:admin, @user]).editable_field?("referral_code") %>
     </div>
 </div>
+<%= form.hidden_field :booking_portal_client_id, value: current_client.try(:id) %>
 <% if params[:manager_id].present? %>
   <%= form.hidden_field :manager_id, value: params[:manager_id] %>
 <% end %>

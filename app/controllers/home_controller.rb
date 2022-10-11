@@ -38,39 +38,6 @@ class HomeController < ApplicationController
     render layout: 'landing_page'
   end
 
-  def select_project
-    if current_user.buyer?
-      if current_user.leads.count == 1
-        current_user.update(selected_lead: (lead = current_user.leads.first), selected_project: lead.project)
-        redirect_to home_path(current_user)
-      else
-        if request.method == 'POST'
-          current_user.selected_lead_id = params[:selected_lead_id]
-          lead = Lead.where(id: params[:selected_lead_id]).first
-          current_user.selected_project_id = lead.project_id if lead
-          current_user.save
-          redirect_to home_path(current_user)
-        else
-          @leads = current_user.leads.all
-          render layout: 'devise'
-        end
-      end
-    elsif !current_user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
-      if current_user.project_ids.count == 1
-        current_user.update(selected_project_id: current_user.project_ids.first)
-        redirect_to home_path(current_user)
-      else
-        if request.method == 'POST'
-          current_user.selected_project_id = params[:selected_project_id]
-          current_user.save
-          redirect_to home_path(current_user)
-        else
-          render layout: 'devise'
-        end
-      end
-    end
-  end
-
   def select_client
     if current_user.role.in?(%w(superadmin))
       if current_user.client_ids.count == 1

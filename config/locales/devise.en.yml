@@ -2,7 +2,7 @@
 
 en:
   devise:
-    sign_out: 'Sign Out'
+    sign_out: "Sign Out"
     confirmations:
       confirmed: "Your account has been successfully confirmed."
       send_instructions: "You will receive an email with instructions for how to confirm your email address in a few minutes. You can also confirm it using your phone & an OTP."
@@ -11,10 +11,10 @@ en:
       already_authenticated: "You are already signed in."
       inactive: "Your account is not activated yet."
       is_active: "You account has been de-activated."
-      invalid: "Invalid %{authentication_keys} or password."
+      invalid: "Invalid login or password."
       locked: "Your account is locked."
       last_attempt: "You have one more attempt before your account is locked."
-      not_found_in_database: "Invalid %{authentication_keys} or password."
+      not_found_in_database: "Invalid login or password."
       timeout: "Your session expired. Please sign in again to continue."
       unauthenticated: "You need to sign in or sign up before continuing."
       unconfirmed: "You have to confirm your email address before continuing."
@@ -30,7 +30,7 @@ en:
       password_change:
         subject: "Password Changed"
     omniauth_callbacks:
-      failure: "Could not authenticate you from %{kind} because \"%{reason}\"."
+      failure: 'Could not authenticate you from %{kind} because "%{reason}".'
       success: "Successfully authenticated from %{kind} account."
     passwords:
       no_token: "You can't access this page without coming from a password reset email. If you do come from a password reset email, please make sure you used the full URL provided."

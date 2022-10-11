@@ -411,10 +411,6 @@ Rails.application.routes.draw do
   get :"cp-enquiryform", as: :cp_enquiryform, to: 'home#cp_enquiryform'
   get :not_authorized, to: 'home#not_authorized', as: :not_authorized
 
-  # Lead selection while login for buyers
-  get 'buyer/projects', to: 'home#select_project', as: :buyer_select_project
-  post 'select_project', to: 'home#select_project', as: :select_project
-
   get 'admin/select_clients', to: 'home#select_client', as: :admin_select_clients
   post 'select_client', to: 'home#select_client', as: :select_client
 

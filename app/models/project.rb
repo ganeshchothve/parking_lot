@@ -294,7 +294,7 @@ class Project
     end
 
     unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
-      if user.selected_project_id.present? && params[:select_project].blank?
+      if user.selected_project_id.present?
         custom_scope.merge!({_id: user.selected_project_id})
       else
         project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) } if user.project_ids.present?

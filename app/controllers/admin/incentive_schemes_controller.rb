@@ -67,7 +67,7 @@ class Admin::IncentiveSchemesController < AdminController
 
   def set_incentive_scheme
     @incentive_scheme = IncentiveScheme.where(id: params[:id]).first
-    redirect_to dashboard_path, alert: I18n.t("controller.incentive_schemes.alert.not_found") unless @incentive_scheme
+    redirect_to home_path(current_user), alert: I18n.t("controller.incentive_schemes.alert.not_found") unless @incentive_scheme
   end
 
   def authorize_resource

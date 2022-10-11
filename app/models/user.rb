@@ -30,11 +30,11 @@ class User
   TEAM_LEAD_DASHBOARD_ACCESS_USERS = %w[team_lead gre]
   KYLAS_MARKETPALCE_USERS = %w[admin sales]
   KYLAS_CUSTOM_FIELDS_ENTITIES = %w[lead deals meetings].freeze
+  CLIENT_SCOPED_ROLES = (%w[channel_partner cp_owner] + User::BUYER_ROLES).freeze
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :timeoutable, :password_archivable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: [:login] #:lockable,:expirable,:session_limitable,:password_expirable
-
+  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :confirmable, :timeoutable, :password_archivable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: {login: true, booking_portal_client_id: false} #:lockable,:expirable,:session_limitable,:password_expirable
   attr_accessor :temporary_password, :payment_link, :temp_manager_id, :company_name
 
   ## Database authenticatable
@@ -221,17 +221,22 @@ class User
   validates :phone, presence: true, if: proc { |user| user.role.in?(%w(cp_owner channel_partner)) }
   #validates :first_name, :last_name, name: true, allow_blank: true
   validate :phone_or_email_required, if: proc { |user| user.phone.blank? && user.email.blank? }
-  validates :phone, :email, uniqueness: { allow_blank: true }
+  # validates :phone, :email, uniqueness: { allow_blank: true }
   validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile mobile fixed_line premium_rate] }, allow_blank: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } , allow_blank: true
   validates :allowed_bookings, presence: true, if: proc { |user| user.buyer? }
   # validates :rera_id, presence: true, if: proc { |user| user.role?('channel_partner') } #TO-DO Done for Runwal to revert for generic
   #validates :rera_id, uniqueness: true, allow_blank: true
+  validates_presence_of     :password, if: :password_required?
+  validates_confirmation_of :password, if: :password_required?
+  validates_length_of       :password, within: Devise.password_length, allow_blank: true
   validates :role, inclusion: { in: proc { |user| User.available_roles(user.booking_portal_client) } }
   validates :lead_id, uniqueness: true, if: proc { |user| user.buyer? }, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :manager_change_reason_present?
   validate :password_complexity
+  validate :phone_email_uniqueness
+
 
   # scopes needed by filter
   scope :filter_by_confirmation, ->(confirmation) { confirmation.eql?('not_confirmed') ? where(confirmed_at: nil) : where(confirmed_at: { "$ne": nil }) }
@@ -393,6 +398,17 @@ class User
       self.booking_portal_client.update(kylas_tenant_id: response.dig(:data, 'id')) if response[:success]
     rescue StandardError
       Rails.logger.error 'Kylas::TenantDetails - StandardError'
+    end
+  end
+
+  def phone_email_uniqueness
+    attrs = []
+    attrs << {email: self.email} if self.email.present?
+    attrs << {phone: self.phone} if self.phone.present?
+    if self.role.in?(User::CLIENT_SCOPED_ROLES)
+      self.errors.add(:base, 'User with these details already exists') if User.in(role: User::CLIENT_SCOPED_ROLES).ne(id: self.id).where(booking_portal_client_id: self.booking_portal_client_id).or(attrs).present?
+    else
+      self.errors.add(:base, 'User with these details already exists') if User.nin(role: User::CLIENT_SCOPED_ROLES).ne(id: self.id).or(attrs).present?
     end
   end
 
@@ -829,7 +845,13 @@ class User
         reset_password_token = warden_conditions.delete(:reset_password_token)
         where(reset_password_token: reset_password_token).first
       elsif login.present?
-        any_of({ phone: login }, email: login).first
+        auth_conditions = [{ phone: login }, { email: login }]
+        if warden_conditions[:booking_portal_client_id].present?
+          user_criteria = any_of(auth_conditions).in(role: User::CLIENT_SCOPED_ROLES).where(booking_portal_client_id: warden_conditions[:booking_portal_client_id])
+        else
+          user_criteria = any_of(auth_conditions).nin(role: User::CLIENT_SCOPED_ROLES)
+        end
+        user_criteria.first
       else
         super
       end

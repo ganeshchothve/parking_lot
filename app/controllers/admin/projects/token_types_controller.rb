@@ -98,12 +98,12 @@ class Admin::Projects::TokenTypesController < AdminController
 
   def set_project
     @project = Project.where(id: params[:project_id]).first
-    redirect_to dashboard_path, alert: I18n.t("controller.projects.alert.not_found") unless @project
+    redirect_to home_path(current_user), alert: I18n.t("controller.projects.alert.not_found") unless @project
   end
 
   def set_token_type
     @token_type = @project.token_types.where(id: params[:id]).first
-    redirect_to dashboard_path, alert: I18n.t("controller.token_types.alert.not_found") unless @token_type
+    redirect_to home_path(current_user), alert: I18n.t("controller.token_types.alert.not_found") unless @token_type
   end
 
   def authorize_resource

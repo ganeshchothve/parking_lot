@@ -78,15 +78,17 @@ module ApplicationHelper
 
   def current_client
     return @current_client if @current_client.present?
-    if defined?(current_user) && current_user.present?
+    @current_client = if current_project.present?
+                        @current_project.booking_portal_client
+                      elsif current_domain
+                        Client.in(booking_portal_domains: current_domain).first
+                      end
+    if @current_client.blank? && defined?(current_user) && current_user.present?
       @current_client = if current_user.role?('superadmin')
-        (Client.where(id: current_user.selected_client_id).first || current_user.booking_portal_client)
-      else
-        current_user.booking_portal_client
-      end
-    elsif defined?(request) && request && request.subdomain.present? && request.domain.present?
-      domain = (request.subdomain.present? ? "#{request.subdomain}." : "") + "#{request.domain}"
-      @current_client = Client.in(booking_portal_domains: domain).first
+                          (Client.where(id: current_user.selected_client_id).first || current_user.booking_portal_client)
+                        else
+                          current_user.booking_portal_client
+                        end
     end
     @current_client
   end
@@ -94,7 +96,26 @@ module ApplicationHelper
   def current_project
     return @current_project if @current_project.present?
     # TODO: for now we are considering one project per client only so loading first client project here
-    @current_project = current_client.projects.first if current_client.present?
+    if current_domain
+      @current_project = Project.in(booking_portal_domains: current_domain).first
+    end
+    @current_project
+  end
+
+  def current_domain
+    if defined?(request) && request && request.subdomain.present? && request.domain.present?
+      (request.subdomain.present? ? "#{request.subdomain}." : "") + "#{request.domain}"
+    end
+  end
+
+  def select_project_for_current_user
+    if current_project.present?
+      current_user.selected_project_id = current_project.id
+      current_user.selected_lead_id = current_user.leads.where(project_id: current_project.id).first if user.buyer?
+      current_user.save
+    else
+      current_user.update(selected_project_id: nil)
+    end
   end
 
   def marketplace?

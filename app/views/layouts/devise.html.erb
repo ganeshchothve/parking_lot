@@ -15,16 +15,13 @@
       if(typeof App === "undefined"){
         App = {};
       }
-      <% if !is_marketplace? && current_client.present? %>
+      <% if current_client.present? %>
         App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login, :enable_referral_bonus]) %>;
-        App.client.enable_actual_inventory = <%= current_client.enable_actual_inventory?(current_user) %>-
         App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;
       <% end %>
       App.locale = <%= current_translations.to_json.html_safe %>
-      <!-- App.client = <%#= raw current_client.to_json(only: [:name, :_id, :preferred_login, :enable_referral_bonus]) %>; -->
-      <!-- App.client.enable_actual_inventory = <%#= current_client.enable_actual_inventory?(current_user) %> -->
-      <!-- App.project = <%#= raw current_project.to_json(only: [:name, :_id]) %>; -->
       <% if user_signed_in? %>
+        App.client.enable_actual_inventory = <%= current_client.enable_actual_inventory?(current_user) %>
         App.current_user = <%= raw current_user.to_json %>;
         App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name;
       <% end %>

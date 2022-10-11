@@ -137,7 +137,7 @@ class Admin::InvoicesController < AdminController
     else
       @invoice = Invoice.where(id: params[:id]).first
     end
-    redirect_to dashboard_path, alert: 'Invoice not found' unless @invoice.present?
+    redirect_to home_path(current_user), alert: 'Invoice not found' unless @invoice.present?
   end
 
   def authorize_resource

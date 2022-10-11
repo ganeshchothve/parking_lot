@@ -64,7 +64,7 @@ class Admin::Invoices::IncentiveDeductionsController < AdminController
 
   def set_incentive_deduction
     @incentive_deduction = IncentiveDeduction.where(id: params[:id]).first
-    redirect_to dashboard_path, alert: I18n.t("controller.incentive_deductions.alert.not_found") unless @incentive_deduction.present?
+    redirect_to home_path(current_user), alert: I18n.t("controller.incentive_deductions.alert.not_found") unless @incentive_deduction.present?
   end
 
   def authorize_resource

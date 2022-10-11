@@ -42,11 +42,7 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_out_path_for(resource_or_scope)
-    # if is_marketplace?
-    #   new_user_session_path(namespace: 'mp')
-    # else
-      new_user_session_path
-    # end
+    new_user_session_path
   end
 
   def home_path(current_user)
@@ -58,11 +54,11 @@ class ApplicationController < ActionController::Base
         if stored_path.present? &&  stored_path.include?("kylas-auth")
           stored_path
         else
-          buyer_select_project_path
+          select_project_for_current_user
+          current_dashboard_path
         end
       else
-        _path = admin_site_visits_path if current_user.role?('dev_sourcing_manager')
-        stored_path || _path || current_dashboard_path
+        stored_path || current_dashboard_path
       end
     else
       return root_path
@@ -70,7 +66,17 @@ class ApplicationController < ActionController::Base
   end
 
   def current_dashboard_path
-    (is_marketplace? ? (embedded_marketplace? ? not_authorized_path : admin_users_path) : dashboard_path)
+    if is_marketplace?
+      if embedded_marketplace?
+        not_authorized_path
+      elsif current_user.role?('dev_sourcing_manager')
+        admin_site_visits_path
+      else
+        admin_users_path
+      end
+    else
+      dashboard_path
+    end
   end
 
   protected

@@ -63,7 +63,7 @@ class Admin::DevelopersController < AdminController
 
   def set_developer
     @developer = Developer.where(id: params[:id]).first
-    redirect_to dashboard_path, alert: I18n.t("controller.developers.alert.not_found") unless @developer
+    redirect_to home_path(current_user), alert: I18n.t("controller.developers.alert.not_found") unless @developer
   end
 
   def authorize_resource
