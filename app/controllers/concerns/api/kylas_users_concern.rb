@@ -12,6 +12,7 @@ module Api
           phone: params.dig("entity", "phoneNumbers")[0].dig("dialCode") + params.dig("entity", "phoneNumbers")[0].dig("value"),
           role: 'sales',
           is_active: params.dig("entity", "active"),
+          is_active_in_kylas: params.dig("entity", "active"),
           kylas_user_id: params.dig("entity", "id"),
           booking_portal_client: @client
         }
@@ -22,7 +23,8 @@ module Api
           first_name:params.dig("entity", "firstName") ,
           last_name: params.dig("entity", "lastName"),
           phone: params.dig("entity", "phoneNumbers")[0].dig("dialCode") + params.dig("entity", "phoneNumbers")[0].dig("value"),
-          is_active: params.dig("entity", "active")
+          is_active: params.dig("entity", "active"),
+          is_active_in_kylas: params.dig("entity", "active")
         )
         @user.skip_confirmation_notification!
       end
