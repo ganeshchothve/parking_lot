@@ -39,7 +39,7 @@ class ChannelPartnersController < ApplicationController
   end
 
   def new_company
-    @user = User.new
+    @user = User.new(role: "channel_partner")
     @channel_partner = ChannelPartner.new
     render layout: false
   end

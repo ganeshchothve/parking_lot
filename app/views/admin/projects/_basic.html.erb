@@ -211,6 +211,13 @@
       <%= f.text_field :iris_url, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("iris_url") %>
     </div>
   </div>
+
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :booking_portal_domains, class: 'label-required' %>
+      <%= f.select :booking_portal_domains, project.booking_portal_domains, {}, class: 'selectize-tags domain', multiple: true, required: 'required', disabled: (policy([:admin, project]).editable_field?("booking_portal_domains") ? false : true) %>
+    </div>
+  </div>
 </div>
 <div class="card mt-3">
   <div class="card-header">
