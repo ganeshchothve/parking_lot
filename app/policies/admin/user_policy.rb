@@ -7,21 +7,31 @@ class Admin::UserPolicy < UserPolicy
 
   def new?(for_edit = false)
     return false unless user
-    if user.booking_portal_client.roles_taking_registrations.include?(user.role) && (!marketplace_portal? || user.role?(:cp_owner))
+    if user.booking_portal_client.roles_taking_registrations.include?(user.role)
       if user.role?('superadmin')
-        (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner))) || for_edit
+        (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner)) && !marketplace_portal?) || for_edit
       elsif user.role?('admin')
-        !record.role?('superadmin') && ((!record.buyer? && !record.role.in?(%w(cp_owner channel_partner))) || for_edit)
+        !record.role?('superadmin') &&
+        (
+          (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner)) && !marketplace_portal?) ||
+          (marketplace_portal? && record.role?('channel_partner') && user.booking_portal_client.enable_channel_partners?) ||
+          for_edit
+        )
       elsif user.role?('channel_partner')
         false
       elsif user.role?('cp_owner')
         record.role.in?(%w(cp_owner channel_partner))
       elsif user.role?('sales_admin')
-        record.role?('sales')
-      elsif user.role?('cp_admin')
-        record.role?('cp') || (record.role.in?(%w(cp_owner channel_partner)) && for_edit)
-      elsif user.role?('cp')
-        (record.role.in?(%w(cp_owner channel_partner)) && for_edit)
+        record.role?('sales') && !marketplace_portal?
+      elsif user.role?('cp_admin') && !marketplace_portal?
+        record.role?('cp') ||
+        (
+          record.role.in?(%w(cp_owner channel_partner)) &&
+          user.booking_portal_client.enable_channel_partners? &&
+          for_edit
+        )
+      elsif user.role?('cp') && !marketplace_portal?
+        (record.role.in?(%w(cp_owner channel_partner)) && user.booking_portal_client.enable_channel_partners? && for_edit)
       elsif user.role?('billing_team')
         false
       elsif !user.buyer?
@@ -30,6 +40,10 @@ class Admin::UserPolicy < UserPolicy
     else
       false
     end
+  end
+
+  def show_add_users_dropdown?
+    marketplace_portal? && user.role.in?(%w(admin)) && user.booking_portal_client.enable_channel_partners?
   end
 
   def edit?
@@ -47,6 +61,10 @@ class Admin::UserPolicy < UserPolicy
       @condition = 'cannot_confirm_user'
       false
     end
+  end
+
+  def add_cp_users?
+    user.booking_portal_client.try(:enable_channel_partners?) && user.role.in?(%w(admin))
   end
 
   def reactivate_account?
