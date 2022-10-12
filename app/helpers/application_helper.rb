@@ -126,6 +126,10 @@ module ApplicationHelper
     valid
   end
 
+  def marketplace_layout?
+    request.host == ENV_CONFIG[:marketplace_host].to_s
+  end
+
   # Kylas i-Frame URL
   def embedded_marketplace?
     request.host == ENV_CONFIG[:embedded_marketplace_host].to_s

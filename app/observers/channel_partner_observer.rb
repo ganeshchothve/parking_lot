@@ -35,6 +35,7 @@ class ChannelPartnerObserver < Mongoid::Observer
       attrs[:channel_partner_id] = channel_partner.id
       attrs[:role] = 'cp_owner'
       attrs[:cp_code] = channel_partner.cp_code
+      attrs[:project_ids] = channel_partner.project_ids
       user.assign_attributes(attrs)
     end
 

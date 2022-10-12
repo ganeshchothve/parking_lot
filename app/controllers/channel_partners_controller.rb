@@ -8,7 +8,7 @@ class ChannelPartnersController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:find_or_create_cp_user, :register_cp_user]
 
   def index
-    @channel_partners = ChannelPartner.build_criteria params
+    @channel_partners = ChannelPartner.where(booking_portal_client_id: current_client.id).build_criteria params
     @channel_partners = @channel_partners.paginate(page: params[:page], per_page: params[:per_page])
   end
 

@@ -56,7 +56,7 @@ class UserPolicy < ApplicationPolicy
   def permitted_attributes(_params = {})
     attributes = []
     if marketplace_portal?
-      if user.role.in?(%w(cp_owner channel_partner))
+      if record.role.in?(%w(cp_owner channel_partner))
         attributes = %i[first_name last_name phone time_zone]
       end
     else

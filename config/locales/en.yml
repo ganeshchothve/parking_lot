@@ -1202,6 +1202,10 @@ en:
         confirmed: "Confirmed"
         pending: "Pending Approval"
         rejected: "Rejected"
+      channel_partner/events:
+        submit_for_approval: "Submit for Approval"
+        approve: "Approve"
+        reject: "Reject"
       channel_partner/internal_categories:
         cat_a: "CAT A"
         cat_b: "CAT B"

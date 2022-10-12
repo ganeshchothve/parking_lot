@@ -42,7 +42,7 @@
     <% if full_page_view? || embedded_marketplace? %>
       <%= yield %>
     <% else %>
-      <% if is_marketplace? %>
+      <% if marketplace_layout? %>
         <%= render "layouts/mp/navbar" %>
         <main class="mp-page-wrapper">
           <%= yield %>

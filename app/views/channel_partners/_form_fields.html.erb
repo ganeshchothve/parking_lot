@@ -112,7 +112,8 @@
   <% if statuses.present? %>
     <div class="row">
       <div class="col-md-6">
-        <%= form.input :event, collection: I18n.t("mongoid.attributes.channel_partner/status").collect {|k,v| [v, k.to_s]}, as: :select, prompt: :translate, input_html: { class: 'selectize', disabled: !policy([:admin, @channel_partner]).editable_field?("event") } %>
+        <% events = @channel_partner.aasm.events(permitted: true).collect{|x| x.name.to_s} %>
+        <%= form.input :event, collection: events.collect {|k| [I18n.t("mongoid.attributes.channel_partner/events.#{k}"), k.to_s]}, as: :select, prompt: :translate, input_html: { class: 'selectize', disabled: !policy([:admin, @channel_partner]).editable_field?("event") } %>
       </div>
       <div class="col-md-12 status_change_field">
         <%= form.label :status_change_reason, class: '' %>
