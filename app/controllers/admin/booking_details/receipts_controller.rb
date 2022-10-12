@@ -85,7 +85,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
   def set_lead
     @lead = Lead.where(_id: params[:lead_id]).first
     @lead = @booking_detail.lead unless @lead
-    redirect_to dashboard_path, alert: t("controller.leads.alert.not_found"), status: 404 if @lead.blank?
+    redirect_to home_path(current_user), alert: t("controller.leads.alert.not_found"), status: 404 if @lead.blank?
   end
 
   def set_project_unit

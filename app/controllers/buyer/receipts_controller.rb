@@ -51,7 +51,7 @@ class Buyer::ReceiptsController < BuyerController
     authorize([:buyer, @receipt])
     respond_to do |format|
       if @receipt.save
-        url = dashboard_path
+        url = home_path(current_user)
         if @receipt.payment_gateway_service.present?
           url = @receipt.payment_gateway_service.gateway_url(@receipt.lead.get_search('').id)
           format.html{ redirect_to url }
@@ -59,7 +59,7 @@ class Buyer::ReceiptsController < BuyerController
         else
           flash[:notice] = I18n.t("controller.notice.failed_to_redirect_to_payment_gateway")
           @receipt.update_attributes(status: "failed")
-          url = dashboard_path
+          url = home_path(current_user)
           format.json{ render json: @receipt, location: url }
           format.html{ redirect_to url }
         end
@@ -80,13 +80,13 @@ class Buyer::ReceiptsController < BuyerController
 
   def set_lead
     @lead = current_user.selected_lead
-    redirect_to dashboard_path, alert: I18n.t("controller.leads.alert.not_found"), status: 404 if @lead.blank?
+    redirect_to home_path(current_user), alert: I18n.t("controller.leads.alert.not_found"), status: 404 if @lead.blank?
   end
 
   def set_receipt
     lead = current_user.selected_lead
     @receipt = lead.receipts.where(_id: params[:id]).first
-    redirect_to dashboard_path, alert: I18n.t("controller.receipts.alert.not_found"), status: 404 if @receipt.blank?
+    redirect_to home_path(current_user), alert: I18n.t("controller.receipts.alert.not_found"), status: 404 if @receipt.blank?
   end
 
 end

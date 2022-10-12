@@ -111,7 +111,7 @@ class SearchesController < ApplicationController
     @booking_detail_scheme = @booking_detail.booking_detail_schemes.desc(:created_at).last || @booking_detail.booking_detail_schemes.build
     if @booking_detail.save && !@booking_detail.hold?
       if current_user.buyer?
-        redirect_to dashboard_path, alert: t('controller.searches.checkout.non_hold_booking')
+        redirect_to home_path(current_user), alert: t('controller.searches.checkout.non_hold_booking')
       else
         redirect_to admin_lead_path(@search.lead_id), alert: t('controller.searches.checkout.non_hold_booking')
       end
@@ -132,7 +132,7 @@ class SearchesController < ApplicationController
         format.html { redirect_to step_lead_search_path(@search, step: @search.step), notice: t('controller.searches.booking_cancelled') }
         format.json { render json: {project_unit: @project_unit}, status: 200 }
       else
-        format.html { redirect_to (request.referer.present? ? request.referer : (marketplace? ? new_kylas_associated_lead_admin_leads_path(entityId: @search.lead.kylas_deal_id) : dashboard_path)), alert: result[:errors] }
+        format.html { redirect_to (request.referer.present? ? request.referer : (marketplace? ? new_kylas_associated_lead_admin_leads_path(entityId: @search.lead.kylas_deal_id) : home_path(current_user))), alert: result[:errors] }
         format.json { render json: { errors: result[:errors] }, status: 422 }
       end
     end
@@ -162,7 +162,7 @@ class SearchesController < ApplicationController
         else
           @receipt.update_attributes(status: "failed")
           flash[:notice] = I18n.t("controller.notice.failed_to_redirect_to_payment_gateway")
-          redirect_to dashboard_path
+          redirect_to home_path(current_user)
         end
       else
         redirect_to [current_user_role_group, @receipt.user], notice: 'Unit is booked successfully.'
@@ -203,7 +203,7 @@ class SearchesController < ApplicationController
     elsif @search.present? && @search.lead_id.present?
       @lead = @search.lead
     else
-      redirect_to dashboard_path and return
+      redirect_to home_path(current_user) and return
     end
   end
 

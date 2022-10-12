@@ -93,7 +93,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
 
   def set_variable_incentive_scheme
     @variable_incentive_scheme = VariableIncentiveScheme.where(id: params[:id]).first
-    redirect_to dashboard_path, alert: I18n.t("controller.incentive_schemes.alert.not_found") unless @variable_incentive_scheme
+    redirect_to home_path(current_user), alert: I18n.t("controller.incentive_schemes.alert.not_found") unless @variable_incentive_scheme
   end
 
   def authorize_resource

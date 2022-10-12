@@ -152,12 +152,12 @@ class Admin::ReceiptsController < AdminController
 
   def set_lead
     @lead = Lead.where(_id: params[:lead_id]).first
-    redirect_to dashboard_path, alert: I18n.t("controller.leads.alert.not_found"), status: 404 if @lead.blank?
+    redirect_to home_path(current_user), alert: I18n.t("controller.leads.alert.not_found"), status: 404 if @lead.blank?
   end
 
   def set_receipt
     @receipt = Receipt.where(_id: params[:id]).first
-    redirect_to dashboard_path, alert: I18n.t("controller.receipts.alert.not_found"), status: 404 if @receipt.blank?
+    redirect_to home_path(current_user), alert: I18n.t("controller.receipts.alert.not_found"), status: 404 if @receipt.blank?
   end
 
   def get_dataset(out, statuses)

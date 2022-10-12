@@ -1177,6 +1177,7 @@ en:
         created_on: "Created On"
         add_company: "Add Partner Company"
         upload_documents: "Upload Documents"
+        project_ids: Projects
       channel_partner/file_types:
         rera_certificate: "RERA Certificate"
         gst_certificate: "GST Certificate"

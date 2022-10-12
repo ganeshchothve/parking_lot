@@ -20,7 +20,6 @@ class SyncKylasUsersWorker
               role: "sales",
               kylas_user_id: kylas_user[4].to_s,
               is_active_in_kylas: kylas_user[5],
-              is_active: kylas_user[5],
               booking_portal_client: user.booking_portal_client
             )
             user.skip_confirmation_notification!
@@ -30,7 +29,6 @@ class SyncKylasUsersWorker
               first_name: kylas_user[0],
               last_name: kylas_user[1],
               phone: kylas_user[3]['dialCode'] + kylas_user[3]['value'],
-              is_active: kylas_user[5],
               is_active_in_kylas: kylas_user[5]
             )
             mp_user.skip_confirmation_notification!

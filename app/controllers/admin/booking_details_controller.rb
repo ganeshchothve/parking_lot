@@ -81,7 +81,7 @@ class Admin::BookingDetailsController < AdminController
         format.json { render json: {message: t('controller.booking_details.booking_successful')}, status: :ok }
         format.html { redirect_to checkout_lead_search_path(_search.id, lead_id: _search.lead_id) }
       else
-        format.html { redirect_to dashboard_path, alert: t('controller.booking_details.booking_unsuccessful') }
+        format.html { redirect_to home_path(current_user), alert: t('controller.booking_details.booking_unsuccessful') }
       end
     end
   end
@@ -253,7 +253,7 @@ class Admin::BookingDetailsController < AdminController
         format.html { redirect_to admin_leads_path }
       else
         flash[:alert] = @booking_detail.errors.full_messages
-        format.html { redirect_to dashboard_path, alert: t('controller.booking_details.booking_unsuccessful') }
+        format.html { redirect_to home_path(current_user), alert: t('controller.booking_details.booking_unsuccessful') }
         format.json { render json: { errors: flash[:alert] }, status: :unprocessable_entity }
       end
     end
@@ -293,22 +293,22 @@ class Admin::BookingDetailsController < AdminController
 
   def set_lead
     @lead = Lead.where(id: params[:lead_id]).first
-    redirect_to dashboard_path, alert: I18n.t("controller.leads.alert.not_found") if @lead.blank?
+    redirect_to home_path(current_user), alert: I18n.t("controller.leads.alert.not_found") if @lead.blank?
   end
 
   def set_project
     @project = Project.where(id: params[:project_id]).first
-    redirect_to dashboard_path, alert: t('controller.booking_details.set_project_missing') if @project.blank?
+    redirect_to home_path(current_user), alert: t('controller.booking_details.set_project_missing') if @project.blank?
   end
 
   def set_booking_detail
     @booking_detail = BookingDetail.where(_id: params[:id]).first
-    redirect_to dashboard_path, alert: t('controller.booking_details.set_booking_detail_missing') if @booking_detail.blank?
+    redirect_to home_path(current_user), alert: t('controller.booking_details.set_booking_detail_missing') if @booking_detail.blank?
   end
 
   def set_project_unit
     @project_unit = @booking_detail.project_unit
-    redirect_to dashboard_path, alert: t('controller.booking_details.set_project_unit_missing') if @project_unit.blank?
+    redirect_to home_path(current_user), alert: t('controller.booking_details.set_project_unit_missing') if @project_unit.blank?
   end
 
   def authorize_resource

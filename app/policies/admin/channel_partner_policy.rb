@@ -92,6 +92,7 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
       attributes += [:event] if user.present? && ['channel_partner', 'cp_owner'].include?(user.role) && record.id == user.channel_partner_id && ['inactive', 'rejected'].include?(record.status)
     end
     attributes += [:erp_id] if user.present? && %w[admin sales_admin].include?(user.role)
+    attributes += [project_ids: []] if user.present? && %w[superadmin admin cp_admin].include?(user.role)
     attributes.uniq
   end
 end

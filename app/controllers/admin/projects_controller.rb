@@ -137,7 +137,7 @@ class Admin::ProjectsController < AdminController
     if action_name == 'edit'
       render json: { errors: I18n.t("controller.projects.alert.not_found") }, status: :not_found unless @project
     else
-      redirect_to dashboard_path, alert: I18n.t("controller.projects.alert.not_found") unless @project
+      redirect_to home_path(current_user), alert: I18n.t("controller.projects.alert.not_found") unless @project
     end
   end
 

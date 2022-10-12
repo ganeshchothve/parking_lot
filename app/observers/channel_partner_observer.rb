@@ -119,6 +119,9 @@ class ChannelPartnerObserver < Mongoid::Observer
       if channel_partner.internal_category_changed? && channel_partner.internal_category.present?
         channel_partner.users.update_all(category: channel_partner.internal_category)
       end
+      if channel_partner.project_ids_changed? && channel_partner.project_ids.present?
+        channel_partner.users.update_all(project_ids: channel_partner.project_ids)
+      end
     end
     channel_partner.rera_applicable = true if channel_partner.rera_id.present?
     channel_partner.gst_applicable = true if channel_partner.gstin_number.present?
