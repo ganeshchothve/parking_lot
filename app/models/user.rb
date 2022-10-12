@@ -707,7 +707,9 @@ class User
   end
 
   def active_for_authentication?
-    super && is_active && is_active_in_kylas?
+    out = super && is_active && is_active_in_kylas?
+    out &&= self.booking_portal_client.enable_channel_partners? if self.role.in?(%w(channel_partner cp_owner))
+    out
   end
 
   def inactive_message

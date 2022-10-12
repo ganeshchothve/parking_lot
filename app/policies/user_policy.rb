@@ -62,7 +62,6 @@ class UserPolicy < ApplicationPolicy
     else
       attributes = %i[first_name last_name phone time_zone]
     end
-    attributes = %i[first_name last_name phone time_zone]
     attributes += %i[lead_id password password_confirmation iris_confirmation temporarily_blocked]
     # Only allow admin to change email.
     attributes += [user_notification_tokens_attributes: [UserNotificationTokenPolicy.new(user, UserNotificationToken.new).permitted_attributes]]
