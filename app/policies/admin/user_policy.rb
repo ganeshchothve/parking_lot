@@ -194,10 +194,10 @@ class Admin::UserPolicy < UserPolicy
       attributes += [:enable_live_inventory] if user.role?(:superadmin) && record.role?(:channel_partner)
     end # user.present?
 
-    if record.role.in?(%w(cp_owner channel_partner)) && !marketplace_portal?
+    if record.role.in?(%w(cp_owner channel_partner))
       attributes += [:upi_id]
       attributes += [:referral_code] if record.new_record?
-      attributes += [:channel_partner_id] if user.present? && user.role.in?(%w(cp_owner))
+      attributes += [:channel_partner_id] if user.present? && user.role.in?(%w(cp_owner admin))
       attributes += [fund_accounts_attributes: FundAccountPolicy.new(user, FundAccount.new).permitted_attributes] if record.persisted?
       attributes += [:rejection_reason]
     end

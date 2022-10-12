@@ -37,7 +37,11 @@ module UsersHelper
   end
 
   def marketplace_roles
-    %w[admin sales gre sales_admin].collect{|role| [User.human_attribute_name("role.#{role}"), role]}
+    if @user.role?('channel_partner')
+      %w[channel_partner].collect{|role| [User.human_attribute_name("role.#{role}"), role]}
+    else
+      %w[admin sales gre sales_admin].collect{|role| [User.human_attribute_name("role.#{role}"), role]}
+    end
   end
 
   def mandates_roles

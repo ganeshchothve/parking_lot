@@ -65,7 +65,13 @@ class UserPolicy < ApplicationPolicy
     attributes += %i[lead_id password password_confirmation iris_confirmation temporarily_blocked]
     # Only allow admin to change email.
     attributes += [user_notification_tokens_attributes: [UserNotificationTokenPolicy.new(user, UserNotificationToken.new).permitted_attributes]]
-    attributes += %i[email] if ((record.new_record? || user.role?('admin')) && !marketplace_portal?)
+    if marketplace_portal?
+      if record.role.in?(%w(cp_owner channel_partner))
+        attributes += %i[email] if ((record.new_record? || user.role?('admin')))
+      end
+    else
+      attributes += %i[email] if ((record.new_record? || user.role?('admin')))
+    end
     attributes
   end
 end
