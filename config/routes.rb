@@ -277,6 +277,8 @@ Rails.application.routes.draw do
         get :new_kylas_associated_lead
         post :create_kylas_associated_lead
         get :deal_associated_contact_details
+        get :new_kylas_lead
+        post :create_kylas_lead
       end
       member do
         get 'sync_notes'
