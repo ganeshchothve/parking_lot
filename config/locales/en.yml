@@ -2112,6 +2112,7 @@ en:
         total_unattached_balance: "Total Unattached Balance"
         kylas_product: Kylas Product
         kylas_contact: Kylas Contacts
+        manager_ids: Channel Partners
       lead/stage:
         incoming: "Incoming"
         booked: "Booked"

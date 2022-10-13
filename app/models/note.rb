@@ -9,6 +9,9 @@ class Note
   field :note, type: String
   field :note_type, type: String, default: :internal
 
+  #kylas specific fields
+  field :kylas_note_id, type: String
+
   belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :notable, polymorphic: true
   has_many :assets, as: :assetable

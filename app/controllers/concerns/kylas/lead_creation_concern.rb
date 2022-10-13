@@ -38,23 +38,16 @@ module Kylas
       respond_to do |format|
         if @user.valid?
           sync_contact_to_kylas(current_user, @user, format)
+          @user.assign_attributes(kylas_contact_id: @contact_response.dig(:data, :id))
+          @user.save
           manager_ids = params.dig(:lead, :manager_ids)
-          manager_ids.each do |manager_id|
-            manager = User.where(id: manager_id).first
-            if manager.present?
-              @lead = Lead.new(
-                              first_name: params.dig(:lead, :first_name),
-                              last_name: params.dig(:lead, :last_name),
-                              email: params.dig(:lead, :email),
-                              phone: params.dig(:lead, :phone),
-                              booking_portal_client: current_client,
-                              project: @project,
-                              manager_id: manager.id,
-                              user: @user
-                              )
-              @lead.save
-            end
+
+          if Rails.env.development? || Rails.env.staging?
+            CreateLeadWorker.new.perform(manager_ids, params, @user, @project, current_client)
+          else
+            CreateLeadWorker.perform_async(manager_ids, params, @user, @project, current_client)
           end
+          format.html { redirect_to request.referer, notice: 'Leads were successfully created' }
         end
       end
     end
@@ -110,7 +103,8 @@ module Kylas
     end
 
     def fetch_lead_details
-      entity_id = "314513" || params[:entityId]
+      # Rails.logger.info "==================== #{params} ========================"
+      entity_id = "315017" || params[:entityId]
       fetch_lead_details = Kylas::FetchLeadDetails.new(entity_id, current_user).call
       if fetch_lead_details[:success]
         @lead_data = fetch_lead_details[:data].with_indifferent_access

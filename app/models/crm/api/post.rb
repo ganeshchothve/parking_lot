@@ -20,9 +20,13 @@ class Crm::Api::Post < Crm::Api
     _request_header['Authorization'] = "Bearer #{get_access_token}" if base.oauth2_authentication?
     uri = URI(_url)
 
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = (uri.scheme == 'https')
-    response = http.send_request(method.upcase, uri.path, _request_payload.to_json, _request_header)
+    https = Net::HTTP.new(uri.host, uri.port)
+    https.use_ssl = true
+    request = Object.const_get("Net::HTTP::#{method.capitalize}").new(uri, _request_header)
+    request.body = JSON.dump(_request_payload)
+    response = https.request(request)
+    # http.use_ssl = (uri.scheme == 'https')
+    # response = http.send_request(method.upcase, uri.path, _request_payload.to_json, _request_header)
     case response
     when Net::HTTPSuccess
       res = process_response(response, record)

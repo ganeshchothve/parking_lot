@@ -911,7 +911,7 @@ class User
         custom_scope = { role: { '$in': %w(sales) }, booking_portal_client_id: user.booking_portal_client.id }
       elsif user.role.in?(%w(superadmin))
         custom_scope = { booking_portal_client_id: user.selected_client_id }
-        custom_scope = { role: { '$in': %w(sales admin sales_admin gre) }, booking_portal_client_id: user.selected_client_id } if user.booking_portal_client.try(:kylas_tenant_id).present?
+        custom_scope = { role: { '$in': %w(sales admin sales_admin gre channel_partner cp_owner) }, booking_portal_client_id: user.selected_client_id } if user.booking_portal_client.try(:kylas_tenant_id).present?
       elsif user.role?('team_lead')|| user.role?('gre')
         custom_scope = { role: 'sales', project_ids: user.selected_project_id.to_s, booking_portal_client_id: user.booking_portal_client_id }
       end

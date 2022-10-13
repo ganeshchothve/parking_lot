@@ -1,4 +1,3 @@
-<%= form_for(@note, url: notables_path(notable_type: @notable.class.model_name.i18n_key.to_s, notable_id: @notable.id), local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['notes'], "data-type": "json", id: 'note_form'}) do |f| %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -7,18 +6,38 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="mb-3">
-          <%= f.label :note, class: 'label-required' %>
-          <%= f.text_area :note, autofocus: true, class: "form-control", required: 'required', disabled: (policy([current_user_role_group, @note]).editable_field?("note") ? false : true) %>
+        <%= form_for(@note, url: notables_path(notable_type: @notable.class.model_name.i18n_key.to_s, notable_id: @notable.id), local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['notes'], "data-type": "json", id: 'note_form'}) do |f| %>
+          <%= hidden_field_tag :response_format, "js" %>
+          <div class="mb-3">
+            <%= f.label :note %>
+            <%= f.text_area :note, autofocus: true, class: 'form-control summernote', disabled: !policy([:admin, @note]).editable_field?("note") %>
+          </div>
+          <div class="mb-3 text-end">
+            <%= f.submit I18n.t("global.link_to.add_element", name: global_labels['notes']), class: "btn btn-primary" %>
+          </div>
+        <% end %>
+        <div class="notes">
+          <% @notable.notes.each do |note| %>
+            <div class="card card-body mb-3">
+              <div><%= note&.note&.html_safe %></div>
+              <div class="dropdown d-inline-block top-right-action">
+                <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
+                  aria-expanded="false">
+                  <i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                  <%= link_to "Delete", notable_path(notable_type: @notable.class.to_s, notable_id: @notable.id, id: note.id), method: :delete, class: "dropdown-item modal-remote-form-link" %>
+                </div>
+              </div>
+              <div class="small"> <%= t('global.added_by') %> <%= note&.creator&.name %> on <%= note&.created_at&.in_time_zone("Mumbai")&.strftime("%b %d, %Y at %I:%M %p") %>
+              </div>
+            </div>
+          <% end %>
         </div>
-      </div>
-      <div class="modal-footer text-end">
-        <%= f.submit I18n.t("global.link_to.add_element", name: global_labels['notes']), class: "btn btn-primary" %>
       </div>
     </div>
   </div>
 </div>
-<% end %>
+
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($("#note_form"));

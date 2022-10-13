@@ -1,0 +1,58 @@
+<div class="row justify-content-center">
+  <div class="col-md-11">
+    <div class="h-100">
+      <div class = 'fn-18 theme-txt-color mb-2'>
+        <div class="card-body">
+          <%= form_for(@lead, url: create_kylas_lead_admin_leads_path, local: true, html: {class: 'validate-form mr-3 ml-3', id: 'kylas_lead_form'}) do |f| %>
+          <div class="mb-3">
+              <%= f.label :kylas_product, class: 'label-required' %>
+              <%= f.select :kylas_product_id, options_for_select(@kylas_products.collect{|kp| [kp[0], kp[1]]}), { include_blank: 'Select Kylas Product'}, autocomplete: 'off', class: 'selectize', required: true, disabled: !(policy([current_user_role_group, @lead]).editable_field?("project_id")) %>
+          </div>
+            <div class="mb-3">
+              <%= f.label :first_name, class: 'label-required' %>
+              <%= f.text_field :first_name, class: 'form-control', autofocus: true, required: false, readonly: true, value: @lead_data["firstName"] %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :last_name, class: 'label-required' %>
+              <%= f.text_field :last_name, class: 'form-control', autofocus: true, required: false, readonly: true, value: @lead_data["lastName"]%>
+            </div>
+
+            <% if @lead_data["emails"].count > 1 %>
+              <div class="mb-3">
+                <%= f.label :email %>
+                <%= f.select :email, options_for_select(@lead_data["emails"].collect{|email| [email["value"], email["value"]]}), { include_blank: 'Select Kylas Email'}, autocomplete: 'off', class: 'selectize', disabled: !(policy([current_user_role_group, @lead]).editable_field?("email")) %>
+              </div>
+            <% else %>
+              <%= f.hidden_field :email, value: @lead_data["emails"].first["value"] %>
+            <% end %>
+
+            <% if @lead_data["phoneNumbers"].count > 1 %>
+              <div class="mb-3">
+                <%= f.label :phone %>
+                <%= f.select :phone, options_for_select(@lead_data["phoneNumbers"].collect{|contact| [(contact["dialCode"] + contact["value"]), (contact["dialCode"] + contact["value"])]}), { include_blank: 'Select Kylas Phone'}, autocomplete: 'off', class: 'selectize', disabled: !(policy([current_user_role_group, @lead]).editable_field?("phone")) %>
+              </div>
+            <% else %>
+              <%= f.hidden_field :phone, value: (@lead_data["phoneNumbers"].first["dialCode"] + @lead_data["phoneNumbers"].first["value"]) %>
+            <% end %>
+            <div class="mb-3">
+              <%= f.label :manager_ids %>
+              <%= f.select :manager_ids, options_from_collection_for_select([], "id", "ds_name"), {prompt: 'Select Channel Partners'}, class: 'selectize-remote', data: {url: admin_users_path(fltrs: { role: ['channel_partner', 'cp_owner'], is_active: true, booking_portal_client_id: current_client.id })}, multiple: true %>
+            </div>
+
+            <div class="text-end">
+                <%= f.submit "Save", class: 'btn btn-primary float-end w-auto border-primary' %>
+            </div>
+
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#kylas_lead_form"));
+});
+<% end %>
