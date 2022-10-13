@@ -381,7 +381,7 @@
       </div>
     </div>
 
-    <h2 class="section-heading text-center cgreen mt-5"><%= I18n.t("controller.home.text_msg.why_beyondwalls.title") %></h2>
+    <h2 class="section-heading text-center cgreen mt-5"><%= I18n.t("controller.home.text_msg.why_beyondwalls.title", name: (current_client.present? ? current_client.name : I18n.t("global.brand"))) %></h2>
     <div class="col-12">
       <ul class="website-stats">
         <li>

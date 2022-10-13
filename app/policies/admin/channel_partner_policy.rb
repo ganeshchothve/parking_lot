@@ -15,9 +15,9 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
 
   def new?
     if user.present?
-      user.booking_portal_client.enable_channel_partners?
+      user.booking_portal_client.try(:enable_channel_partners?)
     else
-      record.booking_portal_client.enable_channel_partners?
+      record.booking_portal_client.try(:enable_channel_partners?)
     end
     #%w[cp_admin].include?(user.role)
   end
@@ -92,6 +92,7 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
       attributes += [:event] if user.present? && ['channel_partner', 'cp_owner'].include?(user.role) && record.id == user.channel_partner_id && ['inactive', 'rejected'].include?(record.status)
     end
     attributes += [:erp_id] if user.present? && %w[admin sales_admin].include?(user.role)
+    attributes += [project_ids: []] if user.present? && %w[superadmin admin cp_admin].include?(user.role)
     attributes.uniq
   end
 end

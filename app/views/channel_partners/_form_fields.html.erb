@@ -38,7 +38,7 @@
     <%= form.input :rera_applicable, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, input_html: {class: 'wd-22', disabled: !policy([:admin, @channel_partner]).editable_field?("rera_applicable") } %>
   </div>
   <div class="col-md-6">
-    <%= form.input :rera_id, disabled: !policy([:admin, @channel_partner]).editable_field?("rera_id"), required: true %>
+    <%= form.input :rera_id, disabled: !policy([:admin, @channel_partner]).editable_field?("rera_id") %>
   </div>
 </div>
 
@@ -77,7 +77,7 @@
     <%= form.input :average_quarterly_business, required: false, disabled: !policy([:admin, @channel_partner]).editable_field?("average_quarterly_business"), as: :float %>
   </div>
   <div class="col-md-6">
-    <%= form.input :manager_id, collection: User.where(is_active: true, confirmed_at: {'$ne': nil}, role: "cp", booking_portal_client_id: current_client.id).collect{|x| [x.ds_name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), required: true, as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
+    <%= form.input :manager_id, collection: User.where(is_active: true, confirmed_at: {'$ne': nil}, role: "cp", booking_portal_client_id: current_client.id).collect{|x| [x.ds_name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), required: (!marketplace?), as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
   </div>
 </div>
 
@@ -100,12 +100,20 @@
   </div>
 </div>
 
+ <% if policy([:admin, @channel_partner]).editable_field?("project_ids") %>
+  <div class="mb-3">
+    <%= form.label :project_ids, class: "control-label" %>
+    <%= form.select :project_ids, options_from_collection_for_select(@channel_partner.project_ids.present? ? Project.in(id: @channel_partner.project_ids) : [], "id", "ds_name", @channel_partner.project_ids), {}, class: 'selectize-remote', multiple: true, data: {url: admin_projects_path}, disabled: !policy([:admin, @channel_partner]).editable_field?("project_ids") %>
+  </div>
+<% end %>
+
 <% if policy([:admin, @channel_partner]).editable_field?("event") %>
   <% statuses = available_chanel_partner_statuses(@channel_partner) %>
   <% if statuses.present? %>
     <div class="row">
       <div class="col-md-6">
-        <%= form.input :event, collection: I18n.t("mongoid.attributes.channel_partner/status").collect {|k,v| [v, k.to_s]}, as: :select, prompt: :translate, input_html: { class: 'selectize', disabled: !policy([:admin, @channel_partner]).editable_field?("event") } %>
+        <% events = @channel_partner.aasm.events(permitted: true).collect{|x| x.name.to_s} %>
+        <%= form.input :event, collection: events.collect {|k| [I18n.t("mongoid.attributes.channel_partner/events.#{k}"), k.to_s]}, as: :select, prompt: :translate, input_html: { class: 'selectize', disabled: !policy([:admin, @channel_partner]).editable_field?("event") } %>
       </div>
       <div class="col-md-12 status_change_field">
         <%= form.label :status_change_reason, class: '' %>

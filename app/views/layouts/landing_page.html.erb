@@ -26,6 +26,7 @@
       if(typeof App === "undefined"){
         App = {};
       }
+      App.locale = <%= current_translations.to_json.html_safe %>
       <% if current_client.present? %>
         App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login, :enable_referral_bonus]) %>;
         App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;

@@ -1,6 +1,7 @@
-host: 'bookingportal.withamura.com'
+host:
 marketplace_host:
 embedded_marketplace_host:
+session_tld_length:
 # for public assets such as app/assets
 asset_sync:
   FOG_DIRECTORY:

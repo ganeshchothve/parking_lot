@@ -1177,6 +1177,8 @@ en:
         created_on: "Created On"
         add_company: "Add Partner Company"
         upload_documents: "Upload Documents"
+        project_ids: Projects
+        document_type: Document Type
       channel_partner/file_types:
         rera_certificate: "RERA Certificate"
         gst_certificate: "GST Certificate"
@@ -1201,6 +1203,10 @@ en:
         confirmed: "Confirmed"
         pending: "Pending Approval"
         rejected: "Rejected"
+      channel_partner/events:
+        submit_for_approval: "Submit for Approval"
+        approve: "Approve"
+        reject: "Reject"
       channel_partner/internal_categories:
         cat_a: "CAT A"
         cat_b: "CAT B"
@@ -2465,7 +2471,7 @@ en:
         channel_partner_summit:
           title: "Channel Partner Summit"
         why_beyondwalls:
-          title: "Why partner with BeyondWalls"
+          title: "Why partner with %{name}"
 
 
     cp_lead_activities:

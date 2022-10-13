@@ -56,6 +56,7 @@ class ChannelPartner
   field :average_quarterly_business, type: Float
   field :developers_worked_for, type: Array, default: []
   field :interested_services, type: Array, default: []
+  field :project_ids, type: Array, default: []
 
   # Tracking selldo srd for new channel partner registrations.
   field :srd, type: String
@@ -104,7 +105,8 @@ class ChannelPartner
   #validates :rera_id, format: { with: /\A([A-Za-z])\d{11}\z/i, message: 'is not valid format' }, allow_blank: true
   #validate :docs_required_for_approval, on: :submit_for_approval
 
-  validates :rera_id, presence: true, uniqueness: true, length: { minimum: 6 }, format: { with: /\A[0-9a-zA-Z\/]*\z/i, message: 'allows only aplabets, numbers & forward slash(/)' }
+  validates :rera_id, uniqueness: true, length: { minimum: 6 }, format: { with: /\A[0-9a-zA-Z\/]*\z/i, message: 'allows only aplabets, numbers & forward slash(/)' }
+  validates :rera_id, presence: true, if: proc { |channel_partner| channel_partner.booking_portal_client.try(:kylas_tenant_id).blank? }
   validates :gstin_number, presence: true, if: :gst_applicable?
   validates :team_size, :numericality => { :greater_than => 0 }, allow_blank: true
   validates :status_change_reason, presence: true, if: proc { |cp| cp.status == 'rejected' }
@@ -193,8 +195,8 @@ class ChannelPartner
         elsif user.role?('cp')
          custom_scope = { manager_id: user.id }
         elsif user.role.in?(%w(cp_owner channel_partner))
-          custom_scope = { id: user.channel_partner_id }
-        elsif user.role.in?(%w(admin sales))
+          custom_scope = { id: user.channel_partner_id, booking_portal_client_id: user.booking_portal_client.id }
+        elsif user.role.in?(%w(admin))
           custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
         elsif user.role.in?(%w(superadmin))
           custom_scope = { booking_portal_client_id: user.selected_client_id }

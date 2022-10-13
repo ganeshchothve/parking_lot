@@ -293,12 +293,12 @@ class Project
       custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
     end
 
-    unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
+    unless user.role.in?(User::ALL_PROJECT_ACCESS)
       if user.selected_project_id.present?
-        custom_scope.merge!({_id: user.selected_project_id})
+        custom_scope.merge!({_id: user.selected_project_id, booking_portal_client_id: user.booking_portal_client.id})
       else
         project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) } if user.project_ids.present?
-        custom_scope.merge!({_id: {"$in": (project_ids || [])}})
+        custom_scope.merge!({_id: {"$in": (project_ids || [])}, booking_portal_client_id: user.booking_portal_client.id})
       end
     end
     custom_scope.merge!({ is_active: true }) if (params[:controller] == 'admin/projects' && params[:action] == 'index') || params[:controller] == 'home'

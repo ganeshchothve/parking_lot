@@ -28,7 +28,7 @@
           '+ (options.progress_bar ? progress_bar : '')+ '</div>'
   };
   $.fn.fileUploader = function(options){
-    var label = this.data("label") || '';
+    var label = this.data("label") || 'Upload';
     var url = this.data("url");
     this.closest(".fileinput-button").prepend('<span>' + label + '</span>');
     this.fileupload({

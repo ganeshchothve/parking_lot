@@ -35,6 +35,7 @@ class ChannelPartnerObserver < Mongoid::Observer
       attrs[:channel_partner_id] = channel_partner.id
       attrs[:role] = 'cp_owner'
       attrs[:cp_code] = channel_partner.cp_code
+      attrs[:project_ids] = channel_partner.project_ids
       user.assign_attributes(attrs)
     end
 
@@ -118,6 +119,9 @@ class ChannelPartnerObserver < Mongoid::Observer
       end
       if channel_partner.internal_category_changed? && channel_partner.internal_category.present?
         channel_partner.users.update_all(category: channel_partner.internal_category)
+      end
+      if channel_partner.project_ids_changed? && channel_partner.project_ids.present?
+        channel_partner.users.update_all(project_ids: channel_partner.project_ids)
       end
     end
     channel_partner.rera_applicable = true if channel_partner.rera_id.present?

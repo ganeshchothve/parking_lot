@@ -81,6 +81,7 @@ module ChannelPartnerRegisteration
   def add_cp_company
     @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
     @channel_partner.assign_attributes(is_existing_company: false, primary_user: @user, booking_portal_client: @user.booking_portal_client)
+    @channel_partner.project_ids << current_project.id.to_s if current_project.present?
     respond_to do |format|
       if @channel_partner.save
         #auto approve partner company if flag on client is enabled
@@ -88,7 +89,7 @@ module ChannelPartnerRegisteration
         format.html { redirect_to channel_partners_path, notice: 'Partner Company Successfully Created' }
         format.json { render json: @channel_partner, status: :created }
       else
-        format.html { redirect_to channel_partners_path, alert: 'Unable to add Partner Company' }
+        format.html { redirect_to channel_partners_path, alert: @channel_partner.errors.full_messages }
         format.json { render json: { errors: @channel_partner.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
@@ -123,6 +124,8 @@ module ChannelPartnerRegisteration
   def register_with_new_company
     @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
     @channel_partner.is_existing_company = false
+    @channel_partner.booking_portal_client = current_client
+    @channel_partner.project_ids << current_project.id.to_s if current_project.present?
     respond_to do |format|
       if @channel_partner.save
         format.json { render 'channel_partners/register_with_new_company.json', status: :created }
