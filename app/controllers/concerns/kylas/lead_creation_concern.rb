@@ -48,6 +48,8 @@ module Kylas
             CreateLeadWorker.perform_async(manager_ids, params, @user, @project, current_client)
           end
           format.html { redirect_to request.referer, notice: 'Leads were successfully created' }
+        else
+          format.html { redirect_to request.referer, notice: 'User is invalid' }
         end
       end
     end
