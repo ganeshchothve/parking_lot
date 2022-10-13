@@ -104,7 +104,7 @@ module Kylas
 
     def fetch_lead_details
       # Rails.logger.info "==================== #{params} ========================"
-      entity_id = "315017" || params[:entityId]
+      entity_id = params[:entityId] || "315017" 
       fetch_lead_details = Kylas::FetchLeadDetails.new(entity_id, current_user).call
       if fetch_lead_details[:success]
         @lead_data = fetch_lead_details[:data].with_indifferent_access
