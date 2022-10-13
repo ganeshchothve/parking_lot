@@ -26,93 +26,10 @@
           <% end %>
         </div>
       </div>
-      <div class="col-lg-5 px-0 px-sm-2">
-        <div class="cp-signup-features px-2">
-          <h2 class="pt-2 pb-2"><%= I18n.t("global.link_to.love_our_brand", name: I18n.t("global.brand")) %></h2>
-          <ul class="list-unstyled mt-4 cp-benefit-list cp-benefit-2row">
-            <li>
-              <div class="features-wrap">
-                <span>
-                  <img src="<%= asset_path 'cp-ex-feat-01.svg' %>">
-                </span>
-                <p><%= I18n.t("global.link_to.early_access").html_safe %> <br></p>
-              </div>
-            </li>
-            <li>
-              <div class="features-wrap">
-                <span>
-                  <img src="<%= asset_path 'cp-ex-feat-06.svg' %>">
-                </span>
-                <p><%= I18n.t("global.link_to.timely_payments").html_safe %></p>
-              </div>
-            </li>
-            <li>
-              <div class="features-wrap">
-                <span>
-                  <img src="<%= asset_path 'cp-ex-feat-05.svg' %>">
-                </span>
-                <p><%= I18n.t("global.link_to.marketing_support").html_safe %></p>
-              </div>
-            </li>
-            <li>
-              <div class="features-wrap">
-                <span>
-                  <img src="<%= asset_path 'cp-ex-feat-11.svg' %>">
-                </span>
-                <p><%= I18n.t("global.link_to.performance_based").html_safe %></p>
-              </div>
-            </li>
-            <li>
-              <div class="features-wrap">
-                <span>
-                  <img src="<%= asset_path 'cp-ex-feat-02.svg' %>">
-                </span>
-                <p><%= I18n.t("global.link_to.extensive_nurturing").html_safe %></p>
-              </div>
-            </li>
-            <li>
-              <div class="features-wrap">
-                <span>
-                  <img src="<%= asset_path 'cp-ex-feat-04.svg' %>">
-                </span>
-                <p><%= I18n.t("global.link_to.crm_training").html_safe %></p>
-              </div>
-            </li>
-            <li>
-              <div class="features-wrap">
-                <span>
-                  <img src="<%= asset_path 'cp-ex-feat-07.svg' %>">
-                </span>
-                <p><%= I18n.t("global.link_to.fully_automated").html_safe %></p>
-              </div>
-            </li>
-            <li>
-              <div class="features-wrap">
-                <span>
-                  <img src="<%= asset_path 'cp-ex-feat-08.svg' %>">
-                </span>
-                <p><%= I18n.t("global.link_to.online_inventory_selection").html_safe %></p>
-              </div>
-            </li>
-            <li>
-              <div class="features-wrap">
-                <span>
-                  <img src="<%= asset_path 'cp-ex-feat-09.svg' %>">
-                </span>
-                <p><%= I18n.t("global.link_to.complete_transparency").html_safe %></p>
-              </div>
-            </li>
-            <li>
-              <div class="features-wrap">
-                <span>
-                  <img src="<%= asset_path 'cp-ex-feat-10.svg' %>">
-                </span>
-                <p><%= I18n.t("global.link_to.unique_online").html_safe %></p>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
+        <% template = ::Template::UITemplate.where(name: 'channel_partner_register', booking_portal_client_id: current_client.try(:id)).first %>
+        <% if template.present? %>
+          <%= get_view_erb(template) %>
+        <% end %>
       </div>
     </div>
 </div>

@@ -3,7 +3,7 @@ class Admin::BannerAssetsController < ApplicationController
   before_action :authorize_resource
 
   def index
-    @banner_assets = BannerAsset.all.order('created_at DESC')
+    @banner_assets = BannerAsset.where(booking_portal_client_id: current_client.try(:id)).order('created_at DESC')
     @banner_assets = @banner_assets.paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
       format.json { render json: @banner_assets }
@@ -12,13 +12,14 @@ class Admin::BannerAssetsController < ApplicationController
   end
 
   def new
-    @banner_asset = BannerAsset.new
+    @banner_asset = BannerAsset.new(booking_portal_client: current_client)
     render layout: false
   end
 
   def create
     @banner_asset = BannerAsset.new(banner_image: params["banner_asset"]["banner_image"], mobile_banner_image: params["banner_asset"]["mobile_banner_image"], url: params["banner_asset"]["url"], uploaded_by: current_user)
     @banner_asset.assign_attributes(permitted_attributes([:admin, @banner_asset]))
+    @banner_asset.booking_portal_client = current_client
     respond_to do |format|
       if @banner_asset.save
         format.html { redirect_to admin_banner_assets_path, notice: I18n.t("controller.banner_assets.notice.upload_successful") }
@@ -36,6 +37,7 @@ class Admin::BannerAssetsController < ApplicationController
 
   def update
     @banner_asset.assign_attributes(permitted_attributes([:admin, @banner_asset]))
+    @banner_asset.booking_portal_client = current_client
     respond_to do |format|
       if @banner_asset.save
         format.html { redirect_to admin_banner_assets_path, notice: I18n.t("controller.banner_assets.notice.update_successful") }

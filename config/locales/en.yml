@@ -1178,6 +1178,7 @@ en:
         add_company: "Add Partner Company"
         upload_documents: "Upload Documents"
         project_ids: Projects
+        document_type: Document Type
       channel_partner/file_types:
         rera_certificate: "RERA Certificate"
         gst_certificate: "GST Certificate"
@@ -2469,7 +2470,7 @@ en:
         channel_partner_summit:
           title: "Channel Partner Summit"
         why_beyondwalls:
-          title: "Why partner with BeyondWalls"
+          title: "Why partner with %{name}"
 
 
     cp_lead_activities:

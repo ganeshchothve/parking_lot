@@ -212,7 +212,7 @@ class ApplicationController < ActionController::Base
     alert = t policy_name, scope: "pundit", default: :default
     respond_to do |format|
       unless request.referer && request.referer.include?('remote-state') && request.method == 'GET'
-        format.html { redirect_to (not_authorized_path), alert: alert }
+        format.html { redirect_to (user_signed_in? ? not_authorized_path : new_user_session_path), alert: alert }
         format.json { render json: { errors: alert }, status: 403 }
       else
         # Handle response for remote-state url requests.

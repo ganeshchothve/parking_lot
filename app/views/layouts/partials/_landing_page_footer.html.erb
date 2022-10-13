@@ -1,10 +1,12 @@
 <footer class="col-app-12">
     <div class="desktop-footer col-app-12">
       <div class="container-launchpad">
-        <div class="col-app-8 col-app-xs-12">
-          Copyrights &copy; K2V2 Technologies Pvt. Ltd. <%= Date.current.year %>. 
-          <!--<a href="javascript:;" rel="about-us" class="footer-link scroll-sec">About Us</a><span> | </span> <%= link_to 'Privacy Policy', privacy_policy_path, class: 'footer-link' %> <span> | </span> <%= link_to 'Terms and Conditions', terms_and_conditions_path, class: 'footer-link' %>-->
-        </div>
+        <% if current_client.present? %>
+          <div class="col-app-8 col-app-xs-12">
+            <%= current_client.name %> <%= Date.current.year %>.
+            <!--<a href="javascript:;" rel="about-us" class="footer-link scroll-sec">About Us</a><span> | </span> <%= link_to 'Privacy Policy', privacy_policy_path, class: 'footer-link' %> <span> | </span> <%= link_to 'Terms and Conditions', terms_and_conditions_path, class: 'footer-link' %>-->
+          </div>
+        <% end %>
         <div class="col-app-4 col-app-xs-12">
           <div class="social-links">
             <a href="https://www.facebook.com/beyondwallsofficial" target="_blank">
