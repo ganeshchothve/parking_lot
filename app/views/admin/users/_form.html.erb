@@ -94,11 +94,11 @@
             <% else %>
               <div class="mb-3">
                 <%= f.label :channel_partner_id %>
-                <%= f.select :channel_partner_id, options_for_select(ChannelPartner.all.collect {|cp| [cp.ds_name, cp.id]}, @user.channel_partner_id), {prompt: I18n.t("global.select")}, class: 'selectize', disabled: (policy([current_user_role_group, @user]).editable_field?("channel_partner_id") ? false : true) %>
+                <%= f.select :channel_partner_id, options_for_select(ChannelPartner.all.where(booking_portal_client_id: current_client.id).collect {|cp| [cp.ds_name, cp.id]}, @user.channel_partner_id), {prompt: I18n.t("global.select")}, class: 'selectize', disabled: (policy([current_user_role_group, @user]).editable_field?("channel_partner_id") ? false : true) %>
               </div>
             <% end %>
           <% end %>
-          <% if policy([current_user_role_group, @user]).editable_field?("channel_partner_id") %>
+          <% if policy([current_user_role_group, @user]).editable_field?("manager_id") %>
             <div class="mb-3">
               <%= f.label :manager_id, class: "control-label" %>
               <%= f.select :manager_id, f.object.manager_id.present? ? [ [ f.object.manager_name, f.object.manager_id]] : [], {prompt: I18n.t("global.select")}, class: 'selectize-remote', autofocus: true, disabled: !(policy([current_user_role_group, @user]).editable_field?("manager_id")), "data-url": admin_users_path, "data-params": {fltrs: {role: fetch_manager_role(@user), confirmation: 'confirmed', is_active: true }}.to_json, 'data-ds': 'ds' %>

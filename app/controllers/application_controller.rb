@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
       stored_path = stored_location_for(current_user)
       if current_user.role.in?(%w(superadmin)) && params[:controller] == 'local_devise/sessions'
         admin_select_clients_path
-      elsif (current_user.buyer? || !current_user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))) && (params[:controller] == 'local_devise/sessions' || (params[:controller] == 'admin/users' && params.dig(:user, :is_first_login).present?))
+      elsif (current_user.buyer? || !current_user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner cp_owner))) && (params[:controller] == 'local_devise/sessions' || (params[:controller] == 'admin/users' && params.dig(:user, :is_first_login).present?))
         if stored_path.present? &&  stored_path.include?("kylas-auth")
           stored_path
         else

@@ -124,6 +124,8 @@ module ChannelPartnerRegisteration
   def register_with_new_company
     @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
     @channel_partner.is_existing_company = false
+    @channel_partner.booking_portal_client = current_client
+    @channel_partner.project_ids << current_project.id.to_s if current_project.present?
     respond_to do |format|
       if @channel_partner.save
         format.json { render 'channel_partners/register_with_new_company.json', status: :created }
