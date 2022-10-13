@@ -2,7 +2,7 @@
 require 'net/http'
 
 module Kylas
-  #service to create product in kylas
+  #service to create note in kylas
   class CreateNote < BaseService
 
     attr_accessor :user, :note, :params

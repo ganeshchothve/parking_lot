@@ -3,7 +3,7 @@
 require 'net/http'
 
 module Kylas
-  # Fetch contact details
+  # Fetch lead details
   class FetchLeadDetails < BaseService
     attr_reader :entity_id, :user
 

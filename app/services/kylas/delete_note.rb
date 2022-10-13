@@ -2,7 +2,7 @@
 require 'net/http'
 
 module Kylas
-  #service to create product in kylas
+  #service to delete note in kylas
   class DeleteNote < BaseService
 
     attr_accessor :user, :note, :params
@@ -17,7 +17,7 @@ module Kylas
       return if user.blank?
 
       response = delete_note_in_kylas
-      binding.pry
+
       case response
       when Net::HTTPOK, Net::HTTPSuccess
         { success: true }
@@ -45,7 +45,6 @@ module Kylas
         https = Net::HTTP.new(url.host, url.port)
         https.use_ssl = true
         request = Net::HTTP::Delete.new(url, request_headers)
-        binding.pry
         request['Content-Type'] = 'application/json'
         request['Accept'] = 'application/json'
         payload = {}
