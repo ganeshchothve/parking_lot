@@ -38,6 +38,7 @@ class Api::V1::UsersController < ApisController
   def create_or_update_user
     register_or_update_sales_user
     if @user.save
+      @user.confirm if @user.unconfirmed_email.present?
       render json: {id: @user.id, message: I18n.t("controller.users.notice.created")}, status: :created
     else
       render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity
