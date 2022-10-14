@@ -5,6 +5,13 @@ class NotesController < ApplicationController
   before_action :authorize_resource
   around_action :apply_policy_scope, only: :index
 
+  def index
+    @notes = @notable.notes.paginate(page: params[:page] || 1, per_page: params[:per_page])
+    respond_to do |format|
+      format.js
+    end
+  end
+
   def new
     @note = Note.new(notable: @notable, booking_portal_client: current_client)
     render layout: false
@@ -23,13 +30,8 @@ class NotesController < ApplicationController
         response = Kylas::CreateNote.new(current_user, @note).call
         response = response.with_indifferent_access
         @note.set(kylas_note_id: response.dig(:data, :id))
-        if params[:response_format] == "js"
-          format.js
-        else
-          format.json { render json: @note, status: :created }
-        end
+        format.json { render json: @note, status: :created }
       else
-        format.js
         format.json { render json: {errors: @note.errors.full_messages.uniq}, status: :unprocessable_entity }
       end
     end

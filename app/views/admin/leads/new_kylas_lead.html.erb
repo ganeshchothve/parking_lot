@@ -1,3 +1,8 @@
+<%
+  kylas_products = {}
+  kylas_products['Lead Product'] = @lead_associated_products if @lead_associated_products.present?
+  kylas_products['Other Products'] = (@kylas_products | @lead_associated_products) - (@kylas_products & @lead_associated_products) if @kylas_products.present?
+%>
 <div class="row justify-content-center">
   <div class="col-md-11">
     <div class="h-100">
@@ -6,7 +11,7 @@
           <%= form_for(@lead, url: create_kylas_lead_admin_leads_path, local: true, html: {class: 'validate-form mr-3 ml-3', id: 'kylas_lead_form'}) do |f| %>
           <div class="mb-3">
               <%= f.label :kylas_product, class: 'label-required' %>
-              <%= f.select :kylas_product_id, options_for_select(@kylas_products.collect{|kp| [kp[0], kp[1]]}), { include_blank: 'Select Kylas Product'}, autocomplete: 'off', class: 'selectize', required: true, disabled: !(policy([current_user_role_group, @lead]).editable_field?("project_id")) %>
+              <%= f.select :kylas_product_id, options_for_select(@lead_associated_products.collect{|kp| [kp[0], kp[1]]}), { include_blank: 'Select Kylas Product'}, autocomplete: 'off', class: 'selectize', required: true, disabled: !(policy([current_user_role_group, @lead]).editable_field?("project_id")) %>
           </div>
             <div class="mb-3">
               <%= f.label :first_name, class: 'label-required' %>

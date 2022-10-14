@@ -105,11 +105,13 @@ module Kylas
     end
 
     def fetch_lead_details
-      # Rails.logger.info "==================== #{params} ========================"
-      entity_id = params[:entityId] || "315017" 
+      entity_id = params[:entityId]
       fetch_lead_details = Kylas::FetchLeadDetails.new(entity_id, current_user).call
       if fetch_lead_details[:success]
         @lead_data = fetch_lead_details[:data].with_indifferent_access
+        # @lead_associated_products = @lead_data[:products].collect{|pd| [pd[:name], pd[:id]]} rescue []
+        # kylas_product_ids = current_user.booking_portal_client.projects.pluck(:kylas_product_id).compact.map(&:to_i)
+        # @lead_associated_products = @lead_associated_products.select{|kp| kylas_product_ids.include?(kp[1]) } rescue []
       end
     end
 
