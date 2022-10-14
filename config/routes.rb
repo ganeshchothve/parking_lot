@@ -544,7 +544,9 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :users, only: [:create, :update]
+      resources :users, only: [:create, :update] do
+        post :create_or_update_user, on: :collection
+      end
       resources :leads, only: [:create, :update]
       resources :user_kycs, only: [:create, :update]
       resources :channel_partners, only: [:create, :update]
