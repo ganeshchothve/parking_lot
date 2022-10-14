@@ -11,7 +11,7 @@
           <%= form_for(@lead, url: create_kylas_lead_admin_leads_path, local: true, html: {class: 'validate-form mr-3 ml-3', id: 'kylas_lead_form'}) do |f| %>
           <div class="mb-3">
               <%= f.label :kylas_product, class: 'label-required' %>
-              <%= f.select :kylas_product_id, options_for_select(@lead_associated_products.collect{|kp| [kp[0], kp[1]]}), { include_blank: 'Select Kylas Product'}, autocomplete: 'off', class: 'selectize', required: true, disabled: !(policy([current_user_role_group, @lead]).editable_field?("project_id")) %>
+              <%= f.select :kylas_product_id, grouped_options_for_select(kylas_products), { include_blank: 'Select Kylas Product'}, autocomplete: 'off', class: 'selectize', required: true, disabled: !(policy([current_user_role_group, @lead]).editable_field?("project_id")) %>
           </div>
             <div class="mb-3">
               <%= f.label :first_name, class: 'label-required' %>
@@ -48,11 +48,9 @@
               <%= f.label :manager_ids %>
               <%= f.select :manager_ids, options_from_collection_for_select([], "id", "ds_name"), {prompt: 'Select Channel Partners'}, class: 'selectize-remote', data: {url: admin_users_path(fltrs: { role: ['channel_partner', 'cp_owner'], is_active: true, booking_portal_client_id: current_client.id })}, multiple: true %>
             </div>
-
             <div class="text-end">
                 <%= f.submit "Save", class: 'btn btn-primary float-end w-auto border-primary' %>
             </div>
-
           <% end %>
         </div>
       </div>

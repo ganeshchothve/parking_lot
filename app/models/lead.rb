@@ -55,6 +55,7 @@ class Lead
   field :accepted_by_sales, type: Boolean
 
   # Kylas Marketplace specific Fields
+  field :kylas_lead_id, type: String
   field :kylas_deal_id, type: String
   field :kylas_pipeline_id, type: Integer
 

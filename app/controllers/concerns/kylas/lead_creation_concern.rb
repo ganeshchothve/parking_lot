@@ -41,11 +41,10 @@ module Kylas
           @user.assign_attributes(kylas_contact_id: @contact_response.dig(:data, :id))
           @user.save
           manager_ids = params.dig(:lead, :manager_ids)
-
-          if Rails.env.development? || Rails.env.staging?
-            CreateLeadWorker.new.perform(manager_ids, params, @user, @project, current_client)
+          if Rails.env.development?
+            CreateLeadWorker.new.perform(manager_ids, params, @user.id, @project.id, current_client.id, @lead_data)
           else
-            CreateLeadWorker.perform_async(manager_ids, params, @user, @project, current_client)
+            CreateLeadWorker.perform_async(manager_ids, params, @user.id, @project.id, current_client.id, @lead_data)
           end
           format.html { redirect_to request.referer, notice: 'Leads were successfully created' }
         else
@@ -109,9 +108,9 @@ module Kylas
       fetch_lead_details = Kylas::FetchLeadDetails.new(entity_id, current_user).call
       if fetch_lead_details[:success]
         @lead_data = fetch_lead_details[:data].with_indifferent_access
-        # @lead_associated_products = @lead_data[:products].collect{|pd| [pd[:name], pd[:id]]} rescue []
-        # kylas_product_ids = current_user.booking_portal_client.projects.pluck(:kylas_product_id).compact.map(&:to_i)
-        # @lead_associated_products = @lead_associated_products.select{|kp| kylas_product_ids.include?(kp[1]) } rescue []
+        @lead_associated_products = @lead_data[:products].collect{|pd| [pd[:name], pd[:id]]} rescue []
+        kylas_product_ids = current_user.booking_portal_client.projects.pluck(:kylas_product_id).compact.map(&:to_i)
+        @lead_associated_products = @lead_associated_products.select{|kp| kylas_product_ids.include?(kp[1]) } rescue []
       end
     end
 

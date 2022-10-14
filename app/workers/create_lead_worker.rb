@@ -1,9 +1,13 @@
 class CreateLeadWorker
   include Sidekiq::Worker
 
-  def perform manager_ids, params, user, project, client
+  def perform manager_ids, params, user_id, project_id, client_id, lead_data
     kylas_base = Crm::Base.where(domain: ENV_CONFIG.dig(:kylas, :base_url)).first
+    user = User.where(id: user_id).first
+    project = Project.where(id: project_id).first
+    client = Client.where(id: client_id).first
 
+    count = 0
     manager_ids.each do |manager_id|
       manager = User.where(id: manager_id).first
       if manager.present?
@@ -15,10 +19,15 @@ class CreateLeadWorker
                         booking_portal_client: client,
                         project: project,
                         manager_id: manager.id,
-                        user: user
+                        user: user,
+                        kylas_lead_id: (params[:entityId])
                         )
         if @lead.save
           Crm::Api::ExecuteWorker.new.perform('post', 'Lead', @lead.id, nil, {}, kylas_base.id.to_s) if kylas_base.present?
+          if (lead_data['products'].blank? || lead_data['products'].pluck('id').map(&:to_s).exclude?(params.dig(:lead, :kylas_product_id))) && count < 1
+              response = Kylas::UpdateLead.new(user, @lead.kylas_lead_id, params).call
+              count += 1 if response[:success]
+          end
         end
       end
     end
