@@ -4,7 +4,7 @@
 <% if policy([current_user_role_group, booking_detail]).choose_template_for_print? %>
   <%= link_to t('controller.templates.choose_template_for_print.link_name'), choose_template_for_print_admin_custom_templates_path(subject_class: booking_detail.class.model_name.i18n_key.to_s, subject_class_id: booking_detail.id.to_s), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
-<% if policy([:admin, booking_detail]).edit_booking_without_inventory?  %>
+<% if policy([:admin, booking_detail]).edit_booking_without_inventory?(current_project.try(:id).try(:to_s))  %>
   <%= link_to t('helpers.edit.link_name', model: BookingDetail.model_name.human ), edit_booking_without_inventory_admin_booking_detail_path(booking_detail), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 <% if policy([:admin, booking_detail]).can_move_booked_tentative? %>

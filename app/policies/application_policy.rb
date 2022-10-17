@@ -58,6 +58,15 @@ class ApplicationPolicy
     marketplace_portal
   end
 
+  def project_access_allowed?(current_project_id=nil)
+    if !user.role.in?(User::ALL_PROJECT_ACCESS) && current_project_id.present?
+      valid = user.project_ids.map(&:to_s).include?(current_project_id.to_s)
+    else
+      valid = true
+    end
+    valid
+  end
+
   def permitted_attributes params={}
     []
   end

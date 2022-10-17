@@ -364,15 +364,12 @@ class Lead
 
     def user_based_scope(user, params = {})
       custom_scope = {}
+      project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids)
       case user.role.to_sym
       when :channel_partner
-        #lead_ids = CpLeadActivity.where(user_id: user.id, channel_partner_id: user.channel_partner_id).distinct(:lead_id)
-        #custom_scope = {_id: { '$in': lead_ids }, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
-        custom_scope = {manager_id: user.id, channel_partner_id: user.channel_partner_id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
+        custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id, project_id: { "$in": project_ids } }
       when :cp_owner
-        #lead_ids = CpLeadActivity.where(channel_partner_id: user.channel_partner_id).distinct(:lead_id)
-        #custom_scope = {_id: { '$in': lead_ids }}
-        custom_scope = {channel_partner_id: user.channel_partner_id}
+        custom_scope = { channel_partner_id: user.channel_partner_id, project_id: { "$in": project_ids } }
       when :cp
         #channel_partner_ids = User.where(role: 'channel_partner', manager_id: user.id).distinct(:id)
         #lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
@@ -387,11 +384,11 @@ class Lead
       when :admin
         custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
       when :sales
-        custom_scope = { project_id: user.selected_project_id, booking_portal_client_id: user.booking_portal_client.id }
+        custom_scope = { project_id: { "$in": project_ids }, booking_portal_client_id: user.booking_portal_client.id }
       when :superadmin
         custom_scope = { booking_portal_client_id: user.selected_client_id }
       when :gre
-        custom_scope = { project_id: user.selected_project_id, booking_portal_client_id: user.booking_portal_client.id }
+        custom_scope = { project_id: { "$in": project_ids }, booking_portal_client_id: user.booking_portal_client.id }
       end
       custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
       custom_scope = { user_id: user.id } if user.buyer?

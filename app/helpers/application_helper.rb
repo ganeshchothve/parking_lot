@@ -109,13 +109,13 @@ module ApplicationHelper
   end
 
   def select_project_for_current_user
-    if current_project.present?
-      current_user.selected_project_id = current_project.id
-      current_user.selected_lead_id = current_user.leads.where(project_id: current_project.id).first if user.buyer?
-      current_user.save
-    else
-      current_user.update(selected_project_id: nil)
-    end
+    # if current_project.present?
+    #   current_user.selected_project_id = current_project.id
+    #   current_user.selected_lead_id = current_user.leads.where(project_id: current_project.id).first if current_user.buyer?
+    #   current_user.save
+    # else
+    #   current_user.update(selected_project_id: nil)
+    # end
   end
 
   def marketplace?

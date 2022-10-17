@@ -9,9 +9,9 @@ module DashboardData
         BookingDetail.where(BookingDetail.user_based_scope(user)).count
       end
 
-      def channel_partner_count(user=nil)
-        if user.selected_project.present?
-          InterestedProject.approved.where(project_id: user.selected_project_id).count
+      def channel_partner_count(user=nil, project_ids=nil)
+        if project_ids.present?
+          InterestedProject.approved.in(project_id: project_ids).count
         elsif user.selected_client.present?
           User.in(role: %w(channel_partner cp_owner)).where(booking_portal_client: user.selected_client).count
         else

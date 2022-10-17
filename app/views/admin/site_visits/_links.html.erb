@@ -25,11 +25,11 @@
   <% end %>
 <% end %>
 <% if ['channel_partner', 'cp_owner', 'dev_sourcing_manager', 'sales', 'admin'].include?(current_user.role) %>
-  <% if policy([:admin, BookingDetail.new(user: site_visit.lead.user, lead: site_visit.lead, project_unit: ProjectUnit.new(status: 'available', blocking_amount: current_client.blocking_amount))]).show_booking_link? %>
+  <% if policy([:admin, BookingDetail.new(user: site_visit.lead.user, lead: site_visit.lead, project_unit: ProjectUnit.new(status: 'available', blocking_amount: current_client.blocking_amount))]).show_booking_link?(current_project.try(:id).try(:to_s)) %>
     <%= link_to t('controller.searches.new.link_name'), new_admin_lead_search_path(lead_id: site_visit.lead.id, site_visit_id: site_visit.id), class: "dropdown-item" %>
   <% end %>
 <% end %>
-<% if policy([:admin, BookingDetail.new(user: site_visit.lead.user, lead: site_visit.lead)]).show_add_booking_link? %>
+<% if policy([:admin, BookingDetail.new(user: site_visit.lead.user, lead: site_visit.lead)]).show_add_booking_link?(current_client.try(:id).try(:to_s)) %>
   <%= link_to "Add Booking", new_booking_without_inventory_admin_booking_details_path(lead_id: site_visit.lead.id, site_visit_id: site_visit.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 

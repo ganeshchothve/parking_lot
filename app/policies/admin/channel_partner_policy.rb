@@ -15,7 +15,7 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
 
   def new?
     if user.present?
-      user.booking_portal_client.try(:enable_channel_partners?)
+      user.booking_portal_client.try(:enable_channel_partners?) && !marketplace_portal?
     else
       record.booking_portal_client.try(:enable_channel_partners?)
     end

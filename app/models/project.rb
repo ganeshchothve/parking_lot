@@ -287,21 +287,15 @@ class Project
 
   def self.user_based_scope(user, params = {})
     custom_scope = {}
-    if user.role.in?(%w(cp_owner channel_partner))
-      custom_scope =  { _id: { '$in': user.interested_projects.approved.distinct(:project_id) }, booking_portal_client_id: user.booking_portal_client.id }
-    elsif user.role.in?(%w(superadmin))
+    project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids)
+    if user.role.in?(%w(superadmin))
       custom_scope = { booking_portal_client_id: user.selected_client_id }
-    elsif user.role.in?(%w(admin superadmin))
+    elsif user.role.in?(%w(admin))
       custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
     end
 
     unless user.role.in?(User::ALL_PROJECT_ACCESS)
-      if user.selected_project_id.present?
-        custom_scope.merge!({_id: user.selected_project_id, booking_portal_client_id: user.booking_portal_client.id})
-      else
-        project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) } if user.project_ids.present?
-        custom_scope.merge!({_id: {"$in": (project_ids || [])}, booking_portal_client_id: user.booking_portal_client.id})
-      end
+      custom_scope.merge!({_id: { "$in": project_ids }, booking_portal_client_id: user.booking_portal_client.id})
     end
     custom_scope.merge!({ is_active: true }) if (params[:controller] == 'admin/projects' && params[:action] == 'index') || params[:controller] == 'home'
     custom_scope

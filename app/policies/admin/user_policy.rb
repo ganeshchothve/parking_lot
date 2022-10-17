@@ -53,7 +53,11 @@ class Admin::UserPolicy < UserPolicy
   def confirm_user?
     if %w[admin superadmin].include?(user.role) && !record.confirmed?
       if marketplace_portal?
-        record.is_active_in_kylas?
+        if record.role.in?(%w(cp_owner channel_partner))
+          Rails.env.production? ? false : true
+        else
+          record.is_active_in_kylas?
+        end
       else
         true
       end
@@ -72,7 +76,11 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def confirm_via_otp?
-    !record.confirmed? && record.phone.present? && new? && !user.buyer?
+    valid = !record.confirmed? && record.phone.present? && new? && !user.buyer?
+    if marketplace_portal? && record.role.in?(%w(cp_owner channel_partner))
+      valid = valid && (Rails.env.production? ? false : true)
+    end
+    valid
   end
 
   def print?

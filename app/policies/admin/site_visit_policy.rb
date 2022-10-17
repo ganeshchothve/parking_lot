@@ -16,9 +16,10 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
     (%w[superadmin admin] + User::CHANNEL_PARTNER_USERS).include?(user.role) && record.project.is_active?
   end
 
-  def new?
-    # SiteVisit.where(lead_id: record.lead_id, status: 'scheduled').blank? && edit? && record.project.walk_ins_enabled?
-    false
+  def new?(current_project_id = nil)
+    valid = SiteVisit.where(lead_id: record.lead_id, status: 'scheduled').blank? && edit? && record.project.walk_ins_enabled?
+    valid = valid && project_access_allowed?(current_project_id)
+    valid
   end
 
   def update?

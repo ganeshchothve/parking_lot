@@ -107,7 +107,7 @@
             <div class="form-footer px-0 d-inline-block d-none">
               <% if policy([current_user_role_group, channel_partner]).change_state? && policy([current_user_role_group, channel_partner]).editable_field?('event') %>
                 <% link_name = "#{channel_partner.rejected? ? I18n.t("global.resubmit_application") : I18n.t("global.submit_application")}" %>
-                <a href="javascript:;" class="btn bg-primary white px-4 d-inline-block py-2 me-3 font-medium w-auto fn-14"  data-bs-toggle="modal" data-bs-target="#confirmRegistration"><%= link_name %></a>
+                <a href="javascript:;" class="btn bg-primary white px-4 d-inline-block py-2 me-3 font-medium w-auto fn-14"  data-bs-toggle="modal" data-bs-target="#confirmRegistration" data-disable-with="Submitting.." ><%= link_name %></a>
               <% end %>
               <div class="modal fade googleMeet-modal" id="confirmRegistration" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
