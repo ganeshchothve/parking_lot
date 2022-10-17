@@ -57,7 +57,7 @@ module Kylas
     def note_payload
       note_payload = {
           "sourceEntity": {
-              "description": "<div>#{note.note.html_safe}</div>"
+              "description": "<div>#{note.note.html_safe}</div><small>Added By: #{note&.creator&.name}</small>"
           },
           "targetEntityId": note.notable.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)),
           "targetEntityType": "DEAL"

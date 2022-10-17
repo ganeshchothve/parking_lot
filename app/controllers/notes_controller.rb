@@ -27,9 +27,11 @@ class NotesController < ApplicationController
     respond_to do |format|
       if @note.save
         SelldoNotePushWorker.perform_async(@note.notable.lead_id, current_user.id.to_s, @note.note) if @note.notable.class.to_s == 'Lead' && current_user.role?(:channel_partner)
-        response = Kylas::CreateNote.new(current_user, @note).call
-        response = response.with_indifferent_access
-        @note.set(kylas_note_id: response.dig(:data, :id))
+        if is_marketplace?
+          response = Kylas::CreateNote.new(current_user, @note).call
+          response = response.with_indifferent_access
+          @note.set(kylas_note_id: response.dig(:data, :id))
+        end
         format.json { render json: @note, status: :created }
       else
         format.json { render json: {errors: @note.errors.full_messages.uniq}, status: :unprocessable_entity }
@@ -40,7 +42,7 @@ class NotesController < ApplicationController
   def destroy
     respond_to do |format|
       if @note.destroy
-        Kylas::DeleteNote.new(current_user, @note).call
+        Kylas::DeleteNote.new(current_user, @note).call if is_marketplace?
         format.html { redirect_to admin_leads_path, notice: 'Note was successfully destroyed' }
         format.json {render json: {}, status: :ok}
       else
