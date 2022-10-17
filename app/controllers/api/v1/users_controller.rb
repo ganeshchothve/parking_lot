@@ -1,5 +1,8 @@
 class Api::V1::UsersController < ApisController
-  before_action :set_user, except: :create
+  include Api::KylasUsersConcern
+
+  before_action :set_user, except: %w[create create_or_update_user]
+  before_action :set_client, only: %w[create_or_update_user]
   before_action :reference_id_present?, only: :create
 
   #
@@ -32,6 +35,16 @@ class Api::V1::UsersController < ApisController
     end
   end
 
+  def create_or_update_user
+    register_or_update_sales_user
+    if @user.save
+      @user.confirm if @user.unconfirmed_email.present?
+      render json: {id: @user.id, message: I18n.t("controller.users.notice.created")}, status: :created
+    else
+      render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def third_party_reference_params
@@ -57,5 +70,9 @@ class Api::V1::UsersController < ApisController
 
   def user_update_params
     params.require(:user).permit(:first_name, :last_name)
+  end
+
+  def set_client
+    @client = Client.where(kylas_tenant_id: params["tenantId"]).first
   end
 end

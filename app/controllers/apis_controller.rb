@@ -6,18 +6,13 @@ class ApisController < ActionController::API
 
   def authenticate_request
     flag = false
-    if request.headers['Client-id'] && request.headers['Client-key']
-      api_key = request.headers['Client-key']
-      crm_id = request.headers['Client-id']
-      @crm = Crm::Base.where(id: crm_id).first
+    if request.headers['Api-Key']
+      api_key = request.headers['Api-Key']
+      @crm = Crm::Base.where(api_key: api_key).first
       if @crm.present?
-        if api_key == @crm.api_key
-          flag = true
-        else
-          message = I18n.t("controller.apis.message.incorrect_key")
-        end
+        flag = true
       else
-        message = I18n.t("controller.apis.message.register")
+        message = I18n.t("controller.apis.message.incorrect_key")
       end
     else
       message = I18n.t("controller.apis.message.parameters_missing")
