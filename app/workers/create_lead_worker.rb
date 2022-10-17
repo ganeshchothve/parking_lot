@@ -25,7 +25,7 @@ class CreateLeadWorker
         if @lead.save
           Crm::Api::ExecuteWorker.new.perform('post', 'Lead', @lead.id, nil, {}, kylas_base.id.to_s) if kylas_base.present?
           if (lead_data['products'].blank? || lead_data['products'].pluck('id').map(&:to_s).exclude?(params.dig(:lead, :kylas_product_id))) && count < 1
-              response = Kylas::UpdateLead.new(user, @lead.kylas_lead_id, params).call
+              response = Kylas::UpdateLead.new(current_user, @lead.kylas_lead_id, params).call
               count += 1 if response[:success]
           end
         end

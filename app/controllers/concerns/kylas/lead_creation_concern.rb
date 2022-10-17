@@ -56,7 +56,7 @@ module Kylas
                               project: @project,
                               manager_id: manager.id,
                               user: @user,
-                              kylas_lead_id: ("315558" || params[:entityId])
+                              kylas_lead_id: params[:entityId]
                               )
 
               if @lead.save

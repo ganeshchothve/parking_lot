@@ -21,16 +21,16 @@ module Kylas
       when Net::HTTPOK, Net::HTTPSuccess
         { success: true, response: JSON.parse(response.body) }
       when Net::HTTPBadRequest
-        Rails.logger.error 'CreateProductInKylas - 400'
+        Rails.logger.error 'UpdateLead - 400'
         { success: false, error: 'Invalid Data!' }
       when Net::HTTPNotFound
-        Rails.logger.error 'CreateProductInKylas - 404'
+        Rails.logger.error 'UpdateLead - 404'
         { success: false, error: 'Invalid Data!' }
       when Net::HTTPServerError
-        Rails.logger.error 'CreateProductInKylas - 500'
+        Rails.logger.error 'UpdateLead - 500'
         { success: false, error: 'Server Error!' }
       when Net::HTTPUnauthorized
-        Rails.logger.error 'CreateProductInKylas - 401'
+        Rails.logger.error 'UpdateLead - 401'
         { success: false, error: 'Unauthorized' }
       else
         { success: false }
