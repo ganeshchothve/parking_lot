@@ -3967,7 +3967,3 @@ en:
   javascript:
     global:
       please_wait: "Please Wait..."
-  will_paginate:
-    page_entries_info:
-      single_page_html: "Single Page Html"
-      multi_page_html: "Multi Page Html"
