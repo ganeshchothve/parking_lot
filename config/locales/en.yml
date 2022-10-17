@@ -1285,6 +1285,7 @@ en:
 
       note:
         note: "Note"
+        add_note: "View and Add Note"
 
       payment_adjustment:
         name: "Name"

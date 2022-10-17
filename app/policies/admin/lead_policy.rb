@@ -145,7 +145,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def new_kylas_lead?
-    true
+    user.role.in?(%w(admin sales))
   end
 
   def create_kylas_lead?
