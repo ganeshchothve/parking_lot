@@ -6,7 +6,6 @@ class ThirdPartyReference
   field :reference_id, type: String
 
   embedded_in :reference_model, polymorphic: true
-  # belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :crm, class_name: 'Crm::Base'
   validates_uniqueness_of :crm_id, scope: :reference_model
 
