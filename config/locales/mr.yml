@@ -221,13 +221,13 @@ mr:
       client:
         name: 'ग्राहक नाव (अनुप्रयोगामध्ये वापरलेले)'
         allowed_bookings_per_user: 'बुकिंग प्रति वापरकर्ता परवानगी'
-        selldo_client_id: 'Sell.Do क्लायंट आयडी'
-        selldo_form_id: 'Sell.Do फॉर्म आयडी'
-        selldo_channel_partner_form_id: 'Sell.Do फॉर्म आयडी - चॅनेल पार्टनरसाठी'
-        selldo_gre_form_id: 'Sell.Do फॉर्म आयडी - नॉन चॅनल पार्टनर्सद्वारे वापरलेले'
-        selldo_api_key: 'Sell.Do API की'
-        selldo_default_srd: 'Sell.Do डीफॉल्ट एसआरडी'
-        selldo_cp_srd: 'Sell.Do चॅनल पार्टनर एसआरडी'
+        selldo_client_id: 'CRM क्लायंट आयडी'
+        selldo_form_id: 'CRM फॉर्म आयडी'
+        selldo_channel_partner_form_id: 'CRM फॉर्म आयडी - चॅनेल पार्टनरसाठी'
+        selldo_gre_form_id: 'CRM फॉर्म आयडी - नॉन चॅनल पार्टनर्सद्वारे वापरलेले'
+        selldo_api_key: 'CRM API की'
+        selldo_default_srd: 'CRM डीफॉल्ट एसआरडी'
+        selldo_cp_srd: 'CRM चॅनल पार्टनर एसआरडी'
         notification_email: 'अधिसूचना ईमेल (सर्व ईमेल येथे पाठविले जातात)'
         notification_numbers: 'अधिसूचना फोन नंबर (मुख्य एसएमएस अहवाल येथे पाठविले जातात)'
         sender_email: 'प्रेषक ईमेल पत्ता'
@@ -544,7 +544,7 @@ mr:
         password_confirmation: 'संकेतशब्द पुष्टीकरण'
         rera_id: 'रेरा नोंदणी क्रमांक'
         location: 'स्थान'
-        lead_id: 'Sell.do लीड आयडी'
+        lead_id: 'CRM लीड आयडी'
         time_zone: "वापरकर्त्याचे टाइम झोन"
         manager_role: "विक्री व्यवस्थापक / द्वारे जोडले"
         confirmed: "पुष्टी केली"

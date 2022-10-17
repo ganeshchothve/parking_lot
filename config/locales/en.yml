@@ -932,7 +932,7 @@ en:
         notification: "Notification"
       developer:
         name: "Developer Name"
-        selldo_id: "Sell.Do Developer ID"
+        selldo_id: "CRM Developer ID"
       project:
         name: "Project Name"
         region: "Region"
@@ -989,8 +989,8 @@ en:
         selldo_api_key: "SellDo API Key (Use generic Api Client)"
         selldo_default_srd: "SellDo Default SRD"
         selldo_cp_srd: "SellDo Channel Partner SRD"
-        selldo_id: "Sell.Do Project ID"
-        selldo_default_search_list_id: "Sell.Do All Leads Search List ID"
+        selldo_id: "CRM Project ID"
+        selldo_default_search_list_id: "CRM All Leads Search List ID"
         notification_email: "Notification Email"
         notification_email_sort: "(all emails are sent here)"
         notification_numbers: "Notification Numbers"
@@ -1051,7 +1051,7 @@ en:
         price_starting_from: "Price Starts From"
         price_upto: "Price Goes Upto"
         broker_usp: "Broker Unique Selling Points (Fill in upto 3 USPs)"
-        check_sv_availability_in_selldo: "Check Site Visit Availability in Sell.do"
+        check_sv_availability_in_selldo: "Check Site Visit Availability in CRM"
         incentive_gst_slabs: "Configure Incentive GST Slabs (%)"
         payment_enabled: "Enable Payment"
         approved_banks/list:
@@ -1983,7 +1983,7 @@ en:
         kyc_ready: "Is the Customer KYC Ready?"
         login_otp: "Login OTP"
         location: "Location"
-        lead_id: "Sell.Do Lead ID"
+        lead_id: "CRM Lead ID"
         manager_name: "Manager Name"
         manager_role: "Sales Manager / Added by Role"
         manager_id: "Channel Partner"
@@ -2312,7 +2312,7 @@ en:
         end_value: "End Value"
 
       customer_search:
-        lead_id: "Sell.Do Lead ID"
+        lead_id: "CRM Lead ID"
         token_number: "Token Number"
         id: "Name / Email / Phone"
 
@@ -2563,7 +2563,7 @@ en:
       show_resposnse:
         error: "There was some error while loading the response. Please contact administrator."
       errors:
-        not_available: "Sell.do CRM integration not available"
+        not_available: "CRM integration not available"
     crm/base:
       create:
         success: "CRM details added successfully."
@@ -2984,7 +2984,7 @@ en:
       index:
         link_name: "Projects"
       sync_on_selldo:
-        link_name: "Sync on Sell.do"
+        link_name: "Sync on CRM"
       show:
         show_interest_text: "Subscribe to Project for Adding Walk-Ins"
         booking_count: "Bookings"
@@ -3007,7 +3007,7 @@ en:
         subscribed: "Project successfully subscribed."
         updated: "Interested Project successfully updated."
         created: "Project created successfully."
-        synced_on_selldo: "Project synced on Sell.do successfully"
+        synced_on_selldo: "Project synced on CRM successfully"
       view:
         all: "All"
         newly_launched: "Newly Launched"
@@ -3177,7 +3177,7 @@ en:
       show:
         link_name: "Walk-in Details"
       sync_with_selldo:
-        link_name: "Sync with Sell.Do"
+        link_name: "Sync with CRM"
       reject:
         link_name: "Reject Walk-in"
         default_note: "Our developer partner indicated that the customer hasn’t visited the project site and no customer with this name was found in their systems. They have asked us to reject this visit. If you do not agree and in case you know the customer has visited; kindly update the walk-in as conducted. Based on your feedback, we will take this up with our developer partner. If you want to reschedule this visit, you can schedule a new walk-in."
@@ -3206,7 +3206,7 @@ en:
         updated: "Site visit was successfully updated"
         synced: "Site visit was successfully synced"
       errors:
-        could_not_register: "Could not register Site Visit on Sell.Do"
+        could_not_register: "Could not register Site Visit on CRM"
         went_wrong: "Something went wrong. Please contact support"
         not_found: "Site visit not found"
         id_missing_in_params: "SiteVisit id is missing in params"
@@ -3804,7 +3804,7 @@ en:
 
   selldo:
     links:
-      header: "Take Action in Sell.Do"
+      header: "Take Action in CRM"
       add_note: "View Lead & Add Notes"
       schedule_site_visit: "Schedule Site Visit"
       schedule_followup: "Schedule Followup"
@@ -3951,7 +3951,7 @@ en:
     selldo:
       note: "Added BY %{name}"
       errors:
-        push_note: "Errors while Pushing note to sell.do %{name}"
+        push_note: "Errors while Pushing note to CRM %{name}"
         sitevisit_update_failed: "Sitevisit for %{name1} has not been updated due to following error - %{name2}"
   gamification:
     text:
@@ -3966,6 +3966,19 @@ en:
     global:
       please_wait: "Please Wait..."
   will_paginate:
+    previous_label: "&#8592; Previous"
+    next_label: "Next &#8594;"
+    page_gap: "&hellip;"
+
     page_entries_info:
-      single_page_html: "Single Page Html"
-      multi_page_html: "Multi Page Html"
+      single_page:
+        zero:  "No %{model} found"
+        one:   "Displaying 1 %{model}"
+        other: "Displaying all %{count} %{model}"
+      single_page_html:
+        zero:  "No %{model} found"
+        one:   "Displaying <b>1</b> %{model}"
+        other: "Displaying <b>all&nbsp;%{count}</b> %{model}"
+
+      multi_page: "Displaying %{model} %{from} - %{to} of %{count} in total"
+      multi_page_html: "Displaying %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> of <b>%{count}</b> in total"
