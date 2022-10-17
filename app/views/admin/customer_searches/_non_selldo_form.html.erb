@@ -1,4 +1,4 @@
-
+<!-- TODO project specific URL and domain specific URL -->
         <% unless @lead = @customer_search.customer.presence %>
           <% @lead = Lead.new(project_id: current_user.selected_project_id) %>
           <% @customer_search.customer = @lead %>

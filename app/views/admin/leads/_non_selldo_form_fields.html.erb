@@ -1,3 +1,4 @@
+<% project_ids = (params[:current_project_ids] || user.project_ids) %>
 <div class="row">
   <% if policy([:admin, lead]).editable_field?("push_to_crm") %>
     <div class="col-md-12">
@@ -21,9 +22,9 @@
     <%= f.input :phone, required: true, disabled: !policy([:admin, lead]).editable_field?("phone"), as: :tel, input_html: { class: 'phone', name: 'phone' } %>
   </div>
 </div>
-<%#= f.input :project_id, as: :hidden, input_html: {name: 'project_id'}, value: current_user.selected_project_id %>
-<% if Project.count == 1 || params[:project_id].present? || current_user.selected_project %>
-  <%= f.input :project_id, as: :hidden, input_html: { name: 'project_id', value: current_user.selected_project_id } %>
+<!-- TODO project specific URL and domain specific URL -->
+<% if Project.count == 1 || params[:project_id].present? || current_project.present? %>
+  <%= f.input :project_id, as: :hidden, input_html: { name: 'project_id', value: (params[:project_id] || current_project.try(:id)) } %>
 <% else %>
   <div class='row'>
     <div class="col-md-12">

@@ -7,11 +7,14 @@
     </div>
   </div>
 </div>
-<div class="px-4">
-  <div class="first-sec welcome-box my-3">
-  <% template = ::Template::UITemplate.where(name: 'sales_dashboard', project_id: current_user.selected_project_id).first %>
-  <% if template.present? %>
-    <%= get_view_erb(template, check_active: true) %>
-  <% end %>
+<!-- TODO project specific URL and domain specific URL -->
+<% if current_project.present? %>
+  <div class="px-4">
+    <div class="first-sec welcome-box my-3">
+    <% template = ::Template::UITemplate.where(name: 'sales_dashboard', project_id: current_project.id).first %>
+    <% if template.present? %>
+      <%= get_view_erb(template, check_active: true) %>
+    <% end %>
+    </div>
   </div>
-</div>
+<% end %>

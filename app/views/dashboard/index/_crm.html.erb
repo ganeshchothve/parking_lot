@@ -1,3 +1,4 @@
+<% project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids) %>
 <div class="px-4 mb-4 admin-dashboard">
   <div class="row">
     <div class="col-lg-<%= current_user.role.in?(%w(admin superadmin)) ? '2' : '4' %> col-xs-6 col-md-4 col-sm-4 mb-3">
@@ -27,7 +28,7 @@
             <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle wd-100"><%= t('mongoid.attributes.user/role.channel_partner').try(:pluralize) %></h4>
           </div>
           <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
-            <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.channel_partner_count(current_user) %></span>
+            <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.channel_partner_count(current_user, project_ids) %></span>
           </div>
         </div>
       </div>

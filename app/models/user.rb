@@ -849,7 +849,7 @@ class User
       elsif login.present?
         auth_conditions = [{ phone: login }, { email: login }]
         if warden_conditions[:booking_portal_client_id].present?
-          user_criteria = any_of(auth_conditions).in(role: User::CLIENT_SCOPED_ROLES).where(booking_portal_client_id: warden_conditions[:booking_portal_client_id])
+          user_criteria = any_of(auth_conditions).where(booking_portal_client_id: warden_conditions[:booking_portal_client_id])
         else
           user_criteria = any_of(auth_conditions).nin(role: User::CLIENT_SCOPED_ROLES)
         end
@@ -881,6 +881,7 @@ class User
 
     def user_based_scope(user, _params = {})
       custom_scope = {}
+      project_ids = (_params[:current_project_id].present? ? [_params[:current_project_id]] : user.project_ids)
       if user.role?('channel_partner')
         custom_scope = { role: {"$in": User.buyer_roles(user.booking_portal_client)} }
         custom_scope[:'$or'] = [{manager_id: user.id}, {manager_id: nil, referenced_manager_ids: user.id, iris_confirmation: false}]
@@ -915,7 +916,7 @@ class User
         custom_scope = { booking_portal_client_id: user.selected_client_id }
         custom_scope = { role: { '$in': %w(sales admin sales_admin gre channel_partner cp_owner) }, booking_portal_client_id: user.selected_client_id } if user.booking_portal_client.try(:kylas_tenant_id).present?
       elsif user.role?('team_lead')|| user.role?('gre')
-        custom_scope = { role: 'sales', project_ids: user.selected_project_id.to_s, booking_portal_client_id: user.booking_portal_client_id }
+        custom_scope = { role: 'sales', project_ids: { "$in": project_ids }, booking_portal_client_id: user.booking_portal_client_id }
       end
       custom_scope
     end

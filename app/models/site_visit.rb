@@ -100,18 +100,19 @@ class SiteVisit
 
   def self.user_based_scope(user, params = {})
     custom_scope = {}
+    project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids)
     if params[:lead_id].blank? && !user.buyer?
       case user.role.to_s
       when 'channel_partner'
-        custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id }
+        custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id, project_id: { "$in": project_ids} }
       when 'cp_owner'
-        custom_scope = {channel_partner_id: user.channel_partner_id}
+        custom_scope = {channel_partner_id: user.channel_partner_id, project_id: { "$in": project_ids}}
       when 'cp_admin'
         custom_scope = {}
       when 'cp'
         custom_scope = {}
       when 'dev_sourcing_manager', 'billing_team'
-        custom_scope = { project_id: user.selected_project_id }
+        custom_scope = { project_id: { "$in": project_ids} }
       when 'admin', 'sales'
         custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
       when 'superadmin'

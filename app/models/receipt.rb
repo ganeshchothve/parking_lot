@@ -246,11 +246,12 @@ class Receipt
 
   def self.user_based_scope(user, params = {})
     custom_scope = {}
+    project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids)
     if params[:lead_id].blank? && !user.buyer?
       if user.role?('channel_partner')
-        custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
+        custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id, project_id: { "$in": project_ids} }
       elsif user.role?('cp_owner')
-        custom_scope = { channel_partner_id: user.channel_partner_id }
+        custom_scope = { channel_partner_id: user.channel_partner_id, project_id: { "$in": project_ids} }
       elsif user.role?('cp_admin')
         #cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
         #channel_partner_ids = User.where(role: 'channel_partner', manager_id: {"$in": cp_ids}).distinct(:id)
@@ -263,7 +264,7 @@ class Receipt
       elsif user.role?(:admin)
         custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
       elsif user.role.in?(%w(sales gre))
-        custom_scope = { booking_portal_client_id: user.booking_portal_client_id, project_id: user.selected_project_id }
+        custom_scope = { booking_portal_client_id: user.booking_portal_client_id, project_id: { "$in": project_ids} }
       elsif user.role.in?(%w(superadmin))
         custom_scope = { booking_portal_client_id: user.selected_client_id }
       end

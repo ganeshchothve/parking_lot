@@ -14,9 +14,10 @@ class ApplicationController < ActionController::Base
   acts_as_token_authentication_handler_for User, if: :token_authentication_valid_params?
 
   before_action :set_current_client, if: :current_user
+  before_action :set_current_project_id
   # Run in current user Time Zone
   around_action :user_time_zone, if: :current_user
-  around_action :apply_project_scope, if: :current_user, unless: proc { current_user.role?('channel_partner') && params[:controller] == 'admin/projects' }
+  around_action :apply_project_scope, if: :current_user, unless: proc { params[:controller] == 'admin/projects' }
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
@@ -50,7 +51,7 @@ class ApplicationController < ActionController::Base
       stored_path = stored_location_for(current_user)
       if current_user.role.in?(%w(superadmin)) && params[:controller] == 'local_devise/sessions'
         admin_select_clients_path
-      elsif (current_user.buyer? || !current_user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner cp_owner))) && (params[:controller] == 'local_devise/sessions' || (params[:controller] == 'admin/users' && params.dig(:user, :is_first_login).present?))
+      elsif (current_user.buyer? || !current_user.role.in?(User::ALL_PROJECT_ACCESS)) && (params[:controller] == 'local_devise/sessions' || (params[:controller] == 'admin/users' && params.dig(:user, :is_first_login).present?))
         if stored_path.present? &&  stored_path.include?("kylas-auth")
           stored_path
         else
@@ -102,6 +103,12 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def set_current_project_id
+    if current_project.present?
+      params.merge!(current_project_id: current_project.id.to_s)
+    end
+  end
 
   def apply_project_scope
     project_scope = Project.where(Project.user_based_scope(current_user, params))

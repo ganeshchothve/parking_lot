@@ -40,7 +40,7 @@ class Admin::BookingDetailsController < AdminController
 
   def process_booking_on_project
     respond_to do |format|
-      if policy([:admin, BookingDetail.new(user: @lead.user, lead: @lead, project_unit: ProjectUnit.new(status: 'available', blocking_amount: current_client.blocking_amount))]).show_booking_link?
+      if policy([:admin, BookingDetail.new(user: @lead.user, lead: @lead, project_unit: ProjectUnit.new(status: 'available', blocking_amount: current_client.blocking_amount))]).show_booking_link?(current_project.try(:id).try(:to_s))
         response.set_header('location', new_admin_lead_search_path(@lead.id) )
         format.json { render json: { status: :ok } }
         format.html { redirect_to new_admin_lead_search_path(@lead.id) }
