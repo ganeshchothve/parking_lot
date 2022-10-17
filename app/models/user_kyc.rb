@@ -13,8 +13,9 @@ class UserKyc
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   DOCUMENT_TYPES = []
   OCCUPATIONS = ['salaried', 'self_employed', 'business_owner', 'retired', 'home_maker', 'other_company']
+  SALUTATIONS = ["Mr", "Mrs", "Ms", "Brig", "Captain", "Col", "Dr", "Maharaj", "Prof"]
 
-  field :salutation, type: String, default: 'Mr.'
+  field :salutation, type: String, default: 'Mr'
   field :first_name, type: String
   field :last_name, type: String
   field :email, type: String
@@ -86,7 +87,7 @@ class UserKyc
   validates :company_name, presence: true, if: proc { |kyc| kyc.is_company? }
   validates :poa_details, presence: true, if: proc { |kyc| kyc.poa? }
   validates :existing_customer_name, :existing_customer_project, presence: true, if: proc { |kyc| kyc.existing_customer? }
-  validates :salutation, inclusion: { in: I18n.t("mongoid.attributes.user_kyc/salutations").keys.map(&:to_s) }, allow_blank: true
+  validates :salutation, inclusion: { in: SALUTATIONS }, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
   validates :addresses, copy_errors_from_child: true
 
