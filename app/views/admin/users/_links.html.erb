@@ -16,7 +16,13 @@
   <%= link_to t('controller.users.confirm_via_otp.link_name'), confirm_via_otp_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 <% if policy([:admin, user]).confirm_user? %>
-  <% link_name = marketplace? ? t('controller.users.invite_user.link_name') : t('controller.users.confirm_user.link_name') %>
+  <%
+    if marketplace? && !user.role.in?(%w[cp_owner channel_partner])
+      link_name = t('controller.users.invite_user.link_name')
+    else
+      link_name = t('controller.users.confirm_user.link_name')
+    end
+  %>
   <%= link_to link_name, confirm_user_admin_user_path(user), method: :patch, class: "dropdown-item" %>
 <% end %>
 
