@@ -16,27 +16,39 @@
           <button type="button" class="close btn-close" data-bs-dismiss="modal" aria-label="Close">
           </button>
         </div>
-        <div class="modal-body row p-0">
-          <div class="col-lg-4 filter-left-section">
-              <ul>
-                <li>
-                  <a class="nav-item nav-link active" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-basic" role="tab">Basic Details</a></li>
-                <li>
-                  <a class="nav-item nav-link" data-bs-toggle="tab" href="javascript:;" data-bs-target="#nav-project-bookings" role="tab">Kylas Products</a>
+        <div class="modal-body row col-12 p-0">
+          <div class="col-lg-3 filter-left-section">
+          <div class="sticky-top ps-3 pt-3">
+              <ul class="">
+                <li class="nav-item">
+                  <a class="nav-link active" rel="nav-project-basic">Basic Details</a></li>
+                <li class="nav-item">
+                  <a class="nav-link" rel="nav-project-bookings">Kylas Products</a>
                 </li>
               </ul>
-          </div>
-          <div class="col-lg-8">
-            <div class="mt-1"></div>
-            <div class="tab-content theme-form">
-              <div class="tab-pane fade show active" id="nav-project-basic" role="tabpanel">
-                <h2 class="tab-title">Basic Details</h2>
-                <%= render 'admin/projects/basic', f: f, project: project %>
-              </div>
               <hr>
-              <div class="tab-pane fade show active" id="nav-project-bookings" role="tabpanel">
-                <h2 class="tab-title">Kylas Products</h2>
-                <%= render 'admin/projects/kylas_products', f: f, project: project %>
+              <div class="theme-form">
+                <select class="selectize" required="" name="" id="" tabindex="-1">
+                  <option></option>
+                  <option>Project Name</option>
+                  <option>Developer Name</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-9 mb-5 pb-4">
+            <div class="mt-3"></div>
+            <div class="filter-right-section">
+              <div class="tab-content theme-form">
+                <div class="" id="nav-project-basic">
+                  <h2 class="tab-title">Basic Details</h2>
+                  <%= render 'admin/projects/basic', f: f, project: project %>
+                </div>
+                <hr>
+                <div class="" id="nav-project-bookings">
+                  <h2 class="tab-title">Kylas Products</h2>
+                  <%= render 'admin/projects/kylas_products', f: f, project: project %>
+                </div>
               </div>
             </div>
           </div>
@@ -51,5 +63,11 @@
 <%= javascript_tag do %>
   $(document).ready(function(){
     FormInitializer.init($("#project_form"));
+      $('.filter-left-section ul li a').on("click", function() {
+    var href = $(this).attr("rel");
+    $('html,body').scrollTo($("#" + href).offset().top);
+    console.log(href);
   });
+  });
+
 <% end %>
