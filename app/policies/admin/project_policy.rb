@@ -22,7 +22,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def index?
-    user.role.in?(%w(channel_partner cp_owner dev_sourcing_manager)) || (!user.buyer? && (user.booking_portal_client.enable_actual_inventory?(user) || enable_incentive_module?(user))) #&& !user.role?('billing_team')
+    user.role.in?(%w(channel_partner cp_owner dev_sourcing_manager superadmin admin)) || (!user.buyer? && (user.booking_portal_client.enable_actual_inventory?(user) || enable_incentive_module?(user))) #&& !user.role?('billing_team')
   end
 
   def third_party_inventory?
@@ -34,7 +34,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def new?
-    user.role.in?(%w(superadmin sales_admin))
+    user.role.in?(%w(superadmin sales_admin)) && !marketplace_client?
   end
 
   def create?
@@ -54,10 +54,6 @@ class Admin::ProjectPolicy < ProjectPolicy
 
   def ds?
     user.booking_portal_client.enable_actual_inventory?(user) || enable_incentive_module?(user)
-  end
-
-  def switch_project?
-    user.role.in?(User::SELECTED_PROJECT_ACCESS) && user.project_ids.count > 1
   end
 
   def sync_kylas_product?
@@ -86,7 +82,7 @@ class Admin::ProjectPolicy < ProjectPolicy
         :consideration_value_help_text, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes,
         email_domains: [], booking_portal_domains: [], enable_actual_inventory: [], enable_live_inventory: [], incentive_percentage_slabs: [], incentive_gst_slabs: [], booking_sources: [], incentive_calculation: [], disable_project: [:walk_ins, :bookings, :invoicing], booking_custom_template_ids: []
       ]
-      attributes += [:name] unless marketplace_portal?
+      attributes += [:name] unless marketplace_client?
     end
 
     attributes.uniq

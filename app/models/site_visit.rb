@@ -104,28 +104,30 @@ class SiteVisit
     if params[:lead_id].blank? && !user.buyer?
       case user.role.to_s
       when 'channel_partner'
-        custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id, project_id: { "$in": project_ids} }
+        custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id}
       when 'cp_owner'
-        custom_scope = {channel_partner_id: user.channel_partner_id, project_id: { "$in": project_ids}}
+        custom_scope = {channel_partner_id: user.channel_partner_id}
       when 'cp_admin'
         custom_scope = {}
       when 'cp'
         custom_scope = {}
       when 'dev_sourcing_manager', 'billing_team'
-        custom_scope = { project_id: { "$in": project_ids} }
+        custom_scope = {}
       when 'admin', 'sales'
-        custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
+        custom_scope = {}
       when 'superadmin'
-        custom_scope = { booking_portal_client_id: user.selected_client_id }
+        custom_scope = {}
       end
     end
 
     custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
     custom_scope = { user_id: user.id } if user.buyer?
 
-    # unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
-    #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
-    # end
+    if !user.role.in?(User::ALL_PROJECT_ACCESS) || params[:current_project_id].present?
+      custom_scope.merge!({project_id: { "$in": project_ids }})
+    end
+
+    custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
     custom_scope
   end
 

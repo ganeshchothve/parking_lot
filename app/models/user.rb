@@ -21,21 +21,21 @@ class User
   BUYER_ROLES = %w[user employee_user management_user]
   ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre billing_team team_lead account_manager_head account_manager cp_owner dev_sourcing_manager]
   ALL_PROJECT_ACCESS = %w[superadmin admin cp cp_admin billing_team]
-  SELECTED_PROJECT_ACCESS = %w[sales sales_admin gre crm team_lead dev_sourcing_manager account_manager account_manager_head]
+  # SELECTED_PROJECT_ACCESS = %w[sales sales_admin gre crm team_lead dev_sourcing_manager account_manager account_manager_head]
   CHANNEL_PARTNER_USERS = %w[cp cp_admin channel_partner cp_owner]
   SALES_USER = %w[sales sales_admin]
   COMPANY_USERS = %w[employee_user management_user]
   # Added different types of documents which are uploaded on User
   DOCUMENT_TYPES = %w[home_loan_application_form photo_identity_proof residence_address_proof residence_ownership_proof income_proof job_continuity_proof bank_statement advance_processing_cheque financial_documents first_page_co_branding last_page_co_branding co_branded_asset]
   TEAM_LEAD_DASHBOARD_ACCESS_USERS = %w[team_lead gre]
-  KYLAS_MARKETPALCE_USERS = %w[admin sales]
+  KYLAS_MARKETPALCE_USERS = %w[admin sales gre sales_admin channel_partner cp_owner superadmin].freeze
   KYLAS_CUSTOM_FIELDS_ENTITIES = %w[lead deals meetings].freeze
   CLIENT_SCOPED_ROLES = (%w[channel_partner cp_owner] + User::BUYER_ROLES).freeze
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :confirmable, :timeoutable, :password_archivable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: {login: true, booking_portal_client_id: false} #:lockable,:expirable,:session_limitable,:password_expirable
-  attr_accessor :temporary_password, :payment_link, :temp_manager_id, :company_name
+  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :confirmable, :timeoutable, :password_archivable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: {login: true, booking_portal_client_id: false, project_id: false} #:lockable,:expirable,:session_limitable,:password_expirable
+  attr_accessor :temporary_password, :payment_link, :temp_manager_id, :company_name, :project_id
 
   ## Database authenticatable
   field :first_name, type: String, default: ''
@@ -239,7 +239,8 @@ class User
 
 
   # scopes needed by filter
-  scope :filter_by_confirmation, ->(confirmation) { confirmation.eql?('not_confirmed') ? where(confirmed_at: nil) : where(confirmed_at: { "$ne": nil }) }
+  # scope :filter_by_confirmation, ->(confirmation) { confirmation.eql?('not_confirmed') ? where(confirmed_at: nil) : where(confirmed_at: { "$ne": nil }) }
+  scope :filter_by_confirmation, ->(confirmation) { confirmation == 'true' ? where(confirmed_at: { "$ne": nil }) : where(confirmed_at: nil)}
   scope :filter_by_is_active, ->(is_active) { is_active.eql?("true") ? where(is_active: true)
     : where(is_active: false)}
   scope :filter_by_channel_partner_id, ->(channel_partner_id) {where(channel_partner_id: channel_partner_id) }
@@ -796,6 +797,16 @@ class User
     self.selldo_access_token = oauth_data.credentials.token if oauth_data
   end
 
+  alias_method :_booking_portal_client, :booking_portal_client
+
+  def booking_portal_client
+    if role?(:superadmin)
+      selected_client
+    else
+      _booking_portal_client
+    end
+  end
+
   #def push_srd_to_selldo
   #  _selldo_api_key = Client.selldo_api_clients.dig(:website, :api_key)
 
@@ -829,7 +840,11 @@ class User
     end
 
     def available_roles(current_client)
-      roles = ADMIN_ROLES + BUYER_ROLES
+      if current_client.present? && current_client.kylas_tenant_id.present?
+        roles = KYLAS_MARKETPALCE_USERS
+      else
+        roles = ADMIN_ROLES + BUYER_ROLES
+      end
       roles -= CHANNEL_PARTNER_USERS unless current_client.try(:enable_channel_partners?)
       roles -= COMPANY_USERS unless current_client.try(:enable_company_users?)
       roles
@@ -848,8 +863,21 @@ class User
         where(reset_password_token: reset_password_token).first
       elsif login.present?
         auth_conditions = [{ phone: login }, { email: login }]
-        if warden_conditions[:booking_portal_client_id].present?
-          user_criteria = any_of(auth_conditions).where(booking_portal_client_id: warden_conditions[:booking_portal_client_id])
+        if warden_conditions[:project_id].present?
+          or_conds = []
+          or_conds << { 
+            "$or": [
+              { booking_portal_client_id: warden_conditions[:booking_portal_client_id], '$or': auth_conditions, role: {"$nin": ALL_PROJECT_ACCESS}, project_ids: warden_conditions[:project_id] },
+              { booking_portal_client_id: warden_conditions[:booking_portal_client_id], '$or': auth_conditions, role: {"$in": ALL_PROJECT_ACCESS}}
+            ]
+          }
+          or_conds << { role: 'superadmin', '$or': auth_conditions, client_ids: warden_conditions[:booking_portal_client_id] }
+          user_criteria = any_of(or_conds)
+        elsif warden_conditions[:booking_portal_client_id].present?
+          or_conds = []
+          or_conds << { booking_portal_client_id: warden_conditions[:booking_portal_client_id], '$or': auth_conditions }
+          or_conds << { role: 'superadmin', '$or': auth_conditions, client_ids: warden_conditions[:booking_portal_client_id] }
+          user_criteria = any_of(or_conds)
         else
           user_criteria = any_of(auth_conditions).nin(role: User::CLIENT_SCOPED_ROLES)
         end
@@ -908,16 +936,17 @@ class User
       elsif user.role?('billing_team')
         custom_scope = { role: { '$in': %w(channel_partner cp_owner) } }
       elsif user.role.in?(%w(admin))
-        custom_scope = { role: { "$ne": 'superadmin' }, booking_portal_client_id: user.booking_portal_client.id }
-        custom_scope = { role: { "$ne": 'superadmin', '$in': %w(sales admin sales_admin gre channel_partner cp_owner) }, booking_portal_client_id: user.booking_portal_client.id } if user.booking_portal_client.try(:kylas_tenant_id).present?
+        custom_scope = { role: { "$ne": 'superadmin' } }
+        custom_scope = { role: { "$ne": 'superadmin', '$in': %w(sales admin sales_admin gre channel_partner cp_owner) } } if user.booking_portal_client.try(:kylas_tenant_id).present?
       elsif user.role.in?(%w(sales))
-        custom_scope = { role: { '$in': %w(sales) }, booking_portal_client_id: user.booking_portal_client.id }
+        custom_scope = { role: { '$in': %w(sales) }}
       elsif user.role.in?(%w(superadmin))
-        custom_scope = { booking_portal_client_id: user.selected_client_id }
-        custom_scope = { role: { '$in': %w(sales admin sales_admin gre) }, booking_portal_client_id: user.selected_client_id } if user.booking_portal_client.try(:kylas_tenant_id).present?
+        custom_scope = {  }
+        custom_scope = { role: { '$in': %w(sales admin sales_admin gre) }} if user.booking_portal_client.try(:kylas_tenant_id).present?
       elsif user.role?('team_lead')|| user.role?('gre')
-        custom_scope = { role: 'sales', project_ids: { "$in": project_ids }, booking_portal_client_id: user.booking_portal_client_id }
+        custom_scope = { role: 'sales', project_ids: { "$in": project_ids }}
       end
+      custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
       custom_scope
     end
 

@@ -194,4 +194,21 @@
       </div>
     </div>
   </div>
+  <% if policy([:admin, project]).editable_field?("disable_project") %>
+    <div class='row'>
+      <div class="col-md-12">
+        <div class="mb-3">
+          <%= f.label :disable_project %>
+          <%= f.fields_for :disable_project do |dp_form| %>
+            <% f.object.disable_project.with_indifferent_access.each do |k, v| %>
+              <div class="form-check form-check-inline">
+                <%= dp_form.check_box k, {class: "form-check-input wd-22", checked: v}, true %>
+                <%= dp_form.label :k, "Disable #{k.to_s.titleize}", class: "form-check-label d-inline-block ms-2" %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
 </div>

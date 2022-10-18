@@ -58,10 +58,12 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def new_booking_on_project?
+    return false if marketplace_client?
     enable_actual_inventory? && record.lead&.project&.bookings_enabled? && enable_inventory?
   end
 
   def show_booking_link?(current_project_id = nil)
+    return false if marketplace_client?
     valid = record.lead&.project&.bookings_enabled? && _role_based_check && only_for_confirmed_user! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && record.try(:user).try(:buyer?) && enable_inventory? && enable_actual_inventory?
     # if is_assigned_lead?
     #   valid = is_lead_accepted? && valid
@@ -71,6 +73,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def show_add_booking_link?(current_project_id = nil)
+    return false if marketplace_client?
     out = !enable_inventory? && record.try(:user).try(:buyer?) && record.lead&.project&.bookings_enabled? && enable_actual_inventory?
     out = false if user.role.in?(%w(cp_owner channel_partner)) && !(user.active_channel_partner? && interested_project_present?)
     out = out && project_access_allowed?(current_project_id)

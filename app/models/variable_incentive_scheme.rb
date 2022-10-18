@@ -49,9 +49,7 @@ class VariableIncentiveScheme
     elsif(user.role.in?(%w(channel_partner cp_owner)))
       custom_scope = { status: 'approved' }
     end
-    # unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
-    #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
-    # end
+    custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
     custom_scope
   end
 end

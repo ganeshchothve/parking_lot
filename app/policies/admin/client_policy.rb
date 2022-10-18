@@ -25,6 +25,10 @@ class Admin::ClientPolicy < ClientPolicy
     user.role.in?(%w(superadmin)) && user.client_ids.count > 1
   end
 
+  def allow_settings?
+    user.role?('superadmin')
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     if %w[superadmin admin].include?(user.role)

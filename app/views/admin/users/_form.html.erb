@@ -143,7 +143,7 @@
             <% end %>
           </div>
 
-           <% if !policy([current_user_role_group, @user]).marketplace_portal? %>
+           <% if !policy([current_user_role_group, @user]).marketplace_client? %>
             <div class="row">
               <% if current_user_role_group.to_s == 'admin' && !@user.buyer? && current_user == @user %>
                 <div class="col-md-12">

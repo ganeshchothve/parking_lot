@@ -26,8 +26,10 @@ class Announcement
   def self.user_based_scope(user, params = {})
     custom_scope = {}
     if user.role.in?(%w(superadmin))
-      custom_scope = { booking_portal_client_id: user.selected_client_id }
+      custom_scope = { }
     end
+    custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
+    custom_scope
   end
 
   def photo_assets_json
