@@ -33,6 +33,9 @@ module Kylas
         else
           { success: false, error_message: response.body }
         end
+      rescue RestClient::Unauthorized
+        Rails.logger.error "#{self.class} - 404"
+        { error_message: 'Unauthorized!', success: false }
       rescue RestClient::NotFound
         Rails.logger.error "#{self.class} - 404"
         { error_message: 'Invalid Data!', success: false }

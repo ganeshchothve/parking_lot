@@ -13,7 +13,7 @@ else
 end
 
 if Rails.env.development? || Rails.env.test? || Rails.env.staging?
-  APP_KYLAS_HOST = 'https://api-qa.sling-dev.com'
+  APP_KYLAS_HOST = 'https://api-stage.sling-dev.com'
 elsif Rails.env.production?
   APP_KYLAS_HOST = 'https://api.kylas.io'
 end
