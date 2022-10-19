@@ -64,7 +64,7 @@
 <% end %>
 
 <% if policy([:admin, Note.new(notable: lead)]).new? %>
-  <%= link_to t('helpers.new.link_name', model: Note.model_name.human), new_notable_path(notable_type: lead.class.model_name.i18n_key.to_s, notable_id: lead.id), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to t('mongoid.attributes.note.add_note'), new_notable_path(notable_type: lead.class.model_name.i18n_key.to_s, notable_id: lead.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
 <%= render 'admin/invoices/invoiceable_links', resource: lead %>

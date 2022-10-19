@@ -943,7 +943,7 @@ class User
         custom_scope = { role: { '$in': %w(sales) }}
       elsif user.role.in?(%w(superadmin))
         custom_scope = {  }
-        custom_scope = { role: { '$in': %w(sales admin sales_admin gre) }} if user.booking_portal_client.try(:kylas_tenant_id).present?
+        custom_scope = { role: { '$in': %w(sales admin sales_admin gre channel_partner cp_owner) }} if user.booking_portal_client.try(:kylas_tenant_id).present?
       elsif user.role?('team_lead')|| user.role?('gre')
         custom_scope = { role: 'sales', project_ids: { "$in": project_ids }}
       end

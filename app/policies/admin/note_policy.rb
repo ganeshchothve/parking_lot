@@ -8,4 +8,8 @@ class Admin::NotePolicy < NotePolicy
   def create?
     new?
   end
+
+  def destroy?
+    true
+  end
 end

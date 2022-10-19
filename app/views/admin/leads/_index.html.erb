@@ -37,7 +37,7 @@
                     <%# end %>
                     <% if lead.manager_id? && current_user.role.in?(%w(admin superadmin)) %>
                       <p class="fn-14 mt-1 mb-0">
-                        <%= "#{t('mongoid.attributes.lead.manager_id')} : #{link_to lead.manager_name, [current_user_role_group, lead.manager], class: 'theme-txt-color'}".html_safe %>
+                        <%= "#{t('mongoid.attributes.lead.manager_id')} : #{link_to lead.manager.name, [current_user_role_group, lead.manager], class: 'theme-txt-color'}".html_safe %>
                       </p>
                     <% end %>
                   </div>
@@ -61,19 +61,21 @@
                   <!-- <p><%= lead.lead_stage || '-' %></p> -->
                   <p class="mb-0 theme-txt-color"><%= lead.project_name %></p>
                 </div>
-                <div class="inner-info">
-                  <div class="pe-3 py-3 ps-3 pt-xs-0 d-sm-flex justify-content-end">
-                    <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color ms-xs-0"><i
-                        class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_blocking_amount_paid? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_blocking_amount_paid? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.blocking_amount_paid') %>
-                    </p>
-                    <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color ms-xs-0"><i
-                        class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_booking_price_paid? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_booking_price_paid? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.payment_done') %>
-                    </p>
-                    <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color ms-xs-0"><i
-                        class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_registration_done? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_registration_done? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.registration_done') %>
-                    </p>
+                <% unless is_marketplace? %>
+                  <div class="inner-info">
+                    <div class="pe-3 py-3 ps-3 pt-xs-0 d-sm-flex justify-content-end">
+                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color ms-xs-0"><i
+                          class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_blocking_amount_paid? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_blocking_amount_paid? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.blocking_amount_paid') %>
+                      </p>
+                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color ms-xs-0"><i
+                          class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_booking_price_paid? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_booking_price_paid? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.payment_done') %>
+                      </p>
+                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color ms-xs-0"><i
+                          class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_registration_done? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_registration_done? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.registration_done') %>
+                      </p>
+                    </div>
                   </div>
-                </div>
+                <% end %>
               </div>
             </div>
           </div>

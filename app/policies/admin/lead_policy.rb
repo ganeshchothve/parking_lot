@@ -63,7 +63,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def note_create?
-    user.role.in?(%w(channel_partner cp_owner)) && record.user.role.in?(User::BUYER_ROLES)
+    user.role.in?(%w(channel_partner cp_owner sales superadmin)) && record.user.role.in?(User::BUYER_ROLES)
   end
 
   def asset_create?
@@ -143,6 +143,14 @@ class Admin::LeadPolicy < LeadPolicy
 
   def deal_associated_contact_details?
     new_kylas_associated_lead?
+  end
+
+  def new_kylas_lead?
+    user.role.in?(%w(admin sales))
+  end
+
+  def create_kylas_lead?
+    new_kylas_lead?
   end
 
   def permitted_attributes(params = {})

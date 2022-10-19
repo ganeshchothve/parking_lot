@@ -1,26 +1,102 @@
-<%= form_for(@note, url: notables_path(notable_type: @notable.class.model_name.i18n_key.to_s, notable_id: @notable.id), local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['notes'], "data-type": "json", id: 'note_form'}) do |f| %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
+    <div class="modal-content" id="notes-modal">
       <div class="modal-header">
         <h3 class="title"> <%= t('controller.notes.new.header') %> </h3>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="mb-3">
-          <%= f.label :note, class: 'label-required' %>
-          <%= f.text_area :note, autofocus: true, class: "form-control", required: 'required', disabled: (policy([current_user_role_group, @note]).editable_field?("note") ? false : true) %>
+        <%= form_for(@note, url: notables_path(notable_type: @notable.class.model_name.i18n_key.to_s, notable_id: @notable.id), local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['notes'], "data-type": "json", id: 'note_form'}) do |f| %>
+          <div class="mb-3">
+            <%= f.text_area :note, autofocus: true, class: 'form-control summernote', disabled: !policy([:admin, @note]).editable_field?("note") %>
+          </div>
+          <div class="mb-3 text-end">
+            <%= f.submit I18n.t("global.link_to.add_element", name: global_labels['notes']), class: "btn btn-primary" %>
+          </div>
+        <% end %>
+        <div class="notes-list col-12">
+          <% @notable.notes.limit(5).each do |note| %>
+            <div class="card card-body mb-3">
+              <div class="row">
+                <div class="col-10"><%= note&.note&.html_safe %></div>
+                <!-- <div class="dropdown d-inline-block top-right-action col-2 text-end">
+                  <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    <i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
+                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                    <%#= link_to "Delete", notable_path(notable_type: @notable.class.to_s, notable_id: @notable.id, id: note.id), method: :delete, class: "dropdown-item modal-remote-form-link" %>
+                  </div>
+                </div> -->
+                <div class="small"> 
+                  <div class="row">
+                      <div class="col-8">
+                        <%= t('global.added_by') %> <%= note&.creator&.name %> 
+                      </div>
+                      <div class="col-4 text-end">
+                        on <%= note&.created_at&.in_time_zone("Mumbai")&.strftime("%b %d, %Y at %I:%M %p") %>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
         </div>
       </div>
-      <div class="modal-footer text-end">
-        <%= f.submit I18n.t("global.link_to.add_element", name: global_labels['notes']), class: "btn btn-primary" %>
-      </div>
+      <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-primary float-end" id="load-more">Load More</button>
+          <p class="float-end mt-2">10 / 30</p>
+      </div> -->
     </div>
   </div>
 </div>
-<% end %>
+<!-- <style type="text/css">
+  .notes-list{
+    height: 500px;
+    overflow: auto;
+  }
+</style> -->
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($("#note_form"));
+  var listElm = document.querySelector('#notes-modal');
+  var PRELOAD_FROM_BOTTOM = 50;
+  var number_of_notes = <%= raw @notable.notes.size.to_json %>
+  var PRELOAD_FROM_BOTTOM = 50;
+  var count = 2;
+  var loading = false;
+  var loadMore = function() {
+    // Should only start loading more items if it's not already loading some.
+    if (loading) {
+      return;
+    }
+   
+    // Show loading icon.
+    loading = true;
+
+    // Simulate that it takes some time to load.
+    window.setTimeout(function() {
+      loading = false;
+      $.ajax({
+        url: "<%= notables_path %>" ,
+        data: {
+          page: count,
+          per_page: 5
+        },
+        type: "get",
+        dataType: "script",
+        success: function(data){
+          count += 1;
+          console.log("Success");
+        }
+      });
+    }, 1000);
+  }
+
+  // Detect when scrolled to bottom.
+  listElm.addEventListener('scroll', function() {
+    if (listElm.scrollTop + listElm.clientHeight >= listElm.scrollHeight - PRELOAD_FROM_BOTTOM && (parseInt(number_of_notes / 5) != (count - 2))) {
+      loadMore();
+    }
+  });
 });
 <% end %>

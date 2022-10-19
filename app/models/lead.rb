@@ -17,7 +17,7 @@ class Lead
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   DOCUMENT_TYPES = []
 
-  attr_accessor :payment_link, :kylas_contact_id, :kylas_product_id, :sync_to_kylas
+  attr_accessor :payment_link, :kylas_contact_id, :kylas_product_id, :sync_to_kylas, :manager_ids
 
   field :first_name, type: String, default: ''
   field :last_name, type: String, default: ''
@@ -55,6 +55,7 @@ class Lead
   field :accepted_by_sales, type: Boolean
 
   # Kylas Marketplace specific Fields
+  field :kylas_lead_id, type: String
   field :kylas_deal_id, type: String
   field :kylas_pipeline_id, type: Integer
 

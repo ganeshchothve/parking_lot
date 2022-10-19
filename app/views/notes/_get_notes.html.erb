@@ -1,0 +1,7 @@
+<div class="notes-container">
+  <% notes = current_user.role?(:channel_partner) ? notes.where(creator_id: current_user.id) : notes %>
+  <% notes.each do |note| %> <!-- Paginate here -->
+    <%= render 'notes/show', note: note %>
+  <% end %>
+</div>
+

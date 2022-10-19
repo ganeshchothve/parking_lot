@@ -54,8 +54,8 @@ module Kylas
     # contact and lead custom fields params
     def custom_field_params
       {
-          displayName: 'Channel Partner',
-          description: 'List of Channel Partners',
+          displayName: 'Channel Partner Users',
+          description: 'List of Channel Partner Users',
           pickLists: [
             {
               id: nil, 
