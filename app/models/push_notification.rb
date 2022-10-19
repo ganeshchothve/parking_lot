@@ -49,10 +49,11 @@ class PushNotification
 
     def user_based_scope user, params = {}
       if user.role?(:superadmin)
-        custom_scope = { booking_portal_client: user.selected_client }
+        custom_scope = { }
       else
-        custom_scope = { booking_portal_client: user.booking_portal_client }
+        custom_scope = { }
       end
+      custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
       custom_scope
     end
 

@@ -518,32 +518,30 @@ class BookingDetail
         when 'billing_team'
          # custom_scope = { project_unit_id: nil, status: { '$nin': %w(blocked) } }
         when 'admin'
-          custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
+          custom_scope = { }
         when 'superadmin'
-          custom_scope = { booking_portal_client_id: user.selected_client_id }
+          custom_scope = {  }
         end
 
         unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
-          custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}, booking_portal_client_id: user.booking_portal_client_id})
+          custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
         end
       end
 
       if params[:entityId].present? && params[:entityType] == 'deals' && user.role.in?(%w(admin sales))
         lead_ids = Lead.where(kylas_deal_id: params[:entityId]).pluck(:id)
-        custom_scope = { booking_portal_client_id: user.booking_portal_client_id, lead_id: {'$in': lead_ids}}
+        custom_scope = { lead_id: {'$in': lead_ids} }
       end
 
       if params[:entityId].present? && params[:entityType] == 'contacts' && user.role.in?(%w(admin sales))
         kylas_contact_ids = User.in(role: User::BUYER_ROLES).where(kylas_contact_id: params[:entityId]).pluck(:id)
-        custom_scope = { booking_portal_client_id: user.booking_portal_client_id, user_id: {'$in': kylas_contact_ids}}
+        custom_scope = { user_id: {'$in': kylas_contact_ids} }
       end
 
       custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
       custom_scope = { user_id: user.id, lead_id: user.selected_lead_id } if user.buyer?
 
-      # unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
-      #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
-      # end
+      custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
       custom_scope
     end
 

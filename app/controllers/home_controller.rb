@@ -40,7 +40,10 @@ class HomeController < ApplicationController
 
   def select_client
     if current_user.role.in?(%w(superadmin))
-      if current_user.client_ids.count == 1
+      if current_client.present? && (Client.in(booking_portal_domains: current_domain).present? || current_client.projects.in(booking_portal_domains: current_domain).present?)
+        current_user.update(selected_client_id: current_client.id)
+        redirect_to home_path(current_user)
+      elsif current_user.client_ids.count == 1
         current_user.update(selected_client_id: current_user.client_ids.first)
         redirect_to home_path(current_user)
       else

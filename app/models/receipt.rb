@@ -249,9 +249,9 @@ class Receipt
     project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids)
     if params[:lead_id].blank? && !user.buyer?
       if user.role?('channel_partner')
-        custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id, project_id: { "$in": project_ids} }
+        custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id }
       elsif user.role?('cp_owner')
-        custom_scope = { channel_partner_id: user.channel_partner_id, project_id: { "$in": project_ids} }
+        custom_scope = { channel_partner_id: user.channel_partner_id }
       elsif user.role?('cp_admin')
         #cp_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
         #channel_partner_ids = User.where(role: 'channel_partner', manager_id: {"$in": cp_ids}).distinct(:id)
@@ -262,11 +262,11 @@ class Receipt
         #custom_scope = { manager_id: { "$in": channel_partner_ids } }
         custom_scope = {cp_manager_id: user.id}
       elsif user.role?(:admin)
-        custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
+        custom_scope = {  }
       elsif user.role.in?(%w(sales gre))
-        custom_scope = { booking_portal_client_id: user.booking_portal_client_id, project_id: { "$in": project_ids} }
+        custom_scope = { }
       elsif user.role.in?(%w(superadmin))
-        custom_scope = { booking_portal_client_id: user.selected_client_id }
+        custom_scope = {  }
       end
     end
 
@@ -275,9 +275,10 @@ class Receipt
 
     custom_scope[:booking_detail_id] = params[:booking_detail_id] if params[:booking_detail_id].present?
 
-    # unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
-    #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
-    # end
+    if !user.role.in?(User::ALL_PROJECT_ACCESS) || params[:current_project_id].present?
+      custom_scope.merge!({project_id: { "$in": project_ids } })
+    end
+    custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
     custom_scope
   end
 

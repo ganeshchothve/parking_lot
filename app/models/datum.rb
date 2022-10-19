@@ -13,7 +13,6 @@ class Datum
   field :order, type: Integer
 
   embedded_in :data_attributable, polymorphic: true
-  belongs_to :booking_portal_client, class_name: 'Client'
   
   validates :name, :key, presence: true
   validates :key, uniqueness: {scope: :data_attributable_id}, format: {with: /\A[a-z_]+\z/, message: "Only small letters & underscore allowed"}

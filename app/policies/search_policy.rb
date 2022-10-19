@@ -66,7 +66,7 @@ class SearchPolicy < ApplicationPolicy
   end
 
   def redirect_to_lead_form?
-    marketplace_portal?
+    marketplace_client?
   end
 
   def update_scheme?(template_klass=nil)

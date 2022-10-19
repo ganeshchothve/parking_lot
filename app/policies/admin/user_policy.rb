@@ -9,12 +9,12 @@ class Admin::UserPolicy < UserPolicy
     return false unless user
     if user.booking_portal_client.roles_taking_registrations.include?(user.role)
       if user.role?('superadmin')
-        (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner)) && !marketplace_portal?) || for_edit
+        (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner)) && !marketplace_client?) || for_edit
       elsif user.role?('admin')
         !record.role?('superadmin') &&
         (
-          (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner)) && !marketplace_portal?) ||
-          (marketplace_portal? && record.role?('channel_partner') && user.booking_portal_client.enable_channel_partners?) ||
+          (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner)) && !marketplace_client?) ||
+          (marketplace_client? && record.role?('channel_partner') && user.booking_portal_client.enable_channel_partners?) ||
           for_edit
         )
       elsif user.role?('channel_partner')
@@ -22,15 +22,15 @@ class Admin::UserPolicy < UserPolicy
       elsif user.role?('cp_owner')
         record.role.in?(%w(cp_owner channel_partner))
       elsif user.role?('sales_admin')
-        record.role?('sales') && !marketplace_portal?
-      elsif user.role?('cp_admin') && !marketplace_portal?
+        record.role?('sales') && !marketplace_client?
+      elsif user.role?('cp_admin') && !marketplace_client?
         record.role?('cp') ||
         (
           record.role.in?(%w(cp_owner channel_partner)) &&
           user.booking_portal_client.enable_channel_partners? &&
           for_edit
         )
-      elsif user.role?('cp') && !marketplace_portal?
+      elsif user.role?('cp') && !marketplace_client?
         (record.role.in?(%w(cp_owner channel_partner)) && user.booking_portal_client.enable_channel_partners? && for_edit)
       elsif user.role?('billing_team')
         false
@@ -43,16 +43,16 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def show_add_users_dropdown?
-    marketplace_portal? && user.role.in?(%w(admin)) && user.booking_portal_client.enable_channel_partners?
+    marketplace_client? && user.role.in?(%w(admin channel_partner cp_owner)) && user.booking_portal_client.enable_channel_partners?
   end
 
   def edit?
-    super || new?(true) || marketplace_portal?
+    super || new?(true) || marketplace_client?
   end
 
   def confirm_user?
     if %w[admin superadmin].include?(user.role) && !record.confirmed?
-      if marketplace_portal?
+      if marketplace_client?
         if record.role.in?(%w(cp_owner channel_partner))
           Rails.env.production? ? false : true
         else
@@ -77,7 +77,7 @@ class Admin::UserPolicy < UserPolicy
 
   def confirm_via_otp?
     valid = !record.confirmed? && record.phone.present? && new? && !user.buyer?
-    if marketplace_portal? && record.role.in?(%w(cp_owner channel_partner))
+    if marketplace_client? && record.role.in?(%w(cp_owner channel_partner))
       valid = valid && (Rails.env.production? ? false : true)
     end
     valid
@@ -143,7 +143,7 @@ class Admin::UserPolicy < UserPolicy
         (record.buyer? && record.may_dropoff? && (record.closing_manager_id == user.id)) ||
         (!record.is_a?(Lead) && record.role?('sales') && (record.may_break? || record.may_available?))
     )
-    valid = false if marketplace_portal?
+    valid = false if marketplace_client?
     valid
   end
 
@@ -172,7 +172,7 @@ class Admin::UserPolicy < UserPolicy
   def permitted_attributes(params = {})
     attributes = super
     if user.present?
-      if marketplace_portal?
+      if marketplace_client?
         attributes += [:is_active] if record.persisted? && record.id != user.id && record.is_active_in_kylas? && user.role.in?(%w(admin))
       else
         attributes += [:is_active] if record.persisted? && record.id != user.id && user.role.in?(%w(admin))
@@ -193,8 +193,8 @@ class Admin::UserPolicy < UserPolicy
         attributes += [:role] unless record.role?('cp_owner') && record&.channel_partner&.primary_user_id == record.id
       end
 
-      attributes += [project_ids: []] if %w[admin superadmin].include?(user.role) && record.role.in?(User::SELECTED_PROJECT_ACCESS)
-      if %w[superadmin admin sales_admin].include?(user.role) && !marketplace_portal?
+      attributes += [project_ids: []] if %w[admin superadmin].include?(user.role) && !record.role.in?(User::ALL_PROJECT_ACCESS)
+      if %w[superadmin admin sales_admin].include?(user.role) && !marketplace_client?
         attributes += [:erp_id]
         attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
       end

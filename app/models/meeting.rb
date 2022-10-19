@@ -49,10 +49,10 @@ class Meeting
     custom_scope[:project_id] = params[:project_id] if params[:project_id].present?
     custom_scope[:campaign_id] = params[:campaign_id] if params[:campaign_id].present?
     custom_scope[:status] = {'$in': ['scheduled', 'completed'] } if %w[crm sales_admin sales channel_partner gre billing_team user employee_user management_user].include?(user.role)
-    if !(user.role.in?(User::ALL_PROJECT_ACCESS))
-      custom_scope[:project_id] = { "$in": project_ids }
+    if !user.role.in?(User::ALL_PROJECT_ACCESS) || params[:current_project_id].present?
+      custom_scope[:project_id] = { project_id: { "$in": project_ids } }
     end
-    custom_scope[:booking_portal_client_id] = user.selected_client_id if user.role.in?(%w(superadmin))
+    custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
     custom_scope
   end
 

@@ -170,9 +170,9 @@ class Invoice
         elsif user.role?('account_manager')
           custom_scope = { account_manager_id: user.id, status: { '$nin': %w(tentative) } }
         elsif user.role.in?(%w(admin sales))
-          custom_scope = { status: { '$in': %w(tentative raised pending_approval approved rejected draft tax_invoice_raised paid) }, booking_portal_client_id: user.booking_portal_client.id }
+          custom_scope = { status: { '$in': %w(tentative raised pending_approval approved rejected draft tax_invoice_raised paid) } }
         elsif user.role.in?(%w(superadmin))
-          custom_scope = { status: { '$in': %w(tentative raised pending_approval approved rejected draft tax_invoice_raised paid) }, booking_portal_client_id: user.selected_client_id }
+          custom_scope = { status: { '$in': %w(tentative raised pending_approval approved rejected draft tax_invoice_raised paid) } }
         else
           custom_scope = { status: { '$nin': %w(tentative) } }
         end
@@ -182,9 +182,7 @@ class Invoice
       end
       custom_scope = {} if user.buyer?
 
-      # unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
-      #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
-      # end
+      custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
       custom_scope
     end
 

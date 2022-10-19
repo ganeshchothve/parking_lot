@@ -195,13 +195,14 @@ class ChannelPartner
         elsif user.role?('cp')
          custom_scope = { manager_id: user.id }
         elsif user.role.in?(%w(cp_owner channel_partner))
-          custom_scope = { id: user.channel_partner_id, booking_portal_client_id: user.booking_portal_client.id }
+          custom_scope = { id: user.channel_partner_id }
         elsif user.role.in?(%w(admin))
-          custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
+          custom_scope = {  }
         elsif user.role.in?(%w(superadmin))
-          custom_scope = { booking_portal_client_id: user.selected_client_id }
+          custom_scope = {  }
         end
       end
+      custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
       custom_scope
     end
 

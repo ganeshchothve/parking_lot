@@ -22,7 +22,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def reset_password_after_first_login?
-    marketplace_portal? && user.sign_in_count == 1 && !user.tenant_owner?
+    marketplace_client? && user.sign_in_count == 1 && !user.tenant_owner?
   end
 
   def resend_confirmation_instructions?
@@ -55,7 +55,7 @@ class UserPolicy < ApplicationPolicy
 
   def permitted_attributes(_params = {})
     attributes = []
-    if marketplace_portal?
+    if marketplace_client?
       if record.role.in?(%w(cp_owner channel_partner))
         attributes = %i[first_name last_name phone time_zone]
       end
@@ -65,7 +65,7 @@ class UserPolicy < ApplicationPolicy
     attributes += %i[lead_id password password_confirmation iris_confirmation temporarily_blocked]
     # Only allow admin to change email.
     attributes += [user_notification_tokens_attributes: [UserNotificationTokenPolicy.new(user, UserNotificationToken.new).permitted_attributes]]
-    if marketplace_portal?
+    if marketplace_client?
       if record.role.in?(%w(cp_owner channel_partner))
         attributes += %i[email] if ((record.new_record? || user.role?('admin')))
       end

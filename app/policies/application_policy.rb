@@ -48,14 +48,9 @@ class ApplicationPolicy
     choose_template_for_print?
   end
 
-  def marketplace_portal?
+  def marketplace_client?
     return false if user.blank?
-    if user.role?('superadmin')
-      marketplace_portal = user.try(:selected_client).try(:kylas_tenant_id).present?
-    else
-      marketplace_portal = user.try(:booking_portal_client).try(:kylas_tenant_id).present?
-    end
-    marketplace_portal
+    user.try(:booking_portal_client).try(:kylas_tenant_id).present?
   end
 
   def project_access_allowed?(current_project_id=nil)

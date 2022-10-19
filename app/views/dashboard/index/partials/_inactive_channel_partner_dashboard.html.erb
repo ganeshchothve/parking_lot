@@ -308,7 +308,7 @@
             <div class="app-review float-start wd-100">
               <h1 class="notify-title float-start wd-100"><%= I18n.t("controller.channel_partners.text.reg_req_sent") %></h1>
               <p class="notify-desc float-start mb-0"><%= I18n.t("controller.channel_partners.text.approve_ac") %></p>
-              <p class="notify-desc float-start mb-0"><%= I18n.t("controller.channel_partners.text.cancel_reg_req", name: I18n.t('global.brand')) %></p>
+              <p class="notify-desc float-start mb-0"><%= I18n.t("controller.channel_partners.text.cancel_reg_req", name: current_client.name) %></p>
             </div>
           </div>
         </div>
