@@ -841,7 +841,7 @@ class User
 
     def available_roles(current_client)
       if current_client.present? && current_client.kylas_tenant_id.present?
-        roles = KYLAS_MARKETPALCE_USERS
+        roles = KYLAS_MARKETPALCE_USERS + BUYER_ROLES
       else
         roles = ADMIN_ROLES + BUYER_ROLES
       end
