@@ -37,14 +37,16 @@
           <% end %>
 
           <td><%= wf_pipeline.lead_closed_reason.presence || '-' %></td>
-          <td class="action-btn">
-            <div class="dropdown show text-right">
-              <a class="btn table-dropdown-btn black-clr" href="javascript:;" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v fill-theme" aria-hidden="true"></i></a>
-              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                <%= link_to t('helpers.edit.link_name', model: workflow.model_name.human), edit_admin_workflow_path(workflow), class: 'dropdown-item', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit Workflow'} %>
+          <% if policy([:admin, Workflow]).update? %>
+            <td class="action-btn">
+              <div class="dropdown show text-right">
+                <a class="btn table-dropdown-btn black-clr" href="javascript:;" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v fill-theme" aria-hidden="true"></i></a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                  <%= link_to t('helpers.edit.link_name', model: workflow.model_name.human), edit_admin_workflow_path(workflow), class: 'dropdown-item', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit Workflow'} %>
+                </div>
               </div>
-            </div>
-          </td>
+            </td>
+          <% end %>
         </tr>
         <% if workflow.pipelines.length > 1 %>
           <% workflow&.pipelines&.slice(1, workflow.pipelines.length)&.to_a&.each do |pipeline| %>
