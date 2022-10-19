@@ -528,7 +528,7 @@ class User
       stage = self.channel_partner&.status
       priority = PortalStagePriority.where(role: 'channel_partner').collect{|x| [x.stage, x.priority]}.to_h
       if stage.present? && priority[stage].present?
-        self.portal_stages.where(stage:  stage).present? ? self.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : self.portal_stages << PortalStage.new(stage: stage, priority: priority[stage], booking_portal_client_id: self.booking_portal_client_id)
+        self.portal_stages.where(stage:  stage).present? ? self.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : self.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
         #push_to_crm = self.booking_portal_client.external_api_integration?
         #if push_to_crm
         #  Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
