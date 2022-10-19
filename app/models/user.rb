@@ -173,7 +173,7 @@ class User
   # key to handle both phone or email as a login
   attr_accessor :login, :login_otp
 
-  belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :users
+  belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :users, optional: true
   belongs_to :referred_by, class_name: 'User', optional: true
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true
@@ -236,6 +236,7 @@ class User
   validate :manager_change_reason_present?
   validate :password_complexity
   validate :phone_email_uniqueness
+  validates :booking_portal_client_id, presence: true, unless: proc { |user| user.role?(:superadmin) }
 
 
   # scopes needed by filter
@@ -801,7 +802,7 @@ class User
 
   def booking_portal_client
     if role?(:superadmin)
-      selected_client
+      selected_client || Client.first
     else
       _booking_portal_client
     end
