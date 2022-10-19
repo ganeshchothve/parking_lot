@@ -70,7 +70,7 @@ module Kylas
           end
           format.html { redirect_to request.referer, notice: 'Leads were successfully created' }
         else
-          format.html { redirect_to request.referer, notice: 'User is invalid' }
+          format.html { redirect_to request.referer, alert: @user.errors.full_messages }
         end
       end
     end
