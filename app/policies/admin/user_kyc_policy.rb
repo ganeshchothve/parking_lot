@@ -1,6 +1,6 @@
 class Admin::UserKycPolicy < UserKycPolicy
   def index?(for_user = nil)
-    true if for_user.present? && for_user.buyer? || for_user.blank? && !marketplace_portal?
+    true if for_user.present? && for_user.buyer? || for_user.blank? && !marketplace_client?
   end
 
   def show?
@@ -8,7 +8,7 @@ class Admin::UserKycPolicy < UserKycPolicy
   end
 
   def new?
-    valid = record.lead&.project&.is_active? && !marketplace_portal?
+    valid = record.lead&.project&.is_active? && !marketplace_client?
     # if is_assigned_lead?
     #   valid = is_lead_accepted? && valid
     # end
