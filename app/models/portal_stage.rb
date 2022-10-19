@@ -8,6 +8,5 @@ class PortalStage
 
   # Associations
   embedded_in :lead
-  belongs_to :booking_portal_client, class_name: 'Client'
 
 end
