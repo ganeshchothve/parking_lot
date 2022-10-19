@@ -52,7 +52,7 @@
                     <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i
                         class='fa fn-16 fa-<%= (user.active_for_authentication?) ? "check" : "times" %> fill-<%= (user.active_for_authentication?) ? "success" : "danger" %> me-12 fa-lg'></i><%= t("mongoid.attributes.user/is_active.#{user.active_for_authentication?}") %>
                     </p>
-                    <% if is_marketplace? %>
+                    <% if is_marketplace? && !user.role.in?(User::CLIENT_SCOPED_ROLES) %>
                       <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color"><i
                           class='fa fn-16 fa-<%= (user.is_active_in_kylas?) ? "check" : "times" %> fill-<%= (user.is_active_in_kylas?) ? "success" : "danger" %> me-12 fa-lg'></i><%= t("mongoid.attributes.user/is_active_in_kylas.#{user.is_active_in_kylas?}") %>
                       </p>
