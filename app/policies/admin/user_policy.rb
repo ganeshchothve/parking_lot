@@ -162,11 +162,7 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def sync_kylas_user?
-    if user.role?(:superadmin)
-      user.selected_client.kylas_tenant_id.present?
-    else
-      user.booking_portal_client.kylas_tenant_id.present?
-    end
+    marketplace_client? && user.role.in?(%w(superadmin admin))
   end
 
   def permitted_attributes(params = {})

@@ -1,6 +1,6 @@
 class Admin::WorkflowPolicy < WorkflowPolicy
   def index?
-    %w[superadmin admin sales].include?(user.role)
+    %w[superadmin admin].include?(user.role)
   end
 
   def create?

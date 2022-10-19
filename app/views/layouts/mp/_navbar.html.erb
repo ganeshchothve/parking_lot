@@ -37,7 +37,7 @@
 
               <%= active_link_to t('controller.workflows.index.link_name'), admin_workflows_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
 
-              <% if policy([:admin, Crm::BasePolicy.new(user, Crm::Base)]).index? %>
+              <% if policy([:admin, Crm::Base]).index? %>
                 <%= active_link_to t('controller.crms.index.link_name'), admin_crm_base_index_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
               <% end %>
             </div>

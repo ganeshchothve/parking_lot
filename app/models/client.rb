@@ -94,7 +94,6 @@ class Client
   field :partner_regions, type: Array, default: ['Pune West', 'Pune East', 'Others']
   field :team_lead_dashboard_access_roles, type: Array, default: %w[gre]
   field :tl_dashboard_refresh_timer, type: Integer, default: 1
-  field :kylas_custom_fields, type: Hash, default: {}
   #
   # This setting will decide how same lead can be added through different channel partners,
   # Enabled: If channel_partner tries to add a lead which is already present in the system & tagged to different channel_partner, then system will check if the lead is confirmed or not, if yes, it won't allow the current channel_partner to add it again & trigger an email to admin saying current channel_partner tried to add an existing lead.
@@ -113,6 +112,7 @@ class Client
   field :kylas_tenant_id, type: String
   field :kylas_api_key, type: String
   field :is_able_sync_products_and_users, type: Boolean, default: true
+  field :kylas_custom_fields, type: Hash, default: {}
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
