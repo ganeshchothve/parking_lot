@@ -149,11 +149,11 @@
                             </div>
                           </div>
                           <div class="alert alert-primary col-md-12 col-lg-12 col-xs-12 col-sm-12">
-                            <% template = ::Template::UITemplate.where(name: 'booking_details/_details').first %>
-                            <% if template.present? %>
-                              <% @bd = @booking_detail %>
-                              <%= get_view_erb(template) %>
-                            <% end %>
+                            <%# template = ::Template::UITemplate.where(name: 'booking_details/_details').first %>
+                            <%# if template.present? %>
+                              <%# @bd = @booking_detail %>
+                              <%#= get_view_erb(template) %>
+                            <%# end %>
                           </div>
                         </div>
                       </div>
