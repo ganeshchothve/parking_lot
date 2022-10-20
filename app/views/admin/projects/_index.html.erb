@@ -14,7 +14,11 @@
   </div>
   <div class="project-inner-info">
     <div class="inner-info position-relative">
-      <h2 class="title"><%= link_to project.name, admin_project_path(project) %></h2>
+      <% if is_marketplace? %>
+        <h2 class="title"><%= project.name %></h2>
+      <% else %>
+        <h2 class="title"><%= link_to project.name, admin_project_path(project) %></h2>
+      <% end %>
       <p class="devl-name"><%= project.developer_name %></p>
       <% if project.micro_market.present? && project.city.present? %>
       <p class="location"><i class="fa fa-map-marker-alt fill-primary me-2"></i><%= project.micro_market %>,
