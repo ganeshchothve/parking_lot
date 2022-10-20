@@ -17,7 +17,13 @@ class Admin::BannerAssetsController < ApplicationController
   end
 
   def create
-    @banner_asset = BannerAsset.new(banner_image: params["banner_asset"]["banner_image"], mobile_banner_image: params["banner_asset"]["mobile_banner_image"], url: params["banner_asset"]["url"], uploaded_by: current_user)
+    @banner_asset = BannerAsset.new(
+                      banner_image: params["banner_asset"]["banner_image"], 
+                      mobile_banner_image: params["banner_asset"]["mobile_banner_image"], 
+                      url: params["banner_asset"]["url"], 
+                      uploaded_by: current_user,
+                      booking_portal_client: current_client
+                      )
     @banner_asset.assign_attributes(permitted_attributes([:admin, @banner_asset]))
     @banner_asset.booking_portal_client = current_client
     respond_to do |format|

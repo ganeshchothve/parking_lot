@@ -1,4 +1,4 @@
-<% project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids) %>
+<% project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : current_user.project_ids) %>
 <div class="px-4 mb-4 admin-dashboard">
   <div class="row">
     <div class="col-lg-<%= current_user.role.in?(%w(admin superadmin)) ? '2' : '4' %> col-xs-6 col-md-4 col-sm-4 mb-3">
