@@ -112,7 +112,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def move_to_next_approval_state?
-    %w[dev_sourcing_manager channel_partner cp_owner cp_admin].include?(user.role)
+    %w[dev_sourcing_manager channel_partner cp_owner cp_admin admin].include?(user.role)
   end
 
   def reject?
@@ -172,7 +172,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     attributes = super
     attributes += [:project_tower_name, :agreement_price, :channel_partner_id, :project_unit_configuration, :booking_project_unit_name, :booked_on, :project_id, :primary_user_kyc_id, :project_unit_id, :user_id, :creator_id, :manager_id, :account_manager_id, :lead_id, :source, user_kyc_ids: []] if record.new_record? || (user.role.in?(%w(cp_owner channel_partner account_manager_head)) && record.status == 'blocked')
 
-    attributes += [:approval_event] if record.approval_status.in?(%w(pending)) && user.role.in?(%w(dev_sourcing_manager cp_admin)) && record.blocked?
+    attributes += [:approval_event] if record.approval_status.in?(%w(pending)) && user.role.in?(%w(dev_sourcing_manager cp_admin admin)) && record.blocked?
 
     attributes += [:approval_event] if record.approval_status.in?(%w(rejected)) && user.role.in?(%w(cp_owner channel_partner)) && record.blocked?
 
