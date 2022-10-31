@@ -1,7 +1,11 @@
 class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   # def export? def new? def edit? from ChannelPartnerPolicy
   def index?
-    current_client.enable_channel_partners? && %w[superadmin admin cp_admin cp].include?(user.role)
+    if user.role?(:superadmin)
+      user.selected_client.enable_channel_partners?
+    else
+      user.booking_portal_client.enable_channel_partners? && %w[admin cp_admin cp].include?(user.role)
+    end
   end
 
   def show?
@@ -10,11 +14,16 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   end
 
   def new?
-    %w[cp_admin].include?(user.role)
+    if user.present?
+      user.booking_portal_client.try(:enable_channel_partners?) && !marketplace_client?
+    else
+      record.booking_portal_client.try(:enable_channel_partners?)
+    end
+    #%w[cp_admin].include?(user.role)
   end
 
   def create?
-    current_client.enable_channel_partners? && %w[channel_partner cp_owner].include?(user.role)
+    user.booking_portal_client.enable_channel_partners? && %w[channel_partner cp_owner].include?(user.role)
   end
 
   def update?
@@ -41,6 +50,18 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
 
   def create_channel_partner?
     new_channel_partner?
+  end
+
+  def show_add_company_link?
+    user.role.in?(%w(superadmin admin cp_admin)) & user.booking_portal_client.enable_channel_partners?
+  end
+
+  def new_company?
+    show_add_company_link?
+  end
+
+  def create_company?
+    new_company?
   end
 
   def permitted_attributes(_params = {})
@@ -71,6 +92,7 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
       attributes += [:event] if user.present? && ['channel_partner', 'cp_owner'].include?(user.role) && record.id == user.channel_partner_id && ['inactive', 'rejected'].include?(record.status)
     end
     attributes += [:erp_id] if user.present? && %w[admin sales_admin].include?(user.role)
+    attributes += [project_ids: []] if user.present? && %w[superadmin admin cp_admin].include?(user.role)
     attributes.uniq
   end
 end

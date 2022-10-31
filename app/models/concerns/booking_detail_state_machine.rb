@@ -187,8 +187,14 @@ module BookingDetailStateMachine
       _project_unit.save
       self.set(booked_on: _project_unit.blocked_on)
 
-      #trigger all workflow events in Kylas
-      Kylas::TriggerWorkflowEvents.new(self).trigger_workflow_events_in_kylas
+      if self.booking_portal_client.kylas_tenant_id.present?
+        #trigger all workflow events in Kylas
+        if Rails.env.production?
+          Kylas::TriggerWorkflowEventsWorker.perform_async(self.id.to_s, self.class.to_s)
+        else
+          Kylas::TriggerWorkflowEventsWorker.new.perform(self.id.to_s, self.class.to_s)
+        end
+      end
 
       if blocked? && get_paid_amount > project_unit.blocking_amount
         booked_tentative!
@@ -200,10 +206,17 @@ module BookingDetailStateMachine
     # Updating blocked date of project_unit to today and  auto_release_on will be changed to blocking_days more from current auto_release_on.
     def after_booked_tentative_event
       return unless project_unit.present?
-      #trigger all workflow events in Kylas
-      Kylas::TriggerWorkflowEvents.new(self).trigger_workflow_events_in_kylas
+      
+      if self.booking_portal_client.kylas_tenant_id.present?
+        #trigger all workflow events in Kylas
+        if Rails.env.production?
+          Kylas::TriggerWorkflowEventsWorker.perform_async(self.id.to_s, self.class.to_s)
+        else
+          Kylas::TriggerWorkflowEventsWorker.new.perform(self.id.to_s, self.class.to_s)
+        end
+      end
 
-      if booked_tentative? && (get_paid_amount >= project_unit.booking_price)
+      if booked_tentative? && (get_paid_amount >= self.get_booking_price)
         booked_confirmed!
       else
         send_email_and_sms_as_booked
@@ -226,8 +239,14 @@ module BookingDetailStateMachine
       if (self.aasm.from_state == :booked_tentative && self.user.booking_portal_client.document_sign.present?)
         # self.send_booking_form_to_sign
       end
-      #trigger all workflow events in Kylas
-      Kylas::TriggerWorkflowEvents.new(self).trigger_workflow_events_in_kylas
+      if self.booking_portal_client.kylas_tenant_id.present?
+        #trigger all workflow events in Kylas
+        if Rails.env.production?
+          Kylas::TriggerWorkflowEventsWorker.perform_async(self.id.to_s, self.class.to_s)
+        else
+          Kylas::TriggerWorkflowEventsWorker.new.perform(self.id.to_s, self.class.to_s)
+        end
+      end
     end
 
     #
@@ -389,8 +408,14 @@ module BookingDetailStateMachine
       project_unit.make_available
       project_unit.save(validate: false)
       SelldoLeadUpdater.perform_async(lead_id.to_s, {stage: 'cancelled'})
-      #trigger all workflow events in Kylas
-      Kylas::TriggerWorkflowEvents.new(self).trigger_workflow_events_in_kylas
+      if self.booking_portal_client.kylas_tenant_id.present?
+        #trigger all workflow events in Kylas
+        if Rails.env.production?
+          Kylas::TriggerWorkflowEventsWorker.perform_async(self.id.to_s, self.class.to_s)
+        else
+          Kylas::TriggerWorkflowEventsWorker.new.perform(self.id.to_s, self.class.to_s)
+        end
+      end
     end
 
     def update_selldo!

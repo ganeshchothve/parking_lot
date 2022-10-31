@@ -4,6 +4,7 @@ class IncentiveDeduction
   include NumberIncrementor
   include InsertionStringMethods
   include IncentiveDeductionStateMachine
+  extend DocumentsConcern
 
   DOCUMENT_TYPES = []
 
@@ -31,9 +32,8 @@ class IncentiveDeduction
       end
 
       if user.role.in?(%w(superadmin))
-        custom_scope[:booking_portal_client_id] = user.selected_client_id
       end
-
+      custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
       custom_scope
     end
   end

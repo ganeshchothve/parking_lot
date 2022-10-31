@@ -86,7 +86,7 @@ class UserObserver < Mongoid::Observer
     if user.lead_id.present? && crm = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
       user.update_external_ids({ reference_id: user.lead_id }, crm.id)
     end
-    user.calculate_incentive if user.booking_portal_client.incentive_calculation_type?("calculated")
+    user.calculate_incentive if user.booking_portal_client.present? && user.booking_portal_client.incentive_calculation_type?("calculated")
     user.move_invoices_to_draft
 
     if user.active? && user.role.in?(%w(cp_owner channel_partner)) && (user.changes.keys & %w(first_name last_name email phone))
@@ -94,6 +94,15 @@ class UserObserver < Mongoid::Observer
         GenerateCoBrandingTemplatesWorker.perform_in(60.seconds, user.id.to_s)
       else
         GenerateCoBrandingTemplatesWorker.new.perform(user.id)
+      end
+    end
+    if user.role?(:admin) && user.kylas_access_token_changed?
+      if user.booking_portal_client.try(:is_able_sync_products_and_users?)
+        user.booking_portal_client.set(sync_product: false)
+        SyncKylasProductsWorker.perform_async(user.id.to_s)
+        user.booking_portal_client.set(sync_user: false)
+        SyncKylasUsersWorker.perform_async(user.id.to_s)
+        user.booking_portal_client.set(is_able_sync_products_and_users: false)
       end
     end
   end

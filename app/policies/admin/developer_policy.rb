@@ -14,7 +14,7 @@ class Admin::DeveloperPolicy < DeveloperPolicy
   end
 
   def index?
-    !user.buyer? && (current_client.enable_actual_inventory?(user) || enable_incentive_module?(user))
+    !user.buyer? && (user.booking_portal_client.enable_actual_inventory?(user) || enable_incentive_module?(user))
   end
 
   def show?
@@ -26,7 +26,7 @@ class Admin::DeveloperPolicy < DeveloperPolicy
   end
 
   def ds?
-    current_client.enable_actual_inventory?(user)
+    user.booking_portal_client.enable_actual_inventory?(user)
   end
 
   def permitted_attributes(params = {})

@@ -1,7 +1,11 @@
 <% if policy([current_user_role_group, @project_unit]).editable_field?("booking_price") %>
   <div class="mb-3">
-    <%= f.label :booking_price %>
-    <%= f.text_field :booking_price, class: 'form-control', autofocus: true, required: 'required', disabled: (policy([current_user_role_group, @project_unit]).editable_field?("booking_price") ? false : true) %>
+    <div>
+      <%= f.label :booking_price %>
+    </div>
+    <div>
+      <span><%= f.object.get_booking_price %></span>
+    </div>
   </div>
 <% end %>
 <% if policy([current_user_role_group, @project_unit]).editable_field?("blocking_amount") %>
@@ -22,13 +26,13 @@
   <% if policy([current_user_role_group, @project_unit]).editable_field?("status") %>
     <div class="mb-3">
       <%= f.label :status, class: 'title' %>
-      <%= f.select :status, (ProjectUnit::STATUS - ['blocked', 'hold']).collect{|x| [ t("mongoid.attributes.project_unit/status.#{x}"), x] }, {}, {prompt: "Select", class: "selectize", disabled: (policy([current_user_role_group, @project_unit]).editable_field?("status") ? false : true)} %>
+      <%= f.select :status, (ProjectUnit::STATUS - ['blocked', 'hold']).collect{|x| [ t("mongoid.attributes.project_unit/status.#{x}"), x] }, {}, {prompt: I18n.t("global.select"), class: "selectize", disabled: (policy([current_user_role_group, @project_unit]).editable_field?("status") ? false : true)} %>
     </div>
   <% end %>
   <% if policy([current_user_role_group, @project_unit]).editable_field?("phase_id") %>
     <div class="mb-3">
       <%= f.label :phase, class: 'title' %>
-      <%= f.select :phase_id, Phase.all.collect{|phase| [ phase.name, phase.id ]}, { prompt: true}, {class: "selectize", disabled: !policy([current_user_role_group, @project_unit]).editable_field?("phase_id") } %>
+      <%= f.select :phase_id, Phase.all.collect{|phase| [ phase.name, phase.id ]}, { prompt: I18n.t("global.select")}, {class: "selectize", disabled: !policy([current_user_role_group, @project_unit]).editable_field?("phase_id") } %>
     </div>
   <% end %>
   <% if policy([current_user_role_group, @project_unit]).editable_field?("comments") %>

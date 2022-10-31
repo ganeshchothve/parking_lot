@@ -20,11 +20,49 @@
           <div class="col-lg-3 filter-left-section">
           <div class="sticky-top ps-3 pt-3">
               <ul class="">
+              <% if is_marketplace? %>
                 <li class="nav-item">
-                  <a class="nav-link active" rel="nav-project-basic">Basic Details</a></li>
-                <li class="nav-item">
-                  <a class="nav-link" rel="nav-project-bookings">Kylas Products</a>
+                  <a class="nav-link active" rel="nav-project-basic"><%= I18n.t("global.link_to.basic_details") %></a>
                 </li>
+              <% else %>
+                <li class="nav-item">
+                  <a class="nav-link active" rel="nav-project-basic"><%= I18n.t("global.link_to.basic_details") %></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" rel="nav-project-specifications"><%= I18n.t("global.link_to.specs") %></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" rel="nav-project-offers"><%= I18n.t("global.link_to.offers") %></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" rel="nav-project-timeline"><%= I18n.t("global.link_to.timeline") %></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" rel="nav-project-location"><%= I18n.t("global.link_to.location") %></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" rel="nav-project-pages"><%= I18n.t("global.link_to.content_pages") %></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" rel="nav-project-logos"><%= I18n.t("global.link_to.images_docs") %></a>
+                </li>
+                <% if current_user.role?(:superadmin) %>
+                  <li class="nav-item">
+                    <a class="nav-link active" rel="nav-project-integrations"><%= I18n.t("global.link_to.integrations") %></a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" rel="nav-project-bookings"><%= I18n.t("global.link_to.bookings") %></a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" rel="nav-project-contacts"><%= I18n.t("global.link_to.notifications") %></a>
+                  </li>
+                  <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
+                    <li class="nav-item">
+                      <a class="nav-link active" rel="nav-project-crm-ids"><%= I18n.t("global.link_to.crm") %></a>
+                    </li>
+                  <% end %>
+                <% end %>
+              <% end %>
               </ul>
               <hr>
               <div class="theme-form">
@@ -40,21 +78,77 @@
             <div class="mt-3"></div>
             <div class="filter-right-section">
               <div class="tab-content theme-form">
-                <div class="" id="nav-project-basic">
-                  <h2 class="tab-title">Basic Details</h2>
-                  <%= render 'admin/projects/basic', f: f, project: project %>
-                </div>
-                <hr>
-                <div class="" id="nav-project-bookings">
-                  <h2 class="tab-title">Kylas Products</h2>
-                  <%= render 'admin/projects/kylas_products', f: f, project: project %>
-                </div>
+                <% if is_marketplace? %>
+                  <div class="" id="nav-project-basic">
+                    <h2 class="tab-title"><%= I18n.t("global.link_to.basic_details") %></h2>
+                    <%= render 'admin/projects/mp/basic', f: f, project: project %>
+                  </div>
+                <% else %>
+                  <div class="" id="nav-project-basic">
+                    <h2 class="tab-title"><%= I18n.t("global.link_to.basic_details") %></h2>
+                    <%= render 'admin/projects/basic', f: f, project: project %>
+                  </div>
+                  <hr>
+                  <div class="" id="nav-project-specifications">
+                    <h2 class="tab-title"><%= I18n.t("global.link_to.specs") %></h2>
+                    <%= render 'admin/projects/specifications', f: f, project: project %>
+                  </div>
+                  <hr>
+                  <div class="" id="nav-project-offers">
+                    <h2 class="tab-title"><%= I18n.t("global.link_to.offers") %></h2>
+                    <%= render 'admin/projects/offers', f: f, project: project %>
+                  </div>
+                  <hr>
+                  <div class="" id="nav-project-timeline">
+                    <h2 class="tab-title"><%= I18n.t("global.link_to.timeline") %></h2>
+                    <%= render 'admin/projects/timeline-updates', f: f, project: project %>
+                  </div>
+                  <hr>
+                  <div class="" id="nav-project-location">
+                    <h2 class="tab-title"><%= I18n.t("global.link_to.location") %></h2>
+                    <%= render 'admin/projects/location', f: f, project: project %>
+                  </div>
+                  <hr>
+                  <div class="" id="nav-project-pages">
+                    <h2 class="tab-title"><%= I18n.t("global.link_to.content_pages") %></h2>
+                    <%= render 'admin/projects/pages', f: f, project: project %>
+                  </div>
+                  <hr>
+                  <div class="" id="nav-project-logos">
+                    <h2 class="tab-title"><%= I18n.t("global.link_to.images_docs") %></h2>
+                    <%= render 'admin/projects/logos', f: f, project: project %>
+                  </div>
+                  <% if current_user.role?(:superadmin) %>
+                    <hr>
+                    <div class="" id="nav-project-integrations">
+                      <h2 class="tab-title"><%= I18n.t("global.link_to.integrations") %></h2>
+                      <%= render 'admin/projects/integrations', f: f, project: project %>
+                    </div>
+                    <hr>
+                    <div class="" id="nav-project-bookings">
+                      <h2 class="tab-title"><%= I18n.t("global.link_to.bookings") %></h2>
+                      <%= render 'admin/projects/bookings', f: f, project: project %>
+                    </div>
+                    <hr>
+                    <div class="" id="nav-project-contacts">
+                      <h2 class="tab-title"><%= I18n.t("global.link_to.notifications") %></h2>
+                      <%= render 'admin/projects/contacts', f: f, project: project %>
+                    </div>
+                    <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
+                      <hr>
+                      <div class="" id="nav-project-crm_ids">
+                        <h2 class="tab-title"><%= I18n.t("global.link_to.crm") %></h2>
+                        <%= render 'admin/projects/crm_ids', f: f, project: project %>
+                      </div>
+                    <% end %>
+                  <% end %>
+                <% end %>
               </div>
             </div>
           </div>
         </div>
         <div class="modal-footer text-end">
-          <%= f.submit "Save", class: 'btn btn-primary' %>
+          <%= f.submit I18n.t("global.save"), class: 'btn btn-primary' %>
         </div>
       </div>
     </div>

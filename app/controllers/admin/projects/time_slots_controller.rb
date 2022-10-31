@@ -16,19 +16,19 @@ class Admin::Projects::TimeSlotsController < AdminController
   # GET /admin/projects/:project_id/time_slots
   #
   def new
-    @time_slot = @project.time_slots.build
+    @time_slot = @project.time_slots.build(booking_portal_client: current_client)
     render layout: false
   end
 
   # POST /admin/projects/:project_id/time_slots/:id
   #
   def create
-    @time_slot = @project.time_slots.build
+    @time_slot = @project.time_slots.build(booking_portal_client: current_client)
     @time_slot.assign_attributes(permitted_attributes([current_user_role_group, @time_slot]))
 
     respond_to do |format|
       if @time_slot.save
-        format.html { redirect_to admin_project_time_slots_path, notice: 'Time slot was successfully created.' }
+        format.html { redirect_to admin_project_time_slots_path, notice: I18n.t("controller.time_slots.notice.created") }
         format.json { render json: @time_slot, status: :created }
       else
         errors = @time_slot.errors.full_messages
@@ -51,7 +51,7 @@ class Admin::Projects::TimeSlotsController < AdminController
     parameters = permitted_attributes([:admin, @time_slot])
     respond_to do |format|
       if @time_slot.update(parameters)
-        format.html { redirect_to request.referrer || admin_project_time_slots_path, notice: 'Time slot successfully updated.' }
+        format.html { redirect_to request.referrer || admin_project_time_slots_path, notice: I18n.t("controller.time_slots.notice.updated") }
       else
         errors = @time_slot.errors.full_messages
         errors.uniq!
@@ -64,7 +64,7 @@ class Admin::Projects::TimeSlotsController < AdminController
   def destroy
     respond_to do |format|
       if @time_slot.destroy
-        format.html { redirect_to request.referrer || admin_project_time_slots_path, notice: 'Time slot successfully deleted.' }
+        format.html { redirect_to request.referrer || admin_project_time_slots_path, notice: I18n.t("controller.time_slots.notice.deleted") }
         format.json {render json: {}, status: :ok}
       else
         format.json {render json: {errors: @time_slot.errors.full_messages.to_sentence}, status: :unprocessable_entity}
@@ -76,12 +76,12 @@ class Admin::Projects::TimeSlotsController < AdminController
 
   def set_project
     @project = Project.where(id: params[:project_id]).first
-    redirect_to dashboard_path, alert: 'Project not found' unless @project
+    redirect_to home_path(current_user), alert: I18n.t("controller.projects.alert.not_found") unless @project
   end
 
   def set_time_slot
     @time_slot = @project.time_slots.where(id: params[:id]).first
-    redirect_to dashboard_path, alert: 'Time slot not found' unless @time_slot
+    redirect_to home_path(current_user), alert: I18n.t("controller.time_slots.alert.not_found") unless @time_slot
   end
 
   def authorize_resource

@@ -8,6 +8,7 @@ class Meeting
   include ApplicationHelper
   extend ApplicationHelper
   extend FilterByCriteria
+  extend DocumentsConcern
 
   DOCUMENT_TYPES = ['photo', 'collateral']
 
@@ -41,38 +42,17 @@ class Meeting
     participant_ids.include?(user_id.is_a?(User) ? user_id.id : user_id)
   end
 
-  def self.meeting_types
-    [
-      { id: 'webinar', text: 'Webinar' },
-      { id: 'offline_event', text: 'Offline Event' }
-    ]
-  end
-
-  def self.providers
-    [
-      { id: 'zoom', text: 'Zoom' },
-      { id: 'google_meet', text: 'Google Meet' },
-      { id: 'microsoft_teams', text: 'Microsoft Teams' }
-    ]
-  end
-
-  def self.statuses
-    [
-      { id: 'draft', text: 'Draft' },
-      { id: 'scheduled', text: 'Scheduled' },
-      { id: 'cancelled', text: 'Cancelled' },
-      { id: 'completed', text: 'Completed' }
-    ]
-  end
-
   def self.user_based_scope(user, params = {})
     custom_scope = {}
+    project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids)
     custom_scope[:roles] = {'$in': [user.role] }  unless user.role == 'superadmin' || user.role == 'admin'
     custom_scope[:project_id] = params[:project_id] if params[:project_id].present?
     custom_scope[:campaign_id] = params[:campaign_id] if params[:campaign_id].present?
     custom_scope[:status] = {'$in': ['scheduled', 'completed'] } if %w[crm sales_admin sales channel_partner gre billing_team user employee_user management_user].include?(user.role)
-    custom_scope[:project_id] = user.selected_project_id if user.selected_project_id.present?
-    custom_scope[:booking_portal_client_id] = user.selected_client_id if user.role.in?(%w(superadmin))
+    if !user.role.in?(User::ALL_PROJECT_ACCESS) || params[:current_project_id].present?
+      custom_scope[:project_id] = { project_id: { "$in": project_ids } }
+    end
+    custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
     custom_scope
   end
 

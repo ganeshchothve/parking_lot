@@ -1,16 +1,16 @@
 <header class="col-app-12 fixed left top shrink bg-white">
     <div class="container">
         <div class="pull-left left-header nav-links">
-          <!--<a href="/" rel="home" class="brand-logo"><img src="<%= current_client.logo.url || 'launchpad-logo.png' %>" data-event-category="Header" data-event-action="Click" data-event-name="Logo" /></a>-->
+          <!--<a href="/" rel="home" class="brand-logo"><img src="<%#= get_client_from_domain.logo.url || 'launchpad-logo.png' %>" data-event-category="Header" data-event-action="Click" data-event-name="Logo" /></a>-->
         </div>
         <div class="pull-right right-header">
             <div class="pull-right upper-right-header hidden-xs hidden-portrait">
               <div class="pull-right ml-2">
-                <%= link_to 'Sign in', new_user_session_path, {class: 'green-btn sign-in-button', 'data-event-category': 'Header', 'data-event-action': 'Click', 'data-event-name': 'Login'} %>
+                <%= link_to  I18n.t("devise.keys.sign_in"), new_user_session_path, {class: 'green-btn sign-in-button', 'data-event-category': 'Header', 'data-event-action': 'Click', 'data-event-name': 'Login'} %>
               </div>
               <% if params[:action] == 'channel_partners' %>
               <div class="enquire-now-wrapper pull-right">
-                <a data-event-category="Header" data-event-action="Click" data-event-name="Register Now" class="enquire-now-btn green-btn register-btn">Register Now</a>
+                <a data-event-category="Header" data-event-action="Click" data-event-name="Register Now" class="enquire-now-btn green-btn register-btn"><%=  I18n.t("devise.keys.register_now") %></a>
               </div>
               <% end %>
             </div>

@@ -1,45 +1,43 @@
 
-<% if false #policy(:dashboard).index? %>
-  <% if ["admin","superadmin"].include?(current_user.role) %>
+<% if ["admin","superadmin"].include?(current_user.role) && !is_marketplace? %>
 
-    <li class="nav-item accordion">
-      <div class="accordion-item bg-menu rounded-none border-0 dropdown">
-        <%= active_link_to t('controller.dashboard.index.link_name'), "javascript:;", active: :exclusive, class: "nav-link pl-0 pr-0 dropdown-toggle", data: {toggle: 'dropdown'}, id: "dropdownMenuLeft", "data-bs-toggle": "collapse", "data-bs-target":"#dashboardMenu", "aria-expanded": "false" %>
-        <div id="dashboardMenu" class="accordion-collapse collapse" aria-labelledby="dropdownMenuLeft">
-          <%= link_to t('controller.dashboard.index.link_name'), dashboard_path(params: {role: current_user.role}), class: "" %>
-          <%= link_to t('controller.dashboard.index.billing_team_link_name'), dashboard_path(params: {role: "billing_team"}), class: "" %>
-          <%= link_to t('controller.dashboard.index.cp_admin_link_name'), dashboard_path(params: {role: "cp_admin"}), class: "" %>
-        </div>
+  <li class="nav-item accordion">
+    <div class="accordion-item bg-menu rounded-none border-0 dropdown">
+      <%= active_link_to t('controller.dashboard.index.link_name'), "javascript:;", active: :exclusive, class: "nav-link pl-0 pr-0 dropdown-toggle", data: {toggle: 'dropdown'}, id: "dropdownMenuLeft", "data-bs-toggle": "collapse", "data-bs-target":"#dashboardMenu", "aria-expanded": "false" %>
+      <div id="dashboardMenu" class="accordion-collapse collapse" aria-labelledby="dropdownMenuLeft">
+        <%= link_to t('controller.dashboard.index.link_name'), dashboard_path(params: {role: current_user.role}), class: "" %>
+        <%= link_to t('controller.dashboard.index.billing_team_link_name'), dashboard_path(params: {role: "billing_team"}), class: "" %>
+        <%= link_to t('controller.dashboard.index.cp_admin_link_name'), dashboard_path(params: {role: "cp_admin"}), class: "" %>
       </div>
-    </li>
-  <% elsif ["cp_owner"].include?(current_user.role) %>
-    <li class="nav-item accordion">
-      <div class="accordion-item bg-menu rounded-none border-0 dropdown">
-        <%= active_link_to t('controller.dashboard.index.link_name'), "javascript:;", active: :exclusive, class: "nav-link pl-0 pr-0 dropdown-toggle", data: {toggle: 'dropdown'}, id: "dropdownMenuLeft", "data-bs-toggle": "collapse", "data-bs-target":"#dashboardMenu", "aria-expanded": "false" %>
-        <div id="dashboardMenu" class="accordion-collapse collapse" aria-labelledby="dropdownMenuLeft">
-          <%= link_to t('controller.dashboard.index.link_name'), dashboard_path, class: "" %>
-          <%= link_to t('controller.dashboard.index.cp_owner_link_name'), dashboard_path(params: {role: "cp_owner"}), class: "" %>
-        </div>
+    </div>
+  </li>
+<% elsif ["cp_owner"].include?(current_user.role) %>
+  <li class="nav-item accordion">
+    <div class="accordion-item bg-menu rounded-none border-0 dropdown">
+      <%= active_link_to t('controller.dashboard.index.link_name'), "javascript:;", active: :exclusive, class: "nav-link pl-0 pr-0 dropdown-toggle", data: {toggle: 'dropdown'}, id: "dropdownMenuLeft", "data-bs-toggle": "collapse", "data-bs-target":"#dashboardMenu", "aria-expanded": "false" %>
+      <div id="dashboardMenu" class="accordion-collapse collapse" aria-labelledby="dropdownMenuLeft">
+        <%= link_to t('controller.dashboard.index.link_name'), dashboard_path, class: "" %>
+        <%= link_to t('controller.dashboard.index.cp_owner_link_name'), dashboard_path(params: {role: "cp_owner"}), class: "" %>
       </div>
-    </li>
-  <% else %>
-    <li class="nav-item">
-      <%= active_link_to t('controller.dashboard.index.link_name'), dashboard_path, active: :exclusive, class: "nav-link pl-0 pr-0" %>
-    </li>
-  <% end %>
+    </div>
+  </li>
+<% else %>
+  <li class="nav-item">
+    <%= active_link_to t('controller.dashboard.index.link_name'), dashboard_path, active: :exclusive, class: "nav-link pl-0 pr-0" %>
+  </li>
 <% end %>
 
-<% if false #policy(:dashboard).team_lead_dashboard? %>
+<% if policy(:dashboard).team_lead_dashboard? %>
   <li class="nav-item">
     <%= active_link_to t('controller.dashboard.index.team_lead'), team_lead_dashboard_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
   </li>
 <% end %>
 
-<% if false #policy(:dashboard).leaderboard? %>
-  <li class="nav-item">
-    <%= active_link_to t('controller.dashboard.index.leaderboard'), channel_partners_leaderboard_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li>
-<% end %>
+<%# if policy(:dashboard).leaderboard? %>
+ <!--  <li class="nav-item">
+    <%#= active_link_to t('controller.dashboard.index.leaderboard'), channel_partners_leaderboard_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  </li> -->
+<%# end %>
 
 
 <% if policy([:admin, Project]).index? %>
@@ -49,7 +47,7 @@
   </li>
   <% if false #policy([current_user_role_group, InterestedProject]).index? && InterestedProject.where(user_id: current_user.id).in(status: %w(subscribed approved)).present? %>
     <li class='nav-item'>
-      <%= active_link_to 'Interested Projects', admin_projects_path(fltrs: {user_interested_projects: current_user.id}), active: /user_interested_projects/, class: "nav-link pl-0 pr-0" %>
+      <%= active_link_to I18n.t("mongoid.models.interested_project.other"), admin_projects_path(fltrs: {user_interested_projects: current_user.id}), active: /user_interested_projects/, class: "nav-link pl-0 pr-0" %>
     </li>
   <% end %>
   <% if false #ENV_CONFIG.dig('third_party_inventory', 'base_url').present? && policy([:admin, Project]).third_party_inventory? %>
@@ -65,12 +63,10 @@
   </li>
 <% end %>
 
-<% if current_user.role.in?(User::KYLAS_MARKETPALCE_USERS) %>
-  <% if policy([:admin, User]).index? %>
-    <li class="nav-item">
-      <%= active_link_to t('controller.users.index.link_name'), admin_users_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-    </li>
-  <% end %>
+<% if policy([:admin, User]).index? %>
+  <li class="nav-item">
+    <%= active_link_to t('controller.users.index.link_name'), admin_users_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  </li>
 <% end %>
 
 <% if policy([:admin, Lead]).index? %>
@@ -79,7 +75,7 @@
   </li>
 <% end %>
 
-<% if false # policy([:admin, SiteVisit]).index? %>
+<% if policy([:admin, SiteVisit]).index? %>
   <li class="nav-item">
     <%= active_link_to t('controller.site_visits.index.link_name'), admin_site_visits_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
   </li>
@@ -111,42 +107,42 @@
   </li>
 <% end %>
 
-<% if false #policy([:admin, Invoice]).index? %>
+<% if policy([:admin, Invoice]).index? %>
   <li class="nav-item">
     <%= active_link_to t('controller.invoices.index.link_name'), admin_invoices_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
   </li>
 <% end %>
 
-<% if false #policy([:admin, ChannelPartner]).index? %>
+<% if policy([:admin, ChannelPartner]).index? %>
   <li class="nav-item">
     <%= active_link_to t('controller.channel_partners.index.link_name'), channel_partners_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
   </li>
 <% end %>
 
-<% if false #policy([:admin, VariableIncentiveScheme]).vis_details? %>
-  <li class="nav-item">
-    <%= active_link_to t('controller.variable_incentive_schemes.vis_details.link_name'), vis_details_admin_variable_incentive_schemes_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li>
-<% end %>
+<%# if policy([:admin, VariableIncentiveScheme]).vis_details? %>
+  <!-- <li class="nav-item">
+    <%#= active_link_to t('controller.variable_incentive_schemes.vis_details.link_name'), vis_details_admin_variable_incentive_schemes_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  </li> -->
+<%# end %>
 
-<% if false #policy([:admin, Meeting]).index? %>
+<% if policy([:admin, Meeting]).index? %>
   <li class="nav-item">
     <%= active_link_to t('controller.meetings.index.link_name'), admin_meetings_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
   </li>
 <% end %>
 
-<% if false #policy([:admin, UserRequest]).index? %>
+<% if policy([:admin, UserRequest]).index? %>
   <li class="nav-item">
     <%= active_link_to t('controller.user_requests.index.link_name'), [:admin, UserRequest, request_type: :all], active: :inclusive, class: "nav-link pl-0 pr-0" %>
   </li>
 <% end %>
-<% if false #policy([:admin, BannerAsset]).index? %>
+<% if policy([:admin, BannerAsset]).index? %>
   <li class="nav-item">
     <%= active_link_to t('controller.banner_assets.index.link_name'), admin_banner_assets_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
   </li>
 <% end %>
 
-<%#= render 'layouts/navbar/custom_links' %>
+<%= render 'layouts/navbar/custom_links' %>
 
 <% if current_user %>
   <!-- <li class="lang-menu nav-item">

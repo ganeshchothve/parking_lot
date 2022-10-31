@@ -6,9 +6,9 @@
         <div class="row">
           <div class="col-lg-12">
             <div class="app-review float-start wd-100">
-              <h1 class="notify-title float-start wd-100">Your application is under review</h1>
-              <p class="notify-desc float-start mb-0">We will notify you via email on the status of your application</p>
-              <p class="notify-desc float-end pe-3 mb-0">Our estimated review time is between 24-48 hours</p>
+              <h1 class="notify-title float-start wd-100"><%= I18n.t("mobile.channel_partner.status_message.pending.step1") %></h1>
+              <p class="notify-desc float-start mb-0"><%= I18n.t("mobile.channel_partner.status_message.pending.step2") %></p>
+              <p class="notify-desc float-end pe-3 mb-0"><%= I18n.t("mobile.channel_partner.status_message.pending.step3") %></p>
             </div>
           </div>
         </div>
@@ -21,9 +21,9 @@
             <div class="row">
               <div class="col-lg-12">
                 <div class="app-review app-reject float-start wd-100">
-                  <h1 class="notify-title float-start mb-0 col-12">Your application has been rejected</h1>
+                  <h1 class="notify-title float-start mb-0 col-12"><%= I18n.t("mobile.channel_partner.status_message.application_rejected") %></h1>
                   <div class="fn-12 col-12">
-                    <p class="mb-0">Reason:</p>
+                    <p class="mb-0"><%= I18n.t("global.reason") %>:</p>
                     <div class="error-reason">
                       <%= channel_partner.status_change_reason&.html_safe %>
                     </div>
@@ -37,7 +37,7 @@
     <section class="cp-register-sec mt-3">
       <div class="col-lg-12">
         <div class="cp-reg-header pt-5 pb-5 col-lg-12">
-          <h1 class="sec-title px-3 ms-4">Complete Registration</h1>
+          <h1 class="sec-title px-3 ms-4"><%= I18n.t("mobile.channel_partner.status_message.complete_registration") %></h1>
           <%# <a href="javascript:;" class="skip-step-btn pe-3">Skip for now</a> %>
         </div>
         <div class="col-lg-12">
@@ -48,7 +48,7 @@
                   type="button" role="tab">
                   <div class="step-inner">
                     <span>1</span>
-                    <p>Company Info</p>
+                    <p><%= I18n.t("mongoid.attributes.channel_partner.company_info") %></p>
                   </div>
                 </a>
               </li>
@@ -57,7 +57,7 @@
                   type="button" role="tab">
                   <div class="step-inner">
                     <span>2</span>
-                    <p>Company Details</p>
+                    <p><%= I18n.t("mongoid.attributes.channel_partner.company_details") %></p>
                   </div>
                 </a>
               </li>
@@ -66,7 +66,7 @@
                   type="button" role="tab">
                   <div class="step-inner">
                     <span>3</span>
-                    <p>Upload Documents</p>
+                    <p><%= I18n.t("mongoid.attributes.channel_partner.upload_documents") %></p>
                   </div>
                 </a>
               </li>
@@ -102,32 +102,32 @@
 
           <div class="cp-form-wrap border-top px-4 py-4 pb-3 text-end px-xs-0">
             <div class='form-footer px-0 text-start d-inline-block'>
-              <%= form.submit "Save", class: "btn btn-primary white me-3 d-inline-block px-4 py-2 font-medium w-auto", id: 'cp-form-submit' %>
+              <%= form.submit I18n.t("global.save"), class: "btn btn-primary white me-3 d-inline-block px-4 py-2 font-medium w-auto", id: 'cp-form-submit' %>
             </div>
             <div class="form-footer px-0 d-inline-block d-none">
               <% if policy([current_user_role_group, channel_partner]).change_state? && policy([current_user_role_group, channel_partner]).editable_field?('event') %>
-                <% link_name = "#{channel_partner.rejected? ? 'Resubmit Application' : 'Submit Application'}" %>
-                <a href="javascript:;" class="btn bg-primary white px-4 d-inline-block py-2 me-3 font-medium w-auto fn-14"  data-bs-toggle="modal" data-bs-target="#confirmRegistration"><%= link_name %></a>
+                <% link_name = "#{channel_partner.rejected? ? I18n.t("global.resubmit_application") : I18n.t("global.submit_application")}" %>
+                <a href="javascript:;" class="btn bg-primary white px-4 d-inline-block py-2 me-3 font-medium w-auto fn-14"  data-bs-toggle="modal" data-bs-target="#confirmRegistration" data-disable-with="Submitting.." ><%= link_name %></a>
               <% end %>
               <div class="modal fade googleMeet-modal" id="confirmRegistration" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
                     <div class='modal-header'>
-                      <h6 class='modal-title'>Are you sure?</h6>
+                      <h6 class='modal-title'><%= I18n.t("controller.assets.confirm.sure") %></h6>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                       <div class="row">
                         <div class="col-lg-12">
-                          <p class='text-start'>By clicking on 'Complete Registration' you are confirming all the provided information and your application will be submitted for review to the BeyondWalls Partner Engagement Team.</p>
+                          <p class='text-start'><%= I18n.t("controller.assets.confirm.click_to_confirm") %></p>
                         </div>
                       </div>
                     </div>
                     <div class="modal-footer col-lg-12">
                       <div class="row">
                         <div class="col-lg-12 text-end px-0">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                          <%= link_to 'Complete Registration', change_state_channel_partner_path(channel_partner, {channel_partner: {event: 'submit_for_approval'}}), method: :post, remote: true, data: {type: 'json', 'disable-with': 'Complete Registration', 'bs-dismiss': 'modal'}, id: 'cp-form-change-state', class: 'btn btn-primary' %>
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><%= I18n.t("global.cancel") %></button>
+                          <%= link_to I18n.t("mobile.channel_partner.status_message.complete_registration"), change_state_channel_partner_path(channel_partner, {channel_partner: {event: 'submit_for_approval'}}), method: :post, remote: true, data: {type: 'json', 'disable-with': I18n.t("mobile.channel_partner.status_message.complete_registration"), 'bs-dismiss': 'modal'}, id: 'cp-form-change-state', class: 'btn btn-primary' %>
                         </div>
                       </div>
                     </div>
@@ -184,12 +184,12 @@
                 Amura.global_error_handler("Error while fetching remote form");
               }
             });
-            $('.form-footer').find('#cp-form-submit').val('Save Draft');
+            $('.form-footer').find('#cp-form-submit').val('<%= I18n.t("global.save_draft") %>');
             $('.form-footer').find('#cp-form-submit').removeClass('btn-primary');
             $('.form-footer').find('#cp-form-submit').addClass('bg-secondary');
             $('.form-footer').find('#cp-form-change-state').closest('.form-footer').removeClass('d-none');
           } else {
-            $('.form-footer').find('#cp-form-submit').val('Save');
+            $('.form-footer').find('#cp-form-submit').val('<%= I18n.t("global.save") %>');
             $('.form-footer').find('#cp-form-submit').removeClass('bg-secondary');
             $('.form-footer').find('#cp-form-submit').addClass('btn-primary');
             $('.form-footer').find('#cp-form-change-state').closest('.form-footer').addClass('d-none');
@@ -207,9 +207,9 @@
           <div class="row">
             <div class="col-lg-12">
               <div class="app-review app-reject float-start wd-100">
-                <h1 class="notify-title float-start mb-0 col-12">Your application has been rejected by <strong><%= current_user.temp_channel_partner&.name %></strong></h1>
+                <h1 class="notify-title float-start mb-0 col-12"><%= I18n.t("controller.channel_partners.text.application_rejected_by", name: current_user.temp_channel_partner&.name).html_safe %></h1>
                 <div class="fn-12 col-12">
-                  <p class="mb-0">Reason:</p>
+                  <p class="mb-0"><%= I18n.t("controller.channel_partners.text.reason") %>:</p>
                   <div class="error-reason">
                     <%= current_user.rejection_reason %>
                   </div>
@@ -223,7 +223,7 @@
     <section class="cp-register-sec">
       <div class="col-lg-12">
         <div class="cp-reg-header pt-5 pb-5 col-lg-12">
-          <h1 class="sec-title px-3 ms-4">Company Registration</h1>
+          <h1 class="sec-title px-3 ms-4"><%= I18n.t("controller.channel_partners.text.company_registration") %></h1>
           <%# <a href="javascript:;" class="skip-step-btn pe-3">Skip for now</a> %>
         </div>
         <div class="col-lg-12">
@@ -232,14 +232,14 @@
               <li>
                 <a href="javascript:;" class="step-done nav-link border-0 active" data-bs-toggle="tab" data-bs-target="#step-existing-company" type="button" role="tab">
                   <div class="step-inner">
-                    <p>Get Yourself Registered in Existing Company</p>
+                    <p><%= I18n.t("controller.channel_partners.text.get_registered") %></p>
                   </div>
                 </a>
               </li>
               <li>
                 <a href="javascript:;" class="step-done nav-link border-0" data-bs-toggle="tab" data-bs-target="#step-new-company" type="button" role="tab">
                   <div class="step-inner">
-                    <p>Register a New Company</p>
+                    <p><%= I18n.t("controller.channel_partners.text.register_company") %></p>
                   </div>
                 </a>
               </li>
@@ -268,7 +268,7 @@
 
           <div class="cp-form-wrap border-top px-4 py-4 pb-3 text-end px-xs-0">
             <div class='form-footer px-0 text-start d-inline-block'>
-              <%= submit_tag "Proceed", class: "btn btn-primary white me-3 d-inline-block px-4 py-2 font-medium w-auto", form: 'new_user_existing_channel_partner_form', data: {disable_with: 'Please wait..'} %>
+              <%= submit_tag I18n.t("global.proceed"), class: "btn btn-primary white me-3 d-inline-block px-4 py-2 font-medium w-auto", form: 'new_user_existing_channel_partner_form', data: {disable_with: I18n.t("global.please_wait")} %>
             </div>
           </div>
         </div>
@@ -306,9 +306,9 @@
         <div class="row">
           <div class="col-lg-12">
             <div class="app-review float-start wd-100">
-              <h1 class="notify-title float-start wd-100">Your registration request has been sent to respective company owner</h1>
-              <p class="notify-desc float-start mb-0">Please get your account approved by contacting the owner</p>
-              <p class="notify-desc float-start mb-0">If you want to cancel above registration request in company, please contact your channel partner representative in <%= t('global.brand') %></p>
+              <h1 class="notify-title float-start wd-100"><%= I18n.t("controller.channel_partners.text.reg_req_sent") %></h1>
+              <p class="notify-desc float-start mb-0"><%= I18n.t("controller.channel_partners.text.approve_ac") %></p>
+              <p class="notify-desc float-start mb-0"><%= I18n.t("controller.channel_partners.text.cancel_reg_req", name: current_client.name) %></p>
             </div>
           </div>
         </div>

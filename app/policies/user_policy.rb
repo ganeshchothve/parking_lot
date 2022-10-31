@@ -21,6 +21,10 @@ class UserPolicy < ApplicationPolicy
     edit? && (!user.role?('cp_owner') || user.id == record.id)
   end
 
+  def reset_password_after_first_login?
+    marketplace_client? && user.sign_in_count == 1 && !user.tenant_owner?
+  end
+
   def resend_confirmation_instructions?
     edit?
   end
@@ -50,10 +54,24 @@ class UserPolicy < ApplicationPolicy
   end
 
   def permitted_attributes(_params = {})
-    attributes = %i[first_name last_name phone lead_id password password_confirmation time_zone iris_confirmation temporarily_blocked]
+    attributes = []
+    if marketplace_client?
+      if record.role.in?(%w(cp_owner channel_partner))
+        attributes = %i[first_name last_name phone time_zone]
+      end
+    else
+      attributes = %i[first_name last_name phone time_zone]
+    end
+    attributes += %i[lead_id password password_confirmation iris_confirmation temporarily_blocked]
     # Only allow admin to change email.
     attributes += [user_notification_tokens_attributes: [UserNotificationTokenPolicy.new(user, UserNotificationToken.new).permitted_attributes]]
-    attributes += %i[email] if record.new_record? || user.role?('admin')
+    if marketplace_client?
+      if record.role.in?(%w(cp_owner channel_partner))
+        attributes += %i[email] if ((record.new_record? || user.role?('admin')))
+      end
+    else
+      attributes += %i[email] if ((record.new_record? || user.role?('admin')))
+    end
     attributes
   end
 end

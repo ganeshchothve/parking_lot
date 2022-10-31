@@ -3,6 +3,7 @@ class Client
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include InsertionStringMethods
+  extend DocumentsConcern
 
   PAYMENT_GATEWAYS = %w(Razorpay CCAvenue)
   # Add different types of documents which are uploaded on client
@@ -61,6 +62,9 @@ class Client
   field :enable_actual_inventory, type: Array, default: ['admin', 'sales']
   field :enable_live_inventory, type: Array, default: []
   field :enable_channel_partners, type: Boolean, default: false
+  field :enable_leads, type: Boolean, default: false
+  field :enable_site_visit, type: Boolean, default: false
+  field :enable_vis, type: Boolean, default: false
   field :enable_direct_payment, type: Boolean, default: false
   field :enable_payment_with_kyc, type: Boolean, default: true
   field :enable_booking_with_kyc, type: Boolean, default: true
@@ -90,7 +94,6 @@ class Client
   field :partner_regions, type: Array, default: ['Pune West', 'Pune East', 'Others']
   field :team_lead_dashboard_access_roles, type: Array, default: %w[gre]
   field :tl_dashboard_refresh_timer, type: Integer, default: 1
-  field :kylas_custom_fields, type: Hash, default: {}
   #
   # This setting will decide how same lead can be added through different channel partners,
   # Enabled: If channel_partner tries to add a lead which is already present in the system & tagged to different channel_partner, then system will check if the lead is confirmed or not, if yes, it won't allow the current channel_partner to add it again & trigger an email to admin saying current channel_partner tried to add an existing lead.
@@ -100,12 +103,16 @@ class Client
   field :selldo_default_search_list_id, type: String
   field :powered_by_link, type: String
   field :launchpad_portal, type: Boolean, default: false
-  field :mask_lead_data_for_roles, type: Array, default: %w(admin superadmin cp cp_admin dev_sourcing_manager)
+  field :mask_lead_data_for_roles, type: Array, default: []
   field :incentive_gst_slabs, type: Array, default: [5, 12, 18]
 
+  field :sync_user, type: Boolean, default: true
+  field :sync_product, type: Boolean, default: true
   # kylas tentant id
   field :kylas_tenant_id, type: String
   field :kylas_api_key, type: String
+  field :is_able_sync_products_and_users, type: Boolean, default: true
+  field :kylas_custom_fields, type: Hash, default: {}
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
@@ -164,8 +171,8 @@ class Client
 
   # validates :name, :allowed_bookings_per_user, :helpdesk_email, :helpdesk_number, :notification_email, :notification_numbers, :sender_email, :email_domains, :booking_portal_domains, :registration_name, :website_link, :support_email, :support_number, :payment_gateway, :cin_number, :mailgun_private_api_key, :mailgun_email_domain, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true
   validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
-  validates :preferred_login, inclusion: {in: Proc.new{ Client.available_preferred_logins.collect{|x| x[:id]} } }
-  validates :payment_gateway, inclusion: {in: Proc.new{ Client::PAYMENT_GATEWAYS } }, allow_blank: true
+  validates :preferred_login, inclusion: {in: I18n.t("mongoid.attributes.client/available_preferred_logins").keys.map(&:to_s) }
+  validates :payment_gateway, inclusion: {in: Client::PAYMENT_GATEWAYS }, allow_blank: true
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
   validates :whatsapp_api_key, :whatsapp_api_secret, presence: true, if: :whatsapp_enabled?
   validates :notification_api_key, presence: true, if: :notification_enabled?

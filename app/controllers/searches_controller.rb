@@ -20,7 +20,7 @@ class SearchesController < ApplicationController
   def show
     if @search.project_unit.present? && @search.project_unit.status == 'hold'
       if redirect_to_checkout?
-        redirect_to checkout_user_search_path(@search)
+        redirect_to checkout_lead_search_path(@search)
       end
     end
     # GENERICTODO: Handle current user to be from a user based route path
@@ -61,7 +61,7 @@ class SearchesController < ApplicationController
     else
       SearchExportWorker.perform_async(current_user.id.to_s)
     end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    flash[:notice] = I18n.t("global.export_scheduled")
     redirect_to admin_searches_path
   end
 
@@ -89,8 +89,7 @@ class SearchesController < ApplicationController
 
   def hold
     @booking_detail.event = 'hold' if @booking_detail.new_record?
-    @booking_detail.assign_attributes( permitted_attributes([ current_user_role_group, @booking_detail]))
-
+    @booking_detail.assign_attributes(permitted_attributes([current_user_role_group, @booking_detail]))
     # Has to be done after user is assigned and before status is updated
     authorize [current_user_role_group, @booking_detail]
     respond_to do |format|
@@ -99,10 +98,10 @@ class SearchesController < ApplicationController
           format.html { redirect_to checkout_lead_search_path(@search) }
         else
           ProjectUnitUnholdWorker.new.perform(@search.project_unit_id)
-          format.html { redirect_to dashboard_path, alert: t('controller.searches.hold.scheme_for_channel_partner_not_found') }
+          format.html { redirect_to home_path(current_user), alert: t('controller.searches.hold.scheme_for_channel_partner_not_found') }
         end
       else
-        format.html { redirect_to dashboard_path, alert: t('controller.searches.hold.booking_detail_error') }
+        format.html { redirect_to home_path(current_user), alert: t('controller.searches.hold.booking_detail_error') }
       end
     end
   end
@@ -112,7 +111,7 @@ class SearchesController < ApplicationController
     @booking_detail_scheme = @booking_detail.booking_detail_schemes.desc(:created_at).last || @booking_detail.booking_detail_schemes.build
     if @booking_detail.save && !@booking_detail.hold?
       if current_user.buyer?
-        redirect_to dashboard_path, alert: t('controller.searches.checkout.non_hold_booking')
+        redirect_to home_path(current_user), alert: t('controller.searches.checkout.non_hold_booking')
       else
         redirect_to admin_lead_path(@search.lead_id), alert: t('controller.searches.checkout.non_hold_booking')
       end
@@ -127,14 +126,15 @@ class SearchesController < ApplicationController
     @project_unit = ProjectUnit.find(@search.project_unit_id)
     authorize [current_user_role_group, @project_unit]
     respond_to do |format|
+      @search.set(step: 'filter', project_unit_id: nil, project_tower_id: nil)
       result = ProjectUnitUnholdWorker.new.perform(@project_unit.id)
       if !(result.is_a?(Hash) && result.has_key?(:errors))
-        format.html { redirect_to dashboard_path, notice: 'Booking cancelled' }
+        format.html { redirect_to step_lead_search_path(@search, step: @search.step), notice: t('controller.searches.booking_cancelled') }
         format.json { render json: {project_unit: @project_unit}, status: 200 }
       else
-        format.html { redirect_to (request.referer.present? ? request.referer : dashboard_path), alert: result[:errors] }
+        format.html { redirect_to (request.referer.present? ? request.referer : (marketplace? ? new_kylas_associated_lead_admin_leads_path(entityId: @search.lead.kylas_deal_id) : home_path(current_user))), alert: result[:errors] }
         format.json { render json: { errors: result[:errors] }, status: 422 }
-      end 
+      end
     end
   end
 
@@ -161,8 +161,8 @@ class SearchesController < ApplicationController
           redirect_to @receipt.payment_gateway_service.gateway_url(@search.id)
         else
           @receipt.update_attributes(status: "failed")
-          flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
-          redirect_to dashboard_path
+          flash[:notice] = I18n.t("controller.notice.failed_to_redirect_to_payment_gateway")
+          redirect_to home_path(current_user)
         end
       else
         redirect_to [current_user_role_group, @receipt.user], notice: 'Unit is booked successfully.'
@@ -203,7 +203,7 @@ class SearchesController < ApplicationController
     elsif @search.present? && @search.lead_id.present?
       @lead = @search.lead
     else
-      redirect_to dashboard_path and return
+      redirect_to home_path(current_user) and return
     end
   end
 
@@ -283,6 +283,9 @@ class SearchesController < ApplicationController
 
   def set_booking_detail
     @booking_detail = BookingDetail.where(status: {"$in": BookingDetail::BOOKING_STAGES}, project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead).first
+    if unattached_blocking_receipt = @search.lead.unattached_blocking_receipt(@search.project_unit.blocking_amount)
+      coupon = unattached_blocking_receipt.coupon
+    end
     if @booking_detail.blank?
       @booking_detail = BookingDetail.find_or_initialize_by(project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead, status: 'hold', booking_portal_client_id: @lead.booking_portal_client.id, creator: current_user)
       if @booking_detail.new_record?
@@ -297,7 +300,9 @@ class SearchesController < ApplicationController
           costs: @search.project_unit.costs,
           data: @search.project_unit.data,
           manager_id: @search.lead_manager_id,
-          site_visit_id: @search.site_visit_id
+          site_visit_id: @search.site_visit_id,
+          token_discount: coupon.try(:value).to_f,
+          variable_discount: coupon.try(:variable_discount).to_f
         )
         @booking_detail.search = @search
       end

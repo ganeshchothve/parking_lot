@@ -13,28 +13,29 @@ class User
   include DetailsMaskable
   include IncentiveSchemeAutoApplication
   include UserStatusInCompanyStateMachine
+  extend DocumentsConcern
 
   # Constants
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   ALLOWED_UTM_KEYS = %i[utm_campaign utm_source utm_sub_source utm_content utm_medium utm_term]
   BUYER_ROLES = %w[user employee_user management_user]
   ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre billing_team team_lead account_manager_head account_manager cp_owner dev_sourcing_manager]
-  ALL_PROJECT_ACCESS = %w[superadmin admin cp cp_admin cp_owner billing_team]
-  SELECTED_PROJECT_ACCESS = %w[sales sales_admin gre crm team_lead dev_sourcing_manager account_manager account_manager_head]
+  ALL_PROJECT_ACCESS = %w[superadmin admin cp cp_admin billing_team]
+  # SELECTED_PROJECT_ACCESS = %w[sales sales_admin gre crm team_lead dev_sourcing_manager account_manager account_manager_head]
   CHANNEL_PARTNER_USERS = %w[cp cp_admin channel_partner cp_owner]
   SALES_USER = %w[sales sales_admin]
   COMPANY_USERS = %w[employee_user management_user]
   # Added different types of documents which are uploaded on User
   DOCUMENT_TYPES = %w[home_loan_application_form photo_identity_proof residence_address_proof residence_ownership_proof income_proof job_continuity_proof bank_statement advance_processing_cheque financial_documents first_page_co_branding last_page_co_branding co_branded_asset]
   TEAM_LEAD_DASHBOARD_ACCESS_USERS = %w[team_lead gre]
-  KYLAS_MARKETPALCE_USERS = %w[admin sales]
+  KYLAS_MARKETPALCE_USERS = %w[admin sales gre sales_admin channel_partner cp_owner superadmin].freeze
   KYLAS_CUSTOM_FIELDS_ENTITIES = %w[lead deals meetings].freeze
+  CLIENT_SCOPED_ROLES = (%w[channel_partner cp_owner] + User::BUYER_ROLES).freeze
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable, :confirmable, :timeoutable, :password_archivable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: [:login] #:lockable,:expirable,:session_limitable,:password_expirable
-
-  attr_accessor :temporary_password, :payment_link, :temp_manager_id, :company_name
+  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :confirmable, :timeoutable, :password_archivable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: {login: true, booking_portal_client_id: false, project_id: false} #:lockable,:expirable,:session_limitable,:password_expirable
+  attr_accessor :temporary_password, :payment_link, :temp_manager_id, :company_name, :project_id
 
   ## Database authenticatable
   field :first_name, type: String, default: ''
@@ -140,6 +141,9 @@ class User
   field :kylas_user_id, type: String
   field :kylas_access_token_expires_at, type: DateTime
   field :kylas_contact_id, type: String
+  field :is_active_in_kylas, type: Boolean, default: true
+  field :tenant_owner, type: Boolean, default: false
+
   # Kylas Custom Fields options values fields
   field :kylas_custom_fields_option_id, type: Hash, default: {}
 
@@ -169,7 +173,7 @@ class User
   # key to handle both phone or email as a login
   attr_accessor :login, :login_otp
 
-  belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :users
+  belongs_to :booking_portal_client, class_name: 'Client', inverse_of: :users, optional: true
   belongs_to :referred_by, class_name: 'User', optional: true
   belongs_to :manager, class_name: 'User', optional: true
   belongs_to :channel_partner, optional: true
@@ -217,20 +221,27 @@ class User
   validates :phone, presence: true, if: proc { |user| user.role.in?(%w(cp_owner channel_partner)) }
   #validates :first_name, :last_name, name: true, allow_blank: true
   validate :phone_or_email_required, if: proc { |user| user.phone.blank? && user.email.blank? }
-  validates :phone, :email, uniqueness: { allow_blank: true }
+  # validates :phone, :email, uniqueness: { allow_blank: true }
   validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile mobile fixed_line premium_rate] }, allow_blank: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } , allow_blank: true
   validates :allowed_bookings, presence: true, if: proc { |user| user.buyer? }
   # validates :rera_id, presence: true, if: proc { |user| user.role?('channel_partner') } #TO-DO Done for Runwal to revert for generic
   #validates :rera_id, uniqueness: true, allow_blank: true
+  validates_presence_of     :password, if: :password_required?
+  validates_confirmation_of :password, if: :password_required?
+  validates_length_of       :password, within: Devise.password_length, allow_blank: true
   validates :role, inclusion: { in: proc { |user| User.available_roles(user.booking_portal_client) } }
   validates :lead_id, uniqueness: true, if: proc { |user| user.buyer? }, allow_blank: true
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :manager_change_reason_present?
   validate :password_complexity
+  validate :phone_email_uniqueness
+  validates :booking_portal_client_id, presence: true, unless: proc { |user| user.role?(:superadmin) }
+
 
   # scopes needed by filter
-  scope :filter_by_confirmation, ->(confirmation) { confirmation.eql?('not_confirmed') ? where(confirmed_at: nil) : where(confirmed_at: { "$ne": nil }) }
+  # scope :filter_by_confirmation, ->(confirmation) { confirmation.eql?('not_confirmed') ? where(confirmed_at: nil) : where(confirmed_at: { "$ne": nil }) }
+  scope :filter_by_confirmation, ->(confirmation) { confirmation == 'true' ? where(confirmed_at: { "$ne": nil }) : where(confirmed_at: nil)}
   scope :filter_by_is_active, ->(is_active) { is_active.eql?("true") ? where(is_active: true)
     : where(is_active: false)}
   scope :filter_by_channel_partner_id, ->(channel_partner_id) {where(channel_partner_id: channel_partner_id) }
@@ -243,6 +254,7 @@ class User
   scope :buyers, -> { where(role: {'$in' => BUYER_ROLES } )}
   scope :filter_by_userwise_project_ids, ->(user) { self.in(project_ids: user.project_ids) if user.try(:project_ids).present? }
   scope :filter_by_sales_status, ->(sales_status){ sales_status.is_a?(Array) ? where( sales_status: { "$in": sales_status }) : where(sales_status: sales_status.as_json) }
+  scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
   scope :filter_by_user_status_in_company, ->(user_status_in_company){ user_status_in_company.is_a?(Array) ? where( user_status_in_company: { "$in": user_status_in_company }) : where(user_status_in_company: user_status_in_company.as_json) }
   scope :incentive_eligible, ->(category) do
     if category == 'referral'
@@ -391,6 +403,35 @@ class User
     end
   end
 
+  def phone_email_uniqueness
+    attrs = []
+    attrs << {email: self.email} if self.email.present?
+    attrs << {phone: self.phone} if self.phone.present?
+    if self.role.in?(User::CLIENT_SCOPED_ROLES)
+      self.errors.add(:base, 'User with these details already exists') if User.in(role: User::CLIENT_SCOPED_ROLES).ne(id: self.id).where(booking_portal_client_id: self.booking_portal_client_id).or(attrs).present?
+    else
+      self.errors.add(:base, 'User with these details already exists') if User.nin(role: User::CLIENT_SCOPED_ROLES).ne(id: self.id).or(attrs).present?
+    end
+  end
+
+  def send_marketplace_token_expired_email
+    if kylas_api_key? && !access_token_valid?
+      email_template = Template::EmailTemplate.where(name: "marketplace_app_session_expired", booking_portal_client_id: booking_portal_client_id).first
+      if email_template.present? && email_template.is_active?
+        attrs = {
+                  booking_portal_client_id: booking_portal_client_id,
+                  subject: email_template.parsed_subject(self),
+                  body: email_template.parsed_content(self),
+                  recipients: [ self ],
+                  triggered_by_id: id,
+                  triggered_by_type: self.class.to_s
+                }
+        email = Email.create!(attrs)
+        email.sent!
+      end
+    end
+  end
+
   def tentative_incentive_eligible?(category=nil)
     if category.present?
       if category == 'referral'
@@ -460,10 +501,10 @@ class User
       if password !~ re
         true
       else
-        errors.add :password, 'should not contain name.'
+        errors.add :password, I18n.t("mongoid.attributes.user/password.name")
       end
     else
-      errors.add :password, 'Length should be 8-16 characters and include: 1 uppercase, 1 lowercase, 1 digit and 1 special character.'
+      errors.add :password, I18n.t("mongoid.attributes.user/password.length")
     end
   end
 
@@ -599,7 +640,7 @@ class User
 
   def generate_cp_code
     if ['channel_partner', 'cp_owner'].include?(self.role) && self.cp_code.blank?
-      self.cp_code = "#{SecureRandom.hex(3)[0..-2]}"
+      self.cp_code = self.channel_partner&.cp_code.present? ? self.channel_partner&.cp_code : "#{SecureRandom.hex(3)[0..-2]}"
     end
   end
 
@@ -668,7 +709,9 @@ class User
   end
 
   def active_for_authentication?
-    super && is_active
+    out = super && is_active && is_active_in_kylas?
+    out &&= self.booking_portal_client.enable_channel_partners? if self.role.in?(%w(channel_partner cp_owner))
+    out
   end
 
   def inactive_message
@@ -755,6 +798,16 @@ class User
     self.selldo_access_token = oauth_data.credentials.token if oauth_data
   end
 
+  alias_method :_booking_portal_client, :booking_portal_client
+
+  def booking_portal_client
+    if role?(:superadmin)
+      selected_client || Client.first
+    else
+      _booking_portal_client
+    end
+  end
+
   #def push_srd_to_selldo
   #  _selldo_api_key = Client.selldo_api_clients.dig(:website, :api_key)
 
@@ -787,15 +840,12 @@ class User
       end
     end
 
-    def available_confirmation_statuses
-      [
-        { id: 'confirmed', text: 'Confirmed' },
-        { id: 'not_confirmed', text: 'Not Confirmed' }
-      ]
-    end
-
     def available_roles(current_client)
-      roles = ADMIN_ROLES + BUYER_ROLES
+      if current_client.present? && current_client.kylas_tenant_id.present?
+        roles = KYLAS_MARKETPALCE_USERS + BUYER_ROLES
+      else
+        roles = ADMIN_ROLES + BUYER_ROLES
+      end
       roles -= CHANNEL_PARTNER_USERS unless current_client.try(:enable_channel_partners?)
       roles -= COMPANY_USERS unless current_client.try(:enable_company_users?)
       roles
@@ -813,7 +863,26 @@ class User
         reset_password_token = warden_conditions.delete(:reset_password_token)
         where(reset_password_token: reset_password_token).first
       elsif login.present?
-        any_of({ phone: login }, email: login).first
+        auth_conditions = [{ phone: login }, { email: login }]
+        if warden_conditions[:project_id].present?
+          or_conds = []
+          or_conds << { 
+            "$or": [
+              { booking_portal_client_id: warden_conditions[:booking_portal_client_id], '$or': auth_conditions, role: {"$nin": ALL_PROJECT_ACCESS}, project_ids: warden_conditions[:project_id] },
+              { booking_portal_client_id: warden_conditions[:booking_portal_client_id], '$or': auth_conditions, role: {"$in": ALL_PROJECT_ACCESS}}
+            ]
+          }
+          or_conds << { role: 'superadmin', '$or': auth_conditions, client_ids: warden_conditions[:booking_portal_client_id] }
+          user_criteria = any_of(or_conds)
+        elsif warden_conditions[:booking_portal_client_id].present?
+          or_conds = []
+          or_conds << { booking_portal_client_id: warden_conditions[:booking_portal_client_id], '$or': auth_conditions }
+          or_conds << { role: 'superadmin', '$or': auth_conditions, client_ids: warden_conditions[:booking_portal_client_id] }
+          user_criteria = any_of(or_conds)
+        else
+          user_criteria = any_of(auth_conditions).nin(role: User::CLIENT_SCOPED_ROLES)
+        end
+        user_criteria.first
       else
         super
       end
@@ -827,18 +896,21 @@ class User
       custom_scope = {}
       if user.role?('cp_admin')
         #cp_ids = User.where(manager_id: user.id).distinct(:id)
-        custom_scope = {role: { '$in': %w(channel_partner cp_owner) } } #, manager_id: {"$in": cp_ids}
+        custom_scope = { role: { '$in': %w(channel_partner cp_owner) } } #, manager_id: {"$in": cp_ids}
       elsif user.role?('cp')
-        custom_scope = {role: { '$in': %w(channel_partner cp_owner) } } #, manager_id: user.id
+        custom_scope = { role: { '$in': %w(channel_partner cp_owner) } } #, manager_id: user.id
       elsif user.role?('cp_owner')
         custom_scope = { role: {'$in': ['channel_partner', 'cp_owner']}, channel_partner_id: user.channel_partner_id }
-      elsif ["admin","superadmin"].include?(user.role)
-        custom_scope = {role: { '$in': %w(channel_partner cp_owner) } }
+      elsif ["admin"].include?(user.role)
+        custom_scope = { role: { '$in': %w(channel_partner cp_owner) }, booking_portal_client_id: user.booking_portal_client.id }
+      elsif ["superadmin"].include?(user.role)
+        custom_scope = { role: { '$in': %w(channel_partner cp_owner) }, booking_portal_client_id: user.selected_client_id }
       end
     end
 
     def user_based_scope(user, _params = {})
       custom_scope = {}
+      project_ids = (_params[:current_project_id].present? ? [_params[:current_project_id]] : user.project_ids)
       if user.role?('channel_partner')
         custom_scope = { role: {"$in": User.buyer_roles(user.booking_portal_client)} }
         custom_scope[:'$or'] = [{manager_id: user.id}, {manager_id: nil, referenced_manager_ids: user.id, iris_confirmation: false}]
@@ -852,25 +924,24 @@ class User
         custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) + %w(channel_partner) } }
       elsif user.role?('sales_admin')
         custom_scope = { "$or": [{ role: { "$in": User.buyer_roles(user.booking_portal_client) } }, { role: 'sales' }, { role: 'channel_partner' }] }
-      # elsif user.role?('sales')
-      #   custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) }, project_ids: user.selected_project_id.to_s, booking_portal_client_id: user.booking_portal_client.id }
       elsif user.role?('cp_admin')
-        # Removing access to customer accounts for cp/cp_admin, as lead conflict will now work on lead's model & they will have access to their leads.
-        #cp_ids = User.where(manager_id: user.id).distinct(:id)
-        #custom_scope = { "$or": [{ role: 'cp', _id: {"$in": cp_ids} }, { role: 'channel_partner', manager_id: {"$in": cp_ids} }] }
          custom_scope = { role: { '$in': %w(cp channel_partner cp_owner) } }
       elsif user.role?('cp')
-        # custom_scope = { role: { '$in': %w(channel_partner cp_owner) }, manager_id: user.id }
         custom_scope[:'$or'] = [{_id: user.id}, { role: { '$in': %w(channel_partner cp_owner) }, manager_id: user.id }]
       elsif user.role?('billing_team')
         custom_scope = { role: { '$in': %w(channel_partner cp_owner) } }
-      elsif user.role.in?(%w(admin sales))
-        custom_scope = { role: { "$in": ['admin', 'sales', 'channel_partner', 'cp_owner'] }, booking_portal_client_id: user.booking_portal_client.id }
+      elsif user.role.in?(%w(admin))
+        custom_scope = { role: { "$ne": 'superadmin' } }
+        custom_scope = { role: { "$ne": 'superadmin', '$in': %w(sales admin sales_admin gre channel_partner cp_owner) } } if user.booking_portal_client.try(:kylas_tenant_id).present?
+      elsif user.role.in?(%w(sales))
+        custom_scope = { role: { '$in': %w(sales) }}
       elsif user.role.in?(%w(superadmin))
-        custom_scope = { role: { "$in": ['admin', 'sales', 'superadmin'] }, booking_portal_client_id: user.selected_client_id }
+        custom_scope = {  }
+        custom_scope = { role: { '$in': %w(sales admin sales_admin gre channel_partner cp_owner) }} if user.booking_portal_client.try(:kylas_tenant_id).present?
       elsif user.role?('team_lead')|| user.role?('gre')
-        custom_scope = { role: 'sales', project_ids: user.selected_project_id.to_s }
+        custom_scope = { role: 'sales', project_ids: { "$in": project_ids }}
       end
+      custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
       custom_scope
     end
 
@@ -901,6 +972,14 @@ class User
         end
       else
         User.where(matcher).first
+      end
+    end
+
+    def doc_types(client)
+      if client.try(:launchpad_portal)
+        DOCUMENT_TYPES
+      else
+        DOCUMENT_TYPES - %w[first_page_co_branding last_page_co_branding co_branded_asset]
       end
     end
   end

@@ -20,7 +20,8 @@ class Admin::SmsesController < AdminController
   private
 
   def apply_policy_scope
-    Sms.with_scope(policy_scope([:admin, Sms])) do
+    custom_scope = Sms.where(Sms.user_based_scope(current_user, params))
+    Sms.with_scope(policy_scope(custom_scope)) do
       yield
     end
   end

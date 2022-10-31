@@ -68,23 +68,77 @@ module ApplicationHelper
     amount.round
   end
 
+  def get_client_from_domain
+    if defined?(request) && request && request.domain.present?
+      domain = (request.subdomain.present? ? "#{request.subdomain}." : "") + "#{request.domain}"
+      client = Client.in(booking_portal_domains: domain).first
+    end
+    client
+  end
+
   def current_client
     return @current_client if @current_client.present?
-    # if defined?(request) && request && request.subdomain.present? && request.domain.present?
-    #   domain = (request.subdomain.present? ? "#{request.subdomain}." : "") + "#{request.domain}"
-    #   @current_client = Client.in(booking_portal_domains: domain).first
-    # else
-    #   @current_client = Client.asc(:created_at).first # GENERICTODO: handle this
-    # end
-    return nil if defined?(current_user) && current_user.blank?
-    @current_client = current_user.booking_portal_client
+    @current_client = if current_project.present?
+                        @current_project.booking_portal_client
+                      elsif current_domain
+                        Client.in(booking_portal_domains: current_domain).first
+                      end
+    if @current_client.blank? && defined?(current_user) && current_user.present?
+      @current_client = if current_user.role?('superadmin')
+                          (Client.where(id: current_user.selected_client_id).first || current_user.booking_portal_client)
+                        else
+                          current_user.booking_portal_client
+                        end
+    end
     @current_client
   end
 
   def current_project
     return @current_project if @current_project.present?
     # TODO: for now we are considering one project per client only so loading first client project here
-    @current_project = current_client.projects.first if current_client.present?
+    if current_domain
+      @current_project = Project.in(booking_portal_domains: current_domain).first
+    end
+    @current_project
+  end
+
+  def current_domain
+    if defined?(request) && request && request.subdomain.present? && request.domain.present?
+      (request.subdomain.present? ? "#{request.subdomain}." : "") + "#{request.domain}"
+    end
+  end
+
+  def select_project_for_current_user
+    # if current_project.present?
+    #   current_user.selected_project_id = current_project.id
+    #   current_user.selected_lead_id = current_user.leads.where(project_id: current_project.id).first if current_user.buyer?
+    #   current_user.save
+    # else
+    #   current_user.update(selected_project_id: nil)
+    # end
+  end
+
+  def marketplace?
+    valid = current_client.try(:kylas_tenant_id).present?
+    unless valid
+      valid = request.host == ENV_CONFIG[:marketplace_host].to_s
+    end
+    valid
+  end
+
+  def marketplace_layout?
+    request.host == ENV_CONFIG[:marketplace_host].to_s
+  end
+
+  # Kylas i-Frame URL
+  def embedded_marketplace?
+    request.host == ENV_CONFIG[:embedded_marketplace_host].to_s
+  end
+
+  def available_templates(subject_class, subject_class_resource)
+    project_id = subject_class_resource.try(:project_id)
+    custom_templates = ::Template::CustomTemplate.where(subject_class: subject_class, booking_portal_client_id: subject_class_resource.booking_portal_client_id, is_active: true).in(project_ids: [project_id, []]).pluck(:name, :id)
+    custom_templates
   end
 
   def bottom_navigation(classes='')
@@ -99,65 +153,67 @@ module ApplicationHelper
     #  #{active_link_to 'Docs', dashboard_documents_path, active: :exclusive, class: 'footer-link'}
     #  </li>"
     #end
-    if current_client.gallery.present? && current_client.gallery.assets.select{|x| x.persisted?}.present?
-      html += "<li >
-        #{active_link_to 'Gallery', dashboard_gallery_path, active: :exclusive, class: 'footer-link'}
-      </li>"
-    end
-    if current_client.faqs.present?
-      html += "<li >
-        #{active_link_to 'FAQs', dashboard_faqs_path, active: :exclusive, class: 'footer-link'}
-      </li>"
-    end
-    if current_client.rera.present?
-      html += "<li >
-        #{active_link_to 'RERA', dashboard_rera_path, active: :exclusive, class: 'footer-link'}
-      </li>"
-    end
-    if current_client.tds_process.present?
-      html += "<li >
-        #{active_link_to 'TDS', dashboard_tds_process_path, active: :exclusive, class: 'footer-link'}
-      </li>"
-    end
-    #if current_client.terms_and_conditions.present?
-    #  html += "<li >
-    #    #{active_link_to 'T & C', dashboard_terms_and_condition_path, active: :exclusive, class: 'footer-link'}
-    #  </li>"
-    #end
-    if current_user && policy([current_user_role_group, current_client]).edit?
-      html += "<li >
-        #{link_to( t('controller.clients.edit.link_name'), edit_admin_client_path, class: 'footer-link modal-remote-form-link')}
-      </li>"
-    end
-    if current_user && current_client.gallery.present? && policy([current_user_role_group, Asset.new(assetable: current_client.gallery)]).index? && current_user.role?("superadmin")
-      html += "<li >
-        #{link_to( t('controller.assets.new.link_name'), assetables_path(assetable_type: current_client.gallery.class.model_name.i18n_key.to_s, assetable_id: current_client.gallery.id), class: 'footer-link modal-remote-form-link')}
-      </li>"
-    end
-    if current_user && TemplatePolicy.new(current_user, Template).index?
-      html += "<li >
-        #{link_to(t('helpers.show.link_name', model: ::Template.model_name.human), admin_client_templates_path, class: 'footer-link')}
-      </li>"
-    end
-    if current_user && policy([current_user_role_group, Asset.new(assetable: current_client)]).index? && current_user.role?("superadmin")
-      html += "<li >
-        #{link_to( t('controller.assets.index.link_name'), assetables_path(assetable_type: current_client.class.model_name.i18n_key.to_s, assetable_id: current_client.id), class: 'footer-link modal-remote-form-link')}
-      </li>"
-    end
-    if current_user && policy([current_user_role_group, PublicAsset.new(public_assetable: current_client)]).index? && current_user.role?("superadmin")
-      html += "<li >
-        #{link_to( t('controller.public_assets.index.link_name'), public_assetables_path(public_assetable_type: current_client.class.model_name.i18n_key.to_s, public_assetable_id: current_client.id), class: 'footer-link modal-remote-form-link')}
-      </li>"
-    end
-    if current_user.buyer? && current_client.support_number.present?
-      html += "<li class = 'footer-object'>
-        Need Help? Contact Us - #{current_client.support_number}
-      </li>"
-    end
-    if current_user.channel_partner? && current_client.channel_partner_support_number.present?
-      html += "<li  class = 'footer-object'>
-        Need Help? Contact Us - #{current_client.channel_partner_support_number}
-      </li>"
+    if current_client.present?
+      if current_client.gallery.present? && current_client.gallery.assets.select{|x| x.persisted?}.present?
+        html += "<li >
+          #{active_link_to 'Gallery', dashboard_gallery_path, active: :exclusive, class: 'footer-link'}
+        </li>"
+      end
+      if current_client.faqs.present?
+        html += "<li >
+          #{active_link_to 'FAQs', dashboard_faqs_path, active: :exclusive, class: 'footer-link'}
+        </li>"
+      end
+      if current_client.rera.present?
+        html += "<li >
+          #{active_link_to 'RERA', dashboard_rera_path, active: :exclusive, class: 'footer-link'}
+        </li>"
+      end
+      if current_client.tds_process.present?
+        html += "<li >
+          #{active_link_to 'TDS', dashboard_tds_process_path, active: :exclusive, class: 'footer-link'}
+        </li>"
+      end
+      #if current_client.terms_and_conditions.present?
+      #  html += "<li >
+      #    #{active_link_to 'T & C', dashboard_terms_and_condition_path, active: :exclusive, class: 'footer-link'}
+      #  </li>"
+      #end
+      if current_user && policy([current_user_role_group, current_client]).edit?
+        html += "<li >
+          #{link_to( t('controller.clients.edit.link_name'), edit_admin_client_path, class: 'footer-link modal-remote-form-link')}
+        </li>"
+      end
+      if current_user && current_client.gallery.present? && policy([current_user_role_group, Asset.new(assetable: current_client.gallery)]).index? && current_user.role?("superadmin")
+        html += "<li >
+          #{link_to( t('controller.assets.new.link_name'), assetables_path(assetable_type: current_client.gallery.class.model_name.i18n_key.to_s, assetable_id: current_client.gallery.id), class: 'footer-link modal-remote-form-link')}
+        </li>"
+      end
+      if current_user && TemplatePolicy.new(current_user, Template).index?
+        html += "<li >
+          #{link_to(t('helpers.show.link_name', model: ::Template.model_name.human), admin_client_templates_path, class: 'footer-link')}
+        </li>"
+      end
+      if current_user && policy([current_user_role_group, Asset.new(assetable: current_client)]).index? && current_user.role?("superadmin")
+        html += "<li >
+          #{link_to( t('controller.assets.index.link_name'), assetables_path(assetable_type: current_client.class.model_name.i18n_key.to_s, assetable_id: current_client.id), class: 'footer-link modal-remote-form-link')}
+        </li>"
+      end
+      if current_user && policy([current_user_role_group, PublicAsset.new(public_assetable: current_client)]).index? && current_user.role?("superadmin")
+        html += "<li >
+          #{link_to( t('controller.public_assets.index.link_name'), public_assetables_path(public_assetable_type: current_client.class.model_name.i18n_key.to_s, public_assetable_id: current_client.id), class: 'footer-link modal-remote-form-link')}
+        </li>"
+      end
+      if current_user.buyer? && current_client.support_number.present?
+        html += "<li class = 'footer-object'>
+        #{I18n.t("helpers.need_help", name: current_client.support_number)}
+        </li>"
+      end
+      if current_user.channel_partner? && current_client.channel_partner_support_number.present?
+        html += "<li  class = 'footer-object'>
+        #{I18n.t("helpers.need_help", name: current_client.channel_partner_support_number)}
+        </li>"
+      end
     end
     html.html_safe
   end
@@ -223,7 +279,7 @@ module ApplicationHelper
   end
 
   def full_page_view?
-    action_name.in?(%w(generate_booking_detail_form generate_invoice sales_board quotation channel_partners_leaderboard_without_layout dashboard_landing_page payout_dashboard payout_list payout_show print_template))
+    action_name.in?(%w(generate_booking_detail_form generate_invoice sales_board quotation channel_partners_leaderboard_without_layout dashboard_landing_page payout_dashboard payout_list payout_show print_template reset_password_after_first_login))
   end
 
   def select_icon(content_type = nil)
@@ -244,7 +300,7 @@ module ApplicationHelper
   end
 
   def is_marketplace?
-    params[:namespace] == 'mp' || params.dig(:user, :namespace) == 'mp'
+    marketplace?
   end
 
   def marketplace_layout
@@ -252,19 +308,11 @@ module ApplicationHelper
   end
 
   def application_layout
-    # if is_marketplace?
-    #   marketplace_layout
-    # else
-      'application'
-    # end
+    'application'
   end
 
   def devise_layout
-    # if is_marketplace?
-    #   marketplace_layout
-    # else
-      'devise'
-    # end
+    'devise'
   end
 
   def create_avatar_name
@@ -277,4 +325,8 @@ module ApplicationHelper
     controller_name == cont_name ? 'active' : ''
   end
 
+  def current_translations
+    @translations ||= I18n.backend.send(:translations)
+    @translations[I18n.locale].with_indifferent_access
+  end
 end

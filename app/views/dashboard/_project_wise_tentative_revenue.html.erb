@@ -3,23 +3,23 @@
     <table class="table my-customer-table responsive-tbl mb-0 align-middle border rounded">
       <thead class="bg-primary white">
         <tr class="bg-primary white">
-          <th rowspan='2' class='text-center border-end bg-primary white align-middle'>City</th>
-          <th colspan='4' class='text-center bg-primary white'>Tentative Invoice Amount</th>
+          <th rowspan='2' class='text-center border-end bg-primary white align-middle'><%= I18n.t("global.city") %></th>
+          <th colspan='4' class='text-center bg-primary white'><%= I18n.t("mongoid.attributes.invoice.tentative_invoice_amount") %></th>
         </tr>
         <tr>
-          <th class="text-center">Project</th>
+          <th class="text-center"><%= I18n.t("mongoid.models.project.one") %></th>
           <% if params[:resource] == "BookingDetail" %>
-            <th class="text-center">Bookings Count</th>
-            <th class="text-center">Agreement Price</th>
+            <th class="text-center"><%= I18n.t("global.booking_count") %></th>
+            <th class="text-center"><%= I18n.t("mongoid.attributes.booking_detail.agreement_price") %></th>
           <% end %>
-          <th class="text-center">Tentative Amount</th>
+          <th class="text-center"><%= I18n.t("mongoid.attributes.booking_detail.tentative_amount") %></th>
         </tr>
       </thead>
       <tbody class='text-md-center'>
         <% if @project_wise_total_tentative_amount.present? %>
           <% @project_wise_total_tentative_amount.each do |key, value| %>
             <tr>
-              <td rowspan="<%= value.length + 1 %>" data-title='<%= key %>' class='text-center border-end bg-primary white align-middle'><%= key %></td>
+              <td rowspan="<%= value.length + 1 %>" data-title='<%= key %>' class='text-center border-end bg-primary white align-middle'><%= I18n.t("global.key") %></td>
             </tr>
             <% value.each do |hash| %>
               <tr>
@@ -41,7 +41,7 @@
               <% end %>
           <% end %>
           <tr>
-            <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong>Total</strong></td>
+            <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong><%= I18n.t("global.total") %></strong></td>
             <td><strong>-</strong></td>
             <% if params[:resource] == "BookingDetail" %>
               <td><strong>
@@ -57,7 +57,7 @@
           </tr>
         <% else %>
           <tr>
-            <td colspan="5">No Records Found</td>
+            <td colspan="5"><%= I18n.t("global.no_record") %></td>
           </tr>
         <% end %>
       </tbody>

@@ -25,7 +25,11 @@ class LocalDevise::SessionsController < Devise::SessionsController
     else
       self.resource = warden.authenticate!(auth_options)
     end
-    set_flash_message!(:notice, :signed_in)
+    if self.resource.is_active?
+      set_flash_message!(:notice, :signed_in)
+    else
+      set_flash_message!(:notice, :sign_in_disabled)
+    end
     sign_in(resource_name, resource)
     yield resource if block_given?
     respond_to do |format|
@@ -49,7 +53,7 @@ class LocalDevise::SessionsController < Devise::SessionsController
           format.json { render json: {errors: [@otp_sent_status[:error]].flatten}, status: 422 }
         end
       else
-        format.json { render json: {errors: ["Please enter a valid phone number"]}, status: :unprocessable_entity }
+        format.json { render json: {errors: [I18n.t("sessions.notice.phone_number")]}, status: :unprocessable_entity }
       end
     end
   end

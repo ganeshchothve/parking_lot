@@ -1,6 +1,6 @@
 <div class="filter-inner modal-content ps-2 pe-2 fixed-header-footer">
     <div class="modal-header filter-header">
-  <h5 class="modal-title title">Filter</h5>
+  <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
   <a href="javascript:;" class="close-filter-btn btn-close"></a>
   </div>
 
@@ -19,11 +19,11 @@
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <% [UserRequest::Cancellation, UserRequest::Swap] if Rails.env.development? %>
           <%= label_tag "fltrs", t('mongoid.attributes.user_request._type'), class: "control-label" %>
-          <%= select_tag "fltrs[_type]", options_for_select(::UserRequest.descendants.collect{|x| [x.to_s.split('::').last, x]}, params.dig(:fltrs, :_type) || " "), {prompt: '', class: "selectize"} %>
+          <%= select_tag "fltrs[_type]", options_for_select(::UserRequest.descendants.collect{|x| [I18n.t("mongoid.attributes.user_request/request_type.#{x.to_s.split('::').last.downcase}"), x]}, params.dig(:fltrs, :_type) || " "), {prompt: '', class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.user_request.project_id'), class: "control-label" %>
-          <%= select_tag "fltrs[project_id]", options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[project_id]", options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.user_request.status'), class: "control-label" %>
@@ -34,18 +34,18 @@
           <%= select_tag "fltrs[requestable_type]", options_for_select(UserRequest.distinct(:requestable_type), params.dig(:fltrs, :requestable_type) || " "), {prompt: '', class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12 requestable BookingDetail d-none">
-          <%= label_tag "fltrs","Booking", class: "control-label", id: 'requestable_label' %>
-          <%= select_tag "fltrs[booking_detail_id]", options_for_select(filter_booking_detail_options( params.dig(:fltrs, :booking_detail_id)), params.dig(:fltrs, :booking_detail_id) ), {prompt: "Select", class: "selectize-remote", data: { url: admin_booking_details_path }} %>
+          <%= label_tag "fltrs",t("mongoid.attributes.user_request/requestable_type.booking"), class: "control-label", id: 'requestable_label' %>
+          <%= select_tag "fltrs[booking_detail_id]", options_for_select(filter_booking_detail_options( params.dig(:fltrs, :booking_detail_id)), params.dig(:fltrs, :booking_detail_id) ), {prompt: I18n.t("global.select"), class: "selectize-remote", data: { url: admin_booking_details_path }} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12 requestable Receipt d-none">
-          <%= label_tag "fltrs","Receipt", class: "control-label", id: 'requestable_label' %>
-          <%= select_tag "fltrs[receipt_id]", options_for_select(filter_receipts_options(params.dig(:fltrs, :receipt_id) ), params.dig(:fltrs, :receipt_id)), {prompt: "Select", class: "selectize-remote", data: { url: admin_receipts_path }} %>
+          <%= label_tag "fltrs",t("mongoid.attributes.user_request/requestable_type.receipt"), class: "control-label", id: 'requestable_label' %>
+          <%= select_tag "fltrs[receipt_id]", options_for_select(filter_receipts_options(params.dig(:fltrs, :receipt_id) ), params.dig(:fltrs, :receipt_id)), {prompt: I18n.t("global.select"), class: "selectize-remote", data: { url: admin_receipts_path }} %>
         </div>
       </div>
     </div>
     <div class="filter-footer modal-footer text-end">
-      <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-      <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+      <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
+      <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.cancel") %></button>
     </div>
   <% end %>
 </div>

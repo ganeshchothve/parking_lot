@@ -7,7 +7,6 @@ class ErpModel
   RESOURCE_CLASS = %w[User UserKyc Receipt BookingDetail ChannelPartner]
   REQUEST_TYPE = [:json]
   HTTP_VERB = %w[get post put patch]
-  # DOMAIN = %w[http://staging.sell.do]
   ACTION_NAME = %w(create update)
 
   # Fields

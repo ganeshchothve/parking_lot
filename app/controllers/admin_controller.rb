@@ -9,8 +9,8 @@ class AdminController < ApplicationController
    #
    #
    def only_administrator_users!
-    if current_user && current_user.buyer?
-      redirect_to dashboard_path, alert: t('controller.only_administrator_users')
+    if current_user && current_user.buyer? && params[:controller] != 'admin/schemes'
+      redirect_to home_path(current_user), alert: t('controller.only_administrator_users')
     end
    end
 end

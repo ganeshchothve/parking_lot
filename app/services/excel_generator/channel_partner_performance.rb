@@ -54,7 +54,7 @@ module ExcelGenerator::ChannelPartnerPerformance
       "Rejected #{SiteVisit.model_name.human(count: 2)}",
       I18n.t("mongoid.attributes.interested_project/status.subscribed"),
       BookingDetail.model_name.human(count: 2),
-      "Total #{I18n.t('mongoid.attributes.booking_detail.agreement_price')}"
+      "#{I18n.t("global.total")}" + " " + "#{I18n.t('mongoid.attributes.booking_detail.agreement_price')}"
     ]  
   end
 

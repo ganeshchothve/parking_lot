@@ -17,7 +17,7 @@ class DashboardController < ApplicationController
     @project_units = current_user.project_units
 
     if ['channel_partner', 'cp_owner'].include?(current_user.role)
-      @offer_assets = BannerAsset.filter_by_publish
+      @offer_assets = BannerAsset.filter_by_booking_portal_client_id(current_user.booking_portal_client.id).filter_by_publish
     end
 
     respond_to do |format|
@@ -123,6 +123,7 @@ class DashboardController < ApplicationController
   private
 
   def set_lead
+    current_user.update(selected_lead_id: params[:selected_lead_id]) if params[:selected_lead_id].present?
     unless @lead = current_user.selected_lead
       redirect_to welcome_path, alert: t('controller.application.set_current_client')
     end

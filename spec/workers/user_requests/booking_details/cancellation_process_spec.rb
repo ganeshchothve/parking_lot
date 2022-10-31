@@ -21,7 +21,7 @@ RSpec.describe UserRequests::BookingDetails::CancellationProcess, type: :worker 
           allow_any_instance_of(UserRequest).to receive(:requestable).and_return(nil)
           UserRequests::BookingDetails::CancellationProcess.new.perform(@user_request.id)
           expect(@user_request.reload.status).to eq('rejected')
-          expect(@user_request.reason_for_failure).to include('Booking Is not available for cancellation.')
+          expect(@user_request.reason_for_failure).to include(I18n.t("worker.booking_details.errors.booking_cancellation_unavailable"))
         end
       end
 
@@ -30,7 +30,7 @@ RSpec.describe UserRequests::BookingDetails::CancellationProcess, type: :worker 
           allow_any_instance_of(BookingDetail).to receive(:status).and_return(:hold)
           UserRequests::BookingDetails::CancellationProcess.new.perform(@user_request.id)
           expect(@user_request.reload.status).to eq('rejected')
-          expect(@user_request.reason_for_failure).to include('Booking Is not available for cancellation.')
+          expect(@user_request.reason_for_failure).to include(I18n.t("worker.booking_details.errors.booking_cancellation_unavailable"))
         end
       end
     end

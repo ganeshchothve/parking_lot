@@ -11,6 +11,8 @@ module BulkUpload
     end
 
     def process_csv(csv)
+      booking_portal_client = bur.client
+
       csv.each do |row|
         unit_id = row.field(0).to_s.strip
         project_unit = ::ProjectUnit.where(id: unit_id).first if unit_id.present?
@@ -85,7 +87,7 @@ module BulkUpload
                 {data_attributes: {'$elemMatch': {n: 'carpet', v: project_unit.carpet}}}
               ]}).first
               unless unit_configuration.present?
-                unit_configuration = UnitConfiguration.new(name: unit_configuration_name, project_id: project.id, saleable: project_unit.saleable, carpet: project_unit.carpet)
+                unit_configuration = UnitConfiguration.new(name: unit_configuration_name, project_id: project.id, saleable: project_unit.saleable, carpet: project_unit.carpet, booking_portal_client_id: booking_portal_client.id)
                 unless unit_configuration.save
                   (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push(*unit_configuration.errors.full_messages.map{ |er| "Unit Configuration: " + er })).uniq
                   bur.failure_count += 1 if bur.upload_errors.where(row: row.fields).present?

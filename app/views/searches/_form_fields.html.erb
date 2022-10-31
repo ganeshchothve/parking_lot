@@ -2,7 +2,7 @@
 <%= f.hidden_field :site_visit_id %>
 <div class="mb-3 mb-2 col-lg-6 col-xs-12">
   <%= f.label :configuration %>
-  <%= f.select :bedrooms, searches_bedrooms_names(data), {prompt: true}, class: 'selectize', disabled: !policy(@search).editable_field?("bedrooms") %>
+  <%= f.select :bedrooms, searches_bedrooms_names(data), {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy(@search).editable_field?("bedrooms") %>
 </div>
 <div class="mb-3 mb-2 col-lg-6 col-xs-12">
   <%= f.label :agreement_price %>
@@ -14,7 +14,7 @@
     agreement_price_slabs << ["#{number_to_indian_currency(min+slab)} - #{number_to_indian_currency(min+2*slab)}".html_safe, "#{min+slab}-#{min + 2*slab}"]
     agreement_price_slabs << ["#{number_to_indian_currency(min+2*slab)} - #{number_to_indian_currency(min+3*slab)}".html_safe, "#{min+2*slab}-#{max}"]
   %>
-  <%= f.select :agreement_price, agreement_price_slabs, {prompt: true}, class: 'selectize', disabled: !policy(@search).editable_field?("bedrooms") %>
+  <%= f.select :agreement_price, agreement_price_slabs, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy(@search).editable_field?("bedrooms") %>
 </div>
 <div class="mb-3 col-lg-6 col-xs-12">
   <%= f.label :all_inclusive_price %>
@@ -26,5 +26,5 @@
     all_inclusive_price_slabs << ["#{number_to_indian_currency(min+slab)} - #{number_to_indian_currency(min+2*slab)}".html_safe, "#{min+slab}-#{min + 2*slab}"]
     all_inclusive_price_slabs << ["#{number_to_indian_currency(min+2*slab)} - #{number_to_indian_currency(min+3*slab)}".html_safe, "#{min+2*slab}-#{max}"]
   %>
-  <%= f.select :all_inclusive_price, all_inclusive_price_slabs, {prompt: true}, class: 'selectize', disabled: !policy(@search).editable_field?("bedrooms") %>
+  <%= f.select :all_inclusive_price, all_inclusive_price_slabs, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy(@search).editable_field?("bedrooms") %>
 </div>

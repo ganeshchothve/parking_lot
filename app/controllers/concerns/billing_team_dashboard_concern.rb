@@ -55,6 +55,7 @@ module BillingTeamDashboardConcern
       options[:project_id] = { "$in": Project.all.pluck(:id) }
     end
     options[:status] = {"$in": ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]}
+    options[:booking_portal_client_id] = current_client.id
     options.with_indifferent_access
   end
 

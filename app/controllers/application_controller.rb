@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   include Pundit
   include ApplicationHelper
 
-  #before_action :store_user_location!, if: :storable_location?
+  before_action :store_user_location!, if: :storable_location?
   before_action :set_locale
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_cache_headers, :set_request_store, :set_cookies
@@ -14,16 +14,17 @@ class ApplicationController < ActionController::Base
   acts_as_token_authentication_handler_for User, if: :token_authentication_valid_params?
 
   before_action :set_current_client, if: :current_user
+  before_action :set_current_project_id
   # Run in current user Time Zone
   around_action :user_time_zone, if: :current_user
-  around_action :apply_project_scope, if: :current_user, unless: proc { current_user.role?('channel_partner') && params[:controller] == 'admin/projects' }
+  around_action :apply_project_scope, if: :current_user, unless: proc { params[:controller] == 'admin/projects' }
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   helper_method :home_path
   protect_from_forgery with: :exception, prepend: true
   skip_before_action :verify_authenticity_token, if: -> { params[:user_token].present? }
-  
+
   layout :set_layout
 
   rescue_from ActionController::InvalidAuthenticityToken, with: :invalid_authenticity_token
@@ -42,20 +43,23 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_out_path_for(resource_or_scope)
-    # if is_marketplace?
-    #   new_user_session_path(namespace: 'mp')
-    # else
-      new_user_session_path
-    # end
+    new_user_session_path
   end
 
   def home_path(current_user)
     if current_user
+      stored_path = stored_location_for(current_user)
       if current_user.role.in?(%w(superadmin)) && params[:controller] == 'local_devise/sessions'
         admin_select_clients_path
+      elsif (current_user.buyer? || !current_user.role.in?(User::ALL_PROJECT_ACCESS)) && (params[:controller] == 'local_devise/sessions' || (params[:controller] == 'admin/users' && params.dig(:user, :is_first_login).present?))
+        if stored_path.present? &&  stored_path.include?("kylas-auth")
+          stored_path
+        else
+          select_project_for_current_user
+          current_dashboard_path
+        end
       else
-        _path = admin_site_visits_path if current_user.role?('dev_sourcing_manager')
-        stored_location_for(current_user) || _path || current_dashboard_path
+        stored_path || current_dashboard_path
       end
     else
       return root_path
@@ -63,8 +67,17 @@ class ApplicationController < ActionController::Base
   end
 
   def current_dashboard_path
-    admin_users_path #dashboard_path
-    # is_marketplace? ? mp_about_path(namespace: 'mp') : dashboard_path
+    if is_marketplace?
+      if embedded_marketplace?
+        not_authorized_path
+      elsif current_user.role?('dev_sourcing_manager')
+        admin_site_visits_path
+      else
+        admin_users_path
+      end
+    else
+      dashboard_path
+    end
   end
 
   protected
@@ -91,6 +104,12 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def set_current_project_id
+    if current_project.present?
+      params.merge!(current_project_id: current_project.id.to_s)
+    end
+  end
+
   def apply_project_scope
     project_scope = Project.where(Project.user_based_scope(current_user, params))
     Project.with_scope(policy_scope(project_scope)) do
@@ -108,9 +127,10 @@ class ApplicationController < ActionController::Base
         params[:controller].in?([
           'buyer/receipts',
           'buyer/booking_details/receipts',
-          'admin/users'
+          'admin/users',
+          'kylas_auth'
         ]) &&
-        params[:action].in?(%w(index show new))
+        params[:action].in?(%w(index show new authenticate))
       )
   end
 
@@ -199,7 +219,7 @@ class ApplicationController < ActionController::Base
     alert = t policy_name, scope: "pundit", default: :default
     respond_to do |format|
       unless request.referer && request.referer.include?('remote-state') && request.method == 'GET'
-        format.html { redirect_to (user_signed_in? ? dashboard_path : root_path), alert: alert }
+        format.html { redirect_to (user_signed_in? ? not_authorized_path : new_user_session_path), alert: alert }
         format.json { render json: { errors: alert }, status: 403 }
       else
         # Handle response for remote-state url requests.

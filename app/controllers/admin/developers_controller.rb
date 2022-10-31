@@ -51,7 +51,7 @@ class Admin::DevelopersController < AdminController
     parameters = permitted_attributes([:admin, @developer])
     respond_to do |format|
       if @developer.update(parameters)
-        format.html { redirect_to request.referrer || admin_developers_path, notice: 'Developer successfully updated.' }
+        format.html { redirect_to request.referrer || admin_developers_path, notice: I18n.t("controller.developers.notice.updated") }
       else
         format.html { render :edit }
         format.json { render json: { errors: @developer.errors.full_messages }, status: :unprocessable_entity }
@@ -63,7 +63,7 @@ class Admin::DevelopersController < AdminController
 
   def set_developer
     @developer = Developer.where(id: params[:id]).first
-    redirect_to dashboard_path, alert: 'Developer not found' unless @developer
+    redirect_to home_path(current_user), alert: I18n.t("controller.developers.alert.not_found") unless @developer
   end
 
   def authorize_resource

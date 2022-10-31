@@ -14,7 +14,7 @@ class MeetingObserverWorker
         }.merge(changes || {})
 
         if changes.present? && changes.has_key?('participant_ids')
-          event_name = changes.dig('participant_ids', 1)&.map(&:to_s)&.include?(user.id.to_s) ? 'Event Subscribed' : 'Event Unsubscribed'
+          event_name = changes.dig('participant_ids', 1)&.map(&:to_s)&.include?(user.id.to_s) ? I18n.t("worker.meetings.keys.subscribed") : I18n.t("worker.meetings.keys.unsubscribed")
           Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, event_name, payload)
         end
       end

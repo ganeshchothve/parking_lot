@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title><%= current_client.name %></title>    
+    <title><%= (current_client.try(:name) || "IRIS") %></title>
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta charset="utf-8">
@@ -26,18 +26,21 @@
       if(typeof App === "undefined"){
         App = {};
       }
-      App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login, :enable_referral_bonus]) %>;
-      App.client.enable_actual_inventory = <%= current_client.enable_actual_inventory?(current_user) %>
-      App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;
+      App.locale = <%= current_translations.to_json.html_safe %>
+      <% if current_client.present? %>
+        App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login, :enable_referral_bonus]) %>;
+        App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;
+      <% end %>
       <% if user_signed_in? %>
         App.current_user = <%= raw current_user.to_json %>;
         App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name;
+        App.client.enable_actual_inventory = <%= current_client.enable_actual_inventory?(current_user) %>
       <% end %>
       <% if Rails.env.development? || Rails.env.staging? %>
         Pusher.logToConsole = true;
       <% end %>
     <% end %>
-    <% if current_client.selldo_client_id.present? %>
+    <% if current_client.present? && current_client.selldo_client_id.present? %>
       <% if Rails.env.production? %>
         <script src='//trkr.scdn1.secure.raxcdn.com/t/<%= current_client.selldo_client_id %>.js'></script>
       <% else %>

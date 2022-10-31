@@ -13,8 +13,8 @@ class BookingDetail
   include PriceCalculator
   include CrmIntegration
   include IncentiveSchemeAutoApplication
+  extend DocumentsConcern
 
-  attr_accessor :template_docs
 
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   STATUSES = %w[hold blocked booked_tentative booked_confirmed under_negotiation scheme_rejected scheme_approved swap_requested swapping swapped swap_rejected cancellation_requested cancelling cancelled cancellation_rejected]
@@ -45,6 +45,8 @@ class BookingDetail
   field :ladder_stage, type: Array
   field :source, type: String
   field :rejection_reason, type: String
+  field :token_discount, type: Float
+  field :variable_discount, type: Float
 
   #kylas specific field
   field :kylas_product_id, type: Integer
@@ -143,6 +145,7 @@ class BookingDetail
   }
   scope :filter_by_agreement_date, ->(date) { start_date, end_date = date.split(' - '); where(agreement_date: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day)
   }
+  scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
   scope :incentive_eligible, ->(category) do
     case category
     when 'spot_booking'
@@ -334,9 +337,9 @@ class BookingDetail
         receipts_total = receipts_total.in(status: ['clearance_pending', "success"])
       end
       receipts_total = receipts_total.sum(:total_amount)
-      return (self.project_unit.booking_price - receipts_total)
+      return (self.get_booking_price - receipts_total)
     else
-      return self.project_unit.booking_price
+      return self.get_booking_price
     end
   end
 
@@ -514,29 +517,31 @@ class BookingDetail
          custom_scope = { project_unit_id: nil }
         when 'billing_team'
          # custom_scope = { project_unit_id: nil, status: { '$nin': %w(blocked) } }
-        when 'admin', 'sales'
-          custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
+        when 'admin'
+          custom_scope = { }
         when 'superadmin'
-          custom_scope = { booking_portal_client_id: user.selected_client_id }
+          custom_scope = {  }
+        end
+
+        unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
+          custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
         end
       end
 
       if params[:entityId].present? && params[:entityType] == 'deals' && user.role.in?(%w(admin sales))
         lead_ids = Lead.where(kylas_deal_id: params[:entityId]).pluck(:id)
-        custom_scope = { booking_portal_client_id: user.booking_portal_client_id, lead_id: {'$in': lead_ids}}
+        custom_scope = { lead_id: {'$in': lead_ids} }
       end
 
       if params[:entityId].present? && params[:entityType] == 'contacts' && user.role.in?(%w(admin sales))
         kylas_contact_ids = User.in(role: User::BUYER_ROLES).where(kylas_contact_id: params[:entityId]).pluck(:id)
-        custom_scope = { booking_portal_client_id: user.booking_portal_client_id, user_id: {'$in': kylas_contact_ids}}
+        custom_scope = { user_id: {'$in': kylas_contact_ids} }
       end
 
       custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
       custom_scope = { user_id: user.id, lead_id: user.selected_lead_id } if user.buyer?
 
-      # unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
-      #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
-      # end
+      custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
       custom_scope
     end
 

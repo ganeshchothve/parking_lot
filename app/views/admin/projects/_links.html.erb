@@ -1,5 +1,5 @@
 <% if policy([:admin, project]).show? %>
-  <%= link_to t('helpers.show.link_name', model: Project.model_name.human), admin_project_path(project), class: 'dropdown-item' %>
+  <%= link_to I18n.t("controller.projects.links.project_details"), admin_project_path(project), class: 'dropdown-item' %>
 <% end %>
 <% if policy([:admin, project]).edit? %>
   <%= link_to t('helpers.edit.link_name', model: Project.model_name.human), edit_admin_project_path(project), class: 'dropdown-item modal-remote-form-link' %>
@@ -10,10 +10,10 @@
 <% if false %>
   <%= link_to UnitConfiguration.model_name.human(count: 2), admin_project_unit_configurations_path(project), class: 'dropdown-item' %>
 <% end %>
-<% if false %>
+<% if true %>
   <%= link_to TokenType.model_name.human(count: 2), admin_project_token_types_path(project), class: 'dropdown-item' %>
 <% end %>
-<% if false %>
+<% if true %>
   <%= link_to TimeSlot.model_name.human(count: 2), admin_project_time_slots_path(project), class: 'dropdown-item' %>
 <% end %>
 <% if false %>
@@ -39,4 +39,7 @@
 <% end %>
 <% if policy([:admin, project]).asset_create? %>
   <%= link_to Asset.model_name.human(count: 2), admin_projects_path('remote-state': assetables_path(assetable_type: project.class.model_name.i18n_key.to_s, assetable_id: project.id) ), class: "dropdown-item" %>
+<% end %>
+<% if policy([:admin, project]).choose_template_for_print? %>
+  <%= link_to t('controller.templates.choose_template_for_print.link_name'), choose_template_for_print_admin_custom_templates_path(subject_class: project.class.model_name.i18n_key.to_s, subject_class_id: project.id.to_s), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>

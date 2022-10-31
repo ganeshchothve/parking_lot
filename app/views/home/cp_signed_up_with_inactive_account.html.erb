@@ -1,14 +1,14 @@
 <div class="mt-5 pt-5"></div>
 <div class="cp-signup-thank-popup pt-3 pb-3 col-lg-8 mg-auto">
   <div class="cp-popup-inner position-relative p-3">
-    <h3 class="text-start text-light-blue">Thank you for signing up with us</h3>
+    <h3 class="text-start text-light-blue"><%= I18n.t("controller.home.text_msg.thanks_for_signing") %></h3>
     <p class="position-absolute top-0 end-0 pt-3 pe-3">
     <img src="<%= asset_path "email-verify.svg" %>">
     </p>
-    <p class="fn-16">We found an old inactive account with these details.<br> We have activated it, registered a new company & linked your account under it.</p>
-    <h4 class="text-start">Reset your password</h4>
-    <p class="fn-16">If you can't remember your password, please reset it from using the link below.<br> <%= link_to 'Reset Password', new_password_path(@user, user: {login: @user.email}), class: 'text-primary' %></p>
-    <p class="fn-16 font-medium theme-txt-color">Sign in after resetting your password</p>
-    <%= link_to 'Sign In', new_user_session_path, class: 'bg-primary btn rounded p-2 px-3 white' %>
+    <p class="fn-16"><%= I18n.t("controller.home.text_msg.found_inactive_account") %></p>
+    <h4 class="text-start"><%= I18n.t("devise.keys.reset_your_password") %></h4>
+    <p class="fn-16"><%= I18n.t("devise.help_text.reset_password.link") %><br> <%= link_to I18n.t("devise.keys.reset_password"), new_password_path(@user, user: {login: @user.email}), class: 'text-primary' %></p>
+    <p class="fn-16 font-medium theme-txt-color"><%= I18n.t("devise.help_text.sign_in.after_reset_password") %></p>
+    <%= link_to I18n.t("devise.keys.sign_in"), new_user_session_path, class: 'bg-primary btn rounded p-2 px-3 white' %>
   </div>
 </div>

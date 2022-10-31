@@ -40,6 +40,28 @@ class ApplicationPolicy
     update?
   end
 
+  def choose_template_for_print?
+    user.role.in?(%w(admin sales superadmin)) && available_templates(record.class.to_s, record).present?
+  end
+
+  def print_template?
+    choose_template_for_print?
+  end
+
+  def marketplace_client?
+    return false if user.blank?
+    user.try(:booking_portal_client).try(:kylas_tenant_id).present?
+  end
+
+  def project_access_allowed?(current_project_id=nil)
+    if !user.role.in?(User::ALL_PROJECT_ACCESS) && current_project_id.present?
+      valid = user.project_ids.map(&:to_s).include?(current_project_id.to_s)
+    else
+      valid = true
+    end
+    valid
+  end
+
   def permitted_attributes params={}
     []
   end

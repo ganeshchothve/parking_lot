@@ -38,11 +38,11 @@ module ExcelGenerator::SiteVisitProjectWise
   def self.site_visit_project_wise_csv_headers
     [
       Project.model_name.human,
-      "All #{SiteVisit.model_name.human(count: 2)}",
-      "Scheduled #{SiteVisit.model_name.human(count: 2)}",
-      "Conducted #{SiteVisit.model_name.human(count: 2)}",
-      "Paid #{SiteVisit.model_name.human(count: 2)}",
-      "Approved #{SiteVisit.model_name.human(count: 2)}",
+      "#{I18n.t("global.all_elements",name: SiteVisit.model_name.human(count: 2))}",
+      "#{I18n.t('mongoid.attributes.site_visit/status.scheduled')}" + " " + "#{SiteVisit.model_name.human(count: 2)}",
+      "#{I18n.t('mongoid.attributes.site_visit/status.conducted')}" + " " + "#{SiteVisit.model_name.human(count: 2)}",
+      "#{I18n.t('mongoid.attributes.site_visit/status.paid')}" + " " + "#{SiteVisit.model_name.human(count: 2)}",
+      "#{I18n.t('mongoid.attributes.site_visit/approval_status.approved')}" + " " + "#{SiteVisit.model_name.human(count: 2)}"
     ]  
   end
   #code for make excel headers bold

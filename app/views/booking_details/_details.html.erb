@@ -44,7 +44,7 @@
           </li>
           <li>
             <span class="txt-light-blue font-normal"><%= BookingDetail.human_attribute_name('carpet')%></span>
-            <p><%= project_unit.carpet %> <%= current_client.area_unit %></p>
+            <p><%= project_unit.carpet %> <%= booking_detail&.booking_portal_client&.area_unit %></p>
           </li>
           <% if current_user.role?('superadmin') %>
           <li>
@@ -54,7 +54,7 @@
           </li>
           <li>
             <span class="txt-light-blue font-normal"><%= BookingDetail.human_attribute_name('saleable') %></span>
-            <p><%= booking_detail.saleable %> <%= current_client.area_unit %></p>
+            <p><%= booking_detail.saleable %> <%= booking_detail&.booking_portal_client&.area_unit %></p>
           </li>
           <li>
             <span class="txt-light-blue font-normal"><%= BookingDetail.human_attribute_name('base_rate') %>/

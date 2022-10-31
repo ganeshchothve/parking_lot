@@ -1,5 +1,5 @@
 <% if @users.present? || params[:template].include?('list_sales_users') %>
   $('<%= params[:element] %>').html("<%= j (render partial: params[:template], :locals => {:users => @users } ) %>");
 <% else %>
-  $('<%= params[:element] %>').html("<p>No Users found </p>");
+  $('<%= params[:element] %>').html("<p>" + App.locale.global.no_users + "</p>");
 <% end %>

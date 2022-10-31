@@ -1,18 +1,18 @@
 <div class="row">
   <div class="col-md-6">
-    <%= form.input :first_name, required: true, autofocus: true, disabled: !policy([:admin, @user]).editable_field?("first_name") %>
+    <%= form.input :first_name, required: true, autofocus: true %>
   </div>
   <div class="col-md-6">
-    <%= form.input :last_name, required: true, autofocus: true, disabled: !policy([:admin, @user]).editable_field?("last_name") %>
+    <%= form.input :last_name, required: true, autofocus: true %>
   </div>
 </div>
 
 <div class="row">
   <div class="col-md-6">
-    <%= form.input :phone, required: true, disabled: !policy([:admin, @user]).editable_field?("phone"), as: :tel, input_html: { class: 'phone' } %>
+    <%= form.input :phone, required: true, as: :tel, input_html: { class: 'phone' } %>
   </div>
   <div class="col-md-6">
-    <%= form.input :email, disabled: !policy([:admin, @user]).editable_field?("email"), input_html: { class: 'email'} %>
+    <%= form.input :email, input_html: { class: 'email'} %>
   </div>
 </div>
 <div class="row">
@@ -20,6 +20,7 @@
       <%#= form.input :referral_code, disabled: !policy([:admin, @user]).editable_field?("referral_code") %>
     </div>
 </div>
+<%= form.hidden_field :booking_portal_client_id, value: current_client.try(:id) %>
 <% if params[:manager_id].present? %>
   <%= form.hidden_field :manager_id, value: params[:manager_id] %>
 <% end %>

@@ -7,7 +7,7 @@
       </div>
       <div class="col-sm-1">
         <% if defined?(with_actions) && with_actions == true %>
-          <%= render "#{current_user_role_group}/booking_details/links", booking_detail: booking_detail, link_name: 'Update Booking' %>
+          <%= render "#{current_user_role_group}/booking_details/links", booking_detail: booking_detail, link_name: I18n.t("controller.booking_details.edit.link_name") %>
         <% end %>
       </div>
     </div>
@@ -16,7 +16,7 @@
     <div class="row">
       <div class="col-md-4">
         <div class="mb-3">
-          <label>Name</label>
+          <label><%= I18n.t("global.name") %></label>
           <div>
             <%= booking_detail.name %>
           </div>
@@ -24,7 +24,7 @@
       </div>
       <div class="col-md-4">
         <div class="mb-3">
-          <label>Tower</label>
+          <label><%= I18n.t("global.tower") %></label>
           <div>
             <%= booking_detail.project_unit.project_tower_name %>
           </div>
@@ -33,7 +33,7 @@
       <% unless params[:action] == 'quotation' %>
         <div class="col-md-4">
           <div class="mb-3">
-            <label>Status</label>
+            <label><%= I18n.t("global.status") %></label>
             <div>
               <%= BookingDetail.human_attribute_name("status.#{booking_detail.status}") %>
             </div>
@@ -44,7 +44,7 @@
     <div class="row">
       <div class="col-md-4">
         <div class="mb-3">
-          <label>Beds / Baths</label>
+          <label><%= I18n.t("controller.dashboard.booking_details_overview.beds_baths") %></label>
           <div>
             <%= booking_detail.project_unit.bedrooms %> / <%= booking_detail.project_unit.bathrooms %>
           </div>
@@ -52,7 +52,7 @@
       </div>
       <div class="col-md-4">
         <div class="mb-3">
-          <label>Carpet</label>
+          <label><%= I18n.t("controller.dashboard.booking_details_overview.carpet") %></label>
           <div>
             <%= booking_detail.project_unit.carpet %> <%= current_client.area_unit %>
           </div>
@@ -61,7 +61,7 @@
       <% if current_user.role?('superadmin') %>
         <div class="col-md-4">
           <div class="mb-3">
-            <label>Saleable</label>
+            <label><%= I18n.t("controller.dashboard.booking_details_overview.saleable") %></label>
             <div>
               <%= booking_detail.project_unit.saleable %> <%= current_client.area_unit %>
             </div>
@@ -73,7 +73,7 @@
       <% if current_user.role?('superadmin') %>
         <div class="col-md-4">
           <div class="mb-3">
-            <label>Effective Rate</label>
+            <label><%= I18n.t("controller.dashboard.booking_details_overview.effective_rate") %></label>
             <div>
               <%= number_to_indian_currency(booking_detail.project_unit.effective_rate) %> <%= current_client.area_unit %>
             </div>
@@ -82,7 +82,7 @@
       <% end %>
       <div class="col-md-4">
         <div class="mb-3">
-          <label>Agreement Price</label>
+          <label><%= I18n.t("controller.dashboard.booking_details_overview.agreement_price") %></label>
           <div>
             <%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %>
           </div>
@@ -90,7 +90,7 @@
       </div>
       <div class="col-md-4">
         <div class="mb-3">
-          <label>All Inclusive Price</label>
+          <label><%= I18n.t("controller.dashboard.booking_details_overview.all_inclusive_price") %></label>
           <div>
             <%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %>
           </div>
@@ -99,7 +99,7 @@
 
       <div class="col-md-4">
         <div class="mb-3">
-          <label>Phase</label>
+          <label><%= I18n.t("controller.dashboard.booking_details_overview.phase") %></label>
           <div>
             <%= booking_detail.project_unit.phase_name %>
           </div>
@@ -111,28 +111,28 @@
         <% if booking_detail.sync_logs.present? %>
           <div class="col-md-4">
             <div class="mb-3">
-            <label>Last Synced At:</label>
+            <label><%= I18n.t("controller.dashboard.booking_details_overview.last_sync") %></label>
               <div>
                 <% if booking_detail.present? %>
                   <% if booking_detail.sync_logs.present? %>
                     <%= booking_detail.sync_logs.desc(:created_at)[0].present? ? booking_detail.sync_logs.desc(:created_at)[0].updated_at.strftime("%d/%m/%Y %l:%M %p") : "-" %>
                   <% end %>
                 <% else %>
-                   <%= "Not synced" %>
+                   <%= I18n.t("controller.dashboard.booking_details_overview.not_synced") %>
                 <% end %>
               </div>
             </div>
           </div>
           <div class="col-md-4">
             <div class="mb-3">
-            <label>Last Sync Log Status:</label>
+            <label><%= I18n.t("controller.dashboard.booking_details_overview.last_sync_log_status") %></label>
               <div>
                 <% if booking_detail.present? %>
                   <% if booking_detail.sync_logs.present? %>
                     <%= booking_detail.sync_logs.desc(:created_at)[0].status.present? ? booking_detail.sync_logs.desc(:created_at)[0].status : "-" %>
                   <% end %>
                 <% else %>
-                   <%= "Not synced" %>
+                   <%= I18n.t("controller.dashboard.booking_details_overview.not_synced") %>
                 <% end %>
               </div>
             </div>
@@ -144,31 +144,31 @@
       <div class="row">
         <div class="col-md-4">
           <div class="mb-3">
-            <label>Amount Paid</label>
+            <label><%= I18n.t("controller.dashboard.booking_details_overview.amt_paid") %></label>
             <div>
               <%= number_to_indian_currency(booking_detail.total_amount_paid) %>
             </div>
-            <div class="small">* Considers processed <%= global_labels[:receipts] %> only</div>
+            <div class="small"><%= I18n.t("controller.dashboard.booking_details_overview.considers_processed", name:"#{global_labels[:receipts]}") %></div>
           </div>
         </div>
         <div class="col-md-4">
           <div class="mb-3">
-            <label>Pending Balance</label>
+            <label><%= I18n.t("controller.dashboard.booking_details_overview.pending_balance") %></label>
             <div>
               <%= number_to_indian_currency(booking_detail.pending_balance({strict: true})) %>
             </div>
-            <div class="small">* Considers processed <%= global_labels[:receipts] %> only</div>
+            <div class="small"><%= I18n.t("controller.dashboard.booking_details_overview.considers_processed", name:"#{global_labels[:receipts]}") %></div>
           </div>
         </div>
       </div>
       <div class="alert alert-primary">
         <ul>
-          <li>You need to pay <%= number_to_indian_currency(booking_detail.project_unit.booking_price) %> to confirm the booking</li>
+          <li><%= I18n.t("controller.dashboard.booking_details_overview.pay_to_confirm", name: number_to_indian_currency(booking_detail.get_booking_price)) %></li>
           <% unless current_client.cancellation_amount.zero? %>
-            <li>Cancellation charges are <%= number_to_indian_currency(current_client.cancellation_amount) %></li>
+            <li><%= I18n.t("controller.dashboard.booking_details_overview.cancellation_charges", name: number_to_indian_currency(current_client.cancellation_amount) %></li>
           <% end %>
           <% if booking_detail.project_unit.auto_release_on %>
-            <li>You have <%= (booking_detail.project_unit.auto_release_on - Date.today).to_i %> days (before <%= I18n.l(booking_detail.project_unit.auto_release_on) %>) remaining to confirm this booking. Please make a remaining payment of <%= number_to_indian_currency(booking_detail.pending_balance.round) %></li>
+            <li><%= I18n.t("controller.dashboard.booking_details_overview.make_remaining_payment", name1: (booking_detail.project_unit.auto_release_on - Date.today).to_i, name2: I18n.l(booking_detail.project_unit.auto_release_on), name3: number_to_indian_currency(booking_detail.pending_balance.round) %></li>
           <% end %>
         </ul>
       </div>

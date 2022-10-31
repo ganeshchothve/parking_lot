@@ -1,6 +1,7 @@
 class Gallery
   include Mongoid::Document
   include Mongoid::Timestamps
+  extend DocumentsConcern
 
   # Add different types of documents which are uploaded on gallery
   DOCUMENT_TYPES = []

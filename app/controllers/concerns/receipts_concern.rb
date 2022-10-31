@@ -21,7 +21,7 @@ module ReceiptsConcern
   def export
     authorize([current_user_role_group, Receipt])
     ReceiptExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json)
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    flash[:notice] = I18n.t("global.export_scheduled")
     redirect_to admin_receipts_path(fltrs: params[:fltrs].as_json)
   end
 
@@ -45,7 +45,7 @@ module ReceiptsConcern
       email.sent!
     end
     flash[:notice] = t('controller.receipts.resend_email.success')
-    redirect_to (request.referrer.present? ? request.referrer : dashboard_path)
+    redirect_to (request.referrer.present? ? request.referrer : home_path(current_user))
   end
 
   private

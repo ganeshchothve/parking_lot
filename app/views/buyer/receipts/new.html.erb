@@ -11,7 +11,7 @@
       </div>
       <div class="modal-body theme-form">
         <%= form_for [:buyer, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.receipt'), type: :json} } do |f| %>
-          <%= render 'admin/booking_details/receipts/form', f: f, direct_payment: true %>
+          <%= render 'admin/booking_details/receipts/form', f: f, direct_payment: params[:booking_detail_id].blank? %>
         <% end %>
       </div>
     </div>
@@ -29,6 +29,11 @@
       }else{
         $('#receipt_form [type="submit"]').attr("disabled", "disabled");
       }
+    });
+
+    $('#receipt_payment_type').on('change', function(e){
+      var payment_type = $(e.currentTarget).val();
+      $('#receipt_total_amount').val(amount_hash[payment_type]);
     });
     FormInitializer.init($('#receipt_form'));
   });

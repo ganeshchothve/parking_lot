@@ -12,6 +12,7 @@ class Receipt
   include TimeSlotGeneration
   include CrmIntegration
   extend FilterByCriteria
+  extend DocumentsConcern
 
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   OFFLINE_PAYMENT_MODE = %w[cheque rtgs imps card_swipe neft]
@@ -65,6 +66,7 @@ class Receipt
   has_many :smses, as: :triggered_by, class_name: 'Sms'
   has_many :user_requests, as: :requestable
   has_one :user_kyc
+  has_one :coupon
 
   scope :filter_by_status, ->(_status) { where(status: { '$in' => _status }) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
@@ -140,7 +142,7 @@ class Receipt
   #validations for fields with default value
   validates :status, :payment_mode, :payment_type, presence: true
   validates :status, inclusion: { in: proc { Receipt.aasm.states.collect(&:name).collect(&:to_s) } }
-  validates :payment_mode, inclusion: { in: proc { Receipt.available_payment_modes.collect { |x| x[:id] } } }, allow_blank: true
+  validates :payment_mode, inclusion: { in: I18n.t("mongoid.attributes.receipt/payment_mode").keys.map(&:to_s) }, allow_blank: true
   validates :payment_type, inclusion: { in: Receipt::PAYMENT_TYPES }, if: proc { |receipt| receipt.payment_type.present? }
   # non mandatory fields
   #validates :issuing_bank, :issuing_bank_branch, name: true, allow_blank: true
@@ -205,28 +207,6 @@ class Receipt
     payment_mode.to_s == 'online'
   end
 
-  def self.available_payment_modes
-    [
-      { id: 'online', text: 'Online' },
-      { id: 'cheque', text: 'Cheque' },
-      { id: 'rtgs', text: 'RTGS' },
-      { id: 'imps', text: 'IMPS' },
-      { id: 'card_swipe', text: 'Card Swipe' },
-      { id: 'neft', text: 'NEFT' }
-    ]
-  end
-
-  def self.available_sort_options
-    [
-      { id: 'created_at.asc', text: 'Created - Oldest First' },
-      { id: 'created_at.desc', text: 'Created - Newest First' },
-      { id: 'issued_date.asc', text: 'Issued Date - Oldest First' },
-      { id: 'issued_date.desc', text: 'Issued Date- Newest First' },
-      { id: 'processed_on.asc', text: 'Proccessed On - Oldest First' },
-      { id: 'processed_on.desc', text: 'Proccessed On - Newest First' }
-    ]
-  end
-
   def primary_user_kyc
     if booking_detail.present? && booking_detail.user_id == user_id
       booking_detail.primary_user_kyc
@@ -266,9 +246,10 @@ class Receipt
 
   def self.user_based_scope(user, params = {})
     custom_scope = {}
+    project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids)
     if params[:lead_id].blank? && !user.buyer?
       if user.role?('channel_partner')
-        custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
+        custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id }
       elsif user.role?('cp_owner')
         custom_scope = { channel_partner_id: user.channel_partner_id }
       elsif user.role?('cp_admin')
@@ -280,10 +261,12 @@ class Receipt
         #channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
         #custom_scope = { manager_id: { "$in": channel_partner_ids } }
         custom_scope = {cp_manager_id: user.id}
-      elsif user.role.in?(%w(admin sales))
-        custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
+      elsif user.role?(:admin)
+        custom_scope = {  }
+      elsif user.role.in?(%w(sales gre))
+        custom_scope = { }
       elsif user.role.in?(%w(superadmin))
-        custom_scope = { booking_portal_client_id: user.selected_client_id }
+        custom_scope = {  }
       end
     end
 
@@ -292,9 +275,10 @@ class Receipt
 
     custom_scope[:booking_detail_id] = params[:booking_detail_id] if params[:booking_detail_id].present?
 
-    # unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
-    #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
-    # end
+    if !user.role.in?(User::ALL_PROJECT_ACCESS) || params[:current_project_id].present?
+      custom_scope.merge!({project_id: { "$in": project_ids } })
+    end
+    custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
     custom_scope
   end
 

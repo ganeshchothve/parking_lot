@@ -5,6 +5,7 @@ class Invoice
   include InvoiceStateMachine
   extend FilterByCriteria
   include CrmIntegration
+  extend DocumentsConcern
   # include NumberIncrementor
 
   DOCUMENT_TYPES = []
@@ -144,36 +145,6 @@ class Invoice
     end
   end
 
-  def self.available_payout_statuses
-    [
-      { id: 'invoiced', text: 'Invoiced' },
-      { id: 'waiting_for_registration', text: 'Waiting for Registration' },
-      { id: 'waiting_for_invoicing', text: 'Waiting for Invoicing' },
-      { id: 'paid', text: 'Paid' },
-      { id: 'cancellation', text: 'Cancellation' }
-    ]
-  end
-
-  def self.available_payout_categories
-    [
-      { id: 'all', text: 'All' },
-      { id: 'walk_in', text: 'Site Visits' },
-      { id: 'spot_booking', text: 'Spot Bookings' },
-      { id: 'brokerage', text: 'Brokerage' },
-    ]
-  end
-
-  def self.available_sort_options
-    [
-      { id: 'created_at.asc', text: 'Created - Oldest First' },
-      { id: 'created_at.desc', text: 'Created - Newest First' },
-      { id: 'raised_date.asc', text: 'Invoiced Date - Oldest First' },
-      { id: 'raised_date.desc', text: 'Invoiced Date- Newest First' },
-      { id: 'net_amount.asc', text: 'Amount - Low to High' },
-      { id: 'net_amount.desc', text: 'Amount- High to Low' }
-    ]
-  end
-
   def calculate_net_amount
     _amount = amount + calculate_gst_amount
     _amount += payment_adjustment.try(:absolute_value).to_i if payment_adjustment.try(:absolute_value).present?
@@ -199,9 +170,9 @@ class Invoice
         elsif user.role?('account_manager')
           custom_scope = { account_manager_id: user.id, status: { '$nin': %w(tentative) } }
         elsif user.role.in?(%w(admin sales))
-          custom_scope = { status: { '$in': %w(tentative raised pending_approval approved rejected draft tax_invoice_raised paid) }, booking_portal_client_id: user.booking_portal_client.id }
+          custom_scope = { status: { '$in': %w(tentative raised pending_approval approved rejected draft tax_invoice_raised paid) } }
         elsif user.role.in?(%w(superadmin))
-          custom_scope = { status: { '$in': %w(tentative raised pending_approval approved rejected draft tax_invoice_raised paid) }, booking_portal_client_id: user.selected_client_id }
+          custom_scope = { status: { '$in': %w(tentative raised pending_approval approved rejected draft tax_invoice_raised paid) } }
         else
           custom_scope = { status: { '$nin': %w(tentative) } }
         end
@@ -211,9 +182,7 @@ class Invoice
       end
       custom_scope = {} if user.buyer?
 
-      # unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
-      #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
-      # end
+      custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
       custom_scope
     end
 

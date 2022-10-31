@@ -11,7 +11,7 @@
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-btn-set float-right pb-3">
           <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @cp_lead_activities.total_entries %></button>
-          <% if policy([:admin, Lead]).new? && current_user.role?(:channel_partner) %>
+          <% if policy([:admin, Lead]).new?(current_project.try(:id).try(:to_s)) && current_user.role?(:channel_partner) %>
             <%= link_to t('helpers.new.link_name', model: Lead.model_name.human), new_admin_lead_path, class: 'db-small-btn light-blue bg-white fn-400 modal-remote-form-link btn unset-width' %>
           <% end %>
           <button class="db-filter-btn white fn-500" type="button">

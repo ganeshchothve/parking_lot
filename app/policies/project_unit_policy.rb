@@ -38,7 +38,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def make_available?
-    valid = (record.status == 'hold' && current_client.enable_actual_inventory?(user))
+    valid = (record.status == 'hold' && user.booking_portal_client.enable_actual_inventory?(user))
     _role_based_check(valid)
   end
 
@@ -47,21 +47,21 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def update_co_applicants?
-    valid = (ProjectUnit.booking_stages.include?(record.status) && current_client.enable_actual_inventory?(user))
+    valid = (ProjectUnit.booking_stages.include?(record.status) && user.booking_portal_client.enable_actual_inventory?(user))
     _role_based_check(valid)
   end
 
   def update_project_unit?
-    valid = record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?(user)
+    valid = record.user.confirmed? && record.user.kyc_ready? && user.booking_portal_client.enable_actual_inventory?(user)
     _role_based_check(valid)
   end
 
   def payment?
-    checkout? && record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?(user)
+    checkout? && record.user.confirmed? && record.user.kyc_ready? && user.booking_portal_client.enable_actual_inventory?(user)
   end
 
   def process_payment?
-    checkout? && record.user.confirmed? && record.user.kyc_ready? && current_client.enable_actual_inventory?(user)
+    checkout? && record.user.confirmed? && record.user.kyc_ready? && user.booking_portal_client.enable_actual_inventory?(user)
   end
 
   def send_under_negotiation?
@@ -69,7 +69,7 @@ class ProjectUnitPolicy < ApplicationPolicy
   end
 
   def _role_based_check(valid)
-    false
+    valid
   end
 
   def quotation?

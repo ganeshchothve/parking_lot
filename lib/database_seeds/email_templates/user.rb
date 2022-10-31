@@ -53,7 +53,7 @@ module DatabaseSeeds
             </div>
           </div>') if ::Template::EmailTemplate.where(name: "user_confirmation_instructions").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: Client.first.id, subject_class: "User", name: "account_confirmation", subject: "Account Confirmed", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: "account_confirmation", subject: "Account Confirmed", content: '<div class="card w-100">
             <div class="card-body">
               <p>
                 Dear <%= self.name %>,
@@ -61,13 +61,13 @@ module DatabaseSeeds
               <div class="mb-3"></div>
               <p>
                 <% if self.role?("channel_partner") %>
-                  Thank you for registering as a Channel Partner at <%= current_project.name %>. Your account is confirmed. <br/>
+                  Thank you for registering as a Channel Partner. Your account is confirmed. <br/>
                   You can start entering your leads.
                 <% elsif self.buyer? %>
                   <% if self.manager_id.present? && self.manager.role?("channel_partner") %>
-                    Your interest for <%= current_project.name %> has been registered by <%= self.manager.name %>. Your account is confirmed. <br/>
+                    <%= self.manager.name %> -  Your account is confirmed. <br/>
                   <% else %>
-                    Thank you for registering at <%= current_project.name %>. Your account is confirmed.
+                    Thank you for registering. Your account is confirmed.
                   <% end %>
                 <% else %>
                   Your account is confirmed.
@@ -92,6 +92,27 @@ module DatabaseSeeds
             </p>
           </div>
         </div>') if ::Template::EmailTemplate.where(name: "cp_user_register_in_company").blank?
+
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "Receipt", name: "updated_token_details", subject: "Updated token details", content: '<div class="card w-100">
+          <div class="card-body">
+            <p>Dear <%= self.user.name %>,</p>
+            <p>
+              Updated token details
+            </p>
+          </div>
+        </div>
+        <div class="mt-3"></div>
+        ') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: "updated_token_details").blank?
+
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: "update_token_details_completed", subject: "Update token details completed", content: '<p>Your request of update token details completed.</p>') if ::Template::EmailTemplate.where(name: "update_token_details_completed").blank?
+
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: "marketplace_app_session_expired", subject: 'Marketplace app session expired', content: 'Hello <%= self.name %>,
+
+          Your logged in session on <%= self.booking_portal_client.name %> Booking Marketplace app is expired.
+          Kindly reinstall the app & login again to regain access.
+
+          Thanks,
+          <%= self.booking_portal_client.name %> Booking Marketplace App.') if ::Template::EmailTemplate.where(name: "marketplace_app_session_expired", booking_portal_client_id: client_id).blank?
       end
     end
   end

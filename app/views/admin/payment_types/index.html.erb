@@ -1,0 +1,19 @@
+<section class="mb-5 mt-3">
+  <div class="px-4">
+    <div class="row">
+
+    <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="table-btn-set float-end pb-3 text-end">
+          <% if policy([current_user_role_group, PaymentType.new]).new? %>
+            <%= link_to I18n.t("controller.payment_types.add_payment.link_name", name: "#{global_labels['payment_types']}"), new_admin_payment_type_path, class: 'border rounded px-3 py-2 px-3 border-primary white bg-primary rounded py-2 ms-2 modal-remote-form-link btn', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add Event'} %>
+          <% end %>
+        </div>
+      </div>
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="box-card relative">
+          <%= render 'admin/payment_types/index', payment_types: @payment_types %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

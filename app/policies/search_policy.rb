@@ -65,6 +65,10 @@ class SearchPolicy < ApplicationPolicy
     record.project_unit_id.present? && "#{current_user_role_group}::ProjectUnitPolicy".constantize.new(user, record.project_unit).make_available?
   end
 
+  def redirect_to_lead_form?
+    marketplace_client?
+  end
+
   def update_scheme?(template_klass=nil)
     valid = record.project_unit_id.present? && "#{current_user_role_group}::ProjectUnitPolicy".constantize.new(user, record.project_unit).make_available?
     if template_klass.present?

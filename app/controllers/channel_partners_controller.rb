@@ -4,11 +4,11 @@ class ChannelPartnersController < ApplicationController
   before_action :authenticate_user!, except: %i[new create find_or_create_cp_user register_cp_user add_user_account], unless: proc { params[:action] == 'index' && params[:ds] == 'true' }
   before_action :set_channel_partner, only: %i[show edit update destroy change_state asset_form]
   around_action :apply_policy_scope, only: :index, unless: proc { params[:ds] == 'true' }
-  before_action :authorize_resource, except: [:new, :create, :find_or_create_cp_user, :register_cp_user, :add_user_account]
+  before_action :authorize_resource, except: [:create, :find_or_create_cp_user, :register_cp_user, :add_user_account]
   skip_before_action :verify_authenticity_token, only: [:find_or_create_cp_user, :register_cp_user]
 
   def index
-    @channel_partners = ChannelPartner.build_criteria params
+    @channel_partners = ChannelPartner.where(booking_portal_client_id: current_client.id).build_criteria params
     @channel_partners = @channel_partners.paginate(page: params[:page], per_page: params[:per_page])
   end
 
@@ -22,7 +22,7 @@ class ChannelPartnersController < ApplicationController
     else
       ChannelPartnerExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json, timezone: Time.zone.name)
     end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    flash[:notice] = I18n.t("global.export_scheduled")
     redirect_to channel_partners_path(fltrs: params[:fltrs].as_json)
   end
 
@@ -36,6 +36,22 @@ class ChannelPartnersController < ApplicationController
     @channel_partner_id = @channel_partner.id
     @lead_id = params[:lead_id]
     render layout: false
+  end
+
+  def new_company
+    @user = User.new(role: "channel_partner")
+    @channel_partner = ChannelPartner.new
+    render layout: false
+  end
+
+  def create_company
+    @user = User.new
+    @user.assign_attributes(user_params)
+    @user.assign_attributes(booking_portal_client_id: current_client.id)
+
+    if @user.valid?
+      add_cp_company
+    end
   end
 
   def edit
@@ -158,9 +174,9 @@ class ChannelPartnersController < ApplicationController
     unless params[:action] == 'index' && params[:ds] == 'true'
       if params[:action] == 'index' || params[:action] == 'export'
         authorize [:admin, ChannelPartner]
-      elsif ["new","new_channel_partner"].include?params[:action]
-        authorize [:admin, ChannelPartner.new]
-      elsif ["create","create_channel_partner"].include?params[:action]
+      elsif ["new","new_channel_partner", "new_company"].include?(params[:action])
+        authorize [:admin, ChannelPartner.new(booking_portal_client: current_client)]
+      elsif ["create","create_channel_partner", "create_company"].include?(params[:action])
         authorize [:admin, ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))]
       else
         authorize [:admin, @channel_partner]
@@ -173,5 +189,17 @@ class ChannelPartnersController < ApplicationController
     ChannelPartner.with_scope(policy_scope(custom_scope)) do
       yield
     end
+  end
+
+  def user_params
+    params[:user] = {
+      first_name: params.dig(:channel_partner, :first_name),
+      last_name: params.dig(:channel_partner, :last_name),
+      phone: params.dig(:channel_partner, :phone),
+      email: params.dig(:channel_partner, :email),
+      manager_id: params.dig(:channel_partner, :manager_id)
+    }
+    params[:channel_partner] = params[:channel_partner].except(:first_name, :last_name, :phone, :email)
+    params.require(:user).permit(:first_name, :last_name, :email, :phone, :manager_id)
   end
 end

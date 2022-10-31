@@ -8,7 +8,7 @@ module ChannelPartnerRegisteration
       else
         create_cp_user
         if @user.save
-          format.html { redirect_to new_user_session_path, notice: 'Successfully registered' }
+          format.html { redirect_to new_user_session_path, notice: I18n.t("controller.channel_partners.notice.registered") }
         else
           format.html { redirect_to new_channel_partner_path, alert: @user.errors.full_messages }
         end
@@ -68,13 +68,30 @@ module ChannelPartnerRegisteration
       @user = User.where(register_in_cp_company_token: params[:register_code]).first
       @channel_partner = ChannelPartner.where(id: params[:channel_partner_id]).first
       unless @user.present?
-        redirect_to root_path, alert: 'This link is expired. Please ask the channel partner to send request again'
+        redirect_to root_path, alert: I18n.t("controller.channel_partners.errors.link_expired")
       end
       unless @channel_partner.present?
         redirect_to root_path, alert: "#{ChannelPartner.model_name.human} not found"
       end
     else
-      redirect_to root_path, alert: 'Registration code is missing'
+      redirect_to root_path, alert: I18n.t("controller.channel_partners.errors.code_missing")
+    end
+  end
+
+  def add_cp_company
+    @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
+    @channel_partner.assign_attributes(is_existing_company: false, primary_user: @user, booking_portal_client: @user.booking_portal_client)
+    @channel_partner.project_ids << current_project.id.to_s if current_project.present?
+    respond_to do |format|
+      if @channel_partner.save
+        #auto approve partner company if flag on client is enabled
+        @channel_partner.approve! if current_client.enable_direct_activation_for_cp?
+        format.html { redirect_to channel_partners_path, notice: 'Partner Company Successfully Created' }
+        format.json { render json: @channel_partner, status: :created }
+      else
+        format.html { redirect_to channel_partners_path, alert: @channel_partner.errors.full_messages }
+        format.json { render json: { errors: @channel_partner.errors.full_messages.uniq }, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -107,6 +124,8 @@ module ChannelPartnerRegisteration
   def register_with_new_company
     @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
     @channel_partner.is_existing_company = false
+    @channel_partner.booking_portal_client = current_client
+    @channel_partner.project_ids << current_project.id.to_s if current_project.present?
     respond_to do |format|
       if @channel_partner.save
         format.json { render 'channel_partners/register_with_new_company.json', status: :created }

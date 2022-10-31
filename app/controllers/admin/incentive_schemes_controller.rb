@@ -24,7 +24,7 @@ class Admin::IncentiveSchemesController < AdminController
     @incentive_scheme.assign_attributes(permitted_attributes([:admin, @incentive_scheme]))
     respond_to do |format|
       if @incentive_scheme.save
-        format.html { redirect_to admin_incentive_schemes_path, notice: 'Incentive Scheme created successfully.' }
+        format.html { redirect_to admin_incentive_schemes_path, notice: I18n.t("controller.incentive_schemes.notice.created") }
         format.json { render json: @incentive_scheme, status: :created }
       else
         format.html { render :new }
@@ -40,7 +40,7 @@ class Admin::IncentiveSchemesController < AdminController
   def update
     respond_to do |format|
       if @incentive_scheme.update(permitted_attributes([:admin, @incentive_scheme]))
-        format.html { redirect_to admin_incentive_schemes_path, notice: 'Incentive Scheme was successfully updated.' }
+        format.html { redirect_to admin_incentive_schemes_path, notice: I18n.t("controller.incentive_schemes.notice.updated") }
       else
         format.html { render :edit }
         format.json { render json: { errors: @incentive_scheme.errors.full_messages.uniq }, status: :unprocessable_entity }
@@ -54,7 +54,7 @@ class Admin::IncentiveSchemesController < AdminController
     elsif request.patch?
       respond_to do |format|
         if @incentive_scheme.update(ends_on: params.dig(:incentive_scheme, :ends_on))
-          format.html { redirect_to admin_incentive_schemes_path, notice: 'Incentive Scheme was successfully updated.' }
+          format.html { redirect_to admin_incentive_schemes_path, notice: I18n.t("controller.incentive_schemes.notice.updated") }
         else
           format.html { render :edit }
           format.json { render json: { errors: @incentive_scheme.errors.full_messages.uniq }, status: :unprocessable_entity }
@@ -67,7 +67,7 @@ class Admin::IncentiveSchemesController < AdminController
 
   def set_incentive_scheme
     @incentive_scheme = IncentiveScheme.where(id: params[:id]).first
-    redirect_to dashboard_path, alert: 'Incentive scheme not found' unless @incentive_scheme
+    redirect_to home_path(current_user), alert: I18n.t("controller.incentive_schemes.alert.not_found") unless @incentive_scheme
   end
 
   def authorize_resource

@@ -3,25 +3,25 @@
     <table class="table my-customer-table responsive-tbl mb-0 align-middle border rounded">
       <thead class="bg-primary white">
         <tr class="bg-primary white">
-          <th rowspan='2' class='text-center border-end bg-primary white align-middle'>City</th>
-          <th colspan='8' class='text-center bg-primary white'>Actual Invoice Amount</th>
+          <th rowspan='2' class='text-center border-end bg-primary white align-middle'><%= I18n.t("global.city") %></th>
+          <th colspan='8' class='text-center bg-primary white'><%= I18n.t("mongoid.attributes.invoice.actual_invoice_amount") %></th>
         </tr>
         <tr>
-          <th class="text-center">Project</th>
+          <th class="text-center"><%= I18n.t("mongoid.models.project.one") %></th>
           <th class="text-center"><%= t('mongoid.attributes.invoice/status.draft') %></th>
           <th class="text-center"><%= t('mongoid.attributes.invoice/status.raised') %></th>
           <th class="text-center"><%= t('mongoid.attributes.invoice/status.pending_approval') %></th>
           <th class="text-center"><%= t('mongoid.attributes.invoice/status.approve') %></th>
           <th class="text-center"><%= t('mongoid.attributes.invoice/status.tax_invoice_raised') %></th>
           <th class="text-center"><%= t('mongoid.attributes.invoice/status.paid') %></th>
-          <th class="text-center"><strong>Total</strong></th>
+          <th class="text-center"><strong><%= I18n.t("global.total") %></strong></th>
         </tr>
       </thead>
       <tbody class='text-md-center'>
         <% if @project_wise_total_invoice_amount.present? %>
           <% @project_wise_total_invoice_amount.each do |key, value| %>
             <tr>
-              <td rowspan="<%= value.length + 1 %>" data-title='<%= key %>' class='text-center border-end bg-primary white align-middle'><%= key %></td>
+              <td rowspan="<%= value.length + 1 %>" data-title='<%= key %>' class='text-center border-end bg-primary white align-middle'><%= I18n.t("global.key") %></td>
             </tr>
             <% value.each do |key, value| %>
               <tr>
@@ -55,7 +55,7 @@
               <% end %>
           <% end %>
           <tr>
-            <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong>Total</strong></td>
+            <td rowspan="1" class='text-center border-end bg-primary white align-middle'><strong><%= I18n.t("global.total") %></strong></td>
             <td><strong>-</strong></td>
             <td><strong><%= number_to_indian_currency((@status_wise_total_amount['draft'] ||=0).round)%></strong></td>
             <td><strong><%= number_to_indian_currency((@status_wise_total_amount['raised'] ||=0).round) %></strong></td>
@@ -67,7 +67,7 @@
           </tr>
         <% else %>
           <tr>
-            <td colspan="9">No Records Found</td>
+            <td colspan="9"><%= I18n.t("global.no_record") %></td>
           </tr>
         <% end %>
       </tbody>

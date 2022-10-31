@@ -9,7 +9,7 @@
 
 <div class="row">
   <div class="col-md-6">
-    <%= f.input :account_type, collection: BankDetail.available_account_types.collect{|x| [x[:text], x[:id]]}, prompt: :translate, as: :select %>
+    <%= f.input :account_type, collection: I18n.t("mongoid.attributes.bank_detail/account_types").collect {|k,v| [v, k.to_s]}, prompt: :translate, as: :select %>
   </div>
 
   <div class="col-md-6">
@@ -39,11 +39,11 @@
         <%= f.label :loan_required %>
         <div class="form-check form-check-inline">
           <%= f.radio_button :loan_required, true, class: "form-check-input wd-22" %>
-          <%= f.label :loan_required, "Yes", class: "form-check-label d-inline-block ms-2" %>
+          <%= f.label :loan_required, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
         </div>
         <div class="form-check form-check-inline">
           <%= f.radio_button :loan_required, false, class: "form-check-input wd-22" %>
-          <%= f.label :loan_required, "No", class: "form-check-label d-inline-block ms-2" %>
+          <%= f.label :loan_required, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
         </div>
       </div>
     <% end %>

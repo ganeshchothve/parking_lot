@@ -8,19 +8,26 @@
     <div class="prjt-thumb-inner position-relative"
       style="background-image: url('<%= project.cover_photo&.url || (asset_path 'default-project.jpg') %>')">
       <% if project.hot?%>
-      <span class="hot-sellig-tag"><i class="fa fa-fire fill-danger me-1"></i>Hot Selling</span>
+      <span class="hot-sellig-tag"><i class="fa fa-fire fill-danger me-1"></i><%= I18n.t("mongoid.attributes.project.hot_selling") %></span>
       <% end %>
     </div>
   </div>
   <div class="project-inner-info">
     <div class="inner-info position-relative">
-      <h2 class="title"><%= link_to project.name, admin_project_path(project) %></h2>
+      <% if is_marketplace? %>
+        <h2 class="title"><%= project.name %></h2>
+      <% else %>
+        <h2 class="title"><%= link_to project.name, admin_project_path(project) %></h2>
+      <% end %>
       <p class="devl-name"><%= project.developer_name %></p>
       <% if project.micro_market.present? && project.city.present? %>
       <p class="location"><i class="fa fa-map-marker-alt fill-primary me-2"></i><%= project.micro_market %>,
         <%= project.city %></p>
       <% end %>
-      <% meeting_str = "#{meeting.present? ? '1' : 'No'} #{meeting.present? && meeting.completed? ? 'Past' : 'New'} event <span>#{meeting&.scheduled_on&.strftime('%b %e %Y')}#{meeting&.scheduled_on&.to_time&.in_time_zone(current_user.time_zone)&.strftime(', %I:%M%p %Z')}</span>".html_safe %>
+      <% meeting_str = "#{meeting.present? ? '1' : 'No'} #{meeting.present? && meeting.completed? ? 'Past' : 'New'} event "
+        meeting_str = I18n.t("mongoid.attributes.meeting/new_event.#{meeting_str.parameterize.underscore}")
+        meeting_str += "<span>#{meeting&.scheduled_on&.strftime('%b %e %Y')}#{meeting&.scheduled_on&.to_time&.in_time_zone(current_user.time_zone)&.strftime(', %I:%M%p %Z')}</span>"
+        meeting_str = meeting_str.html_safe %>
       <p class="prjt-event">
         <%= link_to_if (meeting.present? && Admin::MeetingPolicy.new(current_user, meeting).show?), meeting_str, (meeting.present? ? admin_meeting_path(meeting) : admin_meetings_path), class: 'modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Event details'} %>
       </p>
@@ -35,8 +42,8 @@
     </div>
     <div class="prjt-date-info">
       <div class="inner-date">
-        <p><%= project.launched_on.strftime('%d %b, %Y') rescue "-" %></p>
-        <span>Launch Date</span>
+        <p><%= I18n.l(project.launched_on.strftime('%d %b, %Y')) rescue "-" %></p>
+        <span><%= I18n.t("mongoid.attributes.project.launched_on") %></span>
       </div>
     </div>
     <div class="prjt-stats">
@@ -105,7 +112,7 @@
       </div>
 
       <div class='prjt-inner-stats fn-14 text-primary' style='top: 75%'>
-          <% if !policy([:admin, Lead.new(project_id: project.id)]).new? && policy([current_user_role_group, InterestedProject.new(project_id: project.id)]).create? %>
+          <% if !policy([:admin, Lead.new(project_id: project.id)]).new?(current_project.try(:id).try(:to_s)) && policy([current_user_role_group, InterestedProject.new(project_id: project.id)]).create? %>
             <% if !project.id.in?(interested_project_ids) %>
               <%= link_to t('controller.projects.show.show_interest_text'), admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-block' %>
             <% end %>
@@ -116,23 +123,23 @@
   <div class="row col-lg-12 ms-0"></div>
   <div class="position-relative pt-4 rounded-bottom rounded-3" style="background:#dee8f5">
     <div class="row">
-      <span class="benefits-tag top-0 font-medium ps-3 fn-14 pt-2"><i class="fa fa-hand-holding-usd fill-primary me-1"></i>Benefits for you</span>
+      <span class="benefits-tag top-0 font-medium ps-3 fn-14 pt-2"><i class="fa fa-hand-holding-usd fill-primary me-1"></i><%= I18n.t("controller.projects.benefits_for_you.link_name") %></span>
       <div class="col-lg-6 px-4 mt-2">
         <div class="row">
           <div class="col-lg-4 col-4">
-            <p class="fn-12 small text-secondary mb-0">Site Visit Incentive</p>
-            <h2 class="fn-18"><%= project.sv_incentive.present? ? number_to_indian_currency(project.sv_incentive) : "Coming Soon" %> </h2>
+            <p class="fn-12 small text-secondary mb-0"><%= I18n.t("controller.projects.incentives.site_visit") %></p>
+            <h2 class="fn-18"><%= project.sv_incentive.present? ? number_to_indian_currency(project.sv_incentive) : I18n.t("global.coming_soon")  %> </h2>
           </div>
           <div class="col-lg-4 col-4">
-            <p class="fn-12 small text-secondary mb-0">Spot Booking Incentive</p>
-            <h2 class="fn-18"><%= project.spot_booking_incentive.present? ? number_to_indian_currency(project.spot_booking_incentive) : "Coming Soon" %> </h2>
+            <p class="fn-12 small text-secondary mb-0"><%= I18n.t("controller.projects.incentives.spot_booking") %></p>
+            <h2 class="fn-18"><%= project.spot_booking_incentive.present? ? number_to_indian_currency(project.spot_booking_incentive) : I18n.t("global.coming_soon")  %> </h2>
           </div>
           <div class="col-lg-4 col-4">
-            <p class="fn-12 small text-secondary mb-0">Pre-Registration Incentive</p>
+            <p class="fn-12 small text-secondary mb-0"><%= I18n.t("controller.projects.incentives.pre_registration_incentive") %></p>
             <% if project.pre_reg_incentive_percentage.present? and project.pre_reg_min_bookings.present? %>
-              <h2 class="fn-18 lh-1"><%= number_to_percentage(project.pre_reg_incentive_percentage, precision: 0) %> <span class="fn-12">for min. <%= project.pre_reg_min_bookings %> bookings</span></h2>
+              <h2 class="fn-18 lh-1"><%= number_to_percentage(project.pre_reg_incentive_percentage, precision: 0) %> <span class="fn-12">for min. <%= project.pre_reg_min_bookings %> <%= I18n.t("mongoid.models.booking_detail.other") %></span></h2>
             <% else %>
-              <h2 class="fn-18 lh-1">Coming Soon</h2>
+              <h2 class="fn-18 lh-1"><%= I18n.t("global.coming_soon") %></h2>
             <% end %>
           </div>
         </div>
@@ -154,12 +161,12 @@
               <button class="carousel-control-prev position-absolute top-0" type="button"
                 data-bs-target="#projectDescCarousel_<%= index %>" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
+                <span class="visually-hidden"><%= I18n.t("global.previous") %></span>
               </button>
               <button class="carousel-control-next position-absolute top-0 end-0" type="button"
                 data-bs-target="#projectDescCarousel_<%= index %>" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
+                <span class="visually-hidden"><%= I18n.t("global.next") %></span>
               </button>
             </div>
           </div>

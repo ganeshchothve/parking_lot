@@ -6,6 +6,7 @@ module BulkUpload
     end
 
     def process_csv(csv)
+      booking_portal_client = bur.client
       if project = bur.project.presence
         modes = {
           'Cheque' => 'cheque',
@@ -126,7 +127,7 @@ module BulkUpload
                     next
                   end
                 end
-
+                attrs[:booking_portal_client] = booking_portal_client
                 receipt = ::Receipt.new(attrs)
                 if receipt.save
                   bur.success_count += 1

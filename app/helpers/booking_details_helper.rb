@@ -8,7 +8,7 @@ module BookingDetailsHelper
     if (current_user.role?('channel_partner') || current_user.manager_role?('channel_partner') )
       data.collect{|d| ["#{d.dig('_id', 'bedrooms')} BHK", d.dig('_id', 'bedrooms')]}
     else
-      data.collect{|d| [ "#{d.dig('_id', 'bedrooms')} BHK starting at #{number_to_indian_currency(d.dig('min_agreement_price') ) }".html_safe, d.dig('_id', 'bedrooms') ]}
+      data.collect{|d| [ "#{d.dig('_id', 'bedrooms')} BHK #{I18n.t("controller.searches.text.starting_at")} #{number_to_indian_currency(d.dig('min_agreement_price') ) }".html_safe, d.dig('_id', 'bedrooms') ]}
     end
   end
 

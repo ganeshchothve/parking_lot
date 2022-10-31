@@ -92,4 +92,18 @@ class Sms
     out.present? ? out : "No SMS data present."
   end
 
+  class << self
+
+    def user_based_scope user, params = {}
+      if user.role?(:superadmin)
+        custom_scope = {}
+      else
+        custom_scope = {}
+      end
+      custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
+      custom_scope
+    end
+
+  end
+
 end

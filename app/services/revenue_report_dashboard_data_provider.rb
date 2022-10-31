@@ -1,6 +1,6 @@
 module RevenueReportDashboardDataProvider
-  def self.tentative_reports(current_user, params={})
-    invoice_matcher = set_invoice_matcher("tentative", params, client=Client.first)
+  def self.tentative_reports(current_user, params={}, client)
+    invoice_matcher = set_invoice_matcher("tentative", params, client)
     invoiceable_matcher = set_invoiceable_matcher("tentative", params)
     data = Invoice.collection.aggregate([
     {
@@ -90,8 +90,8 @@ module RevenueReportDashboardDataProvider
     project_wise_tentative_amount
   end
 
-  def self.actual_reports(current_user, params={})
-    invoice_matcher = set_invoice_matcher("actual", params, client=Client.first)
+  def self.actual_reports(current_user, params={}, client)
+    invoice_matcher = set_invoice_matcher("actual", params, client)
     invoiceable_matcher = set_invoiceable_matcher("actual", params)
     data = Invoice.collection.aggregate([
     {
@@ -184,6 +184,7 @@ module RevenueReportDashboardDataProvider
     else
       matcher[:brokerage_type] = client.launchpad_portal ? 'sub_brokerage' : 'brokerage'
     end
+    matcher[:booking_portal_client_id] = client.id
     matcher
   end
 

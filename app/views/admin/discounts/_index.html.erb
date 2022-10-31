@@ -1,0 +1,56 @@
+<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
+  <thead class="th-default">
+    <thead>
+      <tr class="bg-gradient-cd white">
+        <th><%= t('mongoid.attributes.discount.name') %></th>
+        <th><%= t('mongoid.attributes.discount.start_token_number') %></th>
+        <th><%= t('mongoid.attributes.discount.end_token_number') %></th>
+        <th><%= t('mongoid.attributes.discount.project') %></th>
+        <th><%= t('mongoid.attributes.discout.token_type') %></th>
+        <th class="text-right"><%= I18n.t("global.actions") %></th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+    <% discounts.each do |discount| %>
+      <tr>
+        <td>
+          <%= link_to discount.name, admin_discount_path(discount) %>
+        </td>
+        <td>
+          <%= discount.start_token_number %>
+        </td>
+        <td>
+          <%= discount.end_token_number %>
+        </td>
+        <td>
+          <%= discount.project.try(:name) %>
+        </td>
+        <td>
+          <%= discount.token_type.try(:name) %>
+        </td>
+        <td>
+          <div class="dropdown show text-right">
+            <a class="btn table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v theme-txt-color" aria-hidden="true"></i></a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+              <%= link_to 'Edit', edit_admin_discount_path(discount), class: 'modal-remote-form-link dropdown-item' %>
+              <%= link_to 'Delete', admin_discount_path(discount), class: 'dropdown-item', method: :delete %>
+            </div>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="col-lg-12 py-3 bg-white mb-2 px-2">
+  <div class="row">
+    <div class="col-lg-6">
+      <p class="table-entry mb-0 ps-2 pt-2"><%= page_entries_info discounts %></p>
+    </div>
+    <div class="col-lg-6 table-pagination">
+      <%= will_paginate discounts, list_classes: %w(pagination justify-content-end) %>
+    </div>
+  </div>
+</div>
+

@@ -22,7 +22,7 @@ class Admin::SchemesController < AdminController
 
     respond_to do |format|
       if @scheme.save
-        format.html { redirect_to admin_schemes_path, notice: 'Scheme registered successfully and sent for approval.' }
+        format.html { redirect_to admin_schemes_path, notice: I18n.t("controller.schemes.notice.scheme_registered") }
         format.json { render json: @scheme, status: :created }
       else
         format.html { render :new }
@@ -40,7 +40,7 @@ class Admin::SchemesController < AdminController
     @scheme.approved_by = current_user
     respond_to do |format|
       if @scheme.save
-        format.html { redirect_to admin_schemes_path, notice: 'Scheme was successfully updated.' }
+        format.html { redirect_to admin_schemes_path, notice: I18n.t("controller.schemes.notice.updated") }
         format.json { render json: @scheme }
       else
         format.html { render :edit }
@@ -55,7 +55,7 @@ class Admin::SchemesController < AdminController
     @scheme.approved_by = current_user if @scheme.event.present? && @scheme.event == 'approved' && @scheme.status != 'approved'
     respond_to do |format|
       if @scheme.save
-        format.html { redirect_to admin_schemes_path, notice: 'Scheme was successfully updated.' }
+        format.html { redirect_to admin_schemes_path, notice: I18n.t("controller.schemes.notice.updated") }
       else
         format.html { render :edit }
         format.json { render json: @scheme.errors, status: :unprocessable_entity }

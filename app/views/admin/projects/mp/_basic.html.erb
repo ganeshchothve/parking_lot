@@ -1,0 +1,214 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :name, class: 'label-required' %>
+      <%= f.text_field :name, class: 'form-control', autofocus: true, required: 'required', disabled: !policy([:admin, project]).editable_field?("name") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :developer_name %>
+      <%= f.text_field :developer_name, class: 'form-control', autofocus: true, disabled: !policy([:admin, project]).editable_field?("developer_name") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :project_type %>
+      <%= f.select :project_type, Project::PROJECT_TYPES.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", multiple: true, disabled: (policy([current_user_role_group, project]).editable_field?("project_type") ? false : true) %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :category %>
+      <%= f.select :category, Project::CATEGORIES.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", multiple: true, disabled: (policy([current_user_role_group, project]).editable_field?("category") ? false : true) %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :project_segment %>
+      <%= f.select :project_segment, Project::SEGMENTS.collect{|x| [x.titleize, x]}.sort{|x, y| x[0] <=> y[0]}, {prompt: 'Select'}, class: "selectize", multiple: true, disabled: (policy([current_user_role_group, project]).editable_field?("project_segment") ? false : true) %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :micro_market %>
+      <%= f.text_field :micro_market, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("micro_market") %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :possession %>
+      <%= f.text_field :possession, class: 'form-control datepicker', disabled: !policy([:admin, project]).editable_field?("possession"), value: f.object.possession.present? ? f.object.possession.strftime("%d/%m/%Y") : nil %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :registration_name %>
+      <%= f.text_field :registration_name, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("registration_name") %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :rera_registration_no %>
+        <%= f.text_field :rera_registration_no, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("rera_registration_no") %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :gst_number, class: '' %>
+        <%= f.text_field :gst_number, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("gst_number") %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :price_starting_from %>
+        <%= f.number_field :price_starting_from, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("price_starting_from"), min: "0" %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :price_upto %>
+        <%= f.number_field :price_upto, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("price_upto"), min: "0" %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :area_unit, class: '' %>
+        <%= f.text_field :area_unit, class: 'form-control', disabled: (policy([:admin, @project]).editable_field?("area_unit") ? false : true) %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :cancellation_amount, class: '' %>
+        <%= f.text_field :cancellation_amount, class: 'form-control', disabled: (policy([:admin, @project]).editable_field?("cancellation_amount") ? false : true) %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :blocking_days %>
+        <%= f.number_field :blocking_days, class: 'form-control', required: 'required', disabled: (policy([:admin, @project]).editable_field?("blocking_days") ? false : true), min: 0, max: 30 %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :holding_minutes %>
+        <%= f.text_field :holding_minutes, class: 'form-control', required: 'required', disabled: (policy([:admin, @project]).editable_field?("holding_minutes") ? false : true), min: 0, max: 30 %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :blocking_amount %>
+        <%= f.number_field :blocking_amount, class: 'form-control', required: 'required', disabled: (policy([:admin, @project]).editable_field?("blocking_amount") ? false : true), min: 0 %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :cin_number, class: '' %>
+        <%= f.text_field :cin_number, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("cin_number") %>
+      </div>
+    </div>
+  </div>
+  <div class='row'>
+    <div class="mb-3 col-md-6">
+      <%= f.label :latitude %>
+      <%= f.text_field :latitude, class:'form-control', required: 'required', disabled: !policy([:admin, project]).editable_field?("latitude")  %>
+    </div>
+    <div class="mb-3 col-md-6">
+      <%= f.label :longitude %>
+      <%= f.text_field :longitude, class:'form-control', required: 'required',  disabled: !policy([:admin, project]).editable_field?("longitude") %>
+    </div>
+  </div>
+  <div class='row'>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :booking_portal_domains %>
+        <%= f.select :booking_portal_domains, project.booking_portal_domains, {}, class: 'selectize-tags domain', multiple: true, required: false, disabled: (policy([:admin, project]).editable_field?("booking_portal_domains") ? false : true) %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group mb-3">
+        <div class="form-check form-check-inline">
+          <%= f.check_box :enable_booking_with_kyc, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("enable_booking_with_kyc") }, "Yes", "No" %>
+          <%= f.label :enable_booking_with_kyc, class: "form-check-label d-inline-block ms-2 enable-booking-with-kyc" %>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :foyer_link %>
+        <%= f.text_field :foyer_link, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("foyer_link") %>
+      </div>
+    </div>
+  </div>
+  <div class='row'>
+    <div class="col-md-6">
+      <% if policy([:admin, project]).editable_field?("payment_enabled") %>
+        <div class="mb-3">
+          <%= f.label :payment_enabled, class: 'mb-2' %>
+          <div class="form-check form-check-inline">
+            <%= f.radio_button :payment_enabled, true, class: "form-check-input wd-22" %>
+            <%= f.label :payment_enabled, "Yes", class: "form-check-label d-inline-block ms-2" %>
+          </div>
+          <div class="form-check form-check-inline">
+            <%= f.radio_button :payment_enabled, false, class: "form-check-input wd-22" %>
+            <%= f.label :payment_enabled, "No", class: "form-check-label d-inline-block ms-2" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="col-md-6">
+      <% if policy([:admin, project]).editable_field?("enable_inventory") %>
+        <div class="mb-3">
+          <%= f.label :enable_inventory, class: 'mb-2' %>
+          <div class="form-check form-check-inline">
+            <%= f.radio_button :enable_inventory, true, class: "form-check-input wd-22" %>
+            <%= f.label :enable_inventory, "Yes", class: "form-check-label d-inline-block ms-2" %>
+          </div>
+          <div class="form-check form-check-inline">
+            <%= f.radio_button :enable_inventory, false, class: "form-check-input wd-22" %>
+            <%= f.label :enable_inventory, "No", class: "form-check-label d-inline-block ms-2" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="mb-3">
+        <%= f.label :terms_and_conditions %>
+        <%= f.text_area :terms_and_conditions, class: 'form-control summernote', disabled: !policy([:admin, @project]).editable_field?("terms_and_conditions") %>
+      </div>
+    </div>
+  </div>
+  <% if policy([:admin, project]).editable_field?("disable_project") %>
+    <div class='row'>
+      <div class="col-md-12">
+        <div class="mb-3">
+          <%= f.label :disable_project %>
+          <%= f.fields_for :disable_project do |dp_form| %>
+            <% f.object.disable_project.with_indifferent_access.each do |k, v| %>
+              <div class="form-check form-check-inline">
+                <%= dp_form.check_box k, {class: "form-check-input wd-22", checked: v}, true %>
+                <%= dp_form.label :k, "Disable #{k.to_s.titleize}", class: "form-check-label d-inline-block ms-2" %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

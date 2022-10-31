@@ -12,18 +12,18 @@
           <div class="modal-body theme-form">
             <nav>
               <div class="nav nav-tabs theme-tab" role="tablist">
-                <a class="nav-item nav-link active" data-bs-toggle="tab" href="#nav-project-unit-basic" role="tab">Basic Details</a>
+                <a class="nav-item nav-link active" data-bs-toggle="tab" href="#nav-project-unit-basic" role="tab"><%= I18n.t("global.tabs.basic_details") %></a>
                 <% if policy([:admin, @project_unit]).editable_field?("data_attributes") %>
-                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-project-unit-data" role="tab">Data</a>
+                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-project-unit-data" role="tab"><%= I18n.t("mongoid.attributes.project_unit.data") %></a>
                 <% end %>
                 <% if policy([:admin, @project_unit]).editable_field?("costs_attributes") %>
-                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-project-unit-costs" role="tab">Costs</a>
+                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-project-unit-costs" role="tab"><%= I18n.t("mongoid.attributes.project_unit.costs") %></a>
                 <% end %>
                 <% if policy([ current_user_role_group, Asset.new(assetable: @project_unit)]).create? %>
-                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-project-unit-floor_plan" role="tab">Floor Plan</a>
+                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-project-unit-floor_plan" role="tab"><%= I18n.t("mongoid.attributes.project_unit.floor_plan") %></a>
                 <% end %>
                 <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
-                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-project-unit-crm-ids" role="tab">CRM IDs</a>
+                  <a class="nav-item nav-link" data-bs-toggle="tab" href="#nav-project-unit-crm-ids" role="tab"><%= I18n.t("global.tabs.crm_ids") %></a>
                 <% end %>
               </div>
             </nav>
@@ -39,7 +39,7 @@
                   <%= render "admin/datum/form_fields", f: data_form %>
                   <% end %>
                 </div>
-                <%= f.link_to_add "Add", :data, :data => { :target => "#data_container" } %>
+                <%= f.link_to_add I18n.t("global.add"), :data, :data => { :target => "#data_container" } %>
               </div>
               <% end %>
               <% if policy([:admin, @project_unit]).editable_field?("costs_attributes") %>
@@ -49,7 +49,7 @@
                     <%= render "admin/cost/form_fields", f: costs_form %>
                     <% end %>
                   </div>
-                  <%= f.link_to_add "Add", :costs, :data => { :target => "#costs_container" } %>
+                  <%= f.link_to_add I18n.t("global.add"), :costs, :data => { :target => "#costs_container" } %>
                 </div>
               <% end %>
               <% if policy([ current_user_role_group, Asset.new(assetable: @project_unit)]).create? %>
@@ -71,7 +71,7 @@
             </div>
           </div>
           <div class="modal-footer text-end">
-            <%= f.submit "Submit", class: 'btn btn-primary' %>
+            <%= f.submit I18n.t("global.submit"), class: 'btn btn-primary' %>
           </div>
         </div>
       </div>

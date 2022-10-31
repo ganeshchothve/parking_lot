@@ -23,7 +23,7 @@ class Admin::Projects::TokenTypesController < AdminController
   # GET /admin/projects/:project_id/token_types
   #
   def new
-    @token_type = @project.token_types.build
+    @token_type = @project.token_types.build(booking_portal_client: current_client)
     render layout: false
   end
 
@@ -39,12 +39,12 @@ class Admin::Projects::TokenTypesController < AdminController
   # POST /admin/projects/:project_id/token_types/:id
   #
   def create
-    @token_type = @project.token_types.build
+    @token_type = @project.token_types.build(booking_portal_client: current_client)
     @token_type.assign_attributes(permitted_attributes([current_user_role_group, @token_type]))
 
     respond_to do |format|
       if @token_type.save
-        format.html { redirect_to admin_project_token_types_path(), notice: 'Token Type was successfully created.' }
+        format.html { redirect_to admin_project_token_types_path(), notice: I18n.t("controller.token_types.notice.created") }
         format.json { render json: @token_type, status: :created }
       else
         errors = @token_type.errors.full_messages
@@ -64,7 +64,7 @@ class Admin::Projects::TokenTypesController < AdminController
     parameters = permitted_attributes([:admin, @token_type])
     respond_to do |format|
       if @token_type.update(parameters)
-        format.html { redirect_to request.referrer || admin_project_token_types_path, notice: 'Token Type successfully updated.' }
+        format.html { redirect_to request.referrer || admin_project_token_types_path, notice: I18n.t("controller.token_types.notice.updated") }
       else
         errors = @token_type.errors.full_messages
         errors.uniq!
@@ -77,9 +77,9 @@ class Admin::Projects::TokenTypesController < AdminController
   def token_init
     respond_to do |format|
       if @token_type.init
-        format.html {redirect_to admin_project_token_types_path, notice: "#{@token_type.name} Token Type activated successfully"}
+        format.html {redirect_to admin_project_token_types_path, notice: "#{@token_type.name}" + I18n.t("controller.token_types.notice.activated") }
       else
-        format.html {redirect_to admin_project_token_types_path, alert: "Not able to activate #{@token_type.name} Token Type due to some problem"}
+        format.html {redirect_to admin_project_token_types_path, alert: I18n.t("controller.token_types.alert.failed_to_activate", name: "#{@token_type.name}")}
       end
     end
   end
@@ -87,9 +87,9 @@ class Admin::Projects::TokenTypesController < AdminController
   def token_de_init
     respond_to do |format|
       if @token_type.de_init
-        format.html {redirect_to admin_project_token_types_path, notice: "#{@token_type.name} Token Type is deactivated"}
+        format.html {redirect_to admin_project_token_types_path, notice: "#{@token_type.name}" + I18n.t("controller.token_types.notice.deactivated") }
       else
-        format.html {redirect_to admin_project_token_types_path, alert: "Not able to deactivate #{@token_type.name} Token Type due to some problem"}
+        format.html {redirect_to admin_project_token_types_path, alert: I18n.t("controller.token_types.alert.failed_to_deactivate", name: "#{@token_type.name}")}
       end
     end
   end
@@ -98,12 +98,12 @@ class Admin::Projects::TokenTypesController < AdminController
 
   def set_project
     @project = Project.where(id: params[:project_id]).first
-    redirect_to dashboard_path, alert: 'Project not found' unless @project
+    redirect_to home_path(current_user), alert: I18n.t("controller.projects.alert.not_found") unless @project
   end
 
   def set_token_type
     @token_type = @project.token_types.where(id: params[:id]).first
-    redirect_to dashboard_path, alert: 'Token Type not found' unless @token_type
+    redirect_to home_path(current_user), alert: I18n.t("controller.token_types.alert.not_found") unless @token_type
   end
 
   def authorize_resource

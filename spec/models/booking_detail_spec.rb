@@ -40,7 +40,7 @@ RSpec.describe BookingDetail, type: :model do
       @booking_detail.under_negotiation!
       receipt = create(:receipt, user: @user, booking_detail: @booking_detail, total_amount: @client.blocking_amount, status: 'clearance_pending')
       receipt.success!
-      receipt1 = create(:receipt, user: @user, booking_detail: @booking_detail, total_amount: @project_unit.booking_price, status: 'clearance_pending')
+      receipt1 = create(:receipt, user: @user, booking_detail: @booking_detail, total_amount: @project_unit.get_booking_price, status: 'clearance_pending')
       receipt1.success!
       expect(@booking_detail.reload.status).to eq('booked_confirmed')
     end
@@ -150,7 +150,7 @@ RSpec.describe BookingDetail, type: :model do
     context "for pending balance" do
       context "without receipts on booking detail" do
         it "should return complete booking price" do
-          expect(@booking_detail.pending_balance).to eq(@project_unit.booking_price)
+          expect(@booking_detail.pending_balance).to eq(@project_unit.get_booking_price)
         end
       end
 
@@ -159,9 +159,9 @@ RSpec.describe BookingDetail, type: :model do
           receipt_1 = FactoryBot.create(:receipt, status: 'pending', booking_detail: @booking_detail, user_id: @user.id)
           receipt_2 = FactoryBot.create(:receipt, status: 'clearance_pending', booking_detail: @booking_detail, user_id: @user.id)
           receipt_3 = FactoryBot.create(:receipt, status: 'success', booking_detail: @booking_detail, user_id: @user.id)
-          _pending_balance = @project_unit.booking_price - receipt_2.total_amount - receipt_3.total_amount
+          _pending_balance = @project_unit.get_booking_price - receipt_2.total_amount - receipt_3.total_amount
           expect(@booking_detail.pending_balance({user_id: @user.id})).to eq(_pending_balance.to_i)
-          _pending_balance_strict = @project_unit.booking_price - receipt_3.total_amount
+          _pending_balance_strict = @project_unit.get_booking_price - receipt_3.total_amount
           expect(@booking_detail.pending_balance({user_id: @user.id, strict: true})).to eq(_pending_balance_strict.to_i)
         end
       end

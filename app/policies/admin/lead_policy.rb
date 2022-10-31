@@ -1,7 +1,11 @@
 class Admin::LeadPolicy < LeadPolicy
 
   def index?
-    false
+    if user.role?(:superadmin)
+      out = !(user.buyer? || user.role.in?(%w(dev_sourcing_manager))) && user.selected_client.enable_leads?
+    else
+      out = !(user.buyer? || user.role.in?(%w(dev_sourcing_manager))) && user.booking_portal_client.enable_leads?
+    end
     # out = !(user.buyer? || user.role.in?(%w(channel_partner cp_owner dev_sourcing_manager)))
     #out = out && user.active_channel_partner?
     #out = false if user.role.in?(%w(channel_partner cp_owner)) && !interested_project_present?
@@ -23,9 +27,10 @@ class Admin::LeadPolicy < LeadPolicy
     %w[superadmin admin sales_admin crm cp_admin billing_team cp].include?(user.role)
   end
 
-  def new?
+  def new?(current_project_id = nil)
     valid = true && user.role.in?(%w(superadmin admin gre crm account_manager account_manager_head) + User::CHANNEL_PARTNER_USERS + User::SALES_USER)
     valid = false if user.present? && user.role.in?(%w(channel_partner cp_owner)) && !(user.active_channel_partner? && interested_project_present?)
+    valid = valid && project_access_allowed?(current_project_id)
     @condition = 'project_not_subscribed' unless valid
     if record.is_a?(Lead)
       if !(record.project.is_active?)
@@ -58,14 +63,14 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def note_create?
-    user.role.in?(%w(channel_partner cp_owner)) && record.user.role.in?(User::BUYER_ROLES)
+    user.role.in?(%w(channel_partner cp_owner sales superadmin)) && record.user.role.in?(User::BUYER_ROLES)
   end
 
   def asset_create?
     valid = %w[admin sales sales_admin crm].include?(user.role)
-    if user.role?(:sales) && is_assigned_lead?
-      valid = is_lead_accepted? && valid
-    end
+    # if user.role?(:sales) && is_assigned_lead?
+    #   valid = is_lead_accepted? && valid
+    # end
     valid
   end
 
@@ -90,7 +95,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def send_payment_link?
-    record.user.confirmed?
+    record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && (user.booking_portal_client.enable_payment_with_kyc ? record.kyc_ready? : true )
   end
 
   def search_by?
@@ -102,7 +107,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def move_to_next_state?
-    if is_lead_accepted?
+    if user.role?('sales')
       record.may_dropoff? && (record.closing_manager_id == user.id)
     else
       (user.role.in?(%w(gre team_lead)) && (record.is_a?(Lead) || record.role?('sales'))) ||
@@ -113,11 +118,11 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def show_existing_customer?
-    %w(sales).exclude?(user.role)
+    %w(sales).exclude?(user.role) && (user.booking_portal_client.enable_leads || user.booking_portal_client.enable_site_visit?)
   end
 
   def reassign_lead?
-    current_client.team_lead_dashboard_access_roles.include?(user.role)
+    user.booking_portal_client.team_lead_dashboard_access_roles.include?(user.role) || user.role?("team_lead")
   end
 
   def reassign_sales?
@@ -140,11 +145,20 @@ class Admin::LeadPolicy < LeadPolicy
     new_kylas_associated_lead?
   end
 
+  def new_kylas_lead?
+    user.role.in?(%w(admin sales))
+  end
+
+  def create_kylas_lead?
+    new_kylas_lead?
+  end
+
   def permitted_attributes(params = {})
     attributes = super || []
     attributes += [:first_name, :last_name, :email, :phone, :project_id, site_visits_attributes: Pundit.policy(user, [:admin, SiteVisit.new]).permitted_attributes] if record.new_record?
     if user.present? && user.role.in?(%w(superadmin admin gre sales))
-      attributes += [:manager_id, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
+      attributes += [:manager_id] if user.booking_portal_client.try(:enable_channel_partners?)
+      attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
     end
     attributes.uniq
   end

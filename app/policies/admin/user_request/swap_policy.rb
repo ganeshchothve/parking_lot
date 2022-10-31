@@ -2,7 +2,7 @@ class Admin::UserRequest::SwapPolicy < Admin::UserRequestPolicy
   # def index? from Admin::UserRequestPolicy
 
   def edit?
-    super && current_client.enable_actual_inventory?(user)
+    super && user.booking_portal_client.enable_actual_inventory?(user)
   end
 
   def create?

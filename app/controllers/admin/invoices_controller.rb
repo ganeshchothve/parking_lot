@@ -87,7 +87,7 @@ class Admin::InvoicesController < AdminController
     else
       BrokerageExportWorker.perform_async(current_user.id.to_s, params[:fltrs].as_json, timezone: Time.zone.name)
     end
-    flash[:notice] = 'Your export has been scheduled and will be emailed to you in some time'
+    flash[:notice] = I18n.t("global.export_scheduled")
     redirect_to admin_invoices_path(fltrs: params[:fltrs].as_json)
   end
 
@@ -112,7 +112,7 @@ class Admin::InvoicesController < AdminController
     })
     email.sent!
     @invoice.pending_approval!
-    redirect_to admin_invoices_path, notice: "Successfully sent."
+    redirect_to admin_invoices_path, notice: I18n.t("controller.invoices.notice.sent")
   end
 
   private
@@ -137,7 +137,7 @@ class Admin::InvoicesController < AdminController
     else
       @invoice = Invoice.where(id: params[:id]).first
     end
-    redirect_to dashboard_path, alert: 'Invoice not found' unless @invoice.present?
+    redirect_to home_path(current_user), alert: 'Invoice not found' unless @invoice.present?
   end
 
   def authorize_resource

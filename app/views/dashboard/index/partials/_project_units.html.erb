@@ -15,12 +15,12 @@
           <div class="row">
             <div class="col-md-11">
               <div class="mb-3">
-                <%= select_tag "unit_fltrs[group_by]", options_for_select(DashboardDataProvider.project_units_available_group_by.collect{|x| [x[:text], x[:id]]}, (params[:unit_fltrs].present? && params[:unit_fltrs][:group_by].present? ? params[:unit_fltrs][:group_by] : [])), {class: "selectize", prompt: "Select", multiple: true} %>
+                <%= select_tag "unit_fltrs[group_by]", options_for_select(DashboardDataProvider.project_units_available_group_by.collect{|x| [x[:text], x[:id]]}, (params[:unit_fltrs].present? && params[:unit_fltrs][:group_by].present? ? params[:unit_fltrs][:group_by] : [])), {class: "selectize", prompt: I18n.t("global.select"), multiple: true} %>
               </div>
             </div>
             <div class="col-md-1">
               <div class="mb-3">
-                <%= submit_tag :Apply, class: "btn btn-primary float-md-right" %>
+                <%= submit_tag I18n.t("global.apply"), class: "btn btn-primary float-md-right" %>
               </div>
             </div>
           </div>
@@ -30,18 +30,18 @@
             <thead>
               <tr class="bg-primary white">
                 <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("project_tower_id")) || params[:unit_fltrs].nil? %>
-                <th>Tower</th>
+                <th><%= I18n.t("mongoid.attributes.project_unit/headers.tower") %></th>
                 <% end %>
                 <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("bedrooms")) || params[:unit_fltrs].nil? %>
-                <th>Bedrooms</th>
+                <th><%= I18n.t("mongoid.attributes.project_unit/headers.bedrooms") %></th>
                 <% end %>
                 <% if (params[:unit_fltrs] && params[:unit_fltrs][:group_by] && params[:unit_fltrs][:group_by].include?("status")) || params[:unit_fltrs].nil? %>
-                <th>Status</th>
+                <th><%= I18n.t("mongoid.attributes.project_unit/headers.status") %></th>
                 <% end %>
-                <th class="text-right">Count</th>
-                <th class="text-right">Total Agreement Price</th>
-                <th class="text-right">Total All Inclusive Price</th>
-                <th class="text-right">Actions</th>
+                <th class="text-right"><%= I18n.t("mongoid.attributes.project_unit/headers.count") %></th>
+                <th class="text-right"><%= I18n.t("mongoid.attributes.project_unit/headers.total_agreement_price") %></th>
+                <th class="text-right"><%= I18n.t("mongoid.attributes.project_unit/headers.total_inclusive_price") %></th>
+                <th class="text-right"><%= I18n.t("global.actions") %></th>
               </tr>
             </thead>
             <tbody>

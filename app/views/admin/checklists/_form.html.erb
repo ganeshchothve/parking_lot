@@ -35,7 +35,7 @@
             <div class = 'col-6'>
               <div class="mb-3">
                 <%= checklist.label :tracked_by, class: 'label-required' %>
-                <%= checklist.select :tracked_by, options_for_select(Checklist::TRACKED_BY.collect {|x| [x.titleize, x]}, checklist.object.tracked_by), {prompt: 'Select'}, class: 'selectize', required: 'required', disabled: !policy([:admin, @checklist]).editable_field?("tracked_by") %>
+                <%= checklist.select :tracked_by, options_for_select(Checklist::TRACKED_BY.collect {|x| [I18n.t("mongoid.attributes.checklist/tracked_by.#{x.to_s}"), x]}, checklist.object.tracked_by), {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: !policy([:admin, @checklist]).editable_field?("tracked_by") %>
               </div>
             </div>
             <div class = 'col-6'>
@@ -48,7 +48,7 @@
         <% end %>
       </div>
       <div class="modal-footer text-end">
-        <%= f.submit "Save", class: "btn btn-primary" %>
+        <%= f.submit I18n.t("global.save"), class: "btn btn-primary" %>
       </div>
     </div>
   </div>

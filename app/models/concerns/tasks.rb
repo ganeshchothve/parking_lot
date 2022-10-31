@@ -24,6 +24,7 @@ module Tasks
                       key: checklist.key,
                       tracked_by: checklist.tracked_by,
                       order: checklist.order,
+                      booking_portal_client: self.booking_portal_client
                       )
       end
     end

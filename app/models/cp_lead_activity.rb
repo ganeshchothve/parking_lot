@@ -2,6 +2,7 @@ class CpLeadActivity
   include Mongoid::Document
   include Mongoid::Timestamps
   extend FilterByCriteria
+  extend DocumentsConcern
 
   COUNT_STATUS = %w(fresh_lead active_in_same_cp no_count accompanied_credit accompanied_count_to_cp count_given)
   LEAD_STATUS = %w(already_exists registered)
@@ -18,7 +19,7 @@ class CpLeadActivity
   belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :lead
   belongs_to :user
-  belongs_to :channel_partner
+  belongs_to :channel_partner, optional: true
   belongs_to :cp_manager, class_name: 'User', optional: true
   belongs_to :cp_admin, class_name: 'User', optional: true
   has_many :assets, as: :assetable
@@ -70,6 +71,7 @@ class CpLeadActivity
       cp_ids = User.all.cp.where(manager_id: user.id).distinct(:id)
       custom_scope = { user_id: { '$in': User.where(role: 'channel_partner', manager_id: {'$in': cp_ids}).distinct(:id) } }
     end
+    custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
     custom_scope
   end
 

@@ -1,7 +1,8 @@
 class Admin::TemplatesController < AdminController
-  before_action :set_template, except: [:index, :new, :create]
+  before_action :set_template, except: [:index, :new, :create, :choose_template_for_print, :print_template]
   before_action :authorize_resource
   around_action :apply_policy_scope, only: [:index]
+  before_action :set_subject_class, only: [:choose_template_for_print, :print_template]
 
   layout :set_layout
 
@@ -42,11 +43,26 @@ class Admin::TemplatesController < AdminController
     _params = Rack::Utils.parse_nested_query(URI(request.referrer).query)
     respond_to do |format|
       if @template.save
-        format.html { redirect_to admin_client_templates_path, notice: 'Template was successfully updated.' }
+        format.html { redirect_to admin_client_templates_path, notice: I18n.t("controller.templates.notice.updated") }
         format.json { render json: @template, location: admin_client_templates_path(fltrs: _params['fltrs'] || {}, page: _params['page'] || 1) }
       else
         format.html { render :edit }
         format.json { render json: {errors: @template.errors.full_messages.uniq}, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def choose_template_for_print
+    render layout: false
+  end
+
+  def print_template
+    respond_to do |format|
+      @template = Template::CustomTemplate.where(id: params[:template_id]).first
+      if @template.present?
+        format.html { render template: 'admin/templates/print_template' }
+      else
+        format.html { redirect_to request.referer, alert: "Template not found" }
       end
     end
   end
@@ -56,8 +72,13 @@ class Admin::TemplatesController < AdminController
     @template = ::Template.find(params[:id])
   end
 
+  def set_subject_class
+    @subject_class = params[:subject_class].classify.constantize.to_s
+    @subject_class_resource = params[:subject_class].classify.constantize.find params[:subject_class_id]
+  end
+
   def authorize_resource
-    if %w(index new create).include?(params[:action])
+    if %w(index new create choose_template_for_print print_template).include?(params[:action])
       authorize [:admin, ::Template]
     else
       authorize [:admin, @template]

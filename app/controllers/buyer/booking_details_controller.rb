@@ -23,19 +23,10 @@ class Buyer::BookingDetailsController < BuyerController
 
   def booking
     if @receipt.save
-      if @receipt.status == 'pending' # if we are just tagging an already successful receipt, we dont need to send the user to payment gateway
-        if @receipt.payment_gateway_service.present?
-          redirect_to @receipt.payment_gateway_service.gateway_url(@booking_detail.search.id)
-        else
-          @receipt.update_attributes(status: 'failed')
-          flash[:notice] = "We couldn't redirect you to the payment gateway, please try again"
-          redirect_to dashboard_path
-        end
-      else
-        redirect_to buyer_user_path(@booking_detail.user)
-      end
+      @receipt.change_booking_detail_status
+      redirect_to home_path(current_user), notice: t('controller.booking_details.booking_successful')
     else
-      redirect_to checkout_user_search_path(@booking_detail.search)
+      redirect_to search_path(@booking_detail.search), alert: @receipt.errors.full_messages
     end
   end
 
@@ -47,12 +38,12 @@ class Buyer::BookingDetailsController < BuyerController
 
   def set_booking_detail
     @booking_detail = BookingDetail.where(_id: params[:id]).first
-    redirect_to dashboard_path, alert: t('controller.booking_details.set_booking_detail_missing') if @booking_detail.blank?
+    redirect_to home_path(current_user), alert: t('controller.booking_details.set_booking_detail_missing') if @booking_detail.blank?
   end
 
   def set_project_unit
     @project_unit = @booking_detail.project_unit
-    redirect_to dashboard_path, alert: t('controller.booking_details.set_project_unit_missing') if @project_unit.blank?
+    redirect_to home_path(current_user), alert: t('controller.booking_details.set_project_unit_missing') if @project_unit.blank?
   end
 
   def set_receipt

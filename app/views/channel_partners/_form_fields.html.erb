@@ -66,19 +66,18 @@
 <div class="row">
   <div class="col-md-6">
   <!-- Remove form-control class in select field and selectize  -->
-    <%= form.input :expertise, collection: ChannelPartner::EXPERTISE.collect{|x| [x.titleize, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("expertise"), as: :select, prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
+    <%= form.input :expertise, collection: I18n.t("mongoid.attributes.channel_partner/expertise").collect {|k,v| [v,v]}, disabled: !policy([:admin, @channel_partner]).editable_field?("expertise"), as: :select, prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
   </div>
   <div class="col-md-6">
-    <%= form.input :experience, collection: ChannelPartner::EXPERIENCE.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("experience"), as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
+    <%= form.input :experience, collection: I18n.t("mongoid.attributes.channel_partner/experience").collect {|k,v| [v,v]}, disabled: !policy([:admin, @channel_partner]).editable_field?("experience"), as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-6">
     <%= form.input :average_quarterly_business, required: false, disabled: !policy([:admin, @channel_partner]).editable_field?("average_quarterly_business"), as: :float %>
   </div>
   <div class="col-md-6">
-    <%= form.input :manager_id, collection: User.where(is_active: true, confirmed_at: {'$ne': nil}, role: "cp").collect{|x| [x.ds_name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), required: true, as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
+    <%= form.input :manager_id, collection: User.where(is_active: true, confirmed_at: {'$ne': nil}, role: "cp", booking_portal_client_id: current_client.id).collect{|x| [x.ds_name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), required: (!marketplace?), as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
   </div>
 </div>
 
@@ -89,24 +88,32 @@
   </div>
   <div class="col-md-12">
   <!-- Remove form-control class in select field and selectize  -->
-    <%= form.input :interested_services, collection: ChannelPartner::SERVICES.collect{|x| [x, x]}, disabled: !policy([:admin, @channel_partner]).editable_field?("interested_services"), prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
+    <%= form.input :interested_services, collection: I18n.t("mongoid.attributes.channel_partner/services").collect {|k,v| [v,v]}, disabled: !policy([:admin, @channel_partner]).editable_field?("interested_services"), prompt: :translate, input_html: {multiple: true, class: 'selectize'} %>
   </div>
 </div>
 <div class="row">
   <div class="col-md-6">
-    <%= form.input :city, collection: current_client.regions.pluck(:city), disabled: !policy([:admin, @channel_partner]).editable_field?("city"), prompt: 'Select', input_html: {class: 'selectize city_select'} %>
+    <%= form.input :city, collection: current_client.regions.pluck(:city), disabled: !policy([:admin, @channel_partner]).editable_field?("city"), prompt: I18n.t("global.select"), input_html: {class: 'selectize city_select'} %>
   </div>
   <div class="col-md-6">
-    <%= form.input :regions, collection: (@channel_partner.city.present? ? current_client.regions.where(city: @channel_partner.city).pluck(:partner_regions).first : []), selected: @channel_partner.regions, disabled: !policy([:admin, @channel_partner]).editable_field?("regions"), prompt: :translate, input_html: {multiple: true, class: 'selectize regions_select', data: {url: get_regions_admin_client_path}, placeholder: 'Select City First'} %>
+    <%= form.input :regions, collection: (@channel_partner.city.present? ? current_client.regions.where(city: @channel_partner.city).pluck(:partner_regions).first : []), selected: @channel_partner.regions, disabled: !policy([:admin, @channel_partner]).editable_field?("regions"), prompt: :translate, input_html: {multiple: true, class: 'selectize regions_select', data: {url: get_regions_admin_client_path}, placeholder:  I18n.t("global.link_to.select_city_first")} %>
   </div>
 </div>
+
+ <% if policy([:admin, @channel_partner]).editable_field?("project_ids") %>
+  <div class="mb-3">
+    <%= form.label :project_ids, class: "control-label" %>
+    <%= form.select :project_ids, options_from_collection_for_select(@channel_partner.project_ids.present? ? Project.in(id: @channel_partner.project_ids) : [], "id", "ds_name", @channel_partner.project_ids), {}, class: 'selectize-remote', multiple: true, data: {url: admin_projects_path}, disabled: !policy([:admin, @channel_partner]).editable_field?("project_ids") %>
+  </div>
+<% end %>
 
 <% if policy([:admin, @channel_partner]).editable_field?("event") %>
   <% statuses = available_chanel_partner_statuses(@channel_partner) %>
   <% if statuses.present? %>
     <div class="row">
       <div class="col-md-6">
-        <%= form.input :event, collection: statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, as: :select, prompt: :translate, input_html: { class: 'selectize', disabled: !policy([:admin, @channel_partner]).editable_field?("event") } %>
+        <% events = @channel_partner.aasm.events(permitted: true).collect{|x| x.name.to_s} %>
+        <%= form.input :event, collection: events.collect {|k| [I18n.t("mongoid.attributes.channel_partner/events.#{k}"), k.to_s]}, as: :select, prompt: :translate, input_html: { class: 'selectize', disabled: !policy([:admin, @channel_partner]).editable_field?("event") } %>
       </div>
       <div class="col-md-12 status_change_field">
         <%= form.label :status_change_reason, class: '' %>
@@ -119,7 +126,7 @@
 <% if policy([:admin, @channel_partner]).editable_field?("bank_detail_attributes") %>
   <div class="box-card mt-3">
     <div class="box-header bg-gradient br-rd-tr-4">
-      <h2><strong>Bank Details</strong></h2>
+      <h2><strong><%= I18n.t("global.tabs.bank_details") %></strong></h2>
     </div>
     <div class="box-content br-rd-bl-4 bg-white p-0 pt-1">
       <div class="mb-3">
@@ -135,7 +142,7 @@
 <% if policy([:admin, @channel_partner]).editable_field?("address_attributes") %>
   <div class="card mt-2">
     <div class="card-header bg-white">
-      <h5 class="mb-0 py-2 fn-18 theme-txt-color">Address</h5>
+      <h5 class="mb-0 py-2 fn-18 theme-txt-color"><%= I18n.t("global.tabs.address") %></h5>
     </div>
     <div class="card-body box-content rounded-bottom bg-white p-0 pt-3">
       <div class="mb-1 px-3">
@@ -150,7 +157,7 @@
 
 <% if action_name == 'edit' && policy(ThirdPartyReference).editable_field?('reference_id') %>
   <br>
-  <h5>CRM IDs</h5>
+  <h5><%= I18n.t("global.tabs.crm_ids") %></h5>
   <hr/>
   <%= render 'admin/crm/shared/third_party_references_form', f: form %>
 <% end %>

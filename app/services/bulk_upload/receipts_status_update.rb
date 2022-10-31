@@ -37,7 +37,7 @@ module BulkUpload
           attrs[:comments] = row.field(3).to_s.strip if row.field(3).to_s.strip.present?
           attrs[:payment_identifier] = row.field(4).to_s.strip if row.field(4).to_s.strip.present?
           attrs[:tracking_id] = row.field(5).to_s.strip if row.field(5).to_s.strip.present?
-
+          attrs[:booking_portal_client_id] = bur.client_id
           if receipt.update_attributes(attrs)
             bur.success_count += 1
           else
@@ -45,7 +45,7 @@ module BulkUpload
             bur.failure_count += 1
           end
         else
-          (bur.upload_errors.find_or_initialize_by(row: row.fields).messages << 'Receipt not found').uniq
+          (bur.upload_errors.find_or_initialize_by(row: row.fields).messages << I18n.t("controller.receipts.alert.not_found")).uniq
           bur.failure_count += 1
         end
       end

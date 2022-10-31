@@ -36,10 +36,11 @@
             <%= f.fields_for :notes do |note_field| %>
               <% if (note_field.object.new_record? && policy([current_user_role_group, note_field.object]).create?) || policy([current_user_role_group, note_field.object]).edit? %>
                 <div class="mb-3">
-                  <%= note_field.label :comments %>
+                  <%= note_field.label :comments, I18n.t("global.link_to.add_comments") %>
                   <%= note_field.text_area :note, class: "form-control" %>
                   <%= note_field.hidden_field :note_type, value: (note_field.object.note_type.present? ? note_field.object.note_type : "user") if note_field.object.creator.role == "user" %>
                   <%= note_field.hidden_field :creator_id %>
+                  <%= note_field.hidden_field :booking_portal_client_id, value: current_user.booking_portal_client.id %>
                 </div>
               <% else %>
                 <div>
@@ -58,17 +59,17 @@
           <% if @user_request.new_record? && @user_request.is_a?(UserRequest::Cancellation) %>
             <div class="mb-3">
               <div class="alert alert-primary">
-                Your unit will be released once the cancellation request is processed. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability.<br/>
+                <%= I18n.t("controller.user_requests.text.cancellation_request_text") %><br/>
                 <div class="form-check mt-3">
                   <input type="checkbox" id="accepted" class="form-check-input wd-22" />
-                  <label class="form-check-label d-inline-block ms-2">I Agree <%= @user_request.user_id == current_user.id ? "" : " on behalf of #{@user_request.lead.name}" %></label>
+                  <label class="form-check-label d-inline-block ms-2"><%= @user_request.user_id == current_user.id ? I18n.t("controller.user_requests.text.i_agree") : I18n.t("controller.user_requests.text.i_agree_on_behalf_of", name: @user_request.lead.name) %></label>
                 </div>
               </div>
             </div>
           <% end %>
         </div>
         <div class="modal-footer text-end">
-          <%= f.submit "Submit", class: 'btn btn-primary', disabled: ((@user_request.new_record? && @user_request.is_a?(UserRequest::Cancellation)) ? true : false), id: "submit_request", data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
+          <%= f.submit I18n.t("global.submit"), class: 'btn btn-primary', disabled: ((@user_request.new_record? && @user_request.is_a?(UserRequest::Cancellation)) ? true : false), id: "submit_request", data:{event_category: 'Section', event_action: 'Click', event_name: 'cancel booking - submit'}  %>
         </div>
       </div>
     </div>

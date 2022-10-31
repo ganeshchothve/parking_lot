@@ -4,9 +4,8 @@
       <!--<div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-title pt-1">
           <h1 class="title icon-set icon-users-black icon-bs-15 t-2">
-            <%= User.model_name.human(count: @users.total_entries) %>
-          </h1> 
-          
+            <%#= User.model_name.human(count: @users.total_entries) %>
+          </h1>
         </div>
       </div>-->
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
@@ -21,25 +20,34 @@
               <i class="fa fa-filter fill-theme"></i>
             </a>
           </div>
-          <div class="new-menu display-initial d-inline me-2 ms-1" >
-            <button class="select-btn btn btn-primary fn-400 dropdown-toggle" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= t('controller.users.new.link_name', role: 'User') %></button>
-            <div class="dropdown-menu">
-              <% User::KYLAS_MARKETPALCE_USERS.each do |role| %>
-                <% if policy([:admin, User.new(role: role)]).new? %>
-                  <%= link_to t('controller.users.new.link_name', role: User.human_attribute_name("role.#{role}")), new_admin_user_path(user: {role: role}), class: 'modal-remote-form-link dropdown-item' %>
+          <!-- In case of marketplace client, show add user dropdown to only admin role for allowing him to add cp users -->
+          <% unless marketplace? && !policy([:admin, User.new]).show_add_users_dropdown?  %>
+            <div class="new-menu display-initial d-inline me-2 ms-1" >
+              <button class="select-btn btn btn-primary fn-400 dropdown-toggle" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= t('controller.users.new.link_name', role: 'User') %></button>
+              <div class="dropdown-menu">
+                <% User.available_roles(current_client).each do |role| %>
+                  <% if policy([:admin, User.new(role: role)]).new? %>
+                    <%= link_to t('controller.users.new.link_name', role: User.human_attribute_name("role.#{role}")), new_admin_user_path(user: {role: role}), class: 'modal-remote-form-link dropdown-item' %>
+                  <% end %>
                 <% end %>
-              <% end %>
+                <% if marketplace? && policy([:admin, ChannelPartner.new]).show_add_company_link? %>
+                  <%= link_to t('helpers.new.link_name', model: 'Partner Company'), new_company_channel_partners_path, class: 'modal-remote-form-link dropdown-item' %>
+                <% end %>
+              </div>
             </div>
-          </div>
+          <% end %>
 
           <% if policy([:admin, User.new]).export? %>
             <div class="export-menu display-initial d-inline">
               <button class="select-btn btn no-fill primary fn-400 dropdown-toggle" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <%= t('controller.users.exports.link_name', name: nil) %> </button>
               <div class="dropdown-menu dropdown-menu-right">
-                <%= link_to t('controller.users.exports.link_name', name: t('global.all')), export_admin_users_path, class: 'dropdown-item' %>
-                <%= link_to t('controller.users.exports.link_name', name: t('global.active_filter')), export_admin_users_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
+                <%= link_to I18n.t("global.link_to.all_exports"), export_admin_users_path, class: 'dropdown-item' %>
+                <%= link_to I18n.t("global.link_to.active_filter_exports"), export_admin_users_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
               </div>
             </div>
+          <% end %>
+          <% if policy([:admin, User.new]).sync_kylas_user? %>
+            <%= link_to_if current_client.sync_user?, (current_client.sync_user? ? "Sync Users" : "Syncing In Progress"), sync_kylas_users_admin_users_path, class: 'border rounded btn px-3 p-2 border-primary white bg-primary rounded py-2 ms-2', id: 'sync_users' %>
           <% end %>
         </div>
       </div>
@@ -54,3 +62,15 @@
     </div>
   </div>
 </section>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    var client = <%= raw current_user.booking_portal_client.to_json %>;
+    if (!client['sync_user'])
+    {
+      setInterval(function(){
+        location.reload();
+      }, 10000)
+    }
+  });
+<% end %>

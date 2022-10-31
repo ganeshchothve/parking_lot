@@ -22,17 +22,17 @@
             </div>
             <a class="carousel-control-prev" href="#project_unit_gallery_<%= @project_unit.id %>" role="button" data-slide="prev">
               <span class="fas fa-chevron-left text-dark" aria-hidden="true"></span>
-              <span class="sr-only">Previous</span>
+              <span class="sr-only"><%= I18n.t("global.previous") %></span>
             </a>
             <a class="carousel-control-next" href="#project_unit_gallery_<%= @project_unit.id %>" role="button" data-slide="next">
               <span class="fas fa-chevron-right text-dark" aria-hidden="true"></span>
-              <span class="sr-only">Next</span>
+              <span class="sr-only"><%= I18n.t("global.next")  %></span>
             </a>
           </div>
           </div>
         <% else %>
           <div class="alert alert-primary">
-            No images available
+            <%= I18n.t("global.link_to.no_images_available") %>
           </div>
         <% end %>
       </div>

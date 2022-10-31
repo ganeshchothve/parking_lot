@@ -11,6 +11,7 @@ class SiteVisit
   include Mongoid::Autoinc
   include QueueNumberAssignment
   include IncentiveSchemeAutoApplication
+  extend DocumentsConcern
 
   REJECTION_REASONS = ["budget_not_match", "location_not_match", "possession_not_match", "didnt_visit", "different_cp"]
   DOCUMENT_TYPES = []
@@ -60,6 +61,7 @@ class SiteVisit
   scope :filter_by_cp_manager_id, ->(cp_manager_id) {where(cp_manager_id: cp_manager_id) }
   scope :filter_by_channel_partner_id, ->(channel_partner_id) {where(channel_partner_id: channel_partner_id)}
   scope :filter_by_is_revisit, ->(is_revisit) { where(is_revisit: is_revisit.to_s == 'true') }
+  scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
   scope :incentive_eligible, ->(category) do
     if category == 'walk_in'
       where(approval_status: {'$nin': %w(rejected)}, is_revisit: false)
@@ -96,40 +98,13 @@ class SiteVisit
     end
   end
 
-  def self.statuses
-    [
-      { id: 'scheduled', text: 'Scheduled' },
-      { id: 'conducted', text: 'Conducted' },
-      { id: 'pending', text: 'Pending' },
-      { id: 'missed', text: 'Missed' }
-    ]
-  end
-
-  def self.approval_statuses
-    [
-      { id: 'pending', text: 'Pending' },
-      { id: 'approved', text: 'Approved' },
-      { id: 'rejected', text: 'Rejected' }
-    ]
-  end
-
-  def self.available_sort_options
-    [
-      { id: 'created_at.asc', text: 'Created - Oldest First' },
-      { id: 'created_at.desc', text: 'Created - Newest First' },
-      { id: 'scheduled_on.asc', text: 'Scheduled On - Oldest First' },
-      { id: 'scheduled_on.desc', text: 'Scheduled On- Newest First' },
-      { id: 'conducted_on.asc', text: 'Conducted On - Oldest First' },
-      { id: 'conducted_on.desc', text: 'Conducted On - Newest First' }
-    ]
-  end
-
   def self.user_based_scope(user, params = {})
     custom_scope = {}
+    project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids)
     if params[:lead_id].blank? && !user.buyer?
       case user.role.to_s
       when 'channel_partner'
-        custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id }
+        custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id}
       when 'cp_owner'
         custom_scope = {channel_partner_id: user.channel_partner_id}
       when 'cp_admin'
@@ -137,20 +112,22 @@ class SiteVisit
       when 'cp'
         custom_scope = {}
       when 'dev_sourcing_manager', 'billing_team'
-        custom_scope = { project_id: user.selected_project_id }
+        custom_scope = {}
       when 'admin', 'sales'
-        custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
+        custom_scope = {}
       when 'superadmin'
-        custom_scope = { booking_portal_client_id: user.selected_client_id }
+        custom_scope = {}
       end
     end
 
     custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
     custom_scope = { user_id: user.id } if user.buyer?
 
-    # unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
-    #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
-    # end
+    if !user.role.in?(User::ALL_PROJECT_ACCESS) || params[:current_project_id].present?
+      custom_scope.merge!({project_id: { "$in": project_ids }})
+    end
+
+    custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
     custom_scope
   end
 

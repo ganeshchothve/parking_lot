@@ -21,8 +21,8 @@ class KylasAuthController < ApplicationController
     else
       flash[:alert] = I18n.t('kylas_auth.something_went_wrong')
     end
-
-    redirect_to root_path
+    _path = reset_password_after_first_login_admin_user_path(current_user) if policy([:admin, current_user]).reset_password_after_first_login?
+    redirect_to _path || root_path
   end
 
   private

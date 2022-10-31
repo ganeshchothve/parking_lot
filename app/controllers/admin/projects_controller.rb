@@ -1,6 +1,6 @@
 class Admin::ProjectsController < AdminController
-  before_action :set_project, except: %i[index collaterals new create third_party_inventory]
-  before_action :authorize_resource, except: %i[collaterals third_party_inventory]
+  before_action :set_project, except: %i[index collaterals new create third_party_inventory sync_kylas_products]
+  before_action :authorize_resource, except: %i[collaterals third_party_inventory sync_kylas_products]
   around_action :apply_policy_scope, only: %i[index collaterals]
   before_action :fetch_kylas_products, only: %i[new edit]
   layout :set_layout
@@ -52,11 +52,14 @@ class Admin::ProjectsController < AdminController
     @project = Project.new
     @project.assign_attributes(permitted_attributes([current_user_role_group, @project]))
     @project.creator = current_user
-    @project.booking_portal_client_id = current_user.booking_portal_client_id
-
+    if current_user.role?(:superadmin)
+      @project.booking_portal_client_id = current_user.selected_client_id
+    else
+      @project.booking_portal_client_id = current_user.booking_portal_client_id
+    end
     respond_to do |format|
       if @project.save
-        format.html { redirect_to admin_projects_path, notice: 'Project was successfully created.' }
+        format.html { redirect_to admin_projects_path, notice: I18n.t("controller.projects.notice.created") }
         format.json { render json: @project, status: :created }
       else
         errors = @project.errors.full_messages
@@ -77,7 +80,7 @@ class Admin::ProjectsController < AdminController
     parameters = permitted_attributes([:admin, @project])
     respond_to do |format|
       if @project.update(parameters)
-        format.html { redirect_to request.referrer || admin_projects_path, notice: 'Project successfully updated.' }
+        format.html { redirect_to request.referrer || admin_projects_path, notice: I18n.t("controller.projects.notice.updated") }
         format.json { render json: @project, status: 200 }
       else
         errors = @project.errors.full_messages
@@ -103,7 +106,7 @@ class Admin::ProjectsController < AdminController
     errors = @project.sync_on_selldo
     respond_to do |format|
       unless errors.present?
-        format.html { redirect_to request.referrer || admin_projects_path, notice: 'Project synced on Sell.do successfully' }
+        format.html { redirect_to request.referrer || admin_projects_path, notice: I18n.t("controller.projects.notice.synced_on_selldo") }
       else
         if errors&.is_a?(Array)
           Note.create(notable: @project, note: "Sell.do Sync Errors</br>" + errors.to_sentence, creator: current_user)
@@ -116,14 +119,25 @@ class Admin::ProjectsController < AdminController
     end
   end
 
+  def sync_kylas_products
+    current_client.set(sync_product: false)
+    if Rails.env.development?
+      SyncKylasProductsWorker.new.perform(current_user.id.to_s)
+    else
+      SyncKylasProductsWorker.perform_async(current_user.id.to_s)
+    end
+    flash[:notice] = 'Kylas Products Syncing has been initiated'
+    redirect_to admin_projects_path
+  end
+
   private
 
   def set_project
     @project = Project.where(id: params[:id]).first
     if action_name == 'edit'
-      render json: { errors: 'Project not found' }, status: :not_found unless @project
+      render json: { errors: I18n.t("controller.projects.alert.not_found") }, status: :not_found unless @project
     else
-      redirect_to dashboard_path, alert: 'Project not found' unless @project
+      redirect_to home_path(current_user), alert: I18n.t("controller.projects.alert.not_found") unless @project
     end
   end
 

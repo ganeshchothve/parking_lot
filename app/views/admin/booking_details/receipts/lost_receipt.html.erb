@@ -9,7 +9,7 @@
           <%= form_for [:admin, @booking_detail, @receipt], local: true, remote: true, html: {id: 'receipt_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.receipt'), type: :json} } do |f| %>
             <div class="mb-3">
               <%= f.label :payment_mode, class: 'label-required' %>
-                <%= f.select :payment_mode, ['online'], {prompt: true, selected: @receipt.payment_mode}, class: 'selectize', required: 'required', autofocus: true, disabled: !policy([:admin, @receipt]).editable_field?("payment_mode") %>
+                <%= f.select :payment_mode, ['online'], {prompt: I18n.t("global.select"), selected: @receipt.payment_mode}, class: 'selectize', required: 'required', autofocus: true, disabled: !policy([:admin, @receipt]).editable_field?("payment_mode") %>
             </div>
             <div class="mb-3">
               <%= f.label :payment_identifier, class: 'label-required' %>
@@ -18,7 +18,7 @@
             <div class="mb-3">
               <%= f.label :account, class: 'label-required' %>
 
-                <%= f.select :account_number ,Account.all.collect{|x| [ x.account_number, x.id]} , {prompt: true}, class: 'selectize', required: 'required', autofocus: true %>
+                <%= f.select :account_number ,Account.all.collect{|x| [ x.account_number, x.id]} , {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', autofocus: true %>
             </div>
             <div class="mb-3">
               <%= f.label :total_amount, class: 'label-required' %>
@@ -32,7 +32,7 @@
             </div>
             <div class="mb-3">
               <%= f.label :status, class: 'control-label' %>
-              <%= f.select :event, options_for_select([[ Receipt.human_attribute_name('status.pending'), 'pending' ]], @receipt.status), {prompt: true}, class: 'selectize', required: 'required', disabled: !policy([:admin, @receipt]).editable_field?("event") %>
+              <%= f.select :event, options_for_select([[ Receipt.human_attribute_name('status.pending'), 'pending' ]], @receipt.status), {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: !policy([:admin, @receipt]).editable_field?("event") %>
             </div>
             <div class="mb-3">
               <%= f.submit class: 'btn btn-primary' %>

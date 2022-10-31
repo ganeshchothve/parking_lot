@@ -25,7 +25,7 @@ class Admin::BookingDetailSchemePolicy < BookingDetailSchemePolicy
       case user.role
       when 'admin', 'sales', 'sales_admin', 'crm', 'superadmin'
         true
-      when 'channel_partner'
+      when 'channel_partner', 'cp_owner'
         if is_this_user_added_by_channel_partner?
           is_project_unit_hold?
         end
@@ -52,7 +52,7 @@ class Admin::BookingDetailSchemePolicy < BookingDetailSchemePolicy
 
     if record.draft? && !(record.new_record?)
       attributes += [:event ] if record.approver?(user)
-      if user.role?('sales_admin') && !current_client.launchpad_portal
+      if user.role?('sales_admin') && !user.booking_portal_client.launchpad_portal
         attributes += [:event ]
       end
     end

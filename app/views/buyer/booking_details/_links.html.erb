@@ -1,5 +1,5 @@
 <% if booking_detail.hold? && policy([:buyer, booking_detail]).block? && booking_detail.search %>
-  <%= link_to t('controller.booking_details.continue_booking.link_name'), checkout_user_search_path(booking_detail.search), class: 'dropdown-item' %>
+  <%= link_to t('controller.booking_details.continue_booking.link_name'), checkout_lead_search_path(booking_detail.search), class: 'dropdown-item' %>
 <% end %>
 
 <% if policy([:buyer, BookingDetail ]).show? && !current_page?(request.url) %>

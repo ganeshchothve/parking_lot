@@ -1,6 +1,6 @@
 <div class="filter-inner modal-content ps-2 pe-2 fixed-header-footer">
   <div class="modal-header filter-header">
-  <h5 class="modal-title title">Filter</h5>
+  <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
     <a href="javascript:;" class="close-filter-btn btn-close"></a>
   </div>
   <% if @user.blank? %>
@@ -21,7 +21,7 @@
           <% end %>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.receipt.project_id'), class: "control-label" %>
-          <%= select_tag "fltrs[project_id]", options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[project_id]", options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
           <% if policy([current_user_role_group, BookingDetail]).index? %>
             <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
@@ -44,11 +44,11 @@
 
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.status'), class: "control-label" %>
-            <%= select_tag "fltrs[status][]", options_for_select(Receipt.aasm.states.collect(&:name).collect(&:to_s).collect{|x| [Receipt.human_attribute_name("status.#{x}"), x]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize", multiple: 'multiple'} %>
+            <%= select_tag "fltrs[status][]", options_for_select(Receipt.aasm.states.collect(&:name).collect(&:to_s).collect{|x| [Receipt.human_attribute_name("status.#{x}"), x]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: I18n.t("global.select"), class: "selectize", multiple: 'multiple'} %>
           </div>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.payment_mode'), class: "control-label" %>
-            <%= select_tag "fltrs[payment_mode]", options_for_select(Receipt.available_payment_modes.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:payment_mode] : "")), {prompt: "Select", class: "selectize"} %>
+            <%= select_tag "fltrs[payment_mode]", options_for_select(I18n.t("mongoid.attributes.receipt/payment_mode").collect{|k,v| [v, k.to_s] }, (params[:fltrs].present? ? params[:fltrs][:payment_mode] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
           </div>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.issued_date'), class: "control-label" %>
@@ -58,17 +58,19 @@
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.processed_on'), class: "control-label" %>
             <%= text_field_tag "fltrs[processed_on]", (params[:fltrs].present? ? params[:fltrs][:processed_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
           </div>
-          <% unless current_user.role?('channel_partner') %>
-            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-              <%= label_tag "fltrs", t('mongoid.attributes.user.manager_id'), class: "control-label" %>
-              <%= select_tag "fltrs[manager_id]", options_for_select(filter_manager_options), { class: "selectize-remote", data: { url: admin_users_path, params: { fltrs: { role: ['channel_partner', 'cp_owner'] } } } } %>
-            </div>
-          <% end %>
-          <% unless current_user.role.in?(%w(cp_owner cp channel_partner)) %>
-            <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-              <%= label_tag "fltrs", t('mongoid.attributes.user/role.cp') %>
-              <%= select_tag "fltrs[cp_manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:cp_manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp' }}}} %>
-            </div>
+          <% if current_client.enable_channel_partners? %>
+            <% unless current_user.role?('channel_partner') %>
+              <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+                <%= label_tag "fltrs", t('mongoid.attributes.user.manager_id'), class: "control-label" %>
+                <%= select_tag "fltrs[manager_id]", options_for_select(filter_manager_options), { class: "selectize-remote", data: { url: admin_users_path, params: { fltrs: { role: ['channel_partner', 'cp_owner'] } } } } %>
+              </div>
+            <% end %>
+            <% unless current_user.role.in?(%w(cp_owner cp channel_partner)) %>
+              <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+                <%= label_tag "fltrs", t('mongoid.attributes.user/role.cp') %>
+                <%= select_tag "fltrs[cp_manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:cp_manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp' }}}} %>
+              </div>
+            <% end %>
           <% end %>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.created_at'), class: "control-label" %>
@@ -76,13 +78,13 @@
           </div>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.sort_by'), class: "control-label" %>
-            <%= select_tag "fltrs[sort]", options_for_select(Receipt.available_sort_options.collect{|x| [x[:text], x[:id]]}, (params[:fltrs].present? ? params[:fltrs][:sort] : Receipt.available_sort_options.first[:id])), {prompt: "Select", class: "selectize"} %>
+            <%= select_tag "fltrs[sort]", options_for_select(I18n.t("mongoid.attributes.receipt/sort_options").reject{|k,v| k.to_s == 'online'}.collect{|k,v| [v, k.to_s] }, (params[:fltrs].present? ? params[:fltrs][:sort] :  I18n.t("mongoid.attributes.receipt/sort_options").collect{|k,v| k.to_s}.first)), {prompt: I18n.t("global.select"), class: "selectize"} %>
           </div>
         </div>
       </div>
       <div class="filter-footer modal-footer text-end">
-        <%= submit_tag :Apply, class: "btn btn-primary f-save-btn db-small-btn bg-light-blue fn-500 float-end" %>
-        <button type="button" class="btn btn-secondary f-cancel-btn float-end">Cancel</button>
+        <%= submit_tag I18n.t("global.apply"), class: "btn btn-primary f-save-btn db-small-btn bg-light-blue fn-500 float-end" %>
+        <button type="button" class="btn btn-secondary f-cancel-btn float-end"><%= I18n.t("global.cancel") %></button>
       </div>
     <% end %>
 </div>

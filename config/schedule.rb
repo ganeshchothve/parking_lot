@@ -44,6 +44,10 @@ every 1.day, at: "12:00 am" do
   runner "DestroyExpiredAssetsWorker.perform_async"
 end
 
+every 1.day, at: "12:00 am" do
+  runner "Kylas::TokenExpiredNotificationWorker.perform_async"
+end
+
 # every 1.minute do
 #   runner "UpgradePricing.perform"
 # end

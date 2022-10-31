@@ -42,7 +42,7 @@
               <i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
               <% if policy([:admin, bulk_upload_report]).show? %>
-              <%= link_to 'Show', admin_bulk_upload_report_path(bulk_upload_report), class: 'dropdown-item' %>
+              <%= link_to I18n.t("global.show"), admin_bulk_upload_report_path(bulk_upload_report), class: 'dropdown-item' %>
               <% end %>
             </div>
           </div>

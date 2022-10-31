@@ -8,6 +8,7 @@ class Project
   extend ApplicationHelper
   include ProjectOnboardingOnSelldo
   extend FilterByCriteria
+  extend DocumentsConcern
 
   # Add different types of documents which are uploaded on client
   DOCUMENT_TYPES = %w[document brochure certificate unit_selection_filter_image sales_presentation images developer_logo advertise].freeze
@@ -114,7 +115,7 @@ class Project
   field :price_starting_from, type: Integer
   field :price_upto, type: Integer
   field :broker_usp, type: Array, default: []
-  field :enable_inventory, type: Boolean, default: true
+  field :enable_inventory, type: Boolean, default: false
   field :enable_booking_with_kyc, type: Boolean, default: true
   field :check_sv_availability_in_selldo, type: Boolean, default: false
   field :incentive_calculation, type: Array, default: ["manual"]
@@ -122,7 +123,6 @@ class Project
 
   # Kylas fields
   field :kylas_product_id, type: String
-
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
@@ -287,23 +287,18 @@ class Project
 
   def self.user_based_scope(user, params = {})
     custom_scope = {}
-    if user.role.in?(%w(cp_owner channel_partner))
-      custom_scope = { _id: { '$in': user.interested_projects.approved.distinct(:project_id) } } unless params[:controller] == 'admin/projects' && params[:ds].blank?
-    elsif user.role.in?(%w(admin sales))
-      custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
-    elsif user.role.in?(%w(superadmin))
+    project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids)
+    if user.role.in?(%w(superadmin))
       custom_scope = { booking_portal_client_id: user.selected_client_id }
+    elsif user.role.in?(%w(admin))
+      custom_scope = {  }
     end
 
-    # unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
-    #   if user.selected_project_id.present? && params[:select_project].blank?
-    #     custom_scope.merge!({_id: user.selected_project_id})
-    #   elsif user.project_ids.present?
-    #     project_ids = user.project_ids.map{|project_id| BSON::ObjectId(project_id) }
-    #     custom_scope.merge!({_id: {"$in": project_ids}})
-    #   end
-    # end
+    if !user.role.in?(User::ALL_PROJECT_ACCESS) || params[:current_project_id].present?
+      custom_scope.merge!({_id: { "$in": project_ids }})
+    end
     custom_scope.merge!({ is_active: true }) if (params[:controller] == 'admin/projects' && params[:action] == 'index') || params[:controller] == 'home'
+    custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.try(:id)})
     custom_scope
   end
 

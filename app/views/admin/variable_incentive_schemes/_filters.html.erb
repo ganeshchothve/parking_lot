@@ -1,22 +1,22 @@
 <div class="filter-inner modal-content ps-2 pe-2 fixed-header-footer">
     <div class="modal-header filter-header">
-  <h5 class="modal-title title">Filter</h5>
+  <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
   <a href="javascript:;" class="close-filter-btn btn-close"></a>
   </div>
   <%= form_tag admin_variable_incentive_schemes_path, method: "get", id: "variable_incentive_scheme_search_form" do %>
     <div class="filter-content modal-body ps-0 pe-0">
       <div class="row">
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-          <%= label_tag "fltrs", VariableIncentiveScheme.model_name.human + " Name", class: "control-label" %>
+          <%= label_tag "fltrs", I18n.t("mongoid.attributes.variable_incentive_scheme.vis_name"), class: "control-label" %>
           <%= text_field_tag "fltrs[name]", params.dig(:fltrs, :name), class: 'form-control' %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.variable_incentive_scheme.status'), class: "control-label" %>
-          <%= select_tag "fltrs[status]", options_for_select(IncentiveScheme.aasm.states.collect(&:name).collect{|x| [x.to_s.titleize, x.to_s]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: "Select", class: "selectize"} %>
+          <%= select_tag "fltrs[status]", options_for_select(I18n.t("mongoid.attributes.incentive_scheme/status").collect{|k,v| [v, k.to_s]}, (params[:fltrs].present? ? params[:fltrs][:status] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.project_unit.project_id'), class: "control-label" %>
-          <%= select_tag "fltrs[project_id]", options_from_collection_for_select(params[:fltrs].present? ? Project.where(_id: params[:fltrs][:project_id]) : [], "id", "ds_name", params.dig(:fltrs, :project_id)), {prompt: "Select", class: "selectize-remote project_select", data: {url: admin_projects_path}} %>
+          <%= select_tag "fltrs[project_id]", options_from_collection_for_select(params[:fltrs].present? ? Project.where(_id: params[:fltrs][:project_id]) : [], "id", "ds_name", params.dig(:fltrs, :project_id)), {prompt: I18n.t("global.select"), class: "selectize-remote project_select", data: {url: admin_projects_path}} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.variable_incentive_scheme.date_range') %>
@@ -25,8 +25,8 @@
       </div>
     </div>
     <div class="filter-footer modal-footer text-end">
-      <%= submit_tag :Apply, class: "f-save-btn btn btn-primary fn-500 float-end" %>
-      <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end">Cancel</button>
+      <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
+      <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.cancel") %></button>
     </div>
   <% end %>
 </div>

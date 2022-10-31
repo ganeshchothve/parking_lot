@@ -11,6 +11,22 @@ module IncentiveSchemesHelper
     end
   end
 
+  def filter_incentive_scheme_resources
+    incentive_scheme_resources = IncentiveScheme::RESOURCE_CLASS
+    resultant_resources = []
+    resultant_resources = if !current_client.enable_leads && current_client.enable_site_visit
+      incentive_scheme_resources.reject{|doc| %w(Lead).include?(doc)}
+    elsif current_client.enable_leads && !current_client.enable_site_visit
+      incentive_scheme_resources.reject{|doc| %w(SiteVisit).include?(doc)}
+    elsif !current_client.enable_leads && !current_client.enable_site_visit
+      incentive_scheme_resources.reject{|doc| %w(SiteVisit Lead).include?(doc)}
+    else
+      incentive_scheme_resources
+    end
+    options = resultant_resources.collect{|x| [t("mongoid.attributes.incentive_scheme/resource_class.#{x}"), x]}
+    options
+  end
+
   def incentive_scheme_tooltip(scheme)
     html_content = "<table class='table-bordered'><tbody>"
     scheme.ladders.asc(:stage).each do |ladder|

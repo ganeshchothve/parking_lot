@@ -1,12 +1,16 @@
 class Note
   include Mongoid::Document
   include Mongoid::Timestamps
+  extend DocumentsConcern
 
   # Add different types of documents which are uploaded on note.
   DOCUMENT_TYPES = []
 
   field :note, type: String
   field :note_type, type: String, default: :internal
+
+  #kylas specific fields
+  field :kylas_note_id, type: String
 
   belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :notable, polymorphic: true

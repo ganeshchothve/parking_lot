@@ -2,31 +2,30 @@
   <div class="px-0">
     <div class="row g-0">
       <div class="col-lg-12 p-0 mt-3">
-
       <table class="table table-responsive table-color">
         <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Role</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
         <tbody>
           <% users.each do |user| %>
           <tr>
             <td>
               <!-- <h2 class="fn-16 font-medium d-block d-sm-inline-block mb-0 theme-txt-color me-2"> -->
-                <% if policy([ current_user_role_group, user]).show? %>
+              <% if policy([ current_user_role_group, user]).show? %>
                 <%= link_to user.name, [current_user_role_group, user ], class: "theme-txt-color fn-14" %>
-                <% else %>
+              <% else %>
                 <%= user.name %>
-                <% end %>
-                <% if user.temporarily_blocked? %>
+              <% end %>
+              <% if user.temporarily_blocked? %>
                 <i class="fa fa-circle red" aria-hidden="true"></i>
-                <% end %>
+              <% end %>
               <!-- </h2> -->
             </td>
             <td>
@@ -45,42 +44,29 @@
             </td>
             <td><p class="mb-0 theme-txt-color"><%= User.human_attribute_name("role.#{user.role}") %></p></td>
             <td>
-              <% if policy([:admin, user]).editable_field?('is_active') %>
-              <p class="mb-0"><i
-                  class='fa fn-16 fa-<%= user.is_active? ? "check" : "times" %> fill-<%= user.is_active? ? "success" : "danger" %> me-12 fa-lg'></i><%= t("mongoid.attributes.user/is_active.#{user.is_active?}") %>
-              </p>
-            <% end %>
-            <% if user.buyer? %>
-              <p class="mb-0"><i
-                  class='fa fn-16 fa-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= user.is_payment_done? ? 'Payment Done' : 'Payment Pending' %>
-              </p>
-              <% if user.portal_stage.present? %>
-                <p class="mb-0"><i
-                   class='fa fa-circle status_<%= user.portal_stage.stage %> me-2 fa-xs ms-5'></i><%= t("mongoid.attributes.channel_partner/status.#{user.portal_stage.stage}") %>
-                </p>
-              <% else %>
-                <p class=""><i
-                   class='fa fn-16 fa-<%= user.confirmed_at.present? ? "check" : "times" %> fill-<%= user.confirmed_at.present? ? "success" : "danger" %> me-12 fa-lg'></i><%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %>
-                </p>
+              <p class="mb-0"><i class='fa fn-16 fa-<%= (user.active_for_authentication?) ? "check" : "times" %> fill-<%= (user.active_for_authentication?) ? "success" : "danger" %> me-12 fa-lg'></i><%= t("mongoid.attributes.user/is_active.#{user.active_for_authentication?}") %> </p>
+              <% if is_marketplace? %>
+                <p class="mb-0"><i class='fa fn-16 fa-<%= (user.is_active_in_kylas?) ? "check" : "times" %> fill-<%= (user.is_active_in_kylas?) ? "success" : "danger" %> me-12 fa-lg'></i><%= t("mongoid.attributes.user/is_active_in_kylas.#{user.is_active_in_kylas?}") %> </p>
               <% end %>
-            <% end %>
-            <% if user.role.in?(%w(channel_partner cp_owner)) %>
-              <% if user.confirmed? %>
-                <% if user.channel_partner.blank? || user.channel_partner&.inactive? %>
-                  <p class="mb-0"><i
-                     class='fa fn-16 fa-check fill-success me-12 fa-lg'></i><%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %>
-                  </p>
+              <% if user.buyer? %>
+                <p class="mb-0"><i class='fa fn-16 fa-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= user.is_payment_done? ? 'Payment Done' : 'Payment Pending' %> </p>
+                <% if user.portal_stage.present? %>
+                  <p class="mb-0"><i class='fa fa-circle status_<%= user.portal_stage.stage %> me-2 fa-xs ms-5'></i><%= t("mongoid.attributes.channel_partner/status.#{user.portal_stage.stage}") %> </p>
                 <% else %>
-                  <p class="mb-0"><i
-                     class='fa fa-circle status_<%= user.channel_partner&.status %> me-2 fa-xs ms-5'></i><%= t("mongoid.attributes.channel_partner/status.#{user.channel_partner&.status}") %>
-                  </p>
+                  <p class=""><i class='fa fn-16 fa-<%= user.confirmed_at.present? ? "check" : "times" %> fill-<%= user.confirmed_at.present? ? "success" : "danger" %> me-12 fa-lg'></i><%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %> </p>
                 <% end %>
-              <% else %>
-                  <p class="mb-0"><i
-                     class='fa fa-circle status_inactive me-2 fa-xs ms-5'></i><%= t("mongoid.attributes.channel_partner/status.inactive") %>
-                  </p>
               <% end %>
-            <% end %>
+              <% if user.role.in?(%w(channel_partner cp_owner)) %>
+                <% if user.confirmed? %>
+                  <% if user.channel_partner.blank? || user.channel_partner&.inactive? %>
+                    <p class="mb-0"><i class='fa fn-16 fa-check fill-success me-12 fa-lg'></i><%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %> </p>
+                  <% else %>
+                    <p class="mb-0"><i class='fa fa-circle status_<%= user.channel_partner&.status %> me-2 fa-xs ms-5'></i><%= t("mongoid.attributes.channel_partner/status.#{user.channel_partner&.status}") %> </p>
+                  <% end %>
+                <% else %>
+                  <p class="mb-0"><i class='fa fa-circle status_inactive me-2 fa-xs ms-5'></i><%= t("mongoid.attributes.channel_partner/status.inactive") %> </p>
+                <% end %>
+              <% end %>
             </td>
             <td>
               <div class="dropdown d-inline-block">

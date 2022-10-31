@@ -24,7 +24,7 @@ class Admin::CampaignsController < AdminController
     
     respond_to do |format|
       if @campaign.save
-        format.html { redirect_to admin_campaigns_path, notice: 'Campaign was successfully created.' }
+        format.html { redirect_to admin_campaigns_path, notice: I18n.t("controller.campaigns.notice.created") }
         format.json { render json: @campaign, status: :created }
       else
         errors = @campaign.errors.full_messages

@@ -70,12 +70,12 @@ class Api::SellDo::LeadsController < Api::SellDoController
 
   def set_project
     @project = Project.where(selldo_id: params[:project_id]).first
-    render json: { errors: ["Project not found"] } and return unless @project
+    render json: { errors: [I18n.t("controller.projects.alert.not_found")] } and return unless @project
   end
 
   def set_crm
     @crm = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
-    render json: { errors: ["Sell.do CRM integration not available"] } and return unless @crm
+    render json: { errors: [I18n.t("controller.crms.errors.not_available")] } and return unless @crm
   end
 
   def create_or_set_user
@@ -134,7 +134,7 @@ class Api::SellDo::LeadsController < Api::SellDoController
         render json: { errors: @site_visit.errors.full_messages.uniq } and return unless @site_visit.save
       end
     else
-      render json: { errors: ["SiteVisit id is missing in params"] } and return
+      render json: { errors: [I18n.t("controller.site_visits.errors.id_missing_in_params")] } and return
     end
   end
 

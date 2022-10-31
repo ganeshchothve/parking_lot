@@ -8,6 +8,7 @@ class ProjectUnit
   include PriceCalculator
   extend FilterByCriteria
   include CrmIntegration
+  extend DocumentsConcern
 
   STATUS = %w(available employee management not_available hold blocked error)
   # Add different types of documents which are uploaded on project_unit
@@ -18,7 +19,6 @@ class ProjectUnit
   field :erp_id, type: String
   field :agreement_price, type: Integer
   field :all_inclusive_price, type: Integer
-  field :booking_price, type: Integer
   field :status, type: String, default: 'available'
   field :available_for, type: String, default: 'user'
   field :blocked_on, type: Date
@@ -85,8 +85,8 @@ class ProjectUnit
 
   validates :saleable, :carpet, :base_rate, :agreement_price, :all_inclusive_price, :project_id, :project_tower_id, :unit_configuration_id, :floor, :floor_order, :bathrooms, :type, :project_name, :project_tower_name, :unit_configuration_name, :bedrooms, presence: true
   validates :status, :name, :erp_id, presence: true
-  # validates :status, inclusion: { in: proc { ProjectUnit.available_statuses.collect { |x| x[:id] } } }
-  validates :available_for, inclusion: { in: proc { ProjectUnit.available_available_fors.collect { |x| x[:id] } } }
+  validates :status, inclusion: { in: I18n.t("mongoid.attributes.project_unit/status").keys.map(&:to_s) }
+  validates :available_for, inclusion: { in: I18n.t("mongoid.attributes.project_unit/available_for").keys.map(&:to_s) }
   validates :saleable, :carpet, :base_rate, :numericality => {:greater_than => 0}, if: :valid_status?
   validates :floor_order, uniqueness: { scope: [:project_tower_id, :floor] }
   validates :erp_id, uniqueness: { scope: [:project_id] }
@@ -322,11 +322,14 @@ class ProjectUnit
 
   def self.user_based_scope(user, params = {})
     custom_scope = {}
-    if user.role.in?(%w(admin sales))
-      custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
-    elsif user.role.in?(%w(superadmin))
-      custom_scope = { booking_portal_client_id: user.selected_client_id }
+    if user.role.in?(%w(superadmin))
+      custom_scope = {  }
+    elsif user.role.in?(%w(admin sales))
+      custom_scope = {  }
+    else
+      custom_scope = {  }
     end
+    custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
     # unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
     #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
     # end

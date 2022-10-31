@@ -8,7 +8,7 @@
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd mb-3 mt-3 mb-5">
         <div class="card">
           <div class="card-header bg-primary">
-            <h2 class="fn-18 white px-2 py-2 pb-0">KYC Information</h2>
+            <h2 class="fn-18 white px-2 py-2 pb-0"><%= I18n.t("mongoid.attributes.user_kyc.kyc_info") %></h2>
             <!-- <a href="javascript:;" class="view-all-btn">View All > </a> -->
           </div>
           <%= form_for(:booking_detail, url: hold_lead_search_path(@search), html: {method: "post", class: 'validate-form', id: 'hold_booking_detail_form'}) do |f| %>
@@ -17,28 +17,28 @@
                 <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
                   <div class="mb-3">
                     <%= f.hidden_field :lead_id, value: @lead.id %>
-                    <%= f.label :primary_applicants %>
-                    <%= f.select :primary_user_kyc_id, @lead.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', required: @unit.project.enable_booking_with_kyc? , autofocus: true %>
+                    <%= f.label :primary_user_kyc_id, I18n.t("mongoid.attributes.booking_detail.primary_user_kyc_id") %>
+                    <%= f.select :primary_user_kyc_id, options_for_select(@lead.user_kycs.collect{|x| [x.name, x.id]}, @lead.user_kycs.try(:last).try(:id)), {prompt: I18n.t("global.select")}, class: 'selectize primary_kyc_select', required: @unit.project.enable_booking_with_kyc? , autofocus: true %>
                   </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
                   <div class="mb-3">
-                    <%= f.label :secondary_applicants %>
-                    <%= f.select :user_kyc_ids, @lead.user_kycs.collect{|x| [x.name, x.id]}, {prompt: true}, class: 'selectize', multiple: true %>
+                    <%= f.label :user_kyc_ids, I18n.t("mongoid.attributes.booking_detail.user_kyc_ids") %>
+                    <%= f.select :user_kyc_ids, @lead.user_kycs.collect{|x| [x.name, x.id]}, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true %>
                   </div>
                 </div>
               </div>
             </div>
             <div class="box-footer px-4 float-end mt-4">
               <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 text-right no-pd">
-                <%= f.submit "Next", class: "btn next-btn bg-primary white fn-12 " %>
+                <%= f.submit I18n.t("global.next"), class: "btn next-btn bg-primary white fn-12 " %>
               </div>
             </div>
           <% end %>
           <% if @search.previous_step.present? %>
             <%= form_for [:lead, @search], html: {class: 'validate-form previous-form col-4'} do |ff| %>
               <%= ff.hidden_field :step, value: @search.previous_step %>
-              <%= ff.submit "Previous", class: "previous-btn fn-12 fn-300 btn border-primary primary" %>
+              <%= ff.submit I18n.t("global.previous"), class: "previous-btn fn-12 fn-300 btn border-primary primary" %>
             <% end %>
           <% end %>
         </div>

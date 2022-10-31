@@ -5,18 +5,18 @@
       <div class="col-lg-12 row mb-2">
         <div class="col-lg-9 filter-set d-xs-no-flex">
           <% if current_user.role.in?(%w(cp_owner channel_partner)) %>
-            <%= link_to "Projects In My Region", admin_projects_path(fltrs: {city: current_user.channel_partner&.city, regions: current_user.channel_partner&.regions}), class: "filter-link #{params.dig(:fltrs, :regions) == current_user.channel_partner&.regions ? 'active' : ''}" %>
+            <%= link_to I18n.t("controller.projects.region_projects.link_name"), admin_projects_path(fltrs: {city: current_user.channel_partner&.city, regions: current_user.channel_partner&.regions}), class: "filter-link #{params.dig(:fltrs, :regions) == current_user.channel_partner&.regions ? 'active' : ''}" %>
           <% end %>
-          <% all_projects = "All (#{Project.where(Project.user_based_scope(current_user, params)).count})" %>
+          <% all_projects = I18n.t("controller.projects.view.all")+" (#{Project.where(Project.user_based_scope(current_user, params)).count})" %>
           <%= link_to all_projects.html_safe, admin_projects_path, class: "filter-link #{params.dig(:fltrs).blank? ? 'active' : ''}" %>
 
-          <% newly_launched = "Newly Launched (#{newly_launched_count = Project.where(Project.user_based_scope(current_user, params)).where(category: 'launch').count})" %> <%# + "#{newly_launched_count > 0 ? "<span class='notify'></span>".html_safe : ''}" %>
+          <% newly_launched = I18n.t("controller.projects.view.newly_launched") + " (#{newly_launched_count = Project.where(Project.user_based_scope(current_user, params)).where(category: 'launch').count})" %> <%# + "#{newly_launched_count > 0 ? "<span class='notify'></span>".html_safe : ''}" %>
           <%= link_to newly_launched.html_safe, admin_projects_path(fltrs: {category: 'launch'}), class: "filter-link #{params.dig(:fltrs, :category) == 'launch' ? 'active' : ''}" %>
 
-          <% pre_launch = "Pre Launch (#{pre_launch_count = Project.where(Project.user_based_scope(current_user, params)).where(category: 'pre_launch').count})" %> <%# + "#{pre_launch_count > 0 ? "<span class='notify'></span>".html_safe : ''}" %>
+          <% pre_launch = I18n.t("controller.projects.view.pre_launch") + " (#{pre_launch_count = Project.where(Project.user_based_scope(current_user, params)).where(category: 'pre_launch').count})" %> <%# + "#{pre_launch_count > 0 ? "<span class='notify'></span>".html_safe : ''}" %>
           <%= link_to pre_launch.html_safe, admin_projects_path(fltrs: {category: 'pre_launch'}), class: "filter-link #{params.dig(:fltrs, :category) == 'pre_launch' ? 'active' : ''}" %>
 
-          <% hot_prop = "Hot (#{hot_count = Project.where(Project.user_based_scope(current_user, params)).where(hot: true).count})" %> <%# + "#{hot_count > 0 ? "<span class='notify'></span>".html_safe : ''}" %>
+          <% hot_prop = I18n.t("controller.projects.view.pre_launch") + " (#{hot_count = Project.where(Project.user_based_scope(current_user, params)).where(hot: true).count})" %> <%# + "#{hot_count > 0 ? "<span class='notify'></span>".html_safe : ''}" %>
           <%= link_to hot_prop.html_safe, admin_projects_path(fltrs: {hot: true}), class: "filter-link #{params.dig(:fltrs, :hot) == 'true' ? 'active' : ''}" %>
         </div>
         <div class="col-lg-3 text-end px-0 float-right">
@@ -27,6 +27,9 @@
           </div>
           <% if policy([:admin, Project]).new? %>
             <%= link_to t('helpers.new.link_name', model: Project.model_name.human), new_admin_project_path, class: 'modal-remote-form-link p-2 px-3 btn bg-primary border-primary white d-inline-block ms-2 me-2 border rounded' %>
+          <% end %>
+          <% if policy([:admin, Project.new]).sync_kylas_product? %>
+            <%= link_to_if current_client.sync_product?, (current_client.sync_product? ? "Sync Products" : "Syncing In Progress"), sync_kylas_products_admin_projects_path, class: 'border rounded btn p-2 px-3 border-primary white bg-primary rounded py-2 ms-2', id: 'sync_projects' %>
           <% end %>
         </div>
         <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
@@ -71,3 +74,15 @@
     </div>
   </div>
 </section>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    var client = <%= raw current_user.booking_portal_client.to_json %>;
+    if (!client['sync_product'])
+    {
+      setInterval(function(){
+        location.reload();
+      }, 10000)
+    }
+  });
+<% end %>

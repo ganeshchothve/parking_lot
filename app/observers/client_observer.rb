@@ -20,24 +20,34 @@ class ClientObserver < Mongoid::Observer
   end
 
   def after_save client
-    # if client.enable_channel_partners_changed? && client.enable_channel_partners?
-    #   cp_users = User.in(role: %w[channel_partner cp_owner]).where(user_status_in_company: 'active', booking_portal_client_id: client.id)
-    #   if cp_users.present?
-    #     cp_users.each do |cp_user|
-    #       if Rails.env.production?
-    #         Kylas::PushCustomFieldsToKylas.perform_async(cp_user.id.to_s)
-    #       else
-    #         Kylas::PushCustomFieldsToKylas.new.perform(cp_user.id.to_s)
-    #       end
-    #     end
-    #   else
-    #     user = (client.users.admin.first rescue nil)
-    #     if user.present?
-    #       User::KYLAS_CUSTOM_FIELDS_ENTITIES.each do |entity|
-    #         Kylas::CreateCustomField.new(user, nil, {entity: entity}).call
-    #       end
-    #     end
-    #   end
-    # end
+    fields = ['channel_partners', 'leads']
+    fields.each do |field|
+      if defined?("enable_#{field}_changed?") && client.send("enable_#{field}_changed?")
+        if Rails.env.staging? || Rails.env.production?
+          ChangeCpStatus.perform_async(client.id.to_s, field)
+        else
+          ChangeCpStatus.new.perform(client.id.to_s, field)
+        end
+      end
+    end
+    if client.enable_channel_partners_changed? && client.enable_channel_partners? && client.kylas_custom_fields.blank?
+      cp_users = User.in(role: %w[channel_partner cp_owner]).where(user_status_in_company: 'active', booking_portal_client_id: client.id)
+      if cp_users.present?
+        cp_users.each do |cp_user|
+          if Rails.env.production?
+            Kylas::PushCustomFieldsToKylas.perform_async(cp_user.id.to_s)
+          else
+            Kylas::PushCustomFieldsToKylas.new.perform(cp_user.id.to_s)
+          end
+        end
+      else
+        user = (client.users.admin.first rescue nil)
+        if user.present?
+          User::KYLAS_CUSTOM_FIELDS_ENTITIES.each do |entity|
+            Kylas::CreateCustomField.new(user, nil, {entity: entity}).call
+          end
+        end
+      end
+    end
   end
 end

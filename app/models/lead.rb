@@ -12,11 +12,12 @@ class Lead
   include LeadStateMachine
   include DetailsMaskable
   include IncentiveSchemeAutoApplication
+  extend DocumentsConcern
 
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   DOCUMENT_TYPES = []
 
-  attr_accessor :payment_link, :kylas_contact_id, :kylas_product_id, :sync_to_kylas
+  attr_accessor :payment_link, :kylas_contact_id, :kylas_product_id, :sync_to_kylas, :manager_ids
 
   field :first_name, type: String, default: ''
   field :last_name, type: String, default: ''
@@ -48,12 +49,13 @@ class Lead
   # used for dump latest queue_number or revisit queue number from sitevisit
   field :queue_number, type: Integer
   field :kyc_done, type: Boolean, default: false
-  field :push_to_crm, type: Boolean, default: true
+  field :push_to_crm, type: Boolean, default: false
 
   # lead reassignment specific field
   field :accepted_by_sales, type: Boolean
 
   # Kylas Marketplace specific Fields
+  field :kylas_lead_id, type: String
   field :kylas_deal_id, type: String
   field :kylas_pipeline_id, type: Integer
 
@@ -119,6 +121,7 @@ class Lead
   scope :filter_by_lead_stage, ->(lead_stage) { where(lead_stage: lead_stage) }
   scope :filter_by_customer_status, ->(*customer_status){ where(customer_status: { '$in': customer_status }) }
   scope :filter_by_queue_number, ->(queue_number){ where(queue_number: queue_number) }
+  scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
   scope :incentive_eligible, ->(category) do
     if category == 'lead'
       nin(manager_id: ['', nil])
@@ -179,6 +182,13 @@ class Lead
     end
   end
 
+  scope :filter_by_token_number, ->(token_number) do
+    lead_ids = Receipt.where(token_number: token_number).distinct(:lead_id)
+    if lead_ids.present?
+      where(id: { '$in': lead_ids })
+    end
+  end
+
   def tentative_incentive_eligible?(category=nil)
     if category.present?
       if category == 'lead'
@@ -220,8 +230,8 @@ class Lead
   end
 
   def unattached_blocking_receipt(blocking_amount = nil)
-    blocking_amount ||= current_client.blocking_amount
-    Receipt.where(lead_id: id).in(status: %w[success clearance_pending]).where(booking_detail_id: nil).where(total_amount: { "$gte": blocking_amount }).asc(:token_number).first
+    blocking_amount ||= self.booking_portal_client.blocking_amount
+    Receipt.where(lead_id: id).in(status: %w[success clearance_pending]).where(booking_detail_id: nil).asc(:token_number).first
   end
 
   def is_payment_done?
@@ -293,13 +303,17 @@ class Lead
     activity.present? ? "#{(activity.expiry_date - Date.current).to_i} Days" : '0 Days'
   end
 
-  def send_payment_link
+  def send_payment_link(booking_detail_id = nil)
     url = Rails.application.routes.url_helpers
-    hold_booking_detail = self.booking_details.where(status: 'hold').first
-    if hold_booking_detail.present? && hold_booking_detail.search
-      self.payment_link = url.checkout_user_search_path(hold_booking_detail.search)
+    if booking_detail_id
+      hold_booking_detail = self.booking_details.where(id: booking_detail_id).first
     else
-      self.payment_link = url.dashboard_url("remote-state": url.new_buyer_receipt_path, user_email: user.email, user_token: user.authentication_token)
+      hold_booking_detail = self.booking_details.where(status: 'hold').first
+    end
+    if hold_booking_detail.present? && hold_booking_detail.search && hold_booking_detail.status == "hold"
+      self.payment_link = url.checkout_lead_search_url(hold_booking_detail.search)
+    else
+      self.payment_link = url.dashboard_url("remote-state": url.new_buyer_receipt_path(booking_detail_id: booking_detail_id), user_login: user.email, user_token: user.authentication_token, selected_lead_id: self.id)
     end
     #
     # Send email with payment link
@@ -351,15 +365,12 @@ class Lead
 
     def user_based_scope(user, params = {})
       custom_scope = {}
+      project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids)
       case user.role.to_sym
       when :channel_partner
-        #lead_ids = CpLeadActivity.where(user_id: user.id, channel_partner_id: user.channel_partner_id).distinct(:lead_id)
-        #custom_scope = {_id: { '$in': lead_ids }, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
-        custom_scope = {manager_id: user.id, channel_partner_id: user.channel_partner_id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
+        custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id }
       when :cp_owner
-        #lead_ids = CpLeadActivity.where(channel_partner_id: user.channel_partner_id).distinct(:lead_id)
-        #custom_scope = {_id: { '$in': lead_ids }}
-        custom_scope = {channel_partner_id: user.channel_partner_id}
+        custom_scope = { channel_partner_id: user.channel_partner_id }
       when :cp
         #channel_partner_ids = User.where(role: 'channel_partner', manager_id: user.id).distinct(:id)
         #lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
@@ -371,17 +382,22 @@ class Lead
         #lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
         #custom_scope = {_id: { '$in': lead_ids } }
         custom_scope = {}
-      when :admin, :sales
-        custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
+      when :admin
+        custom_scope = { }
+      when :sales
+        custom_scope = { }
       when :superadmin
-        custom_scope = { booking_portal_client_id: user.selected_client_id }
+        custom_scope = { }
+      when :gre
+        custom_scope = { }
       end
       custom_scope = { user_id: params[:user_id] } if params[:user_id].present?
       custom_scope = { user_id: user.id } if user.buyer?
 
-      # unless user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner))
-      #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
-      # end
+      if !user.role.in?(User::ALL_PROJECT_ACCESS) || params[:current_project_id].present?
+        custom_scope.merge!({project_id: { "$in": project_ids } })
+      end
+      custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
       custom_scope
     end
 

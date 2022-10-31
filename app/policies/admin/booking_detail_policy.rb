@@ -7,14 +7,18 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     out
   end
 
-  def new?
+  def new?(current_project_id = nil)
     out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner].include?(user.role) && eligible_user? && enable_actual_inventory?(user) && record.project&.is_active? && record.lead&.project&.bookings_enabled?
     out = false if user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
+    out = out && project_access_allowed?(current_project_id)
     out
   end
 
-  def create?
-    return true if is_buyer_booking_limit_exceed? && eligible_user? && enable_actual_inventory?(user) && record.lead&.project&.bookings_enabled?
+  def create?(current_project_id = nil)
+    valid = false
+    valid = is_buyer_booking_limit_exceed? && eligible_user? && enable_actual_inventory?(user) && record.lead&.project&.bookings_enabled?
+    valid = valid && project_access_allowed?(current_project_id)
+    return true if valid
     @condition = 'allowed_bookings'
     false
   end
@@ -35,25 +39,44 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     record.project&.is_active? && %w[cancelled swapped].exclude?(record.status) && (eligible_users_for_tasks? || enable_incentive_module?(user))
   end
 
-  def mis_report?
+  def mis_report?(embedded_marketplace = false)
+    return false if embedded_marketplace
     %w[superadmin admin sales_admin crm cp_admin billing_team cp].include?(user.role)
+  end
+
+  def filter?(embedded_marketplace = false)
+    return false if embedded_marketplace
+    true
   end
 
   def hold?
     record.project&.is_active? && _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && eligible_user? && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && buyer_kyc_booking_limit_exceed?
   end
 
-  def show_booking_link?
-    valid = record.lead&.project&.bookings_enabled? && _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && record.try(:user).try(:buyer?) && enable_inventory?
-    if is_assigned_lead?
-      valid = is_lead_accepted? && valid
-    end
+  def send_payment_link?
+    record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && (user.booking_portal_client.enable_payment_with_kyc ? record.lead.kyc_ready? : true ) && record.status.in?(['blocked', 'booked_tentative', 'under_negotiation', 'scheme_approved'])
+  end
+
+  def new_booking_on_project?
+    return false if marketplace_client?
+    enable_actual_inventory? && record.lead&.project&.bookings_enabled? && enable_inventory?
+  end
+
+  def show_booking_link?(current_project_id = nil)
+    return false if marketplace_client?
+    valid = record.lead&.project&.bookings_enabled? && _role_based_check && only_for_confirmed_user! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && record.try(:user).try(:buyer?) && enable_inventory? && enable_actual_inventory?
+    # if is_assigned_lead?
+    #   valid = is_lead_accepted? && valid
+    # end
+    valid = valid && project_access_allowed?(current_project_id)
     valid
   end
 
-  def show_add_booking_link?
-    out = !enable_inventory? && record.try(:user).try(:buyer?) && %w[account_manager channel_partner cp_owner].include?(user.role) && record.lead&.project&.bookings_enabled?
+  def show_add_booking_link?(current_project_id = nil)
+    return false if marketplace_client?
+    out = !enable_inventory? && record.try(:user).try(:buyer?) && record.lead&.project&.bookings_enabled? && enable_actual_inventory?
     out = false if user.role.in?(%w(cp_owner channel_partner)) && !(user.active_channel_partner? && interested_project_present?)
+    out = out && project_access_allowed?(current_project_id)
     out
   end
 
@@ -85,15 +108,15 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def move_to_next_state?
-    %w[account_manager account_manager_head cp_admin].include?(user.role)
+    %w[account_manager account_manager_head cp_admin admin].include?(user.role)
   end
 
   def move_to_next_approval_state?
-    %w[dev_sourcing_manager channel_partner cp_owner].include?(user.role)
+    %w[dev_sourcing_manager channel_partner cp_owner cp_admin].include?(user.role)
   end
 
   def reject?
-    user.role?('dev_sourcing_manager') && record.verification_pending?
+    user.role.in?(%w(dev_sourcing_manager cp_admin)) && record.verification_pending?
   end
 
   def can_move_booked_tentative?
@@ -101,13 +124,13 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def can_move_booked_confirmed?
-    (user.role?(:billing_team) || (user.booking_portal_client.launchpad_portal? && user.role.in?(%w(account_manager_head cp_admin)))) && record.booked_tentative? && record.approval_status == "approved"
+    (user.role.in?(%w(account_manager_head cp_admin dev_sourcing_manager billing_team admin))) && record.booked_tentative? && record.approval_status == "approved"
   end
 
   def can_move_cancel?
     out = false
-    out = true if (record.booked_tentative? || record.blocked?) && %w(billing_team).include?(user.role)
-    out = true if (record.booked_tentative? || record.blocked?) && (record.approval_status == "rejected") && %w(cp_admin).include?(user.role)
+    out = true if (record.booked_tentative? || record.blocked?) && %w(billing_team admin).include?(user.role)
+    out = true if (record.booked_tentative? || record.blocked?) && (record.approval_status == "rejected") && %w(cp_admin admin).include?(user.role)
     out
   end
 
@@ -115,10 +138,11 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     user.active_channel_partner?
   end
 
-  def edit_booking_without_inventory?
+  def edit_booking_without_inventory?(current_project_id = nil)
     out = false
     out = true if record.status.in?(%w(blocked booked_tentative)) && user.role.in?(%w(account_manager account_manager_head cp_admin))
     out = true if record.approval_status.in?(%w(pending rejected)) && record.status.in?(%w(blocked)) && user.role.in?(%w(cp_owner channel_partner))
+    out = out && project_access_allowed?(current_project_id)
     # out = true if %w('booked_tentative', 'booked_confirmed') && user.role?('billing_team')
     out
   end
@@ -148,9 +172,9 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     attributes = super
     attributes += [:project_tower_name, :agreement_price, :channel_partner_id, :project_unit_configuration, :booking_project_unit_name, :booked_on, :project_id, :primary_user_kyc_id, :project_unit_id, :user_id, :creator_id, :manager_id, :account_manager_id, :lead_id, :source, user_kyc_ids: []] if record.new_record? || (user.role.in?(%w(cp_owner channel_partner account_manager_head)) && record.status == 'blocked')
 
-    attributes += [:approval_event] if record.approval_status.in?(%w(pending)) && user.role.in?(%w(dev_sourcing_manager)) && user.booking_portal_client.launchpad_portal? && record.blocked?
+    attributes += [:approval_event] if record.approval_status.in?(%w(pending)) && user.role.in?(%w(dev_sourcing_manager cp_admin)) && record.blocked?
 
-    attributes += [:approval_event] if record.approval_status.in?(%w(rejected)) && user.role.in?(%w(cp_owner channel_partner)) && user.booking_portal_client.launchpad_portal? && record.blocked?
+    attributes += [:approval_event] if record.approval_status.in?(%w(rejected)) && user.role.in?(%w(cp_owner channel_partner)) && record.blocked?
 
     attributes += [:rejection_reason] if user.role.in?(%w(dev_sourcing_manager)) && user.booking_portal_client.launchpad_portal?
 
@@ -172,7 +196,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def need_unattached_booking_receipts_for_channel_partner
-    if user.role?('channel_partner')
+    if user.role.in?(['channel_partner', 'cp_owner'])
       return true if record.lead.unattached_blocking_receipt(record.project_unit.blocking_amount).present?
       @condition = "blocking_amount_receipt"
       false

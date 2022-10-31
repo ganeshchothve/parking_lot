@@ -8,6 +8,7 @@ class ChannelPartner
   include ChannelPartnerStateMachine
   include ApplicationHelper
   extend ApplicationHelper
+  extend DocumentsConcern
 
   STATUS = %w(active inactive pending rejected)
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
@@ -55,9 +56,11 @@ class ChannelPartner
   field :average_quarterly_business, type: Float
   field :developers_worked_for, type: Array, default: []
   field :interested_services, type: Array, default: []
+  field :project_ids, type: Array, default: []
 
   # Tracking selldo srd for new channel partner registrations.
   field :srd, type: String
+  field :cp_code, type: String
 
   scope :filter_by_rera_id, ->(rera_id) { where(rera_id: rera_id) }
   scope :filter_by_manager_id, ->(manager_id) { where(manager_id: manager_id) }
@@ -68,6 +71,7 @@ class ChannelPartner
   scope :filter_by__id, ->(_id) { where(_id: _id) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(company_name: regex) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
+  scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
 
   default_scope -> { desc(:created_at) }
 
@@ -101,7 +105,8 @@ class ChannelPartner
   #validates :rera_id, format: { with: /\A([A-Za-z])\d{11}\z/i, message: 'is not valid format' }, allow_blank: true
   #validate :docs_required_for_approval, on: :submit_for_approval
 
-  validates :rera_id, presence: true, uniqueness: true, length: { minimum: 6 }, format: { with: /\A[0-9a-zA-Z\/]*\z/i, message: 'allows only aplabets, numbers & forward slash(/)' }
+  validates :rera_id, uniqueness: true, length: { minimum: 6 }, format: { with: /\A[0-9a-zA-Z\/]*\z/i, message: 'allows only aplabets, numbers & forward slash(/)' }, allow_blank: true
+  validates :rera_id, presence: true, if: proc { |channel_partner| channel_partner.booking_portal_client.try(:kylas_tenant_id).blank? }
   validates :gstin_number, presence: true, if: :gst_applicable?
   validates :team_size, :numericality => { :greater_than => 0 }, allow_blank: true
   validates :status_change_reason, presence: true, if: proc { |cp| cp.status == 'rejected' }
@@ -120,6 +125,7 @@ class ChannelPartner
   validates :erp_id, uniqueness: true, allow_blank: true
   validate :user_based_uniqueness
   validates :primary_user_id, uniqueness: true, allow_blank: true
+  validates :cp_code, uniqueness: true, allow_blank: true
 
   validates :experience, inclusion: { in: proc{ ChannelPartner::EXPERIENCE } }, allow_blank: true
   validates :expertise, array: { inclusion: {allow_blank: true, in: ChannelPartner::EXPERTISE } }
@@ -133,15 +139,6 @@ class ChannelPartner
 
   def phone_or_email_required
     errors.add(:base, 'Email or Phone is required')
-  end
-
-  def self.available_statuses
-    [
-      { id: 'active', text: 'Active' },
-      { id: 'inactive', text: 'Inactive' },
-      { id: 'pending', text: 'Pending Approval' },
-      { id: 'rejected', text: 'Rejected Request' }
-    ]
   end
 
   def name
@@ -199,12 +196,13 @@ class ChannelPartner
          custom_scope = { manager_id: user.id }
         elsif user.role.in?(%w(cp_owner channel_partner))
           custom_scope = { id: user.channel_partner_id }
-        elsif user.role.in?(%w(admin sales))
-          custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
+        elsif user.role.in?(%w(admin))
+          custom_scope = {  }
         elsif user.role.in?(%w(superadmin))
-          custom_scope = { booking_portal_client_id: user.selected_client_id }
+          custom_scope = {  }
         end
       end
+      custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
       custom_scope
     end
 

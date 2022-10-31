@@ -2,28 +2,30 @@
   <p>
     <% leads_count = Lead.where(Lead.user_based_scope(current_user, params)).where(project_id: project.id).count %>
     <%= link_to_if policy([current_user_role_group, Lead]).index?, leads_count, admin_leads_path(fltrs: {project_id: project.id}) %>
-    <span>Leads</span>
+    <span><%= I18n.t("mongoid.models.lead.other") %></span>
 
     <% if policy([:admin, Lead.new(project_id: project.id)]).new? %>
-      <%#= link_to 'ADD', new_admin_lead_path(project_id: project.id), class: 'modal-remote-form-link prjt-add h-auto' %>
+      <%#= link_to I18n.t("global.add"), new_admin_lead_path(project_id: project.id), class: 'modal-remote-form-link prjt-add h-auto' %>
+    <% end %>
+  </p>
+<% end %>
+
+<% if current_client.enable_site_visit? %>
+  <p>
+    <% sv_count = SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).where(project_id: project.id).count %>
+    <%= link_to_if policy([current_user_role_group, SiteVisit]).index?, sv_count, admin_site_visits_path(fltrs: {project_id: project.id}) %>
+    <span><%= I18n.t("mongoid.models.site_visit.other") %></span>
+
+    <% if allow_walkins?(project) %>
+      <%= link_to I18n.t("global.add"), new_admin_lead_path(project_id: project.id, walkin: true), class: 'modal-remote-form-link prjt-add h-auto' %>
     <% end %>
   </p>
 <% end %>
 
 <p>
-  <% sv_count = SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).where(project_id: project.id).count %>
-  <%= link_to_if policy([current_user_role_group, SiteVisit]).index?, sv_count, admin_site_visits_path(fltrs: {project_id: project.id}) %>
-  <span>Walk-Ins</span>
-
-  <% if allow_walkins?(project) %>
-    <%= link_to 'ADD', new_admin_lead_path(project_id: project.id, walkin: true), class: 'modal-remote-form-link prjt-add h-auto' %>
-  <% end %>
-</p>
-
-<p>
   <% bookings_count = BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: project.id).count %>
   <%= link_to_if policy([current_user_role_group, BookingDetail]).index?, bookings_count, admin_booking_details_path(fltrs: {project_id: project.id})  %>
-  <span>Bookings</span>
+  <span><%= I18n.t("mongoid.models.booking_detail.other") %></span>
 
   <%= render "new_booking_links", project: project %>
   <!-- <a href="javascript:;" class="prjt-add"></a> -->

@@ -7,7 +7,11 @@ module BulkUpload
 
     def process_csv(csv)
       if bur.project_id.present?
-        client = bur.uploaded_by.booking_portal_client
+        if bur.uploaded_by.role?(:superadmin)
+          client = bur.uploaded_by.selected_client
+        else
+          client = bur.uploaded_by.booking_portal_client
+        end
         csv.each do |row|
           query = []
           if row.field(4).to_s.strip.present?
@@ -27,7 +31,6 @@ module BulkUpload
           end
 
           query << {lead_id: row.field(0).to_s.strip} if row.field(0).to_s.strip.present?
-
           if (count = User.or(query).count) > 1
             (bur.upload_errors.find_or_initialize_by(row: row.fields).messages.push("More than 1 users exist with this Selldo lead id/ phone/ email")).uniq
             bur.failure_count += 1
@@ -40,9 +43,8 @@ module BulkUpload
           attrs[:last_name] = row.field(2).to_s.strip
           attrs[:email] = email if email.present?
           attrs[:phone] = phone if phone.present?
-          lead_attrs = attrs.clone
           attrs[:booking_portal_client_id] = client.id
-
+          lead_attrs = attrs.clone
           if count.zero?
             user = User.new(attrs)
             if user.save

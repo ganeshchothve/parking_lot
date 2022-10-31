@@ -15,9 +15,11 @@
       if(typeof App === "undefined"){
         App = {};
       }
-      <!-- App.client = <%#= raw current_client.to_json(only: [:name, :_id, :preferred_login]) %>; -->
-      <!-- App.client.enable_actual_inventory = <%#= current_client.enable_actual_inventory?(current_user) %> -->
-      <!-- App.project = <%#= raw current_project.to_json(only: [:name, :_id]) %>; -->
+      App.locale = <%= current_translations.to_json.html_safe %>
+      <% if current_client.present? %>
+        App.client = <%= raw current_client.to_json(only: [:name, :_id, :preferred_login]) %>;
+        App.project = <%= raw current_project.to_json(only: [:name, :_id]) %>;
+      <% end %>
       <% if user_signed_in? %>
         App.current_user = <%= raw current_user.to_json %>;
         App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name;
@@ -37,16 +39,34 @@
     <% end %>
   </head>
   <body class="<%= controller_name %> <%= full_page_view? ? 'pt-0' : '' %>">
-    <% if full_page_view? || request.host.include?('embed-') %>
+    <% if full_page_view? || embedded_marketplace? %>
       <%= yield %>
     <% else %>
-      <%= render "layouts/navbar"%>
-      <main class="page-wrapper">
-        <%= yield %>
-      </main>
+      <% if marketplace_layout? %>
+        <%= render "layouts/mp/navbar" %>
+        <main class="mp-page-wrapper">
+          <%= yield %>
+        </main>
+      <% else %>
+        <%= render "layouts/navbar"%>
+        <main class="page-wrapper">
+          <%= yield %>
+        </main>
+      <% end %>
       <%= render "layouts/gamification" %>
       <%= render "layouts/navbar_footer_afterlogin"%>
     <% end %>
     <%= render 'layouts/partials/google_code' %>
+    <%= javascript_tag do %>
+      $('document').ready(function(){
+        var alert = <%= raw alert.to_json %>
+        var notice = <%= raw notice.to_json %>
+        if(notice){
+          Amura.global_success_handler(notice);
+        } else if(alert){
+          Amura.global_error_handler(alert);
+        }
+      });
+    <% end %>
   </body>
 </html>

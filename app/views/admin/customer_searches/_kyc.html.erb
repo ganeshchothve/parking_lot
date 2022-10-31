@@ -13,7 +13,7 @@
         <%= form_for(@user_kyc, local: true, remote: true, url: _url, html: { class: 'validate-form', "data-resource-type": global_labels['user_kycs'], 'data-type': 'json', id: 'user_kyc_form'}) do |f| %>
           <%= render 'admin/user_kycs/short_form_fields', f: f %>
           <%= f.hidden_field :customer_search_id, value: @customer_search.id %>
-          <%= f.submit "Save", class: "btn btn-primary float-right submit" %>
+          <%= f.submit I18n.t("global.save"), class: "btn btn-primary float-right submit" %>
         <% end %>
       </div>
     </div>

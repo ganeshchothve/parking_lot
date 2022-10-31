@@ -20,22 +20,26 @@ class Crm::Api::Post < Crm::Api
     _request_header['Authorization'] = "Bearer #{get_access_token}" if base.oauth2_authentication?
     uri = URI(_url)
 
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = (uri.scheme == 'https')
-    response = http.send_request(method.upcase, uri.path, _request_payload.to_json, _request_header)
+    https = Net::HTTP.new(uri.host, uri.port)
+    https.use_ssl = true
+    request = Object.const_get("Net::HTTP::#{method.capitalize}").new(uri, _request_header)
+    request.body = JSON.dump(_request_payload)
+    response = https.request(request)
+    # http.use_ssl = (uri.scheme == 'https')
+    # response = http.send_request(method.upcase, uri.path, _request_payload.to_json, _request_header)
     case response
     when Net::HTTPSuccess
       res = process_response(response, record)
-      update_api_log(api_log, _request_payload, _url, res, "Success")
+      update_api_log(api_log, _request_payload, _url, res, "Success", record)
       return {notice: "Object successfully pushed on CRM."}
     else
-      update_api_log(api_log, _request_payload, _url, (JSON.parse(response.body) rescue {}), "Error", response.message)
+      update_api_log(api_log, _request_payload, _url, (JSON.parse(response.body) rescue {}), "Error", record, response.message)
       Rails.logger.error "-------- #{response.message} --------"
       return {alert: response.message}
     end
 
   rescue StandardError => e
-    update_api_log(api_log, _request_payload, _url, (JSON.parse(response.try(:body)) rescue {}), "Error", e.message)
+    update_api_log(api_log, _request_payload, _url, (JSON.parse(response.try(:body)) rescue {}), "Error", record, e.message)
     Rails.logger.error "-------- #{e.message} --------"
     return {alert: e.message}
   end
@@ -77,7 +81,7 @@ class Crm::Api::Post < Crm::Api
     response
   end
 
-  def update_api_log api_log, request, request_url, response, status, message = nil
+  def update_api_log api_log, request, request_url, response, status, record, message = nil
     req = request.is_a?(Hash) ? [request] : request
     resp = if response.is_a?(Hash)
              response_type = 'Hash'
@@ -93,7 +97,8 @@ class Crm::Api::Post < Crm::Api
       response: resp,
       response_type: response_type,
       status: status,
-      message: message
+      message: message,
+      booking_portal_client: record.booking_portal_client
     )
   end
 end

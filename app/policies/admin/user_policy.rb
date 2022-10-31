@@ -9,19 +9,29 @@ class Admin::UserPolicy < UserPolicy
     return false unless user
     if user.booking_portal_client.roles_taking_registrations.include?(user.role)
       if user.role?('superadmin')
-        (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner))) || for_edit
+        (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner)) && !marketplace_client?) || for_edit
       elsif user.role?('admin')
-        !record.role?('superadmin') && ((!record.buyer? && !record.role.in?(%w(cp_owner channel_partner))) || for_edit)
+        !record.role?('superadmin') &&
+        (
+          (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner)) && !marketplace_client?) ||
+          (marketplace_client? && record.role?('channel_partner') && user.booking_portal_client.enable_channel_partners?) ||
+          for_edit
+        )
       elsif user.role?('channel_partner')
         false
       elsif user.role?('cp_owner')
         record.role.in?(%w(cp_owner channel_partner))
       elsif user.role?('sales_admin')
-        record.role?('sales')
-      elsif user.role?('cp_admin')
-        record.role?('cp') || (record.role.in?(%w(cp_owner channel_partner)) && for_edit)
-      elsif user.role?('cp')
-        (record.role.in?(%w(cp_owner channel_partner)) && for_edit)
+        record.role?('sales') && !marketplace_client?
+      elsif user.role?('cp_admin') && !marketplace_client?
+        record.role?('cp') ||
+        (
+          record.role.in?(%w(cp_owner channel_partner)) &&
+          user.booking_portal_client.enable_channel_partners? &&
+          for_edit
+        )
+      elsif user.role?('cp') && !marketplace_client?
+        (record.role.in?(%w(cp_owner channel_partner)) && user.booking_portal_client.enable_channel_partners? && for_edit)
       elsif user.role?('billing_team')
         false
       elsif !user.buyer?
@@ -32,17 +42,33 @@ class Admin::UserPolicy < UserPolicy
     end
   end
 
+  def show_add_users_dropdown?
+    marketplace_client? && user.role.in?(%w(admin channel_partner cp_owner)) && user.booking_portal_client.enable_channel_partners?
+  end
+
   def edit?
-    super || new?(true)
+    super || new?(true) || marketplace_client?
   end
 
   def confirm_user?
     if %w[admin superadmin].include?(user.role) && !record.confirmed?
-      true
+      if marketplace_client?
+        if record.role.in?(%w(cp_owner channel_partner))
+          Rails.env.production? ? false : true
+        else
+          record.is_active_in_kylas?
+        end
+      else
+        true
+      end
     else
       @condition = 'cannot_confirm_user'
       false
     end
+  end
+
+  def add_cp_users?
+    user.booking_portal_client.try(:enable_channel_partners?) && user.role.in?(%w(admin))
   end
 
   def reactivate_account?
@@ -50,7 +76,11 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def confirm_via_otp?
-    !record.confirmed? && record.phone.present? && new? && !user.buyer?
+    valid = !record.confirmed? && record.phone.present? && new? && !user.buyer?
+    if marketplace_client? && record.role.in?(%w(cp_owner channel_partner))
+      valid = valid && (Rails.env.production? ? false : true)
+    end
+    valid
   end
 
   def print?
@@ -62,7 +92,7 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def asset_create?
-    %w[superadmin admin sales sales_admin crm].include?(user.role)
+    User::BUYER_ROLES.include?(user.role)
   end
 
   def block_lead?
@@ -102,15 +132,19 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def search_by?
-    user.role.in?(%w(team_lead))
+    # user.role.in?(%w(team_lead))
+    user.role.in?(%w(sales gre team_lead))
   end
 
   def move_to_next_state?
-    (user.role?('team_lead') && (record.buyer? || record.role?('sales'))) ||
+    valid = false
+    valid = (user.role?('team_lead') && (record.buyer? || record.role?('sales'))) ||
       user.role?('sales') && (
         (record.buyer? && record.may_dropoff? && (record.closing_manager_id == user.id)) ||
         (!record.is_a?(Lead) && record.role?('sales') && (record.may_break? || record.may_available?))
-      )
+    )
+    valid = false if marketplace_client?
+    valid
   end
 
   def change_state?
@@ -127,10 +161,18 @@ class Admin::UserPolicy < UserPolicy
     user.role.in?(%w(superadmin admin channel_partner cp_owner))
   end
 
+  def sync_kylas_user?
+    marketplace_client? && user.role.in?(%w(superadmin admin))
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     if user.present?
-      attributes += [:is_active] if record.persisted? && record.id != user.id && user.role.in?(%w(admin sales))
+      if marketplace_client?
+        attributes += [:is_active] if record.persisted? && record.id != user.id && record.is_active_in_kylas? && user.role.in?(%w(admin))
+      else
+        attributes += [:is_active] if record.persisted? && record.id != user.id && user.role.in?(%w(admin))
+      end
       if %w[admin superadmin].include?(user.role)  && record.role?('cp')
         attributes += [:manager_id]
       end
@@ -147,8 +189,8 @@ class Admin::UserPolicy < UserPolicy
         attributes += [:role] unless record.role?('cp_owner') && record&.channel_partner&.primary_user_id == record.id
       end
 
-      attributes += [project_ids: []] if %w[admin superadmin].include?(user.role) && record.role.in?(User::SELECTED_PROJECT_ACCESS)
-      if %w[superadmin admin sales_admin].include?(user.role)
+      attributes += [project_ids: []] if %w[admin superadmin].include?(user.role) && !record.role.in?(User::ALL_PROJECT_ACCESS)
+      if %w[superadmin admin sales_admin].include?(user.role) && !marketplace_client?
         attributes += [:erp_id]
         attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
       end
@@ -159,12 +201,11 @@ class Admin::UserPolicy < UserPolicy
     if record.role.in?(%w(cp_owner channel_partner))
       attributes += [:upi_id]
       attributes += [:referral_code] if record.new_record?
-      attributes += [:channel_partner_id] if user.present? && user.role.in?(%w(cp_owner))
+      attributes += [:channel_partner_id] if user.present? && user.role.in?(%w(cp_owner admin))
       attributes += [fund_accounts_attributes: FundAccountPolicy.new(user, FundAccount.new).permitted_attributes] if record.persisted?
       attributes += [:rejection_reason]
     end
     attributes += [:login_otp] if confirm_via_otp?
-    attributes += [:kylas_user_id] if record.role.in?(%w(sales admin))
     attributes.uniq
   end
 end

@@ -21,7 +21,8 @@ class Admin::EmailsController < AdminController
   private
 
   def apply_policy_scope
-    Email.with_scope(policy_scope([:admin, Email])) do
+    custom_scope = Email.where(Email.user_based_scope(current_user, params))
+    Email.with_scope(policy_scope(custom_scope)) do
       yield
     end
   end

@@ -52,6 +52,7 @@ Rails.application.routes.draw do
       patch :create, on: :collection
     end
   end
+
   scope "*notable_type/:notable_id" do
     resources :notes, controller: :notes, as: :notables
   end
@@ -67,6 +68,9 @@ Rails.application.routes.draw do
     # TODO: Change this routes
     get :new_channel_partner, on: :collection
     post :create_channel_partner, on: :collection
+
+    get :new_company, on: :collection
+    post :create_company, on: :collection
   end
 
   # New v2 routes required for mobile apps, when old routes are needed to deprecate
@@ -75,6 +79,9 @@ Rails.application.routes.draw do
   get '/s/:code', to: 'shortened_urls#redirect_to_url'
 
   namespace :admin do
+    resources :discounts do
+      get 'update_coupons', on: :collection
+    end
     resources :customer_searches, except: :destroy
     resources :campaigns, except: [:destroy]
     resources :meetings, except: [:destroy]
@@ -89,19 +96,30 @@ Rails.application.routes.draw do
       end
     end
 
+    scope "*subject_class/:subject_class_id" do
+      resources :templates, only: [], controller: :templates, as: :custom_templates do
+        get :choose_template_for_print, on: :collection
+      end
+    end
+
     resources :portal_stage_priorities, only: [:index] do
       patch :reorder, on: :collection
     end
     resources :checklists
 
     resources :bulk_upload_reports, except: [:edit, :update, :destroy] do
-      get :show_errors, on: :member
+      member do
+        get :show_errors
+        get :upload_error_exports
+      end
     end
 
     resources :banner_assets
     resources :workflows, except: [:destroy] do
       get 'pipeline_stages', to: 'workflows#pipeline_stages', on: :collection
     end
+
+    resources :payment_types
 
     resources :booking_details, only: [:index, :show, :new, :create, :edit, :update] do
       member do
@@ -116,8 +134,6 @@ Rails.application.routes.draw do
         patch :move_to_next_state
         patch :move_to_next_approval_state
         get :reject
-        get :choose_template_for_print
-        get :print_template
       end
       get :mis_report, on: :collection
       get :searching_for_towers, on: :collection
@@ -171,7 +187,9 @@ Rails.application.routes.draw do
     end
     resources :push_notifications, only: %i[index show new create]
     resource :client, except: [:new, :create] do
-      resources :templates, only: [:edit, :update, :index, :new, :create]
+      resources :templates, only: [:edit, :update, :index, :new, :create] do
+        get :print_template, on: :collection
+      end
       get 'document_sign/prompt'
       get 'document_sign/callback'
       get 'get_regions'
@@ -212,6 +230,7 @@ Rails.application.routes.draw do
       get :collaterals, on: :collection
       post :sync_on_selldo, on: :member
       get :third_party_inventory, on: :collection
+      get :sync_kylas_products, on: :collection
 
       resources :unit_configurations, only: [:index, :edit, :update], controller: 'projects/unit_configurations'
       resources :token_types, except: [:destroy, :show], controller: 'projects/token_types' do
@@ -258,6 +277,8 @@ Rails.application.routes.draw do
         get :new_kylas_associated_lead
         post :create_kylas_associated_lead
         get :deal_associated_contact_details
+        get :new_kylas_lead
+        post :create_kylas_lead
       end
       member do
         get 'sync_notes'
@@ -312,6 +333,7 @@ Rails.application.routes.draw do
       member do
         get :resend_confirmation_instructions
         get :update_password
+        get :reset_password_after_first_login
         get :resend_password_instructions
         get :print
         patch :confirm_user
@@ -332,6 +354,7 @@ Rails.application.routes.draw do
         get :search_by
         get :site_visit_project_wise
         get :site_visit_partner_wise
+        get :sync_kylas_users
       end
 
       match :confirm_via_otp, action: 'confirm_via_otp', as: :confirm_via_otp, on: :member, via: [:get, :patch]
@@ -367,6 +390,7 @@ Rails.application.routes.draw do
       member do
         get :end_scheme
         patch :end_scheme
+        get :vis_details
       end
       collection do
         get :vis_details
@@ -387,10 +411,7 @@ Rails.application.routes.draw do
   get :terms_and_conditions, as: :terms_and_conditions, to: 'home#terms_and_conditions'
   get :privacy_policy, as: :privacy_policy, to: 'home#privacy_policy'
   get :"cp-enquiryform", as: :cp_enquiryform, to: 'home#cp_enquiryform'
-
-  # Lead selection while login for buyers
-  get 'buyer/projects', to: 'home#select_project', as: :buyer_select_project
-  post 'select_project', to: 'home#select_project', as: :select_project
+  get :not_authorized, to: 'home#not_authorized', as: :not_authorized
 
   get 'admin/select_clients', to: 'home#select_client', as: :admin_select_clients
   post 'select_client', to: 'home#select_client', as: :select_client
@@ -425,8 +446,8 @@ Rails.application.routes.draw do
     get :project_wise_leads, to: "dashboard#project_wise_leads"
     get :cp_variable_incentive_scheme_report, to: "dashboard#cp_variable_incentive_scheme_report"
     get :variable_incentive_scheme_report, to: "dashboard#variable_incentive_scheme_report"
-    get :channel_partners_leaderboard, to: "dashboard#channel_partners_leaderboard"
-    get :channel_partners_leaderboard_without_layout, to: "dashboard#channel_partners_leaderboard_without_layout"
+    get "channel_partners_leaderboard/:id", to: "dashboard#channel_partners_leaderboard", as: :channel_partners_leaderboard
+    get "channel_partners_leaderboard_without_layout/:id", to: "dashboard#channel_partners_leaderboard_without_layout", as: :channel_partners_leaderboard_without_layout
     get :top_channel_partners_by_incentives, to: "dashboard#top_channel_partners_by_incentives"
     get :average_incentive_per_booking, to: "dashboard#average_incentive_per_booking"
     get :highest_incentive_per_booking, to: "dashboard#highest_incentive_per_booking"
@@ -441,7 +462,7 @@ Rails.application.routes.draw do
     get :sales_board, to: 'dashboard#sales_board'
     get :booking_details_counts, to: 'dashboard#booking_details_counts'
     get :team_lead_dashboard, to: 'dashboard#team_lead_dashboard'
-    get :dashboard_landing_page, to: 'dashboard#dashboard_landing_page'
+    # get :dashboard_landing_page, to: 'dashboard#dashboard_landing_page'
     get :payout_dashboard, to: 'dashboard#payout_dashboard'
     get :payout_list, to: 'dashboard#payout_list'
     get :payout_show, to: 'dashboard#payout_show'
@@ -501,11 +522,33 @@ Rails.application.routes.draw do
       post :generate_code, on: :collection
     end
 
+    resources :leads, only: [:index, :show, :edit, :update, :new] do
+      collection do
+        get :export
+        get :search_by
+        post :search_inventory
+      end
+
+      resources :user_kycs, except: [:show, :destroy], controller: 'user_kycs'
+
+      resources :booking_details, only: [:index, :show] do
+        patch :booking, on: :member
+        patch :send_under_negotiation, on: :member
+        patch :send_blocked, on: :member
+        resources :booking_detail_schemes, only: [:index], controller: 'booking_details/booking_detail_schemes'
+
+        resources :receipts, only: [:index, :new, :create], controller: 'booking_details/receipts'
+        # resources :booking_detail_schemes, except: [:destroy]
+        # resources :receipts, only: [:index]
+      end
+    end
   end
 
   namespace :api do
     namespace :v1 do
-      resources :users, only: [:create, :update]
+      resources :users, only: [:create, :update] do
+        post :create_or_update_user, on: :collection
+      end
       resources :leads, only: [:create, :update]
       resources :user_kycs, only: [:create, :update]
       resources :channel_partners, only: [:create, :update]

@@ -2,11 +2,11 @@
   <div class="">
     <div class="row">
       <div class="col-12">
-        <button onclick='window.print();' class='btn btn-primary d-print-none'>Print</button>
+        <button onclick='window.print();' class='btn btn-primary d-print-none'><%= ::Template.human_attribute_name('print') %></button>
       </div>
     </div>
     <br>
-    <%= render 'admin/booking_details/print_template', locals: {template: @template} %>
+    <%= render 'admin/templates/print_template', locals: {template: @template} %>
   </div>
 </div>
 <%= javascript_tag do %>

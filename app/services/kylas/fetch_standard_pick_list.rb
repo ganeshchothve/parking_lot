@@ -4,7 +4,7 @@ require 'net/http'
 
 module Kylas
   # Fetch standard values of kylas
-  class FetchStandardPickList
+  class FetchStandardPickList < BaseService
     attr_reader :user
 
     def initialize(user)
@@ -44,16 +44,7 @@ module Kylas
         https = Net::HTTP.new(url.host, url.port)
         https.use_ssl = true
 
-        request = Net::HTTP::Get.new(url)
-        request['Content-Type'] = 'application/json'
-        request['Accept'] = 'application/json'
-
-        if user.kylas_api_key?
-          request['api-key'] = user.kylas_api_key
-        elsif user.kylas_refresh_token
-          request['Authorization'] = "Bearer #{user.fetch_access_token}"
-        end
-
+        request = Net::HTTP::Get.new(url, request_headers)
         # request
         https.request(request)
       rescue StandardError => e

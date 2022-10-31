@@ -2,8 +2,8 @@
   <div class="row mb-4">
     <div class="col-10">
       <% options = assetable_public_document_types(assetable) %>
-      <%= select_tag "document_type", options_for_select(options, options.first[1]), {prompt: "Select", class: "selectize", required: 'required'} %>
-      <div class = "text-muted small pb-2">Upload documents in following formats - jpg, jpeg, png, pdf, zip</div>
+      <%= select_tag I18n.t("global.document_type"), options_for_select(options, options.first[1]), {prompt: I18n.t("global.select"), class: "selectize", required: 'required'} %>
+      <div class = "text-muted small pb-2"><%= I18n.t("controller.assets.text.upload_formats_text") %></div>
       <div class = "text-muted small"><div class="help_text"></div></div>
     </div>
     <div class="col-2">
@@ -30,7 +30,7 @@
       var formData = {"document_type": $(this).val()}
       $(this).closest('.new_asset').find(".fileupload").data('form-data', formData)
       currentType = $(this).val();
-      $('.help_text').html("Valid documents for <b>" + types[currentType] + "</b> - </br>" + helpText[currentType + "_html"])
+      $('.help_text').html("<%= I18n.t('controller.assets.text.valid_documents_for') %> <b>" + types[currentType] + "</b> - </br>" + helpText[currentType + "_html"])
     }).trigger('change');
     $('.fileupload').on("click", function(){
       if($('.' + currentType).length == 0){

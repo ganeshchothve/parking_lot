@@ -4,7 +4,7 @@ class Buyer::AssetPolicy < AssetPolicy
   end
 
   def create?
-    "Buyer::#{record.assetable_type}Policy".constantize.new(user, record.assetable).update?
+    "Buyer::#{record.assetable_type}Policy".constantize.new(user, record.assetable).asset_create?
   end
 
   def update?
@@ -12,6 +12,6 @@ class Buyer::AssetPolicy < AssetPolicy
   end
 
   def destroy?
-    "Buyer::#{record.assetable_type}Policy".constantize.new(user, record.assetable).update?
+    "Buyer::#{record.assetable_type}Policy".constantize.new(user, record.assetable).asset_update?
   end
 end

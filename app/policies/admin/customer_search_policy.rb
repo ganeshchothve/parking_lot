@@ -16,7 +16,7 @@ class Admin::CustomerSearchPolicy < CustomerSearchPolicy
   end
 
   def show?
-    index?
+    index? && user.booking_portal_client.enable_site_visit?
   end
 
   def update?

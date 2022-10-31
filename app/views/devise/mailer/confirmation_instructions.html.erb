@@ -6,16 +6,15 @@
     <div class="mb-3"></div>
     <p>
       <% if @resource.role?("channel_partner") %>
-        Thank you for registering as a Channel Partner at <%= current_project.name %>. Please confirm your account by clicking the link below. <br/>
-        You can start entering your leads as soon as your account is confirmed.
+        <%= I18n.t("devise.text_msg.thank_channel_partner", name: "#{current_project.name}") %>
       <% elsif @resource.buyer? %>
         <% if @resource.manager_role?("channel_partner") %>
-          Your interest for <%= current_project.name %> has been registered by <%= @resource.manager_name %>. Please confirm your account by clicking the link below and book your Home in 4 easy steps!<br/>
+          <%= I18n.t("devise.text_msg.registered.confirm_account", name1: current_project.name, name2: @resource.manager_name) %><br/>
         <% else %>
-          Thank you for registering at <%= current_project.name %>. Please confirm your account by clicking the link below and book your Home in 4 easy steps!
+          <%= I18n.t("devise.text_msg.interested.confirm_account", name: current_project.name) %>
         <% end %>
       <% else %>
-        Please confirm your account by clicking the link below.
+        <%= I18n.t("devise.text_msg.click_to_confirm") %>
       <% end %>
     </p>
     <div class="mb-3"></div>

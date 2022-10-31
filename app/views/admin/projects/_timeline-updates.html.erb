@@ -2,10 +2,11 @@
   <% editable_timeline_updates = policy([:admin, project]).editable_field?("timeline_updates_attributes")%>
   <% if editable_timeline_updates %>
     <div class='text-right'>
-      <%= f.link_to_add "Add Timeline Update", :timeline_updates, :data => { :target => ".timeline_updates" }, class: 'btn btn-secondary' %>
+      <%= f.link_to_add I18n.t("controller.projects.add_timeline_update.link_name"), :timeline_updates, :data => { :target => ".timeline_updates" }, class: 'btn btn-secondary' %>
     </div>
   <% end %>
   <%= f.fields_for :timeline_updates do |sf|%>
+    <%= sf.hidden_field :booking_portal_client_id, value: current_client.id %>
     <% if editable_timeline_updates %>
       <div class='pl-2 text-right'>
         <%= sf.link_to_remove icon("far", "times-circle") %>

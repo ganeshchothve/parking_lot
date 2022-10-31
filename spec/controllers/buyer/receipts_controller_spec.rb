@@ -125,7 +125,7 @@ RSpec.describe Buyer::ReceiptsController, type: :controller do
         Receipt.any_instance.stub(:payment_gateway_service).and_return nil
         post :create, params: { receipt: receipt_params }
         receipt = Receipt.first
-        expect(response.request.flash[:notice]).to eq("We couldn't redirect you to the payment gateway, please try again")
+        expect(response.request.flash[:notice]).to eq(I18n.t("controller.notice.failed_to_redirect_to_payment_gateway"))
         expect(receipt.status).to eq('failed')
         expect(response).to redirect_to(dashboard_path)
       end
@@ -143,7 +143,7 @@ RSpec.describe Buyer::ReceiptsController, type: :controller do
         Receipt.any_instance.stub(:payment_gateway_service).and_return nil
         post :create, params: { receipt: receipt_params }
         receipt = Receipt.first
-        expect(response.request.flash[:notice]).to eq("We couldn't redirect you to the payment gateway, please try again")
+        expect(response.request.flash[:notice]).to eq(I18n.t("controller.notice.failed_to_redirect_to_payment_gateway"))
         expect(Receipt.first.status).to eq('failed')
         expect(response).to redirect_to(dashboard_path)
       end

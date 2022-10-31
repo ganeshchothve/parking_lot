@@ -6,7 +6,7 @@ class Admin::UsersController < AdminController
   before_action :authenticate_user!, except: %w[resend_confirmation_instructions change_state signup register]
   before_action :set_user, except: %i[index export new create portal_stage_chart channel_partner_performance partner_wise_performance search_by signup register]
   before_action :validate_player_ids, only: %i[update_player_ids]
-  before_action :authorize_resource, except: %w[resend_confirmation_instructions change_state, signup register]
+  before_action :authorize_resource, except: %w[resend_confirmation_instructions change_state, signup register sync_kylas_users]
   around_action :apply_policy_scope, only: %i[index export]
   before_action :set_client, only: [:register]
   before_action :fetch_kylas_users, only: %i[new edit]
@@ -25,9 +25,11 @@ class Admin::UsersController < AdminController
     respond_to do |format|
       @user = User.new(role: 'admin')
       @user.assign_attributes(user_params)
-      @user.assign_attributes(booking_portal_client: @client)
+      @user.assign_attributes(booking_portal_client: @client, tenant_owner: true)
+      @user.skip_confirmation_notification!
       if @user.save
-        format.html { redirect_to new_user_session_path, notice: 'Successfully registered' }
+        @user.confirm
+        format.html { redirect_to (stored_location_for(@user) || new_user_session_path), notice: 'Successfully registered' }
       else
         format.html { redirect_to user_signup_path, alert: @user.errors.full_messages }
       end
@@ -65,7 +67,7 @@ class Admin::UsersController < AdminController
     create_user
     respond_to do |format|
       if @user.save
-        format.html { redirect_to admin_users_path, notice: 'User was successfully created.' }
+        format.html { redirect_to admin_users_path, notice: I18n.t("controller.users.notice.created") }
         format.json { render json: @user, status: :created }
       else
         format.html { render :new }
@@ -86,10 +88,15 @@ class Admin::UsersController < AdminController
           if current_user == @user && permitted_attributes([current_user_role_group, @user]).key?('password')
             bypass_sign_in(@user)
           end
-          format.html { redirect_to edit_admin_user_path(@user), notice: 'User Profile updated successfully.' }
+          _path = params.dig(:user, :is_first_login).present? ? home_path(current_user) : edit_admin_user_path(@user)
+          format.html { redirect_to _path, notice: I18n.t("controller.users.notice.profile_updated") }
           format.json { render json: @user }
         else
-          format.html { render :edit }
+          if params.dig(:user, :is_first_login).present?
+            format.html { redirect_to reset_password_after_first_login_admin_user_path(@user), alert: @user.errors.full_messages }
+          else
+            format.html { render :edit }
+          end
           format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
         end
       end
@@ -102,8 +109,8 @@ class Admin::UsersController < AdminController
       if @user.save
         player_id = params.dig(:user, :user_notification_tokens_attributes, :"0", :token)
         @user.update_onesignal_external_user_id(player_id) if player_id.present?
-        format.html { redirect_to edit_admin_user_path(@user), notice: 'User updated successfully.' }
-        format.json { render json: { user: @user.as_json, message: 'User updated successfully'}, status: :ok }
+        format.html { redirect_to edit_admin_user_path(@user), notice: I18n.t("controller.users.notice.updated") }
+        format.json { render json: { user: @user.as_json, message: I18n.t("controller.users.notice.updated")}, status: :ok }
       else
         format.html { render :edit }
         format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
@@ -138,7 +145,7 @@ class Admin::UsersController < AdminController
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :phone)
+    params.require(:user).permit(:first_name, :last_name, :email, :phone, :password, :password_confirmation)
   end
 
   def client_params
@@ -150,7 +157,7 @@ class Admin::UsersController < AdminController
     is_player_id_exists = @user.user_notification_tokens.where(token: player_id).present?
     if is_player_id_exists
       respond_to do |format|
-        format.html { redirect_to edit_admin_user_path(@user), notice: 'User updated successfully.' }
+        format.html { redirect_to edit_admin_user_path(@user), notice: I18n.t("controller.users.notice.updated") }
         format.json { render json: { user: @user.as_json, message: 'User updated successfully'}, status: :ok }
       end
     end
@@ -172,9 +179,10 @@ class Admin::UsersController < AdminController
 
     # For channel parnter & cp owners
     if @user.role.in?(%w(channel_partner cp_owner))
-      if current_user.role?('cp_owner')
+      if current_user.role.in?(%w(cp_owner admin))
         @user.user_status_in_company = 'active'
         @user.manager_id = @user.channel_partner&.manager_id if @user.channel_partner&.manager_id.present?
+        @user.project_ids = @user.channel_partner&.project_ids if @user.channel_partner&.project_ids.present?
       elsif current_user.role?('cp')
         @user.manager_id = current_user.id
       end

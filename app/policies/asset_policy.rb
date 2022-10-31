@@ -14,7 +14,7 @@ class AssetPolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    attributes = [:asset_type, :file, :assetable_id, :assetable_type, :document_type, :url]
+    attributes = [:asset_type, :file, :assetable_id, :assetable_type, :document_type, :url, :booking_portal_client_id]
 
     if record.assetable_type.present? && "Admin::#{record.assetable_type}Policy".constantize.new(user, record.assetable).update?
       attributes  += [:id]

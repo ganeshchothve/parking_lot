@@ -6,11 +6,11 @@ module ChannelPartnerLeaderboardConcern
   end
 
   def channel_partners_leaderboard
-
+    @vis_id = params[:id]
   end
 
   def channel_partners_leaderboard_without_layout
-
+    @vis_id = params[:id]
   end
 
   def top_channel_partners_by_incentives
