@@ -2,6 +2,7 @@ class Admin::UserPolicy < UserPolicy
   # def resend_confirmation_instructions? def resend_password_instructions? def export? def update_password? def update? def create? from UserPolicy
 
   def index?
+    return false if user.role.in?(%w(sales)) && marketplace_client?
     !user.buyer?
   end
 

@@ -8,6 +8,7 @@ module Kylas
       before_action :set_project, only: [:create_kylas_associated_lead, :create_kylas_lead]
       before_action :set_user, only: [:create_kylas_associated_lead, :create_kylas_lead]
       before_action :fetch_lead_details, only: [:new_kylas_lead, :create_kylas_lead]
+      before_action :redirect_to_checkout, only: [:new_kylas_associated_lead]
     end
 
     def new_kylas_associated_lead
@@ -235,6 +236,18 @@ module Kylas
           product = (products_response.select{|p| p['id'] == kylas_product_id.to_i }.first rescue {})
           params.merge!(product: product) if product.present?
           Kylas::UpdateDeal.new(current_user, kylas_deal_id, params).call
+        end
+      end
+    end
+
+    private
+
+    def redirect_to_checkout
+      lead_ids = Lead.where(kylas_deal_id: params[:entityId]).pluck(:id)
+      hold_booking = BookingDetail.in(lead_id: lead_ids).hold.first
+      if hold_booking.present?
+        respond_to do |format|
+          format.html { redirect_to checkout_lead_search_path(hold_booking.search) }
         end
       end
     end

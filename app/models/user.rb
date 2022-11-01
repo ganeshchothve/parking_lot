@@ -934,7 +934,8 @@ class User
         custom_scope = { role: { "$ne": 'superadmin' } }
         custom_scope = { role: { "$ne": 'superadmin', '$in': %w(sales admin sales_admin gre channel_partner cp_owner) } } if user.booking_portal_client.try(:kylas_tenant_id).present?
       elsif user.role.in?(%w(sales))
-        custom_scope = { role: { '$in': %w(sales) }}
+        custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) }}
+        custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) + %w(channel_partner cp_owner) } } if user.booking_portal_client.try(:kylas_tenant_id).present?
       elsif user.role.in?(%w(superadmin))
         custom_scope = {  }
         custom_scope = { role: { '$in': %w(sales admin sales_admin gre channel_partner cp_owner) }} if user.booking_portal_client.try(:kylas_tenant_id).present?

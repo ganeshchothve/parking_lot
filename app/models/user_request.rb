@@ -53,13 +53,14 @@ class UserRequest
     def user_based_scope(user, params = {})
 
       custom_scope = {}
+      project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids)
       if params[:lead_id].blank? && !user.buyer?
         if user.role.in?(%w(cp_owner channel_partner))
-          custom_scope = { user_id: user.id, project_id: { '$in': user.interested_projects.approved.distinct(:project_id) } }
-        elsif user.role.in?(%w(admin sales))
-          custom_scope = { booking_portal_client_id: user.booking_portal_client.id }
+          custom_scope = { user_id: user.id }
+        elsif user.role.in?(%w(admin))
+          custom_scope = { }
         elsif user.role.in?(%w(superadmin))
-          custom_scope = { booking_portal_client_id: user.selected_client_id }
+          custom_scope = { }
         #elsif user.role?('cp')
         #  channel_partner_ids = User.where(role: 'channel_partner').where(manager_id: user.id).distinct(:id)
         #  custom_scope = { '$or': [{ user_id: { "$in": channel_partner_ids } }, {user_id: user.id}] }
@@ -76,9 +77,10 @@ class UserRequest
       custom_scope[:requestable_id] = params[:requestable_id] if params[:requestable_id].present?
       custom_scope[:_type] = 'UserRequest::General' unless user.booking_portal_client.enable_actual_inventory?(user)
 
-      # unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
-      #   custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
-      # end
+      if !user.role.in?(User::ALL_PROJECT_ACCESS) || params[:current_project_id].present?
+        custom_scope.merge!({project_id: { "$in": project_ids } })
+      end
+      custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
       custom_scope
     end
   end

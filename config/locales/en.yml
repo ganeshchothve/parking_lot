@@ -1746,7 +1746,7 @@ en:
         failed: "Failed"
       user_request/requestable_type:
         receipt: "Receipt"
-        bookingdetail: "Booking"
+        BookingDetail: "Booking"
         department: "Department"
         priority: "Priority"
         due_date: "Due Date"
