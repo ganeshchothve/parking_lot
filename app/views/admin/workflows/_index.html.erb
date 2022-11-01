@@ -1,7 +1,6 @@
-<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
-  <thead class="th-default">
-    <thead>
-      <tr class="bg-primary white">
+<table class='table table-responsive table-color'>
+  <thead>
+      <tr>
         <th><%= t('mongoid.attributes.workflow.stage') %></th>
         <th><%= t('mongoid.attributes.workflow.entity_type') %></th>
         <th><%= t('mongoid.attributes.workflow/pipeline.name') %></th>
@@ -9,7 +8,6 @@
         <th><%= t('mongoid.attributes.workflow/pipeline.reason') %></th>
         <th><%= t('mongoid.attributes.workflow.actions') %></th>
       </tr>
-    </thead>
   </thead>
   <tbody>
     <% workflows.each do |workflow| %>
