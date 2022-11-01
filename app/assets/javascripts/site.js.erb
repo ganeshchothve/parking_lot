@@ -101,6 +101,7 @@ $(document).ready(function () {
       $('.filter-box').toggle('slide', {direction: "right" }, 'slow');
     }
   });
+
   $('body').on('click', '.f-cancel-btn, .close-filter-btn', function () {
     if ($(this).parents('.box-card').length) {
       $(this).parents('.box-card').find('.filter-box').toggle('slide', {direction: "right" }, 'slow')
@@ -186,6 +187,7 @@ $(document).ready(function () {
       $('html,body').scrollTo($("#" + href).offset().top - gap);
     }
   });
+
   $('.incentive-lists li a').click(function(){
       var curnt_tab = $(this).attr('rel');      
       $('.tab-content, .incentive-lists li').removeClass('active');

@@ -17,5 +17,6 @@ class BannerAsset
   belongs_to :uploaded_by, class_name: 'User'
 
   scope :filter_by_publish, ->{ where(publish: true) }
+  scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
 
 end

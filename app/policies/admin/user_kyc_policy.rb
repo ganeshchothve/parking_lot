@@ -8,7 +8,7 @@ class Admin::UserKycPolicy < UserKycPolicy
   end
 
   def new?
-    valid = record.lead&.project&.is_active? && !marketplace_client?
+    valid = record.lead&.project&.is_active?# && !marketplace_client?
     # if is_assigned_lead?
     #   valid = is_lead_accepted? && valid
     # end
