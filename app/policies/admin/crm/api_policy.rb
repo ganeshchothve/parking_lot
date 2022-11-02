@@ -5,6 +5,6 @@ class Admin::Crm::ApiPolicy < Crm::ApiPolicy
   end
 
   def show_response?
-    %w[superadmin admin sales].include?(user.role)
+    %w[superadmin admin sales_admin].include?(user.role)
   end
 end

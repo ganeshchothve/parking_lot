@@ -232,7 +232,7 @@ module Kylas
       params = {}
       products_response = Kylas::FetchProducts.new(current_user).call(detail_response = true)
       if deal_data.present? && products_response.present?
-        if deal_data['products'].blank? || deal_data['products'].pluck('id').exclude?(kylas_product_id)
+        if deal_data['products'].blank? || deal_data['products'].pluck('id').exclude?(kylas_product_id.to_i)
           product = (products_response.select{|p| p['id'] == kylas_product_id.to_i }.first rescue {})
           params.merge!(product: product) if product.present?
           Kylas::UpdateDeal.new(current_user, kylas_deal_id, params).call

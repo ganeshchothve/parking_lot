@@ -28,11 +28,13 @@ class SyncKylasUsersWorker
             mp_user.assign_attributes(
               first_name: kylas_user[0],
               last_name: kylas_user[1],
+              email: kylas_user[2],
               phone: kylas_user[3]['dialCode'] + kylas_user[3]['value'],
               is_active_in_kylas: kylas_user[5]
             )
             mp_user.skip_confirmation_notification!
             mp_user.save
+            mp_user.confirm if mp_user.unconfirmed_email.present?
           end
         end
       end

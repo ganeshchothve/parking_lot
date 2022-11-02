@@ -74,7 +74,7 @@ class ApplicationController < ActionController::Base
       elsif current_user.role?('dev_sourcing_manager')
         admin_site_visits_path
       else
-        if current_user.role.in?(%w(sales))
+        if current_user.role.in?(%w(sales sales_admin))
           admin_projects_path
         else
           admin_users_path
