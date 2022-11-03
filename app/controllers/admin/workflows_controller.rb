@@ -1,8 +1,8 @@
 class Admin::WorkflowsController < AdminController
-  before_action :authorize_resource
   before_action :fetch_pipeline_details, only: %i[index new edit]
   before_action :set_workflow, only: %i[edit update]
   around_action :apply_policy_scope, only: :index
+  before_action :authorize_resource
 
   def index
     @workflows = Workflow.build_criteria params

@@ -242,15 +242,15 @@ module DatabaseSeeds
       # To change text on show booking detail for user & channel_partner
       # @bd is booking_detail
       if Template::UITemplate.where(name: 'booking_details/_details').blank?
-        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'booking_details/_details', content: '<ul>
-            <li>You need to pay <%= number_to_indian_currency(@bd.project_unit.get_booking_price) %> to confirm the booking</li>
-            <% unless @bd.booking_portal_client.cancellation_amount.zero? %>
-              <li>Cancellation charges are <%= number_to_indian_currency(@bd.booking_portal_client.cancellation_amount) %></li>
-            <% end %>
-            <% if @bd.project_unit.auto_release_on %>
-              <li>You have <%= (@bd.project_unit.auto_release_on - Date.today).to_i %> days (before <%= I18n.l(@bd.project_unit.auto_release_on) %>) remaining to confirm this booking. Please make a remaining payment of <%= number_to_indian_currency(@bd.pending_balance.round) %></li>
-            <% end %>
-          </ul>' })
+          Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'booking_details/_details', content: '<ul>
+              <li>You need to pay <%= number_to_indian_currency(@bd.project_unit.get_booking_price) %> to confirm the booking</li>
+              <% unless @bd.booking_portal_client.try(:cancellation_amount).try(:zero?) %>
+                <li>Cancellation charges are <%= number_to_indian_currency(@bd.booking_portal_client.cancellation_amount) %></li>
+              <% end %>
+              <% if @bd.project_unit.auto_release_on %>
+                <li>You have <%= (@bd.project_unit.auto_release_on - Date.today).to_i %> days (before <%= I18n.l(@bd.project_unit.auto_release_on) %>) remaining to confirm this booking. Please make a remaining payment of <%= number_to_indian_currency(@bd.pending_balance.try(:round)) %></li>
+              <% end %>
+            </ul>' })
       end
 
       if Template::UITemplate.where(name: 'quotation_pdf').blank?
