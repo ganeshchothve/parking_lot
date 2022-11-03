@@ -14,7 +14,7 @@ class Admin::WorkflowsController < AdminController
   end
 
   def new
-    @workflow = Workflow.new
+    @workflow = Workflow.new(booking_portal_client_id: current_user.booking_portal_client.id)
   end
 
   def create

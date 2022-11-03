@@ -18,12 +18,45 @@ class Workflow
   validates :stage, inclusion: { in: WORKFLOW_BOOKING_STAGES }
   validates :stage, presence: true, uniqueness: { scope: :booking_portal_client_id, message: 'Stage is already present in a workflow' }
   validate :pipelines_for_present_stage
+  validate :validate_create_product
+  validate :validate_deactivate_product
+  validate :validate_update_product_on_deal
 
   accepts_nested_attributes_for :pipelines, allow_destroy: true
 
   def pipelines_for_present_stage
     if self.pipelines.size != self.pipelines.map(&:pipeline_id).uniq.size
       errors.add(:base, 'Pipelines cannot be same for same stage')
+    end
+  end
+
+  def can_create_product?
+    booking_portal_client.workflows.where(create_product: true).blank?
+  end
+
+  def can_deactivate_product?
+    booking_portal_client.workflows.where(deactivate_product: true).blank?
+  end
+
+  def can_update_product_on_deal?
+    booking_portal_client.workflows.where(update_product_on_deal: true).blank?
+  end
+
+  def validate_create_product
+    if create_product && create_product_changed?
+      errors.add(:create_product, 'cannot be true for more than one workflow') unless can_create_product?
+    end
+  end
+
+  def validate_deactivate_product
+    if deactivate_product && deactivate_product_changed?
+      errors.add(:deactivate_product, 'cannot be true for more than one workflow') unless can_deactivate_product?
+    end
+  end
+
+  def validate_update_product_on_deal
+    if update_product_on_deal && update_product_on_deal_changed?
+      errors.add(:update_product_on_deal, 'cannot be true for more than one workflow') unless can_update_product_on_deal?
     end
   end
   class << self
