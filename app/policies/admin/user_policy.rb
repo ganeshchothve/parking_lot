@@ -2,7 +2,6 @@ class Admin::UserPolicy < UserPolicy
   # def resend_confirmation_instructions? def resend_password_instructions? def export? def update_password? def update? def create? from UserPolicy
 
   def index?
-    return false if user.role.in?(%w(sales sales_admin))
     !user.buyer?
   end
 
@@ -164,6 +163,10 @@ class Admin::UserPolicy < UserPolicy
 
   def sync_kylas_user?
     marketplace_client? && user.role.in?(%w(superadmin admin))
+  end
+
+  def show_index?
+    user.role.in?(%w(channel_partner cp_owner) + User::ALL_PROJECT_ACCESS)
   end
 
   def permitted_attributes(params = {})
