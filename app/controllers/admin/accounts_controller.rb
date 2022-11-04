@@ -46,7 +46,7 @@ class Admin::AccountsController < AdminController
   # POST /admin/:request_type/accounts
   #
   def create
-    @account = associated_class.new
+    @account = associated_class.new(booking_portal_client_id: current_user.booking_portal_client.id)
     @account.assign_attributes(permitted_attributes([:admin, @account]))
     respond_to do |format|
       if @account.save

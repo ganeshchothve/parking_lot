@@ -23,7 +23,11 @@
               <% _projects_path = current_user.role.in?(%w(cp_owner channel_partner)) ? admin_projects_path(fltrs: {city: current_user.channel_partner&.city, regions: current_user.channel_partner&.regions}) : admin_projects_path  %>
               <%= active_link_to t('controller.projects.index.link_name'), _projects_path, active: request.fullpath.scan(/projects/).present? && %w(user_interested_projects third_party_inventory).all? {|x| request.fullpath.scan(/^(?!.*#{x}).*$/).present?}, class: "nav-link pl-0 pr-0" %>
 
-              <%= active_link_to t('controller.users.index.link_name'), admin_users_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+            <% if policy([:admin, User]).show_index? %>
+              <% if policy([:admin, User]).index? %>
+                <%= active_link_to t('controller.users.index.link_name'), admin_users_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+              <% end %>
+            <% end %>
 
               <% if policy([:admin, ChannelPartner]).index? %>
                 <%= active_link_to t('controller.channel_partners.index.link_name'), channel_partners_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
@@ -34,11 +38,16 @@
               <% end %>
 
               <%= active_link_to t('controller.booking_details.index.link_name'), admin_booking_details_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-
-              <%= active_link_to t('controller.workflows.index.link_name'), admin_workflows_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+              <% if policy([:admin, Workflow]).index? %>
+                <%= active_link_to t('controller.workflows.index.link_name'), admin_workflows_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+              <% end %>
 
               <% if policy([:admin, Crm::Base]).index? %>
                 <%= active_link_to t('controller.crms.index.link_name'), admin_crm_base_index_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+              <% end %>
+
+              <% if policy([:admin, UserRequest]).index? %>
+                <%= active_link_to t('controller.user_requests.index.link_name'), [:admin, UserRequest, request_type: :all], active: :inclusive, class: "nav-link pl-0 pr-0" %>
               <% end %>
             </div>
           </div>

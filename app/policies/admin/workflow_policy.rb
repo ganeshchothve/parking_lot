@@ -11,6 +11,10 @@ class Admin::WorkflowPolicy < WorkflowPolicy
     %w[superadmin admin].include?(user.role)
   end
 
+  def pipeline_stages?
+    index?
+  end
+
   def can_create_product?
     record.can_create_product?
   end

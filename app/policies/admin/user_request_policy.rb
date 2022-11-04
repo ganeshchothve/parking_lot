@@ -25,7 +25,7 @@ class Admin::UserRequestPolicy < UserRequestPolicy
     attributes = []
     access_status = (record.status == 'pending' && ["UserRequest::Cancellation", "UserRequest::Swap"].include?(record._type))
     access_status = access_status || (['pending', 'processing'].include?(record.status) && record._type == "UserRequest::General")
-    if access_status && %w[admin crm sales superadmin cp cp_admin billing_team].include?(user.role)
+    if access_status && %w[admin crm sales_admin sales superadmin cp cp_admin billing_team].include?(user.role)
       attributes += [:event, :reason_for_failure]
     end
     if access_status && %w[sales_admin].include?(user.role) && !user.booking_portal_client.launchpad_portal

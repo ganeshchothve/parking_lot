@@ -10,16 +10,16 @@
 <% if false %>
   <%= link_to UnitConfiguration.model_name.human(count: 2), admin_project_unit_configurations_path(project), class: 'dropdown-item' %>
 <% end %>
-<% if true %>
+<% if policy([:admin, TokenType]).index? %>
   <%= link_to TokenType.model_name.human(count: 2), admin_project_token_types_path(project), class: 'dropdown-item' %>
 <% end %>
-<% if true %>
+<% if policy([:admin, TimeSlot]).index? %>
   <%= link_to TimeSlot.model_name.human(count: 2), admin_project_time_slots_path(project), class: 'dropdown-item' %>
 <% end %>
-<% if false %>
+<% if policy([:admin, IncentiveScheme]).index? %>
   <%= link_to IncentiveScheme.model_name.human(count: 2), admin_incentive_schemes_path(fltrs: {project_id: project.id.to_s}), class: 'dropdown-item' %>
 <% end %>
-<% if false %>
+<% if policy([:admin, ::Template]).index? %>
   <%= link_to(t('helpers.show.link_name', model: ::Template.model_name.human), admin_client_templates_path(fltrs: {project_id: project.id}), class: 'dropdown-item') %>
 <% end %>
 <% if policy(:custom).inventory? %>

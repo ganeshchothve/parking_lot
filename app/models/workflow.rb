@@ -3,7 +3,7 @@ class Workflow
   include Mongoid::Timestamps
   extend FilterByCriteria
 
-  WORKFLOW_BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed cancelled]
+  WORKFLOW_BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed cancelled under_negotiation].freeze
 
   field :stage, type: String
 

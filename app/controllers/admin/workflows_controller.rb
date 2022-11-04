@@ -1,8 +1,8 @@
 class Admin::WorkflowsController < AdminController
-
   before_action :fetch_pipeline_details, only: %i[index new edit]
   before_action :set_workflow, only: %i[edit update]
   around_action :apply_policy_scope, only: :index
+  before_action :authorize_resource
 
   def index
     @workflows = Workflow.build_criteria params
@@ -79,6 +79,18 @@ class Admin::WorkflowsController < AdminController
   end
 
   private
+
+  def authorize_resource
+    if params[:action] == 'index' || params[:action] == 'export'
+      authorize [:admin, Workflow]
+    elsif params[:action] == 'new'
+      authorize [:admin, Workflow.new]
+    elsif params[:action] == 'create'
+      authorize [:admin, Workflow.new(permitted_attributes([:admin, Workflow.new]))]
+    else
+      authorize [:admin, @workflow]
+    end
+  end
 
   def fetch_pipeline_details
     @pipelines = Kylas::FetchPipelineDetails.new(current_user).call
