@@ -289,7 +289,7 @@ class Project
     custom_scope = {}
     project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids)
     if user.role.in?(%w(superadmin))
-      custom_scope = { booking_portal_client_id: user.selected_client_id }
+      custom_scope = {  }
     elsif user.role.in?(%w(admin))
       custom_scope = {  }
     end

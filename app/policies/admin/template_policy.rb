@@ -9,7 +9,7 @@ class Admin::TemplatePolicy < TemplatePolicy
   end
 
   def choose_template_for_print?
-    user.role.in?(%w(admin sales superadmin))
+    user.role.in?(%w(admin sales sales_admin superadmin))
   end
 
   def print_template?
