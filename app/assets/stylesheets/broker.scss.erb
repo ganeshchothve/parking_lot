@@ -1369,14 +1369,14 @@ select.form-control{
     box-shadow: 0px 2px 6px #00000029;
     height: auto;
 	.header-logo {
-	    padding: 0;
-		height: 80px;
-		width: 160px;
+	  padding: 10px;
+		height: 60px;
+		width: auto;
 		position: relative;
 		img{
 			width: 100%;
 			height: auto;
-		}	
+		}
 	}
 	.navbar{
 		.nav-link{
@@ -1566,9 +1566,8 @@ select.form-control{
 	}
 }
 .page-wrapper{
-	margin-top: 70px;
-	margin-left: 2px;
-	width: calc(100%-2px);
+  margin: 70px auto 0;
+	width: calc(100% - 2px);
 	@media screen and (max-width: 1024px){
 		width: 100%;
 		margin-left: 0;
@@ -1679,8 +1678,7 @@ select.form-control{
 }
 
 .mp-page-wrapper{
-	margin-top: 70px;
-	margin-left: 2px;
+  margin: 70px auto 0;
 	width: calc(100% - 2px);
 	@media screen and (max-width: 1024px){
 		width: 100%;
@@ -4724,7 +4722,7 @@ table .dropdown-menu.show{
 .filter-box {
     position: fixed;
     right: 0;
-    top: 80px;
+    top: 60px;
     background-color: #fff;
     padding: 7px 11px;
     width: 330px;
@@ -5504,7 +5502,7 @@ table .dropdown-menu.show{
 	input, select, .selectize-input.full,textarea.form-control{
 		display: block;
 		width: 100%;
-		height: calc(1.5em + 0.75rem + 2px);
+		//height: calc(1.5em + 0.75rem + 2px);
 		padding: 0.375rem 0.75rem;
 		font-size: 14px;
 		font-weight: 400;
@@ -5517,19 +5515,20 @@ table .dropdown-menu.show{
 		transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 	}
 	.modal-footer{
-		input{
-			&.btn.btn-primary{
-				float: right;
-				min-width: 7.2rem;
-				margin-left: 0.5rem;
-				line-height: 1.5;
-				color: white;
-				background-color: $theme-blue!important;
-				border: 1px solid $theme-blue!important;
-				letter-spacing: 0.018rem;
+		input,button{
+			&.btn{
 				height: 36px;
 				font-weight: 500;
 				font-size: 16px;
+
+        &.btn-primary{
+          float: right;
+          min-width: 7.2rem;
+          line-height: 1.5;
+          color: white;
+          background-color: $theme-blue!important;
+          letter-spacing: 0.018rem;
+        }
 			}
 		}
 	}
@@ -5912,3 +5911,15 @@ table .dropdown-menu.show{
 #widget .ui-slider .ui-slider-handle{margin-left: -15px;}
 
 .daterangepicker{z-index:99999!important;}
+
+
+.modal.left .modal-content,
+.modal.right .modal-content {
+  height: 100%;
+  overflow-y: inherit !important;
+}
+.filter-right-section{
+  overflow-y: auto;
+  height: 100vh;
+  padding-bottom: 120px;
+}

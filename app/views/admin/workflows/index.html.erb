@@ -1,12 +1,11 @@
 <section class="mb-5 mt-3">
   <div class="">
     <div class="row">
-
-    <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
-        <div class="table-btn-set float-end pb-3 text-end">
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="table-btn-set float-end pb-1 text-end mt-2">
           <% if policy([current_user_role_group, Workflow.new]).new? %>
-                <%= link_to "Add #{global_labels['workflow']}", new_admin_workflow_path, class: 'bg-primary btn white', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add Workflow'} %>
-              <% end %>
+            <%= link_to "Add #{global_labels['workflow']}", new_admin_workflow_path, class: 'bg-primary btn white', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add Workflow'} %>
+          <% end %>
         </div>
       </div>
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">

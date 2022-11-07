@@ -1,5 +1,5 @@
 <footer class="bg-white footer fixed-bottom p-0 pt-1 cmn-inner-footer">
-  <div class="container">
+  <div class="px-4">
     <% if defined?(current_user) && current_user %>
       <div class="row pb-1 footer-tow-cmn">
         <div class="col-lg-6 col-md-8 col-xs-6 col-sm-4 no-pd">
@@ -22,26 +22,26 @@
         </div>
       </div>
     <% end %>
-    <div class="row scroll-footer">
-      <% if defined?(current_user) && current_user %>
-        <hr class="w-100 m-0">
-      <% end %>
-      <div class="col-lg-8 no-pd">
-        <div class="footer-top footer-menu">
-          <% template = ::Template::UITemplate.where(name: 'layouts/_navbar_footer').first %>
-          <% if template.present? %>
+    <% template = ::Template::UITemplate.where(name: 'layouts/_navbar_footer').first %>
+    <% if template.present? && template.is_active? %>
+      <div class="row scroll-footer">
+        <% if defined?(current_user) && current_user %>
+          <hr class="w-100 m-0">
+        <% end %>
+        <div class="col-lg-8 no-pd">
+          <div class="footer-top footer-menu">
             <%= get_view_erb(template, check_active: true) %>
-          <% end %>
+          </div>
         </div>
       </div>
-    </div>
-    <%# unless defined?(current_user) && current_user %>
+      <%# unless defined?(current_user) && current_user %>
       <!-- <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 no-pd">
         <ul class="footer-menu mb-0 text-end text-right">
-          <%#= render "layouts/language" %>
+        <%#= render "layouts/language" %>
         </ul>
-      </div> -->
-    <%# end %>
+        </div> -->
+      <%# end %>
+    <% end %>
   </div>
 </footer>
 

@@ -9,6 +9,7 @@
             <th>Email</th>
             <th>Phone</th>
             <th>Role</th>
+            <th>Active</th>
             <th>Status</th>
             <th>Action</th>
           </tr>
@@ -48,10 +49,12 @@
               <% if is_marketplace? && !user.role.in?(User::CLIENT_SCOPED_ROLES) %>
                 <p class="mb-0"><i class='fa fn-16 fa-<%= (user.is_active_in_kylas?) ? "check" : "times" %> fill-<%= (user.is_active_in_kylas?) ? "success" : "danger" %> me-12 fa-lg'></i><%= t("mongoid.attributes.user/is_active_in_kylas.#{user.is_active_in_kylas?}") %> </p>
               <% end %>
+            </td>
+            <td>
               <% if user.buyer? %>
                 <p class="mb-0"><i class='fa fn-16 fa-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{user.is_payment_done? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= user.is_payment_done? ? 'Payment Done' : 'Payment Pending' %> </p>
                 <% if user.portal_stage.present? %>
-                  <p class="mb-0"><i class='fa fa-circle status_<%= user.portal_stage.stage %> me-2 fa-xs ms-5'></i><%= t("mongoid.attributes.channel_partner/status.#{user.portal_stage.stage}") %> </p>
+                  <p class="mb-0"><i class='fa fa-circle status_<%= user.portal_stage.stage %> me-2 fa-xs'></i><%= t("mongoid.attributes.channel_partner/status.#{user.portal_stage.stage}") %> </p>
                 <% else %>
                   <p class=""><i class='fa fn-16 fa-<%= user.confirmed_at.present? ? "check" : "times" %> fill-<%= user.confirmed_at.present? ? "success" : "danger" %> me-12 fa-lg'></i><%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %> </p>
                 <% end %>
@@ -61,10 +64,10 @@
                   <% if user.channel_partner.blank? || user.channel_partner&.inactive? %>
                     <p class="mb-0"><i class='fa fn-16 fa-check fill-success me-12 fa-lg'></i><%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %> </p>
                   <% else %>
-                    <p class="mb-0"><i class='fa fa-circle status_<%= user.channel_partner&.status %> me-2 fa-xs ms-5'></i><%= t("mongoid.attributes.channel_partner/status.#{user.channel_partner&.status}") %> </p>
+                    <p class="mb-0"><i class='fa fa-circle status_<%= user.channel_partner&.status %> me-2 fa-xs'></i><%= t("mongoid.attributes.channel_partner/status.#{user.channel_partner&.status}") %> </p>
                   <% end %>
                 <% else %>
-                  <p class="mb-0"><i class='fa fa-circle status_inactive me-2 fa-xs ms-5'></i><%= t("mongoid.attributes.channel_partner/status.inactive") %> </p>
+                  <p class="mb-0"><i class='fa fa-circle status_inactive me-2 fa-xs'></i><%= t("mongoid.attributes.channel_partner/status.inactive") %> </p>
                 <% end %>
               <% end %>
             </td>
@@ -85,7 +88,7 @@
       </div>
 
       <!----------- Pagination ---------->
-      <div class="col-lg-12 py-3 bg-white mb-2 px-3 mt-3 shadow-sm">
+      <div class="col-lg-12 p-3">
         <div class="row">
           <div class="col-lg-6 pt-2">
             <p class="table-entry mb-0"><%= page_entries_info users %></p>
