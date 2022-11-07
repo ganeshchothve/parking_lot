@@ -99,7 +99,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def search_by?
-    user.role.in?(%w(sales gre team_lead))
+    user.role.in?(%w(sales sales_admin gre team_lead))
   end
 
   def assign_sales?
@@ -134,7 +134,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def new_kylas_associated_lead?
-    %w(superadmin admin sales).include?(user.role)
+    %w(superadmin admin sales sales_admin).include?(user.role)
   end
 
   def create_kylas_associated_lead?
@@ -146,7 +146,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def new_kylas_lead?
-    user.role.in?(%w(admin sales))
+    user.role.in?(%w(admin sales sales_admin))
   end
 
   def create_kylas_lead?
@@ -156,7 +156,7 @@ class Admin::LeadPolicy < LeadPolicy
   def permitted_attributes(params = {})
     attributes = super || []
     attributes += [:first_name, :last_name, :email, :phone, :project_id, site_visits_attributes: Pundit.policy(user, [:admin, SiteVisit.new]).permitted_attributes] if record.new_record?
-    if user.present? && user.role.in?(%w(superadmin admin gre sales))
+    if user.present? && user.role.in?(%w(superadmin admin gre sales sales_admin))
       attributes += [:manager_id] if user.booking_portal_client.try(:enable_channel_partners?)
       attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
     end

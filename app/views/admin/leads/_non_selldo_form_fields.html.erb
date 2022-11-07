@@ -1,4 +1,3 @@
-<% project_ids = (params[:current_project_ids] || user.project_ids) %>
 <div class="row">
   <% if policy([:admin, lead]).editable_field?("push_to_crm") %>
     <div class="col-md-12">

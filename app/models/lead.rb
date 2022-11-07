@@ -386,6 +386,8 @@ class Lead
         custom_scope = { }
       when :sales
         custom_scope = { }
+      when :sales_admin
+        custom_scope = { }
       when :superadmin
         custom_scope = { }
       when :gre

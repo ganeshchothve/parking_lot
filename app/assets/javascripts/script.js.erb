@@ -283,27 +283,6 @@ $(document).ready(function () {
 
     $(window).scroll(function () {
 
-        // if (window_wt > 768) {
-        //     if ($(document).scrollTop() > 50) {
-        //         if ($('header').hasClass('sticky-header')) {
-
-        //         } else {
-        //             $('header').addClass('shrink');
-        //             $(".brand-logo img").attr("src", "<%= asset_path 'beyondwalls-logo.png' %>")
-        //         }
-        //     } else {
-        //         if ($('header').hasClass('sticky-header')) {
-
-        //         } else {
-        //             // $('header').removeClass('shrink');
-        //             $(".brand-logo img").attr("src", "<%= asset_path 'beyondwalls-logo.png' %>")
-        //         }
-        //     }
-        // } else {
-        //     $(".brand-logo img").attr("src", "<%= asset_path 'beyondwalls-logo.png' %>");
-        // }
-
-
         /******************* Lazy Load Script ************************/
         $(".lazy").each(function () {
             if ($(this).attr("data-src")) {

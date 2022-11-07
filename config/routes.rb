@@ -32,9 +32,14 @@ Rails.application.routes.draw do
     post 'users/notification_tokens', to: 'users/notification_tokens#update', as: :user_notification_tokens
   end
 
+  authenticated :user, ->(u) { u.role.in?(%w(sales sales_admin)) } do
+    root to: 'admin/projects#index', as: :sales_root
+  end
+
   authenticated :user do
     root 'admin/users#index', as: :authenticated_root
   end
+
 
   root to: redirect('users/sign_in')
 

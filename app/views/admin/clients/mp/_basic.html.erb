@@ -146,4 +146,19 @@
       </div>
     </div>
   </div>
+  <% if policy(@client).editable_field?("logo") %>
+    <div class="row">
+      <div class="mb-3">
+        <%= f.label :logo, class: 'label-required' %><br/>
+        <%= f.file_field :logo, class: 'btn pl-0', disabled: (policy([:admin, @client]).editable_field?("logo") ? false : true) %>
+        <br/>
+        <% if @client.logo.present? %>
+          <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
+            <img src="<%= @client.logo.url %>" style="max-height: 100%; max-width:100%;" />
+          </div>
+        <% end %>
+        <hr/>
+      </div>
+    </div>
+  <% end %>
 </div>

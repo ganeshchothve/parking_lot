@@ -10,7 +10,7 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   end
 
   def show?
-    false #index?
+    index?
   end
 
   def release_unit?

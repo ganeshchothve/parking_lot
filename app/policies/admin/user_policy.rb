@@ -165,6 +165,10 @@ class Admin::UserPolicy < UserPolicy
     marketplace_client? && user.role.in?(%w(superadmin admin))
   end
 
+  def show_index?
+    user.role.in?(%w(channel_partner cp_owner) + User::ALL_PROJECT_ACCESS)
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     if user.present?

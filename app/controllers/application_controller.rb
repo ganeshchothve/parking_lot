@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
 
   acts_as_token_authentication_handler_for User, if: :token_authentication_valid_params?
 
+  before_action :set_mailer_host
   before_action :set_current_client, if: :current_user
   before_action :set_current_project_id
   # Run in current user Time Zone
@@ -73,7 +74,11 @@ class ApplicationController < ActionController::Base
       elsif current_user.role?('dev_sourcing_manager')
         admin_site_visits_path
       else
-        admin_users_path
+        if current_user.role.in?(%w(sales sales_admin))
+          admin_projects_path
+        else
+          admin_users_path
+        end
       end
     else
       dashboard_path
@@ -264,5 +269,9 @@ class ApplicationController < ActionController::Base
 
   def default_url_options
     { locale: I18n.locale }
+  end
+
+  def set_mailer_host
+    ActionMailer::Base.default_url_options[:host] = Rails.env.development? ? request.host_with_port : request.host
   end
 end
