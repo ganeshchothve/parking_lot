@@ -9,8 +9,8 @@
     <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,700,900&amp;display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js" integrity="sha512-Wt1bJGtlnMtGP0dqNFH1xlkLBNpEodaiQ8ZN5JLA5wpc1sUlk/O5uuOMNgvzddzkpvZ9GLyYNa8w2s7rqiTk5Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <%= javascript_include_tag 'dashboard' %>
-
     <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+
     <%= javascript_tag do %>
       if(typeof App === "undefined"){
         App = {};
@@ -39,24 +39,20 @@
     <% end %>
   </head>
   <body class="<%= controller_name %> <%= full_page_view? ? 'pt-0' : '' %>">
+
     <% if full_page_view? || embedded_marketplace? %>
       <%= yield %>
     <% else %>
-      <% if marketplace_layout? %>
-        <%= render "layouts/mp/navbar" %>
-        <main class="mp-page-wrapper">
-          <%= yield %>
-        </main>
-      <% else %>
-        <%= render "layouts/navbar"%>
-        <main class="page-wrapper">
-          <%= yield %>
-        </main>
-      <% end %>
+      <%= render "layouts/navbar"%>
+      <main class="page-wrapper">
+        <%= yield %>
+      </main>
       <%= render "layouts/gamification" %>
       <%= render "layouts/navbar_footer_afterlogin"%>
     <% end %>
+
     <%= render 'layouts/partials/google_code' %>
+
     <%= javascript_tag do %>
       $('document').ready(function(){
         var alert = <%= raw alert.to_json %>
@@ -66,6 +62,26 @@
         } else if(alert){
           Amura.global_error_handler(alert);
         }
+
+        // For UX differences between iframe and normal rendering
+        if(window.top != window.self){
+          $('#signout').hide();
+        } else {
+          $('.mp-page-wrapper,.page-wrapper').css('width', 'calc(100% - 40px)')
+        }
+
+        // For scrollable sections in modal inner forms
+        $('body').on("click", '.filter-left-section ul li a', function() {
+          var container = $('.filter-right-section');
+          var scrollTo = $('#' + $(this).attr("rel"));
+
+          // Calculating new position of scrollbar
+          var position = scrollTo.offset().top
+                  - container.offset().top - 20
+                  + container.scrollTop();
+          // Setting the value of scrollbar
+          container.animate({ scrollTop: position }, 500);
+        });
       });
     <% end %>
   </body>

@@ -22,7 +22,7 @@
           </div>
           <!-- In case of marketplace client, show add user dropdown to only admin role for allowing him to add cp users -->
           <% unless marketplace? && !policy([:admin, User.new]).show_add_users_dropdown?  %>
-            <div class="new-menu display-initial d-inline me-2 ms-1" >
+            <div class="new-menu display-initial d-inline" >
               <button class="select-btn btn btn-primary fn-400 dropdown-toggle" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= t('controller.users.new.link_name', role: 'User') %></button>
               <div class="dropdown-menu">
                 <% User.available_roles(current_client).each do |role| %>
@@ -47,7 +47,7 @@
             </div>
           <% end %>
           <% if policy([:admin, User.new]).sync_kylas_user? %>
-            <%= link_to_if current_client.sync_user?, (current_client.sync_user? ? "Sync Users" : "Syncing In Progress"), sync_kylas_users_admin_users_path, class: 'border rounded btn px-3 p-2 border-primary white bg-primary rounded py-2 ms-2', id: 'sync_users' %>
+            <%= link_to_if current_client.sync_user?, (current_client.sync_user? ? "Sync Users" : "Syncing In Progress"), sync_kylas_users_admin_users_path, class: 'border rounded btn px-3 border-primary white bg-primary rounded', id: 'sync_users' %>
           <% end %>
         </div>
       </div>

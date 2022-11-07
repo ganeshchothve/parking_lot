@@ -1,97 +1,66 @@
 <% if user_signed_in? %>
+  <% if (%w(select_client)).include?params[:action] %>
+    <%= render "layouts/partials/before_login_header" %>
+  <% else %>
+    <header>
+      <div class="header-topbar">
+        <div class="header-inner">
+          <div class="header-logo float-start">
+            <%= link_to ((current_client.present? && current_client.logo.present?) ? (image_tag current_client.logo.url, class: 'img-fluid', alt: "Logo") : "launchpad-logo.png"), dashboard_path, class: 'navbar-brand me-0'%>
+          </div>
 
-<% if (%w(select_project select_client)).include?params[:action] %>
-<%= render "layouts/partials/before_login_header" %>
-<% else %>
-<header>
-  <div class="header-leftbar">
-    <div class="leftbar-wrap">
-      <div class="header-menu">
-        <ul class="list-unstyled ">
-          <%= render "layouts/navbar/#{current_user_role_group}" %>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="header-topbar">
-    <div class="header-inner">
-      <!-- <a href="javascript:;" class="p-2 py-1 float-start toggle-side-menu mt-4 me-3 ms-2">
-        <div class="burger-menu menu-btn pull-right" data-event-category="Header" data-event-action="Click"
-          data-event-name="Menu">
-          <div class="bar1" data-event-category="Header" data-event-action="Click" data-event-name="Menu"></div>
-          <div class="bar2" data-event-category="Header" data-event-action="Click" data-event-name="Menu"></div>
-          <div class="bar3" data-event-category="Header" data-event-action="Click" data-event-name="Menu"></div>
-        </div>
-      </a> -->
-      <div class="header-logo float-start">
-        <%= link_to ((current_client.present? && current_client.logo.present?) ? (image_tag current_client.logo.url, class: 'img-fluid position-absolute start-50 top-50 translate-middle', alt: "Logo") : "launchpad-logo.png"), dashboard_path, class: 'navbar-brand me-0'%>
-      </div>
+          <div class="float-start">
+            <nav class="navbar navbar-expand-lg shadow-none px-0">
+              <div class="container-fluid px-0">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-      <div class="float-start">
-        <nav class="navbar navbar-expand-lg shadow-none px-0">
-          <div class="container-fluid px-0">
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <% _projects_path = current_user.role.in?(%w(cp_owner channel_partner)) ? admin_projects_path(fltrs: {city: current_user.channel_partner&.city, regions: current_user.channel_partner&.regions}) : admin_projects_path  %>
+                  <%= active_link_to t('controller.projects.index.link_name'), _projects_path, active: request.fullpath.scan(/projects/).present? && %w(user_interested_projects third_party_inventory).all? {|x| request.fullpath.scan(/^(?!.*#{x}).*$/).present?}, class: "nav-link pl-0 pr-0" %>
 
-              <% _projects_path = current_user.role.in?(%w(cp_owner channel_partner)) ? admin_projects_path(fltrs: {city: current_user.channel_partner&.city, regions: current_user.channel_partner&.regions}) : admin_projects_path  %>
-              <%= active_link_to t('controller.projects.index.link_name'), _projects_path, active: request.fullpath.scan(/projects/).present? && %w(user_interested_projects third_party_inventory).all? {|x| request.fullpath.scan(/^(?!.*#{x}).*$/).present?}, class: "nav-link pl-0 pr-0" %>
+                  <%= active_link_to t('controller.users.index.link_name'), admin_users_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
 
-              <%= active_link_to t('controller.users.index.link_name'), admin_users_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+                  <%= active_link_to t('controller.booking_details.index.link_name'), admin_booking_details_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
 
-              <%= active_link_to t('controller.booking_details.index.link_name'), admin_booking_details_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+                  <%= active_link_to t('controller.workflows.index.link_name'), admin_workflows_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+                </div>
+              </div>
+            </nav>
+          </div>
 
-              <%= active_link_to t('controller.workflows.index.link_name'), admin_workflows_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+          <div class="float-end d-sm-inline-block">
+            <div class="account-menu d-sm-inline-block dropdown">
+              <% if current_user.role.in?(%w(cp_owner channel_partner)) %>
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#needHelpModal">
+                  <%= I18n.t("global.link_to.need_help") %>
+                </button>
+              <% end %>
+              <a href="javascript:;" class="dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="user-first-ltr"><%= "#{current_user.first_name.try(:[], 0)}#{current_user.last_name.try(:[], 0)}" %></span>
+                <!--<span class="user-name"><%= t('welcome', name: current_user.first_name ) %></span>-->
+              </a>
+              <div class="dropdown-menu user-menu-top" aria-labelledby="navbarDropdown">
+                <%= link_to t('controller.users.profile.link_name', role: User.human_attribute_name("role.#{current_user.role}")), [:edit, current_user_role_group, current_user], class: "dropdown-item modal-remote-form-link" %>
+                <%= link_to t('controller.users.change_password.link_name'), [:update_password, current_user_role_group, current_user], class: "dropdown-item modal-remote-form-link" %>
+                <% if policy([:admin, current_user]).move_to_next_state? %>
+                  <% if current_user.may_break? %>
+                    <%= link_to I18n.t("global.link_to.take_break"), move_to_next_state_admin_user_path(current_user, status: 'break', format: :json), method: 'patch', remote: true, data: { disable_with: 'Taking Break...' }, class: 'dropdown-item break move-to-next-state' %>
+                  <% elsif current_user.may_available? %>
+                    <%= link_to I18n.t("global.link_to.resume_work"), move_to_next_state_admin_user_path(current_user, status: 'available', format: :json), method: 'patch', remote: true, data: { disable_with: 'Resuming Work...' }, class: 'dropdown-item available move-to-next-state' %>
+                  <% end %>
+                <% end %>
+                <% if policy([current_user_role_group, Client.new]).switch_client? %>
+                  <%= link_to t('controller.home.select_client.link_name'), admin_select_clients_path, class: "dropdown-item" %>
+                <% end %>
+                <%= link_to t(I18n.t("devise.keys.sign_out"), scope: "devise"), destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
+              </div>
             </div>
           </div>
-        </nav>
-        <%# <h1 class="page-title">Dashboard</h1> %>
-      </div>
-
-      <div class="d-sm-inline-block float-end">
-        <%# <div class="header-search d-sm-inline-block">
-          <a href="javascript:;" class="header-search-icon"><span class="icon-search"></span></a>
-        </div>
-        <div class="header-notify d-sm-inline-block px-4">
-          <a href="javascript:;"><i class="fa fa-bell fill-black"></i><span class="notify-no">45</span></a>
-        </div>
-        <div class="header-add-new d-sm-inline-block px-3">
-          <a href="javascript:;"><i class="fa fa-plus-square fill-primary wd-24 ht-24"></i></a>
-        </div> %>
-        <div class="account-menu d-sm-inline-block dropdown">
-          <% if current_user.role.in?(%w(cp_owner channel_partner)) %>
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#needHelpModal">
-              <%= I18n.t("global.link_to.need_help") %>
-            </button>
-          <% end %>
-          <a href="javascript:;" class="dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            <span
-              class="user-first-ltr"><%= "#{current_user.first_name.try(:[], 0)}#{current_user.last_name.try(:[], 0)}" %></span>
-            <!--<span class="user-name"><%= t('welcome', name: current_user.first_name ) %></span>-->
-          </a>
-          <div class="dropdown-menu user-menu-top" aria-labelledby="navbarDropdown">
-            <%= link_to t('controller.users.profile.link_name', role: User.human_attribute_name("role.#{current_user.role}")), [:edit, current_user_role_group, current_user], class: "dropdown-item modal-remote-form-link" %>
-            <%= link_to t('controller.users.change_password.link_name'), [:update_password, current_user_role_group, current_user], class: "dropdown-item modal-remote-form-link" %>
-            <% if policy([:admin, current_user]).move_to_next_state? %>
-            <% if current_user.may_break? %>
-            <%= link_to I18n.t("global.link_to.take_break"), move_to_next_state_admin_user_path(current_user, status: 'break', format: :json), method: 'patch', remote: true, data: { disable_with: 'Taking Break...' }, class: 'dropdown-item break move-to-next-state' %>
-            <% elsif current_user.may_available? %>
-            <%= link_to I18n.t("global.link_to.resume_work"), move_to_next_state_admin_user_path(current_user, status: 'available', format: :json), method: 'patch', remote: true, data: { disable_with: 'Resuming Work...' }, class: 'dropdown-item available move-to-next-state' %>
-            <% end %>
-            <% end %>
-            <% if policy([current_user_role_group, Client.new]).switch_client? %>
-              <%= link_to t('controller.home.select_client.link_name'), admin_select_clients_path, class: "dropdown-item" %>
-            <% end %>
-            <%= link_to t(I18n.t("devise.keys.sign_out"), scope: "devise"), destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
-          </div>
         </div>
       </div>
-    </div>
-  </div>
-</header>
-
-<% end %>
+    </header>
+  <% end %>
 <% else %>
-<%= render "layouts/partials/before_login_header" %>
+  <%= render "layouts/partials/before_login_header" %>
 <% end %>
 
 <% if user_signed_in? %>
@@ -144,11 +113,11 @@
               <div class="card-body">
                 <h6 class="card-subtitle text-muted">
                   <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= I18n.t("navbar.text.reach_helpdesk") %>
-                  <div class="mt-3">
-                    <a href="tel: <%= current_client.channel_partner_support_number %>">
-                      <%= current_client.channel_partner_support_number %>
-                    </a>
-                  </div>
+                <div class="mt-3">
+                  <a href="tel: <%= current_client.channel_partner_support_number %>">
+                    <%= current_client.channel_partner_support_number %>
+                  </a>
+                </div>
                 </h6>
               </div>
             </div>
@@ -169,12 +138,4 @@
       </div>
     </div>
   </div>
-<% end %>
-
-<%= javascript_tag do %>
-  $('document').ready(function(){
-    if(window.top != window.self){
-      $('#signout').hide();
-    }
-  });
 <% end %>

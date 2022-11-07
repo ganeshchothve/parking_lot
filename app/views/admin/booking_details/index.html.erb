@@ -2,10 +2,10 @@
   <div class="">
     <div class="row">
      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
-        <div class="table-btn-set float-right pb-1 text-end mt-2">
-      <div class="filter-search">
-          <!-- <input type="text" name="" placeholder="Search projects"> -->
-        </div>
+       <div class="table-btn-set float-right pb-1 text-end mt-2">
+         <div class="filter-search">
+           <!-- <input type="text" name="" placeholder="Search projects"> -->
+         </div>
         <% if policy([:admin, BookingDetail.new]).filter?(embedded_marketplace?) %>
           <div class="filter-popup">
             <a class="db-filter-btn fn-500" href="javascript:;">
@@ -15,7 +15,7 @@
         <% end %>
         <% if policy([:admin, BookingDetail.new]).mis_report?(embedded_marketplace?) %>
           <div class="export-menu display-initial d-inline text-end">
-            <button class="select-btn btn no-fill fn-400 dropdown-toggle ms-2" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= t('controller.users.exports.link_name', name: nil) %></button>
+            <button class="select-btn btn no-fill fn-400 dropdown-toggle" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= t('controller.users.exports.link_name', name: nil) %></button>
             <div class="dropdown-menu">
               <%= link_to t('controller.users.exports.link_name', name: 'MIS' ), mis_report_admin_booking_details_path, class: ' dropdown-item' %>
               <%= link_to I18n.t("global.link_to.mis_active_filter"), mis_report_admin_booking_details_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
@@ -24,22 +24,11 @@
         <% end %>
       </div>
     </div>
-      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd mt-2">
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
         <div class="box-card relative">
           <%= render '/admin/booking_details/index', booking_details: @booking_details %>
           <div class="filter-box">
             <%= render "filters" %>
-          </div>
-        </div>
-      </div>
-      <!----------- Pagination ---------->
-      <div class="col-lg-12 launchpad_inventory_pagination">
-        <div class="row py-3 bg-white mb-2 shadow-sm ms-0">
-          <div class="col-lg-6 pt-2">
-            <p class="table-entry mb-0"><%= page_entries_info @booking_details %></p>
-          </div>
-          <div class="col-lg-6 table-pagination">
-            <%= will_paginate @booking_details, list_classes: %w(pagination justify-content-end) %>
           </div>
         </div>
       </div>
