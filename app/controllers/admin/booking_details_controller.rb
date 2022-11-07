@@ -276,8 +276,8 @@ class Admin::BookingDetailsController < AdminController
     respond_to do |format|
       @booking_detail.assign_attributes(rejection_reason: params.dig(:booking_detail, :rejection_reason))
       if @booking_detail.move_to_next_approval_state!(params.dig(:booking_detail, :approval_event))
-        format.html{ redirect_to request.referrer || dashboard_url, notice: I18n.t("controller.booking_details.notice.moved_to", name: I18n.t("mongoid.attributes.booking_detail/status.#{params[:status]}")) }
-        format.json { render json: { message: I18n.t("controller.booking_details.notice.moved_to", name: I18n.t("mongoid.attributes.booking_detail/status.#{params.dig(:booking_detail, :approval_event).humanize}")) }, status: :ok }
+        format.html{ redirect_to request.referrer || dashboard_url, notice: I18n.t("controller.booking_details.notice.moved_to", name: I18n.t("mongoid.attributes.booking_detail/approval_status.#{@booking_detail.approval_status}")) }
+        format.json { render json: { message: I18n.t("controller.booking_details.notice.moved_to", name: I18n.t("mongoid.attributes.booking_detail/approval_status.#{@booking_detail.approval_status}")) }, status: :ok }
       else
         format.html{ redirect_to request.referrer || dashboard_url, alert: @booking_detail.errors.full_messages.uniq }
         format.json { render json: { errors: @booking_detail.errors.full_messages.uniq }, status: :unprocessable_entity }
