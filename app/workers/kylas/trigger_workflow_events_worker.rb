@@ -17,7 +17,7 @@ module Kylas
 
         # call serice to update the product on that deal
         if wf.create_product?
-          product_params = create_product_payload(entity)
+          product_params = create_product_payload(entity, wf)
           kylas_product_response = Kylas::CreateProductInKylas.new(entity.creator, product_params).call
         end
         # call serice to update the product on that deal
@@ -32,7 +32,7 @@ module Kylas
             #check whether the product is present on the deal or not
             if !(booking_product_in_kylas.present?)
               update_deal_params = {}
-              update_deal_params[:product] = update_product_payload(kylas_product_response[:response]['id'], entity) if kylas_product_response[:success]
+              update_deal_params[:product] = update_product_payload(kylas_product_response[:response]['id'], entity, wf) if kylas_product_response[:success]
               kylas_deal_response = Kylas::UpdateDeal.new(entity.creator, entity.lead.kylas_deal_id, update_deal_params).call
               entity.set(kylas_product_id: kylas_product_response[:response]['id']) if kylas_deal_response[:success]
             end
@@ -64,15 +64,15 @@ module Kylas
       end
     end
 
-    def create_product_payload(entity)
+    def create_product_payload(entity, wf)
       payload = {
         project_unit_name: entity.name,
-        agreement_price: entity.agreement_price
+        agreement_price: (wf.product_amount_type.present? ? entity.send(wf.product_amount_type) : 0)
       }
       payload
     end
 
-    def update_product_payload(product_id, entity)
+    def update_product_payload(product_id, entity, wf)
       payload = {
         'id': product_id,
         'name': entity.name,
@@ -80,7 +80,7 @@ module Kylas
           'currency': {
             'id': 431
           },
-          'value': entity.agreement_price
+          'value': (wf.product_amount_type.present? ? entity.send(wf.product_amount_type) : 0)
         }
       }
       payload

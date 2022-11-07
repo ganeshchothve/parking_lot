@@ -2220,7 +2220,17 @@ en:
         sitevisit_form: "Walk-in Form"
       cp_lead_activity/help_text:
         sitevisit_form_html: ""
-
+      workflow:
+        stage: Event
+        entity_type: Condition
+        actions: Actions
+        create_product: Create product in Kylas?
+        deactivate_product: Deactivate the product in Kylas?
+        update_product_on_deal: Update the product on Deal?
+        product_amount_type: Product Price
+      workflow/product_amount_types:
+        agreement_price: "Agreement Value"
+        all_inclusive_price: "All Inclusive Value"
       bulk_upload_report/file_types:
         receipts_status_update: "Receipt Status Bulk Update"
         user_requests_status_update: "User Request Status Bulk Update"

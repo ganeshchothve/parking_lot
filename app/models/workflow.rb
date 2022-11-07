@@ -4,6 +4,7 @@ class Workflow
   extend FilterByCriteria
 
   WORKFLOW_BOOKING_STAGES = %w[blocked booked_tentative booked_confirmed cancelled under_negotiation].freeze
+  PRODUCT_AMOUNT_TYPES = %w[agreement_price all_inclusive_price].freeze
 
   field :stage, type: String
 
@@ -11,6 +12,7 @@ class Workflow
   field :create_product, type: Boolean, default: false
   field :deactivate_product, type: Boolean, default: false
   field :update_product_on_deal, type: Boolean, default: false
+  field :product_amount_type, type: String
 
   has_many :pipelines
   belongs_to :booking_portal_client, class_name: 'Client'
@@ -21,6 +23,8 @@ class Workflow
   validate :validate_create_product
   validate :validate_deactivate_product
   validate :validate_update_product_on_deal
+  validates :product_amount_type, inclusion: { in: PRODUCT_AMOUNT_TYPES }, allow_blank: true
+  validates :product_amount_type, presence: true, if: Proc.new{ |workflow| workflow.create_product? }
 
   accepts_nested_attributes_for :pipelines, allow_destroy: true
 
@@ -42,6 +46,10 @@ class Workflow
     booking_portal_client.workflows.where(update_product_on_deal: true).blank?
   end
 
+  def can_set_product_amount_type?
+    create_product && booking_portal_client.workflows.where(product_amount_type: nil).present?
+  end
+
   def validate_create_product
     if create_product && create_product_changed?
       errors.add(:create_product, 'cannot be true for more than one workflow') unless can_create_product?
@@ -59,6 +67,13 @@ class Workflow
       errors.add(:update_product_on_deal, 'cannot be true for more than one workflow') unless can_update_product_on_deal?
     end
   end
+
+  def validate_product_amount_type
+    if create_product && product_amount_type_changed?
+      errors.add(:product_amount_type, 'cannot be set for more than one workflow') unless can_set_product_amount_type?
+    end
+  end
+
   class << self
     def user_based_scope user, params={}
       custom_scope = {}

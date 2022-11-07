@@ -152,6 +152,11 @@ module BookingDetailStateMachine
       _project_unit.save
       self.set(booked_on: _project_unit.blocked_on)
       if under_negotiation? && booking_detail_scheme.approved?
+        if Rails.env.production?
+          Kylas::TriggerWorkflowEventsWorker.perform_async(self.id.to_s, self.class.to_s)
+        else
+          Kylas::TriggerWorkflowEventsWorker.new.perform(self.id.to_s, self.class.to_s)
+        end
         scheme_approved!
       else
         # auto_released_extended_inform_buyer!
