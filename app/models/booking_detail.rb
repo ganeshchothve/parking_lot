@@ -528,12 +528,12 @@ class BookingDetail
         end
       end
 
-      if params[:entityId].present? && params[:entityType] == 'deals' && user.role.in?(%w(admin sales))
+      if params[:entityId].present? && params[:entityType] == 'deals'
         lead_ids = Lead.where(kylas_deal_id: params[:entityId]).pluck(:id)
         custom_scope = { lead_id: {'$in': lead_ids} }
       end
 
-      if params[:entityId].present? && params[:entityType] == 'contacts' && user.role.in?(%w(admin sales))
+      if params[:entityId].present? && params[:entityType] == 'contacts'
         kylas_contact_ids = User.in(role: User::BUYER_ROLES).where(kylas_contact_id: params[:entityId]).pluck(:id)
         custom_scope = { user_id: {'$in': kylas_contact_ids} }
       end
