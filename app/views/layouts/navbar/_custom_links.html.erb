@@ -10,27 +10,25 @@
 <% end %>
 
 <% if links.present? %>
-  <li class="nav-item accordion">
-                <div class="accordion-item bg-menu rounded-none border-0 dropdown">
-      <%= active_link_to t('global.custom'), "javascript:;", active: [CustomPolicy.custom_methods.map{|x| 'admin/'+x}, ['index']], class: "nav-link dropdown-toggle", data: {toggle: 'dropdown'},  id: "dropdownMenuLeft3", "data-bs-toggle": "collapse", "data-bs-target":"#dashboardMore", "aria-expanded": "false" %>
-      <div id="dashboardMore" class="accordion-collapse collapse" aria-labelledby="dropdownMenuLeft3">
-        <% links.each do |link| %>
-          <%= active_link_to link[:name], link[:link], link[:options] %>
-        <% end %>
-      </div>
+  <div class="dropdown">
+    <%= active_link_to t('global.custom'), "javascript:;", active: [CustomPolicy.custom_methods.map{|x| 'admin/'+x}, ['index']], class: "nav-link dropdown-toggle", data: {toggle: 'dropdown'},  id: "dropdownMenuLeft3", "data-bs-toggle": "dropdown", "data-bs-target":"#dashboardMore", "aria-expanded": "false" %>
+    <div id="dashboardMore" class="dropdown-menu" aria-labelledby="dropdownMenuLeft3">
+      <% links.each do |link| %>
+        <%= active_link_to link[:name], link[:link], link[:options].merge(class: 'dropdown-item') %>
+      <% end %>
     </div>
-  </li>
+  </div>
 <% end %>
 
 <% if links.present? %>
   <% links.each do |link| %>
-    <li class="nav-item d-lg-none">
+    <div class="d-lg-none">
       <%= active_link_to link[:name], link[:link], active: :inclusive, class: "nav-link" %>
-    </li>
+    </div>
   <% end %>
 <% end %>
 <% if current_client.present? && current_client.terms_and_conditions.present? %>
-  <li class='nav-item d-lg-none'>
+  <div class='d-lg-none'>
     <%= link_to I18n.t("global.link_to.tnc"), dashboard_terms_and_condition_path, active: :exclusive, class: 'nav-link pl-0 pr-0', target: "_blank" %>
-  </li>
+  </div>
 <% end %>

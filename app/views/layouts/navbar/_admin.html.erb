@@ -1,173 +1,168 @@
+<% if is_marketplace? %>
 
-<% if ["admin","superadmin"].include?(current_user.role) && !is_marketplace? %>
+  <% _projects_path = current_user.role.in?(%w(cp_owner channel_partner)) ? admin_projects_path(fltrs: {city: current_user.channel_partner&.city, regions: current_user.channel_partner&.regions}) : admin_projects_path  %>
+  <%= active_link_to t('controller.projects.index.link_name'), _projects_path, active: request.fullpath.scan(/projects/).present? && %w(user_interested_projects third_party_inventory).all? {|x| request.fullpath.scan(/^(?!.*#{x}).*$/).present?}, class: "nav-link pl-0 pr-0" %>
 
-  <li class="nav-item accordion">
-    <div class="accordion-item bg-menu rounded-none border-0 dropdown">
-      <%= active_link_to t('controller.dashboard.index.link_name'), "javascript:;", active: :exclusive, class: "nav-link pl-0 pr-0 dropdown-toggle", data: {toggle: 'dropdown'}, id: "dropdownMenuLeft", "data-bs-toggle": "collapse", "data-bs-target":"#dashboardMenu", "aria-expanded": "false" %>
-      <div id="dashboardMenu" class="accordion-collapse collapse" aria-labelledby="dropdownMenuLeft">
-        <%= link_to t('controller.dashboard.index.link_name'), dashboard_path(params: {role: current_user.role}), class: "" %>
-        <%= link_to t('controller.dashboard.index.billing_team_link_name'), dashboard_path(params: {role: "billing_team"}), class: "" %>
-        <%= link_to t('controller.dashboard.index.cp_admin_link_name'), dashboard_path(params: {role: "cp_admin"}), class: "" %>
-      </div>
-    </div>
-  </li>
-<% elsif ["cp_owner"].include?(current_user.role) %>
-  <li class="nav-item accordion">
-    <div class="accordion-item bg-menu rounded-none border-0 dropdown">
-      <%= active_link_to t('controller.dashboard.index.link_name'), "javascript:;", active: :exclusive, class: "nav-link pl-0 pr-0 dropdown-toggle", data: {toggle: 'dropdown'}, id: "dropdownMenuLeft", "data-bs-toggle": "collapse", "data-bs-target":"#dashboardMenu", "aria-expanded": "false" %>
-      <div id="dashboardMenu" class="accordion-collapse collapse" aria-labelledby="dropdownMenuLeft">
-        <%= link_to t('controller.dashboard.index.link_name'), dashboard_path, class: "" %>
-        <%= link_to t('controller.dashboard.index.cp_owner_link_name'), dashboard_path(params: {role: "cp_owner"}), class: "" %>
-      </div>
-    </div>
-  </li>
+  <% if policy([:admin, User]).show_index? %>
+    <% if policy([:admin, User]).index? %>
+      <%= active_link_to t('controller.users.index.link_name'), admin_users_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+    <% end %>
+  <% end %>
+
+  <% if policy([:admin, ChannelPartner]).index? %>
+    <%= active_link_to t('controller.channel_partners.index.link_name'), channel_partners_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <% end %>
+
+  <% if current_client.enable_leads? && policy([:admin, Lead]).index? %>
+    <%= active_link_to t('controller.leads.index.link_name'), admin_leads_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <% end %>
+
+  <% if policy([:admin, BookingDetail]).index? %>
+    <%= active_link_to t('controller.booking_details.index.link_name'), admin_booking_details_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <% end %>
+
+  <% if policy([:admin, Workflow]).index? %>
+    <%= active_link_to t('controller.workflows.index.link_name'), admin_workflows_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <% end %>
+
+  <% if policy([:admin, Crm::Base]).index? %>
+    <%= active_link_to t('controller.crms.index.link_name'), admin_crm_base_index_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <% end %>
+
+  <% if policy([:admin, UserRequest]).index? %>
+    <%= active_link_to t('controller.user_requests.index.link_name'), [:admin, UserRequest, request_type: :all], active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <% end %>
+
 <% else %>
-  <li class="nav-item">
+
+  <% if ["admin","superadmin"].include?(current_user.role) && !is_marketplace? %>
+    <div class="dropdown">
+      <%= active_link_to t('controller.dashboard.index.link_name'), "javascript:;", active: :exclusive, class: "nav-link pl-0 pr-0 dropdown-toggle", data: {toggle: 'dropdown'}, id: "dropdownMenuLeft", "data-bs-toggle": "dropdown", "data-bs-target":"#dashboardMenu", "aria-expanded": "false" %>
+      <div id="dashboardMenu" class="dropdown-menu" aria-labelledby="dropdownMenuLeft">
+        <%= link_to t('controller.dashboard.index.link_name'), dashboard_path(params: {role: current_user.role}), class: "dropdown-item" %>
+        <%= link_to t('controller.dashboard.index.billing_team_link_name'), dashboard_path(params: {role: "billing_team"}), class: "dropdown-item" %>
+        <%= link_to t('controller.dashboard.index.cp_admin_link_name'), dashboard_path(params: {role: "cp_admin"}), class: "dropdown-item" %>
+      </div>
+    </div>
+  <% elsif ["cp_owner"].include?(current_user.role) %>
+    <div class="dropdown">
+      <%= active_link_to t('controller.dashboard.index.link_name'), "javascript:;", active: :exclusive, class: "nav-link pl-0 pr-0 dropdown-toggle", data: {toggle: 'dropdown'}, id: "dropdownMenuLeft", "data-bs-toggle": "dropdown", "data-bs-target":"#dashboardMenu", "aria-expanded": "false" %>
+      <div id="dashboardMenu" class="dropdown-menu" aria-labelledby="dropdownMenuLeft">
+        <%= link_to t('controller.dashboard.index.link_name'), dashboard_path, class: "dropdown-item" %>
+        <%= link_to t('controller.dashboard.index.cp_owner_link_name'), dashboard_path(params: {role: "cp_owner"}), class: "dropdown-item" %>
+      </div>
+    </div>
+  <% else %>
     <%= active_link_to t('controller.dashboard.index.link_name'), dashboard_path, active: :exclusive, class: "nav-link pl-0 pr-0" %>
-  </li>
-<% end %>
+  <% end %>
 
-<% if policy(:dashboard).team_lead_dashboard? %>
-  <li class="nav-item">
-    <%= active_link_to t('controller.dashboard.index.team_lead'), team_lead_dashboard_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li>
-<% end %>
+  <% if policy(:dashboard).team_lead_dashboard? %>
+     <%= active_link_to t('controller.dashboard.index.team_lead'), team_lead_dashboard_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <% end %>
 
-<%# if policy(:dashboard).leaderboard? %>
- <!--  <li class="nav-item">
+  <%# if policy(:dashboard).leaderboard? %>
     <%#= active_link_to t('controller.dashboard.index.leaderboard'), channel_partners_leaderboard_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li> -->
-<%# end %>
+  <%# end %>
 
 
-<% if policy([:admin, Project]).index? %>
-  <li class="nav-item">
+  <% if policy([:admin, Project]).index? %>
     <% _projects_path = current_user.role.in?(%w(cp_owner channel_partner)) ? admin_projects_path(fltrs: {city: current_user.channel_partner&.city, regions: current_user.channel_partner&.regions}) : admin_projects_path  %>
     <%= active_link_to t('controller.projects.index.link_name'), _projects_path, active: request.fullpath.scan(/projects/).present? && %w(user_interested_projects third_party_inventory).all? {|x| request.fullpath.scan(/^(?!.*#{x}).*$/).present?}, class: "nav-link pl-0 pr-0" %>
-  </li>
-  <% if false #policy([current_user_role_group, InterestedProject]).index? && InterestedProject.where(user_id: current_user.id).in(status: %w(subscribed approved)).present? %>
-    <li class='nav-item'>
+
+    <% if false #policy([current_user_role_group, InterestedProject]).index? && InterestedProject.where(user_id: current_user.id).in(status: %w(subscribed approved)).present? %>
       <%= active_link_to I18n.t("mongoid.models.interested_project.other"), admin_projects_path(fltrs: {user_interested_projects: current_user.id}), active: /user_interested_projects/, class: "nav-link pl-0 pr-0" %>
-    </li>
-  <% end %>
-  <% if false #ENV_CONFIG.dig('third_party_inventory', 'base_url').present? && policy([:admin, Project]).third_party_inventory? %>
-    <li class='nav-item'>
+    <% end %>
+    <% if false #ENV_CONFIG.dig('third_party_inventory', 'base_url').present? && policy([:admin, Project]).third_party_inventory? %>
       <%= active_link_to t('global.third_party_inventory'), third_party_inventory_admin_projects_path, active: /third_party_inventory/, class: "nav-link pl-0 pr-0" %>
-    </li>
+    <% end %>
   <% end %>
-<% end %>
 
-<% if policy([:admin, ProjectUnit]).index? %>
-  <li class="nav-item">
+  <% if policy([:admin, ProjectUnit]).index? %>
     <%= active_link_to t('controller.project_units.index.link_name'), admin_project_units_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li>
-<% end %>
+  <% end %>
 
-<% if policy([:admin, User]).show_index? %>
-  <% if policy([:admin, User]).index? %>
-    <li class="nav-item">
+  <% if policy([:admin, User]).show_index? %>
+    <% if policy([:admin, User]).index? %>
       <%= active_link_to t('controller.users.index.link_name'), admin_users_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-    </li>
+    <% end %>
   <% end %>
-<% end %>
 
-<% if policy([:admin, Lead]).index? %>
-  <li class="nav-item">
+  <% if policy([:admin, Lead]).index? %>
     <%= active_link_to t('controller.leads.index.link_name'), admin_leads_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li>
-<% end %>
-
-<% if policy([:admin, SiteVisit]).index? %>
-  <li class="nav-item">
-    <%= active_link_to t('controller.site_visits.index.link_name'), admin_site_visits_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li>
-<% end %>
-
-<% if false # policy([:admin, CpLeadActivity]).index? %>
-  <li class="nav-item">
-    <%= active_link_to t('controller.cp_lead_activities.index.link_name'), admin_cp_lead_activities_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li>
-<% end %>
-
-<% if policy([:admin, BookingDetail]).index? %>
-  <li class="nav-item">
-    <%= active_link_to t('controller.booking_details.index.link_name'), admin_booking_details_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li>
-<% end %>
-
-<!--
-  <%# if policy(:custom).inventory? %>
-  <li class="nav-item">
-  <%#= active_link_to t('controller.inventory.index.link_name'), custom_inventory_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li>
-  <%# end %>
--->
-
-<% if policy([:admin, Receipt]).index? %>
-  <li class="nav-item">
-    <%= active_link_to t('controller.receipts.index.link_name'), admin_receipts_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li>
-<% end %>
-
-<% if policy([:admin, Invoice]).index? %>
-  <li class="nav-item">
-    <%= active_link_to t('controller.invoices.index.link_name'), admin_invoices_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li>
-<% end %>
-
-<% if policy([:admin, ChannelPartner]).index? %>
-  <li class="nav-item">
-    <%= active_link_to t('controller.channel_partners.index.link_name'), channel_partners_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li>
-<% end %>
-
-<%# if policy([:admin, VariableIncentiveScheme]).vis_details? %>
-  <!-- <li class="nav-item">
-    <%#= active_link_to t('controller.variable_incentive_schemes.vis_details.link_name'), vis_details_admin_variable_incentive_schemes_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li> -->
-<%# end %>
-
-<% if policy([:admin, Meeting]).index? %>
-  <li class="nav-item">
-    <%= active_link_to t('controller.meetings.index.link_name'), admin_meetings_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li>
-<% end %>
-
-<% if policy([:admin, UserRequest]).index? %>
-  <li class="nav-item">
-    <%= active_link_to t('controller.user_requests.index.link_name'), [:admin, UserRequest, request_type: :all], active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li>
-<% end %>
-<% if policy([:admin, BannerAsset]).index? %>
-  <li class="nav-item">
-    <%= active_link_to t('controller.banner_assets.index.link_name'), admin_banner_assets_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  </li>
-<% end %>
-
-<%= render 'layouts/navbar/custom_links' %>
-
-<% if current_user %>
-  <!-- <li class="lang-menu nav-item">
-    <div class="btn-group dropdown d-lg-block">
-      <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownLang" href="javascript:;">
-        <%#= t("language.#{params[:locale] || I18n.default_locale }", default: "language.en")%>
-      </a>
-      <div class="dropdown-menu dropdown-menu-right menu-top"  aria-labelledby="dropdownLang">
-        <#% ['en', 'mr'].each do |language| %>
-          <%#= link_to t("language.#{language}"), url_for(params.permit!.merge(locale: language) ), class: 'dropdown-item' %>
-        <#% end %>
-      </div>
-    </div>
-  </li> -->
-<% end %>
-<% if policy([:admin, current_user]).move_to_next_state? %>
-  <%= javascript_tag do %>
-    $(document).ready(function(){
-      $('a.break, a.available').on('ajax:success', function(event) {
-        setTimeout(function() {
-          window.location.reload();
-        }, 3000);
-      });
-    });
   <% end %>
+
+  <% if policy([:admin, SiteVisit]).index? %>
+    <%= active_link_to t('controller.site_visits.index.link_name'), admin_site_visits_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <% end %>
+
+  <% if false # policy([:admin, CpLeadActivity]).index? %>
+    <%= active_link_to t('controller.cp_lead_activities.index.link_name'), admin_cp_lead_activities_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <% end %>
+
+  <% if policy([:admin, BookingDetail]).index? %>
+    <%= active_link_to t('controller.booking_details.index.link_name'), admin_booking_details_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <% end %>
+
+  <!--
+    <%# if policy(:custom).inventory? %>
+      <%#= active_link_to t('controller.inventory.index.link_name'), custom_inventory_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+    <%# end %>
+  -->
+
+  <% if policy([:admin, Receipt]).index? %>
+    <%= active_link_to t('controller.receipts.index.link_name'), admin_receipts_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <% end %>
+
+  <% if policy([:admin, Invoice]).index? %>
+    <%= active_link_to t('controller.invoices.index.link_name'), admin_invoices_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <% end %>
+
+  <% if policy([:admin, ChannelPartner]).index? %>
+    <%= active_link_to t('controller.channel_partners.index.link_name'), channel_partners_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <% end %>
+
+  <%# if policy([:admin, VariableIncentiveScheme]).vis_details? %>
+    <%#= active_link_to t('controller.variable_incentive_schemes.vis_details.link_name'), vis_details_admin_variable_incentive_schemes_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <%# end %>
+
+  <% if policy([:admin, Meeting]).index? %>
+    <%= active_link_to t('controller.meetings.index.link_name'), admin_meetings_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <% end %>
+
+  <% if policy([:admin, UserRequest]).index? %>
+    <%= active_link_to t('controller.user_requests.index.link_name'), [:admin, UserRequest, request_type: :all], active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <% end %>
+
+  <% if policy([:admin, BannerAsset]).index? %>
+    <%= active_link_to t('controller.banner_assets.index.link_name'), admin_banner_assets_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <% end %>
+
+  <%= render 'layouts/navbar/custom_links' %>
+
+  <% if current_user %>
+    <!-- <div class="lang-menu">
+      <div class="btn-group dropdown d-lg-block">
+        <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownLang" href="javascript:;">
+          <%#= t("language.#{params[:locale] || I18n.default_locale }", default: "language.en")%>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right menu-top"  aria-labelledby="dropdownLang">
+          <#% ['en', 'mr'].each do |language| %>
+            <%#= link_to t("language.#{language}"), url_for(params.permit!.merge(locale: language) ), class: 'dropdown-item' %>
+          <#% end %>
+        </div>
+      </div>
+    </div> -->
+  <% end %>
+  <% if policy([:admin, current_user]).move_to_next_state? %>
+    <%= javascript_tag do %>
+      $(document).ready(function(){
+        $('a.break, a.available').on('ajax:success', function(event) {
+          setTimeout(function() {
+            window.location.reload();
+          }, 3000);
+        });
+      });
+    <% end %>
+  <% end %>
+
 <% end %>
