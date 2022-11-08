@@ -14,7 +14,7 @@ class Admin::WorkflowsController < AdminController
   end
 
   def new
-    @workflow = Workflow.new
+    @workflow = Workflow.new(booking_portal_client_id: current_user.booking_portal_client.id)
   end
 
   def create
@@ -81,7 +81,7 @@ class Admin::WorkflowsController < AdminController
   private
 
   def authorize_resource
-    if params[:action] == 'index' || params[:action] == 'export'
+    if %(index export pipeline_stages).include?params[:action]
       authorize [:admin, Workflow]
     elsif params[:action] == 'new'
       authorize [:admin, Workflow.new]

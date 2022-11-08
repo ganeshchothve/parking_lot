@@ -151,6 +151,11 @@ module BookingDetailStateMachine
       _project_unit.assign_attributes(status: 'blocked', held_on: nil, blocked_on: Date.today, auto_release_on: ( Date.today + _project_unit.blocking_days.days) )
       _project_unit.save
       self.set(booked_on: _project_unit.blocked_on)
+      if Rails.env.production?
+        Kylas::TriggerWorkflowEventsWorker.perform_async(self.id.to_s, self.class.to_s)
+      else
+        Kylas::TriggerWorkflowEventsWorker.new.perform(self.id.to_s, self.class.to_s)
+      end
       if under_negotiation? && booking_detail_scheme.approved?
         scheme_approved!
       else
@@ -205,8 +210,6 @@ module BookingDetailStateMachine
     end
     # Updating blocked date of project_unit to today and  auto_release_on will be changed to blocking_days more from current auto_release_on.
     def after_booked_tentative_event
-      return unless project_unit.present?
-      
       if self.booking_portal_client.kylas_tenant_id.present?
         #trigger all workflow events in Kylas
         if Rails.env.production?
@@ -215,11 +218,12 @@ module BookingDetailStateMachine
           Kylas::TriggerWorkflowEventsWorker.new.perform(self.id.to_s, self.class.to_s)
         end
       end
-
-      if booked_tentative? && (get_paid_amount >= self.get_booking_price)
-        booked_confirmed!
-      else
-        send_email_and_sms_as_booked
+      if project_unit.present?
+        if booked_tentative? && (get_paid_amount >= self.get_booking_price)
+          booked_confirmed!
+        else
+          send_email_and_sms_as_booked
+        end
       end
     end
 
