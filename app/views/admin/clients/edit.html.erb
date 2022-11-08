@@ -12,7 +12,7 @@
           <div class="col-lg-3 filter-left-section">
             <div class="sticky-top ps-3 pt-3">
               <ul>
-              <% if false#is_marketplace? %>
+              <% if is_marketplace? %>
                 <li class='nav-item'>
                   <a class="nav-link active" rel="nav-client-basic"><%= I18n.t("global.link_to.basic_details") %></a>
                 </li>
@@ -58,7 +58,7 @@
           <div class="col-lg-9 filter-right-section">
             <div class="mt-3"></div>
             <div class="tab-content theme-form">
-              <% if false#is_marketplace? %>
+              <% if is_marketplace? %>
                 <div id="nav-client-basic">
                   <h2 class="tab-title"><%= I18n.t("global.link_to.basic_details") %></h2>
                   <%= render 'admin/clients/mp/basic', f: f %>
