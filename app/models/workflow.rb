@@ -41,7 +41,7 @@ class Workflow
   end
   
   def can_set_product_amount_type?
-    booking_portal_client.workflows.ne(id: self.id).where(product_amount_type: nil).present?
+    can_create_product?
   end
 
   def can_update_product_on_deal?
@@ -59,19 +59,28 @@ class Workflow
   end
 
   def validate_product_amount_type
+    if !create_product && product_amount_type.present?
+      errors.add(:create_product, 'setting must be on for Product Amount Type')
+    end
     if create_product && !can_set_product_amount_type?
       errors.add(:product_amount_type, 'setting cannot be set for more than one workflow')
     end
   end
 
   def validate_update_product_on_deal
-    if create_product && update_product_on_deal && !can_update_product_on_deal?
+    if update_product_on_deal && !create_product
+      errors.add(:create_product, 'setting must be on for Update the product on Deal')
+    end
+    if update_product_on_deal && !can_update_product_on_deal?
       errors.add(:update_product_on_deal, 'setting cannot be true for more than one workflow')
     end
   end
 
   def validate_deactivate_product
-    if update_product_on_deal && deactivate_product && !can_deactivate_product?
+    if deactivate_product && !update_product_on_deal
+      errors.add(:update_product_on_deal, 'setting must be on for deactivate product')
+    end
+    if deactivate_product && !can_deactivate_product?
       errors.add(:deactivate_product, 'setting cannot be true for more than one workflow')
     end
   end
