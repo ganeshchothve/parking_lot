@@ -75,6 +75,9 @@ module Kylas
         if params[:product].present?
           deal_params = update_product
         end
+        if params[:pipeline].present?
+          deal_params = update_pipeline
+        end
         deal_params
       rescue StandardError => e
         Rails.logger.error { e.message.to_s }
@@ -103,12 +106,25 @@ module Kylas
       contact_payload
     end
 
+    def update_pipeline
+      pipeline = params[:pipeline].with_indifferent_access
+      pipeline_payload = {
+        pipeline: {
+            id: pipeline[:pipeline_id],
+            stage: {
+                id: pipeline[:pipeline_stage_id]
+            }
+        }
+      }
+      pipeline_payload
+    end
+
     def update_product
-      product = params[:product]
+      products = params[:product].try(:is_a?, Array) ? params[:product] : [params[:product]]
       products_payload =  {
         products: {
           operation: 'ADD', 
-          values: [
+          values: products.collect{ |product|
             {
               id: product['id'],
               name: product['name'], 
@@ -122,7 +138,7 @@ module Kylas
                 value: 0.0
               }
             }
-          ]
+          }
         }
       }
       products_payload

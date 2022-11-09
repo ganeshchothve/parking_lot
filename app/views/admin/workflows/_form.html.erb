@@ -13,11 +13,11 @@
       <div class='m-3'>
         <div><%= f.label :create_product %></div>
         <div class="form-check form-check-inline">
-          <%= f.radio_button :create_product, true, class: "form-check-input wd-22", disabled: !policy([:admin, @workflow]).can_create_product? %>
+          <%= f.radio_button :create_product, true, class: "form-check-input wd-22" %>
           <%= f.label :create_product, "Yes", class: " form-check-label d-inline-block ms-2" %>
         </div>
         <div class="form-check form-check-inline">
-          <%= f.radio_button :create_product, false, class: "form-check-input wd-22", disabled: !policy([:admin, @workflow]).can_create_product? %>
+          <%= f.radio_button :create_product, false, class: "form-check-input wd-22" %>
           <%= f.label :create_product, "No", class: " form-check-label d-inline-block ms-2" %>
         </div>
       </div>
@@ -25,8 +25,8 @@
 
     <div class="col-md-3">
       <div class='m-3'>
-        <%= f.label :product_amount_type, class: 'label-required' %>
-        <%= f.select :product_amount_type, Workflow::PRODUCT_AMOUNT_TYPES.collect{|x| [t("mongoid.attributes.workflow/product_amount_types.#{x}"), x]}, {prompt: I18n.t("global.select")}, class: "selectize", required: true %>
+        <%= f.label :product_amount_type %>
+        <%= f.select :product_amount_type, Workflow::PRODUCT_AMOUNT_TYPES.collect{|x| [t("mongoid.attributes.workflow/product_amount_types.#{x}"), x]}, {prompt: I18n.t("global.select")}, class: "selectize" %>
       </div>
     </div>
 
@@ -34,11 +34,11 @@
       <div class='m-3'>
         <div><%= f.label :update_product_on_deal %></div>
         <div class="form-check form-check-inline">
-          <%= f.radio_button :update_product_on_deal, true, class: "form-check-input wd-22", disabled: !policy([:admin, @workflow]).can_update_product_on_deal? %>
+          <%= f.radio_button :update_product_on_deal, true, class: "form-check-input wd-22" %>
           <%= f.label :update_product_on_deal, "Yes", class: " form-check-label d-inline-block ms-2" %>
         </div>
         <div class="form-check form-check-inline">
-          <%= f.radio_button :update_product_on_deal, false, class: "form-check-input wd-22", disabled: !policy([:admin, @workflow]).can_update_product_on_deal? %>
+          <%= f.radio_button :update_product_on_deal, false, class: "form-check-input wd-22" %>
           <%= f.label :update_product_on_deal, "No", class: " form-check-label d-inline-block ms-2" %>
         </div>
       </div>
@@ -47,11 +47,11 @@
       <div class='m-3'>
         <div><%= f.label :deactivate_product %></div>
         <div class="form-check form-check-inline">
-          <%= f.radio_button :deactivate_product, true, class: "form-check-input wd-22", disabled: !policy([:admin, @workflow]).can_deactivate_product? %>
+          <%= f.radio_button :deactivate_product, true, class: "form-check-input wd-22" %>
           <%= f.label :deactivate_product, "Yes", class: " form-check-label d-inline-block ms-2" %>
         </div>
         <div class="form-check form-check-inline">
-          <%= f.radio_button :deactivate_product, false, class: "form-check-input wd-22", disabled: !policy([:admin, @workflow]).can_deactivate_product? %>
+          <%= f.radio_button :deactivate_product, false, class: "form-check-input wd-22" %>
           <%= f.label :deactivate_product, "No", class: " form-check-label d-inline-block ms-2" %>
         </div>
       </div>
@@ -92,7 +92,9 @@
     <% end %>
   </div>
   <div class="m-3 col-1">
-    <%= f.submit "Save", class: "btn btn-primary font-medium" %>
+    <% if policy([:admin, @workflow]).update? %>
+      <%= f.submit "Save", class: "btn btn-primary font-medium" %>
+    <% end %>
   </div>
   
 
@@ -108,14 +110,6 @@ $(document).ready(function(selector){
   var editPage = window.location.pathname.includes(`workflows/${workflow['_id']}/edit`)
 
   var reason_val;
-
-  $('input[name="workflow[create_product]"]').change(function(){
-    if($(this).val() == 'true'){
-      $("#workflow_product_amount_type")[0].selectize.enable();
-    }else{
-      $("#workflow_product_amount_type")[0].selectize.disable();
-    }
-  }).trigger('change');
 
   $('#workflow_form').on('change', 'select.pipeline_stage_select' , function(e){
     var $current_target = $(e.currentTarget);

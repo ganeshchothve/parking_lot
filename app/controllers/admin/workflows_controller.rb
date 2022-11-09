@@ -1,6 +1,6 @@
 class Admin::WorkflowsController < AdminController
   before_action :fetch_pipeline_details, only: %i[index new edit]
-  before_action :set_workflow, only: %i[edit update]
+  before_action :set_workflow, only: %i[edit update enable_disable_workflow destroy]
   around_action :apply_policy_scope, only: :index
   before_action :authorize_resource
 
@@ -22,16 +22,16 @@ class Admin::WorkflowsController < AdminController
     @workflow.assign_attributes(permitted_attributes([:admin, @workflow]))
     respond_to do |format|
       if @workflow.save
-        format.html { redirect_to admin_workflows_path, notice: 'Workflow created successfully.' }
+        format.html { redirect_to admin_workflows_path, notice: I18n.t("controller.workflows.notice.created") }
         format.json { render json: @workflow, status: :created }
       else
         errors = []
-        if @workflow.errors.messages.has_key?(:pipelines) && @workflow.pipelines.first.errors.present?
-          errors << @workflow.pipelines.first.errors.full_messages.to_sentence
+        if @workflow.errors.messages.has_key?(:pipelines)
+          errors << @workflow.pipelines.map{ |pipeline| pipeline.errors.full_messages  }.flatten rescue []
         else
-          errors << @workflow.errors.full_messages.uniq  
+          errors << @workflow.errors.full_messages.uniq
         end
-        format.html { redirect_to new_admin_workflow_path, alert: errors }
+        format.html { redirect_to new_admin_workflow_path, alert: errors.flatten.uniq }
         format.json { render json: { errors: @workflow.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
@@ -45,12 +45,12 @@ class Admin::WorkflowsController < AdminController
         format.html { redirect_to admin_workflows_path, notice: 'Workflow was successfully updated.' }
       else
         errors = []
-        if @workflow.errors.messages.has_key?(:pipelines) && @workflow.pipelines.first.errors.present?
-          errors << @workflow.pipelines.first.errors.full_messages.to_sentence
+        if @workflow.errors.messages.has_key?(:pipelines)
+          errors << @workflow.pipelines.map{ |pipeline| pipeline.errors.full_messages }.flatten rescue []
         else
-          errors << @workflow.errors.full_messages.uniq  
+          errors << @workflow.errors.full_messages.uniq
         end
-        format.html { redirect_to admin_workflows_path, alert: errors }
+        format.html { redirect_to admin_workflows_path, alert: errors.flatten.uniq }
         format.json { render json: { errors: @workflow.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
@@ -75,6 +75,27 @@ class Admin::WorkflowsController < AdminController
                   }
     else
       render json: { error: @pipelines_stages[:error] }, status: :unprocessable_entity
+    end
+  end
+
+  def enable_disable_workflow
+    respond_to do |format|
+      if @workflow.update(is_active: (params[:is_active] == "true" ? true : false))
+        format.html { redirect_to admin_workflows_path, notice: I18n.t("controller.workflows.notice.updated") }
+      else
+        format.html { redirect_to admin_workflows_path, alert: @workflow.errors.full_messages.uniq }
+        format.json { render json: { errors: @workflow.errors.full_messages.uniq }, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def destroy
+    respond_to do |format|
+      if @workflow.destroy
+        format.html { redirect_to admin_workflows_path, notice: I18n.t("controller.workflows.notice.deleted") }
+      else
+        format.html { redirect_to admin_workflows_path, notice: I18n.t("controller.workflows.notice.cannot_be_deleted") }
+      end
     end
   end
 
