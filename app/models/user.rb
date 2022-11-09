@@ -407,10 +407,12 @@ class User
     attrs = []
     attrs << {email: self.email} if self.email.present?
     attrs << {phone: self.phone} if self.phone.present?
-    if self.role.in?(User::CLIENT_SCOPED_ROLES)
-      self.errors.add(:base, 'User with these details already exists') if User.in(role: User::CLIENT_SCOPED_ROLES).ne(id: self.id).where(booking_portal_client_id: self.booking_portal_client_id).or(attrs).present?
-    else
-      self.errors.add(:base, 'User with these details already exists') if User.nin(role: User::CLIENT_SCOPED_ROLES).ne(id: self.id).or(attrs).present?
+    if attrs.present?
+      if self.role.in?(User::CLIENT_SCOPED_ROLES)
+        self.errors.add(:base, 'User with these details already exists') if User.in(role: User::CLIENT_SCOPED_ROLES).ne(id: self.id).where(booking_portal_client_id: self.booking_portal_client_id).or(attrs).present?
+      else
+        self.errors.add(:base, 'User with these details already exists') if User.nin(role: User::CLIENT_SCOPED_ROLES).ne(id: self.id).or(attrs).present?
+      end
     end
   end
 
