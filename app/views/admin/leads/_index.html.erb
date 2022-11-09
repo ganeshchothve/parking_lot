@@ -1,100 +1,122 @@
 <section class="mt-0">
   <div class="px-0">
     <div class="row g-0">
-      <div class="col-lg-12 p-0">
-        <% leads.each do |lead| %>
-          <% is_assigned_lead = current_user.role?(:sales) && Lead.where(id: lead.id, closing_manager_id: current_user.id).in(customer_status: %w(engaged)).first.present? %>
-        <div class="bg-white rounded-3 float-start wd-100 mt-4 shadow-sm position-relative">
-          <div class="float-start wd-100">
-            <div class="">
-              <div>
-                <div class="inner-info d-flex d-xs-no-flex justify-content-between position-relative">
-                  <div class="ps-3 py-3 pb-xs-0">
-                    <h2 class="fn-16 font-medium d-sm-inline-block mb-0 theme-txt-color me-2 d-block">
-                      <% if policy([ current_user_role_group, lead]).show? %>
-                      <%= link_to lead.name, [current_user_role_group, lead ], class: "font-medium theme-txt-color" %>
-                      <% else %>
-                      <%= lead.name %>
-                      <% end %>
-                    </h2>
-                    <% if lead.email.present? %>
-                    <p class="email-icon small d-inline-block mt-1 fn-16 mb-0">
+      <div class="col-lg-12 p-0 mt-3">
+        <table class="table table-responsive table-color">
+          <thead>
+            <tr>
+              <th><%= t('mongoid.attributes.lead.name') %></th>
+              <th><%= t('mongoid.attributes.lead.email') %></th>
+              <th><%= t('mongoid.attributes.lead.phone') %></th>
+              <th><%= t('mongoid.attributes.lead.project_id') %></th>
+              <% if current_user.role.in?(%w(admin superadmin)) %>
+                <th><%= t('mongoid.attributes.lead.manager_id') %></th>
+              <% end %>
+              <th><%= t('mongoid.attributes.lead.stage') %></th>
+              <% unless is_marketplace? %>
+                <th><%= t('mongoid.attributes.lead.blocking_amount_paid') %></th>
+                <th><%= t('mongoid.attributes.lead.payment_done') %></th>
+                <th><%= t('mongoid.attributes.lead.registration_done') %></th>
+              <% end %>
+              <th><%= t('global.action', count:1) %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% leads.each do |lead| %>
+              <tr>
+                <td>
+                  <% if policy([ current_user_role_group, lead]).show? %>
+                    <%= link_to lead.name, [current_user_role_group, lead ] %>
+                  <% else %>
+                    <%= lead.name %>
+                  <% end %>
+                </td>
+                <td>
+                  <% if lead.email.present? %>
+                    <p class="email-icon mb-0">
                       <i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i><%= lead.masked_email(current_user) || '' %>
                     </p>
-                    <% end %>
-                    <% if lead.phone.present? %>
-                    <p class="phone-icon small d-inline-block mt-1 ms-2 fn-16 mb-0">
+                  <% end %>
+                </td>
+                <td>
+                  <% if lead.phone.present? %>
+                    <p class="phone-icon mb-0">
                       <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= lead.masked_phone(current_user) || '' %>
                     </p>
-                    <% end %>
-                    <%# if false #current_user.role?(:sales) && is_assigned_lead && lead.accepted_by_sales.nil? %>
-                      <!-- <p class="small d-inline-block mt-1 ms-2 fn-16 mb-0"> -->
-                        <%#= link_to 'Accept', accept_lead_admin_lead_path(lead, accepted_by_sales: true, event: 'accepted', format: :json), method: 'patch', remote: true, class: "accept move-to-next-state btn btn-success text-white" %>
-                      <!-- </p> -->
-                      <!-- <p class="small d-inline-block mt-1 ms-2 fn-16 mb-0"> -->
-                        <%#= link_to 'Reject', accept_lead_admin_lead_path(lead, accepted_by_sales: false, event: 'rejected', format: :json), method: 'patch', remote: true, data: { confirm: I18n.t("controller.assets.confirm.sure"), disable_with: I18n.t("global.please_wait") }, class: "reject move-to-next-state btn apply-btn btn-primary border-primary" %>
-                      <!-- </p> -->
-                    <%# end %>
-                    <% if lead.manager_id? && current_user.role.in?(%w(admin superadmin)) %>
-                      <p class="fn-14 mt-1 mb-0">
-                        <%= "#{t('mongoid.attributes.lead.manager_id')} : #{link_to lead.manager.name, [current_user_role_group, lead.manager], class: 'theme-txt-color'}".html_safe %>
-                      </p>
-                    <% end %>
-                  </div>
-                  <div class="pe-3 py-3 ps-xs-3">
-                    <p class="font-medium fn-12 mb-0 d-inline-block me-2"><i
-                        class="fa fa-circle info me-2 fa-sm"></i><%= (I18n.t("mongoid.attributes.lead/stage.#{lead.lead_stage}") if lead.lead_stage != nil) || '-' %></p>
-                    <div class="dropdown d-inline-block top-right-action">
-                      <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
-                        <i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
-                      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                        <%= render "#{current_user_role_group}/leads/links", lead: lead %>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="border-bottom col-12"></div>
-              </div>
-              <div class="justify-content-between d-sm-flex">
-                <div class="ps-3 py-3 pb-xs-0">
-                  <!-- <p><%= lead.lead_stage || '-' %></p> -->
+                  <% end %>
+                </td>
+                <td>
                   <p class="mb-0 theme-txt-color"><%= lead.project_name %></p>
-                </div>
+                </td>
+                <% if current_user.role.in?(%w(admin superadmin)) %>
+                  <td>
+                    <% if lead.manager_id? %>
+                      <p class="fn-14 mt-1 mb-0">
+                        <%= link_to lead.manager.name, [current_user_role_group, lead.manager], class: 'theme-txt-color' %>
+                      </p>
+                    <% end %>
+                  </td>
+                <% end %>
+                <td>
+                  <p class="font-medium fn-12 mb-0 d-inline-block me-2">
+                    <i class="fa fa-circle info me-2 fa-sm"></i><%= (I18n.t("mongoid.attributes.lead/stage.#{lead.lead_stage}") if lead.lead_stage != nil) || '-' %>
+                  </p>
+                </td>
                 <% unless is_marketplace? %>
-                  <div class="inner-info">
-                    <div class="pe-3 py-3 ps-3 pt-xs-0 d-sm-flex justify-content-end">
-                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color ms-xs-0"><i
-                          class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_blocking_amount_paid? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_blocking_amount_paid? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.blocking_amount_paid') %>
-                      </p>
-                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color ms-xs-0"><i
-                          class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_booking_price_paid? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_booking_price_paid? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.payment_done') %>
-                      </p>
-                      <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color ms-xs-0"><i
-                          class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_registration_done? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_registration_done? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.registration_done') %>
-                      </p>
+                  <td>
+                    <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color ms-xs-0">
+                      <i class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_blocking_amount_paid? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_blocking_amount_paid? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.blocking_amount_paid') %>
+                    </p>
+                  </td>
+                  <td>
+                    <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color ms-xs-0">
+                      <i class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_booking_price_paid? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_booking_price_paid? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.payment_done') %>
+                    </p>
+                  </td>
+                  <td>
+                    <p class="font-medium fn-14 mb-0 ms-5 theme-txt-color ms-xs-0">
+                      <i class='fa fn-16 fa-<%= t("global.boolean.#{lead.is_registration_done? }") == "Yes" ? "check" : "times" %> fill-<%= t("global.boolean.#{lead.is_registration_done? }") == "Yes" ? "success" : "danger" %> me-12 fa-lg'></i><%= t('mongoid.attributes.lead.registration_done') %>
+                    </p>
+                  </td>
+                <% end %>
+                <td>
+                  <div class="dropdown d-inline-block top-right-action">
+                    <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                      <%= render "#{current_user_role_group}/leads/links", lead: lead %>
                     </div>
                   </div>
-                <% end %>
-              </div>
+                </td>
+                <!-- <td>
+                  <%# is_assigned_lead = current_user.role?(:sales) && Lead.where(id: lead.id, closing_manager_id: current_user.id).in(customer_status: %w(engaged)).first.present? %>
+                  <%# if false #current_user.role?(:sales) && is_assigned_lead && lead.accepted_by_sales.nil? %>
+                  <p class="small d-inline-block mt-1 ms-2 fn-16 mb-0">
+                  <%#= link_to 'Accept', accept_lead_admin_lead_path(lead, accepted_by_sales: true, event: 'accepted', format: :json), method: 'patch', remote: true, class: "accept move-to-next-state btn btn-success text-white" %>
+                  </p>
+                  <p class="small d-inline-block mt-1 ms-2 fn-16 mb-0">
+                  <%#= link_to 'Reject', accept_lead_admin_lead_path(lead, accepted_by_sales: false, event: 'rejected', format: :json), method: 'patch', remote: true, data: { confirm: I18n.t("controller.assets.confirm.sure"), disable_with: I18n.t("global.please_wait") }, class: "reject move-to-next-state btn apply-btn btn-primary border-primary" %>
+                  </p>
+                  <%# end %>
+                </td> -->
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <!----------- Pagination ---------->
+      <% if leads.is_a? WillPaginate::Collection %>
+        <div class="col-lg-12 p-3">
+          <div class="row">
+            <div class="col-lg-6 pt-2">
+              <p class="table-entry mb-0"><%= page_entries_info leads %></p>
+            </div>
+            <div class="col-lg-6 table-pagination">
+              <%= will_paginate leads, list_classes: %w(pagination justify-content-end) %>
             </div>
           </div>
         </div>
-        <% end %>
-      </div>
-
-      <!----------- Pagination ---------->
-      <% if leads.is_a? WillPaginate::Collection %>
-      <div class="col-lg-12 py-3 bg-white mb-2 px-3 mt-3 shadow-sm">
-        <div class="row">
-          <div class="col-lg-6 pt-2">
-            <p class="table-entry mb-0"><%= page_entries_info leads %></p>
-          </div>
-          <div class="col-lg-6 table-pagination">
-            <%= will_paginate leads, list_classes: %w(pagination justify-content-end) %>
-          </div>
-        </div>
-      </div>
       <% end %>
     </div>
   </div>

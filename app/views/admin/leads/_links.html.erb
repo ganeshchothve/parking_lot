@@ -73,8 +73,6 @@
   <%= link_to Asset.model_name.human(count: 2), admin_lead_path(lead,'remote-state': assetables_path(assetable_type: lead.class.model_name.i18n_key.to_s, assetable_id: lead.id) ), class: "dropdown-item" %>
 <% end %>
 
-<div class="dropdown-divider"></div>
-
 <% if policy([:admin, lead]).show_selldo_links? %>
   <h6 class="dropdown-header"><%= t("selldo.links.header") %></h6>
   <% %w(add_note schedule_site_visit schedule_followup).each do |task| %>
