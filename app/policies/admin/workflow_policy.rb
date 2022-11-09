@@ -8,7 +8,11 @@ class Admin::WorkflowPolicy < WorkflowPolicy
   end
 
   def update?
-    %w[superadmin admin].include?(user.role)
+    record.is_active? && %w[superadmin admin].include?(user.role)
+  end
+
+  def edit?
+    index?
   end
 
   def pipeline_stages?
@@ -31,9 +35,17 @@ class Admin::WorkflowPolicy < WorkflowPolicy
     record.can_set_product_amount_type?
   end
 
+  def enable_disable_workflow?
+    %w[superadmin admin].include?(user.role)
+  end
+
+  def destroy?
+    !record.is_active? && edit?
+  end
+
   def permitted_attributes(params = {})
     attributes = []
-    attributes += [:stage, :create_product, :deactivate_product, :update_product_on_deal, :product_amount_type, pipelines_attributes: PipelinePolicy.new(user, Pipeline.new).permitted_attributes]
+    attributes += [:stage, :create_product, :deactivate_product, :update_product_on_deal, :product_amount_type, :is_active, pipelines_attributes: PipelinePolicy.new(user, Pipeline.new).permitted_attributes]
     attributes.uniq
   end
 end

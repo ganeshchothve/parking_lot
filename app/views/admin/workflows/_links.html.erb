@@ -1,0 +1,11 @@
+<% if policy([:admin, workflow]).edit? %>
+  <%= link_to t('helpers.edit.link_name', model: workflow.model_name.human), edit_admin_workflow_path(workflow), class: 'dropdown-item', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit Workflow'} %>
+<% end %>
+<% if policy([:admin, Workflow]).enable_disable_workflow? %>
+  <% link_name = workflow.is_active? ? I18n.t("controller.workflows.enable_disable_workflow.disable") : I18n.t("controller.workflows.enable_disable_workflow.enable") %>
+  <% is_active = workflow.is_active? ? false : true %>
+  <%= link_to link_name, enable_disable_workflow_admin_workflow_path(workflow, is_active: is_active), method: :patch, class: 'dropdown-item' %>
+<% end %>
+<% if policy([:admin, workflow]).destroy? %>
+  <%= link_to I18n.t("controller.workflows.destroy.link_name"), admin_workflow_path(workflow), method: :delete, class: 'dropdown-item' %>
+<% end %>

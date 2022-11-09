@@ -36,7 +36,6 @@
               </div>
             </div>
           <% end %>
-
           <% if policy([:admin, User.new]).export? %>
             <div class="export-menu display-initial d-inline">
               <button class="select-btn btn no-fill primary fn-400 dropdown-toggle" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <%= t('controller.users.exports.link_name', name: nil) %> </button>
