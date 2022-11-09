@@ -43,7 +43,7 @@
   <% end %>
 <% end %>
 
-<% if policy([:admin, ProjectUnit]).index? %>
+<% if false #policy([:admin, ProjectUnit]).index? %>
   <%= active_link_to t('controller.project_units.index.link_name'), admin_project_units_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
 <% end %>
 
@@ -69,17 +69,15 @@
   <%= active_link_to t('controller.booking_details.index.link_name'), admin_booking_details_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
 <% end %>
 
-<!--
-  <%# if policy(:custom).inventory? %>
-    <%#= active_link_to t('controller.inventory.index.link_name'), custom_inventory_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-  <%# end %>
--->
+<% if false# policy(:custom).inventory? %>
+  <%= active_link_to t('controller.inventory.index.link_name'), custom_inventory_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+<% end %>
 
 <% if policy([:admin, Receipt]).index? %>
   <%= active_link_to t('controller.receipts.index.link_name'), admin_receipts_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
 <% end %>
 
-<% if policy([:admin, Invoice]).index? %>
+<% if false #policy([:admin, Invoice]).index? %>
   <%= active_link_to t('controller.invoices.index.link_name'), admin_invoices_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
 <% end %>
 
@@ -87,23 +85,23 @@
   <%= active_link_to t('controller.channel_partners.index.link_name'), channel_partners_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
 <% end %>
 
-<%# if policy([:admin, VariableIncentiveScheme]).vis_details? %>
-  <%#= active_link_to t('controller.variable_incentive_schemes.vis_details.link_name'), vis_details_admin_variable_incentive_schemes_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
-<%# end %>
+<% if false #policy([:admin, VariableIncentiveScheme]).vis_details? %>
+  <%= active_link_to t('controller.variable_incentive_schemes.vis_details.link_name'), vis_details_admin_variable_incentive_schemes_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+<% end %>
 
-<% if policy([:admin, Meeting]).index? %>
+<% if false #policy([:admin, Meeting]).index? %>
   <%= active_link_to t('controller.meetings.index.link_name'), admin_meetings_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
 <% end %>
 
-<% if policy([:admin, UserRequest]).index? %>
+<% if false #policy([:admin, UserRequest]).index? %>
   <%= active_link_to t('controller.user_requests.index.link_name'), [:admin, UserRequest, request_type: :all], active: :inclusive, class: "nav-link pl-0 pr-0" %>
 <% end %>
 
-<% if policy([:admin, BannerAsset]).index? %>
+<% if false #policy([:admin, BannerAsset]).index? %>
   <%= active_link_to t('controller.banner_assets.index.link_name'), admin_banner_assets_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
 <% end %>
 
-<% if policy([:admin, Workflow]).index? %>
+<% if false #policy([:admin, Workflow]).index? %>
   <%= active_link_to t('controller.workflows.index.link_name'), admin_workflows_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
 <% end %>
 
