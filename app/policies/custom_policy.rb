@@ -122,7 +122,27 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     "#{user.buyer? ? 'Buyer' : 'Admin'}::PaymentTypePolicy".constantize.new(user, PaymentType).index?
   end
 
+  def invoices?
+    Admin::InvoicePolicy.new(user, Invoice).index?
+  end
+
+  def meetings?
+    "#{user.buyer? ? 'Buyer' : 'Admin'}::MeetingPolicy".constantize.new(user, Meeting).index?
+  end
+
+  def user_requests?
+    "#{user.buyer? ? 'Buyer' : 'Admin'}::UserRequestPolicy".constantize.new(user, UserRequest).index?
+  end
+
+  def banner_assets?
+    Admin::BannerAssetPolicy.new(user, BannerAsset).index?
+  end
+
+  def workflows?
+    Admin::WorkflowPolicy.new(user, Workflow).index?
+  end
+
   def self.custom_methods
-    %w[schemes incentive_schemes emails smses referrals accounts checklists bulk_upload_reports crms api_logs push_notifications user_kycs sales_board variable_incentive_schemes discounts payment_types].sort
+    %w[schemes incentive_schemes emails smses referrals accounts checklists bulk_upload_reports crms api_logs push_notifications user_kycs sales_board variable_incentive_schemes discounts payment_types invoices meetings user_requests banner_assets workflows].sort
   end
 end
