@@ -1,6 +1,6 @@
 <%= form_for(@booking_detail, url: create_booking_without_inventory_admin_booking_details_path  ,local: true, html: {class: 'validate-form', id: 'booking_detail_form_without_inv'}) do |f| %>
 <%= f.hidden_field :lead_id, value: @booking_detail.lead_id %>
-  <% if !is_marketplace? %>
+  <% if !embedded_marketplace? %>
     <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">

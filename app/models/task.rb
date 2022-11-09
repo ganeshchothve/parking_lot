@@ -15,6 +15,7 @@ class Task
 
   embedded_in :booking_detail
   belongs_to :completed_by, class_name: 'User', optional: true
+  belongs_to :booking_portal_client, class_name: 'Client'
 
   alias :name_in_error :name
 

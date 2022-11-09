@@ -202,9 +202,7 @@ class Admin::BookingDetailsController < AdminController
                                     site_visit_id: params[:site_visit_id],
                                     booking_portal_client_id: current_user.booking_portal_client.id
                                     )
-    if !is_marketplace?
-      render layout: false
-    end
+    render layout: false
   end
 
   def create_booking_without_inventory

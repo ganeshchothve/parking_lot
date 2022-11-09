@@ -12,6 +12,7 @@ class Datum
   field :new_absolute_value, type: Float
   field :order, type: Integer
 
+  belongs_to :booking_portal_client, class_name: 'Client'
   embedded_in :data_attributable, polymorphic: true
   
   validates :name, :key, presence: true
