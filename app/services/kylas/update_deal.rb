@@ -130,7 +130,7 @@ module Kylas
               name: product['name'], 
               quantity: 1,
               price: {
-                currencyId: product.dig('price','currency' ,'id'),
+                currencyId: product.dig('price','currency' ,'id') || product.dig('price', 'currencyId'),
                 value: product.dig('price','value').to_f
               },
               discount: {

@@ -29,14 +29,13 @@ module Kylas
               deal_data = fetch_deal_details[:data].with_indifferent_access
               deal_associated_products = deal_data[:products].collect{|pd| [pd[:name], pd[:id]]} rescue []
               booking_product_in_kylas = deal_associated_products.select{ |kp| kp.include?(entity.kylas_product_id) } rescue []
-              # need to discuss with if one project in deal'ss bucket and taken booking on another project
-              iris_project_on_deal = deal_data[:products].select { |kp| kp['id'] == entity.project.kylas_product_id } rescue {}
-              iris_project_on_deal[:price][:value] = 0 if iris_project_on_deal.dig(:price, :value).present?
+              iris_project_on_deal = deal_data[:products].find { |kp| kp['id'].to_s == entity.project.kylas_product_id } rescue {}
+              iris_project_on_deal[:price][:value] = 0 if iris_project_on_deal.present? && iris_project_on_deal.dig(:price, :value).present?
               #check whether the product is present on the deal or not
               if !(booking_product_in_kylas.present?)
                 update_deal_params = {product: []}
                 update_deal_params[:product] << iris_project_on_deal if iris_project_on_deal.present?
-                update_deal_params[:product] << update_product_payload(kylas_product_response[:response]['id'], entity) if kylas_product_response[:success]
+                update_deal_params[:product] << update_product_payload(kylas_product_response[:response]['id'], entity, wf) if kylas_product_response[:success]
                 kylas_deal_response = Kylas::UpdateDeal.new(entity.creator, entity.lead.kylas_deal_id, update_deal_params).call
                 entity.set(kylas_product_id: kylas_product_response[:response]['id']) if kylas_deal_response[:success]
               end
