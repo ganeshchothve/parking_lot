@@ -13,36 +13,41 @@ module Kylas
 
     def trigger_workflow_events_in_kylas(entity)
       wf = Workflow.where(stage: entity.status, booking_portal_client_id: entity.creator.booking_portal_client.id).first
+      deal_pipeline = wf.pipelines.where(entity_type: "deals").first if wf.present?
       if wf.present?
 
         # call serice to update the product on that deal
         if wf.create_product?
           product_params = create_product_payload(entity, wf)
           kylas_product_response = Kylas::CreateProductInKylas.new(entity.creator, product_params).call
-        end
-        # call serice to update the product on that deal
-        if wf.update_product_on_deal?
-          #fetch deal details from Kylas
-          fetch_deal_details = Kylas::FetchDealDetails.new(entity.lead.kylas_deal_id, entity.creator).call
-          if fetch_deal_details[:success]
-            deal_data = fetch_deal_details[:data].with_indifferent_access
-            deal_associated_products = deal_data[:products].collect{|pd| [pd[:name], pd[:id]]} rescue []
-            booking_product_in_kylas = deal_associated_products.select{ |kp| kp.include?(entity.kylas_product_id) } rescue []
 
-            #check whether the product is present on the deal or not
-            if !(booking_product_in_kylas.present?)
-              update_deal_params = {}
-              update_deal_params[:product] = update_product_payload(kylas_product_response[:response]['id'], entity, wf) if kylas_product_response[:success]
-              kylas_deal_response = Kylas::UpdateDeal.new(entity.creator, entity.lead.kylas_deal_id, update_deal_params).call
-              entity.set(kylas_product_id: kylas_product_response[:response]['id']) if kylas_deal_response[:success]
+          # call serice to update the product on that deal
+          if wf.update_product_on_deal?
+            #fetch deal details from Kylas
+            fetch_deal_details = Kylas::FetchDealDetails.new(entity.lead.kylas_deal_id, entity.creator).call
+            if fetch_deal_details[:success]
+              deal_data = fetch_deal_details[:data].with_indifferent_access
+              deal_associated_products = deal_data[:products].collect{|pd| [pd[:name], pd[:id]]} rescue []
+              booking_product_in_kylas = deal_associated_products.select{ |kp| kp.include?(entity.kylas_product_id) } rescue []
+              # need to discuss with if one project in deal'ss bucket and taken booking on another project
+              iris_project_on_deal = deal_data[:products].select { |kp| kp['id'] == entity.project.kylas_product_id } rescue {}
+              iris_project_on_deal[:price][:value] = 0 if iris_project_on_deal.dig(:price, :value).present?
+              #check whether the product is present on the deal or not
+              if !(booking_product_in_kylas.present?)
+                update_deal_params = {product: []}
+                update_deal_params[:product] << iris_project_on_deal if iris_project_on_deal.present?
+                update_deal_params[:product] << update_product_payload(kylas_product_response[:response]['id'], entity) if kylas_product_response[:success]
+                kylas_deal_response = Kylas::UpdateDeal.new(entity.creator, entity.lead.kylas_deal_id, update_deal_params).call
+                entity.set(kylas_product_id: kylas_product_response[:response]['id']) if kylas_deal_response[:success]
+              end
+            end
+
+            # call service to deactivate the product in Kylas
+            if wf.deactivate_product?
+              product_deactivate_params = deactivate_product_params(entity)
+              Kylas::DeactivateProduct.new(entity.creator, entity.kylas_product_id, product_deactivate_params).call
             end
           end
-        end
-
-        # call service to deactivate the product in Kylas
-        if wf.deactivate_product?
-          product_deactivate_params = deactivate_product_params(entity)
-          Kylas::DeactivateProduct.new(entity.creator, entity.kylas_product_id, product_deactivate_params).call
         end
 
         # call service to update the pipeline stage in kylas
@@ -56,6 +61,7 @@ module Kylas
           #create the request payload
           update_stage_params = update_pipeline_stage_params(workflow_pipeline, kylas_entity, entity)
           
+          kylas_deal_response = Kylas::UpdateDeal.new(entity.creator, entity.lead.kylas_deal_id, {pipeline: deal_pipeline.as_json}).call if deal_pipeline.present?
           #service to update the entity pipeline stage
           Kylas::UpdateEntityPipelineStage.new(
             entity.creator, entity.lead.kylas_deal_id, "deals", workflow_pipeline.pipeline_stage_id, update_stage_params

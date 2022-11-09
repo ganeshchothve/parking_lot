@@ -2777,6 +2777,16 @@ en:
         link_name: 'Add Workflow'
       edit:
         link_name: 'Edit Workflow'
+      destroy:
+        link_name: 'Delete Workflow'
+      notice:
+        created: Workflow created successfully.
+        updated: Workflow updated successfully.
+        deleted: Workflow deleted
+        cannot_be_deleted: Workflow cannot be deleted
+      enable_disable_workflow:
+        enable: Enable Workflow
+        disable: Disable Workflow
     invoices:
       index:
         link_name: "Brokerages"

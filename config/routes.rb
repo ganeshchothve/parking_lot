@@ -120,8 +120,11 @@ Rails.application.routes.draw do
     end
 
     resources :banner_assets
-    resources :workflows, except: [:destroy] do
+    resources :workflows do
       get 'pipeline_stages', to: 'workflows#pipeline_stages', on: :collection
+      member do
+        patch :enable_disable_workflow
+      end
     end
 
     resources :payment_types

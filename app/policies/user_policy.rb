@@ -34,7 +34,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def export?
-    index?
+    index? && !user.role.in?(%w[sales sales_admin])
   end
 
   def confirm_via_otp?

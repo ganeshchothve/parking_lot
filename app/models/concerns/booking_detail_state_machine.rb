@@ -87,12 +87,12 @@ module BookingDetailStateMachine
         transitions from: :swap_requested, to: :swapping
       end
 
-      event :swapped do
+      event :swapped, after: %i[trigger_workflow] do
         transitions from: :swapped, to: :swapped
         transitions from: :swapping, to: :swapped, after: :update_user_request_to_resolved
       end
 
-      event :swap_rejected, after: :update_booking_detail_to_blocked do
+      event :swap_rejected, after: [:update_booking_detail_to_blocked, :trigger_workflow] do
         transitions from: :swap_rejected, to: :swap_rejected
         transitions from: :swap_requested, to: :swap_rejected
         transitions from: :swapping, to: :swap_rejected, after: :update_user_request_to_rejected
@@ -106,7 +106,7 @@ module BookingDetailStateMachine
         transitions from: :scheme_approved, to: :cancellation_requested
       end
 
-      event :cancellation_rejected, after: :update_booking_detail_to_blocked do
+      event :cancellation_rejected, after: [:update_booking_detail_to_blocked, :trigger_workflow] do
         transitions from: :cancelling, to: :cancellation_rejected, after: :update_user_request_to_rejected
         transitions from: :cancellation_requested, to: :cancellation_rejected
       end
@@ -116,7 +116,7 @@ module BookingDetailStateMachine
         transitions from: :cancellation_requested, to: :cancelling
       end
 
-      event :cancel, after: %i[release_project_unit!] do
+      event :cancel, after: %i[release_project_unit! trigger_workflow] do
         transitions from: :booked_tentative, to: :cancelled
         transitions from: :blocked, to: :cancelled
         transitions from: :cancelled, to: :cancelled
@@ -151,11 +151,7 @@ module BookingDetailStateMachine
       _project_unit.assign_attributes(status: 'blocked', held_on: nil, blocked_on: Date.today, auto_release_on: ( Date.today + _project_unit.blocking_days.days) )
       _project_unit.save
       self.set(booked_on: _project_unit.blocked_on)
-      if Rails.env.production?
-        Kylas::TriggerWorkflowEventsWorker.perform_async(self.id.to_s, self.class.to_s)
-      else
-        Kylas::TriggerWorkflowEventsWorker.new.perform(self.id.to_s, self.class.to_s)
-      end
+      trigger_workflow
       if under_negotiation? && booking_detail_scheme.approved?
         scheme_approved!
       else
@@ -166,17 +162,19 @@ module BookingDetailStateMachine
     end
 
     def after_scheme_approved_event
+      trigger_workflow
       if scheme_approved? && get_paid_amount >= project_unit.blocking_amount
         blocked!
       end
     end
 
     def after_scheme_rejected_event
+      trigger_workflow
       receipts.each do |receipt|
         receipt.booking_detail_id = nil
         receipt.save
       end
-     end
+    end
     # Updating blocked date of project_unit to today and  auto_release_on will be changed to blocking_days more from current auto_release_on.
     def after_blocked_event
       _lead = lead
@@ -192,14 +190,7 @@ module BookingDetailStateMachine
       _project_unit.save
       self.set(booked_on: _project_unit.blocked_on)
 
-      if self.booking_portal_client.kylas_tenant_id.present?
-        #trigger all workflow events in Kylas
-        if Rails.env.production?
-          Kylas::TriggerWorkflowEventsWorker.perform_async(self.id.to_s, self.class.to_s)
-        else
-          Kylas::TriggerWorkflowEventsWorker.new.perform(self.id.to_s, self.class.to_s)
-        end
-      end
+      trigger_workflow
 
       if blocked? && get_paid_amount > project_unit.blocking_amount
         booked_tentative!
@@ -210,14 +201,7 @@ module BookingDetailStateMachine
     end
     # Updating blocked date of project_unit to today and  auto_release_on will be changed to blocking_days more from current auto_release_on.
     def after_booked_tentative_event
-      if self.booking_portal_client.kylas_tenant_id.present?
-        #trigger all workflow events in Kylas
-        if Rails.env.production?
-          Kylas::TriggerWorkflowEventsWorker.perform_async(self.id.to_s, self.class.to_s)
-        else
-          Kylas::TriggerWorkflowEventsWorker.new.perform(self.id.to_s, self.class.to_s)
-        end
-      end
+      trigger_workflow
       if project_unit.present?
         if booked_tentative? && (get_paid_amount >= self.get_booking_price)
           booked_confirmed!
@@ -243,14 +227,7 @@ module BookingDetailStateMachine
       if (self.aasm.from_state == :booked_tentative && self.user.booking_portal_client.document_sign.present?)
         # self.send_booking_form_to_sign
       end
-      if self.booking_portal_client.kylas_tenant_id.present?
-        #trigger all workflow events in Kylas
-        if Rails.env.production?
-          Kylas::TriggerWorkflowEventsWorker.perform_async(self.id.to_s, self.class.to_s)
-        else
-          Kylas::TriggerWorkflowEventsWorker.new.perform(self.id.to_s, self.class.to_s)
-        end
-      end
+      trigger_workflow
     end
 
     #
@@ -260,6 +237,7 @@ module BookingDetailStateMachine
     # @return [<type>] <description>
     #
     def after_hold_event
+      trigger_workflow
       under_negotiation! if hold? && (get_paid_amount > 0)
     end
 
@@ -445,6 +423,17 @@ module BookingDetailStateMachine
 
     def selldo_booking_status
       I18n.t("mongoid.attributes.booking_detail/selldo_status.#{status}")
+    end
+
+    def trigger_workflow
+      # trigger all workflow events in Kylas
+      if self.booking_portal_client.kylas_tenant_id.present?
+        if Rails.env.production?
+          Kylas::TriggerWorkflowEventsWorker.perform_async(self.id.to_s, self.class.to_s)
+        else
+          Kylas::TriggerWorkflowEventsWorker.new.perform(self.id.to_s, self.class.to_s)
+        end
+      end
     end
 
   end
