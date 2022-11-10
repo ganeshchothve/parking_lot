@@ -9,7 +9,7 @@
               <th><%= t('mongoid.attributes.lead.email') %></th>
               <th><%= t('mongoid.attributes.lead.phone') %></th>
               <th><%= t('mongoid.attributes.lead.project_id') %></th>
-              <% if current_user.role.in?(%w(admin superadmin)) %>
+              <% if current_user.role.in?(%w(admin superadmin cp_owner)) %>
                 <th><%= t('mongoid.attributes.lead.manager_id') %></th>
               <% end %>
               <th><%= t('mongoid.attributes.lead.stage') %></th>
@@ -48,7 +48,7 @@
                 <td>
                   <p class="mb-0 theme-txt-color"><%= lead.project_name %></p>
                 </td>
-                <% if current_user.role.in?(%w(admin superadmin)) %>
+                <% if current_user.role.in?(%w(admin superadmin cp_owner)) %>
                   <td>
                     <% if lead.manager_id? %>
                       <p class="fn-14 mt-1 mb-0">
