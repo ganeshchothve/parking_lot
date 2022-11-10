@@ -60,7 +60,7 @@ class Workflow
 
   def validate_product_amount_type
     if !create_product && product_amount_type.present?
-      errors.add(:create_product, 'setting must be on for Product Amount Type')
+      errors.add(:create_product, 'setting must be on for Product Price')
     end
     if create_product && !can_set_product_amount_type?
       errors.add(:product_amount_type, 'setting cannot be set for more than one workflow')
