@@ -85,6 +85,16 @@ class Workflow
     end
   end
 
+  def get_product_price
+    if product_amount_type.present?
+      if product_amount_type == 'agreement_price'
+        "agreement_price"
+      else
+        "calculate_all_inclusive_price"
+      end
+    end
+  end
+
   class << self
     def user_based_scope user, params={}
       custom_scope = {}

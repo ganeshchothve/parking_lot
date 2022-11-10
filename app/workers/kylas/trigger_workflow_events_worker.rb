@@ -14,6 +14,7 @@ module Kylas
     def trigger_workflow_events_in_kylas(entity)
       wf = Workflow.where(stage: entity.status, booking_portal_client_id: entity.creator.booking_portal_client.id, is_active: true).first
       deal_pipeline = wf.pipelines.where(entity_type: "deals").first if wf.present?
+      kylas_deal_response = Kylas::UpdateDeal.new(entity.creator, entity.lead.kylas_deal_id, {pipeline: deal_pipeline.as_json}).call if deal_pipeline.present?
       if wf.present?
 
         # call serice to update the product on that deal
@@ -60,7 +61,6 @@ module Kylas
           #create the request payload
           update_stage_params = update_pipeline_stage_params(workflow_pipeline, kylas_entity, entity)
           
-          kylas_deal_response = Kylas::UpdateDeal.new(entity.creator, entity.lead.kylas_deal_id, {pipeline: deal_pipeline.as_json}).call if deal_pipeline.present?
           #service to update the entity pipeline stage
           Kylas::UpdateEntityPipelineStage.new(
             entity.creator, entity.lead.kylas_deal_id, "deals", workflow_pipeline.pipeline_stage_id, update_stage_params
@@ -72,7 +72,7 @@ module Kylas
     def create_product_payload(entity, wf)
       payload = {
         project_unit_name: entity.name,
-        agreement_price: (wf.product_amount_type.present? ? entity.send(wf.product_amount_type) : 0)
+        agreement_price: (wf.get_product_price.present? ? entity.send(wf.get_product_price) : 0)
       }
       payload
     end
@@ -85,7 +85,7 @@ module Kylas
           'currency': {
             'id': 431
           },
-          'value': (wf.product_amount_type.present? ? entity.send(wf.product_amount_type) : 0)
+          'value': (wf.get_product_price.present? ? entity.send(wf.get_product_price) : 0)
         }
       }
       payload

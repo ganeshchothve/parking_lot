@@ -16,7 +16,7 @@
           <tbody>
             <% workflows.each do |workflow| %>
               <tr>
-                <td rowspan="<%= workflow.pipelines.count %>" data-title=<%= t('mongoid.attributes.workflow.stage') %>>
+                <td rowspan="<%= workflow.pipelines.present? ? workflow.pipelines.count : 1 %>" data-title=<%= t('mongoid.attributes.workflow.stage') %>>
                   <%= t("mongoid.attributes.booking_detail/status.#{workflow.stage}") %>
                 </td>
                 <% wf_pipeline = workflow.pipelines.first %>
