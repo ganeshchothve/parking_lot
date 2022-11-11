@@ -16,7 +16,7 @@ class ShortenedUrl
   end
 
   def expired?
-    self.expired_at.present? && (self.expired_at > DateTime.current)
+    self.expired_at.present? && (self.expired_at < DateTime.current)
   end
 
   def generate_shortened_url
