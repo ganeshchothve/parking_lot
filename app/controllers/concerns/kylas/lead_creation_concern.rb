@@ -36,12 +36,11 @@ module Kylas
     end
 
     def create_kylas_lead
-      kylas_base = Crm::Base.where(domain: ENV_CONFIG.dig(:kylas, :base_url)).first
       respond_to do |format|
         if @user.valid?
-          sync_contact_to_kylas(current_user, @user, format)
-          @user.assign_attributes(kylas_contact_id: @contact_response.dig(:data, :id))
+          check_and_sync_data_to_kylas(format)
           @user.save
+          @user.confirm
           manager_ids = params.dig(:lead, :manager_ids)
 
           count = 0
@@ -61,7 +60,6 @@ module Kylas
                               )
 
               if @lead.save
-                Crm::Api::ExecuteWorker.perform_async('post', 'Lead', @lead.id, nil, {}, kylas_base.id.to_s) if kylas_base.present?
                 if (@lead_data['products'].blank? || @lead_data['products'].pluck('id').map(&:to_s).exclude?(params.dig(:lead, :kylas_product_id))) && count < 1
                     response = Kylas::UpdateLead.new(current_user, @lead.kylas_lead_id, params).call
                     count += 1 if response[:success]
@@ -238,6 +236,37 @@ module Kylas
           Kylas::UpdateDeal.new(current_user, kylas_deal_id, params).call
         end
       end
+    end
+
+    # check for uniquness strategy, then search & sync for contact in Kylas
+    def check_and_sync_data_to_kylas format
+      response = get_uniqueness_strategy('contact')
+      if response[:success]
+        uniqueness_strategy = response[:data]["field"].downcase
+        if(uniqueness_strategy == "email" && @user.email.present?) || 
+          (uniqueness_strategy == "phone" && @user.phone.present?) || 
+          (uniqueness_strategy == "email_phone" && (@user.email.present? || @user.phone.present?))
+          search_response = search_entity_in_kylas('contact', uniqueness_strategy)
+          search_result = search_response[:data]
+          if search_result["content"].blank?
+            sync_contact_to_kylas(current_user, @user, format)
+            @user.assign_attributes(kylas_contact_id: @contact_response.dig(:data, :id))
+          else
+            @user.assign_attributes(kylas_contact_id: search_result["content"].first["id"]) if @user.kylas_contact_id.blank?
+          end
+        else
+          sync_contact_to_kylas(current_user, @user, format)
+          @user.assign_attributes(kylas_contact_id: @contact_response.dig(:data, :id))
+        end
+      end
+    end
+
+    def get_uniqueness_strategy entity
+      response = Kylas::FetchUniquenessStrategy.new(entity, current_user).call
+    end
+
+    def search_entity_in_kylas entity, uniqueness_strategy
+      result = Kylas::SearchEntity.new(@user, 'contact', uniqueness_strategy, current_user).call
     end
 
     private

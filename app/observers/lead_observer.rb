@@ -8,6 +8,12 @@ class LeadObserver < Mongoid::Observer
   def after_create lead
     lead.third_party_references.each(&:update_references)
     lead.send_create_notification
+
+    if Rails.env.staging? || Rails.env.production?
+      LeadObserverWorker.perform_async(lead.id.to_s)
+    else
+      LeadObserverWorker.new.perform(lead.id)
+    end
   end
 
   def before_save lead
