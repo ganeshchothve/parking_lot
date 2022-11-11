@@ -8,6 +8,7 @@ class Crm::Base
   field :request_payload, type: String
   field :api_key, type: String
   field :oauth2_authentication, type: Boolean
+  field :oauth_type, type: String
 
   validate :validate_url
   validates :domain, uniqueness: true, presence:true
@@ -18,6 +19,7 @@ class Crm::Base
 
   has_many :apis, dependent: :destroy
   belongs_to :user, class_name: 'User'
+  belongs_to :booking_portal_client, class_name: 'Client'
 
   def validate_user_role
     self.errors.add(:base, "User role should be administrator") unless self.user.role?('admin')

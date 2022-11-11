@@ -4,11 +4,11 @@ class Crm::Api::Post < Crm::Api
 
   validates :response_crm_id_location, format: {with: /\A[a-zA-Z0-9_..]*\z/}, allow_blank: true
 
-  def execute record
-    _execute record, 'post'
+  def execute record, user=nil
+    _execute record, user, 'post'
   end
 
-  def _execute record, method='post'
+  def _execute record, user, method='post'
     api_log = ApiLog.new(resource: record, crm_api: self)
     _request_payload = set_request_payload(record) || {}
 
@@ -17,7 +17,7 @@ class Crm::Api::Post < Crm::Api
 
     _url = URI.join(base.domain, _path)
     _request_header = get_request_header(record) || {}
-    _request_header['Authorization'] = "Bearer #{get_access_token}" if base.oauth2_authentication?
+    set_access_token(user, _request_header)
     uri = URI(_url)
 
     https = Net::HTTP.new(uri.host, uri.port)
@@ -44,24 +44,32 @@ class Crm::Api::Post < Crm::Api
     return {alert: e.message}
   end
 
-  def get_access_token
-    sfdc_credentials = ENV_CONFIG['sfdc'] || {}
-    if sfdc_credentials.present?
-      uri = URI(base.domain)
-      uri.path = "/#{path}".squeeze('/')
-      host = uri.host
-      sfdc_credentials['api_version'] = '41.0'
-      sfdc_credentials['instance_url'] = base.domain
-      sfdc_credentials['host'] = host
-      client = Restforce.new(sfdc_credentials.symbolize_keys)
-      begin
-        response = client.authenticate!
-        response.dig("access_token")
-      rescue Restforce::AuthenticationError => e
-        Rails.logger.error "[Crm::Api::Post] Restforce authentication error: #{e.message}"
+  def set_access_token user, request_header
+    if base.oauth_type == "salesforce"
+      sfdc_credentials = ENV_CONFIG['sfdc'] || {}
+      if sfdc_credentials.present?
+        uri = URI(base.domain)
+        uri.path = "/#{path}".squeeze('/')
+        host = uri.host
+        sfdc_credentials['api_version'] = '41.0'
+        sfdc_credentials['instance_url'] = base.domain
+        sfdc_credentials['host'] = host
+        client = Restforce.new(sfdc_credentials.symbolize_keys)
+        begin
+          response = client.authenticate!
+          request_header['Authorization'] = "Bearer #{response.dig("access_token")}"
+        rescue Restforce::AuthenticationError => e
+          Rails.logger.error "[Crm::Api::Post] Restforce authentication error: #{e.message}"
+        end
+      else
+        Rails.logger.error "[Crm::Api::Post] OAuth credentials not found"
       end
-    else
-      Rails.logger.error "[Crm::Api::Post] OAuth credentials not found"
+    elsif base.oauth_type == "kylas"
+      if user.kylas_refresh_token
+        request_header['Authorization'] = "Bearer #{user.fetch_access_token}"
+      else
+        request_header['api-key'] = user.kylas_api_key
+      end
     end
   end
 
