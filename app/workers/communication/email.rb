@@ -25,8 +25,10 @@ module Communication
         begin
           if Rails.env.production? || Rails.env.staging?
             message = get_message_object(email_json, email.booking_portal_client.sender_email)
-            mailgun = ::Mailgun::Client.new email.booking_portal_client.mailgun_private_api_key
-            response = mailgun.send_message(email.booking_portal_client.mailgun_email_domain, message)
+            mailgun_private_api_key = email.booking_portal_client.try(:mailgun_private_api_key) || ENV_CONFIG['mailgun_private_api_key']
+            mailgun_email_domain = email.booking_portal_client.try(:mailgun_email_domain) || ENV_CONFIG['mailgun_email_domain']
+            mailgun = ::Mailgun::Client.new mailgun_private_api_key
+            response = mailgun.send_message(mailgun_email_domain, message)
             begin
              response = JSON.parse(response.body)
             rescue StandardError => e

@@ -251,7 +251,7 @@ module ApplicationHelper
     end
   end
 
-  def short_url destination_url
+  def short_url destination_url, set_expired_at = false
     uri = ShortenedUrl.clean_url(destination_url)
     if shortened_url = ShortenedUrl.where(original_url: uri.to_s).first
       uri.path = "/s/" + shortened_url.code
@@ -259,6 +259,7 @@ module ApplicationHelper
       shortened_url = ShortenedUrl.create(original_url: uri.to_s)
       uri.path = "/s/" + shortened_url.code
     end
+    shortened_url.set(expired_at: (DateTime.current + current_client.payment_link_validity_hours.hours)) if set_expired_at
     uri.query = nil
     uri.fragment = nil
     uri.to_s

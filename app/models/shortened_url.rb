@@ -6,12 +6,17 @@ class ShortenedUrl
 
   field :original_url, type: String
   field :code, type: String
+  field :expired_at, type: DateTime
 
   validates :original_url, :code, uniqueness: true, presence: true
 
   def self.clean_url(url)
     url = url.to_s.strip
     URI.parse(url).normalize
+  end
+
+  def expired?
+    self.expired_at.present? && (self.expired_at > DateTime.current)
   end
 
   def generate_shortened_url
