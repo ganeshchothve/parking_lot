@@ -58,27 +58,27 @@ module Kylas
 
     def entity_payload entity_value
 			payload = {
-							"fields": [
-									"firstName",
-									"lastName",
-									"id",
-									"customFieldValues"
-							],
-							"jsonRule": {
-									"rules": [
-											{
-													"id": "multi_field",
-													"field": "multi_field",
-													"type": "multi_field",
-													"input": "multi_field",
-													"operator": "multi_field",
-													"value": entity_value
-											}
-									],
-									"condition": "AND",
-									"valid": true
-							}
-					}
+        "fields": [
+            "firstName",
+            "lastName",
+            "id",
+            "customFieldValues"
+        ],
+        "jsonRule": {
+            "rules": [
+                {
+                    "id": "multi_field",
+                    "field": "multi_field",
+                    "type": "multi_field",
+                    "input": "multi_field",
+                    "operator": "multi_field",
+                    "value": entity_value
+                }
+            ],
+            "condition": "AND",
+            "valid": true
+        }
+      }
     end
   end
 end
