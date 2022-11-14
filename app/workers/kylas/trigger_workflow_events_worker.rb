@@ -12,7 +12,7 @@ module Kylas
     end
 
     def trigger_workflow_events_in_kylas(entity)
-      wf = Workflow.where(stage: entity.status, booking_portal_client_id: entity.creator.booking_portal_client.id, is_active: true).first
+      wf = Workflow.where(stage: entity.status, booking_portal_client_id: entity.booking_portal_client.id, is_active: true).first
       deal_pipeline = wf.pipelines.where(entity_type: "deals").first if wf.present?
       kylas_deal_response = Kylas::UpdateDeal.new(entity.creator, entity.lead.kylas_deal_id, {pipeline: deal_pipeline.as_json}).call if deal_pipeline.present?
       if wf.present?

@@ -198,6 +198,11 @@ class SearchesController < ApplicationController
   def set_lead
     if current_user.buyer?
       @lead = current_user.selected_lead
+      if current_user.selected_lead.blank?
+        @lead = Lead.where(id: params[:selected_lead_id]).first
+        current_user.set(selected_lead_id: @lead.id)
+      end
+      @lead
     elsif params[:lead_id].present?
       @lead = Lead.where(id: params[:lead_id]).first
     elsif @search.present? && @search.lead_id.present?
@@ -302,7 +307,8 @@ class SearchesController < ApplicationController
           manager_id: @search.lead_manager_id,
           site_visit_id: @search.site_visit_id,
           token_discount: coupon.try(:value).to_f,
-          variable_discount: coupon.try(:variable_discount).to_f
+          variable_discount: coupon.try(:variable_discount).to_f,
+          creator_id: current_user.id
         )
         @booking_detail.search = @search
       end

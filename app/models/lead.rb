@@ -305,19 +305,20 @@ class Lead
 
   def send_payment_link(booking_detail_id = nil)
     url = Rails.application.routes.url_helpers
+    client = user.booking_portal_client
     if booking_detail_id
       hold_booking_detail = self.booking_details.where(id: booking_detail_id).first
     else
       hold_booking_detail = self.booking_details.where(status: 'hold').first
     end
+    host = client.booking_portal_domains.present? ? client.booking_portal_domains.first : ENV_CONFIG[:host]
     if hold_booking_detail.present? && hold_booking_detail.search && hold_booking_detail.status == "hold"
-      self.payment_link = url.checkout_lead_search_url(hold_booking_detail.search)
+      self.payment_link = url.checkout_lead_search_url(hold_booking_detail.search, selected_lead_id: self.id, user_login: user.email, user_token: user.authentication_token, booking_portal_client_id: client.id.to_s, host: host)
     else
-      self.payment_link = url.dashboard_url("remote-state": url.new_buyer_receipt_path(booking_detail_id: booking_detail_id), user_login: user.email, user_token: user.authentication_token, selected_lead_id: self.id)
+      self.payment_link = url.dashboard_url("remote-state": url.new_buyer_receipt_path(booking_detail_id: booking_detail_id), user_login: user.email, user_token: user.authentication_token, booking_portal_client_id: client.id.to_s, selected_lead_id: self.id, host: host)
     end
     #
     # Send email with payment link
-    client = user.booking_portal_client
     current_client = client
     email_template = ::Template::EmailTemplate.where(name: "payment_link", project_id: self.project_id).first
     if email_template.present?

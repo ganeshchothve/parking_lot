@@ -3275,7 +3275,7 @@ en:
         link_name: "Proceed without payment"
         text: "I Agree on behalf of %{name} and proceed to add payment"
         agree_on_behalf: "I Agree on behalf of %{name}"
-        agree_and_procedd: "I Agree and proceed to add payment"
+        agree_and_proceed: "I Agree and proceed to add payment"
         user_agree: "I agree"
       new:
         header: "Search Home"

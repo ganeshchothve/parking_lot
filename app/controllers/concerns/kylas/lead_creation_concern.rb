@@ -160,7 +160,6 @@ module Kylas
         @user = User.new
         @user.assign_attributes(user_params)
         @user.booking_portal_client = current_user.booking_portal_client
-        @user.is_active = false
         @user.created_by = current_user
       end
     end

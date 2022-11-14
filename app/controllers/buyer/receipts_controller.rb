@@ -31,7 +31,8 @@ class Buyer::ReceiptsController < BuyerController
       creator: current_user, payment_mode: 'online',
       payment_type: payment_type,
       booking_detail_id: params.dig(:booking_detail_id),
-      total_amount: @booking_detail.present? ? @booking_detail.pending_balance : @lead.project.blocking_amount
+      total_amount: @booking_detail.present? ? @booking_detail.pending_balance : @lead.project.blocking_amount,
+      booking_portal_client_id: @lead.booking_portal_client_id,
     })
     authorize([:buyer, @receipt])
     render layout: false
@@ -46,6 +47,7 @@ class Buyer::ReceiptsController < BuyerController
       payment_type: 'token'
     })
     @receipt.assign_attributes(permitted_attributes([:buyer, @receipt]))
+    @receipt.booking_portal_client_id = @lead.booking_portal_client_id
     @receipt.account = selected_account(current_client.payment_gateway.underscore, @receipt)
 
     authorize([:buyer, @receipt])
