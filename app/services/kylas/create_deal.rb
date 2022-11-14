@@ -18,8 +18,7 @@ module Kylas
 
       kylas_base = Crm::Base.where(domain: ENV_CONFIG.dig(:kylas, :base_url), booking_portal_client_id: user.booking_portal_client.id).first
       if kylas_base
-        api = Crm::Api::Post.where(base_id: kylas_base.id, resource_class: 'Lead', is_active: true).first
-        
+        api = Crm::Api::Post.where(base_id: kylas_base.id, resource_class: 'Lead', is_active: true, booking_portal_client_id: user.booking_portal_client.id).first
         if params[:run_in_background]
           response = Kylas::Api::ExecuteWorker.perform_async(user.id, api.id, 'Lead', entity.id, {})
         else

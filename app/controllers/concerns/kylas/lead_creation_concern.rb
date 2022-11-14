@@ -38,7 +38,6 @@ module Kylas
     def create_kylas_lead
       respond_to do |format|
         if @user.valid?
-          check_and_sync_data_to_kylas(format)
           @user.save
           @user.confirm
           manager_ids = params.dig(:lead, :manager_ids)
@@ -236,37 +235,6 @@ module Kylas
           Kylas::UpdateDeal.new(current_user, kylas_deal_id, params).call
         end
       end
-    end
-
-    # check for uniquness strategy, then search & sync for contact in Kylas
-    def check_and_sync_data_to_kylas format
-      response = get_uniqueness_strategy('contact')
-      if response[:success]
-        uniqueness_strategy = response[:data]["field"].downcase
-        if(uniqueness_strategy == "email" && @user.email.present?) || 
-          (uniqueness_strategy == "phone" && @user.phone.present?) || 
-          (uniqueness_strategy == "email_phone" && (@user.email.present? || @user.phone.present?))
-          search_response = search_entity_in_kylas('contact', uniqueness_strategy)
-          search_result = search_response[:data]
-          if search_result["content"].blank?
-            sync_contact_to_kylas(current_user, @user, format)
-            @user.assign_attributes(kylas_contact_id: @contact_response.dig(:data, :id))
-          else
-            @user.assign_attributes(kylas_contact_id: search_result["content"].first["id"]) if @user.kylas_contact_id.blank?
-          end
-        else
-          sync_contact_to_kylas(current_user, @user, format)
-          @user.assign_attributes(kylas_contact_id: @contact_response.dig(:data, :id))
-        end
-      end
-    end
-
-    def get_uniqueness_strategy entity
-      response = Kylas::FetchUniquenessStrategy.new(entity, current_user).call
-    end
-
-    def search_entity_in_kylas entity, uniqueness_strategy
-      result = Kylas::SearchEntity.new(@user, 'contact', uniqueness_strategy, current_user).call
     end
 
     private

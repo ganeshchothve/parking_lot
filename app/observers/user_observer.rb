@@ -54,6 +54,28 @@ class UserObserver < Mongoid::Observer
           UserObserverWorker.new.perform(user.id.to_s, 'create')
         end
       end
+
+      if user.booking_portal_client.kylas_tenant_id.present?
+        response = Kylas::FetchUniquenessStrategy.new('contact', user).call
+        if response[:success]
+          uniqueness_strategy = response[:data]["field"].downcase
+          if(uniqueness_strategy == "email" && user.email.present?) || 
+            (uniqueness_strategy == "phone" && user.phone.present?) || 
+            (uniqueness_strategy == "email_phone" && (user.email.present? || user.phone.present?))
+            search_response = Kylas::SearchEntity.new(user, 'contact', uniqueness_strategy, user, {run_in_background: false}).call
+            search_result = search_response[:api_log][:response].first
+            if search_result["content"].blank?
+              @contact_response = Kylas::CreateContact.new(user, user).call
+              user.set(kylas_contact_id: @contact_response.dig(:data, :id))
+            else
+              user.set(kylas_contact_id: search_result["content"].first["id"]) if user.kylas_contact_id.blank?
+            end
+          else
+            @contact_response = Kylas::CreateContact.new(user, user).call
+            user.set(kylas_contact_id: @contact_response.dig(:data, :id))
+          end
+        end
+      end
     end
   end
 

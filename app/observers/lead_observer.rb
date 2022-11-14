@@ -8,7 +8,10 @@ class LeadObserver < Mongoid::Observer
   def after_create lead
     lead.third_party_references.each(&:update_references)
     lead.send_create_notification
-    Kylas::CreateDeal.new(lead.user, lead, {run_in_background: false}).call
+    
+    if lead.booking_portal_client.kylas_tenant_id.present?
+      Kylas::CreateDeal.new(lead.user, lead, {run_in_background: false}).call
+    end
   end
 
   def before_save lead

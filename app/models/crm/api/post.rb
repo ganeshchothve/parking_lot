@@ -31,7 +31,7 @@ class Crm::Api::Post < Crm::Api
     when Net::HTTPSuccess
       res = process_response(response, record)
       update_api_log(api_log, _request_payload, _url, res, "Success", record)
-      return {notice: "Object successfully pushed on CRM."}
+      return {notice: "Object successfully pushed on CRM.", api_log: api_log}
     else
       update_api_log(api_log, _request_payload, _url, (JSON.parse(response.body) rescue {}), "Error", record, response.message)
       Rails.logger.error "-------- #{response.message} --------"
@@ -81,7 +81,7 @@ class Crm::Api::Post < Crm::Api
       if response_crm_id_location.present?
         reference_id = response
         response_crm_id_location.split('.').each do |location|
-          reference_id = reference_id[(location.match?(/\A\d\z/) ? location.to_i : location)]
+          reference_id = reference_id[(location.match?(/\A\d\z/) ? location.to_i : location)] if reference_id.present?
         end
         record.update_external_ids({ reference_id: reference_id }, self.base_id) if reference_id.present?
       end
