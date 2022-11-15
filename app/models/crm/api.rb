@@ -20,6 +20,7 @@ class Crm::Api
   default_scope -> { where(event: {'$in': ['', nil]}) }
 
   belongs_to :base
+  belongs_to :booking_portal_client, class_name: 'Client'
 
   def set_request_payload record
     _request_erb = ERB.new(request_payload.gsub("\n\s", '')) rescue ERB.new("Hash.new")

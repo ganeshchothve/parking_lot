@@ -15,7 +15,7 @@ class PublicAssetsController < ApplicationController
                                     public_assetable: @public_assetable,
                                     file: params[:files][0],
                                     document_type: params[:document_type],
-                                    booking_portal_client_id: @public_assetable.id
+                                    booking_portal_client_id: current_client.id
                                     )
     if public_asset.persisted?
       render partial: "assets/asset.json", locals: {asset: public_asset}
