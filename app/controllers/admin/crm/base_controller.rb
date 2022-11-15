@@ -7,12 +7,12 @@ class Admin::Crm::BaseController < ApplicationController
   end
 
   def new
-    @crm = ::Crm::Base.new
+    @crm = ::Crm::Base.new(booking_portal_client_id: current_client.id)
     render layout: false
   end
 
   def create
-    @crm = ::Crm::Base.new
+    @crm = ::Crm::Base.new(booking_portal_client_id: current_client.id)
     @crm.assign_attributes(permitted_attributes([:admin, @crm]))
     respond_to do |format|
       if @crm.save

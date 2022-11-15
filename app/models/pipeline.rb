@@ -8,6 +8,7 @@ class Pipeline
   field :lead_closed_reason, type: String
 
   belongs_to :workflow
+  belongs_to :booking_portal_client, class_name: 'Client'
 
   validates :entity_type, presence: true, uniqueness: { scope: :workflow_id, message: 'is already present in a workflow' }
   def get_pipeline_stage_details user

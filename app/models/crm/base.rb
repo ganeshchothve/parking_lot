@@ -18,6 +18,7 @@ class Crm::Base
 
   has_many :apis, dependent: :destroy
   belongs_to :user, class_name: 'User'
+  belongs_to :booking_portal_client, class_name: 'Client'
 
   def validate_user_role
     self.errors.add(:base, "User role should be administrator") unless self.user.role?('admin')
