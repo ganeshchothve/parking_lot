@@ -30,7 +30,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def show?
-    index? && (record.is_active? || user.role?('superadmin')) && !marketplace_client?
+    index?
   end
 
   def new?

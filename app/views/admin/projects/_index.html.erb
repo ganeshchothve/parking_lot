@@ -2,7 +2,9 @@
           <thead>
             <tr>
               <th>Project Name</th>
-              <th>Interested Project</th>
+              <% if policy([current_user_role_group, InterestedProject]).index? %>
+                <%= I18n.t("mongoid.models.interested_project.other") %>
+              <% end %>
               <th>Developer Name</th>
               <th>Location</th>
               <th>Launch Date</th>
@@ -26,8 +28,10 @@
                   <%= link_to project.name, admin_project_path(project) %>
                   <% end %>
                 </td>
-                <% heart_class = project.id.in?(interested_project_ids) ? 'fill-danger' : 'fill-theme' %>
-                <td><%= link_to_if !project.id.in?(interested_project_ids), "<i class='fa fa-heart #{heart_class} d-none d-sm-inline-block me-1'></i>".html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-inline-block me-2' %></td>
+                <% if policy([current_user_role_group, InterestedProject]).index? %>
+                  <% heart_class = project.id.in?(interested_project_ids) ? 'fill-danger' : 'fill-theme' %>
+                  <td><%= link_to_if !project.id.in?(interested_project_ids), "<i class='fa fa-heart #{heart_class} d-none d-sm-inline-block me-1'></i>".html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-inline-block me-2' %></td>
+                <% end %>
                 <td><%= project.developer_name %></td>
                 <td><%= project.micro_market %>,
                     <%= project.city %></td>
