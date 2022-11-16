@@ -5,16 +5,44 @@ require 'net/http'
 module Kylas
   # service used for create contact in Kylas
   class CreateContact < BaseService
-    attr_reader :user, :contact
+    attr_reader :user, :contact, :options
 
-    def initialize(user, contact)
+    def initialize(user, contact, options={})
       @user = user
       @contact = contact
+      @options = options
     end
 
     def call
       return if user.blank? || contact.blank? || request_headers.blank?
+      if options[:check_uniqueness]
+        response = Kylas::FetchUniquenessStrategy.new('contact', user).call
+        if response[:success]
+          uniqueness_strategy = response[:data]["field"].downcase
+          if(uniqueness_strategy == "email" && user.email.present?) || 
+            (uniqueness_strategy == "phone" && user.phone.present?) || 
+            (uniqueness_strategy == "email_phone" && (user.email.present? || user.phone.present?))
+            search_response = Kylas::SearchEntity.new(user, 'contact', uniqueness_strategy, user, {run_in_background: false}).call
+            if search_response[:api_log].present? && search_response[:api_log][:status] == "Success"
+              search_result = search_response[:api_log][:response].first
+              if search_result["content"].blank?
+                response = sync_contact_to_kylas
+                user.set(kylas_contact_id: response.dig(:data, :id))
+              else
+                user.set(kylas_contact_id: search_result["content"].first["id"]) if user.kylas_contact_id.blank?
+              end
+            end
+          else
+            response = sync_contact_to_kylas
+            user.set(kylas_contact_id: response.dig(:data, :id))
+          end
+        end
+      else
+        sync_contact_to_kylas
+      end
+    end
 
+    def sync_contact_to_kylas
       url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/contacts")
 
       https = Net::HTTP.new(url.host, url.port)
@@ -54,7 +82,7 @@ module Kylas
         api_log.save
         { success: false }
       end
-    end
+    end 
 
     def parse_response(response)
       response = response.with_indifferent_access

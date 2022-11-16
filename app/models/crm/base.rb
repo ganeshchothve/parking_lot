@@ -2,12 +2,15 @@ class Crm::Base
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  OAUTH_TYPES = ["salesforce", "kylas"]
+
   field :domain, type: String
   field :name, type: String
   field :request_headers, type: String
   field :request_payload, type: String
   field :api_key, type: String
   field :oauth2_authentication, type: Boolean
+  field :oauth_type, type: String
 
   validate :validate_url
   validates :domain, uniqueness: true, presence:true

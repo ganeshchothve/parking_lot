@@ -8,6 +8,6 @@ class Admin::VideoPolicy < VideoPolicy
   end
 
   def destroy?
-    "Admin::#{record.videoable_type}Policy".constantize.new(user, record.videoable).video_update?
+    "Admin::#{record.videoable_type}Policy".constantize.new(user, record.videoable).video_create?
   end
 end

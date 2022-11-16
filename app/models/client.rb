@@ -234,6 +234,10 @@ class Client
     end
   end
 
+  def is_marketplace?
+    kylas_tenant_id.present?
+  end
+
   def self.selldo_api_clients
     ENV_CONFIG.dig(:selldo, :api_clients) || {}
   end
