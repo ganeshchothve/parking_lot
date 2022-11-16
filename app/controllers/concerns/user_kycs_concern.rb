@@ -66,7 +66,8 @@ module UserKycsConcern
   private
 
   def set_lead
-    @lead = (params[:lead_id].present? ? Lead.find(params[:lead_id]) : current_user.selected_lead)
+    @lead = Lead.find(params[:lead_id]) if params[:lead_id].present?
+    @lead = Lead.where(user_id: current_user, project_id: current_project.id).first if @lead.blank? && current_project.present?
     redirect_to home_path(current_user), alert: t('controller.application.set_current_client') unless @lead
   end
 

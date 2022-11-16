@@ -4,7 +4,8 @@
       </li>
     <% end %>
 
-    <% if policy([:buyer, BookingDetail.new(user: current_user, lead: current_user.selected_lead, project_unit: ProjectUnit.new(status: 'available', user: current_user, lead: current_user.selected_lead))]).hold? %>
+    <% lead = Lead.where(user_id: current_user.id, project_id: current_project.id).first %>
+    <% if policy([:buyer, BookingDetail.new(user: current_user, lead: lead, project_unit: ProjectUnit.new(status: 'available', user: current_user, lead: lead))]).hold? %>
       <li class="nav-item">
         <%= active_link_to t('controller.searches.apartments.link_name'), new_search_path, active: :inclusive, class: "nav-link" %>
       </li>

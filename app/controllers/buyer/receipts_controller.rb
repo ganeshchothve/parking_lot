@@ -81,12 +81,12 @@ class Buyer::ReceiptsController < BuyerController
   private
 
   def set_lead
-    @lead = current_user.selected_lead
+    @lead = Lead.where(user_id: current_user.id, project_id: params[:current_project_id]).first
     redirect_to home_path(current_user), alert: I18n.t("controller.leads.alert.not_found"), status: 404 if @lead.blank?
   end
 
   def set_receipt
-    lead = current_user.selected_lead
+    lead = Lead.where(user_id: current_user.id, project_id: params[:current_project_id]).first
     @receipt = lead.receipts.where(_id: params[:id]).first
     redirect_to home_path(current_user), alert: I18n.t("controller.receipts.alert.not_found"), status: 404 if @receipt.blank?
   end

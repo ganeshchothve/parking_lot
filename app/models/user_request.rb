@@ -72,7 +72,13 @@ class UserRequest
       end
 
       custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
-      custom_scope = { user_id: user.id, lead_id: user.selected_lead_id } if user.buyer?
+      if user.buyer?
+        if params[:current_project_id].present?
+          custom_scope = { user_id: user.id, project_id: params[:current_project_id] }
+        else
+          custom_scope = { user_id: user.id }
+        end
+      end
 
       custom_scope[:requestable_id] = params[:requestable_id] if params[:requestable_id].present?
       custom_scope[:_type] = 'UserRequest::General' unless user.booking_portal_client.enable_actual_inventory?(user)
