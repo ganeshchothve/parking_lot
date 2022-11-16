@@ -55,7 +55,7 @@ class UserObserver < Mongoid::Observer
         end
       end
 
-      if user.booking_portal_client.kylas_tenant_id.present?
+      if user.booking_portal_client.is_mp_client?
         response = Kylas::FetchUniquenessStrategy.new('contact', user).call
         if response[:success]
           uniqueness_strategy = response[:data]["field"].downcase
