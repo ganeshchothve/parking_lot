@@ -75,6 +75,7 @@ module LeadRegisteration
 
             if cp_lead_activity.present?
               if cp_lead_activity.save
+                Kylas::SyncLeadToKylasWorker.perform_async(lead.id.to_s)
                 update_customer_search_to_sitevisit(lead) if @customer_search.present?
 
                 format.json { render json: {lead: lead, success: site_visit.present? ? I18n.t("controller.site_visits.notice.created") : I18n.t("controller.leads.notice.created")}, status: :created }
@@ -82,6 +83,7 @@ module LeadRegisteration
                 format.json { render json: {errors: 'Something went wrong while adding lead. Please contact support'}, status: :unprocessable_entity }
               end
             else
+              Kylas::SyncLeadToKylasWorker.perform_async(lead.id.to_s)
               update_customer_search_to_sitevisit(lead) if @customer_search.present?
 
               format.json { render json: {lead: lead, success: site_visit.present? ? I18n.t("controller.site_visits.notice.created") : I18n.t("controller.leads.notice.created")}, status: :created }

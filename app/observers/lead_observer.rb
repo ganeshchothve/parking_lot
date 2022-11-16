@@ -8,9 +8,6 @@ class LeadObserver < Mongoid::Observer
   def after_create lead
     lead.third_party_references.each(&:update_references)
     lead.send_create_notification
-    if lead.booking_portal_client.is_mp_client? && lead.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)).blank?
-      Kylas::CreateDeal.new(lead.user, lead, {run_in_background: false}).call
-    end
   end
 
   def before_save lead
@@ -25,6 +22,10 @@ class LeadObserver < Mongoid::Observer
     end
     lead.calculate_incentive if lead.project.incentive_calculation_type?("calculated") && lead.project&.invoicing_enabled?
     lead.move_invoices_to_draft
+
+    if lead.manager_id_changed? && lead.manager_id.present? && lead.booking_portal_client.is_marketplace? && lead.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)).present?
+      Kylas::DealUpdate.new(lead.user, lead, {run_in_background: false}).call
+    end
   end
 
   def after_update lead

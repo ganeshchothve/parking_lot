@@ -234,7 +234,7 @@ class Client
     end
   end
 
-  def is_mp_client?
+  def is_marketplace?
     kylas_tenant_id.present?
   end
 
