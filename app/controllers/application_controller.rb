@@ -56,7 +56,6 @@ class ApplicationController < ActionController::Base
         if stored_path.present? &&  stored_path.include?("kylas-auth")
           stored_path
         else
-          select_project_for_current_user
           current_dashboard_path
         end
       else
