@@ -34,7 +34,11 @@ class UserPolicy < ApplicationPolicy
   end
 
   def export?
-    index? && !user.role.in?(%w[sales sales_admin])
+    unless marketplace_client?
+      index? && !user.role.in?(%w[sales sales_admin])
+    else
+      %w[superadmin admin].include?(user.role)
+    end
   end
 
   def confirm_via_otp?

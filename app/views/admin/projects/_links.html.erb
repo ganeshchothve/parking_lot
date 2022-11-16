@@ -22,10 +22,10 @@
 <% if policy([:admin, ::Template]).index? %>
   <%= link_to(t('helpers.show.link_name', model: ::Template.model_name.human), admin_client_templates_path(fltrs: {project_id: project.id}), class: 'dropdown-item') %>
 <% end %>
-<% if policy(:custom).inventory? %>
+<% if policy(:custom).inventory?(project) %>
   <%= link_to(t('controller.inventory.index.link_name'), custom_inventory_path(id: project.id), class: 'dropdown-item') %>
 <% end %>
-<% if policy([:admin, ProjectUnit]).index? %>
+<% if policy([:admin, ProjectUnit.new(project_id: project.id)]).index? %>
   <%= link_to ProjectUnit.model_name.human(count: 2), admin_project_units_path(fltrs: {project_id: project.id.to_s}), class: 'dropdown-item' %>
 <% end %>
 <% if policy([:admin, Lead.new(project_id: project.id)]).index? %>

@@ -49,7 +49,7 @@ class Admin::Projects::UnitConfigurationsController < AdminController
 
   def authorize_resource
     if %w[index].include?(params[:action])
-      authorize [:admin, UnitConfiguration]
+      authorize [:admin, UnitConfiguration.new(project_id: @project.id)]
     else
       authorize [:admin, @unit_configuration]
     end

@@ -20,8 +20,10 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     user.booking_portal_client.enable_actual_inventory?(user)
   end
 
-  def inventory?
-    return false if user.booking_portal_client.launchpad_portal
+  def inventory?(project = nil)
+    if project.present?
+      return false unless project.enable_inventory?
+    end
     if user.role?(:channel_partner)
       user.role.in?(user.booking_portal_client.enable_actual_inventory) || (user.role.in?(user.booking_portal_client.enable_live_inventory) && user.enable_live_inventory)
     else
