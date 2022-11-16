@@ -17,7 +17,7 @@ module Communication
             request.body = request_payload.to_json
             https.use_ssl = true
             response = https.request(request)
-            api_log = ApiLog.new(request_url: request_url, request: [request_payload], resource: user, response_type: "Hash")
+            api_log = ApiLog.new(request_url: request_url, request: [request_payload], resource: user, response_type: "Hash", booking_portal_client_id: user.booking_portal_client_id)
             case response
             when Net::HTTPSuccess
               api_log.status = "Success"

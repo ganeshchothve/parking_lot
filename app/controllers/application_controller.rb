@@ -85,6 +85,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def pundit_user
+    UserContext.new(current_user, current_client, current_project)
+  end
+
   def find_record_from_identifier(entity)
     identifier_param_value = entity.get_identifier_from_params_or_headers(self).presence
     identifier_param_value = integrate_with_devise_case_insensitive_keys(identifier_param_value, entity)

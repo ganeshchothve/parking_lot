@@ -4,12 +4,12 @@ class Admin::Crm::ApiController < ApplicationController
   before_action :authorize_resource
   
   def new
-    @api = params[:type].constantize.new(base_id: @crm.id)
+    @api = params[:type].constantize.new(base_id: @crm.id, booking_portal_client_id: current_client.id)
     render layout: false
   end
 
   def create
-    @api = params[:type].constantize.new(base_id: @crm.id)
+    @api = params[:type].constantize.new(base_id: @crm.id, booking_portal_client_id: current_client.id)
     @api.assign_attributes(permitted_attributes([current_user_role_group, @api]))
     respond_to do |format|
       if @api.save

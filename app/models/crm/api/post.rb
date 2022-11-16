@@ -9,7 +9,7 @@ class Crm::Api::Post < Crm::Api
   end
 
   def _execute record, method='post'
-    api_log = ApiLog.new(resource: record, crm_api: self)
+    api_log = ApiLog.new(resource: record, crm_api: self, booking_portal_client_id: self.booking_portal_client_id)
     _request_payload = set_request_payload(record) || {}
 
     _path_erb = ERB.new(path.gsub("\n\s", '')) rescue ERB.new("Hash.new")

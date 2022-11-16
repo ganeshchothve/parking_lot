@@ -65,6 +65,7 @@ kylas:
   client_id:
   client_secret:
   redirect_url:
+  base_url:
 sfdc:
   client_id:
   client_secret:
