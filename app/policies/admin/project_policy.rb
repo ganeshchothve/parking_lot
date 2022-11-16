@@ -10,15 +10,15 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def asset_update?
-    asset_create?
+    !user.role.in?(%w[sales_admin sales])
   end
 
   def video_create?
-    update?
+    %w[superadmin admin].include?(user.role)
   end
 
   def video_update?
-    video_create?
+    %w[superadmin admin sales_admin sales].include?(user.role)
   end
 
   def index?

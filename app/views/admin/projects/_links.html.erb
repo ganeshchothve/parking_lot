@@ -7,7 +7,7 @@
 <% if false#policy([:admin, project]).sync_on_selldo? %>
   <%= link_to t('controller.projects.sync_on_selldo.link_name'), sync_on_selldo_admin_project_path(project), method: :post, class: 'dropdown-item' %>
 <% end %>
-<% if false %>
+<% if policy([:admin, UnitConfiguration.new(project_id: project.id)]).index? %>
   <%= link_to UnitConfiguration.model_name.human(count: 2), admin_project_unit_configurations_path(project), class: 'dropdown-item' %>
 <% end %>
 <% if policy([:admin, TokenType]).index? %>
@@ -34,7 +34,7 @@
 <% if policy([:admin, BookingDetail.new(project_id: project.id)]).index? %>
   <%= link_to BookingDetail.model_name.human(count: 2), admin_booking_details_path(fltrs: {project_id: project.id.to_s}), class: 'dropdown-item' %>
 <% end %>
-<% if false %>
+<% if policy([:admin, project]).video_update? %>
   <%= link_to Video.model_name.human(count: 2), videoables_path(videoable_type: project.class.model_name.i18n_key.to_s, videoable_id: project.id), class: "dropdown-item" %>
 <% end %>
 <% if policy([:admin, project]).asset_create? %>
