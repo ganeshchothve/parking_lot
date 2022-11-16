@@ -6,7 +6,7 @@ class Buyer::UserKycPolicy < UserKycPolicy
   end
 
   def new?
-    record.lead_id == user.selected_lead_id && user.buyer?
+    record.lead.try(:user_id) == user.id && user.buyer?
   end
 
   def show?

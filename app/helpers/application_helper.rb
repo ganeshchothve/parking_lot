@@ -108,6 +108,11 @@ module ApplicationHelper
     end
   end
 
+  def current_lead
+    @current_lead ||= Lead.where(user_id: current_user.id, project_id: current_project.id).first if (defined?(current_user) && current_user.buyer?)
+    @current_lead
+  end
+
   def select_project_for_current_user
     # if current_project.present?
     #   current_user.selected_project_id = current_project.id

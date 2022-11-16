@@ -303,46 +303,48 @@ class Lead
     activity.present? ? "#{(activity.expiry_date - Date.current).to_i} Days" : '0 Days'
   end
 
-  def send_payment_link(booking_detail_id = nil)
+  def send_payment_link(booking_detail_id = nil, host = nil)
     url = Rails.application.routes.url_helpers
-    if booking_detail_id
+    client = user.booking_portal_client
+    if booking_detail_id.present?
       hold_booking_detail = self.booking_details.where(id: booking_detail_id).first
     else
       hold_booking_detail = self.booking_details.where(status: 'hold').first
     end
-    if hold_booking_detail.present? && hold_booking_detail.search && hold_booking_detail.status == "hold"
-      self.payment_link = url.checkout_lead_search_url(hold_booking_detail.search)
-    else
-      self.payment_link = url.dashboard_url("remote-state": url.new_buyer_receipt_path(booking_detail_id: booking_detail_id), user_login: user.email, user_token: user.authentication_token, selected_lead_id: self.id)
-    end
-    #
-    # Send email with payment link
-    client = user.booking_portal_client
-    current_client = client
-    email_template = ::Template::EmailTemplate.where(name: "payment_link", project_id: self.project_id).first
-    if email_template.present?
-      email = Email.create!({
-        booking_portal_client_id: client.id,
-        body: ERB.new(client.email_header).result( binding) + email_template.parsed_content(self) + ERB.new(client.email_footer).result( binding ),
-        subject: email_template.parsed_subject(self),
-        to: [ self.email ],
-        cc: client.notification_email.to_s.split(',').map(&:strip),
-        triggered_by_id: id,
-        triggered_by_type: self.class.to_s
-      })
-      email.sent!
-    end
-    # Send sms with link for payment
-    sms_template = Template::SmsTemplate.where(name: "payment_link", project_id: self.project_id).first
-    sms_body = sms_template.parsed_content(self) if sms_template.present?
-    if sms_template.present?
-      Sms.create!({
-        booking_portal_client_id: client.id,
-        body: sms_body,
-        to: [self.phone],
-        triggered_by_id: id,
-        triggered_by_type: self.class.to_s
-      }) unless sms_body.blank?
+    if host.present?
+      if hold_booking_detail.present? && hold_booking_detail.search && hold_booking_detail.status == "hold"
+        self.payment_link = url.checkout_lead_search_url(hold_booking_detail.search, user_login: user.email, user_token: user.authentication_token, booking_portal_client_id: client.id.to_s, project_id: self.project_id.to_s, host: host)
+      else
+        self.payment_link = url.dashboard_url("remote-state": url.new_buyer_receipt_path(booking_detail_id: booking_detail_id), user_login: user.email, user_token: user.authentication_token, booking_portal_client_id: client.id.to_s, project_id: self.project_id.to_s, host: host)
+      end
+      #
+      # Send email with payment link
+      current_client = client
+      email_template = ::Template::EmailTemplate.where(name: "payment_link", project_id: self.project_id).first
+      if email_template.present?
+        email = Email.create!({
+          booking_portal_client_id: client.id,
+          body: ERB.new(client.email_header).result( binding) + email_template.parsed_content(self) + ERB.new(client.email_footer).result( binding ),
+          subject: email_template.parsed_subject(self),
+          to: [ self.email ],
+          cc: client.notification_email.to_s.split(',').map(&:strip),
+          triggered_by_id: id,
+          triggered_by_type: self.class.to_s
+        })
+        email.sent!
+      end
+      # Send sms with link for payment
+      sms_template = Template::SmsTemplate.where(name: "payment_link", project_id: self.project_id).first
+      sms_body = sms_template.parsed_content(self) if sms_template.present?
+      if sms_template.present?
+        Sms.create!({
+          booking_portal_client_id: client.id,
+          body: sms_body,
+          to: [self.phone],
+          triggered_by_id: id,
+          triggered_by_type: self.class.to_s
+        }) unless sms_body.blank?
+      end
     end
   end
 

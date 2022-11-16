@@ -20,7 +20,7 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
   def new
     @receipt = Receipt.new({
       project: current_user.selected_project,
-      lead: current_user.selected_lead,
+      lead: @lead.id,
       creator: current_user, user: current_user, booking_detail: @booking_detail,
       total_amount: ( @booking_detail.hold? ? @booking_detail.get_booking_price : @booking_detail.pending_balance
       )
@@ -85,6 +85,7 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
 
   def set_lead
     @lead = @booking_detail.lead if @booking_detail.present?
+    @lead = Lead.where(user_id: current_user.id, project_id: params[:current_project_id]).first if @lead.blank?
     redirect_to root_path, alert: I18n.t("controller.leads.alert.not_found"), status: 404 if @lead.blank?
   end
 

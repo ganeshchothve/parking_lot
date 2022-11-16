@@ -46,6 +46,6 @@ class Buyer::ProjectUnitPolicy < ProjectUnitPolicy
   private
 
   def _role_based_check(valid)
-    valid = (valid && (record.user_id == user.id)) if user.buyer?
+    valid = (valid) if user.buyer?
   end
 end

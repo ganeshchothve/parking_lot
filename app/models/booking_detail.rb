@@ -496,6 +496,7 @@ class BookingDetail
 
     def user_based_scope(user, params = {})
       custom_scope = {}
+      project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids)
       if params[:lead_id].blank? && !user.buyer?
         case user.role.to_s
         when 'channel_partner'
@@ -523,8 +524,8 @@ class BookingDetail
           custom_scope = {  }
         end
 
-        unless user.role.in?(User::ALL_PROJECT_ACCESS + User::BUYER_ROLES + %w(channel_partner))
-          custom_scope.merge!({project_id: {"$in": Project.all.pluck(:id)}})
+        if !user.role.in?(User::ALL_PROJECT_ACCESS) || params[:current_project_id].present?
+          custom_scope.merge!({project_id: { "$in": project_ids } })
         end
       end
 
@@ -539,7 +540,13 @@ class BookingDetail
       end
 
       custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
-      custom_scope = { user_id: user.id, lead_id: user.selected_lead_id } if user.buyer?
+      if user.buyer?
+        if params[:current_project_id].present?
+          custom_scope = { user_id: user.id, project_id: params[:current_project_id] }
+        else
+          custom_scope = { user_id: user.id }
+        end
+      end
 
       custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
       custom_scope
