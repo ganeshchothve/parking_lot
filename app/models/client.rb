@@ -138,6 +138,7 @@ class Client
     <% end %>
     <div class="mt-3"></div>
   </div>'
+  field :payment_link_validity_hours, type: Integer, default: 24
 
   mount_uploader :logo, PublicAssetUploader
   mount_uploader :mobile_logo, PublicAssetUploader
@@ -179,6 +180,7 @@ class Client
   validates :notification_api_key, presence: true, if: :notification_enabled?
   validates :regions, copy_errors_from_child: true
   validates :name, uniqueness: true
+  validates :payment_link_validity_hours, numericality: { greater_than: 0 }
 
   accepts_nested_attributes_for :address, :external_inventory_view_config, :checklists
   accepts_nested_attributes_for :regions, allow_destroy: true

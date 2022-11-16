@@ -67,6 +67,7 @@
     </div>
     <%= f.fields_for :pipelines do |p| %>
       <div class="row pipeline-form" data-pipeline-id = "<%= p.object.pipeline_id %>">
+        <%= p.hidden_field :booking_portal_client_id, value: current_client.id %>
         <div class="col-md-3">
           <%= p.label :entity_type, class: 'label-required' %>
           <%= p.select :entity_type, options_for_select([["Update the Deal pipeline stage ", "deals"]], p.object.entity_type), {prompt: 'Select'}, class: 'selectize entity_type_select', required: true %>

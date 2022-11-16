@@ -287,7 +287,7 @@ class SearchesController < ApplicationController
       coupon = unattached_blocking_receipt.coupon
     end
     if @booking_detail.blank?
-      @booking_detail = BookingDetail.find_or_initialize_by(project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead, status: 'hold', booking_portal_client_id: @lead.booking_portal_client.id, creator: current_user)
+      @booking_detail = BookingDetail.find_or_initialize_by(project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead, status: 'hold', booking_portal_client_id: @lead.booking_portal_client.id)
       if @booking_detail.new_record?
         @booking_detail.assign_attributes(
           base_rate: @search.project_unit.base_rate,

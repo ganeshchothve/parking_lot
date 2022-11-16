@@ -318,27 +318,32 @@ class Lead
     #
     # Send email with payment link
     client = user.booking_portal_client
-    email_template = ::Template::EmailTemplate.find_by(name: "payment_link", project_id: self.project_id)
-    email = Email.create!({
-      booking_portal_client_id: client.id,
-      body: ERB.new(client.email_header).result( binding) + email_template.parsed_content(self) + ERB.new(client.email_footer).result( binding ),
-      subject: email_template.parsed_subject(self),
-      to: [ self.email ],
-      cc: client.notification_email.to_s.split(',').map(&:strip),
-      triggered_by_id: id,
-      triggered_by_type: self.class.to_s
-    })
-    email.sent!
+    current_client = client
+    email_template = ::Template::EmailTemplate.where(name: "payment_link", project_id: self.project_id).first
+    if email_template.present?
+      email = Email.create!({
+        booking_portal_client_id: client.id,
+        body: ERB.new(client.email_header).result( binding) + email_template.parsed_content(self) + ERB.new(client.email_footer).result( binding ),
+        subject: email_template.parsed_subject(self),
+        to: [ self.email ],
+        cc: client.notification_email.to_s.split(',').map(&:strip),
+        triggered_by_id: id,
+        triggered_by_type: self.class.to_s
+      })
+      email.sent!
+    end
     # Send sms with link for payment
-    sms_template = Template::SmsTemplate.find_by(name: "payment_link", project_id: self.project_id)
-    sms_body = sms_template.parsed_content(self)
-    Sms.create!({
-      booking_portal_client_id: client.id,
-      body: sms_body,
-      to: [self.phone],
-      triggered_by_id: id,
-      triggered_by_type: self.class.to_s
-    }) unless sms_body.blank?
+    sms_template = Template::SmsTemplate.where(name: "payment_link", project_id: self.project_id).first
+    sms_body = sms_template.parsed_content(self) if sms_template.present?
+    if sms_template.present?
+      Sms.create!({
+        booking_portal_client_id: client.id,
+        body: sms_body,
+        to: [self.phone],
+        triggered_by_id: id,
+        triggered_by_type: self.class.to_s
+      }) unless sms_body.blank?
+    end
   end
 
   def kyc_ready?

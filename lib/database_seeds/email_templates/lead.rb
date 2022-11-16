@@ -15,7 +15,7 @@ module DatabaseSeeds
                 Please make your first payment by clicking the link below.
               </p>
               <div class="mb-3"></div>
-              <a href="<%= self.payment_link %>" target="_blank">Make payment</a>
+              <a href="<%= short_url(self.payment_link, true, self.booking_portal_client_id.try(:to_s)) %>" target="_blank">Make payment</a>
             </div>
           </div>') if ::Template::EmailTemplate.where(name: "payment_link", project_id: project_id, booking_portal_client_id: client_id).blank?
       end
