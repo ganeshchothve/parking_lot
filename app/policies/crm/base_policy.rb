@@ -29,7 +29,7 @@ class Crm::BasePolicy < ApplicationPolicy
   end
 
   def permitted_attributes
-    attributes = %w[name domain request_payload request_headers user_id oauth2_authentication]
+    attributes = %w[name domain request_payload request_headers user_id oauth2_authentication oauth_type]
     attributes
   end
 end
