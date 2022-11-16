@@ -43,7 +43,7 @@
                 <% if policy([current_user_role_group, Client.new]).switch_client? %>
                   <%= link_to t('controller.home.select_client.link_name'), admin_select_clients_path, class: "dropdown-item" %>
                 <% end %>
-                <%= link_to t(I18n.t("devise.keys.sign_out"), scope: "devise"), destroy_session_path(current_user), class: "dropdown-item", method: :delete %>
+                <%= link_to t(I18n.t("devise.keys.sign_out"), scope: "devise"), destroy_session_path(current_user), id:"signout", class: "dropdown-item", method: :delete %>
               </div>
             </div>
           </div>

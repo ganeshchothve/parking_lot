@@ -16,7 +16,7 @@
           <% pre_launch = I18n.t("controller.projects.view.pre_launch") + " (#{pre_launch_count = Project.where(Project.user_based_scope(current_user, params)).where(category: 'pre_launch').count})" %> <%# + "#{pre_launch_count > 0 ? "<span class='notify'></span>".html_safe : ''}" %>
           <%= link_to pre_launch.html_safe, admin_projects_path(fltrs: {category: 'pre_launch'}), class: "filter-link #{params.dig(:fltrs, :category) == 'pre_launch' ? 'active' : ''}" %>
 
-          <% hot_prop = I18n.t("controller.projects.view.pre_launch") + " (#{hot_count = Project.where(Project.user_based_scope(current_user, params)).where(hot: true).count})" %> <%# + "#{hot_count > 0 ? "<span class='notify'></span>".html_safe : ''}" %>
+          <% hot_prop = I18n.t("controller.projects.view.hot") + " (#{hot_count = Project.where(Project.user_based_scope(current_user, params)).where(hot: true).count})" %> <%# + "#{hot_count > 0 ? "<span class='notify'></span>".html_safe : ''}" %>
           <%= link_to hot_prop.html_safe, admin_projects_path(fltrs: {hot: true}), class: "filter-link #{params.dig(:fltrs, :hot) == 'true' ? 'active' : ''}" %>
         </div>
         <div class="col-lg-3 text-end px-0 pb-1 float-right mt-2">

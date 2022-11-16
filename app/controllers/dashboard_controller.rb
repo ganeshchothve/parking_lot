@@ -72,7 +72,7 @@ class DashboardController < ApplicationController
             :type => current_client.brochure.content_type,
             :disposition => 'attachment',
             :url_based_filename => true)
-      SelldoLeadUpdater.perform_async(current_user.selected_lead_id.to_s, {stage: 'project_info'}) if current_user.buyer? && current_user.selected_lead&.receipts&.count == 0
+      # SelldoLeadUpdater.perform_async(current_user.selected_lead_id.to_s, {stage: 'project_info'}) if current_user.buyer? && current_user.selected_lead&.receipts&.count == 0
     else
       redirect_to dashboard_path, alert: 'Brochure is not available'
     end
@@ -123,8 +123,8 @@ class DashboardController < ApplicationController
   private
 
   def set_lead
-    current_user.update(selected_lead_id: params[:selected_lead_id]) if params[:selected_lead_id].present?
-    unless @lead = current_user.selected_lead
+    @lead = Lead.where(project_id: params[:current_project_id], user_id: current_user.id).first
+    unless @lead
       redirect_to welcome_path, alert: t('controller.application.set_current_client')
     end
   end

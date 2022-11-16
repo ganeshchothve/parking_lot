@@ -108,14 +108,9 @@ module ApplicationHelper
     end
   end
 
-  def select_project_for_current_user
-    # if current_project.present?
-    #   current_user.selected_project_id = current_project.id
-    #   current_user.selected_lead_id = current_user.leads.where(project_id: current_project.id).first if current_user.buyer?
-    #   current_user.save
-    # else
-    #   current_user.update(selected_project_id: nil)
-    # end
+  def current_lead
+    @current_lead ||= Lead.where(user_id: current_user.id, project_id: current_project.id).first if (defined?(current_user) && current_user.buyer?)
+    @current_lead
   end
 
   def marketplace?
@@ -136,7 +131,7 @@ module ApplicationHelper
   end
 
   def available_templates(subject_class, subject_class_resource)
-    project_id = subject_class_resource.try(:project_id)
+    project_id = (subject_class == 'Project' ? subject_class_resource.id : subject_class_resource.try(:project_id))
     custom_templates = ::Template::CustomTemplate.where(subject_class: subject_class, booking_portal_client_id: subject_class_resource.booking_portal_client_id, is_active: true).in(project_ids: [project_id, []]).pluck(:name, :id)
     custom_templates
   end

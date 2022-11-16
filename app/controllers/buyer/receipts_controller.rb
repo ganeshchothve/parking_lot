@@ -31,7 +31,8 @@ class Buyer::ReceiptsController < BuyerController
       creator: current_user, payment_mode: 'online',
       payment_type: payment_type,
       booking_detail_id: params.dig(:booking_detail_id),
-      total_amount: @booking_detail.present? ? @booking_detail.pending_balance : @lead.project.blocking_amount
+      total_amount: @booking_detail.present? ? @booking_detail.pending_balance : @lead.project.blocking_amount,
+      booking_portal_client_id: @lead.booking_portal_client_id,
     })
     authorize([:buyer, @receipt])
     render layout: false
@@ -46,6 +47,7 @@ class Buyer::ReceiptsController < BuyerController
       payment_type: 'token'
     })
     @receipt.assign_attributes(permitted_attributes([:buyer, @receipt]))
+    @receipt.booking_portal_client_id = @lead.booking_portal_client_id
     @receipt.account = selected_account(current_client.payment_gateway.underscore, @receipt)
 
     authorize([:buyer, @receipt])
@@ -79,12 +81,12 @@ class Buyer::ReceiptsController < BuyerController
   private
 
   def set_lead
-    @lead = current_user.selected_lead
+    @lead = Lead.where(user_id: current_user.id, project_id: params[:current_project_id]).first
     redirect_to home_path(current_user), alert: I18n.t("controller.leads.alert.not_found"), status: 404 if @lead.blank?
   end
 
   def set_receipt
-    lead = current_user.selected_lead
+    lead = Lead.where(user_id: current_user.id, project_id: params[:current_project_id]).first
     @receipt = lead.receipts.where(_id: params[:id]).first
     redirect_to home_path(current_user), alert: I18n.t("controller.receipts.alert.not_found"), status: 404 if @receipt.blank?
   end

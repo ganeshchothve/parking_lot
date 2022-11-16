@@ -12,11 +12,6 @@
           <div class="col-lg-3 filter-left-section">
             <div class="sticky-top ps-3 pt-3">
               <ul>
-              <% if is_marketplace? %>
-                <li class='nav-item'>
-                  <a class="nav-link active" rel="nav-client-basic"><%= I18n.t("global.link_to.basic_details") %></a>
-                </li>
-              <% else %>
                 <li class='nav-item'>
                   <a class="nav-link active" rel="nav-client-basic"><%= I18n.t("global.link_to.basic_details") %></a>
                 </li>
@@ -38,16 +33,15 @@
                 <li class='nav-item'>
                   <a class="nav-link" rel="nav-client-regions"><%= I18n.t("global.tabs.cities_regions") %></a>
                 </li>
-              <% end %>
-              <% if policy([:admin, @client]).allow_settings? %>
-                <li class='nav-item'>
-                  <a class="nav-link" rel="nav-client-settings"><%= I18n.t("global.tabs.settings") %></a>
-                </li>
-              <% end %>
+                <% if policy([:admin, @client]).allow_settings? %>
+                  <li class='nav-item'>
+                    <a class="nav-link" rel="nav-client-settings"><%= I18n.t("global.tabs.settings") %></a>
+                  </li>
+                <% end %>
               </ul>
               <hr>
               <div class="theme-form">
-                <select class="selectize" required="" name="" id="field_search" tabindex="-1">
+                <select class="selectize" name="" id="field_search" tabindex="-1">
                   <option></option>
                   <option>Client Name</option>
                   <option>Registration Name</option>
@@ -58,41 +52,34 @@
           <div class="col-lg-9 filter-right-section">
             <div class="mt-3"></div>
             <div class="tab-content theme-form">
-              <% if is_marketplace? %>
-                <div id="nav-client-basic">
-                  <h2 class="tab-title"><%= I18n.t("global.link_to.basic_details") %></h2>
-                  <%= render 'admin/clients/mp/basic', f: f %>
-                </div>
-              <% else %>
-                <div id="nav-client-basic">
-                  <h2 class="tab-title"><%= I18n.t("global.link_to.basic_details") %></h2>
-                  <%= render 'admin/clients/basic', f: f %>
-                </div>
-                <div id="nav-client-bookings">
-                  <h2 class="tab-title"><%= I18n.t("mongoid.models.booking_detail.other") %></h2>
-                  <%= render 'admin/clients/bookings', f: f %>
-                </div>
-                <div id="nav-client-contacts">
-                  <h2 class="tab-title"><%= I18n.t("global.tabs.contacts_n_notifications") %></h2>
-                  <%= render 'admin/clients/contacts', f: f %>
-                </div>
-                <div id="nav-client-integrations">
-                  <h2 class="tab-title"><%= I18n.t("global.tabs.integrations") %></h2>
-                  <%= render 'admin/clients/integrations', f: f %>
-                </div>
-                <div id="nav-client-pages">
-                  <h2 class="tab-title"><%= I18n.t("global.tabs.content_pages") %></h2>
-                  <%= render 'admin/clients/pages', f: f %>
-                </div>
-                <div id="nav-client-logos">
-                  <h2 class="tab-title"><%= I18n.t("global.tabs.images_docs") %></h2>
-                  <%= render 'admin/clients/logos', f: f %>
-                </div>
-                <div id="nav-client-regions">
-                  <h2 class="tab-title"><%= I18n.t("global.tabs.cities_regions") %></h2>
-                  <%= render 'admin/clients/regions', f: f %>
-                </div>
-              <% end %>
+              <div id="nav-client-basic">
+                <h2 class="tab-title"><%= I18n.t("global.link_to.basic_details") %></h2>
+                <%= render 'admin/clients/basic', f: f %>
+              </div>
+              <div id="nav-client-bookings">
+                <h2 class="tab-title"><%= I18n.t("mongoid.models.booking_detail.other") %></h2>
+                <%= render 'admin/clients/bookings', f: f %>
+              </div>
+              <div id="nav-client-contacts">
+                <h2 class="tab-title"><%= I18n.t("global.tabs.contacts_n_notifications") %></h2>
+                <%= render 'admin/clients/contacts', f: f %>
+              </div>
+              <div id="nav-client-integrations">
+                <h2 class="tab-title"><%= I18n.t("global.tabs.integrations") %></h2>
+                <%= render 'admin/clients/integrations', f: f %>
+              </div>
+              <div id="nav-client-pages">
+                <h2 class="tab-title"><%= I18n.t("global.tabs.content_pages") %></h2>
+                <%= render 'admin/clients/pages', f: f %>
+              </div>
+              <div id="nav-client-logos">
+                <h2 class="tab-title"><%= I18n.t("global.tabs.images_docs") %></h2>
+                <%= render 'admin/clients/logos', f: f %>
+              </div>
+              <div id="nav-client-regions">
+                <h2 class="tab-title"><%= I18n.t("global.tabs.cities_regions") %></h2>
+                <%= render 'admin/clients/regions', f: f %>
+              </div>
               <% if policy([:admin, @client]).allow_settings? %>
                 <div id="nav-client-settings">
                   <h2 class="tab-title"><%= I18n.t("global.tabs.settings") %></h2>

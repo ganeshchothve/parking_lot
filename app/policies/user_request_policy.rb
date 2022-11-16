@@ -3,6 +3,7 @@ class UserRequestPolicy < ApplicationPolicy
 
   def index?
     out = user.booking_portal_client.enable_actual_inventory?(user) || enable_incentive_module?(user)
+    out = false if user.role.in?(%w[sales])
     out && user.active_channel_partner?
   end
 

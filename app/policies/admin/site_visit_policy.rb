@@ -1,11 +1,7 @@
 class Admin::SiteVisitPolicy < SiteVisitPolicy
   def index?
-    out = user.role.in?(%w(admin superadmin dev_sourcing_manager channel_partner cp_owner billing_team sales_admin))
-    if user.role?(:superadmin)
-      out && user.active_channel_partner? && user.selected_client.enable_site_visit?
-    else
-      out && user.active_channel_partner? && user.booking_portal_client.enable_site_visit?
-    end
+    out = user.role.in?(%w(admin superadmin dev_sourcing_manager channel_partner cp_owner billing_team sales sales_admin))
+    out && user.active_channel_partner? && current_client.enable_site_visit?
   end
 
   def export?
@@ -17,7 +13,8 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
   end
 
   def new?(current_project_id = nil)
-    valid = SiteVisit.where(lead_id: record.lead_id, status: 'scheduled').blank? && edit? && record.project.walk_ins_enabled?
+    valid = current_client.enable_site_visit?
+    valid = valid && SiteVisit.where(lead_id: record.lead_id, status: 'scheduled').blank? && edit? && record.project.walk_ins_enabled?
     valid = valid && project_access_allowed?(current_project_id)
     valid
   end

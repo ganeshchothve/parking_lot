@@ -1,6 +1,10 @@
 class Admin::ProjectPolicy < ProjectPolicy
   # def new? def create? def edit? def asset_create? from ClientPolicy
 
+  def index?
+    user.role.in?(%w(channel_partner cp_owner dev_sourcing_manager superadmin admin)) || (!user.buyer? && (user.booking_portal_client.enable_actual_inventory?(user) || enable_incentive_module?(user))) #&& !user.role?('billing_team')
+  end
+
   def update?
     %w[superadmin admin sales_admin].include?(user.role)
   end
@@ -21,16 +25,12 @@ class Admin::ProjectPolicy < ProjectPolicy
     video_create?
   end
 
-  def index?
-    user.role.in?(%w(channel_partner cp_owner dev_sourcing_manager superadmin admin)) || (!user.buyer? && (user.booking_portal_client.enable_actual_inventory?(user) || enable_incentive_module?(user))) #&& !user.role?('billing_team')
-  end
-
   def third_party_inventory?
     index? && !user.role?('dev_sourcing_manager')
   end
 
   def show?
-    index? && (record.is_active? || user.role?('superadmin')) && !marketplace_client?
+    index?
   end
 
   def new?
