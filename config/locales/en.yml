@@ -3508,6 +3508,8 @@ en:
       payment_link:
         link_name: "Send Payment link"
       reassign_sales: "Reassign Lead"
+      send_payment_link:
+        project_no_access: Project access not given to customers
       notice:
         updated: "Lead successfully updated."
         assigned_to: "%{name1} assigned to sales %{name2}"
@@ -3517,7 +3519,6 @@ en:
         sales_user_not_found: "Sales user not found"
         unqualified: "Lead cannot be unqualified"
         company_not_found: "Requested partner company not found"
-        project_no_access: Project access not given to customers
       message:
         mail_sent: "Mail successfully sent to the selected leads"
         no_leads_added: "You have not added any lead yet.\nStart exploring the projects and add your leads."

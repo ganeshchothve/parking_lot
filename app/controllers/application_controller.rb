@@ -89,6 +89,8 @@ class ApplicationController < ActionController::Base
     UserContext.new(current_user, current_client, current_project)
   end
 
+  # added for send project_id and client_id to authenticate user without login
+  # this method calls User's find_first_by_auth_conditions internally
   def find_record_from_identifier(entity)
     identifier_param_value = entity.get_identifier_from_params_or_headers(self).presence
     identifier_param_value = integrate_with_devise_case_insensitive_keys(identifier_param_value, entity)

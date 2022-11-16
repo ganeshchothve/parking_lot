@@ -64,7 +64,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def note_create?
-    user.role.in?(%w(superadmin admin channel_partner cp_owner sales sales_admin)) && record.user.role.in?(User::BUYER_ROLES)
+    user.role.in?(%w(superadmin channel_partner cp_owner)) && record.user.role.in?(User::BUYER_ROLES)
   end
 
   def asset_create?
