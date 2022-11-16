@@ -4,7 +4,7 @@ class Admin::AssetPolicy < AssetPolicy
   end
 
   def update?
-    create?
+    "Admin::#{record.assetable_type}Policy".constantize.new(user, record.assetable).asset_update?
   end
 
   def destroy?
