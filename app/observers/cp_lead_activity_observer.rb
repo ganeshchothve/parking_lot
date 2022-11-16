@@ -18,4 +18,11 @@ class CpLeadActivityObserver < Mongoid::Observer
     lead.referenced_manager_ids.uniq!
     lead.save
   end
+
+  def after_create cp_lead_activity
+    lead = cp_lead_activity.lead
+    if lead.booking_portal_client.kylas_tenant_id.present?
+      Kylas::CreateDeal.new(lead.user, lead, {run_in_background: false}).call
+    end
+  end
 end
