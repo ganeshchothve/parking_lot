@@ -85,6 +85,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def pundit_user
+    UserContext.new(current_user, current_client, current_project)
+  end
+
   protected
 
   def user_time_zone

@@ -1,6 +1,21 @@
 class DashboardPolicy < Struct.new(:user, :dashboard)
   include ApplicationHelper
 
+  attr_reader :user, :current_client, :current_project
+
+  def initialize(user_context, record)
+    if user_context.is_a?(User)
+      user = user_context
+      @user = user
+      @current_client = user.role?('superadmin') ? user.selected_client : user.booking_portal_client
+      @current_project = nil
+    else
+      @user = user_context.user
+      @current_client = user_context.current_client
+      @current_project = user_context.current_project
+    end
+  end
+
   def index?
     true
   end

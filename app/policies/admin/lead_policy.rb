@@ -1,11 +1,7 @@
 class Admin::LeadPolicy < LeadPolicy
 
   def index?
-    if user.role?(:superadmin)
-      out = !(user.buyer? || user.role.in?(%w(dev_sourcing_manager))) && user.selected_client.enable_leads?
-    else
-      out = !(user.buyer? || user.role.in?(%w(dev_sourcing_manager))) && user.booking_portal_client.enable_leads?
-    end
+    out = !(user.buyer? || user.role.in?(%w(dev_sourcing_manager))) && current_client.enable_leads?
     # out = !(user.buyer? || user.role.in?(%w(channel_partner cp_owner dev_sourcing_manager)))
     #out = out && user.active_channel_partner?
     #out = false if user.role.in?(%w(channel_partner cp_owner)) && !interested_project_present?
@@ -13,7 +9,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def ds_index?
-    out = !(user.buyer? || user.role.in?(%w(dev_sourcing_manager)))
+    out = !(user.buyer? || user.role.in?(%w(dev_sourcing_manager))) && current_client.enable_leads?
     out = out && user.active_channel_partner?
     out = false if user.role.in?(%w(channel_partner cp_owner)) && !interested_project_present?
     out
@@ -28,7 +24,12 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def new?(current_project_id = nil)
-    valid = true && user.role.in?(%w(superadmin admin gre crm account_manager account_manager_head) + User::CHANNEL_PARTNER_USERS + User::SALES_USER)
+    valid = current_client.enable_leads?
+    if marketplace_client?
+      valid = valid && user.role.in?(%w(channel_partner cp_owner))
+    else
+      valid = valid && user.role.in?(%w(superadmin admin gre crm account_manager account_manager_head) + User::CHANNEL_PARTNER_USERS + User::SALES_USER)
+    end
     valid = false if user.present? && user.role.in?(%w(channel_partner cp_owner)) && !(user.active_channel_partner? && interested_project_present?)
     valid = valid && project_access_allowed?(current_project_id)
     @condition = 'project_not_subscribed' unless valid
