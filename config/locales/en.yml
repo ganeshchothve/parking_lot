@@ -579,6 +579,7 @@ en:
         request_payload: "Request Payload"
         oauth2_authentication: "Oauth2 Authentication"
         user: "User"
+        oauth_type: Authorization Type
       crm/base/oauth_type:
           salesforce: "Salesforce"
           kylas: "Kylas"
