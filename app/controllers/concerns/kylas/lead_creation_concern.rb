@@ -39,7 +39,7 @@ module Kylas
       respond_to do |format|
         if @user.valid?
           @user.save
-          @user.confirm
+          @user.skip_confirmation_notification!
           manager_ids = params.dig(:lead, :manager_ids)
 
           count = 0

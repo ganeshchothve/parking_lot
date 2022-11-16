@@ -19,16 +19,18 @@ module Kylas
       kylas_base = Crm::Base.where(domain: ENV_CONFIG.dig(:kylas, :base_url), booking_portal_client_id: user.booking_portal_client.id).first
       if kylas_base
         api = Crm::Api::Post.where(base_id: kylas_base.id, resource_class: 'Lead', is_active: true, booking_portal_client_id: user.booking_portal_client.id).first
-        if params[:run_in_background]
-          response = Kylas::Api::ExecuteWorker.perform_async(user.id, api.id, 'Lead', entity.id, {})
-        else
-          response = Kylas::Api::ExecuteWorker.new.perform(user.id, api.id, 'Lead', entity.id, {})
+        if api.present?
+          if params[:run_in_background]
+            response = Kylas::Api::ExecuteWorker.perform_async(user.id, api.id, 'Lead', entity.id, {})
+          else
+            response = Kylas::Api::ExecuteWorker.new.perform(user.id, api.id, 'Lead', entity.id, {})
+          end
         end
-      end
-      log_response = response[:api_log]
-      if log_response.present?
-        if log_response[:status] == "Success"
-          entity.set(kylas_deal_id: log_response[:response].first["id"])
+        log_response = response[:api_log]
+        if log_response.present?
+          if log_response[:status] == "Success"
+            entity.set(kylas_deal_id: log_response[:response].first["id"])
+          end
         end
       end
     end

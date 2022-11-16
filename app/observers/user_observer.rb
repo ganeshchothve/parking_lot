@@ -63,12 +63,14 @@ class UserObserver < Mongoid::Observer
             (uniqueness_strategy == "phone" && user.phone.present?) || 
             (uniqueness_strategy == "email_phone" && (user.email.present? || user.phone.present?))
             search_response = Kylas::SearchEntity.new(user, 'contact', uniqueness_strategy, user, {run_in_background: false}).call
-            search_result = search_response[:api_log][:response].first
-            if search_result["content"].blank?
-              @contact_response = Kylas::CreateContact.new(user, user).call
-              user.set(kylas_contact_id: @contact_response.dig(:data, :id))
-            else
-              user.set(kylas_contact_id: search_result["content"].first["id"]) if user.kylas_contact_id.blank?
+            if search_response[:api_log].present? && search_response[:api_log][:status] == "Success"
+              search_result = search_response[:api_log][:response].first
+              if search_result["content"].blank?
+                @contact_response = Kylas::CreateContact.new(user, user).call
+                user.set(kylas_contact_id: @contact_response.dig(:data, :id))
+              else
+                user.set(kylas_contact_id: search_result["content"].first["id"]) if user.kylas_contact_id.blank?
+              end
             end
           else
             @contact_response = Kylas::CreateContact.new(user, user).call

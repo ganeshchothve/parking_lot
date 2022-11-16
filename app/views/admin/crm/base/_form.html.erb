@@ -43,7 +43,7 @@
           <div class = "col-12">
             <div class="mb-3">
               <%= f.label :oauth_type, class: 'control-label' %>
-              <%= f.select :oauth_type, options_for_select([["Salesforce", "salesforce"], ["Kylas", "kylas"]], f.object.oauth_type), {prompt: I18n.t("global.select")}, class: "selectize" %>
+              <%= f.select :oauth_type, options_for_select(Crm::Base::OAUTH_TYPES.collect{ |type| [I18n.t("mongoid.attributes.crm/base/oauth_type.#{type}"), type] }, f.object.oauth_type), {prompt: I18n.t("global.select")}, class: "selectize" %>
             </div>
           </div>
           <div class = "col-12">

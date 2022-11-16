@@ -2,6 +2,8 @@ class Crm::Base
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  OAUTH_TYPES = ["salesforce", "kylas"]
+
   field :domain, type: String
   field :name, type: String
   field :request_headers, type: String
