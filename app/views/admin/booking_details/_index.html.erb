@@ -10,7 +10,6 @@
               <th>Status</th>
               <th>Approval Status</th>
               <th>Booked On</th>
-              <th>Tentative Agreement Date</th>
               <th>Agreement Date</th>
               <th>Action</th>
             </tr>
@@ -34,9 +33,6 @@
                 </td>
                 <td>
                   <%= booking_detail.booked_on ? I18n.l(booking_detail.booked_on) : '-' %>
-                </td>
-                <td>
-                  <%= booking_detail.tentative_agreement_date ? I18n.l(booking_detail.tentative_agreement_date) : '-' %>
                 </td>
                 <td>
                   <%= booking_detail.agreement_date ? I18n.l(booking_detail.agreement_date) : '-' %>
