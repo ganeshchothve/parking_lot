@@ -99,5 +99,9 @@ class SiteVisitObserver < Mongoid::Observer
         api, api_log = site_visit.reload.push_in_crm(crm_base)
       end
     end
+
+    if (site_visit.scheduled_on_changed? || site_visit.status_changed?) && site_visit.booking_portal_client.is_marketplace? && site_visit.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)).present?
+      Kylas::UpdateMeeting.new(site_visit.user, site_visit, {run_in_background: false}).call
+    end
   end
 end
