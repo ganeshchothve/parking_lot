@@ -20,12 +20,12 @@ class Admin::BulkUploadReportsController < AdminController
   end
 
   def new
-    @bulk_upload_report = BulkUploadReport.new
+    @bulk_upload_report = BulkUploadReport.new(client_id: current_client.id)
     render layout: false
   end
 
   def create
-    @bulk_upload_report = BulkUploadReport.new(uploaded_by: current_user)
+    @bulk_upload_report = BulkUploadReport.new(uploaded_by: current_user, client_id: current_client.id)
     @bulk_upload_report.assign_attributes(permitted_attributes([:admin, @bulk_upload_report]))
     if current_user.role?(:admin)
       @bulk_upload_report.assign_attributes(client_id: current_user.booking_portal_client_id)

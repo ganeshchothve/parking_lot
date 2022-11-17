@@ -141,6 +141,9 @@ class Admin::UsersController < AdminController
       respond_to do |format|
         format.json { render json: { errors: @client.errors.full_messages }, status: :unprocessable_entity }
       end
+    else
+      superadmin_users = User.where(role: 'superadmin')
+      superadmin_users.update_all(client_ids: Client.pluck(:id))
     end
   end
 
