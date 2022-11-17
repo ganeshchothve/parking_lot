@@ -169,6 +169,14 @@ class Admin::UserPolicy < UserPolicy
     user.role.in?(%w(channel_partner cp_owner) + User::ALL_PROJECT_ACCESS)
   end
 
+  def note_create?
+    unless marketplace_client?
+      update?
+    else
+      false
+    end
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     if user.present?
