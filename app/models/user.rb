@@ -237,7 +237,7 @@ class User
   validate :password_complexity
   validate :phone_email_uniqueness
   validates :booking_portal_client_id, presence: true, unless: proc { |user| user.role?(:superadmin) }
-  validates :kylas_user_id, uniqueness: true
+  validates :kylas_user_id, uniqueness: true, allow_blank: true
   validate :need_at_least_one_admin
   validate :cannot_unset_kylas_user_id
 
@@ -367,18 +367,18 @@ class User
       user = User.where(kylas_user_id: k_user_id).first
       if user.present?
         if self.id == user.id
-          update_tokens_details!(response)
-          save_kylas_user_id(k_user_id)
-          fetch_and_save_kylas_tenant_id
+          save_kylas_user_id(k_user_id, response)
           true
         else
           false
         end
       else
-        update_tokens_details!(response)
-        save_kylas_user_id(k_user_id)
-        fetch_and_save_kylas_tenant_id
-        true
+        if self.kylas_user_id.blank?
+          save_kylas_user_id(k_user_id, response)
+          true
+        else
+          false
+        end
       end
     end
   end
@@ -1016,8 +1016,11 @@ class User
     )
   end
 
-  def save_kylas_user_id(k_user_id)
-    self.update(kylas_user_id: k_user_id)
+  def save_kylas_user_id(k_user_id, response)
+    if self.update(kylas_user_id: k_user_id)
+      update_tokens_details!(response)
+      fetch_and_save_kylas_tenant_id
+    end
   end
 
   def fetch_and_save_kylas_tenant_id

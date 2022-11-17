@@ -9,53 +9,59 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-3">
-      <div class='m-3'>
-        <div><%= f.label :create_product %></div>
-        <div class="form-check form-check-inline">
-          <%= f.radio_button :create_product, true, class: "form-check-input wd-22" %>
-          <%= f.label :create_product, "Yes", class: " form-check-label d-inline-block ms-2" %>
-        </div>
-        <div class="form-check form-check-inline">
-          <%= f.radio_button :create_product, false, class: "form-check-input wd-22" %>
-          <%= f.label :create_product, "No", class: " form-check-label d-inline-block ms-2" %>
+    <% if policy([:admin, @workflow]).can_create_product? %>
+      <div class="col-md-3">
+        <div class='m-3'>
+          <div><%= f.label :create_product %></div>
+          <div class="form-check form-check-inline">
+            <%= f.radio_button :create_product, true, class: "form-check-input wd-22" %>
+            <%= f.label :create_product, "Yes", class: " form-check-label d-inline-block ms-2" %>
+          </div>
+          <div class="form-check form-check-inline">
+            <%= f.radio_button :create_product, false, class: "form-check-input wd-22" %>
+            <%= f.label :create_product, "No", class: " form-check-label d-inline-block ms-2" %>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="col-md-3">
-      <div class='m-3'>
-        <%= f.label :product_amount_type %>
-        <%= f.select :product_amount_type, Workflow::PRODUCT_AMOUNT_TYPES.collect{|x| [t("mongoid.attributes.workflow/product_amount_types.#{x}"), x]}, {prompt: I18n.t("global.select")}, class: "selectize" %>
+      <div class="col-md-3">
+        <div class='m-3'>
+          <%= f.label :product_amount_type %>
+          <%= f.select :product_amount_type, Workflow::PRODUCT_AMOUNT_TYPES.collect{|x| [t("mongoid.attributes.workflow/product_amount_types.#{x}"), x]}, {prompt: I18n.t("global.select")}, class: "selectize" %>
+        </div>
       </div>
-    </div>
+    <% end %>
 
-    <div class="col-md-3">
-      <div class='m-3'>
-        <div><%= f.label :update_product_on_deal %></div>
-        <div class="form-check form-check-inline">
-          <%= f.radio_button :update_product_on_deal, true, class: "form-check-input wd-22" %>
-          <%= f.label :update_product_on_deal, "Yes", class: " form-check-label d-inline-block ms-2" %>
-        </div>
-        <div class="form-check form-check-inline">
-          <%= f.radio_button :update_product_on_deal, false, class: "form-check-input wd-22" %>
-          <%= f.label :update_product_on_deal, "No", class: " form-check-label d-inline-block ms-2" %>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class='m-3'>
-        <div><%= f.label :deactivate_product %></div>
-        <div class="form-check form-check-inline">
-          <%= f.radio_button :deactivate_product, true, class: "form-check-input wd-22" %>
-          <%= f.label :deactivate_product, "Yes", class: " form-check-label d-inline-block ms-2" %>
-        </div>
-        <div class="form-check form-check-inline">
-          <%= f.radio_button :deactivate_product, false, class: "form-check-input wd-22" %>
-          <%= f.label :deactivate_product, "No", class: " form-check-label d-inline-block ms-2" %>
+    <% if policy([:admin, @workflow]).can_update_product_on_deal? %>
+      <div class="col-md-3">
+        <div class='m-3'>
+          <div><%= f.label :update_product_on_deal %></div>
+          <div class="form-check form-check-inline">
+            <%= f.radio_button :update_product_on_deal, true, class: "form-check-input wd-22" %>
+            <%= f.label :update_product_on_deal, "Yes", class: " form-check-label d-inline-block ms-2" %>
+          </div>
+          <div class="form-check form-check-inline">
+            <%= f.radio_button :update_product_on_deal, false, class: "form-check-input wd-22" %>
+            <%= f.label :update_product_on_deal, "No", class: " form-check-label d-inline-block ms-2" %>
+          </div>
         </div>
       </div>
-    </div>
+    <% end %>
+    <% if policy([:admin, @workflow]).can_deactivate_product? %>
+      <div class="col-md-3">
+        <div class='m-3'>
+          <div><%= f.label :deactivate_product %></div>
+          <div class="form-check form-check-inline">
+            <%= f.radio_button :deactivate_product, true, class: "form-check-input wd-22" %>
+            <%= f.label :deactivate_product, "Yes", class: " form-check-label d-inline-block ms-2" %>
+          </div>
+          <div class="form-check form-check-inline">
+            <%= f.radio_button :deactivate_product, false, class: "form-check-input wd-22" %>
+            <%= f.label :deactivate_product, "No", class: " form-check-label d-inline-block ms-2" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
   <div class="pipelines m-3">
     <div class="row">
