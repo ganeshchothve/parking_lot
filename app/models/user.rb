@@ -237,7 +237,9 @@ class User
   validate :password_complexity
   validate :phone_email_uniqueness
   validates :booking_portal_client_id, presence: true, unless: proc { |user| user.role?(:superadmin) }
-
+  validates :kylas_user_id, uniqueness: true
+  validate :need_at_least_one_admin
+  validate :cannot_unset_kylas_user_id
 
   # scopes needed by filter
   # scope :filter_by_confirmation, ->(confirmation) { confirmation.eql?('not_confirmed') ? where(confirmed_at: nil) : where(confirmed_at: { "$ne": nil }) }
@@ -332,6 +334,14 @@ class User
     scope admin_roles, ->{ where(role: admin_roles )}
   end
 
+  def need_at_least_one_admin
+    errors.add(:base, 'Need at least one admin account') if self.role_changed? && self.role_was == 'admin' && User.where(booking_portal_client_id: booking_portal_client_id).ne(id: self.id).admin.first.blank?
+  end
+
+  def cannot_unset_kylas_user_id
+    errors.add(:kylas_user_id, 'cannot be changed or reset') if self.kylas_user_id_changed? && self.kylas_user_id_was.present?
+  end
+
   # Kylas Auth Code
   def kylas_api_key
     self.booking_portal_client.kylas_api_key
@@ -345,19 +355,32 @@ class User
     (kylas_access_token_expires_at.to_i > DateTime.now.to_i)
   end
 
-  def update_tokens_details!(response = {})
-    return if response.blank?
-
-    update(
+  def update_users_and_tenants_details(response)
+    user_response = Kylas::UserDetails.new(User.new(
       kylas_access_token: response[:access_token],
       kylas_refresh_token: response[:refresh_token],
       kylas_access_token_expires_at: Time.at(DateTime.now.to_i + response[:expires_in])
-    )
-  end
+    )).call
 
-  def update_users_and_tenants_details
-    fetch_and_save_kylas_user_id
-    fetch_and_save_kylas_tenant_id
+    if user_response[:success]
+      k_user_id = user_response.dig(:data, 'id')
+      user = User.where(kylas_user_id: k_user_id).first
+      if user.present?
+        if self.id == user.id
+          update_tokens_details!(response)
+          save_kylas_user_id(k_user_id)
+          fetch_and_save_kylas_tenant_id
+          true
+        else
+          false
+        end
+      else
+        update_tokens_details!(response)
+        save_kylas_user_id(k_user_id)
+        fetch_and_save_kylas_tenant_id
+        true
+      end
+    end
   end
 
   def fetch_access_token
@@ -367,40 +390,8 @@ class User
 
     return unless response[:success]
 
-    update_tokens_details!(response)
+    update_tokens_details!(response) if user.persisted?
     kylas_access_token
-  end
-
-  def fetch_and_save_kylas_user_id
-    return if kylas_access_token.blank?
-
-    begin
-      response = Kylas::UserDetails.new(self).call
-      if response[:success]
-        slice_user_id = response.dig(:data, 'id')
-        user = User.where(kylas_user_id: slice_user_id).first
-        if user.present? && (user.id != self.id)
-          user.update(
-            kylas_user_id: nil, kylas_access_token: nil,
-            kylas_refresh_token: nil, kylas_access_token_expires_at: nil
-          )
-        end
-        self.update(kylas_user_id: slice_user_id)
-      end
-    rescue StandardError
-      Rails.logger.error 'Kylas::UserDetails - StandardError'
-    end
-  end
-
-  def fetch_and_save_kylas_tenant_id
-    return if kylas_access_token.blank?
-
-    begin
-      response = Kylas::TenantDetails.new(self).call
-      self.booking_portal_client.update(kylas_tenant_id: response.dig(:data, 'id')) if response[:success]
-    rescue StandardError
-      Rails.logger.error 'Kylas::TenantDetails - StandardError'
-    end
   end
 
   def phone_email_uniqueness
@@ -770,8 +761,8 @@ class User
     # send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
     devise_mailer.new.send(:devise_sms, self, :confirmation_instructions)
 
-    email_template = Template::EmailTemplate.where(name: "#{role}_confirmation_instructions").first
-    email_template = Template::EmailTemplate.find_by(name: "user_confirmation_instructions") if email_template.blank?
+    email_template = Template::EmailTemplate.where(name: "#{role}_confirmation_instructions", booking_portal_client_id: booking_portal_client.id).first
+    email_template = Template::EmailTemplate.where(name: "user_confirmation_instructions", booking_portal_client_id: booking_portal_client.id).first if email_template.blank?
     if email_template.is_active? && (email.present? || unconfirmed_email.present?)
       attrs = {
         booking_portal_client_id: booking_portal_client_id,
@@ -1014,4 +1005,30 @@ class User
       errors.add :manager_change_reason, 'is required'
     end
   end
+
+  def update_tokens_details!(response = {})
+    return if response.blank?
+
+    update(
+      kylas_access_token: response[:access_token],
+      kylas_refresh_token: response[:refresh_token],
+      kylas_access_token_expires_at: Time.at(DateTime.now.to_i + response[:expires_in])
+    )
+  end
+
+  def save_kylas_user_id(k_user_id)
+    self.update(kylas_user_id: k_user_id)
+  end
+
+  def fetch_and_save_kylas_tenant_id
+    return if kylas_access_token.blank?
+
+    begin
+      response = Kylas::TenantDetails.new(self).call
+      self.booking_portal_client.update(kylas_tenant_id: response.dig(:data, 'id')) if response[:success]
+    rescue StandardError
+      Rails.logger.error 'Kylas::TenantDetails - StandardError'
+    end
+  end
+
 end

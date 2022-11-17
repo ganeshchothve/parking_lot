@@ -9,7 +9,7 @@ module DatabaseSeeds
               <%= I18n.t("users.role.#{manager.role}") %> has been changed on <%= I18n.t("global.user") %> <strong><%= name %></strong>. New assigned <%= I18n.t("mongoid.attributes.user.manager_id") %> is <strong><%= manager.name %></strong>
             </p>
           </div>
-        </div>') if ::Template::EmailTemplate.where(name: "user_manager_changed").blank?
+        </div>') if ::Template::EmailTemplate.where(name: "user_manager_changed", booking_portal_client_id: client_id).blank?
 
         Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: "referral_invitation", subject: "Invitation", content: '<div class="card w-100">
           <div class="card-body">
@@ -26,9 +26,9 @@ module DatabaseSeeds
               <%= self.referred_by.name %>
             </p>
           </div>
-        </div>') if ::Template::EmailTemplate.where(name: "referral_invitation").blank?
+        </div>') if ::Template::EmailTemplate.where(name: "referral_invitation", booking_portal_client_id: client_id).blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: Client.first.id, subject_class: "User", name: "user_confirmation_instructions", subject: "Confirmation Instructions", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: "user_confirmation_instructions", subject: "Confirmation Instructions", content: '<div class="card w-100">
             <div class="card-body">
               <p>
                 Dear <%= self.name %>,
@@ -51,7 +51,7 @@ module DatabaseSeeds
               <div class="mb-3"></div>
               <a href=<%= self.confirmation_url %>>Confirm account</a>
             </div>
-          </div>') if ::Template::EmailTemplate.where(name: "user_confirmation_instructions").blank?
+          </div>') if ::Template::EmailTemplate.where(name: "user_confirmation_instructions", booking_portal_client_id: client_id).blank?
 
         Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: "account_confirmation", subject: "Account Confirmed", content: '<div class="card w-100">
             <div class="card-body">
@@ -80,7 +80,7 @@ module DatabaseSeeds
                     Password: <%= self.temporary_password %>
                 </p>
             </div>
-          </div>') if ::Template::EmailTemplate.where(name: "account_confirmation").blank?
+          </div>') if ::Template::EmailTemplate.where(name: "account_confirmation", booking_portal_client_id: client_id).blank?
 
         Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: "cp_user_register_in_company", subject: '<%= name %> has requested to register his account into your company on <%= I18n.t("global.brand") %>', content: '<div class="card w-100">
           <div class="card-body">
@@ -91,7 +91,7 @@ module DatabaseSeeds
               <%= ActionController::Base.helpers.link_to "Approve or Reject #{I18n.t("mongoid.attributes.user/role.channel_partner")}", Rails.application.routes.url_helpers.add_user_account_channel_partners_url(register_code: self.register_in_cp_company_token, channel_partner_id: self.temp_channel_partner&.id.to_s) %>
             </p>
           </div>
-        </div>') if ::Template::EmailTemplate.where(name: "cp_user_register_in_company").blank?
+        </div>') if ::Template::EmailTemplate.where(name: "cp_user_register_in_company", booking_portal_client_id: client_id).blank?
 
         Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "Receipt", name: "updated_token_details", subject: "Updated token details", content: '<div class="card w-100">
           <div class="card-body">
@@ -102,7 +102,7 @@ module DatabaseSeeds
           </div>
         </div>
         <div class="mt-3"></div>
-        ') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: "updated_token_details").blank?
+        ') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: "updated_token_details", booking_portal_client_id: client_id).blank?
 
         Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: "update_token_details_completed", subject: "Update token details completed", content: '<p>Your request of update token details completed.</p>') if ::Template::EmailTemplate.where(name: "update_token_details_completed").blank?
 

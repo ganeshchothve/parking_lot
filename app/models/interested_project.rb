@@ -17,4 +17,9 @@ class InterestedProject
   belongs_to :project
 
   validates :project_id, uniqueness: { scope: :user_id, message: ->(object, data) { "#{object.project.name} is already subscribed" } }
+
+  def self.user_based_scope(user, params = {})
+    custom_scope = {booking_portal_client_id: user.booking_portal_client.id}
+    custom_scope
+  end
 end

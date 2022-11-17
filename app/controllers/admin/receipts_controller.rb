@@ -126,7 +126,7 @@ class Admin::ReceiptsController < AdminController
   # This method is used in admin dashboard
   #
   def payment_mode_chart
-    @data = DashboardData::AdminDataProvider.receipt_block(params)
+    @data = DashboardData::AdminDataProvider.receipt_block(current_user, params)
     @statuses = params[:status] || %w[pending clearance_pending success available_for_refund]
     @dataset = get_dataset(@data, @statuses)
   end
@@ -136,7 +136,7 @@ class Admin::ReceiptsController < AdminController
   # This method is used in admin dashboard
   #
   def frequency_chart
-    @data = DashboardData::AdminDataProvider.receipt_frequency(params)
+    @data = DashboardData::AdminDataProvider.receipt_frequency(current_user, params)
     @dataset = get_dataset_linechart(@data)
   end
   #
@@ -145,7 +145,7 @@ class Admin::ReceiptsController < AdminController
   # This method is used in admin dashboard
   #
   def status_chart
-    @data = DashboardData::AdminDataProvider.receipt_piechart(params)
+    @data = DashboardData::AdminDataProvider.receipt_piechart(current_user, params)
   end
 
   private

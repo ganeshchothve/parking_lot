@@ -82,9 +82,9 @@ module DatabaseSeeds
                   <h3 class="title"><%= current_user.selected_project.name %></h3>
                   <p class="sort-desc col-lg-6 col-xs-12 col-md-6 col-sm-12 offset-md-3 offset-lg-3"><%= t("dashboard.user.projects.sub_heading") %></p>
                   <ul class="prjt-info br-rd-4">
-                    <li><span><%= t("dashboard.user.titles.available_inventory") %></span><p><%= DashboardDataProvider.available_inventory(current_user.selected_project) %></p></li>
-                    <li><span><%= t("mongoid.attributes.search.starting_price") %></span><p><%= number_to_indian_currency(DashboardDataProvider.minimum_agreement_price(current_user.selected_project)) %></p></li>
-                    <li><span><%= t("mongoid.attributes.project_unit.configuration") %></span><p><%= DashboardDataProvider.configurations(current_user.selected_project).to_sentence(last_word_connector: " & ") %></p></li>
+                    <li><span><%= t("dashboard.user.titles.available_inventory") %></span><p><%= DashboardDataProvider.available_inventory(current_user, current_user.selected_project) %></p></li>
+                    <li><span><%= t("mongoid.attributes.search.starting_price") %></span><p><%= number_to_indian_currency(DashboardDataProvider.minimum_agreement_price(current_user, current_user.selected_project)) %></p></li>
+                    <li><span><%= t("mongoid.attributes.project_unit.configuration") %></span><p><%= DashboardDataProvider.configurations(current_user, current_user.selected_project).to_sentence(last_word_connector: " & ") %></p></li>
                   </ul>
                   <% brochure = current_user.selected_project.assets.where(document_type: 'brochure').first %>
                   <% if brochure.present? %>
@@ -217,7 +217,7 @@ module DatabaseSeeds
 
       # To change text on register page for user
       if Template::UITemplate.where(name: 'home/register').blank?
-        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'home/register', content: '<h1 class="mt-0 fn-20">Biggest real estate opportunity in Pune<br> Introducing exclusive <%= ProjectUnit.distinct(:unit_configuration_name).map {|x| x.match(/\d*.*\d/).to_s}.uniq.sort.first(3).to_sentence(last_word_connector: " & ") %> Bed residences starting from <%= number_to_indian_currency(DashboardDataProvider.minimum_agreement_price.to_s.match(/(\d+)\d{5}/).try(:captures).try(:first)) %> lakhs</h1>
+        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'home/register', content: '<h1 class="mt-0 fn-20">Biggest real estate opportunity in Pune<br> Introducing exclusive <%= ProjectUnit.distinct(:unit_configuration_name).map {|x| x.match(/\d*.*\d/).to_s}.uniq.sort.first(3).to_sentence(last_word_connector: " & ") %> Bed residences starting from <%= number_to_indian_currency(DashboardDataProvider.minimum_agreement_price(current_user).to_s.match(/(\d+)\d{5}/).try(:captures).try(:first)) %> lakhs</h1>
         <p class="p-style">Home buying can’t get better than this</p>
         <p><strong>Register Now</strong> to Book Online</p>' })
       end

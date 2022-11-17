@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     unlocks: 'local_devise/unlocks',
     passwords: 'local_devise/passwords',
     omniauth_callbacks: "users/omniauth_callbacks"
-  }
+  }, skip: [ :registrations ], skip_helpers: [ :registrations ]
 
   namespace :mp do
     get 'about', to: 'dashboard#about'
