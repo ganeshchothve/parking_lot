@@ -38,7 +38,7 @@ module Kylas
                 update_deal_params[:product] << iris_project_on_deal if iris_project_on_deal.present?
                 update_deal_params[:product] << update_product_payload(kylas_product_response[:response]['id'], entity, wf) if kylas_product_response[:success]
                 kylas_deal_response = Kylas::UpdateDeal.new(entity.creator, entity.lead.kylas_deal_id, update_deal_params).call
-                entity.set(kylas_product_id: kylas_product_response[:response]['id']) if kylas_deal_response[:success]
+                entity.set(kylas_product_id: kylas_product_response[:response]['id']) if kylas_product_response[:success]
               end
             end
 
