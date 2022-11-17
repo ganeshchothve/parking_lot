@@ -71,7 +71,7 @@ class Admin::BulkUploadReportsController < AdminController
   end
 
   def set_bulk_upload_report
-    @bulk_upload_report = BulkUploadReport.find(params[:id])
+    @bulk_upload_report = BulkUploadReport.where(BulkUploadReport.user_based_scope(current_user, params)).where(id: params[:id]).first
   end
 
   def apply_policy_scope

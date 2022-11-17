@@ -41,7 +41,11 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def mis_report?(embedded_marketplace = false)
     return false if embedded_marketplace
-    %w[superadmin admin sales_admin crm cp_admin billing_team cp].include?(user.role)
+    unless marketplace_client?
+      %w[superadmin admin sales_admin crm cp_admin billing_team cp].include?(user.role)
+    else
+      %w[superadmin admin crm cp_admin billing_team cp].include?(user.role)
+    end
   end
 
   def filter?(embedded_marketplace = false)
@@ -54,7 +58,8 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def send_payment_link?
-    record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && (user.booking_portal_client.enable_payment_with_kyc ? record.lead.kyc_ready? : true ) && record.status.in?(['blocked', 'booked_tentative', 'under_negotiation', 'scheme_approved'])
+    valid = record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && (user.booking_portal_client.enable_payment_with_kyc ? record.lead.kyc_ready? : true ) && record.status.in?(['blocked', 'booked_tentative', 'under_negotiation', 'scheme_approved'])
+    valid && record.project.try(:booking_portal_domains).present?
   end
 
   def new_booking_on_project?

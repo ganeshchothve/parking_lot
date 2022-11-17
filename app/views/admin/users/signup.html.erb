@@ -59,10 +59,11 @@
   </div>
 </section>
 
-
-
 <%= javascript_tag do %>
   $(document).ready(function(){
     FormInitializer.init($("#mp_user_from"));
+    if(<%= @user.errors.present? %>){
+      Amura.global_error_handler(<%= raw @user.errors.full_messages.to_json %>);
+    }
   });
 <% end %>

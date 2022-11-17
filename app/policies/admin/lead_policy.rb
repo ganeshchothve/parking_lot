@@ -68,7 +68,11 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def note_create?
-    user.role.in?(%w(superadmin channel_partner cp_owner)) && record.user.role.in?(User::BUYER_ROLES)
+    unless marketplace_client?
+      user.role.in?(%w(superadmin channel_partner cp_owner)) && record.user.role.in?(User::BUYER_ROLES)
+    else
+      false
+    end
   end
 
   def asset_create?
@@ -100,7 +104,8 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def send_payment_link?
-    record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && (user.booking_portal_client.enable_payment_with_kyc ? record.kyc_ready? : true )
+    valid = record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && (user.booking_portal_client.enable_payment_with_kyc ? record.kyc_ready? : true )
+    valid && record.project.try(:booking_portal_domains).present?
   end
 
   def search_by?
@@ -156,6 +161,22 @@ class Admin::LeadPolicy < LeadPolicy
 
   def create_kylas_lead?
     new_kylas_lead?
+  end
+
+  def lead_activities?
+    unless marketplace_client?
+      true
+    else
+      user.role.in?(%w(admin superadmin))
+    end
+  end
+
+  def remarks_from_selldo?
+    unless marketplace_client?
+      true
+    else
+      user.role.in?(%w(admin superadmin))
+    end
   end
 
   def permitted_attributes(params = {})
