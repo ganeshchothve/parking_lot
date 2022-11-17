@@ -41,7 +41,11 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def mis_report?(embedded_marketplace = false)
     return false if embedded_marketplace
-    %w[superadmin admin sales_admin crm cp_admin billing_team cp].include?(user.role)
+    unless marketplace_client?
+      %w[superadmin admin sales_admin crm cp_admin billing_team cp].include?(user.role)
+    else
+      %w[superadmin admin crm cp_admin billing_team cp].include?(user.role)
+    end
   end
 
   def filter?(embedded_marketplace = false)
