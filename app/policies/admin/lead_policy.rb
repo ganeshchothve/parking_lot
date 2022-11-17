@@ -158,6 +158,22 @@ class Admin::LeadPolicy < LeadPolicy
     new_kylas_lead?
   end
 
+  def lead_activities?
+    unless marketplace_client?
+      true
+    else
+      user.role.in?(%w(admin superadmin))
+    end
+  end
+
+  def remarks_from_selldo?
+    unless marketplace_client?
+      true
+    else
+      user.role.in?(%w(admin superadmin))
+    end
+  end
+
   def permitted_attributes(params = {})
     attributes = super || []
     attributes += [:first_name, :last_name, :email, :phone, :project_id, site_visits_attributes: Pundit.policy(user, [:admin, SiteVisit.new]).permitted_attributes] if record.new_record?
