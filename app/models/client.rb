@@ -3,6 +3,7 @@ class Client
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include InsertionStringMethods
+  include CrmIntegration
   extend DocumentsConcern
 
   PAYMENT_GATEWAYS = %w(Razorpay CCAvenue)
@@ -112,6 +113,7 @@ class Client
   field :kylas_tenant_id, type: String
   field :kylas_api_key, type: String
   field :is_able_sync_products_and_users, type: Boolean, default: true
+  field :can_create_webhook, type: Boolean, default: true
   field :kylas_custom_fields, type: Hash, default: {}
 
   field :email_header, type: String, default: '<div class="container">

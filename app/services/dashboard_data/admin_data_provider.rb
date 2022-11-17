@@ -219,7 +219,7 @@ module DashboardData
 
       def user_block(user)
         data = User.collection.aggregate([
-          { "$match": matcher.merge(User.user_based_scope(user)) }
+          { "$match": matcher.merge(User.user_based_scope(user)) },
           { "$unwind": "$portal_stages" },
           {
             "$sort": { 'portal_stages.created_at': 1 } 

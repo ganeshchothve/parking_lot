@@ -104,7 +104,10 @@ class UserObserver < Mongoid::Observer
         SyncKylasUsersWorker.perform_async(user.id.to_s)
         user.booking_portal_client.set(is_able_sync_products_and_users: false)
       end
-      Kylas::CreateWebhook.new(user).call
+      if user.booking_portal_client.can_create_webhook?
+        Kylas::CreateWebhook.new(user, user.booking_portal_client, {run_in_background: false}).call
+        user.booking_portal_client.set(can_create_webhook: false)
+      end
     end
   end
 
