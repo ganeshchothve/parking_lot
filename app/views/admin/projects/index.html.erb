@@ -29,7 +29,7 @@
             <%= link_to t('helpers.new.link_name', model: Project.model_name.human), new_admin_project_path, class: 'modal-remote-form-link p-2 px-3 btn bg-primary border-primary white d-inline-block border rounded' %>
           <% end %>
           <% if policy([:admin, Project.new]).sync_kylas_product? %>
-            <%= link_to_if current_client.sync_product?, (current_client.sync_product? ? "Sync Products" : "Syncing In Progress"), sync_kylas_products_admin_projects_path, class: 'border rounded btn px-3 border-primary white bg-primary rounded', id: 'sync_projects' %>
+            <%= link_to_if current_client.sync_product?, (current_client.sync_product? ? "Sync Products" : "<span class='btn px-3 primary no-fill rounded'> Syncing In Progress</span>".html_safe), sync_kylas_products_admin_projects_path, class: 'border rounded btn px-3 border-primary white bg-primary', id: 'sync_projects' %>
           <% end %>
         </div>
         <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">

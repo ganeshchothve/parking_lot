@@ -107,12 +107,12 @@ class Admin::ProjectUnitsController < AdminController
   # This method is used in admin dashboard
   #
   def unit_configuration_chart
-    @data = DashboardData::AdminDataProvider.project_unit_block
+    @data = DashboardData::AdminDataProvider.project_unit_block(current_user)
     @dataset = get_dataset(@data)
   end
 
   def inventory_snapshot
-    @out = DashboardDataProvider.inventory_snapshot
+    @out = DashboardDataProvider.inventory_snapshot(current_user)
   end
 
   def send_cost_sheet_and_payment_schedule

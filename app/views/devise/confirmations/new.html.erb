@@ -4,7 +4,7 @@
     <h2 class="px-4 pt-3 pb-3"><%= I18n.t("devise.keys.reset_password") %></h2>
     <p class="px-4 pt-3 pb-1 font-weight-medium"></p>
     <div class="cp-signup-form-wrap px-4 cp-form-wrap">
-      <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), method: :post, html: { novalidate: false, class: 'validate-form theme-form', id: 'confirmation_form' }) do |f| %>
+      <%= simple_form_for(resource, as: resource_name, url: confirmation_path(resource_name), method: :post, html: { novalidate: false, class: 'validate-form theme-form', id: 'confirmation_form' }) do |f| %>
         <%= f.input :login, autofocus: true, autocomplete: false, class: 'form-control' %>
         <div class="signin-btn col-lg-12 pl-0 pr-0 pt-3 pb-3">
           <%= f.submit "Resend confirmation instructions", class: 'sign-in-btn' %>

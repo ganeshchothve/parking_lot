@@ -105,7 +105,7 @@
                                         <p>
                                             <span><%= I18n.t("mongoid.attributes.project_unit.configuration") %></span>
                                             <% flats_text = @project.project_type.include?("residential") ? I18n.t("mongoid.attributes.project_unit.flats") : "" %>
-                                            <%= inventory_avl ? DashboardDataProvider.configurations(@project).to_sentence + flats_text : @project.configurations&.to_sentence + flats_text %> <%= inventory_avl ? "| #{@project.project_units.min(:saleable)&.round} - #{@project.project_units.max(:saleable)&.round} #{@project.area_unit}" : '' %>
+                                            <%= inventory_avl ? DashboardDataProvider.configurations(current_user, @project).to_sentence + flats_text : @project.configurations&.to_sentence + flats_text %> <%= inventory_avl ? "| #{@project.project_units.min(:saleable)&.round} - #{@project.project_units.max(:saleable)&.round} #{@project.area_unit}" : '' %>
                                         </p>
                                         <p>
                                             <span><%= I18n.t("mongoid.attributes.project.property_value") %></span>

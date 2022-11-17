@@ -33,7 +33,7 @@ module SourcingManagerDashboardConcern
                 }
               }
     @options[:matcher][:project_id] = {"$in": project_ids} if project_ids.present?
-    @max_ladders = DashboardDataProvider.incetive_scheme_max_ladders(@options)
+    @max_ladders = DashboardDataProvider.incetive_scheme_max_ladders(current_user, @options)
   end
 
   def cp_performance

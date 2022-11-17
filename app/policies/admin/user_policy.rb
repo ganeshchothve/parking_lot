@@ -190,7 +190,7 @@ class Admin::UserPolicy < UserPolicy
       attributes += [:premium, :tier_id] if record.role.in?(%w(cp_owner channel_partner)) && user.role?('admin')
 
       if %w[superadmin admin cp_owner].include?(user.role)
-        attributes += [:role] unless record.role?('cp_owner') && record&.channel_partner&.primary_user_id == record.id
+        attributes += [:role] unless (record.role?('cp_owner') && record&.channel_partner&.primary_user_id == record.id) || user.id == record.id
       end
 
       attributes += [project_ids: []] if %w[admin superadmin].include?(user.role) && !record.role.in?(User::ALL_PROJECT_ACCESS)

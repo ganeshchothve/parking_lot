@@ -1,4 +1,4 @@
-<% @lead = Lead.where(closing_manager_id: current_user.id).in(customer_status: %w(engaged payment_done)).first %>
+<% @lead = Lead.where(booking_portal_client_id: current_user.booking_portal_client_id, closing_manager_id: current_user.id).in(customer_status: %w(engaged payment_done)).first %>
 <div class="px-4">
   <%= render "dashboard/index/partials/user_search", lead_id: @lead.try(:id) %>
   <div id="get-started">
@@ -11,7 +11,7 @@
 <% if current_project.present? %>
   <div class="px-4">
     <div class="first-sec welcome-box my-3">
-    <% template = ::Template::UITemplate.where(name: 'sales_dashboard', project_id: current_project.id).first %>
+    <% template = ::Template::UITemplate.where(Template.user_based_scope(current_user)).where(name: 'sales_dashboard', project_id: current_project.id).first %>
     <% if template.present? %>
       <%= get_view_erb(template, check_active: true) %>
     <% end %>

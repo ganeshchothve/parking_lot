@@ -6,7 +6,7 @@ module DashboardDataProvider
     city_wise_booking_count = {}
     data = BookingDetail.collection.aggregate([
       {
-        '$match': matcher
+        '$match': matcher.merge(BookingDetail.user_based_scope(current_user))
       },
       {
         "$project": {
@@ -52,11 +52,11 @@ module DashboardDataProvider
     city_wise_booking_count
   end
 
-  def self.incetive_scheme_max_ladders(options)
+  def self.incetive_scheme_max_ladders(current_user, options)
     matcher = {}
     matcher = options[:matcher] if options[:matcher].present?
     data = IncentiveScheme.collection.aggregate([{
-            "$match": matcher
+            "$match": matcher.merge(IncentiveScheme.user_based_scope(current_user))
           },{
             "$unwind": "$ladders"
           },{
@@ -69,13 +69,13 @@ module DashboardDataProvider
     data.dig(0, "max") || 0
   end
 
-  def self.booking_details_data(options)
+  def self.booking_details_data(current_user, options)
     matcher = {}
     matcher = options[:matcher] if options[:matcher].present?
     project_ids = matcher[:project_id][:$in].map(&:to_s)
     booking_stages = ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]
     data = BookingDetail.collection.aggregate([
-      {"$match": matcher},
+      {"$match": matcher.merge(BookingDetail.user_based_scope(current_user))},
       {
         "$group": {
           "_id": {
@@ -237,16 +237,19 @@ module DashboardDataProvider
   end
 
   def self.channel_partners_dashboard(user, options={})
-    data = ChannelPartner.collection.aggregate([{
-      "$group": {
-        "_id": {
-          status: "$status"
-        },
-        count: {
-          "$sum": 1
+    data = ChannelPartner.collection.aggregate([
+      {"$match": matcher.merge(ChannelPartner.user_based_scope(user))},
+      {
+        "$group": {
+          "_id": {
+            status: "$status"
+          },
+          count: {
+            "$sum": 1
+          }
         }
       }
-    }]).to_a
+    ]).to_a
     out = []
     data.each do |d|
       out << {status: d["_id"]["status"], count: d["count"]}.with_indifferent_access
@@ -265,9 +268,6 @@ module DashboardDataProvider
     options ||= {}
     matcher = options[:matcher]
     group_by = options[:group_by]
-    unless matcher.present? && matcher[:user_id].present?
-      matcher = Receipt.user_based_scope(user)
-    end
     grouping = {
       payment_mode: "$payment_mode",
       status: "$status"
@@ -278,7 +278,7 @@ module DashboardDataProvider
       grouping[:payment_mode] = "$payment_mode" if group_by.include?("payment_mode")
     end
     data = Receipt.collection.aggregate([{
-        "$match": matcher
+        "$match": matcher.merge(Receipt.user_based_scope(user))
       }, {
       "$group": {
         "_id": grouping,
@@ -366,7 +366,9 @@ module DashboardDataProvider
       grouping[:bedrooms] = "$bedrooms" if options[:group_by].include?("bedrooms")
       grouping[:project_tower_id] = "$project_tower_id" if options[:group_by].include?("project_tower_id")
     end
-    data = ProjectUnit.collection.aggregate([{
+    data = ProjectUnit.collection.aggregate([
+    {"$match": matcher.merge(ProjectUnit.user_based_scope(user))},
+    {
       "$group": {
         "_id": grouping,
         agreement_price: {"$sum": "$agreement_price"},
@@ -400,27 +402,27 @@ module DashboardDataProvider
   end
 
   # new (according to new ui)
-  def self.available_inventory(project = nil)
+  def self.available_inventory(user, project = nil)
     if project.present?
-      project.project_units.where(status: 'available').count
+      project.project_units.where(ProjectUnit.user_based_scope(user)).where(status: 'available').count
     else  
-      ProjectUnit.where(status: 'available').count
+      ProjectUnit.where(ProjectUnit.user_based_scope(user)).where(status: 'available').count
     end
   end
 
-  def self.minimum_agreement_price(project = nil)
+  def self.minimum_agreement_price(user, project = nil)
     if project.present?
-      project.project_units.gt(all_inclusive_price: 0).distinct(:all_inclusive_price).min
+      project.project_units.where(ProjectUnit.user_based_scope(user)).gt(all_inclusive_price: 0).distinct(:all_inclusive_price).min
     else
-      ProjectUnit.gt(all_inclusive_price: 0).distinct(:all_inclusive_price).min
+      ProjectUnit.where(ProjectUnit.user_based_scope(user)).gt(all_inclusive_price: 0).distinct(:all_inclusive_price).min
     end
   end
 
-  def self.configurations(project = nil)
+  def self.configurations(user, project = nil)
     if project.present?
-      project.unit_configurations.collect(&:name)&.uniq&.sample(3)
+      project.unit_configurations.where(UnitConfiguration.user_based_scope(user)).collect(&:name)&.uniq&.sample(3)
     else
-      UnitConfiguration.all.collect(&:name)&.uniq&.sample(3)
+      UnitConfiguration.where(UnitConfiguration.user_based_scope(user)).all.collect(&:name)&.uniq&.sample(3)
     end
   end
 
@@ -429,8 +431,8 @@ module DashboardDataProvider
   end
 
   def self.incentive_pending_bookings(current_user, filters={})
-    booking_ids = Invoice.where(manager_id: current_user.id).distinct(:booking_detail_id)
-    BookingDetail.booking_stages.where(manager_id: current_user.id).build_criteria(filters).nin(id: booking_ids).count
+    booking_ids = Invoice.where(Invoice.user_based_scope(user)).where(manager_id: current_user.id).distinct(:booking_detail_id)
+    BookingDetail.where(BookingDetail.user_based_scope(user)).booking_stages.where(manager_id: current_user.id).build_criteria(filters).nin(id: booking_ids).count
   end
 
   def self.lead_group_by(current_user, options={})
@@ -462,7 +464,7 @@ module DashboardDataProvider
     matcher = {manager_id: current_user.id, 'status': {'$in': %w(blocked booked_confirmed booked_tentative)}}
     matcher = matcher.merge!(options[:matcher]) if options[:matcher].present?
     data = BookingDetail.collection.aggregate([
-      {"$match":  matcher},
+      {"$match":  matcher.merge(BookingDetail.user_based_scope(current_user))},
       { "$group": {
         "_id":{
           "status": "$status"
@@ -480,11 +482,11 @@ module DashboardDataProvider
 
   def self.receipts_group_by(current_user, options)
     out = {'pending': 0, 'clearance_pending': 0, 'success': 0, 'refunded': 0}
-    lead_ids = Lead.where(manager_id: current_user.id).pluck(:id)
+    lead_ids = Lead.where(Lead.user_based_scope(current_user)).where(manager_id: current_user.id).pluck(:id)
     matcher = {'lead_id': {'$in': lead_ids }, 'status': {'$in': %w(pending clearance_pending success refunded)}}
     matcher = matcher.merge!(options[:matcher]) if options[:matcher].present?
     data = Receipt.collection.aggregate([
-      {"$match":  matcher},
+      {"$match":  matcher.merge(Receipt.user_based_scope(current_user))},
       { "$group": {
         "_id":{
           "status": "$status"
@@ -504,7 +506,7 @@ module DashboardDataProvider
     matcher = { manager_id: current_user.id }
     matcher = matcher.merge!(options[:matcher]) if options[:matcher].present?
     data = Lead.collection.aggregate([
-      {'$match':  matcher},
+      {'$match': matcher.merge(Lead.user_based_scope(current_user))},
       {'$group': {
         _id: '$project_id',
         count: {
@@ -529,7 +531,7 @@ module DashboardDataProvider
     matcher = { manager_id: current_user.id }
     matcher = matcher.merge!(options[:matcher]) if options[:matcher].present?
     data = Lead.collection.aggregate([
-      {'$match':  matcher},
+      {'$match': matcher.merge(Lead.user_based_scope(current_user))},
       {
         '$lookup': {
           from: "projects",
@@ -578,7 +580,7 @@ module DashboardDataProvider
     matcher = { manager_id: current_user.id, status: {'$nin': %w(hold cancelled swapped)}}
     matcher = matcher.merge!(options[:matcher]) if options[:matcher].present?
     data = BookingDetail.collection.aggregate([
-      {'$match':  matcher },
+      {'$match':  matcher.merge(BookingDetail.user_based_scope(current_user)) },
       {'$project': {
          tasks: {
            '$ifNull': [{
@@ -620,8 +622,8 @@ module DashboardDataProvider
   end
 
   def self.conversion_ratio(current_user, filters={})
-    bookings = BookingDetail.booking_stages.where(manager_id: current_user.id).build_criteria(filters).count
-    leads = Lead.where(manager_id: current_user.id).build_criteria(filters).count
+    bookings = BookingDetail.where(BookingDetail.user_based_scope(current_user)).booking_stages.where(manager_id: current_user.id).build_criteria(filters).count
+    leads = Lead.where(Lead.user_based_scope(current_user)).where(manager_id: current_user.id).build_criteria(filters).count
     conv_ratio = leads.zero? ? 0 : bookings/leads.to_f
     (conv_ratio * 100).round
   end
@@ -641,12 +643,14 @@ module DashboardDataProvider
   # 5. Total blocked unit ids in the system
   # 6. Push configuration wise data (sold and unsold unit count) calculated in first group query
 
-  def self.inventory_snapshot
+  def self.inventory_snapshot current_user
     grouping = {
       project_tower_name: "$project_tower_name",
       unit_configuration_name: "$unit_configuration_name"
     }
-    data = ProjectUnit.collection.aggregate([{
+    data = ProjectUnit.collection.aggregate([
+      { '$match': ProjectUnit.user_based_scope(current_user) },
+      {
           "$group":
           {
             "_id": grouping,
@@ -670,19 +674,19 @@ module DashboardDataProvider
         }]).to_a
     out = {}
     out["All Towers"] = {total: 0, sold: 0, unsold: 0, av_sold: 0, collection: 0}
-    out["All Towers"][:configuration_wise] = new_unit_configuration_hash
+    out["All Towers"][:configuration_wise] = new_unit_configuration_hash(current_user)
     data.each do |_data|
       out[_data["_id"]] = {total: _data["total"], sold: _data["total_blocked"], unsold: _data["total_available"], av_sold: _data["total_agreement_price"]}
-      _unit_configuration_hash = new_unit_configuration_hash
+      _unit_configuration_hash = new_unit_configuration_hash(current_user)
       _data["configuration_wise"].each do |uc|
         _unit_configuration_hash[uc["unit_configuration_name"]] = {sold: uc["blocked"], unsold: uc["available"]}
 
       end
       out[_data["_id"]][:configuration_wise] = _unit_configuration_hash
       _blocked_units = _data["total_blocked_project_units"].flatten.compact.map{|id| id.to_s}
-      _booking_detail_ids = BookingDetail.where(status: {"$in": BookingDetail::BOOKING_STAGES}, project_unit_id: {"$in": _blocked_units}).pluck(:id)
-      out[_data["_id"]][:collection] = Receipt.in(booking_detail_id: _booking_detail_ids).in(status:["success","clearance_pending"]).sum(:total_amount)
-      out["All Towers"] = calculate_all_towers(out["All Towers"], out[_data["_id"]])
+      _booking_detail_ids = BookingDetail.where(BookingDetail.user_based_scope(current_user)).where(status: {"$in": BookingDetail::BOOKING_STAGES}, project_unit_id: {"$in": _blocked_units}).pluck(:id)
+      out[_data["_id"]][:collection] = Receipt.where(Receipt.user_based_scope(current_user)).in(booking_detail_id: _booking_detail_ids).in(status:["success","clearance_pending"]).sum(:total_amount)
+      out["All Towers"] = calculate_all_towers(out["All Towers"], out[_data["_id"]], current_user)
     end
     out
   end
@@ -732,7 +736,7 @@ module DashboardDataProvider
       options[:matcher][:invoice_id] = {"$in": invoice_ids} if invoice_ids.present?
     end
     data = IncentiveDeduction.collection.aggregate([
-      {'$match': matcher },
+      {'$match': matcher.merge(IncentiveDeduction.user_based_scope(current_user)) },
       {
         '$lookup': {
           from: "invoices",
@@ -839,7 +843,7 @@ module DashboardDataProvider
   def self.subscribed_count_project_wise(current_user, matcher)
     data = InterestedProject.collection.aggregate([
       {
-        "$match": matcher
+        "$match": matcher.merge(InterestedProject.user_based_scope(current_user))
       },
         {
         '$group': {
@@ -858,22 +862,22 @@ module DashboardDataProvider
 
   protected
 
-  def self.calculate_all_towers all_towers_out, current_tower_data
+  def self.calculate_all_towers all_towers_out, current_tower_data, current_user
     all_towers_out[:total] += current_tower_data[:total]
     all_towers_out[:sold] += current_tower_data[:sold]
     all_towers_out[:unsold] += current_tower_data[:unsold]
     all_towers_out[:av_sold] += current_tower_data[:av_sold]
     all_towers_out[:collection] += current_tower_data[:collection]
-    ProjectUnit.distinct(:unit_configuration_name).sort.each do |uc|
+    ProjectUnit.where(ProjectUnit.user_based_scope(current_user)).distinct(:unit_configuration_name).sort.each do |uc|
       all_towers_out[:configuration_wise][uc][:sold] += current_tower_data[:configuration_wise][uc][:sold]
       all_towers_out[:configuration_wise][uc][:unsold] += current_tower_data[:configuration_wise][uc][:unsold]
     end
     all_towers_out
   end
 
-  def self.new_unit_configuration_hash
+  def self.new_unit_configuration_hash current_user
     _unit_configuration_hash = {}
-    ProjectUnit.distinct(:unit_configuration_name).sort.each do |uc|
+    ProjectUnit.where(ProjectUnit.user_based_scope(current_user)).distinct(:unit_configuration_name).sort.each do |uc|
       _unit_configuration_hash[uc] = {sold: 0, unsold: 0}
     end
     _unit_configuration_hash

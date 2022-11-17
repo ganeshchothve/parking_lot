@@ -11,55 +11,37 @@ module DashboardData
 
       def channel_partner_count(user=nil, project_ids=nil)
         if project_ids.present?
-          InterestedProject.approved.in(project_id: project_ids).count
-        elsif user.selected_client.present?
-          User.in(role: %w(channel_partner cp_owner)).where(booking_portal_client: user.selected_client).count
+          InterestedProject.where(InterestedProject.user_based_scoped(current_user)).approved.in(project_id: project_ids).count
         else
           User.in(role: %w(channel_partner cp_owner)).where(booking_portal_client: user.booking_portal_client).count
         end
       end
 
       def sold_project_units_count(user=nil)
-        if user.selected_client.present?
-          BookingDetail.where(status: {"$in": %w[blocked booked_tentative booked_confirmed under_negotiation]}, booking_portal_client: user.selected_client).count
-        else
-          BookingDetail.where(status: {"$in": %w[blocked booked_tentative booked_confirmed under_negotiation]}, booking_portal_client: user.booking_portal_client).count
-        end
+        BookingDetail.where(status: {"$in": %w[blocked booked_tentative booked_confirmed under_negotiation]}, booking_portal_client: user.booking_portal_client).count
       end
 
       def all_project_units_count(user=nil)
-        if user.selected_client.present?
-          ProjectUnit.not_in(status: 'not_available').where(booking_portal_client: user.selected_client).count
-        else
-          ProjectUnit.not_in(status: 'not_available').where(booking_portal_client: user.booking_portal_client).count
-        end
+        ProjectUnit.not_in(status: 'not_available').where(booking_portal_client: user.booking_portal_client).count
       end
 
       def open_user_requests(user=nil)
-        if user.selected_client.present?
-          UserRequest.where(status: 'pending', booking_portal_client: user.selected_client).count
-        else
-          UserRequest.where(status: 'pending', booking_portal_client: user.booking_portal_client).count
-        end
+        UserRequest.where(status: 'pending', booking_portal_client: user.booking_portal_client).count
       end
 
       def online_receipts
-        Receipt.where(payment_mode: 'online').count
+        Receipt.where(Receipt.user_based_scoped(current_user)).where(payment_mode: 'online').count
       end
 
       def offline_receipts
-        Receipt.not_in(payment_mode: 'online').count
+        Receipt.where(Receipt.user_based_scoped(current_user)).not_in(payment_mode: 'online').count
       end
 
       def active_schemes(user=nil)
-        if user.selected_client.present?
-          Scheme.approved.where(booking_portal_client: user.selected_client).count
-        else
-          Scheme.approved.where(booking_portal_client: user.booking_portal_client).count
-        end
+        Scheme.approved.where(booking_portal_client: user.booking_portal_client).count
       end
 
-      def receipt_block(params)
+      def receipt_block(user, params)
         matcher = {}
         if params && params[:dates].present?
           dates = params[:dates].split(" - ")
@@ -77,7 +59,7 @@ module DashboardData
           status: "$status"
         }
         data = Receipt.collection.aggregate([
-                { "$match": matcher },
+                { "$match": matcher.merge(Receipt.user_based_scope(user)) },
                 {
                   "$group": 
                   {
@@ -111,13 +93,13 @@ module DashboardData
         out
       end
 
-      def project_unit_block
+      def project_unit_block(user)
         group_project_unit_with_tower_and_configuration = {
           project_tower_name: "$project_tower_name",
           unit_configuration_name: '$unit_configuration_name',
           status: "$status"
         }
-        matcher_for_booked_units = {}
+        matcher_for_booked_units = ProjectUnit.user_based_scope(user)
 
         data = ProjectUnit.collection.aggregate([{"$match": matcher_for_booked_units},
           {
@@ -151,7 +133,7 @@ module DashboardData
         out
       end
 
-      def booking_detail_block(params)
+      def booking_detail_block(user, params)
         matcher = {}
         if params && params[:dates].present?
           dates = params[:dates].split(" - ")
@@ -165,7 +147,7 @@ module DashboardData
          }
 
         data = BookingDetail.collection.aggregate([
-          {"$match": matcher},
+          {"$match": matcher.merge(BookingDetail.user_based_scope(user))},
           {
             "$group": {
               "_id": group_booking_detail_with_tower_and_status,
@@ -195,7 +177,7 @@ module DashboardData
         out
       end
 
-      def receipt_piechart params
+      def receipt_piechart user, params
         matcher = {}
         if params && params[:dates].present?
           dates = params[:dates].split(" - ")
@@ -207,7 +189,8 @@ module DashboardData
           status: "$status"
         }
 
-        data = Receipt.collection.aggregate([{ "$match": matcher },
+        data = Receipt.collection.aggregate([
+          { "$match": matcher.merge(Receipt.user_based_scope(user)) },
           {
             "$group": 
             {
@@ -234,8 +217,10 @@ module DashboardData
         out
       end
 
-      def user_block
-        data = User.collection.aggregate([ { "$unwind": "$portal_stages" },
+      def user_block(user)
+        data = User.collection.aggregate([
+          { "$match": matcher.merge(User.user_based_scope(user)) }
+          { "$unwind": "$portal_stages" },
           {
             "$sort": { 'portal_stages.created_at': 1 } 
           },
@@ -262,7 +247,7 @@ module DashboardData
         out
       end
 
-      def receipt_frequency(params)
+      def receipt_frequency(user, params)
         matcher = {created_at: {"$gt": Date.today - 7.days}}
         grouping = {
           year: { "$year": "$created_at"},
@@ -316,7 +301,7 @@ module DashboardData
         elsif params[:payments] == 'direct_payments'
           matcher["booking_detail_id"] = nil
         end
-        data = Receipt.collection.aggregate([{ "$match": matcher },
+        data = Receipt.collection.aggregate([{ "$match": matcher.merge(Receipt.user_based_scope(user)) },
             {
               "$project":{
                 payment_mode: 
