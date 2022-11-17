@@ -136,10 +136,11 @@ class Admin::ProjectUnitsController < AdminController
 
   def authorize_resource
     if %w[unit_configuration_chart index inventory_snapshot].include?(params[:action])
+      record = params.dig(:fltrs, :project_id).present? ? ProjectUnit.new(project_id: params.dig(:fltrs, :project_id)) : ProjectUnit
       if params[:ds].to_s == 'true'
         authorize([:admin, ProjectUnit], :ds?)
       else
-        authorize [:admin, ProjectUnit]
+        authorize [:admin, record]
       end
     elsif params[:action] == 'export' || params[:action] == 'mis_report'
       authorize [:admin, ProjectUnit]

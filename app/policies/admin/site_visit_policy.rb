@@ -5,7 +5,11 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
   end
 
   def export?
-    %w[superadmin admin cp_admin cp].include?(user.role)
+    unless marketplace_client?
+      %w[superadmin admin cp_admin cp].include?(user.role)
+    else
+      %w[superadmin admin].include?(user.role)
+    end
   end
 
   def edit?
