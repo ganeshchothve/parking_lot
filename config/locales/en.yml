@@ -3433,7 +3433,7 @@ en:
         header: "Overview"
       leads:
         link_name: "Show Leads"
-      send_payment_link: "Payment link sent to user"
+      send_payment_link: Send Payment link
       move_to_next_state:
         sales:
           break: "%{name} is on break"
