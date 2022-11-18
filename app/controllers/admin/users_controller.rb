@@ -29,7 +29,7 @@ class Admin::UsersController < AdminController
       @user.skip_confirmation_notification!
       if @user.save
         @user.confirm
-        format.html { redirect_to (stored_location_for(@user) || new_user_session_path), notice: 'Successfully registered' }
+        format.html { redirect_to (session[:previous_url] || new_user_session_path), notice: 'Successfully registered' }
       else
         format.html { render :signup }
       end
