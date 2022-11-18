@@ -29,6 +29,7 @@ module Kylas
               if search_result["content"].blank?
                 response = sync_contact_to_kylas
                 user.set(kylas_contact_id: response.dig(:data, :id))
+                response
               else
                 response_contact_id = search_result["content"].first["id"]
                 return { success: false, error: "Contact ID: #{response_contact_id}, The entered Phone number or email already exists on another contact!" }
@@ -37,10 +38,12 @@ module Kylas
           else
             response = sync_contact_to_kylas
             user.set(kylas_contact_id: response.dig(:data, :id))
+            response
           end
         end
       else
-        sync_contact_to_kylas
+        response = sync_contact_to_kylas
+        response
       end
     end
 
