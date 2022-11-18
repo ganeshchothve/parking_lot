@@ -201,6 +201,8 @@ Rails.application.routes.draw do
       get 'document_sign/prompt'
       get 'document_sign/callback'
       get 'get_regions'
+      get :kylas_api_key, on: :member
+      put :kylas_api_key, on: :member
     end
     namespace :audit do
       resources :records, only: [:index]

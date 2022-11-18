@@ -817,7 +817,7 @@ en:
         value: "Value"
 
       client:
-        name: "Client Name (Used across the app)"
+        name: "Client Name"
         allowed_bookings_per_user: "Bookings allowed per user"
         selldo_client_id: "SellDo Client ID"
         selldo_form_id: "SellDo Form ID"

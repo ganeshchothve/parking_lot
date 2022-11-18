@@ -49,5 +49,15 @@ class ClientObserver < Mongoid::Observer
         end
       end
     end
+
+    if client.kylas_api_key_was.blank? && client.kylas_api_key.present?
+      if client.try(:is_able_sync_products_and_users?)
+        client.set(sync_product: false)
+        SyncKylasProductsWorker.perform_async(client.id.to_s)
+        client.set(sync_user: false)
+        SyncKylasUsersWorker.perform_async(client.id.to_s)
+        client.set(is_able_sync_products_and_users: false)
+      end
+    end
   end
 end

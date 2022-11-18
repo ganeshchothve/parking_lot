@@ -7,11 +7,14 @@ class Admin::ClientsController < AdminController
     render layout: false
   end
 
+  def kylas_api_key
+  end
+
   def update
     @client.assign_attributes(permitted_attributes([:admin, @client]))
     respond_to do |format|
       if @client.save
-        format.html { redirect_back fallback_location: root_path, notice: 'Client successfully updated.' }
+        format.html { redirect_to root_path, notice: 'Client successfully updated.' }
         format.json { render json: @client }
       else
         format.html { render :edit }
