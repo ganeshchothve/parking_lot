@@ -4,7 +4,7 @@ class Crm::Api
   include JSONStringParser
 
   DEFAULT_REQUEST_HEADER = { 'Content-Type' => 'application/json' }
-  RESOURCE_CLASS = %w[User UserKyc Receipt BookingDetail ChannelPartner Lead SiteVisit FundAccount Invoice Client]
+  RESOURCE_CLASS = %w[User UserKyc Receipt BookingDetail ChannelPartner Lead SiteVisit FundAccount Invoice Note Client]
 
   field :resource_class, type: String
   field :path, type: String

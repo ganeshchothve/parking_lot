@@ -61,7 +61,7 @@ module Kylas
     end
 
     def kylas_request
-      url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/pipelines/#{pipeline_id}")
+      url = URI(base_url+"/pipelines/#{pipeline_id}")
 
       https = Net::HTTP.new(url.host, url.port)
       https.use_ssl = true

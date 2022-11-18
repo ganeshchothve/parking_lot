@@ -40,7 +40,7 @@ module Kylas
 
     def delete_note_in_kylas 
       begin
-        url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/notes/#{note.kylas_note_id}")
+        url = URI(base_url+"/notes/#{note.kylas_note_id}")
 
         https = Net::HTTP.new(url.host, url.port)
         https.use_ssl = true

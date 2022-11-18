@@ -16,52 +16,24 @@ module Kylas
     def call
       return if user.blank?
 
-      response = create_note_in_kylas
-      case response
-      when Net::HTTPOK, Net::HTTPSuccess
-        { success: true, data: JSON.parse(response.body) }
-      when Net::HTTPBadRequest
-        Rails.logger.error 'CreateNoteInKylas - 400'
-        { success: false, error: 'Invalid Data!' }
-      when Net::HTTPNotFound
-        Rails.logger.error 'CreateNoteInKylas - 404'
-        { success: false, error: 'Invalid Data!' }
-      when Net::HTTPServerError
-        Rails.logger.error 'CreateNoteInKylas - 500'
-        { success: false, error: 'Server Error!' }
-      when Net::HTTPUnauthorized
-        Rails.logger.error 'CreateNoteInKylas - 401'
-        { success: false, error: 'Unauthorized' }
-      else
-        { success: false }
+      kylas_base = Crm::Base.where(domain: ENV_CONFIG.dig(:kylas, :base_url), booking_portal_client_id: user.booking_portal_client.id).first
+      if kylas_base
+        api = Crm::Api::Post.where(base_id: kylas_base.id, resource_class: 'Note', is_active: true, booking_portal_client_id: user.booking_portal_client.id).first
+        if api.present?
+          if params[:run_in_background]
+            response = Kylas::Api::ExecuteWorker.perform_async(user.id, api.id, 'Note', note.id, {})
+          else
+            response = Kylas::Api::ExecuteWorker.new.perform(user.id, api.id, 'Note', note.id, {})
+          end
+        end
+        log_response = response[:api_log]
+        if log_response.present?
+          if log_response[:status] == "Success"
+            entity.set(kylas_note_id: log_response[:response].first["id"])
+          end
+        end
       end
-    end
 
-    def create_note_in_kylas 
-      begin
-        url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/notes/relation")
-
-        https = Net::HTTP.new(url.host, url.port)
-        https.use_ssl = true
-        request = Net::HTTP::Post.new(url, request_headers)
-        request['Content-Type'] = 'application/json'
-        request['Accept'] = 'application/json'
-        payload = note_payload
-        request.body = JSON.dump(payload)
-        https.request(request)
-      rescue StandardError => e
-        Rails.logger.error e.message
-      end
-    end
-
-    def note_payload
-      note_payload = {
-          "sourceEntity": {
-              "description": "<div>#{note.note.html_safe}</div><small>Added By: #{note&.creator&.name}</small>"
-          },
-          "targetEntityId": note.notable.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)),
-          "targetEntityType": "DEAL"
-      }
     end
   end
 end

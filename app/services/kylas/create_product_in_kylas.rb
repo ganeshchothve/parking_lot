@@ -5,64 +5,34 @@ module Kylas
   #service to create product in kylas
   class CreateProductInKylas < BaseService
 
-    attr_accessor :user, :params
+    attr_accessor :user, :entity, :params
 
-    def initialize(user, params={})
+    def initialize(user, entity, params={})
       @user = user
+      @entity = entity
       @params = params
     end
 
     def call
       return if user.blank? || params.blank?
 
-      response = create_product_in_kylas
-      case response
-      when Net::HTTPOK, Net::HTTPSuccess
-        { success: true, response: JSON.parse(response.body) }
-      when Net::HTTPBadRequest
-        Rails.logger.error 'CreateProductInKylas - 400'
-        { success: false, error: 'Invalid Data!' }
-      when Net::HTTPNotFound
-        Rails.logger.error 'CreateProductInKylas - 404'
-        { success: false, error: 'Invalid Data!' }
-      when Net::HTTPServerError
-        Rails.logger.error 'CreateProductInKylas - 500'
-        { success: false, error: 'Server Error!' }
-      when Net::HTTPUnauthorized
-        Rails.logger.error 'CreateProductInKylas - 401'
-        { success: false, error: 'Unauthorized' }
-      else
-        { success: false }
+      kylas_base = Crm::Base.where(domain: ENV_CONFIG.dig(:kylas, :base_url), booking_portal_client_id: user.booking_portal_client.id).first
+      if kylas_base
+        api = Crm::Api::Post.where(base_id: kylas_base.id, resource_class: 'BookingDetail', is_active: true, booking_portal_client_id: user.booking_portal_client.id).first
+        if api.present?
+          if params[:run_in_background]
+            response = Kylas::Api::ExecuteWorker.perform_async(user.id, api.id, 'BookingDetail', entity.id, params)
+          else
+            response = Kylas::Api::ExecuteWorker.new.perform(user.id, api.id, 'BookingDetail', entity.id, params)
+          end
+        end
+        log_response = response[:api_log]
+        if log_response.present?
+          if log_response[:status] == "Success"
+            entity.set(kylas_product_id: log_response[:response].first["id"])
+          end
+        end
       end
-    end
-
-    def create_product_in_kylas 
-      begin
-        url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/products")
-
-        https = Net::HTTP.new(url.host, url.port)
-        https.use_ssl = true
-        request = Net::HTTP::Post.new(url, request_headers)
-        request['Content-Type'] = 'application/json'
-        request['Accept'] = 'application/json'
-        payload = product_payload
-        request.body = JSON.dump(payload)
-        https.request(request)
-      rescue StandardError => e
-        Rails.logger.error e.message
-      end
-    end
-
-    def product_payload
-      product_payload = {
-        "isActive": true,
-        "name": params[:project_unit_name],
-        "price": {
-          "currencyId": 431,
-          "value": params[:agreement_price]
-        },
-        "customFieldValues": {}
-      }
     end
   end
 end

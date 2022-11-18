@@ -28,7 +28,7 @@ class NotesController < ApplicationController
       if @note.save
         SelldoNotePushWorker.perform_async(@note.notable.lead_id, current_user.id.to_s, @note.note) if @note.notable.class.to_s == 'Lead' && current_user.role?(:channel_partner)
         if is_marketplace?
-          response = Kylas::CreateNote.new(current_user, @note).call
+          response = Kylas::CreateNote.new(current_user, @note, {run_in_background: true}).call
           response = response.with_indifferent_access
           @note.set(kylas_note_id: response.dig(:data, :id))
         end
