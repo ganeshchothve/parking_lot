@@ -763,7 +763,7 @@ class User
 
     email_template = Template::EmailTemplate.where(name: "#{role}_confirmation_instructions", booking_portal_client_id: booking_portal_client.id).first
     email_template = Template::EmailTemplate.where(name: "user_confirmation_instructions", booking_portal_client_id: booking_portal_client.id).first if email_template.blank?
-    if email_template.is_active? && (email.present? || unconfirmed_email.present?)
+    if email_template.present? && email_template.is_active? && (email.present? || unconfirmed_email.present?)
       attrs = {
         booking_portal_client_id: booking_portal_client_id,
         subject: email_template.parsed_subject(self),

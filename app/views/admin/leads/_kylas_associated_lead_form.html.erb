@@ -26,15 +26,32 @@
   <%= f.text_field :last_name, class: 'form-control', autofocus: true, required: true, readonly: true %>
 </div>
 
-<div class="mb-3">
-  <%= f.label :email %>
-  <%= f.select :email, options_for_select([]), { include_blank: 'Select Kylas Email'}, autocomplete: 'off', class: 'selectize email_select', disabled: !(policy([current_user_role_group, @lead]).editable_field?("email")) %>
-</div>
 
-<div class="mb-3">
-  <%= f.label :phone %>
-  <%= f.select :phone, options_for_select([]),  { include_blank: 'Select Kylas Phone'}, autocomplete: 'off', class: 'selectize phone_select', disabled: !(policy([current_user_role_group, @lead]).editable_field?("phone")) %>
-</div>
+  <div class="mb-3 hidden email-select">
+    <%= f.label :email %>
+    <%= f.select :email, options_for_select([]), { include_blank: 'Select Kylas Email'}, autocomplete: 'off', class: 'selectize email_select', disabled: true, hidden: true %>
+  </div>
+
+  <div class="mb-3 hidden email-text">
+    <%= f.label :email %>
+    <%= f.email_field :email, class: 'form-control', id: 'new_lead_email', disabled: true, hidden: true %>
+  </div>
+  <%= f.hidden_field :email_update, value: true, disabled: true %>
+
+
+
+  <div class="mb-3 hidden phone-select">
+    <%= f.label :phone %>
+    <%= f.select :phone, options_for_select([]),  { include_blank: 'Select Kylas Phone'}, autocomplete: 'off', class: 'selectize phone_select', disabled: true, hidden: true %>
+  </div>
+
+  <div class="mb-3 hidden phone-text">
+    <%= f.label :phone, class: 'form-label' %>
+    <%= f.text_field :phone, class: 'form-control phone', id: 'new_lead_phone', disabled: true, hidden: true %>
+  </div>
+  <%= f.hidden_field :phone_update, value: true, disabled: true %>
+
+
 
 <% if (policy([current_user_role_group, @lead]).editable_field?("manager_id")) %>
   <div class="mb-3">

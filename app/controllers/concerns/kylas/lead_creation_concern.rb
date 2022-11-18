@@ -19,6 +19,7 @@ module Kylas
       respond_to do |format|
         if @user.valid?
           sync_contact_to_kylas(current_user, @user, format) if params.dig(:lead, :sync_to_kylas).present?
+          update_contact_to_kylas(current_user, @user, params.dig(:lead, :kylas_contact_id), format) if params.dig(:lead, :kylas_contact_id).present? && (params.dig(:lead, :phone_update).present? || params.dig(:lead, :email_update).present?)
           if @user.save
             @user.confirm
             create_or_set_lead(format)
@@ -199,6 +200,13 @@ module Kylas
 
     def sync_contact_to_kylas(current_user, kylas_contact_entity, format)
       @contact_response = Kylas::CreateContact.new(current_user, kylas_contact_entity).call
+      unless @contact_response[:success]
+        format.html { redirect_to request.referer, alert: (@contact_response[:error].presence || 'Something went wrong'), status: :unprocessable_entity }
+      end
+    end
+
+    def update_contact_to_kylas(current_user, kylas_contact_entity, kylas_contact_id, format)
+      @contact_response = Kylas::UpdateContact.new(current_user, kylas_contact_entity, kylas_contact_id, {check_uniqueness: true}).call
       unless @contact_response[:success]
         format.html { redirect_to request.referer, alert: (@contact_response[:error].presence || 'Something went wrong'), status: :unprocessable_entity }
       end
