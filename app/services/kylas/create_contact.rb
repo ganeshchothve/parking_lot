@@ -36,7 +36,7 @@ module Kylas
           end
         end
       else
-        sync_contact_to_kylas
+        response = sync_contact_to_kylas
       end
     end
 
@@ -57,6 +57,7 @@ module Kylas
             contact.set(kylas_contact_id: log_response[:response].first["id"])
           end
         end
+        response
       end
     end
   end

@@ -32,6 +32,7 @@ module Kylas
             entity.set(kylas_deal_id: log_response[:response].first["id"])
           end
         end
+        response
       end
     end
   end

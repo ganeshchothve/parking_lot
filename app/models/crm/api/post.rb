@@ -106,7 +106,7 @@ class Crm::Api::Post < Crm::Api
       response_type: response_type,
       status: status,
       message: message,
-      booking_portal_client: record.booking_portal_client
+      booking_portal_client: (record.is_a?(Client) ? record.id : record.booking_portal_client)
     )
   end
 end
