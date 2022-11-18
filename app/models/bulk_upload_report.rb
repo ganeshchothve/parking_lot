@@ -20,6 +20,7 @@ class BulkUploadReport
 
   accepts_nested_attributes_for :asset
 
+  alias_attribute :booking_portal_client_id, :client_id
   private
 
   def asset_presence

@@ -143,6 +143,9 @@ class Admin::UsersController < AdminController
         flash.now[:alert] = @client.errors.full_messages + @user.errors.full_messages
         format.html { render :signup }
       end
+    else
+      superadmin_users = User.where(role: 'superadmin')
+      superadmin_users.update_all(client_ids: Client.pluck(:id))
     end
   end
 

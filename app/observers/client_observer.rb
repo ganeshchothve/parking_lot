@@ -57,6 +57,10 @@ class ClientObserver < Mongoid::Observer
         client.set(sync_user: false)
         SyncKylasUsersWorker.perform_async(client.id.to_s)
         client.set(is_able_sync_products_and_users: false)
+        if client.can_create_webhook?
+          Kylas::CreateWebhook.new(client, {run_in_background: true}).call
+          client.set(can_create_webhook: false)
+        end
       end
     end
   end
