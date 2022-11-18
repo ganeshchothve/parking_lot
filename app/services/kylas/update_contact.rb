@@ -24,7 +24,7 @@ module Kylas
              (uniqueness_strategy == "phone" && contact.phone.present?) ||
              (uniqueness_strategy == "email_phone" && (contact.email.present? || contact.phone.present?))
             search_response = Kylas::SearchEntity.new(contact, 'contact', uniqueness_strategy, user, {run_in_background: false}).call rescue {}
-            if search_response.present? && search_response[:api_log].present? && search_response[:api_log][:status] == "Success"
+            if search_response.present? && search_response.dig(:api_log, :status) == "Success"
               search_result = search_response[:api_log][:response].first
               if search_result["content"].blank?
                 response = sync_contact_to_kylas
