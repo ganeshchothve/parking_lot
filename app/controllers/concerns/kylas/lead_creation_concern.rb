@@ -199,7 +199,7 @@ module Kylas
     end
 
     def sync_contact_to_kylas(current_user, kylas_contact_entity, format)
-      @contact_response = Kylas::CreateContact.new(current_user, kylas_contact_entity).call
+      @contact_response = Kylas::CreateContact.new(current_user, kylas_contact_entity, {check_uniqueness: true}).call
       unless @contact_response[:success]
         format.html { redirect_to request.referer, alert: (@contact_response[:error].presence || 'Something went wrong'), status: :unprocessable_entity }
       end
