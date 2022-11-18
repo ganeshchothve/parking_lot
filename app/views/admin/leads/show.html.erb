@@ -70,44 +70,46 @@
                     </div>
                   </div>
                 <% end %>
-
-                <div class="accordion-item border-end-0 border-start-0">
-                  <h2 class="accordion-header d-flex justify-content-between" id="headingRemarks">
-                    <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseRemarks" aria-expanded="false" aria-controls="headingRemarks">
-                      <%= I18n.t("global.tabs.remarks_from_selldo") %>
-                    </button>
-                  </h2>
-                  <div id="collapseRemarks" class="accordion-collapse collapse" aria-labelledby="headingRemarks"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body pt-0 ps-4">
-                      <div class="row ps-3">
-                        <div class="col-12">
-                          <%= render 'notes', lead: @lead, notes: @notes %>
+                <% if policy([:admin, @lead]).remarks_from_selldo? %>
+                  <div class="accordion-item border-end-0 border-start-0">
+                    <h2 class="accordion-header d-flex justify-content-between" id="headingRemarks">
+                      <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseRemarks" aria-expanded="false" aria-controls="headingRemarks">
+                        <%= I18n.t("global.tabs.remarks_from_selldo") %>
+                      </button>
+                    </h2>
+                    <div id="collapseRemarks" class="accordion-collapse collapse" aria-labelledby="headingRemarks"
+                      data-bs-parent="#accordionExample">
+                      <div class="accordion-body pt-0 ps-4">
+                        <div class="row ps-3">
+                          <div class="col-12">
+                            <%= render 'notes', lead: @lead, notes: @notes %>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-
-                <div class="accordion-item border-end-0 border-start-0">
-                  <h2 class="accordion-header d-flex justify-content-between" id="headingLead">
-                    <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseLead" aria-expanded="false" aria-controls="headingLead">
-                      <%= I18n.t("global.tabs.lead_activities") %>
-                    </button>
-                  </h2>
-                  <div id="collapseLead" class="accordion-collapse collapse" aria-labelledby="headingLead"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body pt-0 ps-4">
-                      <div class="row ps-3">
-                        <div class="col-12">
-                          <%= render 'cp_lead_activities', cp_lead_activities: @lead.cp_lead_activities.where(CpLeadActivity.user_based_scope(current_user, params)).paginate(page: 1) %>
+                <% end %>
+                <% if policy([:admin, @lead]).lead_activities? %>
+                  <div class="accordion-item border-end-0 border-start-0">
+                    <h2 class="accordion-header d-flex justify-content-between" id="headingLead">
+                      <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseLead" aria-expanded="false" aria-controls="headingLead">
+                        <%= I18n.t("global.tabs.lead_activities") %>
+                      </button>
+                    </h2>
+                    <div id="collapseLead" class="accordion-collapse collapse" aria-labelledby="headingLead"
+                      data-bs-parent="#accordionExample">
+                      <div class="accordion-body pt-0 ps-4">
+                        <div class="row ps-3">
+                          <div class="col-12">
+                            <%= render 'cp_lead_activities', cp_lead_activities: @lead.cp_lead_activities.where(CpLeadActivity.user_based_scope(current_user, params)).paginate(page: 1) %>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                <% end %>
 
                 <% if current_client.enable_actual_inventory?(current_user) %>
                 <div class="accordion-item border-end-0 border-start-0">

@@ -271,7 +271,13 @@ class Receipt
     end
 
     custom_scope = { lead_id: params[:lead_id] } if params[:lead_id].present?
-    custom_scope = { user_id: user.id, lead_id: user.selected_lead_id } if user.buyer?
+    if user.buyer?
+      if params[:current_project_id].present?
+        custom_scope = { user_id: user.id, project_id: params[:current_project_id] }
+      else
+        custom_scope = { user_id: user.id }
+      end
+    end
 
     custom_scope[:booking_detail_id] = params[:booking_detail_id] if params[:booking_detail_id].present?
 

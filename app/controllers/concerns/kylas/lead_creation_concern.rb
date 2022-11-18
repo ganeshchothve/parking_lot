@@ -36,11 +36,9 @@ module Kylas
     end
 
     def create_kylas_lead
-      kylas_base = Crm::Base.where(domain: ENV_CONFIG.dig(:kylas, :base_url)).first
       respond_to do |format|
         if @user.valid?
-          sync_contact_to_kylas(current_user, @user, format)
-          @user.assign_attributes(kylas_contact_id: @contact_response.dig(:data, :id))
+          @user.skip_confirmation_notification!
           @user.save
           manager_ids = params.dig(:lead, :manager_ids)
 
@@ -61,7 +59,7 @@ module Kylas
                               )
 
               if @lead.save
-                Crm::Api::ExecuteWorker.perform_async('post', 'Lead', @lead.id, nil, {}, kylas_base.id.to_s) if kylas_base.present?
+                Kylas::SyncLeadToKylasWorker.perform_async(lead.id.to_s)
                 if (@lead_data['products'].blank? || @lead_data['products'].pluck('id').map(&:to_s).exclude?(params.dig(:lead, :kylas_product_id))) && count < 1
                     response = Kylas::UpdateLead.new(current_user, @lead.kylas_lead_id, params).call
                     count += 1 if response[:success]
@@ -160,7 +158,6 @@ module Kylas
         @user = User.new
         @user.assign_attributes(user_params)
         @user.booking_portal_client = current_user.booking_portal_client
-        @user.is_active = false
         @user.created_by = current_user
       end
     end

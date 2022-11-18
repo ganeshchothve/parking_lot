@@ -74,7 +74,11 @@ class Admin::InvoicePolicy < InvoicePolicy
   end
 
   def export?
-    %w[superadmin admin sales_admin crm cp_admin billing_team cp].include?(user.role)
+    unless marketplace_client?
+      %w[superadmin admin sales_admin crm cp_admin billing_team cp].include?(user.role)
+    else
+      %w[superadmin admin].include?(user.role)
+    end
   end
 
   def permitted_attributes(params = {})

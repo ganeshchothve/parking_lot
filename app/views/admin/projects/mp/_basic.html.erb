@@ -151,6 +151,13 @@
         <%= f.text_field :foyer_link, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("foyer_link") %>
       </div>
     </div>
+
+    <div class="col-md-12">
+      <div class="mb-3">
+        <%= f.label :consideration_value_help_text %>
+        <%= f.text_area :consideration_value_help_text, class: 'form-control summernote' , disabled: !policy([:admin, project]).editable_field?("consideration_value_help_text") %>
+      </div>
+    </div>
   </div>
   <div class='row'>
     <div class="col-md-6">

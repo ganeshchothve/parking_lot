@@ -56,7 +56,6 @@ class ApplicationController < ActionController::Base
         if stored_path.present? &&  stored_path.include?("kylas-auth")
           stored_path
         else
-          select_project_for_current_user
           current_dashboard_path
         end
       else
@@ -87,6 +86,16 @@ class ApplicationController < ActionController::Base
 
   def pundit_user
     UserContext.new(current_user, current_client, current_project)
+  end
+
+  # added for send project_id and client_id to authenticate user without login
+  # this method calls User's find_first_by_auth_conditions internally
+  def find_record_from_identifier(entity)
+    identifier_param_value = entity.get_identifier_from_params_or_headers(self).presence
+    identifier_param_value = integrate_with_devise_case_insensitive_keys(identifier_param_value, entity)
+    # The finder method should be compatible with all the model adapters,
+    # namely ActiveRecord and Mongoid in all their supported versions.
+    identifier_param_value && entity.model.find_for_authentication({entity.identifier => identifier_param_value}.merge(project_id: params[:project_id], booking_portal_client_id: params[:booking_portal_client_id]))
   end
 
   protected

@@ -180,7 +180,7 @@ class Admin::BookingDetailsController < AdminController
   #
   def status_chart
     authorize [:admin, BookingDetail]
-    @data = DashboardData::AdminDataProvider.booking_detail_block(params)
+    @data = DashboardData::AdminDataProvider.booking_detail_block(current_user, params)
     @statuses = params[:status] || %w[under_negotiation blocked booked_tentative booked_confirmed]
     @dataset = get_dataset(@data, @statuses)
   end

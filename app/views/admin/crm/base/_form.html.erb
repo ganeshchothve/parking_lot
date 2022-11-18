@@ -1,4 +1,4 @@
-<%= form_for([:admin, @crm], url: url, local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": Crm::Base.model_name.human(count: 2), "data-type": "json", id: 'crm_base_form'}) do |f| %>
+  <%= form_for([:admin, @crm], url: url, local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": Crm::Base.model_name.human(count: 2), "data-type": "json", id: 'crm_base_form'}) do |f| %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
@@ -42,8 +42,14 @@
           </div>
           <div class = "col-12">
             <div class="mb-3">
-              <%= f.label :user, class: 'control-label' %>
-              <%= f.select :user_id, options_from_collection_for_select(User.where(role: 'admin'), "id", "ds_name", f.object.user_id), {prompt: I18n.t("global.select")}, class: "selectize-remote", data: { url: admin_users_path, params: {fltrs: {role: 'admin' } } } %>
+              <%= f.label :oauth_type, class: 'control-label' %>
+              <%= f.select :oauth_type, options_for_select(Crm::Base::OAUTH_TYPES.collect{ |type| [I18n.t("mongoid.attributes.crm/base/oauth_type.#{type}"), type] }, f.object.oauth_type), {prompt: I18n.t("global.select")}, class: "selectize" %>
+            </div>
+          </div>
+          <div class = "col-12">
+            <div class="mb-3">
+              <%= f.label :user, class: 'label-required' %>
+              <%= f.select :user_id, options_from_collection_for_select(User.where(role: 'admin', booking_portal_client: current_client), "id", "ds_name", f.object.user_id), {prompt: I18n.t("global.select")}, class: "selectize-remote", required: true, data: { url: admin_users_path, params: {fltrs: {role: 'admin' } } } %>
             </div>
           </div>
         </div>

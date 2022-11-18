@@ -1,7 +1,7 @@
 module BookingDetailDashboardConcern
   def booking_details_counts
     options = set_matcher
-    @booking_details_data = DashboardDataProvider.booking_details_data(options)
+    @booking_details_data = DashboardDataProvider.booking_details_data(current_user, options)
   end
 
   def set_matcher

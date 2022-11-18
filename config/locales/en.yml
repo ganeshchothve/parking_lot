@@ -579,6 +579,10 @@ en:
         request_payload: "Request Payload"
         oauth2_authentication: "Oauth2 Authentication"
         user: "User"
+        oauth_type: Authorization Type
+      crm/base/oauth_type:
+          salesforce: "Salesforce"
+          kylas: "Kylas"
       discount:
         name: "Name"
         description: "Description"
@@ -3275,7 +3279,7 @@ en:
         link_name: "Proceed without payment"
         text: "I Agree on behalf of %{name} and proceed to add payment"
         agree_on_behalf: "I Agree on behalf of %{name}"
-        agree_and_procedd: "I Agree and proceed to add payment"
+        agree_and_proceed: "I Agree and proceed to add payment"
         user_agree: "I agree"
       new:
         header: "Search Home"
@@ -3429,7 +3433,7 @@ en:
         header: "Overview"
       leads:
         link_name: "Show Leads"
-      send_payment_link: "Payment link sent to user"
+      send_payment_link: Send Payment link
       move_to_next_state:
         sales:
           break: "%{name} is on break"
@@ -3508,6 +3512,8 @@ en:
       payment_link:
         link_name: "Send Payment link"
       reassign_sales: "Reassign Lead"
+      send_payment_link:
+        project_no_access: Project access not given to customers
       notice:
         updated: "Lead successfully updated."
         assigned_to: "%{name1} assigned to sales %{name2}"

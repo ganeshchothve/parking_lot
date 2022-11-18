@@ -107,12 +107,12 @@ class Admin::ProjectUnitsController < AdminController
   # This method is used in admin dashboard
   #
   def unit_configuration_chart
-    @data = DashboardData::AdminDataProvider.project_unit_block
+    @data = DashboardData::AdminDataProvider.project_unit_block(current_user)
     @dataset = get_dataset(@data)
   end
 
   def inventory_snapshot
-    @out = DashboardDataProvider.inventory_snapshot
+    @out = DashboardDataProvider.inventory_snapshot(current_user)
   end
 
   def send_cost_sheet_and_payment_schedule
@@ -136,10 +136,11 @@ class Admin::ProjectUnitsController < AdminController
 
   def authorize_resource
     if %w[unit_configuration_chart index inventory_snapshot].include?(params[:action])
+      record = params.dig(:fltrs, :project_id).present? ? ProjectUnit.new(project_id: params.dig(:fltrs, :project_id)) : ProjectUnit
       if params[:ds].to_s == 'true'
         authorize([:admin, ProjectUnit], :ds?)
       else
-        authorize [:admin, ProjectUnit]
+        authorize [:admin, record]
       end
     elsif params[:action] == 'export' || params[:action] == 'mis_report'
       authorize [:admin, ProjectUnit]

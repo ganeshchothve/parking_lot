@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     unlocks: 'local_devise/unlocks',
     passwords: 'local_devise/passwords',
     omniauth_callbacks: "users/omniauth_callbacks"
-  }
+  }, skip: [ :registrations ], skip_helpers: [ :registrations ]
 
   namespace :mp do
     get 'about', to: 'dashboard#about'
@@ -37,7 +37,7 @@ Rails.application.routes.draw do
   end
 
   authenticated :user do
-    root 'admin/users#index', as: :authenticated_root
+    root 'dashboard#index', as: :authenticated_root
   end
 
 

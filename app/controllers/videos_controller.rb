@@ -6,16 +6,17 @@ class VideosController < ApplicationController
   around_action :apply_policy_scope, only: :index
 
   def index
-    @videos = Video.where(videoable: @videoable).build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
+    @videos = Video.where(videoable: @videoable, booking_portal_client_id: current_client.id).build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
   def new
-    @video = Video.new(videoable: @videoable)
+    @video = Video.new(videoable: @videoable, booking_portal_client_id: current_client.id)
     render layout: false
   end
 
   def create
     @video = Video.new(permitted_attributes([:admin, Video.new(videoable: @videoable)]))
+    @video.booking_portal_client_id = current_client.id
     @video.videoable = @videoable
     if @video.save
       redirect_to videoables_path(videoable: @videoable), notice: I18n.t("controller.videos.notice.created")

@@ -31,7 +31,7 @@ class Admin::UsersController < AdminController
         @user.confirm
         format.html { redirect_to (stored_location_for(@user) || new_user_session_path), notice: 'Successfully registered' }
       else
-        format.html { redirect_to user_signup_path, alert: @user.errors.full_messages }
+        format.html { render :signup }
       end
     end
   end

@@ -7,7 +7,7 @@ module UserReportsConcern
   # This method is used in admin dashboard
   #
   def portal_stage_chart
-    @data = DashboardData::AdminDataProvider.user_block
+    @data = DashboardData::AdminDataProvider.user_block(current_user)
   end
 
   #TO DO - move to SourcingManagerDashboardConcern

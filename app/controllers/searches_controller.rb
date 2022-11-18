@@ -197,13 +197,18 @@ class SearchesController < ApplicationController
 
   def set_lead
     if current_user.buyer?
-      @lead = current_user.selected_lead
+      if params[:current_project_id].present?
+        @lead = Lead.where(project_id: params[:current_project_id], user_id: current_user.id).first
+      end
     elsif params[:lead_id].present?
       @lead = Lead.where(id: params[:lead_id]).first
     elsif @search.present? && @search.lead_id.present?
       @lead = @search.lead
     else
       redirect_to home_path(current_user) and return
+    end
+    unless @lead.present?
+      redirect_to home_path(current_user), alert: I18n.t("controller.leads.alert.not_found")
     end
   end
 
@@ -302,7 +307,8 @@ class SearchesController < ApplicationController
           manager_id: @search.lead_manager_id,
           site_visit_id: @search.site_visit_id,
           token_discount: coupon.try(:value).to_f,
-          variable_discount: coupon.try(:variable_discount).to_f
+          variable_discount: coupon.try(:variable_discount).to_f,
+          creator_id: current_user.id
         )
         @booking_detail.search = @search
       end

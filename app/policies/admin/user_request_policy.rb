@@ -14,7 +14,11 @@ class Admin::UserRequestPolicy < UserRequestPolicy
   end
 
   def export?
-    %w[admin superadmin crm].include?(user.role) && user.booking_portal_client.enable_actual_inventory?(user)
+    unless marketplace_client?
+      %w[admin superadmin crm].include?(user.role) && user.booking_portal_client.enable_actual_inventory?(user)
+    else
+      %w[superadmin admin].include?(user.role) && user.booking_portal_client.enable_actual_inventory?(user)
+    end
   end
 
   def asset_create?
