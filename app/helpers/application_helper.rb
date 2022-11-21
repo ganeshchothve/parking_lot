@@ -148,7 +148,7 @@ module ApplicationHelper
     #  #{active_link_to 'Docs', dashboard_documents_path, active: :exclusive, class: 'footer-link'}
     #  </li>"
     #end
-    if current_client.present?
+    if current_client.present? && policy([current_user_role_group, current_client]).allow_marketplace_access?
       if current_client.gallery.present? && current_client.gallery.assets.select{|x| x.persisted?}.present?
         html += "<li >
           #{active_link_to 'Gallery', dashboard_gallery_path, active: :exclusive, class: 'footer-link'}

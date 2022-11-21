@@ -18,19 +18,18 @@ class Admin::UsersController < AdminController
   # GET /admin/users/:id/update_password
 
   def signup
+    @client = Client.new
     @user = User.new(role: 'admin')
   end
 
   def register
     respond_to do |format|
-      @user = User.new(role: 'admin')
-      @user.assign_attributes(user_params)
-      @user.assign_attributes(booking_portal_client: @client, tenant_owner: true)
       @user.skip_confirmation_notification!
       if @user.save
         @user.confirm
-        format.html { redirect_to (stored_location_for(@user) || new_user_session_path), notice: 'Successfully registered' }
+        format.html { redirect_to (session[:previous_url] || new_user_session_path), notice: 'Successfully registered' }
       else
+        flash.now[:alert] = @user.errors.full_messages
         format.html { render :signup }
       end
     end
@@ -132,14 +131,17 @@ class Admin::UsersController < AdminController
   end
 
   def set_client
-    @client = Client.where(name: params.dig(:user, :name)).first
-    if @client.blank?
-      @client = Client.new
-      @client.assign_attributes(client_params)
-    end
+    @client = Client.new
+    @client.assign_attributes(client_params)
+    @user = User.new(role: 'admin')
+    @user.assign_attributes(user_params)
+    @user.assign_attributes(booking_portal_client: @client, tenant_owner: true)
+    @user.valid?
     unless @client.save
       respond_to do |format|
-        format.json { render json: { errors: @client.errors.full_messages }, status: :unprocessable_entity }
+        @client.errors.delete(:users)
+        flash.now[:alert] = @client.errors.full_messages + @user.errors.full_messages
+        format.html { render :signup }
       end
     else
       superadmin_users = User.where(role: 'superadmin')
