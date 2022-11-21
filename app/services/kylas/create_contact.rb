@@ -28,7 +28,7 @@ module Kylas
               if search_result["content"].blank?
                 response = sync_contact_to_kylas
               else
-                user.set(kylas_contact_id: search_result["content"].first["id"]) if user.kylas_contact_id.blank?
+                contact.set(kylas_contact_id: search_result["content"].first["id"]) if contact.kylas_contact_id.blank?
               end
             end
           else
