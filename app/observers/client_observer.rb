@@ -50,17 +50,23 @@ class ClientObserver < Mongoid::Observer
       end
     end
 
-    if client.kylas_api_key_was.blank? && client.kylas_api_key.present?
+    if client.is_marketplace? && client.kylas_api_key_was.blank? && client.kylas_api_key.present?
+      # syncing kylas products and users into IRIS if flag(is_able_sync_products_and_users) on client is set to true
       if client.try(:is_able_sync_products_and_users?)
         client.set(sync_product: false)
         SyncKylasProductsWorker.perform_async(client.id.to_s)
         client.set(sync_user: false)
         SyncKylasUsersWorker.perform_async(client.id.to_s)
         client.set(is_able_sync_products_and_users: false)
+        # create a user webhook in Kylas when flag(can_create_webhook) on client is set to true
         if client.can_create_webhook?
           Kylas::CreateWebhook.new(client, {run_in_background: true}).call
           client.set(can_create_webhook: false)
         end
+        # Configure Kylas respective Crm Base and Apis for newer clients
+        DatabaseSeeds::CrmBase::Kylas.seed(client.id.to_s)
+        crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:kylas, :base_url), booking_portal_client_id: client.id).first
+        DatabaseSeeds::CrmApis.seed(crm_base.id.to_s) if crm_base.present?
       end
     end
   end
