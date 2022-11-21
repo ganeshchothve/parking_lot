@@ -86,7 +86,7 @@ module DatabaseSeeds
           "event"=>"",
           "path"=>"/v1/webhooks",
           "request_payload"=>
-          "{\n            \"name\": \"User Webhook Test\",\n            \"requestType\": \"POST\",\n            \"url\": \"<%= ENV_CONFIG[:iris_marketplace_host] %>/api/<%= ENV_CONFIG.dig(:kylas, :version) %>/users/create_or_update_user_abc\",\n            \"authenticationType\": \"NONE\",\n            \"events\": [\n                \"USER_CREATED\",\n                \"USER_UPDATED\",\n                \"USER_ACTIVATED\",\n                \"USER_DEACTIVATED\"\n            ],\n            \"active\": true\n        }",
+          "{\n            \"name\": \"User Webhook\",\n            \"requestType\": \"POST\",\n            \"url\": \"<%= ENV_CONFIG[:iris_marketplace_host] %>/api/<%= ENV_CONFIG.dig(:kylas, :version) %>/users/create_or_update_user\",\n            \"authenticationType\": \"NONE\",\n            \"events\": [\n                \"USER_CREATED\",\n                \"USER_UPDATED\",\n                \"USER_ACTIVATED\",\n                \"USER_DEACTIVATED\"\n            ],\n            \"active\": true\n        }",
           "resource_class"=>"Client",
           "response_crm_id_location"=>"id"},
         {"_type"=>"Crm::Api::Post",
