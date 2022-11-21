@@ -2,12 +2,11 @@ require 'spreadsheet'
 class SyncKylasProductsWorker
   include Sidekiq::Worker
 
-  def perform user_id
-    user = User.where(id: user_id).first
-    client = user.booking_portal_client
-    client.set(sync_product: false)
-    if user.present?
-      kylas_products = Kylas::FetchProducts.new(user).call(detail_response: true)
+  def perform client_id
+    client = Client.where(id: client_id).first
+    if client.present?
+      client.set(sync_product: false)
+      kylas_products = Kylas::FetchProducts.new(User.new(booking_portal_client: client)).call(detail_response: true)
       if kylas_products.present?
         kylas_products.each do |kylas_product|
           kylas_product = kylas_product.with_indifferent_access
@@ -15,8 +14,8 @@ class SyncKylasProductsWorker
           if mp_product.blank?
             project = Project.new(
                 name: kylas_product[:name],
-                creator: user,
-                booking_portal_client: user.booking_portal_client,
+                creator: client.admin.first,
+                booking_portal_client: client,
                 is_active: kylas_product[:isActive],
                 kylas_product_id: kylas_product[:id].to_s
             )

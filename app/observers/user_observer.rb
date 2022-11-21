@@ -96,15 +96,6 @@ class UserObserver < Mongoid::Observer
         GenerateCoBrandingTemplatesWorker.new.perform(user.id)
       end
     end
-    if user.role?(:admin) && user.kylas_access_token_changed?
-      if user.booking_portal_client.try(:is_able_sync_products_and_users?)
-        user.booking_portal_client.set(sync_product: false)
-        SyncKylasProductsWorker.perform_async(user.id.to_s)
-        user.booking_portal_client.set(sync_user: false)
-        SyncKylasUsersWorker.perform_async(user.id.to_s)
-        user.booking_portal_client.set(is_able_sync_products_and_users: false)
-      end
-    end
   end
 
   def after_update user

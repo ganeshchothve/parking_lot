@@ -31,7 +31,8 @@ class Admin::WorkflowsController < AdminController
         else
           errors << @workflow.errors.full_messages.uniq
         end
-        format.html { redirect_to new_admin_workflow_path, alert: errors.flatten.uniq }
+        flash.now[:alert] = errors.flatten.uniq
+        format.html { render :new }
         format.json { render json: { errors: @workflow.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
@@ -50,7 +51,8 @@ class Admin::WorkflowsController < AdminController
         else
           errors << @workflow.errors.full_messages.uniq
         end
-        format.html { redirect_to admin_workflows_path, alert: errors.flatten.uniq }
+        flash.now[:alert] = errors.flatten.uniq
+        format.html { render :edit }
         format.json { render json: { errors: @workflow.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end

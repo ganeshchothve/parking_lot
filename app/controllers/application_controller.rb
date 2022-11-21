@@ -18,6 +18,7 @@ class ApplicationController < ActionController::Base
   before_action :set_current_project_id
   # Run in current user Time Zone
   around_action :user_time_zone, if: :current_user
+  before_action :authorize_marketplace_client, if: :current_user, unless: proc { devise_controller? || (params[:controller] == 'admin/clients' && params[:action].in?(%w(kylas_api_key update))) }
   around_action :apply_project_scope, if: :current_user, unless: proc { params[:controller] == 'admin/projects' }
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
@@ -121,6 +122,12 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def authorize_marketplace_client
+    unless policy([current_user_role_group, current_client]).allow_marketplace_access?
+      redirect_to kylas_api_key_admin_client_path
+    end
+  end
 
   def set_current_project_id
     if current_project.present?

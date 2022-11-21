@@ -89,4 +89,12 @@ $(document).ready(function(){
   $('body').on('ajax:complete', 'a.move-to-next-state', function(event) {
     $(event.currentTarget).parents('.dropdown').find('.dropdown-toggle').dropdown('toggle');
   });
+
+  $('.table-responsive').on('show.bs.dropdown', function () {
+    $('.table-responsive').css( "overflow", "inherit" );
+  });
+
+  $('.table-responsive').on('hide.bs.dropdown', function () {
+    $('.table-responsive').css( "overflow", "auto" );
+  })
 });
