@@ -14,7 +14,7 @@ module Kylas
     def trigger_workflow_events_in_kylas(entity)
       wf = Workflow.where(stage: entity.status, booking_portal_client_id: entity.booking_portal_client.id, is_active: true).first
       deal_pipeline = wf.pipelines.where(entity_type: "deals").first if wf.present?
-      kylas_deal_response = Kylas::UpdateDeal.new(entity.creator, entity.lead.kylas_deal_id, {pipeline: deal_pipeline.as_json, run_in_background: true}).call if deal_pipeline.present?
+      kylas_deal_response = Kylas::UpdateDeal.new(entity.creator, entity, {pipeline: deal_pipeline.as_json, run_in_background: true}).call if deal_pipeline.present?
       if wf.present?
 
         # call serice to update the product on that deal
@@ -37,6 +37,7 @@ module Kylas
               if !(booking_product_in_kylas.present?)
                 update_deal_params = {product: []}
                 update_deal_params[:product] << iris_project_on_deal if iris_project_on_deal.present?
+                entity.reload
                 update_deal_params[:product] << update_product_payload(entity.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)), entity, wf) if entity.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)).present?
                 update_deal_params.merge!({run_in_background: true})
                 kylas_deal_response = Kylas::UpdateDeal.new(entity.creator, entity, update_deal_params).call

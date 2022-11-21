@@ -50,14 +50,17 @@ module Kylas
           else
             response = Kylas::Api::ExecuteWorker.new.perform(user.id, api.id, 'User', contact.id, {})
           end
-        end
-        log_response = response[:api_log]
-        if log_response.present?
-          if log_response[:status] == "Success"
-            contact.set(kylas_contact_id: log_response[:response].first["id"])
+
+          if response.present?
+            log_response = response[:api_log]
+            if log_response.present?
+              if log_response[:status] == "Success"
+                contact.set(kylas_contact_id: log_response[:response].first["id"])
+              end
+            end
+            response
           end
         end
-        response
       end
     end
   end

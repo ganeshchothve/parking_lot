@@ -213,7 +213,7 @@ module Kylas
       if deal_data.present? && contact_response.present?
         contact = contact_response[:data] rescue {}
         params.merge!(contact: contact)
-        deal_response = Kylas::UpdateDeal.new(current_user, kylas_deal_id, params).call
+        deal_response = Kylas::UpdateDeal.new(current_user, @lead, params).call
         if deal_response[:success]
           contact = contact_response[:data].with_indifferent_access
           @user.update(kylas_contact_id: contact[:id])
@@ -232,7 +232,8 @@ module Kylas
         if deal_data['products'].blank? || deal_data['products'].pluck('id').exclude?(kylas_product_id.to_i)
           product = (products_response.select{|p| p['id'] == kylas_product_id.to_i }.first rescue {})
           params.merge!(product: product) if product.present?
-          Kylas::UpdateDeal.new(current_user, kylas_deal_id, params).call
+          lead = Lead.where(kylas_deal_id: kylas_deal_id).first if kylas_deal_id.present?
+          Kylas::UpdateDeal.new(current_user, lead, params).call
         end
       end
     end
