@@ -10,7 +10,7 @@ class PushNotificationObserver < Mongoid::Observer
           notification.content = notification_template.parsed_content(notification.triggered_by)
           notification.data = notification_template.parsed_data(notification.triggered_by)
           notification.title = notification_template.parsed_title(notification.triggered_by)
-          notification.url = URI.join(base_url, notification_template.parsed_url(notification.triggered_by)).to_s
+          notification.url = URI.join(base_url(notification), notification_template.parsed_url(notification.triggered_by)).to_s
         end
       else
         notification.content = TemplateParser.parse(notification.content, notification.triggered_by)
@@ -37,8 +37,8 @@ class PushNotificationObserver < Mongoid::Observer
     Rails.application.config.action_mailer.default_url_options[:protocol] || 'http'
   end
 
-  def base_url
-    "#{protocol}://#{Rails.application.config.action_mailer.default_url_options[:host]}"
+  def base_url(notification)
+    "#{protocol}://#{notification.booking_portal_client.base_domain}"
   end
 
 end

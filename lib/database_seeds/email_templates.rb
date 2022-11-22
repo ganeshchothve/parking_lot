@@ -69,7 +69,7 @@ module DatabaseSeeds
                   <div class="mb-3">
                     <label>Carpet</label>
                     <div>
-                      <%= self.project_unit.carpet %> <%= current_client.area_unit %>
+                      <%= self.project_unit.carpet %> <%= booking_portal_client.area_unit %>
                     </div>
                   </div>
                 </td>
@@ -77,7 +77,7 @@ module DatabaseSeeds
                   <div class="mb-3">
                     <label>Saleable</label>
                     <div>
-                      <%= self.project_unit.saleable %> <%= current_client.area_unit %>
+                      <%= self.project_unit.saleable %> <%= booking_portal_client.area_unit %>
                     </div>
                   </div>
                 </td>
@@ -87,7 +87,7 @@ module DatabaseSeeds
                   <div class="mb-3">
                     <label>Effective Rate</label>
                     <div>
-                      <%= number_to_indian_currency(self.project_unit.effective_rate) %> <%= current_client.area_unit %>
+                      <%= number_to_indian_currency(self.project_unit.effective_rate) %> <%= booking_portal_client.area_unit %>
                     </div>
                   </div>
                 </td>

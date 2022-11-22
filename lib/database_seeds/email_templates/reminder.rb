@@ -9,7 +9,7 @@ module DatabaseSeeds
             "<div class = 'card'>
               <div class = 'card-body'>
                 Dear <%= self.name %>,<br/>
-                Thank you for showing interest in <%= current_project.name %>. We have received your details but your KYC registration is not complete. Please note that KYC is mandatory to be eligible for home booking and additional benefits at <%= current_project.name %>.<br/>
+                Thank you for showing interest in <%= booking_portal_client.name %>. We have received your details but your KYC registration is not complete. Please note that KYC is mandatory to be eligible for home booking and additional benefits at <%= booking_portal_client.name %>.<br/>
                 For any further queries, please mail us at <%= self.booking_portal_client.support_email %> or call on <%= self.booking_portal_client.support_number %>.<br/>
                 <Standard T&Cs>
               </div>
@@ -20,7 +20,7 @@ module DatabaseSeeds
           Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: 'User', name: 'not_confirmed_day_3', subject: '<%= self.booking_portal_client.name %> |  Do you want to be first or last?', content: "<div class = 'card'>
                 <div class = 'card-body'>
                   Dear <%= self.name %>,<br/>
-                  We have received your details but your KYC registration is not complete. Please note that KYC is mandatory to be eligible for home booking and additional benefits at <%= current_project.name %>.<br/>
+                  We have received your details but your KYC registration is not complete. Please note that KYC is mandatory to be eligible for home booking and additional benefits at <%= booking_portal_client.name %>.<br/>
                   Under our Accelerated Benefits program, people are given rewards on a first come first serve basis. This means those who register early stand to gain more benefits compared to those who join the queue later.<br/>
                   For any further queries, please mail us at <%= self.booking_portal_client.support_email %> or call on <%= self.booking_portal_client.support_number %>.<br/>
                   <Standard T&Cs>
@@ -33,7 +33,7 @@ module DatabaseSeeds
             "<div class = 'card'>
               <div class = 'card-body'>
                 Dear <%= self.name %>,<br/>
-                Thank you for showing interest in <%= current_project.name %>. We have received your details but your KYC registration is not complete. Please note that KYC is mandatory to be eligible for home booking and additional benefits at <%= current_project.name %>.<br/>
+                Thank you for showing interest in <%= booking_portal_client.name %>. We have received your details but your KYC registration is not complete. Please note that KYC is mandatory to be eligible for home booking and additional benefits at <%= booking_portal_client.name %>.<br/>
                 For any further queries, please mail us at <%= self.booking_portal_client.support_email %> or call on <%= self.booking_portal_client.support_number %>.<br/>
                 <Standard T&Cs>
               </div>
@@ -107,7 +107,7 @@ module DatabaseSeeds
             "<div class = 'card'>
               <div class = 'card-body'>
                 Dear <%= self.name %>,<br/>
-                Thank for showing your preference for the loan requirement for your dream home at <%= current_project.name %>. We have a host financial partners who are offering home loans at competitive rates. Please get in the touch with the financial partners from the list mentioned below.<br/><br/>
+                Thank for showing your preference for the loan requirement for your dream home at <%= booking_portal_client.name %>. We have a host financial partners who are offering home loans at competitive rates. Please get in the touch with the financial partners from the list mentioned below.<br/><br/>
                 <ol><li></li><li></li><li></li></ol>
                 In case of any queries, please mail us at <%= self.user.booking_portal_client.support_email %> or call on <%= self.user.booking_portal_client.support_number %>.<br/><br/>
                 We will start the allocation process on <date.> and will share all details in a follow up mail.<br/><br/>

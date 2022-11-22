@@ -240,6 +240,10 @@ class Client
     kylas_tenant_id.present?
   end
 
+  def base_domain
+    self.booking_portal_domains.first
+  end
+
   def self.selldo_api_clients
     ENV_CONFIG.dig(:selldo, :api_clients) || {}
   end
