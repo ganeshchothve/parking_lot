@@ -6,7 +6,7 @@ class Admin::Projects::UnitConfigurationsController < AdminController
   # GET /admin/projects/:project_id/unit_configurations
   #
   def index
-    @unit_configurations = @project.unit_configurations.all.paginate(page: params[:page] || 1, per_page: params[:per_page])
+    @unit_configurations = @project.unit_configurations.where(booking_portal_client_id: current_client.try(:id)).paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
       format.json { render json: @unit_configurations }
       format.html {}
@@ -23,6 +23,7 @@ class Admin::Projects::UnitConfigurationsController < AdminController
   #
   def update
     parameters = permitted_attributes([:admin, @unit_configuration])
+    @unit_configuration.booking_portal_client_id = current_client.try(:id)
     respond_to do |format|
       if @unit_configuration.update(parameters)
         format.html { redirect_to request.referrer || admin_project_unit_configurations_path, notice: I18n.t("controller.time_slots.notice.updated") }

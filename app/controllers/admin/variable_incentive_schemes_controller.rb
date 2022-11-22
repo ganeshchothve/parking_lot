@@ -14,7 +14,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
   end
 
   def new
-    @variable_incentive_scheme = VariableIncentiveScheme.new(created_by: current_user)
+    @variable_incentive_scheme = VariableIncentiveScheme.new(created_by: current_user, booking_portal_client_id: current_client.try(:id))
     authorize [:admin, @variable_incentive_scheme]
     render layout: false
   end
@@ -23,7 +23,7 @@ class Admin::VariableIncentiveSchemesController < AdminController
   end
 
   def create
-    @variable_incentive_scheme = VariableIncentiveScheme.new(created_by: current_user)
+    @variable_incentive_scheme = VariableIncentiveScheme.new(created_by: current_user, booking_portal_client_id: current_client.try(:id))
     @variable_incentive_scheme.assign_attributes(permitted_attributes([:admin, @variable_incentive_scheme]))
     respond_to do |format|
       if @variable_incentive_scheme.save
