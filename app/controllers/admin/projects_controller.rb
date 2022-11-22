@@ -97,7 +97,7 @@ class Admin::ProjectsController < AdminController
   end
 
   def collaterals
-    @project = Project.where(id: params[:id]).first
+    @project = Project.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first
     @project ? authorize([:admin, @project]) : authorize([:admin, Project])
     render layout: false
   end
@@ -122,9 +122,9 @@ class Admin::ProjectsController < AdminController
   def sync_kylas_products
     current_client.set(sync_product: false)
     if Rails.env.development?
-      SyncKylasProductsWorker.new.perform(current_user.id.to_s)
+      SyncKylasProductsWorker.new.perform(current_client.id.to_s)
     else
-      SyncKylasProductsWorker.perform_async(current_user.id.to_s)
+      SyncKylasProductsWorker.perform_async(current_client.id.to_s)
     end
     flash[:notice] = 'Kylas Products Syncing has been initiated'
     redirect_to admin_projects_path
@@ -133,7 +133,7 @@ class Admin::ProjectsController < AdminController
   private
 
   def set_project
-    @project = Project.where(id: params[:id]).first
+    @project = Project.where(id: params[:id], booking_portal_client_id: current_client.try(:id)).first
     if action_name == 'edit'
       render json: { errors: I18n.t("controller.projects.alert.not_found") }, status: :not_found unless @project
     else
