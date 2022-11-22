@@ -35,13 +35,13 @@ module Kylas
       entity_value = if field == "email"
         entity.email
       elsif field == "phone"
-        phone = Phonelib.parse(entity.phone) 
+        phone = Phonelib.parse(entity.phone)
         phone.national(false).sub(/^0/, '')
       elsif field == "email_phone"
         if entity.email.present?
           entity.email
         elsif entity.phone.present?
-          phone = Phonelib.parse(entity.phone) 
+          phone = Phonelib.parse(entity.phone)
           phone.national(false).sub(/^0/, '')
         end
       end

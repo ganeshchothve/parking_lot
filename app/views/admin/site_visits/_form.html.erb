@@ -41,7 +41,7 @@
                             <% min_date = [site_visit_scheduled_on, (DateTime.current - 4.days) ].max %>
                         <% end %>
                     <% end %>
-                    <div class="datetimepicker" id="site_visit_scheduled_on_calendar" data-default-date="<%= min_date.strftime("%d/%m/%Y") %>" data-inline=true data-side-by-side=true data-use-current=true data-min-date="<%= min_date.strftime("%d/%m/%Y") %>" data-max-date="<%= (Date.today + 20.days).strftime("%d/%m/%Y") %>" data-stepping='30' data-format='DD/MM/YYYY LT'></div>
+                    <div class="datetimepicker" id="site_visit_scheduled_on_calendar" data-default-date="<%= min_date.try(:strftime, "%d/%m/%Y") %>" data-inline=true data-side-by-side=true data-use-current=true data-min-date="<%= min_date.try(:strftime, "%d/%m/%Y") %>" data-max-date="<%= (Date.today + 20.days).strftime("%d/%m/%Y") %>" data-stepping='30' data-format='DD/MM/YYYY LT'></div>
 
                     <%= f.hidden_field :scheduled_on, class: 'form-control', value: date %>
                     <% if f.object.reject %>
