@@ -286,7 +286,6 @@ Rails.application.routes.draw do
         post :search_inventory
         get :new_kylas_associated_lead
         post :create_kylas_associated_lead
-        get :deal_associated_contact_details
         get :new_kylas_lead
         post :create_kylas_lead
       end

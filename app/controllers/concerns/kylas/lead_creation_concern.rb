@@ -75,24 +75,6 @@ module Kylas
       end
     end
 
-    # action used for ajax call
-    def deal_associated_contact_details
-      contact_id = params[:contact_id]
-      @contact_details = Kylas::FetchContactDetails.new(current_user, [contact_id], true).call
-      respond_to do |format|
-        if @contact_details[:success]
-          contact = @contact_details[:data]
-          if contact.present?
-            format.json { render json: contact, status: :ok }
-          else
-            format.json { render json: {errors: 'Contact details not present'}, status: :not_found }
-          end
-        else
-          format.json { render json: {errors: @contact_details[:error]}, status: :not_found }
-        end
-      end
-    end
-
     private
 
     def user_params
