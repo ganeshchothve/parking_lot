@@ -115,6 +115,7 @@ class Client
   field :is_able_sync_products_and_users, type: Boolean, default: true
   field :can_create_webhook, type: Boolean, default: true
   field :kylas_custom_fields, type: Hash, default: {}
+  field :kylas_currency_id, type: Integer
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />

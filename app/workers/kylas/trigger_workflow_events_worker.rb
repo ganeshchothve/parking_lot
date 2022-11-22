@@ -83,7 +83,7 @@ module Kylas
         'name': entity.name,
         'price': {
           'currency': {
-            'id': 431
+            'id': entity.booking_portal_client&.kylas_currency_id
           },
           'value': (wf.get_product_price.present? ? entity.send(wf.get_product_price) : 0)
         }
