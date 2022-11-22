@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   before_action :set_current_project_id
   # Run in current user Time Zone
   around_action :user_time_zone, if: :current_user
-  before_action :authorize_marketplace_client, if: :current_user, unless: proc { devise_controller? || (params[:controller] == 'admin/clients' && params[:action].in?(%w(kylas_api_key update))) }
+  before_action :authorize_marketplace_client, if: :current_user, unless: proc { devise_controller? || (params[:controller] == 'admin/clients' && params[:action].in?(%w(kylas_api_key update))) || (params[:controller] == 'home' && params[:action].in?(%w(not_authorized select_client))) }
   around_action :apply_project_scope, if: :current_user, unless: proc { params[:controller] == 'admin/projects' }
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
@@ -218,7 +218,7 @@ class ApplicationController < ActionController::Base
 
   def load_hold_unit
     if current_user
-      @current_unit = current_user.project_units.where(status: "hold").first
+      @current_unit = current_user.project_units.where(status: "hold", booking_portal_client_id: current_client.try(:id)).first
     end
   end
 

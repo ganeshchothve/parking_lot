@@ -22,7 +22,7 @@ class Admin::ClientPolicy < ClientPolicy
   end
 
   def kylas_api_key?
-    user.role?('admin')
+    user.role.in?(%w(admin superadmin))
   end
 
   def switch_client?
