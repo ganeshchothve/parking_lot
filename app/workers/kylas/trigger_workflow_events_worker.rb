@@ -19,9 +19,7 @@ module Kylas
 
         # call serice to update the product on that deal
         if wf.create_product?
-          product_params = create_product_payload(entity, wf)
-          payload = product_params.merge({run_in_background: false})
-          Kylas::CreateProductInKylas.new(entity.creator, entity, payload).call
+          Kylas::CreateProductInKylas.new(entity.creator, entity, wf, {run_in_background: false}).call
 
           # call serice to update the product on that deal
           if wf.update_product_on_deal?
@@ -68,13 +66,6 @@ module Kylas
           ).call
         end
       end
-    end
-
-    def create_product_payload(entity, wf)
-      payload = {
-        agreement_price: (wf.get_product_price.present? ? entity.send(wf.get_product_price) : 0)
-      }
-      payload
     end
 
     def update_product_payload(product_id, entity, wf)

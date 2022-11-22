@@ -5,11 +5,12 @@ module Kylas
   #service to create product in kylas
   class CreateProductInKylas < BaseService
 
-    attr_accessor :user, :entity, :params
+    attr_accessor :user, :entity, :wf, :params
 
-    def initialize(user, entity, params={})
+    def initialize(user, entity, wf, params={})
       @user = user
       @entity = entity
+      @wf = wf
       @params = params
     end
 
@@ -20,10 +21,11 @@ module Kylas
       if kylas_base
         api = Crm::Api::Post.where(base_id: kylas_base.id, resource_class: 'BookingDetail', is_active: true, booking_portal_client_id: user.booking_portal_client.id).first
         if api.present?
+          product_params = create_product_payload(entity, wf)
           if params[:run_in_background]
-            response = Kylas::Api::ExecuteWorker.perform_async(user.id, api.id, 'BookingDetail', entity.id, params)
+            response = Kylas::Api::ExecuteWorker.perform_async(user.id, api.id, 'BookingDetail', entity.id, product_params)
           else
-            response = Kylas::Api::ExecuteWorker.new.perform(user.id, api.id, 'BookingDetail', entity.id, params)
+            response = Kylas::Api::ExecuteWorker.new.perform(user.id, api.id, 'BookingDetail', entity.id, product_params)
           end
 
           if response.present?
@@ -36,6 +38,13 @@ module Kylas
           end
         end
       end
+    end
+
+    def create_product_payload(entity, wf)
+      payload = {
+        agreement_price: (wf.get_product_price.present? ? entity.send(wf.get_product_price) : 0)
+      }
+      payload
     end
   end
 end
