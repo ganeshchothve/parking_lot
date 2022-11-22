@@ -40,7 +40,9 @@
   <body>
     <%= render "layouts/navbar" %>
     <%= yield %>
-    <%= render "layouts/navbar_footer" %>
+    <% if !full_page_view? %>
+      <%= render "layouts/navbar_footer" %>
+    <% end %>
     <%= render "layouts/gamification" %>
     <%= render 'layouts/partials/google_code' %>
     <%= javascript_tag do %>
