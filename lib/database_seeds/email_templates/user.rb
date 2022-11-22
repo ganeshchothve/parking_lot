@@ -36,13 +36,13 @@ module DatabaseSeeds
               <div class="mb-3"></div>
               <p>
                 <% if self.role?("channel_partner") %>
-                  Thank you for registering as a Channel Partner at <%= current_project.name %>. Please confirm your account by clicking the link below. <br/>
+                  Thank you for registering as a Channel Partner at <%= booking_portal_client.name %>. Please confirm your account by clicking the link below. <br/>
                   You can start entering your leads as soon as your account is confirmed.
                 <% elsif self.buyer? %>
                   <% if self.manager_id.present? && self.manager.role?("channel_partner") %>
-                    Your interest for <%= current_project.name %> has been registered by <%= self.manager.name %>. Please confirm your account by clicking the link below and book your Home in 4 easy steps!<br/>
+                    Your interest for <%= booking_portal_client.name %> has been registered by <%= self.manager.name %>. Please confirm your account by clicking the link below and book your Home in 4 easy steps!<br/>
                   <% else %>
-                    Thank you for registering at <%= current_project.name %>. Please confirm your account by clicking the link below and book your Home in 4 easy steps!
+                    Thank you for registering at <%= booking_portal_client.name %>. Please confirm your account by clicking the link below and book your Home in 4 easy steps!
                   <% end %>
                 <% else %>
                   Please confirm your account by clicking the link below.
