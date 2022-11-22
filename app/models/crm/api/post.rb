@@ -65,10 +65,16 @@ class Crm::Api::Post < Crm::Api
         Rails.logger.error "[Crm::Api::Post] OAuth credentials not found"
       end
     elsif base.oauth_type == "kylas"
-      if user.is_a?(User) && user.kylas_refresh_token
-        request_header['Authorization'] = "Bearer #{user.fetch_access_token}"
-      else
-        request_header['api-key'] = user.kylas_api_key
+      if user.present?
+        if user.is_a?(User) && user.kylas_refresh_token
+          request_header['Authorization'] = "Bearer #{user.fetch_access_token}"
+        else
+          if base.user.present? && base.user.kylas_refresh_token.present?
+            request_header['Authorization'] = "Bearer #{base.user.fetch_access_token}"
+          else
+            request_header['api-key'] = user.kylas_api_key
+          end
+        end
       end
     end
   end
