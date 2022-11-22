@@ -38,7 +38,9 @@
     <%# end %>
   </head>
   <body>
-    <%= render "layouts/navbar" %>
+    <% if !full_page_view? %>
+      <%= render "layouts/navbar" %>
+    <% end %>
     <%= yield %>
     <% if !full_page_view? %>
       <%= render "layouts/navbar_footer" %>

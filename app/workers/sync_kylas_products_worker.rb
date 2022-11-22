@@ -28,8 +28,8 @@ class SyncKylasProductsWorker
           end
         end
       end
+      client.set(sync_product: true)
     end
-    client.set(sync_product: true)
   end
 
   def find_product_in_kylas(kylas_product_id)

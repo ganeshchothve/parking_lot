@@ -37,8 +37,8 @@ class SyncKylasUsersWorker
           end
         end
       end
+      client.set(sync_user: true)
     end
-    client.set(sync_user: true)
   end
 
   def find_user_in_iris(kylas_user_id)
