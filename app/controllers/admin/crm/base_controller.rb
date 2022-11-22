@@ -3,7 +3,7 @@ class Admin::Crm::BaseController < ApplicationController
   before_action :authorize_resource
 
   def index
-    @crms = ::Crm::Base.all.paginate(page: params[:page] || 1, per_page: params[:per_page])
+    @crms = ::Crm::Base.where(booking_portal_client_id: current_client.try(:id)).paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
   def new

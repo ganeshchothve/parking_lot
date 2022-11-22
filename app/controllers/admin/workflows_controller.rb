@@ -45,6 +45,7 @@ class Admin::WorkflowsController < AdminController
       if @workflow.update(permitted_attributes([:admin, @workflow]))
         format.html { redirect_to admin_workflows_path, notice: 'Workflow was successfully updated.' }
       else
+        fetch_pipeline_details
         errors = []
         if @workflow.errors.messages.has_key?(:pipelines)
           errors << @workflow.pipelines.map{ |pipeline| pipeline.errors.full_messages }.flatten rescue []

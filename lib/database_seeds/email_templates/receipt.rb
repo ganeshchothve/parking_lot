@@ -15,7 +15,7 @@ module DatabaseSeeds
           </div>
         </div>
         <div class="mt-3"></div>
-        <%= current_client.templates.where(_type: "Template::ReceiptTemplate", project_id: self.project_id).first.parsed_content(self) %>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "receipt_success").blank?
+        <%= booking_portal_client.templates.where(_type: "Template::ReceiptTemplate", project_id: self.project_id).first.parsed_content(self) %>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "receipt_success").blank?
 
         Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Receipt", name: "receipt_failed", subject: "Payment <%= self.receipt_id %> Failed", content: '<div class="card w-100">
             <div class="card-body">
@@ -30,7 +30,7 @@ module DatabaseSeeds
             </div>
           </div>
           <div class="mt-3"></div>
-          <%= current_client.templates.where(_type: "Template::ReceiptTemplate", project_id: self.project_id).first.parsed_content(self) %>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "receipt_failed").blank?
+          <%= booking_portal_client.templates.where(_type: "Template::ReceiptTemplate", project_id: self.project_id).first.parsed_content(self) %>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "receipt_failed").blank?
 
         Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Receipt", name: "receipt_clearance_pending", subject: "Payment <%= self.receipt_id %> is pending clearance", content: '<div class="card w-100">
           <div class="card-body">
@@ -41,7 +41,7 @@ module DatabaseSeeds
           </div>
         </div>
         <div class="mt-3"></div>
-        <%= current_client.templates.where(_type: "Template::ReceiptTemplate", project_id: self.project_id).first.parsed_content(self) %>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "receipt_clearance_pending").blank?
+        <%= booking_portal_client.templates.where(_type: "Template::ReceiptTemplate", project_id: self.project_id).first.parsed_content(self) %>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "receipt_clearance_pending").blank?
 
         Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Receipt", name: "receipt_pending", subject: "Payment Receipt <%= self.receipt_id %> Collected", content: '<div class="card w-100">
             <div class="card-body">
@@ -50,7 +50,7 @@ module DatabaseSeeds
             </div>
           </div>
           <div class="mt-3"></div>
-          <%= current_client.templates.where(_type: "Template::ReceiptTemplate", project_id: self.project_id).first.parsed_content(self) %>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "receipt_pending").blank?
+          <%= booking_portal_client.templates.where(_type: "Template::ReceiptTemplate", project_id: self.project_id).first.parsed_content(self) %>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "receipt_pending").blank?
 
         Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Receipt", name: "receipt_refunded", subject: "Your refund for payment <%= self.receipt_id %> has been processed", content: '<div class="card w-100">
             <div class="card-body">
@@ -60,7 +60,7 @@ module DatabaseSeeds
             </div>
           </div>
           <div class="mt-3"></div>
-          <%= current_client.templates.where(_type: "Template::ReceiptTemplate", project_id: self.project_id).first.parsed_content(self) %>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "receipt_refunded").blank?
+          <%= booking_portal_client.templates.where(_type: "Template::ReceiptTemplate", project_id: self.project_id).first.parsed_content(self) %>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "receipt_refunded").blank?
 
         Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Receipt", name: "receipt_available_for_refund", subject: "Your payment <%= self.receipt_id %> is available for refund.", content: '<div class="card w-100">
             <div class="card-body">
@@ -70,7 +70,7 @@ module DatabaseSeeds
             </div>
           </div>
           <div class="mt-3"></div>
-          <%= current_client.templates.where(_type: "Template::ReceiptTemplate", project_id: self.project_id).first.parsed_content(self) %>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "receipt_available_for_refund").blank?
+          <%= booking_portal_client.templates.where(_type: "Template::ReceiptTemplate", project_id: self.project_id).first.parsed_content(self) %>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "receipt_available_for_refund").blank?
 
       end
     end

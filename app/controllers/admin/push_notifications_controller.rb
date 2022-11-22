@@ -16,6 +16,7 @@ class Admin::PushNotificationsController < AdminController
 
   def create
     @push_notification.assign_attributes(permitted_attributes([:admin, @push_notification]))
+    @push_notification.booking_portal_client_id = current_client.try(:id)
     respond_to do |format|
       if @push_notification.save
         format.html { redirect_to admin_push_notifications_path, notice: I18n.t("controller.push_notifications.notice.notifications_sent") }

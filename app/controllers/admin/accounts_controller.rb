@@ -8,7 +8,7 @@ class Admin::AccountsController < AdminController
   # GET /admin/:request_type/accounts
 
   def index
-    @accounts = Account.all
+    @accounts = Account.where(booking_portal_client_id: current_client.try(:id))
     @accounts = @accounts.paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
       format.json { render json: @accounts }
@@ -20,7 +20,7 @@ class Admin::AccountsController < AdminController
   # GET /admin/:request_type/accounts/new
 
   def new
-    @account = associated_class.new
+    @account = associated_class.new(booking_portal_client_id: current_client.try(:id))
     render layout: false
   end
 
