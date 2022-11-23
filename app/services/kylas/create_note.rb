@@ -27,7 +27,7 @@ module Kylas
           end
 
           if response.present?
-            log_response = response[:api_log]
+            log_response = response.try(:api_log)
             if log_response.present?
               if log_response[:status] == "Success"
                 entity.set(kylas_note_id: log_response[:response].first.try(:[], "id")) if log_response[:response].present?

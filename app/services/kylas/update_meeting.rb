@@ -35,11 +35,11 @@ module Kylas
       if admin.present?
         payload = 
         {
-          "id": admin.kylas_user_id,
+          "id": admin.kylas_user_id.to_i,
           "entity": "user"
         },
         {
-          "id": entity.user.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)),
+          "id": entity.user.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)).to_i,
           "entity": "contact"
         }
       end
