@@ -151,10 +151,6 @@ class Admin::LeadPolicy < LeadPolicy
     new_kylas_associated_lead?
   end
 
-  def deal_associated_contact_details?
-    new_kylas_associated_lead?
-  end
-
   def new_kylas_lead?
     user.role.in?(%w(admin sales sales_admin))
   end

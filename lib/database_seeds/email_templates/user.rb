@@ -102,7 +102,7 @@ module DatabaseSeeds
           </div>
         </div>
         <div class="mt-3"></div>
-        ') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: "updated_token_details", booking_portal_client_id: client_id).blank?
+        ') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, name: "updated_token_details").blank?
 
         Template::EmailTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: "update_token_details_completed", subject: "Update token details completed", content: '<p>Your request of update token details completed.</p>') if ::Template::EmailTemplate.where(name: "update_token_details_completed").blank?
 

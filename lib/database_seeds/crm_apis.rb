@@ -123,6 +123,13 @@ module DatabaseSeeds
            "{\n    \"sourceEntity\": {\n        \"description\": \"<div><%= self.note.html_safe %></div><small>Added By: <%= self&.creator&.name %></small>\"\n    },\n    \"targetEntityId\": \"<%= self.notable.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)) %>\",\n    \"targetEntityType\": \"DEAL\"\n}",
           "resource_class"=>"Note",
           "response_crm_id_location"=>"id"
+        },
+        {"_type"=>"Crm::Api::Put",
+          "event"=>"UpdateContact",
+          "path"=>"/v1/contacts/<%= self.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)) %>",
+          "request_payload"=>
+           "<% email = [{:type=>\"OFFICE\", :value=>self.email, :primary=>true}] %>\n<% if self.phone.present? %>\n    <% phone = Phonelib.parse(self.phone) %>\n    <% phones = [{:type=>\"MOBILE\", :code=> phone.country, :dialCode=>\"+\#{phone.country_code}\", :value=> phone.national(false).sub(/^0/, ''), :primary=>true}] %>\n<% end %>\n<% if self.email.present? %>\n    <% emails = [{type: \"OFFICE\", value: self.email, primary: true}] %>\n<% end %>\n\n<% parsed_contact = {\n    firstName: self.first_name,\n    lastName: self.last_name\n  } %>\n\n<% if (defined?(emails) && emails.present?) %>\n    <% parsed_contact.merge!(emails: emails)  %>\n<% end %>\n<% if (defined?(phones) && phones.present?) %>\n    <% parsed_contact.merge!(phoneNumbers: phones)  %>\n<% end %>\n<%= parsed_contact %>",
+          "resource_class"=>"User"
         }
       ]
 

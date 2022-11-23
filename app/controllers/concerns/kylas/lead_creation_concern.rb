@@ -19,6 +19,7 @@ module Kylas
       respond_to do |format|
         if @user.valid?
           if @user.save
+            Kylas::UpdateContact.new(current_user, @user, {check_uniqueness: true}).call if params.dig(:lead, :kylas_contact_id).present? && (params.dig(:lead, :phone_update).present? || params.dig(:lead, :email_update).present?)
             Kylas::CreateContact.new(current_user, @user, {check_uniqueness: true, run_in_background: false}) if params.dig(:lead, :sync_to_kylas).present?
             @user.confirm
             create_or_set_lead(format)
@@ -70,24 +71,6 @@ module Kylas
           format.html { redirect_to request.referer, notice: 'Leads were successfully created' }
         else
           format.html { redirect_to request.referer, alert: @user.errors.full_messages }
-        end
-      end
-    end
-
-    # action used for ajax call
-    def deal_associated_contact_details
-      contact_id = params[:contact_id]
-      @contact_details = Kylas::FetchContactDetails.new(current_user, [contact_id], true).call
-      respond_to do |format|
-        if @contact_details[:success]
-          contact = @contact_details[:data]
-          if contact.present?
-            format.json { render json: contact, status: :ok }
-          else
-            format.json { render json: {errors: 'Contact details not present'}, status: :not_found }
-          end
-        else
-          format.json { render json: {errors: @contact_details[:error]}, status: :not_found }
         end
       end
     end
