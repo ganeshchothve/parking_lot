@@ -151,7 +151,7 @@
                 </div>
                 <div class="right-info pl-5 pr-5 pt-4 pb-4">
                   <div class=" float-right">
-                    <%= link_to I18n.t("controller.searches.cost_sheet_and_payment_schedule.link_name"), "javascript:;", class: 'modal-remote-form-link print_cs_ps', target: "_blank" %>
+                    <%= link_to I18n.t("controller.searches.cost_sheet_and_payment_schedule.link_name"), "javascript:;", class: 'print_cs_ps', target: "_blank" %>
                   </div>
                   <!--<div data-placeholder="gallery_unit_images"></div>-->
                 </div>
@@ -214,9 +214,9 @@
     let leadId = <%= raw @search.lead_id.to_json %>
     let currentUserRoleGroup = <%= raw current_user_role_group.to_json %>
     if(currentUserRoleGroup == "buyer"){
-      $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/project_units/"+ unit_id + "/quotation?layout=false");
+      $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/project_units/"+ unit_id + "/quotation");
     }else{
-      $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/leads/"+ leadId +"/project_units/" + unit_id + "/quotation?layout=false");
+      $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/leads/"+ leadId +"/project_units/" + unit_id + "/quotation");
     }
   });
   $('#floorPlanImage').on('shown.bs.modal', function(){
