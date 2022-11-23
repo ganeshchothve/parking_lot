@@ -181,27 +181,27 @@ module Kylas
     end
 
     def associate_contact_with_deal(format, options = {})
-      params = {}
+      deal_payload = {}
       deal_data = options[:deal_data]
       current_user = options[:current_user]
       kylas_deal_id = options[:kylas_deal_id]
       if deal_data.present?
-        params.merge!({run_in_background: true})
-        Kylas::UpdateDeal.new(current_user, @lead, params).call
+        deal_payload.merge!({run_in_background: true})
+        Kylas::UpdateDeal.new(current_user, @lead, deal_payload).call
       else
         format.html { redirect_to request.referer, alert: 'Something went wrong', status: :unprocessable_entity }
       end
     end
 
     def sync_product_to_kylas(current_user, kylas_product_id, kylas_deal_id, deal_data)
-      params = {}
+      update_deal_payload = {}
       products_response = Kylas::FetchProducts.new(current_user).call(detail_response = true)
       if deal_data.present? && products_response.present?
         if deal_data['products'].blank? || deal_data['products'].pluck('id').exclude?(kylas_product_id.to_i)
           product = (products_response.select{|p| p['id'] == kylas_product_id.to_i }.first rescue {})
-          params.merge!(product: product, run_in_background: true) if product.present?
-          lead = Lead.where(kylas_deal_id: kylas_deal_id).first if kylas_deal_id.present?
-          Kylas::UpdateDeal.new(current_user, lead, params).call if lead.present?
+          update_deal_payload.merge!(product: product, run_in_background: true) if product.present?
+          lead = Lead.where(kylas_deal_id: kylas_deal_id, booking_portal_client_id: current_client.id).first if kylas_deal_id.present?
+          Kylas::UpdateDeal.new(current_user, lead, update_deal_payload).call if lead.present?
         end
       end
     end

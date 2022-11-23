@@ -76,7 +76,7 @@ module Kylas
           'currency': {
             'id': entity.booking_portal_client&.kylas_currency_id
           },
-          'value': (wf.get_product_price.present? ? entity.send(wf.get_product_price) : 0)
+          'value': ((wf.get_product_price.present? && entity.respond_to?(wf.get_product_price)) ? entity.send(wf.get_product_price) : 0)
         }
       }
       payload

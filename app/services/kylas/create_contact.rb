@@ -18,7 +18,8 @@ module Kylas
       if options[:check_uniqueness]
         response = Kylas::FetchUniquenessStrategy.new('contact', contact).call
         if response[:success]
-          uniqueness_strategy = response[:data]["field"].downcase
+          response = response.with_indifferent_access
+          uniqueness_strategy = response.dig(:data, :field).downcase
           if(uniqueness_strategy == "email" && contact.email.present?) || 
             (uniqueness_strategy == "phone" && contact.phone.present?) || 
             (uniqueness_strategy == "email_phone" && (contact.email.present? || contact.phone.present?))
@@ -28,7 +29,7 @@ module Kylas
               if search_result["content"].blank?
                 response = sync_contact_to_kylas
               else
-                contact.set(kylas_contact_id: search_result["content"].first["id"]) if contact.kylas_contact_id.blank?
+                contact.set(kylas_contact_id: search_result["content"].first["id"]) if search_result["content"].present? && search_result["content"].first["id"].present? && contact.kylas_contact_id.blank?
               end
             end
           else
@@ -55,7 +56,7 @@ module Kylas
             log_response = response[:api_log]
             if log_response.present?
               if log_response[:status] == "Success"
-                contact.set(kylas_contact_id: log_response[:response].first["id"])
+                contact.set(kylas_contact_id: log_response[:response].first["id"]) if log_response[:response].present? && log_response[:response].first["id"].present?
               end
             end
             response

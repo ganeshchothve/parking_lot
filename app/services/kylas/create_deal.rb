@@ -30,7 +30,7 @@ module Kylas
             log_response = response[:api_log]
             if log_response.present?
               if log_response[:status] == "Success"
-                entity.set(kylas_deal_id: log_response[:response].first["id"])
+                entity.set(kylas_deal_id: log_response[:response].first["id"]) if log_response[:response].present? && log_response[:response].first["id"].present?
               end
             end
             response

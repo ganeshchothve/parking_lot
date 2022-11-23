@@ -32,7 +32,7 @@ module Kylas
             log_response = response[:api_log]
             if log_response.present?
               if log_response[:status] == "Success"
-                entity.set(kylas_product_id: log_response[:response].first["id"])
+                entity.set(kylas_product_id: log_response[:response].first["id"]) if log_response[:response].present? && log_response[:response].first["id"].present?
               end
             end
           end
@@ -42,7 +42,7 @@ module Kylas
 
     def create_product_payload(entity, wf)
       payload = {
-        agreement_price: (wf.get_product_price.present? ? entity.send(wf.get_product_price) : 0)
+        agreement_price: ((wf.get_product_price.present? && entity.respond_to?(wf.get_product_price)) ? entity.send(wf.get_product_price) : 0)
       }
       payload
     end
