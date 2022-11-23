@@ -200,7 +200,7 @@ module Kylas
         if deal_data['products'].blank? || deal_data['products'].pluck('id').exclude?(kylas_product_id.to_i)
           product = (products_response.select{|p| p['id'] == kylas_product_id.to_i }.first rescue {})
           update_deal_payload.merge!(product: product, run_in_background: true) if product.present?
-          lead = Lead.where(kylas_deal_id: kylas_deal_id, booking_portal_client_id: current_client.id).first if kylas_deal_id.present?
+          lead = Lead.where(kylas_deal_id: kylas_deal_id, booking_portal_client_id: current_user.booking_portal_client.id).first if kylas_deal_id.present?
           Kylas::UpdateDeal.new(current_user, lead, update_deal_payload).call if lead.present?
         end
       end
