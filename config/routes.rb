@@ -351,6 +351,7 @@ Rails.application.routes.draw do
         patch :reactivate_account
         patch :move_to_next_state
         patch :change_state
+        get :approve_reject_company_user
         patch :update_player_ids
       end
 

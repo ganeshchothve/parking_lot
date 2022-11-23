@@ -2029,6 +2029,7 @@ en:
         kylas_user_id: Kylas Users
         new_user_kylas_crm: "How to add a new user in Kylas CRM?"
         booking_portal_client: Client Name
+        user_status_in_company_event: 'Status'
         change_in_manger:
           dear_team: "Dear Team"
           text: "Channel Partner has been changed on customer %{name1}. New assigned channel partner is %{name2}."
@@ -2085,6 +2086,9 @@ en:
         employee_user: "Employee"
         direct: "Direct"
         dev_sourcing_manager: "Developer Sourcing Manager"
+      user/company_events:
+        active: "Approve"
+        inactive: "Reject"
 
       fund_account:
         address: "UPI Address"
@@ -3480,6 +3484,12 @@ en:
         customer_signature: "Customer Signature"
         authorized_signatory: "Authorized Signatory"
         e_customer_form: "This is an electronically generated customer form."
+      view:
+        all: All Users
+        join_requests: User Requests
+      approve_reject_company_user:
+        header: Approve / Reject User
+        link_name: Approve / Reject
 
     interested_projects:
       set_interested_project_missing: "Interested Project not found"

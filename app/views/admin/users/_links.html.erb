@@ -78,3 +78,7 @@
     <% end %>
   <% end %>
 <% end %>
+
+<% if policy([:admin, user]).approve_reject_company_user? %>
+  <%= link_to t('controller.users.approve_reject_company_user.link_name'), approve_reject_company_user_admin_user_path(user), class: "dropdown-item modal-remote-form-link" %>
+<% end %>

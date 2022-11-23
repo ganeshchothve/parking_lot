@@ -6,7 +6,7 @@ class Admin::UsersController < AdminController
   before_action :authenticate_user!, except: %w[resend_confirmation_instructions change_state signup register]
   before_action :set_user, except: %i[index export new create portal_stage_chart channel_partner_performance partner_wise_performance search_by signup register]
   before_action :validate_player_ids, only: %i[update_player_ids]
-  before_action :authorize_resource, except: %w[resend_confirmation_instructions change_state, signup register sync_kylas_users]
+  before_action :authorize_resource, except: %w[resend_confirmation_instructions change_state signup register sync_kylas_users]
   around_action :apply_policy_scope, only: %i[index export]
   before_action :set_client, only: [:register]
   before_action :fetch_kylas_users, only: %i[new edit]
@@ -115,6 +115,14 @@ class Admin::UsersController < AdminController
         format.json { render json: { errors: @user.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
+  end
+
+  def approve_reject_company_user
+    @channel_partner = ChannelPartner.where(id: @user.temp_channel_partner_id).first
+    unless @channel_partner.present?
+      redirect_to admin_users_path(fltrs: {user_status_in_company: 'pending_approval'}), alert: "#{ChannelPartner.model_name.human} not found"
+    end
+    render layout: false
   end
 
   private
