@@ -2,9 +2,6 @@
           <thead>
             <tr>
               <th>Project Name</th>
-              <% if policy([current_user_role_group, InterestedProject]).index? %>
-                <%= I18n.t("mongoid.models.interested_project.other") %>
-              <% end %>
               <th>Developer Name</th>
               <th>Location</th>
               <th>Launch Date</th>

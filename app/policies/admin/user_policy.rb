@@ -47,7 +47,7 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def edit?
-    super || new?(true) || marketplace_client?
+    super || new?(true)
   end
 
   def confirm_user?

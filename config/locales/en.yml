@@ -2909,7 +2909,7 @@ en:
         adding_existing_lead: "Above channel partner tried to add already existing lead. Details of the lead are as follows:"
         company_registration: "Company Registration"
         reason: "Reason"
-        application_rejected_by: "Your application has been rejected by <strong> %{name} %></strong>"
+        application_rejected_by: "Your application has been rejected by <strong>%{name}</strong>"
         get_registered: "Get Yourself Registered in Existing Company"
         register_company: "Register a New Company"
         reg_req_sent: "Your registration request has been sent to respective company owner"
@@ -3837,7 +3837,7 @@ en:
           step2: "We will notify you via email on the status of your application."
           step3: "Our estimated review time is between 24-48 hours"
         rejected: "Reason %{reason}"
-        applicatin_rejected: "Your application has been rejected"
+        application_rejected: "Your application has been rejected"
         complete_registration: "Complete Registration"
 
   selldo:
