@@ -18,7 +18,7 @@ module Kylas
           end
           lead.reload
           if site_visit.present?
-            Kylas::SyncSiteVisitWorker.perform_async(site_visit.id.to_s)
+            Kylas::SyncSiteVisitWorker.perform_in(5.seconds, site_visit.id.to_s)
           end
         end
       end
