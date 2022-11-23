@@ -29,7 +29,7 @@ module Kylas
               if search_result["content"].blank?
                 response = sync_contact_to_kylas
               else
-                contact.set(kylas_contact_id: search_result["content"].first["id"]) if search_result["content"].present? && search_result["content"].first["id"].present? && contact.kylas_contact_id.blank?
+                contact.set(kylas_contact_id: search_result["content"].first.try(:[], "id")) if search_result["content"].present? && contact.kylas_contact_id.blank?
               end
             end
           else
@@ -56,7 +56,7 @@ module Kylas
             log_response = response[:api_log]
             if log_response.present?
               if log_response[:status] == "Success"
-                contact.set(kylas_contact_id: log_response[:response].first["id"]) if log_response[:response].present? && log_response[:response].first["id"].present?
+                contact.set(kylas_contact_id: log_response[:response].first.try(:[], "id")) if log_response[:response].present?
               end
             end
             response
