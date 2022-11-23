@@ -116,13 +116,17 @@ module ApplicationHelper
   def marketplace?
     valid = current_client.try(:kylas_tenant_id).present?
     unless valid
-      valid = request.host == ENV_CONFIG[:marketplace_host].to_s
+      valid = marketplace_host? || embedded_marketplace?
     end
     valid
   end
 
-  def marketplace_layout?
+  def marketplace_host?
     request.host == ENV_CONFIG[:marketplace_host].to_s
+  end
+
+  def marketplace_layout?
+    marketplace_host?
   end
 
   # Kylas i-Frame URL

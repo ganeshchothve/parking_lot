@@ -15,6 +15,7 @@ class KylasAuthController < ApplicationController
           session.delete(:previous_url) if auth_request?(session[:previous_url])
           flash[:success] = I18n.t('kylas_auth.successfully_installed')
         else
+          flash[:alert] = I18n.t('app.errors.marketplace_error')
           sign_out current_user
           redirect_to action: :authenticate, code: params[:code] and return
         end
