@@ -221,7 +221,7 @@ class Admin::UserPolicy < UserPolicy
       attributes += [fund_accounts_attributes: FundAccountPolicy.new(user, FundAccount.new).permitted_attributes] if record.persisted? && record.user_status_in_company.in?(%w(active))
       attributes += [:rejection_reason]
     end
-    attributes += [:user_status_in_company_event] if user.role?('cp_owner') && record.user_status_in_company == 'pending_approval' && record.temp_channel_partner_id == user.channel_partner_id
+    attributes += [:user_status_in_company_event] if user.present? && user.role?('cp_owner') && record.user_status_in_company == 'pending_approval' && record.temp_channel_partner_id == user.channel_partner_id
     attributes += [:login_otp] if confirm_via_otp?
     attributes.uniq
   end
