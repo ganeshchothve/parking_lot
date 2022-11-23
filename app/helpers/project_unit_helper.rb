@@ -8,7 +8,7 @@ module ProjectUnitHelper
     html_content = "<div class='row mb-3' style='width:350px;'>
                   <div class='col-md-4'><label>Beds</label><div>#{unit.bedrooms}</div></div>
                   <div class='col-md-4'><label>Apartment</label><div>#{unit.floor_order}</div></div>
-                  <div class='col-md-4'><label>Carpet</label><div>#{unit.carpet} #{current_client.area_unit}</div></div>
+                  <div class='col-md-4'><label>Carpet</label><div>#{unit.carpet} #{unit.booking_portal_client.area_unit}</div></div>
                   <div class='col-md-4'><label>Facing</label><div>#{unit.unit_facing_direction}</div></div>
                 "
     unless unit.status == 'blocked'

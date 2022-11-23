@@ -11,14 +11,14 @@ module IncentiveSchemesHelper
     end
   end
 
-  def filter_incentive_scheme_resources
+  def filter_incentive_scheme_resources client
     incentive_scheme_resources = IncentiveScheme::RESOURCE_CLASS
     resultant_resources = []
-    resultant_resources = if !current_client.enable_leads && current_client.enable_site_visit
+    resultant_resources = if !client.enable_leads && client.enable_site_visit
       incentive_scheme_resources.reject{|doc| %w(Lead).include?(doc)}
-    elsif current_client.enable_leads && !current_client.enable_site_visit
+    elsif client.enable_leads && !client.enable_site_visit
       incentive_scheme_resources.reject{|doc| %w(SiteVisit).include?(doc)}
-    elsif !current_client.enable_leads && !current_client.enable_site_visit
+    elsif !client.enable_leads && !client.enable_site_visit
       incentive_scheme_resources.reject{|doc| %w(SiteVisit Lead).include?(doc)}
     else
       incentive_scheme_resources

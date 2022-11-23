@@ -2,18 +2,19 @@ class DailySmsReportWorker
   include Sidekiq::Worker
   include ApplicationHelper
 
-  def perform
-    if current_client.enable_communication['sms'] && current_client.notification_numbers.present?
-      record = Client.first
-      superadmin = User.where(role: "superadmin").first
-      projects = record.projects
+  def perform client_id
+    return if client_id.blank?
+    client = Client.where(id: client_id).first
+    if client && client.enable_communication['sms'] && client.notification_numbers.present?
+      superadmin = client.users.superadmin.first
+      projects = client.projects
       projects.each do |project|
         template = Template::SmsTemplate.where(project_id: project.id, name: "daily_sms_report").first
         if template.present?
           sms = Sms.create!(
             project_id: project.id,
-            to: record.notification_numbers.split(","),
-            booking_portal_client_id: record.id,
+            to: client.notification_numbers.split(","),
+            booking_portal_client_id: client.id,
             recipient_id: superadmin.id,
             sms_template_id: template.id,
             triggered_by_id: project.id,

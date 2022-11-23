@@ -125,7 +125,7 @@ class Project
   field :kylas_product_id, type: String
 
   field :email_header, type: String, default: '<div class="container">
-    <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
+    <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= client.logo.url %>" />
     <div class="mt-3"></div>'
   field :email_footer, type: String, default: '<div class="mt-3"></div>
     <div class="card mb-3">
@@ -135,15 +135,15 @@ class Project
       </div>
     </div>
     <div style="font-size: 12px;">
-      If you have any queries you can reach us at <%= current_project.support_number %> or write to us at <%= current_project.support_email %>. Please click <a href="<%= current_client.website_link %>">here</a> to visit our website.
+      If you have any queries you can reach us at <%= current_project.support_number %> or write to us at <%= current_project.support_email %>. Please click <a href="<%= client.website_link %>">here</a> to visit our website.
     </div>
     <hr/>
     <div class="text-muted text-center" style="font-size: 12px;">
       © <%= Date.today.year %> <%= current_project.name %>. All Rights Reserved. | MAHARERA ID: <%= current_project.rera_registration_no %>
     </div>
-    <% if current_client.address.present? %>
+    <% if client.address.present? %>
       <div class="text-muted text-center" style="font-size: 12px;">
-        <%= current_client.address.to_sentence %>
+        <%= client.address.to_sentence %>
       </div>
     <% end %>
     <div class="mt-3"></div>
@@ -189,8 +189,8 @@ class Project
   validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
   validates :gst_number, uniqueness: { allow_blank: true }
-  # validates :city, inclusion: { in: proc { current_client.regions.distinct(:city) } }, allow_blank: true
-  # validates :region, inclusion: { in: proc { current_client.regions.distinct(:partner_regions).flatten || [] } }, allow_blank: true
+  # validates :city, inclusion: { in: proc { self.booking_portal_client.regions.distinct(:city) } }, allow_blank: true
+  # validates :region, inclusion: { in: proc { self.booking_portal_client.regions.distinct(:partner_regions).flatten || [] } }, allow_blank: true
 
   accepts_nested_attributes_for :specifications, :offers, :timeline_updates, :address, :nearby_locations, allow_destroy: true
 

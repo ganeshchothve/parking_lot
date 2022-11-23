@@ -117,25 +117,25 @@ class Client
   field :kylas_custom_fields, type: Hash, default: {}
 
   field :email_header, type: String, default: '<div class="container">
-    <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
+    <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= client.logo.url %>" />
     <div class="mt-3"></div>'
   field :email_footer, type: String, default: '<div class="mt-3"></div>
     <div class="card mb-3">
       <div class="card-body">
         Thanks,<br/>
-        <%= current_client.name %>
+        <%= client.name %>
       </div>
     </div>
     <div style="font-size: 12px;">
-      If you have any queries you can reach us at <%= current_client.support_number %> or write to us at <%= current_client.support_email %>. Please click <a href="<%= current_client.website_link %>">here</a> to visit our website.
+      If you have any queries you can reach us at <%= client.support_number %> or write to us at <%= client.support_email %>. Please click <a href="<%= client.website_link %>">here</a> to visit our website.
     </div>
     <hr/>
     <div class="text-muted text-center" style="font-size: 12px;">
-      © <%= Date.today.year %> <%= current_client.name %>. All Rights Reserved.
+      © <%= Date.today.year %> <%= client.name %>. All Rights Reserved.
     </div>
-    <% if current_client.address.present? %>
+    <% if client.address.present? %>
       <div class="text-muted text-center" style="font-size: 12px;">
-        <%= current_client.address.to_sentence %>
+        <%= client.address.to_sentence %>
       </div>
     <% end %>
     <div class="mt-3"></div>
@@ -183,6 +183,7 @@ class Client
   validates :regions, copy_errors_from_child: true
   validates :name, uniqueness: true
   validates :payment_link_validity_hours, numericality: { greater_than: 0 }
+  validate :check_kylas_api_key
 
   accepts_nested_attributes_for :address, :external_inventory_view_config, :checklists
   accepts_nested_attributes_for :regions, allow_destroy: true
@@ -242,6 +243,18 @@ class Client
 
   def base_domain
     self.booking_portal_domains.first
+  end
+
+  def check_kylas_api_key
+    if self.kylas_api_key_changed? && self.kylas_api_key.present?
+      user_response = Kylas::UserDetails.new(User.new(
+        booking_portal_client: self
+      )).call
+
+      unless user_response[:success]
+        self.errors.add(:kylas_api_key, 'is invalid')
+      end
+    end
   end
 
   def self.selldo_api_clients
