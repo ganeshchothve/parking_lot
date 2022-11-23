@@ -3,11 +3,11 @@ class SelldoSitevisitUpdateWorker
   include ApplicationHelper
 
   def perform(lead_id, current_user_id, sitevisit_id, cp_code = nil)
-    crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
     lead = Lead.where(id: lead_id).first
-    sitevisit = lead.site_visits.where(id: sitevisit_id).first
     current_user = User.where(id: current_user_id).first
     current_client = lead.user.booking_portal_client
+    crm_base = Crm::Base.where(booking_portal_client_id: current_client.id ,domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+    sitevisit = lead.site_visits.where(id: sitevisit_id).first
     # v2.sell.do params
     # params = {
     #   api_key: "6a6854e70e4be582de82bf5c4861ab11",

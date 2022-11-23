@@ -5,7 +5,7 @@ module ChannelPartnerDashboardConcern
     #Need refactoring
     dates = params[:dates]
     project_ids = params["project_ids"].try(:split, ",").try(:flatten) || []
-    project_ids = Project.where(id: {"$in": project_ids}).distinct(:id) || []
+    project_ids = Project.where(booking_portal_client_id: current_client.try(:id)).where(id: {"$in": project_ids}).distinct(:id) || []
 
     filters = if dates.present? || project_ids.present?
                 {fltrs: {created_at: dates, project_ids: project_ids}}
@@ -49,8 +49,8 @@ module ChannelPartnerDashboardConcern
     @data_labels = get_labels(@data)
     #
     # Incentives section
-    @incentive_approved = Invoice.where(manager_id: current_user.id, status: 'approved').build_criteria(filters).count
-    @incentive_raised = Invoice.where(manager_id: current_user.id, status: 'pending_approval').build_criteria(filters).count
+    @incentive_approved = Invoice.where(booking_portal_client_id: current_client.try(:id)).where(manager_id: current_user.id, status: 'approved').build_criteria(filters).count
+    @incentive_raised = Invoice.where(booking_portal_client_id: current_client.try(:id)).where(manager_id: current_user.id, status: 'pending_approval').build_criteria(filters).count
     @bookings_eligible_for_brokerage = BookingDetail.build_criteria(filters).where(BookingDetail.user_based_scope(current_user)).incentive_eligible.count
     @bookins_not_eligible_for_brokerage = BookingDetail.build_criteria(filters).where(BookingDetail.user_based_scope(current_user)).where(status: {"$in": %w(scheme_approved blocked booked_tentative booked_confirmed)}).filter_by_tasks_pending_tracked_by('system').count
     # @incentive_pending_bookings = DashboardDataProvider.incentive_pending_bookings(current_user, filters)
@@ -83,8 +83,8 @@ module ChannelPartnerDashboardConcern
     dates = params[:dates]
     dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
     project_ids = params["project_ids"].try(:split, ",").try(:flatten) || []
-    project_ids = Project.where(id: {"$in": project_ids}).distinct(:id)
-    @all_schemes = IncentiveScheme.build_criteria(fltrs: {date_range: dates, project_ids: project_ids, status: 'approved'}).in(tier_id: [nil, '', current_user.tier_id])
+    project_ids = Project.where(booking_portal_client_id: current_client.try(:id)).where(id: {"$in": project_ids}).distinct(:id)
+    @all_schemes = IncentiveScheme.where(booking_portal_client_id: current_client.try(:id)).build_criteria(fltrs: {date_range: dates, project_ids: project_ids, status: 'approved'}).in(tier_id: [nil, '', current_user.tier_id])
   end
 
   def project_wise_leads

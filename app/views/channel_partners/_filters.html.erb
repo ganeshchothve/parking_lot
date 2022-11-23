@@ -34,7 +34,7 @@
 
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.channel_partner.manager_id'), class: "control-label" %>
-          <%= select_tag "fltrs[manager_id]", options_for_select( User.where(is_active: true, confirmed_at: {'$ne': nil}, role: "cp").collect{|x| [ x.ds_name, x.id.to_s]}, params.dig(:fltrs,:manager_id)), {prompt: I18n.t("global.select"), class: "selectize"} %>
+          <%= select_tag "fltrs[manager_id]", options_for_select( User.where(booking_portal_client_id: current_client.try(:id), is_active: true, confirmed_at: {'$ne': nil}, role: "cp").collect{|x| [ x.ds_name, x.id.to_s]}, params.dig(:fltrs,:manager_id)), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
 
         <%= render 'admin/regions/filters' %>

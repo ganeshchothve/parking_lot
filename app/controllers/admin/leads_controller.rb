@@ -9,10 +9,10 @@ class Admin::LeadsController < AdminController
   def new
     attrs = {}
     if params[:user_id].present?
-      @user = User.where(id: params[:user_id]).first
+      @user = User.where(id: params[:user_id], booking_portal_client_id: current_client.try(:id)).first
       attrs = @user.as_json(only: %w(first_name last_name email phone))
     elsif params[:lead_id].present?
-      @existing_lead = Lead.where(id: params[:lead_id]).first
+      @existing_lead = Lead.where(id: params[:lead_id], booking_portal_client_id: current_client.try(:id)).first
     end
     if params[:project_id].present?
       attrs[:project_id] = params[:project_id]
@@ -116,7 +116,7 @@ class Admin::LeadsController < AdminController
   end
 
   def reassign_sales
-    @sales = User.where(id: params.dig(:lead, :closing_manager_id), role: 'sales').first
+    @sales = User.where(booking_portal_client_id: current_client.try(:id)).where(id: params.dig(:lead, :closing_manager_id), role: 'sales').first
     respond_to do |format|
       if @sales.present?
         if @lead.assign_manager(params.dig(:lead, :closing_manager_id), @lead.closing_manager_id)
@@ -178,7 +178,7 @@ class Admin::LeadsController < AdminController
 
     respond_to do |format|
       if @leads.present? && @project_ids.present?
-        email_template = ::Template::EmailTemplate.where(name: "send_tp_projects_link").first
+        email_template = ::Template::EmailTemplate.where(name: "send_tp_projects_link", booking_portal_client_id: current_client.try(:id)).first
         if email_template.present?
           @leads.each do |lead|
             if lead.email.present?
@@ -194,7 +194,7 @@ class Admin::LeadsController < AdminController
             end
           end
         end
-        sms_template = ::Template::SmsTemplate.where(name: "send_tp_projects_link").first
+        sms_template = ::Template::SmsTemplate.where(name: "send_tp_projects_link", booking_portal_client_id: current_client.try(:id)).first
         if sms_template.present?
           @leads.each do |lead|
             if lead.phone.present?
@@ -232,12 +232,12 @@ class Admin::LeadsController < AdminController
   end
 
   def find_lead_with_reference_id crm_id, reference_id
-    _crm = Crm::Base.where(id: crm_id).first
-    Lead.where("third_party_references.crm_id": _crm.try(:id), "third_party_references.reference_id": reference_id ).first
+    _crm = Crm::Base.where(id: crm_id, booking_portal_client_id: current_client.try(:id)).first
+    Lead.where(booking_portal_client_id: current_client.try(:id)).where("third_party_references.crm_id": _crm.try(:id), "third_party_references.reference_id": reference_id ).first
   end
 
   def set_sales_user
-    @sales = User.where(id: params[:sales_id], role: 'sales').first
+    @sales = User.where(id: params[:sales_id], role: 'sales', booking_portal_client_id: current_client.try(:id)).first
     unless @sales
       flash.now[:alert] = 'Sales user not found'
       render 'assign_sales'

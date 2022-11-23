@@ -54,11 +54,11 @@ class NotesController < ApplicationController
 
   private
   def set_notable
-    @notable = params[:notable_type].classify.constantize.find params[:notable_id]
+    @notable = params[:notable_type].classify.constantize.where(id: params[:notable_id], booking_portal_client_id: current_client.try(:id)).first
   end
 
   def set_note
-    @note = Note.where(id: params[:id]).first if params[:id].present?
+    @note = Note.where(id: params[:id], booking_portal_client_id: current_client.try(:id)).first if params[:id].present?
   end
 
   def authorize_resource
@@ -72,7 +72,7 @@ class NotesController < ApplicationController
   end
 
   def apply_policy_scope
-    Note.with_scope(policy_scope(Note.all)) do
+    Note.with_scope(policy_scope(Note.where(booking_portal_client_id: current_client.try(:id)))) do
       yield
     end
   end

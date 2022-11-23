@@ -66,13 +66,13 @@ module UserKycsConcern
   private
 
   def set_lead
-    @lead = Lead.find(params[:lead_id]) if params[:lead_id].present?
+    @lead = Lead.where(booking_portal_client_id: current_client.try(:id), id: params[:lead_id]).first if params[:lead_id].present?
     @lead = Lead.where(user_id: current_user, project_id: current_project.id).first if @lead.blank? && current_project.present?
     redirect_to home_path(current_user), alert: t('controller.application.set_current_client') unless @lead
   end
 
   def set_user_kyc
-    @user_kyc = UserKyc.find(params[:id])
+    @user_kyc = UserKyc.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first
   end
 
   def apply_policy_scope

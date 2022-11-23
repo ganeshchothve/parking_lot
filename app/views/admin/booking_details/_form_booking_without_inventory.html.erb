@@ -108,7 +108,7 @@
     $('.booking_source').on('change', function(e){
       var source = e.target.value
       if (!(['Channel Partner', 'channel_partner', 'CP', 'cp', 'ChannelPartner'].includes(source))) {
-        var manager = JSON.parse('<%= raw User.in(role: ['cp_owner', 'channel_partner']).where(email: 'ketan.vaze@sell.do').collect {|cp| {value: cp.id.to_s, text:cp.name} }.to_json %>')
+        var manager = JSON.parse('<%= raw User.in(role: ['cp_owner', 'channel_partner']).where(booking_portal_client_id: current_client.try(:id), email: 'ketan.vaze@sell.do').collect {|cp| {value: cp.id.to_s, text:cp.name} }.to_json %>')
 
         var $manager = $("#tagged_manager").selectize();
         var manager_selectized = $manager[0].selectize;

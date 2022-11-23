@@ -33,7 +33,7 @@ module IncentiveSchemeAutoApplication
   # Find incentive schemes
   def find_incentive_schemes(category)
     tier_id = manager&.tier_id
-    incentive_schemes = ::IncentiveScheme.approved.where(resource_class: self.class.to_s, category: category, project_id: project_id, auto_apply: true).lte(starts_on: invoiceable_date).gte(ends_on: invoiceable_date)
+    incentive_schemes = ::IncentiveScheme.approved.where(booking_portal_client_id: self.booking_portal_client_id, resource_class: self.class.to_s, category: category, project_id: project_id, auto_apply: true).lte(starts_on: invoiceable_date).gte(ends_on: invoiceable_date)
     # Find tier level scheme
     if tier_id
       incentive_schemes = incentive_schemes.where(tier_id: tier_id)
@@ -43,7 +43,7 @@ module IncentiveSchemeAutoApplication
 
   # Find all the resources for a channel partner that fall under this scheme
   def find_all_resources_for_scheme(i_scheme)
-    resources = self.class.incentive_eligible(i_scheme.category).where(project_id: i_scheme.project_id, :"incentive_scheme_data.#{i_scheme.id.to_s}".exists => true, manager_id: self.manager_id).gte(scheduled_on: i_scheme.starts_on).lte(scheduled_on: i_scheme.ends_on)
+    resources = self.class.incentive_eligible(i_scheme.category).where(booking_portal_client_id: self.booking_portal_client_id, project_id: i_scheme.project_id, :"incentive_scheme_data.#{i_scheme.id.to_s}".exists => true, manager_id: self.manager_id).gte(scheduled_on: i_scheme.starts_on).lte(scheduled_on: i_scheme.ends_on)
     self.class.or(resources.selector, {id: self.id})
   end
 

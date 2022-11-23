@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12">
-        <%= render "admin/crm/base/choose_crm", crms: Crm::Base.where(id: {"$in": apis.distinct(:base_id)}), apis: apis, resource: resource %>
+        <%= render "admin/crm/base/choose_crm", crms: Crm::Base.where(booking_portal_client_id: current_client.try(:id), id: {"$in": apis.distinct(:base_id)}), apis: apis, resource: resource %>
       </div>
     </div>
   </div>

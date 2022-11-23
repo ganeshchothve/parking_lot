@@ -5,7 +5,7 @@ module SchemesHelper
 
   def filter_scheme_options(scheme_id=nil)
     if scheme_id.present?
-      Scheme.where(_id: scheme_id).map{|pt| [pt.name, pt.id]}
+      Scheme.where(booking_portal_client_id: current_client.try(:id), _id: scheme_id).map{|pt| [pt.name, pt.id]}
     else
       []
     end

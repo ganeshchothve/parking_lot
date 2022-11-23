@@ -77,7 +77,7 @@ class Admin::CustomerSearchesController < AdminController
   def send_notification
     lead = @customer_search.customer
     if lead
-      template = ::Template::SmsTemplate.where(name: "queue_number_notice", project_id: lead.project_id).first
+      template = ::Template::SmsTemplate.where(booking_portal_client_id: current_client.try(:id)).where(name: "queue_number_notice", project_id: lead.project_id).first
       sms = Sms.create!(
         booking_portal_client_id: lead.user.booking_portal_client_id,
         to: [lead.phone],
@@ -93,7 +93,7 @@ class Admin::CustomerSearchesController < AdminController
       @user_kyc = @customer_search.user_kyc
     else
       _customer = @customer_search.customer
-      @user_kyc = _customer.user_kycs.where(default: true).first
+      @user_kyc = _customer.user_kycs.where(booking_portal_client_id: current_client.try(:id)).where(default: true).first
       if !@user_kyc.present?
         @user_kyc = _customer.user_kycs.build(creator: current_user, first_name: _customer.first_name, last_name: _customer.last_name, email: _customer.email, phone: _customer.phone, default: true)
       end
@@ -101,13 +101,13 @@ class Admin::CustomerSearchesController < AdminController
   end
 
   def set_customer_search
-    @customer_search = CustomerSearch.where(id: params[:id]).first
+    @customer_search = CustomerSearch.where(booking_portal_client_id: current_client.try(:id)).where(id: params[:id]).first
     redirect_to root_path, alert: t('controller.customer_searches.set_customer_search_missing'), status: 404 if @customer_search.blank?
   end
 
   def check_cp_user_presence
     if params[:manager_id].present?
-      cp_user = User.where(id: params[:manager_id]).first
+      cp_user = User.where(booking_portal_client_id: current_client.try(:id)).where(id: params[:manager_id]).first
       render json: {errors: I18n.t("controller.channel_partners.alert.not_found")}, status: :not_found and return unless cp_user.present?
     end
   end

@@ -17,7 +17,7 @@ class SiteVisitExportWorker
     end
     file_name = "#{SiteVisit.model_name.human(count: 2)}-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/exports/#{file_name}")
-    ExportMailer.notify(file_name, user.email, SiteVisit.model_name.human(count: 2)).deliver
+    ExportMailer.notify(file_name, user.email, SiteVisit.model_name.human(count: 2), user.id.to_s).deliver
   end
 
   #code for make excel headers bold

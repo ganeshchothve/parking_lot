@@ -3,6 +3,7 @@ class GenerateCoBrandingTemplatesWorker
 
   def perform(user_id)
     user = User.where(id: user_id).first
+    booking_portal_client_id = user.booking_portal_client_id
     options = {
             orientation: 'Landscape',
             page_width: '2000',
@@ -10,17 +11,17 @@ class GenerateCoBrandingTemplatesWorker
           }
     if user.present?
       co_branding_asset_types = ['first_page_co_branding', 'last_page_co_branding']
-      user_asset = Asset.where(assetable_id: user_id).in(document_type: co_branding_asset_types)
+      user_asset = Asset.where(booking_portal_client_id: booking_portal_client_id, assetable_id: user_id).in(document_type: co_branding_asset_types)
       
       co_branding_asset_types.each do |cbt|
-        user_asset = Asset.where(assetable_id: user_id, document_type: cbt).first
+        user_asset = Asset.where(booking_portal_client_id: booking_portal_client_id, assetable_id: user_id, document_type: cbt).first
         if user_asset.present?
           user_asset.remove_file!
 
-          co_branded_assets = Asset.where(assetable_id: user_id, document_type: 'co_branded_asset')
+          co_branded_assets = Asset.where(booking_portal_client_id: booking_portal_client_id, assetable_id: user_id, document_type: 'co_branded_asset')
           co_branded_assets.destroy_all
 
-          pdf_content = Template::CoBrandingTemplate.where(name: user_asset.document_type ).first.parsed_content(user)
+          pdf_content = Template::CoBrandingTemplate.where(booking_portal_client_id: booking_portal_client_id, name: user_asset.document_type ).first.parsed_content(user)
 
           pdf = WickedPdf.new.pdf_from_string(pdf_content, options)
           File.open("#{Rails.root}/tmp/#{user_asset.document_type}-#{user.id}.pdf", "wb") do |file|
@@ -29,7 +30,7 @@ class GenerateCoBrandingTemplatesWorker
           end
           user_asset.save
         else
-          asset = user.assets.build(document_type: cbt, assetable: user)
+          asset = user.assets.build(booking_portal_client_id: booking_portal_client_id, document_type: cbt, assetable: user)
           pdf_content = Template::CoBrandingTemplate.where(name: cbt).first.parsed_content(user)
           pdf = WickedPdf.new.pdf_from_string(pdf_content, options)
           File.open("#{Rails.root}/tmp/#{cbt}-#{user.id}.pdf", "wb") do |file|

@@ -61,7 +61,7 @@ module Kylas
 
     def leads_payload
       lead = params[:lead]
-      product = Project.where(kylas_product_id: lead['kylas_product_id']).first
+      product = Project.where(kylas_product_id: lead['kylas_product_id'], booking_portal_client_id: user.booking_portal_client_id).first
       leads_payload =  {
         id: entity_id,
         firstName: lead['first_name'],

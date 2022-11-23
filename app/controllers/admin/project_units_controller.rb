@@ -83,7 +83,7 @@ class Admin::ProjectUnitsController < AdminController
 
   # after the booking_detail_scheme is rejected, project_unit can be released by calling this action. It makes the project unit available and marks booking_detail as cancelled.
   def release_unit
-    BookingDetail.where(project_unit_id: @project_unit.id).each do |bd|
+    BookingDetail.where(project_unit_id: @project_unit.id, booking_portal_client_id: current_client.try(:id)).each do |bd|
       bd.cancel!
     end
     @project_unit.status = 'available'
@@ -130,7 +130,7 @@ class Admin::ProjectUnitsController < AdminController
   # Defined in ProjectUnitsConcern
 
   def set_project_unit_scheme
-    @scheme = Scheme.where(_id: params[:selected_scheme_id]).first
+    @scheme = Scheme.where(_id: params[:selected_scheme_id], booking_portal_client_id: current_client.try(:id)).first
     @project_unit.scheme = @scheme if @scheme
   end
 
@@ -151,10 +151,10 @@ class Admin::ProjectUnitsController < AdminController
 
   def apply_policy_scope
     custom_project_unit_scope = ProjectUnit.all.where(ProjectUnit.user_based_scope(current_user)).criteria
-    custom_project_unit_scope = custom_project_unit_scope.or([{ status: 'available' }, { status: { "$in": ProjectUnit.booking_stages }, user_id: { "$in": User.where(referenced_manager_ids: current_user.id).distinct(:id) } }]) if current_user.role == 'channel_partner'
+    custom_project_unit_scope = custom_project_unit_scope.or([{ status: 'available' }, { status: { "$in": ProjectUnit.booking_stages }, user_id: { "$in": User.where(booking_portal_client_id: current_client.try(:id)).where(referenced_manager_ids: current_user.id).distinct(:id) } }]) if current_user.role == 'channel_partner'
 
     ProjectUnit.with_scope(policy_scope(custom_project_unit_scope)) do
-      custom_scope = User.all.criteria
+      custom_scope = User.where(booking_portal_client_id: current_client.try(:id)).criteria
       custom_scope = custom_scope.in(referenced_manager_ids: current_user.id).in(role: User.buyer_roles(current_client)) if current_user.role == 'channel_partner'
       User.with_scope(policy_scope(custom_scope)) do
         yield

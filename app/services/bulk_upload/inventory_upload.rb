@@ -52,7 +52,7 @@ module BulkUpload
           agreement_price = row.field(17).strip rescue ""
           all_inclusive_price = row.field(18).strip rescue ""
 
-          project = Project.where(name: project_name).first
+          project = Project.where(booking_portal_client_id: bur.booking_portal_client_id, name: project_name).first
           unless project.present?
             project = Project.new(rera_registration_no: rera_registration_no, name: project_name, booking_portal_client_id: booking_portal_client.id, creator: bur.uploaded_by)
             unless project.save
@@ -62,7 +62,7 @@ module BulkUpload
             end
           end
 
-          project_tower = ProjectTower.where(name: project_tower_name).where(project_id: project.id).first
+          project_tower = ProjectTower.where(booking_portal_client_id: bur.booking_portal_client_id, name: project_tower_name).where(project_id: project.id).first
           unless project_tower.present?
             project_tower = ProjectTower.new(name: project_tower_name, project_id: project.id, total_floors: 1, booking_portal_client_id: booking_portal_client.id)
             unless project_tower.save
@@ -72,7 +72,7 @@ module BulkUpload
             end
           end
 
-          unit_configuration = UnitConfiguration.where(project_id: project.id).where({'$and': [
+          unit_configuration = UnitConfiguration.where(booking_portal_client_id: bur.booking_portal_client_id, project_id: project.id).where({'$and': [
             {data_attributes: {'$elemMatch': {n: 'name', v: unit_configuration_name }}},
             {data_attributes: {'$elemMatch': {n: 'saleable', v: saleable.to_f}}},
             {data_attributes: {'$elemMatch': {n: 'carpet', v: carpet.to_f}}}
@@ -86,7 +86,7 @@ module BulkUpload
             end
           end
 
-          if(ProjectUnit.where(project_id: project.id, erp_id: erp_id).blank?)
+          if(ProjectUnit.where(booking_portal_client_id: bur.booking_portal_client_id, project_id: project.id, erp_id: erp_id).blank?)
             project_unit = ProjectUnit.new
             project_unit.erp_id = erp_id
             #project_unit.developer = developer
@@ -145,7 +145,7 @@ module BulkUpload
               project_unit.parameters.build(name: name, value: row[index], key: name.gsub(/[\W_]+/i, "_").downcase)
             end
             crms.each do |index, crm_id|
-              _crm = Crm::Base.where(id: crm_id).first
+              _crm = Crm::Base.where(booking_portal_client_id: bur.booking_portal_client_id, id: crm_id).first
               if _crm
                 project_unit.third_party_references.build(crm_id: _crm.id, reference_id: row[index])
               else

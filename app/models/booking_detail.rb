@@ -257,15 +257,15 @@ class BookingDetail
   def find_incentive_schemes(category)
     tower_id = project_tower_id
     tier_id = manager&.tier_id
-    incentive_schemes = ::IncentiveScheme.approved.where(resource_class: self.class.to_s, category: category, project_id: project_id, auto_apply: true).lte(starts_on: invoiceable_date).gte(ends_on: invoiceable_date)
+    incentive_schemes = ::IncentiveScheme.approved.where(booking_portal_client_id: self.booking_portal_client_id, resource_class: self.class.to_s, category: category, project_id: project_id, auto_apply: true).lte(starts_on: invoiceable_date).gte(ends_on: invoiceable_date)
     # Find tier level scheme
     if tier_id
-      _incentive_schemes = (incentive_schemes.where(project_tower_id: tower_id, tier_id: tier_id) || incentive_schemes.where(tier_id: tier_id, project_tower_id: nil))
+      _incentive_schemes = (incentive_schemes.where(booking_portal_client_id: self.booking_portal_client_id, project_tower_id: tower_id, tier_id: tier_id) || incentive_schemes.where(booking_portal_client_id: self.booking_portal_client_id, tier_id: tier_id, project_tower_id: nil))
     end
     # Find tower level scheme
-    _incentive_schemes = _incentive_schemes.presence || incentive_schemes.where(project_tower_id: tower_id, tier_id: nil)
+    _incentive_schemes = _incentive_schemes.presence || incentive_schemes.where(booking_portal_client_id: self.booking_portal_client_id, project_tower_id: tower_id, tier_id: nil)
     # Find project level scheme
-    _incentive_schemes = _incentive_schemes.presence || incentive_schemes.where(project_tower_id: nil, tier_id: nil)
+    _incentive_schemes = _incentive_schemes.presence || incentive_schemes.where(booking_portal_client_id: self.booking_portal_client_id, project_tower_id: nil, tier_id: nil)
     # Use default scheme if not found any of above
     #_incentive_schemes.presence ||= ::IncentiveScheme.where(default: true)
     _incentive_schemes
@@ -273,8 +273,8 @@ class BookingDetail
 
   # Find all the bookings for a channel partner that fall under this scheme
   def find_all_resources_for_scheme(i_scheme)
-    booking_details = self.class.incentive_eligible(i_scheme.category).where(project_id: i_scheme.project_id, :"incentive_scheme_data.#{i_scheme.id.to_s}".exists => true, manager_id: self.manager_id).gte(booked_on: i_scheme.starts_on).lte(booked_on: i_scheme.ends_on)
-    booking_details = booking_details.where(project_tower_id: i_scheme.project_tower_id) if i_scheme.project_tower_id.present?
+    booking_details = self.class.incentive_eligible(i_scheme.category).where(booking_portal_client_id: self.booking_portal_client_id, project_id: i_scheme.project_id, :"incentive_scheme_data.#{i_scheme.id.to_s}".exists => true, manager_id: self.manager_id).gte(booked_on: i_scheme.starts_on).lte(booked_on: i_scheme.ends_on)
+    booking_details = booking_details.where(booking_portal_client_id: self.booking_portal_client_id, project_tower_id: i_scheme.project_tower_id) if i_scheme.project_tower_id.present?
     self.class.or(booking_details.selector, {id: self.id})
   end
 
@@ -312,12 +312,12 @@ class BookingDetail
   end
 
   def cost_sheet_template(booking_detail_scheme_id = nil)
-    bds = booking_detail_scheme_id.present? ? booking_detail_schemes.where(id: booking_detail_scheme_id).first : booking_detail_scheme
+    bds = booking_detail_scheme_id.present? ? booking_detail_schemes.where(booking_portal_client_id: self.booking_portal_client_id, id: booking_detail_scheme_id).first : booking_detail_scheme
     bds.try(:cost_sheet_template)
   end
 
   def payment_schedule_template(booking_detail_scheme_id = nil)
-    bds = booking_detail_scheme_id.present? ? booking_detail_schemes.where(id: booking_detail_scheme_id).first : booking_detail_scheme
+    bds = booking_detail_scheme_id.present? ? booking_detail_schemes.where(booking_portal_client_id: self.booking_portal_client_id, id: booking_detail_scheme_id).first : booking_detail_scheme
     bds.try(:payment_schedule_template)
   end
 
@@ -330,9 +330,9 @@ class BookingDetail
     lead_id = options[:lead_id] || self.lead_id
     return unless self.project_unit.present?
     if lead_id.present?
-      receipts_total = Receipt.where(lead_id: lead_id, booking_detail_id: self.id)
+      receipts_total = Receipt.where(booking_portal_client_id: self.booking_portal_client_id, lead_id: lead_id, booking_detail_id: self.id)
       if strict
-        receipts_total = receipts_total.where(status: "success")
+        receipts_total = receipts_total.where(booking_portal_client_id: self.booking_portal_client_id, status: "success")
       else
         receipts_total = receipts_total.in(status: ['clearance_pending', "success"])
       end
@@ -458,15 +458,15 @@ class BookingDetail
   def send_second_booking_notification
     booking_detail = self
     lead = booking_detail.lead
-    if lead.present? && lead.booking_details.where(project_id: lead.project_id).count > 1
+    if lead.present? && lead.booking_details.where(booking_portal_client_id: self.booking_portal_client_id, project_id: lead.project_id).count > 1
       recipients = []
       recipients << lead.manager.manager if lead.manager.try(:manager).present?
       recipients << lead.manager.manager.manager if lead.manager.try(:manager).try(:manager).present?
       recipients << User.admin
-      recipients << User.dev_sourcing_manager.where(project_ids: lead.project_id.to_s)
+      recipients << User.dev_sourcing_manager.where(booking_portal_client_id: self.booking_portal_client_id, project_ids: lead.project_id.to_s)
       recipients = recipients.flatten
       template_name = "second_booking_notification"
-      template = Template::EmailTemplate.where(name: template_name).first
+      template = Template::EmailTemplate.where(booking_portal_client_id: self.booking_portal_client_id, name: template_name).first
 
       if template.present? && template.is_active? && recipients.present?
         email = Email.create!({
@@ -478,7 +478,7 @@ class BookingDetail
         })
         email.sent!
       end
-      sms_template = Template::SmsTemplate.where(name: template_name).first
+      sms_template = Template::SmsTemplate.where(booking_portal_client_id: self.booking_portal_client_id, name: template_name).first
       phones = recipients.collect(&:phone).reject(&:blank?)
       if sms_template.present? && sms_template.is_active? && phones.present?
         Sms.create!(
@@ -530,12 +530,12 @@ class BookingDetail
       end
 
       if params[:entityId].present? && params[:entityType] == 'deals'
-        lead_ids = Lead.where(kylas_deal_id: params[:entityId]).pluck(:id)
+        lead_ids = Lead.where(booking_portal_client_id: user.booking_portal_client.try(:id), kylas_deal_id: params[:entityId]).pluck(:id)
         custom_scope = { lead_id: {'$in': lead_ids} }
       end
 
       if params[:entityId].present? && params[:entityType] == 'contacts'
-        kylas_contact_ids = User.in(role: User::BUYER_ROLES).where(kylas_contact_id: params[:entityId]).pluck(:id)
+        kylas_contact_ids = User.in(role: User::BUYER_ROLES).where(booking_portal_client_id: user.booking_portal_client.try(:id), kylas_contact_id: params[:entityId]).pluck(:id)
         custom_scope = { user_id: {'$in': kylas_contact_ids} }
       end
 

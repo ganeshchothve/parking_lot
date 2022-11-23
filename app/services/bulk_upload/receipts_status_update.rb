@@ -21,7 +21,7 @@ module BulkUpload
           next
         end
 
-        receipt = ::Receipt.where(id: row.field(0).to_s.strip).first if row.field(0).to_s.strip.present?
+        receipt = ::Receipt.where(booking_portal_client_id: bur.booking_portal_client_id, id: row.field(0).to_s.strip).first if row.field(0).to_s.strip.present?
         if receipt
           attrs = {}
           attrs[:event] = status

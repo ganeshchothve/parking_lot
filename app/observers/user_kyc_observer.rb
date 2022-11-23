@@ -12,7 +12,7 @@ class UserKycObserver < Mongoid::Observer
     lead.set(kyc_done: true)
     user = lead.user
     SelldoLeadUpdater.perform_async(lead.id.to_s, {stage: 'kyc_done'})
-    template = Template::EmailTemplate.where(name: "user_kyc_added", project_id: lead.project_id).first
+    template = Template::EmailTemplate.where(booking_portal_client_id: user_kyc.booking_portal_client_id, name: "user_kyc_added", project_id: lead.project_id).first
     if user.booking_portal_client.email_enabled? && template.present?
       email = Email.create!({
         booking_portal_client_id: user.booking_portal_client_id,

@@ -11,7 +11,7 @@ class Admin::SyncLogsController < AdminController
   # GET /admin/sync_logs
   #
   def index
-    @sync_logs = SyncLog.build_criteria(params).order(created_at: :desc).paginate(page: params[:page] || 1, per_page: params[:per_page])
+    @sync_logs = SyncLog.where(booking_portal_client_id: current_client.try(:id)).build_criteria(params).order(created_at: :desc).paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
   #
@@ -34,6 +34,7 @@ class Admin::SyncLogsController < AdminController
 
   def create
     @sync_log = SyncLog.new(set_params)
+    @sync_log.booking_portal_client_id = current_client.try(:id)
     @sync_log.action = 'create'
     record = @sync_log.resource
     erp_model = @sync_log.erp_model
@@ -52,7 +53,7 @@ class Admin::SyncLogsController < AdminController
   private
 
   def set_sync_reference
-    @sync_log = SyncLog.where(id: params[:id]).first
+    @sync_log = SyncLog.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first
   end
 
   def authorize_resource

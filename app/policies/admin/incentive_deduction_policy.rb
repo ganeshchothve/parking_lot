@@ -8,7 +8,7 @@ class Admin::IncentiveDeductionPolicy < IncentiveDeductionPolicy
   end
 
   def create?
-    user.role.in?(%w(cp_admin admin)) && !record.invoice.status.in?(%w(approved rejected)) && IncentiveDeduction.where(invoice_id: record.invoice_id, status: { '$ne': 'rejected' }).blank?
+    user.role.in?(%w(cp_admin admin)) && !record.invoice.status.in?(%w(approved rejected)) && IncentiveDeduction.where(booking_portal_client_id: record.booking_portal_client_id, invoice_id: record.invoice_id, status: { '$ne': 'rejected' }).blank?
   end
 
   def edit?

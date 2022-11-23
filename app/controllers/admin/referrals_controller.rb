@@ -9,14 +9,14 @@ class Admin::ReferralsController < AdminController
 
   # GET /admin/referrals/new
   def new
-    @referral = Referral.new(referred_by: current_user)
+    @referral = Referral.new(referred_by: current_user, booking_portal_client_id: current_client.try(:id))
     authorize [:admin, @referral]
     render layout: false
   end
 
   # POST /admin/referrals
   def create
-    referral_user = User.where(email: params.dig(:referral, :email))[0]
+    referral_user = User.where(email: params.dig(:referral, :email), booking_portal_client_id: current_client.try(:id)).first
     respond_to do |format|
       if referral_user.blank?
         @referral = Referral.new(referred_by: current_user, booking_portal_client: current_client, referral_code: current_user.referral_code)

@@ -59,11 +59,11 @@ class Admin::Invoices::IncentiveDeductionsController < AdminController
   private
 
   def set_invoice
-    @invoice = Invoice.where(id: params[:invoice_id]).first if params[:invoice_id].present?
+    @invoice = Invoice.where(booking_portal_client_id: current_client.try(:id), id: params[:invoice_id]).first if params[:invoice_id].present?
   end
 
   def set_incentive_deduction
-    @incentive_deduction = IncentiveDeduction.where(id: params[:id]).first
+    @incentive_deduction = IncentiveDeduction.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first
     redirect_to home_path(current_user), alert: I18n.t("controller.incentive_deductions.alert.not_found") unless @incentive_deduction.present?
   end
 

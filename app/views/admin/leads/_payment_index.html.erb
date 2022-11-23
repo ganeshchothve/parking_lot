@@ -20,7 +20,7 @@
                         <% if policy([current_user_role_group, receipt]).resend_success? %>
                         <%= link_to t('controller.receipts.resend_email.link_name'), [:resend_success, current_user_role_group, receipt], class: 'dropdown-item' %>
                         <% end %>
-                        <% if policy([:admin, Crm::Base.new()]).choose_crm? && Crm::Api.where(resource_class: 'Receipt').present? %>
+                        <% if policy([:admin, Crm::Base.new()]).choose_crm? && Crm::Api.where(booking_portal_client_id: current_client.try(:id), resource_class: 'Receipt').present? %>
                         <%= link_to t('controller.crms.choose_crm.link_name'), choose_crm_admin_crm_base_index_path(resource_id: receipt.id, resource_class: receipt.class), class: "dropdown-item " %>
                         <% end %>
                         <% if policy([ current_user_role_group, receipt]).edit? %>

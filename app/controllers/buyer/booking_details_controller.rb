@@ -8,7 +8,7 @@ class Buyer::BookingDetailsController < BuyerController
 
   def index
     authorize [:buyer, BookingDetail]
-    @booking_details = BookingDetail.build_criteria params
+    @booking_details = BookingDetail.where(booking_portal_client_id: current_client.try(:id)).build_criteria params
     @booking_details = @booking_details.paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
@@ -37,7 +37,7 @@ class Buyer::BookingDetailsController < BuyerController
   private
 
   def set_booking_detail
-    @booking_detail = BookingDetail.where(_id: params[:id]).first
+    @booking_detail = BookingDetail.where(booking_portal_client_id: current_client.try(:id), _id: params[:id]).first
     redirect_to home_path(current_user), alert: t('controller.booking_details.set_booking_detail_missing') if @booking_detail.blank?
   end
 
@@ -52,7 +52,7 @@ class Buyer::BookingDetailsController < BuyerController
       @receipt = unattached_blocking_receipt
       @receipt.booking_detail_id = @booking_detail.id
     else
-      @receipt = Receipt.new(creator: @booking_detail.user, user: @booking_detail.user, payment_mode: 'online', total_amount: current_client.blocking_amount, payment_gateway: current_client.payment_gateway, booking_detail_id: @booking_detail.id)
+      @receipt = Receipt.new(creator: @booking_detail.user, user: @booking_detail.user, payment_mode: 'online', total_amount: current_client.blocking_amount, payment_gateway: current_client.payment_gateway, booking_detail_id: @booking_detail.id, booking_portal_client_id: current_client.try(:id))
       @receipt.account ||= selected_account(current_client.payment_gateway.underscore, @booking_detail.project_unit)
       @receipt.total_amount = @project_unit.blocking_amount
       authorize([:buyer, @receipt], :create?)

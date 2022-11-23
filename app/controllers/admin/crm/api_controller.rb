@@ -50,7 +50,7 @@ class Admin::Crm::ApiController < ApplicationController
   end
 
   def show_response
-    @api = Crm::Api.find params[:api_id]
+    @api = Crm::Api.where(id: params[:api_id], booking_portal_client_id: current_client.try(:id)).first
     @resource = @api.resource_class.constantize.find params[:resource_id]
     @response = @api.execute(@resource)
     if request.xhr?
@@ -63,12 +63,12 @@ class Admin::Crm::ApiController < ApplicationController
   private
 
   def set_api
-    @api = params[:type].constantize.unscoped.where(id: params[:id]).first
+    @api = params[:type].constantize.unscoped.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first
     redirect_to admin_crm_base_path(@crm), alert: I18n.t("controller.apis.alert.not_found") if @api.blank?
   end
 
   def set_crm
-    @crm = ::Crm::Base.find params[:base_id]
+    @crm = ::Crm::Base.where(booking_portal_client_id: current_client.try(:id), id: params[:base_id]).first
   end
 
   def authorize_resource

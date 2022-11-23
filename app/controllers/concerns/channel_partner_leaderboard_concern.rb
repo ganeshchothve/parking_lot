@@ -72,11 +72,13 @@ module ChannelPartnerLeaderboardConcern
     query = []
     query << {project_ids: {"$in": params[:project_ids]}} if params[:project_ids].present?
     query << {id: {"$in": params[:variable_incentive_scheme_ids]}} if params[:variable_incentive_scheme_ids].present?
+    query << {booking_portal_client_id: current_client.try(:id)}
     query
   end
 
   def get_options
     @vis_options = {}
+    @vis_options.merge!(booking_portal_client_id: current_client.try(:id))
     @vis_options.merge!(user_id: params[:user_id]) if params[:user_id].present?
     @vis_options.merge!(project_ids: params[:project_ids]) if params[:project_ids].present?
   end

@@ -21,7 +21,7 @@ module ProjectUnitsConcern
   # GET /admin/project_units/:id
   #
   def show
-    @booking_details = BookingDetail.where(project_unit_id: @project_unit.id).paginate(page: params[:page] || 1, per_page: 15)
+    @booking_details = BookingDetail.where(booking_portal_client_id: current_client.try(:id), project_unit_id: @project_unit.id).paginate(page: params[:page] || 1, per_page: 15)
     respond_to do |format|
       format.json { render json: @project_unit }
       format.html do
@@ -66,17 +66,17 @@ module ProjectUnitsConcern
   def set_lead
     lead_id = current_user.buyer? ? current_user.id : params[:lead_id]
     if lead_id
-      @lead = Lead.where(id: lead_id).first
+      @lead = Lead.where(booking_portal_client_id: current_client.try(:id), id: lead_id).first
     end
   end
 
   def set_project_unit
-    @project_unit = ProjectUnit.find(params[:id])
+    @project_unit = ProjectUnit.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first
   end
 
   def build_objects
-   @booking_detail = BookingDetail.new(name: @project_unit.name, base_rate: @project_unit.base_rate, floor_rise: @project_unit.floor_rise, saleable: @project_unit.saleable, costs: @project_unit.costs, data: @project_unit.data, project_unit: @project_unit, creator_id: current_user.id )
-    @booking_detail_scheme = BookingDetailScheme.new(booking_detail: @booking_detail, project_unit: @project_unit)
+   @booking_detail = BookingDetail.new(name: @project_unit.name, base_rate: @project_unit.base_rate, floor_rise: @project_unit.floor_rise, saleable: @project_unit.saleable, costs: @project_unit.costs, data: @project_unit.data, project_unit: @project_unit, creator_id: current_user.id, booking_portal_client_id: current_client.try(:id))
+    @booking_detail_scheme = BookingDetailScheme.new(booking_detail: @booking_detail, project_unit: @project_unit, booking_portal_client_id: current_client.try(:id))
   end
 
   def modify_params

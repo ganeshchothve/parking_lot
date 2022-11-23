@@ -1,6 +1,8 @@
 class ApisController < ActionController::API
   before_action :authenticate_request
   around_action :log_standard_errors
+  before_action :set_user
+  before_action :set_client
 
   private
 
@@ -26,6 +28,14 @@ class ApisController < ActionController::API
     rescue StandardError => e
       create_error_log e
     end
+  end
+
+  def current_user
+    @current_user = @crm.try(:user)
+  end
+
+  def current_client
+    @current_client = @crm.try(:booking_portal_client)
   end
 
   def create_error_log e

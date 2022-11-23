@@ -18,7 +18,7 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
 
   def new?(current_project_id = nil)
     valid = current_client.enable_site_visit?
-    valid = valid && SiteVisit.where(lead_id: record.lead_id, status: 'scheduled').blank? && edit? && record.project.walk_ins_enabled?
+    valid = valid && SiteVisit.where(booking_portal_client_id: record.booking_portal_client_id, lead_id: record.lead_id, status: 'scheduled').blank? && edit? && record.project.walk_ins_enabled?
     valid = valid && project_access_allowed?(current_project_id)
     valid
   end

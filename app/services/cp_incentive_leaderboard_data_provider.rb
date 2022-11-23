@@ -49,16 +49,17 @@ module CpIncentiveLeaderboardDataProvider
   # Current(today's) incentive per booking
   def self.incentive_predictions(options = {})
     incentive_predictions = []
+    booking_portal_client_id = options[:booking_portal_client_id]
     yesterday_booking_detail = BookingDetail.new(booked_on: Date.today - 1)
     todays_booking_detail = BookingDetail.new(booked_on: Date.today)
     tomorrow_booking_detail = BookingDetail.new(booked_on: Date.today + 1)
     next_week_booking_detail = BookingDetail.new(booked_on: Date.today + 7)
     random_days_booking_detail = BookingDetail.new(booked_on: Date.today + options[:random_days]) if options[:random_days].present?
     # TODO: Need to give project id filter for approved_schemes
-    approved_schemes = VariableIncentiveScheme.approved.or(options[:query])
+    approved_schemes = VariableIncentiveScheme.where(booking_portal_client_id: booking_portal_client_id).approved.or(options[:query])
     if approved_schemes.present?
       approved_schemes.each do |variable_incentive_scheme|
-        booking_details = BookingDetail.in(status: BookingDetail::BOOKING_STAGES, project_id: variable_incentive_scheme.project_ids).where(booked_on: variable_incentive_scheme.start_date.beginning_of_day..variable_incentive_scheme.end_date.end_of_day)
+        booking_details = BookingDetail.where(booking_portal_client_id: booking_portal_client_id).in(status: BookingDetail::BOOKING_STAGES, project_id: variable_incentive_scheme.project_ids).where(booked_on: variable_incentive_scheme.start_date.beginning_of_day..variable_incentive_scheme.end_date.end_of_day)
         booking_count = booking_details.count
 
         yesterday_incentive = VariableIncentiveSchemeCalculator.calculate_capped_incentive(yesterday_booking_detail, variable_incentive_scheme, booking_count)

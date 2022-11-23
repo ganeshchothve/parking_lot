@@ -10,7 +10,7 @@ class SyncKylasProductsWorker
       if kylas_products.present?
         kylas_products.each do |kylas_product|
           kylas_product = kylas_product.with_indifferent_access
-          mp_product = find_product_in_kylas(kylas_product[:id])
+          mp_product = find_product_in_kylas(kylas_product[:id], client_id)
           if mp_product.blank?
             project = Project.new(
                 name: kylas_product[:name],
@@ -32,9 +32,9 @@ class SyncKylasProductsWorker
     end
   end
 
-  def find_product_in_kylas(kylas_product_id)
-    project = Project.where(kylas_product_id: kylas_product_id).first
-    booking_project_unit = BookingDetail.where(kylas_product_id: kylas_product_id).first
+  def find_product_in_kylas(kylas_product_id, client_id)
+    project = Project.where(kylas_product_id: kylas_product_id, booking_portal_client_id: client_id).first
+    booking_project_unit = BookingDetail.where(kylas_product_id: kylas_product_id, booking_portal_client_id: client_id).first
     result = (project || booking_project_unit)
     result
   end

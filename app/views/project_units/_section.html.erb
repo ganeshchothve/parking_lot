@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="separate-line"></div>
-      <% template = ::Template::UITemplate.where(name: 'project_units/_section').first %>
+      <% template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'project_units/_section').first %>
       <% if template.present? && current_user.selected_project.present? %>
         <%= get_view_erb(template, check_active: true) %>
       <% end %>

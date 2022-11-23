@@ -106,14 +106,15 @@ class Email
     end
   end
 
-  def self.monthly_count(range = nil)
+  def self.monthly_count(range = nil, params={})
+    booking_portal_client_id = params[:booking_portal_client_id]
     if range.present?
       from, to = range.split(' - ')
       match_params = {sent_on: {"$gte": Time.parse(from), "$lte": Time.parse(to)}}
     else
       match_params = {sent_on: {"$ne": nil}}
     end
-
+    match_params.merge!({booking_portal_client_id: booking_portal_client_id})
     data = Email.collection.aggregate([
       {
         "$match": match_params

@@ -22,7 +22,7 @@ class UserRequestService
   end
 
   def send_sms
-    template = Template::SmsTemplate.where(name: "#{user_request.class.model_name.element}_request_created", project_id: self.project_id).first
+    template = Template::SmsTemplate.where(booking_portal_client_id: user.booking_portal_client_id, name: "#{user_request.class.model_name.element}_request_created", project_id: self.project_id).first
     if template.present?
       Sms.create!(
         project_id: self.project_id,

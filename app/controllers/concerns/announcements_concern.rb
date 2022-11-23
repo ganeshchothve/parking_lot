@@ -77,7 +77,7 @@ module AnnouncementsConcern
   end
 
   def set_announcement
-    @announcement = Announcement.where(id: params[:id]).first
+    @announcement = Announcement.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first
     redirect_to root_path, alert: I18n.t("controller.announcements.alert.not_found") if @announcement.blank?
   end
 end

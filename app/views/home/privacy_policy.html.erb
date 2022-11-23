@@ -1,4 +1,4 @@
-<% template = ::Template::UITemplate.where(name: 'privacy_policy').first %>
+<% template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'privacy_policy').first %>
 <% if template.present? %>
   <%= get_view_erb(template) %>
 <% end %>

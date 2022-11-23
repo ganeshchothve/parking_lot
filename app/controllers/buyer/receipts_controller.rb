@@ -19,7 +19,7 @@ class Buyer::ReceiptsController < BuyerController
     @lead.project.token_types.all.select{|tt| tt.incrementor_exists?}.map { |x| @amount_hash[x.id.to_s] = x.token_amount }
 
     if params.dig(:booking_detail_id).present?
-      @booking_detail = BookingDetail.where(id: params[:booking_detail_id]).first
+      @booking_detail = BookingDetail.where(booking_portal_client_id: current_client.try(:id), id: params[:booking_detail_id]).first
       @amount_hash['agreement'] = @booking_detail.pending_balance
       payment_type = "agreement"
     else
@@ -81,13 +81,13 @@ class Buyer::ReceiptsController < BuyerController
   private
 
   def set_lead
-    @lead = Lead.where(user_id: current_user.id, project_id: params[:current_project_id]).first
+    @lead = Lead.where(booking_portal_client_id: current_client.try(:id), user_id: current_user.id, project_id: params[:current_project_id]).first
     redirect_to home_path(current_user), alert: I18n.t("controller.leads.alert.not_found"), status: 404 if @lead.blank?
   end
 
   def set_receipt
-    lead = Lead.where(user_id: current_user.id, project_id: params[:current_project_id]).first
-    @receipt = lead.receipts.where(_id: params[:id]).first
+    lead = Lead.where(booking_portal_client_id: current_client.try(:id), user_id: current_user.id, project_id: params[:current_project_id]).first
+    @receipt = lead.receipts.where(booking_portal_client_id: current_client.try(:id), _id: params[:id]).first
     redirect_to home_path(current_user), alert: I18n.t("controller.receipts.alert.not_found"), status: 404 if @receipt.blank?
   end
 
