@@ -8,7 +8,7 @@ class ChannelPartnerObserver < Mongoid::Observer
       query << { phone: channel_partner.phone } if channel_partner.phone.present?
       query << { email: channel_partner.email } if channel_partner.email.present?
       if query.present?
-        user = User.in(role: %w(channel_partner cp_owner)).or(query).first
+        user = User.where(booking_portal_client_id: channel_partner.booking_portal_client_id).in(role: %w(channel_partner cp_owner)).or(query).first
         if user.present?
           channel_partner.primary_user_id = user.id
           channel_partner.manager_id = user.manager_id
@@ -23,7 +23,7 @@ class ChannelPartnerObserver < Mongoid::Observer
       query = []
       query << { phone: channel_partner.phone } if channel_partner.phone.present?
       query << { email: channel_partner.email } if channel_partner.email.present?
-      user = User.in(role: %w(channel_partner cp_owner)).or(query).first
+      user = User.where(booking_portal_client_id: channel_partner.booking_portal_client_id).in(role: %w(channel_partner cp_owner)).or(query).first
     end
     if user.present?
       attrs = {}

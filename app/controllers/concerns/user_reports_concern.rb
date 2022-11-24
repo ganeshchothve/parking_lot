@@ -76,8 +76,8 @@ module UserReportsConcern
 
     @site_visits_manager_ids = @site_visits.distinct(:manager_id).compact
     @booking_detail_manager_ids = @bookings.distinct(:manager_id).compact
-
-    @manager_ids_criteria = partner_wise_filters(@site_visits_manager_ids, @booking_detail_manager_ids, params)
+    client_id = current_client.try(:id)
+    @manager_ids_criteria = partner_wise_filters(@site_visits_manager_ids, @booking_detail_manager_ids, client_id, params)
 
     if params[:project_id].present?
       @leads = @leads.where(booking_portal_client_id: current_client.try(:id), project_id: params[:project_id])
@@ -147,8 +147,8 @@ module UserReportsConcern
 
     @site_visits_manager_ids = @site_visits.distinct(:manager_id).compact || []
     @booking_detail_manager_ids = @bookings.distinct(:manager_id).compact || []
-
-    @manager_ids_criteria = partner_wise_filters(@site_visits_manager_ids, @booking_detail_manager_ids, params)
+    client_id = current_client.try(:id)
+    @manager_ids_criteria = partner_wise_filters(@site_visits_manager_ids, @booking_detail_manager_ids, client_id, params)
 
     if params[:project_id].present?
       @site_visits = @site_visits.where(booking_portal_client_id: current_client.try(:id), project_id: params[:project_id])
@@ -176,7 +176,7 @@ module UserReportsConcern
 
   private
 
-  def partner_wise_filters (site_visit_manager_ids, booking_detail_manager_ids, params = {})
+  def partner_wise_filters (site_visit_manager_ids, booking_detail_manager_ids, client_id, params = {})
 
     manager_ids_with_sv_and_booking = site_visit_manager_ids & booking_detail_manager_ids
     manager_ids_with_sv_or_booking = site_visit_manager_ids || booking_detail_manager_ids
@@ -190,17 +190,17 @@ module UserReportsConcern
     elsif params[:active_walkins] == 'false' && params[:active_bookings] == 'true'
       manager_ids_with_booking_and_no_sv
     elsif params[:active_walkins] == 'false' && params[:active_bookings] == 'false'
-      User.nin(id: manager_ids_with_sv_or_booking).distinct(:id)
+      User.where(booking_portal_client_id: client_id).nin(id: manager_ids_with_sv_or_booking).distinct(:id)
     elsif params[:active_walkins] == 'true' && params[:active_bookings] == ''
-      User.in(id: site_visit_manager_ids).distinct(:id)
+      User.where(booking_portal_client_id: client_id).in(id: site_visit_manager_ids).distinct(:id)
     elsif params[:active_walkins] == 'false' && params[:active_bookings] == ''
-      User.nin(id: site_visit_manager_ids).distinct(:id)
+      User.where(booking_portal_client_id: client_id).nin(id: site_visit_manager_ids).distinct(:id)
     elsif params[:active_walkins] == '' && params[:active_bookings] == 'true'
-      User.in(id: booking_detail_manager_ids).distinct(:id)
+      User.where(booking_portal_client_id: client_id).in(id: booking_detail_manager_ids).distinct(:id)
     elsif params[:active_walkins] == '' && params[:active_bookings] == 'false'
-      User.nin(id: booking_detail_manager_ids).distinct(:id)
+      User.where(booking_portal_client_id: client_id).nin(id: booking_detail_manager_ids).distinct(:id)
     else
-      User.filter_by_role(%w(cp_owner channel_partner)).distinct(:id)
+      User.where(booking_portal_client_id: client_id).filter_by_role(%w(cp_owner channel_partner)).distinct(:id)
     end
 
     manager_ids = {id: user_ids}

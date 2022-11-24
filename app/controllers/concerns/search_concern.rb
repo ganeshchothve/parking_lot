@@ -49,7 +49,7 @@ module SearchConcern
     @lead ||= Lead.where(booking_portal_client_id: current_client.try(:id), id: lead_id).first
     parameters = {}
     parameters = @search.params_json if @search.present?
-    project_units = ProjectUnit.build_criteria({fltrs: parameters}).in(status: ProjectUnit.user_based_available_statuses(@lead.user))
+    project_units = ProjectUnit.build_criteria({fltrs: parameters}).where(booking_portal_client_id: current_client.try(:id)).in(status: ProjectUnit.user_based_available_statuses(@lead.user))
     if @lead.present? && @lead.manager_role?('channel_partner')
       filters = {fltrs: { can_be_applied_by_role: @lead.manager_role, user_role: @lead.user_role, user_id: @lead.user_id, status: 'approved', default_for_user_id: @lead.manager_id } }
       project_tower_ids_for_channel_partner = Scheme.build_criteria(filters).distinct(:project_tower_id)

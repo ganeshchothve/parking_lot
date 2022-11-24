@@ -172,7 +172,7 @@ class Admin::LeadsController < AdminController
   end
 
   def search_inventory
-    @leads = Lead.in(id: params[:leads][:ids]&.reject(&:blank?))
+    @leads = Lead.where(booking_portal_client_id: current_client.try(:id)).in(id: params[:leads][:ids]&.reject(&:blank?))
     @project_ids = params.dig(:leads, :tp_project_ids).split(',')
     @project_url = ENV_CONFIG.dig('third_party_inventory', 'base_url')
 
