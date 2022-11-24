@@ -246,19 +246,23 @@ module ApplicationHelper
     end
   end
 
-  def short_url destination_url, set_expired_at = false, current_client_id = nil
-    client = Client.where(id: current_client_id).first
-    uri = ShortenedUrl.clean_url(destination_url)
-    if shortened_url = ShortenedUrl.where(original_url: uri.to_s).first
-      uri.path = "/s/" + shortened_url.code
+  def short_url destination_url, client_id = nil, set_expired_at = false
+    client = Client.where(id: client_id).first
+    if client.present?
+      uri = ShortenedUrl.clean_url(destination_url)
+      if shortened_url = ShortenedUrl.where(original_url: uri.to_s, booking_portal_client_id: client.id).first
+        uri.path = "/s/#{client.id}-#{shortened_url.code}"
+      else
+        shortened_url = ShortenedUrl.create(original_url: uri.to_s, booking_portal_client_id: client.id)
+        uri.path = "/s/#{client.id}-#{shortened_url.code}"
+      end
+      shortened_url.set(expired_at: (DateTime.current + client.payment_link_validity_hours.hours)) if (client.present? && set_expired_at)
+      uri.query = nil
+      uri.fragment = nil
+      uri.to_s
     else
-      shortened_url = ShortenedUrl.create(original_url: uri.to_s)
-      uri.path = "/s/" + shortened_url.code
+      destination_url
     end
-    shortened_url.set(expired_at: (DateTime.current + client.payment_link_validity_hours.hours)) if (client.present? && set_expired_at)
-    uri.query = nil
-    uri.fragment = nil
-    uri.to_s
   end
 
   def device_type

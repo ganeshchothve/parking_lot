@@ -89,7 +89,7 @@ module DatabaseSeeds
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Project", name: "daily_sms_report", content: 'Daily SMS Report for the project <%= self.name %> => Blocked: <%= self.booking_details.where(status: "blocked").count %>. Tentative: <%= self.booking_details.where(status: "booked_tentative").count %>. Confirmed: <%= self.booking_details.where(status: "booked_confirmed").count %>. Blocked Today: <%= self.project_units.where(blocked_on: Date.today).count %>') if Template::SmsTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "daily_sms_report").blank?
 
-      Template::SmsTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Lead", name: 'payment_link', content: 'Dear <%= self.name %>, Thank you for your interest in <%= self.project.try(:name) %>. To make your first payment, please click here: <%= short_url(self.payment_link, true, self.try(:booking_portal_client_id).try(:to_s)) %>')  if ::Template::SmsTemplate.where(booking_portal_client_id: client_id, name: "payment_link", project_id: project_id).blank?
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Lead", name: 'payment_link', content: 'Dear <%= self.name %>, Thank you for your interest in <%= self.project.try(:name) %>. To make your first payment, please click here: <%= short_url(self.payment_link, self.try(:booking_portal_client_id).try(:to_s)), true %>')  if ::Template::SmsTemplate.where(booking_portal_client_id: client_id, name: "payment_link", project_id: project_id).blank?
 
       Template::SmsTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Lead", name: 'queue_number_notice', content: 'Your queue_number is <%= self.queue_number %>') if ::Template::SmsTemplate.where(name: "queue_number_notice", project_id: project_id, booking_portal_client_id: client_id).blank?
 
@@ -117,14 +117,14 @@ module DatabaseSeeds
 
       Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "Lead", name: "send_tp_projects_link", content: 'Dear <%= lead.name %>, Please check out these new projects:
       <% url = "#{@project_url}?#{@project_ids.collect {|x| \'search[project_ids][]=\' + x}.join(\'&\')}" %>
-      <%= short_url(url) %>') if ::Template::SmsTemplate.where(name: "send_tp_projects_link", booking_portal_client_id: client_id).blank?
+      <%= short_url(url, lead.booking_portal_client_id.to_s) %>') if ::Template::SmsTemplate.where(name: "send_tp_projects_link", booking_portal_client_id: client_id).blank?
 
       Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: "cp_user_register_in_company", content: '
           Dear <%= temp_channel_partner&.primary_user&.name || "Sir/Madam" %>,
           <%= name %> has requested to register his account into your company on <%= I18n.t("global.brand") %>.
               Please use the following link to approve his/her account to give him/her access as a <%= I18n.t("mongoid.attributes.user/role.channel_partner") %> into your company.
               <% url = "#{Rails.application.routes.url_helpers.add_user_account_channel_partners_url(register_code: self.register_in_cp_company_token, channel_partner_id: self.temp_channel_partner&.id.to_s)}" %>
-              <%= short_url(url) %>') if ::Template::SmsTemplate.where(name: "cp_user_register_in_company").blank?
+              <%= short_url(url, self.booking_portal_client_id.to_s) %>') if ::Template::SmsTemplate.where(name: "cp_user_register_in_company").blank?
 
 
       Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "BookingDetail", name: "second_booking_notification", content: 'Alert - Channel Partner <%= self.manager.try(:name) %> has added more than 1 booking on same customer <%= self.lead.try(:name) %> for project <%= self.try(:project).try(:name) %> on BeyondWalls portal. Please cross verify with channel Partner / channel partner manager before approval.') if ::Template::SmsTemplate.where(name: "second_booking_notification").blank?
