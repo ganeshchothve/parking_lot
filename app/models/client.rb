@@ -258,6 +258,14 @@ class Client
     end
   end
 
+  def booking_portal_client
+    self
+  end
+
+  def booking_portal_client_id
+    self.id
+  end
+
   def self.selldo_api_clients
     ENV_CONFIG.dig(:selldo, :api_clients) || {}
   end
