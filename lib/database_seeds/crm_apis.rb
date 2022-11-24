@@ -157,7 +157,7 @@ module DatabaseSeeds
           kylas_crm_data.each do |crm_api|
             klass = crm_api['_type']
             if klass
-              attrs = {base_id: crm_base.id, path: crm_api['path'], resource_class: crm_api['resource_class'], request_payload: crm_api['request_payload'], event: crm_api['event'], booking_portal_client_id: crm_base.booking_portal_client.id}
+              attrs = {base_id: crm_base.id, path: crm_api['path'], resource_class: crm_api['resource_class'], request_payload: crm_api['request_payload'], event: crm_api['event'], booking_portal_client_id: crm_base.booking_portal_client.id, response_crm_id_location: crm_api['response_crm_id_location']}
               attrs['http_method'] = crm_api['http_method'] if crm_api['http_method'].present?
               puts Object.const_get(klass).create(attrs)
             end
