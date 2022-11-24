@@ -33,6 +33,11 @@ class UserObserver < Mongoid::Observer
     elsif ENV_CONFIG[:default_cp_manager_id].present?
       user.manager_id = ENV_CONFIG[:default_cp_manager_id]
     end
+    # update all the project ids for the user
+    if !user.role.in?(User::ALL_PROJECT_ACCESS)
+      project_ids = Project.where(booking_portal_client_id: user.booking_portal_client.id).pluck(:id)
+      user.update(project_ids: project_ids)
+    end
   end
 
   def after_create user
