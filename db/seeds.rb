@@ -86,7 +86,7 @@ project = Project.where(name: project_name).first || Project.new(
   rera_registration_no: (ENV['rera_no'].presence || "RERA-AMURA-123"),
   booking_portal_client: client,
   developer: developer,
-  creator: User.where(booking_portal_client_id: client.id, role: 'superadmin').first
+  creator: User.where(role: 'superadmin').first
 )
 
 if project && project.new_record?
