@@ -12,6 +12,7 @@
               <% if current_user.role.in?(%w(admin superadmin cp_owner)) %>
                 <th><%= t('mongoid.attributes.lead.manager_id') %></th>
               <% end %>
+              <th><%= t('mongoid.attributes.lead.crm_reference_id') %></th>
               <th><%= t('mongoid.attributes.lead.stage') %></th>
               <% unless is_marketplace? %>
                 <th><%= t('mongoid.attributes.lead.blocking_amount_paid') %></th>
@@ -57,6 +58,7 @@
                     <% end %>
                   </td>
                 <% end %>
+                <td><%= lead.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)) %></td>
                 <td>
                   <p class="font-medium fn-12 mb-0 d-inline-block me-2">
                     <i class="fa fa-circle info me-2 fa-sm"></i><%= (I18n.t("mongoid.attributes.lead/stage.#{lead.lead_stage}") if lead.lead_stage != nil) || '-' %>

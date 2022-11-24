@@ -13,7 +13,7 @@ class Admin::BookingDetailsController < AdminController
 
   def index
     authorize [:admin, BookingDetail]
-    @booking_details = BookingDetail.includes(:project_unit, :user, :booking_detail_schemes).build_criteria(params).paginate(page: params[:page] || 1, per_page: 2)
+    @booking_details = BookingDetail.includes(:project_unit, :user, :booking_detail_schemes).build_criteria(params).paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
       format.json
       format.html

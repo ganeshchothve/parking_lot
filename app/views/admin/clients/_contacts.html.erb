@@ -30,7 +30,7 @@
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :channel_partner_support_email, class: 'label-required' %>
-      <%= f.phone_field :channel_partner_support_email, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("channel_partner_support_email") ? false : true) %>
+      <%= f.email_field :channel_partner_support_email, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("channel_partner_support_email") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
@@ -50,7 +50,7 @@
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :notification_numbers, class: 'label-required' %>
-      <%= f.text_field :notification_numbers, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("notification_numbers") ? false : true) %>
+      <%= f.phone_field :notification_numbers, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("notification_numbers") ? false : true) %>
     </div>
   </div>
 </div>

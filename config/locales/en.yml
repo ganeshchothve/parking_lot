@@ -2128,6 +2128,7 @@ en:
         kylas_product: Kylas Product
         kylas_contact: Kylas Contacts
         manager_ids: Channel Partners
+        crm_reference_id: CRM Reference ID
       lead/stage:
         incoming: "Incoming"
         booked: "Booked"
