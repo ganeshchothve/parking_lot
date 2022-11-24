@@ -91,7 +91,7 @@ class Scheme
   end
 
   def booking_details
-    BookingDetail.in(_id: self.booking_detail_schemes.distinct(:booking_detail_id))
+    BookingDetail.where(booking_portal_client_id: self.booking_portal_client_id).in(_id: self.booking_detail_schemes.distinct(:booking_detail_id))
   end
 
   def self.user_based_scope(user, params = {})

@@ -1,4 +1,4 @@
-projects = Project.in(id: variable_incentive_scheme.project_ids).to_a
+projects = Project.where(booking_portal_client_id: variable_incentive_scheme.booking_portal_client_id).in(id: variable_incentive_scheme.project_ids).to_a
 random_days = calculate_random_days(variable_incentive_scheme)
 incentive_predictions_data = CpIncentiveLeaderboardDataProvider.incentive_predictions(@options)
 

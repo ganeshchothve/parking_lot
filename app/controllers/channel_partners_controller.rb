@@ -65,7 +65,7 @@ class ChannelPartnersController < ApplicationController
     query = []
     query << { phone: params.dig(:channel_partner, :phone) } if params.dig(:channel_partner, :phone).present?
     query << { email: params.dig(:channel_partner, :email) } if params.dig(:channel_partner, :email).present?
-    @cp_user = User.in(role: %w(channel_partner cp_owner)).or(query).first
+    @cp_user = User.in(role: %w(channel_partner cp_owner)).or(query).where(booking_portal_client_id: current_client.try(:id)).first
     if @cp_user.present?
       if !@cp_user.is_active?
         if @channel_partner.blank?
