@@ -2,7 +2,7 @@ class ClientPolicy < ApplicationPolicy
   # def new? def create? def edit? def update? from ApplicationPolicy
 
   def allow_marketplace_access?
-    !marketplace_client? || current_client.kylas_api_key.present?
+    !marketplace_client? || (current_client.kylas_api_key.present? && current_client.errors.blank?)
   end
 
   def permitted_attributes params={}
