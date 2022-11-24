@@ -186,7 +186,8 @@ class Project
   has_many :invoices
 
   validates :name, presence: true
-  validates_uniqueness_of :name, :rera_registration_no, allow_blank: true
+  validates :name, uniqueness: {scope: :booking_portal_client_id, message: 'Project with same name is already present for this client'}, presence: true
+  validates_uniqueness_of :rera_registration_no, allow_blank: true
   validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
   validates :gst_number, uniqueness: { allow_blank: true }
