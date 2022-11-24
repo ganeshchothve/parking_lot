@@ -13,7 +13,7 @@ module ExcelGenerator::SiteVisitPartnerWise
     users = User.filter_by_role(%w(cp_owner)).where(User.user_based_scope(user)).in(manager_ids_criteria)
     users.each do |p|
       index = index+1
-      users = User.where(channel_partner_id: p.channel_partner_id).in(manager_ids_criteria)
+      users = User.where(booking_portal_client_id: user.booking_portal_client_id, channel_partner_id: p.channel_partner_id).in(manager_ids_criteria)
       sheet.insert_row(index, [
         p.channel_partner&.name&.titleize,
         "",

@@ -83,7 +83,7 @@ class UserObserver < Mongoid::Observer
   end
 
   def after_save user
-    if user.lead_id.present? && crm = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+    if user.lead_id.present? && crm = Crm::Base.where(booking_portal_client_id: user.booking_portal_client.try(:id), domain: ENV_CONFIG.dig(:selldo, :base_url)).first
       user.update_external_ids({ reference_id: user.lead_id }, crm.id)
     end
     user.calculate_incentive if user.booking_portal_client.present? && user.booking_portal_client.incentive_calculation_type?("calculated")

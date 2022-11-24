@@ -36,7 +36,7 @@ class Account
   end
 
   def unique_default_account
-    if self.by_default && !::Account.where(by_default: true, _type: self._type).nin(_id: self.id).count.zero?
+    if self.by_default && !::Account.where(by_default: true, _type: self._type, booking_portal_client_id: self.booking_portal_client_id).nin(_id: self.id).count.zero?
       self.errors.add(:by_default, 'Only one can set as default.')
     end
   end

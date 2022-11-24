@@ -18,7 +18,7 @@ module LeadNotifications
   end
 
   def send_notification template_name
-    template = Template::EmailTemplate.where(name: template_name, project_id: self.project_id).first
+    template = Template::EmailTemplate.where(name: template_name, project_id: self.project_id, booking_portal_client_id: self.booking_portal_client_id).first
     recipients = get_recipients
     if recipients.present? && template.present?
        email = Email.create!(

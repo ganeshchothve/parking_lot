@@ -9,14 +9,14 @@ class Buyer::ReferralsController < BuyerController
 
   # GET /buyer/referrals/new
   def new
-    @referral = Referral.new(referred_by: current_user)
+    @referral = Referral.new(referred_by: current_user, booking_portal_client_id: current_client.try(:id))
     authorize [:buyer, @referral]
     render layout: false
   end
 
   # POST /buyer/referrals
   def create
-    referral_user = User.where(email: params.dig(:referral, :email))[0]
+    referral_user = User.where(booking_portal_client_id: current_client.try(:id), email: params.dig(:referral, :email))[0]
     respond_to do |format|
       if referral_user.blank?
         @referral = Referral.new(referred_by: current_user, booking_portal_client: current_client)

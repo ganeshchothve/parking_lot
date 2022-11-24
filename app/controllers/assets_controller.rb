@@ -6,7 +6,7 @@ class AssetsController < ApplicationController
   around_action :apply_policy_scope, only: :index
 
   def index
-    @assets = Asset.where(assetable: @assetable).build_criteria(params)
+    @assets = Asset.where(assetable: @assetable, booking_portal_client_id: current_client.try(:id)).build_criteria(params)
     render layout: false
   end
 
@@ -16,7 +16,7 @@ class AssetsController < ApplicationController
                   file: params[:files][0], 
                   document_type: params[:document_type], 
                   url: params[:url],
-                  booking_portal_client_id: current_client.id
+                  booking_portal_client_id: current_client.try(:id)
                   )
     if asset.persisted?
       render partial: "assets/asset.json", locals: {asset: asset}
@@ -43,7 +43,7 @@ class AssetsController < ApplicationController
   end
 
   def set_asset
-    @asset = Asset.where(assetable: @assetable).find params[:id]
+    @asset = Asset.where(assetable: @assetable, booking_portal_client_id: current_client.try(:id)).find params[:id]
   end
 
   def authorize_resource

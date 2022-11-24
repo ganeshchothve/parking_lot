@@ -16,7 +16,7 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
   end
 
   def show
-    @scheme = BookingDetailScheme.find(params[:id])
+    @scheme = BookingDetailScheme.where(booking_portal_client_id: current_client.try(:id)).find(params[:id])
     render layout: false
   end
 
@@ -24,7 +24,7 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
     @scheme = BookingDetailScheme.new(
       derived_from_scheme_id: booking_detail_scheme.derived_from_scheme_id,
       booking_detail_id: @booking_detail.id,
-      booking_portal_client_id: current_user.booking_portal_client_id,
+      booking_portal_client_id: current_client.try(:id),
       payment_adjustments: booking_detail_scheme.payment_adjustments.collect(&:clone),
       created_by_id: current_user.id,
       created_by_user: true
@@ -85,7 +85,7 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
     @scheme = if @booking_detail.present?
       @booking_detail.booking_detail_schemes.find(params[:id])
     else
-      BookingDetailScheme.where(project_unit_id: @project_unit.id).find(params[:id])
+      BookingDetailScheme.where(booking_portal_client_id: current_client.try(:id), project_unit_id: @project_unit.id).find(params[:id])
     end
   end
 
@@ -94,7 +94,7 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
     redirect_to root_path, alert: t('controller.booking_details.set_project_unit_missing'), status: 404 if @project_unit.blank?
   end
   def set_booking_detail
-    @booking_detail = BookingDetail.where(id: params[:booking_detail_id]).first if params[:booking_detail_id].present?
+    @booking_detail = BookingDetail.where(booking_portal_client_id: current_client.try(:id), id: params[:booking_detail_id]).first if params[:booking_detail_id].present?
     redirect_to root_path, alert: t('controller.booking_details.set_booking_detail_missing'), status: 404 if @booking_detail.blank?
   end
 
@@ -113,8 +113,8 @@ class Buyer::BookingDetails::BookingDetailSchemesController < BuyerController
     if params[:action] == "index" || params[:action] == 'export'
       authorize [:buyer, BookingDetailScheme]
     elsif params[:action] == "new" || params[:action] == "create"
-      @scheme = Scheme.where(_id: params.dig(:booking_detail_scheme, :derived_from_scheme_id) ).last
-      @booking_detail_scheme = BookingDetailScheme.new(created_by: current_user, booking_detail_id: @booking_detail, derived_from_scheme_id: @scheme.try(:_id), status: @scheme.try(:status))
+      @scheme = Scheme.where(booking_portal_client_id: current_client.try(:id), _id: params.dig(:booking_detail_scheme, :derived_from_scheme_id) ).last
+      @booking_detail_scheme = BookingDetailScheme.new(created_by: current_user, booking_detail_id: @booking_detail, derived_from_scheme_id: @scheme.try(:_id), status: @scheme.try(:status), booking_portal_client_id: current_client.try(:id))
       authorize [:buyer, @booking_detail_scheme]
     else
       authorize [:buyer, @scheme]

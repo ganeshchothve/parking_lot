@@ -1,6 +1,7 @@
 class Note
   include Mongoid::Document
   include Mongoid::Timestamps
+  include CrmIntegration
   extend DocumentsConcern
 
   # Add different types of documents which are uploaded on note.

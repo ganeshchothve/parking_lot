@@ -9,6 +9,7 @@ class Api::V1::ReceiptsController < ApisController
   def create
     unless Receipt.reference_resource_exists?(@crm.id, params[:receipt][:reference_id].to_s)
       @receipt = Receipt.new(receipt_create_params)
+      @receipt.booking_portal_client_id = @current_client.try(:id)
       if @receipt.save
         response = generate_response
         response[:message] = I18n.t("controller.receipts.notice.created")
@@ -45,12 +46,12 @@ class Api::V1::ReceiptsController < ApisController
   end
 
   def set_lead
-    @lead = Lead.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:receipt][:lead_id]).first
+    @lead = Lead.where(booking_portal_client_id: @current_client.try(:id), "third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:receipt][:lead_id]).first
     render json: { errors: [I18n.t("controller.leads.errors.lead_reference_id_not_found", name: "#{params[:receipt][:lead_id]}")] }, status: :not_found and return unless @lead
   end
 
   def set_receipt_and_lead
-    @receipt = Receipt.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
+    @receipt = Receipt.where(booking_portal_client_id: @current_client.try(:id), "third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
     render json: { errors: [I18n.t("controller.receipts.errors.receipt_reference_id_not_found", name: "#{params[:id]}}")] }, status: :not_found and return unless @receipt
     render json: { errors: [I18n.t("controller.receipts.errors.receipt_reference_id_in_success", name: "#{params[:id]}}")] }, status: :unprocessable_entity and return if @receipt.success?
     @lead = @receipt.lead

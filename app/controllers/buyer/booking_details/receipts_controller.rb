@@ -19,6 +19,7 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
   # GET "/admin/users/:user_id/booking_details/:booking_detail_id/receipts/new"
   def new
     @receipt = Receipt.new({
+      booking_portal_client_id: current_client.try(:id),
       project: current_user.selected_project,
       lead: @lead.id,
       creator: current_user, user: current_user, booking_detail: @booking_detail,
@@ -68,7 +69,7 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
   private
 
   def set_user
-    @user = User.where(_id: params[:user_id]).first
+    @user = User.where(booking_portal_client_id: current_client.try(:id), _id: params[:user_id]).first
     @user = @booking_detail.user if !(@user.present?)
     redirect_to home_path(current_user), alert: I18n.t("controller.users.alert.not_found"), status: 404 if @user.blank?
   end
@@ -79,13 +80,13 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
   end
 
   def set_booking_detail
-    @booking_detail = BookingDetail.where(_id: params[:booking_detail_id], user_id: current_user.id).first
+    @booking_detail = BookingDetail.where(booking_portal_client_id: current_client.try(:id), _id: params[:booking_detail_id], user_id: current_user.id).first
     redirect_to root_path, alert: t('controller.booking_details.set_booking_detail_missing'), status: 404 if @booking_detail.blank?
   end
 
   def set_lead
     @lead = @booking_detail.lead if @booking_detail.present?
-    @lead = Lead.where(user_id: current_user.id, project_id: params[:current_project_id]).first if @lead.blank?
+    @lead = Lead.where(booking_portal_client_id: current_client.try(:id), user_id: current_user.id, project_id: params[:current_project_id]).first if @lead.blank?
     redirect_to root_path, alert: I18n.t("controller.leads.alert.not_found"), status: 404 if @lead.blank?
   end
 

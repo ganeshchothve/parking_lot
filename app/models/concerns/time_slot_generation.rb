@@ -35,7 +35,7 @@ module TimeSlotGeneration
         if token_type.incrementor_exists?
           begin
             assign!(:token_number)
-          end while Receipt.where(token_number: token_number, project_id: project_id, token_type_id: token_type_id).any?
+          end while Receipt.where(booking_portal_client_id: self.booking_portal_client_id, token_number: token_number, project_id: project_id, token_type_id: token_type_id).any?
 
           self.token_prefix = token_type.token_prefix
           self.time_slot = fetch_time_slot if project.enable_slot_generation?
@@ -52,7 +52,7 @@ module TimeSlotGeneration
   end
 
   def generate_coupon
-    discount = Discount.where(project_id: self.project_id, token_type_id: self.token_type_id , start_token_number: { '$lte': token_number }, end_token_number: { '$gte': token_number }).first
+    discount = Discount.where(booking_portal_client_id: self.booking_portal_client_id, project_id: self.project_id, token_type_id: self.token_type_id , start_token_number: { '$lte': token_number }, end_token_number: { '$gte': token_number }).first
     if discount
       attrs = discount.attributes.deep_dup
       attrs.except! :_id, :created_at, :updated_at, :payment_adjustments, :project_id, :token_type_id

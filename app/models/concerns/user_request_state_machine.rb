@@ -52,7 +52,7 @@ module UserRequestStateMachine
     end
 
     def send_sms
-      template = Template::SmsTemplate.where(name: "#{self.class.model_name.element}_request_#{status}", project_id: self.project_id).first
+      template = Template::SmsTemplate.where(booking_portal_client_id: self.booking_portal_client_id, name: "#{self.class.model_name.element}_request_#{status}", project_id: self.project_id).first
       if template.present? && lead.user.booking_portal_client.sms_enabled?
         Sms.create!(
           project_id: self.project_id,
@@ -66,7 +66,7 @@ module UserRequestStateMachine
     end
 
     def send_push_notification
-      template = Template::NotificationTemplate.where(name: "#{self.class.model_name.element}_request_#{status}").first
+      template = Template::NotificationTemplate.where(booking_portal_client_id: self.booking_portal_client_id, name: "#{self.class.model_name.element}_request_#{status}").first
       if template.present? && template.is_active? && user.booking_portal_client.notification_enabled?
         push_notification = PushNotification.new(
           notification_template_id: template.id,

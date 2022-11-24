@@ -5,7 +5,7 @@ module UserRequestsHelper
   end
 
   def available_booking_for_request
-    BookingDetail.where(user_id: @user_request.user_id, status: { '$in' => BookingDetail::BOOKING_STAGES }).collect{ |bd| [bd.name, bd.id]}
+    BookingDetail.where(booking_portal_client_id: current_client.try(:id), user_id: @user_request.user_id, status: { '$in' => BookingDetail::BOOKING_STAGES }).collect{ |bd| [bd.name, bd.id]}
   end
 
   def get_new_user_request_url(klass, requestable)

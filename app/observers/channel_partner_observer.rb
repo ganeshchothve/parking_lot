@@ -72,7 +72,7 @@ class ChannelPartnerObserver < Mongoid::Observer
     end
 
     template_name = "channel_partner_created"
-    template = Template::EmailTemplate.where(name: template_name).first
+    template = Template::EmailTemplate.where(booking_portal_client_id: channel_partner.booking_portal_client_id, name: template_name).first
     recipients = []
     recipients << channel_partner.manager if channel_partner.manager.present?
     recipients << channel_partner.manager.manager if channel_partner.manager.try(:manager).present?
@@ -86,7 +86,7 @@ class ChannelPartnerObserver < Mongoid::Observer
       })
       email.sent!
     end
-    sms_template = Template::EmailTemplate.where(name: template_name).first
+    sms_template = Template::EmailTemplate.where(booking_portal_client_id: channel_partner.booking_portal_client_id, name: template_name).first
     if sms_template.present?
       phones = recipients.collect(&:phone).reject(&:blank?)
       if phones.present?
@@ -157,7 +157,7 @@ class ChannelPartnerObserver < Mongoid::Observer
       recipients << channel_partner.manager.manager if channel_partner.manager.try(:manager).present?
       if recipients.present?
         template_name = "channel_partner_updated"
-        template = Template::EmailTemplate.where(name: template_name).first
+        template = Template::EmailTemplate.where(booking_portal_client_id: channel_partner.booking_portal_client_id, name: template_name).first
         if template.present?
           email = Email.create!({
             booking_portal_client_id: channel_partner.booking_portal_client.id,
@@ -168,7 +168,7 @@ class ChannelPartnerObserver < Mongoid::Observer
           })
           email.sent!
         end
-        sms_template = Template::SmsTemplate.where(name: template_name).first
+        sms_template = Template::SmsTemplate.where(booking_portal_client_id: channel_partner.booking_portal_client_id, name: template_name).first
         if sms_template.present?
           phones = recipients.collect(&:phone).reject(&:blank?)
           if phones.present?

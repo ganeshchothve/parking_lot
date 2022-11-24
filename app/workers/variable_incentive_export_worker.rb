@@ -16,7 +16,7 @@ class VariableIncentiveExportWorker
     end
     file_name = "vis_detail-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/exports/#{file_name}")
-    ExportMailer.notify(file_name, user.email, "Variable Incentive Details").deliver
+    ExportMailer.notify(file_name, user.email, "Variable Incentive Details", user.id.to_s).deliver
   end
 
   # code for make excel headers bold

@@ -80,7 +80,7 @@
     <h2 class="section-heading text-center cgreen"><%= I18n.t("controller.home.text_msg.good_points.with_us.hottest_selling_properties") %></h2>
     <div class="row relative project-listing-wrapper">
       <div class="project-listing-slider">
-        <% Project.where(hot: true).limit(15).each do |project| %>
+        <% Project.where(booking_portal_client_id: current_client.try(:id), hot: true).limit(15).each do |project| %>
         <div class="property-item col-app-4 col-app-sm-6">
           <div class="property-item-inner">
             <div class="property-item-image">

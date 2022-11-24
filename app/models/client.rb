@@ -112,9 +112,10 @@ class Client
   # kylas tentant id
   field :kylas_tenant_id, type: String
   field :kylas_api_key, type: String
-  field :is_able_sync_products_and_users, type: Boolean, default: true
-  field :can_create_webhook, type: Boolean, default: true
+  field :is_able_sync_products_and_users, type: Boolean, default: true # flag to check whether syncing of users and products can be initiated or not
+  field :can_create_webhook, type: Boolean, default: true # flag to check whether user webhook can be created in Kylas or not
   field :kylas_custom_fields, type: Hash, default: {}
+  field :kylas_currency_id, type: Integer # kylas currency id is present on kylas products and is tenant dependent
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= client.logo.url %>" />

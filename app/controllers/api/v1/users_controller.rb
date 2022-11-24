@@ -12,6 +12,7 @@ class Api::V1::UsersController < ApisController
   #
   def create
     @user = User.new(user_create_params)
+    @user.booking_portal_client_id = @current_client.try(:id)
     if @user.save
       @user.update_external_ids(third_party_reference_params, @crm.id) if third_party_reference_params
       render json: {id: @user.id, message: I18n.t("controller.users.notice.created")}, status: :created

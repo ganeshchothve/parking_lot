@@ -94,14 +94,14 @@ class SiteVisitObserver < Mongoid::Observer
 
     # if site visit status is changed to conducted, the site visit is pushed to sell do
     if site_visit.status_changed? && site_visit.status == 'conducted'
-      crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+      crm_base = Crm::Base.where(booking_portal_client_id: site_visit.booking_portal_client_id, domain: ENV_CONFIG.dig(:selldo, :base_url)).first
       if crm_base.present?
         api, api_log = site_visit.reload.push_in_crm(crm_base)
       end
     end
 
     if (site_visit.scheduled_on_changed? || site_visit.status_changed?) && site_visit.booking_portal_client.is_marketplace? && site_visit.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)).present?
-      Kylas::UpdateMeeting.new(site_visit.user, site_visit, {run_in_background: false}).call
+      Kylas::UpdateMeeting.new(site_visit.user, site_visit, {run_in_background: true}).call
     end
   end
 end

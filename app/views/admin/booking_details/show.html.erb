@@ -266,7 +266,7 @@
                       <div class="accordion-body pt-0 ps-4">
                         <div class="ps-3">
                           <div class="col-12 row ps-2">
-                            <%= render "admin/crm/base/choose_crm", crms: Crm::Base.where(id: {"$in": apis.distinct(:base_id)}), apis: apis, resource: @booking_detail %>
+                            <%= render "admin/crm/base/choose_crm", crms: Crm::Base.where(booking_portal_client_id: current_client.try(:id), id: {"$in": apis.distinct(:base_id)}), apis: apis, resource: @booking_detail %>
                           </div>
                         </div>
                       </div>

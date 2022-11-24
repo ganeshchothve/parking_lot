@@ -20,7 +20,7 @@
         <% unless f.object.default? %>
           <div class="mb-3">
             <%= f.label :project_id %>
-            <%= f.select :project_id, options_from_collection_for_select(f.object.project_id ? Project.where(_id: f.object.project_id) : [], "id", "ds_name", f.object.project_id), {prompt: 'Select Project'}, class: 'selectize-remote project_select', data: {url: admin_projects_path}, disabled: !policy([:admin, @incentive_scheme]).editable_field?("project_id") %>
+            <%= f.select :project_id, options_from_collection_for_select(f.object.project_id ? Project.where(booking_portal_client_id: current_client.try(:id), _id: f.object.project_id) : [], "id", "ds_name", f.object.project_id), {prompt: 'Select Project'}, class: 'selectize-remote project_select', data: {url: admin_projects_path}, disabled: !policy([:admin, @incentive_scheme]).editable_field?("project_id") %>
           </div>
           <div class="mb-3">
             <%= f.label :project_tower_id %>

@@ -19,7 +19,7 @@ module BulkUpload
           next
         end
 
-        user_request = ::UserRequest.where(id: row.field(0).to_s.strip).first if row.field(0).to_s.strip.present?
+        user_request = ::UserRequest.where(booking_portal_client_id: bur.booking_portal_client_id, id: row.field(0).to_s.strip).first if row.field(0).to_s.strip.present?
         if user_request
           attrs = {}
           attrs[:event] = status

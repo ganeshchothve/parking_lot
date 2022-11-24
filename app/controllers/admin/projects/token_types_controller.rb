@@ -97,7 +97,7 @@ class Admin::Projects::TokenTypesController < AdminController
   private
 
   def set_project
-    @project = Project.where(id: params[:project_id]).first
+    @project = Project.where(booking_portal_client_id: current_client.try(:id), id: params[:project_id]).first
     redirect_to home_path(current_user), alert: I18n.t("controller.projects.alert.not_found") unless @project
   end
 

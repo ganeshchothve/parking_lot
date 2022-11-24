@@ -39,7 +39,7 @@ module Kylas
 
     def standard_picklist_request
       begin
-        url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/picklists/standard")
+        url = URI(base_url+"/picklists/standard")
 
         https = Net::HTTP.new(url.host, url.port)
         https.use_ssl = true

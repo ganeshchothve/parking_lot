@@ -123,6 +123,7 @@ class Project
 
   # Kylas fields
   field :kylas_product_id, type: String
+  field :kylas_product_value, type: Integer
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= client.logo.url %>" />
@@ -238,7 +239,7 @@ class Project
   end
 
   def default_scheme
-    Scheme.where(project_id: self.id, default: true).first
+    Scheme.where(booking_portal_client_id: self.booking_portal_client_id, project_id: self.id, default: true).first
   end
 
   def enable_actual_inventory?(user)
@@ -266,11 +267,11 @@ class Project
   end
 
   def cp_subscription_count
-    InterestedProject.where(project_id: self.id).count
+    InterestedProject.where(booking_portal_client_id: self.booking_portal_client_id, project_id: self.id).count
   end
 
   def is_subscribed(user)
-    InterestedProject.where(project_id: self.id, user_id: user.id).in(status: %w(subscribed approved)).present?
+    InterestedProject.where(booking_portal_client_id: self.booking_portal_client_id, project_id: self.id, user_id: user.id).in(status: %w(subscribed approved)).present?
   end
 
   def walk_ins_enabled?

@@ -27,6 +27,7 @@ class Api::V1::LeadsController < ApisController
   def create
     unless Lead.reference_resource_exists?(@crm.id, params[:lead][:reference_id])
       @lead = @user.leads.build(lead_create_params)
+      @lead.booking_portal_client_id = @current_client.id
 
       # Add manager in referenced_manager_ids array on lead for future reference.
       if @manager
@@ -84,8 +85,9 @@ class Api::V1::LeadsController < ApisController
 
   # Sets or creates the user object if it doesn't exists.
   def create_or_set_user
-    unless @user = User.or(check_and_build_query_for_finding_user).first
+    unless @user = User.or(check_and_build_query_for_finding_user).where(booking_portal_client_id: @current_client.try(:id)).first
       @user = User.new(user_create_params)
+      @user.booking_portal_client_id = @current_client.id
       @user.assign_attributes(is_active: false) # Ruwnal Specific. TODO: Remove this for generic
       @user.skip_confirmation! # TODO: Remove this when customer login needs to be given
       if @user.save
@@ -113,7 +115,7 @@ class Api::V1::LeadsController < ApisController
       render json: { errors: [I18n.t("controller.leads.errors.project_id_required")] }, status: :bad_request
     else
       # set project
-      @project = Project.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": project_reference_id).first
+      @project = Project.where(booking_portal_client_id: @current_client.try(:id), "third_party_references.crm_id": @crm.id, "third_party_references.reference_id": project_reference_id).first
       render json: { errors: [I18n.t("controller.projects.errors.project_reference_id_not_found", name: "#{project_reference_id}")] }, status: :not_found and return unless @project
 
       # modify params
@@ -137,7 +139,7 @@ class Api::V1::LeadsController < ApisController
   end
 
   def set_lead_and_user
-    @lead = Lead.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
+    @lead = Lead.where(booking_portal_client_id: @current_client.try(:id), "third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
     render json: { errors: [I18n.t("controller.projects.errors.lead_reference_id_not_found", name: "#{params[:id]}")] }, status: :not_found unless @lead
     @user = @lead.user
   end
@@ -165,7 +167,7 @@ class Api::V1::LeadsController < ApisController
 
   def set_manager_through_reference_id
     if manager_reference_id = params.dig(:lead, :manager_id).presence
-      @manager = User.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": manager_reference_id).first
+      @manager = User.where(booking_portal_client_id: @current_client.try(:id), "third_party_references.crm_id": @crm.id, "third_party_references.reference_id": manager_reference_id).first
       if @manager
         # modify params
         params[:lead][:manager_id] = @manager.id.to_s

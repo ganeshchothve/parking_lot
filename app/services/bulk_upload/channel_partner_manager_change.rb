@@ -8,12 +8,12 @@ module BulkUpload
     def process_csv(csv)
       csv.each do |row|
         channel_partner_id = row.field(0).to_s.strip
-        if channel_partner_id.present? && (channel_partner = ::ChannelPartner.where(id: channel_partner_id).first.presence)
+        if channel_partner_id.present? && (channel_partner = ::ChannelPartner.where(id: channel_partner_id, booking_portal_client_id: bur.booking_portal_client_id).first.presence)
           attrs = {}
           if m_phone = row.field(1).to_s.strip.presence
             _manager_phone = Phonelib.parse(m_phone)
             manager_phone = (_manager_phone.country_code == '91' && _manager_phone.sanitized.length == 10 ? "+91#{_manager_phone.sanitized}" : "+#{_manager_phone.sanitized}")
-            manager = User.where(phone: manager_phone, role: {'$in': ['cp', 'cp_admin']}).first if manager_phone.present?
+            manager = User.where(booking_portal_client_id: bur.booking_portal_client_id, phone: manager_phone, role: {'$in': ['cp', 'cp_admin']}).first if manager_phone.present?
             if manager
               attrs[:manager_id] = manager.id
             else

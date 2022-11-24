@@ -32,7 +32,7 @@ module BookingDetailsHelper
 
   def filter_booking_detail_options(booking_detail_id=nil)
     if booking_detail_id.present?
-      BookingDetail.where(_id: booking_detail_id).map{|bd| [bd.ds_name, bd.id]}
+      BookingDetail.where(booking_portal_client_id: current_client.try(:id), _id: booking_detail_id).map{|bd| [bd.ds_name, bd.id]}
     else
       []
     end
@@ -40,7 +40,7 @@ module BookingDetailsHelper
 
   def filter_project_tower_options
     if params.dig(:fltrs, :project_tower_id).present?
-      ProjectTower.where(_id: params.dig(:fltrs, :project_tower_id)).map{|pt| [pt.name, pt.id]}
+      ProjectTower.where(booking_portal_client_id: current_client.try(:id), _id: params.dig(:fltrs, :project_tower_id)).map{|pt| [pt.name, pt.id]}
     else
       []
     end
@@ -48,7 +48,7 @@ module BookingDetailsHelper
 
   def filter_user_options
     if params.dig(:fltrs, :user_id).present?
-      User.in(role: User::BUYER_ROLES).where(_id: params.dig(:fltrs, :user_id)).map{|user| [user.ds_name, user.id]}
+      User.in(role: User::BUYER_ROLES).where(booking_portal_client_id: current_client.try(:id), _id: params.dig(:fltrs, :user_id)).map{|user| [user.ds_name, user.id]}
     else
       []
     end
@@ -56,7 +56,7 @@ module BookingDetailsHelper
 
   def filter_lead_options
     if params.dig(:fltrs, :lead_id).present?
-      Lead.where(_id: params.dig(:fltrs, :lead_id)).map{|lead| [lead.ds_name(current_user), lead.id]}
+      Lead.where(booking_portal_client_id: current_client.try(:id), _id: params.dig(:fltrs, :lead_id)).map{|lead| [lead.ds_name(current_user), lead.id]}
     else
       []
     end
@@ -64,7 +64,7 @@ module BookingDetailsHelper
 
   def filter_manager_options
     if params.dig(:fltrs, :manager_id).present?
-      User.nin(role: User::BUYER_ROLES).where(_id: params.dig(:fltrs, :manager_id)).map{|user| [user.ds_name, user.id]}
+      User.nin(role: User::BUYER_ROLES).where(booking_portal_client_id: current_client.try(:id), _id: params.dig(:fltrs, :manager_id)).map{|user| [user.ds_name, user.id]}
     else
       []
     end
@@ -72,15 +72,15 @@ module BookingDetailsHelper
 
   def filter_incentive_scheme_options
     if params.dig(:fltrs, :incentive_scheme_id).present?
-      IncentiveScheme.where(_id: params.dig(:fltrs, :incentive_scheme_id)).map{|incentive_scheme| [incentive_scheme.name, incentive_scheme.id]}
+      IncentiveScheme.where(booking_portal_client_id: current_client.try(:id), _id: params.dig(:fltrs, :incentive_scheme_id)).map{|incentive_scheme| [incentive_scheme.name, incentive_scheme.id]}
     else
       []
     end
   end
 
   def available_booking_custom_templates(booking_detail)
-    templates = ::Template::CustomTemplate.where(subject_class: 'BookingDetail', project_id: booking_detail.project.id, is_active: true).collect{|t| [t.name.titleize, t.id]}
-    booking_form_and_allotment_letter_templates = Template.where(project_id: booking_detail.project.id, is_active: true).in(name: ['allotment_letter', 'booking_detail_form_html']).map{|t| [t.name.try(:titleize), t.id]}
+    templates = ::Template::CustomTemplate.where(booking_portal_client_id: current_client.try(:id), subject_class: 'BookingDetail', project_id: booking_detail.project.id, is_active: true).collect{|t| [t.name.titleize, t.id]}
+    booking_form_and_allotment_letter_templates = Template.where(booking_portal_client_id: current_client.try(:id), project_id: booking_detail.project.id, is_active: true).in(name: ['allotment_letter', 'booking_detail_form_html']).map{|t| [t.name.try(:titleize), t.id]}
     booking_form_and_allotment_letter_templates + templates
   end
 

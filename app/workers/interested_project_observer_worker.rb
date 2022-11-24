@@ -6,11 +6,12 @@ class InterestedProjectObserverWorker
     ip = InterestedProject.where(id: interested_project_id).first
     if ip.present?
       user = ip.user
+      booking_portal_client_id = user.booking_portal_client_id
       project = ip.project
-      onesignal_base = Crm::Base.where(domain: ENV_CONFIG.dig(:onesignal, :base_url)).first
+      onesignal_base = Crm::Base.where(booking_portal_client_id: booking_portal_client_id, domain: ENV_CONFIG.dig(:onesignal, :base_url)).first
 
       Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, nil, {
-        'interested_projects' => Project.in(id: user.interested_projects.collect(&:project_id)).pluck(:name)
+        'interested_projects' => Project.where(booking_portal_client_id: booking_portal_client_id).in(id: user.interested_projects.collect(&:project_id)).pluck(:name)
       })
       Crm::Api::ExecuteWorker.perform_async('post', 'User', user.id, 'Project Subscribed', { 'project' => project.as_json(methods: [:logo_url, :mobile_logo_url, :cover_photo_url, :mobile_cover_photo_url]) })
 

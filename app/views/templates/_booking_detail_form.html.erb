@@ -1,4 +1,4 @@
-<% template = ::Template::BookingDetailFormTemplate.where(project_id: @booking_detail.project_id, name: 'booking_detail_form_pdf').first %>
+<% template = ::Template::BookingDetailFormTemplate.where(booking_portal_client_id: current_client.try(:id), project_id: @booking_detail.project_id, name: 'booking_detail_form_pdf').first %>
 <% if template.present? %>
   <% begin %>
     <%= ::ERB.new(template.content).result( binding ).html_safe %>

@@ -13,6 +13,7 @@ class IncentiveSchemeValidator < ActiveModel::Validator
                         tier_id: is.tier_id.presence,
                         category: is.category,
                         brokerage_type: is.brokerage_type,
+                        booking_portal_client_id: is.try(:booking_portal_client_id)
                       )
                       .lte(starts_on: is.ends_on)
                       .gte(ends_on: is.starts_on).present?

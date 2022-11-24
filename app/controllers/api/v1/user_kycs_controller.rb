@@ -48,6 +48,7 @@ class Api::V1::UserKycsController < ApisController
   def create
     unless UserKyc.reference_resource_exists?(@crm.id, params[:user_kyc][:reference_id].to_s)
       @user_kyc = @lead.user_kycs.build(user_kyc_params)
+      @user_kyc.booking_portal_client_id = @current_client.try(:id)
       if @user_kyc.save
         render json: {user_kyc_id: @user_kyc.id, lead_id: @lead.id, message: I18n.t("controller.user_kycs.notice.created")}, status: :created
       else
@@ -127,13 +128,13 @@ class Api::V1::UserKycsController < ApisController
     unless lead_reference_id = params.dig(:user_kyc, :lead_id).presence
       render json: { errors: [I18n.t("controller.user_kycs.errors.lead_id_required")] }, status: :bad_request
     else
-      @lead = Lead.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": lead_reference_id).first
+      @lead = Lead.where(booking_portal_client_id: @current_client.try(:id), "third_party_references.crm_id": @crm.id, "third_party_references.reference_id": lead_reference_id).first
       render json: { errors: [ I18n.t("controller.leads.errors.lead_reference_id_not_found", name: "#{lead_reference_id}") ] }, status: :not_found and return unless @lead
     end
   end
 
   def set_user_kyc_and_lead
-    @user_kyc = UserKyc.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
+    @user_kyc = UserKyc.where(booking_portal_client_id: @current_client.try(:id), "third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
     render json: { errors: [I18n.t("controller.user_kycs.errors.lead_reference_id_not_found", name: "#{params[:id]}")] }, status: :not_found and return unless @user_kyc
     @lead = @user_kyc.lead
   end

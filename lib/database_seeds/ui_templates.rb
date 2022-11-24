@@ -5,7 +5,7 @@ module DatabaseSeeds
   module UITemplate
     def self.client_based_seed(client_id)
       # To add links for videos
-      if Template::UITemplate.where(name: 'assets/_videos').blank?
+      if Template::UITemplate.where(name: 'assets/_videos', booking_portal_client_id: client_id).blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'assets/_videos', content: '<div class="row">
           <div class="col-12 my-4 text-center">
           </div>
@@ -13,7 +13,7 @@ module DatabaseSeeds
       end
 
       # To render card on user dashboard
-      if Template::UITemplate.where(name: 'users/_welcome').blank?
+      if Template::UITemplate.where(name: 'users/_welcome', booking_portal_client_id: client_id).blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'users/_welcome', content: '
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bg-primary">
           <div class="box-content">
@@ -67,7 +67,7 @@ module DatabaseSeeds
       end
 
       # To render projects section card on user dashboard
-      if Template::UITemplate.where(name: 'project_units/_section').blank?
+      if Template::UITemplate.where(name: 'project_units/_section', booking_portal_client_id: client_id).blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'project_units/_section', content: <<-'INACTIVE_CP'
         <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 my-4 no-pd">
           <div class="box-card">
@@ -102,7 +102,7 @@ module DatabaseSeeds
         })
       end
 
-      if Template::UITemplate.where(name: 'index/inactive_channel_partner').blank?
+      if Template::UITemplate.where(name: 'index/inactive_channel_partner', booking_portal_client_id: client_id).blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'index/inactive_channel_partner', content: <<-'INACTIVE_CP'
           <div class="col-lg-12 col-xs-12 bg-primary br-rd-8 col-md-12 col-sm-12">
             <img src="<%= asset_path 'quality-tag.png' %>" alt="user icon" class="quality-tag">
@@ -149,7 +149,7 @@ module DatabaseSeeds
         })
       end
 
-      if Template::UITemplate.where(name: 'index/_channel_partner').blank?
+      if Template::UITemplate.where(name: 'index/_channel_partner', booking_portal_client_id: client_id).blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'index/_channel_partner', content: '
         <div class="col-lg-12 col-xs-12 bg-primary br-rd-8 col-md-12 col-sm-12">
           <img src="<%= asset_path \'quality-tag.png\' %>" alt="user icon" class="quality-tag">
@@ -184,7 +184,7 @@ module DatabaseSeeds
       end
 
       # To render card on sales & admin dashboard
-      if Template::UITemplate.where(name: 'dashboard/index/_admin').blank?
+      if Template::UITemplate.where(name: 'dashboard/index/_admin', booking_portal_client_id: client_id).blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'dashboard/index/_admin', content: '
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bg-primary">
           <div class="box-content">
@@ -209,39 +209,39 @@ module DatabaseSeeds
       end
 
       # To change text above login page for admin/sales/user
-      if Template::UITemplate.where(name: 'devise/sessions/new').blank?
+      if Template::UITemplate.where(name: 'devise/sessions/new', booking_portal_client_id: client_id).blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'devise/sessions/new', content: '<h1 class="mt-0 fn-24">Welcome to <%= current_project.name %></h1>
           <p class="p-style mt-0">Now is the best time to turn your dream into reality</p>
           <p class="p-style"><strong>Login</strong> to Book an Apartment online</p>' })
       end
 
       # To change text on register page for user
-      if Template::UITemplate.where(name: 'home/register').blank?
+      if Template::UITemplate.where(name: 'home/register', booking_portal_client_id: client_id).blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'home/register', content: '<h1 class="mt-0 fn-20">Biggest real estate opportunity in Pune<br> Introducing exclusive <%= ProjectUnit.distinct(:unit_configuration_name).map {|x| x.match(/\d*.*\d/).to_s}.uniq.sort.first(3).to_sentence(last_word_connector: " & ") %> Bed residences starting from <%= number_to_indian_currency(DashboardDataProvider.minimum_agreement_price(current_user).to_s.match(/(\d+)\d{5}/).try(:captures).try(:first)) %> lakhs</h1>
         <p class="p-style">Home buying can’t get better than this</p>
         <p><strong>Register Now</strong> to Book Online</p>' })
       end
 
       # To change text on register page for channel_partner
-      if Template::UITemplate.where(name: 'channel_partner/new').blank?
+      if Template::UITemplate.where(name: 'channel_partner/new', booking_portal_client_id: client_id).blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'channel_partner/new', content: '<h1 class="mt-0 fn-20">We are a big family of 400+ esteemed partners and we are happy to onboard you</h1>
         <p><strong>Register now</strong> & join our network to explore new opportunities</p>' })
       end
 
       # To change text in the footer
-      if Template::UITemplate.where(name: 'layouts/_navbar_footer').blank?
+      if Template::UITemplate.where(name: 'layouts/_navbar_footer', booking_portal_client_id: client_id).blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'layouts/_navbar_footer', content: '
         <% if current_project.rera_registration_no %> <p class="m-0 pb-1"><%= current_project.name %> is registered via MahaRERA No.: <%= current_project.rera_registration_no %> & is available on <a href="https://maharera.mahaonline.gov.in" target="_blank">https://maharera.mahaonline.gov.in</a>.</p> <% end %>' })
       end
 
       # To change text above timer when booking a unit
-      if Template::UITemplate.where(name: 'searches/checkout').blank?
+      if Template::UITemplate.where(name: 'searches/checkout', booking_portal_client_id: client_id).blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'searches/checkout', content: '<p class="p-style white"> To be fair to other user interested in this apartments, we have held this unit for some time. Please go through the costs and payments schedule before you make a payment of <%= number_to_indian_currency(@project_unit.blocking_amount || @project_unit.booking_portal_client.blocking_amount) %></p>' })
       end
 
       # To change text on show booking detail for user & channel_partner
       # @bd is booking_detail
-      if Template::UITemplate.where(name: 'booking_details/_details').blank?
+      if Template::UITemplate.where(name: 'booking_details/_details', booking_portal_client_id: client_id).blank?
           Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'booking_details/_details', content: '<ul>
               <li>You need to pay <%= number_to_indian_currency(@bd.project_unit.get_booking_price) %> to confirm the booking</li>
               <% unless @bd.booking_portal_client.try(:cancellation_amount).try(:zero?) %>
@@ -253,7 +253,7 @@ module DatabaseSeeds
             </ul>' })
       end
 
-      if Template::UITemplate.where(name: 'quotation_pdf').blank?
+      if Template::UITemplate.where(name: 'quotation_pdf', booking_portal_client_id: client_id).blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'quotation_pdf',
  content: <<-'QUOTATION_PDF'
             <div class='text-center'>
@@ -267,7 +267,7 @@ module DatabaseSeeds
         })
       end
 
-      if Template::UITemplate.where(name: 'terms_and_conditions').blank?
+      if Template::UITemplate.where(name: 'terms_and_conditions', booking_portal_client_id: client_id).blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'terms_and_conditions',
  content: <<-'TERMS_AND_CONDITIONS'
 <section class="privacy-policy-sec">
@@ -432,7 +432,7 @@ module DatabaseSeeds
         })
       end
 
-      if Template::UITemplate.where(name: 'privacy_policy').blank?
+      if Template::UITemplate.where(name: 'privacy_policy', booking_portal_client_id: client_id).blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'privacy_policy',
  content: <<-'PRIVACY_POLICY'
 <section class="privacy-policy-sec">
@@ -602,14 +602,14 @@ module DatabaseSeeds
 
     def self.project_based_seed(project_id, client_id)
       # To add links for videos
-      if Template::UITemplate.where(name: 'assets/_videos', project_id: project_id).blank?
+      if Template::UITemplate.where(name: 'assets/_videos', project_id: project_id, booking_portal_client_id: client_id).blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, project_id: project_id, subject_class: 'View', name: 'assets/_videos', content: '<div class="row">
           <div class="col-12 my-4 text-center">
           </div>
         </div>' })
       end
 
-      if Template::UITemplate.where(name: 'sales_dashboard', project_id: project_id).blank?
+      if Template::UITemplate.where(name: 'sales_dashboard', project_id: project_id, booking_portal_client_id: client_id).blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, project_id: project_id, subject_class: 'View', name: 'sales_dashboard', content: '<section class=" mt-4">
           <div class="container">
             <div class="row">

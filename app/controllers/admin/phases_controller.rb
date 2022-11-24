@@ -5,7 +5,7 @@ class Admin::PhasesController < AdminController
   # index
   # GET /admin/phases
   def index
-    @phases = Phase.all
+    @phases = Phase.where(booking_portal_client_id: current_client.try(:id))
     @phases = @phases.paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
       format.json { render json: @phases }
@@ -16,7 +16,7 @@ class Admin::PhasesController < AdminController
   # new
   # GET /admin/phases/new
   def new
-    @phase = Phase.new
+    @phase = Phase.new(booking_portal_client_id: current_client.try(:id))
     render layout: false
   end
 
@@ -40,7 +40,7 @@ class Admin::PhasesController < AdminController
   # POST /admin/phases
   #
   def create
-    @phase = Phase.new
+    @phase = Phase.new(booking_portal_client_id: current_client.try(:id))
     @phase.assign_attributes(permitted_attributes([:admin, @phase]))
     respond_to do |format|
       if @phase.save

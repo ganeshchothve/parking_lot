@@ -1,7 +1,7 @@
 module ProjectUnitHelper
 
   def floor_plan_asset(project_unit)
-    project_unit.assets.where(asset_type: 'floor_plan').first || project_unit.assets.build(asset_type: :floor_plan)
+    project_unit.assets.where(booking_portal_client_id: current_client.try(:id), asset_type: 'floor_plan').first || project_unit.assets.build(asset_type: :floor_plan, booking_portal_client_id: current_client.try(:id))
   end
 
   def unit_tooltip(unit)

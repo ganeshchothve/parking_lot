@@ -8,12 +8,12 @@
       <div class="row">
         <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.cp_lead_activity.lead_id')%>
-          <%= select_tag "fltrs[lead_id]", options_from_collection_for_select(params[:fltrs].present? ? Lead.where(_id: params[:fltrs][:lead_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_leads_path}} %>
+          <%= select_tag "fltrs[lead_id]", options_from_collection_for_select(params[:fltrs].present? ? Lead.where(booking_portal_client_id: current_client.try(:id), _id: params[:fltrs][:lead_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_leads_path}} %>
         </div>
         <% unless current_user.role?('channel_partner') %>
           <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
             <%= label_tag "fltrs", ChannelPartner.model_name.human %>
-            <%= select_tag "fltrs[user_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:user_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'channel_partner' }}}} %>
+            <%= select_tag "fltrs[user_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(booking_portal_client_id: current_client.try(:id), _id: params[:fltrs][:user_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'channel_partner' }}}} %>
           </div>
         <% end %>
         <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">

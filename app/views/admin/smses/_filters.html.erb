@@ -9,7 +9,7 @@
       <div class="row">
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs[project_id]", t('mongoid.attributes.sms.project_id'), class: "control-label" %>
-          <%= select_tag "fltrs[project_id]", options_from_collection_for_select(params[:fltrs].present? ? Project.where(_id: params[:fltrs][:project_id]) : [], "id", "ds_name", params.dig(:fltrs, :project_id)), {prompt: I18n.t("global.select"), class: "selectize-remote", data: {url: admin_projects_path}} %>
+          <%= select_tag "fltrs[project_id]", options_from_collection_for_select(params[:fltrs].present? ? Project.where(booking_portal_client_id: current_client.try(:id), _id: params[:fltrs][:project_id]) : [], "id", "ds_name", params.dig(:fltrs, :project_id)), {prompt: I18n.t("global.select"), class: "selectize-remote", data: {url: admin_projects_path}} %>
         </div>
         <% unless true #current_user.buyer? %>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">

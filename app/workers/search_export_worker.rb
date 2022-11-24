@@ -12,7 +12,7 @@ class SearchExportWorker
     end
     file_name = "cancellation-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/exports/#{file_name}")
-    ExportMailer.notify(file_name, user.email, "Search Report").deliver
+    ExportMailer.notify(file_name, user.email, "Search Report", user.id.to_s).deliver
   end
 
   def self.get_column_names

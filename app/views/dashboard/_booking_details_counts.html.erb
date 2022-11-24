@@ -23,7 +23,7 @@
       <tbody>
         <% @booking_details_data.each do |p| %>
           <tr>
-            <td data-title='<%= Project.model_name.human %>'><%= Project.where(_id: p[:project_id]).first.try(:name).try(:titleize) || "-" %></td>
+            <td data-title='<%= Project.model_name.human %>'><%= Project.where(booking_portal_client_id: current_client.try(:id), _id: p[:project_id]).first.try(:name).try(:titleize) || "-" %></td>
             <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/status.blocked") %>'><%= link_to p[:blocked], admin_booking_details_path({ fltrs: { status: 'blocked', project_id: p[:project_id], booked_on: booked_on}, current: 'all'}) %></td>
             <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/status.under_negotiation") %>'><%= link_to p[:under_negotiation], admin_booking_details_path({ fltrs: { status: 'under_negotiation', project_id: p[:project_id], booked_on: booked_on}, current: 'all'}) %></td>
             <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/status.booked_tentative") %>'><%= link_to p[:booked_tentative], admin_booking_details_path({ fltrs: { status: 'booked_tentative', project_id: p[:project_id], booked_on: booked_on}, current: 'all'}) %></td>
