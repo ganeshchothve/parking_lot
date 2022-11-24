@@ -81,13 +81,14 @@ module DatabaseSeeds
            "<% if self.manager_id.present? && self.manager.kylas_custom_fields_option_id.dig('deal').present? %>\n    <% deal_custom_field = {\n        \"cfChannelPartnerUsers\": {\n            \"id\": self.manager.kylas_custom_fields_option_id.dig('deal'),\n            \"name\": self.manager.first_name + ' ' + self.manager.last_name\n        }\n    } %>\n<% end %>\n<% sales = User.where(role: 'sales', booking_portal_client_id: self.booking_portal_client.id).first %>\n{\n    \"id\": <%= self.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)) %>,\n    \"ownedBy\": {\n        \"id\": <%= sales.kylas_user_id %>,\n        \"name\":  \"<%= sales.name %>\"\n    },\n    \"name\": \"<%= self.name %>\",\n    \"products\": [\n        {\n            \"id\": \"<%= self.project&.kylas_product_id %>\",\n            \"discount\": {\n                \"value\": 0,\n                \"type\": \"PERCENTAGE\"\n            },\n            \"quantity\": 1,\n            \"price\": {\n                \"currencyId\": <%= self.booking_portal_client&.kylas_currency_id %>,\n                \"value\": <%= self.project&.kylas_product_value %>\n            }\n        }\n    ],\n    \"estimatedValue\": {\n        \"currencyId\": <%= self.booking_portal_client&.kylas_currency_id %>,\n        \"value\": <%= self.project&.kylas_product_value %>\n    },\n    \"associatedContacts\": [\n        {\n            \"id\": \"<%= self.user&.kylas_contact_id %>\"\n        }\n    ],\n    \"customFieldValues\": <%= deal_custom_field.present? ? deal_custom_field : {} %>\n}",
           "resource_class"=>"Lead",
           "response_crm_id_location"=>nil},
-         {"_type"=>"Crm::Api::Post",
-          "event"=>"",
-          "path"=>"/v1/webhooks",
-          "request_payload"=>
-           "{\n    \"name\": \"User Webhook\",\n    \"requestType\": \"POST\",\n    \"url\": \"<%= ENV_CONFIG[:iris_marketplace_host] %>/api/<%= ENV_CONFIG.dig(:kylas, :version) %>/users/create_or_update_user,\n    \"authenticationType\": \"NONE\",\n    \"events\": [\n        \"USER_CREATED\",\n        \"USER_UPDATED\",\n        \"USER_ACTIVATED\",\n        \"USER_DEACTIVATED\"\n    ],\n    \"active\": true\n}",
-          "resource_class"=>"Client",
-          "response_crm_id_location"=>"id"},
+          {"_type"=>"Crm::Api::Post",
+            "event"=>"",
+            "path"=>"/v1/webhooks",
+            "request_payload"=>
+             "{\n    \"name\": \"User Webhook\",\n    \"requestType\": \"POST\",\n    \"url\": \"<%= ENV_CONFIG[:iris_marketplace_host] %>/api/<%= ENV_CONFIG.dig(:kylas, :version) %>/users/create_or_update_user\",\n    \"authenticationType\": \"NONE\",\n    \"events\": [\n        \"USER_CREATED\",\n        \"USER_UPDATED\",\n        \"USER_ACTIVATED\",\n        \"USER_DEACTIVATED\"\n    ],\n    \"active\": true\n}",
+            "resource_class"=>"Client",
+            "response_crm_id_location"=>"id"
+          },
          {"_type"=>"Crm::Api::Post",
           "event"=>"",
           "path"=>"/v1/products",
