@@ -9,7 +9,7 @@
         <% if !current_user.role.in?(User::CHANNEL_PARTNER_USERS) && policy([current_user_role_group, User]).index? %>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.user.name_email_phone'), class: "control-label" %>
-            <%= select_tag "fltrs[user_id]", options_for_select(filter_user_options), { class: "selectize-remote", data: { url: admin_users_path, params: { fltrs: { role: ::User::BUYER_ROLES }} }} %>
+            <%= select_tag "fltrs[user_id]", options_for_select(filter_user_options(current_client)), { class: "selectize-remote", data: { url: admin_users_path, params: { fltrs: { role: ::User::BUYER_ROLES }} }} %>
           </div>
         <% end %>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">

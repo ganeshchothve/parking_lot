@@ -29,7 +29,7 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs[project_tower_id]", t('mongoid.attributes.project_unit.project_tower_id'), class: "control-label" %>
-          <%= select_tag "fltrs[project_tower_id]", options_for_select(filter_project_tower_options, params.dig(:fltrs, :project_tower_id).present? ? params[:fltrs][:project_tower_id] : ''), {prompt: (params.dig(:fltrs, :project_id).present? ? "Select" : 'Select Project first'), class: "selectize project_tower_select", data: { url: admin_project_towers_path }} %>
+          <%= select_tag "fltrs[project_tower_id]", options_for_select(filter_project_tower_options(current_client), params.dig(:fltrs, :project_tower_id).present? ? params[:fltrs][:project_tower_id] : ''), {prompt: (params.dig(:fltrs, :project_id).present? ? "Select" : 'Select Project first'), class: "selectize project_tower_select", data: { url: admin_project_towers_path }} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.project_unit.bedrooms'), class: "control-label" %>

@@ -12,7 +12,7 @@
           <%= hidden_field_tag :user_token, params[:user_token] %>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
               <label><%= t('mongoid.attributes.lead.name_email_phone') %></label>
-              <%= select_tag "fltrs[lead_id]", options_for_select(filter_lead_options), { class: "selectize-remote", data: { url: admin_leads_path, params: {user_login: params[:user_login], user_token: params[:user_token]} }} %>
+              <%= select_tag "fltrs[lead_id]", options_for_select(filter_lead_options(current_client)), { class: "selectize-remote", data: { url: admin_leads_path, params: {user_login: params[:user_login], user_token: params[:user_token]} }} %>
           </div>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
               <label>Date Range</label>

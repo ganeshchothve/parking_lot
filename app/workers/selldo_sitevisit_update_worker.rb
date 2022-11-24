@@ -2,12 +2,12 @@ class SelldoSitevisitUpdateWorker
   include Sidekiq::Worker
   include ApplicationHelper
 
-  def perform(lead_id, current_user_id, sitevisit_id, cp_code = nil)
-    lead = Lead.where(id: lead_id).first
-    current_user = User.where(id: current_user_id).first
-    current_client = lead.user.booking_portal_client
-    crm_base = Crm::Base.where(booking_portal_client_id: current_client.id ,domain: ENV_CONFIG.dig(:selldo, :base_url)).first
-    sitevisit = lead.site_visits.where(id: sitevisit_id).first
+  def perform(client_id, lead_id, current_user_id, sitevisit_id, cp_code = nil)
+    lead = Lead.where(booking_portal_client_id: client_id, id: lead_id).first
+    current_user = User.where(booking_portal_client_id: client_id, id: current_user_id).first
+    client = lead.user.booking_portal_client
+    crm_base = Crm::Base.where(booking_portal_client_id: client.id ,domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+    sitevisit = lead.site_visits.where(booking_portal_client_id: client.id, id: sitevisit_id).first
     # v2.sell.do params
     # params = {
     #   api_key: "6a6854e70e4be582de82bf5c4861ab11",
@@ -27,10 +27,10 @@ class SelldoSitevisitUpdateWorker
     if sitevisit
       if sitevisit.selldo_id.present?
         #  params = {
-        #     api_key: current_client.selldo_api_key,
-        #     client_id: current_client.selldo_client_id,
+        #     api_key: client.selldo_api_key,
+        #     client_id: client.selldo_client_id,
         #     "site_visit": {
-        #       "project_id": current_client.selldo_project_id,
+        #       "project_id": client.selldo_project_id,
         #       "lead_crm_id": "3739",
         #       "status": "conducted",
         #       "conducted_on": DateTime.now,
