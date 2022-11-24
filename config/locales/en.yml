@@ -916,6 +916,9 @@ en:
         partner_regions: "Partner Regions"
         enable_vis: "Enable vis"
         kylas_api_key: Kylas API Key
+        cp_deal_custom_field: "Deal Channel Partners"
+        cp_lead_custom_field: "Lead Channel Partners"
+        cp_meeting_deal_custom_field: "Meeting Channel Partners"
       client/available_preferred_logins:
         phone: "Phone Based"
         email: "Email Based"
