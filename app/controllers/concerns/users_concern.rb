@@ -134,7 +134,7 @@ module UsersConcern
   end
 
   def block_lead
-    @referenced_managers = User.in(id: @user.referenced_manager_ids).all
+    @referenced_managers = User.where(booking_portal_client_id: current_client.try(:id)).in(id: @user.referenced_manager_ids).all
     render layout: false
   end
 
