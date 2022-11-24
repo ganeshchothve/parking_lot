@@ -8,7 +8,7 @@ class SmsObserver < Mongoid::Observer
         sms.to += sms.recipient.user.phone
       end
     end
-    if sms.sms_template_id.present? && sms_template = Template::SmsTemplate.where(id: sms.sms_template_id).first
+    if sms.sms_template_id.present? && sms_template = Template::SmsTemplate.where(booking_portal_client_id: sms.booking_portal_client_id, id: sms.sms_template_id).first
       begin
         sms.body = sms_template.parsed_content(sms.triggered_by)
       rescue => e

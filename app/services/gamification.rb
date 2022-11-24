@@ -6,7 +6,7 @@ module Gamification
     include ApplicationHelper
     def dashboard_data(current_user)
       messages = []
-      if current_client.enable_actual_inventory?(current_user)
+      if current_user.booking_portal_client.enable_actual_inventory?(current_user)
         random_starter = [11, 12, 15, 14, 18, 13, 12, 17, 16, 15, 11, 12]
         messages << "#{BookingDetail.where(created_at: {"$gte": Time.now.beginning_of_day}).count + random_starter[0]} people have paid the token amount today"
 

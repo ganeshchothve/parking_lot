@@ -24,7 +24,7 @@ class UserExportWorker
     file_name = "user-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/exports/#{file_name}")
 
-    ExportMailer.notify(file_name, current_user.email, "Users & User KYCs").deliver
+    ExportMailer.notify(file_name, current_user.email, "Users & User KYCs", current_user.id.to_s).deliver
   end
 
   def self.get_kyc_column_names

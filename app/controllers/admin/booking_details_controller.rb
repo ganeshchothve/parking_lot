@@ -292,17 +292,17 @@ class Admin::BookingDetailsController < AdminController
   private
 
   def set_lead
-    @lead = Lead.where(id: params[:lead_id]).first
+    @lead = Lead.where(booking_portal_client_id: current_client.try(:id), id: params[:lead_id]).first
     redirect_to home_path(current_user), alert: I18n.t("controller.leads.alert.not_found") if @lead.blank?
   end
 
   def set_project
-    @project = Project.where(id: params[:project_id]).first
+    @project = Project.where(booking_portal_client_id: current_client.try(:id), id: params[:project_id]).first
     redirect_to home_path(current_user), alert: t('controller.booking_details.set_project_missing') if @project.blank?
   end
 
   def set_booking_detail
-    @booking_detail = BookingDetail.where(_id: params[:id]).first
+    @booking_detail = BookingDetail.where(booking_portal_client_id: current_client.try(:id), _id: params[:id]).first
     redirect_to home_path(current_user), alert: t('controller.booking_details.set_booking_detail_missing') if @booking_detail.blank?
   end
 

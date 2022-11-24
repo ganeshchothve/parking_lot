@@ -9,7 +9,7 @@ module BillingTeamDashboardConcern
     matcher = set_city_wise_report_matcher
     @project_booking_report = DashboardDataProvider.city_wise_booking_report(current_user, matcher)
     @project_name_hash = {}
-    Project.all.each do |p|
+    Project.where(booking_portal_client_id: current_client.try(:id)).each do |p|
       @project_name_hash[p.id.to_s] = p.name
     end
     @total_booking = 0

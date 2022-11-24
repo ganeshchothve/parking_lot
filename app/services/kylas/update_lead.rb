@@ -39,7 +39,7 @@ module Kylas
 
     def update_lead_in_kylas 
       begin
-        url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/leads/#{entity_id}")
+        url = URI(base_url+"/leads/#{entity_id}")
 
         https = Net::HTTP.new(url.host, url.port)
         https.use_ssl = true
@@ -61,7 +61,7 @@ module Kylas
 
     def leads_payload
       lead = params[:lead]
-      product = Project.where(kylas_product_id: lead['kylas_product_id']).first
+      product = Project.where(kylas_product_id: lead['kylas_product_id'], booking_portal_client_id: user.booking_portal_client_id).first
       leads_payload =  {
         id: entity_id,
         firstName: lead['first_name'],

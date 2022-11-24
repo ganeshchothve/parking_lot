@@ -4,10 +4,11 @@ class ChannelPartnerObserverWorker
 
   def perform(channel_partner_id, changes={})
     channel_partner = ChannelPartner.where(id: channel_partner_id).first
+    booking_portal_client_id =  channel_partner.try(:booking_portal_client_id)
     if channel_partner.present?
-      interakt_base = Crm::Base.where(domain: ENV_CONFIG.dig(:interakt, :base_url)).first
-      selldo_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
-      onesignal_base = Crm::Base.where(domain: ENV_CONFIG.dig(:onesignal, :base_url)).first
+      interakt_base = Crm::Base.where(booking_portal_client_id: booking_portal_client_id, domain: ENV_CONFIG.dig(:interakt, :base_url)).first
+      selldo_base = Crm::Base.where(booking_portal_client_id: booking_portal_client_id, domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+      onesignal_base = Crm::Base.where(booking_portal_client_id: booking_portal_client_id, domain: ENV_CONFIG.dig(:onesignal, :base_url)).first
 
       # For calling Selldo APIs
       if selldo_base

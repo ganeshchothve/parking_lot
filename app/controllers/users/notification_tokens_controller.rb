@@ -4,7 +4,7 @@ class Users::NotificationTokensController < ApplicationController
   def update
     authorize current_user, :update?
     if params[:old_token].present?
-      old_user = User.where("user_notification_tokens.token": params[:old_token]).first
+      old_user = User.where(booking_portal_client_id: current_client.try(:id), "user_notification_tokens.token": params[:old_token]).first
       old_user.user_notification_tokens.where(token: params[:old_token]).first.try(:destroy) if old_user.present?
     end
     parameters = permitted_attributes([current_user_role_group, current_user])

@@ -18,9 +18,9 @@ module Kylas
     def create_kylas_associated_lead
       respond_to do |format|
         if @user.valid?
-          sync_contact_to_kylas(current_user, @user, format) if params.dig(:lead, :sync_to_kylas).present?
-          update_contact_to_kylas(current_user, @user, params.dig(:lead, :kylas_contact_id), format) if params.dig(:lead, :kylas_contact_id).present? && (params.dig(:lead, :phone_update).present? || params.dig(:lead, :email_update).present?)
           if @user.save
+            Kylas::UpdateContact.new(current_user, @user, {check_uniqueness: true}).call if params.dig(:lead, :kylas_contact_id).present? && (params.dig(:lead, :phone_update).present? || params.dig(:lead, :email_update).present?)
+            Kylas::CreateContact.new(current_user, @user, {check_uniqueness: true, run_in_background: false}) if params.dig(:lead, :sync_to_kylas).present?
             @user.confirm
             create_or_set_lead(format)
           else
@@ -127,7 +127,7 @@ module Kylas
     def set_project
       kylas_product_id = params.dig(:lead, :kylas_product_id)
       kylas_deal_id = params.dig(:lead, :kylas_deal_id)
-      @project = Project.where(kylas_product_id: kylas_product_id).first
+      @project = Project.where(booking_portal_client_id: current_client.try(:id), kylas_product_id: kylas_product_id).first
       if @project.present?
         sync_product_to_kylas(current_user, kylas_product_id, kylas_deal_id, @deal_data)
       else
@@ -154,7 +154,7 @@ module Kylas
 
 
     def create_or_set_lead(format)
-      @lead = Lead.where(kylas_deal_id: params.dig(:lead, :kylas_deal_id), user_id: @user.id, project_id: @project.id).first
+      @lead = Lead.where(booking_portal_client_id: current_client.try(:id), kylas_deal_id: params.dig(:lead, :kylas_deal_id), user_id: @user.id, project_id: @project.id).first
       if @lead.blank?
         @lead = @user.leads.build(lead_params)
         @lead.booking_portal_client = current_user.booking_portal_client
@@ -164,7 +164,7 @@ module Kylas
       end
       @lead.assign_attributes(manager_id: params.dig(:lead, :manager_id)) if (@lead.manager_id.to_s != params.dig(:lead, :manager_id))
       if @lead.valid?
-        options = {current_user: current_user, kylas_deal_id: params.dig(:lead, :kylas_deal_id), deal_data: @deal_data, contact_response: @contact_response}
+        options = {current_user: current_user, kylas_deal_id: params.dig(:lead, :kylas_deal_id), deal_data: @deal_data}
         associate_contact_with_deal(format, options) if params.dig(:lead, :sync_to_kylas).present?
         if @lead.save
           if @project.enable_inventory?
@@ -180,49 +180,28 @@ module Kylas
       end
     end
 
-    def sync_contact_to_kylas(current_user, kylas_contact_entity, format)
-      @contact_response = Kylas::CreateContact.new(current_user, kylas_contact_entity, {check_uniqueness: true}).call
-      unless @contact_response[:success]
-        format.html { redirect_to request.referer, alert: (@contact_response[:error].presence || 'Something went wrong'), status: :unprocessable_entity }
-      end
-    end
-
-    def update_contact_to_kylas(current_user, kylas_contact_entity, kylas_contact_id, format)
-      @contact_response = Kylas::UpdateContact.new(current_user, kylas_contact_entity, kylas_contact_id, {check_uniqueness: true}).call
-      unless @contact_response[:success]
-        format.html { redirect_to request.referer, alert: (@contact_response[:error].presence || 'Something went wrong'), status: :unprocessable_entity }
-      end
-    end
-
     def associate_contact_with_deal(format, options = {})
-      params = {}
+      deal_payload = {}
       deal_data = options[:deal_data]
-      contact_response = options[:contact_response]
       current_user = options[:current_user]
       kylas_deal_id = options[:kylas_deal_id]
-      if deal_data.present? && contact_response.present?
-        contact = contact_response[:data] rescue {}
-        params.merge!(contact: contact)
-        deal_response = Kylas::UpdateDeal.new(current_user, kylas_deal_id, params).call
-        if deal_response[:success]
-          contact = contact_response[:data].with_indifferent_access
-          @user.update(kylas_contact_id: contact[:id])
-        else
-          format.html { redirect_to request.referer, alert: (deal_response[:error].presence || 'Something went wrong'), status: :unprocessable_entity }
-        end
+      if deal_data.present?
+        deal_payload.merge!({run_in_background: true})
+        Kylas::UpdateDeal.new(current_user, @lead, deal_payload).call
       else
         format.html { redirect_to request.referer, alert: 'Something went wrong', status: :unprocessable_entity }
       end
     end
 
     def sync_product_to_kylas(current_user, kylas_product_id, kylas_deal_id, deal_data)
-      params = {}
+      update_deal_payload = {}
       products_response = Kylas::FetchProducts.new(current_user).call(detail_response = true)
       if deal_data.present? && products_response.present?
         if deal_data['products'].blank? || deal_data['products'].pluck('id').exclude?(kylas_product_id.to_i)
           product = (products_response.select{|p| p['id'] == kylas_product_id.to_i }.first rescue {})
-          params.merge!(product: product) if product.present?
-          Kylas::UpdateDeal.new(current_user, kylas_deal_id, params).call
+          update_deal_payload.merge!(product: product, run_in_background: true) if product.present?
+          lead = Lead.where(kylas_deal_id: kylas_deal_id, booking_portal_client_id: current_user.booking_portal_client.id).first if kylas_deal_id.present?
+          Kylas::UpdateDeal.new(current_user, lead, update_deal_payload).call if lead.present?
         end
       end
     end
@@ -230,7 +209,7 @@ module Kylas
     private
 
     def redirect_to_checkout
-      lead_ids = Lead.where(kylas_deal_id: params[:entityId]).pluck(:id)
+      lead_ids = Lead.where(booking_portal_client_id: current_client.try(:id), kylas_deal_id: params[:entityId]).pluck(:id)
       hold_booking = BookingDetail.in(lead_id: lead_ids).hold.first
       if hold_booking.present?
         respond_to do |format|

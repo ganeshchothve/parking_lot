@@ -27,7 +27,7 @@
 
             <div class="col-md-12">
               <%= f.label :project_ids %>
-              <%= f.select :project_ids, options_from_collection_for_select(f.object.project_ids.present? ? Project.in(id: f.object.project_ids) : [], "id" , "ds_name" , f.object.project_ids), {}, class: 'selectize-remote' , multiple: true, data: {url: admin_projects_path} %>
+              <%= f.select :project_ids, options_from_collection_for_select(f.object.project_ids.present? ? Project.where(booking_portal_client_id: current_client.try(:id)).in(id: f.object.project_ids) : [], "id" , "ds_name" , f.object.project_ids), {}, class: 'selectize-remote' , multiple: true, data: {url: admin_projects_path} %>
             </div>
 
             <div>

@@ -22,5 +22,9 @@ module Kylas
       end
       headers
     end
+
+    def base_url
+      "#{ENV_CONFIG.dig(:kylas, :base_url)}/#{ENV_CONFIG.dig(:kylas, :version)}"
+    end
   end
 end

@@ -62,7 +62,7 @@ class Admin::WorkflowsController < AdminController
   def pipeline_stages
     @pipelines_stages = Kylas::FetchPipelineStageDetails.new(current_user, params[:pipeline_id]).call
     if params[:workflow_id].present?
-      @wf = Workflow.where(id: params[:workflow_id]).first
+      @wf = Workflow.where(booking_portal_client_id: current_client.try(:id), id: params[:workflow_id]).first
       if @wf.present?
         wf_pipeline = @wf.pipelines.where(pipeline_id: params[:pipeline_id]).first
         @selected_stage = wf_pipeline&.pipeline_stage_id
@@ -121,7 +121,7 @@ class Admin::WorkflowsController < AdminController
   end
 
   def set_workflow
-    @workflow = Workflow.where(id: params[:id]).first
+    @workflow = Workflow.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first
     redirect_to admin_workflows_path, alert: 'Workflow not found' unless @workflow
   end
 

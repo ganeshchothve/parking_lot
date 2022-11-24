@@ -3,8 +3,9 @@ module Reminders
     include Sidekiq::Worker
 
     def perform user_id, day, project_id
-      user = User.find user_id
-      email_template = Template::EmailTemplate.where(project_id: project_id, name: "no_booking_day_#{day.to_i}").first
+      user = User.where(id: user_id).first
+      booking_portal_client_id = user.try(:booking_portal_client_id)
+      email_template = Template::EmailTemplate.where(project_id: project_id, name: "no_booking_day_#{day.to_i}", booking_portal_client_id: booking_portal_client_id).first
       if email_template.present?
         email = Email.create!(
           project_id: project_id,
@@ -18,7 +19,7 @@ module Reminders
         )
         email.sent!
       end
-      sms_template = Template::SmsTemplate.where(project_id: project_id, name: "no_booking_day_#{day.to_i}").first
+      sms_template = Template::SmsTemplate.where(project_id: project_id, name: "no_booking_day_#{day.to_i}", booking_portal_client_id:booking_portal_client_id).first
       Sms.create!(
             project_id: project_id,
             booking_portal_client_id: user.booking_portal_client_id,

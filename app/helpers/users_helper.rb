@@ -16,8 +16,8 @@ module UsersHelper
     end
   end
 
-  def filter_user_role_options
-    User.available_roles(current_client).collect{|role| [ User.human_attribute_name("role.#{role}"), role ]}
+  def filter_user_role_options client
+    User.available_roles(client).collect{|role| [ User.human_attribute_name("role.#{role}"), role ]}
   end
 
   def filter_admin_role_options
@@ -28,8 +28,8 @@ module UsersHelper
     Project.pluck(:name,:id)
   end
 
-  def filter_buyer_role_options
-    User.buyer_roles(current_client).collect{|role| [ User.human_attribute_name("role.#{role}"), role ]}
+  def filter_buyer_role_options client
+    User.buyer_roles(client).collect{|role| [ User.human_attribute_name("role.#{role}"), role ]}
   end
 
   def filter_tl_dashboard_access_options
@@ -39,45 +39,47 @@ module UsersHelper
   def marketplace_roles
     if @user.role?('channel_partner')
       %w[channel_partner].collect{|role| [User.human_attribute_name("role.#{role}"), role]}
+    elsif @user.role?('cp_owner')
+      %w[channel_partner cp_owner].collect{|role| [User.human_attribute_name("role.#{role}"), role]}
     else
       %w[admin sales gre sales_admin].collect{|role| [User.human_attribute_name("role.#{role}"), role]}
     end
   end
 
-  def mandates_roles
-    User.available_roles(current_client).reject{|role| User.buyer_roles(current_client).include?(role) || role.in?(%w(cp_owner channel_partner))}.collect{ |r| [User.human_attribute_name("role.#{r}"), r] }
+  def mandates_roles client
+    User.available_roles(client).reject{|role| User.buyer_roles(client).include?(role) || role.in?(%w(cp_owner channel_partner))}.collect{ |r| [User.human_attribute_name("role.#{r}"), r] }
   end
 
-  def filter_roles
+  def filter_roles client
     if marketplace?
       marketplace_roles
     else
-      mandates_roles
+      mandates_roles client
     end
   end
 
 
-  def user_edit_role_options(_user = nil)
+  def user_edit_role_options(_user)
     if marketplace?
       marketplace_roles
     else
       if _user.id == current_user.id
       [[ User.human_attribute_name("role.#{_user.role}"), _user.role]]
       elsif _user.buyer?
-        filter_buyer_role_options
+        filter_buyer_role_options _user.booking_portal_client
       elsif current_user.role?('cp_owner') || _user.role.in?(%w(channel_partner cp_owner))
         %w(cp_owner channel_partner).collect { |x| [User.human_attribute_name("role.#{x}"), x] }
       else
-        User.available_roles(current_client).reject {|x| x.in?(%w(cp_owner channel_partner))}.collect{|role| [ User.human_attribute_name("role.#{role}"), role ]}
+        User.available_roles(_user.booking_portal_client).reject {|x| x.in?(%w(cp_owner channel_partner))}.collect{|role| [ User.human_attribute_name("role.#{role}"), role ]}
       end
     end
   end
 
-  def user_filter_role_options
+  def user_filter_role_options client
     if current_user.role?('cp_owner')
       %w(cp_owner channel_partner).collect { |x| [User.human_attribute_name("role.#{x}"), x] }
     else
-      filter_user_role_options
+      filter_user_role_options client
     end
   end
 

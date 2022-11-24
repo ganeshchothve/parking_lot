@@ -66,7 +66,7 @@ class Admin::IncentiveSchemesController < AdminController
   private
 
   def set_incentive_scheme
-    @incentive_scheme = IncentiveScheme.where(id: params[:id]).first
+    @incentive_scheme = IncentiveScheme.where(booking_portal_client_id: current_client.try(:id)).where(id: params[:id]).first
     redirect_to home_path(current_user), alert: I18n.t("controller.incentive_schemes.alert.not_found") unless @incentive_scheme
   end
 

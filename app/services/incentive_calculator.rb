@@ -41,8 +41,8 @@ class IncentiveCalculator
             if options[:test]
               hash[:incentive] = incentive_amount
             else
-              invoice = Invoice::Calculated.find_or_initialize_by(project_id: _resource.try(:project_id), invoiceable: _resource, incentive_scheme_id: scheme.id, ladder_id: ladder.id, manager_id: channel_partner.id, category: scheme.category, brokerage_type: scheme.brokerage_type)
-              existing_invoices = Invoice::Calculated.where(project_id: _resource.try(:project_id), invoiceable: _resource, incentive_scheme_id: scheme.id, manager_id: channel_partner.id, category: scheme.category, brokerage_type: scheme.brokerage_type)
+              invoice = Invoice::Calculated.find_or_initialize_by(project_id: _resource.try(:project_id), invoiceable: _resource, incentive_scheme_id: scheme.id, ladder_id: ladder.id, manager_id: channel_partner.id, category: scheme.category, brokerage_type: scheme.brokerage_type, booking_portal_client_id: _resource.try(:booking_portal_client_id))
+              existing_invoices = Invoice::Calculated.where(booking_portal_client_id: _resource.try(:booking_portal_client_id), project_id: _resource.try(:project_id), invoiceable: _resource, incentive_scheme_id: scheme.id, manager_id: channel_partner.id, category: scheme.category, brokerage_type: scheme.brokerage_type)
 
               if invoice.new_record?
                 # Only in case of booking we set the agreement amount on invoice.

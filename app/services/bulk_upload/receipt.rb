@@ -52,7 +52,7 @@ module BulkUpload
               next
             end
 
-            user = User.or(query).first
+            user = User.or(query).where(booking_portal_client_id: bur.booking_portal_client_id).first
             if user
               if lead = user.leads.where(project_id: bur.project_id).first
                 attrs = {}

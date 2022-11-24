@@ -6,7 +6,7 @@
 <div class="modal-body">
   <div class="mb-3">
     <%= f.label I18n.t("mongoid.models.lead.one"), class: 'label-required control-label' %>
-    <%= select_tag "lead_id", options_for_select(filter_lead_options), { class: "selectize-remote", data: { url: admin_leads_path(fltrs: {project_id: project.id}) } } %>
+    <%= select_tag "lead_id", options_for_select(filter_lead_options(current_client)), { class: "selectize-remote", data: { url: admin_leads_path(fltrs: {project_id: project.id}) } } %>
   </div>
 </div>
 <div class="modal-footer text-end">

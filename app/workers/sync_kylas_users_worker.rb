@@ -9,7 +9,7 @@ class SyncKylasUsersWorker
       kylas_users = Kylas::FetchUsers.new(User.new(booking_portal_client: client)).call
       if kylas_users.present?
         kylas_users.each do |kylas_user|
-          mp_user = find_user_in_iris(kylas_user[4].to_s)
+          mp_user = find_user_in_iris(kylas_user[4].to_s, client_id)
           if !mp_user.present?
             user = User.new(
               first_name: kylas_user[0],
@@ -41,7 +41,7 @@ class SyncKylasUsersWorker
     end
   end
 
-  def find_user_in_iris(kylas_user_id)
-    User.where(kylas_user_id: kylas_user_id).first
+  def find_user_in_iris(kylas_user_id, client_id)
+    User.where(kylas_user_id: kylas_user_id, booking_portal_client_id: client_id).first
   end
 end

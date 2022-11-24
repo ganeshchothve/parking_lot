@@ -11,10 +11,11 @@ class Admin::EmailsController < AdminController
   # GET /admin/emails/:id
 
   def monthly_count
+    params.merge!(booking_portal_client_id: current_client.try(:id))
     if params[:fltrs] && params[:fltrs][:sent_on]
-      @monthly_count = Email.monthly_count(params[:fltrs][:sent_on])
+      @monthly_count = Email.monthly_count(params[:fltrs][:sent_on], params)
     else
-      @monthly_count = Email.monthly_count
+      @monthly_count = Email.monthly_count(nil, params)
     end
   end
 

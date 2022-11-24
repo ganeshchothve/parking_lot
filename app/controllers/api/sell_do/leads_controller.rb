@@ -69,12 +69,12 @@ class Api::SellDo::LeadsController < Api::SellDoController
   end
 
   def set_project
-    @project = Project.where(selldo_id: params[:project_id]).first
+    @project = Project.where(booking_portal_client_id: @current_client.try(:id), selldo_id: params[:project_id]).first
     render json: { errors: [I18n.t("controller.projects.alert.not_found")] } and return unless @project
   end
 
   def set_crm
-    @crm = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+    @crm = Crm::Base.where(booking_portal_client_id: @current_client.try(:id), domain: ENV_CONFIG.dig(:selldo, :base_url)).first
     render json: { errors: [I18n.t("controller.crms.errors.not_available")] } and return unless @crm
   end
 
@@ -104,7 +104,7 @@ class Api::SellDo::LeadsController < Api::SellDoController
   end
 
   def create_or_set_lead
-    @lead = @user.leads.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:lead_id].to_s).first
+    @lead = @user.leads.where(booking_portal_client_id: @current_client.try(:id), "third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:lead_id].to_s).first
     if @lead.present?
       update_source_and_sub_source_on_lead
       update_rera_number_on_lead
@@ -112,6 +112,7 @@ class Api::SellDo::LeadsController < Api::SellDoController
 
     unless @lead
       @lead = @user.leads.new(lead_create_attributes)
+      @lead.booking_portal_client_id = @current_client.try(:id)
       render json: { errors: @lead.errors.full_messages.uniq } and return unless @lead.save
     end
   end
@@ -128,9 +129,10 @@ class Api::SellDo::LeadsController < Api::SellDoController
 
   def create_or_set_site_visit
     if params.dig("payload", "_id").present?
-      @site_visit = @lead.site_visits.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params.dig("payload", "_id")).first
+      @site_visit = @lead.site_visits.where(booking_portal_client_id: @current_client.try(:id), "third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params.dig("payload", "_id")).first
       unless @site_visit.present?
         @site_visit = SiteVisit.new(site_visit_attributes)
+        @site_visit.booking_portal_client_id = @current_client.try(:id)
         render json: { errors: @site_visit.errors.full_messages.uniq } and return unless @site_visit.save
       end
     else

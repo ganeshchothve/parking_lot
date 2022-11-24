@@ -88,7 +88,7 @@
                 <% end %>
                 <% if @user.role?("cp_admin") || @user.role?("cp") %>
                 <!-- User List -->
-                <% users = User.where(manager_id: @user.id).paginate(page: 1) %>
+                <% users = User.where(booking_portal_client_id: current_client.try(:id), manager_id: @user.id).paginate(page: 1) %>
                 <div class="accordion-item border-end-0 border-start-0">
                   <h2 class="accordion-header d-flex justify-content-between" id="headingUsers">
                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"

@@ -3,15 +3,15 @@ module BulkUploadReportsHelper
     admin_bulk_upload_reports_path
   end
 
-  def filter_bulk_upload_report
+  def filter_bulk_upload_report client
     bulk_upload_docs = BulkUploadReport::DOCUMENT_TYPES
     resultant_docs = []
 
-    resultant_docs = if !current_client.enable_channel_partners? && current_client.enable_leads?
+    resultant_docs = if !client.enable_channel_partners? && client.enable_leads?
       reject_cp_docs(bulk_upload_docs)
-    elsif current_client.enable_channel_partners? && !current_client.enable_leads?
+    elsif client.enable_channel_partners? && !client.enable_leads?
       reject_lead_docs(bulk_upload_docs)
-    elsif !current_client.enable_channel_partners? && !current_client.enable_leads?
+    elsif !client.enable_channel_partners? && !client.enable_leads?
       reject_cp_docs(bulk_upload_docs) & reject_lead_docs(bulk_upload_docs)
     else
       bulk_upload_docs

@@ -15,7 +15,7 @@ class UserRequestExportWorker
     end
     file_name = "cancellation-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/exports/#{file_name}")
-    ExportMailer.notify(file_name, user.email, 'Cancellation Report').deliver
+    ExportMailer.notify(file_name, user.email, 'Cancellation Report', user.id.to_s).deliver
   end
 
   def self.get_column_names

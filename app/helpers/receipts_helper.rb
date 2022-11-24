@@ -27,9 +27,9 @@ module ReceiptsHelper
     end
   end
 
-  def filter_receipts_options(receipt_id)
+  def filter_receipts_options(client, receipt_id)
     if receipt_id.present?
-      Receipt.where(_id: receipt_id).map{|bd| [bd.name, bd.id]}
+      Receipt.where(booking_portal_client_id: client.try(:id), _id: receipt_id).map{|bd| [bd.name, bd.id]}
     else
       []
     end

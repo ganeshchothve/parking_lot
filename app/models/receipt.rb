@@ -211,7 +211,7 @@ class Receipt
     if booking_detail.present? && booking_detail.user_id == user_id
       booking_detail.primary_user_kyc
     else
-      UserKyc.where(user_id: user_id).asc(:created_at).first
+      UserKyc.where(booking_portal_client_id: self.booking_portal_client_id, user_id: user_id).asc(:created_at).first
     end
   end
 

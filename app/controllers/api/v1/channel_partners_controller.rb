@@ -11,6 +11,7 @@ class Api::V1::ChannelPartnersController < ApisController
     unless ChannelPartner.reference_resource_exists?(@crm.id, params[:channel_partner][:reference_id])
       @channel_partner = ChannelPartner.new(channel_partner_create_params)
       @channel_partner.primary_user = @primary_user
+      @channel_partner.booking_portal_client_id = @current_client.try(:id)
       @channel_partner.is_existing_company = false
       if @channel_partner.save
         @channel_partner.approve! if @crm.user.booking_portal_client.try(:enable_direct_activation_for_cp?)
@@ -51,7 +52,7 @@ class Api::V1::ChannelPartnersController < ApisController
 
   # Sets the channel partner object
   def set_channel_partner
-    @channel_partner = ChannelPartner.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params.dig(:id)).first
+    @channel_partner = ChannelPartner.where(booking_portal_client_id: @current_client.try(:id), "third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params.dig(:id)).first
     render json: { errors: [I18n.t("controller.channel_partners.errors.not_registered")] }, status: :not_found if @channel_partner.blank?
   end
 

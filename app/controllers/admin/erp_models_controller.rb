@@ -10,18 +10,18 @@ class Admin::ErpModelsController < AdminController
   # GET /admin/erp_models
   #
   def index
-    @erp_models = ErpModel.build_criteria(params).order(created_at: :desc).paginate(page: params[:page] || 1, per_page: params[:per_page])
+    @erp_models = ErpModel.where(booking_portal_client_id: current_client.try(:id)).build_criteria(params).order(created_at: :desc).paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
   # GET /admin/erp_models/new
   def new
-    @erp_model = ErpModel.new
+    @erp_model = ErpModel.new(booking_portal_client_id: current_client.try(:id))
     render layout: false
   end
 
   def create
     respond_to do |format|
-      if ErpModel.create(permitted_attributes([:admin, ErpModel.new]))
+      if ErpModel.create(permitted_attributes([:admin, ErpModel.new(booking_portal_client_id: current_client.try(:id))]))
         format.html { redirect_to admin_erp_models_path, notice: I18n.t("controller.erp_models.notice.created") }
         format.json { render json: @erp_model }
       else
@@ -60,7 +60,7 @@ class Admin::ErpModelsController < AdminController
 
 
   def set_erp_model
-    @erp_model = ErpModel.where(id: params[:id]).first
+    @erp_model = ErpModel.where(booking_portal_client_id: current_client.try(:id)).where(id: params[:id]).first
   end
 
   def apply_policy_scope

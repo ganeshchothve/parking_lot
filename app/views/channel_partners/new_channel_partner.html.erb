@@ -10,7 +10,7 @@
           <%= f.hidden_field :lead_id, value: @lead_id %>
           <div class="mb-3 position-relative offline">
             <%= f.label :company_name, class: 'label-required' %>
-            <%= f.select :company_name, options_from_collection_for_select(ChannelPartner.where(_id: f.object.id), 'ds_name', 'id'), {prompt: I18n.t("global.select")}, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: channel_partners_path, create: true, params: {ds: true} }%>
+            <%= f.select :company_name, options_from_collection_for_select(ChannelPartner.where(booking_portal_client_id: current_client.try(:id), _id: f.object.id), 'ds_name', 'id'), {prompt: I18n.t("global.select")}, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: channel_partners_path, create: true, params: {ds: true} }%>
           </div>
           <div class="mb-3 position-relative offline">
             <%= f.label :first_name, class: 'label-required' %>

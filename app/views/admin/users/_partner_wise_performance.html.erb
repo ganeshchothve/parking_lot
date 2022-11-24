@@ -19,7 +19,7 @@
         </tr>
       </thead>
       <tbody>
-        <% user = params[:channel_partner_id].present? ? ChannelPartner.where(id: params[:channel_partner_id]).first&.users&.cp_owner&.first : current_user %>
+        <% user = params[:channel_partner_id].present? ? ChannelPartner.where(booking_portal_client_id: current_client.try(:id), id: params[:channel_partner_id]).first&.users&.cp_owner&.first : current_user %>
         <% total_sign_in_count = 0 %>
         <% User.filter_by_role(%w(cp_owner channel_partner)).where(User.user_based_scope(user || current_user)).in(@manager_ids_criteria).limit(15).each do |p| %>
           <% total_sign_in_count += (p.sign_in_count || 0) %>
@@ -39,7 +39,7 @@
             <td class='non-action-td' data-title='<%= t("mongoid.attributes.booking_detail.agreement_price") %>'><%= number_to_indian_currency(sum_of_av) %>(<%= number_to_inr(sum_of_av, {precision: 2, significant: false}) %>)</td>
           </tr>
         <% end %>
-        <% channel_partner = params[:channel_partner_id].present? ? ChannelPartner.where(id: params[:channel_partner_id]).first : current_user %>
+        <% channel_partner = params[:channel_partner_id].present? ? ChannelPartner.where(booking_portal_client_id: current_client.try(:id), id: params[:channel_partner_id]).first : current_user %>
         <% manager_ids = @manager_ids_criteria.values.flatten %>
         <tr >
           <th data-title='<%= I18n.t("global.total") %>'><%= t("global.total") %></th>

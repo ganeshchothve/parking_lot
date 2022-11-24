@@ -25,11 +25,15 @@ module Kylas
           else
             response = Kylas::Api::ExecuteWorker.new.perform(user.id, api.id, 'Lead', entity.id, {})
           end
-        end
-        log_response = response[:api_log]
-        if log_response.present?
-          if log_response[:status] == "Success"
-            entity.set(kylas_deal_id: log_response[:response].first["id"])
+
+          if response.present?
+            log_response = response[:api_log]
+            if log_response.present?
+              if log_response[:status] == "Success"
+                entity.set(kylas_deal_id: log_response[:response].first.try(:[], "id")) if log_response[:response].present?
+              end
+            end
+            response
           end
         end
       end

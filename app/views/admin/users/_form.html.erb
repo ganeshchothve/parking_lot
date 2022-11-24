@@ -42,7 +42,7 @@
           <% if @user.role.blank? %>
             <div class="mb-3">
               <%= f.label :role, class: 'label-required' %>
-              <%= f.select :role, filter_roles, {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("role") ? false : true) %>
+              <%= f.select :role, filter_roles(current_client), {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("role") ? false : true) %>
             </div>
           <% elsif policy([current_user_role_group, @user]).editable_field?("role") %>
             <div class="mb-3">

@@ -14,10 +14,10 @@ class Developer
   belongs_to :booking_portal_client, class_name: "Client"
 
   def unit_configurations
-    UnitConfiguration.where(data_attributes: {"$elemMatch" => {"n" => "developer_id", "v" => self.selldo_id}})
+    UnitConfiguration.where(booking_portal_client_id: self.booking_portal_client_id, data_attributes: {"$elemMatch" => {"n" => "developer_id", "v" => self.selldo_id}})
   end
 
   def projects
-    Project.or([{developer_id: self.selldo_id}, {secondary_developer_ids: self.selldo_id}])
+    Project.or([{developer_id: self.selldo_id}, {secondary_developer_ids: self.selldo_id}]).where(booking_portal_client_id: self.booking_portal_client_id)
   end
 end

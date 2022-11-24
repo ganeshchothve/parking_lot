@@ -6,7 +6,7 @@ class PushNotificationObserver < Mongoid::Observer
     notification.user_notification_tokens = notification.recipient.user_notification_tokens.collect{|x| x.token} if notification.user_notification_tokens.blank? && notification.recipient_id.present?
     if notification.user_notification_tokens.present?
       if notification.notification_template_id.present?
-        if notification_template = Template::NotificationTemplate.where(id: notification.notification_template_id).first
+        if notification_template = Template::NotificationTemplate.where(booking_portal_client_id: notification.booking_portal_client_id, id: notification.notification_template_id).first
           notification.content = notification_template.parsed_content(notification.triggered_by)
           notification.data = notification_template.parsed_data(notification.triggered_by)
           notification.title = notification_template.parsed_title(notification.triggered_by)

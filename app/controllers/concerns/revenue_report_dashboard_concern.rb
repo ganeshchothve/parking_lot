@@ -49,7 +49,7 @@ module RevenueReportDashboardConcern
 
   def projects_hash
     @project_name_hash = {}
-    Project.all.each do |p|
+    Project.where(booking_portal_client_id: current_client.try(:id)).each do |p|
       @project_name_hash[p.id.to_s] = p.name
     end
     @project_name_hash

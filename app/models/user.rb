@@ -519,9 +519,9 @@ class User
   def set_portal_stage_and_push_in_crm
     if self.role.in?(%w(cp_owner channel_partner))
       stage = self.channel_partner&.status
-      priority = PortalStagePriority.where(role: 'channel_partner').collect{|x| [x.stage, x.priority]}.to_h
+      priority = PortalStagePriority.where(booking_portal_client_id: self.booking_portal_client_id, role: 'channel_partner').collect{|x| [x.stage, x.priority]}.to_h
       if stage.present? && priority[stage].present?
-        self.portal_stages.where(stage:  stage).present? ? self.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : self.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
+        self.portal_stages.where(stage:  stage).present? ? self.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : self.portal_stages << PortalStage.new(booking_portal_client_id: self.booking_portal_client_id, stage: stage, priority: priority[stage])
         #push_to_crm = self.booking_portal_client.external_api_integration?
         #if push_to_crm
         #  Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
@@ -683,18 +683,18 @@ class User
   # Find incentive schemes
   def find_incentive_schemes(category)
     tier_id = referred_by&.tier_id
-    incentive_schemes = ::IncentiveScheme.approved.where(resource_class: self.class.to_s, category: category, auto_apply: true).lte(starts_on: invoiceable_date).gte(ends_on: invoiceable_date)
+    incentive_schemes = ::IncentiveScheme.approved.where(booking_portal_client_id: self.booking_portal_client_id, resource_class: self.class.to_s, category: category, auto_apply: true).lte(starts_on: invoiceable_date).gte(ends_on: invoiceable_date)
     # Find tier level scheme
     if tier_id
-      incentive_schemes = incentive_schemes.where(tier_id: tier_id)
+      incentive_schemes = incentive_schemes.where(booking_portal_client_id: self.booking_portal_client_id, tier_id: tier_id)
     end
     incentive_schemes
   end
 
   # Find all the resources for a channel partner that fall under this scheme
   def find_all_resources_for_scheme(i_scheme)
-    resources = self.class.incentive_eligible(i_scheme.category).where(:"incentive_scheme_data.#{i_scheme.id.to_s}".exists => true, referred_by_id: self.referred_by_id).gte(scheduled_on: i_scheme.starts_on).lte(scheduled_on: i_scheme.ends_on)
-    self.class.or(resources.selector, {id: self.id})
+    resources = self.class.incentive_eligible(i_scheme.category).where(booking_portal_client_id: self.booking_portal_client_id, :"incentive_scheme_data.#{i_scheme.id.to_s}".exists => true, referred_by_id: self.referred_by_id).gte(scheduled_on: i_scheme.starts_on).lte(scheduled_on: i_scheme.ends_on)
+    self.class.or(resources.selector, {id: self.id}).where(booking_portal_client_id: self.booking_portal_client_id)
   end
 
   def login
@@ -720,10 +720,10 @@ class User
   end
 
   def get_search(project_unit_id)
-    search = searches
+    search = searches.where(booking_portal_client_id: self.booking_portal_client_id)
     search = search.where(project_unit_id: project_unit_id) if project_unit_id.present?
     search = search.desc(:created_at).first
-    search = Search.create(user: self) if search.blank?
+    search = Search.create(user: self, booking_portal_client_id: self.booking_portal_client_id) if search.blank?
     search
   end
 
@@ -825,18 +825,22 @@ class User
       criteria
     end
 
-    def buyer_roles(current_client = nil)
-      if current_client.present? && current_client.enable_company_users?
+    def buyer_roles(client = nil)
+      if client.present? && client.enable_company_users?
         BUYER_ROLES
       else
         ['user']
       end
     end
 
-    def available_roles(current_client)
-      roles = ADMIN_ROLES + BUYER_ROLES
-      roles -= CHANNEL_PARTNER_USERS unless current_client.try(:enable_channel_partners?)
-      roles -= COMPANY_USERS unless current_client.try(:enable_company_users?)
+    def available_roles(client)
+      if client.present? && client.kylas_tenant_id.present?
+        roles = KYLAS_MARKETPALCE_USERS + BUYER_ROLES
+      else
+        roles = ADMIN_ROLES + BUYER_ROLES
+      end
+      roles -= CHANNEL_PARTNER_USERS unless client.try(:enable_channel_partners?)
+      roles -= COMPANY_USERS unless client.try(:enable_company_users?)
       roles
     end
 
@@ -896,6 +900,7 @@ class User
       elsif ["superadmin"].include?(user.role)
         custom_scope = { role: { '$in': %w(channel_partner cp_owner) }, booking_portal_client_id: user.selected_client_id }
       end
+      custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
     end
 
     def user_based_scope(user, _params = {})
@@ -953,11 +958,11 @@ class User
           user.first_name = oauth_data.extra.first_name if user.first_name.blank?
           user.last_name = oauth_data.extra.last_name if user.last_name.blank?
           user.phone = oauth_data.extra.phone if user.phone.blank?
-          user.booking_portal_client ||= (client || current_client)
+          user.booking_portal_client ||= client
           user.confirmed_at = Time.now unless user.confirmed?
           user.role = role
         end
-        if user.save
+        if user.save!
           user.update_selldo_credentials(oauth_data)
           user
         end

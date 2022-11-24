@@ -24,13 +24,13 @@ module Devise::Mailers::Helpers
     begin
       if action.to_s == "confirmation_instructions"
         if record.buyer? && record.manager_role?("channel_partner")
-          template = Template::SmsTemplate.find_by(name: "user_registered_by_channel_partner").first
+          template = Template::SmsTemplate.where(name: "user_registered_by_channel_partner", booking_portal_client_id: record.booking_portal_client_id).first
         else
-          template = Template::SmsTemplate.where(name: "#{record.role}_user_registered").first
-          template = Template::SmsTemplate.find_by(name: "user_registered").first if template.blank?
+          template = Template::SmsTemplate.where(name: "#{record.role}_user_registered", booking_portal_client_id: record.booking_portal_client_id).first
+          template = Template::SmsTemplate.where(name: "user_registered", booking_portal_client_id: record.booking_portal_client_id).first if template.blank?
         end
       elsif action.to_s == "resend_confirmation_instructions"
-        template = Template::SmsTemplate.find_by(name: "user_registered").first
+        template = Template::SmsTemplate.where(name: "user_registered", booking_portal_client_id: record.booking_portal_client_id).first
       else
         # GENERICTODO : Will work once we get urls to start working in templates
         # template = Template::SmsTemplate.find_by(name: "devise_#{action}").id

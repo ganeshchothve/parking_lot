@@ -30,7 +30,7 @@ module SalesUserStateMachine
     end
 
     def check_customer_status
-      Lead.where(closing_manager_id: self.id).in(customer_status: %w(engaged payment_done)).blank?
+      Lead.where(booking_portal_client_id: self.booking_portal_client_id, closing_manager_id: self.id).in(customer_status: %w(engaged payment_done)).blank?
     end
 
     def move_to_next_state!(status)

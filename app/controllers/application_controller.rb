@@ -18,6 +18,7 @@ class ApplicationController < ActionController::Base
   before_action :set_current_project_id
   # Run in current user Time Zone
   around_action :user_time_zone, if: :current_user
+  before_action :marketplace_current_user_match, if: proc { (marketplace_host? || embedded_marketplace?) && current_user.present? && params[:tenantId].present? && params[:userId].present? }
   before_action :authorize_marketplace_client, if: :current_user, unless: proc { devise_controller? || (params[:controller] == 'admin/clients' && params[:action].in?(%w(kylas_api_key update))) || (params[:controller] == 'home' && params[:action].in?(%w(not_authorized select_client))) }
   around_action :apply_project_scope, if: :current_user, unless: proc { params[:controller] == 'admin/projects' }
 
@@ -112,6 +113,16 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def marketplace_current_user_match
+    valid = (marketplace_host? || embedded_marketplace?) && (current_client.kylas_tenant_id.blank? || current_user.kylas_user_id.blank?)
+    valid = valid || (current_client.is_marketplace? && (current_user.kylas_user_id != params[:userId] || current_client.kylas_tenant_id != params[:tenantId]))
+    if valid
+      store_user_location!
+      flash[:alert] = I18n.t('app.errors.marketplace_error')
+      sign_out current_user and redirect_to root_path
+    end
+  end
 
   def authorize_marketplace_client
     unless policy([current_user_role_group, current_client]).allow_marketplace_access?

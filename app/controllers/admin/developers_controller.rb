@@ -11,7 +11,7 @@ class Admin::DevelopersController < AdminController
   # GET /admin/developers
   #
   def index
-    @developers = Developer.all.paginate(page: params[:page] || 1, per_page: params[:per_page])
+    @developers = Developer.where(booking_portal_client_id: current_client.try(:id)).paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
       if params[:ds].to_s == 'true'
         format.json { render json: @developers.collect { |p| { id: p.id, name: p.ds_name } } }
@@ -62,7 +62,7 @@ class Admin::DevelopersController < AdminController
   private
 
   def set_developer
-    @developer = Developer.where(id: params[:id]).first
+    @developer = Developer.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first
     redirect_to home_path(current_user), alert: I18n.t("controller.developers.alert.not_found") unless @developer
   end
 
@@ -77,7 +77,7 @@ class Admin::DevelopersController < AdminController
   end
 
   def apply_policy_scope
-    custom_developer_scope = Developer.all.criteria
+    custom_developer_scope = Developer.where(booking_portal_client_id: current_client.try(:id)).criteria
     Developer.with_scope(policy_scope(custom_developer_scope)) do
       yield
     end

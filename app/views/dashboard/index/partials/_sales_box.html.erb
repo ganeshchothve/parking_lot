@@ -1,4 +1,4 @@
-<% customer = Lead.where(closing_manager_id: sales.id).in(customer_status: %w(engaged payment_done)).first %>
+<% customer = Lead.where(booking_portal_client_id: current_client.try(:id), closing_manager_id: sales.id).in(customer_status: %w(engaged payment_done)).first %>
 <%
     if customer.present?
       is_lead_rejected = customer.engaged? #&& (!customer.accepted_by_sales.nil?) && customer.accepted_by_sales == false

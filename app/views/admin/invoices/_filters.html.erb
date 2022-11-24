@@ -16,17 +16,17 @@
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.invoice.category'), class: "control-label" %>
-          <%= select_tag "fltrs[category]", options_for_select(filter_incentive_categories, params.dig(:fltrs, :category)), {prompt: I18n.t("global.select"), class: "selectize"} %>
+          <%= select_tag "fltrs[category]", options_for_select(filter_incentive_categories(current_client), params.dig(:fltrs, :category)), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <% unless current_user.role?('channel_partner') %>
           <% if current_client.enable_channel_partners? %>
             <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
               <%= label_tag "fltrs", t('mongoid.attributes.invoice.manager_id'), class: "control-label" %>
-              <%= select_tag "fltrs[manager_id]", options_from_collection_for_select(params.dig(:fltrs, :manager_id).present? ? User.where(_id: params[:fltrs][:manager_id]) : [], "id", "ds_name", params.dig(:fltrs, :manager_id)), {prompt: I18n.t("global.select"), class: "selectize-remote", data: {url: admin_users_path, params: { fltrs: { role: %w(cp_owner channel_partner)} } }} %>
+              <%= select_tag "fltrs[manager_id]", options_from_collection_for_select(params.dig(:fltrs, :manager_id).present? ? User.where(booking_portal_client_id: current_client.try(:id), _id: params[:fltrs][:manager_id]) : [], "id", "ds_name", params.dig(:fltrs, :manager_id)), {prompt: I18n.t("global.select"), class: "selectize-remote", data: {url: admin_users_path, params: { fltrs: { role: %w(cp_owner channel_partner)} } }} %>
             </div>
             <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
               <%= label_tag "fltrs", ChannelPartner.model_name.human, class: "control-label" %>
-              <%= select_tag "fltrs[channel_partner_id]", options_from_collection_for_select(params.dig(:fltrs, :channel_partner_id).present? ? ChannelPartner.where(_id: params[:fltrs][:channel_partner_id]) : [], "id", "ds_name", params.dig(:fltrs, :channel_partner_id)), {prompt: I18n.t("global.select"), class: "selectize-remote", data: {url: channel_partners_path, params: { fltrs: { status: 'active'}, ds: true } }} %>
+              <%= select_tag "fltrs[channel_partner_id]", options_from_collection_for_select(params.dig(:fltrs, :channel_partner_id).present? ? ChannelPartner.where(booking_portal_client_id: current_client.try(:id), _id: params[:fltrs][:channel_partner_id]) : [], "id", "ds_name", params.dig(:fltrs, :channel_partner_id)), {prompt: I18n.t("global.select"), class: "selectize-remote", data: {url: channel_partners_path, params: { fltrs: { status: 'active'}, ds: true } }} %>
             </div>
           <% end %>
         <% end %>

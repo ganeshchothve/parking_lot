@@ -8,7 +8,7 @@
           <% if current_user.buyer? %>
             <%= select_tag 'selected_lead_id', options_from_collection_for_select(@leads, "id", "project_name", current_user.selected_lead_id), prompt: "Select Project to Log in", autofocus: true, class: "selectize" %>
           <% elsif !current_user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner)) %>
-            <%= select_tag 'selected_project_id', options_from_collection_for_select(Project.where(id: current_user.selected_project_id), "id", "ds_name", current_user.selected_project_id), prompt: "Select Project to Log in", autofocus: true, class: "selectize-remote", data: {url: admin_projects_path(select_project: true)} %>
+            <%= select_tag 'selected_project_id', options_from_collection_for_select(Project.where(booking_portal_client_id: current_client.try(:id), id: current_user.selected_project_id), "id", "ds_name", current_user.selected_project_id), prompt: "Select Project to Log in", autofocus: true, class: "selectize-remote", data: {url: admin_projects_path(select_project: true)} %>
           <% end %>
         </div>
 

@@ -9,8 +9,8 @@ class MeetingObserver < Mongoid::Observer
         else
             meeting.participant_ids << toggle_participant_id
         end
-        user = User.where(id: toggle_participant_id).first
-        if user && current_client.external_api_integration?
+        user = User.where(booking_portal_client_id: meeting.booking_portal_client_id, id: toggle_participant_id).first
+        if user && user.booking_portal_client.external_api_integration?
           if Rails.env.staging? || Rails.env.production?
             MeetingObserverWorker.perform_async(meeting.id.to_s, user.id.to_s, meeting.changes)
           else

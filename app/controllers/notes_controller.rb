@@ -28,9 +28,7 @@ class NotesController < ApplicationController
       if @note.save
         SelldoNotePushWorker.perform_async(@note.notable.lead_id, current_user.id.to_s, @note.note) if @note.notable.class.to_s == 'Lead' && current_user.role?(:channel_partner)
         if is_marketplace?
-          response = Kylas::CreateNote.new(current_user, @note).call
-          response = response.with_indifferent_access
-          @note.set(kylas_note_id: response.dig(:data, :id))
+          Kylas::CreateNote.new(current_user, @note, {run_in_background: true}).call
         end
         format.json { render json: @note, status: :created }
       else
@@ -54,11 +52,11 @@ class NotesController < ApplicationController
 
   private
   def set_notable
-    @notable = params[:notable_type].classify.constantize.find params[:notable_id]
+    @notable = params[:notable_type].classify.constantize.where(id: params[:notable_id], booking_portal_client_id: current_client.try(:id)).first
   end
 
   def set_note
-    @note = Note.where(id: params[:id]).first if params[:id].present?
+    @note = Note.where(id: params[:id], booking_portal_client_id: current_client.try(:id)).first if params[:id].present?
   end
 
   def authorize_resource
@@ -72,7 +70,7 @@ class NotesController < ApplicationController
   end
 
   def apply_policy_scope
-    Note.with_scope(policy_scope(Note.all)) do
+    Note.with_scope(policy_scope(Note.where(booking_portal_client_id: current_client.try(:id)))) do
       yield
     end
   end

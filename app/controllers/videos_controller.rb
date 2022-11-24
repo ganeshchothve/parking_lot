@@ -60,7 +60,7 @@ class VideosController < ApplicationController
   end
 
   def set_video
-    @video = Video.where(videoable: @videoable).find params[:id]
+    @video = Video.where(booking_portal_client_id: current_client.try(:id)).where(videoable: @videoable).find params[:id]
   end
 
   def authorize_resource

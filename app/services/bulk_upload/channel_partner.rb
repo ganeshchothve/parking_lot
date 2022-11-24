@@ -25,7 +25,7 @@ module BulkUpload
         if m_phone = row.field(9).to_s.strip.presence
           _manager_phone = Phonelib.parse(m_phone)
           manager_phone = (_manager_phone.country_code == '91' && _manager_phone.sanitized.length == 10 ? "+91#{_manager_phone.sanitized}" : "+#{_manager_phone.sanitized}")
-          manager = User.where(phone: manager_phone, role: {'$in': ['cp']}).first if manager_phone.present?
+          manager = User.where(booking_portal_client_id: bur.booking_portal_client_id, phone: manager_phone, role: {'$in': ['cp']}).first if manager_phone.present?
           if manager
             attrs[:manager_id] = manager.id
           else

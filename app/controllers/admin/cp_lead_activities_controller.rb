@@ -106,7 +106,7 @@ class Admin::CpLeadActivitiesController < AdminController
   end
 
   def set_cp_lead_activity
-    @cp_lead_activity = CpLeadActivity.find(params[:id])
+    @cp_lead_activity = CpLeadActivity.where(CpLeadActivity.user_based_scope(current_user, params)).where(id: params[:id]).first
   end
 
   def authorize_resource

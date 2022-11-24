@@ -18,7 +18,7 @@ class ReceiptExportWorker
     if user_id
       file_name = "receipt-#{SecureRandom.hex}.xls"
       file.write("#{Rails.root}/exports/#{file_name}")
-      ExportMailer.notify(file_name, user.email, "Payments").deliver
+      ExportMailer.notify(file_name, user.email, "Payments", user.id.to_s).deliver
     else options[:daily_report]
       file_name = "receipt-#{DateTime.current.in_time_zone('Mumbai').strftime('%F-%T')}.xls"
       file.write("#{Rails.root}/exports/#{file_name}")

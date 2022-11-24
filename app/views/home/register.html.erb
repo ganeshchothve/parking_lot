@@ -4,7 +4,7 @@
     <h2 class="px-4 pt-3 pb-3"><%= I18n.t("devise.keys.register") %></h2>
     <%# <p  class="px-4 pt-3 pb-1 font-weight-medium"></p> %>
     <div class="cp-signup-form-wrap px-4 cp-form-wrap py-3">
-          <% template = ::Template::UITemplate.where(name: 'home/register').first %>
+          <% template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'home/register').first %>
           <% if template.present? %>
             <%= get_view_erb(template, check_active: true) %>
           <% end %>

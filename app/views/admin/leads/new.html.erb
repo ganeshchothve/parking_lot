@@ -1,4 +1,4 @@
-<% if selldo_config_base.present? %>
+<% if selldo_config_base(current_client).present? %>
   <%= render 'admin/leads/selldo_form' %>
 <% else %>
   <% unless params[:add_to_another_project].present? %>
