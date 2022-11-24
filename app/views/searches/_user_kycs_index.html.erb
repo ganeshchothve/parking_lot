@@ -1,68 +1,66 @@
-<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
-  <thead>
+<div class="position-relative table-layout-box">
+  <h2 class="table-title fn-16 mb-0 p-3">Customer Details</h2>
+  <div class="table-layout-inner float-start w-100">
     <% labels = t('mongoid.attributes.user_kyc').with_indifferent_access %>
-      <thead>
-        <tr class="bg-gradient white">
-          <th><%= labels['name'] %></th>
-        <th><%= labels['lead_id'] %></th>
-        <th><%= "#{labels['phone']} & #{labels['email']}" %></th>
-        <th><%= labels['dob_short'] %></th>
-        <th><%= labels['pan_number'] %></th>
-        <th class="wd-22"></th>
-        </tr>
-      </thead>
-  </thead>
-  <tbody>
     <% user_kycs.each do |user_kyc| %>
-      <tr>
-        <td data-title="<%= labels['name'] %>"><%= user_kyc.name %></td>
-        <td data-title="<%= labels['lead_id'] %>">
-          <% if policy([:admin, Lead.new]).show? %>
+    <div class="position-relative float-start w-100 pt-3 px-4">
+      <ul class="booking-apart-info list-info-with-label float-start w-100 mb-0">
+        <li>
+          <span><%= labels['name'] %></span>
+          <p><%= user_kyc.name %></p>
+        </li>
+        <li>
+          <span><%= labels['lead_id'] %></span>
+          <p><% if policy([:admin, Lead.new]).show? %>
             <%= link_to user_kyc.lead.name, admin_lead_path(user_kyc.lead_id) %>
-          <% else %>
+            <% else %>
             <%= user_kyc.lead.name %>
+            <% end %></p>
+        </li>
+        <li>
+          <span><%= "#{labels['phone']}" %></span>
+          <p><%= user_kyc.phone %></p>
+        </li>
+        <li>
+          <span><%= "#{labels['email']}" %></span>
+          <p><%= user_kyc.email %></p>
+        </li>
+        <li>
+          <span><%= labels['dob_short'] %></span>
+          <p><%= user_kyc.dob.strftime("%d %b %Y") rescue "-" %></p>
+        </li>
+        <li>
+          <span><%= labels['pan_number'] %></span>
+          <p><%= user_kyc.pan_number %></p>
+        </li>
+      </ul>
+      <hr class=" float-start w-100 my-0">
+      <div class="dropdown show text-right position-absolute">
+        <a class="btn table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink"
+          data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v"
+            aria-hidden="true"></i></a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+          <% if current_user.buyer? && Buyer::UserKycPolicy.new(current_user, user_kyc).edit? %>
+          <%= link_to I18n.t("global.edit"), edit_buyer_user_kyc_path(user_kyc), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit User KYC'} %>
+          <% elsif Admin::UserKycPolicy.new(current_user, user_kyc).edit? %>
+          <%= link_to I18n.t("global.edit"), edit_admin_lead_user_kyc_path(@lead, user_kyc), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit User KYC'} %>
           <% end %>
-        </td>
-        <td data-title="<%= "#{labels['phone']} & #{labels['email']}" %>">
-          <p class="mb-1 mt-1">
-          <i class="far fa-envelope me-2"></i> <%= user_kyc.email %>
-          </p>
-          <p class="mb-0">
-          <i class="fas fa-mobile-alt me-2"></i> <%= user_kyc.phone %>
-          </p>
-        </td>
-        <td data-title="<%= labels['dob_short'] %>"><%= user_kyc.dob.strftime("%d %b %Y") rescue "" %></td>
-        <td data-title="<%= labels['pan_number'] %>"><%= user_kyc.pan_number %></td>
-        <td>
-          <div class="dropdown show text-right">
-          <a class="btn table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-              <% if current_user.buyer? && Buyer::UserKycPolicy.new(current_user, user_kyc).edit? %>
-                <%= link_to I18n.t("global.edit"), edit_buyer_user_kyc_path(user_kyc), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit User KYC'} %>
-              <% elsif Admin::UserKycPolicy.new(current_user, user_kyc).edit? %>
-                <%= link_to I18n.t("global.edit"), edit_admin_lead_user_kyc_path(@lead, user_kyc), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit User KYC'} %>
-              <% end %>
-              <% if policy([:admin, UserKyc.new]).show? %>
-                <%= link_to I18n.t("global.show"), admin_user_kyc_path(user_kyc), class: 'dropdown-item' %>
-              <% end %>
-              <% if policy([ current_user_role_group, Asset.new(assetable: user_kyc)]).index? %>
-                <%= link_to I18n.t("global.documents"), assetables_path(assetable_type: user_kyc.class.model_name.i18n_key.to_s, assetable_id: user_kyc.id), class: 'dropdown-item modal-remote-form-link' %>
-              <% end %>
-           </div>
+          <% if policy([:admin, UserKyc.new]).show? %>
+          <%= link_to I18n.t("global.show"), admin_user_kyc_path(user_kyc), class: 'dropdown-item' %>
+          <% end %>
+          <% if policy([ current_user_role_group, Asset.new(assetable: user_kyc)]).index? %>
+          <%= link_to I18n.t("global.documents"), assetables_path(assetable_type: user_kyc.class.model_name.i18n_key.to_s, assetable_id: user_kyc.id), class: 'dropdown-item modal-remote-form-link' %>
+          <% end %>
         </div>
-        </td>
-      </tr>
+      </div>
+    </div>
+    <% end %>
+    <div class="text-center float-start w-100 my-3">
+      <% if current_user.buyer? %>
+      <%= link_to I18n.t("global.link_to.add_element", name: global_labels['user_kyc']), new_buyer_user_kyc_path, class: 'next-btn text-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+      <% else %>
+      <%= link_to I18n.t("global.link_to.add_element", name: global_labels['user_kyc']), new_admin_lead_user_kyc_path(@lead), class: 'text-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
       <% end %>
-  </tbody>
-  <tfoot>
-    <tr>
-      <td colspan='6'>
-        <% if current_user.buyer? %>
-          <%= link_to I18n.t("global.link_to.add_element", name: global_labels['user_kyc']), new_buyer_user_kyc_path, class: 'btn next-btn primary white modal-remote-form-link fn-12 h-auto', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
-        <% else %>
-          <%= link_to I18n.t("global.link_to.add_element", name: global_labels['user_kyc']), new_admin_lead_user_kyc_path(@lead), class: 'btn next-btn bg-primary white modal-remote-form-link px-3 fn-12 h-auto', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
-        <% end %>
-      </td>
-    </tr>
-  </tfoot>
-</table>
+    </div>
+  </div>
+</div>

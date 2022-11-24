@@ -34,14 +34,14 @@
                 <td>
                   <% if lead.email.present? %>
                     <p class="email-icon mb-0">
-                      <i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i><%= lead.masked_email(current_user) || '' %>
+                      <%= lead.masked_email(current_user) || '' %>
                     </p>
                   <% end %>
                 </td>
                 <td>
                   <% if lead.phone.present? %>
                     <p class="phone-icon mb-0">
-                      <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= lead.masked_phone(current_user) || '' %>
+                      <%= lead.masked_phone(current_user) || '' %>
                     </p>
                   <% end %>
                 </td>

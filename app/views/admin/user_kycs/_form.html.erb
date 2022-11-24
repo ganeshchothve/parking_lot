@@ -1,6 +1,6 @@
 <%= simple_form_for(@user_kyc, local: true, url: url, remote: true, html: { novalidate: false, class: 'modal-remote-form validate-form', data: { 'resource-type': UserKyc.model_name.human, type: :json }, id: 'user_kyc_form' } ) do |f| %>
-  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-    <div class="modal-dialog modal-lg" role="document">
+  <div class="modal fade right fixed-header-footer modal-fullscreen" role="dialog" id="modal-remote-form-inner" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-fullscreen" role="document">
       <div class="modal-content theme-form">
         <div class="modal-header">
           <h3 class="title">

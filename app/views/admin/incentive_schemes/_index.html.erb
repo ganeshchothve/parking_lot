@@ -1,12 +1,12 @@
-<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
-  <thead class="th-default">
+<table class='table table-responsive table-color'>
+  <thead>
     <thead>
       <tr class="bg-gradient-cd white">
         <th><%= t('mongoid.attributes.incentive_scheme.name') %></th>
         <th><%= t('mongoid.attributes.incentive_scheme.project_id') %></th>
         <th><%= t('mongoid.attributes.incentive_scheme.status') %></th>
         <th><%= t('mongoid.attributes.incentive_scheme.date_range') %></th>
-        <th class='text-right wd-22'></th>
+        <th>Action</th>
       </tr>
     </thead>
   </thead>
@@ -25,7 +25,7 @@
         <%= t("mongoid.attributes.incentive_scheme/status.#{incentive_scheme.status}") %>
       </td>
       <td data-title="<%= t('mongoid.attributes.incentive_scheme.date_range') %>">
-       <%= I18n.l(incentive_scheme.starts_on) + " - " + I18n.l(incentive_scheme.ends_on) %>
+        <%= I18n.l(incentive_scheme.starts_on) + " - " + I18n.l(incentive_scheme.ends_on) %>
       </td>
       <td class="action-btn">
         <div class="dropdown text-right">

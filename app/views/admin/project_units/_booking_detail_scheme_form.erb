@@ -1,4 +1,4 @@
-<%= nested_form_for([ current_user_role_group, booking_detail, booking_detail_scheme], url: url, method: :get, remote: true, html: {class: 'validate-form', "data-resource-type": global_labels['schemes'], "data-type": "json", id: 'scheme_form'}) do |f| %>
+<%= nested_form_for([ current_user_role_group, booking_detail, booking_detail_scheme], url: url, method: :get, remote: true, html: {class: 'validate-form theme-form', "data-resource-type": global_labels['schemes'], "data-type": "json", id: 'scheme_form'}) do |f| %>
   <div class="mb-3">
     <% _params = {fltrs: {project_id: booking_detail.project_unit.project_id, project_tower_id: booking_detail.project_unit.project_tower_id, can_be_applied_by: current_user.role, status: 'approved' } } %>
     <%= f.label :derived_from_scheme_id, class: 'control-label' %>
@@ -8,37 +8,41 @@
   <% if payment_adjustment && action_name != 'quotation' %>
     <div class="non-editable-payment-adjustments">
       <% booking_detail_scheme.non_editable_payment_adjustments.each do |payment_adjustment| %>
-        <div class="row">
-          <div class="col-md-4">
-            <p><%= I18n.t("mongoid.attributes.booking_detail_scheme.name") %></p>
-            <p><%= payment_adjustment.name %></p>
-          </div>
-          <div class="col-md-4">
-            <p><%= I18n.t("mongoid.attributes.booking_detail_scheme.field") %></p>
-            <p><%= payment_adjustment.field.humanize %></p>
-          </div>
-          <div class="col-md-4">
-            <p><%= I18n.t("mongoid.attributes.booking_detail_scheme.value") %></p>
-            <p><%= payment_adjustment.value(booking_detail.project_unit) %></p>
-          </div>
-        </div>
-      <% end %>
+      <table class="table table-responsive table-color">
+        <thead>
+          <tr>
+            <th><%= I18n.t("mongoid.attributes.booking_detail_scheme.name") %></th>
+            <th><%= I18n.t("mongoid.attributes.booking_detail_scheme.field") %></th>
+            <th><%= I18n.t("mongoid.attributes.booking_detail_scheme.value") %></th>
+          </tr>
+          <tbody>
+            <tr>
+              <td><%= payment_adjustment.name %></td>
+              <td><%= payment_adjustment.field.humanize %></td>
+              <td><%= payment_adjustment.value(booking_detail.project_unit) %></td>
+              </tr>
+          </tbody>
+        </thead>
+      </table>     
     </div>
+    <% end %>
   <% end %>
-  <div class="payment-adjustments">
+  <div class="payment-adjustments rounded">
     <%= f.fields_for :payment_adjustments, booking_detail_scheme.editable_payment_adjustments do |adj| %>
       <% if payment_adjustment %>
-        <%= adj.link_to_remove icon("far", "times-circle") %>
+      <span class="col-12 d-block text-end">
+        <%= adj.link_to_remove icon("fas", "trash") %>
+      </span>
       <% end %>
       <%= adj.hidden_field :editable, value: true %>
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
           <div class="mb-3">
             <%= adj.label :name, class: 'label-required' %>
             <%= adj.text_field :name, class: "form-control", required: 'required', disabled: !payment_adjustment %>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-12">
           <div class="mb-3">
             <%= adj.label :field, class: 'label-required' %>
             <%= adj.select :field, Scheme::FIELDS.collect{|sf| [ t("mongoid.attributes.payment_adjustment/field.#{sf}"), sf]}, {prompt: I18n.t("global.select")}, class: 'selectize-tags', disabled: !payment_adjustment %>
@@ -48,13 +52,13 @@
       <div class="mb-3">
         <%= adj.label :absolute_value, class: 'label-required' %>
         <%= adj.number_field :absolute_value, class: "form-control", disabled: !payment_adjustment %>
-        <p class="small text-muted"><%= I18n.t("controller.project_units.total_adjustment") %></p>
+        <p class="small text-muted fn-12"><%= I18n.t("controller.project_units.total_adjustment") %></p>
       </div>
     <% end %>
   </div>
   <% if payment_adjustment %>
-    <%= f.link_to_add I18n.t("controller.project_units.adjustments.link_name"), :payment_adjustments, :data => { :target => ".payment-adjustments" } %>
+    <%= f.link_to_add I18n.t("controller.project_units.adjustments.link_name"), :payment_adjustments, :data => { :target => ".payment-adjustments" }, class: 'text-primary' %>
   <% end %>
   </br>
-  <%= f.submit I18n.t("global.apply"), class: "btn btn-primary d-print-none" %>
+  <%= f.submit I18n.t("global.apply"), class: "mt-2 btn btn-primary no-fill font-medium d-print-none d-inline-block w-auto" %>
 <% end %>

@@ -1,33 +1,38 @@
 <section class="checkout-sec my-4 mb-5">
   <div class="px-3">
     <div class="">
-      <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 bg-white border rounded">
+      <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 bg-white">
         <div class="row">
-          <div class="col-lg-4 col-xs-12 col-sm-12 col-md-12 pt-3 ps-4">
-            <div class="left-info bg-primary br-rd-4 p-4 text-center">
-              <% template = ::Template::UITemplate.where(name: 'searches/checkout').first %>
-              <% if template.present? %>
-                <%= get_view_erb(template) %>
-              <% end %>
+          <div class="col-lg-4 col-xs-12 col-sm-12 col-md-12 p-0 border rounded">
+            <div class="left-info bg-primary p-2 text-center position-relative  rounded-top">
+              <i class="fa fa-info-circle fill-white position-absolute" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title='<% template = ::Template::UITemplate.where(name: 'searches/checkout').first %><% if template.present? %><%= get_view_erb(template) %><% end %>' data-bs-html="true"></i>
               <div class="payment-timer jquery-countdown-container white fs-1 font-medium" id="held-until-countdown"></div>
             </div>
-            <div class="form-sec-title pl-0 fn-24 py-3"><%= Scheme.model_name.human %></div>
-            <%= nested_form_for([ current_user_role_group, @booking_detail, @booking_detail_scheme], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['schemes'], "data-type": "json", id: 'scheme_form'}) do |f| %>
+            <div class="form-sec-title pl-0 fn-24 p-3"><%= Scheme.model_name.human %></div>
+            <%= nested_form_for([ current_user_role_group, @booking_detail, @booking_detail_scheme], local: true, remote: true, html: {class: 'modal-remote-form validate-form px-3', "data-resource-type": global_labels['schemes'], "data-type": "json", id: 'scheme_form'}) do |f| %>
                 <%= render 'booking_detail_schemes/form', booking_detail_scheme: @booking_detail_scheme, booking_detail: @booking_detail, f: f %>
-                <%= f.submit I18n.t("global.apply"), class: "save-kyc-btn fn-12 fn-300 bg-primary border-primary white rounded p-1 px-3 shadow-none" %>
+                <%= f.submit I18n.t("global.apply"), class: "save-kyc-btn border-primary btn text-primary fn-500 p-1 px-3 shadow-none" %>
               <% end %>
           </div>
-          <div class="col-lg-8 col-xs-12 col-sm-12 col-md-12 br-l-1 px-0">
-            <div class="right-info border-start pb-4">
+          <div class="col-lg-8 col-xs-12 col-sm-12 col-md-12">
+            <div class="right-info border rounded pb-4">
               <div class="checkout-menu-list ps-3 py-3 border-bottom">
-                <a rel="apartment" class="scroll-sec active fn-16 p-2 display-inline-block theme-txt-color"><%= ProjectUnit.model_name.human %></a>
-                <a rel="cost-sheet" class="scroll-sec fn-16 p-2 display-inline-block theme-txt-color"> <%= t('mongoid.attributes.project_unit.cost_sheet')%></a>
-                <a rel="payment-schedule" class="scroll-sec fn-16 p-2 display-inline-block theme-txt-color"><%= t('mongoid.attributes.project_unit.payment_schedule')%></a>
+              <ul class="theme-sticky-tab p-0 mb-0">
+                <li class="p-0">
+                  <a rel="apartment" class="scroll-sec active fn-16 p-2 display-inline-block theme-txt-color"><%= ProjectUnit.model_name.human %></a>
+                </li>
+                <li class="p-0">
+                  <a rel="cost-sheet" class="scroll-sec fn-16 p-2 display-inline-block theme-txt-color"> <%= t('mongoid.attributes.project_unit.cost_sheet')%></a>
+                </li>
+                <li class="p-0">  
+                  <a rel="payment-schedule" class="scroll-sec fn-16 p-2 display-inline-block theme-txt-color"><%= t('mongoid.attributes.project_unit.payment_schedule')%></a>
+                </li>
+              </ul>
               </div>
               <div class="bookings scroll-fixed-height">
                 <div class="px-3">
                   <div class="row">
-                    <div class='col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd mt-4' id='apartment'>
+                    <div class='col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd' id='apartment'>
                       <%= render 'booking_details/details', booking_detail: @booking_detail %>
                     </div>
                     <div class='col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd mt-4' id='cost-sheet'>
@@ -106,6 +111,10 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="booking-flow-footer position-fixed w-100 bottom-0 start-0 p-2 py-3 bg-white border-top text-end">
+    <a href="" class="btn btn-primary no-fill font-medium ms-2">Cancel</a>
+    <a href="" class="btn btn-primary font-medium border-primary ms-2">Next</a>
   </div>
 </section>
 <%= javascript_tag do %>

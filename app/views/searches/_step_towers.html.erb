@@ -1,193 +1,194 @@
-<div class="card shadow-sm rounded px-0 bg-white mb-5">
-  <div class="row">
-    <div class="col-lg-12">
-      <div class="card-header bg-white pb-0">
-        <div class="p-2 py-3">
-          <h2 class="fn-24 theme-txt-color font-normal"><%= I18n.t("controller.project_units.create_booking.link_name") %></h2>
-            <p class="fn-16 theme-txt-color mb-4"><%= t('controller.searches.new.booking_hint', name: @lead.name) %></p>
-            
-          <div class="d-flex justify-content-start">
-            <p class="fn-16 theme-txt-color mb-0"><i class="fa fa-check-circle me-2 fill-success"></i>
-              <%= link_to I18n.t("controller.projects.filter_project"), edit_search_path, class: "modal-remote-form-link theme-txt-color step-change-btn" %>
-            </p>
-            <p class="wd-22 border-top border-2 mt-2 mx-3 mb-0"></p>
-            <p class="fn-16 theme-txt-color mb-0"><i class="fa fa-check-circle me-2 fill-success"></i>
-              <% if @search.previous_step.present? && @search.crossed_step('filter') %>
-              <%= form_for [:lead, @search], html: {class: 'validate-form'} do |f| %>
-              <div class="mb-3">
-                <%= f.hidden_field :step, value: "filter" %>
-                <%= f.submit I18n.t("controller.project_units.choose_tower"), class: "theme-txt-color step-change-btn bg-white border-0 pd-0" %>
-              </div>
-              <% end %>
-              <% end %>
-            </p>
-            <p class="wd-22 border-top border-2 mt-2 mx-3 mb-0"></p>
-            <p class="fn-16 theme-txt-color mb-0"><i class="fa fa-check-circle me-2 fill-success"></i><%= I18n.t("controller.searches.apartments.link_name") %>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="card-body bg-white p-0">
-        <div class="card text-dark bg-light border border-white mb-3">
-          <div class="card-body bg-white">
-            <div class="row">
-            <div class="col-lg-6 col-xs-12 col-sm-12 col-md-12 pt-3 pb-3">
-              <% max_floor = @all_units.collect{|x| x[:_id]}.max || 0 %>
-              <% max_per_floor = @all_units.collect{|x| x[:floor_order].max}.max || 0 %>
-              <% width = ((100.to_f - (4 * max_per_floor)) / max_per_floor).round(2) %>
-              <%
-                  height = (280.to_f / max_floor).round(2)
-                  height = 16 if height < 16
-                %>
-              <div class="left-info pl-5 pr-5 pt-0 pb-0 book-apartment">
-                <ul class="book-box-info">
-                  <li><span class="book-box available-aprt"></span><span><%= I18n.t("global.link_to.available") %></span></li>
-                  <li><span class="book-box soldout-aprt"></span><span><%= I18n.t("controller.searches.sold_out_filtered") %></span></li>
-                  <li><span class="book-box selected-aprt"></span><span><%= I18n.t("global.selected") %></span></li>
-                </ul>
-                <div class="booking-list">
-                  <div class="apartments-no">
-                    <ul class="aprt-no-list">
-                      <% max_floor = @all_units.collect{|x| x[:_id]}.max || 0 %>
-                      <% max_per_floor = @all_units.collect{|x| x[:floor_order].max}.max || 0 %>
-                      <% width = ((100.to_f - (4 * max_per_floor)) / max_per_floor).round(2) %>
-                      <%
-                                height = (280.to_f / max_floor).round(2)
-                                height = 16 if height < 16
-                              %>
-                      <% max_per_floor.times do |index| %>
-                      <li><span class="book-box"><%= index + 1 %></span></li>
-                      <% end %>
-                    </ul>
-                    <div class="floor-listing">
-                      <div class="floor-inner">
-                        <% @all_units.each do |floor_data| %>
-                        <div class="floor">
-                          <div class="floor-number"><%= floor_data[:_id] %></div>
-                          <% max_per_floor.times do |index| %>
-                          <%
-                                klass = 'soldout-aprt'
-                                data_selector = ''
-                                unit = @units.find{|unit| unit.floor == floor_data[:_id] && unit.floor_order == (index + 1) }
-                                if unit
-                                  if unit.user_based_status(@lead.user) == 'available'
-                                    klass = 'available-aprt'
-                                    data_selector = 'unit-card'
-                                  elsif unit.user_based_status(@lead.user) == 'booked'
-                                    klass = 'booked-aprt'
-                                  elsif unit.user_based_status(@lead.user) == 'hold'
-                                    klass = 'bg-secondary'
-                                  else
-                                    klass = 'soldout-aprt'
-                                  end
-                                end
-                              %>
-                          <% if unit.present? %>
-                          <span data-jquery-selector="<%= data_selector %>" data-toggle="popover"
-                            data-content="<%= unit_tooltip(unit) %>" data-title="Details for <%= unit.name %>"
-                            data-unit-id="<%= unit.present? ? unit.id : '' %>" class="book-box <%= klass %>"></span>
-                          <% else %>
-                          <span data-jquery-selector="<%= data_selector %>" class="book-box <%= klass %>"></span>
-                          <% end %>
-                          <% end %>
-                        </div>
-                        <% end %>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-              <div class="col-lg-6 col-xs-12 col-sm-12 col-md-12 br-l-1 no-pd after-show d-none pt-5" id="unit-description">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col-lg-7">
-                        <div data-placeholder="name" class="fn-20 font-medium theme-txt-color mb-3"></div>
-                        <!--<div class="alert-box pb-3 mt-2">-->
-                          <!-- whenever give animation on bell only add class (bell-anime) -->
-                          <!-- <span class="info bell-anime" data-placeholder="gamification"></span>
-                        </div>-->
-                        <ul class="apartments-info-list list-unstyled row text-start">
-                          <li class="col-lg-6">
-                            <span class="desc d-block fn-12 font-medium theme-txt-color"><%= I18n.t("mongoid.attributes.project_unit.floor") %></span>
-                            <span class="title d-block fn-14 mb-3" data-placeholder="floor"></span>
-                            
-                          </li>
-                          <li class="col-lg-6">
-                            <span class="desc d-block fn-12 font-medium theme-txt-color"><%= I18n.t("mongoid.attributes.project_unit.apartment") %></span>
-                            <span class="title d-block fn-14 mb-3" data-placeholder="floor_order"></span>
-                          </li>
-                          <li class="col-lg-6">
-                            <span class="desc d-block fn-12 font-medium theme-txt-color"><%= I18n.t("mongoid.attributes.project_unit.carpet_sq") %></span>
-                            <span class="title d-block fn-14 mb-3" data-placeholder="carpet"></span>                        
-                          </li>
-                          <li class="col-lg-6">
-                            <span class="desc d-block fn-12 font-medium theme-txt-color"><%= I18n.t("mongoid.attributes.project_unit.facing") %></span>
-                            <span class="title d-block fn-14 mb-3" data-placeholder="facing"></span>                        
-                          </li>
-                          <li class="col-lg-6">
-                            <span class="desc d-block fn-12 font-medium theme-txt-color"><%= I18n.t("mongoid.attributes.project_unit.agreement_price") %></span>
-                            <span class="title d-block fn-14" data-placeholder="agreement_price"></span>
-                          </li>
-                          <li class="col-lg-6">
-                            <span class="desc d-block fn-12 font-medium theme-txt-color"><%= I18n.t("mongoid.attributes.project_unit.all_inclusive_price") %></span>
-                            <span class="title d-block fn-14" data-placeholder="all_inclusive_price"></span>
-                          </li>
-                        </ul>
-                      </div>
-                      <div class="col-lg-5">
-                        <img class="img-fluid" style="width: 100%; display: block;" data-placeholder="unit_image" />
-                        <div class="float-right">
-                          <a data-bs-toggle="modal" data-bs-target="#floorPlanImage" href="javascript:;" class="unit_image_container"
-                            style="display:none;">
-                            <%= I18n.t("global.link_to.click_to_zoom") %>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="right-info pl-5 pr-5 pt-4 pb-4">
-                  <div class=" float-right">
-                    <%= link_to I18n.t("controller.searches.cost_sheet_and_payment_schedule.link_name"), "javascript:;", class: 'modal-remote-form-link print_cs_ps', target: "_blank" %>
-                  </div>
-                  <!--<div data-placeholder="gallery_unit_images"></div>-->
-                </div>
-              </div>
-            </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
+<div class="row vh-100">
+  <div class="col-lg-3 booking-flow-step px-0 mh-100">
+    <p class="fn-16 mb-0">
+      <i class="fa fa-check-circle me-2 fill-success"></i>
+      <%# <span class="">1</span> %>
+      Select Project
+    </p>
+    <p class="fn-16 mb-0">
+      <i class="fa fa-check-circle me-2 fill-success"></i>
+      <!-- <span>2</span> -->
+      <%= link_to I18n.t("controller.projects.filter_project"), edit_search_path, class: "modal-remote-form-link theme-txt-color step-change-btn" %>
+    </p>
+    <div class="fn-16 mb-0">
+      <i class="fa fa-check-circle me-2 fill-success"></i>
+      <!-- <span>3</span> -->
+      <% if @search.previous_step.present? && @search.crossed_step('filter') %>
+        <%= form_for [:lead, @search], html: {class: 'validate-form d-inline-block'} do |f| %>
+          <%= f.hidden_field :step, value: "filter" %>
+          <%= f.submit I18n.t("controller.project_units.choose_tower"), class: "theme-txt-color step-change-btn bg-white border-0 p-0" %>
+        <% end %>
+      <% end %>
     </div>
-    <div class="col-lg-12">
-      <div class="border-top px-3 mt-3 py-3">
-        <div class="d-inline-block">
-          <% if @search.previous_step.present? %>
-          <%= form_for [:lead, @search] do |f| %>
-          <%= f.hidden_field :step, value: @search.previous_step %>
-          <%= f.submit I18n.t("global.previous"), class: "previous-btn border-primary px-2 shadow-none border-1 rounded bg-white py-1" %>
-          <% end %>
-          <% end %>
+    <p class="fn-16 mb-0 active">
+      <!-- <i class="fa fa-check-circle me-2 fill-theme"></i> -->
+      <span>4</span>
+      <%= I18n.t("controller.searches.apartments.link_name") %>
+    </p>
+  </div>
+  <div class="col-lg-9 px-4 mh-100">
+    <div class="row">
+      <div class="card-body bg-white">
+        <div class="row">
+        <div class="col-lg-4 col-xs-12 col-sm-12 col-md-12 pb-3 px-0">
+          <% max_floor = @all_units.collect{|x| x[:_id]}.max || 0 %>
+          <% max_per_floor = @all_units.collect{|x| x[:floor_order].max}.max || 0 %>
+          <% width = ((100.to_f - (4 * max_per_floor)) / max_per_floor).round(2) %>
+          <%
+              height = (280.to_f / max_floor).round(2)
+              height = 16 if height < 16
+            %>
+          <div class="left-info pl-5 pr-5 pt-0 pb-0 book-apartment">
+            <ul class="book-box-info">
+              <li><span class="book-box available-aprt"></span><span><%= I18n.t("global.link_to.available") %></span></li>
+              <li><span class="book-box soldout-aprt"></span><span><%= I18n.t("controller.searches.sold_out_filtered") %></span></li>
+              <li><span class="book-box selected-aprt"></span><span><%= I18n.t("global.selected") %></span></li>
+            </ul>
+            <div class="booking-list">
+              <div class="apartments-no">
+                <ul class="aprt-no-list">
+                  <% max_floor = @all_units.collect{|x| x[:_id]}.max || 0 %>
+                  <% max_per_floor = @all_units.collect{|x| x[:floor_order].max}.max || 0 %>
+                  <% width = ((100.to_f - (4 * max_per_floor)) / max_per_floor).round(2) %>
+                  <%
+                            height = (280.to_f / max_floor).round(2)
+                            height = 16 if height < 16
+                          %>
+                  <% max_per_floor.times do |index| %>
+                  <li><span class="book-box"><%= index + 1 %></span></li>
+                  <% end %>
+                </ul>
+                <div class="floor-listing">
+                  <div class="floor-inner">
+                    <% @all_units.each do |floor_data| %>
+                    <div class="floor">
+                      <div class="floor-number"><%= floor_data[:_id] %></div>
+                      <% max_per_floor.times do |index| %>
+                      <%
+                            klass = 'soldout-aprt'
+                            data_selector = ''
+                            unit = @units.find{|unit| unit.floor == floor_data[:_id] && unit.floor_order == (index + 1) }
+                            if unit
+                              if unit.user_based_status(@lead.user) == 'available'
+                                klass = 'available-aprt'
+                                data_selector = 'unit-card'
+                              elsif unit.user_based_status(@lead.user) == 'booked'
+                                klass = 'booked-aprt'
+                              elsif unit.user_based_status(@lead.user) == 'hold'
+                                klass = 'bg-secondary'
+                              else
+                                klass = 'soldout-aprt'
+                              end
+                            end
+                          %>
+                      <% if unit.present? %>
+                      <span data-jquery-selector="<%= data_selector %>" data-toggle="popover"
+                        data-content="<%= unit_tooltip(unit) %>" data-title="Details for <%= unit.name %>"
+                        data-unit-id="<%= unit.present? ? unit.id : '' %>" class="book-box <%= klass %>"></span>
+                      <% else %>
+                      <span data-jquery-selector="<%= data_selector %>" class="book-box <%= klass %>"></span>
+                      <% end %>
+                      <% end %>
+                    </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="d-inline-block">
-          <% if @search.next_step.present? %>
-          <%= form_for [:lead, @search] do |f| %>
-          <%= f.hidden_field :step, value: @search.next_step %>
-          <%= f.hidden_field :project_unit_id, id: 'project_unit_id' %>
-          <%= f.submit I18n.t("global.next"), class: "ms-2 next-btn bg-primary px-3 border-primary rounded white border-1 py-1", disabled: 'disabled' %>
-          <% end %>
-          <% end %>
+
+          <div class="col-lg-8 col-xs-12 col-sm-12 col-md-12 br-l-1 no-pd after-show d-none pt-5 border-start" id="unit-description">
+            <div class="row">
+              <div class="col-lg-4">
+                <h2 class="fn-14 mb-0 d-inline-block">Apartment Details</h2>
+              </div>
+              <div class="col-lg-8 text-end">
+                <%= link_to I18n.t("controller.searches.cost_sheet_and_payment_schedule.link_name"), "javascript:;", class: 'fn-14 modal-remote-form-link print_cs_ps text-primary mb-3 d-block', target: "_blank" %>
+              </div>
+            </div>
+            <div class="card selected-aprt-card">
+              <div class="card-body p-2 px-3">
+                <div class="row">
+                  <div class="col-lg-7">
+                    <div data-placeholder="name" class="fn-20 theme-txt-color mb-3"></div>
+                    <!--<div class="alert-box pb-3 mt-2">-->
+                      <!-- whenever give animation on bell only add class (bell-anime) -->
+                      <!-- <span class="info bell-anime" data-placeholder="gamification"></span>
+                    </div>-->
+                    <ul class="apartments-info-list list-unstyled row text-start mb-0">
+                      <li class="col-lg-6">
+                        <span class="desc d-block fn-16 font-medium theme-txt-light"><%= I18n.t("mongoid.attributes.project_unit.floor") %></span>
+                        <span class="title d-block fn-16 mb-3" data-placeholder="floor"></span>
+                        
+                      </li>
+                      <li class="col-lg-6">
+                        <span class="desc d-block fn-16 font-medium theme-txt-light"><%= I18n.t("mongoid.attributes.project_unit.apartment") %></span>
+                        <span class="title d-block fn-16 mb-3" data-placeholder="floor_order"></span>
+                      </li>
+                      <li class="col-lg-6">
+                        <span class="desc d-block fn-16 font-medium theme-txt-light"><%= I18n.t("mongoid.attributes.project_unit.carpet_sq") %></span>
+                        <span class="title d-block fn-16 mb-3" data-placeholder="carpet"></span>                        
+                      </li>
+                      <li class="col-lg-6">
+                        <span class="desc d-block fn-16 font-medium theme-txt-light"><%= I18n.t("mongoid.attributes.project_unit.facing") %></span>
+                        <span class="title d-block fn-16 mb-3" data-placeholder="facing"></span>                        
+                      </li>
+                      <li class="col-lg-6">
+                        <span class="desc d-block fn-16 font-medium theme-txt-light"><%= I18n.t("mongoid.attributes.project_unit.agreement_price") %></span>
+                        <span class="title d-block fn-16" data-placeholder="agreement_price"></span>
+                      </li>
+                      <li class="col-lg-6">
+                        <span class="desc d-block fn-16 font-medium theme-txt-light"><%= I18n.t("mongoid.attributes.project_unit.all_inclusive_price") %></span>
+                        <span class="title d-block fn-16" data-placeholder="all_inclusive_price"></span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="col-lg-5">
+                    <img class="img-fluid" style="width: 100%; display: block;" data-placeholder="unit_image" />
+                    <div class="float-right">
+                      <a data-bs-toggle="modal" data-bs-target="#floorPlanImage" href="javascript:;" class="unit_image_container"
+                        style="display:none;">
+                        <%= I18n.t("global.link_to.click_to_zoom") %>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         </div>
       </div>
     </div>
   </div>
+  <div class="booking-flow-footer position-fixed w-100 bottom-0 start-0 p-2 py-3 bg-white border-top text-end">
+    <p class="fn-16 theme-txt-color mt-1 position-absolute"><%= t('controller.searches.new.booking_hint', name: @lead.name) %></p>
+    <!-- <a href="" class="btn btn-primary no-fill font-medium ms-2">Cancel</a> -->
+    <!-- <a href="" class="btn btn-primary font-medium border-primary ms-2">Next</a> -->
+    <div class="d-inline-block">
+      <% if @search.previous_step.present? %>
+      <%= form_for [:lead, @search] do |f| %>
+      <%= f.hidden_field :step, value: @search.previous_step %>
+      <%= f.submit I18n.t("global.previous"), class: "previous-btn btn btn-primary no-fill font-medium ms-2" %>
+      <% end %>
+      <% end %>
+    </div>
+    <div class="d-inline-block">
+      <% if @search.next_step.present? %>
+      <%= form_for [:lead, @search] do |f| %>
+      <%= f.hidden_field :step, value: @search.next_step %>
+      <%= f.hidden_field :project_unit_id, id: 'project_unit_id' %>
+      <%= f.submit I18n.t("global.next"), class: "next-btn btn btn-primary font-medium border-primary ms-2", disabled: 'disabled' %>
+      <% end %>
+      <% end %>
+    </div>
+  </div>
 </div>
-<div class="modal fade" role="dialog" id="floorPlanImage">
-  <div class="modal-dialog modal-lg" role="document">
+
+<div class="modal fade modal-fullscreen" role="dialog" id="floorPlanImage">
+  <div class="modal-dialog modal-fullscreen" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

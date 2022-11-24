@@ -8,38 +8,36 @@
   end
 %>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 mb-5">
-  <div class="box-card relative table-responsive mb-5">
-    <table class="table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0">
-      <thead class="th-default">
-        <tr class="bg-primary white">
-          <th><%= Project.model_name.human %></th>
-          <th><%= I18n.t("mongoid.attributes.booking_detail/status.blocked") %></th>
-          <th><%= I18n.t("mongoid.attributes.booking_detail/status.under_negotiation") %></th>
-          <th><%= I18n.t("mongoid.attributes.booking_detail/status.booked_tentative") %></th>
-          <th><%= I18n.t("mongoid.attributes.booking_detail/status.booked_confirmed") %></th>
-          <th><%= I18n.t("mongoid.attributes.booking_detail/status.cancelled") %></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @booking_details_data.each do |p| %>
-          <tr>
-            <td data-title='<%= Project.model_name.human %>'><%= Project.where(_id: p[:project_id]).first.try(:name).try(:titleize) || "-" %></td>
-            <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/status.blocked") %>'><%= link_to p[:blocked], admin_booking_details_path({ fltrs: { status: 'blocked', project_id: p[:project_id], booked_on: booked_on}, current: 'all'}) %></td>
-            <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/status.under_negotiation") %>'><%= link_to p[:under_negotiation], admin_booking_details_path({ fltrs: { status: 'under_negotiation', project_id: p[:project_id], booked_on: booked_on}, current: 'all'}) %></td>
-            <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/status.booked_tentative") %>'><%= link_to p[:booked_tentative], admin_booking_details_path({ fltrs: { status: 'booked_tentative', project_id: p[:project_id], booked_on: booked_on}, current: 'all'}) %></td>
-            <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/status.booked_confirmed") %>'><%= link_to p[:booked_confirmed], admin_booking_details_path({ fltrs: { status: 'booked_confirmed', project_id: p[:project_id], booked_on: booked_on}, current: 'all'}) %></td>
-            <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/status.cancelled") %>'><%= link_to p[:cancelled], admin_booking_details_path({ fltrs: { status: 'cancelled', project_id: p[:project_id], booked_on: booked_on}, current: 'all'}) %></td>
-          </tr>
-        <% end %>
+  <table class="table table-responsive table-color">
+    <thead>
+      <tr>
+        <th><%= Project.model_name.human %></th>
+        <th><%= I18n.t("mongoid.attributes.booking_detail/status.blocked") %></th>
+        <th><%= I18n.t("mongoid.attributes.booking_detail/status.under_negotiation") %></th>
+        <th><%= I18n.t("mongoid.attributes.booking_detail/status.booked_tentative") %></th>
+        <th><%= I18n.t("mongoid.attributes.booking_detail/status.booked_confirmed") %></th>
+        <th><%= I18n.t("mongoid.attributes.booking_detail/status.cancelled") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @booking_details_data.each do |p| %>
         <tr>
-          <th data-title="<%= t('global.total') %>"><strong><%= t('global.total') %></strong></th>
-          <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/count.total_blocked") %>'><strong><%= link_to @booking_details_data.map{|d| d[:blocked] }.sum, admin_booking_details_path({ fltrs: { status: 'blocked', booked_on: booked_on}, current: 'all'}) %></strong></td>
-          <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/count.total_under_negotiation") %>'><strong><%= link_to @booking_details_data.map{|d| d[:under_negotiation] }.sum, admin_booking_details_path({ fltrs: { status: 'under_negotiation', booked_on: booked_on}, current: 'all'}) %></strong></td>
-          <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/count.total_booked_tentative") %>'><strong><%= link_to @booking_details_data.map{|d| d[:booked_tentative] }.sum, admin_booking_details_path({ fltrs: { status: 'booked_tentative', booked_on: booked_on}, current: 'all'}) %></strong></td>
-          <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/count.total_booked_confirmed") %>'><strong><%= link_to @booking_details_data.map{|d| d[:booked_confirmed] }.sum, admin_booking_details_path({ fltrs: { status: 'booked_confirmed', booked_on: booked_on}, current: 'all'}) %></strong></td>
-          <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/count.total_cancelled") %>'><strong><%= link_to @booking_details_data.map{|d| d[:cancelled] }.sum, admin_booking_details_path({ fltrs: { status: 'cancelled', booked_on: booked_on}, current: 'all'}) %></strong></td>
+          <td data-title='<%= Project.model_name.human %>'><%= Project.where(_id: p[:project_id]).first.try(:name).try(:titleize) || "-" %></td>
+          <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/status.blocked") %>'><%= link_to p[:blocked], admin_booking_details_path({ fltrs: { status: 'blocked', project_id: p[:project_id], booked_on: booked_on}, current: 'all'}) %></td>
+          <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/status.under_negotiation") %>'><%= link_to p[:under_negotiation], admin_booking_details_path({ fltrs: { status: 'under_negotiation', project_id: p[:project_id], booked_on: booked_on}, current: 'all'}) %></td>
+          <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/status.booked_tentative") %>'><%= link_to p[:booked_tentative], admin_booking_details_path({ fltrs: { status: 'booked_tentative', project_id: p[:project_id], booked_on: booked_on}, current: 'all'}) %></td>
+          <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/status.booked_confirmed") %>'><%= link_to p[:booked_confirmed], admin_booking_details_path({ fltrs: { status: 'booked_confirmed', project_id: p[:project_id], booked_on: booked_on}, current: 'all'}) %></td>
+          <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/status.cancelled") %>'><%= link_to p[:cancelled], admin_booking_details_path({ fltrs: { status: 'cancelled', project_id: p[:project_id], booked_on: booked_on}, current: 'all'}) %></td>
         </tr>
-      </tbody>
-    </table>
-  </div>
+      <% end %>
+      <tr>
+        <th data-title="<%= t('global.total') %>"><strong><%= t('global.total') %></strong></th>
+        <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/count.total_blocked") %>'><strong><%= link_to @booking_details_data.map{|d| d[:blocked] }.sum, admin_booking_details_path({ fltrs: { status: 'blocked', booked_on: booked_on}, current: 'all'}) %></strong></td>
+        <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/count.total_under_negotiation") %>'><strong><%= link_to @booking_details_data.map{|d| d[:under_negotiation] }.sum, admin_booking_details_path({ fltrs: { status: 'under_negotiation', booked_on: booked_on}, current: 'all'}) %></strong></td>
+        <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/count.total_booked_tentative") %>'><strong><%= link_to @booking_details_data.map{|d| d[:booked_tentative] }.sum, admin_booking_details_path({ fltrs: { status: 'booked_tentative', booked_on: booked_on}, current: 'all'}) %></strong></td>
+        <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/count.total_booked_confirmed") %>'><strong><%= link_to @booking_details_data.map{|d| d[:booked_confirmed] }.sum, admin_booking_details_path({ fltrs: { status: 'booked_confirmed', booked_on: booked_on}, current: 'all'}) %></strong></td>
+        <td data-title='<%= I18n.t("mongoid.attributes.booking_detail/count.total_cancelled") %>'><strong><%= link_to @booking_details_data.map{|d| d[:cancelled] }.sum, admin_booking_details_path({ fltrs: { status: 'cancelled', booked_on: booked_on}, current: 'all'}) %></strong></td>
+      </tr>
+    </tbody>
+  </table>
 </div>

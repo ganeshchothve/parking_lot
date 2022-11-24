@@ -1,5 +1,5 @@
-<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
-  <thead class="th-default">
+<table class='table table-responsive table-color'>
+  <thead>
     <thead>
       <tr class="bg-gradient-cd white">
         <% unless current_user.buyer? %>
@@ -8,7 +8,7 @@
         <th><%= t('mongoid.attributes.email.subject') %></th>
         <th><%= t('mongoid.attributes.email.status') %></th>
         <th><%= t('mongoid.attributes.email.sent_on') %></th>
-        <th class="text-right wd-22"></th>
+        <th>Action</th>
       </tr>
     </thead>
   </thead>
