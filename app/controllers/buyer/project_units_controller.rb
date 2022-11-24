@@ -14,7 +14,7 @@ class Buyer::ProjectUnitsController < BuyerController
   # GET /buyer/project_units
   #
   def index
-    @project_units = ProjectUnit.where(status: "available").paginate(page: params[:page] || 1, per_page: params[:per_page] )
+    @project_units = ProjectUnit.where(booking_portal_client_id: current_client.try(:id), status: "available").paginate(page: params[:page] || 1, per_page: params[:per_page] )
     respond_to do |format|
       if params[:ds].to_s == 'true'
         format.json { render json: @project_units.as_json(only: [:_id], methods: [:ds_name]) }
@@ -64,9 +64,9 @@ class Buyer::ProjectUnitsController < BuyerController
   end
 
   def apply_policy_scope
-    custom_project_unit_scope = ProjectUnit.all.criteria.or([{ status: { "$in": ProjectUnit.user_based_available_statuses(current_user) } }, { status: { "$in": ProjectUnit.booking_stages }, user_id: current_user.id }])
+    custom_project_unit_scope = ProjectUnit.where(booking_portal_client_id: current_client.try(:id)).criteria.or([{ status: { "$in": ProjectUnit.user_based_available_statuses(current_user) } }, { status: { "$in": ProjectUnit.booking_stages }, user_id: current_user.id }])
     ProjectUnit.with_scope(policy_scope(custom_project_unit_scope)) do
-      custom_scope = User.all.criteria
+      custom_scope = User.where(booking_portal_client_id: current_client.try(:id)).criteria
       User.with_scope(policy_scope(custom_scope)) do
         yield
       end

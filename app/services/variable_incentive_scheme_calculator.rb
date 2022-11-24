@@ -1,20 +1,21 @@
 class VariableIncentiveSchemeCalculator
 
   def self.channel_partner_incentive(options={})
-    approved_schemes = VariableIncentiveScheme.approved
+    booking_portal_client_id = options[:booking_portal_client_id]
+    approved_schemes = VariableIncentiveScheme.where(booking_portal_client_id: booking_portal_client_id).approved
     incentive_data = []
     incentive_amount = 0
     query = get_query(options)
     approved_schemes.each_with_index do |variable_incentive_scheme, index|
 
-      booking_details = BookingDetail.in(status: BookingDetail::BOOKING_STAGES, project_id: variable_incentive_scheme.project_ids).where(booked_on: variable_incentive_scheme.start_date.beginning_of_day..variable_incentive_scheme.end_date.end_of_day).where(query)
+      booking_details = BookingDetail.where(booking_portal_client_id: booking_portal_client_id).in(status: BookingDetail::BOOKING_STAGES, project_id: variable_incentive_scheme.project_ids).where(booked_on: variable_incentive_scheme.start_date.beginning_of_day..variable_incentive_scheme.end_date.end_of_day).where(query)
 
       booking_details.each_with_index do |booking_detail, index|
         incentive_amount += calculate_capped_incentive(booking_detail, variable_incentive_scheme, booking_details.count)
       end
 
       if query[:manager_id].present?
-        user = User.where(_id: query[:manager_id]).first
+        user = User.where(booking_portal_client_id: booking_portal_client_id, _id: query[:manager_id]).first
         user_hash = {user_id: user.try(:id).to_s, user_name: user.name}
       else
         user_hash = {user_id: nil, user_name: I18n.t("global.all") }
@@ -28,12 +29,13 @@ class VariableIncentiveSchemeCalculator
   def self.vis_details(options={})
     incentive_data = []
     options = options.with_indifferent_access
+    booking_portal_client_id = options[:booking_portal_client_id]
     filter_query = options[:query]
-    variable_incentive_schemes = VariableIncentiveScheme.approved.or(filter_query)
+    variable_incentive_schemes = VariableIncentiveScheme.where(booking_portal_client_id: booking_portal_client_id).approved.or(filter_query)
     query = get_query(options)
     if variable_incentive_schemes.present?
       variable_incentive_schemes.each do |variable_incentive_scheme|
-        booking_details = BookingDetail.in(status: BookingDetail::BOOKING_STAGES, project_id: variable_incentive_scheme.project_ids).where(booked_on: variable_incentive_scheme.start_date.beginning_of_day..variable_incentive_scheme.end_date.end_of_day).where(query)
+        booking_details = BookingDetail.where(booking_portal_client_id: booking_portal_client_id).in(status: BookingDetail::BOOKING_STAGES, project_id: variable_incentive_scheme.project_ids).where(booked_on: variable_incentive_scheme.start_date.beginning_of_day..variable_incentive_scheme.end_date.end_of_day).where(query)
         booking_count = booking_details.count
 
         booking_details.includes(:project, :manager).each do |booking_detail|
@@ -48,14 +50,15 @@ class VariableIncentiveSchemeCalculator
 
   def self.average_incentive_per_booking_prediction(options={})
     filter_query = options[:query]
+    booking_portal_client_id = options[:booking_portal_client_id]
     average_incentive = 0
     predicted_incentive = 0
-    variable_incentive_scheme = VariableIncentiveScheme.approved.or(filter_query).first
+    variable_incentive_scheme = VariableIncentiveScheme.where(booking_portal_client_id: booking_portal_client_id).approved.or(filter_query).first
     if variable_incentive_scheme.present?
       start_date = Date.today - 5
       end_date = Date.today
       # last 5 days booking count
-      booking_count = BookingDetail.in(status: BookingDetail::BOOKING_STAGES, project_id: variable_incentive_scheme.project_ids).where(booked_on: start_date.beginning_of_day..end_date.end_of_day).count
+      booking_count = BookingDetail.where(booking_portal_client_id: booking_portal_client_id).in(status: BookingDetail::BOOKING_STAGES, project_id: variable_incentive_scheme.project_ids).where(booked_on: start_date.beginning_of_day..end_date.end_of_day).count
       # avg booking count per day
       booking_count = (booking_count <= 1 ? 1 : booking_count)
       avg_booking_count_per_day = (booking_count.to_f / 5).ceil
@@ -74,7 +77,8 @@ class VariableIncentiveSchemeCalculator
 
   def self.maximum_incentive(options={})
     filter_query = options[:query]
-    variable_incentive_scheme = VariableIncentiveScheme.approved.or(filter_query).first
+    booking_portal_client_id = options[:booking_portal_client_id]
+    variable_incentive_scheme = VariableIncentiveScheme.where(booking_portal_client_id: booking_portal_client_id).approved.or(filter_query).first
     max_capped_incentive = 0
     if variable_incentive_scheme.present?
       booking_detail = BookingDetail.new(booked_on: variable_incentive_scheme.start_date)
@@ -85,7 +89,8 @@ class VariableIncentiveSchemeCalculator
 
   def self.total_maximum_capped_incentive(options={})
     filter_query = options[:query]
-    variable_incentive_scheme = VariableIncentiveScheme.approved.or(filter_query).first
+    booking_portal_client_id = options[:booking_portal_client_id]
+    variable_incentive_scheme = VariableIncentiveScheme.where(booking_portal_client_id: booking_portal_client_id).approved.or(filter_query).first
     total_maximum_capped_incentive = 0
     if variable_incentive_scheme.present?
       total_maximum_capped_incentive = maximum_incentive(options) * variable_incentive_scheme.total_bookings
@@ -97,7 +102,8 @@ class VariableIncentiveSchemeCalculator
   def self.all_channel_partners_incentives(options={})
     # need to discuss this user roles
     # how many cps need to show at a time
-    cps = User.channel_partner
+    booking_portal_client_id = options[:booking_portal_client_id]
+    cps = User.where(booking_portal_client_id: booking_portal_client_id).channel_partner
     incentives_data = {}
     cps.each do |cp|
       cp_id = cp.id.to_s
@@ -184,6 +190,7 @@ class VariableIncentiveSchemeCalculator
     if options.present?
       query.merge!({manager_id: options[:user_id]}) if options[:user_id].present?
       query.merge!({project_id: {"$in": options[:project_ids]}}) if options[:project_ids].present?
+      query.merge!({booking_portal_client_id: options[:booking_portal_client_id]})
     end
     query
   end

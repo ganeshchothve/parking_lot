@@ -31,7 +31,7 @@ module SchemesConcern
                    elsif @project.present?
                      @project.schemes
                    else
-                     Scheme.all
+                     Scheme.where(booking_portal_client_id: current_client.try(:id))
                    end
     custom_scope = custom_scope.filter_by_can_be_applied_by(current_user.role) unless current_user.role.in?(%w(admin superadmin))
     _role = if current_user.role?('channel_partner')
@@ -48,6 +48,6 @@ module SchemesConcern
   end
 
   def set_project
-    @project = Project.find params[:project_id] if params[:project_id].present?
+    @project = Project.where(booking_portal_client_id: current_client.try(:id), id: params[:project_id]).first if params[:project_id].present?
   end
 end

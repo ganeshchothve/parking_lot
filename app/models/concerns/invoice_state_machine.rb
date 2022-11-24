@@ -81,7 +81,7 @@ module InvoiceStateMachine
       recipients = self.send("get_#{status}_recipients_list")
       if recipients.present? && project.booking_portal_client.email_enabled?
         template_name = "invoice_#{status}"
-        if email_template = Template::EmailTemplate.where(name: template_name, project_id: project_id).first
+        if email_template = Template::EmailTemplate.where(name: template_name, project_id: project_id, booking_portal_client_id: self.booking_portal_client_id).first
           email = Email.new(
             booking_portal_client_id: project.booking_portal_client_id,
             email_template_id: email_template.id,
@@ -95,7 +95,7 @@ module InvoiceStateMachine
         end
       end
       if recipients.pluck(:phone).present? && project.booking_portal_client.sms_enabled?
-        if sms_template = Template::SmsTemplate.where(name: template_name, project_id: project_id).first
+        if sms_template = Template::SmsTemplate.where(name: template_name, project_id: project_id, booking_portal_client_id: self.booking_portal_client_id).first
           recipients.each do |recipient|
             Sms.create(
               booking_portal_client_id: project.booking_portal_client_id,
@@ -115,7 +115,7 @@ module InvoiceStateMachine
     end
 
     def send_push_notification template_name, recipient
-      template = Template::NotificationTemplate.where(name: template_name).first
+      template = Template::NotificationTemplate.where(name: template_name, booking_portal_client_id: self.booking_portal_client_id).first
       if template.present? && template.is_active? && recipient.booking_portal_client.notification_enabled?
         push_notification = PushNotification.new(
           notification_template_id: template.id,

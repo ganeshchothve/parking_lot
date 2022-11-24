@@ -127,7 +127,7 @@ module Kylas
     def set_project
       kylas_product_id = params.dig(:lead, :kylas_product_id)
       kylas_deal_id = params.dig(:lead, :kylas_deal_id)
-      @project = Project.where(kylas_product_id: kylas_product_id).first
+      @project = Project.where(booking_portal_client_id: current_client.try(:id), kylas_product_id: kylas_product_id).first
       if @project.present?
         sync_product_to_kylas(current_user, kylas_product_id, kylas_deal_id, @deal_data)
       else
@@ -154,7 +154,7 @@ module Kylas
 
 
     def create_or_set_lead(format)
-      @lead = Lead.where(kylas_deal_id: params.dig(:lead, :kylas_deal_id), user_id: @user.id, project_id: @project.id).first
+      @lead = Lead.where(booking_portal_client_id: current_client.try(:id), kylas_deal_id: params.dig(:lead, :kylas_deal_id), user_id: @user.id, project_id: @project.id).first
       if @lead.blank?
         @lead = @user.leads.build(lead_params)
         @lead.booking_portal_client = current_user.booking_portal_client
@@ -209,7 +209,7 @@ module Kylas
     private
 
     def redirect_to_checkout
-      lead_ids = Lead.where(kylas_deal_id: params[:entityId]).pluck(:id)
+      lead_ids = Lead.where(booking_portal_client_id: current_client.try(:id), kylas_deal_id: params[:entityId]).pluck(:id)
       hold_booking = BookingDetail.in(lead_id: lead_ids).hold.first
       if hold_booking.present?
         respond_to do |format|

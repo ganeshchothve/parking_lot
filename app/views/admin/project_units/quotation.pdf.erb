@@ -1,4 +1,4 @@
-<% template = ::Template::UITemplate.where(name: 'quotation_pdf').first %>
+<% template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'quotation_pdf').first %>
 <% if template.present? %>
   <%= get_view_erb(template) %>
 <% end %>

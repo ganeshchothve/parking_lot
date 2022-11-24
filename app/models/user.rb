@@ -519,9 +519,9 @@ class User
   def set_portal_stage_and_push_in_crm
     if self.role.in?(%w(cp_owner channel_partner))
       stage = self.channel_partner&.status
-      priority = PortalStagePriority.where(role: 'channel_partner').collect{|x| [x.stage, x.priority]}.to_h
+      priority = PortalStagePriority.where(booking_portal_client_id: self.booking_portal_client_id, role: 'channel_partner').collect{|x| [x.stage, x.priority]}.to_h
       if stage.present? && priority[stage].present?
-        self.portal_stages.where(stage:  stage).present? ? self.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : self.portal_stages << PortalStage.new(stage: stage, priority: priority[stage])
+        self.portal_stages.where(stage:  stage).present? ? self.portal_stages.where(stage:  stage).first.set(updated_at: Time.now, priority: priority[stage]) : self.portal_stages << PortalStage.new(booking_portal_client_id: self.booking_portal_client_id, stage: stage, priority: priority[stage])
         #push_to_crm = self.booking_portal_client.external_api_integration?
         #if push_to_crm
         #  Crm::Api::Put.where(resource_class: 'User', is_active: true).each do |api|
@@ -683,18 +683,18 @@ class User
   # Find incentive schemes
   def find_incentive_schemes(category)
     tier_id = referred_by&.tier_id
-    incentive_schemes = ::IncentiveScheme.approved.where(resource_class: self.class.to_s, category: category, auto_apply: true).lte(starts_on: invoiceable_date).gte(ends_on: invoiceable_date)
+    incentive_schemes = ::IncentiveScheme.approved.where(booking_portal_client_id: self.booking_portal_client_id, resource_class: self.class.to_s, category: category, auto_apply: true).lte(starts_on: invoiceable_date).gte(ends_on: invoiceable_date)
     # Find tier level scheme
     if tier_id
-      incentive_schemes = incentive_schemes.where(tier_id: tier_id)
+      incentive_schemes = incentive_schemes.where(booking_portal_client_id: self.booking_portal_client_id, tier_id: tier_id)
     end
     incentive_schemes
   end
 
   # Find all the resources for a channel partner that fall under this scheme
   def find_all_resources_for_scheme(i_scheme)
-    resources = self.class.incentive_eligible(i_scheme.category).where(:"incentive_scheme_data.#{i_scheme.id.to_s}".exists => true, referred_by_id: self.referred_by_id).gte(scheduled_on: i_scheme.starts_on).lte(scheduled_on: i_scheme.ends_on)
-    self.class.or(resources.selector, {id: self.id})
+    resources = self.class.incentive_eligible(i_scheme.category).where(booking_portal_client_id: self.booking_portal_client_id, :"incentive_scheme_data.#{i_scheme.id.to_s}".exists => true, referred_by_id: self.referred_by_id).gte(scheduled_on: i_scheme.starts_on).lte(scheduled_on: i_scheme.ends_on)
+    self.class.or(resources.selector, {id: self.id}).where(booking_portal_client_id: self.booking_portal_client_id)
   end
 
   def login
@@ -720,10 +720,10 @@ class User
   end
 
   def get_search(project_unit_id)
-    search = searches
+    search = searches.where(booking_portal_client_id: self.booking_portal_client_id)
     search = search.where(project_unit_id: project_unit_id) if project_unit_id.present?
     search = search.desc(:created_at).first
-    search = Search.create(user: self) if search.blank?
+    search = Search.create(user: self, booking_portal_client_id: self.booking_portal_client_id) if search.blank?
     search
   end
 
@@ -900,6 +900,7 @@ class User
       elsif ["superadmin"].include?(user.role)
         custom_scope = { role: { '$in': %w(channel_partner cp_owner) }, booking_portal_client_id: user.selected_client_id }
       end
+      custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
     end
 
     def user_based_scope(user, _params = {})

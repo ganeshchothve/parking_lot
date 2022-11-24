@@ -16,7 +16,7 @@
           <li class="col-lg-3">
             <span class="txt-light-blue fn-12"><%= t('mongoid.attributes.user.manager_id') %></span>
             <p class="fn-14 theme-txt-color">
-              <% manager_user = User.where(id: user.manager_id).first %>
+              <% manager_user = User.where(booking_portal_client_id: current_client.try(:id), id: user.manager_id).first %>
               <%= link_to_if(manager_user, manager_user&.name, manager_user ? admin_user_path(manager_user) : '') %>
             </p>
           </li>

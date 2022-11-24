@@ -29,8 +29,8 @@ class Discount
   end
 
   def not_overlapping
-    errors.add(:base, "Token range is overlapping with other discounts") unless Discount.where(project_id: self.project_id, token_type_id: self.token_type_id).nin(id: [self.id]).blank? ||
-      Discount.where(project_id: self.project_id, token_type_id: self.token_type_id).nin(id: [self.id]).pluck(:start_token_number, :end_token_number)
+    errors.add(:base, "Token range is overlapping with other discounts") unless Discount.where(booking_portal_client_id: self.booking_portal_client_id, project_id: self.project_id, token_type_id: self.token_type_id).nin(id: [self.id]).blank? ||
+      Discount.where(booking_portal_client_id: self.booking_portal_client_id, project_id: self.project_id, token_type_id: self.token_type_id).nin(id: [self.id]).pluck(:start_token_number, :end_token_number)
       .map { |x| (x.first..x.last).to_a }
       .map { |x| (x & (start_token_number..end_token_number).to_a).blank? }
       .inject(:&)

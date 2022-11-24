@@ -6,7 +6,7 @@ class PublicAssetsController < ApplicationController
   around_action :apply_policy_scope, only: :index
 
   def index
-    @public_assets = PublicAsset.where(public_assetable: @public_assetable).build_criteria(params)
+    @public_assets = PublicAsset.where(booking_portal_client_id: current_client.try(:id), public_assetable: @public_assetable).build_criteria(params)
     render layout: false
   end
 
@@ -38,11 +38,11 @@ class PublicAssetsController < ApplicationController
 
   private
   def set_public_assetable
-    @public_assetable = params[:public_assetable_type].classify.constantize.where(id: params[:public_assetable_id]).first
+    @public_assetable = params[:public_assetable_type].classify.constantize.where(id: params[:public_assetable_id], booking_portal_client_id: current_client.try(:id)).first
   end
 
   def set_asset
-    @public_asset = PublicAsset.where(public_assetable: @public_assetable, id: params[:id]).first
+    @public_asset = PublicAsset.where(booking_portal_client_id: current_client.try(:id), public_assetable: @public_assetable, id: params[:id]).first
   end
 
   def authorize_resource
@@ -56,7 +56,7 @@ class PublicAssetsController < ApplicationController
   end
 
   def apply_policy_scope
-    PublicAsset.with_scope(policy_scope(PublicAsset.all)) do
+    PublicAsset.with_scope(policy_scope(PublicAsset.where(booking_portal_client_id: current_client.try(:id)))) do
       yield
     end
   end

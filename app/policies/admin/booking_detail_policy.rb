@@ -231,7 +231,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def interested_project_present?
     if record.is_a?(BookingDetail) && record.project_id.present?
-      user.interested_projects.approved.where(project_id: record.project_id).present?
+      user.interested_projects.approved.where(booking_portal_client_id: record.booking_portal_client_id, project_id: record.project_id).present?
     else
       true
     end
@@ -239,7 +239,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def is_assigned_lead?
     if user.role?(:sales) && record.lead.is_a?(Lead)
-      Lead.where(id: record.lead.id, closing_manager_id: user.id).in(customer_status: %w(engaged)).first.present?
+      Lead.where(id: record.lead.id, closing_manager_id: user.id, booking_portal_client_id: record.booking_portal_client_id).in(customer_status: %w(engaged)).first.present?
     else
       false
     end

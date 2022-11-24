@@ -16,12 +16,12 @@ class Admin::TemplatesController < AdminController
   end
 
   def new
-    @template = Template::CustomTemplate.new(booking_portal_client_id: (current_user.selected_client_id || current_client.id))
+    @template = Template::CustomTemplate.new(booking_portal_client_id: current_client.try(:id))
     render layout: false
   end
 
   def create
-    @template = Template::CustomTemplate.new(booking_portal_client_id: (current_user.selected_client_id || current_client.id))
+    @template = Template::CustomTemplate.new(booking_portal_client_id: current_client.try(:id))
     @template.assign_attributes(permitted_attributes([:admin, @template]))
     respond_to do |format|
       if @template.save
@@ -58,7 +58,7 @@ class Admin::TemplatesController < AdminController
 
   def print_template
     respond_to do |format|
-      @template = Template::CustomTemplate.where(id: params[:template_id]).first
+      @template = Template::CustomTemplate.where(id: params[:template_id], booking_portal_client_id: current_client.try(:id)).first
       if @template.present?
         format.html { render template: 'admin/templates/print_template' }
       else
@@ -69,7 +69,7 @@ class Admin::TemplatesController < AdminController
 
   private
   def set_template
-    @template = ::Template.find(params[:id])
+    @template = ::Template.where(id: params[:id], booking_portal_client_id: current_client.try(:id)).first
   end
 
   def set_subject_class

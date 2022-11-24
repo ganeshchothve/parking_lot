@@ -1,7 +1,7 @@
 <section class="first-sec welcome-box mt-3">
   <div class="px-4">
     <div class="row">
-      <% template = ::Template::UITemplate.where(name: 'users/_welcome').first %>
+      <% template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'users/_welcome').first %>
       <% if template.present? %>
         <%= get_view_erb(template) %>
       <% end %>

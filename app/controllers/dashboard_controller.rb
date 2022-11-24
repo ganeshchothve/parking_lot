@@ -13,7 +13,7 @@ class DashboardController < ApplicationController
 
   def index
     authorize :dashboard, :index?
-    @customer_search = CustomerSearch.new if current_user.role == 'gre'
+    @customer_search = CustomerSearch.new(booking_portal_client_id: current_client.try(:id)) if current_user.role == 'gre'
     @project_units = current_user.project_units
 
     if ['channel_partner', 'cp_owner'].include?(current_user.role)
@@ -48,7 +48,7 @@ class DashboardController < ApplicationController
   end
 
   def gamify_unit_selection
-    data = ProjectUnit.build_criteria({
+    data = ProjectUnit.where(booking_portal_client_id: current_client.try(:id)).build_criteria({
       fltrs: {
         status: ProjectUnit.booking_stages,
         bedrooms: params[:bedrooms].to_i,
@@ -88,13 +88,13 @@ class DashboardController < ApplicationController
   end
 
   def dashboard_landing_page
-    @meetings = Meeting.in(roles: ["channel_partner","cp_owner"]).where(scheduled_on: {"$gte": Time.now.beginning_of_day}).scheduled.desc(:scheduled_on)
-    @announcements = Announcement.where(is_active: true)
+    @meetings = Meeting.where(booking_portal_client_id: current_client.try(:id)).in(roles: ["channel_partner","cp_owner"]).where(scheduled_on: {"$gte": Time.now.beginning_of_day}).scheduled.desc(:scheduled_on)
+    @announcements = Announcement.where(booking_portal_client_id: current_client.try(:id), is_active: true)
   end
 
   def payout_dashboard
     authorize :dashboard, :payout_dashboard?
-    @invoices = Invoice.build_criteria(params)
+    @invoices = Invoice.where(booking_portal_client_id: current_client.try(:id)).build_criteria(params)
     @invoices_with_limit = @invoices.limit(3)
     @total_earnings = @invoices.in(status: Invoice::PAYOUT_DASHBOARD_STAGES).sum(:net_amount)
     @invoiced = @invoices.or([{category: "brokerage", status: {"$in": ["raised", "pending_approval", "approved"]}}, {category: {"$in": ["spot_booking", "walk_in"]}, status: {"$in": ["draft","raised", "pending_approval", "approved"]}}]).sum(:net_amount)
@@ -112,18 +112,18 @@ class DashboardController < ApplicationController
 
   def payout_list
     authorize :dashboard, :payout_dashboard?
-    @invoices = Invoice.build_criteria(params)
+    @invoices = Invoice.where(booking_portal_client_id: current_client.try(:id)).build_criteria(params)
   end
 
   def payout_show
     authorize :dashboard, :payout_dashboard?
-    @invoice = Invoice.where(id: params[:invoice_id]).first
+    @invoice = Invoice.where(booking_portal_client_id: current_client.try(:id), id: params[:invoice_id]).first
   end
 
   private
 
   def set_lead
-    @lead = Lead.where(project_id: params[:current_project_id], user_id: current_user.id).first
+    @lead = Lead.where(booking_portal_client_id: current_client.try(:id), project_id: params[:current_project_id], user_id: current_user.id).first
     unless @lead
       redirect_to welcome_path, alert: t('controller.application.set_current_client')
     end

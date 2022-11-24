@@ -65,7 +65,7 @@ module ChannelPartnerRegisteration
 
   def add_user_account
     if params[:register_code].present?
-      @user = User.where(register_in_cp_company_token: params[:register_code]).first
+      @user = User.where(booking_portal_client_id: current_client.try(:id), register_in_cp_company_token: params[:register_code]).first
       @channel_partner = ChannelPartner.where(id: params[:channel_partner_id]).first
       unless @user.present?
         redirect_to root_path, alert: I18n.t("controller.channel_partners.errors.link_expired")
@@ -103,7 +103,7 @@ module ChannelPartnerRegisteration
   end
 
   def handle_json_request(format)
-    @user = User.where(phone: params.dig(:user, :phone)).first
+    @user = User.where(booking_portal_client_id: current_client.try(:id), phone: params.dig(:user, :phone)).first
     create_cp_user unless @user
 
     if @user.persisted? || @user.save
@@ -136,7 +136,7 @@ module ChannelPartnerRegisteration
   end
 
   def register_with_existing_company
-    @channel_partner = ChannelPartner.where(id: params[:channel_partner_id]).first
+    @channel_partner = ChannelPartner.where(booking_portal_client_id: current_client.try(:id), id: params[:channel_partner_id]).first
     @user = User.where(id: params[:user_id]).first
 
     respond_to do |format|
@@ -163,7 +163,7 @@ module ChannelPartnerRegisteration
 
   def send_request_to_company_owner
     client = @user.booking_portal_client
-    email_template = ::Template::EmailTemplate.where(name: "cp_user_register_in_company").first
+    email_template = ::Template::EmailTemplate.where(booking_portal_client_id: current_client.try(:id), name: "cp_user_register_in_company").first
     if email_template.present?
       email = Email.create!({
         booking_portal_client_id: client.id,
@@ -176,7 +176,7 @@ module ChannelPartnerRegisteration
       })
       email.sent!
     end
-    sms_template = Template::SmsTemplate.where(name: "cp_user_register_in_company").first
+    sms_template = Template::SmsTemplate.where(booking_portal_client_id: current_client.try(:id), name: "cp_user_register_in_company").first
     if sms_template.present?
       if @user.phone.present?
         Sms.create!(

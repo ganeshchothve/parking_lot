@@ -57,7 +57,7 @@ class Admin::InterestedProjectsController < AdminController
   private
 
   def set_user
-    @user = User.where(id: params[:user_id]).first
+    @user = User.where(booking_portal_client_id: current_client.try(:id)).where(id: params[:user_id]).first
     redirect_to root_path, alert: t('controller.users.set_user_missing') if @user.blank?
   end
 

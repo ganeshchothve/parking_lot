@@ -22,7 +22,7 @@
         </div>
       </div>
     <% end %>
-    <% template = ::Template::UITemplate.where(name: 'layouts/_navbar_footer').first %>
+    <% template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'layouts/_navbar_footer').first %>
     <% if template.present? && template.is_active? %>
       <div class="row scroll-footer">
         <% if defined?(current_user) && current_user %>

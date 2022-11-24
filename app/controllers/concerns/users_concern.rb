@@ -26,7 +26,7 @@ module UsersConcern
   end
 
   def resend_confirmation_instructions
-    @user = User.find(params[:id])
+    @user = User.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first
     respond_to do |format|
       if @user.resend_confirmation_instructions
         flash[:notice] = I18n.t("controller.users.notice.confirmation_sent")
@@ -39,7 +39,7 @@ module UsersConcern
   end
 
   def resend_password_instructions
-    @user = User.find(params[:id])
+    @user = User.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first
     respond_to do |format|
       if @user.send_reset_password_instructions
         flash[:notice] = I18n.t("controller.users.notice.resend_password_sent")
@@ -58,7 +58,7 @@ module UsersConcern
       format.html do
         if @user.save
           SelldoLeadUpdater.perform_async(@user.leads.first&.id, {stage: 'confirmed'}) if @user.buyer?
-          email_template = ::Template::EmailTemplate.where(name: "account_confirmation").first
+          email_template = ::Template::EmailTemplate.where(booking_portal_client_id: current_client.try(:id), name: "account_confirmation").first
           email = Email.create!({
             booking_portal_client_id: @user.booking_portal_client_id,
             body: ERB.new(@user.booking_portal_client.email_header).result( binding) + email_template.parsed_content(@user) + ERB.new(@user.booking_portal_client.email_footer).result( binding ),
@@ -177,7 +177,7 @@ module UsersConcern
       user_current_status_in_company = @user.user_status_in_company
 
       if user_current_status_in_company == 'pending_approval' && @user.event == 'active'
-        @channel_partner = ChannelPartner.where(id: params.dig(:user, :channel_partner_id)).first
+        @channel_partner = ChannelPartner.where(booking_portal_client_id: current_client.try(:id), id: params.dig(:user, :channel_partner_id)).first
         unless @channel_partner
           format.html { redirect_to request.referer, alert: I18n.t("controller.users.alert.company_not_found") }
           format.json { render json: { errors: [I18n.t("controller.users.alert.company_not_found")] }, status: :unprocessable_entity }

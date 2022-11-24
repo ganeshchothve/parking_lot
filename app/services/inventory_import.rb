@@ -43,7 +43,7 @@ module InventoryImport
         agreement_price = row[17].strip rescue ""
         all_inclusive_price = row[18].strip rescue ""
 
-        project = Project.where(name: project_name).first
+        project = Project.where(booking_portal_client_id: booking_portal_client_id, name: project_name).first
         unless project.present?
           project = Project.create!(rera_registration_no: rera_registration_no, name: project_name, client_id: client_id, booking_portal_client_id: booking_portal_client.id)
         end
@@ -53,11 +53,11 @@ module InventoryImport
           project_tower = ProjectTower.create!(name: project_tower_name, project_id: project.id, client_id: client_id, total_floors: 1, booking_portal_client_id: booking_portal_client.id)
         end
 
-        unit_configuration = UnitConfiguration.where(name: unit_configuration_name).where(project_id: project.id).where(project_tower_id: project_tower.id).first
+        unit_configuration = UnitConfiguration.where(booking_portal_client_id: booking_portal_client_id, name: unit_configuration_name).where(project_id: project.id).where(project_tower_id: project_tower.id).first
         unless unit_configuration.present?
           unit_configuration = UnitConfiguration.create!(name: unit_configuration_name, project_id: project.id, project_tower_id: project_tower.id, client_id: client_id, saleable: saleable.to_f, carpet: carpet.to_f, base_rate: base_rate.to_f, booking_portal_client_id: booking_portal_client.id)
         end
-        if(ProjectUnit.where(erp_id: erp_id).blank?)
+        if(ProjectUnit.where(booking_portal_client_id: booking_portal_client_id, erp_id: erp_id).blank?)
           project_unit = ProjectUnit.new
           project_unit.erp_id = erp_id
           project_unit.developer = developer

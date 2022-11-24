@@ -3651,6 +3651,9 @@ en:
     omniauth_callbacks:
       alert:
         register: "Please ask support team to register your account."
+    shortened_urls:
+      alert:
+        not_found: "Invalid URL"
 
   records:
     text:

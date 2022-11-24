@@ -3,8 +3,9 @@ class InvoicePayoutWorker
 
   def perform(invoice_id)
     invoice = Invoice.where(id: invoice_id).first
+    booking_portal_client_id = invoice.booking_portal_client_id
     if invoice
-      crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:razorpay, :base_url)).first
+      crm_base = Crm::Base.where(booking_portal_client_id: booking_portal_client_id, domain: ENV_CONFIG.dig(:razorpay, :base_url)).first
       if crm_base
         if invoice.brokerage_type == 'sub_brokerage'
           cp_user = case invoice.payment_to

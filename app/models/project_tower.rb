@@ -43,11 +43,11 @@ class ProjectTower
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
 
   def unit_configurations
-    UnitConfiguration.where(data_attributes: { '$elemMatch' => { 'n' => 'project_tower_id', 'v' => selldo_id } })
+    UnitConfiguration.where(booking_portal_client_id: self.booking_portal_client_id, data_attributes: { '$elemMatch' => { 'n' => 'project_tower_id', 'v' => selldo_id } })
   end
 
   def default_scheme
-    Scheme.where(project_tower_id: id, default: true).first
+    Scheme.where(booking_portal_client_id: self.booking_portal_client_id, project_tower_id: id, default: true).first
   end
 
   private

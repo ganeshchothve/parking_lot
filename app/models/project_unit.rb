@@ -180,7 +180,7 @@ class ProjectUnit
           { user_ids: _user.id } ] }
       _selector['$and'] <<  { '$or' => [ {user_role: nil}, { user_role: []}, {user_role: _user.role } ]}
     end
-    Scheme.where(_selector)
+    Scheme.where(booking_portal_client_id: self.booking_portal_client_id).where(_selector)
   end
 
   def self.user_based_available_statuses(user)
@@ -278,7 +278,7 @@ class ProjectUnit
   end
 
   def booking_detail
-    self.available? ? nil : BookingDetail.where(project_unit_id: id).nin(status: %w[cancelled swapped]).first
+    self.available? ? nil : BookingDetail.where(booking_portal_client_id: self.booking_portal_client_id, project_unit_id: id).nin(status: %w[cancelled swapped]).first
   end
 
   def blocking_days
@@ -312,7 +312,7 @@ class ProjectUnit
 
   def pending_booking_detail_scheme
     if booking_detail.present? && (%w[hold].include?(status) || self.class.booking_stages.include?(status))
-      BookingDetailScheme.where(booking_detail_id: booking_detail.id).in(status: 'draft').desc(:created_at).first
+      BookingDetailScheme.where(booking_portal_client_id: self.booking_portal_client_id, booking_detail_id: booking_detail.id).in(status: 'draft').desc(:created_at).first
     end
   end
 

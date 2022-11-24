@@ -9,7 +9,7 @@ module BulkUpload
       csv.each do |row|
         receipt_id = row.field(0).to_s.strip
         if receipt_id
-          if receipt = ::Receipt.where(id: receipt_id).first.presence
+          if receipt = ::Receipt.where(booking_portal_client_id: bur.booking_portal_client_id, id: receipt_id).first.presence
             #time slot
             attrs = {}
             if time_slot_id = row.field(1).to_s.strip.presence

@@ -59,12 +59,12 @@ class Api::V1::BookingDetailsController < ApisController
   end
 
   def set_lead
-    @lead = Lead.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:booking_detail][:lead_id]).first
+    @lead = Lead.where(booking_portal_client_id: @current_client.try(:id), "third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:booking_detail][:lead_id]).first
     render json: { errors: [I18n.t("controller.leads.errors.lead_reference_id_not_found", name: "#{ params[:booking_detail][:lead_id] }")] }, status: :not_found and return unless @lead
   end
 
   def set_project_unit
-    @project_unit = ProjectUnit.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:booking_detail][:project_unit_id], status: 'available').first
+    @project_unit = ProjectUnit.where(booking_portal_client_id: @current_client.try(:id), "third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:booking_detail][:project_unit_id], status: 'available').first
     render json: { errors: [I18n.t("controller.project_units.errors.project_unit_reference_id_not_found", name: "#{ params[:booking_detail][:project_uni_id] }")] }, status: :not_found and return unless @project_unit
   end
 
@@ -97,7 +97,8 @@ class Api::V1::BookingDetailsController < ApisController
                                           project_unit_id: @project_unit.id,
                                           lead_id: @lead.id, user_id: @lead.user.id,
                                           project_id: @project_unit.project_id,
-                                          creator_id: current_user.id
+                                          creator_id: current_user.id,
+                                          booking_portal_client_id: @current_client.try(:id)
                                         )
   end
 

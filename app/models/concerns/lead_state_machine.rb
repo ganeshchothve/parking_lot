@@ -81,7 +81,7 @@ module LeadStateMachine
     end
 
     def check_sales_availability sales_id
-      sales = User.where(id: sales_id.to_s).first
+      sales = User.where(booking_portal_client_id: self.booking_portal_client_id, id: sales_id.to_s).first
       return sales.present? && sales.available?
     end
 
@@ -92,10 +92,10 @@ module LeadStateMachine
     end
 
     def assign_manager sales_id, old_sales_id = nil
-      sales = User.where(id: sales_id.to_s).first
+      sales = User.where(id: sales_id.to_s, booking_portal_client_id: self.booking_portal_client_id).first
       if self.update(closing_manager_id: sales_id.to_s, accepted_by_sales: nil)
         if old_sales_id.present?
-          old_sales = User.where(id: old_sales_id.to_s).first
+          old_sales = User.where(booking_portal_client_id: self.booking_portal_client_id, id: old_sales_id.to_s).first
           old_sales.available! if old_sales.may_available?
           self.current_site_visit&.set(sales_id: sales_id)
           reassign_log_status(old_sales_id)

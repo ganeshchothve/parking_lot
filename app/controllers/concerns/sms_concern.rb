@@ -23,6 +23,6 @@ module SmsConcern
   private
 
   def set_sms
-    @sms = Sms.find(params[:id])
+    @sms = Sms.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first
   end
 end

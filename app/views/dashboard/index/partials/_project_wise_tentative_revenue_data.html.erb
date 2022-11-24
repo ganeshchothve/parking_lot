@@ -44,15 +44,15 @@
                       <% if current_client.enable_channel_partners? %>
                         <div class="mb-3 col-12">
                           <%= label_tag "fltrs", t('mongoid.attributes.lead.manager_id') %>
-                          <%= select_tag "manager_id", options_from_collection_for_select(params[:manager_id].present? ? User.where(_id: params[:manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: ['channel_partner', 'cp_owner'] }}}} %>
+                          <%= select_tag "manager_id", options_from_collection_for_select(params[:manager_id].present? ? User.where(booking_portal_client_id: current_client.try(:id), _id: params[:manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: ['channel_partner', 'cp_owner'] }}}} %>
                         </div>
                         <div class="mb-3 col-12">
                           <%= label_tag "fltrs", t('mongoid.attributes.user/role.cp') %>
-                          <%= select_tag "cp_manager_id", options_from_collection_for_select(params[:cp_manager_id].present? ? User.where(_id: params[:cp_manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp' }}}} %>
+                          <%= select_tag "cp_manager_id", options_from_collection_for_select(params[:cp_manager_id].present? ? User.where(booking_portal_client_id: current_client.try(:id), _id: params[:cp_manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp' }}}} %>
                         </div>
                         <div class="mb-3 col-12">
                           <%= label_tag "fltrs", I18n.t("global.link_to.cp_admin") %>
-                          <%= select_tag "cp_admin_id", options_from_collection_for_select(params[:cp_admin_id].present? ? User.where(_id: params[:cp_admin_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp_admin' }}}} %>
+                          <%= select_tag "cp_admin_id", options_from_collection_for_select(params[:cp_admin_id].present? ? User.where(booking_portal_client_id: current_client.try(:id), _id: params[:cp_admin_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp_admin' }}}} %>
                         </div>
                       <% end %>
 

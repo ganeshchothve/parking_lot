@@ -5,17 +5,17 @@ module SourcingManagerDashboardConcern
     dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
     project_ids = params["project_ids"].try(:split, ",").try(:flatten) || (current_user.project_ids || [])
     fltrs = ActionController::Parameters.new({fltrs: {project_ids: project_ids }})
-    @active_partners = SiteVisit.build_criteria(fltrs).filter_by_scheduled_on(dates).where({"$and": [SiteVisit.user_based_scope(current_user)]}).distinct(:manager_id).count
-    @booking_active_partners = BookingDetail.build_criteria(fltrs).filter_by_booked_on(dates).where({ "$and": [BookingDetail.user_based_scope(current_user), BookingDetail.booking_stages.selector]}).distinct(:manager_id).count
-    @raised_invoices = Invoice.build_criteria(fltrs).filter_by_created_at(dates).where({ "$and": [Invoice.user_based_scope(current_user), status: 'pending_approval']}).count
-    @approved_invoices = Invoice.build_criteria(fltrs).filter_by_created_at(dates).where({ "$and": [Invoice.user_based_scope(current_user), status: 'approved']}).count
+    @active_partners = SiteVisit.where(booking_portal_client_id: current_client.try(:id)).build_criteria(fltrs).filter_by_scheduled_on(dates).where({"$and": [SiteVisit.user_based_scope(current_user)]}).distinct(:manager_id).count
+    @booking_active_partners = BookingDetail.where(booking_portal_client_id: current_client.try(:id)).build_criteria(fltrs).filter_by_booked_on(dates).where({ "$and": [BookingDetail.user_based_scope(current_user), BookingDetail.booking_stages.selector]}).distinct(:manager_id).count
+    @raised_invoices = Invoice.where(booking_portal_client_id: current_client.try(:id)).build_criteria(fltrs).filter_by_created_at(dates).where({ "$and": [Invoice.user_based_scope(current_user), status: 'pending_approval']}).count
+    @approved_invoices = Invoice.where(booking_portal_client_id: current_client.try(:id)).build_criteria(fltrs).filter_by_created_at(dates).where({ "$and": [Invoice.user_based_scope(current_user), status: 'approved']}).count
   end
 
   def invoice_summary
     dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if dates.blank?
     start_date, end_date = dates.split(' - ')
     project_ids = params["project_ids"].try(:split, ",").try(:flatten) || []
-    project_ids = Project.where(id: {"$in": project_ids}).distinct(:id)
+    project_ids = Project.where(booking_portal_client_id: current_client.try(:id)).where(id: {"$in": project_ids}).distinct(:id)
     opt = {}
     opt = {
       matcher:{
@@ -40,7 +40,7 @@ module SourcingManagerDashboardConcern
     @dates = params[:dates]
     @dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if @dates.blank?
     project_ids = params["project_ids"].try(:split, ",").try(:flatten) || (current_user.project_ids || [])
-    project_ids = Project.where(id: {"$in": project_ids}).distinct(:id)
+    project_ids = Project.where(booking_portal_client_id: current_client.try(:id)).where(id: {"$in": project_ids}).distinct(:id)
     start_date, end_date = @dates.split(' - ')
     if ["superadmin","admin"].include?(current_user.role) #Channel Partner Manager Performance Dashboard for admin and superadmin
       @cps = User.where(role: "cp", booking_portal_client_id: current_client.id).filter_by_is_active("true")

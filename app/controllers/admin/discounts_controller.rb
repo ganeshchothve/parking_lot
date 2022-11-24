@@ -5,7 +5,7 @@ class Admin::DiscountsController < AdminController
   # index
   # GET /admin/discounts
   def index
-    @discounts = Discount.all
+    @discounts = Discount.where(booking_portal_client_id: current_client.try(:id))
     @discounts = @discounts.paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
       format.json { render json: @discounts }
@@ -16,7 +16,7 @@ class Admin::DiscountsController < AdminController
   # new
   # GET /admin/discounts/new
   def new
-    @discount = Discount.new
+    @discount = Discount.new(booking_portal_client_id: current_client.try(:id))
     render layout: false
   end
 
@@ -39,7 +39,7 @@ class Admin::DiscountsController < AdminController
   #
   # POST /admin/discounts
   def create
-    @discount = Discount.new
+    @discount = Discount.new(booking_portal_client_id: current_client.try(:id))
     @discount.assign_attributes(permitted_attributes([:admin, @discount]))
     respond_to do |format|
       if @discount.save
@@ -91,7 +91,7 @@ class Admin::DiscountsController < AdminController
   private
 
   def set_discount
-    @discount = Discount.where(id: params[:id]).first
+    @discount = Discount.where(booking_portal_client_id: current_client.try(:id)).where(id: params[:id]).first
   end
 
   def authorize_resource

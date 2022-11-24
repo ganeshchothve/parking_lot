@@ -15,7 +15,7 @@ module BulkUpload
 
       csv.each do |row|
         unit_id = row.field(0).to_s.strip
-        project_unit = ::ProjectUnit.where(id: unit_id).first if unit_id.present?
+        project_unit = ::ProjectUnit.where(booking_portal_client_id: bur.booking_portal_client_id, id: unit_id).first if unit_id.present?
         if project_unit.present?
           begin
             costs = {}
@@ -81,7 +81,7 @@ module BulkUpload
             project_unit.new_blocking_amount = blocking_amount if blocking_amount.present?
 
             if unit_configuration_name.present? && project_unit.unit_configuration_name != unit_configuration_name
-              unit_configuration = UnitConfiguration.where(project_id: project.id).where({'$and': [
+              unit_configuration = UnitConfiguration.where(booking_portal_client_id: bur.booking_portal_client_id, project_id: project.id).where({'$and': [
                 {data_attributes: {'$elemMatch': {n: 'name', v: unit_configuration_name }}},
                 {data_attributes: {'$elemMatch': {n: 'saleable', v: project_unit.saleable}}},
                 {data_attributes: {'$elemMatch': {n: 'carpet', v: project_unit.carpet}}}
@@ -122,7 +122,7 @@ module BulkUpload
             # Update crm ids
             crms.each do |index, crm_id|
               if row[index].to_s.strip.present?
-                _crm = Crm::Base.where(id: crm_id).first
+                _crm = Crm::Base.where(booking_portal_client_id: bur.booking_portal_client_id, id: crm_id).first
                 if _crm
                   if tpr = project_unit.third_party_references.where(crm_id: _crm.id).first.presence
                     tpr.assign_attributes(reference_id: row[index].to_s.strip)

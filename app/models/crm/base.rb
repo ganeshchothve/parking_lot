@@ -47,6 +47,6 @@ class Crm::Base
 
   def self.active_apis(resource)
     _crm_ids = resource.third_party_references.distinct(:crm_id)
-    Crm::Api.where(resource_class: resource.class, is_active: true).where({"$or": [{_type: 'Crm::Api::Get', base_id: {"$in": _crm_ids}}, {_type: 'Crm::Api::Post'}]})
+    Crm::Api.where(booking_portal_client_id: resource.booking_portal_client.try(:id), resource_class: resource.class, is_active: true).where({"$or": [{_type: 'Crm::Api::Get', base_id: {"$in": _crm_ids}}, {_type: 'Crm::Api::Post'}]})
   end
 end

@@ -15,7 +15,7 @@ class UploadErrorsExportWorker
         end
       end
     end
-    ExportMailer.notify(file_name , user.email, "#{bulk_upload_report.asset.try(:document_type)}").deliver
+    ExportMailer.notify(file_name , user.email, "#{bulk_upload_report.asset.try(:document_type)}", user.id.to_s).deliver
   end
 
 end

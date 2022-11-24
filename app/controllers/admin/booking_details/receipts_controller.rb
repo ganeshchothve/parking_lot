@@ -5,7 +5,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
 
   def index
     authorize([:admin, Receipt])
-    @receipts = Receipt.where(booking_detail_id: @booking_detail.id).where(Receipt.user_based_scope(current_user, params))
+    @receipts = Receipt.where(booking_portal_client_id: current_client.try(:id), booking_detail_id: @booking_detail.id).where(Receipt.user_based_scope(current_user, params))
                        .build_criteria(params)
                        .paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
@@ -19,7 +19,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
   # GET "/admin/users/:user_id/booking_details/:booking_detail_id/receipts/new"
   def new
     @amount_hash = {}
-    PaymentType.in(name: Receipt::PAYMENT_TYPES).where(project_id: @project_unit.project_id).map { |x| @amount_hash[x.name.to_sym] = x.value(@project_unit).round }
+    PaymentType.where(booking_portal_client_id: current_client.try(:id)).in(name: Receipt::PAYMENT_TYPES).where(project_id: @project_unit.project_id).map { |x| @amount_hash[x.name.to_sym] = x.value(@project_unit).round }
     @receipt = Receipt.new(
                       creator: current_user,
                       user: @lead.user,
@@ -74,7 +74,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
   # GET "admin/booking_details/:booking_detail_id/receipts/lost_receipt"
   def lost_receipt
     @receipt = Receipt.new({
-      creator: current_user, user_id: @lead.user, lead: @lead, project: @lead.project, payment_mode: 'online'
+      creator: current_user, user_id: @lead.user, lead: @lead, project: @lead.project, payment_mode: 'online', booking_portal_client_id: current_client.try(:id)
     })
     authorize([:admin, @receipt])
     render layout: false
@@ -83,7 +83,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
   private
 
   def set_lead
-    @lead = Lead.where(_id: params[:lead_id]).first
+    @lead = Lead.where(booking_portal_client_id: current_client.try(:id), _id: params[:lead_id]).first
     @lead = @booking_detail.lead unless @lead
     redirect_to home_path(current_user), alert: t("controller.leads.alert.not_found"), status: 404 if @lead.blank?
   end
@@ -94,7 +94,7 @@ class Admin::BookingDetails::ReceiptsController < AdminController
   end
 
   def set_booking_detail
-    @booking_detail = BookingDetail.where(_id: params[:booking_detail_id]).first
+    @booking_detail = BookingDetail.where(booking_portal_client_id: current_client.try(:id), _id: params[:booking_detail_id]).first
     redirect_to root_path, alert: t('controller.booking_details.set_booking_detail_missing'), status: 404 if @booking_detail.blank?
   end
 end
