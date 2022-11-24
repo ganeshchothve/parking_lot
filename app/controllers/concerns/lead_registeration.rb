@@ -19,7 +19,7 @@ module LeadRegisteration
             format.json { render json: {errors: I18n.t("controller.leads.errors.already_exists")}, status: :unprocessable_entity }
           end
         else
-          if selldo_config_base.present?
+          if selldo_config_base(current_client).present?
             @project = Project.new(booking_portal_client_id: current_client.id, name: params["project_name"], selldo_id: params["project_id"]) unless @project.present?
           end
 
@@ -60,7 +60,7 @@ module LeadRegisteration
 
   def save_lead(format, lead, existing=false)
     push_lead_to_selldo(format, lead) do |selldo_api, api_log|
-      if existing || (@user.save && (selldo_config_base.blank? || @project.save))
+      if existing || (@user.save && (selldo_config_base(@user.booking_portal_client).blank? || @project.save))
         lead.assign_attributes(selldo_lead_registration_date: params.dig(:lead_details, :lead_created_at))
         lead.assign_attributes(permitted_attributes([:admin, lead])) if params[:lead].present?
 
@@ -166,21 +166,21 @@ module LeadRegisteration
 
   def set_project
     if params["project_id"].present?
-      if selldo_config_base.present?
-        @project = Project.where(booking_portal_client_id: current_client.try(:id), selldo_id: params["project_id"]).first
+      if selldo_config_base(current_client).present?
+        @project = Project.where(selldo_id: params["project_id"], booking_portal_client_id: current_client.id).first
       else
-        @project = Project.where(booking_portal_client_id: current_client.try(:id), id: params['project_id']).first
+        @project = Project.where(id: params['project_id'], booking_portal_client_id: current_client.id).first
       end
     end
   end
 
   def set_user
     if params[:lead_id]
-      @lead = Lead.where(booking_portal_client_id: current_client.try(:id), id: params[:lead_id]).first
+      @lead = Lead.where(id: params[:lead_id], booking_portal_client_id: current_client.id).first
       @user = @lead.user
     else
       _query = get_query
-      @user = User.or(_query).first if _query.present?
+      @user = User.where(booking_portal_client_id: current_client.id).or(_query).first if _query.present?
       render json: {errors: I18n.t("controller.users.errors.already_registered") }, status: :unprocessable_entity and return if @user.present? && !@user.buyer?
     end
   end
@@ -189,7 +189,7 @@ module LeadRegisteration
     if params[:lead_id]
       render json: {errors: I18n.t("controller.leads.errors.already_exists") }, status: :unprocessable_entity and return if @user.leads.where(project_id: @project.id).present?
     else
-      leads = Lead.or(get_query).where(booking_portal_client_id: current_client.try(:id))
+      leads = Lead.where(booking_portal_client_id: current_client.id).or(get_query)
       if @project.present?
         @lead = leads.where({project_id: @project.id}).first
       end

@@ -239,7 +239,7 @@ class ProjectUnit
       { id: 'hold', text: 'Hold' },
       { id: 'blocked', text: 'Blocked' }
     ]
-    # if current_client.enable_company_users?
+    # if self.booking_portal_client.enable_company_users?
     #   out += [
     #     { id: 'management', text: 'Management Blocking' },
     #     { id: 'employee', text: 'Employee Blocking' }

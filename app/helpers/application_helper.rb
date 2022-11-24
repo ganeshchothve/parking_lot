@@ -78,16 +78,14 @@ module ApplicationHelper
 
   def current_client
     return @current_client if @current_client.present?
-    @current_client = if current_project.present?
-                        @current_project.booking_portal_client
-                      elsif current_domain
-                        Client.in(booking_portal_domains: current_domain).first
-                      end
-    if @current_client.blank? && defined?(current_user) && current_user.present?
-      @current_client = if current_user.role?('superadmin')
-                          (Client.where(id: current_user.selected_client_id).first || current_user.booking_portal_client)
-                        else
-                          current_user.booking_portal_client
+    if defined?(current_user) && current_user.present?
+      @current_client = current_user.booking_portal_client
+    end
+    if @current_client.blank?
+      @current_client = if current_project.present?
+                          @current_project.booking_portal_client
+                        elsif current_domain
+                          Client.in(booking_portal_domains: current_domain).first
                         end
     end
     @current_client
@@ -97,7 +95,9 @@ module ApplicationHelper
     return @current_project if @current_project.present?
     # TODO: for now we are considering one project per client only so loading first client project here
     if current_domain
-      @current_project = Project.in(booking_portal_domains: current_domain).first
+      @current_project = Project.in(booking_portal_domains: current_domain)
+      @current_project = @current_project.where(booking_portal_client_id: current_user.booking_portal_client_id) if current_user.present?
+      @current_project = @current_project.first
     end
     @current_project
   end
@@ -116,13 +116,17 @@ module ApplicationHelper
   def marketplace?
     valid = current_client.try(:kylas_tenant_id).present?
     unless valid
-      valid = request.host == ENV_CONFIG[:marketplace_host].to_s
+      valid = marketplace_host? || embedded_marketplace?
     end
     valid
   end
 
-  def marketplace_layout?
+  def marketplace_host?
     request.host == ENV_CONFIG[:marketplace_host].to_s
+  end
+
+  def marketplace_layout?
+    marketplace_host?
   end
 
   # Kylas i-Frame URL

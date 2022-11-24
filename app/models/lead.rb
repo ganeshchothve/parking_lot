@@ -319,7 +319,6 @@ class Lead
       end
       #
       # Send email with payment link
-      current_client = client
       email_template = ::Template::EmailTemplate.where(booking_portal_client_id: self.booking_portal_client_id, name: "payment_link", project_id: self.project_id).first
       if email_template.present?
         email = Email.create!({

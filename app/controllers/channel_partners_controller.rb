@@ -65,12 +65,13 @@ class ChannelPartnersController < ApplicationController
     query = []
     query << { phone: params.dig(:channel_partner, :phone) } if params.dig(:channel_partner, :phone).present?
     query << { email: params.dig(:channel_partner, :email) } if params.dig(:channel_partner, :email).present?
-    @cp_user = User.in(role: %w(channel_partner cp_owner)).or(query).where(booking_portal_client_id: current_client.try(:id)).first
+    @cp_user = User.where(booking_portal_client_id: current_client.id).in(role: %w(channel_partner cp_owner)).or(query).first
     if @cp_user.present?
       if !@cp_user.is_active?
         if @channel_partner.blank?
           # Create Channel partner company if blank & put cp_user under it
           @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
+          @channel_partner.assign_attributes(booking_portal_client_id: current_client.id)
           @channel_partner.assign_attributes(srd: cookies[:srd]) if cookies[:srd].present?
           respond_to do |format|
             if @channel_partner.save
@@ -87,6 +88,7 @@ class ChannelPartnersController < ApplicationController
           # Do not allow to change company on inactive cp accounts through registration. Only owner of respective companies can add such accounts under a company.
           @cp_owner = User.cp_owner.where(channel_partner_id: @channel_partner.id, booking_portal_client_id: current_client.try(:id)).first
           @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
+          @channel_partner.assign_attributes(booking_portal_client_id: current_client.id)
           respond_to do |format|
             err_msg = t('controller.channel_partners.create.not_allowed_message', owner_name: @cp_owner&._name || 'Admin')
             flash.now[:alert] = err_msg
@@ -96,6 +98,7 @@ class ChannelPartnersController < ApplicationController
         end
       else
         @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
+        @channel_partner.assign_attributes(booking_portal_client_id: current_client.id)
         respond_to do |format|
           err_msg = t('controller.channel_partners.create.already_present_and_active_msg', company_name: @cp_user.channel_partner&.company_name)
           flash.now[:alert] = err_msg
@@ -106,6 +109,7 @@ class ChannelPartnersController < ApplicationController
     else
       if @channel_partner.blank?
         @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
+        @channel_partner.assign_attributes(booking_portal_client_id: current_client.id)
         @channel_partner.assign_attributes(srd: cookies[:srd]) if cookies[:srd].present?
         respond_to do |format|
           if @channel_partner.save
@@ -121,6 +125,7 @@ class ChannelPartnersController < ApplicationController
       else
         @cp_owner = User.cp_owner.where(channel_partner_id: @channel_partner.id,booking_portal_client_id: current_client.try(:id)).first
         @channel_partner = ChannelPartner.new(permitted_attributes([:admin, ChannelPartner.new]))
+        @channel_partner.assign_attributes(booking_portal_client_id: current_client.id)
         respond_to do |format|
           err_msg = t('controller.channel_partners.create.not_allowed_message', owner_name: @cp_owner&._name || 'Admin')
           flash.now[:alert] = err_msg

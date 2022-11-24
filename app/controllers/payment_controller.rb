@@ -13,9 +13,10 @@ class PaymentController < ApplicationController
       @receipt = Receipt.where(booking_portal_client_id: current_client.try(:id)).where(payment_identifier: params[:receipt_id]).first
       unless @receipt.present?
         if current_user.buyer?
+          flash[:alert] = I18n.t('app.errors.payment_error')
           sign_out current_user and redirect_to root_path
         else
-          redirect_to home_path(current_user), notice: 'No pending receipt found.'
+          redirect_to home_path(current_user), alert: I18n.t('app.errors.payment_error')
         end
       end
     end

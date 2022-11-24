@@ -825,22 +825,22 @@ class User
       criteria
     end
 
-    def buyer_roles(current_client = nil)
-      if current_client.present? && current_client.enable_company_users?
+    def buyer_roles(client = nil)
+      if client.present? && client.enable_company_users?
         BUYER_ROLES
       else
         ['user']
       end
     end
 
-    def available_roles(current_client)
-      if current_client.present? && current_client.kylas_tenant_id.present?
+    def available_roles(client)
+      if client.present? && client.kylas_tenant_id.present?
         roles = KYLAS_MARKETPALCE_USERS + BUYER_ROLES
       else
         roles = ADMIN_ROLES + BUYER_ROLES
       end
-      roles -= CHANNEL_PARTNER_USERS unless current_client.try(:enable_channel_partners?)
-      roles -= COMPANY_USERS unless current_client.try(:enable_company_users?)
+      roles -= CHANNEL_PARTNER_USERS unless client.try(:enable_channel_partners?)
+      roles -= COMPANY_USERS unless client.try(:enable_company_users?)
       roles
     end
 
@@ -958,11 +958,11 @@ class User
           user.first_name = oauth_data.extra.first_name if user.first_name.blank?
           user.last_name = oauth_data.extra.last_name if user.last_name.blank?
           user.phone = oauth_data.extra.phone if user.phone.blank?
-          user.booking_portal_client ||= (client || current_client)
+          user.booking_portal_client ||= client
           user.confirmed_at = Time.now unless user.confirmed?
           user.role = role
         end
-        if user.save
+        if user.save!
           user.update_selldo_credentials(oauth_data)
           user
         end

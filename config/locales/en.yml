@@ -4023,3 +4023,8 @@ en:
 
       multi_page: "Displaying %{model} %{from} - %{to} of %{count} in total"
       multi_page_html: "Displaying %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> of <b>%{count}</b> in total"
+
+  app:
+    errors:
+      marketplace_error: 'We encountered some issue with your Marketplace setup. Please connect with Kylas Customer Success'
+      payment_error: 'No receipt found'

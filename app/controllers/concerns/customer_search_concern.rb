@@ -73,7 +73,7 @@ module CustomerSearchConcern
     #  _lead.temporarily_block_manager(channel_partner.associated_user_id) if channel_partner.present?
     #end
 
-    SelldoSitevisitUpdateWorker.new.perform(_lead.id, current_user.id, _sitevisit.id, params[:cp_code]) if _lead.save && _lead.lead_id && _sitevisit.present?
+    SelldoSitevisitUpdateWorker.new.perform(current_client.id, _lead.id, current_user.id, _sitevisit.id, params[:cp_code]) if _lead.save && _lead.lead_id && _sitevisit.present?
 
     if !_lead.queued? && _lead.queued!
       @customer_search.assign_attributes(step: 'queued')

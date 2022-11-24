@@ -30,7 +30,7 @@
 
         <div class="mb-3">
           <%= f.label :can_be_applied_by, class: '' %>
-          <%= f.select :can_be_applied_by, filter_user_role_options, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: "multiple", disabled: !policy([:admin, @scheme]).editable_field?("can_be_applied_by") %>
+          <%= f.select :can_be_applied_by, filter_user_role_options(current_client), {prompt: I18n.t("global.select")}, class: 'selectize', multiple: "multiple", disabled: !policy([:admin, @scheme]).editable_field?("can_be_applied_by") %>
         </div>
         <div class="mb-3">
           <%= f.label :default_for_users, class: 'control-label' %>

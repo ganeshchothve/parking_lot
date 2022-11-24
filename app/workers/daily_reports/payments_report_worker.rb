@@ -3,9 +3,10 @@ module DailyReports
     include Sidekiq::Worker
     include ApplicationHelper
 
-    def perform
-      client = current_client
-      if client.enable_daily_reports['payments_report']
+    def perform client_id
+      return if client_id.blank?
+      client = Client.where(id: client_id).first
+      if client && client.enable_daily_reports['payments_report']
         # Send daily report email
         filters = {
           status: %w(clearance_pending success),
