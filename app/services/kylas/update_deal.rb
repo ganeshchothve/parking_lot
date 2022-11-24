@@ -5,144 +5,28 @@ require 'net/http'
 module Kylas
   # Used for update deal
   class UpdateDeal < BaseService
-    attr_reader :user, :entity_id, :params
+    attr_reader :user, :entity, :params
 
-    def initialize(user, entity_id, params = {})
+    def initialize(user, entity, params = {})
       @user = user
-      @entity_id = entity_id
-      @params = params.with_indifferent_access
+      @entity = entity
+      @params = params
     end
 
     def call
-      return if user.blank? || entity_id.blank? || params.blank?
+      return if user.blank? || entity.blank?
 
-      url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/deals/#{entity_id}")
-
-      https = Net::HTTP.new(url.host, url.port)
-      https.use_ssl = true
-      request = Net::HTTP::Patch.new(url, request_headers)
-      payload = deal_payload
-      request.body = JSON.dump(
-        {
-            'deal': payload,
-            'executeWorkflow': true,
-            'sendNotification': false
-        }
-      )
-      response = https.request(request)
-      api_log = ApiLog.new
-      case response
-      when Net::HTTPOK, Net::HTTPSuccess
-        api_log.assign_attributes(request_url: url, request: [payload], response: [(JSON.parse(response.body) rescue {})], resource: user, response_type: "Hash", booking_portal_client: user.booking_portal_client)
-        api_log.save
-        # dump_kylas_contact_id
-        response = JSON.parse(response.body)
-        { success: true, data: response }
-      when Net::HTTPBadRequest
-        Rails.logger.error 'UpdateDeal - 400'
-        api_log.assign_attributes(request_url: url, request: ([(payload rescue {})]), response: [(JSON.parse(response.message) rescue {})], resource: user, response_type: "Hash", booking_portal_client: user.booking_portal_client)
-        api_log.save
-        { success: false, error: 'Invalid Data!' }
-      when Net::HTTPNotFound
-        Rails.logger.error 'UpdateDeal - 404'
-        api_log.assign_attributes(request_url: url, request: ([(payload rescue {})]), response: [(JSON.parse(response.message) rescue 'Invalid Data!')], resource: user, response_type: "Hash", booking_portal_client: user.booking_portal_client)
-        api_log.save
-        { success: false, error: 'Invalid Data!' }
-      when Net::HTTPServerError
-        Rails.logger.error 'UpdateDeal - 500'
-        api_log.assign_attributes(request_url: url, request: ([(payload rescue {})]), response: [(JSON.parse(response.message) rescue 'Server Error!')], resource: user, response_type: "Hash", booking_portal_client: user.booking_portal_client)
-        api_log.save
-        { success: false, error: 'Server Error!' }
-      when Net::HTTPUnauthorized
-        Rails.logger.error 'UpdateDeal - 401'
-        api_log.assign_attributes(request_url: url, request: ([(payload rescue {})]), response: [(JSON.parse(response.message) rescue 'Unauthorized')], resource: user, response_type: "Hash", booking_portal_client: user.booking_portal_client)
-        api_log.save
-        { success: false, error: 'Unauthorized' }
-      else
-        api_log.assign_attributes(request_url: url, request: ([(payload rescue {})]), response: [(JSON.parse(response.message) rescue 'Internal server error!')], resource: user, response_type: "Hash", booking_portal_client: user.booking_portal_client)
-        api_log.save
-        { success: false }
+      kylas_base = Crm::Base.where(domain: ENV_CONFIG.dig(:kylas, :base_url), booking_portal_client_id: user.booking_portal_client.id).first
+      if kylas_base
+        api = Crm::Api::Put.where(base_id: kylas_base.id, resource_class: 'BookingDetail', is_active: true, booking_portal_client_id: user.booking_portal_client.id).first
+        if api.present?
+          if params[:run_in_background]
+            response = Kylas::Api::ExecuteWorker.perform_async(user.id, api.id, 'BookingDetail', entity.id, params)
+          else
+            response = Kylas::Api::ExecuteWorker.new.perform(user.id, api.id, 'BookingDetail', entity.id, params)
+          end
+        end
       end
     end
-
-    private
-    def deal_payload
-      begin
-        deal_params = {}
-        if params[:contact].present?
-          deal_params = update_contact
-        end
-        if params[:product].present?
-          deal_params = update_product
-        end
-        if params[:pipeline].present?
-          deal_params = update_pipeline
-        end
-        deal_params
-      rescue StandardError => e
-        Rails.logger.error { e.message.to_s }
-        { }
-      end
-    end
-
-    # save kylas contact id to user
-    def dump_kylas_contact_id
-      if params[:contact].present?
-        lead = Lead.where(kylas_deal_id: entity_id).first
-        user = lead.user
-        contact = params[:contact].with_indifferent_access
-        user.update(kylas_contact_id: contact[:id])
-      end
-    end
-
-    def update_contact
-      contact = params[:contact]
-      contact_payload = {
-        associatedContacts:{
-          operation: "ADD",
-          values: [contact]
-        }
-      }
-      contact_payload
-    end
-
-    def update_pipeline
-      pipeline = params[:pipeline].with_indifferent_access
-      pipeline_payload = {
-        pipeline: {
-            id: pipeline[:pipeline_id],
-            stage: {
-                id: pipeline[:pipeline_stage_id]
-            }
-        }
-      }
-      pipeline_payload
-    end
-
-    def update_product
-      products = params[:product].try(:is_a?, Array) ? params[:product] : [params[:product]]
-      products_payload =  {
-        products: {
-          operation: 'ADD', 
-          values: products.collect{ |product|
-            {
-              id: product['id'],
-              name: product['name'], 
-              quantity: 1,
-              price: {
-                currencyId: product.dig('price','currency' ,'id') || product.dig('price', 'currencyId'),
-                value: product.dig('price','value').to_f
-              },
-              discount: {
-                type: 'PERCENTAGE', 
-                value: 0.0
-              }
-            }
-          }
-        }
-      }
-      products_payload
-    end
-
   end
 end

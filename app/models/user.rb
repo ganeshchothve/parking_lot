@@ -911,7 +911,7 @@ class User
         custom_scope[:'$or'] = [{manager_id: user.id}, {manager_id: nil, referenced_manager_ids: user.id, iris_confirmation: false}]
       elsif user.role?('cp_owner')
         if user.channel_partner_id.present?
-          custom_scope = { role: {'$in': ['channel_partner', 'cp_owner']}, channel_partner_id: user.channel_partner_id }
+          custom_scope = { role: {'$in': ['channel_partner', 'cp_owner']}, '$or': [{channel_partner_id: user.channel_partner_id}, {temp_channel_partner_id: user.channel_partner_id}] }
         else
           custom_scope = { id: user.id }
         end

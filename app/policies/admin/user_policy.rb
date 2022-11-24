@@ -20,7 +20,7 @@ class Admin::UserPolicy < UserPolicy
       elsif user.role?('channel_partner')
         false
       elsif user.role?('cp_owner')
-        record.role.in?(%w(cp_owner channel_partner))
+        record.role.in?(%w(cp_owner channel_partner)) && record.user_status_in_company.in?(%w(active))
       elsif user.role?('sales_admin')
         record.role?('sales') && !marketplace_client?
       elsif user.role?('cp_admin') && !marketplace_client?
@@ -47,7 +47,7 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def edit?
-    super || new?(true) || marketplace_client?
+    super || new?(true)
   end
 
   def confirm_user?
@@ -150,11 +150,15 @@ class Admin::UserPolicy < UserPolicy
   def change_state?
     (
       user.role.in?(%w(cp_owner)) && user.id != record.id &&
-      record.user_status_in_company.in?(%w(active pending_approval)) && user.channel_partner.primary_user.id != record.id
+      record.user_status_in_company.in?(%w(active)) && user.channel_partner.primary_user.id != record.id
     ) || (
-      user.role.in?(%w(cp cp_admin superadmin)) &&
+      user.role.in?(%w(cp cp_admin superadmin admin)) &&
       record.user_status_in_company.in?(%w(pending_approval))
     )
+  end
+
+  def approve_reject_company_user?
+    user.role?('cp_owner') && record.user_status_in_company == 'pending_approval' && record.temp_channel_partner_id == user.channel_partner_id
   end
 
   def update_player_ids?
@@ -214,9 +218,10 @@ class Admin::UserPolicy < UserPolicy
       attributes += [:upi_id]
       attributes += [:referral_code] if record.new_record?
       attributes += [:channel_partner_id] if user.present? && user.role.in?(%w(cp_owner admin))
-      attributes += [fund_accounts_attributes: FundAccountPolicy.new(user, FundAccount.new).permitted_attributes] if record.persisted?
+      attributes += [fund_accounts_attributes: FundAccountPolicy.new(user, FundAccount.new).permitted_attributes] if record.persisted? && record.user_status_in_company.in?(%w(active))
       attributes += [:rejection_reason]
     end
+    attributes += [:user_status_in_company_event] if user.present? && user.role?('cp_owner') && record.user_status_in_company == 'pending_approval' && record.temp_channel_partner_id == user.channel_partner_id
     attributes += [:login_otp] if confirm_via_otp?
     attributes.uniq
   end

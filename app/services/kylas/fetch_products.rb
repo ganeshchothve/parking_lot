@@ -38,7 +38,7 @@ module Kylas
     def fetch_products_request(data = {})
       begin
         page = data[:page] || 0
-        url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/products/search?sort=updatedAt,desc&page=#{page}&size=100")
+        url = URI(base_url+"/products/search?sort=updatedAt,desc&page=#{page}&size=100")
         https = Net::HTTP.new(url.host, url.port)
         https.use_ssl = true
         post_request = Net::HTTP::Post.new(url, request_headers)

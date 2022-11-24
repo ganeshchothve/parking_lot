@@ -51,8 +51,8 @@ class Admin::Crm::ApiController < ApplicationController
 
   def show_response
     @api = Crm::Api.where(id: params[:api_id], booking_portal_client_id: current_client.try(:id)).first
-    @resource = @api.resource_class.constantize.find params[:resource_id]
-    @response = @api.execute(@resource)
+    @resource = @api.resource_class.constantize.where(id: params[:resource_id]).first if params[:resource_id].present?
+    @response = @api.execute(@resource) if @resource.present?
     if request.xhr?
       render layout: false
     else
@@ -68,7 +68,7 @@ class Admin::Crm::ApiController < ApplicationController
   end
 
   def set_crm
-    @crm = ::Crm::Base.where(booking_portal_client_id: current_client.try(:id), id: params[:base_id]).first
+    @crm = ::Crm::Base.where(id: params[:base_id], booking_portal_client_id: current_client.id).first if params[:base_id].present?
   end
 
   def authorize_resource

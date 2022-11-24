@@ -13,7 +13,7 @@ module Kylas
     end
 
     def call
-      url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/configurations/uniqueness/#{entity}")
+      url = URI(base_url+"/configurations/uniqueness/#{entity}")
 
       https = Net::HTTP.new(url.host, url.port)
       https.use_ssl = true

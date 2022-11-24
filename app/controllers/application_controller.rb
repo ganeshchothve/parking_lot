@@ -68,18 +68,8 @@ class ApplicationController < ActionController::Base
   end
 
   def current_dashboard_path
-    if is_marketplace?
-      if embedded_marketplace?
-        not_authorized_path
-      elsif current_user.role?('dev_sourcing_manager')
-        admin_site_visits_path
-      else
-        if current_user.role.in?(%w(sales sales_admin))
-          admin_projects_path
-        else
-          admin_users_path
-        end
-      end
+    if is_marketplace? && embedded_marketplace?
+      not_authorized_path
     else
       dashboard_path
     end

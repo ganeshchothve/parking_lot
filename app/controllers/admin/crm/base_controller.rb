@@ -66,7 +66,7 @@ class Admin::Crm::BaseController < ApplicationController
   private
 
   def set_crm
-    @crm = ::Crm::Base.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first
+    @crm = ::Crm::Base.where(id: params[:id], booking_portal_client_id: current_client.id).first if params[:id].present?
   end
 
   def authorize_resource

@@ -59,11 +59,11 @@ module SiteVisitStateMachine
     end
 
     def can_approve?
-      scheduled_on < Time.now
+      scheduled_on < Time.now if scheduled_on.present?
     end
 
     def can_reject?
-      scheduled_on < Time.now
+      scheduled_on < Time.now if scheduled_on.present?
     end
 
     def mark_conducted

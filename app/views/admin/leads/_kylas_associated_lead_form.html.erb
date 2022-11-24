@@ -1,4 +1,4 @@
-<% 
+<%
   kylas_products = {}
   kylas_products['Deal Product'] = @deal_associated_products if @deal_associated_products.present?
   kylas_products['Other Products'] = (@kylas_products | @deal_associated_products) - (@kylas_products & @deal_associated_products) if @kylas_products.present?
@@ -6,15 +6,14 @@
 
 <%= f.hidden_field :kylas_deal_id, value: @lead.kylas_deal_id %>
 <div class="mb-3">
-    <%= f.label :kylas_product, class: 'label-required' %>
-    <%= f.select :kylas_product_id, grouped_options_for_select(kylas_products), { include_blank: 'Select Kylas Product'}, autocomplete: 'off', class: 'selectize', required: true, disabled: !(policy([current_user_role_group, @lead]).editable_field?("project_id")) %>
+  <%= f.label :kylas_product, class: 'label-required' %>
+  <%= f.select :kylas_product_id, grouped_options_for_select(kylas_products), { include_blank: 'Select Kylas Product'}, autocomplete: 'off', class: 'selectize', required: true, disabled: !(policy([current_user_role_group, @lead]).editable_field?("project_id")) %>
 </div>
 
 <div class="mb-3">
-    <%= f.label :kylas_contact, class: 'label-required' %>
-    <%= f.select :kylas_contact_id, options_for_select(@deal_associated_contacts), { include_blank: 'Select Kylas Contact'}, autocomplete: 'off', class: 'selectize', required: true %>
+  <%= f.label :kylas_contact, class: 'label-required' %>
+  <%= f.select :kylas_contact_id, options_for_select(@deal_associated_contacts), { include_blank: 'Select Kylas Contact'}, autocomplete: 'off', class: 'selectize', required: true %>
 </div>
-
 
 <div class="mb-3">
   <%= f.label :first_name, class: 'label-required' %>
@@ -26,15 +25,25 @@
   <%= f.text_field :last_name, class: 'form-control', autofocus: true, required: true, readonly: true %>
 </div>
 
-<div class="mb-3">
+<div class="mb-3 hidden email-select">
   <%= f.label :email %>
-  <%= f.select :email, options_for_select([]), { include_blank: 'Select Kylas Email'}, autocomplete: 'off', class: 'selectize email_select', disabled: !(policy([current_user_role_group, @lead]).editable_field?("email")) %>
+  <%= f.select :email, options_for_select([]), { include_blank: 'Select Kylas Email'}, autocomplete: 'off', class: 'selectize email_select', disabled: true, hidden: true %>
 </div>
+<div class="mb-3 hidden email-text">
+  <%= f.label :email %>
+  <%= f.email_field :email, class: 'form-control', id: 'new_lead_email', disabled: true, hidden: true %>
+</div>
+<%= f.hidden_field :email_update, value: true, disabled: true %>
 
-<div class="mb-3">
+<div class="mb-3 hidden phone-select">
   <%= f.label :phone %>
-  <%= f.select :phone, options_for_select([]),  { include_blank: 'Select Kylas Phone'}, autocomplete: 'off', class: 'selectize phone_select', disabled: !(policy([current_user_role_group, @lead]).editable_field?("phone")) %>
+  <%= f.select :phone, options_for_select([]),  { include_blank: 'Select Kylas Phone'}, autocomplete: 'off', class: 'selectize phone_select', disabled: true, hidden: true %>
 </div>
+<div class="mb-3 hidden phone-text">
+  <%= f.label :phone, class: 'form-label' %>
+  <%= f.text_field :phone, class: 'form-control phone', id: 'new_lead_phone', disabled: true, hidden: true %>
+</div>
+<%= f.hidden_field :phone_update, value: true, disabled: true %>
 
 <% if (policy([current_user_role_group, @lead]).editable_field?("manager_id")) %>
   <div class="mb-3">
@@ -44,5 +53,70 @@
 <% end %>
 
 <div class="text-end">
-    <%= f.submit "Save", class: 'btn btn-primary float-end w-auto border-primary' %>
+  <%= f.submit "Save", class: 'btn btn-primary float-end w-auto border-primary' %>
 </div>
+
+<%= javascript_tag do %>
+  $(document).ready(function(selector){
+    var contact_details = <%= raw @contact_details.to_json %>;
+
+    $('#lead_kylas_contact_id').change(function(e){
+      var contactId = $(e.currentTarget).val();
+      var contact = contact_details.data.find(function(contact){
+        return contact.id == contactId;
+      });
+
+      if(contact){
+        $('#lead_first_name').val(contact.firstName);
+        $('#lead_last_name').val(contact.lastName);
+
+        email_options = _.map(contact.emails, function(d) { return { value: d.value, text: d.value } });
+        phone_options = _.map(contact.phoneNumbers, function(d) { return { value: (d.dialCode+d.value), text: (d.dialCode+d.value) } });
+
+        var emailSelectize = $('#lead_email')[0].selectize;
+        $('.email-text').addClass('hidden');
+        $('#new_lead_email').attr('disabled', 'disabled').attr('hidden', true);
+        $('#lead_email_update').attr('disabled', 'disabled');
+        $('.email-select').addClass('hidden');
+        emailSelectize.disable();
+        emailSelectize.setValue('');
+        emailSelectize.clearOptions();
+
+        if (!_.isEmpty(email_options)){
+          $('.email-select').removeClass('hidden');
+          emailSelectize.enable();
+          emailSelectize.setValue('');
+          emailSelectize.clearOptions();
+          emailSelectize.addOption(email_options);
+          emailSelectize.refreshOptions(false);
+        }else{
+          $('.email-text').removeClass('hidden');
+          $('#new_lead_email').removeAttr('disabled').removeAttr('hidden');
+          $('#lead_email_update').removeAttr('disabled');
+        }
+
+        var phoneSelectize = $('#lead_phone')[0].selectize;
+        $('.phone-text').addClass('hidden');
+        $('#new_lead_phone').attr('disabled', 'disabled').attr('hidden', true);
+        $('#lead_phone_update').attr('disabled', 'disabled');
+        $('.phone-select').addClass('hidden');
+        phoneSelectize.disable();
+        phoneSelectize.setValue('');
+        phoneSelectize.clearOptions();
+
+        if (!_.isEmpty(phone_options)){
+          $('.phone-select').removeClass('hidden');
+          phoneSelectize.enable();
+          phoneSelectize.setValue('');
+          phoneSelectize.clearOptions();
+          phoneSelectize.addOption(phone_options);
+          phoneSelectize.refreshOptions(false);
+        }else{
+          $('.phone-text').removeClass('hidden');
+          $('#new_lead_phone').removeAttr('disabled').removeAttr('hidden');
+          $('#lead_phone_update').removeAttr('disabled');
+        }
+      }
+    });
+  });
+<% end %>

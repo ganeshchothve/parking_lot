@@ -61,6 +61,7 @@ class Admin::SiteVisitsController < AdminController
     respond_to do |format|
       if selldo_api.blank? || (api_log.present? && api_log.status == 'Success')
         if @site_visit.save
+          Kylas::SyncSiteVisitWorker.perform_async(@site_visit.id.to_s)
           flash[:notice] = I18n.t("controller.site_visits.notice.created")
           url = admin_lead_path(@lead)
           format.json { render json: @site_visit, location: url }

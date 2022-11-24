@@ -68,7 +68,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def note_create?
-    unless marketplace_client?
+    if marketplace_client?
       user.role.in?(%w(superadmin channel_partner cp_owner)) && record.user.role.in?(User::BUYER_ROLES)
     else
       false
@@ -148,10 +148,6 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def create_kylas_associated_lead?
-    new_kylas_associated_lead?
-  end
-
-  def deal_associated_contact_details?
     new_kylas_associated_lead?
   end
 
