@@ -14,7 +14,7 @@ module Kylas
     end
 
     def call
-      return if user.blank? || contact.blank? || request_headers.blank? || kylas_contact_id.blank?
+      return if user.blank? || contact.blank? || request_headers.blank?
       if options[:check_uniqueness]
         response = Kylas::FetchUniquenessStrategy.new('contact', user).call
         if response[:success]
