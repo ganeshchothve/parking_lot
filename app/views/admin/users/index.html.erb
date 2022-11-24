@@ -73,11 +73,13 @@
 
 <%= javascript_tag do %>
   $(document).ready(function(){
-    var client = <%= raw current_user.booking_portal_client.to_json %>;
-    if (!client['sync_user'])
+    if (!App.client.sync_user)
     {
       setInterval(function(){
-        location.reload();
+        var href = window.location.href;
+        if (!(href.indexOf("remote-state=") != -1)) {
+          location.reload();
+        }
       }, 10000)
     }
   });

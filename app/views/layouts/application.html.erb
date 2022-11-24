@@ -23,7 +23,7 @@
       <% if user_signed_in? %>
         App.current_user = <%= raw current_user.to_json(only: [:_id, :kylas_user_id, :email, :phone, :lead_id, :role, :first_name, :last_name]) %>;
         App.current_user.name = App.current_user.first_name + " " + App.current_user.last_name;
-        App.client = <%= raw current_user.booking_portal_client.to_json(only: [:name, :_id, :preferred_login]) %>;
+        App.client = <%= raw current_user.booking_portal_client.to_json(only: [:name, :_id, :preferred_login, :sync_product, :sync_user]) %>;
         App.client.enable_actual_inventory = <%= current_user.booking_portal_client.enable_actual_inventory?(current_user) %>
       <% end %>
       <% if Rails.env.development? || Rails.env.staging? %>
