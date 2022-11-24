@@ -34,7 +34,7 @@ module Kylas
     def fetch_users_request(data = {})
       begin
         page = data[:page] || 0
-        url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/users/search?sort=updatedAt,desc&page=#{page}&size=100")
+        url = URI(base_url+"/users/search?sort=updatedAt,desc&page=#{page}&size=100")
         https = Net::HTTP.new(url.host, url.port)
         https.use_ssl = true
         post_request = Net::HTTP::Post.new(url)
