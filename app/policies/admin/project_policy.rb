@@ -10,7 +10,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def asset_create?
-    %w[superadmin admin sales_admin].include?(user.role)
+    %w[superadmin admin sales_admin sales].include?(user.role)
   end
 
   def asset_update?

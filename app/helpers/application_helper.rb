@@ -135,8 +135,16 @@ module ApplicationHelper
   end
 
   def available_templates(subject_class, subject_class_resource)
-    project_id = (subject_class == 'Project' ? subject_class_resource.id : subject_class_resource.try(:project_id))
-    custom_templates = ::Template::CustomTemplate.where(subject_class: subject_class, booking_portal_client_id: subject_class_resource.booking_portal_client_id, is_active: true).in(project_ids: [project_id, []]).pluck(:name, :id)
+    project_ids = case subject_class
+    
+    when "Project"
+      subject_class_resource.id
+    when "VariableIncentiveScheme"
+      subject_class_resource.project_ids
+    else
+      subject_class_resource.try(:project_id)
+    end
+    custom_templates = ::Template::CustomTemplate.where(subject_class: subject_class, booking_portal_client_id: subject_class_resource.booking_portal_client_id, is_active: true).filter_by_project_ids(project_ids).pluck(:name, :id)
     custom_templates
   end
 

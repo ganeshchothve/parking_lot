@@ -10,13 +10,13 @@ class Admin::SchemesController < AdminController
 
 
   def new
-    @scheme = Scheme.new(created_by: current_user, booking_portal_client_id: current_user.booking_portal_client_id)
+    @scheme = Scheme.new(created_by: current_user, booking_portal_client_id: current_client.id)
     authorize [:admin, @scheme]
     render layout: false
   end
 
   def create
-    @scheme = Scheme.new(created_by: current_user, booking_portal_client_id: current_user.booking_portal_client_id)
+    @scheme = Scheme.new(created_by: current_user, booking_portal_client_id: current_client.id)
     modify_params
     @scheme.assign_attributes(permitted_attributes([:admin, @scheme]))
 

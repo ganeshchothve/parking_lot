@@ -27,7 +27,7 @@ class Admin::ReceiptsController < AdminController
                       payment_mode: 'cheque',
                       payment_type: 'token',
                       total_amount: current_client.blocking_amount,
-                      booking_portal_client_id: @lead.booking_portal_client_id
+                      booking_portal_client_id: current_client.id
                     )
     authorize([:admin, @receipt])
     render layout: false
@@ -53,7 +53,7 @@ class Admin::ReceiptsController < AdminController
                       lead: @lead,
                       creator: current_user,
                       project: @lead.project,
-                      booking_portal_client_id: @lead.booking_portal_client_id
+                      booking_portal_client_id: current_client.id
                       )
     @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
     @receipt.payment_gateway = current_client.payment_gateway if @receipt.payment_mode == 'online'

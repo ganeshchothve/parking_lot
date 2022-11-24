@@ -20,9 +20,9 @@ class User
   ALLOWED_UTM_KEYS = %i[utm_campaign utm_source utm_sub_source utm_content utm_medium utm_term]
   BUYER_ROLES = %w[user employee_user management_user]
   ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre billing_team team_lead account_manager_head account_manager cp_owner dev_sourcing_manager]
-  ALL_PROJECT_ACCESS = %w[superadmin admin cp cp_admin billing_team]
-  # SELECTED_PROJECT_ACCESS = %w[sales sales_admin gre crm team_lead dev_sourcing_manager account_manager account_manager_head]
   CHANNEL_PARTNER_USERS = %w[cp cp_admin channel_partner cp_owner]
+  ALL_PROJECT_ACCESS = (%w[superadmin admin cp cp_admin billing_team] + CHANNEL_PARTNER_USERS).uniq
+  # SELECTED_PROJECT_ACCESS = %w[sales sales_admin gre crm team_lead dev_sourcing_manager account_manager account_manager_head]
   SALES_USER = %w[sales sales_admin]
   COMPANY_USERS = %w[employee_user management_user]
   # Added different types of documents which are uploaded on User
