@@ -6,7 +6,7 @@ class DailySmsReportWorker
     return if client_id.blank?
     client = Client.where(id: client_id).first
     if client && client.enable_communication['sms'] && client.notification_numbers.present?
-      superadmin = client.users.superadmin.first
+      superadmin = User.all.superadmin.first
       projects = client.projects
       projects.each do |project|
         template = Template::SmsTemplate.where(project_id: project.id, name: "daily_sms_report").first
