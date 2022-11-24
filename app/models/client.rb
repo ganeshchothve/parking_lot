@@ -185,6 +185,7 @@ class Client
   validates :name, uniqueness: true
   validates :payment_link_validity_hours, numericality: { greater_than: 0 }
   validate :check_kylas_api_key
+  validate :check_booking_portal_domains
 
   accepts_nested_attributes_for :address, :external_inventory_view_config, :checklists
   accepts_nested_attributes_for :regions, allow_destroy: true
@@ -256,6 +257,10 @@ class Client
         self.errors.add(:kylas_api_key, 'is invalid')
       end
     end
+  end
+
+  def check_booking_portal_domains
+    self.errors.add(:booking_portal_domains, "can't contain marketplace domains") if self.booking_portal_domains.find {|bpd| bpd.in?([ENV_CONFIG[:marketplace_host], ENV_CONFIG[:embedded_marketplace_host]])}
   end
 
   def booking_portal_client

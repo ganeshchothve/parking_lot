@@ -144,16 +144,15 @@ class Admin::UsersController < AdminController
     @user = User.new(role: 'admin')
     @user.assign_attributes(user_params)
     @user.assign_attributes(booking_portal_client: @client, tenant_owner: true)
-    @user.valid?
-    unless @client.save
+    if @user.valid? && @client.save
+      superadmin_users = User.where(role: 'superadmin')
+      superadmin_users.update_all(client_ids: Client.pluck(:id))
+    else
       respond_to do |format|
         @client.errors.delete(:users)
         flash.now[:alert] = @client.errors.full_messages + @user.errors.full_messages
         format.html { render :signup }
       end
-    else
-      superadmin_users = User.where(role: 'superadmin')
-      superadmin_users.update_all(client_ids: Client.pluck(:id))
     end
   end
 

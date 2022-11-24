@@ -488,8 +488,8 @@ class User
     # Regexp extracted from https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a
     if password.blank? || password =~ /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,16}$/
       arr = []
-      arr << ::Regexp.new(first_name, true) if first_name.present?
-      arr << ::Regexp.new(last_name, true) if last_name.present?
+      arr << ::Regexp.new(first_name, true) if first_name.present? && first_name.length >= 3
+      arr << ::Regexp.new(last_name, true) if last_name.present? && last_name.length >= 3
       re = ::Regexp.union(arr)
       if password !~ re
         true
