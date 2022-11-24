@@ -126,7 +126,8 @@ $(document).ready(function(){
         data: {
           fltrs: {
             project_id: projectId,
-            _type: "Template::PaymentScheduleTemplate"
+            _type: "Template::PaymentScheduleTemplate",
+            ds: true
           }
         },
         type: "get",
@@ -154,7 +155,8 @@ $(document).ready(function(){
         data: {
           fltrs: {
             project_id: projectId,
-            _type: "Template::CostSheetTemplate"
+            _type: "Template::CostSheetTemplate",
+            ds: true
           }
         },
         type: "get",

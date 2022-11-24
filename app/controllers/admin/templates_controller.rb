@@ -79,7 +79,12 @@ class Admin::TemplatesController < AdminController
 
   def authorize_resource
     if %w(index new create choose_template_for_print print_template).include?(params[:action])
-      authorize [:admin, ::Template]
+      if params.dig(:fltrs, :ds)
+        policy([current_user_role_group, ::Template]).ds_index?
+      else
+        authorize [:admin, ::Template]
+      end
+      
     else
       authorize [:admin, @template]
     end

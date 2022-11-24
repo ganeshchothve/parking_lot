@@ -3,6 +3,10 @@ class TemplatePolicy < ApplicationPolicy
     user.role?('superadmin')
   end
 
+  def ds_index?
+    user.role.in?(%w(superadmin admin sales_admin))
+  end
+
   def edit?
     index?
   end
