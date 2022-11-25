@@ -23,12 +23,10 @@ module Kylas
              (uniqueness_strategy == "phone" && contact.phone.present?) ||
              (uniqueness_strategy == "email_phone" && (contact.email.present? || contact.phone.present?))
             search_response = Kylas::SearchEntity.new(contact, 'contact', uniqueness_strategy, user, {run_in_background: false}).call rescue {}
-            if search_response.present? && search_response.dig(:api_log, :status) == "Success"
+            if search_response.present? && search_response[:api_log].present? && search_response[:api_log][:status] == "Success"
               search_result = search_response[:api_log][:response].first
               if search_result["content"].blank?
                 response = sync_contact_to_kylas
-                user.set(kylas_contact_id: response.dig(:data, :id))
-                response
               else
                 response_contact_id = search_result["content"].first["id"]
                 return { success: false, error: "Contact ID: #{response_contact_id}, The entered Phone number or email already exists on another contact!" }
@@ -36,13 +34,10 @@ module Kylas
             end
           else
             response = sync_contact_to_kylas
-            user.set(kylas_contact_id: response.dig(:data, :id))
-            response
           end
         end
       else
         response = sync_contact_to_kylas
-        response
       end
     end
 
