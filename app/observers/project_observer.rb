@@ -21,5 +21,10 @@ class ProjectObserver < Mongoid::Observer
     # Create a default token type
     token_type = project.token_types.create(name: 'Default', token_amount: (project.blocking_amount || project.booking_portal_client.blocking_amount), token_prefix: (project.name.gsub(/\s+/, '')[0..2].try(:upcase).presence || 'TKN'), token_seed: 0)
     token_type.init if token_type.valid?
+
+    # dump all the project ids to all the users that are not given project access
+    users = User.where(booking_portal_client_id: project.booking_portal_client.id).nin(role: User::ALL_PROJECT_ACCESS)
+    project_ids = Project.where(booking_portal_client_id: project.booking_portal_client.id).pluck(:id)
+    users.update_all(project_ids: project_ids)
   end
 end

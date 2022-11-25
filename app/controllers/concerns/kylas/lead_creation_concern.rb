@@ -19,6 +19,7 @@ module Kylas
       respond_to do |format|
         if @user.valid?
           if @user.save
+            @user.set(kylas_contact_id: params.dig(:lead, :kylas_contact_id)) if params.dig(:lead, :kylas_contact_id).present?
             Kylas::UpdateContact.new(current_user, @user, {check_uniqueness: true}).call if params.dig(:lead, :kylas_contact_id).present? && (params.dig(:lead, :phone_update).present? || params.dig(:lead, :email_update).present?)
             Kylas::CreateContact.new(current_user, @user, {check_uniqueness: true, run_in_background: false}) if params.dig(:lead, :sync_to_kylas).present?
             @user.confirm
