@@ -61,7 +61,7 @@ module UsersConcern
           email_template = ::Template::EmailTemplate.where(booking_portal_client_id: current_client.try(:id), name: "account_confirmation").first
           email = Email.create!({
             booking_portal_client_id: @user.booking_portal_client_id,
-            body: ERB.new(@user.booking_portal_client.email_header).result( binding) + email_template.parsed_content(@user) + ERB.new(@user.booking_portal_client.email_footer).result( binding ),
+            body: ERB.new(@user.booking_portal_client.email_header).result(@user.booking_portal_client) + email_template.parsed_content(@user) + ERB.new(@user.booking_portal_client.email_footer).result(@user.booking_portal_client),
             subject: email_template.parsed_subject(@user),
             recipients: [ @user ],
             cc: @user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
@@ -75,7 +75,7 @@ module UsersConcern
             redirect_to request.referrer || dashboard_url, notice: t('controller.users.account_confirmed')
           end
         else
-          redirect_to request.referrer || dashboard_url, alert: t('controller.users.cannot_confirm_user')
+          redirect_to request.referrer || dashboard_url, alert: @user.errors.full_messages
         end
       end
     end
@@ -198,7 +198,7 @@ module UsersConcern
 
   def generate_password
     if Rails.env.production?
-    ((('AaF'..'ZzK').to_a.sample + (0..999).to_a.sample.to_s + '@') * 2)
+      ((('AaF'..'ZzK').to_a.sample + (0..999).to_a.sample.to_s + '@') * 2)
     else
       "Iris@2022"
     end

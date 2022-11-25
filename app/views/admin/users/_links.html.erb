@@ -17,7 +17,7 @@
 <% end %>
 <% if policy([:admin, user]).confirm_user? %>
   <%
-    if marketplace? && !user.role.in?(%w[cp_owner channel_partner])
+    if user.kylas_user_id.present?
       link_name = t('controller.users.invite_user.link_name')
     else
       link_name = t('controller.users.confirm_user.link_name')

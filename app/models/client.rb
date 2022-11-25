@@ -118,25 +118,25 @@ class Client
   field :kylas_currency_id, type: Integer # kylas currency id is present on kylas products and is tenant dependent
 
   field :email_header, type: String, default: '<div class="container">
-    <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= client.logo.url %>" />
+    <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= self.logo.url %>" />
     <div class="mt-3"></div>'
   field :email_footer, type: String, default: '<div class="mt-3"></div>
     <div class="card mb-3">
       <div class="card-body">
         Thanks,<br/>
-        <%= client.name %>
+        <%= self.name %>
       </div>
     </div>
     <div style="font-size: 12px;">
-      If you have any queries you can reach us at <%= client.support_number %> or write to us at <%= client.support_email %>. Please click <a href="<%= client.website_link %>">here</a> to visit our website.
+      If you have any queries you can reach us at <%= self.support_number %> or write to us at <%= self.support_email %>. Please click <a href="<%= self.website_link %>">here</a> to visit our website.
     </div>
     <hr/>
     <div class="text-muted text-center" style="font-size: 12px;">
-      © <%= Date.today.year %> <%= client.name %>. All Rights Reserved.
+      © <%= Date.today.year %> <%= self.name %>. All Rights Reserved.
     </div>
-    <% if client.address.present? %>
+    <% if self.address.present? %>
       <div class="text-muted text-center" style="font-size: 12px;">
-        <%= client.address.to_sentence %>
+        <%= self.address.to_sentence %>
       </div>
     <% end %>
     <div class="mt-3"></div>

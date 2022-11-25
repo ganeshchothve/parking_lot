@@ -225,8 +225,8 @@ class BookingDetail
       email_template = Template::EmailTemplate.find_by(project_id: project_id, name: "cost_sheet_and_payment_schedule")
       email = Email.create!({
         project_id: project_id,
-        booking_portal_client_id: project_unit.booking_portal_client_id,
-        body: ERB.new(project_unit.booking_portal_client.email_header).result(binding) + email_template.parsed_content(self) + ERB.new(project_unit.booking_portal_client.email_footer).result(binding),
+        booking_portal_client_id: self.booking_portal_client_id,
+        body: ERB.new(project_unit.booking_portal_client.email_header).result(self.booking_portal_client) + email_template.parsed_content(self) + ERB.new(project_unit.booking_portal_client.email_footer).result(self.booking_portal_client),
         subject: email_template.parsed_subject(self),
         cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
         recipients: [lead.user],

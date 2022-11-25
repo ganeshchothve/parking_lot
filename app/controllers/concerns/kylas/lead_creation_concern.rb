@@ -19,7 +19,6 @@ module Kylas
       respond_to do |format|
         if @user.valid?
           if @user.save
-            @user.set(kylas_contact_id: params.dig(:lead, :kylas_contact_id)) if params.dig(:lead, :kylas_contact_id).present?
             Kylas::UpdateContact.new(current_user, @user, {check_uniqueness: true}).call if params.dig(:lead, :kylas_contact_id).present? && (params.dig(:lead, :phone_update).present? || params.dig(:lead, :email_update).present?)
             Kylas::CreateContact.new(current_user, @user, {check_uniqueness: true, run_in_background: false}) if params.dig(:lead, :sync_to_kylas).present?
             @user.confirm
@@ -144,6 +143,7 @@ module Kylas
         @user.booking_portal_client = current_user.booking_portal_client
         @user.created_by = current_user
       end
+      @user.assign_attributes(kylas_contact_id: params.dig(:lead, :kylas_contact_id)) if params.dig(:lead, :kylas_contact_id).present? && @user.kylas_contact_id.blank?
     end
 
     def get_query
