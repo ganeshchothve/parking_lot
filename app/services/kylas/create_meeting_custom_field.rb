@@ -1,5 +1,5 @@
 module Kylas
-  class CreateDealCustomField < BaseService
+  class CreateMeetingCustomField < BaseService
 
     attr_reader :user, :options
 
@@ -11,7 +11,7 @@ module Kylas
     def call
       return unless user.present?
       begin
-        url = URI("#{base_url}/deals/fields")
+        url = URI("#{base_url}/meetings/fields")
         https = Net::HTTP.new(url.host, url.port)
         https.use_ssl = true
         request = Net::HTTP::Post.new(url, request_headers)
@@ -51,7 +51,7 @@ module Kylas
     private
     def custom_field_params
       { 
-          displayName: I18n.t('mongoid.attributes.client.cp_deal_custom_field'), 
+          displayName: I18n.t('mongoid.attributes.client.cp_meeting_custom_field'), 
           description: nil,
           pickLists: [
               {
@@ -61,7 +61,7 @@ module Kylas
               }
           ],
           filterable: true,
-          sortable: true,
+          sortable: false,
           standard: false,
           required: false,
           type: 'PICK_LIST', 
@@ -71,7 +71,16 @@ module Kylas
 
     def dump_kylas_field_ids(response)
       booking_portal_client = user.booking_portal_client
-      booking_portal_client.set("kylas_custom_fields.deal": ({id: response[:id], name: response[:name], picklist_id: response.dig(:picklist, :id)} rescue nil))
+      booking_portal_client.set("kylas_custom_fields.meeting": ({id: response[:id]} rescue nil))
+      meeting_custom_field_id = booking_portal_client.kylas_custom_fields.dig('meeting', 'id')
+      if meeting_custom_field_id.present?
+        meeting_custom_field_response = Kylas::FetchMeetingCustomFieldDetails.new(user, meeting_custom_field_id).call
+        if meeting_custom_field_response[:success]
+          meeting_custom_field_response = meeting_custom_field_response.with_indifferent_access
+          data = meeting_custom_field_response[:data]
+          booking_portal_client.set("kylas_custom_fields.meeting": booking_portal_client.kylas_custom_fields.dig(:meeting).merge(name: data.dig(:field, :name), picklist_id: data.dig(:field, :picklist, :id)))
+        end
+      end
     end
 
   end

@@ -1,19 +1,20 @@
 module Kylas
-  class UpdateDealPicklist < BaseService
+  class UpdateMeetingPicklist < BaseService
 
-    attr_reader :user, :cp_user, :options, :picklist_id
+    attr_reader :user, :cp_user, :options, :picklist_id, :picklist_value_id
 
     def initialize(user, cp_user, options = {})
       @user = user
       @cp_user = cp_user
       @options = options
-      @picklist_id = @cp_user.kylas_custom_fields_option_id[:deal] if @cp_user.present?
+      @picklist_value_id = @cp_user.kylas_custom_fields_option_id[:meeting] if @cp_user.present?
+      @picklist_id = @user.booking_portal_client.kylas_custom_fields.dig(:meeting, :picklist_id) if @user.present?
     end
 
     def call
-      return unless user.present? && cp_user.present? && picklist_id.present?
+      return unless user.present? && cp_user.present? && picklist_id.present? && picklist_value_id.present?
       begin
-        url = URI("#{base_url}/deals/picklists/picklist-values/#{picklist_id}")
+        url = URI("#{base_url}/meetings/picklist/#{picklist_id}/picklist-value/#{picklist_value_id}")
         https = Net::HTTP.new(url.host, url.port)
         https.use_ssl = true
         request = Net::HTTP::Put.new(url, request_headers)
@@ -52,8 +53,8 @@ module Kylas
     
     def picklist_params
       {
-        id: (cp_user.kylas_custom_fields_option_id[:deal] rescue nil),
-        name: cp_user.name
+        id: (cp_user.kylas_custom_fields_option_id[:meeting] rescue nil),
+        displayName: cp_user.name
       }
     end
 

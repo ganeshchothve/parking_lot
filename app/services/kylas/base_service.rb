@@ -15,9 +15,9 @@ module Kylas
       headers = {}
       headers['Content-Type'] = 'application/json'
       headers['Accept'] = 'application/json'
-      if user.kylas_refresh_token
-        headers['Authorization'] = "Bearer #{user.fetch_access_token}"
-      elsif user.kylas_api_key?
+      # if user.kylas_refresh_token
+      #   headers['Authorization'] = "Bearer #{user.fetch_access_token}"
+      if user.kylas_api_key?
         headers['api-key'] = user.kylas_api_key
       end
       headers

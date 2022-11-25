@@ -1,29 +1,30 @@
 module Kylas
-  class CreateDealCustomField < BaseService
+  class UpdateLeadCustomField < BaseService
 
-    attr_reader :user, :options
+    attr_reader :user, :cp_user, :custom_field_id, :options
 
-    def initialize(user, options = {})
+    def initialize(user, cp_user, custom_field_id, options = {})
       @user = user
+      @custom_field_id = custom_field_id
+      @cp_user = cp_user
       @options = options
     end
 
     def call
-      return unless user.present?
+      return unless user.present? && cp_user.present? && custom_field_id.present?
       begin
-        url = URI("#{base_url}/deals/fields")
+        url = URI("#{base_url}/entities/lead/fields/#{custom_field_id}?fieldId=#{custom_field_id}")
         https = Net::HTTP.new(url.host, url.port)
         https.use_ssl = true
-        request = Net::HTTP::Post.new(url, request_headers)
+        request = Net::HTTP::Put.new(url, request_headers)
         request.body = JSON.dump(custom_field_params)
-
         response = https.request(request)
 
         case response
         when Net::HTTPOK, Net::HTTPSuccess
           parsed_response = JSON.parse(response.body)
           parsed_response = parsed_response.with_indifferent_access
-          dump_kylas_field_ids(parsed_response)
+          dump_custom_field_option_values(parsed_response)
           ApiLog.log_responses(url, [custom_field_params], [parsed_response], (user), 'Hash', user.booking_portal_client)
           { success: true, data: parsed_response }
         when Net::HTTPBadRequest
@@ -51,27 +52,40 @@ module Kylas
     private
     def custom_field_params
       { 
-          displayName: I18n.t('mongoid.attributes.client.cp_deal_custom_field'), 
+          displayName: I18n.t('mongoid.attributes.client.cp_deal_custom_field'),
           description: nil,
-          pickLists: [
-              {
-                  id: nil,
-                  name: nil,
-                  displayName: 'Default Channel Partner',
-              }
-          ],
+          pickLists: lead_custom_field_details,
+          type: 'PICK_LIST',
+          important: false,
           filterable: true,
-          sortable: true,
+          sortable: false,
           standard: false,
           required: false,
-          type: 'PICK_LIST', 
-          important: false
       }
     end
 
-    def dump_kylas_field_ids(response)
-      booking_portal_client = user.booking_portal_client
-      booking_portal_client.set("kylas_custom_fields.deal": ({id: response[:id], name: response[:name], picklist_id: response.dig(:picklist, :id)} rescue nil))
+    def lead_custom_field_details
+      response = Kylas::FetchLeadCustomFieldDetails.new(user, custom_field_id).call
+      if response[:success]
+        data = response[:data].with_indifferent_access
+        picklist_values = []
+        picklist_values = data[:field][:picklist][:values].collect{|cf | {id: cf[:id], displayName: cf[:displayName]}  } rescue []
+        picklist_values += [{id: nil, displayName: cp_user.name}] if picklist_values.present?
+        picklist_values
+      else
+        []
+      end
+    end
+
+    def dump_custom_field_option_values(response)
+      begin
+        data = response.with_indifferent_access
+        pick_list_response = {}
+        pick_list_response = data[:pickLists].find{|cf| cf[:displayName] == cp_user.name } rescue {}
+        cp_user.set("kylas_custom_fields_option_id.lead": pick_list_response[:id]) if pick_list_response.present?
+      rescue => exception
+        Rails.logger.error "Error in dump_custom_field_option_values: #{exception.message}"
+      end
     end
 
   end

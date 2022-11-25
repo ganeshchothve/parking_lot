@@ -3,7 +3,7 @@
 require 'net/http'
 
 module Kylas
-  class FetchDealCustomFieldDetails < BaseService
+  class FetchMeetingCustomFieldDetails < BaseService
     attr_reader :user, :custom_field_id
 
     def initialize(user, custom_field_id)
@@ -13,7 +13,7 @@ module Kylas
 
     def call
       return if user.blank? || custom_field_id.blank?
-      url = URI("#{base_url}/deals/fields/#{custom_field_id}")
+      url = URI("#{base_url}/meetings/fields/#{custom_field_id}")
 
       https = Net::HTTP.new(url.host, url.port)
       https.use_ssl = true

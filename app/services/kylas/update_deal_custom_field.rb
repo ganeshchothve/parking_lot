@@ -13,7 +13,7 @@ module Kylas
     def call
       return unless user.present? && cp_user.present? && custom_field_id.present?
       begin
-        url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/deals/fields/#{custom_field_id}")
+        url = URI("#{base_url}/deals/fields/#{custom_field_id}")
         https = Net::HTTP.new(url.host, url.port)
         https.use_ssl = true
         request = Net::HTTP::Put.new(url, request_headers)
@@ -52,11 +52,15 @@ module Kylas
     private
     def custom_field_params
       { 
-          displayName: "dcfvgbhnjmjhgffgn", #I18n.t('mongoid.attributes.client.cp_deal_custom_field'), 
+          displayName: I18n.t('mongoid.attributes.client.cp_deal_custom_field'),
           description: nil,
           pickLists: deal_custom_field_details,
           type: 'PICK_LIST',
-          important: false
+          important: false,
+          filterable: true,
+          sortable: true,
+          standard: false,
+          required: false,
       }
     end
 

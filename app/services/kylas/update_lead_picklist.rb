@@ -1,19 +1,19 @@
 module Kylas
-  class UpdateDealPicklist < BaseService
+  class UpdateLeadPicklist < BaseService
 
-    attr_reader :user, :cp_user, :options, :picklist_id
+    attr_reader :user, :cp_user, :options, :picklist_value_id
 
     def initialize(user, cp_user, options = {})
       @user = user
       @cp_user = cp_user
       @options = options
-      @picklist_id = @cp_user.kylas_custom_fields_option_id[:deal] if @cp_user.present?
+      @picklist_value_id = @cp_user.kylas_custom_fields_option_id[:lead] if @cp_user.present?
     end
 
     def call
-      return unless user.present? && cp_user.present? && picklist_id.present?
+      return unless user.present? && cp_user.present? && picklist_value_id.present?
       begin
-        url = URI("#{base_url}/deals/picklists/picklist-values/#{picklist_id}")
+        url = URI("#{base_url}/picklist-values/#{picklist_value_id}")
         https = Net::HTTP.new(url.host, url.port)
         https.use_ssl = true
         request = Net::HTTP::Put.new(url, request_headers)
@@ -52,8 +52,8 @@ module Kylas
     
     def picklist_params
       {
-        id: (cp_user.kylas_custom_fields_option_id[:deal] rescue nil),
-        name: cp_user.name
+        id: (cp_user.kylas_custom_fields_option_id[:lead] rescue nil),
+        displayName: cp_user.name
       }
     end
 
