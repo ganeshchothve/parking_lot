@@ -131,11 +131,7 @@ class Admin::UsersController < AdminController
     @user = if params[:crm_client_id].present? && params[:id].present?
               find_user_with_reference_id(params[:crm_client_id], params[:id])
             elsif params[:id].present?
-              user = User.where(id: params[:id])
-              if !user.role?(:superadmin)
-                user = user.where(booking_portal_client_id: current_client.try(:id))
-              end
-              user.first || User.where(lead_id: params[:id]).first
+              User.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first || User.where(booking_portal_client_id: current_client.try(:id), lead_id: params[:id]).first || User.where(selected_client_id: current_client.try(:id), id: params[:id]).first
             else
               current_user
             end
@@ -185,8 +181,8 @@ class Admin::UsersController < AdminController
   end
 
   def find_user_with_reference_id crm_id, reference_id
-    _crm = Crm::Base.where(id: crm_id, booking_portal_client_id: current_client.try(:id)).first
-    _user = User.where("third_party_references.crm_id": _crm.try(:id), "third_party_references.reference_id": reference_id ).first
+    _crm = Crm::Base.where(id: crm_id, booking_portal_client_id: current_client.id).first
+    _user = User.where("third_party_references.crm_id": _crm.try(:id), "third_party_references.reference_id": reference_id, booking_portal_client_id: current_client.id).first
     _user
   end
 

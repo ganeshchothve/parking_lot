@@ -23,6 +23,15 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     false
   end
 
+  def new_booking_without_inventory?
+    valid = record.project&.is_active? && record.project.bookings_enabled?
+    @condition = 'bookings_disabled' unless valid
+  end
+
+  def create_booking_without_inventory?
+    new_booking_without_inventory?
+  end
+
   def booking?
     true
   end

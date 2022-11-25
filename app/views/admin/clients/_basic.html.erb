@@ -7,20 +7,20 @@
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :registration_name, class: 'label-required' %>
-      <%= f.text_field :registration_name, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("registration_name") ? false : true) %>
+      <%= f.label :registration_name, class: (current_client.is_marketplace? ? 'label-required' : '') %>
+      <%= f.text_field :registration_name, class: 'form-control', required: (current_client.is_marketplace? ? 'required' : ''), disabled: (policy([:admin, @client]).editable_field?("registration_name") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :email_domains, class: 'label-required' %>
-      <%= f.select :email_domains, @client.email_domains, {}, class: 'selectize-tags domain', multiple: true, required: 'required', disabled: (policy([:admin, @client]).editable_field?("email_domains") ? false : true) %>
+      <%= f.label :email_domains, class: (current_client.is_marketplace? ? 'label-required' : '') %>
+      <%= f.select :email_domains, @client.email_domains, {}, class: 'selectize-tags domain', multiple: true, required: (current_client.is_marketplace? ? 'required' : ''), disabled: (policy([:admin, @client]).editable_field?("email_domains") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :cin_number, class: 'label-required' %>
-      <%= f.text_field :cin_number, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("cin_number") ? false : true) %>
+      <%= f.label :cin_number, class: (current_client.is_marketplace? ? 'label-required' : '') %>
+      <%= f.text_field :cin_number, class: 'form-control', required: (current_client.is_marketplace? ? 'required' : ''), disabled: (policy([:admin, @client]).editable_field?("cin_number") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
@@ -38,14 +38,14 @@
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :website_link, class: 'label-required' %>
-      <%= f.url_field :website_link, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("website_link") ? false : true) %>
+      <%= f.label :website_link, class: (current_client.is_marketplace? ? 'label-required' : '') %>
+      <%= f.url_field :website_link, class: 'form-control', required: (current_client.is_marketplace? ? 'required' : ''), disabled: (policy([:admin, @client]).editable_field?("website_link") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :preferred_login, class: 'label-required' %>
-      <%= f.select :preferred_login, I18n.t("mongoid.attributes.client/available_preferred_logins").collect{|k,v| [v, k.to_s]}, {}, class: 'selectize', required: 'required', disabled: (policy([:admin, @client]).editable_field?("preferred_login") ? false : true) %>
+      <%= f.label :preferred_login, class: (current_client.is_marketplace? ? 'label-required' : '') %>
+      <%= f.select :preferred_login, I18n.t("mongoid.attributes.client/available_preferred_logins").collect{|k,v| [v, k.to_s]}, {}, class: 'selectize', required: (current_client.is_marketplace? ? 'required' : ''), disabled: (policy([:admin, @client]).editable_field?("preferred_login") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
@@ -62,14 +62,14 @@
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :incentive_gst_slabs, class: 'label-required' %>
+      <%= f.label :incentive_gst_slabs, class: (current_client.is_marketplace? ? 'label-required' : '') %>
       <%= f.select :incentive_gst_slabs, f.object.incentive_gst_slabs, {},  class: "selectize-tags", multiple: true, required: true, disabled: !policy([current_user_role_group, @client]).editable_field?("incentive_gst_slabs") %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :tl_dashboard_refresh_timer, class: 'label-required' %>
-      <%= f.number_field :tl_dashboard_refresh_timer, class: 'form-control', required: 'required', disabled:!policy([:admin, @client]).editable_field?("tl_dashboard_refresh_timer"), min: 1, max: 30, placeholder: 'Minimum 1 minute' %>
+      <%= f.label :tl_dashboard_refresh_timer, class: (current_client.is_marketplace? ? 'label-required' : '') %>
+      <%= f.number_field :tl_dashboard_refresh_timer, class: 'form-control', required: (current_client.is_marketplace? ? 'required' : ''), disabled:!policy([:admin, @client]).editable_field?("tl_dashboard_refresh_timer"), min: 1, max: 30, placeholder: 'Minimum 1 minute' %>
     </div>
   </div>
 </div>
@@ -111,7 +111,7 @@
   <div class="col-md-12">
     <div class="mb-3">
       <%= f.label :roles_taking_registrations %>
-      <%= f.select :roles_taking_registrations, filter_admin_role_options, {}, class: 'selectize', multiple: true, required: 'required', disabled: !(policy([current_user_role_group, f.object]).editable_field?("roles_taking_registrations")) %>
+      <%= f.select :roles_taking_registrations, filter_admin_role_options, {}, class: 'selectize', multiple: true, required: (current_client.is_marketplace? ? 'required' : ''), disabled: !(policy([current_user_role_group, f.object]).editable_field?("roles_taking_registrations")) %>
     </div>
   </div>
   <div class="col-md-12">
@@ -123,15 +123,15 @@
   <div class="col-md-12">
     <div class="mb-3">
       <%= f.label :mask_lead_data_for_roles %>
-      <%= f.select :mask_lead_data_for_roles, filter_admin_role_options, {}, class: 'selectize', multiple: true, required: 'required', disabled: !(policy([current_user_role_group, f.object]).editable_field?("mask_lead_data_for_roles")) %>
+      <%= f.select :mask_lead_data_for_roles, filter_admin_role_options, {}, class: 'selectize', multiple: true, required: (current_client.is_marketplace? ? 'required' : ''), disabled: !(policy([current_user_role_group, f.object]).editable_field?("mask_lead_data_for_roles")) %>
     </div>
   </div>
 </div>
 <div class="row">
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :powered_by_link, class: 'label-required' %>
-      <%= f.url_field :powered_by_link, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("powered_by_link") ? false : true) %>
+      <%= f.label :powered_by_link, class: (current_client.is_marketplace? ? 'label-required' : '') %>
+      <%= f.url_field :powered_by_link, class: 'form-control', required: (current_client.is_marketplace? ? 'required' : ''), disabled: (policy([:admin, @client]).editable_field?("powered_by_link") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">

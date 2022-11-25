@@ -1,5 +1,5 @@
 class ApisController < ActionController::API
-  before_action :authenticate_request, except: %w[create_or_update_user register_or_update_sales_user]
+  before_action :authenticate_request
   around_action :log_standard_errors
   before_action :set_current_user, except: %w[create_or_update_user register_or_update_sales_user]
   before_action :set_current_client, except: %w[create_or_update_user register_or_update_sales_user]
@@ -10,7 +10,8 @@ class ApisController < ActionController::API
     flag = false
     if request.headers['Api-Key']
       api_key = request.headers['Api-Key']
-      @crm = Crm::Base.where(api_key: api_key).first
+      response = JSON.parse(Base64.decode64(api_key))
+      @crm = Crm::Base.where(api_key: api_key).first || Crm::Base.where(api_key: response['value']).first
       if @crm.present?
         flag = true
       else

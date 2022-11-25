@@ -168,15 +168,10 @@ module Kylas
         options = {current_user: current_user, kylas_deal_id: params.dig(:lead, :kylas_deal_id), deal_data: @deal_data}
         associate_contact_with_deal(format, options) if params.dig(:lead, :sync_to_kylas).present?
         if @lead.save
-          project = Project.where(kylas_product_id: params.dig(:lead, :kylas_product_id)).first
-          if project.present? && project.bookings_enabled?
-            if @project.enable_inventory?
-              format.html { redirect_to new_admin_lead_search_path(@lead.id), notice: 'Lead was successfully created' }
-            else
-              format.html { redirect_to new_booking_without_inventory_admin_booking_details_path(lead_id: @lead.id), notice: 'Lead was successfully created' }
-            end
+          if @project.enable_inventory?
+            format.html { redirect_to new_admin_lead_search_path(@lead.id), notice: 'Lead was successfully created' }
           else
-            format.html { redirect_to request.referer, alert: ('Bookings on this project is disabled') }  
+            format.html { redirect_to new_booking_without_inventory_admin_booking_details_path(lead_id: @lead.id), notice: 'Lead was successfully created' }
           end
         else
           format.html { redirect_to request.referer, alert: (@lead.errors.full_messages.uniq.presence || 'Something went wrong'), status: :unprocessable_entity }

@@ -46,6 +46,8 @@ en:
         checkout?:
           booking_done: 'User has successfully blocked the unit'
           record_not_held: 'Unit is not held anymore'
+        new_booking_without_inventory?:
+          bookings_disabled: 'Bookings on this project is disabled'
 
       project_unit_policy:
         index?: "Only administrator has rights to view this page."

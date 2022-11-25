@@ -2,15 +2,15 @@
 
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :area_unit, class: 'label-required' %>
-      <%= f.text_field :area_unit, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("area_unit") ? false : true) %>
+      <%= f.label :area_unit, class: (current_client.is_marketplace? ? 'label-required' : '') %>
+      <%= f.text_field :area_unit, class: 'form-control', required: (current_client.is_marketplace? ? 'required' : ''), disabled: (policy([:admin, @client]).editable_field?("area_unit") ? false : true) %>
     </div>
   </div>
 
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :cancellation_amount, class: 'label-required' %>
-      <%= f.text_field :cancellation_amount, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("cancellation_amount") ? false : true) %>
+      <%= f.label :cancellation_amount, class: (current_client.is_marketplace? ? 'label-required' : '') %>
+      <%= f.text_field :cancellation_amount, class: 'form-control', required: (current_client.is_marketplace? ? 'required' : ''), disabled: (policy([:admin, @client]).editable_field?("cancellation_amount") ? false : true) %>
     </div>
   </div>
 </div>
@@ -33,8 +33,8 @@
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :payment_gateway, class: 'label-required' %>
-      <%= f.select :payment_gateway, Client::PAYMENT_GATEWAYS.collect{|x| [ Client.human_attribute_name("payment_gateway.#{x}"), x] }, {}, class: 'selectize', required: 'required', disabled: (policy([:admin, @client]).editable_field?("payment_gateway") ? false : true) %>
+      <%= f.label :payment_gateway, class: (current_client.is_marketplace? ? 'label-required' : '') %>
+      <%= f.select :payment_gateway, Client::PAYMENT_GATEWAYS.collect{|x| [ Client.human_attribute_name("payment_gateway.#{x}"), x] }, {}, class: 'selectize', required: (current_client.is_marketplace? ? 'required' : ''), disabled: (policy([:admin, @client]).editable_field?("payment_gateway") ? false : true) %>
     </div>
   </div>
 </div>
@@ -61,14 +61,14 @@
 <div class="row">
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :blocking_days, class: 'label-required' %>
-      <%= f.number_field :blocking_days, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("blocking_days") ? false : true), min: 0, max: 30 %>
+      <%= f.label :blocking_days, class: (current_client.is_marketplace? ? 'label-required' : '') %>
+      <%= f.number_field :blocking_days, class: 'form-control', required: (current_client.is_marketplace? ? 'required' : ''), disabled: (policy([:admin, @client]).editable_field?("blocking_days") ? false : true), min: 0, max: 30 %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :holding_minutes, class: 'label-required' %>
-      <%= f.text_field :holding_minutes, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("holding_minutes") ? false : true), min: 0, max: 30 %>
+      <%= f.label :holding_minutes, class: (current_client.is_marketplace? ? 'label-required' : '') %>
+      <%= f.text_field :holding_minutes, class: 'form-control', required: (current_client.is_marketplace? ? 'required' : ''), disabled: (policy([:admin, @client]).editable_field?("holding_minutes") ? false : true), min: 0, max: 30 %>
     </div>
   </div>
 </div>
@@ -134,13 +134,13 @@
 <div class="row">
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :allowed_bookings_per_user, class: 'label-required' %>
-      <%= f.number_field :allowed_bookings_per_user, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("allowed_bookings_per_user") ? false : true), min: 0 %>
+      <%= f.label :allowed_bookings_per_user, class: (current_client.is_marketplace? ? 'label-required' : '') %>
+      <%= f.number_field :allowed_bookings_per_user, class: 'form-control', required: (current_client.is_marketplace? ? 'required' : ''), disabled: (policy([:admin, @client]).editable_field?("allowed_bookings_per_user") ? false : true), min: 0 %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :allow_multiple_bookings_per_user_kyc, class: 'label-required' %>
+      <%= f.label :allow_multiple_bookings_per_user_kyc, class: (current_client.is_marketplace? ? 'label-required' : '') %>
       <div class="form-check form-check-inline">
         <%= f.radio_button :allow_multiple_bookings_per_user_kyc, true, class: "form-check-input wd-22" %>
         <%= f.label :allow_multiple_bookings_per_user_kyc, I18n.t("global.boolean.true"), class: " form-check-label d-inline-block ms-2" %>
@@ -157,14 +157,14 @@
 <div class="row">
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :blocking_amount, class: 'label-required' %>
-      <%= f.number_field :blocking_amount, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("blocking_amount") ? false : true), min: 0 %>
+      <%= f.label :blocking_amount, class: (current_client.is_marketplace? ? 'label-required' : '') %>
+      <%= f.number_field :blocking_amount, class: 'form-control', required: (current_client.is_marketplace? ? 'required' : ''), disabled: (policy([:admin, @client]).editable_field?("blocking_amount") ? false : true), min: 0 %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :incentive_calculation, class: 'label-required' %>
-      <%= f.select :incentive_calculation, Client::INCENTIVE_CALCULATION.collect{|x| [x,x]}, {}, class: 'selectize', multiple: true, required: 'required', disabled: (policy([:admin, @client]).editable_field?("incentive_calculation") ? false : true) %>
+      <%= f.label :incentive_calculation, class: (current_client.is_marketplace? ? 'label-required' : '') %>
+      <%= f.select :incentive_calculation, Client::INCENTIVE_CALCULATION.collect{|x| [x,x]}, {}, class: 'selectize', multiple: true, required: (current_client.is_marketplace? ? 'required' : ''), disabled: (policy([:admin, @client]).editable_field?("incentive_calculation") ? false : true) %>
     </div>
   </div>
 </div>
