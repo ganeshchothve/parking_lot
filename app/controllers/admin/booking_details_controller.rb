@@ -21,10 +21,10 @@ class Admin::BookingDetailsController < AdminController
   end
 
   def new
-    @search = Search.new(booking_portal_client: current_user.booking_portal_client)
+    @search = Search.new(booking_portal_client_id: current_client.id)
     @booking_detail = BookingDetail.new(
                                     search: @search,
-                                    booking_portal_client_id: current_user.booking_portal_client.id,
+                                    booking_portal_client_id: current_client.id,
                                     creator_id: current_user.id
                                     )
     @project_towers = search_for_towers
@@ -58,11 +58,11 @@ class Admin::BookingDetailsController < AdminController
                     lead_id: params[:booking_detail][:lead_id],
                     project_tower_id: params[:project_tower_id] || _project_unit.project_tower.id,
                     project_unit_id: params[:booking_detail][:project_unit_id],
-                    booking_portal_client_id: current_user.booking_portal_client.id
+                    booking_portal_client_id: current_client.id
                     )
     @booking_detail = BookingDetail.new(
                                     search: _search,
-                                    booking_portal_client_id: current_user.booking_portal_client.id,
+                                    booking_portal_client_id: current_client.id,
                                     creator_id: current_user.id
                                     )
     @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
@@ -200,7 +200,7 @@ class Admin::BookingDetailsController < AdminController
                                     lead_id: params[:lead_id],
                                     project_id: params[:project_id],
                                     site_visit_id: params[:site_visit_id],
-                                    booking_portal_client_id: current_user.booking_portal_client.id
+                                    booking_portal_client_id: current_client.id
                                     )
     authorize([:admin, @booking_detail], :new?)
     if !embedded_marketplace?
@@ -210,7 +210,7 @@ class Admin::BookingDetailsController < AdminController
 
   def create_booking_without_inventory
     @booking_detail = BookingDetail.new(
-                                        booking_portal_client_id: current_user.booking_portal_client.id,
+                                        booking_portal_client_id: current_client.id,
                                         creator: current_user
                                        )
     @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
@@ -293,17 +293,17 @@ class Admin::BookingDetailsController < AdminController
   private
 
   def set_lead
-    @lead = Lead.where(booking_portal_client_id: current_client.try(:id), id: params[:lead_id]).first
+    @lead = Lead.where(booking_portal_client_id: current_client.id, id: params[:lead_id]).first
     redirect_to home_path(current_user), alert: I18n.t("controller.leads.alert.not_found") if @lead.blank?
   end
 
   def set_project
-    @project = Project.where(booking_portal_client_id: current_client.try(:id), id: params[:project_id]).first
+    @project = Project.where(booking_portal_client_id: current_client.id, id: params[:project_id]).first
     redirect_to home_path(current_user), alert: t('controller.booking_details.set_project_missing') if @project.blank?
   end
 
   def set_booking_detail
-    @booking_detail = BookingDetail.where(booking_portal_client_id: current_client.try(:id), _id: params[:id]).first
+    @booking_detail = BookingDetail.where(booking_portal_client_id: current_client.id, _id: params[:id]).first
     redirect_to home_path(current_user), alert: t('controller.booking_details.set_booking_detail_missing') if @booking_detail.blank?
   end
 
