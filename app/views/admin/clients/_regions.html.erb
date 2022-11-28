@@ -12,12 +12,12 @@
       </div>
     <% end %>
     <div class="mb-3">
-      <%= sf.label :city, I18n.t("mongoid.attributes.client.city"), class: 'label-required' %>
-      <%= sf.text_field :city, class:'form-control', required: 'required', disabled: !editable_regions %>
+      <%= sf.label :city, I18n.t("mongoid.attributes.client.city"), class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+      <%= sf.text_field :city, class:'form-control', required: (current_client.launchpad_portal? ? 'required' : ''), disabled: !editable_regions %>
     </div>
     <div class="mb-3">
-      <%= sf.label :partner_regions, I18n.t("mongoid.attributes.client.partner_regions") %>
-      <%= sf.select :partner_regions, (sf.object.partner_regions || []), {}, class: 'selectize-tags', required: 'required', multiple: true, disabled: !editable_regions %>
+      <%= sf.label :partner_regions, I18n.t("mongoid.attributes.client.partner_regions"), class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+      <%= sf.select :partner_regions, (sf.object.partner_regions || []), {}, class: 'selectize-tags', required: (current_client.launchpad_portal? ? 'required' : ''), multiple: true, disabled: !editable_regions %>
     </div>
   <% end %>
   <hr>

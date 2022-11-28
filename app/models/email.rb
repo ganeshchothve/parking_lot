@@ -93,7 +93,7 @@ class Email
       client = self.booking_portal_client
       current_project = self.project
       begin
-        self.body = ERB.new((current_project || client).email_header).result( client ) + email_template.parsed_content(triggered_by) + ERB.new((current_project || client).email_footer).result( client )
+        self.body = ERB.new((current_project || client).email_header).result( client.get_binding ) + email_template.parsed_content(triggered_by) + ERB.new((current_project || client).email_footer).result( client.get_binding )
       rescue => e
         self.body = ""
       end

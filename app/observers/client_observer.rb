@@ -30,23 +30,12 @@ class ClientObserver < Mongoid::Observer
         end
       end
     end
-    if client.enable_channel_partners_changed? && client.enable_channel_partners? && client.kylas_custom_fields.blank?
-      cp_users = User.in(role: %w[channel_partner cp_owner]).where(user_status_in_company: 'active', booking_portal_client_id: client.id)
-      if cp_users.present?
-        cp_users.each do |cp_user|
-          if Rails.env.production?
-            Kylas::PushCustomFieldsToKylas.perform_async(cp_user.id.to_s)
-          else
-            Kylas::PushCustomFieldsToKylas.new.perform(cp_user.id.to_s)
-          end
-        end
-      else
-        user = (client.users.admin.first rescue nil)
-        if user.present?
-          User::KYLAS_CUSTOM_FIELDS_ENTITIES.each do |entity|
-            Kylas::CreateCustomField.new(user, nil, {entity: entity}).call
-          end
-        end
+    if client.is_marketplace? && client.enable_channel_partners_changed? && client.enable_channel_partners? && client.kylas_custom_fields.blank?
+      user = client.users.admin.ne(kylas_access_token: nil).first
+      if user.present?
+        Kylas::CreateDealCustomField.new(user).call
+        Kylas::CreateLeadCustomField.new(user).call
+        Kylas::CreateMeetingCustomField.new(user).call
       end
     end
 

@@ -98,9 +98,10 @@ module Kylas
         @contact_details = Kylas::FetchContactDetails.new(current_user, contact_ids).call rescue {}
         @kylas_emails = @contact_details.dig(:data).pluck(:emails).flatten rescue []
         @kylas_phones = @contact_details.dig(:data).pluck(:phoneNumbers).flatten rescue []
-        @kylas_cp_id = @deal_data.dig(:customFieldValues, :cfChannelPartner, :id)
+        @deal_custom_field_name = current_client.kylas_custom_fields.dig(:deal,:name)
+        @kylas_cp_id = @deal_data.dig(:customFieldValues, @deal_custom_field_name, :id) if @deal_custom_field_name.present?
         if @kylas_cp_id.present?
-          @cp_users = User.in(role: ['channel_partner', 'cp_owner']).where(booking_portal_client_id: current_user.booking_portal_client_id, user_status_in_company: 'active', 'kylas_custom_fields_option_id.deals': @kylas_cp_id)
+          @cp_users = User.in(role: ['channel_partner', 'cp_owner']).where(booking_portal_client_id: current_user.booking_portal_client_id, user_status_in_company: 'active', 'kylas_custom_fields_option_id.deal': @kylas_cp_id)
         end
       else
         redirect_to root_path, alert: 'Deal not found'
@@ -136,7 +137,7 @@ module Kylas
     end
 
     def set_user
-      @user = User.or(get_query).first if get_query.present?
+      @user = User.or(get_query).where(booking_portal_client_id: current_client.id).first if get_query.present?
       unless @user.present?
         @user = User.new
         @user.assign_attributes(user_params)

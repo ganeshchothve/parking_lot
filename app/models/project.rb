@@ -191,8 +191,8 @@ class Project
   validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
   validates :gst_number, uniqueness: { allow_blank: true }
-  # validates :city, inclusion: { in: proc { self.booking_portal_client.regions.distinct(:city) } }, allow_blank: true
-  # validates :region, inclusion: { in: proc { self.booking_portal_client.regions.distinct(:partner_regions).flatten || [] } }, allow_blank: true
+  validates :city, inclusion: { in: proc { self.booking_portal_client.regions.distinct(:city) } }, allow_blank: true
+  validates :region, inclusion: { in: proc { self.booking_portal_client.regions.distinct(:partner_regions).flatten || [] } }, allow_blank: true
 
   accepts_nested_attributes_for :specifications, :offers, :timeline_updates, :address, :nearby_locations, allow_destroy: true
 

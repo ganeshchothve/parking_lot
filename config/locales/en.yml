@@ -916,6 +916,9 @@ en:
         partner_regions: "Partner Regions"
         enable_vis: "Enable vis"
         kylas_api_key: Kylas API Key
+        cp_deal_custom_field: "Channel Partner"
+        cp_lead_custom_field: "Channel Partner"
+        cp_meeting_custom_field: "Channel Partner"
       client/available_preferred_logins:
         phone: "Phone Based"
         email: "Email Based"
@@ -2235,7 +2238,7 @@ en:
         actions: Actions
         create_product: Create product in Kylas?
         deactivate_product: Deactivate the product in Kylas?
-        update_product_on_deal: Update the product on Deal?
+        update_product_on_deal: Associate the product on Deal?
         product_amount_type: Product Price
       workflow/product_amount_types:
         agreement_price: "Agreement Value"
