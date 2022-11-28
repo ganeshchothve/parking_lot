@@ -8,7 +8,8 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def new?(current_project_id = nil)
-    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner].include?(user.role) && eligible_user? && enable_actual_inventory?(user) && record.project&.is_active? && record.lead&.project&.bookings_enabled?
+    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner].include?(user.role) && eligible_user? && record.project&.is_active? && record.lead&.project&.bookings_enabled?
+    out = out && enable_actual_inventory?(user) if record.lead&.project&.enable_inventory?
     out = false if user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
     out = out && project_access_allowed?(current_project_id)
     @condition = 'bookings_disabled' unless record.lead&.project&.bookings_enabled?
@@ -17,7 +18,8 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def create?(current_project_id = nil)
     valid = false
-    valid = is_buyer_booking_limit_exceed? && eligible_user? && enable_actual_inventory?(user) && record.lead&.project&.bookings_enabled?
+    valid = is_buyer_booking_limit_exceed? && eligible_user? && record.lead&.project&.bookings_enabled?
+    out = out && enable_actual_inventory?(user) if record.lead&.project&.enable_inventory?
     valid = valid && project_access_allowed?(current_project_id)
     return true if valid
     @condition = 'allowed_bookings'
