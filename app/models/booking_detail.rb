@@ -226,7 +226,7 @@ class BookingDetail
       email = Email.create!({
         project_id: project_id,
         booking_portal_client_id: self.booking_portal_client_id,
-        body: ERB.new(project_unit.booking_portal_client.email_header).result(self.booking_portal_client) + email_template.parsed_content(self) + ERB.new(project_unit.booking_portal_client.email_footer).result(self.booking_portal_client),
+        body: ERB.new(project_unit.booking_portal_client.email_header).result(self.booking_portal_client.get_binding) + email_template.parsed_content(self) + ERB.new(project_unit.booking_portal_client.email_footer).result(self.booking_portal_client.get_binding),
         subject: email_template.parsed_subject(self),
         cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
         recipients: [lead.user],

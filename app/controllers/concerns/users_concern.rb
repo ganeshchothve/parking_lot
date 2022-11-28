@@ -32,7 +32,7 @@ module UsersConcern
         flash[:notice] = I18n.t("controller.users.notice.confirmation_sent")
         format.html { redirect_to request.referer || admin_users_path }
       else
-        flash[:error] = I18n.t("controller.users.errors.could_not_send_confirmation")
+        flash[:alert] = I18n.t("controller.users.errors.could_not_send_confirmation")
         format.html { redirect_to request.referer || admin_users_path }
       end
     end
@@ -45,7 +45,7 @@ module UsersConcern
         flash[:notice] = I18n.t("controller.users.notice.resend_password_sent")
         format.html { redirect_to admin_users_path }
       else
-        flash[:error] = I18n.t("controller.users.errors.could_not_send_reset_password")
+        flash[:alert] = I18n.t("controller.users.errors.could_not_send_reset_password")
         format.html { redirect_to admin_users_path }
       end
     end
@@ -61,7 +61,7 @@ module UsersConcern
           email_template = ::Template::EmailTemplate.where(booking_portal_client_id: current_client.try(:id), name: "account_confirmation").first
           email = Email.create!({
             booking_portal_client_id: @user.booking_portal_client_id,
-            body: ERB.new(@user.booking_portal_client.email_header).result(@user.booking_portal_client) + email_template.parsed_content(@user) + ERB.new(@user.booking_portal_client.email_footer).result(@user.booking_portal_client),
+            body: ERB.new(@user.booking_portal_client.email_header).result(@user.booking_portal_client.get_binding) + email_template.parsed_content(@user) + ERB.new(@user.booking_portal_client.email_footer).result(@user.booking_portal_client.get_binding),
             subject: email_template.parsed_subject(@user),
             recipients: [ @user ],
             cc: @user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),

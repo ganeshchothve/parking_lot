@@ -323,7 +323,7 @@ class Lead
       if email_template.present?
         email = Email.create!({
           booking_portal_client_id: client.id,
-          body: ERB.new(client.email_header).result(client) + email_template.parsed_content(self) + ERB.new(client.email_footer).result(client),
+          body: ERB.new(client.email_header).result(client.get_binding) + email_template.parsed_content(self) + ERB.new(client.email_footer).result(client.get_binding),
           subject: email_template.parsed_subject(self),
           to: [ self.email ],
           cc: client.notification_email.to_s.split(',').map(&:strip),
