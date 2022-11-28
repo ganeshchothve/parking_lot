@@ -84,7 +84,7 @@ module Kylas
         pick_list_response = data[:pickLists].find{|cf| cf[:displayName] == cp_user.name } rescue {}
         cp_user.set("kylas_custom_fields_option_id.lead": pick_list_response[:id]) if pick_list_response.present?
       rescue => exception
-        Rails.logger.error "Error in dump_custom_field_option_values: #{exception.message}"
+        Rails.logger.error "[Kylas::UpdateLeadCustomField] - Error in dump_custom_field_option_values: #{exception.message} - response: #{response}"
       end
     end
 

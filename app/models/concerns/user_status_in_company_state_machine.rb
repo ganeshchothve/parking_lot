@@ -82,9 +82,8 @@ module UserStatusInCompanyStateMachine
 
     # Push Channel Partner to Kylas as a Custom Field
     def push_to_kylas
-      booking_portal_client = self.booking_portal_client
-      user = booking_portal_client.users.admin.ne(kylas_access_token: nil).first
-      if user.present? && booking_portal_client.is_marketplace?
+      if booking_portal_client.is_marketplace?
+        user = booking_portal_client.users.admin.ne(kylas_access_token: nil).first
         deal_custom_field_id = booking_portal_client.kylas_custom_fields.dig(:deal, :id)
         lead_custom_field_id = booking_portal_client.kylas_custom_fields.dig(:lead, :id)
         meeting_custom_field_id = booking_portal_client.kylas_custom_fields.dig(:meeting, :id)

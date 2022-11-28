@@ -84,7 +84,7 @@ module Kylas
         pick_list_response = data[:picklist][:picklistValues].find{|cf| cf[:displayName] == cp_user.name } rescue {}
         cp_user.set("kylas_custom_fields_option_id.meeting": pick_list_response[:id]) if pick_list_response.present?
       rescue => exception
-        Rails.logger.error "Error in dump_custom_field_option_values: #{exception.message}"
+        Rails.logger.error "[Kylas::UpdateMeetingCustomField] - Error in dump_custom_field_option_values: #{exception.message} - response: #{response}"
       end
     end
 

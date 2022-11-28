@@ -56,7 +56,7 @@ module Kylas
               {
                   id: nil,
                   name: nil,
-                  displayName: 'TestCP1', #'Default Channel Partner'
+                  displayName: 'Default Channel Partner'
               }
           ],
           filterable: true,

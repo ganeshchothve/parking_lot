@@ -99,8 +99,8 @@ class UserObserver < Mongoid::Observer
 
     if user.role.in?(%w(cp_owner channel_partner)) && user.user_status_in_company == 'active' && (user.first_name_changed? || user.last_name.changed?)
       booking_portal_client = user.booking_portal_client
-      admin_user = booking_portal_client.users.admin.ne(kylas_access_token: nil).first
-      if admin_user.present? && booking_portal_client.is_marketplace?
+      if booking_portal_client.is_marketplace?
+        admin_user = booking_portal_client.users.admin.ne(kylas_access_token: nil).first
         deal_custom_field_id = booking_portal_client.kylas_custom_fields.dig(:deal, :id)
         lead_custom_field_id = booking_portal_client.kylas_custom_fields.dig(:lead, :id)
         meeting_custom_field_id = booking_portal_client.kylas_custom_fields.dig(:meeting, :id)
