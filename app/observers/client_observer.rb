@@ -30,7 +30,7 @@ class ClientObserver < Mongoid::Observer
         end
       end
     end
-    if client.kylas_tenant_id.present? && client.enable_channel_partners_changed? && client.enable_channel_partners? && client.kylas_custom_fields.blank?
+    if client.is_marketplace? && client.enable_channel_partners_changed? && client.enable_channel_partners? && client.kylas_custom_fields.blank?
       user = client.users.admin.ne(kylas_access_token: nil).first
       if user.present?
         Kylas::CreateDealCustomField.new(user).call
