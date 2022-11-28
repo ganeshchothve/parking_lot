@@ -13,8 +13,8 @@
   <div class="col-4">
     <p class="fn-12 font-medium mb-0 txt-light-gray"></p>
     <p class="fn-14">
-      <% if (api = apis.where(booking_portal_client_id: current_client.try(:id), _type: Crm::Api::Get, resource_class: resource.class.to_s, base_id: crm.id).first) && resource.third_party_references.where(crm_id: crm.id).present? %>
-      <%= link_to t("mongoid.attributes.crm.api.request_types.get"), admin_crm_base_api_show_response_path(api.base, api, resource_id: resource.id, type: api._type , is_active: true), class: 'db-small-btn light-blue bg-white fn-400 btn unset-width modal-remote-form-link mr-2' %>
+      <% if (api = apis.where(booking_portal_client_id: current_client.try(:id), _type: Crm::Api::Get, resource_class: resource.class.to_s, base_id: crm.id).first) && resource.crm_reference_id(crm).present? %>
+      <%= link_to t("mongoid.attributes.crm.api.request_types.get"), admin_crm_base_api_show_response_path(api.base, api, resource_id: resource.id, type: api._type , is_active: true), class: 'white bg-primary fn-400 btn unset-width modal-remote-form-link mr-2' %>
       <% end %>
 
       <% if ['superadmin', 'admin', 'sales_admin'].include?(current_user.role) && api = apis.where(_type: Crm::Api::Post, resource_class: resource.class, is_active: true).first %>

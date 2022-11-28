@@ -44,6 +44,41 @@ class Crm::Api
     _request_header = DEFAULT_REQUEST_HEADER.merge(_base_request_header)
   end
 
+  def set_access_token user, request_header
+    if base.oauth_type == "salesforce"
+      sfdc_credentials = ENV_CONFIG['sfdc'] || {}
+      if sfdc_credentials.present?
+        uri = URI(base.domain)
+        uri.path = "/#{path}".squeeze('/')
+        host = uri.host
+        sfdc_credentials['api_version'] = '41.0'
+        sfdc_credentials['instance_url'] = base.domain
+        sfdc_credentials['host'] = host
+        client = Restforce.new(sfdc_credentials.symbolize_keys)
+        begin
+          response = client.authenticate!
+          request_header['Authorization'] = "Bearer #{response.dig("access_token")}"
+        rescue Restforce::AuthenticationError => e
+          Rails.logger.error "[Crm::Api::Post] Restforce authentication error: #{e.message}"
+        end
+      else
+        Rails.logger.error "[Crm::Api::Post] OAuth credentials not found"
+      end
+    elsif base.oauth_type == "kylas"
+      if user.present?
+        if user.is_a?(User) && user.kylas_refresh_token
+          request_header['Authorization'] = "Bearer #{user.fetch_access_token}"
+        else
+          if base.user.present? && base.user.kylas_refresh_token.present?
+            request_header['Authorization'] = "Bearer #{base.user.fetch_access_token}"
+          else
+            request_header['api-key'] = user.kylas_api_key
+          end
+        end
+      end
+    end
+  end
+
   def self.execute(api_id, record_id)
     api = where(id: api_id).first
     if api
