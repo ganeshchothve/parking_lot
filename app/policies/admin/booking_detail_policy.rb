@@ -11,6 +11,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner].include?(user.role) && eligible_user? && enable_actual_inventory?(user) && record.project&.is_active? && record.lead&.project&.bookings_enabled?
     out = false if user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
     out = out && project_access_allowed?(current_project_id)
+    @condition = 'bookings_disabled' unless record.lead&.project&.bookings_enabled?
     out
   end
 
@@ -21,15 +22,6 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     return true if valid
     @condition = 'allowed_bookings'
     false
-  end
-
-  def new_booking_without_inventory?
-    valid = record.project&.is_active? && record.project.bookings_enabled?
-    @condition = 'bookings_disabled' unless valid
-  end
-
-  def create_booking_without_inventory?
-    new_booking_without_inventory?
   end
 
   def booking?
