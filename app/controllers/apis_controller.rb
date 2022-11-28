@@ -10,7 +10,7 @@ class ApisController < ActionController::API
     flag = false
     if request.headers['Api-Key']
       api_key = request.headers['Api-Key']
-      response = JSON.parse(Base64.decode64(api_key))
+      response = JSON.parse(Base64.decode64(api_key)) rescue {}
       @crm = Crm::Base.where(api_key: api_key).first || Crm::Base.where(api_key: response['value']).first
       if @crm.present?
         flag = true
