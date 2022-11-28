@@ -8,19 +8,44 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def new?(current_project_id = nil)
-    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner].include?(user.role) && eligible_user? && enable_actual_inventory?(user) && record.project&.is_active? && record.lead&.project&.bookings_enabled?
-    out = false if user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
-    out = out && project_access_allowed?(current_project_id)
-    out
+    valid = true
+    unless eligible_user?
+      valid = false
+      @condition = 'kyc_required'
+    end
+    unless is_buyer_booking_limit_exceed?
+      valid = false
+      @condition = 'allowed_bookings'
+    end
+    unless user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
+      valid = false
+      @condition = 'project_not_subscribed'
+    end
+    unless project_access_allowed?(current_project_id)
+      valid = false
+      @condition = 'project_access_not_given'
+    end
+    unless %w[superadmin admin sales sales_admin gre].include?(user.role) + User::CHANNEL_PARTNER_USERS
+      valid = false
+      @condition = 'user_not_included'
+    end
+    unless record.lead.project.enable_inventory? && enable_actual_inventory?(user)
+      valid = false
+      @condition = 'inventory_access_not_given'
+    end
+    unless record.lead&.project&.bookings_enabled?
+      valid = false
+      @condition = 'booking_disabled_on_project'
+    end
+    unless record.project&.is_active?
+      valid = false
+      @condition = 'project_not_active'
+    end
+    valid
   end
 
   def create?(current_project_id = nil)
-    valid = false
-    valid = is_buyer_booking_limit_exceed? && eligible_user? && enable_actual_inventory?(user) && record.lead&.project&.bookings_enabled?
-    valid = valid && project_access_allowed?(current_project_id)
-    return true if valid
-    @condition = 'allowed_bookings'
-    false
+    new?
   end
 
   def booking?

@@ -1,64 +1,64 @@
 <div class="row">
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :helpdesk_email, class: 'label-required' %>
-      <%= f.text_field :helpdesk_email, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("helpdesk_email") ? false : true) %>
+      <%= f.label :helpdesk_email %>
+      <%= f.text_field :helpdesk_email, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("helpdesk_email") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :helpdesk_number, class: 'label-required' %>
-      <%= f.phone_field :helpdesk_number, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("helpdesk_number") ? false : true) %>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :support_email, class: 'label-required' %>
-      <%= f.email_field :support_email, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("support_email") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :support_number, class: 'label-required' %>
-      <%= f.phone_field :support_number, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("support_number") ? false : true) %>
+      <%= f.label :helpdesk_number %>
+      <%= f.phone_field :helpdesk_number, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("helpdesk_number") ? false : true) %>
     </div>
   </div>
 </div>
 <div class="row">
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :channel_partner_support_email, class: 'label-required' %>
-      <%= f.email_field :channel_partner_support_email, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("channel_partner_support_email") ? false : true) %>
+      <%= f.label :support_email %>
+      <%= f.email_field :support_email, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("support_email") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :channel_partner_support_number, class: 'label-required' %>
-      <%= f.phone_field :channel_partner_support_number, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("channel_partner_support_number") ? false : true) %>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :notification_email, class: 'label-required' %>
-      <%= f.text_field :notification_email, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("notification_email") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :notification_numbers, class: 'label-required' %>
-      <%= f.phone_field :notification_numbers, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("notification_numbers") ? false : true) %>
+      <%= f.label :support_number %>
+      <%= f.phone_field :support_number, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("support_number") ? false : true) %>
     </div>
   </div>
 </div>
 <div class="row">
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :sender_email, class: 'label-required' %>
-      <%= f.email_field :sender_email, class: 'form-control', required: 'required', disabled: (policy([:admin, @client]).editable_field?("sender_email") ? false : true) %>
+      <%= f.label :channel_partner_support_email %>
+      <%= f.email_field :channel_partner_support_email, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("channel_partner_support_email") ? false : true) %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :channel_partner_support_number %>
+      <%= f.phone_field :channel_partner_support_number, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("channel_partner_support_number") ? false : true) %>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :notification_email %>
+      <%= f.text_field :notification_email, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("notification_email") ? false : true) %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :notification_numbers %>
+      <%= f.phone_field :notification_numbers, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("notification_numbers") ? false : true) %>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :sender_email %>
+      <%= f.email_field :sender_email, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("sender_email") ? false : true) %>
     </div>
   </div>
 </div>

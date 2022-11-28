@@ -137,7 +137,7 @@ module Kylas
     end
 
     def set_user
-      @user = User.or(get_query).first if get_query.present?
+      @user = User.or(get_query).where(booking_portal_client_id: current_client.id).first if get_query.present?
       unless @user.present?
         @user = User.new
         @user.assign_attributes(user_params)
