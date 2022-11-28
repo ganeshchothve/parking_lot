@@ -1,8 +1,8 @@
 class ApisController < ActionController::API
   before_action :authenticate_request
   around_action :log_standard_errors
-  before_action :set_current_user, except: %w[create_or_update_user register_or_update_sales_user]
-  before_action :set_current_client, except: %w[create_or_update_user register_or_update_sales_user]
+  before_action :set_current_user
+  before_action :set_current_client
 
   private
 
@@ -36,7 +36,7 @@ class ApisController < ActionController::API
   end
 
   def set_current_client
-    @current_client = @crm.try(:booking_portal_client)
+    @current_client = @crm.booking_portal_client
   end
 
   def create_error_log e
