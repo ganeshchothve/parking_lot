@@ -13,11 +13,11 @@
     <% end %>
     <div class="mb-3">
       <%= sf.label :city, I18n.t("mongoid.attributes.client.city"), class: (current_client.is_marketplace? ? 'label-required' : '') %>
-      <%= sf.text_field :city, class:'form-control', required: (current_client.is_marketplace? ? 'required' : ''), disabled: !editable_regions %>
+      <%= sf.text_field :city, class:'form-control', disabled: !editable_regions %>
     </div>
     <div class="mb-3">
       <%= sf.label :partner_regions, I18n.t("mongoid.attributes.client.partner_regions") %>
-      <%= sf.select :partner_regions, (sf.object.partner_regions || []), {}, class: 'selectize-tags', required: (current_client.is_marketplace? ? 'required' : ''), multiple: true, disabled: !editable_regions %>
+      <%= sf.select :partner_regions, (sf.object.partner_regions || []), {}, class: 'selectize-tags', multiple: true, disabled: !editable_regions %>
     </div>
   <% end %>
   <hr>

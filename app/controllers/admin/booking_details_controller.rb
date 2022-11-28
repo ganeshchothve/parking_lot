@@ -203,6 +203,7 @@ class Admin::BookingDetailsController < AdminController
                                     booking_portal_client_id: current_client.id
                                     )
     authorize([:admin, @booking_detail], :new?)
+    # open booking without inventory form modal only when it is not rendered in Kylas i-frame
     if !embedded_marketplace?
       render layout: false
     end
@@ -217,7 +218,7 @@ class Admin::BookingDetailsController < AdminController
     @booking_detail.user = @booking_detail.lead.user
     @booking_detail.name = @booking_detail.booking_project_unit_name
     @booking_detail.status = "blocked"
-    authorize([:admin, @booking_detail], :create?)
+    authorize([:admin, @booking_detail], :new?)
     respond_to do |format|
       if @booking_detail.save
         if @booking_detail.booking_portal_client.is_marketplace?

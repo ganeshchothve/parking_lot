@@ -75,7 +75,7 @@ class Client
   field :blocking_days, type: Integer, default: 10
   field :holding_minutes, type: Integer, default: 15
   field :payment_gateway, type: String, default: 'Razorpay'
-  field :enable_company_users, type: Boolean
+  field :enable_company_users, type: Boolean, default: false
   field :terms_and_conditions, type: String
   field :faqs, type: String
   field :rera, type: String
@@ -86,13 +86,13 @@ class Client
   field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
   field :enable_referral_bonus, type: Boolean, default: false
   field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner cp_owner]
-  field :lead_blocking_days, type: Integer
+  field :lead_blocking_days, type: Integer, default: 30
   field :invoice_approval_tat, type: Integer, default: 2
 
   field :external_api_integration, type: Boolean, default: false
   field :enable_daily_reports, type: Hash, default: {"payments_report": false}
   field :enable_incentive_module, type: Array, default: []
-  field :partner_regions, type: Array, default: ['Pune West', 'Pune East', 'Others']
+  field :partner_regions, type: Array, default: []
   field :team_lead_dashboard_access_roles, type: Array, default: %w[gre]
   field :tl_dashboard_refresh_timer, type: Integer, default: 1
   #

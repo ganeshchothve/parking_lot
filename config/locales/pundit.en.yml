@@ -28,8 +28,15 @@ en:
           project_not_active: 'This project is inactive'
 
       booking_detail_policy:
-        create?:
-          allowed_bookings: "You have booked the permitted number of apartments."
+        new?:
+          kyc_required: 'Please add KYC'
+          allowed_bookings: 'You have booked the permitted number of apartments.'
+          project_not_subscribed: 'This project is not subscribed'
+          project_access_not_given: 'Access to this project is not given'
+          user_not_included: 'You are not allowed to take bookings'
+          inventory_access_not_given: 'You do not have access to this project inventory'
+          booking_disabled_on_project: 'Bookings on this project is disabled'
+          project_not_active: 'This project is inactive'
         hold?:
           enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator.'
           only_for_kyc_added_users: 'Please add KYC before booking Unit.'
@@ -46,8 +53,6 @@ en:
         checkout?:
           booking_done: 'User has successfully blocked the unit'
           record_not_held: 'Unit is not held anymore'
-        new_booking_without_inventory?:
-          bookings_disabled: 'Bookings on this project is disabled'
 
       project_unit_policy:
         index?: "Only administrator has rights to view this page."
