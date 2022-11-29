@@ -20,11 +20,6 @@
           <div class="col-lg-3 filter-left-section">
             <div class="sticky-top ps-3 pt-3">
               <ul>
-              <% if is_marketplace? %>
-                <li class="nav-item">
-                  <a class="nav-link active" rel="nav-project-basic"><%= I18n.t("global.link_to.basic_details") %></a>
-                </li>
-              <% else %>
                 <li class="nav-item">
                   <a class="nav-link active" rel="nav-project-basic"><%= I18n.t("global.link_to.basic_details") %></a>
                 </li>
@@ -60,7 +55,6 @@
                     <a class="nav-link active" rel="nav-project-crm-ids"><%= I18n.t("global.link_to.crm") %></a>
                   </li>
                 <% end %>
-              <% end %>
               </ul>
               <!--
               <hr>
