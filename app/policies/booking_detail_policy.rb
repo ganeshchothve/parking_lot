@@ -42,7 +42,7 @@ class BookingDetailPolicy < ApplicationPolicy
   end
 
   def is_buyer_booking_limit_exceed?
-    return true if (record.user.allowed_bookings > record.user.booking_details.nin(status: %w[cancelled swapped hold]).count)
+    return true if (record&.lead&.user&.allowed_bookings > record&.lead&.user&.booking_details.nin(status: %w[cancelled swapped hold]).count)
     @condition = "booking_limit_exceed"
     false
   end

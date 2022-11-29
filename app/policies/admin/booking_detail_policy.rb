@@ -25,7 +25,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
       valid = false
       @condition = 'project_access_not_given'
     end
-    unless %w[superadmin admin sales sales_admin gre].include?(user.role) + User::CHANNEL_PARTNER_USERS
+    unless (%w[superadmin admin sales sales_admin gre] + User::CHANNEL_PARTNER_USERS).include?(user.role)
       valid = false
       @condition = 'user_not_included'
     end
