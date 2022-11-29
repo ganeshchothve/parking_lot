@@ -14,12 +14,13 @@ class Crm::Api::Get < Crm::Api
 
     _url = URI.join(base.domain, _path)
     _request_header = get_request_header(resource)
-    api.set_access_token(user, _request_header)
+    set_access_token(resource.user, _request_header)
     uri = URI(_url)
 
-    uri.query = URI.encode_www_form(_request_payload.merge({headers: _request_header}))
-
-    response = Net::HTTP.get_response(uri)
+    https = Net::HTTP.new(uri.host, uri.port)
+    https.use_ssl = true
+    request = Net::HTTP::Get.new(uri, _request_header)
+    response = https.request(request)
 
     case response
     when Net::HTTPSuccess

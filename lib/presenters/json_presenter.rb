@@ -26,7 +26,7 @@ module Presenters
     end
 
     def self.create_table header, arr
-      card = get_table_card(header) + "<table class='table my-customer-table responsive-tbl'><thead class='th-default'>"
+      card = get_table_card(header) + "<table class='table table-responsive'><thead class='th-default'>"
       card_end_tag = "</table></div></div></div>"
       card += "<tr class='bg-primary white'>"
       index = 0
@@ -74,17 +74,17 @@ module Presenters
     end
 
     def self.get_card header
-      "<div class='col-md-12 pt-5'><div class='box-card'><div class='box-header bg-gradient br-rd-tr-4'><h2>#{header.to_s.titleize}</h2></div><div class='box-content br-rd-bl-4 bg-white pl-2 p-5'>"
+      "<div class='col-md-12 pt-5'><div class='box-card'><div class='box-header'><h3>#{header.to_s.titleize}</h3></div><div class='box-content bg-white'>"
     end
 
     def self.get_table_card header
-      "<div class='col-md-12'><div class='box-card'><div class='col-lg-6 col-xs-12 col-md-6 col-sm-12 pt-5 pb-0 pl-0'>
+      "<div class='col-md-12'><div class='box-card'><div class='col-lg-12 col-xs-12 col-md-12 col-sm-12 pb-0 pl-0'>
         <div class='table-title'>
-          <h1 class='title'>
+          <h3 class='title'>
             #{header.to_s.titleize}
-          </h1>
+          </h3>
         </div>
-      </div> <div class='box-content br-rd-bl-4 bg-white pt-0'>"
+      </div> <div class='box-content bg-white'>"
     end
   end
 end

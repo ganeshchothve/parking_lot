@@ -642,6 +642,12 @@ en:
             Receipt: "Payment"
             UserKyc: "User KYC"
             BookingDetail: "Booking Detail"
+            Lead: 'Lead'
+            SiteVisit: 'Walkin'
+            FundAccount: 'Account'
+            Note: 'Note'
+            Client: 'Client'
+            Invoice: 'Invoice'
       crm/api:
         event: "Event Name"
         resource_class: "Resource Class"
