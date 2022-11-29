@@ -60,7 +60,7 @@ module Kylas
                               )
 
               if @lead.save
-                Kylas::SyncLeadToKylasWorker.perform_async(lead.id.to_s)
+                Kylas::SyncLeadToKylasWorker.perform_async(@lead.id.to_s)
                 if (@lead_data['products'].blank? || @lead_data['products'].pluck('id').map(&:to_s).exclude?(params.dig(:lead, :kylas_product_id))) && count < 1
                     response = Kylas::UpdateLead.new(current_user, @lead.kylas_lead_id, params).call
                     count += 1 if response[:success]
