@@ -834,11 +834,7 @@ class User
     end
 
     def available_roles(client)
-      if client.present? && client.kylas_tenant_id.present?
-        roles = KYLAS_MARKETPALCE_USERS + BUYER_ROLES
-      else
-        roles = ADMIN_ROLES + BUYER_ROLES
-      end
+      roles = ADMIN_ROLES + BUYER_ROLES
       roles -= CHANNEL_PARTNER_USERS unless client.try(:enable_channel_partners?)
       roles -= COMPANY_USERS unless client.try(:enable_company_users?)
       roles
