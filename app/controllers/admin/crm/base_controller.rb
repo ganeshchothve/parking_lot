@@ -58,9 +58,9 @@ class Admin::Crm::BaseController < ApplicationController
   end
 
   def choose_crm
-    @resource = params[:resource_class].constantize.find params[:resource_id]
-    @apis = Crm::Api.where(booking_portal_client_id: current_client.try(:id), resource_class: params[:resource_class].to_s)
-    @crms = Crm::Base.where(booking_portal_client_id: current_client.try(:id), id: {"$in": @apis.pluck(:base_id)})
+    @resource = params[:resource_class].constantize.where(booking_portal_client_id: current_client.id, id: params[:resource_id]).first
+    @apis = Crm::Api.where(booking_portal_client_id: current_client.id, resource_class: params[:resource_class].to_s)
+    @crms = Crm::Base.where(booking_portal_client_id: current_client.id, id: {"$in": @apis.pluck(:base_id)})
   end
 
   private

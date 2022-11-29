@@ -6,14 +6,21 @@ class Crm::Api::Get < Crm::Api
 
   validates :response_data_location, format: {with: /\A[a-zA-Z0-9_..]*\z/}, allow_blank: true
 
-  def execute resource
+  def execute resource, user
     _request_payload = set_request_payload(resource)
-    _url = URI.join(base.domain, path)
-    _request_header = get_request_header(resource)
-    uri = URI(_url)
-    uri.query = URI.encode_www_form(_request_payload.merge({headers: _request_header}))
 
-    response = Net::HTTP.get_response(uri)
+    _path_erb = ERB.new(path.gsub("\n\s", '')) rescue ERB.new("Hash.new")
+    _path = _path_erb.result(resource.get_binding) rescue ''
+
+    _url = URI.join(base.domain, _path)
+    _request_header = get_request_header(resource)
+    set_access_token(resource.user, _request_header)
+    uri = URI(_url)
+
+    https = Net::HTTP.new(uri.host, uri.port)
+    https.use_ssl = true
+    request = Net::HTTP::Get.new(uri, _request_header)
+    response = https.request(request)
 
     case response
     when Net::HTTPSuccess

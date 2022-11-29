@@ -8,9 +8,9 @@
   class: "dropdown-item" %>
 <% end %>
 
-<%# if policy([:admin, Crm::Base.new()]).choose_crm? && Crm::Api.where(resource_class: 'User').present? %>
-  <%#= link_to t('controller.crms.choose_crm.link_name'), choose_crm_admin_crm_base_index_path(resource_id: user.id, resource_class: user.class), class: "dropdown-item " %>
-<%# end %>
+<% if policy([:admin, Crm::Base.new(booking_portal_client_id: current_client.id)]).choose_crm? && Crm::Api.where(resource_class: 'User', booking_portal_client_id: current_client.id).present? %>
+  <%= link_to t('controller.crms.choose_crm.link_name'), choose_crm_admin_crm_base_index_path(resource_id: user.id, resource_class: user.class), class: "dropdown-item " %>
+<% end %>
 
 <% if policy([:admin, user]).confirm_via_otp? %>
   <%= link_to t('controller.users.confirm_via_otp.link_name'), confirm_via_otp_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
