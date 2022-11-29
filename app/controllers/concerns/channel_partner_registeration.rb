@@ -85,7 +85,7 @@ module ChannelPartnerRegisteration
     respond_to do |format|
       if @channel_partner.save
         #auto approve partner company if flag on client is enabled
-        @channel_partner.approve! if current_client.enable_direct_activation_for_cp?
+        @channel_partner.approve!
         format.html { redirect_to channel_partners_path, notice: 'Partner Company Successfully Created' }
         format.json { render json: @channel_partner, status: :created }
       else
@@ -128,6 +128,7 @@ module ChannelPartnerRegisteration
     @channel_partner.project_ids << current_project.id.to_s if current_project.present?
     respond_to do |format|
       if @channel_partner.save
+        @channel_partner.approve! if current_client.enable_direct_activation_for_cp?
         format.json { render 'channel_partners/register_with_new_company.json', status: :created }
       else
         format.json { render json: { errors: @channel_partner.errors.full_messages.uniq }, status: :unprocessable_entity }

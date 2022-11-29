@@ -9,7 +9,7 @@ class Admin::BookingDetailsController < AdminController
   before_action :set_project_unit, only: :booking
   before_action :set_receipt, only: :booking
   before_action :set_project, only: [:new_booking_on_project]
-  before_action :set_lead, only: [:process_booking_on_project]
+  before_action :set_lead, only: [:process_booking_on_project, :new_booking_without_inventory, :create_booking_without_inventory]
 
   def index
     authorize [:admin, BookingDetail]
@@ -197,8 +197,8 @@ class Admin::BookingDetailsController < AdminController
 
   def new_booking_without_inventory
     @booking_detail = BookingDetail.new(
-                                    lead_id: params[:lead_id],
-                                    project_id: params[:project_id],
+                                    lead_id: @lead.id,
+                                    project_id: @lead.project_id,
                                     site_visit_id: params[:site_visit_id],
                                     booking_portal_client_id: current_client.id
                                     )
