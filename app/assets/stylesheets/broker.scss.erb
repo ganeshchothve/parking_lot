@@ -4709,6 +4709,22 @@ table .dropdown-menu.show{
 			color: #30384B;
 			font-size: 14px;
 		}
+		.btn-action{
+			width: 50px;
+		}
+	}
+	tr > td > a{
+		color: $primary!important;
+		text-decoration: underline;
+		// border-bottom: 1px solid;
+		svg.fill-theme path{
+			fill: $primary;
+		}
+	}
+	.dropdown{
+		a{
+			border-bottom: 0px solid;
+		}
 	}
 }
 /********************** Apartment Filter Popup *******************/
@@ -4820,6 +4836,12 @@ table .dropdown-menu.show{
 		height: auto;
 		@include tableLightTitle;
 		padding: 8px 15px!important;
+	}
+}
+.dropdown-item{
+	&.active,&:active{
+		background-color: #E7F0FD;
+		color: $primary;
 	}
 }
 @mixin LightTitle14{

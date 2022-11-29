@@ -11,7 +11,7 @@
               <th>Bookings</th>
               <% if current_client.enable_site_visit? %><th><%= I18n.t("mongoid.models.site_visit.other") %></th><% end %>
               <% if policy([current_user_role_group, Lead]).index? %><th><%= I18n.t("mongoid.models.lead.other") %></th><% end %>
-              <th>Action</th>
+              <th class="btn-action">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -43,9 +43,11 @@
                 <% if current_client.enable_site_visit? %>
                 <td><% sv_count = SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).where(project_id: project.id).count %>
                 <%= link_to_if policy([current_user_role_group, SiteVisit]).index?, sv_count, admin_site_visits_path(fltrs: {project_id: project.id}) %>
-                            <% if allow_walkins?(project) %>
-                  <%= link_to I18n.t("global.add"), new_admin_lead_path(project_id: project.id, walkin: true), class: 'modal-remote-form-link prjt-add h-auto' %>
-                <% end %>
+                <span class="float-end">
+                        <%= link_to I18n.t("global.add"), new_admin_lead_path(project_id: project.id, walkin: true), class: 'modal-remote-form-link prjt-add h-auto text-primary  text-decoration-underline' %>
+                      <% if allow_walkins?(project) %>
+                      <% end %>
+                </span>
                 </td>
                 <% end %>
                 <% if policy([current_user_role_group, Lead]).index? %>

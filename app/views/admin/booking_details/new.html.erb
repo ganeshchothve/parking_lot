@@ -24,8 +24,9 @@
           <%= f.select :project_unit_id, options_from_collection_for_select(ProjectUnit.where(_id: f.object.project_unit_id), 'id', 'first_name', f.object.project_unit_id), {prompt: I18n.t("global.select") }, class: 'selectize-remote', required: 'required', autofocus: true, data: { url: admin_project_units_path, params: { status: 'available', fltrs: { project_tower_id: '-' } } }%>
         </div>
       </div>
-      <div class="modal-footer text-end">
-        <%= f.submit I18n.t("global.submit"), class: "btn btn-primary" %>
+      <div class="filter-footer modal-footer text-end pe-0">
+        <%= f.submit I18n.t("global.submit"), class: "btn btn-primary f-save-btn db-small-btn bg-light-blue fn-500 float-end me-0" %>
+        <button type="button" class="btn btn-secondary f-cancel-btn float-end"><%= I18n.t("global.cancel") %></button>
       </div>
     </div>
   </div>

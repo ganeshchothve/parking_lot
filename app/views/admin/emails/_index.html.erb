@@ -1,14 +1,14 @@
 <table class='table table-responsive table-color'>
   <thead>
     <thead>
-      <tr class="bg-gradient-cd white">
+      <tr>
         <% unless current_user.buyer? %>
         <th><%= t('mongoid.attributes.email.to') %></th>
         <% end %>
         <th><%= t('mongoid.attributes.email.subject') %></th>
         <th><%= t('mongoid.attributes.email.status') %></th>
         <th><%= t('mongoid.attributes.email.sent_on') %></th>
-        <th>Action</th>
+        <th class="btn-action">Action</th>
       </tr>
     </thead>
   </thead>

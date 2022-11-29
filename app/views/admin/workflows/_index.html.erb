@@ -10,7 +10,7 @@
               <th><%= t('mongoid.attributes.workflow/pipeline.name') %></th>
               <th><%= t('mongoid.attributes.workflow/pipeline.stage') %></th>
               <th><%= t('mongoid.attributes.workflow/pipeline.reason') %></th>
-              <th><%= t('mongoid.attributes.workflow.actions') %></th>
+              <th class="btn-action"><%= t('mongoid.attributes.workflow.actions') %></th>
             </tr>
           </thead>
           <tbody>
@@ -38,7 +38,7 @@
                 <% end %>
 
                 <td><%= wf_pipeline.try(:lead_closed_reason).presence || '-' %></td>
-                <td class="action-btn">
+                <td>
                   <div class="dropdown">
                     <a  href="javascript:;" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
