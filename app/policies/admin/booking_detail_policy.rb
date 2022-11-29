@@ -17,9 +17,11 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
       valid = false
       @condition = 'allowed_bookings'
     end
-    unless user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
-      valid = false
-      @condition = 'project_not_subscribed'
+    if user.role.in?(%w(cp_owner channel_partner))
+      unless !interested_project_present?
+        valid = false
+        @condition = 'project_not_subscribed'
+      end
     end
     unless project_access_allowed?(current_project_id)
       valid = false
@@ -29,9 +31,11 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
       valid = false
       @condition = 'user_not_included'
     end
-    unless record.lead.project.enable_inventory? && enable_actual_inventory?(user)
-      valid = false
-      @condition = 'inventory_access_not_given'
+    if record.lead.project.enable_inventory?
+      unless record.lead.project.enable_inventory? && enable_actual_inventory?(user)
+        valid = false
+        @condition = 'inventory_access_not_given'
+      end
     end
     unless record.lead&.project&.bookings_enabled?
       valid = false

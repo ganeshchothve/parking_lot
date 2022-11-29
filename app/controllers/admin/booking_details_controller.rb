@@ -295,7 +295,7 @@ class Admin::BookingDetailsController < AdminController
   private
 
   def set_lead
-    @lead = Lead.where(booking_portal_client_id: current_client.id, id: params[:lead_id]).first
+    @lead = Lead.where(booking_portal_client_id: current_client.id, id: (params[:lead_id] || params.dig("booking_detail", "lead_id"))).first
     redirect_to home_path(current_user), alert: I18n.t("controller.leads.alert.not_found") if @lead.blank?
   end
 
