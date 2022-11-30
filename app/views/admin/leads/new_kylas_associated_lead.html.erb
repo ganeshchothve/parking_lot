@@ -2,28 +2,28 @@
   <div class="col-lg-3 booking-flow-step px-0 mh-100">
     <p class="fn-16 mb-0 active">
       <!-- <i class="fa fa-check-circle me-2 fill-success"></i> -->
-      <span class="">1</span>
-      Select Project
+      <span class=""><%= t('controller.searches.select_project.step') %></span>
+      <%= t('controller.searches.select_project.link_name') %>
     </p>
     <p class="fn-16 mb-0">
       <!-- <i class="fa fa-check-circle me-2 fill-success"></i> -->
-      <span>2</span>
-      <%= I18n.t("controller.project_units.filter_project") %>
+      <span><%= t('controller.searches.filter.step') %></span>
+      <%= I18n.t("controller.searches.filter.link_name") %>
     </p>
     <p class="fn-16 mb-0">
       <!-- <i class="fa fa-check-circle me-2 fill-theme"></i> -->
-      <span>3</span>
+      <span><%= t('controller.searches.towers.step') %></span>
       <%= I18n.t("controller.searches.towers.link_name") %>
     </p>
     <p class="fn-16 mb-0">
       <!-- <i class="fa fa-check-circle me-2 fill-theme"></i> -->
-      <span>4</span>
+      <span><%= t('controller.searches.apartments.step') %></span>
       <%= I18n.t("controller.searches.apartments.link_name") %>
     </p>
   </div>
   <div class="col-lg-9 px-0 mh-100">
     <%= form_for(@lead, url: create_kylas_associated_lead_admin_leads_path, local: true, html: {class: 'validate-form ms-2 me-2', id: 'kylas_lead_form'}) do |f| %>
-      <% if @kylas_emails.present? || @kylas_phones.present? %>
+      <% if @deal_associated_contacts.present? %>
         <%= render 'kylas_associated_lead_form', f: f %>
       <% else %>
         <%= render 'form_new_lead_info', f: f %>
@@ -32,40 +32,8 @@
   </div>
 </div>
 
-
 <%= javascript_tag do %>
   $(document).ready(function(selector){
     FormInitializer.init($("#kylas_lead_form"));
-    var selected_email = $(selector).find(".email_select");
-    var emails = selected_email[0].selectize;
-    var selected_phones = $(selector).find(".phone_select");
-    var phones = selected_phones[0].selectize;
-    $('#lead_kylas_contact_id').change(function(e){
-      var contactId = $(e.currentTarget).val();
-      $.ajax({
-        url: "/admin/leads/deal_associated_contact_details.json",
-        data: { contact_id: contactId },
-        type: "get",
-        dataType: "json",
-        success: function(data){
-          $('#lead_first_name').val(data.firstName);
-          $('#lead_last_name').val(data.lastName);
-          emails.setValue('');
-          emails.clearOptions();
-          phones.setValue('');
-          phones.clearOptions();
-          email_options = _.map(data['emails'], function(d) { return { value: d.value, text: d.value } });
-          phone_options = _.map(data['phoneNumbers'], function(d) { return { value: (d.dialCode+d.value), text: (d.dialCode+d.value) } });
-          emails.addOption(email_options);
-          emails.refreshOptions(false);
-          phones.addOption(phone_options);
-          phones.refreshOptions(false);
-        },
-        error: function(){
-          Amura.global_error_handler("Select Contact...")
-        }
-      });
-    });
-
   });
 <% end %>

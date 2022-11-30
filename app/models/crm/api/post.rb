@@ -44,35 +44,6 @@ class Crm::Api::Post < Crm::Api
     return {alert: e.message}
   end
 
-  def set_access_token user, request_header
-    if base.oauth_type == "salesforce"
-      sfdc_credentials = ENV_CONFIG['sfdc'] || {}
-      if sfdc_credentials.present?
-        uri = URI(base.domain)
-        uri.path = "/#{path}".squeeze('/')
-        host = uri.host
-        sfdc_credentials['api_version'] = '41.0'
-        sfdc_credentials['instance_url'] = base.domain
-        sfdc_credentials['host'] = host
-        client = Restforce.new(sfdc_credentials.symbolize_keys)
-        begin
-          response = client.authenticate!
-          request_header['Authorization'] = "Bearer #{response.dig("access_token")}"
-        rescue Restforce::AuthenticationError => e
-          Rails.logger.error "[Crm::Api::Post] Restforce authentication error: #{e.message}"
-        end
-      else
-        Rails.logger.error "[Crm::Api::Post] OAuth credentials not found"
-      end
-    elsif base.oauth_type == "kylas"
-      if user.kylas_refresh_token
-        request_header['Authorization'] = "Bearer #{user.fetch_access_token}"
-      else
-        request_header['api-key'] = user.kylas_api_key
-      end
-    end
-  end
-
   def process_response response, record
     if response.body == ''
       response = { error: 'Response is empty'}

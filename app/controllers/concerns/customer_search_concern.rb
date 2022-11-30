@@ -46,7 +46,7 @@ module CustomerSearchConcern
       @lead.update(permitted_attributes([:admin, @lead]))
     end
     if params[:manager_id].present?
-      cp_user = User.where(id: params[:manager_id]).first
+      cp_user = User.where(booking_portal_client_id: current_client.try(:id), id: params[:manager_id]).first
       cp_lead_activity = CpLeadActivityRegister.create_cp_lead_object(@lead, cp_user) if cp_user.present?
       cp_lead_activity.save if cp_lead_activity.present?
     end
@@ -63,7 +63,7 @@ module CustomerSearchConcern
       _sitevisit = _lead.site_visits.build(scheduled_on: params[:sitevisit_datetime], status: "scheduled", creator: current_user, project: _lead.project, user: _lead.user)#, cp_code: params[:cp_code])
       _sitevisit.is_revisit = _lead.is_revisit?
     elsif params[:sitevisit_id].present?
-      _sitevisit = _lead.site_visits.where(id: params[:sitevisit_id]).first
+      _sitevisit = _lead.site_visits.where(booking_portal_client_id: current_client.try(:id), id: params[:sitevisit_id]).first
       _sitevisit.status = 'scheduled' if _sitevisit.present?
     end
     _lead.current_site_visit = _sitevisit
@@ -73,7 +73,7 @@ module CustomerSearchConcern
     #  _lead.temporarily_block_manager(channel_partner.associated_user_id) if channel_partner.present?
     #end
 
-    SelldoSitevisitUpdateWorker.new.perform(_lead.id, current_user.id, _sitevisit.id, params[:cp_code]) if _lead.save && _lead.lead_id && _sitevisit.present?
+    SelldoSitevisitUpdateWorker.new.perform(current_client.id, _lead.id, current_user.id, _sitevisit.id, params[:cp_code]) if _lead.save && _lead.lead_id && _sitevisit.present?
 
     if !_lead.queued? && _lead.queued!
       @customer_search.assign_attributes(step: 'queued')

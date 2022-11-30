@@ -27,7 +27,7 @@ class Admin::ReceiptsController < AdminController
                       payment_mode: 'cheque',
                       payment_type: 'token',
                       total_amount: current_client.blocking_amount,
-                      booking_portal_client_id: @lead.booking_portal_client_id
+                      booking_portal_client_id: current_client.id
                     )
     authorize([:admin, @receipt])
     render layout: false
@@ -53,7 +53,7 @@ class Admin::ReceiptsController < AdminController
                       lead: @lead,
                       creator: current_user,
                       project: @lead.project,
-                      booking_portal_client_id: @lead.booking_portal_client_id
+                      booking_portal_client_id: current_client.id
                       )
     @receipt.assign_attributes(permitted_attributes([:admin, @receipt]))
     @receipt.payment_gateway = current_client.payment_gateway if @receipt.payment_mode == 'online'
@@ -151,12 +151,12 @@ class Admin::ReceiptsController < AdminController
   private
 
   def set_lead
-    @lead = Lead.where(_id: params[:lead_id]).first
+    @lead = Lead.where(booking_portal_client_id: current_client.try(:id), _id: params[:lead_id]).first
     redirect_to home_path(current_user), alert: I18n.t("controller.leads.alert.not_found"), status: 404 if @lead.blank?
   end
 
   def set_receipt
-    @receipt = Receipt.where(_id: params[:id]).first
+    @receipt = Receipt.where(booking_portal_client_id: current_client.try(:id), _id: params[:id]).first
     redirect_to home_path(current_user), alert: I18n.t("controller.receipts.alert.not_found"), status: 404 if @receipt.blank?
   end
 

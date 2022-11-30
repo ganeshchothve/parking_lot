@@ -38,9 +38,13 @@
     <%# end %>
   </head>
   <body>
-    <%= render "layouts/navbar" %>
+    <% if !full_page_view? %>
+      <%= render "layouts/navbar" %>
+    <% end %>
     <%= yield %>
-    <%= render "layouts/navbar_footer" %>
+    <% if !full_page_view? %>
+      <%= render "layouts/navbar_footer" %>
+    <% end %>
     <%= render "layouts/gamification" %>
     <%= render 'layouts/partials/google_code' %>
     <%= javascript_tag do %>

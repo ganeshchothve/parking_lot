@@ -32,16 +32,16 @@ module CrmIntegration
     if crm_base.present?
       crm_id = self.third_party_references.where(crm_id: crm_base.id).first&.reference_id
       if self.is_a?(SiteVisit) && self.status == "conducted"
-        api = Crm::Api::Put.where(resource_class: self.class.to_s, base_id: crm_base.id, is_active: true).first
+        api = Crm::Api::Put.where(booking_portal_client_id: self.booking_portal_client_id, resource_class: self.class.to_s, base_id: crm_base.id, is_active: true).first
       elsif crm_id.present? && !force_create
-        api = Crm::Api::Put.where(resource_class: self.class.to_s, base_id: crm_base.id, is_active: true).first
+        api = Crm::Api::Put.where(booking_portal_client_id: self.booking_portal_client_id, resource_class: self.class.to_s, base_id: crm_base.id, is_active: true).first
       else
-        api = Crm::Api::Post.where(resource_class: self.class.to_s, base_id: crm_base.id, is_active: true).first
+        api = Crm::Api::Post.where(booking_portal_client_id: self.booking_portal_client_id, resource_class: self.class.to_s, base_id: crm_base.id, is_active: true).first
       end
 
       if self.valid? && api.present?
         api.execute(self)
-        api_log = ApiLog.where(resource_id: self.id).first
+        api_log = ApiLog.where(booking_portal_client_id: self.booking_portal_client_id, resource_id: self.id).first
       end
     end
     [api, api_log]
@@ -49,7 +49,7 @@ module CrmIntegration
 
   # used safe navigation operator "&."
   def crm_reference_id(crm_base)
-    crm_base = Crm::Base.where(domain: crm_base).first if crm_base.is_a?(String)
+    crm_base = Crm::Base.where(domain: crm_base, booking_portal_client_id: self.booking_portal_client.id).first if crm_base.is_a?(String)
     third_party_references.where("crm_id": crm_base.id).first&.reference_id
   end
 

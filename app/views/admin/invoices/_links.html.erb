@@ -41,7 +41,7 @@
 <% end %>
 
 <!-- Raise incentive deduction for cp_admin -->
-<% incentive_deduction = IncentiveDeduction.where(invoice_id: invoice.id).first %>
+<% incentive_deduction = IncentiveDeduction.where(booking_portal_client_id: current_client.try(:id), invoice_id: invoice.id).first %>
 <% if incentive_deduction.blank? %>
   <% if policy([current_user_role_group, invoice.build_incentive_deduction]).create? %>
     <%= link_to t("controller.incentive_deductions.new.link_name"), new_admin_invoice_incentive_deduction_path(invoice), class: 'dropdown-item modal-remote-form-link' %>

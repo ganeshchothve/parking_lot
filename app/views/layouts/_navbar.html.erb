@@ -13,7 +13,9 @@
             <nav class="navbar navbar-expand-lg shadow-none px-0">
               <div class="container-fluid px-0">
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                  <%= render "layouts/navbar/#{current_user_role_group}" %>
+                  <% if policy([current_user_role_group, current_client]).allow_marketplace_access? %>
+                    <%= render "layouts/navbar/#{current_user_role_group}" %>
+                  <% end %>
                 </div>
               </div>
             </nav>
@@ -31,8 +33,10 @@
                 <!--<span class="user-name"><%= t('welcome', name: current_user.first_name ) %></span>-->
               </a>
               <div class="dropdown-menu user-menu-top" aria-labelledby="navbarDropdown">
-                <%= link_to t('controller.users.profile.link_name', role: User.human_attribute_name("role.#{current_user.role}")), [:edit, current_user_role_group, current_user], class: "dropdown-item modal-remote-form-link" %>
-                <%= link_to t('controller.users.change_password.link_name'), [:update_password, current_user_role_group, current_user], class: "dropdown-item modal-remote-form-link" %>
+                <% if policy([current_user_role_group, current_client]).allow_marketplace_access? %>
+                  <%= link_to t('controller.users.profile.link_name', role: User.human_attribute_name("role.#{current_user.role}")), [:edit, current_user_role_group, current_user], class: "dropdown-item modal-remote-form-link" %>
+                  <%= link_to t('controller.users.change_password.link_name'), [:update_password, current_user_role_group, current_user], class: "dropdown-item modal-remote-form-link" %>
+                <% end %>
                 <% if policy([:admin, current_user]).move_to_next_state? %>
                   <% if current_user.may_break? %>
                     <%= link_to I18n.t("global.link_to.take_break"), move_to_next_state_admin_user_path(current_user, status: 'break', format: :json), method: 'patch', remote: true, data: { disable_with: 'Taking Break...' }, class: 'dropdown-item break move-to-next-state' %>

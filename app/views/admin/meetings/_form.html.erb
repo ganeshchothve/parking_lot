@@ -37,7 +37,7 @@
 
           <div class="mb-3">
             <%= f.label :project_id %>
-            <%= f.select :project_id, Project.where(id: f.object.project_id).collect{|x| [x.ds_name, x.id]}, {prompt: I18n.t("global.select")}, class: "selectize-remote", data: {url: admin_projects_path}, disabled: (policy([current_user_role_group, meeting]).editable_field?("project_id") ? false : true) %>
+            <%= f.select :project_id, Project.where(booking_portal_client_id: current_client.try(:id), id: f.object.project_id).collect{|x| [x.ds_name, x.id]}, {prompt: I18n.t("global.select")}, class: "selectize-remote", data: {url: admin_projects_path}, disabled: (policy([current_user_role_group, meeting]).editable_field?("project_id") ? false : true) %>
           </div>
 
           <div class="mb-3">

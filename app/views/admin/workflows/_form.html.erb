@@ -27,7 +27,7 @@
       <div class="col-md-3">
         <div class='m-3'>
           <%= f.label :product_amount_type %>
-          <%= f.select :product_amount_type, Workflow::PRODUCT_AMOUNT_TYPES.collect{|x| [t("mongoid.attributes.workflow/product_amount_types.#{x}"), x]}, {prompt: I18n.t("global.select")}, class: "selectize" %>
+          <%= f.select :product_amount_type, options_for_select(Workflow::PRODUCT_AMOUNT_TYPES.collect{|x| [t("mongoid.attributes.workflow/product_amount_types.#{x}"), x]}, @workflow.product_amount_type), {prompt: 'Select'}, class: 'selectize' %>
         </div>
       </div>
     <% end %>
@@ -108,7 +108,6 @@
 <% end %>
 <%= javascript_tag do %>
 $(document).ready(function(selector){
-  
   FormInitializer.init($("#workflow_form"));
 
   var pipeline_stage_reasons = [];
@@ -194,7 +193,6 @@ $(document).ready(function(selector){
         pipeline_stage_selectize.refreshOptions(false);
         pipeline_stage_selectize.settings.placeholder = 'Select'
         pipeline_stage_selectize.updatePlaceholder();
-
         if(pipeline_stage_val)
         {
           if(!_.isEmpty(pipeline_stage_val.toString())){

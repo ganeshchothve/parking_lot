@@ -22,11 +22,12 @@ class SearchPolicy < ApplicationPolicy
     valid = valid && (record.lead.try(:user_id) == user.id) if user.buyer?
     valid = valid && record.lead.referenced_manager_ids.include?(user.id) if user.role == "channel_partner"
     valid = valid && true if ['cp', 'sales', 'sales_admin', 'admin'].include?(user.role)
+    valid = valid && record.lead&.project&.is_active? && record.lead&.project&.bookings_enabled?
     valid
   end
 
   def three_d?
-    new? #&& current_client.external_inventory_view_config.present? && current_client.external_inventory_view_config.enabled?
+    new? && current_client.external_inventory_view_config.present? && current_client.external_inventory_view_config.enabled?
   end
 
   def edit?

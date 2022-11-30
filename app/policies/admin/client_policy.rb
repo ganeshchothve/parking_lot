@@ -21,6 +21,10 @@ class Admin::ClientPolicy < ClientPolicy
     show?
   end
 
+  def kylas_api_key?
+    user.role.in?(%w(admin superadmin))
+  end
+
   def switch_client?
     user.role.in?(%w(superadmin)) && user.client_ids.count > 1
   end

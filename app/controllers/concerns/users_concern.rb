@@ -26,26 +26,26 @@ module UsersConcern
   end
 
   def resend_confirmation_instructions
-    @user = User.find(params[:id])
+    @user = User.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first
     respond_to do |format|
       if @user.resend_confirmation_instructions
         flash[:notice] = I18n.t("controller.users.notice.confirmation_sent")
         format.html { redirect_to request.referer || admin_users_path }
       else
-        flash[:error] = I18n.t("controller.users.errors.could_not_send_confirmation")
+        flash[:alert] = I18n.t("controller.users.errors.could_not_send_confirmation")
         format.html { redirect_to request.referer || admin_users_path }
       end
     end
   end
 
   def resend_password_instructions
-    @user = User.find(params[:id])
+    @user = User.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first
     respond_to do |format|
       if @user.send_reset_password_instructions
         flash[:notice] = I18n.t("controller.users.notice.resend_password_sent")
         format.html { redirect_to admin_users_path }
       else
-        flash[:error] = I18n.t("controller.users.errors.could_not_send_reset_password")
+        flash[:alert] = I18n.t("controller.users.errors.could_not_send_reset_password")
         format.html { redirect_to admin_users_path }
       end
     end
@@ -58,10 +58,10 @@ module UsersConcern
       format.html do
         if @user.save
           SelldoLeadUpdater.perform_async(@user.leads.first&.id, {stage: 'confirmed'}) if @user.buyer?
-          email_template = ::Template::EmailTemplate.where(name: "account_confirmation").first
+          email_template = ::Template::EmailTemplate.where(booking_portal_client_id: current_client.try(:id), name: "account_confirmation").first
           email = Email.create!({
             booking_portal_client_id: @user.booking_portal_client_id,
-            body: ERB.new(@user.booking_portal_client.email_header).result( binding) + email_template.parsed_content(@user) + ERB.new(@user.booking_portal_client.email_footer).result( binding ),
+            body: ERB.new(@user.booking_portal_client.email_header).result(@user.booking_portal_client.get_binding) + email_template.parsed_content(@user) + ERB.new(@user.booking_portal_client.email_footer).result(@user.booking_portal_client.get_binding),
             subject: email_template.parsed_subject(@user),
             recipients: [ @user ],
             cc: @user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
@@ -75,7 +75,7 @@ module UsersConcern
             redirect_to request.referrer || dashboard_url, notice: t('controller.users.account_confirmed')
           end
         else
-          redirect_to request.referrer || dashboard_url, alert: t('controller.users.cannot_confirm_user')
+          redirect_to request.referrer || dashboard_url, alert: @user.errors.full_messages
         end
       end
     end
@@ -94,9 +94,9 @@ module UsersConcern
   def sync_kylas_users
     current_client.set(sync_user: false)
     if Rails.env.development?
-      SyncKylasUsersWorker.new.perform(current_user.id.to_s)
+      SyncKylasUsersWorker.new.perform(current_client.id.to_s)
     else
-      SyncKylasUsersWorker.perform_async(current_user.id.to_s)
+      SyncKylasUsersWorker.perform_async(current_client.id.to_s)
     end
     flash[:notice] = 'Kylas Users Syncing has been initiated'
     redirect_to admin_users_path
@@ -134,7 +134,7 @@ module UsersConcern
   end
 
   def block_lead
-    @referenced_managers = User.in(id: @user.referenced_manager_ids).all
+    @referenced_managers = User.where(booking_portal_client_id: current_client.try(:id)).in(id: @user.referenced_manager_ids).all
     render layout: false
   end
 
@@ -177,7 +177,7 @@ module UsersConcern
       user_current_status_in_company = @user.user_status_in_company
 
       if user_current_status_in_company == 'pending_approval' && @user.event == 'active'
-        @channel_partner = ChannelPartner.where(id: params.dig(:user, :channel_partner_id)).first
+        @channel_partner = ChannelPartner.where(booking_portal_client_id: current_client.try(:id), id: params.dig(:user, :channel_partner_id)).first
         unless @channel_partner
           format.html { redirect_to request.referer, alert: I18n.t("controller.users.alert.company_not_found") }
           format.json { render json: { errors: [I18n.t("controller.users.alert.company_not_found")] }, status: :unprocessable_entity }
@@ -198,7 +198,7 @@ module UsersConcern
 
   def generate_password
     if Rails.env.production?
-    ((('AaF'..'ZzK').to_a.sample + (0..999).to_a.sample.to_s + '@') * 2)
+      ((('AaF'..'ZzK').to_a.sample + (0..999).to_a.sample.to_s + '@') * 2)
     else
       "Iris@2022"
     end

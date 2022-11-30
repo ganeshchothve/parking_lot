@@ -642,6 +642,12 @@ en:
             Receipt: "Payment"
             UserKyc: "User KYC"
             BookingDetail: "Booking Detail"
+            Lead: 'Lead'
+            SiteVisit: 'Walkin'
+            FundAccount: 'Account'
+            Note: 'Note'
+            Client: 'Client'
+            Invoice: 'Invoice'
       crm/api:
         event: "Event Name"
         resource_class: "Resource Class"
@@ -817,7 +823,7 @@ en:
         value: "Value"
 
       client:
-        name: "Client Name (Used across the app)"
+        name: "Client Name"
         allowed_bookings_per_user: "Bookings allowed per user"
         selldo_client_id: "SellDo Client ID"
         selldo_form_id: "SellDo Form ID"
@@ -916,6 +922,9 @@ en:
         partner_regions: "Partner Regions"
         enable_vis: "Enable vis"
         kylas_api_key: Kylas API Key
+        cp_deal_custom_field: "Channel Partner"
+        cp_lead_custom_field: "Channel Partner"
+        cp_meeting_custom_field: "Channel Partner"
       client/available_preferred_logins:
         phone: "Phone Based"
         email: "Email Based"
@@ -2029,6 +2038,7 @@ en:
         kylas_user_id: Kylas Users
         new_user_kylas_crm: "How to add a new user in Kylas CRM?"
         booking_portal_client: Client Name
+        user_status_in_company_event: 'Status'
         change_in_manger:
           dear_team: "Dear Team"
           text: "Channel Partner has been changed on customer %{name1}. New assigned channel partner is %{name2}."
@@ -2085,6 +2095,9 @@ en:
         employee_user: "Employee"
         direct: "Direct"
         dev_sourcing_manager: "Developer Sourcing Manager"
+      user/company_events:
+        active: "Approve"
+        inactive: "Reject"
 
       fund_account:
         address: "UPI Address"
@@ -2124,6 +2137,7 @@ en:
         kylas_product: Kylas Product
         kylas_contact: Kylas Contacts
         manager_ids: Channel Partners
+        crm_reference_id: CRM Reference ID
       lead/stage:
         incoming: "Incoming"
         booked: "Booked"
@@ -2230,7 +2244,7 @@ en:
         actions: Actions
         create_product: Create product in Kylas?
         deactivate_product: Deactivate the product in Kylas?
-        update_product_on_deal: Update the product on Deal?
+        update_product_on_deal: Associate the product on Deal?
         product_amount_type: Product Price
       workflow/product_amount_types:
         agreement_price: "Agreement Value"
@@ -2905,7 +2919,7 @@ en:
         adding_existing_lead: "Above channel partner tried to add already existing lead. Details of the lead are as follows:"
         company_registration: "Company Registration"
         reason: "Reason"
-        application_rejected_by: "Your application has been rejected by <strong> %{name} %></strong>"
+        application_rejected_by: "Your application has been rejected by <strong>%{name}</strong>"
         get_registered: "Get Yourself Registered in Existing Company"
         register_company: "Register a New Company"
         reg_req_sent: "Your registration request has been sent to respective company owner"
@@ -3253,15 +3267,23 @@ en:
         details: "Site Visit Details"
     searches:
       booking_cancelled: Booking Cancelled
+      select_project:
+        step: 1
+        link_name: 'Select Project'
       filter:
+        step: 2
+        link_name: 'Filter Project'
         header: "Select Tower"
         hint: "Choose towers that suit your requirements"
         error: "We couldn't find any towers for your selection, would you like to change your search?"
         again: "Search Again"
       apartments:
-        title: "Apartmenets"
+        step: 4
+        header: 'Apartment Details'
+        title: "Apartments"
         link_name: "Choose Apartment"
       towers:
+        step: 3
         link_name: "Choose Tower"
         header: "Choose Apartment"
         hint: "Choose apartment that suit your requirements"
@@ -3469,17 +3491,22 @@ en:
         account_reactivation: "There was some error while reactivating account. Please contact support for assistance"
         could_not_send_confirmation: "Couldn't send confirmation instructions."
         could_not_send_reset_password: "Couldn't send Reset password instructions."
+        already_registered: "User with these details is already registered with a different role"
 
       alert:
         not_found: "User not found"
-      errors:
-        already_registered: "User with these details is already registered with a different role"
       text:
         payment_done: "Payment Done"
         payment_pending: "Payment Pending"
         customer_signature: "Customer Signature"
         authorized_signatory: "Authorized Signatory"
         e_customer_form: "This is an electronically generated customer form."
+      view:
+        all: All Users
+        join_requests: User Requests
+      approve_reject_company_user:
+        header: Approve / Reject User
+        link_name: Approve / Reject
 
     interested_projects:
       set_interested_project_missing: "Interested Project not found"
@@ -3641,6 +3668,9 @@ en:
     omniauth_callbacks:
       alert:
         register: "Please ask support team to register your account."
+    shortened_urls:
+      alert:
+        not_found: "Invalid URL"
 
   records:
     text:
@@ -3827,7 +3857,7 @@ en:
           step2: "We will notify you via email on the status of your application."
           step3: "Our estimated review time is between 24-48 hours"
         rejected: "Reason %{reason}"
-        applicatin_rejected: "Your application has been rejected"
+        application_rejected: "Your application has been rejected"
         complete_registration: "Complete Registration"
 
   selldo:
@@ -4010,3 +4040,8 @@ en:
 
       multi_page: "Displaying %{model} %{from} - %{to} of %{count} in total"
       multi_page_html: "Displaying %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> of <b>%{count}</b> in total"
+
+  app:
+    errors:
+      marketplace_error: 'We encountered some issue with your Marketplace setup. Please connect with Kylas Customer Success'
+      payment_error: 'No receipt found'

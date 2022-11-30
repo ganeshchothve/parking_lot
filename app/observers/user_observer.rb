@@ -33,6 +33,11 @@ class UserObserver < Mongoid::Observer
     elsif ENV_CONFIG[:default_cp_manager_id].present?
       user.manager_id = ENV_CONFIG[:default_cp_manager_id]
     end
+    # update all the project ids for the user
+    if !user.role.in?(User::ALL_PROJECT_ACCESS)
+      project_ids = Project.where(booking_portal_client_id: user.booking_portal_client.id).pluck(:id)
+      user.assign_attributes(project_ids: project_ids)
+    end
   end
 
   def after_create user
@@ -83,26 +88,37 @@ class UserObserver < Mongoid::Observer
   end
 
   def after_save user
-    if user.lead_id.present? && crm = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+    if user.lead_id.present? && crm = Crm::Base.where(booking_portal_client_id: user.booking_portal_client.try(:id), domain: ENV_CONFIG.dig(:selldo, :base_url)).first
       user.update_external_ids({ reference_id: user.lead_id }, crm.id)
     end
     user.calculate_incentive if user.booking_portal_client.present? && user.booking_portal_client.incentive_calculation_type?("calculated")
     user.move_invoices_to_draft
 
-    if user.active? && user.role.in?(%w(cp_owner channel_partner)) && (user.changes.keys & %w(first_name last_name email phone))
+    if user.active? && user.role.in?(%w(cp_owner channel_partner)) && (user.changes.keys & %w(first_name last_name email phone)).present?
       if Rails.env.staging? || Rails.env.production?
         GenerateCoBrandingTemplatesWorker.perform_in(60.seconds, user.id.to_s)
       else
         GenerateCoBrandingTemplatesWorker.new.perform(user.id)
       end
     end
-    if user.role?(:admin) && user.kylas_access_token_changed?
-      if user.booking_portal_client.try(:is_able_sync_products_and_users?)
-        user.booking_portal_client.set(sync_product: false)
-        SyncKylasProductsWorker.perform_async(user.id.to_s)
-        user.booking_portal_client.set(sync_user: false)
-        SyncKylasUsersWorker.perform_async(user.id.to_s)
-        user.booking_portal_client.set(is_able_sync_products_and_users: false)
+
+    if user.booking_portal_client.is_marketplace?&& user.role.in?(%w(cp_owner channel_partner)) && user.user_status_in_company == 'active' && (user.first_name_changed? || user.last_name_changed?)
+      booking_portal_client = user.booking_portal_client
+      admin_user = booking_portal_client.users.admin.ne(kylas_access_token: nil).first
+      deal_custom_field_id = booking_portal_client.kylas_custom_fields.dig(:deal, :id)
+      lead_custom_field_id = booking_portal_client.kylas_custom_fields.dig(:lead, :id)
+      meeting_custom_field_id = booking_portal_client.kylas_custom_fields.dig(:meeting, :id)
+
+      if deal_custom_field_id.present?
+        Kylas::UpdateDealPicklist.new(admin_user, user).call
+      end
+
+      if lead_custom_field_id.present?
+        Kylas::UpdateLeadPicklist.new(admin_user, user).call
+      end
+
+      if meeting_custom_field_id.present?
+        Kylas::UpdateMeetingPicklist.new(admin_user, user).call
       end
     end
   end

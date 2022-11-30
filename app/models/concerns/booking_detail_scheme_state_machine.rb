@@ -33,7 +33,7 @@ module BookingDetailSchemeStateMachine
     end
 
     def other_approved_scheme_present?
-      BookingDetailScheme.where(project_unit_id: project_unit_id, user_id: user_id, status: 'approved').count > 1
+      BookingDetailScheme.where(booking_portal_client_id: self.booking_portal_client_id, project_unit_id: project_unit_id, user_id: user_id, status: 'approved').count > 1
     end
 
     def after_draft_event

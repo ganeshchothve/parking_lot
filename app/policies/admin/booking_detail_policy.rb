@@ -8,19 +8,48 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def new?(current_project_id = nil)
-    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner].include?(user.role) && eligible_user? && enable_actual_inventory?(user) && record.project&.is_active? && record.lead&.project&.bookings_enabled?
-    out = false if user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
-    out = out && project_access_allowed?(current_project_id)
-    out
+    valid = true
+    unless eligible_user?
+      valid = false
+      @condition = 'kyc_required'
+    end
+    unless is_buyer_booking_limit_exceed?
+      valid = false
+      @condition = 'allowed_bookings'
+    end
+    if user.role.in?(%w(cp_owner channel_partner))
+      unless !interested_project_present?
+        valid = false
+        @condition = 'project_not_subscribed'
+      end
+    end
+    unless project_access_allowed?(current_project_id)
+      valid = false
+      @condition = 'project_access_not_given'
+    end
+    unless (%w[superadmin admin sales sales_admin gre] + User::CHANNEL_PARTNER_USERS).include?(user.role)
+      valid = false
+      @condition = 'user_not_included'
+    end
+    if record.lead.project.enable_inventory?
+      unless record.lead.project.enable_inventory? && enable_actual_inventory?(user)
+        valid = false
+        @condition = 'inventory_access_not_given'
+      end
+    end
+    unless record.lead&.project&.bookings_enabled?
+      valid = false
+      @condition = 'booking_disabled_on_project'
+    end
+    unless record.project&.is_active?
+      valid = false
+      @condition = 'project_not_active'
+    end
+    valid
   end
 
   def create?(current_project_id = nil)
-    valid = false
-    valid = is_buyer_booking_limit_exceed? && eligible_user? && enable_actual_inventory?(user) && record.lead&.project&.bookings_enabled?
-    valid = valid && project_access_allowed?(current_project_id)
-    return true if valid
-    @condition = 'allowed_bookings'
-    false
+    new?
   end
 
   def booking?
@@ -231,7 +260,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def interested_project_present?
     if record.is_a?(BookingDetail) && record.project_id.present?
-      user.interested_projects.approved.where(project_id: record.project_id).present?
+      user.interested_projects.approved.where(booking_portal_client_id: record.booking_portal_client_id, project_id: record.project_id).present?
     else
       true
     end
@@ -239,7 +268,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def is_assigned_lead?
     if user.role?(:sales) && record.lead.is_a?(Lead)
-      Lead.where(id: record.lead.id, closing_manager_id: user.id).in(customer_status: %w(engaged)).first.present?
+      Lead.where(id: record.lead.id, closing_manager_id: user.id, booking_portal_client_id: record.booking_portal_client_id).in(customer_status: %w(engaged)).first.present?
     else
       false
     end

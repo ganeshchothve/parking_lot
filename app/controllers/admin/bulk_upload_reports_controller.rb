@@ -4,7 +4,7 @@ class Admin::BulkUploadReportsController < AdminController
   around_action :apply_policy_scope, only: %i[index]
 
   def index
-    @bulk_upload_reports = BulkUploadReport.all.order('created_at DESC')
+    @bulk_upload_reports = BulkUploadReport.where(booking_portal_client_id: current_client.try(:id)).order('created_at DESC')
     @bulk_upload_reports = @bulk_upload_reports.paginate(page: params[:page] || 1, per_page: params[:per_page])
     respond_to do |format|
       format.json { render json: @bulk_upload_reports }
@@ -20,12 +20,12 @@ class Admin::BulkUploadReportsController < AdminController
   end
 
   def new
-    @bulk_upload_report = BulkUploadReport.new
+    @bulk_upload_report = BulkUploadReport.new(client_id: current_client.id)
     render layout: false
   end
 
   def create
-    @bulk_upload_report = BulkUploadReport.new(uploaded_by: current_user)
+    @bulk_upload_report = BulkUploadReport.new(uploaded_by: current_user, client_id: current_client.id)
     @bulk_upload_report.assign_attributes(permitted_attributes([:admin, @bulk_upload_report]))
     if current_user.role?(:admin)
       @bulk_upload_report.assign_attributes(client_id: current_user.booking_portal_client_id)

@@ -13,7 +13,7 @@
   <% if !f.object.lead.present? && f.object.project.present? %>
     <div class="mb-3">
       <%= f.label :lead_id, class: 'label-required control-label' %>
-      <%= f.select :lead_id, options_for_select(filter_lead_options), {prompt: I18n.t("global.select")},  required: 'required', class: "selectize-remote", data: { url: admin_leads_path(fltrs: {project_id: f.object.project.id, ds: true}) } %>
+      <%= f.select :lead_id, options_for_select(filter_lead_options(current_client)), {prompt: I18n.t("global.select")},  required: 'required', class: "selectize-remote", data: { url: admin_leads_path(fltrs: {project_id: f.object.project.id, ds: true}) } %>
     </div>
   <% end %>
   <div class="mb-3 position-relative offline">
@@ -108,7 +108,7 @@
     $('.booking_source').on('change', function(e){
       var source = e.target.value
       if (!(['Channel Partner', 'channel_partner', 'CP', 'cp', 'ChannelPartner'].includes(source))) {
-        var manager = JSON.parse('<%= raw User.in(role: ['cp_owner', 'channel_partner']).where(email: 'ketan.vaze@sell.do').collect {|cp| {value: cp.id.to_s, text:cp.name} }.to_json %>')
+        var manager = JSON.parse('<%= raw User.in(role: ['cp_owner', 'channel_partner']).where(booking_portal_client_id: current_client.try(:id), email: 'ketan.vaze@sell.do').collect {|cp| {value: cp.id.to_s, text:cp.name} }.to_json %>')
 
         var $manager = $("#tagged_manager").selectize();
         var manager_selectized = $manager[0].selectize;

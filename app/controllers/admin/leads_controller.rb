@@ -1,6 +1,6 @@
 class Admin::LeadsController < AdminController
   before_action :authenticate_user!
-  before_action :set_lead, except: %i[index new export search_by search_inventory new_kylas_associated_lead deal_associated_contact_details create_kylas_associated_lead new_kylas_lead create_kylas_lead]
+  before_action :set_lead, except: %i[index new export search_by search_inventory new_kylas_associated_lead create_kylas_associated_lead new_kylas_lead create_kylas_lead]
   before_action :authorize_resource
   before_action :set_sales_user, only: :assign_sales
   around_action :apply_policy_scope, only: %i[index search_inventory]
@@ -9,10 +9,10 @@ class Admin::LeadsController < AdminController
   def new
     attrs = {}
     if params[:user_id].present?
-      @user = User.where(id: params[:user_id]).first
+      @user = User.where(id: params[:user_id], booking_portal_client_id: current_client.try(:id)).first
       attrs = @user.as_json(only: %w(first_name last_name email phone))
     elsif params[:lead_id].present?
-      @existing_lead = Lead.where(id: params[:lead_id]).first
+      @existing_lead = Lead.where(id: params[:lead_id], booking_portal_client_id: current_client.try(:id)).first
     end
     if params[:project_id].present?
       attrs[:project_id] = params[:project_id]
@@ -116,7 +116,7 @@ class Admin::LeadsController < AdminController
   end
 
   def reassign_sales
-    @sales = User.where(id: params.dig(:lead, :closing_manager_id), role: 'sales').first
+    @sales = User.where(booking_portal_client_id: current_client.try(:id)).where(id: params.dig(:lead, :closing_manager_id), role: 'sales').first
     respond_to do |format|
       if @sales.present?
         if @lead.assign_manager(params.dig(:lead, :closing_manager_id), @lead.closing_manager_id)
@@ -172,19 +172,19 @@ class Admin::LeadsController < AdminController
   end
 
   def search_inventory
-    @leads = Lead.in(id: params[:leads][:ids]&.reject(&:blank?))
+    @leads = Lead.where(booking_portal_client_id: current_client.try(:id)).in(id: params[:leads][:ids]&.reject(&:blank?))
     @project_ids = params.dig(:leads, :tp_project_ids).split(',')
     @project_url = ENV_CONFIG.dig('third_party_inventory', 'base_url')
 
     respond_to do |format|
       if @leads.present? && @project_ids.present?
-        email_template = ::Template::EmailTemplate.where(name: "send_tp_projects_link").first
+        email_template = ::Template::EmailTemplate.where(name: "send_tp_projects_link", booking_portal_client_id: current_client.try(:id)).first
         if email_template.present?
           @leads.each do |lead|
             if lead.email.present?
               email = Email.create!({
                 booking_portal_client_id: current_client.id,
-                body: ERB.new(current_client.email_header).result(binding) + ERB.new(email_template.content).result(binding).html_safe + ERB.new(current_client.email_footer).result(binding),
+                body: ERB.new(current_client.email_header).result(current_client.get_binding) + ERB.new(email_template.content).result(binding).html_safe + ERB.new(current_client.email_footer).result(current_client.get_binding),
                 subject: ERB.new(email_template.subject).result(binding).html_safe,
                 to: [lead.email],
                 triggered_by_id: lead.id,
@@ -194,7 +194,7 @@ class Admin::LeadsController < AdminController
             end
           end
         end
-        sms_template = ::Template::SmsTemplate.where(name: "send_tp_projects_link").first
+        sms_template = ::Template::SmsTemplate.where(name: "send_tp_projects_link", booking_portal_client_id: current_client.try(:id)).first
         if sms_template.present?
           @leads.each do |lead|
             if lead.phone.present?
@@ -232,12 +232,12 @@ class Admin::LeadsController < AdminController
   end
 
   def find_lead_with_reference_id crm_id, reference_id
-    _crm = Crm::Base.where(id: crm_id).first
-    Lead.where("third_party_references.crm_id": _crm.try(:id), "third_party_references.reference_id": reference_id ).first
+    _crm = Crm::Base.where(id: crm_id, booking_portal_client_id: current_client.try(:id)).first
+    Lead.where(booking_portal_client_id: current_client.try(:id)).where("third_party_references.crm_id": _crm.try(:id), "third_party_references.reference_id": reference_id ).first
   end
 
   def set_sales_user
-    @sales = User.where(id: params[:sales_id], role: 'sales').first
+    @sales = User.where(id: params[:sales_id], role: 'sales', booking_portal_client_id: current_client.try(:id)).first
     unless @sales
       flash.now[:alert] = 'Sales user not found'
       render 'assign_sales'
@@ -245,7 +245,7 @@ class Admin::LeadsController < AdminController
   end
 
   def authorize_resource
-    if %w[new export search_by search_inventory new_kylas_associated_lead create_kylas_associated_lead deal_associated_contact_details new_kylas_lead create_kylas_lead].include?(params[:action])
+    if %w[new export search_by search_inventory new_kylas_associated_lead create_kylas_associated_lead new_kylas_lead create_kylas_lead].include?(params[:action])
       authorize [current_user_role_group, Lead]
     elsif params[:action] == 'index'
       unless params[:ds]

@@ -282,7 +282,7 @@ module BookingDetailStateMachine
     def send_email_and_sms_as_confirmed
       if self.project_unit.booking_portal_client.email_enabled?
         attachments_attributes = []
-        action_mailer_email = ApplicationMailer.test(body: project_unit.booking_portal_client.templates.where(_type: "Template::AllotmentLetterTemplate", project_id: self.project_id).first.parsed_content(self))
+        action_mailer_email = ApplicationMailer.test(body: project_unit.booking_portal_client.templates.where(_type: "Template::AllotmentLetterTemplate", project_id: self.project_id, booking_portal_client_id: self.booking_portal_client_id).first.parsed_content(self))
         pdf = WickedPdf.new.pdf_from_string(action_mailer_email.html_part.body.to_s)
         File.open("#{Rails.root}/exports/allotment_letter-#{project_unit.name}.pdf", "wb") do |file|
           file << pdf
@@ -312,7 +312,7 @@ module BookingDetailStateMachine
             )
       end
 
-      template = Template::NotificationTemplate.where(name: "booking_confirmed").first
+      template = Template::NotificationTemplate.where(booking_portal_client_id: self.booking_portal_client_id, name: "booking_confirmed").first
       if template.present? && template.is_active? && user.booking_portal_client.notification_enabled?
         push_notification = PushNotification.new(
           notification_template_id: template.id,
@@ -358,7 +358,7 @@ module BookingDetailStateMachine
 
     def send_notification
       recipient = self.manager || self.lead.manager
-      template = Template::NotificationTemplate.where(name: get_notification_template_status).first
+      template = Template::NotificationTemplate.where(name: get_notification_template_status, booking_portal_client_id: self.booking_portal_client_id).first
       if template.present? && template.is_active? && user.booking_portal_client.notification_enabled?
         push_notification = PushNotification.new(
           notification_template_id: template.id,
@@ -415,7 +415,7 @@ module BookingDetailStateMachine
     end
 
     def sync_booking
-      crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+      crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url), booking_portal_client_id: self.booking_portal_client_id).first
       if crm_base.present?
         api, api_log = self.push_in_crm(crm_base)
       end

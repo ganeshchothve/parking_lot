@@ -4,8 +4,9 @@ class TokenDetailsUpdateNotification
 
   def perform user_id, receipt_id
     user = User.find user_id
+    booking_portal_client_id = user.try(:booking_portal_client_id)
     if user
-      email_template = ::Template::EmailTemplate.where(name: "updated_token_details")
+      email_template = ::Template::EmailTemplate.where(name: "updated_token_details", booking_portal_client_id: booking_portal_client_id).first
       if email_template.present?
         email = Email.create!(
           booking_portal_client_id: user.booking_portal_client_id,
@@ -18,7 +19,7 @@ class TokenDetailsUpdateNotification
         )
         email.sent!
       end
-      sms_template = Template::SmsTemplate.where(name: "updated_token_details")
+      sms_template = Template::SmsTemplate.where(name: "updated_token_details" , booking_portal_client_id: booking_portal_client_id).first
       if sms_template.present?
         Sms.create!(
             booking_portal_client_id: user.booking_portal_client_id,

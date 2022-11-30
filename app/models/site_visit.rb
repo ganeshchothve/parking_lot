@@ -181,6 +181,6 @@ class SiteVisit
   end
 
   def existing_scheduled_sv
-    self.errors.add :base, 'One Scheduled Site Visit Already Exists' if SiteVisit.where(lead_id: lead_id, status: 'scheduled').present?
+    self.errors.add :base, 'One Scheduled Site Visit Already Exists' if SiteVisit.where(booking_portal_client_id: self.booking_portal_client_id, lead_id: lead_id, status: 'scheduled').present?
   end
 end

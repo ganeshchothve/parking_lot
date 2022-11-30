@@ -13,7 +13,7 @@ module Kylas
     end
 
     def call
-      url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/leads/#{entity_id}")
+      url = URI(base_url+"/leads/#{entity_id}")
 
       https = Net::HTTP.new(url.host, url.port)
       https.use_ssl = true

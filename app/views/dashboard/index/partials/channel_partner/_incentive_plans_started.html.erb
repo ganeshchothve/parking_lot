@@ -23,7 +23,7 @@
                 <% if scheme.ladder_strategy == 'number_of_items' %>
                   <%= "<strong>#{(ladder.start_value - booking_detail_ids.count)}</strong> #{BookingDetail.model_name.human(count:2)}".html_safe %>
                 <% elsif scheme.ladder_strategy == 'sum_of_value' %>
-                  <%= "<strong>#{number_to_indian_currency((ladder.start_value - BookingDetail.in(id: invoices.map(&:booking_detail_id).uniq).sum(&:calculate_agreement_price)), :indian)}</strong> #{t('global.agreement_value')}".html_safe %>
+                  <%= "<strong>#{number_to_indian_currency((ladder.start_value - BookingDetail.where(booking_portal_client_id: current_client.try(:id)).in(id: invoices.map(&:booking_detail_id).uniq).sum(&:calculate_agreement_price)), :indian)}</strong> #{t('global.agreement_value')}".html_safe %>
                 <% end %>
               <% else %>
                 <%= t('dashboard.channel_partner.incentive_plan_started.max_ladder_html') %>

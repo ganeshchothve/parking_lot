@@ -9,7 +9,7 @@ class Admin::BookingDetailsController < AdminController
   before_action :set_project_unit, only: :booking
   before_action :set_receipt, only: :booking
   before_action :set_project, only: [:new_booking_on_project]
-  before_action :set_lead, only: [:process_booking_on_project]
+  before_action :set_lead, only: [:process_booking_on_project, :new_booking_without_inventory, :create_booking_without_inventory]
 
   def index
     authorize [:admin, BookingDetail]
@@ -21,10 +21,10 @@ class Admin::BookingDetailsController < AdminController
   end
 
   def new
-    @search = Search.new(booking_portal_client: current_user.booking_portal_client)
+    @search = Search.new(booking_portal_client_id: current_client.id)
     @booking_detail = BookingDetail.new(
                                     search: @search,
-                                    booking_portal_client_id: current_user.booking_portal_client.id,
+                                    booking_portal_client_id: current_client.id,
                                     creator_id: current_user.id
                                     )
     @project_towers = search_for_towers
@@ -58,11 +58,11 @@ class Admin::BookingDetailsController < AdminController
                     lead_id: params[:booking_detail][:lead_id],
                     project_tower_id: params[:project_tower_id] || _project_unit.project_tower.id,
                     project_unit_id: params[:booking_detail][:project_unit_id],
-                    booking_portal_client_id: current_user.booking_portal_client.id
+                    booking_portal_client_id: current_client.id
                     )
     @booking_detail = BookingDetail.new(
                                     search: _search,
-                                    booking_portal_client_id: current_user.booking_portal_client.id,
+                                    booking_portal_client_id: current_client.id,
                                     creator_id: current_user.id
                                     )
     @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
@@ -197,11 +197,13 @@ class Admin::BookingDetailsController < AdminController
 
   def new_booking_without_inventory
     @booking_detail = BookingDetail.new(
-                                    lead_id: params[:lead_id],
-                                    project_id: params[:project_id],
+                                    lead_id: @lead.id,
+                                    project_id: @lead.project_id,
                                     site_visit_id: params[:site_visit_id],
-                                    booking_portal_client_id: current_user.booking_portal_client.id
+                                    booking_portal_client_id: current_client.id
                                     )
+    authorize([:admin, @booking_detail], :new?)
+    # open booking without inventory form modal only when it is not rendered in Kylas i-frame
     if !embedded_marketplace?
       render layout: false
     end
@@ -209,16 +211,17 @@ class Admin::BookingDetailsController < AdminController
 
   def create_booking_without_inventory
     @booking_detail = BookingDetail.new(
-                                        booking_portal_client_id: current_user.booking_portal_client.id,
+                                        booking_portal_client_id: current_client.id,
                                         creator: current_user
                                        )
     @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
     @booking_detail.user = @booking_detail.lead.user
     @booking_detail.name = @booking_detail.booking_project_unit_name
     @booking_detail.status = "blocked"
+    authorize([:admin, @booking_detail], :new?)
     respond_to do |format|
       if @booking_detail.save
-        if @booking_detail.try(:booking_portal_client).try(:kylas_tenant_id).present?
+        if @booking_detail.booking_portal_client.is_marketplace?
           #trigger all workflow events in Kylas
           if Rails.env.production?
             Kylas::TriggerWorkflowEventsWorker.perform_async(@booking_detail.id.to_s, @booking_detail.class.to_s)
@@ -292,17 +295,17 @@ class Admin::BookingDetailsController < AdminController
   private
 
   def set_lead
-    @lead = Lead.where(id: params[:lead_id]).first
+    @lead = Lead.where(booking_portal_client_id: current_client.id, id: (params[:lead_id] || params.dig("booking_detail", "lead_id"))).first
     redirect_to home_path(current_user), alert: I18n.t("controller.leads.alert.not_found") if @lead.blank?
   end
 
   def set_project
-    @project = Project.where(id: params[:project_id]).first
+    @project = Project.where(booking_portal_client_id: current_client.id, id: params[:project_id]).first
     redirect_to home_path(current_user), alert: t('controller.booking_details.set_project_missing') if @project.blank?
   end
 
   def set_booking_detail
-    @booking_detail = BookingDetail.where(_id: params[:id]).first
+    @booking_detail = BookingDetail.where(booking_portal_client_id: current_client.id, _id: params[:id]).first
     redirect_to home_path(current_user), alert: t('controller.booking_details.set_booking_detail_missing') if @booking_detail.blank?
   end
 

@@ -1,6 +1,8 @@
 class ApisController < ActionController::API
   before_action :authenticate_request
   around_action :log_standard_errors
+  before_action :set_current_user
+  before_action :set_current_client
 
   private
 
@@ -8,7 +10,8 @@ class ApisController < ActionController::API
     flag = false
     if request.headers['Api-Key']
       api_key = request.headers['Api-Key']
-      @crm = Crm::Base.where(api_key: api_key).first
+      response = JSON.parse(Base64.decode64(api_key)) rescue {}
+      @crm = Crm::Base.where(api_key: api_key).first || Crm::Base.where(api_key: response['value']).first
       if @crm.present?
         flag = true
       else
@@ -26,6 +29,14 @@ class ApisController < ActionController::API
     rescue StandardError => e
       create_error_log e
     end
+  end
+
+  def set_current_user
+    @current_user = @crm.try(:user)
+  end
+
+  def set_current_client
+    @current_client = @crm.booking_portal_client
   end
 
   def create_error_log e

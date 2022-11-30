@@ -17,7 +17,7 @@ class LeadExportWorker
     end
     file_name = "lead-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/exports/#{file_name}")
-    ExportMailer.notify(file_name, user.email, "Leads").deliver
+    ExportMailer.notify(file_name, user.email, "Leads", user.id.to_s).deliver
   end
 
   #code for make excel headers bold

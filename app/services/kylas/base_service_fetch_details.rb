@@ -18,9 +18,9 @@ module Kylas
           response = RestClient.get(
             api_call_url, { content_type: :json, 'Authorization' => "Bearer #{access_token}" }
           )
-        elsif current_client.kylas_api_key
+        elsif user.kylas_api_key?
           response = RestClient.get(
-            api_call_url, { content_type: :json, 'api-key': current_client.kylas_api_key }
+            api_call_url, { content_type: :json, 'api-key': user.kylas_api_key }
           )
         end
         if response&.code.eql?(200)

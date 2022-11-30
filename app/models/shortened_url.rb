@@ -8,6 +8,8 @@ class ShortenedUrl
   field :code, type: String
   field :expired_at, type: DateTime
 
+  belongs_to :booking_portal_client, class_name: "Client"
+
   validates :original_url, :code, uniqueness: true, presence: true
 
   def self.clean_url(url)

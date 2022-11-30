@@ -38,7 +38,7 @@ module ChannelPartnerStateMachine
 
     def send_notification
       template_name = "channel_partner_status_#{self.status}"
-      template = Template::EmailTemplate.where(name: template_name).first
+      template = Template::EmailTemplate.where(name: template_name, booking_portal_client_id: self.booking_portal_client_id).first
       recipients = self.users.cp_owner.to_a
       recipients << self.manager if self.manager.present?
       recipients << self.manager.manager if self.manager.try(:manager).present?
@@ -54,7 +54,7 @@ module ChannelPartnerStateMachine
         email.sent!
       end
 
-      sms_template = Template::EmailTemplate.where(name: template_name).first
+      sms_template = Template::EmailTemplate.where(name: template_name, booking_portal_client_id: self.booking_portal_client_id).first
       if sms_template.present?
         phones = recipients.collect(&:phone).reject(&:blank?)
         if phones.present?
@@ -73,7 +73,7 @@ module ChannelPartnerStateMachine
     end
 
     def send_push_notification template_name, recipient
-      template = Template::NotificationTemplate.where(name: template_name).first
+      template = Template::NotificationTemplate.where(name: template_name, booking_portal_client_id: self.booking_portal_client_id).first
       if template.present? && template.is_active? && users.first&.booking_portal_client.notification_enabled?
         push_notification = PushNotification.new(
           notification_template_id: template.id,

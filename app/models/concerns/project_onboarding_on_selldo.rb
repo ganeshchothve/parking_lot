@@ -72,7 +72,7 @@ module ProjectOnboardingOnSelldo
             end
 
             # Create Workflows
-            host = Rails.application.config.action_mailer.default_url_options[:host]
+            host = self.booking_portal_client.base_domain
             port = Rails.application.config.action_mailer.default_url_options[:port].to_i
             host = (Rails.application.config.action_mailer.default_url_options[:protocol] || (port == 443 ? 'https' : 'http')) + '://' + host
 

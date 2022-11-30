@@ -45,7 +45,7 @@ module Kylas
 
     def update_pipeline_stage_kylas_entity
       begin
-        url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/#{entity_type}/#{entity_id}/pipeline-stages/#{pipeline_stage_id}/activate")
+        url = URI(base_url+"/#{entity_type}/#{entity_id}/pipeline-stages/#{pipeline_stage_id}/activate")
         https = Net::HTTP.new(url.host, url.port)
         https.use_ssl = true
 

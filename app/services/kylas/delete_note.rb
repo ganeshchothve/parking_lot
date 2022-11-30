@@ -22,16 +22,16 @@ module Kylas
       when Net::HTTPOK, Net::HTTPSuccess
         { success: true }
       when Net::HTTPBadRequest
-        Rails.logger.error 'CreateProductInKylas - 400'
+        Rails.logger.error 'DeleteNoteInKylas - 400'
         { success: false, error: 'Invalid Data!' }
       when Net::HTTPNotFound
-        Rails.logger.error 'CreateProductInKylas - 404'
+        Rails.logger.error 'DeleteNoteInKylas - 404'
         { success: false, error: 'Invalid Data!' }
       when Net::HTTPServerError
-        Rails.logger.error 'CreateProductInKylas - 500'
+        Rails.logger.error 'DeleteNoteInKylas - 500'
         { success: false, error: 'Server Error!' }
       when Net::HTTPUnauthorized
-        Rails.logger.error 'CreateProductInKylas - 401'
+        Rails.logger.error 'DeleteNoteInKylas - 401'
         { success: false, error: 'Unauthorized' }
       else
         { success: false }
@@ -40,7 +40,7 @@ module Kylas
 
     def delete_note_in_kylas 
       begin
-        url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/notes/#{note.kylas_note_id}")
+        url = URI(base_url+"/notes/#{note.kylas_note_id}")
 
         https = Net::HTTP.new(url.host, url.port)
         https.use_ssl = true

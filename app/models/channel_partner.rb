@@ -178,7 +178,7 @@ class ChannelPartner
 
   private
   def user_based_uniqueness
-    if email.present? && User.where(email: email).present?
+    if email.present? && User.where(booking_portal_client_id: self.booking_portal_client_id, email: email).present?
       errors.add :base, 'Email is already taken'
     end
   end

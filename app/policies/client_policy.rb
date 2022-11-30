@@ -1,6 +1,10 @@
 class ClientPolicy < ApplicationPolicy
   # def new? def create? def edit? def update? from ApplicationPolicy
 
+  def allow_marketplace_access?
+    !marketplace_client? || (current_client.kylas_api_key.present? && current_client.errors.blank?)
+  end
+
   def permitted_attributes params={}
     attrs = [
       :sms_provider_dlt_entity_id, :notification_api_key, :sms_provider_telemarketer_id, :name, :selldo_client_id, :selldo_form_id,

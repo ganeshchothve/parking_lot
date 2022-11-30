@@ -2,15 +2,14 @@ require 'spreadsheet'
 class SyncKylasUsersWorker
   include Sidekiq::Worker
 
-  def perform user_id
-    user = User.where(id: user_id).first
-    client = user.booking_portal_client
-    client.set(sync_user: false)
-    if user.present?
-      kylas_users = Kylas::FetchUsers.new(user).call
+  def perform client_id
+    client = Client.where(id: client_id).first
+    if client.present?
+      client.set(sync_user: false)
+      kylas_users = Kylas::FetchUsers.new(User.new(booking_portal_client: client)).call
       if kylas_users.present?
         kylas_users.each do |kylas_user|
-          mp_user = find_user_in_iris(kylas_user[4].to_s)
+          mp_user = find_user_in_iris(kylas_user[4].to_s, client_id)
           if !mp_user.present?
             user = User.new(
               first_name: kylas_user[0],
@@ -20,7 +19,7 @@ class SyncKylasUsersWorker
               role: "sales",
               kylas_user_id: kylas_user[4].to_s,
               is_active_in_kylas: kylas_user[5],
-              booking_portal_client: user.booking_portal_client
+              booking_portal_client: client
             )
             user.skip_confirmation_notification!
             user.save
@@ -38,11 +37,11 @@ class SyncKylasUsersWorker
           end
         end
       end
+      client.set(sync_user: true)
     end
-    client.set(sync_user: true)
   end
 
-  def find_user_in_iris(kylas_user_id)
-    User.where(kylas_user_id: kylas_user_id).first
+  def find_user_in_iris(kylas_user_id, client_id)
+    User.where(kylas_user_id: kylas_user_id, booking_portal_client_id: client_id).first
   end
 end

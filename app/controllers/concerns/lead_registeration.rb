@@ -19,7 +19,7 @@ module LeadRegisteration
             format.json { render json: {errors: I18n.t("controller.leads.errors.already_exists")}, status: :unprocessable_entity }
           end
         else
-          if selldo_config_base.present?
+          if selldo_config_base(current_client).present?
             @project = Project.new(booking_portal_client_id: current_client.id, name: params["project_name"], selldo_id: params["project_id"]) unless @project.present?
           end
 
@@ -40,7 +40,7 @@ module LeadRegisteration
   private
 
   def add_existing_lead_to_project_flow(format)
-    @new_lead = @user.leads.new(email: @lead.email, phone: @lead.phone, first_name: @lead.first_name, last_name: @lead.last_name, project_id: @project.id, manager_id: params[:manager_id], booking_portal_client_id: current_user.booking_portal_client.id)
+    @new_lead = @user.leads.new(email: @lead.email, phone: @lead.phone, first_name: @lead.first_name, last_name: @lead.last_name, project_id: @project.id, manager_id: params[:manager_id], booking_portal_client_id: current_client.try(:id))
     @new_lead.push_to_crm = params[:push_to_crm] unless params[:push_to_crm].nil?
 
     save_lead(format, @new_lead, true)
@@ -48,7 +48,7 @@ module LeadRegisteration
 
   def add_new_lead_flow(format)
     unless @user.present?
-      @user = User.new(booking_portal_client_id: current_user.booking_portal_client.id, email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], is_active: true)
+      @user = User.new(booking_portal_client_id: current_client.try(:id), email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], is_active: true)
       @user.skip_confirmation! # TODO: Remove this when customer login needs to be given
     end
 
@@ -60,7 +60,7 @@ module LeadRegisteration
 
   def save_lead(format, lead, existing=false)
     push_lead_to_selldo(format, lead) do |selldo_api, api_log|
-      if existing || (@user.save && (selldo_config_base.blank? || @project.save))
+      if existing || (@user.save && (selldo_config_base(@user.booking_portal_client).blank? || @project.save))
         lead.assign_attributes(selldo_lead_registration_date: params.dig(:lead_details, :lead_created_at))
         lead.assign_attributes(permitted_attributes([:admin, lead])) if params[:lead].present?
 
@@ -72,10 +72,9 @@ module LeadRegisteration
               update_selldo_lead_stage(lead)
               sv_selldo_api, sv_api_log = site_visit.push_in_crm(selldo_api.base) if site_visit.present?
             end
-
             if cp_lead_activity.present?
               if cp_lead_activity.save
-                Kylas::SyncLeadToKylasWorker.perform_async(lead.id.to_s)
+                Kylas::SyncLeadToKylasWorker.perform_async(lead.id.to_s, site_visit.try(:id).try(:to_s))
                 update_customer_search_to_sitevisit(lead) if @customer_search.present?
 
                 format.json { render json: {lead: lead, success: site_visit.present? ? I18n.t("controller.site_visits.notice.created") : I18n.t("controller.leads.notice.created")}, status: :created }
@@ -83,7 +82,7 @@ module LeadRegisteration
                 format.json { render json: {errors: 'Something went wrong while adding lead. Please contact support'}, status: :unprocessable_entity }
               end
             else
-              Kylas::SyncLeadToKylasWorker.perform_async(lead.id.to_s)
+              Kylas::SyncLeadToKylasWorker.perform_async(lead.id.to_s, site_visit.try(:id).try(:to_s))
               update_customer_search_to_sitevisit(lead) if @customer_search.present?
 
               format.json { render json: {lead: lead, success: site_visit.present? ? I18n.t("controller.site_visits.notice.created") : I18n.t("controller.leads.notice.created")}, status: :created }
@@ -102,7 +101,7 @@ module LeadRegisteration
     if current_user&.role&.in?(%w(channel_partner cp_owner))
       cp_lead_activity = CpLeadActivityRegister.create_cp_lead_object(lead, current_user, (params[:lead_details] || {}))
     elsif params[:manager_id].present?
-      cp_user = User.all.in(role: %w(channel_partner cp_owner)).where(id: params[:manager_id]).first
+      cp_user = User.all.in(role: %w(channel_partner cp_owner)).where(booking_portal_client_id: current_client.try(:id), id: params[:manager_id]).first
       cp_lead_activity = CpLeadActivityRegister.create_cp_lead_object(lead, cp_user, (params[:lead_details] || {})) if cp_user
     end
 
@@ -112,11 +111,11 @@ module LeadRegisteration
   def push_lead_to_selldo(format, lead)
     if lead.push_to_crm?
       # Push lead first to sell.do & upon getting successful response, save it in IRIS. Same flow as when were using sell.do form for lead registration.
-      crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
-      selldo_api = Crm::Api::Post.where(resource_class: 'Lead', base_id: crm_base.id, is_active: true).first if crm_base.present?
+      crm_base = Crm::Base.where(booking_portal_client_id: current_client.try(:id), domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+      selldo_api = Crm::Api::Post.where(booking_portal_client_id: current_client.try(:id), resource_class: 'Lead', base_id: crm_base.id, is_active: true).first if crm_base.present?
       if selldo_api.present?
         selldo_api.execute(lead)
-        api_log = ApiLog.where(resource_id: lead.id).first
+        api_log = ApiLog.where(booking_portal_client_id: current_client.try(:id), resource_id: lead.id).first
         if resp = api_log.response.try(:first).presence
           params[:lead_details] = resp['selldo_lead_details']
           #
@@ -149,7 +148,7 @@ module LeadRegisteration
   # end
 
   def set_customer_search
-    @customer_search = CustomerSearch.where(id: params[:customer_search_id]).first if params[:customer_search_id].present?
+    @customer_search = CustomerSearch.where(booking_portal_client_id: current_client.try(:id), id: params[:customer_search_id]).first if params[:customer_search_id].present?
   end
 
   def update_customer_search_to_sitevisit(lead)
@@ -167,21 +166,21 @@ module LeadRegisteration
 
   def set_project
     if params["project_id"].present?
-      if selldo_config_base.present?
-        @project = Project.where(selldo_id: params["project_id"]).first
+      if selldo_config_base(current_client).present?
+        @project = Project.where(selldo_id: params["project_id"], booking_portal_client_id: current_client.id).first
       else
-        @project = Project.where(id: params['project_id']).first
+        @project = Project.where(id: params['project_id'], booking_portal_client_id: current_client.id).first
       end
     end
   end
 
   def set_user
     if params[:lead_id]
-      @lead = Lead.where(id: params[:lead_id]).first
+      @lead = Lead.where(id: params[:lead_id], booking_portal_client_id: current_client.id).first
       @user = @lead.user
     else
       _query = get_query
-      @user = User.or(_query).first if _query.present?
+      @user = User.where(booking_portal_client_id: current_client.id).or(_query).first if _query.present?
       render json: {errors: I18n.t("controller.users.errors.already_registered") }, status: :unprocessable_entity and return if @user.present? && !@user.buyer?
     end
   end
@@ -190,7 +189,7 @@ module LeadRegisteration
     if params[:lead_id]
       render json: {errors: I18n.t("controller.leads.errors.already_exists") }, status: :unprocessable_entity and return if @user.leads.where(project_id: @project.id).present?
     else
-      leads = Lead.or(get_query)
+      leads = Lead.where(booking_portal_client_id: current_client.id).or(get_query)
       if @project.present?
         @lead = leads.where({project_id: @project.id}).first
       end

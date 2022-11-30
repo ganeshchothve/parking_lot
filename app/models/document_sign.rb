@@ -29,7 +29,7 @@ class DocumentSign
   end
 
   def test
-    d = current_client.document_sign
+    d = self.booking_portal_client.document_sign
     options = d.vendor.create("test.txt", d, {}).with_indifferent_access
     d.vendor.sign(d, options[:request_id], options[:action_id], options[:document_id])
     d.vendor.remind(d, res[:request_id])

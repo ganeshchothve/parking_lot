@@ -31,7 +31,8 @@ class Admin::WorkflowsController < AdminController
         else
           errors << @workflow.errors.full_messages.uniq
         end
-        format.html { redirect_to new_admin_workflow_path, alert: errors.flatten.uniq }
+        flash.now[:alert] = errors.flatten.uniq
+        format.html { render :new }
         format.json { render json: { errors: @workflow.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
@@ -44,13 +45,15 @@ class Admin::WorkflowsController < AdminController
       if @workflow.update(permitted_attributes([:admin, @workflow]))
         format.html { redirect_to admin_workflows_path, notice: 'Workflow was successfully updated.' }
       else
+        fetch_pipeline_details
         errors = []
         if @workflow.errors.messages.has_key?(:pipelines)
           errors << @workflow.pipelines.map{ |pipeline| pipeline.errors.full_messages }.flatten rescue []
         else
           errors << @workflow.errors.full_messages.uniq
         end
-        format.html { redirect_to admin_workflows_path, alert: errors.flatten.uniq }
+        flash.now[:alert] = errors.flatten.uniq
+        format.html { render :edit }
         format.json { render json: { errors: @workflow.errors.full_messages.uniq }, status: :unprocessable_entity }
       end
     end
@@ -59,7 +62,7 @@ class Admin::WorkflowsController < AdminController
   def pipeline_stages
     @pipelines_stages = Kylas::FetchPipelineStageDetails.new(current_user, params[:pipeline_id]).call
     if params[:workflow_id].present?
-      @wf = Workflow.where(id: params[:workflow_id]).first
+      @wf = Workflow.where(booking_portal_client_id: current_client.try(:id), id: params[:workflow_id]).first
       if @wf.present?
         wf_pipeline = @wf.pipelines.where(pipeline_id: params[:pipeline_id]).first
         @selected_stage = wf_pipeline&.pipeline_stage_id
@@ -118,7 +121,7 @@ class Admin::WorkflowsController < AdminController
   end
 
   def set_workflow
-    @workflow = Workflow.where(id: params[:id]).first
+    @workflow = Workflow.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first
     redirect_to admin_workflows_path, alert: 'Workflow not found' unless @workflow
   end
 

@@ -4,10 +4,10 @@ class SchemeObserver < Mongoid::Observer
     scheme.project_id = scheme.project_tower.project_id if scheme.project_id.blank?
     scheme.send(scheme.event) if scheme.event.present?
     if scheme.payment_schedule_template_id.blank?
-      scheme.payment_schedule_template_id = Template::PaymentScheduleTemplate.where(default: true).first.id
+      scheme.payment_schedule_template_id = Template::PaymentScheduleTemplate.where(booking_portal_client_id: scheme.booking_portal_client_id, default: true).first.id
     end
     if scheme.cost_sheet_template_id.blank?
-      scheme.cost_sheet_template_id = Template::CostSheetTemplate.where(default: true).first.id
+      scheme.cost_sheet_template_id = Template::CostSheetTemplate.where(default: true, booking_portal_client_id: scheme.booking_portal_client_id).first.id
     end
   end
   def before_save scheme

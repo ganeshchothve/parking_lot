@@ -2,14 +2,14 @@ class CreateLeadWorker
   include Sidekiq::Worker
 
   def perform manager_ids, params, user_id, project_id, client_id, lead_data
-    kylas_base = Crm::Base.where(domain: ENV_CONFIG.dig(:kylas, :base_url)).first
-    user = User.where(id: user_id).first
-    project = Project.where(id: project_id).first
-    client = Client.where(id: client_id).first
+    kylas_base = Crm::Base.where(booking_portal_client_id: client_id, domain: ENV_CONFIG.dig(:kylas, :base_url)).first
+    user = User.where(booking_portal_client_id: client_id, id: user_id).first
+    project = Project.where(booking_portal_client_id: client_id, id: project_id).first
+    client = Client.where(booking_portal_client_id: client_id, id: client_id).first
 
     count = 0
     manager_ids.each do |manager_id|
-      manager = User.where(id: manager_id).first
+      manager = User.where(booking_portal_client_id: client_id, id: manager_id).first
       if manager.present?
         @lead = Lead.new(
                         first_name: params.dig(:lead, :first_name),

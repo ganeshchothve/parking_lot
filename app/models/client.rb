@@ -3,6 +3,7 @@ class Client
   include Mongoid::Timestamps
   include ArrayBlankRejectable
   include InsertionStringMethods
+  include CrmIntegration
   extend DocumentsConcern
 
   PAYMENT_GATEWAYS = %w(Razorpay CCAvenue)
@@ -74,7 +75,7 @@ class Client
   field :blocking_days, type: Integer, default: 10
   field :holding_minutes, type: Integer, default: 15
   field :payment_gateway, type: String, default: 'Razorpay'
-  field :enable_company_users, type: Boolean
+  field :enable_company_users, type: Boolean, default: false
   field :terms_and_conditions, type: String
   field :faqs, type: String
   field :rera, type: String
@@ -85,13 +86,13 @@ class Client
   field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
   field :enable_referral_bonus, type: Boolean, default: false
   field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner cp_owner]
-  field :lead_blocking_days, type: Integer
+  field :lead_blocking_days, type: Integer, default: 30
   field :invoice_approval_tat, type: Integer, default: 2
 
   field :external_api_integration, type: Boolean, default: false
   field :enable_daily_reports, type: Hash, default: {"payments_report": false}
   field :enable_incentive_module, type: Array, default: []
-  field :partner_regions, type: Array, default: ['Pune West', 'Pune East', 'Others']
+  field :partner_regions, type: Array, default: []
   field :team_lead_dashboard_access_roles, type: Array, default: %w[gre]
   field :tl_dashboard_refresh_timer, type: Integer, default: 1
   #
@@ -111,29 +112,31 @@ class Client
   # kylas tentant id
   field :kylas_tenant_id, type: String
   field :kylas_api_key, type: String
-  field :is_able_sync_products_and_users, type: Boolean, default: true
+  field :is_able_sync_products_and_users, type: Boolean, default: true # flag to check whether syncing of users and products can be initiated or not
+  field :can_create_webhook, type: Boolean, default: true # flag to check whether user webhook can be created in Kylas or not
   field :kylas_custom_fields, type: Hash, default: {}
+  field :kylas_currency_id, type: Integer # kylas currency id is present on kylas products and is tenant dependent
 
   field :email_header, type: String, default: '<div class="container">
-    <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= current_client.logo.url %>" />
+    <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= self.logo.url %>" />
     <div class="mt-3"></div>'
   field :email_footer, type: String, default: '<div class="mt-3"></div>
     <div class="card mb-3">
       <div class="card-body">
         Thanks,<br/>
-        <%= current_client.name %>
+        <%= self.name %>
       </div>
     </div>
     <div style="font-size: 12px;">
-      If you have any queries you can reach us at <%= current_client.support_number %> or write to us at <%= current_client.support_email %>. Please click <a href="<%= current_client.website_link %>">here</a> to visit our website.
+      If you have any queries you can reach us at <%= self.support_number %> or write to us at <%= self.support_email %>. Please click <a href="<%= self.website_link %>">here</a> to visit our website.
     </div>
     <hr/>
     <div class="text-muted text-center" style="font-size: 12px;">
-      © <%= Date.today.year %> <%= current_client.name %>. All Rights Reserved.
+      © <%= Date.today.year %> <%= self.name %>. All Rights Reserved.
     </div>
-    <% if current_client.address.present? %>
+    <% if self.address.present? %>
       <div class="text-muted text-center" style="font-size: 12px;">
-        <%= current_client.address.to_sentence %>
+        <%= self.address.to_sentence %>
       </div>
     <% end %>
     <div class="mt-3"></div>
@@ -181,6 +184,8 @@ class Client
   validates :regions, copy_errors_from_child: true
   validates :name, uniqueness: true
   validates :payment_link_validity_hours, numericality: { greater_than: 0 }
+  validate :check_kylas_api_key
+  validate :check_booking_portal_domains
 
   accepts_nested_attributes_for :address, :external_inventory_view_config, :checklists
   accepts_nested_attributes_for :regions, allow_destroy: true
@@ -236,6 +241,34 @@ class Client
 
   def is_marketplace?
     kylas_tenant_id.present?
+  end
+
+  def base_domain
+    self.booking_portal_domains.first
+  end
+
+  def check_kylas_api_key
+    if self.kylas_api_key_changed? && self.kylas_api_key.present?
+      user_response = Kylas::UserDetails.new(User.new(
+        booking_portal_client: self
+      )).call
+
+      unless user_response[:success]
+        self.errors.add(:kylas_api_key, 'is invalid')
+      end
+    end
+  end
+
+  def check_booking_portal_domains
+    self.errors.add(:booking_portal_domains, "can't contain marketplace domains") if self.booking_portal_domains.find {|bpd| bpd.in?([ENV_CONFIG[:marketplace_host], ENV_CONFIG[:embedded_marketplace_host]])}
+  end
+
+  def booking_portal_client
+    self
+  end
+
+  def booking_portal_client_id
+    self.id
   end
 
   def self.selldo_api_clients

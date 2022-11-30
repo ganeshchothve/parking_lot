@@ -59,11 +59,11 @@ module SiteVisitStateMachine
     end
 
     def can_approve?
-      scheduled_on < Time.now
+      scheduled_on < Time.now if scheduled_on.present?
     end
 
     def can_reject?
-      scheduled_on < Time.now
+      scheduled_on < Time.now if scheduled_on.present?
     end
 
     def mark_conducted
@@ -78,7 +78,7 @@ module SiteVisitStateMachine
     end
 
     def send_push_notification template_name, recipient
-      template = Template::NotificationTemplate.where(name: template_name).first
+      template = Template::NotificationTemplate.where(booking_portal_client_id: self.booking_portal_client_id, name: template_name).first
       if template.present? && template.is_active? && recipient.booking_portal_client.notification_enabled?
         push_notification = PushNotification.new(
           notification_template_id: template.id,

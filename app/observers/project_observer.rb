@@ -12,7 +12,7 @@ class ProjectObserver < Mongoid::Observer
     DatabaseSeeds::UITemplate.project_based_seed(project.id.to_s, project.booking_portal_client_id.to_s)
     Template::InvoiceTemplate.seed(project.booking_portal_client_id.to_s, project.id.to_s)
     # Email and Sms Templates are disabled by default
-    Template.in(_type: ['Template::SmsTemplate', 'Template::EmailTemplate'], project_id: project.id).update_all(is_active: false)
+    Template.in(_type: ['Template::SmsTemplate', 'Template::EmailTemplate'], project_id: project.id, booking_portal_client_id: project.booking_portal_client_id).update_all(is_active: false)
     Template::CostSheetTemplate.create(name: "Default Cost sheet template", content: Template::CostSheetTemplate.default_content, booking_portal_client_id: project.booking_portal_client_id, project_id: project.id, default: true)
     Template::PaymentScheduleTemplate.create(name: "Default payment schedule template", content: Template::PaymentScheduleTemplate.default_content, booking_portal_client_id: project.booking_portal_client_id, default: true, project_id: project.id)
     Template::ReceiptTemplate.create(content: Template::ReceiptTemplate.default_content, booking_portal_client_id: project.booking_portal_client_id, project_id: project.id)
@@ -21,5 +21,10 @@ class ProjectObserver < Mongoid::Observer
     # Create a default token type
     token_type = project.token_types.create(name: 'Default', token_amount: (project.blocking_amount || project.booking_portal_client.blocking_amount), token_prefix: (project.name.gsub(/\s+/, '')[0..2].try(:upcase).presence || 'TKN'), token_seed: 0)
     token_type.init if token_type.valid?
+
+    # dump all the project ids to all the users that are not given project access
+    users = User.where(booking_portal_client_id: project.booking_portal_client.id).nin(role: User::ALL_PROJECT_ACCESS)
+    project_ids = Project.where(booking_portal_client_id: project.booking_portal_client.id).pluck(:id)
+    users.update_all(project_ids: project_ids)
   end
 end

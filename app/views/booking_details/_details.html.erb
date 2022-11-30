@@ -1,5 +1,3 @@
-
-
 <div class="mt-4">
   <h2 class="fn-16">Apartment Details</h2>
   <hr class="my-2 mb-3">
@@ -86,12 +84,12 @@
         <p><%= number_to_indian_currency(booking_detail.pending_balance({strict: true})) %></p>
       </li>
     </ul>
-  <div class="alert alert-primary col-md-12 col-lg-12 col-xs-12 col-sm-12">
-    <% template = ::Template::UITemplate.where(name: 'booking_details/_details').first %>
-    <% if template.present? %>
-    <% @bd = booking_detail %>
-    <%= get_view_erb(template) %>
-    <% end %>
-  </div>
+    <div class="alert alert-primary col-md-12 col-lg-12 col-xs-12 col-sm-12">
+      <% template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'booking_details/_details').first %>
+      <% if template.present? %>
+        <% @bd = booking_detail %>
+        <%= get_view_erb(template) %>
+      <% end %>
+    </div>
   <% end %>
 </div>

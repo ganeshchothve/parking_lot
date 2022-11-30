@@ -8,16 +8,16 @@
   class: "dropdown-item" %>
 <% end %>
 
-<%# if policy([:admin, Crm::Base.new()]).choose_crm? && Crm::Api.where(resource_class: 'User').present? %>
-  <%#= link_to t('controller.crms.choose_crm.link_name'), choose_crm_admin_crm_base_index_path(resource_id: user.id, resource_class: user.class), class: "dropdown-item " %>
-<%# end %>
+<% if policy([:admin, Crm::Base.new(booking_portal_client_id: current_client.id)]).choose_crm? && Crm::Api.where(resource_class: 'User', booking_portal_client_id: current_client.id).present? %>
+  <%= link_to t('controller.crms.choose_crm.link_name'), choose_crm_admin_crm_base_index_path(resource_id: user.id, resource_class: user.class), class: "dropdown-item " %>
+<% end %>
 
 <% if policy([:admin, user]).confirm_via_otp? %>
   <%= link_to t('controller.users.confirm_via_otp.link_name'), confirm_via_otp_admin_user_path(user.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 <% if policy([:admin, user]).confirm_user? %>
   <%
-    if marketplace? && !user.role.in?(%w[cp_owner channel_partner])
+    if user.kylas_user_id.present?
       link_name = t('controller.users.invite_user.link_name')
     else
       link_name = t('controller.users.confirm_user.link_name')
@@ -77,4 +77,8 @@
       <%= link_to t("controller.users.change_state.links.#{user.user_status_in_company}_to_#{event.name}"), change_state_admin_user_path(user, {user: {user_status_in_company_event: event.name}}), method: :patch, class: 'dropdown-item', data:{event_category: 'Section', event_action: 'Click', event_name: t("controller.users.change_state.#{event.name}") } %>
     <% end %>
   <% end %>
+<% end %>
+
+<% if policy([:admin, user]).approve_reject_company_user? %>
+  <%= link_to t('controller.users.approve_reject_company_user.link_name'), approve_reject_company_user_admin_user_path(user), class: "dropdown-item modal-remote-form-link" %>
 <% end %>

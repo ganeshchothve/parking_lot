@@ -3,7 +3,7 @@
     <p class="fn-16 mb-0">
       <i class="fa fa-check-circle me-2 fill-success"></i>
       <%# <span class="">1</span> %>
-      Select Project
+      <%= t('controller.searches.select_project.link_name') %>
     </p>
     <p class="fn-16 mb-0">
       <i class="fa fa-check-circle me-2 fill-success"></i>
@@ -22,7 +22,7 @@
     </div>
     <p class="fn-16 mb-0 active">
       <!-- <i class="fa fa-check-circle me-2 fill-theme"></i> -->
-      <span>4</span>
+      <span><%= t('controller.searches.apartments.step') %></span>
       <%= I18n.t("controller.searches.apartments.link_name") %>
     </p>
   </div>
@@ -101,7 +101,7 @@
           <div class="col-lg-8 col-xs-12 col-sm-12 col-md-12 br-l-1 no-pd after-show d-none pt-5 border-start" id="unit-description">
             <div class="row">
               <div class="col-lg-4">
-                <h2 class="fn-14 mb-0 d-inline-block">Apartment Details</h2>
+                <h2 class="fn-14 mb-0 d-inline-block"><%= t('controller.searches.apartments.header') %></h2>
               </div>
               <div class="col-lg-8 text-end">
                 <%= link_to I18n.t("controller.searches.cost_sheet_and_payment_schedule.link_name"), "javascript:;", class: 'fn-14 modal-remote-form-link print_cs_ps text-primary mb-3 d-block', target: "_blank" %>
@@ -120,7 +120,6 @@
                       <li class="col-lg-6">
                         <span class="desc d-block fn-16 font-medium theme-txt-light"><%= I18n.t("mongoid.attributes.project_unit.floor") %></span>
                         <span class="title d-block fn-16 mb-3" data-placeholder="floor"></span>
-                        
                       </li>
                       <li class="col-lg-6">
                         <span class="desc d-block fn-16 font-medium theme-txt-light"><%= I18n.t("mongoid.attributes.project_unit.apartment") %></span>
@@ -128,11 +127,11 @@
                       </li>
                       <li class="col-lg-6">
                         <span class="desc d-block fn-16 font-medium theme-txt-light"><%= I18n.t("mongoid.attributes.project_unit.carpet_sq") %></span>
-                        <span class="title d-block fn-16 mb-3" data-placeholder="carpet"></span>                        
+                        <span class="title d-block fn-16 mb-3" data-placeholder="carpet"></span>
                       </li>
                       <li class="col-lg-6">
                         <span class="desc d-block fn-16 font-medium theme-txt-light"><%= I18n.t("mongoid.attributes.project_unit.facing") %></span>
-                        <span class="title d-block fn-16 mb-3" data-placeholder="facing"></span>                        
+                        <span class="title d-block fn-16 mb-3" data-placeholder="facing"></span>
                       </li>
                       <li class="col-lg-6">
                         <span class="desc d-block fn-16 font-medium theme-txt-light"><%= I18n.t("mongoid.attributes.project_unit.agreement_price") %></span>
@@ -169,19 +168,19 @@
     <!-- <a href="" class="btn btn-primary font-medium border-primary ms-2">Next</a> -->
     <div class="d-inline-block">
       <% if @search.previous_step.present? %>
-      <%= form_for [:lead, @search] do |f| %>
-      <%= f.hidden_field :step, value: @search.previous_step %>
-      <%= f.submit I18n.t("global.previous"), class: "previous-btn btn btn-primary no-fill font-medium ms-2" %>
-      <% end %>
+        <%= form_for [:lead, @search] do |f| %>
+          <%= f.hidden_field :step, value: @search.previous_step %>
+          <%= f.submit I18n.t("global.previous"), class: "previous-btn btn btn-primary no-fill font-medium ms-2" %>
+        <% end %>
       <% end %>
     </div>
     <div class="d-inline-block">
       <% if @search.next_step.present? %>
-      <%= form_for [:lead, @search] do |f| %>
-      <%= f.hidden_field :step, value: @search.next_step %>
-      <%= f.hidden_field :project_unit_id, id: 'project_unit_id' %>
-      <%= f.submit I18n.t("global.next"), class: "next-btn btn btn-primary font-medium border-primary ms-2", disabled: 'disabled' %>
-      <% end %>
+        <%= form_for [:lead, @search] do |f| %>
+          <%= f.hidden_field :step, value: @search.next_step %>
+          <%= f.hidden_field :project_unit_id, id: 'project_unit_id' %>
+          <%= f.submit I18n.t("global.next"), class: "next-btn btn btn-primary font-medium border-primary ms-2", disabled: 'disabled' %>
+        <% end %>
       <% end %>
     </div>
   </div>
@@ -201,7 +200,7 @@
 <%= javascript_tag do %>
   var units =
   <%= raw @units.to_json(methods: [:calculate_agreement_price, :calculate_all_inclusive_price, :calculated_costs, :calculated_data, :calculated_costs]) %>;
-  var assets = <%= raw Asset.in(assetable_id: @units.pluck(:unit_configuration_id)).to_json %>
+  var assets = <%= raw Asset.where(booking_portal_client_id: current_client.try(:id)).in(assetable_id: @units.pluck(:unit_configuration_id)).to_json %>
 
   $(document).on('click', '[data-jquery-selector="unit-card"]', function(){
     var unit_id = $(this).data("unit-id");
@@ -215,9 +214,9 @@
     let leadId = <%= raw @search.lead_id.to_json %>
     let currentUserRoleGroup = <%= raw current_user_role_group.to_json %>
     if(currentUserRoleGroup == "buyer"){
-      $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/project_units/"+ unit_id + "/quotation?layout=false");
+      $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/project_units/"+ unit_id + "/quotation");
     }else{
-      $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/leads/"+ leadId +"/project_units/" + unit_id + "/quotation?layout=false");
+      $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/leads/"+ leadId +"/project_units/" + unit_id + "/quotation");
     }
   });
   $('#floorPlanImage').on('shown.bs.modal', function(){

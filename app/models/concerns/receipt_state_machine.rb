@@ -170,13 +170,13 @@ module ReceiptStateMachine
       # TODO - Remove hardcoded from value & save it on client. This is a test entry for whatsapp message.
       # Actual messages will be added via templates on client requests & triggered appropriately.
       if self.user.booking_portal_client.whatsapp_enabled?
-        whatsapp_template = Template::WhatsappTemplate.where(project_id: self.project_id, name: 'receipt_success').first
+        whatsapp_template = Template::WhatsappTemplate.where(booking_portal_client_id: self.booking_portal_client_id, project_id: self.project_id, name: 'receipt_success').first
         if whatsapp_template.present?
           Whatsapp.create!(project_id: self.project_id, to: self.user.phone, triggered_by: self, booking_portal_client: self.user.booking_portal_client, whatsapp_template: whatsapp_template, from: "+16413231111")
         end
       end
 
-      template = Template::NotificationTemplate.where(name: "receipt_#{status}").first
+      template = Template::NotificationTemplate.where(booking_portal_client_id: self.booking_portal_client_id, name: "receipt_#{status}").first
       if template.present? && template.is_active? && user.booking_portal_client.notification_enabled?
         push_notification = PushNotification.new(
           notification_template_id: template.id,

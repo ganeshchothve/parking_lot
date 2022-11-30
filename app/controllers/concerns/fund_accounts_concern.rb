@@ -19,7 +19,7 @@ module FundAccountsConcern
       end
 
       # Create/Update fund account in razorpay if its api is configured
-      razorpay_base = Crm::Base.where(domain: ENV_CONFIG.dig(:razorpay, :base_url)).first
+      razorpay_base = Crm::Base.where(booking_portal_client_id: current_client.try(:id), domain: ENV_CONFIG.dig(:razorpay, :base_url)).first
       if fund_account && razorpay_base
         if fund_account.new_record?
           razorpay_api, api_log = fund_account.push_in_crm(razorpay_base) if fund_account.is_active?

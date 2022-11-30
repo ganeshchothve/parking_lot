@@ -17,7 +17,7 @@ class Lead
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   DOCUMENT_TYPES = []
 
-  attr_accessor :payment_link, :kylas_contact_id, :kylas_product_id, :sync_to_kylas, :manager_ids
+  attr_accessor :payment_link, :kylas_contact_id, :kylas_product_id, :sync_to_kylas, :manager_ids, :phone_update, :email_update
 
   field :first_name, type: String, default: ''
   field :last_name, type: String, default: ''
@@ -231,11 +231,11 @@ class Lead
 
   def unattached_blocking_receipt(blocking_amount = nil)
     blocking_amount ||= self.booking_portal_client.blocking_amount
-    Receipt.where(lead_id: id).in(status: %w[success clearance_pending]).where(booking_detail_id: nil).asc(:token_number).first
+    Receipt.where(booking_portal_client_id: self.booking_portal_client_id, lead_id: id).in(status: %w[success clearance_pending]).where(booking_detail_id: nil).asc(:token_number).first
   end
 
   def is_payment_done?
-    receipts.where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).present?
+    receipts.where(booking_portal_client_id: self.booking_portal_client_id).where('$or' => [{ status: { '$in': %w(success clearance_pending) } }, { payment_mode: {'$ne': 'online'}, status: {'$in': %w(pending clearance_pending success)} }]).present?
   end
 
   def is_blocking_amount_paid?
@@ -262,11 +262,11 @@ class Lead
   end
 
   def total_unattached_balance
-    receipts.in(status: %w[success clearance_pending]).where(booking_detail_id: nil).sum(:total_amount)
+    receipts.where(booking_portal_client_id: self.booking_portal_client_id).in(status: %w[success clearance_pending]).where(booking_detail_id: nil).sum(:total_amount)
   end
 
   def get_search(project_unit_id)
-    search = searches
+    search = searches.where(booking_portal_client_id: self.booking_portal_client_id)
     search = search.where(project_unit_id: project_unit_id) if project_unit_id.present?
     search = search.desc(:created_at).first
     search = Search.create(lead: self, user: user, booking_portal_client_id: self.booking_portal_client.id) if search.blank?
@@ -319,12 +319,11 @@ class Lead
       end
       #
       # Send email with payment link
-      current_client = client
-      email_template = ::Template::EmailTemplate.where(name: "payment_link", project_id: self.project_id).first
+      email_template = ::Template::EmailTemplate.where(booking_portal_client_id: self.booking_portal_client_id, name: "payment_link", project_id: self.project_id).first
       if email_template.present?
         email = Email.create!({
           booking_portal_client_id: client.id,
-          body: ERB.new(client.email_header).result( binding) + email_template.parsed_content(self) + ERB.new(client.email_footer).result( binding ),
+          body: ERB.new(client.email_header).result(client.get_binding) + email_template.parsed_content(self) + ERB.new(client.email_footer).result(client.get_binding),
           subject: email_template.parsed_subject(self),
           to: [ self.email ],
           cc: client.notification_email.to_s.split(',').map(&:strip),
@@ -334,7 +333,7 @@ class Lead
         email.sent!
       end
       # Send sms with link for payment
-      sms_template = Template::SmsTemplate.where(name: "payment_link", project_id: self.project_id).first
+      sms_template = Template::SmsTemplate.where(booking_portal_client_id: self.booking_portal_client_id, name: "payment_link", project_id: self.project_id).first
       sms_body = sms_template.parsed_content(self) if sms_template.present?
       if sms_template.present?
         Sms.create!({
@@ -354,18 +353,18 @@ class Lead
 
   def sync_with_selldo params={}
     if lead.update_attributes(params)
-      @crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+      @crm_base = Crm::Base.where(booking_portal_client_id: self.booking_portal_client_id, domain: ENV_CONFIG.dig(:selldo, :base_url)).first
       selldo_api = Crm::Api::Put.where(resource_class: 'Lead', base_id: @crm_base.id, is_active: true).first if @crm_base.present?
       selldo_api.execute(self)
     end
   end
 
   def arrived_sitevist
-    site_visits.where(status: 'arrived', _id: self.current_site_visit_id).order(created_at: :desc).first
+    site_visits.where(booking_portal_client_id: self.booking_portal_client_id, status: 'arrived', _id: self.current_site_visit_id).order(created_at: :desc).first
   end
 
   def is_revisit?
-    self.site_visits.where(status: "conducted").present?
+    self.site_visits.where(booking_portal_client_id: self.booking_portal_client_id, status: "conducted").present?
   end
 
   class << self

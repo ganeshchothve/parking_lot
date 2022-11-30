@@ -104,7 +104,7 @@ class Admin::InvoicesController < AdminController
     email = Email.create!({
       project_id: @invoice.project.id,
       booking_portal_client_id: @invoice.project.booking_portal_client_id,
-      email_template_id: Template::EmailTemplate.find_by(project_id: @invoice.project.id, name: "send_invoice_to_poc").id,
+      email_template_id: Template::EmailTemplate.where(project_id: @invoice.project.id, name: "send_invoice_to_poc", booking_portal_client_id: current_client.try(:id)).first.id,
       to: [params[:email]],
       triggered_by_id: @invoice.id,
       triggered_by_type: @invoice.class.to_s
@@ -128,14 +128,14 @@ class Admin::InvoicesController < AdminController
   end
 
   def set_resource
-    @resource = params[:invoiceable_type]&.classify&.constantize.where(id: params[:invoiceable_id]).first if params[:invoiceable_id].present? && params[:invoiceable_type].present?
+    @resource = params[:invoiceable_type]&.classify&.constantize.where(id: params[:invoiceable_id], booking_portal_client_id: current_client.try(:id)).first if params[:invoiceable_id].present? && params[:invoiceable_type].present?
   end
 
   def set_invoice
     if params[:action] == 'new'
-      @invoice = Invoice::Manual.new(invoiceable: @resource, project_id: @resource.try(:project_id), agreement_amount: @resource.try(:calculate_invoice_agreement_amount))
+      @invoice = Invoice::Manual.new(invoiceable: @resource, project_id: @resource.try(:project_id), agreement_amount: @resource.try(:calculate_invoice_agreement_amount), booking_portal_client_id: current_client.try(:id))
     else
-      @invoice = Invoice.where(id: params[:id]).first
+      @invoice = Invoice.where(id: params[:id], booking_portal_client_id: current_client.try(:id)).first
     end
     redirect_to home_path(current_user), alert: 'Invoice not found' unless @invoice.present?
   end

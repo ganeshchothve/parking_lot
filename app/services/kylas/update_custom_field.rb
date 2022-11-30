@@ -12,7 +12,7 @@ module Kylas
     def call
       return unless user.present? && cp_user.present? && options.present?
       begin
-        url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/entities/#{options[:entity]}/fields/#{options[:field_id]}?fieldId=#{options[:field_id]}")
+        url = URI(base_url+"/entities/#{options[:entity]}/fields/#{options[:field_id]}?fieldId=#{options[:field_id]}")
         https = Net::HTTP.new(url.host, url.port)
         https.use_ssl = true
         request = Net::HTTP::Put.new(url, request_headers)

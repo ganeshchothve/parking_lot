@@ -61,6 +61,7 @@ class Admin::SiteVisitsController < AdminController
     respond_to do |format|
       if selldo_api.blank? || (api_log.present? && api_log.status == 'Success')
         if @site_visit.save
+          Kylas::SyncSiteVisitWorker.perform_async(@site_visit.id.to_s)
           flash[:notice] = I18n.t("controller.site_visits.notice.created")
           url = admin_lead_path(@lead)
           format.json { render json: @site_visit, location: url }
@@ -170,17 +171,17 @@ class Admin::SiteVisitsController < AdminController
   private
 
   def set_crm_base
-    @crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+    @crm_base = Crm::Base.where(booking_portal_client_id: current_client.try(:id), domain: ENV_CONFIG.dig(:selldo, :base_url)).first
     redirect_to request.referer, alert: 'Sell.do CRM integration not available' if params[:action] == 'sync_with_selldo' && @crm_base.blank?
   end
 
   def set_lead
-    @lead = Lead.where(_id: params[:lead_id]).first
+    @lead = Lead.where(booking_portal_client_id: current_client.try(:id), _id: params[:lead_id]).first
     redirect_to request.referer, alert: I18n.t("controller.leads.alert.not_found") if @lead.blank?
   end
 
   def set_site_visit
-    @site_visit = SiteVisit.where(_id: params[:id]).first
+    @site_visit = SiteVisit.where(booking_portal_client_id: current_client.try(:id), _id: params[:id]).first
     redirect_to request.referer || home_path(current_user), alert: I18n.t("controller.site_visits.errors.not_found") if @site_visit.blank?
     @lead = @site_visit.lead if @site_visit && @lead.blank?
   end

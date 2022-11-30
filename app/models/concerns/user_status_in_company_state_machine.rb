@@ -67,7 +67,7 @@ module UserStatusInCompanyStateMachine
     end
 
     def send_push_notification template_name, recipient
-      template = Template::NotificationTemplate.where(name: template_name).first
+      template = Template::NotificationTemplate.where(booking_portal_client_id: self.booking_portal_client_id, name: template_name).first
       if template.present? && template.is_active? && self.booking_portal_client.notification_enabled?
         push_notification = PushNotification.new(
           notification_template_id: template.id,
@@ -82,7 +82,24 @@ module UserStatusInCompanyStateMachine
 
     # Push Channel Partner to Kylas as a Custom Field
     def push_to_kylas
-      # Kylas::UpdateCustomField.new(self, self, options = {}).call
+      if booking_portal_client.is_marketplace?
+        user = booking_portal_client.users.admin.ne(kylas_access_token: nil).first
+        deal_custom_field_id = booking_portal_client.kylas_custom_fields.dig(:deal, :id)
+        lead_custom_field_id = booking_portal_client.kylas_custom_fields.dig(:lead, :id)
+        meeting_custom_field_id = booking_portal_client.kylas_custom_fields.dig(:meeting, :id)
+
+        if deal_custom_field_id.present?
+          Kylas::UpdateDealCustomField.new(user, self, deal_custom_field_id).call
+        end
+
+        if lead_custom_field_id.present?
+          Kylas::UpdateLeadCustomField.new(user, self, lead_custom_field_id).call
+        end
+
+        if meeting_custom_field_id.present?
+          Kylas::UpdateMeetingCustomField.new(user, self, meeting_custom_field_id).call
+        end
+      end
     end
 
   end

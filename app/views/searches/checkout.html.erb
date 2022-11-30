@@ -5,7 +5,8 @@
         <div class="row">
           <div class="col-lg-4 col-xs-12 col-sm-12 col-md-12 p-0 border rounded">
             <div class="left-info bg-primary p-2 text-center position-relative  rounded-top">
-              <i class="fa fa-info-circle fill-white position-absolute" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title='<% template = ::Template::UITemplate.where(name: 'searches/checkout').first %><% if template.present? %><%= get_view_erb(template) %><% end %>' data-bs-html="true"></i>
+              <% template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'searches/checkout').first %>
+              <i class="fa fa-info-circle fill-white position-absolute" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title='<%= template.present? ? get_view_erb(template) : '' %>' data-bs-html="true"></i>
               <div class="payment-timer jquery-countdown-container white fs-1 font-medium" id="held-until-countdown"></div>
             </div>
             <div class="form-sec-title pl-0 fn-24 p-3"><%= Scheme.model_name.human %></div>
@@ -24,7 +25,7 @@
                 <li class="p-0">
                   <a rel="cost-sheet" class="scroll-sec fn-16 p-2 display-inline-block theme-txt-color"> <%= t('mongoid.attributes.project_unit.cost_sheet')%></a>
                 </li>
-                <li class="p-0">  
+                <li class="p-0">
                   <a rel="payment-schedule" class="scroll-sec fn-16 p-2 display-inline-block theme-txt-color"><%= t('mongoid.attributes.project_unit.payment_schedule')%></a>
                 </li>
               </ul>

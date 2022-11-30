@@ -2,9 +2,6 @@
           <thead>
             <tr>
               <th>Project Name</th>
-              <% if policy([current_user_role_group, InterestedProject]).index? %>
-                <%= I18n.t("mongoid.models.interested_project.other") %>
-              <% end %>
               <th>Developer Name</th>
               <th>Location</th>
               <th>Launch Date</th>
@@ -27,11 +24,11 @@
                   <% else %>
                   <%= link_to project.name, admin_project_path(project) %>
                   <% end %>
+                  <% if policy([current_user_role_group, InterestedProject]).index? %>
+                    <% heart_class = project.id.in?(interested_project_ids) ? 'fill-danger' : 'fill-theme' %>
+                    <span><%= link_to_if !project.id.in?(interested_project_ids), "<i class='fa fa-heart #{heart_class} d-none d-sm-inline-block me-1'></i>".html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-inline-block me-2' %></span>
+                  <% end %>
                 </td>
-                <% if policy([current_user_role_group, InterestedProject]).index? %>
-                  <% heart_class = project.id.in?(interested_project_ids) ? 'fill-danger' : 'fill-theme' %>
-                  <td><%= link_to_if !project.id.in?(interested_project_ids), "<i class='fa fa-heart #{heart_class} d-none d-sm-inline-block me-1'></i>".html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-inline-block me-2' %></td>
-                <% end %>
                 <td><%= project.developer_name %></td>
                 <td><%= project.micro_market %>,
                     <%= project.city %></td>
@@ -55,11 +52,11 @@
                     <% leads_count = Lead.where(Lead.user_based_scope(current_user, params)).where(project_id: project.id).count %>
                     <%= link_to_if policy([current_user_role_group, Lead]).index?, leads_count, admin_leads_path(fltrs: {project_id: project.id}) %>
                     <% if policy([:admin, Lead.new(project_id: project.id)]).new? %>
-                      <%#= link_to I18n.t("global.add"), new_admin_lead_path(project_id: project.id), class: 'modal-remote-form-link prjt-add h-auto' %>
+                      <%= link_to I18n.t("global.add"), new_admin_lead_path(project_id: project.id), class: 'modal-remote-form-link prjt-add h-auto' %>
                     <% end %>
                   </td>
                 <% end %>
-                <td><div class="dropdown">
+                <td><div class="dropdown d-inline-block">
             <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
               <i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>

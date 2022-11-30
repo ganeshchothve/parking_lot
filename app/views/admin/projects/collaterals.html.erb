@@ -31,7 +31,7 @@
             </div>
           <% end %>
           <div class="tab-pane fade" id="nav-project-videos" role="tabpanel">
-            <% template = ::Template::UITemplate.where(name: 'assets/_videos', project_id: @project.try(:id)).first %>
+            <% template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'assets/_videos', project_id: @project.try(:id)).first %>
             <% if template.present? %>
               <%= get_view_erb(template, check_active: true) %>
             <% end %>

@@ -3,7 +3,7 @@ class Admin::PaymentTypesController < AdminController
   before_action :set_payment_type, only: %i[show edit update]
 
   def index
-    @payment_types = PaymentType.build_criteria params
+    @payment_types = PaymentType.where(booking_portal_client_id: current_client.try(:id)).build_criteria params
     if params[:fltrs].present? && params[:fltrs][:_id].present?
       redirect_to admin_payment_type_path(params[:fltrs][:_id])
     else
@@ -13,7 +13,7 @@ class Admin::PaymentTypesController < AdminController
   end
 
   def new
-    @payment_type = PaymentType.new
+    @payment_type = PaymentType.new(booking_portal_client_id: current_client.try(:id))
     render layout: false
   end
 
@@ -29,7 +29,7 @@ class Admin::PaymentTypesController < AdminController
   def update
     attrs = permitted_attributes([current_user_role_group, @payment_type])
     @payment_type.assign_attributes(attrs)
-
+    @payment_type.booking_portal_client_id = current_client.try(:id)
     respond_to do |format|
       if @payment_type.save
         format.json { render json: @payment_type }
@@ -40,7 +40,7 @@ class Admin::PaymentTypesController < AdminController
   end
 
   def create
-    @payment_type = PaymentType.new
+    @payment_type = PaymentType.new(booking_portal_client_id: current_client.try(:id))
     @payment_type.assign_attributes(permitted_attributes([current_user_role_group, @payment_type]))
 
     respond_to do |format|
@@ -57,7 +57,7 @@ class Admin::PaymentTypesController < AdminController
   private
 
   def set_payment_type
-    @payment_type = PaymentType.where(id: params[:id]).first if params[:id].present?
+    @payment_type = PaymentType.where(id: params[:id], booking_portal_client_id: current_client.try(:id)).first if params[:id].present?
   end
 
 end

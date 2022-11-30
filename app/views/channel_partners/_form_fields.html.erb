@@ -77,7 +77,7 @@
     <%= form.input :average_quarterly_business, required: false, disabled: !policy([:admin, @channel_partner]).editable_field?("average_quarterly_business"), as: :float %>
   </div>
   <div class="col-md-6">
-    <%= form.input :manager_id, collection: User.where(is_active: true, confirmed_at: {'$ne': nil}, role: "cp", booking_portal_client_id: current_client.id).collect{|x| [x.ds_name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), required: (!marketplace?), as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
+    <%= form.input :manager_id, collection: User.where(booking_portal_client_id: current_client.try(:id), is_active: true, confirmed_at: {'$ne': nil}, role: "cp", booking_portal_client_id: current_client.id).collect{|x| [x.ds_name, x.id]}, disabled: !policy([:admin, @channel_partner]).editable_field?("manager_id"), required: (!marketplace?), as: :select, prompt: :translate, input_html: { class: 'selectize' } %>
   </div>
 </div>
 
@@ -103,7 +103,7 @@
  <% if policy([:admin, @channel_partner]).editable_field?("project_ids") %>
   <div class="mb-3">
     <%= form.label :project_ids, class: "control-label" %>
-    <%= form.select :project_ids, options_from_collection_for_select(@channel_partner.project_ids.present? ? Project.in(id: @channel_partner.project_ids) : [], "id", "ds_name", @channel_partner.project_ids), {}, class: 'selectize-remote', multiple: true, data: {url: admin_projects_path}, disabled: !policy([:admin, @channel_partner]).editable_field?("project_ids") %>
+    <%= form.select :project_ids, options_from_collection_for_select(@channel_partner.project_ids.present? ? Project.where(booking_portal_client_id: current_client.try(:id)).in(id: @channel_partner.project_ids) : [], "id", "ds_name", @channel_partner.project_ids), {}, class: 'selectize-remote', multiple: true, data: {url: admin_projects_path}, disabled: !policy([:admin, @channel_partner]).editable_field?("project_ids") %>
   </div>
 <% end %>
 

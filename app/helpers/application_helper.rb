@@ -78,16 +78,14 @@ module ApplicationHelper
 
   def current_client
     return @current_client if @current_client.present?
-    @current_client = if current_project.present?
-                        @current_project.booking_portal_client
-                      elsif current_domain
-                        Client.in(booking_portal_domains: current_domain).first
-                      end
-    if @current_client.blank? && defined?(current_user) && current_user.present?
-      @current_client = if current_user.role?('superadmin')
-                          (Client.where(id: current_user.selected_client_id).first || current_user.booking_portal_client)
-                        else
-                          current_user.booking_portal_client
+    if defined?(current_user) && current_user.present?
+      @current_client = current_user.booking_portal_client
+    end
+    if @current_client.blank?
+      @current_client = if current_project.present?
+                          @current_project.booking_portal_client
+                        elsif current_domain
+                          Client.in(booking_portal_domains: current_domain).first
                         end
     end
     @current_client
@@ -97,7 +95,9 @@ module ApplicationHelper
     return @current_project if @current_project.present?
     # TODO: for now we are considering one project per client only so loading first client project here
     if current_domain
-      @current_project = Project.in(booking_portal_domains: current_domain).first
+      @current_project = Project.in(booking_portal_domains: current_domain)
+      @current_project = @current_project.where(booking_portal_client_id: current_user.booking_portal_client_id) if current_user.present?
+      @current_project = @current_project.first
     end
     @current_project
   end
@@ -109,20 +109,24 @@ module ApplicationHelper
   end
 
   def current_lead
-    @current_lead ||= Lead.where(user_id: current_user.id, project_id: current_project.id).first if (defined?(current_user) && current_user.buyer? && current_project.present?)
+    @current_lead ||= Lead.where(booking_portal_client_id: current_client.try(:id), user_id: current_user.id, project_id: current_project.id).first if (defined?(current_user) && current_user.buyer? && current_project.present?)
     @current_lead
   end
 
   def marketplace?
     valid = current_client.try(:kylas_tenant_id).present?
     unless valid
-      valid = request.host == ENV_CONFIG[:marketplace_host].to_s
+      valid = marketplace_host? || embedded_marketplace?
     end
     valid
   end
 
-  def marketplace_layout?
+  def marketplace_host?
     request.host == ENV_CONFIG[:marketplace_host].to_s
+  end
+
+  def marketplace_layout?
+    marketplace_host?
   end
 
   # Kylas i-Frame URL
@@ -131,8 +135,16 @@ module ApplicationHelper
   end
 
   def available_templates(subject_class, subject_class_resource)
-    project_id = (subject_class == 'Project' ? subject_class_resource.id : subject_class_resource.try(:project_id))
-    custom_templates = ::Template::CustomTemplate.where(subject_class: subject_class, booking_portal_client_id: subject_class_resource.booking_portal_client_id, is_active: true).in(project_ids: [project_id, []]).pluck(:name, :id)
+    project_ids = case subject_class
+    
+    when "Project"
+      subject_class_resource.id
+    when "VariableIncentiveScheme"
+      subject_class_resource.project_ids
+    else
+      subject_class_resource.try(:project_id)
+    end
+    custom_templates = ::Template::CustomTemplate.where(subject_class: subject_class, booking_portal_client_id: subject_class_resource.booking_portal_client_id, is_active: true).filter_by_project_ids(project_ids).pluck(:name, :id)
     custom_templates
   end
 
@@ -148,7 +160,7 @@ module ApplicationHelper
     #  #{active_link_to 'Docs', dashboard_documents_path, active: :exclusive, class: 'footer-link'}
     #  </li>"
     #end
-    if current_client.present?
+    if current_client.present? && policy([current_user_role_group, current_client]).allow_marketplace_access?
       if current_client.gallery.present? && current_client.gallery.assets.select{|x| x.persisted?}.present?
         html += "<li >
           #{active_link_to 'Gallery', dashboard_gallery_path, active: :exclusive, class: 'footer-link'}
@@ -246,19 +258,23 @@ module ApplicationHelper
     end
   end
 
-  def short_url destination_url, set_expired_at = false, current_client_id = nil
-    client = Client.where(id: current_client_id).first
-    uri = ShortenedUrl.clean_url(destination_url)
-    if shortened_url = ShortenedUrl.where(original_url: uri.to_s).first
-      uri.path = "/s/" + shortened_url.code
+  def short_url destination_url, client_id = nil, set_expired_at = false
+    client = Client.where(id: client_id).first
+    if client.present?
+      uri = ShortenedUrl.clean_url(destination_url)
+      if shortened_url = ShortenedUrl.where(original_url: uri.to_s, booking_portal_client_id: client.id).first
+        uri.path = "/s/#{client.id}-#{shortened_url.code}"
+      else
+        shortened_url = ShortenedUrl.create(original_url: uri.to_s, booking_portal_client_id: client.id)
+        uri.path = "/s/#{client.id}-#{shortened_url.code}"
+      end
+      shortened_url.set(expired_at: (DateTime.current + client.payment_link_validity_hours.hours)) if (client.present? && set_expired_at)
+      uri.query = nil
+      uri.fragment = nil
+      uri.to_s
     else
-      shortened_url = ShortenedUrl.create(original_url: uri.to_s)
-      uri.path = "/s/" + shortened_url.code
+      destination_url
     end
-    shortened_url.set(expired_at: (DateTime.current + client.payment_link_validity_hours.hours)) if (client.present? && set_expired_at)
-    uri.query = nil
-    uri.fragment = nil
-    uri.to_s
   end
 
   def device_type
@@ -276,7 +292,7 @@ module ApplicationHelper
   end
 
   def full_page_view?
-    action_name.in?(%w(generate_booking_detail_form generate_invoice sales_board quotation channel_partners_leaderboard_without_layout dashboard_landing_page payout_dashboard payout_list payout_show print_template reset_password_after_first_login))
+    action_name.in?(%w(generate_booking_detail_form generate_invoice sales_board quotation channel_partners_leaderboard_without_layout dashboard_landing_page payout_dashboard payout_list payout_show print_template reset_password_after_first_login select_client))
   end
 
   def select_icon(content_type = nil)

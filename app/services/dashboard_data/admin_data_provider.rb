@@ -11,7 +11,7 @@ module DashboardData
 
       def channel_partner_count(user=nil, project_ids=nil)
         if project_ids.present?
-          InterestedProject.where(InterestedProject.user_based_scoped(current_user)).approved.in(project_id: project_ids).count
+          InterestedProject.where(InterestedProject.user_based_scope(user)).approved.in(project_id: project_ids).count
         else
           User.in(role: %w(channel_partner cp_owner)).where(booking_portal_client: user.booking_portal_client).count
         end
@@ -29,12 +29,12 @@ module DashboardData
         UserRequest.where(status: 'pending', booking_portal_client: user.booking_portal_client).count
       end
 
-      def online_receipts
-        Receipt.where(Receipt.user_based_scoped(current_user)).where(payment_mode: 'online').count
+      def online_receipts(user)
+        Receipt.where(Receipt.user_based_scope(user)).where(payment_mode: 'online').count
       end
 
-      def offline_receipts
-        Receipt.where(Receipt.user_based_scoped(current_user)).not_in(payment_mode: 'online').count
+      def offline_receipts(user)
+        Receipt.where(Receipt.user_based_scope(user)).not_in(payment_mode: 'online').count
       end
 
       def active_schemes(user=nil)

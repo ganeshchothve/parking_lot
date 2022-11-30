@@ -46,10 +46,10 @@ module SearchConcern
   end
 
   def search_for_towers(lead_id = nil)
-    @lead ||= Lead.where(id: lead_id).first
+    @lead ||= Lead.where(booking_portal_client_id: current_client.try(:id), id: lead_id).first
     parameters = {}
     parameters = @search.params_json if @search.present?
-    project_units = ProjectUnit.build_criteria({fltrs: parameters}).in(status: ProjectUnit.user_based_available_statuses(@lead.user))
+    project_units = ProjectUnit.build_criteria({fltrs: parameters}).where(booking_portal_client_id: current_client.try(:id)).in(status: ProjectUnit.user_based_available_statuses(@lead.user))
     if @lead.present? && @lead.manager_role?('channel_partner')
       filters = {fltrs: { can_be_applied_by_role: @lead.manager_role, user_role: @lead.user_role, user_id: @lead.user_id, status: 'approved', default_for_user_id: @lead.manager_id } }
       project_tower_ids_for_channel_partner = Scheme.build_criteria(filters).distinct(:project_tower_id)
@@ -60,8 +60,8 @@ module SearchConcern
       hash = {project_tower_id: x.id, project_tower_name: x.name, assets: x.assets.as_json}
       # GENERIC_TODO: handle floor plan url here
       hash[:floors] = x.total_floors
-      hash[:total_units] = ProjectUnit.where(project_tower_id: x.id).count
-      hash[:total_units_available] = ProjectUnit.build_criteria({fltrs: parameters}).where(project_tower_id: x.id).in(status: ProjectUnit.user_based_available_statuses(@lead.user)).count
+      hash[:total_units] = ProjectUnit.where(booking_portal_client_id: current_client.try(:id), project_tower_id: x.id).count
+      hash[:total_units_available] = ProjectUnit.build_criteria({fltrs: parameters}).where(booking_portal_client_id: current_client.try(:id), project_tower_id: x.id).in(status: ProjectUnit.user_based_available_statuses(@lead.user)).count
       hash
     end
     # GENERIC TODO: If no results found we should display alternate towers

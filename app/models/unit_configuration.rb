@@ -93,4 +93,14 @@ class UnitConfiguration
     project_tower_id=self.data_attributes.find { |h| h['n'] == "project_tower_id" }['v']
     ProjectTower.find(project_tower_id) rescue nil
   end
+
+  def self.user_based_scope(user, params = {})
+    custom_scope = {}
+    if user.role.in?(%w(superadmin))
+      custom_scope = { }
+    end
+    custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
+    custom_scope
+  end
+
 end

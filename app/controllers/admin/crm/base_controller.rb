@@ -3,7 +3,7 @@ class Admin::Crm::BaseController < ApplicationController
   before_action :authorize_resource
 
   def index
-    @crms = ::Crm::Base.all.paginate(page: params[:page] || 1, per_page: params[:per_page])
+    @crms = ::Crm::Base.where(booking_portal_client_id: current_client.try(:id)).paginate(page: params[:page] || 1, per_page: params[:per_page])
   end
 
   def new
@@ -58,15 +58,15 @@ class Admin::Crm::BaseController < ApplicationController
   end
 
   def choose_crm
-    @resource = params[:resource_class].constantize.find params[:resource_id]
-    @apis = Crm::Api.where(resource_class: params[:resource_class].to_s)
-    @crms = Crm::Base.where(id: {"$in": @apis.pluck(:base_id)})
+    @resource = params[:resource_class].constantize.where(booking_portal_client_id: current_client.id, id: params[:resource_id]).first
+    @apis = Crm::Api.where(booking_portal_client_id: current_client.id, resource_class: params[:resource_class].to_s)
+    @crms = Crm::Base.where(booking_portal_client_id: current_client.id, id: {"$in": @apis.pluck(:base_id)})
   end
 
   private
 
   def set_crm
-    @crm = ::Crm::Base.find params[:id]
+    @crm = ::Crm::Base.where(id: params[:id], booking_portal_client_id: current_client.id).first if params[:id].present?
   end
 
   def authorize_resource

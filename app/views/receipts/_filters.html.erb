@@ -11,12 +11,12 @@
             <% if !current_user.role.in?(User::CHANNEL_PARTNER_USERS) && policy([current_user_role_group, User]).index? %>
               <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
                 <%= label_tag "fltrs", t('mongoid.attributes.user.name_email_phone'), class: "control-label" %>
-                <%= select_tag "fltrs[user_id]", options_for_select(filter_user_options), {class: "selectize-remote", data: {params: {fltrs: {role: User.buyer_roles(current_client)} }, url: admin_users_path }} %>
+                <%= select_tag "fltrs[user_id]", options_for_select(filter_user_options(current_client)), {class: "selectize-remote", data: {params: {fltrs: {role: User.buyer_roles(current_client)} }, url: admin_users_path }} %>
               </div>
             <% end %>
             <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
               <%= label_tag "fltrs", t('mongoid.attributes.lead.name_email_phone'), class: "control-label" %>
-              <%= select_tag "fltrs[lead_id]", options_for_select(filter_lead_options), { class: "selectize-remote", data: { url: admin_leads_path } } %>
+              <%= select_tag "fltrs[lead_id]", options_for_select(filter_lead_options(current_client)), { class: "selectize-remote", data: { url: admin_leads_path } } %>
             </div>
           <% end %>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
@@ -26,7 +26,7 @@
           <% if policy([current_user_role_group, BookingDetail]).index? %>
             <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
               <%= label_tag "fltrs", t('mongoid.attributes.receipt.booking_detail_id'), class: "control-label" %>
-              <% booking_detail = params.dig(:fltrs, :booking_detail_id).present? ? BookingDetail.where(_id: params.dig(:fltrs, :booking_detail_id) ).first : nil %>
+              <% booking_detail = params.dig(:fltrs, :booking_detail_id).present? ? BookingDetail.where(booking_portal_client_id: current_client.try(:id), _id: params.dig(:fltrs, :booking_detail_id) ).first : nil %>
               <%= select_tag "fltrs[booking_detail_id]", options_for_select( booking_detail ? [[booking_detail.name, booking_detail.id]] : []), {class: "selectize-remote", data: {url: admin_booking_details_path }} %>
             </div>
           <% end %>
@@ -62,13 +62,13 @@
             <% unless current_user.role?('channel_partner') %>
               <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
                 <%= label_tag "fltrs", t('mongoid.attributes.user.manager_id'), class: "control-label" %>
-                <%= select_tag "fltrs[manager_id]", options_for_select(filter_manager_options), { class: "selectize-remote", data: { url: admin_users_path, params: { fltrs: { role: ['channel_partner', 'cp_owner'] } } } } %>
+                <%= select_tag "fltrs[manager_id]", options_for_select(filter_manager_options(current_client)), { class: "selectize-remote", data: { url: admin_users_path, params: { fltrs: { role: ['channel_partner', 'cp_owner'] } } } } %>
               </div>
             <% end %>
             <% unless current_user.role.in?(%w(cp_owner cp channel_partner)) %>
               <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
                 <%= label_tag "fltrs", t('mongoid.attributes.user/role.cp') %>
-                <%= select_tag "fltrs[cp_manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(_id: params[:fltrs][:cp_manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp' }}}} %>
+                <%= select_tag "fltrs[cp_manager_id]", options_from_collection_for_select(params[:fltrs].present? ? User.where(booking_portal_client_id: current_client.try(:id), _id: params[:fltrs][:cp_manager_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: 'cp' }}}} %>
               </div>
             <% end %>
           <% end %>

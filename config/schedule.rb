@@ -36,7 +36,6 @@ every 1.day, at: "4:30 am" do
   runner "ReceiptCleaner.perform_async"
   #runner "ReminderWorker.perform_async"
   #runner "UnblockLeadsWorker.perform_async"
-  #runner "InvoicePendingReminderWorker.perform_async"
   # runner "ProjectUnitRemindersAndAutoRelease::Job.release_project_unit"
 end
 
@@ -51,11 +50,3 @@ end
 # every 1.minute do
 #   runner "UpgradePricing.perform"
 # end
-
-#every 1.day, at: "3:30 pm" do
-#  #runner "DailySmsReportWorker.perform_async"
-#end
-
-#every 1.day, at: "3:00 pm" do
-#  #runner "DailyReports::PaymentsReportWorker.perform_async"
-#end

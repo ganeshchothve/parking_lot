@@ -1,4 +1,3 @@
-require 'net/http'
 class SelldoLeadUpdater
   include Sidekiq::Worker
   include ApplicationHelper
@@ -153,7 +152,7 @@ class SelldoLeadUpdater
   end
 
   def sell_do(lead, data={})
-    MixpanelPusherWorker.perform_async(lead.mixpanel_id, stage, {}) if current_client.mixpanel_token.present?
+    MixpanelPusherWorker.perform_async(lead.booking_portal_client_id, lead.mixpanel_id, stage, {}) if lead.booking_portal_client.mixpanel_token.present?
 
     selldo_base_url = ENV_CONFIG['selldo']['base_url'].chomp('/')
     if selldo_base_url.present? && lead.lead_id.present? && lead.project.selldo_api_key.present?

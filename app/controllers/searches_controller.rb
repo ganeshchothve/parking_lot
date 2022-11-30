@@ -115,7 +115,7 @@ class SearchesController < ApplicationController
       else
         redirect_to admin_lead_path(@search.lead_id), alert: t('controller.searches.checkout.non_hold_booking')
       end
-    elsif @search.user && @search.user.receipts.where(project_unit_id: @search.project_unit_id, status: "pending", payment_mode: {"$ne": "online"}).present?
+    elsif @search.user && @search.user.receipts.where(booking_portal_client_id: current_client.try(:id)).where(project_unit_id: @search.project_unit_id, status: "pending", payment_mode: {"$ne": "online"}).present?
       redirect_to admin_lead_path(@search.lead_id), notice: t('controller.searches.checkout.pending_payments')
     else
       # Open checkout page for costsheet selection
@@ -173,7 +173,7 @@ class SearchesController < ApplicationController
   end
 
   def gateway_payment
-    @receipt = Receipt.where(:receipt_id => params[:receipt_id]).first
+    @receipt = Receipt.where(booking_portal_client_id: current_client.try(:id)).where(:receipt_id => params[:receipt_id]).first
     if @receipt.present?
       render file: "searches/#{@receipt.payment_gateway.underscore}_payment"
     else
@@ -184,7 +184,7 @@ class SearchesController < ApplicationController
   private
 
   def set_search
-    @search = Search.find(params[:id])
+    @search = Search.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first
   end
 
   def set_project_unit
@@ -196,12 +196,8 @@ class SearchesController < ApplicationController
   end
 
   def set_lead
-    if current_user.buyer?
-      if params[:current_project_id].present?
-        @lead = Lead.where(project_id: params[:current_project_id], user_id: current_user.id).first
-      end
-    elsif params[:lead_id].present?
-      @lead = Lead.where(id: params[:lead_id]).first
+    if params[:lead_id].present?
+      @lead = Lead.where(booking_portal_client_id: current_client.try(:id)).where(id: params[:lead_id]).first
     elsif @search.present? && @search.lead_id.present?
       @lead = @search.lead
     else
@@ -223,16 +219,16 @@ class SearchesController < ApplicationController
   end
 
   def apply_policy_scope
-    custom_scope = Search.all.criteria
+    custom_scope = Search.where(booking_portal_client_id: current_client.try(:id)).criteria
     if current_user.role?('admin') || current_user.role?('superadmin') || current_user.role?('crm') || current_user.role?('sales') || current_user.role?('cp')
       if params[:lead_id].present?
-        custom_scope = custom_scope.where(lead_id: params[:lead_id])
+        custom_scope = custom_scope.where(booking_portal_client_id: current_client.try(:id)).where(lead_id: params[:lead_id])
       end
     elsif current_user.role?('channel_partner')
-      lead_ids = Lead.in(referenced_manager_ids: current_user.id).distinct(:id)
-      custom_scope = custom_scope.in(lead_id: lead_ids)
+      lead_ids = Lead.where(booking_portal_client_id: current_client.try(:id)).in(referenced_manager_ids: current_user.id).distinct(:id)
+      custom_scope = custom_scope.where(booking_portal_client_id: current_client.try(:id)).in(lead_id: lead_ids)
     else
-      custom_scope = custom_scope.where(user_id: current_user.id)
+      custom_scope = custom_scope.where(booking_portal_client_id: current_client.try(:id)).where(user_id: current_user.id)
     end
     Search.with_scope(policy_scope(custom_scope)) do
       yield
@@ -287,7 +283,7 @@ class SearchesController < ApplicationController
   end
 
   def set_booking_detail
-    @booking_detail = BookingDetail.where(status: {"$in": BookingDetail::BOOKING_STAGES}, project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead).first
+    @booking_detail = BookingDetail.where(booking_portal_client_id: current_client.try(:id)).where(status: {"$in": BookingDetail::BOOKING_STAGES}, project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead).first
     if unattached_blocking_receipt = @search.lead.unattached_blocking_receipt(@search.project_unit.blocking_amount)
       coupon = unattached_blocking_receipt.coupon
     end
@@ -323,7 +319,7 @@ class SearchesController < ApplicationController
   end
 
   def redirect_to_checkout?
-    booking_detail  = @lead.booking_details.where(search_id: @search.id).first
+    booking_detail  = @lead.booking_details.where(booking_portal_client_id: current_client.try(:id)).where(search_id: @search.id).first
     booking_detail.present? && (Search::RESTRICTED_STEP.include?(params[:step]) && params[:action] == "show")
   end
 

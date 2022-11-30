@@ -7,14 +7,14 @@ module InvoicesHelper
     record.aasm.events(permitted: true).collect{|x| x.name.to_s}
   end
 
-  def filter_incentive_categories
+  def filter_incentive_categories client
     categories = IncentiveScheme::CATEGORIES
     resultant_categories = []
-    resultant_categories = if current_client.enable_site_visit? && !current_client.enable_leads?
+    resultant_categories = if client.enable_site_visit? && !client.enable_leads?
       categories.reject{|x| x == 'lead'}
-    elsif !current_client.enable_site_visit? && current_client.enable_leads?
+    elsif !client.enable_site_visit? && client.enable_leads?
       categories.reject{|x| x == 'walk_in'}
-    elsif !current_client.enable_site_visit? && !current_client.enable_leads?
+    elsif !client.enable_site_visit? && !client.enable_leads?
       categories.reject{|x| %(lead walk_in).include?(x)}
     else
       categories

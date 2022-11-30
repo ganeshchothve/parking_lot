@@ -50,7 +50,7 @@ module Kylas
     end
 
     def kylas_request(page: 0)
-      url = URI("#{APP_KYLAS_HOST}/#{APP_KYLAS_VERSION}/pipelines/search?sort=updatedAt,desc&page=#{page}&size=100")
+      url = URI(base_url+"/pipelines/search?sort=updatedAt,desc&page=#{page}&size=100")
 
       https = Net::HTTP.new(url.host, url.port)
       https.use_ssl = true

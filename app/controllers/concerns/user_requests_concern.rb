@@ -44,7 +44,7 @@ module UserRequestsConcern
   private
 
   def set_user_request
-    @user_request = associated_class.find(params[:id])
+    @user_request = associated_class.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first
   end
 
   def permitted_user_request_attributes

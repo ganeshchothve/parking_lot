@@ -15,7 +15,7 @@ class ProjectUnitExportWorker
     end
     file_name = "project_unit-#{SecureRandom.hex}.xls"
     file.write("#{Rails.root}/exports/#{file_name}")
-    ExportMailer.notify(file_name, user.email, "Units").deliver
+    ExportMailer.notify(file_name, user.email, "Units", user.id.to_s).deliver
   end
 
   def self.get_column_names

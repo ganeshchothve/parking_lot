@@ -14,6 +14,7 @@ end
 
 if Rails.env.development? || Rails.env.test? || Rails.env.staging?
   APP_KYLAS_HOST = 'https://api-stage.sling-dev.com'
+  IRIS_MARKETPLACE_HOST = 'https://base.marketplace.iris.selldoapp.com'
 elsif Rails.env.production?
   APP_KYLAS_HOST = 'https://api.kylas.io'
 end

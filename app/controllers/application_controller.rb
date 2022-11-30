@@ -18,6 +18,8 @@ class ApplicationController < ActionController::Base
   before_action :set_current_project_id
   # Run in current user Time Zone
   around_action :user_time_zone, if: :current_user
+  before_action :marketplace_current_user_match, if: proc { (marketplace_host? || embedded_marketplace?) && current_user.present? && params[:tenantId].present? && params[:userId].present? }
+  before_action :authorize_marketplace_client, if: :current_user, unless: proc { devise_controller? || (params[:controller] == 'admin/clients' && params[:action].in?(%w(kylas_api_key update))) || (params[:controller] == 'home' && params[:action].in?(%w(not_authorized select_client))) }
   around_action :apply_project_scope, if: :current_user, unless: proc { params[:controller] == 'admin/projects' }
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
@@ -67,18 +69,8 @@ class ApplicationController < ActionController::Base
   end
 
   def current_dashboard_path
-    if is_marketplace?
-      if embedded_marketplace?
-        not_authorized_path
-      elsif current_user.role?('dev_sourcing_manager')
-        admin_site_visits_path
-      else
-        if current_user.role.in?(%w(sales sales_admin))
-          admin_projects_path
-        else
-          admin_users_path
-        end
-      end
+    if is_marketplace? && embedded_marketplace?
+      not_authorized_path
     else
       dashboard_path
     end
@@ -121,6 +113,22 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def marketplace_current_user_match
+    valid = (marketplace_host? || embedded_marketplace?) && (current_client.kylas_tenant_id.blank? || current_user.kylas_user_id.blank?)
+    valid = valid || (current_client.is_marketplace? && (current_user.kylas_user_id != params[:userId] || current_client.kylas_tenant_id != params[:tenantId]))
+    if valid
+      store_user_location!
+      flash[:alert] = I18n.t('app.errors.marketplace_error')
+      sign_out current_user and redirect_to root_path
+    end
+  end
+
+  def authorize_marketplace_client
+    unless policy([current_user_role_group, current_client]).allow_marketplace_access?
+      redirect_to kylas_api_key_admin_client_path
+    end
+  end
 
   def set_current_project_id
     if current_project.present?
@@ -211,7 +219,7 @@ class ApplicationController < ActionController::Base
 
   def load_hold_unit
     if current_user
-      @current_unit = current_user.project_units.where(status: "hold").first
+      @current_unit = current_user.project_units.where(status: "hold", booking_portal_client_id: current_client.try(:id)).first
     end
   end
 

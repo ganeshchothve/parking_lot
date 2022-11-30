@@ -39,7 +39,7 @@ class VariableIncentiveScheme
 
   def project_names
     return "" if project_ids.blank?
-    Project.in(id: project_ids).pluck(:name).join(",")
+    Project.where(booking_portal_client_id: self.booking_portal_client_id).in(id: project_ids).pluck(:name).join(",")
   end
 
   def self.user_based_scope(user, params = {})

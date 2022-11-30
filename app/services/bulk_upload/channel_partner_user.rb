@@ -13,7 +13,7 @@ module BulkUpload
           phone = (_phone.country_code == '91' && _phone.sanitized.length == 10 ? "+91#{_phone.sanitized}" : "+#{_phone.sanitized}")
         end
         if row.field(0).to_s.strip.present?
-          partner_company = ::ChannelPartner.where(id: row.field(0).to_s.strip).first
+          partner_company = ::ChannelPartner.where(booking_portal_client_id: bur.booking_portal_client_id, id: row.field(0).to_s.strip).first
           if partner_company.present?
             attrs = {}
             attrs[:first_name] = row.field(1).to_s.strip

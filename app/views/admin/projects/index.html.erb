@@ -2,7 +2,7 @@
   <div class="">
     <% interested_project_ids = current_user.interested_projects.in(status: %w(subscribed approved)).distinct(:project_id) %>
     <div class="row">
-      <div class="col-lg-12 row">
+      <div class="col-lg-12 row pe-0">
         <div class="col-lg-9 filter-set d-xs-no-flex mt-2">
           <% if current_user.role.in?(%w(cp_owner channel_partner)) %>
             <%= link_to I18n.t("controller.projects.region_projects.link_name"), admin_projects_path(fltrs: {city: current_user.channel_partner&.city, regions: current_user.channel_partner&.regions}), class: "filter-link #{params.dig(:fltrs, :regions) == current_user.channel_partner&.regions ? 'active' : ''}" %>
@@ -77,11 +77,13 @@
 
 <%= javascript_tag do %>
   $(document).ready(function(){
-    var client = <%= raw current_user.booking_portal_client.to_json %>;
-    if (!client['sync_product'])
+    if (!App.client.sync_product)
     {
       setInterval(function(){
-        location.reload();
+        var href = window.location.href;
+        if (!(href.indexOf("remote-state=") != -1)) {
+          location.reload();
+        }
       }, 10000)
     }
   });

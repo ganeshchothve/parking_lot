@@ -6,7 +6,7 @@ class Admin::UsersController < AdminController
   before_action :authenticate_user!, except: %w[resend_confirmation_instructions change_state signup register]
   before_action :set_user, except: %i[index export new create portal_stage_chart channel_partner_performance partner_wise_performance search_by signup register]
   before_action :validate_player_ids, only: %i[update_player_ids]
-  before_action :authorize_resource, except: %w[resend_confirmation_instructions change_state, signup register sync_kylas_users]
+  before_action :authorize_resource, except: %w[resend_confirmation_instructions change_state signup register sync_kylas_users]
   around_action :apply_policy_scope, only: %i[index export]
   before_action :set_client, only: [:register]
   before_action :fetch_kylas_users, only: %i[new edit]
@@ -18,19 +18,18 @@ class Admin::UsersController < AdminController
   # GET /admin/users/:id/update_password
 
   def signup
+    @client = Client.new
     @user = User.new(role: 'admin')
   end
 
   def register
     respond_to do |format|
-      @user = User.new(role: 'admin')
-      @user.assign_attributes(user_params)
-      @user.assign_attributes(booking_portal_client: @client, tenant_owner: true)
       @user.skip_confirmation_notification!
       if @user.save
         @user.confirm
-        format.html { redirect_to (stored_location_for(@user) || new_user_session_path), notice: 'Successfully registered' }
+        format.html { redirect_to (session[:previous_url] || new_user_session_path), notice: 'Successfully registered' }
       else
+        flash.now[:alert] = @user.errors.full_messages
         format.html { render :signup }
       end
     end
@@ -118,13 +117,21 @@ class Admin::UsersController < AdminController
     end
   end
 
+  def approve_reject_company_user
+    @channel_partner = ChannelPartner.where(id: @user.temp_channel_partner_id).first
+    unless @channel_partner.present?
+      redirect_to admin_users_path(fltrs: {user_status_in_company: 'pending_approval'}), alert: "#{ChannelPartner.model_name.human} not found"
+    end
+    render layout: false
+  end
+
   private
 
   def set_user
     @user = if params[:crm_client_id].present? && params[:id].present?
               find_user_with_reference_id(params[:crm_client_id], params[:id])
             elsif params[:id].present?
-              User.where(id: params[:id]).first || User.where(lead_id: params[:id]).first
+              User.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first || User.where(booking_portal_client_id: current_client.try(:id), lead_id: params[:id]).first || User.where(selected_client_id: current_client.try(:id), id: params[:id]).first
             else
               current_user
             end
@@ -132,14 +139,19 @@ class Admin::UsersController < AdminController
   end
 
   def set_client
-    @client = Client.where(name: params.dig(:user, :name)).first
-    if @client.blank?
-      @client = Client.new
-      @client.assign_attributes(client_params)
-    end
-    unless @client.save
+    @client = Client.new
+    @client.assign_attributes(client_params)
+    @user = User.new(role: 'admin')
+    @user.assign_attributes(user_params)
+    @user.assign_attributes(booking_portal_client: @client, tenant_owner: true)
+    if @user.valid? && @client.save
+      superadmin_users = User.where(role: 'superadmin')
+      superadmin_users.update_all(client_ids: Client.pluck(:id))
+    else
       respond_to do |format|
-        format.json { render json: { errors: @client.errors.full_messages }, status: :unprocessable_entity }
+        @client.errors.delete(:users)
+        flash.now[:alert] = @client.errors.full_messages + @user.errors.full_messages
+        format.html { render :signup }
       end
     end
   end
@@ -168,8 +180,8 @@ class Admin::UsersController < AdminController
   end
 
   def find_user_with_reference_id crm_id, reference_id
-    _crm = Crm::Base.where(id: crm_id).first
-    _user = User.where("third_party_references.crm_id": _crm.try(:id), "third_party_references.reference_id": reference_id ).first
+    _crm = Crm::Base.where(id: crm_id, booking_portal_client_id: current_client.id).first
+    _user = User.where("third_party_references.crm_id": _crm.try(:id), "third_party_references.reference_id": reference_id, booking_portal_client_id: current_client.id).first
     _user
   end
 
