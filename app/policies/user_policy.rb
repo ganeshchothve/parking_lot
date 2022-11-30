@@ -26,7 +26,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def resend_confirmation_instructions?
-    edit? && ((!record.confirmed? && record.confirmation_token.present?) || (record.email.blank? && record.unconfirmed_email.present?))
+    edit? && ((!record.confirmed? && record.confirmation_token.present?) || record.unconfirmed_email.present? )
   end
 
   def resend_password_instructions?
