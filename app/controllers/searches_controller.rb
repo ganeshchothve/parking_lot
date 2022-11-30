@@ -184,7 +184,7 @@ class SearchesController < ApplicationController
   private
 
   def set_search
-    @search = Search.find(params[:id])
+    @search = Search.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first
   end
 
   def set_project_unit
@@ -196,11 +196,7 @@ class SearchesController < ApplicationController
   end
 
   def set_lead
-    if current_user.buyer?
-      if params[:current_project_id].present?
-        @lead = Lead.where(booking_portal_client_id: current_client.try(:id)).where(project_id: params[:current_project_id], user_id: current_user.id).first
-      end
-    elsif params[:lead_id].present?
+    if params[:lead_id].present?
       @lead = Lead.where(booking_portal_client_id: current_client.try(:id)).where(id: params[:lead_id]).first
     elsif @search.present? && @search.lead_id.present?
       @lead = @search.lead
