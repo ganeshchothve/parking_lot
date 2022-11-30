@@ -17,7 +17,7 @@ class ClientPolicy < ApplicationPolicy
       :mailgun_private_api_key, :mailgun_email_domain, :sms_mask, :enable_direct_payment,
       :blocking_amount, :blocking_amount_editable, :enable_referral_bonus, :enable_payment_with_kyc, :enable_booking_with_kyc,
       :blocking_days, :holding_minutes, :payment_gateway, :enable_company_users, :email_header, :email_footer,
-      :terms_and_conditions, :faqs, :rera, :tds_process, :logo, :mobile_logo, :background_image,
+      :faqs, :rera, :tds_process, :logo, :mobile_logo, :background_image,
       :allow_multiple_bookings_per_user_kyc, :enable_lead_conflicts, :lead_blocking_days,
       :enable_direct_activation_for_cp, :external_api_integration, :invoice_approval_tat, :powered_by_link, :launchpad_portal, :tl_dashboard_refresh_timer, :payment_link_validity_hours,
       enable_communication: [:email, :sms, :whatsapp, :notification],

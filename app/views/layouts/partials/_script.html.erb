@@ -6,7 +6,7 @@ var header_ht = $('header').height();
 
 $(document).ready(function () {
     if (window_wt <= 768) {
-        $(".brand-logo img").attr("src", "<%= current_client.logo.url || asset_path 'beyondwalls-logo.svg' %>");
+        $(".brand-logo img").attr("src", "<%= current_client.logo.url || asset_path 'logo.svg' %>");
     }
 });
 

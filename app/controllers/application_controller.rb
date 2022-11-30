@@ -98,7 +98,7 @@ class ApplicationController < ActionController::Base
 
   def set_current_client
     unless current_client
-      redirect_to welcome_path, alert: t('controller.application.set_current_client')
+      redirect_to home_path(current_user), alert: t('controller.application.set_current_client')
     end
   end
 

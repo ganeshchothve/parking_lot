@@ -1,8 +1,4 @@
 <div class="mb-3">
-  <%= f.label :terms_and_conditions, class: '' %>
-  <%= f.text_area :terms_and_conditions, class: 'form-control summernote', disabled: !policy([:admin, @client]).editable_field?("terms_and_conditions") %>
-</div>
-<div class="mb-3">
   <%= f.label :faqs, class: '' %>
   <%= f.text_area :faqs, class: 'form-control summernote', disabled: !policy([:admin, @client]).editable_field?("faqs") %>
 </div>

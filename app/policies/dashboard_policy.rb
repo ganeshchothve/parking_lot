@@ -40,10 +40,6 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
     true
   end
 
-  def terms_and_conditions?
-    true
-  end
-
   def gamify_unit_selection?
     true
   end

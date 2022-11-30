@@ -44,9 +44,6 @@ class DashboardController < ApplicationController
   def tds_process
   end
 
-  def terms_and_conditions
-  end
-
   def gamify_unit_selection
     data = ProjectUnit.where(booking_portal_client_id: current_client.try(:id)).build_criteria({
       fltrs: {
@@ -125,7 +122,7 @@ class DashboardController < ApplicationController
   def set_lead
     @lead = Lead.where(booking_portal_client_id: current_client.try(:id), project_id: params[:current_project_id], user_id: current_user.id).first
     unless @lead
-      redirect_to welcome_path, alert: t('controller.application.set_current_client')
+      redirect_to home_path(current_user), alert: t('controller.application.set_current_client')
     end
   end
 
