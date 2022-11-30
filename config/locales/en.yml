@@ -983,7 +983,7 @@ en:
         incentive_percentage_slabs: "Incentive Percentage Slabs"
         gst_slab_applicable: "GST Slab Applicable"
         enable_slot_generation: "Enable Slot Generation"
-        disable_project: "Disable Project"
+        disable_project: "Enable / Disable Project Functionalities"
         disable_walkins: "Disable Walk-ins"
         disable_bookings: "Disable Bookings"
         disable_invoicing: "Disable Invoicing"

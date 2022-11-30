@@ -15,50 +15,50 @@
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :developer_name, class: 'label-required' %>
-      <%= f.text_field :developer_name, class: 'form-control', autofocus: true, required: 'required', disabled: !policy([:admin, project]).editable_field?("developer_name") %>
+      <%= f.label :developer_name, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+      <%= f.text_field :developer_name, class: 'form-control', autofocus: true, required: (current_client.launchpad_portal? ? 'required' : ''), disabled: !policy([:admin, project]).editable_field?("developer_name") %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :project_type, class: 'label-required' %>
-      <%= f.select :project_type, I18n.t("mongoid.attributes.project/project_type").collect{|k,v| [v, k.to_s]}.sort{|x, y| x[0] <=> y[0]}, {prompt: I18n.t("global.select")}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("project_type") ? false : true) %>
+      <%= f.label :project_type, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+      <%= f.select :project_type, I18n.t("mongoid.attributes.project/project_type").collect{|k,v| [v, k.to_s]}.sort{|x, y| x[0] <=> y[0]}, {prompt: I18n.t("global.select")}, class: "selectize", multiple: true, required: (current_client.launchpad_portal? ? true : false), disabled: (policy([current_user_role_group, project]).editable_field?("project_type") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :category, class: 'label-required' %>
-      <%= f.select :category, I18n.t("mongoid.attributes.project/category").collect{|k,v| [v, k.to_s]}.sort{|x, y| x[0] <=> y[0]}, {prompt: I18n.t("global.select")}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("category") ? false : true) %>
+      <%= f.label :category, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+      <%= f.select :category, I18n.t("mongoid.attributes.project/category").collect{|k,v| [v, k.to_s]}.sort{|x, y| x[0] <=> y[0]}, {prompt: I18n.t("global.select")}, class: "selectize", multiple: true, required: (current_client.launchpad_portal? ? true : false), disabled: (policy([current_user_role_group, project]).editable_field?("category") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :project_segment, class: 'label-required' %>
-      <%= f.select :project_segment, I18n.t("mongoid.attributes.project/project_segment").collect{|k,v| [v, k.to_s]}.sort{|x, y| x[0] <=> y[0]}, {prompt: I18n.t("global.select")}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("project_segment") ? false : true) %>
+      <%= f.label :project_segment, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+      <%= f.select :project_segment, I18n.t("mongoid.attributes.project/project_segment").collect{|k,v| [v, k.to_s]}.sort{|x, y| x[0] <=> y[0]}, {prompt: I18n.t("global.select")}, class: "selectize", multiple: true, required: (current_client.launchpad_portal? ? true : false), disabled: (policy([current_user_role_group, project]).editable_field?("project_segment") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :micro_market, class: 'label-required' %>
-      <%= f.text_field :micro_market, class: 'form-control', required: true, disabled: !policy([:admin, project]).editable_field?("micro_market") %>
+      <%= f.label :micro_market, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+      <%= f.text_field :micro_market, class: 'form-control', required: (current_client.launchpad_portal? ? true : false), disabled: !policy([:admin, project]).editable_field?("micro_market") %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :city, class: 'label-required' %>
-      <%= f.select :city, current_client.regions.pluck(:city), {prompt: I18n.t("global.select")}, class: 'selectize city_select', required: true,  disabled: !policy([:admin, @project]).editable_field?("city") %>
+      <%= f.label :city, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+      <%= f.select :city, current_client.regions.pluck(:city), {prompt: I18n.t("global.select")}, class: 'selectize city_select', required: (current_client.launchpad_portal? ? true : false),  disabled: !policy([:admin, @project]).editable_field?("city") %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :region %>
-      <%= f.select :region, (@project.region.present? ? current_client.regions.where(city: @project.city).pluck(:partner_regions).first : []), {prompt:  I18n.t("global.link_to.select_city_first")}, class: 'selectize regions_select', required: true,  disabled: !policy([:admin, @project]).editable_field?("region"), data: { url: get_regions_admin_client_path } %>
+      <%= f.select :region, (@project.region.present? ? current_client.regions.where(city: @project.city).pluck(:partner_regions).first : []), {prompt:  I18n.t("global.link_to.select_city_first")}, class: 'selectize regions_select', required: (current_client.launchpad_portal? ? true : false),  disabled: !policy([:admin, @project]).editable_field?("region"), data: { url: get_regions_admin_client_path } %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :possession, class: 'label-required' %>
-      <%= f.text_field :possession, class: 'form-control datepicker', required: true, disabled: !policy([:admin, project]).editable_field?("possession"), value: f.object.possession.present? ? f.object.possession.strftime("%d/%m/%Y") : nil %>
+      <%= f.label :possession, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+      <%= f.text_field :possession, class: 'form-control datepicker', required: (current_client.launchpad_portal? ? true : false), disabled: !policy([:admin, project]).editable_field?("possession"), value: f.object.possession.present? ? f.object.possession.strftime("%d/%m/%Y") : nil %>
     </div>
   </div>
   <div class="col-md-6">
@@ -69,14 +69,14 @@
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :registration_name, class: 'label-required' %>
-      <%= f.text_field :registration_name, class: 'form-control', required: true, disabled: !policy([:admin, project]).editable_field?("registration_name") %>
+      <%= f.label :registration_name, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+      <%= f.text_field :registration_name, class: 'form-control', required: (current_client.launchpad_portal? ? true : false), disabled: !policy([:admin, project]).editable_field?("registration_name") %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :rera_registration_no, class: 'label-required' %>
-      <%= f.text_field :rera_registration_no, class: 'form-control', required: 'required', disabled: !policy([:admin, project]).editable_field?("rera_registration_no") %>
+      <%= f.label :rera_registration_no, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+      <%= f.text_field :rera_registration_no, class: 'form-control', required: (current_client.launchpad_portal? ? true : false), disabled: !policy([:admin, project]).editable_field?("rera_registration_no") %>
     </div>
   </div>
   <div class="col-md-6">
@@ -111,82 +111,24 @@
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :blocking_days, class: 'label-required' %>
-      <%= f.number_field :blocking_days, class: 'form-control', required: 'required', disabled: (policy([:admin, @project]).editable_field?("blocking_days") ? false : true), min: 0, max: 30 %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :holding_minutes, class: 'label-required' %>
-      <%= f.text_field :holding_minutes, class: 'form-control', required: 'required', disabled: (policy([:admin, @project]).editable_field?("holding_minutes") ? false : true), min: 0, max: 30 %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :blocking_amount, class: 'label-required' %>
-      <%= f.number_field :blocking_amount, class: 'form-control', required: 'required', disabled: (policy([:admin, @project]).editable_field?("blocking_amount") ? false : true), min: 0 %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
       <%= f.label :cin_number, class: '' %>
       <%= f.text_field :cin_number, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("cin_number") %>
     </div>
   </div>
   <div class="mb-3 col-md-6">
-    <%= f.label :latitude, class: 'label-required' %>
-    <%= f.text_field :latitude, class:'form-control', required: 'required', disabled: !policy([:admin, project]).editable_field?("latitude")  %>
+    <%= f.label :latitude, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+    <%= f.text_field :latitude, class:'form-control', required: (current_client.launchpad_portal? ? true : false), disabled: !policy([:admin, project]).editable_field?("latitude")  %>
   </div>
   <div class="mb-3 col-md-6">
-    <%= f.label :longitude, class: 'label-required' %>
-    <%= f.text_field :longitude, class:'form-control', required: 'required',  disabled: !policy([:admin, project]).editable_field?("longitude") %>
-  </div>
-  <div class="col-md-6">
-    <div class="form-group mb-3">
-      <div class="form-check form-check-inline">
-        <%= f.check_box :enable_booking_with_kyc, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("enable_booking_with_kyc") }, "Yes", "No" %>
-        <%= f.label :enable_booking_with_kyc, class: "form-check-label d-inline-block ms-2 enable-booking-with-kyc" %>
-      </div>
-    </div>
+    <%= f.label :longitude, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+    <%= f.text_field :longitude, class:'form-control', required: (current_client.launchpad_portal? ? true : false),  disabled: !policy([:admin, project]).editable_field?("longitude") %>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :foyer_link, class: 'label-required' %>
+      <%= f.label :foyer_link %>
       <%= f.text_field :foyer_link, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("foyer_link") %>
     </div>
   </div>
-  <div class="col-md-6">
-    <% if policy([:admin, project]).editable_field?("payment_enabled") %>
-      <div class="mb-3">
-        <%= f.label :payment_enabled, class: 'mb-2' %>
-        <div class="form-check form-check-inline">
-          <%= f.radio_button :payment_enabled, true, class: "form-check-input wd-22" %>
-          <%= f.label :payment_enabled, "Yes", class: "form-check-label d-inline-block ms-2" %>
-        </div>
-        <div class="form-check form-check-inline">
-          <%= f.radio_button :payment_enabled, false, class: "form-check-input wd-22" %>
-          <%= f.label :payment_enabled, "No", class: "form-check-label d-inline-block ms-2" %>
-        </div>
-      </div>
-    <% end %>
-  </div>
-
-  <div class="col-md-6">
-    <% if policy([:admin, project]).editable_field?("enable_inventory") %>
-      <div class="mb-3">
-        <%= f.label :enable_inventory, class: 'mb-2' %>
-        <div class="form-check form-check-inline">
-          <%= f.radio_button :enable_inventory, true, class: "form-check-input wd-22" %>
-          <%= f.label :enable_inventory, "Yes", class: "form-check-label d-inline-block ms-2" %>
-        </div>
-        <div class="form-check form-check-inline">
-          <%= f.radio_button :enable_inventory, false, class: "form-check-input wd-22" %>
-          <%= f.label :enable_inventory, "No", class: "form-check-label d-inline-block ms-2" %>
-        </div>
-      </div>
-    <% end %>
-  </div>
-
   <% if policy([:admin, project]).editable_field?("is_active") %>
     <div class="col-md-6">
     <div class="mb-3">
@@ -204,44 +146,44 @@
   <% end %>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :website_link, class: 'label-required' %>
-      <%= f.url_field :website_link, required: true, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("website_link") %>
+      <%= f.label :website_link, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+      <%= f.url_field :website_link, required: (current_client.launchpad_portal? ? true : false), class: 'form-control', disabled: !policy([:admin, project]).editable_field?("website_link") %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :configurations, class: 'label-required' %>
-      <%= f.select :configurations, (Project::DEFAULT_CONFIGURATIONS + Project.pluck(:configurations)).flatten.compact.uniq.collect{|x| [x, x]}.sort{|x, y| x[0] <=> y[0]}, {}, class: 'selectize-tags', multiple: true, disabled: !policy([:admin, project]).editable_field?("configurations"), required: true %>
+      <%= f.label :configurations, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+      <%= f.select :configurations, (Project::DEFAULT_CONFIGURATIONS + Project.pluck(:configurations)).flatten.compact.uniq.collect{|x| [x, x]}.sort{|x, y| x[0] <=> y[0]}, {}, class: 'selectize-tags', multiple: true, disabled: !policy([:admin, project]).editable_field?("configurations"), required: (current_client.launchpad_portal? ? true : false) %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :project_size, class: 'label-required' %>
-      <%= f.number_field :project_size, class: 'form-control', required: true, disabled: !policy([:admin, project]).editable_field?("project_size") %>
+      <%= f.label :project_size, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+      <%= f.number_field :project_size, class: 'form-control', required: (current_client.launchpad_portal? ? true : false), disabled: !policy([:admin, project]).editable_field?("project_size") %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :total_buildings, class: 'label-required' %>
-      <%= f.number_field :total_buildings, required: true, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("total_buildings"), min: 1 %>
+      <%= f.label :total_buildings, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+      <%= f.number_field :total_buildings, required: (current_client.launchpad_portal? ? true : false), class: 'form-control', disabled: !policy([:admin, project]).editable_field?("total_buildings"), min: 1 %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :total_units, class: 'label-required' %>
-      <%= f.number_field :total_units, class: 'form-control', required: true, disabled: !policy([:admin, project]).editable_field?("total_units"), min: 1 %>
+      <%= f.label :total_units, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+      <%= f.number_field :total_units, class: 'form-control', required: (current_client.launchpad_portal? ? true : false), disabled: !policy([:admin, project]).editable_field?("total_units"), min: 1 %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :amenities, class: 'label-required' %>
-      <%= f.select :amenities, I18n.t("mongoid.attributes.project/default_amenities").collect{|k,v| [v, k.to_s]}, {}, required: true, class: 'selectize-tags', multiple: true, disabled: !policy([:admin, project]).editable_field?("amenities") %>
+      <%= f.label :amenities, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+      <%= f.select :amenities, I18n.t("mongoid.attributes.project/default_amenities").collect{|k,v| [v, k.to_s]}, {}, required: (current_client.launchpad_portal? ? true : false), class: 'selectize-tags', multiple: true, disabled: !policy([:admin, project]).editable_field?("amenities") %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :approved_banks, class: 'label-required' %>
-      <%= f.select :approved_banks, I18n.t("mongoid.attributes.project/allowed_banks").collect{|k,v| [v, k.to_s]}, {prompt: I18n.t("global.select")}, class: "selectize", multiple: true, required: true, disabled: (policy([current_user_role_group, project]).editable_field?("approved_banks") ? false : true) %>
+      <%= f.label :approved_banks, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+      <%= f.select :approved_banks, I18n.t("mongoid.attributes.project/allowed_banks").collect{|k,v| [v, k.to_s]}, {prompt: I18n.t("global.select")}, class: "selectize", multiple: true, required: (current_client.launchpad_portal? ? true : false), disabled: (policy([current_user_role_group, project]).editable_field?("approved_banks") ? false : true) %>
     </div>
   </div>
   <div class="col-md-6">
@@ -293,13 +235,6 @@
     <div class="mb-3">
       <%= f.label :iris_url, class: '' %>
       <%= f.text_field :iris_url, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("iris_url") %>
-    </div>
-  </div>
-
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :booking_portal_domains, class: 'label-required' %>
-      <%= f.select :booking_portal_domains, project.booking_portal_domains, {}, class: 'selectize-tags domain', multiple: true, required: 'required', disabled: (policy([:admin, project]).editable_field?("booking_portal_domains") ? false : true) %>
     </div>
   </div>
 </div>

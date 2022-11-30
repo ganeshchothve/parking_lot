@@ -20,15 +20,15 @@
     <% end %>
     <div class='row'>
       <div class="mb-3 col-md-6">
-        <%= sf.label :distance, class: 'label-required' %>
+        <%= sf.label :distance, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
         <%= sf.text_field :distance, class:'form-control', required: 'required', disabled: !editable_locations %>
       </div>
       <div class="mb-3 col-md-6">
-        <%= sf.label :unit, class: 'label-required' %>
+        <%= sf.label :unit, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
         <%= sf.select :unit, I18n.t("mongoid.attributes.nearby_locations/units").collect{|k,v| [v,k.to_s]}, {prompt: I18n.t("global.select")}, class:'selectize', required: 'required', disabled: !editable_locations %>
       </div>
       <div class="mb-3 col-md-12">
-        <%= sf.label :destination, class: 'label-required' %>
+        <%= sf.label :destination, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
         <%= sf.text_field :destination, class:'form-control', required: 'required', disabled: !editable_locations %>
       </div>
     </div>
