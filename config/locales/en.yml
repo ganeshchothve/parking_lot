@@ -2098,6 +2098,10 @@ en:
       user/company_events:
         active: "Approve"
         inactive: "Reject"
+      user/user_status_in_company:
+        active: "Active"
+        inactive: "Inactive"
+        pending: "Pending Approval"
 
       fund_account:
         address: "UPI Address"
