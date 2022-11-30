@@ -77,7 +77,7 @@ module ProjectOnboardingOnSelldo
             host = (Rails.application.config.action_mailer.default_url_options[:protocol] || (port == 443 ? 'https' : 'http')) + '://' + host
 
             if self.booking_portal_client&.launchpad_portal?
-              create_workflow("#{I18n.t('global.brand')} - #{self.name} - New lead Created to IRIS", "new_lead", "lead_meta_info#project_ids", project['_id'], "LeadMetaInfo", "#{host.chomp('/')}/sell_do/#{project['_id']}/lead_created", errors)
+              create_workflow("#{I18n.t('global.brand', client_name: self.booking_portal_client.name)} - #{self.name} - New lead Created to IRIS", "new_lead", "lead_meta_info#project_ids", project['_id'], "LeadMetaInfo", "#{host.chomp('/')}/sell_do/#{project['_id']}/lead_created", errors)
 
               trigger_predicates = [{
                 operator: "changed",
@@ -90,14 +90,14 @@ module ProjectOnboardingOnSelldo
                 sub_value: "",
                 value: project['_id']
               }]
-              create_workflow("#{I18n.t('global.brand')} - #{self.name} - Lead Project Updated", "lead_updated", trigger_predicates, project['_id'], "LeadMetaInfo", "#{host.chomp('/')}/sell_do/#{project['_id']}/lead_created", errors)
+              create_workflow("#{I18n.t('global.brand', client_name: self.booking_portal_client.name)} - #{self.name} - Lead Project Updated", "lead_updated", trigger_predicates, project['_id'], "LeadMetaInfo", "#{host.chomp('/')}/sell_do/#{project['_id']}/lead_created", errors)
             end
 
-            create_workflow("#{I18n.t('global.brand')} - #{self.name} - Lead Stage Updated", "stage_changed", "lead_meta_info#project_ids", project['_id'], "LeadMetaInfo", "#{host.chomp('/')}/sell_do/#{project['_id']}/lead_updated", errors)
+            create_workflow("#{I18n.t('global.brand', client_name: self.booking_portal_client.name)} - #{self.name} - Lead Stage Updated", "stage_changed", "lead_meta_info#project_ids", project['_id'], "LeadMetaInfo", "#{host.chomp('/')}/sell_do/#{project['_id']}/lead_updated", errors)
 
-            create_workflow("#{I18n.t('global.brand')} - #{self.name} - Site Visit Scheduled to IRIS", "sitevisit_scheduled", "site_visit#project_id", project['_id'], "SiteVisit", "#{host.chomp('/')}/sell_do/#{project['_id']}/site_visit_created", errors)
+            create_workflow("#{I18n.t('global.brand', client_name: self.booking_portal_client.name)} - #{self.name} - Site Visit Scheduled to IRIS", "sitevisit_scheduled", "site_visit#project_id", project['_id'], "SiteVisit", "#{host.chomp('/')}/sell_do/#{project['_id']}/site_visit_created", errors)
 
-            create_workflow("#{I18n.t('global.brand')} - #{self.name} - Site Visit Conducted to IRIS", "sitevisit_conducted", "site_visit#project_id", project['_id'], "SiteVisit", "#{host.chomp('/')}/sell_do/#{project['_id']}/site_visit_updated", errors)
+            create_workflow("#{I18n.t('global.brand', client_name: self.booking_portal_client.name)} - #{self.name} - Site Visit Conducted to IRIS", "sitevisit_conducted", "site_visit#project_id", project['_id'], "SiteVisit", "#{host.chomp('/')}/sell_do/#{project['_id']}/site_visit_updated", errors)
           end
         else
           errors << 'Sales user not found'

@@ -3,7 +3,7 @@
     <p class="fn-16 mb-0">
       <i class="fa fa-check-circle me-2 fill-success"></i>
       <%# <span class="">1</span> %>
-      Select Project
+      <%= t('controller.searches.select_project.link_name') %>
     </p>
     <p class="fn-16 mb-0">
       <i class="fa fa-check-circle me-2 fill-success"></i>
@@ -12,12 +12,12 @@
     </p>
     <p class="fn-16 mb-0 active">
       <!-- <i class="fa fa-check-circle me-2 fill-theme"></i> -->
-      <span>3</span>
+      <span><%= t('controller.searches.towers.step') %></span>
       <%= I18n.t("controller.searches.towers.link_name") %>
     </p>
     <p class="fn-16 mb-0">
       <!-- <i class="fa fa-check-circle me-2 fill-theme"></i> -->
-      <span>4</span>
+      <span><%= t('controller.searches.apartments.step') %></span>
       <%= I18n.t("controller.searches.apartments.link_name") %>
     </p>
   </div>
@@ -119,23 +119,23 @@
   </div>
 </div>
 <%= javascript_tag do %>
-$(document).ready(function(){
-var towers = <%= raw @towers.to_json(include: [:assets]) %>;
-_.each(towers, function(tower) {
-Gamification.gamifyTowerSelection(tower, $('#' + tower.project_tower_id + ' [data-placeholder="gamification"]'));
-});
-$('.result-list').click(function(e) {
-$('.result-list').removeClass('active')
-$(this).addClass('active')
-$("#project_tower_id").val($(this).attr('id'));
-var $form = $(".edit_search_form");
-var tower_id = $(this).attr('id')
-$form.find('[name="search[project_tower_id]"]').val(tower_id);
-$form.find('input[type="submit"]').removeAttr("disabled");
-var tower = _.find(towers, function(u){ return u.project_tower_id == tower_id });
-showTowerData(tower);
-});
-$('.extra-pad').css('padding-top', $('.result-list').outerHeight()/2);
-$('.result-list').eq(0).click();
-});
+  $(document).ready(function(){
+    var towers = <%= raw @towers.to_json(include: [:assets]) %>;
+    _.each(towers, function(tower) {
+      Gamification.gamifyTowerSelection(tower, $('#' + tower.project_tower_id + ' [data-placeholder="gamification"]'));
+    });
+    $('.result-list').click(function(e) {
+      $('.result-list').removeClass('active')
+      $(this).addClass('active')
+      $("#project_tower_id").val($(this).attr('id'));
+      var $form = $(".edit_search_form");
+      var tower_id = $(this).attr('id')
+      $form.find('[name="search[project_tower_id]"]').val(tower_id);
+      $form.find('input[type="submit"]').removeAttr("disabled");
+      var tower = _.find(towers, function(u){ return u.project_tower_id == tower_id });
+      showTowerData(tower);
+    });
+    $('.extra-pad').css('padding-top', $('.result-list').outerHeight()/2);
+    $('.result-list').eq(0).click();
+  });
 <% end %>

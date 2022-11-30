@@ -1,7 +1,7 @@
 <div class="mt-4">
-  <h2 class="fn-16">Apartment Details</h2>
+  <h2 class="fn-16"><%= t('controller.project_units.title') %></h2>
   <hr class="my-2 mb-3">
-  <p class="fn-16">Unit No.: <%= booking_detail.name %></p>
+  <p class="fn-16"><%= t('controller.project_units.unit_no') %> <%= booking_detail.name %></p>
   <ul class="booking-apart-info list-info-with-label">
     <% project_unit = booking_detail.project_unit %>
     <li>

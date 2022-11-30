@@ -5,16 +5,16 @@
         <table class="table table-responsive table-color">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Channel Partner</th>
-              <th>Status</th>
-              <th>Scheduled On</th>
-              <th>Project Name</th>
-              <th>Verification Approved</th>
-              <th>Site Visit Manager</th>
-              <th class="btn-action">Action</th>
+              <th><%= t('mongoid.attributes.site_visit.name') %></th>
+              <th><%= t('mongoid.attributes.site_visit.email') %></th>
+              <th><%= t('mongoid.attributes.site_visit.phone') %></th>
+              <th><%= t('mongoid.attributes.site_visit.manager_id') %></th>
+              <th><%= t('mongoid.attributes.site_visit.status') %></th>
+              <th><%= t('mongoid.attributes.site_visit.scheduled_on') %></th>
+              <th><%= t('mongoid.attributes.site_visit.project') %></th>
+              <th><%= t('mongoid.attributes.site_visit.approval_status') %></th>
+              <th><%= t('mongoid.attributes.site_visit.cp_manager') %></th>
+              <th class="btn-action">Action<%= t('global.action') %></th>
             </tr>
           </thead>
           <tbody>

@@ -508,7 +508,7 @@ module DatabaseSeeds
           content: <<-'CP'
             <div class="col-lg-5 px-0 px-sm-2">
               <div class="cp-signup-features px-2">
-                <h2 class="pt-2 pb-2"><%= I18n.t("global.link_to.love_our_brand", name: (current_client.present? ? current_client.name : I18n.t("global.brand"))) %></h2>
+                <h2 class="pt-2 pb-2"><%= I18n.t("global.link_to.love_our_brand", name: (current_client.present? ? current_client.name : I18n.t("global.brand", client_name: current_client.name))) %></h2>
                 <ul class="list-unstyled mt-4 cp-benefit-list cp-benefit-2row">
                   <li>
                     <div class="features-wrap">

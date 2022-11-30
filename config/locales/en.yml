@@ -22,7 +22,7 @@ en:
     coming_soon: "Coming Soon"
     confirmed: "Confirmation successful."
     terms_and_conditions: "Terms and Conditions"
-    brand: "BeyondWalls"
+    brand: "%{client_name}"
     all: "All"
     all_elements: "All %{name}"
     at: "At"
@@ -1074,8 +1074,7 @@ en:
           bajaj_finance: "Bajaj Finance"
         kylas_product_id: Kylas Products
         new_product_kylas_crm: "How to add a new Product in Kylas CRM?"
-        disabled_walkins: "Disabled Walk-ins"
-        disabled_bookings: "Disabled bookings"
+        bookings: Bookings
       project/project_type:
         residential: "Residential"
         commercial: "Commercial"
@@ -1144,6 +1143,8 @@ en:
         name: "Name"
         first_name: "First Name"
         last_name: "Last Name"
+        primary_user_id: 'Company Owner'
+        users_count: 'User Count'
         company_name: "CP Company Name/ Organisation Name/ CP Name"
         company_owner_name: "Organisation CEO/MD/Owner Name"
         company_owner_phone: "Organisation CEO/MD/Owner's Contact No."
@@ -1592,6 +1593,9 @@ en:
         disabled: "Disabled"
 
       invoice:
+        name: Name
+        manager: Manager
+        invoice_amount: Amount
         number: "Invoice Number"
         amount: "Brokerage Amount"
         gst_amount: "GST Amount"
@@ -1776,6 +1780,10 @@ en:
         swap: "Swap"
         general: "General"
       site_visit:
+        name: Name
+        email: Email
+        phone: Phone
+        cp_manager: 'Relationship Manager'
         project: "Project"
         lead: "Lead"
         creator: "Created By"
@@ -2633,7 +2641,7 @@ en:
       confirm:
         booking_moved_tentative: "Are you sure? You cannot make changes once booking moved to tentative state"
         sure: "Are you sure?"
-        click_to_confirm: "By clicking on 'Complete Registration' you are confirming all the provided information and your application will be submitted for review to the BeyondWalls Partner Engagement Team."
+        click_to_confirm: "By clicking on 'Complete Registration' you are confirming all the provided information and your application will be submitted for review to the %{client_name} Partner Engagement Team."
       text:
         upload_formats_text: "Upload documents in following formats - jpg, jpeg, png, pdf, zip"
         valid_documents_for: "Valid documents for"
@@ -3073,6 +3081,7 @@ en:
         search_token: "Search Token"
 
     project_units:
+      title: 'Apartment Details'
       send_cost_sheet_and_payment_schedule:
         link_name: "Send Cost sheet & Payment Schedule to Customer"
         success: "Cost sheet & payment schedule will be sent to customer shortly."

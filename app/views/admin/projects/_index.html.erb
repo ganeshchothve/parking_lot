@@ -1,70 +1,70 @@
 <table class="table table-responsive table-color align-middle">
-          <thead>
-            <tr>
-              <th>Project Name</th>
-              <th>Developer Name</th>
-              <th>Location</th>
-              <th>Launch Date</th>
-              <th>Bookings</th>
-              <% if current_client.enable_site_visit? %><th><%= I18n.t("mongoid.models.site_visit.other") %></th><% end %>
-              <% if policy([current_user_role_group, Lead]).index? %><th><%= I18n.t("mongoid.models.lead.other") %></th><% end %>
-              <th class="btn-action">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-<% projects.each_with_index do |project, index| %>
-<% meetings = Meeting.where(Meeting.user_based_scope(current_user, {project_id: project.id})) %>
-<% scheduled_meetings = meetings.where(status: 'scheduled') %>
-<% meeting = scheduled_meetings.first %>
-<% meeting = meetings.where(status: 'completed').first unless meeting %>
-              <tr>
-                <td>
-                  <% if is_marketplace? %>
-                    <%= project.name %>
-                  <% else %>
-                  <%= link_to project.name, admin_project_path(project) %>
-                  <% end %>
-                  <% if policy([current_user_role_group, InterestedProject]).index? %>
-                    <% heart_class = project.id.in?(interested_project_ids) ? 'fill-danger' : 'fill-theme' %>
-                    <span><%= link_to_if !project.id.in?(interested_project_ids), "<i class='fa fa-heart #{heart_class} d-none d-sm-inline-block me-1'></i>".html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-inline-block me-2' %></span>
-                  <% end %>
-                </td>
-                <td><%= project.developer_name %></td>
-                <td><%= project.micro_market %>,
-                    <%= project.city %></td>
-                <td><%= I18n.l(project.launched_on.strftime('%d %b, %Y')) rescue "-" %></td>
-                <td>
-                <% bookings_count = BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: project.id).count %>
-                <%= link_to_if policy([current_user_role_group, BookingDetail]).index?, bookings_count, admin_booking_details_path(fltrs: {project_id: project.id})  %>
-                </td>
-                <% if current_client.enable_site_visit? %>
-                <td><% sv_count = SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).where(project_id: project.id).count %>
-                <%= link_to_if policy([current_user_role_group, SiteVisit]).index?, sv_count, admin_site_visits_path(fltrs: {project_id: project.id}) %>
-                <span class="float-end">
-                        <%= link_to I18n.t("global.add"), new_admin_lead_path(project_id: project.id, walkin: true), class: 'modal-remote-form-link prjt-add h-auto text-primary  text-decoration-underline' %>
-                      <% if allow_walkins?(project) %>
-                      <% end %>
-                </span>
-                </td>
-                <% end %>
-                <% if policy([current_user_role_group, Lead]).index? %>
-                  <td>
-                    <% leads_count = Lead.where(Lead.user_based_scope(current_user, params)).where(project_id: project.id).count %>
-                    <%= link_to_if policy([current_user_role_group, Lead]).index?, leads_count, admin_leads_path(fltrs: {project_id: project.id}) %>
-                    <% if policy([:admin, Lead.new(project_id: project.id)]).new? %>
-                      <%= link_to I18n.t("global.add"), new_admin_lead_path(project_id: project.id), class: 'modal-remote-form-link prjt-add h-auto' %>
-                    <% end %>
-                  </td>
-                <% end %>
-                <td><div class="dropdown d-inline-block">
-            <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false">
-              <i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
+  <thead>
+    <tr>
+      <th><%= t('mongoid.attributes.project.name') %></th>
+      <th><%= t('mongoid.attributes.project.developer_name %></th>
+      <th><%= t('mongoid.attributes.project.micro_market') %></th>
+      <th><%= t('mongoid.attributes.project.launched_on') %></th>
+      <th><%= t('mongoid.attributes.project.bookings') %></th>
+      <% if current_client.enable_site_visit? %><th><%= I18n.t("mongoid.models.site_visit.other") %></th><% end %>
+      <% if policy([current_user_role_group, Lead]).index? %><th><%= I18n.t("mongoid.models.lead.other") %></th><% end %>
+      <th class="btn-action">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% projects.each_with_index do |project, index| %>
+      <% meetings = Meeting.where(Meeting.user_based_scope(current_user, {project_id: project.id})) %>
+      <% scheduled_meetings = meetings.where(status: 'scheduled') %>
+      <% meeting = scheduled_meetings.first %>
+      <% meeting = meetings.where(status: 'completed').first unless meeting %>
+      <tr>
+        <td>
+          <% if is_marketplace? %>
+            <%= project.name %>
+          <% else %>
+            <%= link_to project.name, admin_project_path(project) %>
+          <% end %>
+          <% if policy([current_user_role_group, InterestedProject]).index? %>
+            <% heart_class = project.id.in?(interested_project_ids) ? 'fill-danger' : 'fill-theme' %>
+            <span><%= link_to_if !project.id.in?(interested_project_ids), "<i class='fa fa-heart #{heart_class} d-none d-sm-inline-block me-1'></i>".html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-inline-block me-2' %></span>
+          <% end %>
+        </td>
+        <td><%= project.developer_name %></td>
+        <td><%= project.micro_market %>,
+          <%= project.city %></td>
+        <td><%= I18n.l(project.launched_on.strftime('%d %b, %Y')) rescue "-" %></td>
+        <td>
+          <% bookings_count = BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: project.id).count %>
+          <%= link_to_if policy([current_user_role_group, BookingDetail]).index?, bookings_count, admin_booking_details_path(fltrs: {project_id: project.id})  %>
+        </td>
+        <% if current_client.enable_site_visit? %>
+          <td><% sv_count = SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).where(project_id: project.id).count %>
+          <%= link_to_if policy([current_user_role_group, SiteVisit]).index?, sv_count, admin_site_visits_path(fltrs: {project_id: project.id}) %>
+          <span class="float-end">
+            <% if allow_walkins?(project) %>
+              <%= link_to I18n.t("global.add"), new_admin_lead_path(project_id: project.id, walkin: true), class: 'modal-remote-form-link prjt-add h-auto text-primary  text-decoration-underline' %>
+            <% end %>
+          </span>
+          </td>
+        <% end %>
+        <% if policy([current_user_role_group, Lead]).index? %>
+          <td>
+            <% leads_count = Lead.where(Lead.user_based_scope(current_user, params)).where(project_id: project.id).count %>
+            <%= link_to_if policy([current_user_role_group, Lead]).index?, leads_count, admin_leads_path(fltrs: {project_id: project.id}) %>
+            <% if policy([:admin, Lead.new(project_id: project.id)]).new? %>
+              <%= link_to I18n.t("global.add"), new_admin_lead_path(project_id: project.id), class: 'modal-remote-form-link prjt-add h-auto' %>
+            <% end %>
+          </td>
+        <% end %>
+        <td>
+          <div class="dropdown d-inline-block">
+            <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
               <%= render "#{current_user_role_group}/projects/links", project: project %>
             </div>
-          </div></td>
-              </tr>
-<% end %>
-</tbody>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>

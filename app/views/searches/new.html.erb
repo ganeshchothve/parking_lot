@@ -3,21 +3,21 @@
     <p class="fn-16 mb-0">
       <i class="fa fa-check-circle me-2 fill-success"></i>
       <!-- <span class="">1</span> -->
-      Select Project
+      <%= t('controller.searches.select_project.link_name') %>
     </p>
     <p class="fn-16 mb-0  active">
       <!-- <i class="fa fa-check-circle me-2 fill-success"></i> -->
-      <span>2</span>
-      <%= I18n.t("controller.project_units.filter_project") %>
+      <span><%= t('controller.searches.filter.step') %></span>
+      <%= I18n.t("controller.searches.filter.link_name") %>
     </p>
     <p class="fn-16 mb-0">
       <!-- <i class="fa fa-check-circle me-2 fill-theme"></i> -->
-      <span>3</span>
+      <span><%= t('controller.searches.towers.step') %></span>
       <%= I18n.t("controller.searches.towers.link_name") %>
     </p>
     <p class="fn-16 mb-0">
       <!-- <i class="fa fa-check-circle me-2 fill-theme"></i> -->
-      <span>4</span>
+      <span><%= t('controller.searches.apartments.step') %></span>
       <%= I18n.t("controller.searches.apartments.link_name") %>
     </p>
   </div>
@@ -45,7 +45,7 @@
             <p class="card-text"><%= @lead.project.developer_name %></p>
           </div>
           <div class="col-lg-4">
-            <p class="card-text small mt-2">Location</p>
+            <p class="card-text small mt-2"><%= t('mongoid.attributes.project.micro_market') %></p>
             <p class="text-primary"><i
                 class="fas fa-map-marker-alt fill-primary me-2"></i><%= "#{@lead.project.micro_market.present? ? @lead.project.micro_market&.titleize + ', ': ''}#{@lead.project.city&.titleize}".presence || '-' %>
             </p>
@@ -64,13 +64,13 @@
     </div>
   </div>
   <div class="booking-flow-footer position-fixed w-100 bottom-0 start-0 p-2 py-3 bg-white border-top text-end">
-    <a href="" class="btn btn-primary no-fill font-medium ms-2">Cancel</a>
-    <a href="" class="btn btn-primary font-medium border-primary ms-2">Next</a>
+    <a href="" class="btn btn-primary no-fill font-medium ms-2"><%= t('global.cancel') %></a>
+    <a href="" class="btn btn-primary font-medium border-primary ms-2"><%= t('global.next') %></a>
   </div>
 </div>
 
 <%= javascript_tag do %>
-$(document).ready(function(){
-FormInitializer.init($("#search_form"));
-});
+  $(document).ready(function(){
+    FormInitializer.init($("#search_form"));
+  });
 <% end %>

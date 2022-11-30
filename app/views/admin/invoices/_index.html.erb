@@ -5,14 +5,15 @@
         <table class="table table-responsive table-color">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Manager</th>
-              <th>Acount Manager</th>
-              <th>Invoice No.</th>
-              <th>Status</th>
-              <th>Category</th>
-              <th>Invoice</th>
-              <th>Amount</th>
+              <th><%= t('mongoid.attributes.invoice.name') %></th>
+              <th><%= t('mongoid.attributes.invoice.manager') %></th>
+              <th><%= t('mongoid.attributes.invoice.account_manager_id') %></th>
+              <th><%= t('mongoid.attributes.invoice.number') %></th>
+              <th><%= t('mongoid.attributes.invoice.status') %></th>
+              <th><%= t('mongoid.attributes.invoice.category') %></th>
+              <th><%= t('mongoid.attributes.invoice.project_id') %></th>
+              <th><%= t('mongoid.attributes.invoice.invoice_amount') %></th>
+              <th class="btn-action"><%= t('global.action', count: 2) %></th>
             </tr>
           </thead>
           <tbody>
@@ -54,6 +55,15 @@
                   <% end %>
                 </td>
                 <td><%= number_to_indian_currency(invoice.net_amount) %></td>
+                <td>
+                  <div class="dropdown d-inline-block">
+                    <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                      <%= render "#{current_user_role_group}/invoices/links", invoice: invoice %>
+                    </div>
+                  </div>
+                </td>
             </tr>
           <% end %>
           </tbody>
