@@ -3483,11 +3483,10 @@ en:
         account_reactivation: "There was some error while reactivating account. Please contact support for assistance"
         could_not_send_confirmation: "Couldn't send confirmation instructions."
         could_not_send_reset_password: "Couldn't send Reset password instructions."
+        already_registered: "User with these details is already registered with a different role"
 
       alert:
         not_found: "User not found"
-      errors:
-        already_registered: "User with these details is already registered with a different role"
       text:
         payment_done: "Payment Done"
         payment_pending: "Payment Pending"
