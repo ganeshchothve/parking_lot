@@ -181,11 +181,12 @@ module ApplicationHelper
           #{active_link_to 'TDS', dashboard_tds_process_path, active: :exclusive, class: 'footer-link'}
         </li>"
       end
-      #if current_client.terms_and_conditions.present?
-      #  html += "<li >
-      #    #{active_link_to 'T & C', dashboard_terms_and_condition_path, active: :exclusive, class: 'footer-link'}
-      #  </li>"
-      #end
+      template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'terms_and_conditions').first
+      if (current_client.present? && template.present?) || current_client.blank?
+        html += "<li >
+          #{active_link_to 'T & C', dashboard_terms_and_condition_path, active: :exclusive, class: 'footer-link'}
+        </li>"
+      end
       if current_user && policy([current_user_role_group, current_client]).edit?
         html += "<li >
           #{link_to( t('controller.clients.edit.link_name'), edit_admin_client_path, class: 'footer-link modal-remote-form-link')}

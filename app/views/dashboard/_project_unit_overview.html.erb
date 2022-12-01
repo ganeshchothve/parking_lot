@@ -1,83 +1,77 @@
-<section class="project-unit my-3 mb-0">
-  <div class="project-unit-overview px-0">
-    <div class="card p-0">
-      <div class="card-header bg-primary ">
-        <h2 class="fn-18 font-medium float-start white px-2 py-2 pb-0">
-          <%= ProjectUnit.model_name.human %>
-        </h2>
-        <div class="dropdown show text-center float-end">
-          <a class="btn table-dropdown-btn white" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
-          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-            <%= render "#{current_user_role_group}/project_units/links", project_unit: project_unit %>
-          </div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="row ps-3">
-          <div class="col-3">
-            <p class="fn-12 font-medium mb-0"><%= t('mongoid.attributes.project_unit.name') %></p>
-            <p class="fn-14"><%= project_unit.name %></p>
-          </div>
-          <div class="col-3">
-            <p class="fn-12 font-medium mb-0"><%= ProjectTower.model_name.human %></p>
-            <p class="fn-14"><%= project_unit.project_tower_name %></p>
-          </div>
-          <div class="col-3">
-            <p class="fn-12 font-medium mb-0"><%= t('mongoid.attributes.project_unit.status') %></p>
-            <p class="fn-14"><%= t("mongoid.attributes.project_unit/status.#{project_unit.status}") %></p>
-          </div>
-          <div class="col-3">
-            <p class="fn-12 font-medium mb-0"><%= t('mongoid.attributes.project_unit.bedrooms') %>/
-              <%= t('mongoid.attributes.project_unit.bathrooms') %></p>
-            <p class="fn-14"><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></p>
-          </div>
-          <div class="col-3">
-            <p class="fn-12 font-medium mb-0"><%= t('mongoid.attributes.project_unit.carpet') %></p>
-            <p class="fn-14"><%= project_unit.carpet %> <%= current_client.area_unit %></p>
-          </div>
-          <div class="col-3">
-            <p class="fn-12 font-medium mb-0"><%= t('mongoid.attributes.project_unit.floor') %></p>
-            <p class="fn-14"><%= project_unit.floor %></p>
-          </div>
-          <% if current_user.role?('superadmin') %>
-          <div class="col-3">
-            <p class="fn-12 font-medium mb-0"><%= t('mongoid.attributes.project_unit.saleable') %></p>
-            <p class="fn-14"><%= project_unit.saleable %></p>
-          </div>
-          <% end %>
-          <% if project_unit.blocked? || (defined?(scheme) && scheme.present?) %>
-          <% if current_user.role?('superadmin') %>
-          <div class="col-3">
-            <p class="fn-12 font-medium mb-0"><%= t('mongoid.attributes.project_unit.effective_rate') %></p>
-            <p class="fn-14"><%= number_to_indian_currency(project_unit.effective_rate) %></p>
-          </div>
-          <div class="col-3">
-            <p class="fn-12 font-medium mb-0"><%= t('mongoid.attributes.project_unit.base_rate') %>/
-              <%= t('mongoid.attributes.project_unit.floor_rise') %></p>
-            <p class="fn-14"><%= number_to_indian_currency(project_unit.base_rate) %> / <%= project_unit.floor_rise %>
-            </p>
-          </div>
-          <% end %>
-          <div class="col-3">
-            <p class="fn-12 font-medium mb-0"><%= t('mongoid.attributes.project_unit.agreement_price') %></p>
-            <p class="fn-14"><%= number_to_indian_currency(project_unit.agreement_price) %></p>
-          </div>
-          <div class="col-3">
-            <p class="fn-12 font-medium mb-0"><%= t('mongoid.attributes.project_unit.all_inclusive_price') %></p>
-            <p class="fn-14"><%= number_to_indian_currency(project_unit.all_inclusive_price) %></p>
-          </div>
-          <% end %>
-          <div class="col-3">
-            <p class="fn-12 font-medium mb-0"><%= t('mongoid.attributes.project_unit.phase') %></p>
-            <p class="fn-14"><%= project_unit.phase.try(:name) || '-' %></p>
-          </div>
-          <div class="col-3">
-            <p class="fn-12 font-medium mb-0"><%= t('mongoid.attributes.project_unit.comments') %></p>
-            <p class="fn-14"><%= project_unit.comments || '-' %></p>
-          </div>
-        </div>
+<div class="position-relative table-layout-box mb-3 float-start w-100 mt-3">
+  <h2 class="table-title fn-16 mb-0 p-3 position-relative"><%= ProjectUnit.model_name.human %> Details
+    <div class="dropdown show text-center float-end position-absolute">
+      <a class="btn table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+        <%= render "#{current_user_role_group}/project_units/links", project_unit: project_unit %>
       </div>
     </div>
+  </h2>
+  <div class="position-relative float-start w-100">
+    <div class="table-layout-inner float-start w-100 pt-3 px-4">
+      <ul class="booking-apart-info list-info-with-label float-start w-100 mb-0">
+        <li>
+          <span><%= t('mongoid.attributes.project_unit.name') %></span>
+          <p><%= project_unit.name %></p>
+        </li>
+        <li>
+          <span><%= ProjectTower.model_name.human %></span>
+          <p><%= project_unit.project_tower_name %></p>
+        </li>
+        <li>
+          <span><%= t('mongoid.attributes.project_unit.status') %></span>
+          <p><%= t("mongoid.attributes.project_unit/status.#{project_unit.status}") %></p>
+        </li>
+        <li>
+          <span><%= t('mongoid.attributes.project_unit.bedrooms') %>/
+                <%= t('mongoid.attributes.project_unit.bathrooms') %></span>
+          <p><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></p>
+        </li>
+        <li>
+          <span><%= t('mongoid.attributes.project_unit.carpet') %></span>
+          <p><%= project_unit.carpet %> <%= current_client.area_unit %></p>
+        </li>
+        <li>
+          <span><%= t('mongoid.attributes.project_unit.floor') %></span>
+          <p><%= project_unit.floor %></p>
+        </li>
+        <% if current_user.role?('superadmin') %>
+        <li>
+          <span><%= t('mongoid.attributes.project_unit.saleable') %></span>
+          <p><%= project_unit.saleable %></p>
+        </li>
+        <% end %>
+        <% if project_unit.blocked? || (defined?(scheme) && scheme.present?) %>
+            <% if current_user.role?('superadmin') %>
+              <li>
+                <span><%= t('mongoid.attributes.project_unit.effective_rate') %></span>
+                <p><%= number_to_indian_currency(project_unit.effective_rate) %></p>
+              </li>
+              <li>
+                <span><%= t('mongoid.attributes.project_unit.base_rate') %>/
+                      <%= t('mongoid.attributes.project_unit.floor_rise') %></span>
+                <p><%= number_to_indian_currency(project_unit.base_rate) %> / <%= project_unit.floor_rise %></p>
+              </li>
+            <% end %>
+            <li>
+              <span><%= t('mongoid.attributes.project_unit.agreement_price') %></span>
+              <p><%= number_to_indian_currency(project_unit.agreement_price) %></p>
+            </li>
+            <li>
+              <span><%= t('mongoid.attributes.project_unit.all_inclusive_price') %></span>
+              <p><%= number_to_indian_currency(project_unit.all_inclusive_price) %></p>
+            </li>
+          <% end %>
+        <li>
+          <span><%= t('mongoid.attributes.project_unit.phase') %></span>
+          <p><%= project_unit.phase.try(:name) || '-' %></p>
+        </li>
+        <li>
+          <span><%= t('mongoid.attributes.project_unit.comments') %></span>
+          <p><%= project_unit.comments || '-' %></p>
+        </li>
+      </ul>
+    </div>
   </div>
-</section>
+</div>

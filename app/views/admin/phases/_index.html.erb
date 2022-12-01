@@ -1,10 +1,10 @@
-<table class='table my-customer-table responsive-tbl'>
+<table class='table my-customer-table table-responsive table-color'>
   <thead class="th-default">
     <thead>
       <tr class="bg-primary white">
         <th><%= t('mongoid.attributes.phase.phase_name') %></th>
         <th><%= t('mongoid.attributes.phase.account_name') %></th>
-        <th class="text-right"><%= t('global.action', count: 3)%></th>
+        <th class="btn-action"><%= t('global.action', count: 3)%></th>
       </tr>
     </thead>
   </thead>
@@ -17,11 +17,11 @@
         </td>
         <td>
           <div class="dropdown show text-right">
-          <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
               <%= link_to t('helpers.edit.link_name', model: Phase.model_name.human), edit_admin_phase_path(phase), class: 'modal-remote-form-link dropdown-item' %>
-           </div>
-        </div>
+              </div>
+          </div>
         </td>
       </tr>
     <% end %>

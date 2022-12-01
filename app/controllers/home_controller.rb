@@ -3,16 +3,6 @@ class HomeController < ApplicationController
   include LeadsHelper
   include LeadRegisteration
 
-  skip_before_action :set_current_client, only: :welcome
-
-  def index
-    render layout: 'landing_page'
-  end
-
-  def welcome
-    render layout: 'welcome'
-  end
-
   def signed_up
     @user = User.where(id: params[:user_id]).first
     render layout: 'devise'
@@ -25,17 +15,14 @@ class HomeController < ApplicationController
 
   def privacy_policy
     @channel_partner = ChannelPartner.new
-    render layout: 'landing_page'
   end
 
   def terms_and_conditions
     @channel_partner = ChannelPartner.new
-    render layout: 'landing_page'
   end
 
   def cp_enquiryform
     @channel_partner = ChannelPartner.new
-    render layout: 'landing_page'
   end
 
   def select_client

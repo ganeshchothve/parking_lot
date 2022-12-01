@@ -1,28 +1,34 @@
 <div id="project-unit-cost-details">
-  <%= render 'booking_details/details', booking_detail: @booking_detail, with_actions: false %>
-  <div class='card'>
-    <% unless request.format.pdf? %>
+<div class=''>
+  <h2 class="fn-16">Print Cost Sheet & Payment Schedule</h2>
+  <hr class="my-2 mb-3">
+  <div class="row">
+    <div class="col-lg-5 border-end pe-4">
+      <% unless request.format.pdf? %>
+      <% if @lead %>
+        <%= render 'admin/project_units/booking_detail_scheme_form', {booking_detail: @booking_detail, booking_detail_scheme: @booking_detail_scheme, url: current_user.buyer? ? quotation_buyer_project_unit_path(@project_unit) : quotation_admin_lead_project_unit_path(@lead, @project_unit) } %>
+      <% else %>
+        <%= render 'admin/project_units/booking_detail_scheme_form', {booking_detail: @booking_detail, booking_detail_scheme: @booking_detail_scheme, url: quotation_admin_project_unit_path(@project_unit) } %>
+      <% end %>
+    <% else %>
+      <%= render 'admin/project_units/booking_detail_scheme_pdf', { booking_detail: @booking_detail, booking_detail_scheme: @booking_detail_scheme } %>
+    <% end %>
+    </div>
+    <div class="col-lg-7">
+      <% unless request.format.pdf? %>
       <div class='box-header p-3'>
-        <button onclick='window.print();' class='btn btn-primary d-print-none'><%= I18n.t("global.print") %></button>
-        <%#= link_to "Get PDF", method(:"quotation_#{current_user_role_group}_project_unit_path").call(@project_unit, booking_detail_scheme: params.dig(:booking_detail_scheme).try(:permit, :derived_from_scheme_id, payment_adjustments_attributes: {}), format: :pdf), class: "fn-500 float-end theme-txt-color border  rounded p-2 btn", target: '_blank' %>
+        <button onclick='window.print();' class='btn btn-primary border-primary next-btn font-medium border-primary ms-2 d-print-none'><%= I18n.t("global.print") %></button>
+        <%#= link_to "Get PDF", method(:"quotation_#{current_user_role_group}_project_unit_path").call(@project_unit, booking_detail_scheme: params.dig(:booking_detail_scheme).try(:permit, :derived_from_scheme_id, payment_adjustments_attributes: {}), format: :pdf), class: "btn btn-primary no-fill font-medium ms-2", target: '_blank' %>
         <% if @lead && policy([current_user_role_group, @project_unit]).send_cost_sheet_and_payment_schedule? %>
-          <%= link_to t("controller.project_units.send_cost_sheet_and_payment_schedule.link_name"), send_cost_sheet_and_payment_schedule_admin_project_unit_url(@project_unit, booking_detail_scheme: params.dig(:booking_detail_scheme).try(:permit, :derived_from_scheme_id, payment_adjustments_attributes: {}), lead_id: @lead.id), class: 'btn btn-sm btn-primary',id: "send_cost_sheet_and_payment_schedule", remote: true %>
+          <%= link_to t("controller.project_units.send_cost_sheet_and_payment_schedule.link_name"), send_cost_sheet_and_payment_schedule_admin_project_unit_url(@project_unit, booking_detail_scheme: params.dig(:booking_detail_scheme).try(:permit, :derived_from_scheme_id, payment_adjustments_attributes: {}), lead_id: @lead.id), class: 'btn btn-primary no-fill font-medium ms-2',id: "send_cost_sheet_and_payment_schedule", remote: true %>
         <% end %>
       </div>
     <% end %>
-    <div class='card-body d-print-none'>
-      <% unless request.format.pdf? %>
-        <% if @lead %>
-          <%= render 'admin/project_units/booking_detail_scheme_form', {booking_detail: @booking_detail, booking_detail_scheme: @booking_detail_scheme, url: current_user.buyer? ? quotation_buyer_project_unit_path(@project_unit) : quotation_admin_lead_project_unit_path(@lead, @project_unit) } %>
-        <% else %>
-          <%= render 'admin/project_units/booking_detail_scheme_form', {booking_detail: @booking_detail, booking_detail_scheme: @booking_detail_scheme, url: quotation_admin_project_unit_path(@project_unit) } %>
-        <% end %>
-      <% else %>
-        <%= render 'admin/project_units/booking_detail_scheme_pdf', { booking_detail: @booking_detail, booking_detail_scheme: @booking_detail_scheme } %>
-      <% end %>
     </div>
   </div>
+  </div>
 </div>
+<%= render 'booking_details/details', booking_detail: @booking_detail, with_actions: false %>
 <%= javascript_tag do %>
   $(document).ready(function(){
     $('#send_cost_sheet_and_payment_schedule').on("ajax:success", function(evt, data, status, xhr){

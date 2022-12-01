@@ -25,6 +25,7 @@ $txt-drk-b-lt: #3F5275;
 $theme-color-red: #D62927;
 $theme-blue: #2E6BE6;
 $theme-blue-border: #0176FF;
+$theme-txt-light:#687790;
 .hidden {
 	display: none;
 }
@@ -156,6 +157,9 @@ a{
 }
 .theme-txt-color{
 	color: $theme-txt-color;
+}
+.theme-txt-light{
+	color: $theme-txt-light;
 }
 .font-light{
 	font-weight: $font-light!important;
@@ -901,8 +905,12 @@ a{
 }
 
 .result-list{
-	&.active, &.active .card-footer{
-		background-color: #e6e6e6!important;
+	background-color: #EBEDF2!important;
+	&.active, .card-footer{
+		background-color: #EBEDF2!important;
+	}
+	&.active{
+		border: 1px solid #3274F6!important;
 	}
 }
 
@@ -3019,7 +3027,7 @@ select.form-control{
 	.book-box-info{
 		list-style: none;
 		padding:0px;
-		text-align: center;
+		text-align: left;
 		li{
 			display: inline-block;
 			margin: 0px 5px;
@@ -3045,8 +3053,8 @@ select.form-control{
 	.aprt-no-list{
 		list-style: none;
 		padding:0px;
-		margin-bottom: 7px;
-		text-align: center;
+		margin-bottom: 0px;
+		text-align: left;
 		li{
 			display: inline-block;
 			margin: 0px 0px;
@@ -3067,9 +3075,9 @@ select.form-control{
 	}
 	.floor-listing{
 		position: relative;
-		margin: 0 auto;
+		margin: 0;
 		display: block;
-		padding: 15px 0px;    
+		padding: 0px 0px 15px;    
 		text-align: center;
 		width: fit-content;
 		.floor-number{
@@ -3093,30 +3101,16 @@ select.form-control{
 }
 .available-aprt{
 	background-color: #F9F9F9;
-	border: 1px solid #8B95A7;
+	border: 1px solid $primary;
 }
 .booked-aprt, .soldout-aprt{
 	position: relative;
-	background-color: #F9F9F9;
+	background-color: #B2BAC8;
 	border: 1px solid #8B95A7;
-	&:after{
-		content: "᙮";
-		font-size: 22px;
-		position: absolute;
-		left: 0;
-		display: inline-block;
-		width: 12px;
-		height: 12px;
-		top: 0;
-		color: #EE0000;
-		font-weight: 600;
-		line-height: 8px;
-		text-align: center;
-	}
 }
 .selected-aprt{
-	background-color: #28A645;
-	border: 1px solid #28A645;
+	background-color: $primary;
+	border: 1px solid $primary;
 }
 .previous-form{
 	float: left;
@@ -4715,6 +4709,22 @@ table .dropdown-menu.show{
 			color: #30384B;
 			font-size: 14px;
 		}
+		.btn-action{
+			width: 50px;
+		}
+	}
+	tr > td > a{
+		color: $primary!important;
+		text-decoration: underline;
+		// border-bottom: 1px solid;
+		svg.fill-theme path{
+			fill: $primary;
+		}
+	}
+	.dropdown{
+		a{
+			border-bottom: 0px solid;
+		}
 	}
 }
 /********************** Apartment Filter Popup *******************/
@@ -4826,6 +4836,12 @@ table .dropdown-menu.show{
 		height: auto;
 		@include tableLightTitle;
 		padding: 8px 15px!important;
+	}
+}
+.dropdown-item{
+	&.active,&:active{
+		background-color: #E7F0FD;
+		color: $primary;
 	}
 }
 @mixin LightTitle14{
@@ -5478,7 +5494,7 @@ table .dropdown-menu.show{
 }
 
 /*Filter Modal */
-.fixed-header-footer{
+.fixed-header-footer, #kylas_lead_form, .theme-form{
 	.modal-dialog.modal-xl{
 		width: 80%;
 	}
@@ -5498,7 +5514,7 @@ table .dropdown-menu.show{
 		line-height: 1;
 		display: block;
 	}
-	input, select, .selectize-input.full,textarea.form-control{
+	input, select, .selectize-input.full,textarea.form-control,.selectize-input{
 		display: block;
 		width: 100%;
 		//height: calc(1.5em + 0.75rem + 2px);
@@ -5921,4 +5937,204 @@ table .dropdown-menu.show{
   overflow-y: auto;
   height: 100vh;
   padding-bottom: 120px;
+}
+.vh-100{
+	height: 100vh;
+}
+
+/******************** Booking Details Flow******/
+.booking-flow-footer{
+	z-index: 999;
+    border-color: #e1e1e1;
+	p{
+		left: 25%;
+	}
+}
+.modal-fullscreen {
+    width: 100vw;
+    max-width: none;
+    height: 100%;
+    margin: 0;
+}
+.booking-flow-step{
+	box-shadow: 2px 0px 4px #00000029;
+	padding-top: 20px;
+	p, div{
+		font-size:16px;
+		letter-spacing: 0.44px;
+		color: #30384B;
+		height:52px;
+		padding:13px 33px;
+		span{
+			width:24px;
+			height:24px;
+			border-radius:100%;
+			font-size:14px;
+			letter-spacing: 0.39px;
+			text-align: center;
+			font-weight:500;
+			margin-right: 10px;
+			vertical-align: middle;
+			display:inline-block;
+			border:1px solid #B2BAC8;
+			color:#B2BAC8;
+			padding:1px;
+		}	
+		&.active{
+			background-color:#E7F0FD;
+			span{
+				
+				border:1px solid #52A451;
+				color:#52A451;				
+			}
+		}
+		svg{
+			width: 24px!important;
+			height: 24px;
+			vertical-align: middle;
+		}
+	}
+}
+.project_box{
+	background-color: #EBEDF2;
+	border-radius: 6px;
+	.card-title{
+		font-size: 20px;
+		font-weight: 500;
+		letter-spacing: 0.56px;
+		color: #6B778E;
+	}
+	.card-text{
+		color:#2E384D;
+		font-size: 16px;
+		letter-spacing: 0.44px;
+		&.small{
+			letter-spacing: 0.44px;
+			color: #6B778E;
+			font-weight: 500;
+			margin-bottom: 0;
+		}
+	}
+}
+.tower-description{
+	h5{
+		letter-spacing: 0.56px;
+		color: #2E384D;
+		font-size: 20px;
+	}
+	.tower-info{
+		color:#687790;
+		font-size: 14px;
+		letter-spacing: 0.39px;
+		span{
+			font-size: 16px;
+			letter-spacing: 0.44px;
+			color: #30384B;
+		}
+	}
+}
+.selected-aprt-card{
+	background-color: #EBEDF2;
+}
+.checkout-sec{
+	.left-info{
+		svg{
+			top: 20px;
+			right: 20px;
+		}
+	}
+}
+.list-info-with-label{
+	list-style: none;
+	padding: 0px;
+	li{
+		width: 20%;
+		float: left;
+		text-align: left;
+		margin-bottom: 10px;
+		@media screen and (max-width:700px){
+			width: 49%;
+		}
+		span{
+			font-size: 16px;
+			font-weight: 500;
+			letter-spacing: 0.44px;
+			color: #687790;
+			display: block;
+		}
+		p{
+			font-size: 16px;
+			line-height: 1.43;
+			letter-spacing: 0.44px;
+			color: $theme-txt-color;
+			margin: 0;
+		}
+	}	
+}
+.list-info-column-4{
+	li{
+		width: 25%;
+	}
+}
+.bg-light-blue{
+	background-color: #E7F0FD;
+}
+.table-layout-box, .fixed-header-footer.modal-fullscreen {
+	.card{
+		border:0px solid;
+	}
+	.table-title, .card-header{
+		letter-spacing: 0.44px;
+		color: #2E384D;
+		font-weight: 500;
+		background-color: #EBEDF2;
+		border-radius: 6px 6px 0 0;
+		border-bottom: 0px solid;
+	}
+	.table-layout-inner, .card-body{
+		border:1px solid #EBEDF2;
+		border-radius: 0 0 6px 6px;
+	}
+	.dropdown{
+		right:10px;
+		top:10px;
+	}
+}
+.sticky-tab-list{
+	position: fixed;
+    top: 44px;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+	z-index: 99;
+	box-shadow: 0px 2px 4px #00000029;
+}
+.sticky-tab-list, .theme-sticky-tab{
+	li{
+		list-style: none;
+		display: inline-block;
+		padding: 10px 0;
+		a{
+			letter-spacing: 0.25px;
+			color: #2E384D;
+			font-weight: 500;
+			padding: 10px 12px;
+			display: inline-block;
+			line-height: 20px;
+			&.active{
+				background-color: #E7F0FD;
+				border-radius: 6px;
+				color: #006DEE;
+			}
+		}
+	}
+}
+.payment-adjustments{
+	.fields{
+		border-radius: 6px;
+		background-color: #F9F9F9;
+		padding: 10px;
+		margin-bottom: 30px;
+		box-shadow: 0px 0px 2px #00000029;
+	}
 }

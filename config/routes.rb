@@ -417,7 +417,6 @@ Rails.application.routes.draw do
   match 'payment/:receipt_id/process_payment/:ignore', to: 'payment#process_payment', via: [:get, :post]
   get :register, to: 'home#register', as: :register
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
-  get :welcome, as: :welcome, to: 'home#welcome'
   get :terms_and_conditions, as: :terms_and_conditions, to: 'home#terms_and_conditions'
   get :privacy_policy, as: :privacy_policy, to: 'home#privacy_policy'
   get :"cp-enquiryform", as: :cp_enquiryform, to: 'home#cp_enquiryform'
@@ -441,7 +440,6 @@ Rails.application.routes.draw do
     get 'documents', to: 'dashboard#documents', as: :dashboard_documents
     get 'rera', to: 'dashboard#rera', as: :dashboard_rera
     get 'tds-process', to: 'dashboard#tds_process', as: :dashboard_tds_process
-    get 'terms-and-conditions', to: 'dashboard#terms_and_condition', as: :dashboard_terms_and_condition
     get "gamify-unit-selection", to: "dashboard#gamify_unit_selection"
     get :dashboard_counts, to: "dashboard#dashboard_counts"
     get :invoice_summary, to: "dashboard#invoice_summary"

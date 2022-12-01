@@ -81,7 +81,7 @@ class UserExportWorker
       "Name",
       "Email",
       "Phone",
-      "Sell.Do Lead ID",
+      "CRM Lead ID",
       "Role",
       "Manager Name",
       "Regions",

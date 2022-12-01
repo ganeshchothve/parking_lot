@@ -1,7 +1,7 @@
-<table class='table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0'>
-  <thead class="th-default">
+<table class='table table-responsive table-color'>
+  <thead>
     <thead>
-      <tr class="bg-primary white">
+      <tr>
         <% if current_client.enable_leads? %>
           <th><%= Lead.model_name.human %></th>
         <% else %>
@@ -12,7 +12,7 @@
         <th><%= t('mongoid.attributes.receipt.token_number')%></th>
         <th><%= t('mongoid.attributes.receipt.status') %></th>
         <th><%= t('mongoid.attributes.receipt.total_amount') %></th>
-        <th class="text-right action"></th>
+        <th class="btn-action">Action</th>
       </tr>
     </thead>
   </thead>

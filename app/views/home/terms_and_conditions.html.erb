@@ -1,4 +1,8 @@
-<% template = ::Template::UITemplate.where(name: 'terms_and_conditions').first %>
-<% if template.present? %>
-  <%= get_view_erb(template) %>
+<% if current_client.present? %>
+  <% template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'terms_and_conditions').first %>
+  <% if template.present? %>
+    <%= get_view_erb(template) %>
+  <% end %>
+<% else %>
+  <h2>Terms And Conditions</h2>
 <% end %>

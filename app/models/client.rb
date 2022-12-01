@@ -76,7 +76,6 @@ class Client
   field :holding_minutes, type: Integer, default: 15
   field :payment_gateway, type: String, default: 'Razorpay'
   field :enable_company_users, type: Boolean, default: false
-  field :terms_and_conditions, type: String
   field :faqs, type: String
   field :rera, type: String
   field :tds_process, type: String

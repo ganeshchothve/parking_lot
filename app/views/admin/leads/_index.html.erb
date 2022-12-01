@@ -21,7 +21,7 @@
                 <th><%= t('mongoid.attributes.lead.payment_done') %></th>
                 <th><%= t('mongoid.attributes.lead.registration_done') %></th>
               <% end %>
-              <th><%= t('global.action', count:1) %></th>
+              <th class="btn-action"><%= t('global.action', count:1) %></th>
             </tr>
           </thead>
           <tbody>
@@ -37,14 +37,14 @@
                 <td>
                   <% if lead.email.present? %>
                     <p class="email-icon mb-0">
-                      <i class="fa fa-envelope fill-theme me-2 ms-2 fa-sm"></i><%= lead.masked_email(current_user) || '' %>
+                      <%= lead.masked_email(current_user) || '' %>
                     </p>
                   <% end %>
                 </td>
                 <td>
                   <% if lead.phone.present? %>
                     <p class="phone-icon mb-0">
-                      <i class="fa fa-phone-alt fill-theme me-2 fa-sm"></i><%= lead.masked_phone(current_user) || '' %>
+                      <%= lead.masked_phone(current_user) || '' %>
                     </p>
                   <% end %>
                 </td>

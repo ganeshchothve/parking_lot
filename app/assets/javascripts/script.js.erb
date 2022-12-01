@@ -174,10 +174,6 @@ $(document).ready(function () {
         moveSlides: 1
     });
 
-    if (window_wt <= 768) {
-        $(".brand-logo img").attr("src", "<%= asset_path 'beyondwalls-logo.svg' %>");
-    }
-
     if (window_wt < 768) {
         $(".presented-by-amura-line-image img").attr("src", "<%= asset_path 'mobile-presented-by-image.svg' %>");
     }

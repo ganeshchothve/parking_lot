@@ -1,41 +1,29 @@
-<div class="alert alert-primary">
-  <p><%= t('controller.booking_details.receipts.show.disclaimer')%></p>
-  <div class="row">
-    <div class="col-md-4">
-      <div class="mb-3">
-        <label class="small"><%= t('mongoid.models.project_unit', count: 1) %></label>
-        <div><%= booking_detail.name %></div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="mb-3">
-        <label class="small">
-          <%= t('mongoid.attributes.booking_detail.agreement_price')%>
-        </label>
-        <div><%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %></div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="mb-3">
-        <label class="small">
-          <%= t('mongoid.attributes.booking_detail.all_inclusive_price') %>
-        </label>
-        <div><%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %></div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6">
-      <div class="mb-3">
-        <label class="small"><%= t('mongoid.attributes.booking_detail.total_amount_paid')%></label>
-        <div><%= number_to_indian_currency(booking_detail.total_amount_paid.round) %></div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="mb-3">
-        <label class="small"><%= t('mongoid.attributes.booking_detail.booking_pending_amount')%></label>
-        <div><%= number_to_indian_currency(booking_detail.pending_balance.round) %></div>
-      </div>
-    </div>
-  </div>
+<div class="bg-light-blue col-12 float-start p-3 rounded pb-1 px-4">
+  <p class="font-medium"><%= t('controller.booking_details.receipts.show.disclaimer')%></p>
+  <ul class="list-info-with-label list-info-column-4">
+    <li>
+      <span><%= t('mongoid.models.project_unit', count: 1) %></span>
+      <p><%= booking_detail.name %></p>
+    </li>
+    <li>
+      <span>
+        <%= t('mongoid.attributes.booking_detail.agreement_price')%>
+      </span>
+      <p><%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %></p>
+    </li>
+    <li>
+      <span>
+        <%= t('mongoid.attributes.booking_detail.all_inclusive_price') %>
+      </span>
+      <p><%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %></p>
+    </li>
+    <li>
+      <span><%= t('mongoid.attributes.booking_detail.total_amount_paid')%></span>
+      <p><%= number_to_indian_currency(booking_detail.total_amount_paid.round) %></p>
+    </li>
+    <li>
+      <span><%= t('mongoid.attributes.booking_detail.booking_pending_amount')%></span>
+      <p><%= number_to_indian_currency(booking_detail.pending_balance.round) %></p>
+    </li>
+  </ul>
 </div>

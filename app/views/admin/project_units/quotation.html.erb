@@ -1,14 +1,26 @@
 <%- unless params[:layout].blank? %>
-  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
-    <div class="modal-dialog modal-lg" role="document">
+  <div class="modal fade right fixed-header-footer modal-fullscreen" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-fullscreen" role="document">
       <div class="modal-content">
         <div class="modal-header">
+          <h2 class="text-primary fn-16 font-normal">Cost Sheet & Payment Schedule</h2>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+        <ul class="theme-sticky-tab sticky-tab-list ps-2">
+            <li>
+              <a href="javascript:;" rel="apartment_details" class="active">Apartment Details</a>
+            </li>
+            <li>
+              <a href="javascript:;" rel="cost_sheet">Cost Sheet</a>
+            </li>
+            <li>
+              <a href="javascript:;" rel="paymnet_schedule">Payment Schedule</a>
+            </li>
+        </ul>
 <% end %>
 
-<div class='quotation mb-5'>
+<div class='quotation mb-5 mt-5'>
   <%= render 'admin/project_units/quotation' %>
 </div>
 

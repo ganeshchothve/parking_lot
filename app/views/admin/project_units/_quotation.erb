@@ -29,20 +29,17 @@
 $(document).ready(function(){
   FormInitializer.init($("#scheme_form"));
   var payment_adjustment_html = function(record){
-    return '<div class="row">\
-      <div class="col-md-4">\
-        <p>Name</p>\
-        <p>' + record.name + '</p>\
-      </div>\
-      <div class="col-md-4">\
-        <p>Field</p>\
-        <p>' + record.field + '</p>\
-      </div>\
-      <div class="col-md-4">\
-        <p>Value</p>\
-        <p>' + record.value + '</p>\
-      </div>\
-    </div>'
+    return '<table class="table table-responsive table-color rounded">\
+      <thead>\
+        <tr><th>Name</th><th>Field</th><th>Value</th>\
+      </tr>\
+      <tr>\
+        <td>' + record.name + '</td>\
+        <td>' + record.field + '</td>\
+        <td>' + record.value + '</td>\
+      </tr>\
+      </thead>\
+    </table>'
   }
   $('[name="booking_detail_scheme[derived_from_scheme_id]"]').change(function(){
     $(".non-editable-payment-adjustments").html("");
