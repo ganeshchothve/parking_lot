@@ -1,0 +1,20 @@
+<%= javascript_tag do %>
+  var aArray = [];
+  var wn_width = $(window).width();
+  var wn_height = $(window).height();
+  var wind_height = $('.header').outerHeight();
+
+  $(document).ready(function () {
+    $(window).on("scroll", function() {
+      if(wn_width > 992){
+        if ($(window).scrollTop() > 150) {
+            $('.home-header.shrink').addClass('sticky-header');
+            $('.home-header .brand-logo img').attr('src','<%= current_client&.logo&.url || asset_path('logo.svg') %>');
+        } else {
+            $('.home-header.shrink').removeClass('sticky-header');
+            $('.home-header .brand-logo img').attr('src','<%= current_client&.logo&.url || asset_path('logo-white.svg') %>')
+        }
+      }
+    });
+  });
+<% end %>

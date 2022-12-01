@@ -1,8 +1,8 @@
 <%
   i_agree_required = current_client.disclaimer.present? && @receipt.new_record?
 %>
-<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
-  <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade right modal-fullscreen fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-fullscreen" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="title"> <%= t('controller.receipts.new.header') %></h3>

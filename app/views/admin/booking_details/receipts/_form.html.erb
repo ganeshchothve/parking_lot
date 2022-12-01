@@ -2,10 +2,10 @@
   i_agree_required = current_client.disclaimer.present? && @receipt.new_record?
 %>
 
-<div class="alert alert-primary">
+<div class="float-start col-12 py-3 text-warning">
   <%= t('controller.booking_details.receipts.form.disclaimer', field: t('mongoid.attributes.receipt.receipt_id') )%>
 </div>
-<div class="mb-3">
+<div class="mb-3 col-md-6">
   <%= f.label :payment_mode, class: 'label-required' %>
   <%= f.select :payment_mode, payment_mode_options, {prompt: I18n.t("global.select"), selected: @receipt.payment_mode}, class: 'selectize', required: 'required', autofocus: true, disabled: !policy([current_user_role_group, @receipt]).editable_field?("payment_mode") %>
 </div>

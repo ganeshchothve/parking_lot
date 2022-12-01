@@ -1,18 +1,34 @@
-<div class="row justify-content-center">
-  <div class="col-md-11">
-    <div class="h-100">
-      <div class = 'fn-18 theme-txt-color mb-2'>
-        <div class="card-body">
-          <%= form_for(@lead, url: create_kylas_associated_lead_admin_leads_path, local: true, html: {class: 'validate-form mr-3 ml-3', id: 'kylas_lead_form'}) do |f| %>
-            <% if @deal_associated_contacts.present? %>
-              <%= render 'kylas_associated_lead_form', f: f %>
-            <% else %>
-              <%= render 'form_new_lead_info', f: f %>
-            <% end %>
-          <% end %>
-        </div>
-      </div>
-    </div>
+<div class="row vh-100">
+  <div class="col-lg-3 booking-flow-step px-0 mh-100">
+    <p class="fn-16 mb-0 active">
+      <!-- <i class="fa fa-check-circle me-2 fill-success"></i> -->
+      <span class=""><%= t('controller.searches.select_project.step') %></span>
+      <%= t('controller.searches.select_project.link_name') %>
+    </p>
+    <p class="fn-16 mb-0">
+      <!-- <i class="fa fa-check-circle me-2 fill-success"></i> -->
+      <span><%= t('controller.searches.filter.step') %></span>
+      <%= I18n.t("controller.searches.filter.link_name") %>
+    </p>
+    <p class="fn-16 mb-0">
+      <!-- <i class="fa fa-check-circle me-2 fill-theme"></i> -->
+      <span><%= t('controller.searches.towers.step') %></span>
+      <%= I18n.t("controller.searches.towers.link_name") %>
+    </p>
+    <p class="fn-16 mb-0">
+      <!-- <i class="fa fa-check-circle me-2 fill-theme"></i> -->
+      <span><%= t('controller.searches.apartments.step') %></span>
+      <%= I18n.t("controller.searches.apartments.link_name") %>
+    </p>
+  </div>
+  <div class="col-lg-9 px-0 mh-100">
+    <%= form_for(@lead, url: create_kylas_associated_lead_admin_leads_path, local: true, html: {class: 'validate-form ms-2 me-2', id: 'kylas_lead_form'}) do |f| %>
+      <% if @deal_associated_contacts.present? %>
+        <%= render 'kylas_associated_lead_form', f: f %>
+      <% else %>
+        <%= render 'form_new_lead_info', f: f %>
+      <% end %>
+    <% end %>
   </div>
 </div>
 

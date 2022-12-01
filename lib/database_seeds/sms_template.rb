@@ -121,13 +121,13 @@ module DatabaseSeeds
 
       Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "User", name: "cp_user_register_in_company", content: '
           Dear <%= temp_channel_partner&.primary_user&.name || "Sir/Madam" %>,
-          <%= name %> has requested to register his account into your company on <%= I18n.t("global.brand") %>.
+          <%= name %> has requested to register his account into your company on <%= I18n.t("global.brand", client_name: self.booking_portal_client.name) %>.
               Please use the following link to approve his/her account to give him/her access as a <%= I18n.t("mongoid.attributes.user/role.channel_partner") %> into your company.
               <% url = "#{Rails.application.routes.url_helpers.add_user_account_channel_partners_url(register_code: self.register_in_cp_company_token, channel_partner_id: self.temp_channel_partner&.id.to_s)}" %>
               <%= short_url(url, self.booking_portal_client_id.to_s) %>') if ::Template::SmsTemplate.where(name: "cp_user_register_in_company").blank?
 
 
-      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "BookingDetail", name: "second_booking_notification", content: 'Alert - Channel Partner <%= self.manager.try(:name) %> has added more than 1 booking on same customer <%= self.lead.try(:name) %> for project <%= self.try(:project).try(:name) %> on BeyondWalls portal. Please cross verify with channel Partner / channel partner manager before approval.') if ::Template::SmsTemplate.where(name: "second_booking_notification").blank?
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, subject_class: "BookingDetail", name: "second_booking_notification", content: 'Alert - Channel Partner <%= self.manager.try(:name) %> has added more than 1 booking on same customer <%= self.lead.try(:name) %> for project <%= self.try(:project).try(:name) %> on <%= self.booking_portal_client.name %> portal. Please cross verify with channel Partner / channel partner manager before approval.') if ::Template::SmsTemplate.where(name: "second_booking_notification").blank?
 
       Template::SmsTemplate.create(booking_portal_client_id: client_id, subject_class: "Receipt", name: "updated_token_details", content: "Dear <%= user.name %>, your token has been updated") if Template::SmsTemplate.where(name: "updated_token_details").blank?
 

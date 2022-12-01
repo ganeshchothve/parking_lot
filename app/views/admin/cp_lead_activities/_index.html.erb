@@ -1,4 +1,4 @@
-<table class='table my-customer-table responsive-tbl'>
+<table class='table my-customer-table responsive-tbl table-color'>
   <thead class="th-default">
     <thead>
       <tr class="bg-primary white">
@@ -16,7 +16,7 @@
         <th><%= t('mongoid.attributes.cp_lead_activity.expiry_date') %></th>
         <th><%= t('mongoid.attributes.cp_lead_activity.expiry_remaining_days') %></th>
         <th><%= t('mongoid.attributes.cp_lead_activity.can_extend_validity') %></th>
-        <th class="text-right"><%= t('global.action', count: 3) %></th>
+        <th  class="btn-action"><%= t('global.action', count: 3) %></th>
       </tr>
     </thead>
   </thead>
@@ -43,7 +43,7 @@
           <% end %>
         </td>
         <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>
-          <td data-title="Sell.Do Lead Id"><span><%= lead.lead_id %></span></td>
+          <td data-title="CRM Lead Id"><span><%= lead.lead_id %></span></td>
         <% end %>
         <td><%= lead.project.try(:name) %></td>
         <% if !current_user.role?('channel_partner') %>

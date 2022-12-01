@@ -1,15 +1,16 @@
-<table class='table my-customer-table responsive-tbl'>
-  <thead class="th-default">
+<table class='table table-responsive table-color'>
+  <thead>
     <thead>
       <tr class="bg-primary white">
         <th><%= t('mongoid.attributes.user_kyc.name') %></th>
         <% if current_client.enable_leads? %>
           <th><%= t('mongoid.attributes.user_kyc.lead_id') %></th>
         <% end %>
-        <th><%= "#{ t('mongoid.attributes.user_kyc.phone') } & #{ t('mongoid.attributes.user_kyc.email')}" %></th>
+        <th><%= "#{ t('mongoid.attributes.user_kyc.email')}" %></th>
+        <th><%= "#{ t('mongoid.attributes.user_kyc.phone') }" %></th>
         <th><%= t('mongoid.attributes.user_kyc.dob') %></th>
         <th><%= t('mongoid.attributes.user_kyc.pan_number') %></th>
-        <th class="text-right wd-22"></th>
+        <th class="btn-action">Action</th>
       </tr>
     </thead>
   </thead>
@@ -26,14 +27,17 @@
             <% end %>
           </td>
         <% end %>
-        <td  data-title= <%= "#{t('mongoid.attributes.user_kyc.phone')}/#{t('mongoid.attributes.user_kyc.email')}" %> >
-          <i class="far fa-envelope"></i> <%= user_kyc.email %><br /> <i class="fas fa-mobile-alt"></i> <%= user_kyc.phone %>
+        <td  data-title= <%= "#{t('mongoid.attributes.user_kyc.email')}" %> >
+          <%= user_kyc.email %>
+        </td>
+        <td  data-title= <%= "#{t('mongoid.attributes.user_kyc.phone')}" %> >
+          <%= user_kyc.phone %>
         </td>
         <td data-title=<%= t('mongoid.attributes.user_kyc.dob') %> ><%= user_kyc.dob.strftime("%d %b %Y") rescue "" %></td>
         <td data-title=<%= t('mongoid.attributes.user_kyc.pan_number') %> ><%= user_kyc.pan_number %></td>
         <td>
           <div class="dropdown show text-right">
-          <a class="btn table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
+          <a class="" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
               <% if current_user.buyer? && Buyer::UserKycPolicy.new(current_user, user_kyc).edit? %>
                 <%= link_to t('helpers.edit.link_name', model: UserKyc.model_name.human), edit_buyer_user_kyc_path(user_kyc), class: 'dropdown-item modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Edit User KYC'} %>
@@ -56,6 +60,13 @@
     <% end %>
   </tbody>
 </table>
-<div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pt-2">
-  <%= will_paginate user_kycs, list_classes: %w(pagination justify-content-center) %>
+<div class="col-lg-12 py-3 white mb-2 px-2">
+  <div class="row">
+    <div class="col-lg-6">
+      <p class="table-entry mb-0 ps-2 pt-2"><%= page_entries_info user_kycs %></p>
+    </div>
+    <div class="col-lg-6 table-pagination">
+      <%= will_paginate user_kycs, list_classes: %w(pagination justify-content-end) %>
+    </div>
+  </div>
 </div>
