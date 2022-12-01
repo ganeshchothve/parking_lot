@@ -2,7 +2,7 @@ class Admin::UserPolicy < UserPolicy
   # def resend_confirmation_instructions? def resend_password_instructions? def export? def update_password? def update? def create? from UserPolicy
 
   def index?
-    !user.buyer?
+    !(user.buyer? || user.role?(:channel_partner))
   end
 
   def new?(for_edit = false)

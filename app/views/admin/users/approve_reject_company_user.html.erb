@@ -11,15 +11,15 @@
         <div class="modal-body theme-form">
           <div class="row">
             <div class="col-md-12">
-              <div class="mb-3 pt-3">
-                <%= f.label :rejection_reason, class: '' %>
-                <%= f.text_area :rejection_reason, rows: 2, class: 'form-control' %>
-              </div>
+              <%= f.hidden_field :channel_partner_id, value: @channel_partner.id %>
               <div class='mb-3'>
                 <% events = @user.aasm(:company).events(permitted: true).collect{|x| x.name.to_s} %>
                 <%= f.input :user_status_in_company_event, collection: events.collect {|k| [I18n.t("mongoid.attributes.user/company_events.#{k}"), k.to_s]}, as: :select, prompt: :translate, input_html: { class: 'selectize', disabled: !policy([:admin, @user]).editable_field?("user_status_in_company_event") } %>
               </div>
-              <%= f.hidden_field :channel_partner_id, value: @channel_partner.id %>
+              <div class="mb-3 pt-3 status_change_field">
+                <%= f.label :rejection_reason, class: '' %>
+                <%= f.text_area :rejection_reason, rows: 2, class: 'form-control' %>
+              </div>
             </div>
           </div>
         </div>
@@ -33,5 +33,16 @@
 <%= javascript_tag do %>
   $(document).ready(function(){
     FormInitializer.init($("#company_user_approve_reject_form"));
+    $(document).ready(function(){
+      $('#user_user_status_in_company_event').change(function(){
+        if($(this).val() == 'inactive'){
+          $('.status_change_field').removeClass('hidden');
+          $('#user_rejection_reason').addClass('required').attr('required', 'required');
+        }else{
+          $('.status_change_field').addClass('hidden');
+          $('#user_rejection_reason').removeClass('required').removeAttr('required');
+        }
+      }).trigger('change');
+    });
   });
 <% end %>
