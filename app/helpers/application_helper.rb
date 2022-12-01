@@ -184,7 +184,7 @@ module ApplicationHelper
       template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'terms_and_conditions').first
       if (current_client.present? && template.present?) || current_client.blank?
         html += "<li >
-          #{active_link_to 'T & C', dashboard_terms_and_condition_path, active: :exclusive, class: 'footer-link'}
+          #{active_link_to 'T & C', terms_and_conditions_path, active: :exclusive, class: 'footer-link'}
         </li>"
       end
       if current_user && policy([current_user_role_group, current_client]).edit?
