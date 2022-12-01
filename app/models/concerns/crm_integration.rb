@@ -50,7 +50,7 @@ module CrmIntegration
   # used safe navigation operator "&."
   def crm_reference_id(crm_base)
     crm_base = Crm::Base.where(domain: crm_base, booking_portal_client_id: self.booking_portal_client.id).first if crm_base.is_a?(String)
-    third_party_references.where("crm_id": crm_base.id).first&.reference_id
+    third_party_references.where("crm_id": crm_base.id).first&.reference_id if crm_base.present?
   end
 
 
