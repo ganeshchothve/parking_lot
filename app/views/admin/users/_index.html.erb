@@ -61,11 +61,7 @@
               <% end %>
               <% if user.role.in?(%w(channel_partner cp_owner)) %>
                 <% if user.confirmed? %>
-                  <% if user.channel_partner.blank? || user.channel_partner&.inactive? %>
-                    <p class="mb-0"><i class='fa fn-16 fa-check fill-success me-12 fa-lg'></i><%= t("mongoid.attributes.user/confirmed.#{user.confirmed_at.present?}") %> </p>
-                  <% else %>
-                    <p class="mb-0"><i class='fa fa-circle status_<%= user.channel_partner&.status %> me-2 fa-xs'></i><%= t("mongoid.attributes.channel_partner/status.#{user.channel_partner&.status}") %> </p>
-                  <% end %>
+                  <p class="mb-0"><i class='fa fa-circle status_<%= user.status %> me-2 fa-xs'></i><%= t("mongoid.attributes.user/user_status_in_company.#{user.status}") %> </p>
                 <% else %>
                   <p class="mb-0"><i class='fa fa-circle status_inactive me-2 fa-xs'></i><%= t("mongoid.attributes.channel_partner/status.inactive") %> </p>
                 <% end %>
