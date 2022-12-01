@@ -30,6 +30,6 @@
 <% template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'terms_and_conditions').first %>
 <% if (current_client.present? && template.present?) || current_client.blank? %>
   <div class='d-lg-none'>
-    <%= link_to I18n.t("global.link_to.tnc"), terms_and_condition_path, active: :exclusive, class: 'nav-link pl-0 pr-0', target: "_blank" %>
+    <%= link_to I18n.t("global.link_to.tnc"), terms_and_conditions_path, active: :exclusive, class: 'nav-link pl-0 pr-0', target: "_blank" %>
   </div>
 <% end %>
