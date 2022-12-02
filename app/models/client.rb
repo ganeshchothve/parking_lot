@@ -42,7 +42,7 @@ class Client
   field :erp, type: Hash, default: {} # name, access_token, instance_url, client_id, username, password, client_secret
   field :cancellation_amount, type: Float
   field :area_unit, type: String, default: "sqft"
-  field :preferred_login, type: String, default: "phone"
+  field :preferred_login, type: String, default: "email"
   field :mixpanel_token, type: String
   field :sms_provider_username, type: String
   field :sms_provider_password, type: String
