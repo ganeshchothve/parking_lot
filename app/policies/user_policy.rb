@@ -26,11 +26,39 @@ class UserPolicy < ApplicationPolicy
   end
 
   def resend_confirmation_instructions?
-    edit? && ((!record.confirmed? && record.confirmation_token.present?) || record.unconfirmed_email.present? )
+    valid = edit? && ((!record.confirmed? && record.confirmation_token.present?) || record.unconfirmed_email.present? )
+    if current_client.booking_portal_domains.include?(current_domain) || current_client.projects.in(booking_portal_domains: current_domain).present?
+      if record.role.in?(User::CLIENT_SCOPED_ROLES)
+        valid &&= true
+      else
+        valid &&= false
+      end
+    else
+      if record.role.in?(User::CLIENT_SCOPED_ROLES)
+        valid &&= false
+      else
+        valid &&= true
+      end
+    end
+    valid
   end
 
   def resend_password_instructions?
-    edit? && record.email.present?
+    valid = edit? && record.email.present?
+    if current_client.booking_portal_domains.include?(current_domain) || current_client.projects.in(booking_portal_domains: current_domain).present?
+      if record.role.in?(User::CLIENT_SCOPED_ROLES)
+        valid &&= true
+      else
+        valid &&= false
+      end
+    else
+      if record.role.in?(User::CLIENT_SCOPED_ROLES)
+        valid &&= false
+      else
+        valid &&= true
+      end
+    end
+    valid
   end
 
   def export?
