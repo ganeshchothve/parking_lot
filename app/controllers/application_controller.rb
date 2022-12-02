@@ -77,7 +77,7 @@ class ApplicationController < ActionController::Base
   end
 
   def pundit_user
-    UserContext.new(current_user, current_client, current_project)
+    UserContext.new(current_user, current_client, current_project, current_domain)
   end
 
   # added for send project_id and client_id to authenticate user without login
