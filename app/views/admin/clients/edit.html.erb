@@ -4,7 +4,11 @@
       <div class="modal-content">
         <div class="modal-header">
           <h3 class="title">
-            <%= t('helpers.edit.link_name', model: Client.model_name.human)%>
+            <% if policy([:admin, @client]).show_marketplace_tenant_id? %>
+              <%= t('helpers.edit.link_name', model: Client.model_name.human) + " " + "(#{@client.kylas_tenant_id.to_s})" %>
+            <% else %>
+              <%= t('helpers.edit.link_name', model: Client.model_name.human)%>
+            <% end %>
           </h3>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>

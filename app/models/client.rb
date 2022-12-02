@@ -185,6 +185,8 @@ class Client
   validates :payment_link_validity_hours, numericality: { greater_than: 0 }
   validate :check_kylas_api_key
   validate :check_booking_portal_domains
+  validate :check_preferred_login
+  validates :sms_provider, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true, if: :sms_enabled?
 
   accepts_nested_attributes_for :address, :external_inventory_view_config, :checklists
   accepts_nested_attributes_for :regions, allow_destroy: true
@@ -272,5 +274,11 @@ class Client
 
   def self.selldo_api_clients
     ENV_CONFIG.dig(:selldo, :api_clients) || {}
+  end
+
+  def check_preferred_login
+    if !sms_enabled? && preferred_login == 'phone'
+      self.errors.add(:preferred_login, "SMS setting must be enabled to select phone as preferred login")
+    end
   end
 end
