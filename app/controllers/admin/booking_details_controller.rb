@@ -234,9 +234,8 @@ class Admin::BookingDetailsController < AdminController
         format.json { render json: {message: I18n.t("controller.booking_details.notice.created")}, status: :ok }
         format.html { redirect_to admin_booking_detail_path(@booking_detail) }
       else
-        flash[:alert] = @booking_detail.errors.full_messages
-        # format.html { redirect_to dashboard_path, alert: t('controller.booking_details.booking_unsuccessful') }
-        format.html { redirect_to request.referer, alert: t('controller.booking_details.booking_unsuccessful') }
+        flash.now[:alert] = @booking_detail.errors.full_messages
+        format.html { render :new_booking_without_inventory }
         format.json { render json: { errors: flash[:alert] }, status: :unprocessable_entity }
       end
     end

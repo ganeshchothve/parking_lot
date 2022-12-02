@@ -1,106 +1,84 @@
 <% channel_partners = [] %>
-<div class="modal-header">
-  <h3 class="title"><%= t('controller.booking_details.new.header', customer: f.object.lead.try(:name), project: (f.object.lead.try(:project_name) || f.object.project.name)) %></h3>
-  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<%= f.hidden_field :site_visit_id, value: f.object.site_visit.try(:id) %>
+<%= f.hidden_field :project_id, value: ( f.object.lead.try(:project_id) || f.object.project_id ) %>
+<% if !f.object.lead.present? && f.object.project.present? %>
+  <div class="mb-3">
+    <%= f.label :lead_id, class: 'label-required control-label' %>
+    <%= f.select :lead_id, options_for_select(filter_lead_options(current_client)), {prompt: I18n.t("global.select")},  required: 'required', class: "selectize-remote", data: { url: admin_leads_path(fltrs: {project_id: f.object.project.id, ds: true}) } %>
+  </div>
+<% end %>
+<div class="mb-3 position-relative offline">
+  <%= f.label :project_tower_name, class: 'label-required' %>
+  <%= f.text_field :project_tower_name, class: 'form-control', required: 'required', disabled: !(policy([:admin, @booking_detail]).editable_field?("project_tower_name")) %>
 </div>
-<div class="modal-body">
-  <!-- <div class="mb-3"> -->
-    <%#= f.label :project_id, class: 'label-required control-label' %>
-    <%#= f.select :project_id, Project.all.collect{|p| [p.name, p.id]}, {}, prompt: :translate, class: 'form-control selectize' %>
-  <!-- </div> -->
-  <%= f.hidden_field :site_visit_id, value: f.object.site_visit.try(:id) %>
-  <%= f.hidden_field :project_id, value: ( f.object.lead.try(:project_id) || f.object.project_id ) %>
-  <% if !f.object.lead.present? && f.object.project.present? %>
-    <div class="mb-3">
-      <%= f.label :lead_id, class: 'label-required control-label' %>
-      <%= f.select :lead_id, options_for_select(filter_lead_options(current_client)), {prompt: I18n.t("global.select")},  required: 'required', class: "selectize-remote", data: { url: admin_leads_path(fltrs: {project_id: f.object.project.id, ds: true}) } %>
-    </div>
-  <% end %>
-  <div class="mb-3 position-relative offline">
-    <%= f.label :project_tower_name, class: 'label-required' %>
-    <%= f.text_field :project_tower_name, class: 'form-control', required: 'required', disabled: !(policy([:admin, @booking_detail]).editable_field?("project_tower_name")) %>
-  </div>
-  <div class="mb-3 position-relative offline">
-    <%= f.label :project_unit_name, class: 'label-required' %>
-    <%= f.text_field :booking_project_unit_name, class: 'form-control', required: 'required', disabled: !(policy([:admin, @booking_detail]).editable_field?("booking_project_unit_name")) %>
-  </div>
-  <div class="mb-3 position-relative offline">
-    <%= f.label :project_unit_configuration, class: 'label-required' %>
-    <%= f.text_field :project_unit_configuration, class: 'form-control', required: 'required', disabled: !(policy([:admin, @booking_detail]).editable_field?("project_unit_configuration")) %>
-  </div>
-  <div class="mb-3 position-relative offline">
-    <%= f.label :agreement_price_without_inventory, t("mongoid.attributes.booking_detail.agreement_price_without_inventory"), class: 'label-required'%>
-    <% help_text = @booking_detail.lead&.project&.consideration_value_help_text %>
-    <% help_text = help_text.presence ? help_text.html_safe : '' %>
-    <span data-bs-toggle="tooltip" data-bs-placement="top"
-        data-bs-custom-class="custom-tooltip"
-        title="<%= strip_tags(help_text).html_safe %>"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle text-primary" style="cursor: pointer;" viewBox="0 0 16 16">
-  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-  <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+<div class="mb-3 position-relative offline">
+  <%= f.label :project_unit_name, class: 'label-required' %>
+  <%= f.text_field :booking_project_unit_name, class: 'form-control', required: 'required', disabled: !(policy([:admin, @booking_detail]).editable_field?("booking_project_unit_name")) %>
+</div>
+<div class="mb-3 position-relative offline">
+  <%= f.label :project_unit_configuration, class: 'label-required' %>
+  <%= f.text_field :project_unit_configuration, class: 'form-control', required: 'required', disabled: !(policy([:admin, @booking_detail]).editable_field?("project_unit_configuration")) %>
+</div>
+<div class="mb-3 position-relative offline">
+  <%= f.label :agreement_price_without_inventory, t("mongoid.attributes.booking_detail.agreement_price_without_inventory"), class: 'label-required'%>
+  <% help_text = @booking_detail.lead&.project&.consideration_value_help_text %>
+  <% help_text = help_text.presence ? help_text.html_safe : '' %>
+  <span data-bs-toggle="tooltip" data-bs-placement="top"
+      data-bs-custom-class="custom-tooltip"
+      title="<%= strip_tags(help_text).html_safe %>"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle text-primary" style="cursor: pointer;" viewBox="0 0 16 16">
+<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+<path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
 </svg></span>
-    <%= f.number_field :agreement_price, class: 'form-control', required: 'required', disabled: !(policy([:admin, @booking_detail]).editable_field?("agreement_price")) %>
-  </div>
-  <% if policy([current_user_role_group, f.object]).editable_field?("other_costs")%>
-    <div class="mb-3 position-relative offline">
-      <%= f.label :other_costs, class: 'label-required' %>
-      <%= f.number_field :other_costs, class: 'form-control', required: 'required', disabled: !(policy([:admin, @booking_detail]).editable_field?("other_costs")) %>
-    </div>
-  <% end %>
-  <div class="mb-3 position-relative offline">
-    <%= f.label :booked_on, class: 'label-required' %>
-    <%= f.text_field :booked_on, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.booked_on.present? ? f.object.booked_on.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), value: f.object.booked_on.present? ? f.object.booked_on.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), disabled: !(policy([:admin, @booking_detail]).editable_field?("booked_on")) %>
-  </div>
-  <div class="mb-3 position-relative offline">
-    <% if %w(channel_partner cp_owner).include?(current_user.role) %>
-      <%= f.label :tentative_agreement_date, class: 'label-required' %>
-    <% else %>
-      <%= f.label :agreement_date, class: 'label-required' %>
-    <% end %>
-    <% if %w(channel_partner account_manager cp_owner).include?(current_user.role) %>
-      <%= f.hidden_field :creator_id, value: current_user.id %>
-      <%= f.text_field :agreement_date, class: 'form-control datepicker', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '',  disabled: !(policy([:admin, @booking_detail]).editable_field?("agreement_date")) %>
-    <% else %>
-      <%= f.text_field :agreement_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '',  disabled: !(policy([:admin, @booking_detail]).editable_field?("agreement_date")) %>
-    <% end %>
-  </div>
-  <% if policy([:admin, @booking_detail]).enable_channel_partners? %>
-    <div class="mb-3">
-      <%= f.label :source, class: 'control-label' %>
-      <% if %w(channel_partner cp_owner).include?(current_user.role) %>
-        <% booking_sources = ["Channel Partner"]%>
-      <% else %>
-        <% booking_sources = ( f.object.lead.present? ? f.object.lead.project.booking_sources : f.object.project.booking_sources ) %>
-      <% end %>
-      <%= f.select :source, booking_sources.collect{|s| [s, s]}, {prompt: true}, class: 'selectize booking_source', disabled: !(policy([:admin, @booking_detail]).editable_field?("source"))  %>
-    </div>
-  <% end %>
-  <% if current_client.enable_channel_partners? %>
-    <div class="mb-3 channel_partner_div">
-      <% if f.object.lead.present? && f.object.lead.manager && %w(channel_partner cp_owner).include?(f.object.lead.manager.role)
-        channel_partners = User.where(id: f.object.lead.manager_id, booking_portal_client_id: current_user.booking_portal_client_id, user_status_in_company: 'active')
-      elsif %w(channel_partner cp_owner).include?(current_user.role)
-        channel_partners = User.where(id: current_user.id)
-      else
-        channel_partners = User.in(role: ['channel_partner', 'cp_owner']).where(booking_portal_client_id: current_user.booking_portal_client_id, user_status_in_company: 'active')
-      end %>
-      <% channel_partners = channel_partners.where(booking_portal_client_id: current_client.id) %>
-      <label class="'label-required control-label'"><%= I18n.t("mongoid.attributes.user/role.channel_partner") %></label>
-      <%= f.select :manager_id, channel_partners.collect{|cp| [(cp.name), cp.id]}, {prompt: I18n.t("global.select")}, class: 'selectize', id: 'tagged_manager', disabled: !(policy([:admin, @booking_detail]).editable_field?("manager_id"))  %>
-
-        <%# unless (%w(channel_partner cp_owner).include?(current_user.role) && current_client.launchpad_portal?)  %>
-          <%#= link_to I18n.t("controller.channel_partners.add.link_name"), new_channel_partner_channel_partners_path(lead_id: f.object.try(:lead).try(:id).to_s), class: 'modal-remote-form-link' %>
-        <%# end %>
-    </div>
-  <% end %>
+  <%= f.number_field :agreement_price, class: 'form-control', required: 'required', disabled: !(policy([:admin, @booking_detail]).editable_field?("agreement_price")) %>
 </div>
-<div class="filter-footer modal-footer text-end pe-0">
-  <% if edit_access %>
-    <%= f.submit I18n.t("global.submit"), class: "btn btn-primary" %>
+<% if policy([current_user_role_group, f.object]).editable_field?("other_costs")%>
+  <div class="mb-3 position-relative offline">
+    <%= f.label :other_costs, class: 'label-required' %>
+    <%= f.number_field :other_costs, class: 'form-control', required: 'required', disabled: !(policy([:admin, @booking_detail]).editable_field?("other_costs")) %>
+  </div>
+<% end %>
+<div class="mb-3 position-relative offline">
+  <%= f.label :booked_on, class: 'label-required' %>
+  <%= f.text_field :booked_on, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.booked_on.present? ? f.object.booked_on.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), value: f.object.booked_on.present? ? f.object.booked_on.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y"), disabled: !(policy([:admin, @booking_detail]).editable_field?("booked_on")) %>
+</div>
+<div class="mb-3 position-relative offline">
+  <% if %w(channel_partner cp_owner).include?(current_user.role) %>
+    <%= f.label :tentative_agreement_date, class: 'label-required' %>
   <% else %>
-    <%= f.submit I18n.t("global.submit"), data: { :confirm => I18n.t("controller.booking_details.text.confirm")}, class: "btn btn-primary" %>
+    <%= f.label :agreement_date, class: 'label-required' %>
   <% end %>
-
+  <% if %w(channel_partner account_manager cp_owner).include?(current_user.role) %>
+    <%= f.hidden_field :creator_id, value: current_user.id %>
+    <%= f.text_field :agreement_date, class: 'form-control datepicker', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '',  disabled: !(policy([:admin, @booking_detail]).editable_field?("agreement_date")) %>
+  <% else %>
+    <%= f.text_field :agreement_date, class: 'form-control datepicker', required: 'required', "data-default-date": f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '', value: f.object.agreement_date.present? ? f.object.agreement_date.strftime("%d/%m/%Y") : '',  disabled: !(policy([:admin, @booking_detail]).editable_field?("agreement_date")) %>
+  <% end %>
 </div>
+<% if policy([:admin, @booking_detail]).enable_channel_partners? %>
+  <div class="mb-3">
+    <%= f.label :source, class: 'control-label' %>
+    <% if %w(channel_partner cp_owner).include?(current_user.role) %>
+      <% booking_sources = ["Channel Partner"]%>
+    <% else %>
+      <% booking_sources = ( f.object.lead.present? ? f.object.lead.project.booking_sources : f.object.project.booking_sources ) %>
+    <% end %>
+    <%= f.select :source, booking_sources.collect{|s| [s, s]}, {prompt: true}, class: 'selectize booking_source', disabled: !(policy([:admin, @booking_detail]).editable_field?("source"))  %>
+  </div>
+<% end %>
+<% if current_client.enable_channel_partners? %>
+  <div class="mb-3 channel_partner_div">
+    <% if f.object.lead.present? && f.object.lead.manager && %w(channel_partner cp_owner).include?(f.object.lead.manager.role)
+      channel_partners = User.where(id: f.object.lead.manager_id, booking_portal_client_id: current_user.booking_portal_client_id, user_status_in_company: 'active')
+    elsif %w(channel_partner cp_owner).include?(current_user.role)
+      channel_partners = User.where(id: current_user.id)
+    else
+      channel_partners = User.in(role: ['channel_partner', 'cp_owner']).where(booking_portal_client_id: current_user.booking_portal_client_id, user_status_in_company: 'active')
+    end %>
+    <% channel_partners = channel_partners.where(booking_portal_client_id: current_client.id) %>
+    <label class="'label-required control-label'"><%= I18n.t("mongoid.attributes.user/role.channel_partner") %></label>
+    <%= f.select :manager_id, channel_partners.collect{|cp| [(cp.name), cp.id]}, {prompt: I18n.t("global.select")}, class: 'selectize', id: 'tagged_manager', disabled: !(policy([:admin, @booking_detail]).editable_field?("manager_id"))  %>
+  </div>
+<% end %>
 
 
 <%= javascript_tag do %>
