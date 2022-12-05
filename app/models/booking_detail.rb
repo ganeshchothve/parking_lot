@@ -221,21 +221,23 @@ class BookingDetail
       File.open("#{Rails.root}/exports/#{project_unit.name}_cost_sheet.pdf", "wb") do |file|
         file << pdf
       end
-      attachments_attributes << {file: File.open("#{Rails.root}/exports/#{project_unit.name}_cost_sheet.pdf")}
-      email_template = Template::EmailTemplate.find_by(project_id: project_id, name: "cost_sheet_and_payment_schedule")
-      email = Email.create!({
-        project_id: project_id,
-        booking_portal_client_id: self.booking_portal_client_id,
-        body: ERB.new(project_unit.booking_portal_client.email_header).result(self.booking_portal_client.get_binding) + email_template.parsed_content(self) + ERB.new(project_unit.booking_portal_client.email_footer).result(self.booking_portal_client.get_binding),
-        subject: email_template.parsed_subject(self),
-        cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
-        recipients: [lead.user],
-        cc_recipients: [],
-        triggered_by_id: self.id,
-        triggered_by_type: self.class.to_s,
-        attachments_attributes: attachments_attributes
-      })
-      email.sent!
+      attachments_attributes << {booking_portal_client_id: self.booking_portal_client_id, file: File.open("#{Rails.root}/exports/#{project_unit.name}_cost_sheet.pdf")}
+      email_template = Template::EmailTemplate.where(project_id: project_id, name: "cost_sheet_and_payment_schedule").first
+      if email_template.present?
+        email = Email.create!({
+          project_id: project_id,
+          booking_portal_client_id: self.booking_portal_client_id,
+          body: ERB.new(project_unit.booking_portal_client.email_header).result(self.booking_portal_client.get_binding) + email_template.parsed_content(self) + ERB.new(project_unit.booking_portal_client.email_footer).result(self.booking_portal_client.get_binding),
+          subject: email_template.parsed_subject(self),
+          cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
+          recipients: [lead.user],
+          cc_recipients: [],
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s,
+          attachments_attributes: attachments_attributes
+        })
+        email.sent!
+      end
     end
   end
 

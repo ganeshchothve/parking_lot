@@ -17,6 +17,7 @@ class Admin::ClientsController < AdminController
         format.html { redirect_to root_path, notice: 'Client successfully updated.' }
         format.json { render json: @client }
       else
+        flash.now[:alert] = @client.errors.full_messages
         format.html { render (params[:render_kylas_api_key] ? :kylas_api_key : :edit) }
         format.json { render json: {errors: @client.errors.full_messages.flatten}, status: :unprocessable_entity }
       end

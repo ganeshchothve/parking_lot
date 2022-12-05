@@ -116,6 +116,8 @@ module Kylas
         @lead_associated_products = @lead_data[:products].collect{|pd| [pd[:name], pd[:id]]} rescue []
         kylas_product_ids = current_user.booking_portal_client.projects.pluck(:kylas_product_id).compact.map(&:to_i)
         @lead_associated_products = @lead_associated_products.select{|kp| kylas_product_ids.include?(kp[1]) } rescue []
+      else
+        redirect_to root_path, alert: 'Lead not found'
       end
     end
 
