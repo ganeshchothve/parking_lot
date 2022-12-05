@@ -29,7 +29,7 @@ class ProjectObserver < Mongoid::Observer
 
     if project.booking_portal_client.is_marketplace?
       custom_field_id = project.booking_portal_client.kylas_custom_fields.dig("meeting_project", "id")
-      Kylas::UpdateProjectCustomField.new(current_user, project, custom_field_id).call
+      Kylas::UpdateProjectCustomField.new(project.creator, project, custom_field_id).call
     end
   end
 end
