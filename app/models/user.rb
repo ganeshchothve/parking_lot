@@ -35,7 +35,7 @@ class User
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :confirmable, :timeoutable, :password_archivable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: {login: true, booking_portal_client_id: false, project_id: false} #:lockable,:expirable,:session_limitable,:password_expirable
-  attr_accessor :temporary_password, :payment_link, :temp_manager_id, :company_name, :project_id
+  attr_accessor :temporary_password, :payment_link, :temp_manager_id, :company_name, :project_id, :sender_email, :booking_portal_domains
 
   ## Database authenticatable
   field :first_name, type: String, default: ''

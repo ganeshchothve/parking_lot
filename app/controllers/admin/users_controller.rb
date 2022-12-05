@@ -141,6 +141,7 @@ class Admin::UsersController < AdminController
   def set_client
     @client = Client.new
     @client.assign_attributes(client_params)
+    @client.assign_attributes(booking_portal_domains: ["#{@client.id}.#{ENV_CONFIG[:client_domain]}"]) if params.dig(:user, :booking_portal_domains).reject(&:blank?).blank?
     @user = User.new(role: 'admin')
     @user.assign_attributes(user_params)
     @user.assign_attributes(booking_portal_client: @client, tenant_owner: true)
@@ -161,7 +162,7 @@ class Admin::UsersController < AdminController
   end
 
   def client_params
-    params.require(:user).permit(:name)
+    params.require(:user).permit(:name, :sender_email, booking_portal_domains: [])
   end
 
   def validate_player_ids
