@@ -27,7 +27,7 @@ class UserPolicy < ApplicationPolicy
 
   def resend_confirmation_instructions?
     valid = edit? && ((!record.confirmed? && record.confirmation_token.present?) || record.unconfirmed_email.present? )
-    if current_client.booking_portal_domains.include?(current_domain) || current_client.projects.in(booking_portal_domains: current_domain).present?
+    if is_client_domain?
       if record.role.in?(User::CLIENT_SCOPED_ROLES)
         valid &&= true
       else
@@ -45,7 +45,7 @@ class UserPolicy < ApplicationPolicy
 
   def resend_password_instructions?
     valid = edit? && record.email.present?
-    if current_client.booking_portal_domains.include?(current_domain) || current_client.projects.in(booking_portal_domains: current_domain).present?
+    if is_client_domain?
       if record.role.in?(User::CLIENT_SCOPED_ROLES)
         valid &&= true
       else

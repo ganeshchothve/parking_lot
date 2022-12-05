@@ -75,6 +75,12 @@ class ApplicationPolicy
     valid
   end
 
+  #included client or project domain
+  def is_client_domain?
+    return false unless current_client.present?
+    current_client.booking_portal_domains.include?(current_domain) || current_client.projects.in(booking_portal_domains: current_domain).present?
+  end
+
   def permitted_attributes params={}
     []
   end

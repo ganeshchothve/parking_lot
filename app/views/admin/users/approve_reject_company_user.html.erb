@@ -33,16 +33,14 @@
 <%= javascript_tag do %>
   $(document).ready(function(){
     FormInitializer.init($("#company_user_approve_reject_form"));
-    $(document).ready(function(){
-      $('#user_user_status_in_company_event').change(function(){
-        if($(this).val() == 'inactive'){
-          $('.status_change_field').removeClass('hidden');
-          $('#user_rejection_reason').addClass('required').attr('required', 'required');
-        }else{
-          $('.status_change_field').addClass('hidden');
-          $('#user_rejection_reason').removeClass('required').removeAttr('required');
-        }
-      }).trigger('change');
-    });
+    $('#user_user_status_in_company_event').change(function(){
+      if($(this).val() == 'inactive'){
+        $('.status_change_field').removeClass('hidden');
+        $('#user_rejection_reason').addClass('required').attr('required', 'required');
+      }else{
+        $('.status_change_field').addClass('hidden');
+        $('#user_rejection_reason').removeClass('required').removeAttr('required');
+      }
+    }).trigger('change');
   });
 <% end %>
