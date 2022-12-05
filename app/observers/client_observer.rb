@@ -36,6 +36,7 @@ class ClientObserver < Mongoid::Observer
         Kylas::CreateDealCustomField.new(user).call
         Kylas::CreateLeadCustomField.new(user).call
         Kylas::CreateMeetingCustomField.new(user).call
+        Kylas::CreateProjectCustomField.new(user).call
       end
     end
 

@@ -21,7 +21,6 @@ module Kylas
         api = if note.notable.is_a?(Lead)
           Crm::Api::Post.where(base_id: kylas_base.id, resource_class: 'Note', is_active: true, booking_portal_client_id: user.booking_portal_client.id).first
         elsif note.notable.is_a?(SiteVisit)
-          binding.pry
           Crm::Api::Post.where(base_id: kylas_base.id, resource_class: 'Note', is_active: true, event: 'CreateNoteOnMeeting',  booking_portal_client_id: user.booking_portal_client.id).first
         end
         if api.present?

@@ -26,5 +26,10 @@ class ProjectObserver < Mongoid::Observer
     users = User.where(booking_portal_client_id: project.booking_portal_client.id).nin(role: User::ALL_PROJECT_ACCESS)
     project_ids = Project.where(booking_portal_client_id: project.booking_portal_client.id).pluck(:id)
     users.update_all(project_ids: project_ids)
+
+    if project.booking_portal_client.is_marketplace?
+      custom_field_id = project.booking_portal_client.kylas_custom_fields.dig("meeting_project", "id")
+      Kylas::UpdateProjectCustomField.new(current_user, project, custom_field_id).call
+    end
   end
 end
