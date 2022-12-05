@@ -101,26 +101,7 @@ class UserObserver < Mongoid::Observer
         GenerateCoBrandingTemplatesWorker.new.perform(user.id)
       end
     end
-
-    if user.booking_portal_client.is_marketplace?&& user.role.in?(%w(cp_owner channel_partner)) && user.user_status_in_company == 'active' && (user.first_name_changed? || user.last_name_changed?)
-      booking_portal_client = user.booking_portal_client
-      admin_user = booking_portal_client.users.admin.ne(kylas_access_token: nil).first
-      deal_custom_field_id = booking_portal_client.kylas_custom_fields.dig(:deal, :id)
-      lead_custom_field_id = booking_portal_client.kylas_custom_fields.dig(:lead, :id)
-      meeting_custom_field_id = booking_portal_client.kylas_custom_fields.dig(:meeting, :id)
-
-      if deal_custom_field_id.present?
-        Kylas::UpdateDealPicklist.new(admin_user, user).call
-      end
-
-      if lead_custom_field_id.present?
-        Kylas::UpdateLeadPicklist.new(admin_user, user).call
-      end
-
-      if meeting_custom_field_id.present?
-        Kylas::UpdateMeetingPicklist.new(admin_user, user).call
-      end
-    end
+    Kylas::UpdatePicklistValues.new(user, user.changes).call if user.booking_portal_client.is_marketplace?
   end
 
   def after_update user
