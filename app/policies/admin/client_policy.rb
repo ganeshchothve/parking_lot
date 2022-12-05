@@ -33,6 +33,10 @@ class Admin::ClientPolicy < ClientPolicy
     user.role?('superadmin')
   end
 
+  def show_marketplace_tenant_id?
+    (user.role?('superadmin') && record.is_marketplace?)
+  end
+
   def permitted_attributes(params = {})
     attributes = super
     if %w[superadmin admin].include?(user.role)

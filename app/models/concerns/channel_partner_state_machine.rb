@@ -13,7 +13,7 @@ module ChannelPartnerStateMachine
         transitions from: :rejected, to: :pending, if: :can_send_for_approval?
       end
 
-      event :approve, after: %i[update_selldo! send_notification] do
+      event :approve, after: %i[update_selldo! send_notification update_project_ids] do
         transitions from: :pending, to: :active
         transitions from: :inactive, to: :active
       end
@@ -98,6 +98,13 @@ module ChannelPartnerStateMachine
         I18n.t("mobile.channel_partner.status_message.#{status}", reason: status_change_reason&.html_safe)
       else
         nil
+      end
+    end
+
+    def update_project_ids
+      if self.booking_portal_client.is_marketplace?
+        project_ids = Project.where(booking_portal_client_id: self.booking_portal_client.id).pluck(:id)
+        self.update(project_ids: project_ids)
       end
     end
   end

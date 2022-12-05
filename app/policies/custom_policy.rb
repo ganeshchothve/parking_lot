@@ -1,7 +1,7 @@
 class CustomPolicy < Struct.new(:user, :enable_users)
   include ApplicationHelper
 
-  attr_reader :user, :current_client, :current_project
+  attr_reader :user, :current_client, :current_project, :current_domain
 
   def initialize(user_context, record)
     if user_context.is_a?(User)
@@ -9,10 +9,12 @@ class CustomPolicy < Struct.new(:user, :enable_users)
       @user = user
       @current_client = user.role?('superadmin') ? user.selected_client : user.booking_portal_client
       @current_project = nil
+      @current_domain = nil
     else
       @user = user_context.user
       @current_client = user_context.current_client
       @current_project = user_context.current_project
+      @current_domain = user_context.current_domain
     end
   end
 

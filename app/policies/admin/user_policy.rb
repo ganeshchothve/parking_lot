@@ -2,7 +2,7 @@ class Admin::UserPolicy < UserPolicy
   # def resend_confirmation_instructions? def resend_password_instructions? def export? def update_password? def update? def create? from UserPolicy
 
   def index?
-    !user.buyer?
+    !(user.buyer? || user.role?(:channel_partner))
   end
 
   def new?(for_edit = false)
@@ -20,7 +20,7 @@ class Admin::UserPolicy < UserPolicy
       elsif user.role?('channel_partner')
         false
       elsif user.role?('cp_owner')
-        record.role.in?(%w(cp_owner channel_partner)) && record.user_status_in_company.in?(%w(active))
+        record.role.in?(%w(cp_owner channel_partner)) && user.user_status_in_company.in?(%w(active))
       elsif user.role?('sales_admin')
         record.role?('sales') && !marketplace_client?
       elsif user.role?('cp_admin') && !marketplace_client?
