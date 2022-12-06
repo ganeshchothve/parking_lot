@@ -183,6 +183,10 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     %w[admin sales sales_admin account_manager account_manager_head account_manager_head billing_team cp_admin].include?(user.role)
   end
 
+  def asset_update?
+    asset_create?
+  end
+
   def enable_channel_partners?
     record.booking_portal_client.try(:enable_channel_partners?)
   end
