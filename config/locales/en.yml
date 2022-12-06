@@ -1981,11 +1981,11 @@ en:
         no_new_event: "No New Event"
         no_past_event: "No Past Event"
       booking_detail/file_types:
-        booking_detail: "Booking Detail"
+        booking_detail_form: "Booking Detail"
         document: "Document"
       booking_detail/help_text:
-        booking_detail: "Booking Detail"
-        document: "Document'  "
+        booking_detail_form: "Booking Detail"
+        document: "Document"
       user:
         first_name: "First Name"
         last_name: "Last Name"
