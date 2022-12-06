@@ -2896,6 +2896,8 @@ en:
         link_name: "Edit Client"
       show:
         link_name: "Client Detail"
+      sender_email:
+        help_text: This is an email from which all the emails will be sent to your users
     channel_partners:
       add:
         link_name: "Add Channel Partner"
