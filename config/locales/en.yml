@@ -1984,8 +1984,8 @@ en:
         booking_detail_form: "Booking Detail"
         document: "Document"
       booking_detail/help_text:
-        booking_detail_form: "Booking Detail"
-        document: "Document"
+        booking_detail_form_html: "<ul><li>Booking form with unit details</li></ul>"
+        document_html: "<ul><li>Document related to Booking</li></ul>"
       user:
         first_name: "First Name"
         last_name: "Last Name"
