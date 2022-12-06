@@ -187,6 +187,7 @@ class Client
   validate :check_booking_portal_domains
   validate :check_preferred_login
   validates :sms_provider, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true, if: :sms_enabled?
+  validates :sender_email, presence: true
 
   accepts_nested_attributes_for :address, :external_inventory_view_config, :checklists
   accepts_nested_attributes_for :regions, allow_destroy: true

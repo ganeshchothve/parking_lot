@@ -2,6 +2,7 @@ host:
 marketplace_host:
 embedded_marketplace_host:
 session_tld_length:
+client_domain:
 # for public assets such as app/assets
 asset_sync:
   FOG_DIRECTORY:
