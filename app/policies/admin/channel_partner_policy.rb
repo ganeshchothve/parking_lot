@@ -66,8 +66,7 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
 
   def permitted_attributes(_params = {})
     attributes = []
-    if user.blank? || 
-      (user.present? && (%w[superadmin admin cp_admin account_manager_head account_manager].include?(user.role) || (['channel_partner', 'cp_owner'].include?(user.role) && record.id == user.channel_partner_id && ['inactive', 'rejected'].include?(record.status))))
+    if user.blank? || (user.present? && (%w[superadmin admin cp_admin account_manager_head account_manager].include?(user.role) || (['channel_partner', 'cp_owner'].include?(user.role) && record.id == user.channel_partner_id && ['inactive', 'rejected'].include?(record.status))))
       attributes += [:email, :phone, :first_name, :last_name, :company_name, :company_owner_name, :company_owner_phone, :pan_number, :gstin_number, :aadhaar, :rera_id, :manager_id, :team_size, :rera_applicable, :gst_applicable, :nri, :experience, :average_quarterly_business, :referral_code, :city, :company_logo, expertise: [], developers_worked_for: [], interested_services: [], regions: [], address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes]
     end
 
@@ -89,14 +88,13 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
       if record.present?
         attributes += [:internal_category] if (%w[superadmin admin cp_admin].include?(user.role) || (['cp'].include?(user.role) && record.manager_id == user.id))
         if(
-            %w[superadmin admin cp_admin sales_admin].include?(user.role) || 
-            (['cp'].include?(user.role) && record.status != 'active' && record.manager_id == user.id) ||
-            (!(user.role?(:admin) && user.booking_portal_client.is_marketplace?))
+            (%w[superadmin admin cp_admin sales_admin].include?(user.role) && record.status != 'inactive') || 
+            (['cp'].include?(user.role) && record.status != 'active' && record.manager_id == user.id)
           )
           attributes += [:event, :status_change_reason]
         end
 
-        if (%w['channel_partner', 'cp_owner'].include?(user.role) && record.id == user.channel_partner_id && %w['inactive', 'rejected'].include?(record.status))
+        if (['channel_partner', 'cp_owner'].include?(user.role) && record.id == user.channel_partner_id && ['inactive', 'rejected'].include?(record.status))
           attributes += [:event]
         end
       end
