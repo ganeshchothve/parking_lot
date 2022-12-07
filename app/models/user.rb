@@ -34,8 +34,8 @@ class User
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :confirmable, :timeoutable, :password_archivable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: {login: true, booking_portal_client_id: false, project_id: false} #:lockable,:expirable,:session_limitable,:password_expirable
-  attr_accessor :temporary_password, :payment_link, :temp_manager_id, :company_name, :project_id
+  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :confirmable, :timeoutable, :password_archivable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: {login: true, booking_portal_client_id: false, project_id: false}, reset_password_keys: [:login, :booking_portal_client_id, :project_id] #:lockable,:expirable,:session_limitable,:password_expirable
+  attr_accessor :temporary_password, :payment_link, :temp_manager_id, :company_name, :project_id, :sender_email, :booking_portal_domains
 
   ## Database authenticatable
   field :first_name, type: String, default: ''
@@ -838,6 +838,35 @@ class User
       roles -= CHANNEL_PARTNER_USERS unless client.try(:enable_channel_partners?)
       roles -= COMPANY_USERS unless client.try(:enable_company_users?)
       roles
+    end
+
+    # This method is used to find user for reset_password using reset_password_keys
+    # Method overriden to compare reset_password_keys with params
+    def find_or_initialize_with_errors(required_attributes, attributes, error=:invalid) #:nodoc:
+      attributes = if attributes.respond_to? :permit!
+        attributes.slice(*required_attributes).permit!.to_h.with_indifferent_access
+      else
+        attributes.with_indifferent_access.slice(*required_attributes)
+      end
+
+      # here overriden code
+      attributes.delete_if { |key, value| value.blank? && authentication_keys[key.to_sym] }
+
+      if attributes.size == required_attributes.size
+        record = find_first_by_auth_conditions(attributes)
+      end
+
+      unless record
+        record = new
+
+        required_attributes.each do |key|
+          value = attributes[key]
+          record.send("#{key}=", value)
+          record.errors.add(key, value.present? ? error : :blank)
+        end
+      end
+
+      record
     end
 
     def find_first_by_auth_conditions(warden_conditions)

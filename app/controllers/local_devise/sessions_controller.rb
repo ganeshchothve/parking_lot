@@ -28,7 +28,7 @@ class LocalDevise::SessionsController < Devise::SessionsController
     if self.resource.is_active?
       set_flash_message!(:notice, :signed_in)
     else
-      set_flash_message!(:notice, :sign_in_disabled)
+      set_flash_message!(:alert, :sign_in_disabled)
     end
     sign_in(resource_name, resource)
     yield resource if block_given?
