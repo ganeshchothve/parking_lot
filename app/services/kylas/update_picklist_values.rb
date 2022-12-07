@@ -10,7 +10,7 @@ module Kylas
     end
 
     def call
-      return if user.blank? || options.blank?
+      return if user.blank?
   
       if (user.role.in?(%w(cp_owner channel_partner)) && user.user_status_in_company == 'active' && (changes.keys & %w(first_name last_name)).presence)
         client = user.booking_portal_client
