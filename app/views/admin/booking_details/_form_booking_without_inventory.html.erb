@@ -43,9 +43,9 @@
 </div>
 <div class="mb-3 position-relative offline">
   <% if %w(channel_partner cp_owner).include?(current_user.role) %>
-    <%= f.label :tentative_agreement_date, class: 'label-required' %>
+    <%= f.label :tentative_agreement_date, class: 'control-label' %>
   <% else %>
-    <%= f.label :agreement_date, class: 'label-required' %>
+    <%= f.label :agreement_date, class: 'control-label' %>
   <% end %>
   <% if %w(channel_partner account_manager cp_owner).include?(current_user.role) %>
     <%= f.hidden_field :creator_id, value: current_user.id %>
