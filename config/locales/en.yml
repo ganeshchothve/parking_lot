@@ -925,6 +925,7 @@ en:
         cp_deal_custom_field: "Channel Partner"
         cp_lead_custom_field: "Channel Partner"
         cp_meeting_custom_field: "Channel Partner"
+        project_meeting_custom_field: "Project"
       client/available_preferred_logins:
         phone: "Phone Based"
         email: "Email Based"

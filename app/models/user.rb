@@ -29,7 +29,7 @@ class User
   DOCUMENT_TYPES = %w[home_loan_application_form photo_identity_proof residence_address_proof residence_ownership_proof income_proof job_continuity_proof bank_statement advance_processing_cheque financial_documents first_page_co_branding last_page_co_branding co_branded_asset]
   TEAM_LEAD_DASHBOARD_ACCESS_USERS = %w[team_lead gre]
   KYLAS_MARKETPALCE_USERS = %w[admin sales gre sales_admin channel_partner cp_owner superadmin].freeze
-  KYLAS_CUSTOM_FIELDS_ENTITIES = %w[lead deals meetings].freeze
+  KYLAS_CUSTOM_FIELDS_ENTITIES = %w[lead deal meeting].freeze
   CLIENT_SCOPED_ROLES = (%w[channel_partner cp_owner] + User::BUYER_ROLES).freeze
 
   # Include default devise modules. Others available are:

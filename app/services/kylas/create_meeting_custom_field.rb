@@ -16,7 +16,6 @@ module Kylas
         https.use_ssl = true
         request = Net::HTTP::Post.new(url, request_headers)
         request.body = JSON.dump(custom_field_params)
-
         response = https.request(request)
 
         case response
@@ -82,7 +81,5 @@ module Kylas
         end
       end
     end
-
   end
-  
 end

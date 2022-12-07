@@ -124,6 +124,8 @@ class Project
   # Kylas fields
   field :kylas_product_id, type: String
   field :kylas_product_value, type: Integer
+  # Kylas Custom Fields options values fields
+  field :kylas_custom_fields_option_id, type: Hash, default: {}
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= client.logo.url %>" />
