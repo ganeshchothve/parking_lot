@@ -2,7 +2,8 @@ host:
 marketplace_host:
 embedded_marketplace_host:
 session_tld_length:
-client_domain:
+iris_marketplace_host:
+client_default_domain:
 # for public assets such as app/assets
 asset_sync:
   FOG_DIRECTORY:
@@ -67,6 +68,7 @@ kylas:
   client_secret:
   redirect_url:
   base_url:
+  version:
 sfdc:
   client_id:
   client_secret:
