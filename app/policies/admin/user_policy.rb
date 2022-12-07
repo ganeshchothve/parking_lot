@@ -185,7 +185,7 @@ class Admin::UserPolicy < UserPolicy
       else
         attributes += [:is_active] if record.persisted? && record.id != user.id && user.role.in?(%w(admin))
       end
-      if %w[admin superadmin].include?(user.role)  && record.role?('cp')
+      if %w[admin superadmin].include?(user.role) && record.role?('cp')
         attributes += [:manager_id]
       end
       if %w[admin superadmin cp_admin sales_admin].include?(user.role) && record.buyer?
