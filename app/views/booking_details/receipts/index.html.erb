@@ -10,7 +10,7 @@
       </div>
       <div class="col-lg-7 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-btn-set float-right pb-3">
-          <% if current_client.cancellation_amount > 0 %>
+          <% if current_client.cancellation_amount.to_i > 0 %>
             <div class="btn db-small-btn light-blue width-300 disclaimer bg-white">
               <%= t('controller.booking_details.receipts.form.refund_disclaimer') %>
             </div>
