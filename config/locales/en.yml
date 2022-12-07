@@ -925,6 +925,7 @@ en:
         cp_deal_custom_field: "Channel Partner"
         cp_lead_custom_field: "Channel Partner"
         cp_meeting_custom_field: "Channel Partner"
+        project_meeting_custom_field: "Project"
       client/available_preferred_logins:
         phone: "Phone Based"
         email: "Email Based"
@@ -1981,11 +1982,11 @@ en:
         no_new_event: "No New Event"
         no_past_event: "No Past Event"
       booking_detail/file_types:
-        booking_detail: "Booking Detail"
+        booking_detail_form: "Booking Detail"
         document: "Document"
       booking_detail/help_text:
-        booking_detail: "Booking Detail"
-        document: "Document'  "
+        booking_detail_form_html: "<ul><li>Booking form with unit details</li></ul>"
+        document_html: "<ul><li>Document related to Booking</li></ul>"
       user:
         first_name: "First Name"
         last_name: "Last Name"
@@ -2709,6 +2710,7 @@ en:
         header: "Add Booking for %{customer}-(%{project})"
       edit:
         link_name: "Update Booking"
+        header: "Update Booking for %{customer}-(%{project})"
       show:
         link_name: "View Details"
       exports:

@@ -42,6 +42,7 @@ module Kylas
           "id": entity.user.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)).to_i,
           "entity": "contact"
         }
+        
       end
       payload
     end

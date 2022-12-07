@@ -180,7 +180,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def asset_create?
-    %w[account_manager account_manager_head billing_team cp_admin].include?(user.role)
+    %w[admin sales sales_admin account_manager account_manager_head account_manager_head billing_team cp_admin].include?(user.role)
   end
 
   def enable_channel_partners?
