@@ -24,7 +24,7 @@ class ProjectObserver < Mongoid::Observer
 
     # dump all the project ids to all the users and partner companies that are not given project access
     if project.booking_portal_client.is_marketplace?
-      project_ids = Project.where(booking_portal_client_id: project.booking_portal_client.id).pluck(:id)
+      project_ids = project.booking_portal_client.projects.pluck(:id)
 
       users = User.where(booking_portal_client_id: project.booking_portal_client.id).nin(role: User::ALL_PROJECT_ACCESS)
       users.update_all(project_ids: project_ids)
