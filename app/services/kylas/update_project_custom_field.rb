@@ -68,8 +68,8 @@ module Kylas
         response = Kylas::FetchMeetingCustomFieldDetails.new(user, custom_field_id).call
         if response[:success]
           data = response[:data].with_indifferent_access
-          picklist_values = []
-          picklist_values = data[:field][:picklist][:picklistValues].collect{|p| {id: p[:id], displayName: p[:displayName]}  } rescue []
+          picklist_values = [] 
+          picklist_values = data.dig(:field, :picklist, :picklistValues).collect{|p| {id: p[:id], displayName: p[:displayName]}  } rescue []
           picklist_values += [{id: nil, displayName: project.name}] if picklist_values.present?
           picklist_values
         else
@@ -80,8 +80,8 @@ module Kylas
       def dump_custom_field_option_values(response)
         begin
           data = response.with_indifferent_access
-          pick_list_response = {}
-          pick_list_response = data[:picklist][:picklistValues].find{|p| p[:displayName] == project.name } rescue {}
+          pick_list_response = {} 
+          pick_list_response = data.dig(:picklist, :picklistValues).find{|p| p[:displayName] == project.name } rescue {}
           project.set("kylas_custom_fields_option_id.meeting": pick_list_response[:id]) if pick_list_response.present?
         rescue => exception
           Rails.logger.error "[Kylas::UpdateProjectCustomField] - Error in dump_custom_field_option_values: #{exception.message} - response: #{response}"
