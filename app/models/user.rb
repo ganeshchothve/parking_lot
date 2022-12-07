@@ -390,7 +390,7 @@ class User
 
     return unless response[:success]
 
-    update_tokens_details!(response) if user.persisted?
+    update_tokens_details!(response) if self.persisted?
     kylas_access_token
   end
 

@@ -152,7 +152,7 @@ class Admin::UsersController < AdminController
       respond_to do |format|
         @client.errors.delete(:users)
         flash.now[:alert] = @client.errors.full_messages + @user.errors.full_messages
-        format.html { render :signup }
+        format.html { render :signup and return }
       end
     end
   end

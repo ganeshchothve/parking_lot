@@ -81,7 +81,7 @@ class Client
   field :tds_process, type: String
   field :ga_code, type: String
   field :gtm_tag, type: String
-  field :enable_communication, type: Hash, default: { 'email': true, 'sms': false, 'whatsapp': false, 'notification': false }
+  field :enable_communication, type: Hash, default: { email: true, sms: false, whatsapp: false, notification: false }
   field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
   field :enable_referral_bonus, type: Boolean, default: false
   field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner cp_owner]
@@ -200,19 +200,19 @@ class Client
   end
 
   def sms_enabled?
-    self.enable_communication["sms"]
+    self.enable_communication[:sms]
   end
 
   def email_enabled?
-    self.enable_communication["email"]
+    self.enable_communication[:email]
   end
 
   def whatsapp_enabled?
-    self.enable_communication['whatsapp']
+    self.enable_communication[:whatsapp]
   end
 
   def notification_enabled?
-    self.enable_communication['notification']
+    self.enable_communication[:notification]
   end
 
   def enable_actual_inventory?(user)
