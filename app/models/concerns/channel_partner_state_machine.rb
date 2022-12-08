@@ -103,7 +103,11 @@ module ChannelPartnerStateMachine
 
     def update_project_ids
       if self.booking_portal_client.is_marketplace?
-        project_ids = self.booking_portal_client.projects.where(is_active: true).distinct(:id)
+        if current_project.present?
+          project_ids = [current_project.id]
+        else
+          project_ids = self.booking_portal_client.projects.where(is_active: true).distinct(:id)
+        end
         self.update(project_ids: project_ids)
       end
     end
