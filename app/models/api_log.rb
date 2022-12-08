@@ -9,6 +9,7 @@ class ApiLog
   field :response_type, type: String
   field :status, type: String
   field :message, type: String
+  field :log_type, type: String, default: "API"
 
   belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :crm_api, class_name: 'Crm::Api', optional: true
@@ -31,9 +32,9 @@ class ApiLog
       custom_scope
     end
 
-    def log_responses(request_url, request, response, resource, response_type, booking_portal_client, status = nil, message = nil)
+    def log_responses(request_url, request, response, resource, response_type, booking_portal_client, status = nil, message = nil, log_type = "API")
       api_log = ApiLog.new
-      api_log.assign_attributes(request_url: request_url, request: request, response: response, resource: resource, response_type: response_type, booking_portal_client: booking_portal_client, status: status, message: message)
+      api_log.assign_attributes(request_url: request_url, request: request, response: response, resource: resource, response_type: response_type, booking_portal_client: booking_portal_client, status: status, message: message, log_type: log_type)
       api_log.save
     end
 

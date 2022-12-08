@@ -13,6 +13,7 @@ class Api::V1::UsersController < ApisController
   def create
     @user = User.new(user_create_params)
     @user.booking_portal_client_id = @current_client.try(:id)
+    @resource = @user
     if @user.save
       @user.update_external_ids(third_party_reference_params, @crm.id) if third_party_reference_params
       render json: {id: @user.id, message: I18n.t("controller.users.notice.created")}, status: :created
@@ -37,12 +38,15 @@ class Api::V1::UsersController < ApisController
   end
 
   def create_or_update_user
+    @resource = @user
     register_or_update_sales_user
     if @user.save
       @user.confirm if @user.unconfirmed_email.present?
-      render json: {id: @user.id, message: I18n.t("controller.users.notice.created")}, status: :created
+      @message = I18n.t("controller.users.notice.created")
+      render json: {id: @user.id, message: @message}, status: :created
     else
-      render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity
+      @errors = @user.errors.full_messages.uniq
+      render json: {errors: @errors}, status: :unprocessable_entity
     end
   end
 
@@ -60,6 +64,7 @@ class Api::V1::UsersController < ApisController
   # Sets the user object
   def set_user
     @user = User.where("third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params.dig(:id)).first
+    @resource = @user if @user.present?
     render json: { errors: [I18n.t("controller.users.errors.not_registered")
 ] }, status: :not_found if @user.blank?
   end
