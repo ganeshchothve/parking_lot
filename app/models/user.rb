@@ -368,14 +368,12 @@ class User
       if user.present?
         if self.id == user.id
           save_kylas_user_id(k_user_id, response)
-          true
         else
           false
         end
       else
         if self.kylas_user_id.blank?
           save_kylas_user_id(k_user_id, response)
-          true
         else
           false
         end
@@ -1044,8 +1042,13 @@ class User
 
   def save_kylas_user_id(k_user_id, response)
     if self.update(kylas_user_id: k_user_id)
-      update_tokens_details!(response)
-      fetch_and_save_kylas_tenant_id
+      if update_tokens_details!(response)
+        fetch_and_save_kylas_tenant_id
+      else
+        false
+      end
+    else
+      false
     end
   end
 
@@ -1054,9 +1057,14 @@ class User
 
     begin
       response = Kylas::TenantDetails.new(self).call
-      self.booking_portal_client.update(kylas_tenant_id: response.dig(:data, 'id')) if response[:success]
+      if response[:success]
+        self.booking_portal_client.update(kylas_tenant_id: response.dig(:data, 'id'))
+      else
+        false
+      end
     rescue StandardError
       Rails.logger.error 'Kylas::TenantDetails - StandardError'
+      false
     end
   end
 
