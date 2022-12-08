@@ -22,15 +22,15 @@ class KylasAuthController < ApplicationController
             errors += current_user.booking_portal_client.errors.full_messages
           end
           flash[:alert] = errors
-          sign_out_and_redirect_back
+          sign_out_and_redirect_back and return
         end
       else
         flash[:alert] = I18n.t('kylas_auth.facing_problem')
-        sign_out_and_redirect_back
+        sign_out_and_redirect_back and return
       end
     else
       flash[:alert] = I18n.t('kylas_auth.something_went_wrong')
-      sign_out_and_redirect_back
+      sign_out_and_redirect_back and return
     end
     _path = reset_password_after_first_login_admin_user_path(current_user) if current_user && policy([:admin, current_user]).reset_password_after_first_login?
     redirect_to _path || root_path
@@ -44,6 +44,6 @@ class KylasAuthController < ApplicationController
 
   def sign_out_and_redirect_back
     sign_out current_user
-    redirect_to action: :authenticate, code: params[:code] and return
+    redirect_to action: :authenticate, code: params[:code]
   end
 end
