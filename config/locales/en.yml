@@ -4062,3 +4062,8 @@ en:
     errors:
       marketplace_error: 'We encountered some issue with your Marketplace setup. Please connect with Kylas Customer Success'
       payment_error: 'No receipt found'
+
+  kylas_auth:
+    successfully_installed: 'App installed successfully'
+    facing_problem: 'We are facing some problem with your installation. Please connect with Kylas Customer Success'
+    something_went_wrong: 'We encountered some issue with your Marketplace setup. Please connect with Kylas Customer Success'
