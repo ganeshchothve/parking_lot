@@ -24,12 +24,13 @@ class ProjectObserver < Mongoid::Observer
 
     
     if project.booking_portal_client.is_marketplace?
-      project_ids = project.booking_portal_client.projects.pluck(:id)
 
       custom_field_id = project.booking_portal_client.kylas_custom_fields.dig("meeting_project", "id")
       Kylas::UpdateProjectCustomField.new(project.creator, project, custom_field_id).call
 
       # dump all the project ids to all the users that are not given project access
+      project_ids = project.booking_portal_client.projects.where(is_active: true).distinct(:id)
+      
       users = User.where(booking_portal_client_id: project.booking_portal_client.id).nin(role: User::ALL_PROJECT_ACCESS)
       users.update_all(project_ids: project_ids)
       
