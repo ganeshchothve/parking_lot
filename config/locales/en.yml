@@ -1300,8 +1300,6 @@ en:
 
       note:
         note: "Note"
-        add_note: "View and Add Note"
-
       payment_adjustment:
         name: "Name"
         field: "Field"
@@ -3033,8 +3031,8 @@ en:
 
     notes:
       new:
-        header: "Add Note"
-        link_name: "Add Note"
+        header: "View and Add Note"
+        link_name: "View and Add Note"
 
     projects:
       index:
