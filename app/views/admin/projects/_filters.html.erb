@@ -44,11 +44,11 @@
         <% end %>
         <% if policy([:admin, Project.new]).show? %>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-            <%= label_tag "fltrs", I18n.t("mongoid.attributes.project.disabled_walkins") %>
+            <%= label_tag "fltrs", I18n.t("mongoid.attributes.project.disable_walkins") %>
             <%= select_tag "fltrs[disable_project_walk_ins]", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:fltrs].present? ? params[:fltrs][:disable_project_walk_ins] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
           </div>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-            <%= label_tag "fltrs", I18n.t("mongoid.attributes.project.disabled_bookings") %>
+            <%= label_tag "fltrs", I18n.t("mongoid.attributes.project.disable_bookings") %>
             <%= select_tag "fltrs[disable_project_bookings]", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:fltrs].present? ? params[:fltrs][:disable_project_bookings] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
           </div>
         <% end %>

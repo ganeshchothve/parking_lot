@@ -35,7 +35,7 @@ en:
     enable: "Enable "
     check_in: "Check In"
     submit_application: "Submit Application"
-    resubmit_applicatin: "Resubmit Application"
+    resubmit_application: "Resubmit Application"
     save_draft: "Save Draft"
     submit: "Submit"
     upload: "Upload"
