@@ -55,14 +55,23 @@ class Api::V1::BookingDetailsController < ApisController
       render json: { errors: [I18n.t("controller.booking_details.errors.project_unit_id_required")] }, status: :bad_request and return unless params.dig(:booking_detail, :project_unit_id).present?
       render json: { errors: [I18n.t("controller.booking_details.errors.lead_id_required")] }, status: :bad_request and return unless params.dig(:booking_detail, :lead_id).present?
     end
-    render json: { errors: [I18n.t("controller.booking_details.errors.primary_user_kyc_id_required")] }, status: :bad_request and return if params.dig(:booking_detail, :primary_user_kyc_attributes).present? && !params.dig(:booking_detail, :primary_user_kyc_attributes, :reference_id).present?
+    if params.dig(:booking_detail, :primary_user_kyc_attributes).present? && !params.dig(:booking_detail, :primary_user_kyc_attributes, :reference_id).present?
+      @errors = [I18n.t("controller.booking_details.errors.primary_user_kyc_reference_id_required")]
+      render json: { errors: @errors }, status: :bad_request and return
+    end
     if params.dig(:booking_detail, :receipts_attributes).present?
       params.dig(:booking_detail, :receipts_attributes).each do |receipt_attributes|
-        render json: { errors: [I18n.t("controller.booking_details.errors.receipt_reference_id_required")] }, status: :bad_request and return unless receipt_attributes.dig(:reference_id).present?
+        unless receipt_attributes.dig(:reference_id).present?
+          @errors = [I18n.t("controller.booking_details.errors.receipt_reference_id_required")]
+          render json: { errors: @errors }, status: :bad_request and return
+        end
       end
     end
     params.dig(:booking_detail, :user_kycs_attributes).each do |user_kyc_attributes|
-      render json: { errors: [I18n.t("controller.booking_details.errors.user_kyc_reference_id_required")] }, status: :bad_request and return unless user_kyc_attributes.dig(:reference_id).present?
+      unless user_kyc_attributes.dig(:reference_id).present?
+        @errors = [I18n.t("controller.booking_details.errors.user_kyc_reference_id_required")]
+        render json: { errors: @errors }, status: :bad_request and return
+      end
     end if params.dig(:booking_detail, :user_kycs_attributes).present?
   end
 

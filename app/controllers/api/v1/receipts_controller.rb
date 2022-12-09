@@ -12,13 +12,16 @@ class Api::V1::ReceiptsController < ApisController
       @receipt.booking_portal_client_id = @current_client.try(:id)
       if @receipt.save
         response = generate_response
-        response[:message] = I18n.t("controller.receipts.notice.created")
+        @message = I18n.t("controller.receipts.notice.created")
+        response[:message] = @message
         render json: response, status: :created
       else
-        render json: {errors: @receipt.errors.full_messages.uniq}, status: :unprocessable_entity
+        @errors = @receipt.errors.full_messages.uniq
+        render json: {errors: @errors}, status: :unprocessable_entity
       end
     else
-      render json: {errors: ["Receipt with reference_id '#{params[:receipt][:reference_id]}' already exists"]}, status: :unprocessable_entity
+      @errors = ["Receipt with reference_id '#{params[:receipt][:reference_id]}' already exists"]
+      render json: {errors: @errors}, status: :unprocessable_entity
     end
   end
 
@@ -27,33 +30,55 @@ class Api::V1::ReceiptsController < ApisController
       @receipt.assign_attributes(receipt_update_params)
       if @receipt.save
         response = generate_response
-        response[:message] = I18n.t("controller.receipts.notice.updated")
+        @message = I18n.t("controller.receipts.notice.updated")
+        response[:message] = @message
         render json: response, status: :created
       else
-        render json: {errors: @receipt.errors.full_messages.uniq}, status: :unprocessable_entity
+        @errors = @receipt.errors.full_messages.uniq
+        render json: {errors: @errors}, status: :unprocessable_entity
       end
     else
-      render json: {errors: [I18n.t("controller.receipts.errors.receipt_reference_id_already_exists", name: "#{params[:receipt][:reference_id]}")]}, status: :unprocessable_entity
+      @errors = [I18n.t("controller.receipts.errors.receipt_reference_id_already_exists", name: "#{params[:receipt][:reference_id]}")]
+      render json: {errors: @errors}, status: :unprocessable_entity
     end
   end
 
   def reference_ids_present?
     if params[:action] == 'create'
-      render json: { errors: [I18n.t("controller.receipts.errors.reference_id_required")] }, status: :bad_request and return unless params.dig(:receipt, :reference_id).present?
-      render json: { errors: [I18n.t("controller.receipts.errors.lead_id_required")] }, status: :bad_request and return unless params.dig(:receipt, :lead_id).present?
+      unless params.dig(:receipt, :reference_id).present?
+        @errors = [I18n.t("controller.receipts.errors.reference_id_required")]
+        render json: {errors: @errors}, status: :bad_request and return
+      end
+      unless params.dig(:receipt, :lead_id).present?
+        @errors = [I18n.t("controller.receipts.errors.lead_id_required")]
+        render json: {errors: @errors}, status: :bad_request and return
+      end
     end
-    render json: { errors: [I18n.t("controller.receipts.errors.user_kyc_reference_id_required")] }, status: :bad_request and return if params.dig(:receipt, :user_kyc_attributes).present? && !params.dig(:receipt, :user_kyc_attributes, :reference_id).present?
+    if params.dig(:receipt, :user_kyc_attributes).present? && !params.dig(:receipt, :user_kyc_attributes, :reference_id).present?
+      @errors = [I18n.t("controller.receipts.errors.user_kyc_reference_id_required")]
+      render json: {errors: @errors}, status: :bad_request and return
+    end
   end
 
   def set_lead
     @lead = Lead.where(booking_portal_client_id: @current_client.try(:id), "third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:receipt][:lead_id]).first
-    render json: { errors: [I18n.t("controller.leads.errors.lead_reference_id_not_found", name: "#{params[:receipt][:lead_id]}")] }, status: :not_found and return unless @lead
+    unless @lead.present?
+      @errors = [I18n.t("controller.leads.errors.lead_reference_id_not_found", name: "#{params[:receipt][:lead_id]}")]
+      render json: {errors: @errors}, status: :not_found and return
+    end
   end
 
   def set_receipt_and_lead
     @receipt = Receipt.where(booking_portal_client_id: @current_client.try(:id), "third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
-    render json: { errors: [I18n.t("controller.receipts.errors.receipt_reference_id_not_found", name: "#{params[:id]}}")] }, status: :not_found and return unless @receipt
-    render json: { errors: [I18n.t("controller.receipts.errors.receipt_reference_id_in_success", name: "#{params[:id]}}")] }, status: :unprocessable_entity and return if @receipt.success?
+    @resource = @receipt if @receipt.present?
+    unless @receipt.present?
+      @errors = [I18n.t("controller.receipts.errors.receipt_reference_id_not_found", name: "#{params[:id]}")]
+      render json: {errors: @errors}, status: :not_found and return
+    end
+    unless @receipt.success?
+      @errors = [I18n.t("controller.receipts.errors.receipt_reference_id_in_success", name: "#{params[:id]}")]
+      render json: {errors: @errors}, status: :unprocessable_entity and return
+    end
     @lead = @receipt.lead
   end
 

@@ -27,6 +27,7 @@ module Api
         )
         @user.skip_confirmation_notification!
       end
+      @resource = @user
     end
   end
 end
