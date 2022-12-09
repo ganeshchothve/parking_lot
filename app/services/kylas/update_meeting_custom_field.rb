@@ -87,7 +87,5 @@ module Kylas
         Rails.logger.error "[Kylas::UpdateMeetingCustomField] - Error in dump_custom_field_option_values: #{exception.message} - response: #{response}"
       end
     end
-
   end
-  
 end

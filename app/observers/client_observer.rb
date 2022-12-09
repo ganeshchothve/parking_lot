@@ -1,6 +1,6 @@
 class ClientObserver < Mongoid::Observer
   def before_validation client
-    client.enable_communication = {email: true, sms: true, 'whatsapp': false, 'notification': false} if client.enable_communication.blank?
+    client.enable_communication = {email: true, sms: false, whatsapp: false, notification: false} if client.enable_communication.blank?
     client.enable_communication[:email] = (client.enable_communication[:email].to_s == "true") || (client.enable_communication[:email].to_s == "1")
     client.enable_communication[:sms] = (client.enable_communication[:sms].to_s == "true") || (client.enable_communication[:sms].to_s == "1")
     client.enable_communication[:whatsapp] = (client.enable_communication[:whatsapp].to_s == "true") || (client.enable_communication[:whatsapp].to_s == "1")
@@ -36,6 +36,7 @@ class ClientObserver < Mongoid::Observer
         Kylas::CreateDealCustomField.new(user).call
         Kylas::CreateLeadCustomField.new(user).call
         Kylas::CreateMeetingCustomField.new(user).call
+        Kylas::CreateProjectCustomField.new(user).call
       end
     end
 

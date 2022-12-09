@@ -53,7 +53,7 @@ class Client
   field :notification_api_key, type: String
   field :notification_vendor, type: String, default: 'firebase'
   field :sms_provider_dlt_entity_id, type: String
-  field :sms_mask, type: String, default: "SellDo"
+  field :sms_mask, type: String
   field :sms_provider, type: String, default: 'sms_just'
   field :mailgun_private_api_key, type: String
   field :mailgun_email_domain, type: String
@@ -81,7 +81,7 @@ class Client
   field :tds_process, type: String
   field :ga_code, type: String
   field :gtm_tag, type: String
-  field :enable_communication, type: Hash, default: { 'email': true, 'sms': true, 'whatsapp': false, 'notification': false }
+  field :enable_communication, type: Hash, default: { email: true, sms: false, whatsapp: false, notification: false }
   field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
   field :enable_referral_bonus, type: Boolean, default: false
   field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner cp_owner]
@@ -187,6 +187,7 @@ class Client
   validate :check_booking_portal_domains
   validate :check_preferred_login
   validates :sms_provider, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true, if: :sms_enabled?
+  validates :sender_email, presence: true
 
   accepts_nested_attributes_for :address, :external_inventory_view_config, :checklists
   accepts_nested_attributes_for :regions, allow_destroy: true
@@ -199,19 +200,19 @@ class Client
   end
 
   def sms_enabled?
-    self.enable_communication["sms"]
+    self.enable_communication[:sms]
   end
 
   def email_enabled?
-    self.enable_communication["email"]
+    self.enable_communication[:email]
   end
 
   def whatsapp_enabled?
-    self.enable_communication['whatsapp']
+    self.enable_communication[:whatsapp]
   end
 
   def notification_enabled?
-    self.enable_communication['notification']
+    self.enable_communication[:notification]
   end
 
   def enable_actual_inventory?(user)

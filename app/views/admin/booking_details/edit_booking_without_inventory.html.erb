@@ -1,13 +1,22 @@
-<%= form_for(@booking_detail, url: update_booking_without_inventory_admin_booking_detail_path  , local: true, remote: true, html: {class: 'validate-form modal-remote-form', "data-type": "json", id: 'booking_detail_form_without_inv'}) do |f| %>
-<%= f.hidden_field :lead_id, value: @booking_detail.lead_id %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <%= render 'form_booking_without_inventory', f: f, edit_access: true %>    
+      <%= form_for(@booking_detail, url: update_booking_without_inventory_admin_booking_detail_path, remote: true ,local: true, html: {class: 'validate-form modal-remote-form', id: 'booking_detail_form_without_inv'}, data: { 'resource-type': BookingDetail.model_name.human, type: :json }) do |f| %>
+        <%= f.hidden_field :lead_id, value: @booking_detail.lead_id %>
+        <div class="modal-header">
+          <h3 class="title"><%= t('controller.booking_details.edit.header', customer: f.object.lead.try(:name), project: (f.object.lead.try(:project_name) || f.object.project.name)) %></h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <%= render 'form_booking_without_inventory', f: f %>
+        </div>
+        <div class="filter-footer modal-footer text-end pe-0">
+          <%= f.submit I18n.t("global.submit"), class: "btn btn-primary" %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>
-<% end %>
 <%= javascript_tag do %>
 $(document).ready(function(){
   FormInitializer.init($("#booking_detail_form_without_inv"));

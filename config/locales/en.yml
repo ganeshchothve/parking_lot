@@ -925,6 +925,7 @@ en:
         cp_deal_custom_field: "Channel Partner"
         cp_lead_custom_field: "Channel Partner"
         cp_meeting_custom_field: "Channel Partner"
+        project_meeting_custom_field: "Project"
       client/available_preferred_logins:
         phone: "Phone Based"
         email: "Email Based"
@@ -1299,8 +1300,6 @@ en:
 
       note:
         note: "Note"
-        add_note: "View and Add Note"
-
       payment_adjustment:
         name: "Name"
         field: "Field"
@@ -1981,11 +1980,11 @@ en:
         no_new_event: "No New Event"
         no_past_event: "No Past Event"
       booking_detail/file_types:
-        booking_detail: "Booking Detail"
+        booking_detail_form: "Booking Detail"
         document: "Document"
       booking_detail/help_text:
-        booking_detail: "Booking Detail"
-        document: "Document'  "
+        booking_detail_form_html: "<ul><li>Booking form with unit details</li></ul>"
+        document_html: "<ul><li>Document related to Booking</li></ul>"
       user:
         first_name: "First Name"
         last_name: "Last Name"
@@ -2709,6 +2708,7 @@ en:
         header: "Add Booking for %{customer}-(%{project})"
       edit:
         link_name: "Update Booking"
+        header: "Update Booking for %{customer}-(%{project})"
       show:
         link_name: "View Details"
       exports:
@@ -2896,6 +2896,8 @@ en:
         link_name: "Edit Client"
       show:
         link_name: "Client Detail"
+      sender_email:
+        help_text: This is an email from which all the emails will be sent to your users
     channel_partners:
       add:
         link_name: "Add Channel Partner"
@@ -3029,8 +3031,8 @@ en:
 
     notes:
       new:
-        header: "Add Note"
-        link_name: "Add Note"
+        header: "View and Add Note"
+        link_name: "View and Add Note"
 
     projects:
       index:
@@ -4058,3 +4060,8 @@ en:
     errors:
       marketplace_error: 'We encountered some issue with your Marketplace setup. Please connect with Kylas Customer Success'
       payment_error: 'No receipt found'
+
+  kylas_auth:
+    successfully_installed: 'App installed successfully'
+    facing_problem: 'We are facing some problem with your installation. Please connect with Kylas Customer Success'
+    something_went_wrong: 'We encountered some issue with your Marketplace setup. Please connect with Kylas Customer Success'

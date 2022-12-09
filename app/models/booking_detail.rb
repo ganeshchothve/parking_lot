@@ -101,6 +101,7 @@ class BookingDetail
   validate :validate_content, on: :create
   validates :primary_user_kyc, :receipts, :tasks, copy_errors_from_child: true, allow_blank: true
   validates :agreement_date, presence: true, if: proc { booked_tentative? && status_was == 'blocked' }, unless: proc { project_unit.present? }
+  validates :booked_on, presence: true, unless: proc { project_unit.present? }
 
   delegate :name, :blocking_amount, to: :project_unit, prefix: true, allow_nil: true
   delegate :name, :email, :phone, to: :user, prefix: true, allow_nil: true
