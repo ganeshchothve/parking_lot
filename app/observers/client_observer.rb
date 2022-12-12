@@ -20,16 +20,6 @@ class ClientObserver < Mongoid::Observer
   end
 
   def after_save client
-    fields = ['channel_partners', 'leads']
-    fields.each do |field|
-      if defined?("enable_#{field}_changed?") && client.send("enable_#{field}_changed?")
-        if Rails.env.staging? || Rails.env.production?
-          ChangeCpStatus.perform_async(client.id.to_s, field)
-        else
-          ChangeCpStatus.new.perform(client.id.to_s, field)
-        end
-      end
-    end
     if client.is_marketplace? && client.enable_channel_partners_changed? && client.enable_channel_partners? && client.kylas_custom_fields.blank?
       user = client.users.admin.ne(kylas_access_token: nil).first
       if user.present?
