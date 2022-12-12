@@ -37,9 +37,7 @@ module UsersHelper
   end
 
   def marketplace_roles
-    if @user.role?('channel_partner')
-      %w[channel_partner].collect{|role| [User.human_attribute_name("role.#{role}"), role]}
-    elsif @user.role?('cp_owner')
+    if current_user.role?('cp_owner') || @user.role.in?(%w(channel_partner cp_owner))
       %w[channel_partner cp_owner].collect{|role| [User.human_attribute_name("role.#{role}"), role]}
     else
       %w[admin sales gre sales_admin].collect{|role| [User.human_attribute_name("role.#{role}"), role]}
@@ -64,7 +62,7 @@ module UsersHelper
       marketplace_roles
     else
       if _user.id == current_user.id
-      [[ User.human_attribute_name("role.#{_user.role}"), _user.role]]
+        [[ User.human_attribute_name("role.#{_user.role}"), _user.role]]
       elsif _user.buyer?
         filter_buyer_role_options _user.booking_portal_client
       elsif current_user.role?('cp_owner') || _user.role.in?(%w(channel_partner cp_owner))

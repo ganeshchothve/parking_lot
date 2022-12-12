@@ -88,7 +88,7 @@ module DatabaseSeeds
             <p>
               <%= name %> has requested to register his account into your company on <%= I18n.t("global.brand", client_name: self.booking_portal_client.name) %>.
               Please use the following link to approve his/her account to give him/her access as a <%= I18n.t("mongoid.attributes.user/role.channel_partner") %> into your company.
-              <%= ActionController::Base.helpers.link_to "Approve or Reject #{I18n.t("mongoid.attributes.user/role.channel_partner")}", Rails.application.routes.url_helpers.add_user_account_channel_partners_url(register_code: self.register_in_cp_company_token, channel_partner_id: self.temp_channel_partner&.id.to_s) %>
+              <%= ActionController::Base.helpers.link_to "Approve or Reject #{I18n.t("mongoid.attributes.user/role.channel_partner")}", Rails.application.routes.url_helpers.add_user_account_channel_partners_url(register_code: self.register_in_cp_company_token, channel_partner_id: self.temp_channel_partner&.id.to_s, host: self.booking_portal_client.base_domain) %>
             </p>
           </div>
         </div>') if ::Template::EmailTemplate.where(name: "cp_user_register_in_company", booking_portal_client_id: client_id).blank?

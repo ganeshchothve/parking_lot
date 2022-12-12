@@ -137,8 +137,8 @@ module ChannelPartnerRegisteration
   end
 
   def register_with_existing_company
-    @channel_partner = ChannelPartner.where(booking_portal_client_id: current_client.try(:id), id: params[:channel_partner_id]).first
-    @user = User.where(id: params[:user_id]).first
+    @channel_partner = ChannelPartner.where(booking_portal_client_id: current_client.id, id: params[:channel_partner_id]).first
+    @user = User.where(id: params[:user_id], booking_portal_client_id: current_client.id).first
 
     respond_to do |format|
       if @channel_partner && @user
@@ -146,7 +146,7 @@ module ChannelPartnerRegisteration
         @user.assign_attributes(user_permitted_attributes_for_existing_company_flow || {})
 
         if @user.save
-          send_request_to_company_owner
+          send_request_to_company_owner if current_client.base_domain.present?
           ExpireRegisterPartnerInExistingCompanyLinkWorker.perform_in(24.hours, @user.id.to_s)
           format.json { render 'channel_partners/register_with_existing_company.json', status: :ok }
         else
