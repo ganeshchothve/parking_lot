@@ -1,3 +1,9 @@
+<%
+  notes = @notable.notes.where(booking_portal_client_id: current_client.id)
+  if current_user.role?(:channel_partner)
+    notes = notes.filter_by_creator_id(current_user.id)
+  end
+%>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content" id="notes-modal">
@@ -15,7 +21,7 @@
           </div>
         <% end %>
         <div class="notes-list col-12">
-          <% @notable.notes.limit(5).each do |note| %>
+          <% notes.limit(5).each do |note| %>
             <div class="card card-body mb-3">
               <div class="row">
                 <div class="col-10"><%= note&.note&.html_safe %></div>
