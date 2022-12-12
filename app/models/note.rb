@@ -28,16 +28,4 @@ class Note
       { id: 'user', text: 'Customer' }
     ]
   end
-
-  def self.user_based_scope user, params={}
-    custom_scope = {}
-    if user.role.in?(%w(superadmin))
-      custom_scope = { }
-    elsif user.role?(:channel_partner)
-      custom_scope = { creator_id: user.id }
-    end
-
-    custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
-    custom_scope
-  end
 end
