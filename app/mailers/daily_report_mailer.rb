@@ -3,6 +3,6 @@ class DailyReportMailer < ApplicationMailer
     @project = Project.where(id: project_id).first
     @count = count
     mail.attachments[file_name] = File.read("#{Rails.root}/exports/#{file_name}")
-    make_bootstrap_mail(to: @project.booking_portal_client.notification_email.split(',').map(&:strip).uniq.compact, subject: "#{@project.name} - Daily Payments Report - #{Date.current}")
+    make_bootstrap_mail(from: @project.booking_portal_client.sender_email, to: @project.booking_portal_client.notification_email.split(',').map(&:strip).uniq.compact, subject: "#{@project.name} - Daily Payments Report - #{Date.current}")
   end
 end

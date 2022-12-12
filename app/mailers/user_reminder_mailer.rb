@@ -7,6 +7,6 @@ class UserReminderMailer < ApplicationMailer
     cc = @cp.present? ? [@cp.email] : []
     @days = (@project_unit.auto_release_on - Date.today).to_i
     @client = @user.booking_portal_client
-    make_bootstrap_mail(to: @user.email, cc: cc, subject: "Comfirm Your Booking - " + @project_unit.project_name + " at " + @client.name)
+    make_bootstrap_mail(from: @project_unit.booking_portal_client.sender_email, to: @user.email, cc: cc, subject: "Comfirm Your Booking - " + @project_unit.project_name + " at " + @client.name)
   end
 end
