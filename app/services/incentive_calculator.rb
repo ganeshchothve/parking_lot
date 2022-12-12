@@ -52,7 +52,7 @@ class IncentiveCalculator
                 invoice.amount = (amount > 0 ? amount : 0)
                 invoice.ladder_stage = ladder.stage
                 invoice.payment_to = scheme.payment_to
-                invoice.creator = User.admin.first
+                invoice.creator = User.where(booking_portal_client_id: _resource.try(:booking_portal_client_id)).admin.first
                 if invoice.save
                   # Set incentive scheme id & ladder stage of scheme under which this resource is incentivized.
                   is_data = _resource.incentive_scheme_data&.clone || {}
