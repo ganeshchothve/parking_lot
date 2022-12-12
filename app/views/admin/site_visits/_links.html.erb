@@ -36,6 +36,6 @@
 <%= render 'admin/invoices/invoiceable_links', resource: site_visit %>
 
 <% if allow_add_notes?(site_visit) %>
-  <%= link_to t('mongoid.attributes.note.add_note'), new_notable_path(notable_type: site_visit.class.model_name.i18n_key.to_s, notable_id: site_visit.id), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to t('controller.notes.new.link_name'), new_notable_path(notable_type: site_visit.class.model_name.i18n_key.to_s, notable_id: site_visit.id), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 

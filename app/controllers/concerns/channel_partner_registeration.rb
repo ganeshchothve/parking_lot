@@ -65,7 +65,7 @@ module ChannelPartnerRegisteration
 
   def add_user_account
     if params[:register_code].present?
-      @user = User.where(booking_portal_client_id: current_client.try(:id), register_in_cp_company_token: params[:register_code]).first
+      @user = User.where(booking_portal_client_id: current_client.id, register_in_cp_company_token: params[:register_code]).first
       @channel_partner = ChannelPartner.where(id: params[:channel_partner_id]).first
       unless @user.present?
         redirect_to root_path, alert: I18n.t("controller.channel_partners.errors.link_expired")
