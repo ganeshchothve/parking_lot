@@ -31,7 +31,7 @@ class Note
     ]
   end
 
-  def self.user_based_scope user, params
+  def self.user_based_scope user, params={}
     custom_scope = {}
     if user.role.in?(%w(superadmin))
       custom_scope = { }
