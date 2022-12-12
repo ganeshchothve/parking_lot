@@ -5,9 +5,11 @@
 <div class="float-start col-12 py-3 text-warning">
   <%= t('controller.booking_details.receipts.form.disclaimer', field: t('mongoid.attributes.receipt.receipt_id') )%>
 </div>
-<div class="mb-3 col-md-6">
-  <%= f.label :payment_mode, class: 'label-required' %>
-  <%= f.select :payment_mode, payment_mode_options, {prompt: I18n.t("global.select"), selected: @receipt.payment_mode}, class: 'selectize', required: 'required', autofocus: true, disabled: !policy([current_user_role_group, @receipt]).editable_field?("payment_mode") %>
+<div class="row">
+  <div class="mb-3 col-md-6">
+    <%= f.label :payment_mode, class: 'label-required' %>
+    <%= f.select :payment_mode, payment_mode_options, {prompt: I18n.t("global.select"), selected: @receipt.payment_mode}, class: 'selectize', required: 'required', autofocus: true, disabled: !policy([current_user_role_group, @receipt]).editable_field?("payment_mode") %>
+  </div>
 </div>
 
 <div class="row offline">
@@ -42,7 +44,7 @@
   </div>
 </div>
 
-<div class="mb-3">
+<div class="mb-3 col-6">
   <% if f.object.new_record? %>
     <%= f.hidden_field :event, value: 'pending' %>
   <% else %>
@@ -55,7 +57,7 @@
 </div>
 
 <% if current_client.enable_actual_inventory?(current_user) %>
-  <div class="mb-3">
+  <div class="mb-3 col-6">
     <% unless( (defined? direct_payment) && direct_payment ) %>
       <%= f.label :project_unit_id, class: 'control-label' %>
         <% if @receipt.booking_detail_id.present? %>
@@ -71,7 +73,7 @@
 <% end %>
 
 <% if policy([current_user_role_group, @receipt]).editable_field?("payment_type") %>
-  <div class="row">
+  <div class="">
     <% if @receipt.payment_type == 'token' %>
       <%= f.hidden_field :payment_type %>
       <% if policy([current_user_role_group, @receipt]).editable_field?("token_type") %>
@@ -118,7 +120,7 @@
     <%= f.text_area :comments, class: 'form-control' %>
   </div>
 <% end %>
-<div class="mb-3">
+<div class="mb-3 col-6">
   <%= f.label :total_amount, class: 'label-required' %>
   <% if !policy([current_user_role_group, @receipt]).editable_field?("total_amount") %>
     <% total_amount = @receipt.total_amount.present? ? @receipt.total_amount : current_client.blocking_amount %>

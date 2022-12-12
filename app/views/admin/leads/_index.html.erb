@@ -61,7 +61,7 @@
                   </td>
                 <% end %>
                 <% if is_marketplace? %>
-                  <td><%= lead.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)) %></td>
+                  <td><%= lead.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)) rescue 'Error' %></td>
                 <% end %>
                 <td>
                   <p class="font-medium fn-12 mb-0 d-inline-block me-2">

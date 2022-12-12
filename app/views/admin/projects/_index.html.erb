@@ -2,13 +2,13 @@
   <thead>
     <tr>
       <th><%= t('mongoid.attributes.project.name') %></th>
-      <th><%= t('mongoid.attributes.project.developer_name %></th>
+      <th><%= t('mongoid.attributes.project.developer_name') %></th>
       <th><%= t('mongoid.attributes.project.micro_market') %></th>
       <th><%= t('mongoid.attributes.project.launched_on') %></th>
       <th><%= t('mongoid.attributes.project.bookings') %></th>
       <% if current_client.enable_site_visit? %><th><%= I18n.t("mongoid.models.site_visit.other") %></th><% end %>
       <% if policy([current_user_role_group, Lead]).index? %><th><%= I18n.t("mongoid.models.lead.other") %></th><% end %>
-      <th class="btn-action">Action</th>
+      <th class="btn-action"><%= t('global.action', count:1) %></th>
     </tr>
   </thead>
   <tbody>
@@ -51,9 +51,11 @@
           <td>
             <% leads_count = Lead.where(Lead.user_based_scope(current_user, params)).where(project_id: project.id).count %>
             <%= link_to_if policy([current_user_role_group, Lead]).index?, leads_count, admin_leads_path(fltrs: {project_id: project.id}) %>
+            <span class="float-end">
             <% if policy([:admin, Lead.new(project_id: project.id)]).new? %>
               <%= link_to I18n.t("global.add"), new_admin_lead_path(project_id: project.id), class: 'modal-remote-form-link prjt-add h-auto' %>
             <% end %>
+            <span>
           </td>
         <% end %>
         <td>
