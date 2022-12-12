@@ -99,7 +99,6 @@ class Api::V1::LeadsController < ApisController
   def create_or_set_user
     unless @user = User.or(check_and_build_query_for_finding_user).where(booking_portal_client_id: @current_client.try(:id)).first
       @user = User.new(user_create_params)
-      @resource = @user
       @user.booking_portal_client_id = @current_client.id
       @user.assign_attributes(is_active: false) # Ruwnal Specific. TODO: Remove this for generic
       @user.skip_confirmation! # TODO: Remove this when customer login needs to be given
@@ -120,7 +119,7 @@ class Api::V1::LeadsController < ApisController
       @errors = [I18n.t("controller.leads.errors.email_or_phone_required")]
       render json: {errors: @errors}, status: :bad_request and return if User.or(query).count > 1
     else
-      @errors = [I18n.t("controller.leads.errors.email_or_phone_required")]
+      @errors = [I18n.t("controller.leads.errors.email_phone_not_match")]
       render json: { errors: @errors }, status: :bad_request and return
     end
     query
@@ -205,16 +204,16 @@ class Api::V1::LeadsController < ApisController
   def modify_params
     errors = []
     begin
-      params[:lead][:sitevisit_date] = Date.strptime(params[:lead][:sitevisit_date], "%d/%m/%Y") if params[:lead][:sitevisit_date].present?
+      params[:lead][:sitevisit_date] = Date.strptime(params.dig(:lead, :sitevisit_date), "%d/%m/%Y") if params.dig(:lead, :sitevisit_date).present?
     rescue ArgumentError
       errors << I18n.t("controller.site_visits.errors.invalid_date_format")
     end
     begin
-      params[:lead][:last_revisit_date] = Date.strptime(params[:lead][:last_revisit_date], "%d/%m/%Y") if params[:lead][:last_revisit_date].present?
+      params[:lead][:last_revisit_date] = Date.strptime(params.dig(:lead, :last_revisit_date), "%d/%m/%Y") if params.dig(:lead, :last_revisit_date).present?
     rescue ArgumentError
       errors << I18n.t("controller.site_visits.errors.revisit_invalid_date_format")
     end
-    errors << I18n.t("controller.site_visits.errors.revisit_count")if params[:lead][:revisit_count].present? && !params[:lead][:revisit_count].is_a?(Integer)
+    errors << I18n.t("controller.site_visits.errors.revisit_count")if params.dig(:lead, :revisit_count).present? && !params.dig(:lead, :revisit_count).is_a?(Integer)
     @errors = errors
     render json: { errors: @errors },status: :unprocessable_entity and return if @errors.present?
   end

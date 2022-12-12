@@ -8,7 +8,7 @@ class Api::V1::ChannelPartnersController < ApisController
   # POST  /api/v1/channel_partners
   #
   def create
-    unless ChannelPartner.reference_resource_exists?(@crm.id, params[:channel_partner][:reference_id])
+    unless ChannelPartner.reference_resource_exists?(@crm.id, params.dig(:channel_partner, :reference_id))
       @channel_partner = ChannelPartner.new(channel_partner_create_params)
       @channel_partner.primary_user = @primary_user
       @channel_partner.booking_portal_client_id = @current_client.try(:id)
@@ -23,7 +23,7 @@ class Api::V1::ChannelPartnersController < ApisController
         render json: {errors: @errors}, status: :unprocessable_entity
       end
     else
-      @errors = ["Channel Partner with reference_id '#{params[:channel_partner][:reference_id]}' already exists"]
+      @errors = [I18n.t("controller.channel_partners.errors.already_exists", name: params.dig(:channel_partner, :reference_id))]
       render json: {errors: [@errors]}, status: :unprocessable_entity
     end
   end
@@ -34,7 +34,7 @@ class Api::V1::ChannelPartnersController < ApisController
   # PATCH     /api/v1/channel_partners/:reference_id
   #
   def update
-    unless ChannelPartner.reference_resource_exists?(@crm.id, params[:channel_partner][:reference_id])
+    unless ChannelPartner.reference_resource_exists?(@crm.id, params.dig(:channel_partner, :reference_id))
       @channel_partner.assign_attributes(channel_partner_update_params)
       if @channel_partner.save
         @message = I18n.t("controller.channel_partners.notice.updated")
@@ -44,7 +44,7 @@ class Api::V1::ChannelPartnersController < ApisController
         render json: {errors: @errors }, status: :unprocessable_entity
       end
     else
-      @errors = ["Channel Partner with reference_id '#{params[:channel_partner][:reference_id]}' already exists"]
+      @errors = [I18n.t("controller.channel_partners.errors.already_exists", name: params.dig(:channel_partner, :reference_id))]
       render json: {errors: @errors}, status: :unprocessable_entity
     end
   end

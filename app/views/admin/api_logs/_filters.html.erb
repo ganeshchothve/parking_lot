@@ -11,6 +11,12 @@
           <%= select_tag "fltrs[log_type]", options_for_select(ApiLog::LOG_TYPES, (params[:fltrs].present? ? params[:fltrs][:log_type] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
       </div>
+      <div class="row">
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.api_log.resource_type'), class: "control-label" %>
+          <%= select_tag "fltrs[resource_type]", options_for_select(I18n.t("mongoid.attributes.api_log/resource_type").collect{|k,v| [v,k.to_s]}, params.dig(:fltrs, :resource_type)), {prompt: I18n.t("global.select"), class: "selectize"} %>
+        </div>
+      </div>
     </div>
     <div class="filter-footer modal-footer text-end">
       <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>

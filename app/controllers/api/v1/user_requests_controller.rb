@@ -38,7 +38,7 @@ class Api::V1::UserRequestsController < ApisController
   def set_requestable_lead_user_and_project
     if booking_id = params.dig(:user_request, :booking_detail_id).presence
       @requestable = BookingDetail.where(booking_portal_client_id: @current_client.try(:id), "third_party_references.crm_id": @crm.id, "third_party_references.reference_id": booking_id).first
-      unless @resource.present?
+      unless @requestable.present?
         @errors = [I18n.t("controller.booking_details.errors.booking_detail_reference_id_not_found", name: "#{ booking_id }")]
         render json: { errors: @errors }, status: :not_found and return
       end
