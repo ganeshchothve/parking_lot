@@ -554,6 +554,25 @@ en:
         response: "Response"
         status: "Status"
         message: "Message"
+        log_type: "Log Type"
+        resource_type: "Resource Type"
+      api_log/resource_type:
+        BookingDetail: Booking
+        Campaign: Campaign
+        ChannelPartner: Channel Partner
+        Client: Client
+        FundAccount: Fund Account
+        Invoice: Invoice
+        Lead: Lead
+        Meeting: Event
+        Note: Note
+        ProjectTower: Project Tower
+        ProjectUnit: Project Unit
+        Project: Project
+        Receipt: Payment
+        SiteVisit: Walk-in
+        UserKyc: User KYC
+        User: User
       announcement:
         title: "Title"
         content: "Details"
