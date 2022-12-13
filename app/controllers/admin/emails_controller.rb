@@ -1,6 +1,6 @@
 class Admin::EmailsController < AdminController
   include EmailConcern
-  before_action :set_email, only: :show #set_email written in EmailConcern
+  before_action :set_email, only: %w[show resend_email]#set_email written in EmailConcern
   before_action :authorize_resource
   around_action :apply_policy_scope, only: :index
 
