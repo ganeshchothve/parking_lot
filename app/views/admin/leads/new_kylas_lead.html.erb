@@ -14,13 +14,13 @@
               <%= f.select :kylas_product_id, grouped_options_for_select(kylas_products), { include_blank: 'Select Kylas Product'}, autocomplete: 'off', class: 'selectize', required: true, disabled: !(policy([current_user_role_group, @lead]).editable_field?("project_id")) %>
           </div>
             <div class="mb-3">
-              <%= f.label :first_name, class: 'label-required' %>
-              <%= f.text_field :first_name, class: 'form-control', autofocus: true, required: false, readonly: true, value: @lead_data["firstName"] %>
+              <%= f.label :first_name %>
+              <%= f.text_field :first_name, class: 'form-control', autofocus: true, readonly: true, value: @lead_data["firstName"] %>
             </div>
 
             <div class="mb-3">
-              <%= f.label :last_name, class: 'label-required' %>
-              <%= f.text_field :last_name, class: 'form-control', autofocus: true, required: false, readonly: true, value: @lead_data["lastName"]%>
+              <%= f.label :last_name %>
+              <%= f.text_field :last_name, class: 'form-control', autofocus: true, readonly: true, value: @lead_data["lastName"]%>
             </div>
 
             <% if @lead_data["emails"].present? %>
@@ -45,8 +45,8 @@
               <% end %>
             <% end %>
             <div class="mb-3">
-              <%= f.label :manager_ids %>
-              <%= f.select :manager_ids, options_from_collection_for_select([], "id", "ds_name"), {prompt: 'Select Channel Partners'}, class: 'selectize-remote', data: {url: admin_users_path(fltrs: { role: ['channel_partner', 'cp_owner'], is_active: true, booking_portal_client_id: current_client.id, user_status_in_company: 'active' })}, multiple: true %>
+              <%= f.label :manager_ids, class: 'label-required' %>
+              <%= f.select :manager_ids, options_from_collection_for_select([], "id", "ds_name"), {prompt: 'Select Channel Partners'}, class: 'selectize-remote', data: {url: admin_users_path(fltrs: { role: ['channel_partner', 'cp_owner'], is_active: true, booking_portal_client_id: current_client.id, user_status_in_company: 'active' })}, multiple: true, required: true %>
             </div>
             <%= hidden_field_tag :entityId, params[:entityId] %>
             <div class="text-end">
