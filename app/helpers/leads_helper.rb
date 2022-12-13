@@ -27,4 +27,8 @@ module LeadsHelper
       client
     end
   end
+
+  def filter_cp_users_options(client=nil)
+    User.in(role: %w(cp_owner channel_partner)).where(is_active: true, booking_portal_client_id: client.id, user_status_in_company: 'active').collect{|u| [u.ds_name, u.id]}
+  end
 end
