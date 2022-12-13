@@ -60,39 +60,43 @@ module LeadRegisteration
 
   def save_lead(format, lead, existing=false)
     push_lead_to_selldo(format, lead) do |selldo_api, api_log|
-      if existing || (@user.save && (selldo_config_base(@user.booking_portal_client).blank? || @project.save))
-        lead.assign_attributes(selldo_lead_registration_date: params.dig(:lead_details, :lead_created_at))
-        lead.assign_attributes(permitted_attributes([:admin, lead])) if params[:lead].present?
+      if @lead.valid?
+        if existing || (@user.save && (selldo_config_base(@user.booking_portal_client).blank? || @project.save))
+          lead.assign_attributes(selldo_lead_registration_date: params.dig(:lead_details, :lead_created_at))
+          lead.assign_attributes(permitted_attributes([:admin, lead])) if params[:lead].present?
 
-        check_if_lead_added_by_channel_partner(lead) do |cp_lead_activity|
-          if lead.save
-            # Update selldo lead stage & push Site visits
-            site_visit = lead.site_visits.first
-            if selldo_api && selldo_api.base.present?
-              update_selldo_lead_stage(lead)
-              sv_selldo_api, sv_api_log = site_visit.push_in_crm(selldo_api.base) if site_visit.present?
-            end
-            if cp_lead_activity.present?
-              if cp_lead_activity.save
+          check_if_lead_added_by_channel_partner(lead) do |cp_lead_activity|
+            if lead.save
+              # Update selldo lead stage & push Site visits
+              site_visit = lead.site_visits.first
+              if selldo_api && selldo_api.base.present?
+                update_selldo_lead_stage(lead)
+                sv_selldo_api, sv_api_log = site_visit.push_in_crm(selldo_api.base) if site_visit.present?
+              end
+              if cp_lead_activity.present?
+                if cp_lead_activity.save
+                  Kylas::SyncLeadToKylasWorker.perform_async(lead.id.to_s, site_visit.try(:id).try(:to_s))
+                  update_customer_search_to_sitevisit(lead) if @customer_search.present?
+
+                  format.json { render json: {lead: lead, success: site_visit.present? ? I18n.t("controller.site_visits.notice.created") : I18n.t("controller.leads.notice.created")}, status: :created }
+                else
+                  format.json { render json: {errors: 'Something went wrong while adding lead. Please contact support'}, status: :unprocessable_entity }
+                end
+              else
                 Kylas::SyncLeadToKylasWorker.perform_async(lead.id.to_s, site_visit.try(:id).try(:to_s))
                 update_customer_search_to_sitevisit(lead) if @customer_search.present?
 
                 format.json { render json: {lead: lead, success: site_visit.present? ? I18n.t("controller.site_visits.notice.created") : I18n.t("controller.leads.notice.created")}, status: :created }
-              else
-                format.json { render json: {errors: 'Something went wrong while adding lead. Please contact support'}, status: :unprocessable_entity }
               end
             else
-              Kylas::SyncLeadToKylasWorker.perform_async(lead.id.to_s, site_visit.try(:id).try(:to_s))
-              update_customer_search_to_sitevisit(lead) if @customer_search.present?
-
-              format.json { render json: {lead: lead, success: site_visit.present? ? I18n.t("controller.site_visits.notice.created") : I18n.t("controller.leads.notice.created")}, status: :created }
+              format.json { render json: {errors: lead.errors.full_messages.uniq}, status: :unprocessable_entity }
             end
-          else
-            format.json { render json: {errors: lead.errors.full_messages.uniq}, status: :unprocessable_entity }
           end
+        else
+          format.json { render json: {errors: (@project.errors.full_messages.uniq.map{|e| "#{I18n.t('mongoid.models.project.one')} - "+ e } rescue []) + (@user.errors.full_messages.uniq.map{|e| "#{ I18n.t('mongoid.models.user.one')} - "+ e } rescue [])}, status: :unprocessable_entity }
         end
       else
-        format.json { render json: {errors: (@project.errors.full_messages.uniq.map{|e| "#{I18n.t('mongoid.models.project.one')} - "+ e } rescue []) + (@user.errors.full_messages.uniq.map{|e| "#{ I18n.t('mongoid.models.user.one')} - "+ e } rescue [])}, status: :unprocessable_entity }
+        format.json { render json: {errors: @lead.errors.full_messages.uniq}, status: :unprocessable_entity }
       end
     end
   end
