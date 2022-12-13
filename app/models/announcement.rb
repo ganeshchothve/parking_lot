@@ -22,7 +22,8 @@ class Announcement
 
   validates :category, inclusion: { in: CATEGORIES }
 
-  scope :filter_by_published, ->{where(is_active: true)}
+  scope :filter_by_published, ->{ where(is_active: true) }
+
   def self.user_based_scope(user, params = {})
     custom_scope = {}
     if user.role.in?(%w(superadmin))

@@ -302,7 +302,7 @@ class Project
       custom_scope.merge!({_id: { "$in": project_ids }})
     end
     custom_scope.merge!({ is_active: true }) if (params[:controller] == 'admin/projects' && params[:action] == 'index') || params[:controller] == 'home'
-    custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.try(:id)})
+    custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
     custom_scope
   end
 

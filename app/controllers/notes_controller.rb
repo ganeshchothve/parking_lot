@@ -14,6 +14,10 @@ class NotesController < ApplicationController
 
   def new
     @note = Note.new(notable: @notable, booking_portal_client: current_client)
+    @existing_notes = @notable.notes
+    if current_user.role?(:channel_partner)
+      @existing_notes = @existing_notes.filter_by_creator_id(current_user.id)
+    end
     render layout: false
   end
 
@@ -52,11 +56,11 @@ class NotesController < ApplicationController
 
   private
   def set_notable
-    @notable = params[:notable_type].classify.constantize.where(id: params[:notable_id], booking_portal_client_id: current_client.try(:id)).first
+    @notable = params[:notable_type].classify.constantize.where(id: params[:notable_id], booking_portal_client_id: current_client.id).first
   end
 
   def set_note
-    @note = Note.where(id: params[:id], booking_portal_client_id: current_client.try(:id)).first if params[:id].present?
+    @note = Note.where(id: params[:id], booking_portal_client_id: current_client.id).first if params[:id].present?
   end
 
   def authorize_resource
@@ -70,7 +74,8 @@ class NotesController < ApplicationController
   end
 
   def apply_policy_scope
-    Note.with_scope(policy_scope(Note.where(booking_portal_client_id: current_client.try(:id)))) do
+    custom_scope = Note.where(Note.user_based_scope(current_user, params))
+    Note.with_scope(policy_scope(custom_scope)) do
       yield
     end
   end

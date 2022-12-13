@@ -15,7 +15,7 @@
           </div>
         <% end %>
         <div class="notes-list col-12">
-          <% @notable.notes.limit(5).each do |note| %>
+          <% @existing_notes.limit(5).each do |note| %>
             <div class="card card-body mb-3">
               <div class="row">
                 <div class="col-10"><%= note&.note&.html_safe %></div>
