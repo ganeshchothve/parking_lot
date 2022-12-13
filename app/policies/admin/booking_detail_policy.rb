@@ -208,7 +208,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
     attributes += [:approval_event] if record.approval_status.in?(%w(rejected)) && user.role.in?(%w(cp_owner channel_partner admin)) && record.blocked?
 
-    attributes += [:rejection_reason] if user.role.in?(%w(dev_sourcing_manager admin)) && user.booking_portal_client.launchpad_portal?
+    attributes += [:rejection_reason] if user.role.in?(%w(dev_sourcing_manager admin))
 
     attributes += [:agreement_date]
     if eligible_users_for_tasks?

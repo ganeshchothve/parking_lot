@@ -31,11 +31,7 @@ document.addEventListener("sell_do_form_rendered", function(){
   setTimeout(function(){
     $('[name="sell_do[form][custom][portal_stage]"]').closest(".selldof_row").hide();
   }, 100);
-  if(App.client.enable_referral_bonus){
-    $('[name="sell_do[form][custom][custom_referral_code]"]').val(params.custom_referral_code)
-  } else {
-    $('[name="sell_do[form][custom][custom_referral_code]"]').parents('.selldof_row').remove()
-  }
+  $('[name="sell_do[form][custom][custom_referral_code]"]').val(params.custom_referral_code)
   if(params.first_name && params.last_name && params.phone && params.email && params.lead_id){
     $('[name="sell_do[form][lead][first_name]"]').val(params.first_name);
     $('[name="sell_do[form][lead][last_name]"]').val(params.last_name);
@@ -71,9 +67,7 @@ function register_user_with_portal(d, e){
     project_name: is_channel_partner ? $(e.currentSubmittedForm).find('[name="iris_project_id"] option:selected').text() : $(e.currentSubmittedForm).find('[name="sell_do[form][lead][project_id]"] option:selected').text(),
     lead_details: d.sell_do_lead_details
   }
-  if(App.client.enable_referral_bonus){
-    data.referral_code = unescape(d['sell_do[form][custom][custom_referral_code]'] ? d['sell_do[form][custom][custom_referral_code]'] : '')
-  }
+  data.referral_code = unescape(d['sell_do[form][custom][custom_referral_code]'] ? d['sell_do[form][custom][custom_referral_code]'] : '')
   $.ajax({
     url: '<%= url.check_and_register_path %>',
     data: data,
