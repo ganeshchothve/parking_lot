@@ -47,7 +47,7 @@
             <% end %>
             <div class="mb-3">
               <%= f.label :manager_ids, class: 'label-required' %>
-              <%= f.select :manager_ids, filter_cp_users_options(current_client), {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true, required: true %>
+              <%= f.select :manager_ids, options_from_collection_for_select([], "id", "ds_name"), {prompt: 'Select Channel Partners'}, class: 'selectize-remote', data: {url: admin_users_path(fltrs: { role: ['channel_partner', 'cp_owner'], is_active: true, booking_portal_client_id: current_client.id, user_status_in_company: 'active' })}, multiple: true, required: true %>
             </div>
             <div class="text-end">
                 <%= f.submit "Save", class: 'btn btn-primary float-end w-auto border-primary' %>
