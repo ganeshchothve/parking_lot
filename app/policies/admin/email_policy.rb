@@ -18,4 +18,8 @@ class Admin::EmailPolicy < EmailPolicy
       end
     end
   end
+
+  def resend_email?
+    record.status == 'draft' && user.role?(:admin)
+  end
 end
