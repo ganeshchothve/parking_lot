@@ -20,7 +20,7 @@ class Api::V1::ReceiptsController < ApisController
         render json: {errors: @errors}, status: :unprocessable_entity
       end
     else
-      @errors = ["Receipt with reference_id '#{params[:receipt][:reference_id]}' already exists"]
+      @errors = [I18n.t("controller.receipts.errors.already_exists", name: "#{params.dig(:receipt, :reference_id)}")]
       render json: {errors: @errors}, status: :unprocessable_entity
     end
   end

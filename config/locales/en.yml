@@ -3206,6 +3206,7 @@ en:
           blank: "Payment identifier can't be blank"
         status_should_present: "Status should be present"
         status_should_success: "Status should be clearance_pending or success"
+        already_exists: "Payment with reference_id %{name} already exists"
       text:
         e_generated_receipt: "This is an electronically generated receipt; hence no signature is required."
         account_unconfirmed: "The %{name} has not yet confirmed their account via email."
