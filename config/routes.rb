@@ -185,7 +185,7 @@ Rails.application.routes.draw do
     end
     resources :emails, only: %i[index show] do
       get :monthly_count, on: :collection
-      get :resend_email, on: :member
+      post :resend_email, on: :member
     end
     resources :smses, only: %i[index show] do
       get :sms_pulse, on: :collection
