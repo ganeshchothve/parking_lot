@@ -3036,7 +3036,6 @@ en:
         link_name: "Resend Email"
         success: "Email has been sent again."
         emails_enabled: "Please enable email settings from Edit Client"
-        emails_template: "Email Template might not be active or present"
     erp_models:
       index:
         link_name: "Third Party Integration"
