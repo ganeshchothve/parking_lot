@@ -32,7 +32,7 @@
         <td><%= project.developer_name %></td>
         <td><%= project.micro_market %>,
           <%= project.city %></td>
-        <td><%= I18n.l(project.launched_on.strftime('%d %b, %Y')) rescue "-" %></td>
+        <td><%= I18n.l(project.launched_on) rescue "-" %></td>
         <td>
           <% bookings_count = BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: project.id).count %>
           <%= link_to_if policy([current_user_role_group, BookingDetail]).index?, bookings_count, admin_booking_details_path(fltrs: {project_id: project.id})  %>
