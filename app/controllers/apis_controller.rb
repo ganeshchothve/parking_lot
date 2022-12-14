@@ -53,7 +53,7 @@ class ApisController < ActionController::API
     request = [params.as_json.to_h] rescue []
     response = [@errors || @message]
     resource = (@resource || @current_user || @current_client)
-    response_type = "String"
+    response_type = "Array"
     booking_portal_client = @current_client
     status = @errors.present? ? "Error" : "Success"
     message = @errors || @message

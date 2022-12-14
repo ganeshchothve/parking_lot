@@ -8,7 +8,7 @@
       <div class="row">
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.api_log.log_type'), class: "control-label" %>
-          <%= select_tag "fltrs[log_type]", options_for_select(ApiLog::LOG_TYPES, (params[:fltrs].present? ? params[:fltrs][:log_type] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
+          <%= select_tag "fltrs[log_type]", options_for_select(ApiLog::LOG_TYPES, (params[:fltrs].present? ? params.dig(:fltrs, :log_type) : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
       </div>
       <div class="row">

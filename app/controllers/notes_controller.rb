@@ -14,6 +14,10 @@ class NotesController < ApplicationController
 
   def new
     @note = Note.new(notable: @notable, booking_portal_client: current_client)
+    @existing_notes = @notable.notes
+    if current_user.role?(:channel_partner)
+      @existing_notes = @existing_notes.filter_by_creator_id(current_user.id)
+    end
     render layout: false
   end
 

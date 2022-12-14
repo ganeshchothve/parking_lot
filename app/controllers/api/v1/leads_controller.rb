@@ -116,10 +116,10 @@ class Api::V1::LeadsController < ApisController
     query << {email: params.dig(:lead, :email).to_s.downcase} if params.dig(:lead, :email).present?
     query << {phone: params.dig(:lead, :phone)} if params.dig(:lead, :phone).present?
     if query.present?
-      @errors = [I18n.t("controller.leads.errors.email_or_phone_required")]
+      @errors = [I18n.t("controller.leads.errors.email_phone_not_match")]
       render json: {errors: @errors}, status: :bad_request and return if User.or(query).count > 1
     else
-      @errors = [I18n.t("controller.leads.errors.email_phone_not_match")]
+      @errors = [I18n.t("controller.leads.errors.email_or_phone_required")]
       render json: { errors: @errors }, status: :bad_request and return
     end
     query

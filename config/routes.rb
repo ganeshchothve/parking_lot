@@ -32,10 +32,6 @@ Rails.application.routes.draw do
     post 'users/notification_tokens', to: 'users/notification_tokens#update', as: :user_notification_tokens
   end
 
-  authenticated :user, ->(u) { u.role.in?(%w(sales sales_admin)) } do
-    root to: 'admin/projects#index', as: :sales_root
-  end
-
   authenticated :user do
     root 'dashboard#index', as: :authenticated_root
   end
@@ -189,6 +185,7 @@ Rails.application.routes.draw do
     end
     resources :emails, only: %i[index show] do
       get :monthly_count, on: :collection
+      post :resend_email, on: :member
     end
     resources :smses, only: %i[index show] do
       get :sms_pulse, on: :collection
