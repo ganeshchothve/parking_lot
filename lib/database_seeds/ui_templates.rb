@@ -231,7 +231,7 @@ module DatabaseSeeds
       # To change text in the footer
       if Template::UITemplate.where(name: 'layouts/_navbar_footer', booking_portal_client_id: client_id).blank?
         Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'layouts/_navbar_footer', content: '
-        <% if current_project.rera_registration_no %> <p class="m-0 pb-1"><%= current_project.name %> is registered via MahaRERA No.: <%= current_project.rera_registration_no %> & is available on <a href="https://maharera.mahaonline.gov.in" target="_blank">https://maharera.mahaonline.gov.in</a>.</p> <% end %>' })
+          <% if current_project.present? && current_project.rera_registration_no %> <p class="m-0 pb-1"><%= current_project.name %> is registered via MahaRERA No.: <%= current_project.rera_registration_no %> & is available on <a href="https://maharera.mahaonline.gov.in" target="_blank">https://maharera.mahaonline.gov.in</a>.</p><% elsif current_client.present? %><p><%= current_client.name %></p><% end %>' })
       end
 
       # To change text above timer when booking a unit
@@ -382,6 +382,77 @@ module DatabaseSeeds
               </div>
             </div>
           CP
+        })
+      end
+
+
+      if Template::UITemplate.where(name: 'channel_partner_register_dashboard', booking_portal_client_id: client_id).blank?
+        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', is_active: true, name: 'channel_partner_register_dashboard',
+          content: <<-'CPDashboard'
+            <div class="col-lg-12">
+              <h2 class="pb-4"><%= I18n.t("global.link_to.love_our_brand", name: I18n.t("global.brand", client_name: current_client.name)) %></h2>
+            </div>
+            <div class="col-lg-4 app-features-list">
+              <span>
+                  <img src="<%= asset_path 'cp-ex-feat-01.svg' %>" width="45">
+                </span>
+                <p><%= I18n.t("global.link_to.early_access").html_safe %> <br></p>
+            </div>
+            <div class="col-lg-4 app-features-list">
+              <span>
+                  <img src="<%= asset_path 'cp-ex-feat-06.svg' %>" width="45">
+                </span>
+                <p><%= I18n.t("global.link_to.timely_payments").html_safe %></p>
+            </div>
+            <div class="col-lg-4 app-features-list">
+              <span>
+                  <img src="<%= asset_path 'cp-ex-feat-05.svg' %>" width="45">
+                </span>
+                <p><%= I18n.t("global.link_to.marketing_support").html_safe %></p>
+            </div>
+            <div class="col-lg-4 app-features-list">
+              <span>
+                  <img src="<%= asset_path 'cp-ex-feat-11.svg' %>" width="45">
+                </span>
+                <p><%= I18n.t("global.link_to.performance_based").html_safe %></p>
+            </div>
+            <div class="col-lg-4 app-features-list">
+              <span>
+                  <img src="<%= asset_path 'cp-ex-feat-02.svg' %>" width="45">
+                </span>
+                <p><%= I18n.t("global.link_to.extensive_nurturing").html_safe %></p>
+            </div>
+            <div class="col-lg-4 app-features-list">
+              <span>
+                  <img src="<%= asset_path 'cp-ex-feat-04.svg' %>" width="45">
+                </span>
+                <p><%= I18n.t("global.link_to.crm_training").html_safe %></p>
+            </div>
+            <div class="col-lg-4 app-features-list">
+              <span>
+                  <img src="<%= asset_path 'cp-ex-feat-07.svg' %>" width="45">
+                </span>
+                <p><%= I18n.t("global.link_to.fully_automated").html_safe %></p>
+            </div>
+            <div class="col-lg-4 app-features-list">
+              <span>
+                  <img src="<%= asset_path 'cp-ex-feat-08.svg' %>" width="45">
+                </span>
+                <p><%= I18n.t("global.link_to.online_inventory_selection").html_safe %></p>
+            </div>
+            <div class="col-lg-4 app-features-list">
+                <span>
+                  <img src="<%= asset_path 'cp-ex-feat-09.svg' %>" width="45">
+                </span>
+                <p><%= I18n.t("global.link_to.complete_transparency").html_safe %></p>
+            </div>
+            <div class="col-lg-4 app-features-list">
+              <span>
+                  <img src="<%= asset_path 'cp-ex-feat-10.svg' %>" width="45">
+                </span>
+                <p><%= I18n.t("global.link_to.unique_online").html_safe %></p>
+            </div>
+            CPDashboard
         })
       end
 

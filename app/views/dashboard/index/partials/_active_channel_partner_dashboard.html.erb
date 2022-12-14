@@ -198,9 +198,9 @@
       <div class="col-lg-12 mt-4 mb-4">
         <div class="app-features">
           <div class="row px-3 py-3">
-            <% template = ::Template::UITemplate.where(name: 'channel_partner_register', booking_portal_client_id: current_client.try(:id)).first %>
-            <% if template.present? %>
-              <%= get_view_erb(template) %>
+            <% dashboard_template = ::Template::UITemplate.where(name: 'channel_partner_register_dashboard', booking_portal_client_id: current_client.try(:id)).first %>
+            <% if dashboard_template.present? %>
+              <%= get_view_erb(dashboard_template) %>
             <% end %>
           </div>
         </div>
@@ -320,15 +320,6 @@
     </div>
 </section>
 
-<!-- Inline Css so that we don't have to create two separate templates for channel partner register -->
-<style>
-  .cp-signup-features ul li {
-      width: 33.33%;
-  }
-  .app-features .col-lg-5{
-    width: 70%;
-  }
-</style>
 <%= javascript_tag do %>
   $.ajax({
     url: '/dashboard/project_wise_leads',
