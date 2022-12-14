@@ -23,11 +23,11 @@
 
           <div class="float-end d-sm-inline-block">
             <div class="account-menu d-sm-inline-block dropdown">
-              <% if current_user.role.in?(%w(cp_owner channel_partner)) %>
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#needHelpModal">
-                  <%= I18n.t("global.link_to.need_help") %>
-                </button>
-              <% end %>
+              <%# if current_user.role.in?(%w(cp_owner channel_partner)) %>
+                <!-- <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#needHelpModal"> -->
+                  <%#= I18n.t("global.link_to.need_help") %>
+                <!-- </button> -->
+              <%# end %>
               <a href="javascript:;" class="dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 <span class="user-first-ltr"><%= "#{current_user.first_name.try(:[], 0)}#{current_user.last_name.try(:[], 0)}" %></span>
                 <!--<span class="user-name"><%= t('welcome', name: current_user.first_name ) %></span>-->
