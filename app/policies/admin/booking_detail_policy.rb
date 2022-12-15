@@ -87,7 +87,14 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def send_payment_link?
-    valid = record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && (user.booking_portal_client.enable_payment_with_kyc ? record.lead.kyc_ready? : true ) && record.status.in?(['blocked', 'booked_tentative', 'under_negotiation', 'scheme_approved'])
+    valid = if user.booking_portal_client.payment_enabled?
+      if user.booking_portal_client.kyc_required_for_payment?
+        record.lead.kyc_ready?
+      else
+        true
+      end
+    end
+    valid = valid && record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && record.status.in?(BookingDetail::BOOKING_STAGES - %w(booked_confirmed))
     valid && record.project.try(:booking_portal_domains).present?
   end
 

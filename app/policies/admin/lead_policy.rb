@@ -104,7 +104,14 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def send_payment_link?
-    valid = record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && (user.booking_portal_client.enable_payment_with_kyc ? record.kyc_ready? : true )
+    valid = if user.booking_portal_client.payment_enabled?
+      if user.booking_portal_client.kyc_required_for_payment?
+        record.kyc_ready?
+      else
+        true
+      end
+    end
+    valid = valid && record.user.confirmed? && user.role.in?(User::ADMIN_ROLES)
     valid && record.project.try(:booking_portal_domains).present?
   end
 

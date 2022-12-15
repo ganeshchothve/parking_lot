@@ -17,19 +17,10 @@
 
 <div class="row">
   <div class="col-md-6">
-    <% if policy([:admin, @client]).editable_field?("enable_direct_payment") %>
-    <div class="mb-3 direct-payment">
-      <%= f.label :enable_direct_payment %>
-      <div class="form-check form-check-inline">
-        <%= f.radio_button :enable_direct_payment, true, class: "form-check-input wd-22" %>
-        <%= f.label :enable_direct_payment, I18n.t("global.boolean.true"), class: " form-check-label d-inline-block ms-2" %>
-      </div>
-      <div class="form-check form-check-inline">
-        <%= f.radio_button :enable_direct_payment, false, class: "form-check-input wd-22" %>
-        <%= f.label :enable_direct_payment, I18n.t("global.boolean.false"), class: " form-check-label d-inline-block ms-2" %>
-      </div>
+    <div class="mb-3">
+      <%= f.label :enable_payment %>
+      <%= f.select :enable_payment, Client::ENABLE_PAYMENT.collect{|x| [t("mongoid.attributes.client/enable_payment.#{x}"), x] }, {}, class: 'selectize', disabled: !(policy([:admin, @client]).editable_field?("enable_payment")) %>
     </div>
-    <% end %>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
@@ -103,19 +94,6 @@
 </div>
 
 <div class="row">
-  <div class="col-md-6">
-    <div class="mb-3 depend-direct-payment">
-      <%= f.label :enable_payment_with_kyc %>
-      <div class="form-check form-check-inline">
-        <%= f.radio_button :enable_payment_with_kyc, true, class: "form-check-input wd-22" %>
-        <%= f.label :enable_payment_with_kyc, I18n.t("global.boolean.true"), class: " form-check-label d-inline-block ms-2" %>
-      </div>
-      <div class="form-check form-check-inline">
-        <%= f.radio_button :enable_payment_with_kyc, false, class: "form-check-input wd-22" %>
-        <%= f.label :enable_payment_with_kyc, I18n.t("global.boolean.false"), class: " form-check-label d-inline-block ms-2" %>
-      </div>
-    </div>
-  </div>
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :enable_booking_with_kyc %>

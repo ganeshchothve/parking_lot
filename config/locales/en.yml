@@ -902,12 +902,10 @@ en:
         incentive_gst_slabs: "Configure Incentive GST Slabs (%)"
         team_lead_dashboard_access_roles: "Team Lead Dashboard Access Roles"
         tl_dashboard_refresh_timer: "Team Lead Dashboard Refresh Timer (Minutes)"
-        enable_direct_payment: "Enable Direct Payment"
         enable_lead_conflicts: "Enable Lead Conflicts"
         launchpad_portal: "Launchpad Portal"
         payment_gateway: "Payment Gateway"
         enable_referral_bonus: "Enable Referral Bonus"
-        enable_payment_with_kyc: "Enable Payment With KYC"
         enable_live_inventory: "Enable Live Inventory"
         enable_booking_with_kyc: "Enabe Booking With KYC"
         allow_multiple_bookings_per_user_kyc: "Allow Multiple Bookings per User KYC"
@@ -963,6 +961,10 @@ en:
         sms: "sms"
         whatsapp: "Whatsapp"
         notification: "Notification"
+      client/enable_payment:
+        enable_with_kyc: 'Enable With KYC'
+        enable_without_kyc: 'Enable Without KYC'
+        disable: 'Disable Payment'
       developer:
         name: "Developer Name"
         selldo_id: "CRM Developer ID"
