@@ -28,6 +28,11 @@
             <% heart_class = project.id.in?(interested_project_ids) ? 'fill-danger' : 'fill-theme' %>
             <span><%= link_to_if !project.id.in?(interested_project_ids), "<i class='fa fa-heart #{heart_class} d-none d-sm-inline-block me-1'></i>".html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-inline-block me-2' %></span>
           <% end %>
+          <% if !policy([:admin, Lead.new(project_id: project.id)]).new? && policy([current_user_role_group, InterestedProject.new(project_id: project.id)]).create? %>
+            <% if !project.id.in?(interested_project_ids) %>
+              <%= link_to t('controller.projects.show.show_interest_text'), admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-block' %>
+            <% end %>
+          <% end %>
         </td>
         <td><%= project.developer_name %></td>
         <td><%= project.micro_market %>,
