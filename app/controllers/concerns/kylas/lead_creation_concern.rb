@@ -24,10 +24,10 @@ module Kylas
             @user.confirm
             create_or_set_lead(format)
           else
-            format.html { redirect_to request.referer, alert: (@user.errors.full_messages.uniq.presence || 'Something went wrong') }
+            format.html { redirect_to request.referer, alert: (@user.errors.full_messages.uniq.presence || t('global.errors.something_went_wrong')) }
           end
         else
-          format.html { redirect_to request.referer, alert: (@user.errors.full_messages.uniq.presence || 'Something went wrong') }
+          format.html { redirect_to request.referer, alert: (@user.errors.full_messages.uniq.presence || t('global.errors.something_went_wrong')) }
         end
       end
     end
@@ -42,35 +42,17 @@ module Kylas
           @user.skip_confirmation_notification!
           @user.save
           manager_ids = params.dig(:lead, :manager_ids)
-
-          count = 0
-          manager_ids.each do |manager_id|
-            manager = User.where(id: manager_id).first
-            if manager.present?
-              @lead = Lead.new(
-                              first_name: params.dig(:lead, :first_name),
-                              last_name: params.dig(:lead, :last_name),
-                              email: params.dig(:lead, :email),
-                              phone: params.dig(:lead, :phone),
-                              booking_portal_client: current_client,
-                              project: @project,
-                              manager_id: manager.id,
-                              user: @user,
-                              kylas_lead_id: params[:entityId]
-                              )
-
-              if @lead.save
-                Kylas::SyncLeadToKylasWorker.perform_async(@lead.id.to_s)
-                if (@lead_data['products'].blank? || @lead_data['products'].pluck('id').map(&:to_s).exclude?(params.dig(:lead, :kylas_product_id))) && count < 1
-                    response = Kylas::UpdateLead.new(current_user, @lead.kylas_lead_id, params).call
-                    count += 1 if response[:success]
-                end
-              end
-            end
+          if manager_ids
+            Kylas::CreateLeadsForPartners.new(manager_ids, @user, @project, @lead_data, params).call
+            msg = t("controller.booking_details.#{action_name}.response_msg")
+            format.html { redirect_to show_response_path(response: {success: true, message: msg}) }
+          else
+            flash.now[:alert] = t('controller.leads.alert.select_manager')
+            format.html { render :new_kylas_lead }
           end
-          format.html { redirect_to request.referer, notice: 'Leads were successfully created' }
         else
-          format.html { redirect_to request.referer, alert: @user.errors.full_messages }
+          flash.now[:alert] = @user.errors.full_messages.uniq.presence || t('global.errors.something_went_wrong')
+          format.html { render :new_kylas_lead }
         end
       end
     end
@@ -104,7 +86,7 @@ module Kylas
           @cp_users = User.in(role: ['channel_partner', 'cp_owner']).where(booking_portal_client_id: current_user.booking_portal_client_id, user_status_in_company: 'active', 'kylas_custom_fields_option_id.deal': @kylas_cp_id)
         end
       else
-        redirect_to root_path, alert: 'Deal not found'
+        redirect_to show_response_path(response: fetch_deal_details) and return
       end
     end
 
@@ -117,7 +99,7 @@ module Kylas
         kylas_product_ids = current_user.booking_portal_client.projects.pluck(:kylas_product_id).compact.map(&:to_i)
         @lead_associated_products = @lead_associated_products.select{|kp| kylas_product_ids.include?(kp[1]) } rescue []
       else
-        redirect_to root_path, alert: 'Lead not found'
+        redirect_to show_response_path(response: fetch_lead_details) and return
       end
     end
 
@@ -130,11 +112,12 @@ module Kylas
     def set_project
       kylas_product_id = params.dig(:lead, :kylas_product_id)
       kylas_deal_id = params.dig(:lead, :kylas_deal_id)
-      @project = Project.where(booking_portal_client_id: current_client.try(:id), kylas_product_id: kylas_product_id).first
+      @project = Project.where(booking_portal_client_id: current_client.id, kylas_product_id: kylas_product_id).first
       if @project.present?
-        sync_product_to_kylas(current_user, kylas_product_id, kylas_deal_id, @deal_data)
+        sync_product_to_kylas(current_user, kylas_product_id, kylas_deal_id, @deal_data) if @deal_data.present?
       else
-        redirect_to root_path, alert: 'Project not found'
+        msg = t("controller.booking_details.set_project.response_msg")
+        redirect_to show_response_path(response: {success: false, message: msg}) and return
       end
     end
 
@@ -177,10 +160,10 @@ module Kylas
             format.html { redirect_to new_booking_without_inventory_admin_booking_details_path(lead_id: @lead.id), notice: 'Lead was successfully created' }
           end
         else
-          format.html { redirect_to request.referer, alert: (@lead.errors.full_messages.uniq.presence || 'Something went wrong'), status: :unprocessable_entity }
+          format.html { redirect_to request.referer, alert: (@lead.errors.full_messages.uniq.presence || t('global.errors.something_went_wrong')), status: :unprocessable_entity }
         end
       else
-        format.html { redirect_to request.referer, alert: (@lead.errors.full_messages.uniq.presence || 'Something went wrong'), status: :unprocessable_entity }
+        format.html { redirect_to request.referer, alert: (@lead.errors.full_messages.uniq.presence || t('global.errors.something_went_wrong')), status: :unprocessable_entity }
       end
     end
 
@@ -189,24 +172,23 @@ module Kylas
       deal_data = options[:deal_data]
       current_user = options[:current_user]
       kylas_deal_id = options[:kylas_deal_id]
-      if deal_data.present?
-        deal_payload.merge!({run_in_background: true})
-        Kylas::UpdateDeal.new(current_user, @lead, deal_payload).call
-      else
-        format.html { redirect_to request.referer, alert: 'Something went wrong', status: :unprocessable_entity }
-      end
+
+      deal_payload.merge!({run_in_background: true})
+      Kylas::UpdateDeal.new(current_user, @lead, deal_payload).call
     end
 
     def sync_product_to_kylas(current_user, kylas_product_id, kylas_deal_id, deal_data)
       update_deal_payload = {}
       products_response = Kylas::FetchProducts.new(current_user).call(detail_response = true)
-      if deal_data.present? && products_response.present?
+      if products_response.present?
         if deal_data['products'].blank? || deal_data['products'].pluck('id').exclude?(kylas_product_id.to_i)
           product = (products_response.select{|p| p['id'] == kylas_product_id.to_i }.first rescue {})
           update_deal_payload.merge!(product: product, run_in_background: true) if product.present?
           lead = Lead.where(kylas_deal_id: kylas_deal_id, booking_portal_client_id: current_user.booking_portal_client.id).first if kylas_deal_id.present?
           Kylas::UpdateDeal.new(current_user, lead, update_deal_payload).call if lead.present?
         end
+      else
+        redirect_to show_response_path(response: products_response) and return
       end
     end
 

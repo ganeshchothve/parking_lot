@@ -3,7 +3,7 @@
   kylas_products['Lead Product'] = @lead_associated_products if @lead_associated_products.present?
   kylas_products['Other Products'] = (@kylas_products | @lead_associated_products) - (@kylas_products & @lead_associated_products) if @kylas_products.present?
 %>
-<div class="row justify-content-center">
+<div class="row justify-content-center new-lead-form">
   <div class="col-md-11">
     <div class="h-100">
       <div class = 'fn-18 theme-txt-color mb-2'>

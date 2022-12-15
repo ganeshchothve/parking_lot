@@ -21,25 +21,25 @@ module Kylas
       request = Net::HTTP::Get.new(url, request_headers)
 
       response = https.request(request)
+      parsed_response = JSON.parse(response.body)
 
       case response
       when Net::HTTPOK, Net::HTTPSuccess
-        parsed_response = JSON.parse(response.body)
         { success: true, data: parsed_response }
       when Net::HTTPBadRequest
         Rails.logger.error 'FetchDealDetails - 400'
-        { success: false, error: 'Invalid Data!' }
+        { success: false, error: 'Invalid Data!', response: parsed_response }
       when Net::HTTPNotFound
         Rails.logger.error 'FetchDealDetails - 404'
-        { success: false, error: 'Invalid Data!' }
+        { success: false, error: 'Invalid Data!', response: parsed_response }
       when Net::HTTPServerError
         Rails.logger.error 'FetchDealDetails - 500'
-        { success: false, error: 'Server Error!' }
+        { success: false, error: 'Server Error!', response: parsed_response }
       when Net::HTTPUnauthorized
         Rails.logger.error 'FetchDealDetails - 401'
-        { success: false, error: 'Unauthorized' }
+        { success: false, error: 'Unauthorized', response: parsed_response }
       else
-        { success: false }
+        { success: false, response: parsed_response }
       end
     end
 
