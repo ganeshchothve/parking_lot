@@ -83,7 +83,7 @@ class Project
   field :website_link, type: String
   field :notification_email, type: String
   field :notification_numbers, type: String
-  field :allowed_bookings_per_user, type: Integer, default: 3
+  field :allowed_bookings_per_user, type: Integer, default: 300
   field :sender_email, type: String
   field :email_domains, type: Array, default: []
   field :booking_portal_domains, type: Array, default: []

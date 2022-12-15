@@ -906,7 +906,6 @@ en:
         enable_lead_conflicts: "Enable Lead Conflicts"
         launchpad_portal: "Launchpad Portal"
         payment_gateway: "Payment Gateway"
-        enable_referral_bonus: "Enable Referral Bonus"
         enable_payment_with_kyc: "Enable Payment With KYC"
         enable_live_inventory: "Enable Live Inventory"
         enable_booking_with_kyc: "Enabe Booking With KYC"
