@@ -1,8 +1,8 @@
 <% date = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") %>
 <% start_date, end_date = date.split(' - ') %>
 <% channel_partner = current_user.channel_partner %>
-<% @channel_partner = channel_partner%>
-<% if current_user.fund_accounts.count.zero? && !current_client.is_marketplace? %>
+<% @channel_partner = channel_partner %>
+<% if policy(:dashboard).show_upi_message? %>
   <section class="mt-3" id="">
     <div class="px-4">
       <div class="row">
