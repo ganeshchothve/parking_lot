@@ -3,7 +3,7 @@
   <h3 class="title"><%= t('controller.booking_details.new.header', customer: f.object.lead.try(:name), project: (f.object.lead.try(:project_name) || f.object.project.name)) %></h3>
   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-<div class="modal-body">
+<div class="modal-body theme-form">
   <!-- <div class="mb-3"> -->
     <%#= f.label :project_id, class: 'label-required control-label' %>
     <%#= f.select :project_id, Project.all.collect{|p| [p.name, p.id]}, {}, prompt: :translate, class: 'form-control selectize' %>

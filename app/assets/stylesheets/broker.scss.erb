@@ -2511,7 +2511,9 @@ select.form-control{
 		position: relative;
 		margin-bottom:5px;
 		&.active{
-			border: 1px solid #296FE6;
+			background-color: #E7F0FD;
+			color: #2E6BE6;
+			border: 1px solid #E7F0FD;
 		}
 		.notify{
 			background-color: #EE0000;
@@ -6155,4 +6157,19 @@ table .dropdown-menu.show{
     margin-bottom: 0;
     margin-top: 7px;
     margin-left: 5px;
+}
+.fix-dropdown-menu{
+	&.show{
+		display: block;
+		position: fixed!important;
+		right: 24px!important;
+		top: 50%!important;
+		transform: translateY(-50%)!important;
+		z-index: 9999;
+		left: unset!important;
+		overflow: auto;
+		@media screen and (max-width:700px){
+			max-height: 90vh;
+		}
+	}
 }
