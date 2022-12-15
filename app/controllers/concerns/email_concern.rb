@@ -26,7 +26,7 @@ module EmailConcern
         else
           email_response = Communication::Email::MailgunWorker.new.perform(@email.id.to_s)
         end
-        if (email_response.status == 'sent')
+        if (email_response.present? && email_response.status == 'sent')
           format.html { redirect_to admin_emails_path, notice: t("controller.emails.resend_email.success") }
         else
           format.html { redirect_to admin_emails_path, alert: email_response.response["message"] rescue t('controller.emails.resend_email.alert') }
