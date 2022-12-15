@@ -198,7 +198,7 @@
       <div class="col-lg-12 mt-4 mb-4">
         <div class="app-features">
           <div class="row px-3 py-3">
-            <% dashboard_template = ::Template::UITemplate.where(name: 'channel_partner_register_dashboard', booking_portal_client_id: current_client.try(:id)).first %>
+            <% dashboard_template = ::Template::UITemplate.where(name: 'channel_partner_register_dashboard', booking_portal_client_id: current_client.id).first %>
             <% if dashboard_template.present? %>
               <%= get_view_erb(dashboard_template) %>
             <% end %>
