@@ -95,9 +95,9 @@ module UsersHelper
   def filter_projects(user)
     if user.role?(:cp_owner)
       channel_partner = user.channel_partner
-      Project.where(booking_portal_client_id: cuser.booking_portal_client.id).in(id: channel_partner.project_ids)
+      Project.where(booking_portal_client_id: user.booking_portal_client.id).in(id: channel_partner.project_ids)
     else
-      Project.where(booking_portal_client_id: cuser.booking_portal_client.id).in(id: user.project_ids)
+      Project.where(booking_portal_client_id: user.booking_portal_client.id).in(id: user.project_ids)
     end
   end
 end
