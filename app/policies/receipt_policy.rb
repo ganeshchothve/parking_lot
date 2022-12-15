@@ -45,6 +45,8 @@ class ReceiptPolicy < ApplicationPolicy
       else
         true
       end
+    else
+      false
     end
     return valid if valid
     @condition = 'enable_direct_payment' if @condition.blank?

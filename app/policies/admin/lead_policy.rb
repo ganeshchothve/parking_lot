@@ -110,6 +110,8 @@ class Admin::LeadPolicy < LeadPolicy
       else
         true
       end
+    else
+      false
     end
     valid = valid && record.user.confirmed? && user.role.in?(User::ADMIN_ROLES)
     valid && record.project.try(:booking_portal_domains).present?

@@ -93,6 +93,8 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
       else
         true
       end
+    else
+      false
     end
     valid = valid && record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && record.status.in?(BookingDetail::BOOKING_STAGES - %w(booked_confirmed))
     valid && record.project.try(:booking_portal_domains).present?
