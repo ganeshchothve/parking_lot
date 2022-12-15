@@ -20,7 +20,7 @@ module EmailConcern
 
   def resend_email
     respond_to do |format|
-      if @email.booking_portal_client.email_enabled? && @email.to.present?
+      if policy([:admin, @email]).email_enabled?
         if @email.email_template
           email_response = Communication::Email::MailgunWorker.new.perform(@email.id.to_s) if @email.email_template.try(:is_active?)
         else
@@ -29,7 +29,7 @@ module EmailConcern
         if (email_response.status == 'sent')
           format.html { redirect_to admin_emails_path, notice: t("controller.emails.resend_email.success") }
         else
-          format.html { redirect_to admin_emails_path, alert: email_response.response["message"] rescue "Email not sent" }
+          format.html { redirect_to admin_emails_path, alert: email_response.response["message"] rescue t('controller.emails.resend_email.alert') }
         end
       else
         format.html { redirect_to admin_emails_path, alert: t("controller.emails.resend_email.emails_enabled") }
