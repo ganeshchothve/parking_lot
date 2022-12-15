@@ -3035,7 +3035,8 @@ en:
       resend_email:
         link_name: "Resend Email"
         success: "Email has been sent again."
-        emails_enabled: "Please enable email settings from Edit Client"
+        alert: "Email not sent" 
+        emails_enabled: "Emails are disabled, please connect with your admin"
     erp_models:
       index:
         link_name: "Third Party Integration"

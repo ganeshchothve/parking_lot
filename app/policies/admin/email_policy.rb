@@ -11,7 +11,7 @@ class Admin::EmailPolicy < EmailPolicy
 
   def show?
     if !user.buyer?
-      if %[admin superadmin].include?(user.role)
+      if %w[admin superadmin].include?(user.role)
         true
       else
        record.recipient_ids.include?(user.id)
@@ -20,6 +20,10 @@ class Admin::EmailPolicy < EmailPolicy
   end
 
   def resend_email?
-    record.status == 'draft' && user.role?(:admin)
+    Rails.env.in?(%w(staging production)) && record.status == 'draft' && user.role?(:admin)
+  end
+
+  def email_enabled?
+    record.booking_portal_client.email_enabled? && record.to.present?
   end
 end
