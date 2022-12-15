@@ -418,6 +418,7 @@ Rails.application.routes.draw do
   get :privacy_policy, as: :privacy_policy, to: 'home#privacy_policy'
   get :"cp-enquiryform", as: :cp_enquiryform, to: 'home#cp_enquiryform'
   get :not_authorized, to: 'home#not_authorized', as: :not_authorized
+  get :show_response, as: 'show_response', to: 'home#show_response'
 
   get 'admin/select_clients', to: 'home#select_client', as: :admin_select_clients
   post 'select_client', to: 'home#select_client', as: :select_client
