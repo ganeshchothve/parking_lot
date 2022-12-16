@@ -69,4 +69,8 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
   def payout_dashboard?
     user.role.in?(%w[channel_partner cp_owner])
   end
+
+  def show_upi_message?
+    user.fund_accounts.count.zero? && !user.booking_portal_client.is_marketplace?
+  end
 end

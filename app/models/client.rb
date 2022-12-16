@@ -11,6 +11,7 @@ class Client
   DOCUMENT_TYPES = %w[document offer login_page_image].freeze
   PUBLIC_DOCUMENT_TYPES = []
   INCENTIVE_CALCULATION = ["manual", "calculated"]
+  ENABLE_PAYMENT = %w[enable_with_kyc enable_without_kyc disable].freeze
 
   field :name, type: String
   field :selldo_client_id, type: String
@@ -66,8 +67,7 @@ class Client
   field :enable_leads, type: Boolean, default: false
   field :enable_site_visit, type: Boolean, default: false
   field :enable_vis, type: Boolean, default: false
-  field :enable_direct_payment, type: Boolean, default: false
-  field :enable_payment_with_kyc, type: Boolean, default: true
+  field :enable_payment, type: String, default: 'disable'
   field :enable_booking_with_kyc, type: Boolean, default: true
   field :incentive_calculation, type: Array, default: ["manual"]
   field :enable_direct_activation_for_cp, type: Boolean, default: false
@@ -151,6 +151,7 @@ class Client
   has_many :users, class_name: 'User', inverse_of: 'booking_portal_client'
   has_many :project_units
   has_many :projects
+  has_many :booking_details
   has_one :address, as: :addressable
   has_many :templates
   has_many :sms_templates, class_name: 'Template::SmsTemplate'
@@ -176,6 +177,7 @@ class Client
   validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
   validates :preferred_login, inclusion: {in: I18n.t("mongoid.attributes.client/available_preferred_logins").keys.map(&:to_s) }
   validates :payment_gateway, inclusion: {in: Client::PAYMENT_GATEWAYS }, allow_blank: true
+  validates :enable_payment, inclusion: { in: Client::ENABLE_PAYMENT }, allow_blank: true
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
   validates :whatsapp_api_key, :whatsapp_api_secret, presence: true, if: :whatsapp_enabled?
   validates :notification_api_key, presence: true, if: :notification_enabled?
@@ -280,5 +282,13 @@ class Client
     if !sms_enabled? && preferred_login == 'phone'
       self.errors.add(:preferred_login, "SMS setting must be enabled to select phone as preferred login")
     end
+  end
+
+  def payment_enabled?
+    self.enable_payment != 'disable'
+  end
+
+  def kyc_required_for_payment?
+    payment_enabled? && self.enable_payment == 'enable_with_kyc' 
   end
 end

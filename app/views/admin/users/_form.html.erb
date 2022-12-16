@@ -107,8 +107,9 @@
 
           <% if policy([current_user_role_group, @user]).editable_field?("project_ids") %>
             <div class="mb-3">
+              <% filtered_projects = filter_projects(@user) %>
               <%= f.label :project_ids, class: "control-label" %>
-              <%= f.select :project_ids, options_from_collection_for_select(@user.project_ids.present? ? Project.in(id: @user.project_ids) : [], "id", "ds_name", @user.project_ids), {}, class: 'selectize-remote', multiple: true, data: {url: admin_projects_path}, disabled: !(policy([current_user_role_group, f.object]).editable_field?("project_ids")) %>
+              <%= f.select :project_ids, options_from_collection_for_select(filtered_projects.present? ? Project.in(id: filtered_projects.pluck(:id)) : [], "id", "ds_name", @user.project_ids), {}, class: 'selectize-remote', multiple: true, data: {url: admin_projects_path}, disabled: !(policy([current_user_role_group, f.object]).editable_field?("project_ids")) %>
             </div>
           <% end %>
           <% if policy([current_user_role_group, @user]).editable_field?("manager_change_reason") %>

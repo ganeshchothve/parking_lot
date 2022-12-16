@@ -87,7 +87,16 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def send_payment_link?
-    valid = record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && (user.booking_portal_client.enable_payment_with_kyc ? record.lead.kyc_ready? : true ) && record.status.in?(['blocked', 'booked_tentative', 'under_negotiation', 'scheme_approved'])
+    valid = if user.booking_portal_client.payment_enabled?
+      if user.booking_portal_client.kyc_required_for_payment?
+        record.lead.kyc_ready?
+      else
+        true
+      end
+    else
+      false
+    end
+    valid = valid && record.user.confirmed? && user.role.in?(User::ADMIN_ROLES) && record.status.in?(BookingDetail::BOOKING_STAGES - %w(booked_confirmed))
     valid && record.project.try(:booking_portal_domains).present?
   end
 
@@ -180,11 +189,11 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def asset_create?
-    %w[admin sales_admin sales account_manager account_manager_head billing_team cp_admin].include?(user.role)
+    %w[admin sales_admin sales account_manager account_manager_head billing_team cp_admin cp_owner channel_partner].include?(user.role)
   end
 
   def asset_destroy?
-    %w[admin account_manager account_manager_head billing_team cp_admin].include?(user.role)
+    %w[admin account_manager account_manager_head billing_team cp_admin cp_owner channel_partner].include?(user.role)
   end
 
   def enable_channel_partners?

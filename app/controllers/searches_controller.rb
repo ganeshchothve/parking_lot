@@ -27,7 +27,7 @@ class SearchesController < ApplicationController
   end
 
   def tower
-    @tower = ProjectTower.find(params[:project_tower_id])
+    @tower = ProjectTower.where(id: params[:project_tower_id], booking_portal_client_id: current_client.id).first
     respond_to do |format|
       format.json { render json: @tower.to_json }
     end

@@ -301,6 +301,10 @@ class Project
     if !user.role.in?(User::ALL_PROJECT_ACCESS) || params[:current_project_id].present?
       custom_scope.merge!({_id: { "$in": project_ids }})
     end
+    if user.role?(:cp_owner)
+      channel_partner = user.channel_partner
+      custom_scope.merge!({_id: { "$in": channel_partner.project_ids }})
+    end
     custom_scope.merge!({ is_active: true }) if (params[:controller] == 'admin/projects' && params[:action] == 'index') || params[:controller] == 'home'
     custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
     custom_scope

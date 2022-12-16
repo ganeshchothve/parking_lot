@@ -99,6 +99,7 @@ en:
     errors:
       invalid_date_format: "%{name} date format is invalid. Correct date format is - dd/mm/yyyy"
       boolean: "%{name} should be a boolean value - true or false"
+      something_went_wrong: "Something went wrong"
     filter: "Filter"
     filters: "Filters"
     project: "Project"
@@ -902,11 +903,10 @@ en:
         incentive_gst_slabs: "Configure Incentive GST Slabs (%)"
         team_lead_dashboard_access_roles: "Team Lead Dashboard Access Roles"
         tl_dashboard_refresh_timer: "Team Lead Dashboard Refresh Timer (Minutes)"
-        enable_direct_payment: "Enable Direct Payment"
         enable_lead_conflicts: "Enable Lead Conflicts"
         launchpad_portal: "Launchpad Portal"
         payment_gateway: "Payment Gateway"
-        enable_payment_with_kyc: "Enable Payment With KYC"
+
         enable_live_inventory: "Enable Live Inventory"
         enable_booking_with_kyc: "Enabe Booking With KYC"
         allow_multiple_bookings_per_user_kyc: "Allow Multiple Bookings per User KYC"
@@ -962,6 +962,10 @@ en:
         sms: "sms"
         whatsapp: "Whatsapp"
         notification: "Notification"
+      client/enable_payment:
+        enable_with_kyc: 'Enable With KYC'
+        enable_without_kyc: 'Enable Without KYC'
+        disable: 'Disable Payment'
       developer:
         name: "Developer Name"
         selldo_id: "CRM Developer ID"
@@ -2749,6 +2753,12 @@ en:
         link_name: "Brokerage Invoices"
       choose_template_for_print:
         link_name: Print Documents
+      create_kylas_lead:
+        response_msg: 'Deals have successfully been created'
+      set_project:
+        response_msg: 'Project Not Found'
+      create_booking_without_inventory:
+        response_msg: 'Thank you for taking Booking'
       send_booking_detail_form_notification: "Booking detail form will be sent to customer shortly."
       set_booking_detail_missing: "Booking detail not found"
       set_project_unit_missing: "Project unit not found"
@@ -3031,6 +3041,11 @@ en:
         link_name: "Details"
       links:
         monthly_count: "Monthly Count"
+      resend_email:
+        link_name: "Resend Email"
+        success: "Email has been sent again."
+        alert: "Email not sent" 
+        emails_enabled: "Emails are disabled, please connect with your admin"
     erp_models:
       index:
         link_name: "Third Party Integration"
@@ -3584,6 +3599,7 @@ en:
         sales_user_not_found: "Sales user not found"
         unqualified: "Lead cannot be unqualified"
         company_not_found: "Requested partner company not found"
+        select_manager: "Please select atleast one partner"
       message:
         mail_sent: "Mail successfully sent to the selected leads"
         no_leads_added: "You have not added any lead yet.\nStart exploring the projects and add your leads."
