@@ -967,8 +967,8 @@ en:
         enable_without_kyc: 'Enable Without KYC'
         disable: 'Disable Payment'
       client/lead_conflicts:
-        client: Client
-        project: Project
+        client: Client Level
+        project: Project Level
         no_conflict: No Conflict
       developer:
         name: "Developer Name"
@@ -2175,6 +2175,9 @@ en:
         kylas_contact: Kylas Contacts
         manager_ids: Channel Partners
         crm_reference_id: CRM Reference ID
+        errors:
+          lead_registered_with_client: "Lead is already registered with Client"
+          lead_registered_with_project: "Lead is already registered with Project"
       lead/stage:
         incoming: "Incoming"
         booked: "Booked"

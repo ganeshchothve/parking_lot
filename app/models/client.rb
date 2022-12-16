@@ -12,7 +12,7 @@ class Client
   PUBLIC_DOCUMENT_TYPES = []
   INCENTIVE_CALCULATION = ["manual", "calculated"]
   ENABLE_PAYMENT = %w[enable_with_kyc enable_without_kyc disable].freeze
-  LEAD_CONFLICT= %w[client project no_conflict]
+  LEAD_CONFLICT= %w[client_level project_level no_conflict]
 
   field :name, type: String
   field :selldo_client_id, type: String

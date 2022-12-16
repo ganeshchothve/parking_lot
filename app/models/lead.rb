@@ -370,14 +370,22 @@ class Lead
 
   def check_for_lead_conflict
     lead_conflict_on = self.booking_portal_client.enable_lead_conflicts
-    if lead_conflict_on == 'client'
+    if lead_conflict_on == 'client_level'
       # same lead cannot be added by another partner in any project
-      lead = Lead.where(user_id: self.user.id, booking_portal_client_id: self.booking_portal_client.id).first
-      self.errors.add(:enable_lead_conflicts, "Lead is already present on client") if lead.present?
-    elsif lead_conflict_on == 'project'
+      lead = Lead.where(user_id: self.user.id, booking_portal_client_id: self.booking_portal_client.id)
+      if lead.present?
+        unless self.manager.blank? || (lead.distinct(:manager_id).count <= 1 && lead.first.try(:manager_id) == self.manager_id)
+          self.errors.add(:base, I18n.t('mongoid.attributes.lead.errors.lead_registered_with_client'))
+        else
+          if lead.where(project_id: self.project_id).present?
+            self.errors.add(:base, I18n.t('mongoid.attributes.lead.errors.lead_registered_with_project'))
+          end
+        end
+      end
+    elsif lead_conflict_on == 'project_level'
       # same lead cannot be added by partner in that project
       lead = Lead.where(project_id: self.project.id, user_id: self.user.id, booking_portal_client: self.booking_portal_client.id).first
-      self.errors.add(:enable_lead_conflicts, "Lead is already present on this project") if lead.present?
+      self.errors.add(:base, I18n.t('mongoid.attributes.lead.errors.lead_registered_with_project')) if lead.present?
     end
   end
 
