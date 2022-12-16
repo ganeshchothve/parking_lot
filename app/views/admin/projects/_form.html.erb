@@ -20,9 +20,11 @@
           <div class="col-lg-3 filter-left-section">
             <div class="sticky-top ps-3 pt-3">
               <ul>
-                <li class="nav-item">
-                  <a class="nav-link active" rel="nav-project-basic"><%= I18n.t("global.link_to.basic_details") %></a>
-                </li>
+                <% if policy([:admin, @project]).editable_field?("basic")%>
+                  <li class="nav-item">
+                    <a class="nav-link active" rel="nav-project-basic"><%= I18n.t("global.link_to.basic_details") %></a>
+                  </li>
+                <% end %>
                 <% if policy([:admin, @project]).editable_field?("specifications_attributes")%>
                   <li class="nav-item">
                     <a class="nav-link active" rel="nav-project-specifications"><%= I18n.t("global.link_to.specs") %></a>
@@ -43,21 +45,31 @@
                     <a class="nav-link active" rel="nav-project-location"><%= I18n.t("global.link_to.location") %></a>
                   </li>
                 <% end %>
-                <li class="nav-item">
-                  <a class="nav-link active" rel="nav-project-pages"><%= I18n.t("global.link_to.content_pages") %></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" rel="nav-project-logos"><%= I18n.t("global.link_to.images_docs") %></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" rel="nav-project-integrations"><%= I18n.t("global.link_to.integrations") %></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" rel="nav-project-bookings"><%= I18n.t("global.link_to.bookings") %></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" rel="nav-project-contacts"><%= I18n.t("global.link_to.notifications") %></a>
-                </li>
+                <% if policy([:admin, @project]).editable_field?("pages")%>
+                  <li class="nav-item">
+                    <a class="nav-link active" rel="nav-project-pages"><%= I18n.t("global.link_to.content_pages") %></a>
+                  </li>
+                <% end %>
+                <% if policy([:admin, @project]).editable_field?("logos")%>
+                  <li class="nav-item">
+                    <a class="nav-link active" rel="nav-project-logos"><%= I18n.t("global.link_to.images_docs") %></a>
+                  </li>
+                <% end %>
+                <% if policy([:admin, @project]).editable_field?("integrations")%>
+                  <li class="nav-item">
+                    <a class="nav-link active" rel="nav-project-integrations"><%= I18n.t("global.link_to.integrations") %></a>
+                  </li>
+                <% end %>
+                <% if policy([:admin, @project]).editable_field?("bookings")%>
+                  <li class="nav-item">
+                    <a class="nav-link active" rel="nav-project-bookings"><%= I18n.t("global.link_to.bookings") %></a>
+                  </li>
+                <% end %>
+                <% if policy([:admin, @project]).editable_field?("contacts")%>
+                  <li class="nav-item">
+                    <a class="nav-link active" rel="nav-project-contacts"><%= I18n.t("global.link_to.notifications") %></a>
+                  </li>
+                <% end %>
                 <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
                   <li class="nav-item">
                     <a class="nav-link active" rel="nav-project-crm-ids"><%= I18n.t("global.link_to.crm") %></a>
@@ -79,11 +91,13 @@
           <div class="col-lg-9 filter-right-section">
             <div class="mt-3"></div>
             <div class="tab-content theme-form">
-              <div class="" id="nav-project-basic">
-                <h2 class="tab-title"><%= I18n.t("global.link_to.basic_details") %></h2>
-                <%= render 'admin/projects/basic', f: f, project: project %>
-              </div>
-              <hr>
+              <% if policy([:admin, @project]).editable_field?("basic")%>
+                <div class="" id="nav-project-basic">
+                  <h2 class="tab-title"><%= I18n.t("global.link_to.basic_details") %></h2>
+                  <%= render 'admin/projects/basic', f: f, project: project %>
+                </div>
+                <hr>
+              <% end %>
               <% if policy([:admin, @project]).editable_field?("specifications_attributes")%>
                 <div class="" id="nav-project-specifications">
                   <h2 class="tab-title"><%= I18n.t("global.link_to.specs") %></h2>
@@ -112,31 +126,41 @@
                 </div>
                 <hr>
               <% end %>
-              <div class="" id="nav-project-pages">
-                <h2 class="tab-title"><%= I18n.t("global.link_to.content_pages") %></h2>
-                <%= render 'admin/projects/pages', f: f, project: project %>
-              </div>
-              <hr>
-              <div class="" id="nav-project-logos">
-                <h2 class="tab-title"><%= I18n.t("global.link_to.images_docs") %></h2>
-                <%= render 'admin/projects/logos', f: f, project: project %>
-              </div>
-              <hr>
-              <div class="" id="nav-project-integrations">
-                <h2 class="tab-title"><%= I18n.t("global.link_to.integrations") %></h2>
-                <%= render 'admin/projects/integrations', f: f, project: project %>
-              </div>
-              <hr>
-              <div class="" id="nav-project-bookings">
-                <h2 class="tab-title"><%= I18n.t("global.link_to.bookings") %></h2>
-                <%= render 'admin/projects/bookings', f: f, project: project %>
-              </div>
-              <hr>
-              <div class="" id="nav-project-contacts">
-                <h2 class="tab-title"><%= I18n.t("global.link_to.notifications") %></h2>
-                <%= render 'admin/projects/contacts', f: f, project: project %>
-              </div>
-              <hr>
+              <% if policy([:admin, @project]).editable_field?("pages")%>
+                <div class="" id="nav-project-pages">
+                  <h2 class="tab-title"><%= I18n.t("global.link_to.content_pages") %></h2>
+                  <%= render 'admin/projects/pages', f: f, project: project %>
+                </div>
+                <hr>
+              <% end %>
+              <% if policy([:admin, @project]).editable_field?("logos")%>
+                <div class="" id="nav-project-logos">
+                  <h2 class="tab-title"><%= I18n.t("global.link_to.images_docs") %></h2>
+                  <%= render 'admin/projects/logos', f: f, project: project %>
+                </div>
+                <hr>
+              <% end %>
+              <% if policy([:admin, @project]).editable_field?("integrations")%>
+                <div class="" id="nav-project-integrations">
+                  <h2 class="tab-title"><%= I18n.t("global.link_to.integrations") %></h2>
+                  <%= render 'admin/projects/integrations', f: f, project: project %>
+                </div>
+                <hr>
+              <% end %>
+              <% if policy([:admin, @project]).editable_field?("bookings")%>
+                <div class="" id="nav-project-bookings">
+                  <h2 class="tab-title"><%= I18n.t("global.link_to.bookings") %></h2>
+                  <%= render 'admin/projects/bookings', f: f, project: project %>
+                </div>
+                <hr>
+              <% end %>
+              <% if policy([:admin, @project]).editable_field?("contacts")%>
+                <div class="" id="nav-project-contacts">
+                  <h2 class="tab-title"><%= I18n.t("global.link_to.notifications") %></h2>
+                  <%= render 'admin/projects/contacts', f: f, project: project %>
+                </div>
+                <hr>
+              <% end %>
               <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
                 <div class="" id="nav-project-crm_ids">
                   <h2 class="tab-title"><%= I18n.t("global.link_to.crm") %></h2>

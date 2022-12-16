@@ -14,6 +14,8 @@ class Client
   ENABLE_PAYMENT = %w[enable_with_kyc enable_without_kyc disable].freeze
   INDUSTRIES = %w(real_estate generic)
 
+  attr_accessor :basic, :bookings, :contacts, :integrations, :pages, :logos
+
   field :name, type: String
   field :selldo_client_id, type: String
   field :selldo_form_id, type: String
@@ -293,5 +295,9 @@ class Client
 
   def kyc_required_for_payment?
     payment_enabled? && self.enable_payment == 'enable_with_kyc' 
+  end
+
+  def real_estate?
+    industry == 'real_estate'
   end
 end
