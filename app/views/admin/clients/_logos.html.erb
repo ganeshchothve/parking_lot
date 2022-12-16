@@ -1,33 +1,39 @@
-<div class="mb-3">
-  <%= f.label :logo %><br/>
-  <%= f.file_field :logo, class: 'btn pl-0', disabled: (policy([:admin, @client]).editable_field?("logo") ? false : true) %>
-  <br/>
-  <% if @client.logo.present? %>
-    <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
-      <img src="<%= @client.logo.url %>" style="max-height: 100%; max-width:100%;" />
-    </div>
-  <% end %>
-  <hr/>
-</div>
-<div class="mb-3">
-  <%= f.label :mobile_logo %><br/>
-  <%= f.file_field :mobile_logo, class: 'btn pl-0', disabled: (policy([:admin, @client]).editable_field?("mobile_logo") ? false : true) %>
-  <br/>
-  <% if @client.mobile_logo.present? %>
-    <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
-      <img src="<%= @client.mobile_logo.url %>" style="max-height: 100%; max-width:100%;" />
-    </div>
-  <% end %>
-  <hr/>
-</div>
-<div class="mb-3">
-  <%= f.label :background_image %><br/>
-  <%= f.file_field :background_image, class: 'btn pl-0', disabled: (policy([:admin, @client]).editable_field?("background_image") ? false : true) %>
-  <br/>
-  <% if @client.background_image.present? %>
-    <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
-      <img src="<%= @client.background_image.url %>" style="max-height: 100%; max-width:100%;" />
-    </div>
-  <% end %>
-  <hr/>
-</div>
+<% if policy([:admin, @client]).editable_field?('logo') %>
+  <div class="mb-3">
+    <%= f.label :logo %><br/>
+    <%= f.file_field :logo, class: 'btn pl-0', disabled: (policy([:admin, @client]).editable_field?("logo") ? false : true) %>
+    <br/>
+    <% if @client.logo.present? %>
+      <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
+        <img src="<%= @client.logo.url %>" style="max-height: 100%; max-width:100%;" />
+      </div>
+    <% end %>
+    <hr/>
+  </div>
+<% end %>
+<% if policy([:admin, @client]).editable_field?('mobile_logo') %>
+  <div class="mb-3">
+    <%= f.label :mobile_logo %><br/>
+    <%= f.file_field :mobile_logo, class: 'btn pl-0', disabled: (policy([:admin, @client]).editable_field?("mobile_logo") ? false : true) %>
+    <br/>
+    <% if @client.mobile_logo.present? %>
+      <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
+        <img src="<%= @client.mobile_logo.url %>" style="max-height: 100%; max-width:100%;" />
+      </div>
+    <% end %>
+    <hr/>
+  </div>
+<% end %>
+<% if policy([:admin, @client]).editable_field?('background_image') %>
+  <div class="mb-3">
+    <%= f.label :background_image %><br/>
+    <%= f.file_field :background_image, class: 'btn pl-0', disabled: (policy([:admin, @client]).editable_field?("background_image") ? false : true) %>
+    <br/>
+    <% if @client.background_image.present? %>
+      <div style="width:100px;height:100px;overflow:hidden;" class="ml-3">
+        <img src="<%= @client.background_image.url %>" style="max-height: 100%; max-width:100%;" />
+      </div>
+    <% end %>
+    <hr/>
+  </div>
+<% end %>

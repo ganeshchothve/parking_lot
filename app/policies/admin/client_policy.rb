@@ -43,6 +43,9 @@ class Admin::ClientPolicy < ClientPolicy
       attributes += [:twilio_account_sid, :twilio_auth_token, :twilio_virtual_number, :kylas_api_key]
       attributes += [general_user_request_categories: [], partner_regions: [], roles_taking_registrations: [], mask_lead_data_for_roles: [], team_lead_dashboard_access_roles: []]
     end
+    if user.role?('superadmin')
+      attributes += [:industry]
+    end
     attributes.uniq
   end
 end

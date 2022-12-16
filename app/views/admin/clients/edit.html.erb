@@ -34,9 +34,12 @@
                 <li class='nav-item'>
                   <a class="nav-link" rel="nav-client-logos"><%= I18n.t("global.tabs.images_docs") %></a>
                 </li>
-                <li class='nav-item'>
-                  <a class="nav-link" rel="nav-client-regions"><%= I18n.t("global.tabs.cities_regions") %></a>
-                </li>
+                <% editable_regions = policy([:admin, @client]).editable_field?("regions_attributes")%>
+                <% if editable_regions %>
+                  <li class='nav-item'>
+                    <a class="nav-link" rel="nav-client-regions"><%= I18n.t("global.tabs.cities_regions") %></a>
+                  </li>
+                <% end %>
                 <% if policy([:admin, @client]).allow_settings? %>
                   <li class='nav-item'>
                     <a class="nav-link" rel="nav-client-settings"><%= I18n.t("global.tabs.settings") %></a>
@@ -82,10 +85,12 @@
                 <h2 class="tab-title"><%= I18n.t("global.tabs.images_docs") %></h2>
                 <%= render 'admin/clients/logos', f: f %>
               </div>
-              <div id="nav-client-regions">
-                <h2 class="tab-title"><%= I18n.t("global.tabs.cities_regions") %></h2>
-                <%= render 'admin/clients/regions', f: f %>
-              </div>
+              <% if editable_regions %>
+                <div id="nav-client-regions">
+                  <h2 class="tab-title"><%= I18n.t("global.tabs.cities_regions") %></h2>
+                  <%= render 'admin/clients/regions', f: f %>
+                </div>
+              <% end %>
               <% if policy([:admin, @client]).allow_settings? %>
                 <div id="nav-client-settings">
                   <h2 class="tab-title"><%= I18n.t("global.tabs.settings") %></h2>

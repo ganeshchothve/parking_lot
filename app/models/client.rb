@@ -12,6 +12,7 @@ class Client
   PUBLIC_DOCUMENT_TYPES = []
   INCENTIVE_CALCULATION = ["manual", "calculated"]
   ENABLE_PAYMENT = %w[enable_with_kyc enable_without_kyc disable].freeze
+  INDUSTRIES = %w(real_estate generic)
 
   field :name, type: String
   field :selldo_client_id, type: String
@@ -114,6 +115,7 @@ class Client
   field :can_create_webhook, type: Boolean, default: true # flag to check whether user webhook can be created in Kylas or not
   field :kylas_custom_fields, type: Hash, default: {}
   field :kylas_currency_id, type: Integer # kylas currency id is present on kylas products and is tenant dependent
+  field :industry, type: String, default: 'generic'
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= self.logo.url %>" />
@@ -189,6 +191,7 @@ class Client
   validate :check_preferred_login
   validates :sms_provider, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true, if: :sms_enabled?
   validates :sender_email, presence: true
+  validates :industry, inclusion: {in: Client::INDUSTRIES}
 
   accepts_nested_attributes_for :address, :external_inventory_view_config, :checklists
   accepts_nested_attributes_for :regions, allow_destroy: true
