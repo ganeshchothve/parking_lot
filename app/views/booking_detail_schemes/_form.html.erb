@@ -45,13 +45,17 @@
       <div class="col-md-12">
         <div class="mb-3">
           <%= adj.label :field, class: 'label-required' %>
-          <%= adj.select :field, Scheme::FIELDS.collect{|sf| [t("mongoid.attributes.payment_adjustment/field.#{sf}"), sf]}, {prompt: I18n.t("global.select")}, class: 'form-control -tags', disabled: !editable_payment_adjustment %>
+          <%= adj.select :field, Scheme::FIELDS.collect{|sf| [t("mongoid.attributes.payment_adjustment/field.#{sf}"), sf]}, {prompt: I18n.t("global.select")}, class: 'form-control -tags', required: 'required', disabled: !editable_payment_adjustment %>
         </div>
       </div>
     </div>
     <div class="mb-3 col-12">
+      <%= adj.label :absolute_value_type, class: 'label-required' %>
+      <%= adj.select :absolute_value_type, ["+", "-"], selected: "-", class: "selectize", required: 'required', disabled: !editable_payment_adjustment %>
+    </div>
+    <div class="mb-3 col-12">
       <%= adj.label :absolute_value, class: 'label-required' %>
-      <%= adj.number_field :absolute_value, class: "form-control", disabled: !editable_payment_adjustment %>
+      <%= adj.number_field :absolute_value, value: (adj.object.absolute_value.try(:abs)), class: "form-control", min: 1, required: 'required', disabled: !editable_payment_adjustment %>
       <p class="small text-muted"><%= I18n.t("controller.project_units.total_adjustment") %></p>
     </div>
     <div class="mb-3">
@@ -72,7 +76,7 @@
       events = booking_detail_scheme.aasm.events(permitted: true).collect{|x| x.name.to_s}
       events = events.collect{|x| [x.to_s.titleize, x.to_s] }
     %>
-    <%= f.select :event, options_for_select(events, booking_detail_scheme.status), {prompt: I18n.t("global.select")}, class: 'selectize form-control', required: "required" %>
+    <%= f.select :event, options_for_select(events, booking_detail_scheme.status), {prompt: I18n.t("global.select")}, class: 'selectize', required: "required" %>
   </div>
 <% end %>
 
