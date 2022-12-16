@@ -966,6 +966,10 @@ en:
         enable_with_kyc: 'Enable With KYC'
         enable_without_kyc: 'Enable Without KYC'
         disable: 'Disable Payment'
+      client/lead_conflicts:
+        client: Client
+        project: Project
+        no_conflict: No Conflict
       developer:
         name: "Developer Name"
         selldo_id: "CRM Developer ID"

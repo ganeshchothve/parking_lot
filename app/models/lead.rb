@@ -102,6 +102,7 @@ class Lead
   validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile mobile fixed_line premium_rate] }, allow_blank: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } , allow_blank: true
   validates :site_visits, copy_errors_from_child: true, if: :site_visits?
+  validate :check_for_lead_conflict
 
   # delegate :first_name, :last_name, :name, :email, :phone, to: :user, prefix: false, allow_nil: true
   delegate :name, to: :project, prefix: true, allow_nil: true
@@ -365,6 +366,19 @@ class Lead
 
   def is_revisit?
     self.site_visits.where(booking_portal_client_id: self.booking_portal_client_id, status: "conducted").present?
+  end
+
+  def check_for_lead_conflict
+    lead_conflict_on = self.booking_portal_client.enable_lead_conflicts
+    if lead_conflict_on == 'client'
+      # same lead cannot be added by another partner in any project
+      lead = Lead.where(user_id: self.user.id, booking_portal_client_id: self.booking_portal_client.id).first
+      self.errors.add(:enable_lead_conflicts, "Lead is already present on client") if lead.present?
+    elsif lead_conflict_on == 'project'
+      # same lead cannot be added by partner in that project
+      lead = Lead.where(project_id: self.project.id, user_id: self.user.id, booking_portal_client: self.booking_portal_client.id).first
+      self.errors.add(:enable_lead_conflicts, "Lead is already present on this project") if lead.present?
+    end
   end
 
   class << self

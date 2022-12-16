@@ -11,27 +11,27 @@ module LeadRegisteration
       redirect_to (user_signed_in? ? after_sign_in_path_for(current_user) : root_path)
     else
       respond_to do |format|
-        if params[:lead_id].blank? && @lead.present?
-          if current_client.enable_lead_conflicts?
-            CpLeadActivityRegister.create_cp_lead_object(@lead, current_user, params[:lead_details]) if current_user&.role.in?(%w(channel_partner cp_owner))
-            format.json { render json: {lead: @lead, success: I18n.t("controller.leads.notice.created")}, status: :created }
+        # if params[:lead_id].blank? && @lead.present?
+        #   if current_client.enable_lead_conflicts?
+        #     CpLeadActivityRegister.create_cp_lead_object(@lead, current_user, params[:lead_details] || {})) if current_user&.role.in?(%w(channel_partner cp_owner))
+        #     format.json { render json: {lead: @lead, success: I18n.t("controller.leads.notice.created")}, status: :created }
+        #   else
+        #     format.json { render json: {errors: I18n.t("controller.leads.errors.already_exists")}, status: :unprocessable_entity }
+        #   end
+        # else
+        # end
+        if selldo_config_base(current_client).present?
+          @project = Project.new(booking_portal_client_id: current_client.id, name: params["project_name"], selldo_id: params["project_id"]) unless @project.present?
+        end
+
+        if @project.present?
+          if params[:lead_id]
+            add_existing_lead_to_project_flow(format)
           else
-            format.json { render json: {errors: I18n.t("controller.leads.errors.already_exists")}, status: :unprocessable_entity }
+            add_new_lead_flow(format)
           end
         else
-          if selldo_config_base(current_client).present?
-            @project = Project.new(booking_portal_client_id: current_client.id, name: params["project_name"], selldo_id: params["project_id"]) unless @project.present?
-          end
-
-          if @project.present?
-            if params[:lead_id]
-              add_existing_lead_to_project_flow(format)
-            else
-              add_new_lead_flow(format)
-            end
-          else
-            format.json { render json: {errors: I18n.t("controller.projects.alert.not_found") }, status: :not_found }
-          end
+          format.json { render json: {errors: I18n.t("controller.projects.alert.not_found") }, status: :not_found }
         end
       end
     end
@@ -66,30 +66,34 @@ module LeadRegisteration
           lead.assign_attributes(permitted_attributes([:admin, lead])) if params[:lead].present?
 
           check_if_lead_added_by_channel_partner(lead) do |cp_lead_activity|
-            if lead.save
-              # Update selldo lead stage & push Site visits
-              site_visit = lead.site_visits.first
-              if selldo_api && selldo_api.base.present?
-                update_selldo_lead_stage(lead)
-                sv_selldo_api, sv_api_log = site_visit.push_in_crm(selldo_api.base) if site_visit.present?
-              end
-              if cp_lead_activity.present?
-                if cp_lead_activity.save
+            if cp_lead_activity.valid?
+              if lead.save
+                # Update selldo lead stage & push Site visits
+                site_visit = lead.site_visits.first
+                if selldo_api && selldo_api.base.present?
+                  update_selldo_lead_stage(lead)
+                  sv_selldo_api, sv_api_log = site_visit.push_in_crm(selldo_api.base) if site_visit.present?
+                end
+                if cp_lead_activity.present?
+                  if cp_lead_activity.save
+                    Kylas::SyncLeadToKylasWorker.perform_async(lead.id.to_s, site_visit.try(:id).try(:to_s))
+                    update_customer_search_to_sitevisit(lead) if @customer_search.present?
+
+                    format.json { render json: {lead: lead, success: site_visit.present? ? I18n.t("controller.site_visits.notice.created") : I18n.t("controller.leads.notice.created")}, status: :created }
+                  else
+                    format.json { render json: {errors: 'Something went wrong while adding lead. Please contact support'}, status: :unprocessable_entity }
+                  end
+                else
                   Kylas::SyncLeadToKylasWorker.perform_async(lead.id.to_s, site_visit.try(:id).try(:to_s))
                   update_customer_search_to_sitevisit(lead) if @customer_search.present?
 
                   format.json { render json: {lead: lead, success: site_visit.present? ? I18n.t("controller.site_visits.notice.created") : I18n.t("controller.leads.notice.created")}, status: :created }
-                else
-                  format.json { render json: {errors: 'Something went wrong while adding lead. Please contact support'}, status: :unprocessable_entity }
                 end
               else
-                Kylas::SyncLeadToKylasWorker.perform_async(lead.id.to_s, site_visit.try(:id).try(:to_s))
-                update_customer_search_to_sitevisit(lead) if @customer_search.present?
-
-                format.json { render json: {lead: lead, success: site_visit.present? ? I18n.t("controller.site_visits.notice.created") : I18n.t("controller.leads.notice.created")}, status: :created }
+                format.json { render json: {errors: lead.errors.full_messages.uniq}, status: :unprocessable_entity }
               end
             else
-              format.json { render json: {errors: lead.errors.full_messages.uniq}, status: :unprocessable_entity }
+              format.json { render json: {errors: cp_lead_activity.errors.full_messages.uniq}, status: :unprocessable_entity }
             end
           end
         else
