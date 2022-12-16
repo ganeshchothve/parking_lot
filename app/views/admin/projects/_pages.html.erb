@@ -1,28 +1,42 @@
-<div class="mb-3">
-  <%= f.label :video_link, class: '' %>
-  <%= f.text_field :video_link, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("video_link") %>
-</div>
-<div class="mb-3">
-  <%= f.label :description, class: '' %>
-  <%= f.text_area :description, rows: 5, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("description") %>
-</div>
-<div class="mb-3">
-  <%= f.label :advantages, class: '' %>
-  <%= f.text_area :advantages, class: 'form-control summernote', disabled: !policy([:admin, project]).editable_field?("advantages") %>
-</div>
-<div class="mb-3">
-  <%= f.label :terms_and_conditions %>
-  <%= f.text_area :terms_and_conditions, class: 'form-control summernote', disabled: !policy([:admin, @project]).editable_field?("terms_and_conditions") %>
-</div>
-<div class="mb-3">
-  <%= f.label :consideration_value_help_text%>
-  <%= f.text_area :consideration_value_help_text, class: 'form-control summernote', disabled: !policy([:admin, @project]).editable_field?("consideration_value_help_text") %>
-</div>
-<div class="mb-3">
-  <%= f.label :email_header %>
-  <%= f.text_area :email_header, rows: 10, class: 'form-control h-auto', disabled: !policy([:admin, @project]).editable_field?("email_header") %>
-</div>
-<div class="mb-3">
-  <%= f.label :email_footer %>
-  <%= f.text_area :email_footer, rows: 10, class: 'form-control h-auto', disabled: !policy([:admin, @project]).editable_field?("email_footer") %>
-</div>
+<% if policy([:admin, project]).editable_field?("video_link")%>
+  <div class="mb-3">
+    <%= f.label :video_link, class: '' %>
+    <%= f.text_field :video_link, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("video_link") %>
+  </div>
+<% end %>
+<% if policy([:admin, project]).editable_field?("description")%>
+  <div class="mb-3">
+    <%= f.label :description, class: '' %>
+    <%= f.text_area :description, rows: 5, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("description") %>
+  </div>
+<% end %>
+<% if policy([:admin, project]).editable_field?("advantages")%>
+  <div class="mb-3">
+    <%= f.label :advantages, class: '' %>
+    <%= f.text_area :advantages, class: 'form-control summernote', disabled: !policy([:admin, project]).editable_field?("advantages") %>
+  </div>
+<% end %>
+<% if policy([:admin, project]).editable_field?("terms_and_conditions")%>
+  <div class="mb-3">
+    <%= f.label :terms_and_conditions %>
+    <%= f.text_area :terms_and_conditions, class: 'form-control summernote', disabled: !policy([:admin, @project]).editable_field?("terms_and_conditions") %>
+  </div>
+<% end %>
+<% if policy([:admin, project]).editable_field?("consideration_value_help_text")%>
+  <div class="mb-3">
+    <%= f.label :consideration_value_help_text%>
+    <%= f.text_area :consideration_value_help_text, class: 'form-control summernote', disabled: !policy([:admin, @project]).editable_field?("consideration_value_help_text") %>
+  </div>
+<% end %>
+<% if policy([:admin, project]).editable_field?("email_header")%>
+  <div class="mb-3">
+    <%= f.label :email_header %>
+    <%= f.text_area :email_header, rows: 10, class: 'form-control h-auto', disabled: !policy([:admin, @project]).editable_field?("email_header") %>
+  </div>
+<% end %>
+<% if policy([:admin, project]).editable_field?("email_footer")%>
+  <div class="mb-3">
+    <%= f.label :email_footer %>
+    <%= f.text_area :email_footer, rows: 10, class: 'form-control h-auto', disabled: !policy([:admin, @project]).editable_field?("email_footer") %>
+  </div>
+<% end %>

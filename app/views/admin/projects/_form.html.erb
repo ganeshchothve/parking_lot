@@ -23,18 +23,26 @@
                 <li class="nav-item">
                   <a class="nav-link active" rel="nav-project-basic"><%= I18n.t("global.link_to.basic_details") %></a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link active" rel="nav-project-specifications"><%= I18n.t("global.link_to.specs") %></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" rel="nav-project-offers"><%= I18n.t("global.link_to.offers") %></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" rel="nav-project-timeline"><%= I18n.t("global.link_to.timeline") %></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" rel="nav-project-location"><%= I18n.t("global.link_to.location") %></a>
-                </li>
+                <% if policy([:admin, @project]).editable_field?("specifications_attributes")%>
+                  <li class="nav-item">
+                    <a class="nav-link active" rel="nav-project-specifications"><%= I18n.t("global.link_to.specs") %></a>
+                  </li>
+                <% end %>
+                <% if policy([:admin, @project]).editable_field?("offers_attributes")%>
+                  <li class="nav-item">
+                    <a class="nav-link active" rel="nav-project-offers"><%= I18n.t("global.link_to.offers") %></a>
+                  </li>
+                <% end %>
+                <% if policy([:admin, @project]).editable_field?("timeline_updates_attributes")%>
+                  <li class="nav-item">
+                    <a class="nav-link active" rel="nav-project-timeline"><%= I18n.t("global.link_to.timeline") %></a>
+                  </li>
+                <% end %>
+                <% if policy([:admin, @project]).editable_field?("nearby_locations_attributes")%>
+                  <li class="nav-item">
+                    <a class="nav-link active" rel="nav-project-location"><%= I18n.t("global.link_to.location") %></a>
+                  </li>
+                <% end %>
                 <li class="nav-item">
                   <a class="nav-link active" rel="nav-project-pages"><%= I18n.t("global.link_to.content_pages") %></a>
                 </li>
@@ -76,26 +84,34 @@
                 <%= render 'admin/projects/basic', f: f, project: project %>
               </div>
               <hr>
-              <div class="" id="nav-project-specifications">
-                <h2 class="tab-title"><%= I18n.t("global.link_to.specs") %></h2>
-                <%= render 'admin/projects/specifications', f: f, project: project %>
-              </div>
-              <hr>
-              <div class="" id="nav-project-offers">
-                <h2 class="tab-title"><%= I18n.t("global.link_to.offers") %></h2>
-                <%= render 'admin/projects/offers', f: f, project: project %>
-              </div>
-              <hr>
-              <div class="" id="nav-project-timeline">
-                <h2 class="tab-title"><%= I18n.t("global.link_to.timeline") %></h2>
-                <%= render 'admin/projects/timeline-updates', f: f, project: project %>
-              </div>
-              <hr>
-              <div class="" id="nav-project-location">
-                <h2 class="tab-title"><%= I18n.t("global.link_to.location") %></h2>
-                <%= render 'admin/projects/location', f: f, project: project %>
-              </div>
-              <hr>
+              <% if policy([:admin, @project]).editable_field?("specifications_attributes")%>
+                <div class="" id="nav-project-specifications">
+                  <h2 class="tab-title"><%= I18n.t("global.link_to.specs") %></h2>
+                  <%= render 'admin/projects/specifications', f: f, project: project %>
+                </div>
+                <hr>
+              <% end %>
+              <% if policy([:admin, @project]).editable_field?("offers_attributes")%>
+                <div class="" id="nav-project-offers">
+                  <h2 class="tab-title"><%= I18n.t("global.link_to.offers") %></h2>
+                  <%= render 'admin/projects/offers', f: f, project: project %>
+                </div>
+                <hr>
+              <% end %>
+              <% if policy([:admin, @project]).editable_field?("timeline_updates_attributes")%>
+                <div class="" id="nav-project-timeline">
+                  <h2 class="tab-title"><%= I18n.t("global.link_to.timeline") %></h2>
+                  <%= render 'admin/projects/timeline-updates', f: f, project: project %>
+                </div>
+                <hr>
+              <% end %>
+              <% if policy([:admin, @project]).editable_field?("nearby_locations_attributes")%>
+                <div class="" id="nav-project-location">
+                  <h2 class="tab-title"><%= I18n.t("global.link_to.location") %></h2>
+                  <%= render 'admin/projects/location', f: f, project: project %>
+                </div>
+                <hr>
+              <% end %>
               <div class="" id="nav-project-pages">
                 <h2 class="tab-title"><%= I18n.t("global.link_to.content_pages") %></h2>
                 <%= render 'admin/projects/pages', f: f, project: project %>
@@ -120,8 +136,8 @@
                 <h2 class="tab-title"><%= I18n.t("global.link_to.notifications") %></h2>
                 <%= render 'admin/projects/contacts', f: f, project: project %>
               </div>
+              <hr>
               <% if policy(ThirdPartyReference).editable_field?('reference_id') %>
-                <hr>
                 <div class="" id="nav-project-crm_ids">
                   <h2 class="tab-title"><%= I18n.t("global.link_to.crm") %></h2>
                   <%= render 'admin/projects/crm_ids', f: f, project: project %>
