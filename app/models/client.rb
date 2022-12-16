@@ -26,7 +26,7 @@ class Client
   field :helpdesk_email, type: String
   field :notification_email, type: String
   field :notification_numbers, type: String
-  field :allowed_bookings_per_user, type: Integer, default: 3
+  field :allowed_bookings_per_user, type: Integer, default: 300
   field :sender_email, type: String
   field :general_user_request_categories, type: Array, default: []
   field :email_domains, type: Array, default: []
@@ -75,7 +75,7 @@ class Client
   field :blocking_days, type: Integer, default: 10
   field :holding_minutes, type: Integer, default: 15
   field :payment_gateway, type: String, default: 'Razorpay'
-  field :enable_company_users, type: Boolean, default: false
+  field :enable_company_users, type: Boolean, default: true
   field :faqs, type: String
   field :rera, type: String
   field :tds_process, type: String
@@ -83,7 +83,6 @@ class Client
   field :gtm_tag, type: String
   field :enable_communication, type: Hash, default: { email: true, sms: false, whatsapp: false, notification: false }
   field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
-  field :enable_referral_bonus, type: Boolean, default: false
   field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner cp_owner]
   field :lead_blocking_days, type: Integer, default: 30
   field :invoice_approval_tat, type: Integer, default: 2
