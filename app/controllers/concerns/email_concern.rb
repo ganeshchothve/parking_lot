@@ -40,7 +40,7 @@ module EmailConcern
   private
 
   def set_email
-    @email = Email.where(id: params[:id]).first if params[:id].present?
+    @email = Email.where(id: params[:id], booking_portal_client_id: current_client.id).first if params[:id].present?
   end
 
   def set_layout

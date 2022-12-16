@@ -3599,7 +3599,7 @@ en:
         sales_user_not_found: "Sales user not found"
         unqualified: "Lead cannot be unqualified"
         company_not_found: "Requested partner company not found"
-        select_manager: "Please select atleast one manager"
+        select_manager: "Please select atleast one partner"
       message:
         mail_sent: "Mail successfully sent to the selected leads"
         no_leads_added: "You have not added any lead yet.\nStart exploring the projects and add your leads."
