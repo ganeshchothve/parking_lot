@@ -2,6 +2,8 @@ class PaymentAdjustment
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  attr_accessor :absolute_value_type
+
   field :name, type: String
   field :field, type: String
   field :formula, type: String
