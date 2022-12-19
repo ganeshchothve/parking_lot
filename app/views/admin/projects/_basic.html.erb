@@ -9,12 +9,14 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, project]).editable_field?("name") %>
-    <div class="col-md-6">
-      <div class="mb-3">
-        <%= f.label :name, class: 'label-required' %>
-        <%= f.text_field :name, class: 'form-control', autofocus: true, required: 'required', disabled: !policy([:admin, project]).editable_field?("name") %>
-      </div>
+  <div class="mb-3">
+    <%= f.label :name, class: 'label-required' %>
+    <%= f.text_field :name, class: 'form-control', autofocus: true, required: 'required', disabled: !policy([:admin, project]).editable_field?("name") %>
+  </div>
+  <% if policy([:admin, project]).editable_field?("description")%>
+    <div class="mb-3">
+      <%= f.label :description, class: '' %>
+      <%= f.text_area :description, rows: 5, class: '', disabled: !policy([:admin, project]).editable_field?("description") %>
     </div>
   <% end %>
   <% if policy([:admin, project]).editable_field?("developer_name") %>
@@ -312,40 +314,42 @@
     </div>
   <% end %>
 </div>
-<div class="card mt-3">
-  <div class="card-header">
-    <%= I18n.t("global.link_to.contact_details") %>
-  </div>
-  <div class="card-body">
-    <div class="row">
-      <% if policy([:admin, project]).editable_field?("support_name") %>
-        <div class="col-md-12">
-          <div class="mb-3">
-            <%= f.label :support_name %>
-            <%= f.text_field :support_name, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("support_name") %>
+<% if policy([:admin, @project]).editable_field?("support_contact_details") %>
+  <div class="card mt-3">
+    <div class="card-header">
+      <%= I18n.t("global.link_to.contact_details") %>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <% if policy([:admin, @project]).editable_field?("support_name") %>
+          <div class="col-md-12">
+            <div class="mb-3">
+              <%= f.label :support_name %>
+              <%= f.text_field :support_name, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("support_name") %>
+            </div>
           </div>
-        </div>
-      <% end %>
-      <% if policy([:admin, project]).editable_field?("support_mail") %>
-        <div class="col-md-12">
-          <div class="mb-3">
-            <%= f.label :support_mail %>
-            <%= f.email_field :support_mail, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("support_mail") %>
+        <% end %>
+        <% if policy([:admin, @project]).editable_field?("support_mail") %>
+          <div class="col-md-12">
+            <div class="mb-3">
+              <%= f.label :support_mail %>
+              <%= f.email_field :support_mail, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("support_mail") %>
+            </div>
           </div>
-        </div>
-      <% end %>
-      <% if policy([:admin, project]).editable_field?("support_phone") %>
-        <div class="col-md-12">
-          <div class="mb-3">
-            <%= f.label :support_phone %>
-            <%= f.text_field :support_phone, class: 'form-control phone', disabled: !policy([:admin, project]).editable_field?("support_phone") %>
+        <% end %>
+        <% if policy([:admin, @project]).editable_field?("support_phone") %>
+          <div class="col-md-12">
+            <div class="mb-3">
+              <%= f.label :support_phone %>
+              <%= f.text_field :support_phone, class: 'form-control phone', disabled: !policy([:admin, project]).editable_field?("support_phone") %>
+            </div>
           </div>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
     </div>
   </div>
-</div>
-<% if policy([:admin, project]).editable_field?("address") %>
+<% end %>
+<% if policy([:admin, @project]).editable_field?("address") %>
   <div class="card mt-3">
     <div class="card-header">
       <%= I18n.t("mongoid.attributes.project.address") %>
