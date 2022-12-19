@@ -2511,7 +2511,9 @@ select.form-control{
 		position: relative;
 		margin-bottom:5px;
 		&.active{
-			border: 1px solid #296FE6;
+			background-color: #E7F0FD;
+			color: #2E6BE6;
+			border: 1px solid #E7F0FD;
 		}
 		.notify{
 			background-color: #EE0000;
@@ -3814,7 +3816,7 @@ label.label-required:after {
 		border-radius: 50%;
 	} 
 	.mb-3 input, select{
-		height: 36px;
+		height: 38px;
 	}
 	select, textarea{
 		background-color: #fff;
@@ -3824,16 +3826,16 @@ label.label-required:after {
 		padding: 5px 6px;
 	}
 	.selectize-input{
-		border: 0.5px solid #949494;
+		border: 0.5px solid rgb(204, 204, 204);
 		box-shadow: none;
 		overflow: auto;
-		padding: 8px 8px!important;
-		overflow: hidden;
-		height: auto;
-		max-height: 36px;
+		padding: 0px 8px!important;
+		overflow: auto;
+		height: 38px;
+		max-height: 38px;
 		input{
 			position: relative!important;
-			height: auto;
+			height: 36px;
 		}
 		.item{
 	    	// vertical-align: middle;
@@ -3843,7 +3845,9 @@ label.label-required:after {
 		}
 	}
 	.selectize-control.multi .selectize-input > div{
-		background-color: rgba(0,109,238,0.20);
+		border: 1px solid rgb(105, 112, 127);
+    	background-color: #fff;
+		border-radius:2px;
 	}
 	.intl-tel-input{
 		width: 100%;
@@ -3857,7 +3861,7 @@ label.label-required:after {
 .fixed-header-footer {
 	.theme-form {
 		.selectize-input{
-			border: 1px solid #C6D0F0;
+			border: 1px solid rgb(204, 204, 204);
 		}
 	}
 }
@@ -6136,5 +6140,36 @@ table .dropdown-menu.show{
 		padding: 10px;
 		margin-bottom: 30px;
 		box-shadow: 0px 0px 2px #00000029;
+	}
+}
+.form-check-input:valid:checked, 
+.form-check-input.is-valid:checked {
+  	background-color: $primary;
+  	border-color: $primary;
+}
+.form-check-input.is-valid:focus{
+	box-shadow: 0 0 0 0.25rem rgba(0, 109, 238, 0.25);
+}
+.form-check-input.is-valid{
+	border-color: $primary;
+}
+.form-check label {
+    margin-bottom: 0;
+    margin-top: 7px;
+    margin-left: 5px;
+}
+.fix-dropdown-menu{
+	&.show{
+		display: block;
+		position: fixed!important;
+		right: 24px!important;
+		top: 50%!important;
+		transform: translateY(-50%)!important;
+		z-index: 9999;
+		left: unset!important;
+		overflow: auto;
+		@media screen and (max-width:700px){
+			max-height: 90vh;
+		}
 	}
 }

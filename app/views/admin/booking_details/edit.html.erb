@@ -6,7 +6,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <%= form_for [:admin, @booking_detail], local: true, remote: true, html: {id: 'booking_detail_form', class: 'modal-remote-form validate-form', data: { "resource-type": t('global.booking_detail'), type: :json} } do |f| %>
+        <%= form_for [:admin, @booking_detail], local: true, remote: true, html: {id: 'booking_detail_form', class: 'modal-remote-form validate-form theme-form', data: { "resource-type": t('global.booking_detail'), type: :json} } do |f| %>
           <div class="mb-3">
           <%= f.label :primary_user_kyc_id %>
           <%= f.select :primary_user_kyc_id, @booking_detail.lead.user_kycs.collect{|x| [x.name, x.id]}, {prompt: I18n.t("global.select")}, class: 'selectize', required: @booking_detail.user.user_kycs.present? ? 'required' : nil,  autofocus: true %>

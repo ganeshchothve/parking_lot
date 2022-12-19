@@ -11,7 +11,7 @@
         <div class="col-md-3">
           <div class="mb-3">
             <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.stage') %></label>
-<p class="fn-14 theme-txt-color mb-0"><%= (I18n.t("mongoid.attributes.lead/stage.#{lead.lead_stage}") if lead.lead_stage != nil) || '-' %></p>
+            <p class="fn-14 theme-txt-color mb-0"><%= (I18n.t("mongoid.attributes.lead/stage.#{lead.lead_stage}") if lead.lead_stage != nil) || '-' %></p>
           </div>
         </div>
         <div class="col-md-3">
@@ -91,7 +91,7 @@
           <div class="col-md-3">
             <div class="mb-3">
               <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.manager_id') %></label>
-               <p class="fn-14 theme-txt-color mb-0">
+                <p class="fn-14 theme-txt-color mb-0">
                 <% manager_user = lead.manager_id.present? ? User.find(lead.manager_id) : nil %>
                 <%= manager_user.present? ? link_to(manager_user.name, admin_user_path(manager_user)) : '-' %>
                 </p>
@@ -104,7 +104,7 @@
           <div class="col-md-3">
             <div class="mb-3">
               <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.source') %></label>
-               <p class="fn-14 theme-txt-color mb-0">
+                <p class="fn-14 theme-txt-color mb-0">
                 <%= lead.source || "-" %>
                 </p>
             </div>
@@ -115,7 +115,7 @@
           <div class="col-md-3">
             <div class="mb-3">
               <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.sub_source') %></label>
-               <p class="fn-14 theme-txt-color mb-0">
+                <p class="fn-14 theme-txt-color mb-0">
                 <%= lead.sub_source || "-" %>
                 </p>
             </div>
