@@ -1,0 +1,4106 @@
+en-REAL_ESTATE:
+  currency:
+    indian: "₹"
+    default: "&#8377;"
+  date:
+    formats:
+      default: "%d/%m/%Y"
+  time:
+    formats:
+      default: "%d/%m/%Y %I:%M %p"
+      date: "%d/%m/%Y"
+  date_time:
+    formats:
+      default: "%d/%m/%Y %I:%M %p"
+      date: "%d/%m/%Y"
+  welcome: "Welcome %{name}"
+  global:
+    only_admins:
+      this_page: "Only admins can view this page."
+    please_wait: "Please wait..."
+    congratulations: "Congratulations"
+    coming_soon: "Coming Soon"
+    confirmed: "Confirmation successful."
+    terms_and_conditions: "Terms and Conditions"
+    brand: "%{client_name}"
+    all: "All"
+    all_elements: "All %{name}"
+    at: "At"
+    file: "File"
+    add: "Add"
+    edit: "Edit"
+    send: "Send"
+    show: "Show"
+    save: "Save"
+    enable: "Enable "
+    check_in: "Check In"
+    submit_application: "Submit Application"
+    resubmit_application: "Resubmit Application"
+    save_draft: "Save Draft"
+    submit: "Submit"
+    upload: "Upload"
+    close: "Close"
+    proceed: "Proceed"
+    cancel: "Cancel"
+    apply: "Apply"
+    select: "Select"
+    error: "Error"
+    print: "Print"
+    customer: "Customer"
+    selected: "Selected"
+    reason: "Reason"
+    success: "Success"
+    no_of: "No. Of "
+    gallery: "Gallery"
+    enter_url: "Enter Url"
+    created_at: "Created At"
+    wait_time: "Wait Time"
+    action:
+      one: "Action"
+      other: "Actions"
+    active_filter: "Active Filter"
+    active_filter_elements: "Active Filter %{name}"
+    channel_partner_application: "Application Form"
+    added_by: "Added By"
+    custom: "More"
+    change: "Change"
+    dashboard: "Dashboard"
+    pdf: "pdf"
+    disclaimer: "Disclaimer"
+    default_account_name: "Default Account will be considered"
+    gallery: "Gallery"
+    i_agree: "I Agree"
+    i_agree_be_half_of: "I Agree on behalf of %{name}"
+    previous: "Previous"
+    next: "Next"
+    _no: "No"
+    not_sync_yet: "Not Synced"
+    not_generated: "Not Generated"
+    otp: "OTP"
+    overview: "Overview"
+    total: "Total"
+    options:
+      yes: "Yes"
+      no: "No"
+    boolean:
+      :true: "Yes"
+      :false: "No"
+    agreement_value: "AV"
+    walkin:
+      one: "Walk-in"
+      other: "Walk-ins"
+    third_party_inventory: "3rd Party Inventory"
+    variable_incentive_schemes: "Variable Incentive Scheme"
+    lead: "Lead"
+    discount:
+      one: "Token Discount"
+      other: "Token Discounts"
+    export_scheduled: "Your export has been scheduled and will be emailed to you in some time"
+    errors:
+      invalid_date_format: "%{name} date format is invalid. Correct date format is - dd/mm/yyyy"
+      boolean: "%{name} should be a boolean value - true or false"
+      something_went_wrong: "Something went wrong"
+    filter: "Filter"
+    filters: "Filters"
+    project: "Project"
+    booking_count: "Booking Count"
+    no_users: "No Users Found"
+    no_record: "No Records Found"
+    no_records: "No Records."
+    welcome: "Welcome"
+    dates: "Dates"
+    type: "Type"
+    status: "Status"
+    count: "Count"
+    back_to_home: "Back to Home"
+    name: "Name"
+    tower: "Tower"
+    city: "City"
+    regions: "Regions"
+    key: "Key"
+    hello: "Hello"
+    today: "Today"
+    loss: "Loss"
+    documents: "Documents"
+    search: "Search"
+    drop_customer: "Drop Customer"
+    congratulations: "Congratulations"
+    email_id: "Email Id"
+    phone_no: "Phone No."
+    actions: "Actions"
+    name_email_phone: "Name / Email / Phone"
+    search_by: "Search By %{name}"
+    logical_conditions:
+      or: "OR"
+    export: "Export"
+    keys:
+      from: "From "
+    tabs:
+      amount: "Amount"
+      overview: "Overview"
+      site_visits: "Walk-ins"
+      remarks_from_selldo: "Remarks From SellDo"
+      lead_activities: "Lead Activities"
+      bookings: "Bookings"
+      basic_details: "Basic Details"
+      booking_details: "Booking Details"
+      payments: "Payments"
+      time_slot: "Time Slot"
+      note_summary: "Note Summary"
+      crm: "CRM"
+      lead: "Lead"
+      users: "Users"
+      notes: "Notes"
+      interested_projects: "Interested Projects"
+      my_referrals: "My Referrals"
+      utm_params: "UTM Params"
+      residence/permanent_address: "Residence / Permanent Address"
+      correspondence/office_address: "Correspondence / Office Address"
+      corporate_details: "Corporate Details (If Any)"
+      bank_details: "Bank Details"
+      other_details: "Other Details"
+      nri_related_details: "NRI Related Details"
+      existing_customer: "Existing Customer?"
+      address: "Address"
+      crm_ids: "CRM IDs"
+      export: "Export"
+      actions: "Actions"
+      contacts_n_notifications: "Contacts & Notifications"
+      itegrations: "Integrations"
+      content_pages: "Content Pages"
+      images_docs: "Images & Docs"
+      cities_regions: "Cities & Regions"
+      settings: "Settings"
+      payment_schedule: "Payment Schedule"
+      get_details_from_crm: "Get Details from CRM"
+      integrations: "Integrations"
+      external_inventory_view: "External Inventory View Configuration"
+      specifications: "Specifications"
+    units:
+      sq_ft: "sq.ft"
+    fetch_errors:
+      project_towers: "Error in fetching the project towers..."
+      regions: "Error in fetching the regions..."
+      payment_schedules: "Error in fetching the project payment schedules..."
+      cost_sheet_templates: "Error in fetching the project cost sheet templates..."
+    link_to:
+      all_exports: "All Exports"
+      active_filter_exports: "Active Filter Exports"
+      click_to_zoom: "Click to Zoom"
+      add_new: "Add New"
+      need_help: "Need Help?"
+      not_summary: "Note Summary"
+      call: "Call"
+      here: "Here"
+      document_type: "Document Type"
+      crm: "CRM"
+      basic_details: "Basic Details"
+      specs: "Specs"
+      offers: "Offers"
+      timeline: "Timeline"
+      location: "Location"
+      content_pages: "Content Pages"
+      images_docs: "Images & Docs"
+      integrations: "Integrations"
+      bookings: "Bookings"
+      notifications: "Notifications"
+      details: "Details"
+      crm: "CRM"
+      videos: "Videos"
+      overview: "Overview"
+      configurations: "Configurations"
+      collaterals: "Collaterals"
+      amenities: "Amenities"
+      project_timeline: "Project Timeline"
+      rate_of_interest: "Rate of Interest"
+      loan_tenure: "Loan Tenure"
+      total_interest_payable: "Total Interest Payable"
+      total_amount_payable: "Total Amount Payable"
+      select_category: "Select Category"
+      select_type: "Select Type"
+      select_project: "Select Project"
+      uniques_selling_points: "Uniques Selling Points"
+      view_all: "View All"
+      advertise_kit: "Advertise Kit"
+      contact_details: "Support Contact Details"
+      customers_offers: "Customers offers"
+      send_projects_link: "Send Projects Link"
+      add_comments: "Add Comments"
+      sign_in_count: "Sign in Count"
+      recommended: "Recommended"
+      last_added: "Last Added"
+      saved: "Saved"
+      launchbook: "Launchbook"
+      embassy_developers: "Embassy Developers"
+      completed_projects: "Completed Projects"
+      ongoing_projects: "Ongoing Projects"
+      benefits: "Benefits of investing in this project"
+      good_location: "Good Location"
+      amenitites_state: "State of the art Amenities"
+      reputed_developer: "Reputed Developer"
+      bank_offers: "Bank Offers"
+      affordable: "Affordable"
+      popular_among: "Popular among partners"
+      funds_raised: "Funds Raised"
+      funds_raised_so_far: "Funds Raised so far"
+      minimum_investment: "Minimum Investment"
+      select_city_first: "Select City First"
+      mis_active_filter: "MIS Active Filter"
+      get_started: "Get Started"
+      this_is_time: "Now is the best time to turn your dream into reality"
+      love_our_brand: "Why you would love %{name}"
+      early_access: "Early access to <br> New Launches"
+      timely_payments: "Timely payments to <br> streamline cash flows"
+      marketing_support: "Marketing Support <br> & assets"
+      performance_based: "Performance-based <br> Channel Partner ratings"
+      extensive_nurturing: "Extensive nurturing <br> Calling during launches"
+      crm_training: "CRM training <br> Support"
+      fully_automated: "Fully automated <br> EOI Process"
+      eoi_number: "EOI Number"
+      online_inventory_selection: "Online inventory selection <br> KYC & bookings"
+      complete_transparency: "Complete <br> Transparency"
+      unique_online: "Unique online <br> Broker Profile"
+      available: "Available"
+      hold: "Hold"
+      sold_out: "Sold Out"
+      not_available: "Not Available"
+      r_refugee_area: "R Refugee Area"
+      vis_report: "Variable Incentive Scheme Report"
+      current_ladder: "Current Ladder"
+      total_incentives_generated: "Total Incentives Generated"
+      projects_available: "Projects available"
+      upcoming_events: "Upcoming Evetns"
+      drop: "Drop"
+      busy_not_available: "Busy | Not Available"
+      break: "Break"
+      resource: "Resource"
+      category: "Category"
+      brokerage_type: "Brokerage Type"
+      cp_admin: "CP Admin"
+      count: "Count"
+      city_wise:
+        booking_reports: "City Wise Booking Reports"
+      add_upi: "Please add your UPI Address for quick payment. Please click on the link"
+      active_walkins: "Active Walk-ins"
+      active_bookings: "Active Bookings"
+      active_partners: "Active Partners"
+      cancel: "Cancel"
+      virtual_walkthrough: "Begin Virtual Walkthrough below"
+      upload: "Upload"
+      site_visits: "Site Visits"
+      spot_bookings: "Spot Bookings"
+      brokerages: "Brokerages"
+      total_earnings: "Total Earnings"
+      total_errors: "Total Errors"
+      earnings: "Earnings"
+      earning_potential: "Earning Potential"
+      no_images_available: "No Images Available"
+      scroll_down: "Scroll Down"
+      register_now: "Register Now"
+      tnc: "T & C"
+      privacy_policy: "Privacy Policy"
+      powered_by_selldo: "Powered by Sell.do"
+      take_break: "Take Break"
+      resume_work: "Resume Work"
+      add_element: "Add %{name}"
+      photos: "Photos"
+      print: "Print"
+      paid_by: "Paid By"
+      paid_to: "Paid To"
+      for: "For"
+      total_count: "Total %{name}"
+      details_on_click: "Click to view details"
+      add_city_regions: "Add New City & Regions"
+    text:
+      dropping: "Dropping..."
+    operators:
+      plus: "Plus"
+
+  helpers:
+    mark_conducted:
+      link_name: "Mark as Conducted"
+    extend_validity:
+      link_name: "%{model}"
+    accompanied_credit:
+      link_name: "%{model}"
+    show_interest:
+      link_name: "Sign Up"
+    not_interested:
+      link_name: "Mark not Interested"
+    show:
+      link_name: "%{model} Details"
+    edit:
+      link_name: "Edit %{model}"
+      direct_activation_for_cp_label: "Skip Admin approval for channel partner registration"
+    new:
+      link_name: "Add %{model}"
+    destroy:
+      link_name: "Destroy %{model}"
+    select:
+      prompt: "Please select"
+    submit:
+      create: "Add %{model}"
+      update: "Update %{model}"
+      submit: "Save %{model}"
+      post:
+        create: "Upload %{model}"
+    save: "Save"
+    need_help: "Need Help? Contact Us - %{name}"
+
+  language:
+    en: "English"
+    mr: "मराठी"
+
+  mongoid:
+    models:
+      push_notification:
+        one: "Notification"
+        other: "Notifications"
+      api_log:
+        one: "API Log"
+        other: "API Logs"
+      crm/base:
+        one: "CRM"
+        other: "CRMs"
+      crm/api:
+        one: "API"
+        other: "APIs"
+      crm/api/get:
+        one: "GET API"
+        other: "GET APIs"
+      crm/api/post:
+        one: "POST API"
+        other: "POST API"
+      crm/api/put:
+        one: "PUT API"
+        other: "PUT API"
+      bulk_upload_report:
+        one: "Bulk Upload Report"
+        other: "Bulk Upload Reports"
+      asset:
+        zero: "Document"
+        one: "Document"
+        other: "Documents"
+      public_asset:
+        zero: "Public Asset"
+        one: "Public Asset"
+        other: "Public Assets"
+      video:
+        zero: "Video"
+        one: "Video"
+        other: "Videos"
+      address:
+        one: "Address"
+        other: "Addresses"
+      account:
+        one: "Account"
+        other: "Accounts"
+      bank_detail:
+        one: "Bank"
+        other: "Banks"
+      bulk_upload_report:
+        one: "Bulk Upload Report"
+        other: "Bulk Upload Reports"
+      upload_error:
+        one: "Upload Errors"
+        other: "Upload Errors"
+      booking_detail:
+        one: "Booking"
+        other: "Bookings"
+        i_agree_label:
+          buyer: "I Agree"
+          admin: "I Agree in behalf of %{name}"
+      checklist:
+        one: "Task"
+        other: "Tasks"
+      announcement:
+        one: "Announcement"
+        other: "Announcements"
+
+      booking_detail_scheme:
+        one: "Booking Scheme"
+        other: "Booking Schemes"
+      client:
+        one: "Client"
+        other: "Clients"
+      cost:
+        one: "Cost"
+        other: "Costs"
+      channel_partner:
+        one: "Partner Company"
+        other: "Partner Companies"
+      interested_project:
+        one: "Interested Project"
+        other: "Interested Projects"
+
+      data_attribute:
+        one: "Date"
+        other: "Data"
+      email:
+        one: "Email"
+        other: "Emails"
+      erp_model:
+        one: "ERP Model"
+        other: "ERP Models"
+      note:
+        one: "Note"
+        other: "Notes"
+      portal_stage_priority:
+        one: "Portal Stage"
+        other: "Portal Stages"
+      project_tower:
+        one: "Tower"
+        other: "Towers"
+      project_unit:
+        one: "Apartment"
+        other: "Apartments"
+      project:
+        one: "Project"
+        other: "Projects"
+      token_type:
+        one: "Token Type"
+        other: "Token Types"
+      time_slot:
+        one: "Time Slot"
+        other: "Time Slots"
+      developer:
+        one: "Developer"
+        other: "Developers"
+      payment_adjustment:
+        zero: "Payment Adjustment"
+        one: "Payment Adjustment"
+        other: "Payment Adjustments"
+      receipt:
+        one: "Payment"
+        other: "Payments"
+      search:
+        one: "Search"
+        other: "Searches"
+      scheme:
+        one: "Scheme"
+        other: "Schemes"
+      incentive_scheme:
+        one: "Brokerage Scheme"
+        other: "Brokerage Schemes"
+      sms:
+        one: "SMS"
+        other: "SMSs"
+      sync_log:
+        one: "Sync Log"
+        other: "Sync Logs"
+      template:
+        one: "Template"
+        other: "Templates"
+      user_request:
+        one: "User Request"
+        other: "User Requests"
+      meeting:
+        one: "Event"
+        other: "Events"
+      campaign:
+        one: "Campaign"
+        other: "Campaigns"
+      user_request/cancellation:
+        one: "Cancellation"
+        other: "Cancellations"
+      user_request/swap:
+        one: "Swap"
+        other: "Swaps"
+      user_request/general:
+        one: "General"
+        other: "General"
+      site_visit:
+        one: "Walk-in"
+        other: "Walk-ins"
+      user_kyc:
+        one: "KYC"
+        other: "KYCs"
+      user:
+        one: "User Account"
+        other: "Users Accounts"
+      fund_account:
+        one: "Fund Account"
+        other: "Fund Accounts"
+      lead:
+        one: "Lead"
+        other: "Leads"
+      invoice:
+        zero: "Invoice"
+        one: "Invoice"
+        other: "Invoices"
+      incentive_deduction:
+        zero: "Brokerage Deduction"
+        one: "Brokerage Deduction"
+        other: "Brokerage Deductions"
+      unit_configuration:
+        one: "Unit Configuration"
+        other: "Unit Configurations"
+      variable_incentive_scheme:
+        one: "Variable Incentive Scheme"
+        other: "Variable Incentive Schemes"
+      external_inventory_view_config:
+        available_providers:
+          Foyr: "Foyr 3D Inventory View"
+        available_statuses:
+          active: "Active"
+          inactive: "Inactive"
+      banner_asset:
+        one: "Banner Asset"
+        other: "Banner Assets"
+
+    attributes:
+      api_log:
+        request: "Request"
+        request_url: "Request Url"
+        response: "Response"
+        status: "Status"
+        message: "Message"
+        log_type: "Log Type"
+        resource_type: "Resource Type"
+      api_log/resource_type:
+        BookingDetail: Booking
+        Campaign: Campaign
+        ChannelPartner: Channel Partner
+        Client: Client
+        FundAccount: Fund Account
+        Invoice: Invoice
+        Lead: Lead
+        Meeting: Event
+        Note: Note
+        ProjectTower: Project Tower
+        ProjectUnit: Project Unit
+        Project: Project
+        Receipt: Payment
+        SiteVisit: Walk-in
+        UserKyc: User KYC
+        User: User
+      announcement:
+        title: "Title"
+        content: "Details"
+        announcement_details: "Title & Details"
+        date: "Date"
+        category: "Category"
+        published: "Published"
+      announcement/categories:
+        general: "General"
+        new_launch: "New Launch"
+        events: "Events"
+        brokerage_alert: "Brokerage Alert"
+      announcement/file_types:
+        photo: "Photos"
+        collateral: "Collaterals"
+      announcement/help_text:
+        photo_html: "<ul><li>Photos of the Announcement</li></ul>"
+        collateral_html: "<ul><li>Announcement Collaterals</li></ul>"
+      crm/base:
+        name: "Name"
+        domain: "Domain"
+        request_headers: "Request Headerssss"
+        request_payload: "Request Payload"
+        oauth2_authentication: "Oauth2 Authentication"
+        user: "User"
+        oauth_type: Authorization Type
+      crm/base/oauth_type:
+          salesforce: "Salesforce"
+          kylas: "Kylas"
+      discount:
+        name: "Name"
+        description: "Description"
+        start_token_number: "Start Token Number"
+        end_token_number: "End Token Number"
+        project_id: "Project"
+        token_type_id: "Token Type"
+        project: "Project"
+        token_type: "Token Type"
+        field: "Field"
+        absolute_value: "Absolute Value"
+        formula: "Formula"
+      video:
+        thumbnail: "Thumbnail"
+        description: "Title"
+        embedded_video: "Embedded Video"
+      unit_configuration:
+        name: "Name"
+        project_id: "Project"
+        saleable: "Saleable"
+        carpet: "Carpet"
+        base_rate: "Base Rate"
+      unit_configuration/file_types:
+        floor_plan: "Floor Plan"
+        image: "Unit Image"
+      unit_configuration/help_text:
+        floor_plan_html: "<ul><li>Floor Plans images</li></ul>"
+        image_html: "<ul><li>Other Unit images</li></ul>"
+      interested_project:
+        project_id: "Project"
+        user_id: "User"
+        status: "Status"
+      interested_project/status:
+        subscribed: "Subscribed"
+        approved: "Approved"
+        rejected: "Rejected"
+        blocked: "Blocked"
+
+      push_notification:
+        url: "Redirect url"
+        title: "Title"
+        content: "Content"
+        data: "Data"
+        status: "Status"
+      crm:
+        base:
+          name: "Name"
+          domain: "Domain"
+        api:
+          request_type: "Request Type"
+          request_types:
+            get: "Get Details"
+            post: "Sync"
+          resource_classes:
+            User: "Customer Account"
+            ChannelPartner: "Channel Partner"
+            Receipt: "Payment"
+            UserKyc: "User KYC"
+            BookingDetail: "Booking Detail"
+            Lead: 'Lead'
+            SiteVisit: 'Walkin'
+            FundAccount: 'Account'
+            Note: 'Note'
+            Client: 'Client'
+            Invoice: 'Invoice'
+      crm/api:
+        event: "Event Name"
+        resource_class: "Resource Class"
+        Path: "Api Path"
+        request_payload: "Request Payload"
+        is_active: "Active"
+        response_crm_id_location: "CRM Reference ID Location In Response"
+      crm/api/put:
+        http_method: "HTTP Method"
+
+      bulk_upload_report:
+        uploaded_by_id: "Uploaded By"
+        project_id: "Project"
+        total_rows: "Total rows"
+        success_count: "Successfully Uploaded"
+        failure_count: "Failed to Upload"
+        file_uploaded: "File Uploaded"
+      banner_asset:
+        uploaded_by_id: "Uploaded By"
+        banner_image: "Website Banner"
+        mobile_banner_image: "Mobile Banner"
+        url: "URL"
+        publish: "Publish"
+      upload_error:
+        row: "Row"
+        errors: "Errors"
+      checklist:
+        name: "Name"
+        key: "Key"
+        description: "Description"
+        tracked_by: "Tracked By"
+        order: "Order"
+      checklist/tracked_by:
+        manual: "Manual"
+        calculated: "Calculated"
+        system: "System"
+      checklist/status:
+        registration_done: "Registration Done"
+      asset:
+        assetable_id: "Assetable ID"
+        assetable_type: "Assetable Type"
+        file: "File"
+        file_size: "Size"
+        file_name: "Name"
+        asset_type: "Type"
+      address:
+        address1: "House/Flat/Company"
+        address2: "Street"
+        city: "City"
+        country: "Country"
+        state: "State / Region"
+        zip: "Zip / Pin Code"
+        address_type: "Address Type"
+
+      account:
+        account_number: "Account Number"
+        access_code: "Access Code"
+        by_default: "Default"
+        key: "Key"
+        merchant_id: "Merchant Id"
+        name: "Name"
+        secret: "Secret"
+        working_key: "Working Key"
+        names: "Names"
+      account/by_default:
+        :true: "Yes"
+        :false: "No"
+
+      bank_detail:
+        zip: "Zip / Pin Code"
+        name: "Bank Name"
+        account_holder_name: "Account Holder's Name"
+        branch: "Branch"
+        account_type: "Account Type"
+        ifsc_code: "IFSC Code"
+        account_number: "Account Number"
+        loan_required: "Do you need a loan?"
+      bank_detail/account_types:
+        savings: "Savings"
+        current: "Current"
+
+      booking_detail:
+        name: "Name"
+        rejection_reason: "Rejection Reason"
+        status: "Status"
+        project_tower: "Project Tower"
+        project_id: "Project"
+        user: "User"
+        bathrooms: "Bathrooms"
+        bedrooms: "Bedrooms"
+        manager: "Manager"
+        paid_amount: "Paid Amt.(Inclusive of GST)"
+        total_amount_paid: "Total Amount Paid (Inclusive of GST)"
+        booking_pending_amount: "Booking Amt. Pending"
+        last_sync_status: "Last Sync Status"
+        comments: "Comments"
+        carpet: "Carpet Area"
+        agreement_price: "Agreement Price"
+        tentative_amount: "Tentative Amount"
+        all_inclusive_price: "All Inclusive Price"
+        manager_id: "Manager"
+        dates: "Dates"
+        tasks_completed: "Tasks Completed"
+        tasks_pending: "Tasks Pending"
+        tasks_completed_tracked_by: "All Tasks Completed Tracked by"
+        registration_done: "Registration Done"
+        ladder_stage: "Ladder Stage"
+        primary_user_kyc_id: "Primary Applicants"
+        user_kyc_ids: "Secondary Applicants"
+        lead_id: "Customer Name"
+        agreement_price_without_inventory: "Consideration Value"
+        invoice_generated: "Invoice Generated"
+        tentative_agreement_date: "Tentative Agreement Date"
+        agreement_date: "Agreement Date"
+        booked_on: "Booked On"
+        approval_status: "Approval Status"
+        saleable: "Saleable"
+        phase: "Phase"
+        effective_rate: "Effective Rate"
+        base_rate: "Base Rate"
+        floor_rise: "Floor Rise"
+        booking_project_unit_name: "Booking Project Unit Name"
+        project_tower_name: "Project Tower Name"
+        project_unit_name: "Project Unit Name"
+        project_unit_configuration: "Project Unit Configuration"
+        site_visit_id: "Site Visit"
+        project_id: "Project"
+        lead_id: "Lead"
+        other_costs: "Other costs"
+        source: "Source"
+        manager_id: "Channel Partner"
+        template_docs: Documents
+        print_document: Print Document
+      booking_detail/selldo_status:
+        booked_tentative: "tentative"
+        booked_confirmed: "confirmed"
+        cancelled: "cancelled"
+      booking_detail/approval_status:
+        pending: "Pending Approval"
+        approved: "Approved"
+        rejected: "Rejected"
+      booking_detail/status:
+        available: "Available"
+        not_available: "Not Available"
+        error: "Error"
+        hold: "Hold"
+        blocked: "Blocked"
+        booked_tentative: "Tentative Booked"
+        booked_confirmed: "Confirmed Booked"
+        under_negotiation: "Under Negotiation"
+        scheme_approved: "Scheme Approved"
+        scheme_rejected: "Scheme Rejected"
+        swap_requested: "Swap Requested"
+        swapping: "Swapping"
+        swapped: "Swapped"
+        swap_rejected: "Swap Rejected"
+        cancellation_requested: "Cancellation Requested"
+        cancelling: "Cancelling"
+        cancelled: "Cancelled"
+        cancellation_rejected: "Cancellation Rejected"
+        management: "Management Blocking"
+        employee: "Employee Blocking"
+      booking_detail/count:
+        total_blocked: "Total Blocked"
+        total_booked_tentative: "Total Tentative Booked"
+        total_booked_confirmed: "Total Confirmed Booked"
+        total_under_negotiation: "Total Under Negotiation"
+        total_cancelled: "Total Cancelled"
+      booking_detail_scheme:
+        derived_from_scheme_id: "Derived from Scheme"
+        name: "Name"
+        field: "Field"
+        value: "Value"
+
+      client:
+        name: "Client Name"
+        allowed_bookings_per_user: "Bookings allowed per user"
+        selldo_client_id: "SellDo Client ID"
+        selldo_form_id: "SellDo Form ID"
+        selldo_channel_partner_form_id: "SellDo Form ID - For Channel Partners"
+        selldo_gre_form_id: "SellDo Form ID - Used by Non Channel Partners"
+        selldo_api_key: "SellDo API Key (Use generic Api Client)"
+        selldo_api_secret: "SellDo API Secret"
+        selldo_default_srd: "SellDo Default SRD"
+        selldo_cp_srd: "SellDo Channel Partner SRD"
+        notification_email: "Notification Email"
+        notification_email_sort: "(all emails are sent here)"
+        notification_numbers: "Notification Numbers"
+        notification_numbers_sort: "(Key SMS Reports are sent here)"
+        sender_email: "Sender Email Address"
+        email_domains: "Email Domains (to detect employee users)"
+        booking_portal_domains: "Booking Portal Domains (where the portal is hosted)"
+        registration_name: "Registration Name (Used in Payments)"
+        gst_number: "GST Number"
+        address: "Address"
+        cin_number: "CIN Number"
+        website_link: "Website Link (Used in email communication)"
+        cp_disclaimer: "Channel Partner Disclaimer"
+        cp_disclaimer_sort: "(to be shown to Channel Partners during registration)"
+        disclaimer: "Disclaimer"
+        support_number: "Support Phone"
+        support_email: "Support Email"
+        helpdesk_number: "Helpdesk Phone (For after booking CRM Help)"
+        helpdesk_email: "Helpdesk Email (For after booking CRM Help)"
+        ga_code: "Google Analytics Code (UA-XXXXXXXXX-Y)"
+        gtm_tag: "GTM Tag (Please add a the entire JS code)"
+        channel_partner_support_number: "Support Number (For Channel Partners)"
+        channel_partner_support_email: "Support Email (For Channel Partner)"
+        erp: "ERP"
+        cancellation_amount: "Cancellation Amount (displayed to Customers)"
+        area_unit: "Unit of Area (used to display inventory)"
+        preferred_login: "Preferred Login Method"
+        mixpanel_token: "Mixpanel Token"
+        sms_provider_username: "SMS Provider Username"
+        sms_provider_password: "SMS Provider Password"
+        sms_mask: "SMS Mask"
+        enable_actual_inventory: "Enable Inventory for these user roles"
+        enable_channel_partners: "Enable Channel Partners?"
+        enable_leads: "Enable Lead?"
+        enable_site_visit: "Enable Walk-in?"
+        blocking_amount: "Min. Amount for Blocking an Unit"
+        blocking_days: "Unit to be blocked for (Days)"
+        holding_minutes: "Unit to be held for (Minutes)"
+        enable_company_users: "Allow Company Users & Benefits"
+        roles_taking_registrations: "Allowed Roles For Taking New Registrations"
+        external_api_integration: "Enable External CRM Integration"
+        enable_incentive_module: "Enable Brokerage Module For These Roles"
+        mask_lead_data_for_roles: "Enable Lead Data Masking For These Roles"
+        partner_regions: "Define Regions For Channel Partners & Projects"
+        powered_by_link: "Show Powered By Link"
+        lead_blocking_days: "Configure Lead Blocking Days"
+        invoice_approval_tat: "Invoice Approval TAT (In Days)"
+        incentive_gst_slabs: "Configure Incentive GST Slabs (%)"
+        team_lead_dashboard_access_roles: "Team Lead Dashboard Access Roles"
+        tl_dashboard_refresh_timer: "Team Lead Dashboard Refresh Timer (Minutes)"
+        enable_lead_conflicts: "Enable Lead Conflicts"
+        launchpad_portal: "Launchpad Portal"
+        payment_gateway: "Payment Gateway"
+
+        enable_live_inventory: "Enable Live Inventory"
+        enable_booking_with_kyc: "Enabe Booking With KYC"
+        allow_multiple_bookings_per_user_kyc: "Allow Multiple Bookings per User KYC"
+        incentive_calculation: "Incentive Calculation"
+        general_user_request_categories: "General User Request Categories"
+        sms_provider: "Sms Provider"
+        sms_provider_telemarketer_id: "Sms Provider Telemarketer"
+        sms_provider_dlt_entity_id: "Sms Provider DLT Entry"
+        whatsapp_api_key: "Whatsapp API Key"
+        whatsapp_api_secret: "Whatsapp API Secret"
+        notification_api_key: "Notification API Key"
+        mailgun_private_api_key: "Mailgun Private API Key"
+        mailgun_email_domain: "Mailgun Email Domain"
+        twilio_virtual_number: "Twilio Virtual Number"
+        twilio_account_sid: "Twilio Account SID"
+        twilio_auth_token: "Twilio Auth Token"
+        enable_communication: "Enable Communication"
+        provider: "Provider"
+        url: "Url"
+        status: "Status"
+        terms_and_conditions: "Terms and conditions"
+        faqs: "Faqs"
+        rera: "Rera"
+        tds_process: "TDS Process"
+        email_header: "Email Header"
+        email_footer: "Email Footer"
+        logo: "Logo"
+        mobile_logo: "Mobile Logo"
+        background_image: "Background Image"
+        city: "City"
+        partner_regions: "Partner Regions"
+        enable_vis: "Enable vis"
+        kylas_api_key: Kylas API Key
+        cp_deal_custom_field: "Channel Partner"
+        cp_lead_custom_field: "Channel Partner"
+        cp_meeting_custom_field: "Channel Partner"
+        project_meeting_custom_field: "Project"
+        industry: 'Industry'
+      client/available_preferred_logins:
+        phone: "Phone Based"
+        email: "Email Based"
+      client/payment_gateway:
+        Razorpay: "Razorpay"
+        CCAvenue: "CCAvenue"
+      client/payment_gateways:
+        Razorpay: "Razorpay Payment Gateway"
+        CCAvenue: "CCAvenue Payment Gateway"
+        redirecting_to: "You'll be redirected to %{name}, where you can pay using Net Banking, UPI, Credit/Debit Card or Wallet"
+      client/incentive_calculation:
+        manual: "manual"
+        calculated: "calculated"
+      client/enable_communication:
+        email: "email"
+        sms: "sms"
+        whatsapp: "Whatsapp"
+        notification: "Notification"
+      client/enable_payment:
+        enable_with_kyc: 'Enable With KYC'
+        enable_without_kyc: 'Enable Without KYC'
+        disable: 'Disable Payment'
+      client/industries:
+        real_estate: 'Real Estate'
+        generic: 'Generic'
+      developer:
+        name: "Developer Name"
+        selldo_id: "CRM Developer ID"
+      project:
+        name: "Project Name"
+        region: "Region"
+        category: "Category"
+        project_type: "Project Type"
+        project_segment: "Segment"
+        configurations: "Configurations"
+        micro_market: "Location"
+        city: "City"
+        possession: "Possession Date"
+        property_value: "Property Value"
+        hot: "Hot Property"
+        hot_selling: "Hot Selling"
+        spot_booking_incentive: "Spot Booking Incentive"
+        pre_reg_incentive_percentage: "Pre-registration Incentive %"
+        pre_reg_min_bookings: "Pre-registration Minimum Bookings"
+        iris_url: "IRIS URL"
+        sv_incentive: "Sitevisit Incentive"
+        video_link: "Video Link"
+        description: "Description"
+        advantages: "Advantages"
+        terms_and_conditions: "Terms and Conditions"
+        consideration_value_help_text: "Consideration Value Help Text"
+        email_header: "Email Header"
+        email_footer: "Email Footer"
+        logo: "Logos"
+        mobile_logo: "Mobile Logo"
+        cover_photo: "Cover Photo"
+        mobile_cover_photo: "Mobile Cover Photo"
+        enable_inventory: "Enable Inventory"
+        enable_booking_with_kyc: "Enable Booking with KYC"
+        enable_live_inventory: "Enable Live Inventory"
+        incentive_calculation: "Incentive Calculation"
+        booking_sources: "Booking Sources"
+        incentive_percentage_slabs: "Incentive Percentage Slabs"
+        gst_slab_applicable: "GST Slab Applicable"
+        enable_slot_generation: "Enable Slot Generation"
+        disable_project: "Enable / Disable Project Functionalities"
+        disable_walkins: "Disable Walk-ins"
+        disable_bookings: "Disable Bookings"
+        disable_invoicing: "Disable Invoicing"
+        is_active: "Active?"
+        launched_on: "Launch Date"
+        developer_name: "Developer Name"
+        approved_banks: "Approved Banks"
+        support_name: "Name"
+        support_mail: "Email"
+        support_phone: "Contact"
+        allowed_bookings_per_user: "Bookings allowed per user"
+        selldo_client_id: "SellDo Client ID"
+        selldo_form_id: "SellDo Form ID"
+        selldo_channel_partner_form_id: "SellDo Form ID - For Channel Partners"
+        selldo_gre_form_id: "SellDo Form ID - Used by Non Channel Partners"
+        selldo_api_key: "SellDo API Key (Use generic Api Client)"
+        selldo_default_srd: "SellDo Default SRD"
+        selldo_cp_srd: "SellDo Channel Partner SRD"
+        selldo_id: "CRM Project ID"
+        selldo_default_search_list_id: "CRM All Leads Search List ID"
+        notification_email: "Notification Email"
+        notification_email_sort: "(all emails are sent here)"
+        notification_numbers: "Notification Numbers"
+        notification_numbers_sort: "(Key SMS Reports are sent here)"
+        sender_email: "Sender Email Address"
+        email_domains: "Email Domains (to detect employee users)"
+        booking_portal_domains: "Booking Portal Domains (where the portal is hosted)"
+        registration_name: "Registration Name (Used in Payments)"
+        cin_number: "CIN Number"
+        gst_number: "GST Number"
+        website_link: "Website Link (Used in email communication)"
+        cp_disclaimer: "Channel Partner Disclaimer (to be shown to Channel Partners during registration)"
+        disclaimer: "Disclaimer"
+        support_number: "Support Phone"
+        support_email: "Support Email"
+        helpdesk_number: "Helpdesk Phone"
+        helpdesk_number_sort: "(For after booking CRM Help)"
+        helpdesk_email: "Helpdesk Email"
+        helpdesk_email_sort: "(For after booking CRM Help)"
+        ga_code: "Google Analytics Code (UA-XXXXXXXXX-Y)"
+        gtm_tag: "GTM Tag (Please add a the entire JS code)"
+        channel_partner_support_number: "Support Number"
+        channel_partner_support_number_sort: "(For Channel Partners)"
+        channel_partner_support_email: "Support Email"
+        channel_partner_support_email_sort: "(For Channel Partner)"
+        erp: "ERP"
+        cancellation_amount: "Cancellation Amount (displayed to Customers)"
+        area_unit: "Unit of Area (used to display inventory)"
+        enable_actual_inventory: "Enable Inventory for these user roles"
+        enable_channel_partners: "Enable Channel Partners"
+        blocking_amount: "Min. Amount for Blocking an Unit"
+        blocking_days: "Unit to be blocked for (Days)"
+        holding_minutes: "Unit to be held for (Minutes)"
+        rera_registration_no: "RERA Registration Number"
+        configurations: "Configuration Types"
+        types: "Project Type"
+        project_size: "Total Land Area (in Acres)"
+        total_buildings: "Number Of Ongoing Towers"
+        amenities: "Project Amenities"
+        specifications: "Project Specifications"
+        offers: "Customer Offers"
+        timeline_updates: "Project Timelines"
+        assets: "Collaterals"
+        address: "Address"
+        offer_category: "Category"
+        offer_short_description: "What's the Offer"
+        offer_description: "Full Offer Text"
+        timeline_update_name: "Update"
+        timeline_update_description: "Update Details"
+        timeline_update_date: "Update Date"
+        incentive_scheme_category: "Category"
+        incentive_scheme_short_description: "What's the Opportunity"
+        incentive_scheme_description: "Full Incentive Scheme Text"
+        incentive_schemes: "Earning Opportunities"
+        total_units: "Total Units"
+        embed_map_tag: "Embed Map Tag (iframe)"
+        usp: "Unique Selling Points"
+        price_starting_from: "Price Starts From"
+        price_upto: "Price Goes Upto"
+        broker_usp: "Broker Unique Selling Points (Fill in upto 3 USPs)"
+        check_sv_availability_in_selldo: "Check Site Visit Availability in CRM"
+        incentive_gst_slabs: "Configure Incentive GST Slabs (%)"
+        payment_enabled: "Enable Payment"
+        approved_banks/list:
+          hdfc: "HDFC Bank"
+          sbi: "State Bank of India"
+          bob: "Bank of Baroda"
+          bajaj_finance: "Bajaj Finance"
+        kylas_product_id: Kylas Products
+        new_product_kylas_crm: "How to add a new Product in Kylas CRM?"
+        bookings: Bookings
+      project/project_type:
+        residential: "Residential"
+        commercial: "Commercial"
+      project/category:
+        pre_launch: "Pre Launch"
+        launch: "Launch"
+        ongoing: "Ongoing"
+        completed: "Completed"
+      project/project_segment:
+        affordable: "Affordable"
+        value: "Value"
+        luxury: "Luxury"
+        ultra_luxury: "Ultra Luxury"
+      project/default_amenities:
+        auditorium: "Auditorium"
+        gym: "Gym"
+        internal_roads: "Internal Roads"
+        movie_theatre: "Movie Theatre"
+        playschool: "Playschool"
+        sewage_treatment_plant: "Sewage Treatment Plant"
+        swimming_pool: "Swimming Pool"
+        table_tennis_court: "Table Tennis Court"
+      project/allowed_banks:
+        bajaj_finance: "Bajaj Finance"
+        bob: "Bank of Baroda"
+        hdfc: "HDFC Bank"
+        sbi: "State Bank of India"
+
+      nearby_location:
+        distance: "Distance to destination"
+        destination: "Destination"
+        unit: "Unit"
+      nearby_locations/units:
+        km: "Km"
+        min: "Min"
+      token_type:
+        name: "Name"
+        token_prefix: "Token Prefix"
+        token_amount: "Token Amount"
+        token_seed: "Token Seed"
+        status: "Status"
+      token_type/status:
+        active: "Active"
+        disabled: "Disabled"
+
+      time_slot:
+        number: "ID"
+        date: "Slot Date"
+        start_time: "Start Time"
+        end_time: "End Time"
+        capacity: "Slot Capacity"
+        allotted: "Tokens Allotted"
+
+      cost:
+        name: "Name"
+        formula: "Formula"
+        absolute_value: "Absolute Value"
+        category: "Category"
+        order: "Order"
+      cost/available_categories:
+        agreement: "Part of Agreement Value"
+        parking: "Parking"
+        outside_agreement: "In addition to Agreement Value"
+
+      channel_partner:
+        name: "Name"
+        first_name: "First Name"
+        last_name: "Last Name"
+        primary_user_id: 'Company Owner'
+        users_count: 'User Count'
+        company_name: "CP Company Name/ Organisation Name/ CP Name"
+        company_owner_name: "Organisation CEO/MD/Owner Name"
+        company_owner_phone: "Organisation CEO/MD/Owner's Contact No."
+        additional_name: "Additional Name"
+        address: "Address"
+        company_logo: "Company Logo"
+        bank_detail: "Bank Details"
+        email: "Email"
+        alternate_email: "Alternate Email"
+        phone: "Phone"
+        alternate_phone: "Alternate Phone"
+        rera_id: "RERA No."
+        city: "City"
+        regions: "Regions"
+        associated_user_id: "Associated User"
+        status: "Status"
+        gstin_number: "GST Number"
+        pan_number: "PAN Number"
+        aadhaar: "Aadhaar"
+        name_email_phone: "Partner Companies"
+        details: "Details"
+        team_size: "Team Size"
+        rera_applicable: "Is RERA Applicable?"
+        gst_applicable: "IS GST Applicable?"
+        nri: "Are you NRI"
+        expertise: "Expertise"
+        experience: "Experience"
+        average_quarterly_business: "Average Quarterly Business (₹)"
+        developers_worked_for: "Developers Worked For (Type any developer name & press enter)"
+        event: "Application Status"
+        cp_code: "Partner Code"
+        company_type: "Company Type"
+        category: "Category"
+        internal_category: "Category"
+        source: "Source"
+        website: "Website"
+        region: "Region"
+        interested_services: "Services Interested In"
+        created_at: "Registered At"
+        manager_id: "Manager"
+        document_type: "Document Type"
+        company_info: "Company Info"
+        company_details: "Company Details"
+        created_on: "Created On"
+        add_company: "Add Partner Company"
+        upload_documents: "Upload Documents"
+        project_ids: Projects
+        document_type: Document Type
+      channel_partner/file_types:
+        rera_certificate: "RERA Certificate"
+        gst_certificate: "GST Certificate"
+        cheque_scanned_copy: "Cheque Scanned Copy"
+        pan_card: "PAN Card"
+        company_incorporation_certificate: "Company Incorporation Certificate"
+        form_10f: "Form 10F"
+        tax_residency_certificate: "Tax Residency Certificate"
+        pe_declaration: "PE Declaration (No permanent Establishment in India)"
+      channel_partner/help_text:
+        rera_certificate_html: "<ul><li>Self Attested Rera Certificate</li></ul>"
+        gst_certificate_html: "<ul><li>Self Attested GST Certificate</li></ul>"
+        cheque_scanned_copy_html: "<ul><li>A Cancelled Cheque Scanned Copy</li></ul>"
+        pan_card_html: "<ul><li>PAN Card Scanned Copy</li></ul>"
+        company_incorporation_certificate_html: "<ul><li>Company Incorporation Certificate</li></ul>"
+        form_10f_html: "<ul><li>Form 10F</li></ul>"
+        tax_residency_certificate_html: "<ul><li>Tax Residency Certificate</li></ul>"
+        pe_declaration_html: "<ul><li>PE Declaration (No permanent Establishment in India)</li></ul>"
+      channel_partner/status:
+        active: "Approved"
+        inactive: "Signed Up"
+        confirmed: "Confirmed"
+        pending: "Pending Approval"
+        rejected: "Rejected"
+      channel_partner/events:
+        submit_for_approval: "Submit for Approval"
+        approve: "Approve"
+        reject: "Reject"
+      channel_partner/internal_categories:
+        cat_a: "CAT A"
+        cat_b: "CAT B"
+        cat_c: "CAT C"
+      channel_partner/incentive_plans_headers:
+        current_ladder: "Current Ladder"
+        incentives_generated: "Total Incentives Generated<br>(includes rejected invoices)"
+        target_for_next_laddeer: "Target Required To Reach Next Ladder"
+      channel_partner/expertise:
+        rentals: "rentals"
+        retail: "retail"
+        residential: "residential"
+        commercial: "commercial"
+      channel_partner/services:
+        work_on_mandates: "Work on Mandates"
+        sales_training: "Sales Training & Branded Collaterals"
+        lead_generation_help: "Lead Generation Help"
+        crm: "CRM"
+      channel_partner/experience:
+        zero_to_one: "0-1 yrs"
+        one_to_five: "1-5 yrs"
+        five_to_ten: "5-10 yrs"
+        ten_to_fifteen: "10-15 yrs"
+        fifteen_to_twenty: "15-20 yrs"
+        twenty_plus: "20+ yrs"
+
+      data_attribute:
+        name: "Name"
+        formula: "Formula"
+        absolute_value: "Absolute Value"
+        order: "Order"
+
+      email:
+        to: "To"
+        cc: "Cc"
+        sent_on: "Sent On"
+        subject: "Subject"
+        body: "Body"
+        status: "Status"
+        project_id: "Project"
+      email/status:
+        draft: "Draft"
+        scheduled: "Scheduled"
+        queued: "Queued"
+        sent: "Sent"
+        delivered: "Delivered"
+        read: "Read"
+        unread: "Unread"
+        clicked: "Clicked"
+        bounced: "Bounced"
+        dropped: "Dropped"
+        spam: "Spam"
+        complained: "Complained"
+        unsubscribed: "Unsubscribed"
+        untracked: "Untracked"
+
+      erp_model/status:
+        active: "Active"
+        inactive: "Inactive"
+      erp_models/resource_class:
+        User: "User"
+        UserKyc: "KYC"
+        Receipt: "Payments"
+        BookingDetail: "Booking"
+        ChannelPartner: "Channel Partner"
+      erp_model/request_type:
+        json: "JSON"
+      erp_model/http_verb:
+        get: "GET"
+        post: "POST"
+        put: "PUT"
+        patch: "PATCH"
+      erp_model/action_name:
+        create: "Create"
+        update: "Update"
+
+      note:
+        note: "Note"
+      payment_adjustment:
+        name: "Name"
+        field: "Field"
+        formula: "Formula"
+        absolute_value: "Absolute Value"
+        editable: "Editable"
+        value: "Value"
+      payment_adjustment/field:
+        agreement_price: "Agreement Value"
+        all_inclusive_price: "All Inclusive Value"
+        base_rate: "Base Rate"
+        floor_rise: "Floor Rise"
+      portal_stage_priority:
+        stage_name: "Stage"
+        priority_name: "Priority"
+      portal_stage_priority/portal_stages:
+        registered: "Registered"
+        confirmed: "Confirmed"
+        project_info: "Project Info"
+        kyc_done: "KYC Done"
+        unit_browsing: "Unit Browsing"
+        unit_selected: "Unit Selected"
+        hold_payment_dropoff: "Hold Payment Dropoff"
+        payment_done: "Payment Done"
+        blocked: "Blocked"
+        booked_tentative: "Booked Tentative"
+        booked_confirmed: "Booked Confirmed"
+        cancelled: "Cancelled"
+
+      project_tower:
+        name: "Name"
+
+      project_unit:
+        costs: "Costs"
+        data: "Data"
+        flats: "Flats"
+        floor_plan: "Floor Plan"
+        bedrooms: "Beds"
+        bathrooms: "Baths"
+        status: "Status"
+        user_id: "Customer"
+        receipt_ids: "Payments (associated with this Apartment)"
+        user_request_ids: "User Requests (associated with this Apartment)"
+        user_kyc_ids: "Co-Applicants (KYCs associated with this Apartment)"
+        primary_user_kyc_id: "Primary User KYC"
+        name: "Name"
+        project_id: "Project"
+        project_tower_name: "Project Tower"
+        project_tower_id: "Project Tower"
+        project_name: "Project"
+        blocked_on: "Blocked On"
+        unit_facing_direction: "Facing"
+        agreement_price: "Agreement Value"
+        all_inclusive_price: "All Inclusive Price"
+        project_tower: "Project Tower"
+        floor: "Floor"
+        floors: "Floors"
+        apartment: "Apartment"
+        floor_order: "Floor Order"
+        facing: "Facing"
+        paid_amount: "Paid Amt.(Inclusive of GST)"
+        booking_pending_amount: "Booking Amt. Pending"
+        last_sync_at: "Last Sync"
+        last_sync_status: "Last Sync Status"
+        comments: "Comments"
+        carpet: "Carpet Area"
+        carpet_sq: "Carpet Area Sq.Ft"
+        configuration: "Configuration"
+        payment_schedule: "Payment Schedule"
+        cost_sheet: "Cost Sheet"
+        tower_name: "Tower Name"
+        total_units: "Total Units"
+        sold_unsold: "Sold / Unsold"
+        av_sold: "A.V (Sold)"
+        saleable: "Saleable"
+        phase: "Phase"
+        booking_price: "Booking Price"
+        blocking_amount: "Blocking Amount"
+        name: "Name"
+        key: "Key"
+        category: "Category"
+        absolute_value: "Absolute Value"
+        formula: "Formula"
+        order: "Order"
+        auto_release_on: "Auto Release On"
+        tower_name:
+          rhea_miranda: "Rhea Miranda"
+      project_unit/status:
+        hold: "Hold"
+        available: "Available"
+        not_available: "Not Available"
+        blocked: "Blocked"
+        error: "Error"
+        employee: "Employee Reserved"
+        management: "Management Reserved"
+      project_unit/available_for:
+        user: "User"
+        management: "Management"
+        employee: "Employee"
+      project_unit/headers:
+        tower: "Tower"
+        bedrooms: "Bedrooms"
+        status: "Status"
+        count: "Count"
+        total_agreement_price: "Total Agreement Price"
+        total_inclusive_price: "Total All Inclusive Price"
+      developers:
+        name: "Name"
+      projects:
+        name: "Name"
+        show:
+          brokerage_slabs: "Brokerage Slabs"
+          offer_valid_till: "Offer valid till"
+          terms_and_conditions: "Terms & Conditions"
+      receipt:
+        comments: "Comments"
+        creator_id: "Created by"
+        created_at: "Created on"
+        created_by: "Created By"
+        issued_date: "Date of issuance (e.g. Cheque Date)"
+        total_amount_paid: "Total Amount Paid"
+        issuing_bank: "Issuing Bank"
+        issuing_bank_branch: "Issuing Bank Branch"
+        issued_date: "Issued Date"
+        handover_date: "Handover Date"
+        approved_date: "Approved Date"
+        paid_date: "Paid Date"
+        payout_id: "Payout ID"
+        upid_id: "UPI ID"
+        deals: "Deals"
+        name_email_phone: "Name/Email/Phone"
+        project_id: "Project"
+        project_unit_id: "Apartment"
+        processed_on: "Date of Clearance"
+        payment_mode: "Mode of Payment"
+        payment_type: "Payment Type"
+        payment_identifier: "Cheque Number / Transaction Identifier"
+        receipt_id: "Receipt ID"
+        status: "Payment Status"
+        user: "Customer"
+        user_id: "Customer"
+        total_amount: "Total Amount (Rs.)"
+        token_number: "Token Number"
+        time_slot: "Time Slot"
+        tracking_id: "Transaction ID (Processed Payment)"
+        frequency: "Frequency"
+        dates: "Dates"
+        token: "Token Number"
+        token_discount: "Token Discount"
+        date: "Slot Date"
+        start_time: "Slot Start"
+        end_time: "Slot End"
+        token_type: "Token Type"
+        sort_by: "Sort By"
+        booking_detail_id: "Booking Detail"
+      receipt/status:
+        pending: "Pending"
+        clearance_pending: "Clearance Pending"
+        failed: "Failed"
+        success: "Success"
+        available_for_refund: "Available For Refund"
+        refunded: "Refund"
+        cancelled: "Cancelled"
+        cancellation_requested: "Cancellation Requested"
+        cancelling: "Cancelling"
+        cancellation_rejected: "Cancellation Rejected"
+      receipt/payment_mode:
+        online: "Online"
+        cheque: "Cheque"
+        rtgs: "RTGS"
+        imps: "IMPS"
+        card_swipe: "Card Swipe"
+        neft: "NEFT"
+        offline: "Offline"
+      receipt/payment_types:
+        agreement: "Agreement"
+        stamp_duty: " Stamp Duty"
+      receipt/sort_options:
+        created_at.asc: "Created - Oldest First"
+        created_at.desc: "Created - Newest First"
+        issued_date.asc: "Issued Date - Oldest First"
+        issued_date.desc: "Issued Date- Newest First"
+        processed_on.asc: "Proccessed On - Oldest First"
+        processed_on.desc: "Proccessed On - Newest First"
+      receipt/headers:
+        status: "Status"
+        payment_mode: "Payment Mode"
+        total_amount: "Total Amount"
+
+      search:
+        configuration: "Configuration"
+        bedrooms: "Beds"
+        agreement_price: "Agreement Value"
+        all_inclusive_price: "All Inclusive Price"
+        carpet: "Carpet Area"
+        project_tower_id: "Tower"
+        project_unit_id: "Apartment"
+        starting_price: "Starting Price"
+
+      scheme:
+        name: "Name"
+        project_id: "Project"
+        project_tower_id: "Project Tower"
+        project_unit_id: "Apartment"
+        user_id: "User"
+        user_role: "User Role"
+        user: "User"
+        value: "Adjustment (Rs.)"
+        status: "Status"
+        approved_at: "Approved At"
+        approved_by: "Approved By"
+        created_by: "Created By"
+        default_for_users: "Default for Channel Partners"
+        can_be_applied_by: "Can be applied by"
+        customer_role: "Customer Role"
+        payment_schedule_template_id: "Payment Schedule Template"
+        cost_sheet_template_id: "Cost Sheet Template"
+      scheme/status:
+        draft: "Draft"
+        approved: "Approved"
+        disabled: "Disabled"
+
+      incentive_scheme:
+        name: "Name"
+        project_id: "Project"
+        project_tower_id: "Project Tower"
+        tier_id: "Channel Partner Tier"
+        status: "Status"
+        description: "Description"
+        date_range: "Date Filter"
+        resource_class: "Resource"
+        category: "Category"
+        brokerage_type: "Brokerage Type"
+        payment_to: "Payment To"
+        auto_apply: "Auto Apply"
+        terms_and_conditions: "Terms & Conditions"
+        date_range: "Date Range"
+        ladder_strategy: "Ladder Strategy"
+        starts_on: "Starts On"
+        ends_on: "Ends On"
+      incentive_scheme/categories:
+        walk_in: "Walk-in"
+        spot_booking: "Spot Booking"
+        lead: "Lead"
+        referral: "Referral"
+        brokerage: "Booking Brokerage"
+      incentive_scheme/status:
+        draft: "Draft"
+        approved: "Approved"
+        disabled: "Disabled"
+      incentive_scheme/brokerage_type:
+        brokerage: "Brokerage"
+        sub_brokerage: "Sub Brokerage"
+      incentive_scheme/payment_to:
+        company: "Partner Company"
+        channel_partner: "Channel Partner"
+      incentive_scheme/strategies:
+        number_of_items: "No of Items"
+        sum_of_units: "Sum of Units"
+      incentive_scheme/resource_class:
+        SiteVisit: "Walk-in"
+        Lead: "Lead"
+        BookingDetail: "Booking"
+        User: "User (Referral)"
+      variable_incentive_scheme:
+        name: "Name"
+        vis_name: "Variable Incentive Scheme Name"
+        days_multiplier: "Days Multiplier"
+        total_bookings_multiplier: "Total Bookings Multiplier"
+        min_incentive: "Minimum Incentive"
+        scheme_days: "Scheme Days"
+        average_revenue_or_bookings: "Avg. Revenue / Booking"
+        max_expense_percentage: "Expense Max %"
+        start_date: "Start Date"
+        end_date: "End Date"
+        project_ids: "Projects"
+        user_id: "Channel Partner"
+        approved_by: "Approved By"
+        created_by: "Created by"
+        total_bookings: "Total Bookings"
+        total_inventory: "Total Inventory"
+        date_range: "Date Range"
+        status: "Status"
+        day: "Day"
+        capped_incentive: "Capped Incentive Amount"
+        message: ["Incentives are higher for early adopters & increase like the stock price", "You book early and get more SuperBrokers to drive Bookings!", "More Network Bookings means Incentive Value goes up for everyone"]
+      variable_incentive_scheme/status:
+        draft: "Draft"
+        approved: "Approved"
+        disabled: "Disabled"
+
+      invoice:
+        name: Name
+        manager: Manager
+        invoice_amount: Amount
+        number: "Invoice Number"
+        amount: "Brokerage Amount"
+        gst_amount: "GST Amount"
+        gst_slab: "GST Slab"
+        net_amount: "Total Brokerage Amount"
+        approved_amount: "Approved Amount"
+        comments: "Comments"
+        rejection_reason: "Rejection Reason"
+        project_id: "Project"
+        booking_detail_id: "Booking Detail"
+        incentive_scheme_id: "Brokerage Scheme"
+        ladder_stage: "Ladder Stage"
+        raised_date: "Raised Date"
+        processing_date: "Processing Date"
+        approved_date: "Approved Date"
+        status: "Status"
+        cheque_detail: "Cheque Details"
+        agreement_amount: "Consideration Value For Brokerage"
+        incentive_resource: "Resource"
+        category: "Type"
+        manager_id: "Channel Partner"
+        account_manager_id: "Account Manager"
+        actual_invoice_amount: "Actual Invoice Amount"
+        tentative_invoice_amount: "Tentative Invoice Amount"
+        brokerage_type: "Brokerage Type"
+      invoice/status:
+        draft: "Draft"
+        raised: "Raised"
+        tentative: "Tentative"
+        pending_approval: "Pending Approval"
+        paid: "Paid"
+        approve: "Approved"
+        raise: "Raise Invoice"
+        re_raise: "Re-Raise Invoice"
+        approved: "Invoice Approved by Developer"
+        rejected: "Dispute Raised by Developer"
+        tax_invoice_raised: "Raised Tax Invoice"
+      invoice/payout_status:
+        raised: "Invoiced"
+        draft: "Waiting for Invoicing"
+        approved: "Waiting for Registration"
+        paid: "Paid"
+        rejected: "Cancellation"
+      invoice/categories:
+        walk_in: "Walk In"
+        spot_booking: "Spot Booking"
+        lead: "Lead"
+        referral: "Referral"
+        brokerage: "Brokerage"
+      invoice/sort_options:
+        created_at.asc: "Created - Oldest First"
+        created_at.desc: "Created - Newest First"
+        raised_date.asc: "Invoiced Date - Oldest First"
+        raised_date.desc: "Invoiced Date- Newest First"
+        net_amount.asc: "Amount - Low to High"
+        net_amount.desc: "Amount- High to Low"
+      cheque_detail:
+        total_amount: "Total Amount"
+        payment_identifier: "Payment Identifier"
+        issued_date: "Issued Date"
+        issuing_bank: "Issuing Bank"
+        issuing_bank_branch: "Issuing Bank Branch"
+        handover_date: "Handover Date"
+      incentive_deduction:
+        number: "Brokerage Deduction #"
+        amount: "Deduction Amount"
+        comments: "Reason"
+        status: "Status"
+      incentive_deduction/status:
+        draft: "Draft"
+        pending_approval: "Pending Approval"
+        approved: "Approved"
+        rejected: "Rejected"
+
+      sms:
+        to: "To"
+        cc: "Cc"
+        sent_on: "Sent On"
+        subject: "Subject"
+        body: "Body"
+        status: "Status"
+        content: "Content"
+      sms/status:
+        received: "Received"
+        untracked: "Untracked"
+        scheduled: "Scheduled"
+        sent: "Sent"
+        failed: "Failed"
+      sms/gateway:
+        knowlarity: "Knowlarity"
+        sms_just: "Sms Just"
+        twilio: "Twilio"
+
+      sync_log:
+        last_sync_at: "Last Synced"
+        last_sync_on: "Last Synced On"
+        last_sync_status: "Last Synced Status"
+      template:
+        name: "Name"
+        content: "Content"
+        type: "Type"
+        dlt_tag_id: "DLT Tag ID"
+        dlt_temp_id: "DLT Template ID"
+        project_id: "Project"
+        project_ids: 'Projects'
+        print_document: Print Document
+        custom_document: Documents
+        document_not_available: Document not available
+        print: Print
+      user_request:
+        project_unit: "Project Unit"
+        project_id: "Project"
+        category: "Category."
+        request_type: "Request type"
+        _type: "Request type"
+        user_id: "Customer"
+        comments: "Complain / Request"
+        subject: "Subject"
+        description: "Details"
+        department: "Department"
+        priority: "Priority"
+        tags: "Tags"
+        due_date: "Due Date"
+        details: "Details"
+        status: "Status"
+        project_id: "Project"
+        project_unit_id: "Related Apartment"
+        alternate_project_unit_id: "Alternate Project Unit"
+        receipt_id: "Related Payment"
+        created_at: "Created at"
+        resolved_at: "Processed on"
+        name_email_phone: "Name/Email/Phone"
+        requestable_type: "Requestable Type"
+        request_details: "Related to"
+        comments: "Comments"
+        resolved_by: "Resolved By"
+        created_by: "Created By"
+        request: "Request"
+      template/subject_classes:
+        SiteVisit: Walk-in
+        VariableIncentiveScheme: Variable Incentive Scheme
+        Workflow: Workflow
+        ProjectUnit: Project Unit
+        IncentiveScheme: Incentive Scheme
+        User: User
+        ProjectTower: Project Tower
+        Project: Project
+        BookingDetail: Booking
+        Lead: Lead
+        Scheme: Scheme
+        Receipt: Payment
+        ChannelPartner: Channel Partner
+        UserKyc: User KYC
+        Invoice: Invoice
+        Client: Client
+        UserRequest::Cancellation: Cancellation Request
+        UserRequest::Swap: Swap Request
+      user_request/swap:
+        project_unit_id: "Project Unit"
+      user_request/status:
+        pending: "Pending"
+        processing: "Processing"
+        resolved: "Resolved"
+        rejected: "Rejected"
+        failed: "Failed"
+      user_request/requestable_type:
+        receipt: "Receipt"
+        BookingDetail: "Booking"
+        department: "Department"
+        priority: "Priority"
+        due_date: "Due Date"
+      user_request/general_departments:
+        billing: "Billing"
+        sourcing: "Sourcing"
+        sales: "Sales"
+      user_request/general_priorities:
+        low: "Low"
+        medium: "Medium"
+        high: "High"
+      user_request/request_type:
+        cancellation: "Cancellation"
+        swap: "Swap"
+        general: "General"
+      site_visit:
+        name: Name
+        email: Email
+        phone: Phone
+        cp_manager: 'Relationship Manager'
+        project: "Project"
+        lead: "Lead"
+        creator: "Created By"
+        scheduled_on: "Scheduled on"
+        status: "Status"
+        conducted_on: "Conducted on"
+        site_visit_type: "Type"
+        approval_status: "Approval Status"
+        manager_id: "Channel Partner"
+        rejection_reason: "Rejection Reason"
+        is_revisit: "Revisit"
+      site_visit/status:
+        scheduled: "Scheduled"
+        pending: "Pending"
+        missed: "Missed"
+        conducted: "Conducted"
+        paid: "Paid"
+      site_visit/approval_status:
+        pending: "Pending Approval"
+        approved: "Approved"
+        rejected: "Rejected"
+      site_visit/rejection_reason:
+        budget_not_match: "Budget didn't match"
+        location_not_match: "Location didn't match"
+        possession_not_match: "Possession didn't match"
+        didnt_visit: "Didn't visit"
+        different_cp: "Walk In with different CP"
+      site_visit/site_visit_type:
+        token_slot: "Token Slot"
+        visit: "Visit"
+      user_kyc:
+        name: "Name"
+        email: "Email"
+        phone: "Phone"
+        salutation: "Salutation"
+        first_name: "First Name"
+        last_name: "Last Name"
+        dob: "Date of Birth"
+        dob_short: "DOB"
+        pan_number: "PAN Number"
+        aadhaar: "Aadhaar Number"
+        gstn: "GSTN"
+        anniversary: "Anniversary"
+        kyc_info: "KYC Information"
+        nri: "Are you an NRI?"
+        poa: "Do you have a valid Power of Attorney in India?"
+        company_name: "Company Name"
+        loan_required: "Are you looking at taking a loan?"
+        existing_customer: "Are you an existing customer with us?"
+        comments: "Please mention any specific notes for our team"
+        user_id: "Customer"
+        lead_id: "Lead"
+        creator: "Created By"
+        project_units: "Apartments"
+        son_daughter_of: "Son / Daughter Of"
+        education_qualification: "Educational Qualification"
+        designation: "Designation"
+        company_name: "Company Name"
+        poa_details_phone_no: "Power of Attorney - Phone"
+        photo: "Photo"
+        pancard_photo: "PAN Card Photo"
+        adharcard_photo: "Aadhaar Photo"
+        address_proof: "Address Proof"
+        permanent_address: "Permanent Address"
+        correspondence_address: "Correspondence Address"
+        aadhaar: "Aadhaar"
+        oci: "OCI"
+        gstn: "GSTN"
+        is_company: "Are you a corporate buying an Apartment?"
+        anniversary: "Anniversary"
+        poa_details: "Power of Attorney Details"
+        loan_required: "Do you require a Loan"
+        bank_name: "Bank Name"
+        existing_customer_name: "Customer Name"
+        existing_customer_project: "Project you have already bought"
+        customer_company_name: "Company Name"
+        configurations: "Preferences"
+        number_of_units: "Number of Units"
+        loan_required: "Do you require a loan ?"
+        loan_amount: "Loan Amount"
+        loan_sanction_days: "Loan Sanction Days"
+        preferred_floors: "Preferred Floors"
+        min_budget: "Min. Budget (Rs.)"
+        max_budget: "Max. Budget (Rs.)"
+        budget: "Budget (Rs.)"
+        occupation: "Occupation"
+      user_kyc/occupation:
+        salaried: "Salaried"
+        self_employed: "Self Employed"
+        business_owner: "Business Owner"
+        retired: "Retired"
+        home_maker: "Home Maker"
+        other_company: "Other Company"
+      user_kyc/salutations:
+        Mr: "Mr."
+        Mrs: "Mrs."
+        Ms: "Ms."
+        Brig: "Brig."
+        Captain: "Captain"
+        Col: "Col"
+        Dr: "Dr."
+        Maharaj: "Maharaj"
+        Prof: "Prof."
+      campaign:
+        name: "Campaign Name"
+        description: "About this Campaign"
+        campaign_manager: "Campaign Manager"
+        about_campaign_manager: "About the Campaign Manager"
+        terms_and_conditions: "Terms & Conditions"
+        campaign_slab_offer_text: "Offer"
+        campaign_slab_offer_percentage: "Offer Percentage"
+        campaign_slab_offer_amount: "Offer Amount (Rs.)"
+        campaign_id: "Campaign ID"
+        total_budget: "Total Campaign Budget (Rs.)"
+        total_invested_amount: "Total Invested Amount (Rs.)"
+        start_date: "Campaign Start Date"
+        end_date: "Campaign End Date"
+        campaign_type: "Type"
+        status: "Status"
+        estimated_cost_per_lead: "Estimated Cost per Lead (Rs.)"
+        sources: "Target Ad Platforms"
+        projects: "Related Projects"
+        project_ids: "Related Projects"
+        target_areas: "Target Areas (Micro-markets)"
+        focus: "Campaign Focus"
+        campaign_budgets: "Media Plan"
+        campaign_slabs: "Campaign Slabs"
+        interested_campaigns: "Campaigns you are interested in"
+        assets: "Related Marketing Collateral"
+        meetings: "Related Events"
+        faqs: "FAQs"
+        all: "All Campaigns"
+      campaign/statuses:
+        draft: "Draft"
+        funding: "Funding"
+        funded: "Funded"
+        live: "Live"
+        paused: "Paused"
+        cancelled: "Cancelled"
+        Completed: "Completed"
+      campaign/focuses:
+        project_based: "Project based"
+        area_based: "Area based"
+      campaign/campaign_types:
+        pool_funded: "Pool funded"
+      campaign/campaign_sources:
+        google: "Google"
+        facebook: "Facebook"
+      meeting:
+        topic: "Topic"
+        meeting_details: "Topic & Agenda"
+        meeting_type: "Meeting type"
+        provider: "Online Provider"
+        provider_url: "Event URL"
+        provider_details: "How to Join?"
+        scheduled_on: "Scheduled on"
+        status: "Event Status"
+        duration: "Duration (in minutes)"
+        broadcast: "Do you want to broadcast this message to all users with these roles?"
+        agenda: "Agenda"
+        participant_ids: "Event Attendees"
+        participants: "Event Attendees"
+        project: "Project"
+        project_id: "Project"
+        creator: "Host"
+        creator_id: "Host"
+        meeting_date: "Event Date"
+        campaign_id: "Campaign"
+        roles: "Roles"
+      meeting/meeting_types:
+        webinar: "Webinar"
+        offline_event: "Offline Event"
+      meeting/providers:
+        zoom: "Zoom"
+        google_meet: "Google Meet"
+        microsoft_teams: "Microsoft Teams"
+      meeting/edit_status:
+        cancel: "Cancel"
+        complete: "Complete"
+        draft: "Draft"
+      meeting/statuses:
+        draft: "Draft"
+        scheduled: "Scheduled"
+        cancelled: "Cancelled"
+        completed: "Completed"
+      meeting/file_types:
+        photo: "Photos"
+        collateral: "Collaterals"
+      meeting/help_text:
+        photo_html: "<ul><li>Photos of the Event</li></ul>"
+        collateral_html: "<ul><li>Event Collaterals</li></ul>"
+      meeting/new_event:
+        1_new_event: "1 New Event"
+        1_past_event: "1 Past Event"
+        no_new_event: "No New Event"
+        no_past_event: "No Past Event"
+      booking_detail/file_types:
+        booking_detail_form: "Booking Detail"
+        document: "Document"
+      booking_detail/help_text:
+        booking_detail_form_html: "<ul><li>Booking form with unit details</li></ul>"
+        document_html: "<ul><li>Document related to Booking</li></ul>"
+      user:
+        first_name: "First Name"
+        last_name: "Last Name"
+        temporarily_blocked: "Qualify lead"
+        iris_confirmation: "Lead Tagging"
+        aadhaar: "Aadhaar"
+        confirmation: "Confirmation"
+        channel_partner: "Channel Partner"
+        created_at: "Registered At"
+        confirmed_at: "Confirmed"
+        confirmed_by: "Confirmed By"
+        confirmed: "Confirmed"
+        company_name: "Company Name"
+        email: "Email"
+        is_active: "Allow the user to login?"
+        enable_live_inventory: "Allow live inventory access?"
+        kyc_ready: "Is the Customer KYC Ready?"
+        login_otp: "Login OTP"
+        location: "Location"
+        lead_id: "CRM Lead ID"
+        manager_name: "Manager Name"
+        manager_role: "Sales Manager / Added by Role"
+        manager_id: "Channel Partner"
+        project_ids: "Projects"
+        manager_change_reason: "Reason for changing Partner"
+        name: "Name"
+        name_email_phone: "Name/Email/Phone"
+        pan_number: "PAN Number"
+        phone: "Phone"
+        phone_number: "Phone Number"
+        password: "Password"
+        portal_stage: "Portal Stage"
+        password_confirmation: "Password Confirmation"
+        rera_id: "RERA Registration Number"
+        role: "Role"
+        kyc_done: "KYC done?"
+        queue_no: "Queue No."
+        remember_me: "<span>Keep me logged in</span>"
+        registered_at: "Registered at"
+        referred_by_id: "Referred by"
+        referral_code: "Referral Code"
+        status: "Status"
+        selldo_lead_id: "Sell Do Lead ID"
+        total_amount_paid: "Total Paid (Inclusive of GST)"
+        total_balance_pending: "Total Balance Pending"
+        total_unattached_balance: "Total Un-attached Balance"
+        time_zone: "User's Time Zone"
+        utm_params: "UTM Tracking"
+        channel_partner_id: "CP Company Name/ Organisation Name/ CP Name"
+        referral_code: "Referral Code"
+        shareable_link: "Shareable Link"
+        upi_id: "UPI Address"
+        your_relationship_manager: "Your Relationship Manager"
+        dear_user: "Dear %{name}"
+        allowed_bookings: "Allowed Bookings"
+        category: "Category"
+        cp_code: "Cp Code"
+        kylas_user_id: Kylas Users
+        new_user_kylas_crm: "How to add a new user in Kylas CRM?"
+        booking_portal_client: Client Name
+        user_status_in_company_event: 'Status'
+        change_in_manger:
+          dear_team: "Dear Team"
+          text: "Channel Partner has been changed on customer %{name1}. New assigned channel partner is %{name2}."
+        reminder:
+          pay: "A gentle reminder to pay your balance amount of %{name}"
+        utm:
+          no_tracking: "No Tracking Found"
+        upi:
+          add_address: "Please add your UPI Address for quick payment. Please click on the link"
+          update: "Update UPI Address"
+        revisit_queue_number: "Revisit Queue Number"
+
+      user/password:
+        name: "should not contain name."
+        length: "Length should be 8-16 characters and include: 1 uppercase, 1 lowercase, 1 digit and 1 special character."
+      user/confirmed:
+        :true: "Confirmed"
+        :false: "Not Confirmed"
+      user/iris_confirmation:
+        :true:
+          temporarily_blocked:
+            :true: "Temporarily Blocked"
+            :false: "Permanently Tagged"
+        :false:
+          temporarily_blocked:
+            :true: "Unqualified"
+            :false: "Unqualified"
+      user/is_active:
+        :true: "Active"
+        :false: "Inactive"
+      user/is_active_in_kylas:
+        :true: "Active in Kylas"
+        :false: "Inactive in Kylas"
+      user/role:
+        superadmin: "Superadmin"
+        admin: "Administrator"
+        crm: "CRM User"
+        sales_admin: "Sales Head"
+        sales: "Sales User"
+        user:
+          zero: "Customer Account"
+          one: "Customer Account"
+          other: "Customer Accounts"
+        gre: "GRE or Pre-sales"
+        cp_admin: "Channel Partner Head"
+        cp: "Relationship Manager"
+        channel_partner: "Channel Partner"
+        cp_owner: "Company Owner"
+        team_lead: "Team Lead"
+        billing_team: "Billing Team"
+        management_user: "Management User"
+        account_manager: "Account Manager"
+        account_manager_head: "Sourcing Head"
+        employee_user: "Employee"
+        direct: "Direct"
+        dev_sourcing_manager: "Developer Sourcing Manager"
+      user/company_events:
+        active: "Approve"
+        inactive: "Reject"
+      user/user_status_in_company:
+        active: "Active"
+        inactive: "Inactive"
+        pending: "Pending Approval"
+
+      fund_account:
+        address: "UPI Address"
+        is_active: "Activate UPI Address"
+
+      lead:
+        name: "Name"
+        phone: "Phone"
+        first_name: "First Name"
+        last_name: "Last Name"
+        email: "Email"
+        project_id: "Project"
+        manager_id: "Channel Partner"
+        id: "Customer"
+        name_email_phone: "Name/Email/Phone (Project Name)"
+        total_amount_paid: "Total Amount Paid (Inclusive of GST)"
+        registered_at: "Registered At"
+        payment_done: "9.90% Received"
+        blocking_amount_paid: "Booking Amount Paid"
+        registration_done: "Registration Done"
+        stage: "Status (From Developer CRM)"
+        lead_id: "Lead Id"
+        lead_validity_period: "Lead Validity Period"
+        selldo_lead_registration_date: "Sell Do Lead Registration Date"
+        selldo_lead_stage: "SellDo Lead Stage"
+        queue_number: "Queue No."
+        customer_status: "Queue Status"
+        search_by_name: "Name/ Email/ Phone"
+        kyc_done: "KYC Done?"
+        push_to_crm: "Do You Want The Developer To Contact The Customer ?"
+        closing_manager_id: "Available Sales Users"
+        source: "Source"
+        sub_source: "Sub-Source"
+        portal_stage: "Portal Stage"
+        total_balance_pending: "Pending Balance"
+        total_unattached_balance: "Total Unattached Balance"
+        kylas_product: Kylas Product
+        kylas_contact: Kylas Contacts
+        manager_ids: Channel Partners
+        crm_reference_id: CRM Reference ID
+      lead/stage:
+        incoming: "Incoming"
+        booked: "Booked"
+        opportunity: "Opportunity"
+        prospect: "Prospect"
+        unqualified: "Unqualified"
+      lead/customer_status:
+        booking_done: "Booking Done"
+        dropoff: "Dropoff"
+        engaged: "Engaged"
+        payment_done: "Payment Done"
+        queued: "Queued"
+        registered: "Registered"
+
+      cp_lead_activity:
+        lead_id: "Lead Id"
+        selldo_lead_id: "SellDo Lead Id"
+        project_id: "Project"
+        channel_partner: "Channel Partner"
+        count_status: "Count Status"
+        lead_status: "Lead Status"
+        expiry_remaining_days: "Lead Validity Period"
+        registered_at: "Registered At"
+        can_extend_validity: "Can Extend Validity?"
+        expiry_date: "Lead Expiry Date"
+        sitevisit_date: "Walk-in Date"
+        sitevisit_status: "Walk-in Status"
+      cp_lead_activity/count_status:
+        fresh_lead: "Fresh Lead"
+        active_in_same_cp: "Active In Same Cp"
+        no_count: "No Count"
+        accompanied_credit: "Accompanied Credit"
+        accompanied_count_to_cp: "Accompanied Count To Cp"
+        count_given: "Count Given"
+      cp_lead_activity/lead_status:
+        already_exists: "Already Exists"
+        registered: "Registered"
+      cp_lead_activity/site_visit_status:
+        scheduled: "Scheduled"
+        conducted: "Conducted"
+      user/file_types:
+        home_loan_application_form: "Home Loan Application Form"
+        photo_identity_proof: "Photo Identity Proof"
+        residence_address_proof: "Residence Address Proof"
+        residence_ownership_proof: "Residence Ownership Proof"
+        income_proof: "Income Proof"
+        job_continuity_proof: "Job Continuity Proof"
+        bank_statement: "Bank Statement"
+        advance_processing_cheque: "Advance Processing Cheque"
+        financial_documents: "Financial Documents"
+      user/help_text:
+        home_loan_application_form_html: "<ul><li>Application form of the bank duly signed with one passport size photo</li></ul>"
+        photo_identity_proof_html: "<ul><li>Passport / Driving License /  Voter ID / PAN / Aadhaar card</li></ul>"
+        residence_address_proof_html: "<ul><li>License / Registered Rent Agreement / Utility Bill/ Aadhar Card</li></ul>"
+        residence_ownership_proof_html: "<ul><li>Sale deed or Rental agreement</li></ul>"
+        income_proof_html: "<ul><li>Salary slip, Bank statement and Form 16</li></ul>"
+        job_continuity_proof_html: "<ul><li>Appointment letter at employment and validation letter from HR</li></ul>"
+        bank_statement_html: "<ul><li>Past 6 months’ document</li></ul>"
+        advance_processing_cheque_html: "<ul><li>Upload cheque’s photo for sanction</li></ul>"
+        financial_documents_html: "<ul>"
+        <li><strong>For Salaried Individual</strong>: "3-month salary slip, Form 16 and bank statement</li>"
+        <li><strong>For Self-Employed Individual</strong>: "IT returns for the last 2 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li>"
+        <li><strong>For Self-Employed Non- Professionals</strong>: "IT returns for the last 3 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li></ul>"
+
+      client/file_types:
+        document: "Document"
+        offer: "Ongoing Offers"
+        login_page_image: "Login Page Image"
+
+      client/help_text:
+        document_html: "Client documents"
+        offer_html: "Client ongoing offers"
+        login_page_image_html: "Web compatible landing page image"
+
+      project/file_types:
+        document: "Document"
+        offer: "Ongoing Offers"
+        brochure: "Project Brochure"
+        sales_presentation: "Sales Presentation"
+        unit_selection_filter_image: "Image on Apartment Search Page"
+        amenities: "Amenities"
+        certificate: "Certificate"
+        images: "Images"
+        developer_logo: "Developer Logo"
+        advertise: "Advertise Kit"
+      project/help_text:
+        document_html: "Project documents"
+        offer_html: "Project ongoing offers"
+        brochure_html: "Project Brochure preferably in PDF"
+        sales_presentation_html: "Sales Presentation"
+        unit_selection_filter_image_html: "Web compatible image - to be displayed on apartment search page"
+        amenities_html: "Project amenities"
+        certificate_html: "Certificate"
+        images_html: "Images"
+        developer_logo_html: "Project Developer Logo"
+        advertise_html: "Advertise Kit"
+      cp_lead_activity/file_types:
+        sitevisit_form: "Walk-in Form"
+      cp_lead_activity/help_text:
+        sitevisit_form_html: ""
+      workflow:
+        stage: Event
+        entity_type: Condition
+        actions: Actions
+        create_product: Create product in Kylas?
+        deactivate_product: Deactivate the product in Kylas?
+        update_product_on_deal: Associate the product on Deal?
+        product_amount_type: Product Price
+      workflow/product_amount_types:
+        agreement_price: "Agreement Value"
+        all_inclusive_price: "All Inclusive Value"
+      bulk_upload_report/file_types:
+        receipts_status_update: "Receipt Status Bulk Update"
+        user_requests_status_update: "User Request Status Bulk Update"
+        project_units_update: "Project Units Bulk Update"
+        inventory_upload: "Inventory Import"
+        leads: "Leads Import"
+        receipts: "Payments Import"
+        channel_partners: "Channel Partners Import"
+        channel_partner_manager_change: "Channel Partner Manager Change"
+        time_slots_update: "Time Slots Bulk Update"
+        channel_partner_user: 'Channel Partner Users Import'
+
+      bulk_upload_report/help_text:
+        receipts_status_update_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
+        user_requests_status_update_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
+        project_units_update_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
+        inventory_upload_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
+        leads_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
+        receipts_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
+        channel_partners_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
+        channel_partner_manager_change_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
+        time_slots_update_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
+
+      dashboard:
+        payout_dashboard:
+          customer_name: "Customer Name"
+          customer_phone: "Customer Phone"
+          customer_email: "Customer Email"
+
+
+      dashboard/filters:
+        payments:
+          all: "All"
+          attached_payments: "Attached Payments"
+          direct_payments: "Direct Payments"
+        frequency:
+          last_7_days: "Last 7 days"
+          last_7_weeks: "Last 7 weeks"
+          last_7_months: "Last 7 months"
+          custom_dates: "Custom Dates"
+        workflow:
+          stage: Event
+          entity_type: Condition
+          actions: Actions
+          create_product: Create product in Kylas?
+          deactivate_product: Deactivate the product in Kylas?
+          update_product_on_deal: Update the product on Deal?
+        workflow/pipeline:
+          name: Pipeline
+          stage: Pipeline Stage
+          reason: Reason
+
+      payment_type:
+        name: "Name"
+        formula: "Formula"
+        absolute_value: "Absolute Value"
+        project: "Project"
+        project_id: "Project"
+
+      specification:
+        category: "Category"
+        description: "Description"
+      specification/categories:
+          flooring: "Flooring"
+          kitchen: "Kitchen"
+          painting: "Painting"
+          structure: "Structure"
+          toilets: "Toilets"
+
+      offer:
+        category: "Category"
+        provided_by: "Provided By"
+        short_description: "Short Description"
+        description: "Description"
+      offer/categories:
+        rate: "Rate"
+        white_goods: "White Goods"
+        direct: "Direct"
+        tax: "Tax"
+      offer/provided_by:
+        developer: "Developer"
+        launchpad: "Launchpad"
+
+      timeline_update:
+        name: "Name"
+        description: "Description"
+        date: "Date"
+      ladder:
+        stage: "Stage"
+        start_value: "Start Value"
+        end_value: "End Value"
+
+      customer_search:
+        lead_id: "CRM Lead ID"
+        token_number: "Token Number"
+        id: "Name / Email / Phone"
+
+  controller:
+    notice:
+      failed_to_redirect_to_payment_gateway: "We couldn't redirect you to the payment gateway, please try again"
+      logged_in: "You have already been logged in"
+    apis:
+      notice:
+        added: "API configuration is added successfully"
+        updated: "API configuration is updated successfully"
+        removed: "API configuration is removed successfully"
+        cannot_removed: "API configuration is cannot be removed"
+        request_processed: "Request is being processed"
+      alert:
+        not_found: "API not found"
+      errors:
+        went_wrong: "Something went wrong. Please contact support team & share the error code: %{name}"
+      message:
+        incorrect_key: "Incorrect key."
+        register: "Kindly register with our application."
+        paramerters_missing: "Required parameters missing."
+    discounts:
+      index:
+        link_name: "Token Discounts"
+      update_coupons:
+        success_message: "You will receive a mail when MRP numbers are updated"
+      links:
+        update_coupons: "Update Token Discounts"
+        add_adjustments: "Add adjustments"
+      notice:
+        created: "%{name} created successfully."
+        deleted: "%{name} deleted successfully."
+    videos:
+      destroy:
+        link_name: "Delete"
+      notice:
+        created: "Video created successfully"
+        updated: "Video updated successfully"
+        deleted: "Video deleted successfully"
+    sales_board:
+      index:
+        link_name: "Sales Board"
+    customer_searches:
+      set_customer_search_missing: "Customer Search not found."
+      links:
+        add_new_customer: "Add New Customer"
+      notice:
+        cannot_be_queued: "%{name} cannot be queued"
+    token_types:
+      index:
+        link_name: "Token Types"
+      new:
+        header: "New Token Type"
+      edit:
+        header: "Edit Token Type"
+      token_init:
+        link_name: "Activate"
+      token_de_init:
+        link_name: "Deactivate"
+      notice:
+        created: "Token type successfully created."
+        updated: "Token type successfully updated."
+        activated: "Token type successfully activated."
+        deactivated: "Token type successfully deactivated."
+      alert:
+        not_found: "Token type not found"
+        failed_to_activate: "Not able to activate %{name} Token Type due to some problem"
+        failed_to_deactivate: "Not able to deactivate %{name} Token Type due to some problem"
+    payment_types:
+      index:
+        link_name: "Payment Types"
+      add_payment:
+        link_name: "Add %{name}"
+      notice:
+        created: "Payment Type was successfully created."
+        updated: "Payment Type was successfully updated."
+        deleted: "Payment Type was successfully deleted."
+    time_slots:
+      index:
+        link_name: "Time Slots"
+      new:
+        header: "New Time Slot"
+      edit:
+        header: "Edit Time Slot"
+        link_name: "Edit Slot"
+      destroy:
+        link_name: "Delete Slot"
+      notice:
+        created: "Time slot was successfully created."
+        updated: "Time slot was successfully updated."
+        deleted: "Time slot was successfully deleted."
+      alert:
+        not_found: "Time slot not found"
+      text:
+        search_time_slot: "Search time slot"
+    home:
+      keys:
+        broker: "BROKER"
+        superbroker: "SUPERBROKER"
+        partial_brokerage: "Partial Brokerage"
+        hot_selling: "Hot Selling"
+      select_project:
+        link_name: "Switch Project"
+      select_client:
+        link_name: 'Switch Client'
+      text_msg:
+        thanks_for_signing: "Thank you for signing up with us"
+        found_inactive_account: "We found an old inactive account with these details. We have activated it, registered a new company & linked your account under it."
+        be_a_superbroker: "Be a SUPERBROKER"
+        good_points:
+          others:
+            no_info_new_launches: "No information about new launches"
+            no_tie_ups: "No tie-ups with TOP developers"
+            no_promotion_material: "No Promotion Material of projects"
+            low_qality_leads: "Low Quality Leads"
+          with_us:
+            full_brokerage: "FULL Brokerage on time"
+            get_info_new_launches: "Get ALL information about new launches"
+            work_with_top_devs: "Work with TOP Developers"
+            best_leads: "Best quality Leads at Lowest Prices"
+            all_promotion_material: "All Promotion Materials for every project"
+            pune_market_opportunity: "Pune's residential market opportunity"
+            register_now: "Register Now"
+            lined_up_launches: "Lined Up Launches"
+            brokerage_to_be_paid: "Brokerage to be paid out within the next 6 months"
+            hottest_selling_properties: "Chance to work with Pune's hottest selling properties"
+        what_for_you:
+          title: "What’s in it for You!"
+          pune_projects:
+            title: "Projects in Pune"
+            projects_in_pune_regions: "15 projects in Pune West and East (Mandates)"
+            units: "units"
+            inventory: "INR. 2,000 CR inventory"
+            townships: "2 Large Townships (Magarpatta)"
+          inventory:
+            title: "Inventory of ALL sizes"
+            early_access: "Exclusive early access to inventory"
+            lead_lock_in: "Exclusive lead lock-in"
+            blocked: "Blocked for 45 days after visit"
+          rewards:
+            title: "Quarterly & Annual Rewards"
+            prizes: "Total prizes worth Rs. 15L for Top performers (Dec’21 - Mar’22)"
+            bangkok_trip: "Top 3 Brokers get a Bangkok trip for 3 team members"
+            goa_trip: "Next 5 Brokers get a Goa trip for 3 team members"
+            annual_prize: "Annual Bumper prize – SUV(Dec‘21 - Dec ‘22)"
+          incentives:
+            title: "Special Incentives"
+            spot_booking: "Spot booking Incentive- INR 5,000"
+            site_visit_incentive: "Site visit Incentive- INR 500 on First visit"
+            other_projects: "Rs. 300 for visits to other projects"
+            offer: "Get 3 Bookings in a project – get 30% of your brokerage paid before registration"
+        exclusive_features:
+          title: "Exclusive Features to Grow Your Business 5X"
+        channel_partner_summit:
+          title: "Channel Partner Summit"
+        why_partner:
+          title: "Why partner with %{name}"
+
+
+    cp_lead_activities:
+      index:
+        link_name: "Lead Activities"
+      show:
+        link_name: "Show Lead Activities"
+      notice:
+        created: "Lead Activity created successfully."
+        updated: "Lead Activity updated successfully."
+        deleted: "Lead Activity deleted successfully."
+      errors:
+        cannot_be_updated: "Lead validity can not be updated. Lead is active for %{name}"
+    push_notifications:
+      index:
+        link_name: "Notifications"
+      notice:
+        notifications_sent: "Push notification will be sent in some time."
+    api_logs:
+      index:
+        link_name: "API Logs"
+      text:
+        response_type: "Response Type"
+    meetings:
+      index:
+        link_name: "Events"
+      notice:
+        created: "Meeting created successfully."
+        updated: "Meeting updated successfully."
+        deleted: "Meeting deleted successfully."
+      message:
+        interested:
+          one: "You are interested in attending this %{name}"
+          many: "You and %{name1} others are interested in attending this %{name2}"
+          be_the_first: "New Event! Be the first to show interest"
+          count: "%{name1} are interested in attending this %{name2}"
+    announcements:
+      index:
+        link_name: "Announcements"
+      event_name:
+        add: "Add Announcement"
+        edit: "Edit Announcement"
+        event: "Event Announcement"
+      delete:
+        link_name: "Delete Announcement"
+      notice:
+        created: "Announcement created successfully."
+        updated: "Announcement updated successfully."
+        deleted: "Announcement deleted successfully."
+      alert:
+        not_found: "Announcement not found"
+    banner_assets:
+      index:
+        link_name: "Banner Assets"
+      notice:
+        upload_successful: "Banner Image uploaded successfully."
+        update_successful: "Banner Image updated successfully."
+        deleted: "Banner Image deleted successfully."
+      alert:
+        update_unsuccessful: "Banner Image update unsuccessful."
+        upload_unsuccessful: "Banner Image upload unsuccessful."
+      links:
+        edit: "Edit Banner Image"
+        delete: "Delete Banner Image"
+        upload: "Upload Banner Image"
+    campaigns:
+      index:
+        link_name: "Campaigns"
+      event_name:
+        add: "Add Campaign"
+      notice:
+        created: "Campaign created successfully."
+        updated: "Campaign updated successfully."
+        deleted: "Campaign deleted successfully."
+      text:
+        details: "Campaign Details"
+        campaign_type: "Type of Campaign"
+        campaign_stage: "Campaign Stage"
+        campaign_start_date: "Campaign Start Date"
+        campaign_end_date: "Campaign End Date"
+        frequently_asked_questions: "Frequently asked Questions"
+        get_the_leads: "How will I get the leads?"
+        third_body: "This is the third item's accordion body. "
+        hidden_by_default: "It is hidden by default."
+    crms:
+      index:
+        link_name: "CRM Integration"
+      choose_crm:
+        link_name: "Get Details from CRM"
+      show_resposnse:
+        error: "There was some error while loading the response. Please contact administrator."
+      errors:
+        not_available: "CRM integration not available"
+    crm/base:
+      create:
+        success: "CRM details added successfully."
+      update:
+        success: "CRM details updated successfully."
+      destroy:
+        success: "CRM details removed successfully."
+        failure: "CRM details cannot be removed."
+    add_booking:
+        index:
+            link_name: "Add Booking"
+    bulk_upload_reports:
+      index:
+        link_name: "Bulk Uploads"
+      create:
+        success: "%{upload_type} has been scheduled. Will complete shortly."
+      links:
+        upload: "New Bulk Upload"
+      text:
+        bulk_upload_type: "Bulk Upload Type"
+        file_uploaded_by: "File Uploaded By"
+    checklists:
+      index:
+        link_name: "Tasks"
+      new:
+        link_name: "New Task"
+      edit:
+        link_name: "Edit Task"
+      delete:
+        success: "Task deleted successfully"
+        failure: "Task cannot be deleted"
+      set_checklist:
+        not_found: "Task not found"
+    assets:
+      index:
+        link_name: "Documents"
+      confirm:
+        booking_moved_tentative: "Are you sure? You cannot make changes once booking moved to tentative state"
+        sure: "Are you sure?"
+        click_to_confirm: "By clicking on 'Complete Registration' you are confirming all the provided information and your application will be submitted for review to the %{client_name} Partner Engagement Team."
+      text:
+        upload_formats_text: "Upload documents in following formats - jpg, jpeg, png, pdf, zip"
+        valid_documents_for: "Valid documents for"
+        upload_following_docs: "Upload following documents to submit your application"
+
+    public_assets:
+      index:
+        link_name: "Public Documents"
+    application:
+      set_current_client: "The site is under maintenance. Please contact your  administrator."
+      invalid: "Invalid"
+    accounts:
+      by_default:
+        hint: "System need only one default account, which contains first payment of each unit."
+      destroy:
+        link_name: "Remove"
+      edit:
+        button: "Update"
+        header: "Edit Account"
+        link_name: "Edit Account"
+      index:
+        link_name: "Accounts"
+      notice:
+        created: "Account created successfully."
+        deleted: "Account deleted successfully."
+        registered: "Request registered successfully."
+        cannot_be_deleted: "Account cannot be deleted."
+      new:
+        button: "Save"
+        header: "New Account"
+        link_name: "New Account"
+
+      print:
+        link_name: "Print"
+    audits:
+      index:
+        link_name: "History"
+
+    booking_detail_schemes:
+      index:
+        link_name: "Booking Schemes"
+      new:
+        link_name: "Add Scheme & Discount"
+      edit:
+        link_name: "Update Scheme & Discount"
+        edit: "Edit"
+      derived_from_scheme:
+        link_name: "Derived from Scheme"
+      notice:
+        scheme_approved: "Scheme applied successfully, please check cost sheet."
+        scheme_under_negotiation: "Scheme registered successfully and sent for approval."
+        updated: "Scheme was successfully updated."
+      rejected_scheme: "Scheme for this booking is rejected. Please contact administrator."
+    booking_details:
+      add_booking:
+        link_name: "Add Booking"
+      index:
+        link_name: "Bookings"
+      new:
+        link_name: "Add Booking"
+        header: "Add Booking for %{customer}-(%{project})"
+      edit:
+        link_name: "Update Booking"
+        header: "Update Booking for %{customer}-(%{project})"
+      show:
+        link_name: "View Details"
+      exports:
+        link_name: "%{name} Exports"
+      release_unit:
+        link_name: "Release Unit"
+      continue_booking:
+        link_name: "Checkout using already held unit"
+      cost_sheet:
+        link_name: "Cost Sheet"
+      payment_schedule:
+        link_name: "Payment Schedule"
+      tasks:
+        link_name: "Tasks"
+        header: "Tasks"
+      links:
+        print_booking_form: "Print Booking Form"
+        edit_booking_detail: "Edit Booking Detail"
+      invoices:
+        link_name: "Brokerage Invoices"
+      choose_template_for_print:
+        link_name: Print Documents
+      create_kylas_lead:
+        response_msg: 'Deals have successfully been created'
+      set_project:
+        response_msg: 'Project Not Found'
+      create_booking_without_inventory:
+        response_msg: 'Thank you for taking Booking'
+      send_booking_detail_form_notification: "Booking detail form will be sent to customer shortly."
+      set_booking_detail_missing: "Booking detail not found"
+      set_project_unit_missing: "Project unit not found"
+      set_project_missing: "Project not found"
+      booking_successful: "You have completed the booking successfully."
+      booking_unsuccessful: "Your booking was unsuccessful. Please contact administrator to book."
+      set_receipt_missing: "Make new payment"
+      documents:
+        link_name: "Documents"
+      receipts:
+        form:
+          disclaimer: "The %{field} will be generated only after successful processing of payment."
+          refund_disclaimer: "Refund Payments will be subject to cancellation charges"
+          kyc_before_payment: "You might need to complete the user's KYC before you can take payments."
+        new:
+          link_name: "Pay Remaining Amount"
+        show:
+          disclaimer: "Payments need to be for individual units, clubbed payments are not allowed. Please collect a cheque for individual units only."
+      link_to:
+        total_bookings: "Total Bookings"
+        confirmed_bookings: "Confirmed Bookings"
+        registration_done: "Registration Done"
+        cancellations: "Cancellations"
+        my_incentives: "My Incentives"
+        bookings_eligile: "Bookings eligible"
+        approved: "Approved"
+        invoice_raised: "Invoice Raised"
+        bookings_not_eligible: "Bookings not eligible for brokerage"
+
+      events:
+        approval_status:
+            approve: "Approve"
+            reject: "Reject"
+            pending: "Submit for Approval"
+      reject:
+        link_name: "Reject Booking"
+      notice:
+        export_scheduled: "Your mis-report has been scheduled and will be emailed to you in some time"
+        created: "Booking created successfully."
+        updated: "Booking updated successfully."
+        moved_to: "Booking moved to %{name} successfully"
+      errors:
+        towers_not_present: "Towers not present for this user"
+        already_exists: "Booking with reference_id %{name} already exists"
+        reference_id_required: "Reference id is required to create Booking"
+        project_unit_id_required: "Project unit id is required to create Booking"
+        lead_id_required: "Lead reloaid is required to create Booking"
+        primary_user_kyc_id_required: "Primary user kyc reference id is required to create Booking"
+        receipt_reference_id_required: "Receipt reference id is required for all receipts"
+        user_kyc_reference_id_required: "User KYC reference id is required for all user KYCs"
+        project_does_not_match: "Project for project unit - %{name1} and lead - %{name2} does not match"
+        booking_scheme_not_found: "Booking scheme is not found for this project unit. Please contact administrator"
+        booking_detail_reference_id_not_found: "Booking Detail with reference_id %{name} not found"
+        primary_user_kyc_already_present: "Primary User KYC is already present for booking detail"
+        task_attributes: "tasks_attributes should be a key, value pair"
+        not_available_for_cancellation: "Booking Detail %{name} is not available for cancellation."
+        unable_to_proceed: " Lead user should be confirmed, Lead should have kyc if kyc setting is on"
+      text:
+        flat_no: "Flat No."
+        agreement_price: "Agreement Value"
+        inclusive_price: "All Inclusive Price"
+        total_amount_paid: "Total Amount Paid (Inclusive of GST)"
+        pending_balance: "Pending Balance"
+        confirm: "You won't be able to edit it, Are you sure?"
+      move_to:
+        booked_tentative: "Move to Booked Tentative"
+        booked_confirmed: "Move to Booked Confirmed"
+        cancel_booking: "Cancel Booking"
+
+    workflows:
+      index:
+        link_name: 'Workflows'
+      new:
+        link_name: 'Add Workflow'
+      edit:
+        link_name: 'Edit Workflow'
+      destroy:
+        link_name: 'Delete Workflow'
+      notice:
+        created: Workflow created successfully.
+        updated: Workflow updated successfully.
+        deleted: Workflow deleted
+        cannot_be_deleted: Workflow cannot be deleted
+      enable_disable_workflow:
+        enable: Enable Workflow
+        disable: Disable Workflow
+    invoices:
+      index:
+        link_name: "Brokerages"
+      new:
+        link_name: "Raise Brokerage Invoice"
+      edit:
+        link_name: "Edit Invoice"
+      move_to_draft:
+        link_name: "Move To Draft"
+      send_invoice:
+        link_name: "Send invoice to Developer"
+        to_poc: "Send invoice to POC"
+      update_gst:
+        link_name: "Update GST"
+      show:
+        link_name: "Invoice Details"
+      generate_invoice:
+        link_name: "Print Invoice"
+      asset_create:
+        link_name: "Uploaded Invoice Copy"
+      download:
+        link_name: "Download"
+      status_message:
+        draft: "Invoice raised successfully"
+        pending_approval: "Invoice successfully raised"
+        approved: "Invoice successfully approved"
+        rejected: "Invoice rejected"
+        tax_invoice_raised: "Tax Invoice raised successfully"
+      events:
+        raise: "Raise Invoice"
+        re_raise: "Re-Raise Invoice"
+        approve: "Invoice Approved by Developer"
+        reject: "Dispute Raised by Developer"
+        tax_invoice_raise: "Raised Tax Invoice"
+      exports:
+        link_name: "%{name} Exports"
+      filters:
+        all: "All"
+        manual_invoices: "Manual Invoices"
+        calculated_invoices: "Calculated Invoices"
+      notice:
+        sent: "Successfully sent."
+      text:
+        confirm:
+          send_email: "Are you sure you want to send the email to developer?"
+        change_gst_slab: "Please change the GST Slab % as per the Slabs"
+
+    incentive_deductions:
+      index:
+        link_name: "Brokerage Deductions"
+      new:
+        link_name: "Add Deduction"
+      edit:
+        link_name: "Edit Deduction"
+      show:
+        link_name: "Show Deduction"
+      status_message:
+        approved: "Brokerage deduction approved"
+        rejected: "Brokerage deduction rejected"
+      events:
+        approved: "Approve"
+        rejected: "Reject"
+      alert:
+        not_found: "Incentive deduction not found"
+    
+    team_leads:
+      headers:
+        sales_team: "Sales Team"
+      text:
+        with: "With"
+        queue_no: "Queue Number"
+        search_user: "Search User by Queue No."
+    clients:
+      new:
+        link_name: "Add Client"
+      edit:
+        link_name: "Edit Client"
+      show:
+        link_name: "Client Detail"
+      sender_email:
+        help_text: This is an email from which all the emails will be sent to your users
+    channel_partners:
+      add:
+        link_name: "Add Channel Partner"
+      new:
+        link_name: "Add New ChannelPartner"
+      index:
+        link_name: "Partner Companies"
+      edit:
+        link_name: "Edit Application"
+      show:
+        link_name: "Application Details"
+      status_message:
+        pending: "Application submitted for approval"
+      create:
+        not_allowed_message: "Company with these details already exists. Please contact your company admin (%{owner_name}) to create your account."
+        already_present_and_active_msg: "A user with these details is already present & active under a company"
+      notice:
+        created: "Channel Partner successfully created."
+        updated: "Channel Partner successfully updated."
+        registered: "Channel Partner successfully registered."
+      alert:
+        not_found: "Channel Partner not found"
+      errors:
+        already_exists: "Channel Partner with reference_id %{name} already exists"
+        reference_id_required: "Channel Partner reference_id is required"
+        not_registered: "Channel Partner is not registered."
+        link_expired: "This link is expired. Please ask the channel partner to send request again"
+        code_missing: "Registration code is missing"
+      register_request_sent: "Registration request sent to Company owner"
+      tabs:
+        new: "New Channel Partner"
+      text:
+        adding_existing_lead: "Above channel partner tried to add already existing lead. Details of the lead are as follows:"
+        company_registration: "Company Registration"
+        reason: "Reason"
+        application_rejected_by: "Your application has been rejected by <strong>%{name}</strong>"
+        get_registered: "Get Yourself Registered in Existing Company"
+        register_company: "Register a New Company"
+        reg_req_sent: "Your registration request has been sent to respective company owner"
+        approve_ac: "Please get your account approved by contacting the owner"
+        cancel_reg_req: "If you want to cancel above registration request in company, please contact your channel partner representative in %{name} "
+      new_company:
+        link_name: Add Partner Company
+
+    dashboard:
+      index:
+        link_name: "Dashboard"
+        leaderboard: "CP Leaderboard"
+        billing_team_link_name: "Billing Dashboard"
+        cp_admin_link_name: "Channel Partner Head Dashboard"
+        cp_owner_link_name: "Company Owner Dashboard"
+        team_lead: "Team Lead Dashboard"
+      receipt_frequency: "Payment Frequency"
+      leaderboard:
+        early_booking_incentive: "Early Booking Incentive"
+        average_incentive: "Average Incentive"
+        rank: "Rank"
+        name_and_company: "Name & Company"
+        incentives: "Incentives"
+        view_leaderboard: "View Leaderboard"
+        text:
+          claimed_incentives: "Incentives Claimed So Far"
+          max_incentive: "Highest incentive per booking"
+        day:
+          today: "Today"
+          after_7days: "After 7 Days"
+          till_date: "Till Date"
+          max_potential: "Maximum Potential"
+      invoice_summary:
+        partners_count: "No. of Partners in Ladder %{name}"
+      booking_details_overview:
+        beds_baths: "Beds / Baths"
+        carpet: "Carpet"
+        saleable: "Saleable"
+        effective_rate: "Effective Rate"
+        agreement_price: "Agreement Price"
+        all_inclusive_price: "All Inclusive Price"
+        phase: "Phase"
+        last_sync: "Last Synced At:"
+        last_sync_status: "Last Sync Log Status:"
+        not_synced: "Not synced"
+        amt_paid: "Amount Paid"
+        pending_balance: "Pending Balance"
+        considers_processed: "*Considers processed %{name} only"
+        pay_to_confirm: "You need to pay %{name} to confirm the booking"
+        cancellation_charges: "Cancellation charges are %{name}"
+        make_remaining_payment: "You have %{name1} days (before %{name2}) remaining to confirm this booking. Please make a remaining payment of %{name3}"
+        ladder: "Ladder"
+      invoice_ageing_report: "Invoice Ageing Report"
+      registration_count: "Registration Count"
+      payment_failed: "Payment Failed"
+      payment_unsuccessful: "Your payment of was unsuccessful. Please check the credentials and try again."
+      headers:
+        site_visit_active_partners: "Walk-in Active Partners"
+        booking_active_partners: "Booking Active Partners"
+        raised_invoices: "Raised Invoices"
+        approved_invoices: "Approved Invoices"
+      link_to:
+        project_wise:
+          incentive_deduction: "Project Wise Incentive Deduction Summary"
+          overview: "Overview"
+          booking_count: "Project Wise Booking Count"
+          actual_revenue_report: "Project Wise Actual Revenue Reports"
+          tentative_revenue_reports: "Project Wise Tentative Revenue Reports"
+          applying_filters:
+            step1: "Applying filters will only show 15 records irrespective of the total records count. Acitve Filter Export will contain all the filtered records. The"
+            step2: "count will depend on the filtered results."
+
+    emails:
+      index:
+        link_name: "Emails"
+      show:
+        link_name: "Details"
+      links:
+        monthly_count: "Monthly Count"
+      resend_email:
+        link_name: "Resend Email"
+        success: "Email has been sent again."
+        alert: "Email not sent" 
+        emails_enabled: "Emails are disabled, please connect with your admin"
+    erp_models:
+      index:
+        link_name: "Third Party Integration"
+      edit:
+        link_name: "Edit"
+      notice:
+        created: "Erp Model created successfully."
+        updated: "Erp Model updated successfully."
+
+    inventory:
+      index:
+        link_name: "Inventory"
+
+    only_administrator_users: "Only administrator users are allowed."
+    only_buyer_users: "Only Buyer users are allowed."
+
+    notes:
+      new:
+        header: "View and Add Note"
+        link_name: "View and Add Note"
+
+    projects:
+      index:
+        link_name: "Projects"
+      sync_on_selldo:
+        link_name: "Sync on CRM"
+      show:
+        show_interest_text: "Subscribe to Project for Adding Walk-Ins"
+        booking_count: "Bookings"
+        brokerage: "Brokerage"
+        terms_and_conditions: "Terms & Conditions"
+        plus: "Plus"
+      nearby_location:
+        link_name: "Add Nearby Location"
+      add_offer:
+        link_name: "Add Offer"
+      add_specification:
+        link_name: "Add Specification"
+      add_timeline_update:
+        link_name: "Add Timeline Update"
+      region_projects:
+        link_name: "Projects In My Region"
+      benefits_for_you:
+        link_name: "Benefits for You"
+      notice:
+        subscribed: "Project successfully subscribed."
+        updated: "Interested Project successfully updated."
+        created: "Project created successfully."
+        synced_on_selldo: "Project synced on CRM successfully"
+      view:
+        all: "All"
+        newly_launched: "Newly Launched"
+        pre_launch: "Pre Launch"
+        hot: "Hot"
+        cost_sheet: "View Cost Sheet"
+      alert:
+        not_found: "Project not found"
+      errors:
+        not_selected: "Projects not selected"
+        select_projects: "Please select some projects"
+        failed_to_sync: "Project was unable to sync due to some errors. Please check notes for details"
+        project_reference_id_not_found: "Project with Reference Id %{name} not found."
+      filter_project: "Filter Project"
+      incentives:
+        site_visit: "Site Visit Incentive"
+        spot_booking: "Spot Booking Incentive"
+        pre_registration_incentive: "Pre-registration Incentive"
+      links:
+        project_details: "Project Details"
+      text:
+        emis_per_month: "EMI's starting at <strong>₹ 25,000</strong> /month"
+        search_token: "Search Token"
+
+    project_units:
+      title: 'Apartment Details'
+      send_cost_sheet_and_payment_schedule:
+        link_name: "Send Cost sheet & Payment Schedule to Customer"
+        success: "Cost sheet & payment schedule will be sent to customer shortly."
+        failure: "Cost sheet & payment schedule cannot be sent. Please contact administrator"
+      dashboard:
+        link_name: "Dashboard"
+      index:
+        link_name: "Apartments"
+      show:
+        link_name: "Details"
+      edit:
+        header: "Edit Apartment"
+        link_name: "Edit"
+        customer: "Edit Customer"
+      create_booking:
+        link_name: "Create Booking"
+      choose_tower: "Choose Tower"
+      all_towers: "All Towers"
+      filter_project: "Filter Project"
+      exports:
+        link_name: "%{type} Exports"
+      quotation:
+        link_name: "Get Quotation"
+        pdf_footer: "This cost sheet generated should mention that this is a quotation so that it is not confused with the cost sheet that is generated after the booking"
+      adjustments:
+        link_name: "Add Adjustments"
+      unit_released: "The unit has been successfully released."
+      total_adjustment: "*Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)"
+      notice:
+        created: "Project Unit created successfully."
+        updated: "Project Unit updated successfully."
+      errors:
+        project_units_reference_id_not_found: "Project Unit with Reference Id %{name} not found or is already booked."
+      text:
+        kyc_primary_applicant: "KYC (Primary Applicant)"
+        general_info: "General Info"
+        bank_details: "Bank Details"
+        documents: "Documents"
+        requirement: "Requirement"
+        booking_details: "Booking Details"
+        booking: "Booking"
+        created_on: "Created On"
+        booked_on: "Booked On"
+        registration_date: "Registration Date"
+        history: "History"
+        kyc_completed: "KYC Completed"
+        site_visit_conducted: "Site Visit Conducted"
+        lead_created: "Lead created on Launchpad"
+      unit_no: "Unit No. :"
+    phases:
+      index:
+        link_name: "Phases"
+      new:
+        link_name: "Add Phase"
+      edit:
+        link_name: "Edit"
+    portal_stage_priorities:
+      index:
+        link_name: "Portal Stages"
+
+    receipts:
+      account_missing: "We do not have any Account Details for Transaction. Please ask Administrator to add."
+      edit:
+        link_name: "Edit Payment"
+      edit_token_number:
+        link_name: "Change Token"
+      exports:
+        link_name: "%{name} Exports"
+      index:
+        link_name: "Payments"
+      lost_receipt:
+        header: "Lost Payment"
+        link_name: "Lost Payment"
+        details: "Lost Receipt Details"
+      new:
+        link_name: "Make Payment"
+        header: "Make Payment"
+        make_payment: "Make Payment"
+      print:
+        link_name: "Print"
+      resend_email:
+        link_name: "Resend Email"
+        success: "Email has been sent again."
+      show:
+        link_name: "Payment Details"
+      show_user_kyc:
+        link_name: "View KYC"
+      notice:
+        created: "Receipt created successfully."
+        updated: "Receipt updated successfully."
+        receipt_updated: "Receipt was successfully updated. Please upload documents"
+        no_pending: "No pending Receipt found."
+      alert:
+        not_found: "Receipt not found."
+      errors:
+        payment_identifier:
+          blank: "Payment identifier can't be blank"
+        status_should_present: "Status should be present"
+        status_should_success: "Status should be clearance_pending or success"
+        already_exists: "Payment with reference_id %{name} already exists"
+      text:
+        e_generated_receipt: "This is an electronically generated receipt; hence no signature is required."
+        account_unconfirmed: "The %{name} has not yet confirmed their account via email."
+        add_to_blocked_units: "Add %{name} to Blocked Units"
+        direct_receipt: "Make Direct %{name}"
+      process_payment:
+        total_brokerage_note: "This is the total brokerage amount of all bookings approved by the developer end. The brokerage release process will start once booking registration is completed."
+        potential_brokerage_note: "This is the total potential brokerage generated on bookings. The booking details will be submitted to the developer for verification and further brokerage process."
+        lost_brokerage_amt: "This is the total amount of lost brokerage due to missing/incorrect booking details submitted to developer."
+        thanks_for_payment: "Thank you for your payment of %{name}."
+        email_will_be_sent: "You will receive an email from us with detailed information on next steps."
+        unit_in_blocked_state: "This unit will remain blocked for you for the next %{name} days. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click"
+    referrals:
+      index:
+        link_name: "Referrals"
+      new:
+        link_name: "Add Referrals"
+      generate_code:
+        link_name: "Generate Referral Code"
+      notice:
+        sent: "Invitation sent successfully."
+        code_generated: "Code generated successfully."
+        created: "Receipt created successfully."
+        updated: "Receipt updated successfully."
+      errors:
+        already_present: "%{name} is already present."
+        receipt_reference_id_not_found: "Receipt with Reference Id %{name} not found"
+        receipt_reference_id_in_success: "Receipt with Reference Id %{name} is already in success"
+        receipt_reference_id_already_exists: "Receipt with Reference Id %{name} already exists."
+        reference_id_required: "Reference id is required to create Receipt"
+        project_unit_id_required: "Project unit id is required to create Receipt"
+        lead_id_required: "Lead id is required to create Receipt"
+        user_kyc_reference_id_required: "User KYC reference id is required to create user KYC for receipt"
+        user_kyc_present: "User KYC is already present on Receipt."
+        not_available_for_cancellation: "Receipt %{name} not available for cancellation."
+    site_visits:
+      index:
+        link_name: "Walk-ins"
+      new:
+        link_name: "Schedule Walk-in"
+      edit:
+        link_name: "Reschedule"
+      show:
+        link_name: "Walk-in Details"
+      sync_with_selldo:
+        link_name: "Sync with CRM"
+      reject:
+        link_name: "Reject Walk-in"
+        default_note: "Our developer partner indicated that the customer hasn’t visited the project site and no customer with this name was found in their systems. They have asked us to reject this visit. If you do not agree and in case you know the customer has visited; kindly update the walk-in as conducted. Based on your feedback, we will take this up with our developer partner. If you want to reschedule this visit, you can schedule a new walk-in."
+      exports:
+        link_name: "%{name} Exports"
+      events:
+        status:
+          conduct: "Mark Conducted"
+          paid: "Mark Paid"
+        approval_status:
+          approve: "Approve"
+          reject: "Reject"
+      status_message:
+        status:
+          conducted: "Walk-in Conducted Successfully"
+          paid: "Walk-in Incentive is Paid"
+        approval_status:
+          approved: "Walk-in Successfully Approved"
+          rejected: "Walk-in Rejected"
+      filters:
+        scheduled_this_week: "This Week"
+        scheduled_last_week: "Last Week"
+        scheduled_this_month: "This Month"
+      notice:
+        created: "Site visit was successfully created"
+        updated: "Site visit was successfully updated"
+        synced: "Site visit was successfully synced"
+      errors:
+        could_not_register: "Could not register Site Visit on CRM"
+        went_wrong: "Something went wrong. Please contact support"
+        not_found: "Site visit not found"
+        id_missing_in_params: "SiteVisit id is missing in params"
+        invalid_date_format: "Sitevisit date format is invalid. Correct date format is - dd/mm/yyyy"
+        revisit_invalid_date_format: "Last revisit date format is invalid. Correct date format is - dd/mm/yyyy"
+        revisit_count: "Revisit count should be a number"
+      text:
+        schedule: "Schedule a Site Visit"
+        scheduled_at: "Schedule a sitevisit at - %{name}"
+        wait_time: "Wait Time"
+        last_visit_date: "Last site visit date"
+        last_visit_status: "Last site visit status"
+        mark_conducted: "Mark site visit conducted"
+
+      headings:
+        customer_site_visit: "Customer Site Visit"
+        customer_details: "Customer Details"
+        details: "Site Visit Details"
+    searches:
+      booking_cancelled: Booking Cancelled
+      select_project:
+        step: 1
+        link_name: 'Select Project'
+      filter:
+        step: 2
+        link_name: 'Filter Project'
+        header: "Select Tower"
+        hint: "Choose towers that suit your requirements"
+        error: "We couldn't find any towers for your selection, would you like to change your search?"
+        again: "Search Again"
+      apartments:
+        step: 4
+        header: 'Apartment Details'
+        title: "Apartments"
+        link_name: "Choose Apartment"
+      towers:
+        step: 3
+        link_name: "Choose Tower"
+        header: "Choose Apartment"
+        hint: "Choose apartment that suit your requirements"
+      project_unit:
+        header: "Set up your KYC"
+        hint: "Set up your KYC & hold your apartments"
+        unit_no: "Unit No. :"
+      cost_sheet_and_payment_schedule:
+        link_name: "View Cost Sheet & Payment Schedule"
+      booking_cancellation_charges: "%{name} processing charges will be applied on cancellation of booking"
+      disclaimer: "Disclaimer"
+      msg:
+        scheme_approval_first: "As the payment is adjusted, this scheme will go for approval first."
+      proceed_without_payment:
+        link_name: "Proceed without payment"
+        text: "I Agree on behalf of %{name} and proceed to add payment"
+        agree_on_behalf: "I Agree on behalf of %{name}"
+        agree_and_proceed: "I Agree and proceed to add payment"
+        user_agree: "I agree"
+      new:
+        header: "Search Home"
+        link_name: "Choose Apartment & Add Booking"
+        booking_hint: "You are taking a booking for %{name}"
+        hint: "Property you are looking for"
+      project_unit_missing: "Project Unit Selection step is missing"
+      check_project_unit_hold_status: "We've released the unit which was held for %{holding_minutes} minutes. Please re-select the unit and try booking again."
+      checkout:
+        non_hold_booking: "Booking is not held."
+        pending_payments: "We already have collected a payment for this unit from the same customer."
+      hold:
+        booking_detail_error: "We cannot process your request at this time. Please retry"
+        scheme_for_channel_partner_not_found: "No Scheme found for channel partner"
+        success: "Your Booking is hold. Please select Scheme and go for Payment."
+      gateway_payment:
+        receipt_missing: "Requested receipt not in pending."
+      sold_out_filtered: "Sold Out and Filtered"
+      text:
+        starting_at: "Starting At"
+    smses:
+      index:
+        link_name: "SMSs"
+      show:
+        link_name: "Details"
+      links:
+        sms_pulse: "SMS Pulse"
+    schemes:
+      index:
+        link_name: "Schemes"
+      edit:
+        link_name: "Edit Scheme"
+      show:
+        link_name: "Scheme Detail"
+        header: "Scheme Detail"
+      new:
+        link_name: "Add Scheme"
+        header: "Add Scheme"
+      notice:
+        scheme_registered: "Scheme registered successfully and sent for approval."
+        updated: "Scheme updated successfully."
+    incentive_schemes:
+      index:
+        link_name: "Brokerage Schemes"
+      edit:
+        link_name: "Edit Brokerage Scheme"
+      end_scheme:
+        link_name: "End Scheme"
+      show:
+        link_name: "Brokerage Scheme Detail"
+        header: "Brokerage Scheme Detail"
+      new:
+        link_name: "Add Brokerage Scheme"
+        header: "Add Brokerage Scheme"
+      add_ladder:
+        link_name: "Add Ladder"
+        ladder_stage: "Ladder - Stage "
+      notice:
+        created: "Incentive Scheme created successfully."
+        updated: "Incentive Scheme updated successfully."
+      alert:
+        not_found: "Incentive Scheme not found."
+      text:
+        incentive_calculation: "Incentive Calculation"
+        formula_help_text: "This will be evaluated in the context of resource (which can be a Booking, Payment, etc)"
+    variable_incentive_schemes:
+      index:
+        link_name: "Variable Incentive Schemes"
+      edit:
+        link_name: "Edit Variable Incentive Scheme"
+      end_scheme:
+        link_name: "End Scheme"
+      show:
+        link_name: "Variable Incentive Scheme Detail"
+        header: "Variable Incentive Scheme Detail"
+      new:
+        link_name: "Add Variable Incentive Scheme"
+        header: "Add Variable Incentive Scheme"
+      vis_details:
+        link_name: "Scheme Booking Details"
+      leaderboard:
+        link_name: "Leaderboard"
+    sync_logs:
+      index:
+        link_name: "Sync Logs"
+      new:
+        link_name: "Sync"
+      show:
+        link_name: "Details"
+      notice:
+        resource_absent: "Sync log resource absent"
+        process_started: "Sync process has been started."
+        updated: "Variable Incentive Scheme updated successfully."
+      alert:
+        details_missing: "Sync details are missing."
+
+    templates:
+      new:
+        link_name: 'Add Template'
+      index:
+        link_name: "Templates"
+      show:
+        link_name: "Template Detail"
+      notice:
+        updated: "Template updated successfully."
+      errors:
+        contact_admin: "We are sorry! %{name} has some issue. Please Contact to Administrator."
+      choose_template_for_print:
+        link_name: Print Documents
+
+    users:
+      set_user_missing: "User not found"
+      block_lead:
+        header: "Qualify Lead"
+        link_name: "Qualify Lead"
+      unblock_lead:
+        link_name: "Unqualify Lead"
+      account_confirmed: "Account Confirmed"
+      account_confirmed_and_block_lead: "Account confirmed but not qualified. You can qualify the lead here."
+      change_password:
+        link_name: "Change Password"
+      cannot_confirm_user: "Cannot confirm user"
+      confirm_user:
+        link_name: "Confirm User"
+      invite_user:
+        link_name: "Invite User"
+      confirm_via_otp:
+        link_name: "Confirm Via OTP"
+      exports:
+        link_name: "%{name} Exports"
+      edit:
+        link_name: "Edit %{role}"
+        header: "Edit %{role}"
+      index:
+        link_name: "Users Accounts"
+      new:
+        link_name: "Add %{role}"
+        header: "Add %{role}"
+      profile:
+        link_name: "Profile"
+      print:
+        link_name: "Print"
+      reactivate_account:
+        link_name: "Reactivate Account"
+      resend_confirmation_instructions:
+        link_name: "Resend Confirmation"
+      resend_password_instructions:
+        link_name: "Resend Password Instruction"
+      show:
+        link_name: "%{role} Details"
+        header: "Overview"
+      leads:
+        link_name: "Show Leads"
+      send_payment_link: Send Payment link
+      move_to_next_state:
+        sales:
+          break: "%{name} is on break"
+          available: "%{name} is available"
+          not_available: "%{name} is not available"
+      create:
+        change_channel_partner_company: "Found an old inactive account with these details. We have activated it & linked it under your company"
+      change_state:
+        buttons:
+          active: "Approve"
+          inactive: "Reject"
+        links:
+          active_to_inactive: "Remove Account From Company"
+          pending_approval_to_inactive: "Cancel Registration In Company Request"
+      status_in_company_message:
+        pending_approval_to_inactive: "Registration request is rejected"
+        pending_approval_to_active: "Account added successfully"
+        active_to_inactive: "Account removed successfully"
+      notice:
+        created: "User created successfully"
+        profile_updated: "User Profile updated successfully"
+        updated: "User updated successfully"
+        cannot_confirm: "Cannot confirm with this link. Please contact administrator"
+        resend_password_sent: "Password instructions send successfully."
+        profile_updated: "User profile updated successfully."
+        reactivated_account: "User Account reactivated successfully."
+        confirmation_sent: "Confirmation instructions sent successfully."
+        reset_password_sent: "Reset password instructions sent successfully."
+        confirmed_via_otp: "User confirmed using OTP by this channel_partner"
+      errors:
+        reference_id_required: "Reference Id is required to create User."
+        not_registered: "User is not registered."
+        account_reactivation: "There was some error while reactivating account. Please contact support for assistance"
+        could_not_send_confirmation: "Couldn't send confirmation instructions."
+        could_not_send_reset_password: "Couldn't send Reset password instructions."
+        already_registered: "User with these details is already registered with a different role"
+
+      alert:
+        not_found: "User not found"
+      text:
+        payment_done: "Payment Done"
+        payment_pending: "Payment Pending"
+        customer_signature: "Customer Signature"
+        authorized_signatory: "Authorized Signatory"
+        e_customer_form: "This is an electronically generated customer form."
+      view:
+        all: All Users
+        join_requests: User Requests
+      approve_reject_company_user:
+        header: Approve / Reject User
+        link_name: Approve / Reject
+
+    interested_projects:
+      set_interested_project_missing: "Interested Project not found"
+      edit:
+        link_name: "Edit Interested Project"
+
+    leads:
+      index:
+        link_name: "Leads"
+      show:
+        link_name: "Show Lead Details"
+        header: "Overview"
+      edit:
+        link_name: "Edit Lead"
+        header: "Edit Lead"
+      exports:
+        link_name: "%{name} Exports"
+      move_to_next_state:
+        queued: "%{name} moved to sales queue successfully"
+        dropoff: "%{name} dropped off successfully"
+      accepted_by_sales: "Lead %{status}"
+      create_from_existing_lead:
+        link_name: "Add From Existing Customer"
+      add_to_another_project:
+        link_name: "Add To Other Project"
+      create_new_lead:
+        link_name: "Add New %{model}"
+      drop_customer:
+        link_name: "Drop Customer"
+      payment_link:
+        link_name: "Send Payment link"
+      reassign_sales: "Reassign Lead"
+      send_payment_link:
+        project_no_access: Project access not given to customers
+      notice:
+        updated: "Lead successfully updated."
+        assigned_to: "%{name1} assigned to sales %{name2}"
+        not_assigned_to: "%{name1} not assigned to sales %{name2}"
+      alert:
+        not_found: "Lead Not found"
+        sales_user_not_found: "Sales user not found"
+        unqualified: "Lead cannot be unqualified"
+        company_not_found: "Requested partner company not found"
+        select_manager: "Please select atleast one partner"
+      message:
+        mail_sent: "Mail successfully sent to the selected leads"
+        no_leads_added: "You have not added any lead yet.\nStart exploring the projects and add your leads."
+      notice:
+        created: "Lead created successfully."
+        updated: "Lead updated successfully."
+        unqualified: "Lead unqualified successfully."
+      errors:
+        select_leads: "Please select some leads"
+        already_exists: "Lead already exists."
+        failed_to_assign: "Not able to assign %{name} to sales"
+        lead_reference_id_not_found: "Lead with Reference Id %{name} not found"
+        lead_reference_id_already_exists: "Lead with Reference Id %{name} already exists"
+        project_id_required: "project_id is required to create Lead"
+        lead_reference_id_required: "Lead reference_id is required"
+        email_phone_not_match: "User email & phone doesn't match"
+        email_or_phone_required: "User email or phone is required"
+        manager_reference_id_not_found: "Manager with Reference Id %{name} not found"
+        lead_not_present_for_booking: "Lead not present for booking. Please contact administrator"
+        user_account_not_present_for_lead: "User Account not present for lead. Please contact administrator"
+        project_not_present_for_lead: "Project not present for lead. Please contact administrator"
+      total_amount_paid:
+        hint: "(you might have some payments pending clearance)"
+      total_balance_pending:
+        hint: "(you might have some payments pending clearance)"
+      total_unattached_balance:
+        hint: "(subject to clearance)"
+        text: "Total Unattached Balance"
+
+    user_kycs:
+      index:
+        link_name: "KYCs"
+      new:
+        link_name: "Fill KYC Form"
+      edit:
+        link_name: "Edit"
+      show:
+        link_name: "Detail"
+      notice:
+        created: "User KYC created successfully"
+        updated: "User KYC updated successfully"
+      errors:
+        reference_id_already_exists: "User KYC with Reference Id %{name} already exists."
+        reference_id_required: "User KYC Reference Id is required"
+        lead_id_required: "Lead Id is required to create KYC"
+    user_requests:
+      index:
+        link_name: "Help Center"
+      edit:
+        link_name: "Edit %{type}"
+      show:
+        link_name: "Detail"
+      new:
+        link_name: "Add"
+      link_to:
+        cancellation_request: "Cancellation Request"
+        swap_request: "Swap Request"
+        general_request: "General Request"
+      general:
+        index:
+          link_name: "General Requests"
+        new:
+          link_name: "General Request"
+          header: "General Request"
+        edit:
+          link_name: "Edit General Request"
+          header: "Edit General Request"
+      swap:
+        index:
+          link_name: "Swap Requests"
+        new:
+          link_name: "Swap"
+          header: "Swap"
+        edit:
+          link_name: "Edit Swap"
+          header: "Edit Swap"
+      cancellation:
+        index:
+          link_name: "Cancellation Requests"
+        new:
+          link_name: "Cancel"
+          header: "Cancel"
+        edit:
+          link_name: "Edit Cancellation"
+          header: "Edit Cancellation"
+      notice:
+        updated: "User Request updated successfully"
+      message:
+        sent_for_cancellation: " %{name} has been sent for cancellation."
+      errors:
+        request_type_required: "User Request type is required."
+        ids_required_for_cancellation: "Booking detail id or Receipt id is required for cancellation"
+        cancellation_request_type_supported: "Only cancellation user request type is supported"
+      text:
+        requested_for: "Requested for %{name}"
+        reason: "Reason"
+        alternate_project_unit: "Alternate Project Unit"
+        cancellation_request_text: "Your unit will be released once the cancellation request is processed. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability."
+        i_agree: "I agree"
+        i_agree_on_behalf_of: "I Agree on behalf of %{name}"
+
+
+    developers:
+      notice:
+        updated: "Developer updated successfully."
+      alert:
+        not_found: "Developer not found"
+    document_signs:
+      notice:
+        connected: "Connected your %{name} Account successfully"
+      errors:
+        could_not_connect: "Couldn't connect with your %{name} Account"
+    notification_tokens:
+      notice:
+        updated: "Token updated successfully."
+    omniauth_callbacks:
+      alert:
+        register: "Please ask support team to register your account."
+    shortened_urls:
+      alert:
+        not_found: "Invalid URL"
+
+  records:
+    text:
+      subject_class: "Subject Class"
+      changed_by: "Changed By"
+      action_type: "Action Type"
+      audit_entries: "Audit Entries"
+  checklists:
+    form:
+      key_helptext: "Only small letters, numbers & underscore allowed"
+
+  asset:
+    image:
+      not_found: "No Image Found"
+
+  datetime:
+    distance_in_words:
+      about_x_years:
+        one: "an year"
+        other: "%{count} Years"
+      almost_x_years:
+        one: "almost year"
+        other: "%{count} Years"
+      short:
+        about_x_hours:
+          one: "about 1 hr"
+          other: "about %{count} hrs"
+        about_x_months:
+          one: "about 1 mo"
+          other: "about %{count} mos"
+        about_x_years:
+          one: "about 1 yr"
+          other: "about %{count} yrs"
+        almost_x_years:
+          one: "~ 1 yr"
+          other: "~ %{count} yrs"
+        half_a_minute: "half a min"
+        less_than_x_seconds:
+          one: "< 1 sec"
+          other: "< %{count} secs"
+        less_than_x_minutes:
+          one: "< 1 min"
+          other: "< %{count} mins"
+        over_x_years:
+          one: "> 1 yr"
+          other: "> %{count} yrs"
+        x_seconds:
+          one: "1 sec"
+          other: "%{count} secs"
+        x_minutes:
+          one: "1 min"
+          other: "%{count} mins"
+        x_days:
+          one: "1 day"
+          other: "%{count} days"
+        x_months:
+          one: "1 mo"
+          other: "%{count} mos"
+        x_years:
+          one: "1 yr"
+          other: "%{count} yrs"
+
+  users:
+    account_confirmed: "Account Confirmed"
+    total_amount_paid:
+      hint: "(you might have some payments pending clearance)"
+    total_balance_pending:
+      hint: "(you might have some payments pending clearance)"
+    total_unattached_balance:
+      hint: "(subject to clearance)"
+
+  sessions:
+    new:
+      otp_submit: "Get OTP"
+      otp_resend: "Resend OTP"
+      login_with_password_link: "Login with password instead"
+      login_with_otp_link: "Login with OTP instead"
+      sign_in: "Sign In"
+      link:
+        pre_text: "Already have an account?"
+        name: "Login here"
+    notice:
+      phone_number: "Please enter a valid phone number"
+      otp_sent_to: "Otp sent to "
+    errors:
+      max_otp_tries: "Maximum limit reached to get OTP code. Please try again after %{name}"
+      wait_for_otp: "Please wait for %{name} seconds to resend OTP."
+
+  registrations:
+    pre_text: "Don’t have account ?"
+    new:
+      sign_up: "Sign Up"
+
+  channel_partner_registration:
+    titles:
+      heading2_html: "<strong>Register now</strong> & join our network to explore new opportunities"
+
+  dashboard:
+    exports:
+      link_name: "%{type} Exports"
+    cp_admin:
+      channel_partner_performace:
+        heading: "Channel Partner Performance (Project Wise)"
+      partner_wise_performace:
+        heading: "Channel Partner Performance (User Wise)"
+      site_visit_partner_wise:
+        heading: "Walk-ins (User Wise)"
+      incentive_scheme_performance:
+        heading: "Brokerage Scheme Performance"
+      cp_performance:
+        heading: "Channel Partner Manager Performance"
+      site_visit_project_wise:
+        heading: "Walk-ins (Project wise)"
+      cp_status:
+        active_html: "Active<br> Companies"
+        inactive_html: "Signed Up<br> Companies"
+        pending_html: "Pending<br> Companies"
+        rejected_html: "Rejected<br> Companies"
+        heading: "Partner Companies Status Wise Counts"
+    channel_partner:
+      projects:
+        sub_heading: "Best homes to meet your expectations"
+      refer_a_channel_partner:
+        heading: "Refer a Channel Partner"
+        sub_heading: "Earn additional benefits by referring your friends at %{project_name}."
+      incentive_plan:
+        heading: "Brokerage Plans"
+      incentive_plan_started:
+        heading: "Brokerage Plans Started"
+        max_ladder_html: "<strong>Max.</strong> Ladder Reached"
+      details: "Channel Partner Details"
+
+      titles:
+        lead_details: "Customer Account Details"
+        booking_details: "Bookings"
+        total_leads: "Total Leads"
+        received: "Added"
+        available_inventory: "Available Inventory"
+        download_brochure: "Download Brochure"
+        visit_website: "Visit Website"
+      confirmed_users: "Confirmed Customer Accounts"
+      not_confirmed_users: "Not Confirmed Customer Accounts"
+      booking_detail:
+        blocked:
+          label: "Blocked"
+          sub_label: " (Paid Rs.%{blocking_amount})"
+        booked_tentative:
+          label: "Tentative"
+          sub_label: ""
+        booked_confirmed:
+          label: "Confirmed"
+          sub_label: "Paid 10% Amount"
+      data:
+        booked_leads:
+          label: "Booked"
+          sub_label: "Leads"
+        not_booked_leads:
+          label: "Not Booked"
+          sub_label: "Leads"
+        total_bookings:
+          label: "Total Bookings"
+          sub_label: ""
+        confirmed_bookings:
+          label: "9.90%"
+          sub_label: "Payment Received"
+        registration_done_bookings:
+          label: "Registration Done"
+          sub_label: ""
+      new_user:
+        header: "Add Customers"
+    user:
+      projects:
+        sub_heading: "Best homes to meet your expectations"
+      titles:
+        available_inventory: "Available Inventory"
+        download_brochure: "Download Brochure"
+        visit_website: "Visit Website"
+
+  mobile:
+    channel_partner:
+      status_message:
+        pending:
+          step1: "Your application is under review."
+          step2: "We will notify you via email on the status of your application."
+          step3: "Our estimated review time is between 24-48 hours"
+        rejected: "Reason %{reason}"
+        application_rejected: "Your application has been rejected"
+        complete_registration: "Complete Registration"
+
+  selldo:
+    links:
+      header: "Take Action in CRM"
+      add_note: "View Lead & Add Notes"
+      schedule_site_visit: "Schedule Site Visit"
+      schedule_followup: "Schedule Followup"
+
+  templates:
+    users/_welcome: "Customer Dashboard"
+    index/inactive_channel_partner: "Channel Partner Dashboard before Approval"
+    index/_channel_partner: "Channel Partner Dashboard"
+    dashboard/index/_admin: "Admin Dashboard"
+    sales_dashboard: "Sales Dashboard"
+    devise/sessions/new: "Landing Page"
+    home/register: "Customer Registration Page"
+    channel_partner/new: "Channel Partner Registration"
+    layouts/_navbar_footer: "Footer Rera Line"
+    searches/checkout: "Holding minutes Text on Checkout page"
+    booking_details/_details: "Bottom Text in Booking detail overview section"
+    assets/_videos: "Videos in Collaterals Section on Dashboard"
+    project_units/_section: "Projects Section on Dashboard"
+    quotation_pdf: "Quotation PDF"
+    terms_and_conditions: "Terms and Conditions"
+    privacy_policy: "Privacy Policy"
+    assets/_videos: "Assets Videos"
+
+  number:
+    human:
+      decimal_units:
+        format: "₹%n %u"
+  inr:
+    unit: ""
+    ten: ""
+    hundred: ""
+    thousand: "K"
+    lakh:
+      one: "Lac"
+      other: "Lacs"
+    crore: "Cr"
+
+  formula:
+    calculate_agreement_price: "Agreement Value"
+    calculate_all_inclusive_price: "All Inclusive"
+    agreement_price: "Agreement Value"
+    all_inclusive_price: "All Inclusive Price"
+
+  amenity_icons:
+    swimming_pool: "fa-swimming-pool"
+    auditorium: "fa-theater-masks"
+    gym: "fa-dumbbell"
+    internal_roads: "fa-road"
+    movie_theatre: "fa-camera-movie"
+    playschool: "fa-school"
+    table_tennis_court: "fa-table-tennis"
+    sewage_treatment_plant: "fa-house-flood"
+
+  devise:
+    keys:
+      sign_in: "Sign In"
+      log_in: "Log In"
+      sign_out: "Sign Out"
+      register: "Register"
+      register_now: "Register Now"
+      email_verified: "Email Verified"
+      reset_password: "Reset Password"
+      create_password: "Create Password"
+      select_password: "Please choose a password of your choice and confirm your account"
+      email_being_changed: "We're contacting you to notify you that your email is being changed to %{name}."
+      email_has_changed: "We're contacting you to notify you that your email has been changed to %{name}."
+      password_changed: "We're contacting you to notify you that your password has been changed."
+      dear_resource: "Dear %{name}"
+      change_password: "Change Password"
+      change_my_password: "Change my Password"
+      change_your_password: "Change your Password"
+      reset_your_password: "Reset your Password"
+      change_password: "Change Password"
+      unlock_my_account: "Unlock my Account"
+      forgot_password: "Forgot your Password?"
+      verify_your_email: "Verify your Email"
+      verify_your_account: "Verify your Account"
+      logging_in: "Logging in"
+      verifying_login: "Verifying & Logging you in"
+      resend: "Click here to resend"
+      confirm_account: "Confirm Account"
+      register_as:
+        customer: "Register as Customer"
+        channel_partner: "Register as Channel Partner"
+      sms_unreceived: "Didn’t Receive SMS?"
+    help_text:
+      sign_in:
+        otp: "Sign in using OTP (One Time Password)"
+        email_and_password: "Sign in using email and password"
+        omniauth: "Sign in with %{name}"
+        after_password_reset: "Sign in after resetting your password"
+        after_verify: "Sign in after verifying your email and setting up a password"
+      enter_password: "Please enter a password of your choice"
+      create_password: "Please create a password for your account"
+      resend_unlock_instructions: "Resend unlock instructions"
+      reset_password:
+        link: "If you can't remember your password, please reset it from using the link below."
+      verify_account:
+        link: "Click the link in your email to verify your account. If you can't find the email check your spam folder or "
+
+    text_msg:
+      thanks_channel_partner: "Thank you for registering as a Channel Partner at %{name}. Please confirm your account by clicking the link below. You can start entering your leads as soon as your account is confirmed."
+      interested:
+        confirm_account: "Thank you for registering at %{name}. Please confirm your account by clicking the link below and book your Home in 4 easy steps!"
+      registerd:
+        confirm_account: "Your interest for %{name1} has been registered by %{name2}. Please confirm your account by clicking the link below and book your Home in 4 easy steps!"
+      click_to_confirm: "Please confirm your account by clicking the link below."
+      reset_password: "Reset your password by clicking the link below. Your password won't change until you access the link above and create a new one."
+      account_locked: "Your account has been locked due to an excessive number of unsuccessful sign in attempts. Click the link below to unlock your account:"
+      sent_verification_link: "We have sent an account verification link to %{name}"
+    errors:
+      invalid_phone_number: "Invalid Phone Number"
+  export_mailer:
+    export_scheduled: "Please find attached your scheduled export"
+  navbar:
+    text:
+      whatsapp_chat: "Chat with us on Whatsapp"
+      reach_helpdesk: "Reach our Helpdesk"
+      write_us: "Write to us"
+      cp_code: "CP Code"
+  worker:
+    booking_details:
+      errors:
+        booking_cancellation_unavailable: "Booking Is not available for cancellation."
+        unit_swapping_unavailable: "Alternative unit is not available for swapping."
+        booking_swapping_unavailable: "Booking Is not available for swapping.',"
+        reject_user_request: "Alternate Unit booking price is very high. No any receipt with minimum %{name}."
+    receipts:
+      comments:
+        swap_receipt_generated: "Receipt generated for Swapped Unit. Original Receipt ID %{name}"
+        swapped_receipt_cancellation: "Unit Swapped by user. Original Unit ID: %{name} So cancelling these receipts"
+      errors:
+        cancellation_receipt_unavailable: "Receipt is not available for cancellation."
+    meetings:
+      keys:
+        subscribed: "Event Subscribed"
+        unsubscribed: "Event Unsubscribed"
+    project_units:
+      errors:
+        not_on_hold: "Project unit not on hold"
+    razorpay:
+      errors:
+        transfer: "Transfer not initiated"
+    selldo:
+      note: "Added BY %{name}"
+      errors:
+        push_note: "Errors while Pushing note to CRM %{name}"
+        sitevisit_update_failed: "Sitevisit for %{name1} has not been updated due to following error - %{name2}"
+  gamification:
+    text:
+      popular_floor: "This is one of our most popular floors with stunning views"
+      people_viewing_apartments: " other people are viewing the apartments on this floor"
+      people_viewing_home: " other people like you are looking for a home in this tower"
+      first_time_home_buyers: "Popular choice of first-time home buyers"
+  amura:
+    text:
+      support: "There was some issue with the system. Please contact %{name} support"
+  javascript:
+    global:
+      please_wait: "Please Wait..."
+  will_paginate:
+    previous_label: "&#8592; Previous"
+    next_label: "Next &#8594;"
+    page_gap: "&hellip;"
+
+    page_entries_info:
+      single_page:
+        zero:  "No %{model} found"
+        one:   "Displaying 1 %{model}"
+        other: "Displaying all %{count} %{model}"
+      single_page_html:
+        zero:  "No %{model} found"
+        one:   "Displaying <b>1</b> %{model}"
+        other: "Displaying <b>all&nbsp;%{count}</b> %{model}"
+
+      multi_page: "Displaying %{model} %{from} - %{to} of %{count} in total"
+      multi_page_html: "Displaying %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> of <b>%{count}</b> in total"
+
+  app:
+    errors:
+      marketplace_error: 'We encountered some issue with your Marketplace setup. Please connect with Kylas Customer Success'
+      payment_error: 'No receipt found'
+
+  kylas_auth:
+    successfully_installed: 'App installed successfully'
+    facing_problem: 'We are facing some problem with your installation. Please connect with Kylas Customer Success'
+    something_went_wrong: 'We encountered some issue with your Marketplace setup. Please connect with Kylas Customer Success'

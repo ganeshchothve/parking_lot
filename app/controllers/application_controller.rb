@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
   include ApplicationHelper
 
   before_action :store_user_location!, if: :storable_location?
-  before_action :set_locale
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_cache_headers, :set_request_store, :set_cookies
   before_action :load_hold_unit
@@ -16,6 +15,7 @@ class ApplicationController < ActionController::Base
   before_action :set_mailer_host
   before_action :set_current_client, if: :current_user
   before_action :set_current_project_id
+  before_action :set_locale
   # Run in current user Time Zone
   around_action :user_time_zone, if: :current_user
   before_action :marketplace_current_user_match, if: proc { (marketplace_host? || embedded_marketplace?) && current_user.present? && params[:tenantId].present? && params[:userId].present? }
@@ -285,7 +285,13 @@ class ApplicationController < ActionController::Base
   # end
 
   def set_locale
-    I18n.locale = params[:locale] || I18n.default_locale
+    industry = current_client.industry
+    _locale = if industry && !industry.to_s.empty?
+                "#{ I18n.default_locale }-#{ industry.to_s.upcase }"
+              else
+                I18n.default_locale
+              end
+    I18n.locale = _locale
   end
 
   def default_url_options
