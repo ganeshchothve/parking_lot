@@ -7,7 +7,7 @@
             </div>
         <% else %>
             <div class="alert alert-danger">
-                <h4><%= @response.dig(:response, :code) %> - <%= @response.dig(:response, :message) %></h4>
+                <h4><%= @response.dig(:response, :code) %> - <%= @response.dig(:response, :message) || @response.dig(:message) %></h4>
             </div>
         <% end %>
     </div>

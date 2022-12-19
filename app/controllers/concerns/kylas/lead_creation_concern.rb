@@ -51,8 +51,8 @@ module Kylas
             format.html { render :new_kylas_lead }
           end
         else
-          flash.now[:alert] = @user.errors.full_messages.uniq.presence || t('global.errors.something_went_wrong')
-          format.html { render :new_kylas_lead }
+          msg = t('controller.leads.errors.email_or_phone_required')
+          format.html { redirect_to show_response_path({success: false, response: {message: msg}}) }
         end
       end
     end
