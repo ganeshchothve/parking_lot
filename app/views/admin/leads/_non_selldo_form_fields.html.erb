@@ -28,7 +28,7 @@
 <% else %>
   <div class='row'>
     <div class="col-md-12">
-      <%= f.input :project_id, collection: [], required: false, disabled: !policy([:admin, lead]).editable_field?("project_id"), as: :select, prompt: :translate, input_html: { class: 'selectize-remote', name: 'project_id', data: {url: admin_projects_path} } %>
+      <%= f.input :project_id, collection: [], required: true, disabled: !policy([:admin, lead]).editable_field?("project_id"), as: :select, prompt: :translate, input_html: { class: 'selectize-remote', name: 'project_id', data: {url: admin_projects_path} } %>
     </div>
   </div>
 <% end %>
