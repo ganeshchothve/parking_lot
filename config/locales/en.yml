@@ -967,8 +967,8 @@ en:
         enable_without_kyc: 'Enable Without KYC'
         disable: 'Disable Payment'
       client/lead_conflicts:
-        client: Client Level
-        project: Project Level
+        client_level: Client Level
+        project_level: Project Level
         no_conflict: No Conflict
       developer:
         name: "Developer Name"
