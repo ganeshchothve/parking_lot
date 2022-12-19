@@ -75,19 +75,10 @@
 </div>
 <div class="row">
   <div class="col-md-6">
-    <% if policy(@client).editable_field?("enable_lead_conflicts") %>
     <div class="mb-3">
       <%= f.label :enable_lead_conflicts %>
-      <div class="form-check form-check-inline">
-        <%= f.radio_button :enable_lead_conflicts, true, class: "form-check-input wd-22" %>
-        <%= f.label :enable_lead_conflicts, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
-      </div>
-      <div class="form-check form-check-inline">
-        <%= f.radio_button :enable_lead_conflicts, false, class: "form-check-input wd-22" %>
-        <%= f.label :enable_lead_conflicts, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
-      </div>
+      <%= f.select :enable_lead_conflicts, Client::LEAD_CONFLICT.collect{|x| [t("mongoid.attributes.client/lead_conflict.#{x}"), x] }, {}, class: 'selectize', disabled: !(policy([:admin, @client]).editable_field?("enable_lead_conflicts")) %>
     </div>
-    <% end %>
   </div>
 
   <div class="col-md-6">

@@ -12,6 +12,7 @@ class Client
   PUBLIC_DOCUMENT_TYPES = []
   INCENTIVE_CALCULATION = ["manual", "calculated"]
   ENABLE_PAYMENT = %w[enable_with_kyc enable_without_kyc disable].freeze
+  LEAD_CONFLICT= %w[client_level project_level no_conflict]
 
   field :name, type: String
   field :selldo_client_id, type: String
@@ -97,7 +98,7 @@ class Client
   # This setting will decide how same lead can be added through different channel partners,
   # Enabled: If channel_partner tries to add a lead which is already present in the system & tagged to different channel_partner, then system will check if the lead is confirmed or not, if yes, it won't allow the current channel_partner to add it again & trigger an email to admin saying current channel_partner tried to add an existing lead.
   # Disabled: If channel_partner tries to add an already present lead under diff. channel_partner, then system will not allow current channel_partner to add that lead again regardless of its confirmation status & trigger a notification email to admin informing that current channel_partner tried to add existing lead.
-  field :enable_lead_conflicts, type: Boolean, default: false
+  field :enable_lead_conflicts, type: String, default: ''
   # required for sell.do links of sitevisit, followup & add task on user to work.
   field :selldo_default_search_list_id, type: String
   field :powered_by_link, type: String
