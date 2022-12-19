@@ -1,7 +1,11 @@
 class ChecklistPolicy < ApplicationPolicy
 
   def index?
-    user.role?('superadmin')
+    if current_client.real_estate?
+      user.role?('superadmin')
+    else
+      false
+    end
   end
 
   def new?

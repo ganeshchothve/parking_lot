@@ -1,7 +1,11 @@
 class Admin::TokenTypePolicy < TokenTypePolicy
 
   def index?
-    user.role.in?(%w(superadmin)) && !(user.booking_portal_client.launchpad_portal)
+    if current_client.real_estate?
+      user.role.in?(%w(superadmin)) && !(user.booking_portal_client.launchpad_portal)
+    else
+      false
+    end
   end
 
   def new?

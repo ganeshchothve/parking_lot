@@ -1,16 +1,16 @@
 class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   # def export? def new? def edit? from ChannelPartnerPolicy
   def index?
-    if user.role?(:superadmin)
-      user.selected_client.enable_channel_partners?
-    else
-      user.booking_portal_client.enable_channel_partners? && %w[admin cp_admin cp].include?(user.role)
-    end
+    user.booking_portal_client.enable_channel_partners? && %w[superadmin admin cp_admin cp].include?(user.role)
   end
 
   def show?
-    valid = %w[superadmin admin cp_admin].include?(user.role)
-    valid ||= (user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner.present? && user.channel_partner.id.to_s == record.id.to_s)
+    if current_client.real_estate?
+      valid = %w[superadmin admin cp_admin].include?(user.role)
+      valid ||= (user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner.present? && user.channel_partner.id.to_s == record.id.to_s)
+    else
+      false
+    end
   end
 
   def new?
@@ -23,17 +23,26 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   end
 
   def create?
-    user.booking_portal_client.enable_channel_partners? && %w[channel_partner cp_owner].include?(user.role)
+    #TODO: Check where this is used & change accordingly
+    false && user.booking_portal_client.enable_channel_partners?
   end
 
   def update?
-    valid = show?
+    valid = create_company?
     #valid = valid && ['inactive', 'rejected'].include?(record.status) if user.role.in?(%w(cp_owner channel_partner))
     valid
   end
 
   def edit?
     update?
+  end
+
+  def asset_create?
+    if current_client.real_estate?
+      user.active_channel_partner?
+    else
+      false
+    end
   end
 
   def asset_form?

@@ -22,7 +22,11 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def video_update?
-    %w[superadmin admin sales_admin sales].include?(user.role)
+    if current_client.real_estate?
+      %w[superadmin admin sales_admin sales].include?(user.role)
+    else
+      false
+    end
   end
 
   def third_party_inventory?
@@ -30,7 +34,11 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def show?
-    index?
+    if current_client.real_estate?
+      index?
+    else
+      false
+    end
   end
 
   def new?
@@ -42,7 +50,12 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def sync_on_selldo?
-    user.role?('superadmin') && record.valid? && record.selldo_client_id.present? && ENV_CONFIG.dig(:selldo, :user_token).present? && ENV_CONFIG.dig(:selldo, :user_email).present? && record.selldo_id.blank?
+    if current_client.real_estate?
+      #user.role?('superadmin') && record.valid? && record.selldo_client_id.present? && ENV_CONFIG.dig(:selldo, :user_token).present? && ENV_CONFIG.dig(:selldo, :user_email).present? && record.selldo_id.blank?
+      false
+    else
+      false
+    end
   end
 
   def collaterals?

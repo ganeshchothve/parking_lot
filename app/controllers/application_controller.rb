@@ -285,7 +285,7 @@ class ApplicationController < ActionController::Base
   # end
 
   def set_locale
-    industry = current_client.industry
+    industry = current_client.industry if current_client
     _locale = if industry && !industry.to_s.empty?
                 "#{ I18n.default_locale }-#{ industry.to_s.upcase }"
               else

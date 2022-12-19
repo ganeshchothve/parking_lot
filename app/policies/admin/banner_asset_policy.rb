@@ -1,6 +1,10 @@
 class Admin::BannerAssetPolicy < ApplicationPolicy
   def index?
-    %w[superadmin].include?(user.role)
+    if current_client.real_estate?
+      %w[superadmin].include?(user.role)
+    else
+      false
+    end
   end
 
   def new?

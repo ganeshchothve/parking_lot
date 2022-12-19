@@ -2,10 +2,16 @@
   <thead>
     <tr>
       <th><%= t('mongoid.attributes.project.name') %></th>
-      <th><%= t('mongoid.attributes.project.developer_name') %></th>
-      <th><%= t('mongoid.attributes.project.micro_market') %></th>
-      <th><%= t('mongoid.attributes.project.launched_on') %></th>
-      <th><%= t('mongoid.attributes.project.bookings') %></th>
+      <% if policy([:admin, Developer]).index? %>
+        <th><%= t('mongoid.attributes.project.developer_name') %></th>
+      <% end %>
+      <% if current_client.real_estate? %>
+        <th><%= t('mongoid.attributes.project.micro_market') %></th>
+        <th><%= t('mongoid.attributes.project.launched_on') %></th>
+      <% end %>
+      <% if policy([:admin, BookingDetail]).index? %>
+        <th><%= t('mongoid.attributes.project.bookings') %></th>
+      <% end %>
       <% if current_client.enable_site_visit? %><th><%= I18n.t("mongoid.models.site_visit.other") %></th><% end %>
       <% if policy([current_user_role_group, Lead]).index? %><th><%= I18n.t("mongoid.models.lead.other") %></th><% end %>
       <th class="btn-action">Action</th>
@@ -34,14 +40,20 @@
             <% end %>
           <% end %>
         </td>
-        <td><%= project.developer_name %></td>
-        <td><%= project.micro_market %>,
-          <%= project.city %></td>
-        <td><%= I18n.l(project.launched_on) rescue "-" %></td>
-        <td>
-          <% bookings_count = BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: project.id).count %>
-          <%= link_to_if policy([current_user_role_group, BookingDetail]).index?, bookings_count, admin_booking_details_path(fltrs: {project_id: project.id})  %>
-        </td>
+        <% if policy([:admin, Developer]).index? %>
+          <td><%= project.developer_name %></td>
+        <% end %>
+        <% if current_client.real_estate? %>
+          <td><%= project.micro_market %>,
+            <%= project.city %></td>
+          <td><%= I18n.l(project.launched_on) rescue "-" %></td>
+        <% end %>
+        <% if policy([:admin, BookingDetail]).index? %>
+          <td>
+            <% bookings_count = BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: project.id).count %>
+            <%= link_to_if policy([current_user_role_group, BookingDetail]).index?, bookings_count, admin_booking_details_path(fltrs: {project_id: project.id})  %>
+          </td>
+        <% end %>
         <% if current_client.enable_site_visit? %>
           <td><% sv_count = SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).where(project_id: project.id).count %>
           <%= link_to_if policy([current_user_role_group, SiteVisit]).index?, sv_count, admin_site_visits_path(fltrs: {project_id: project.id}) %>
