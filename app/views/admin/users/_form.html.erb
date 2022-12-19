@@ -11,31 +11,39 @@
         <div class="modal-body theme-form">
           <div class="row">
             <div class="col-md-6">
+              <% if policy([:admin, @user]).editable_field?("first_name") %>
               <div class="mb-3">
                 <%= f.label :first_name, class: 'label-required' %>
                 <%= f.text_field :first_name, class: 'form-control', autofocus: true, required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("first_name") ? false : true) %>
               </div>
+              <% end %>
             </div>
             <div class="col-md-6">
+              <% if policy([:admin, @user]).editable_field?("last_name") %>
               <div class="mb-3">
                 <%= f.label :last_name %>
                 <%= f.text_field :last_name, class: 'form-control', autofocus: true, disabled: (policy([current_user_role_group, @user]).editable_field?("last_name") ? false : true) %>
               </div>
+              <% end %>
             </div>
           </div>
           <% unless @user.buyer? && current_user.in_masked_details_user_group? %>
             <div class="row">
               <div class="col-md-6">
+                <% if policy([:admin, @user]).editable_field?("email") %>
                 <div class="mb-3">
                   <%= f.label :email %>
                   <%= f.email_field :email, class: 'form-control', disabled: (policy([current_user_role_group, @user]).editable_field?("email") ? false : true) %>
                 </div>
+                <% end %>
               </div>
               <div class="col-md-6">
+                <% if policy([:admin, @user]).editable_field?("phone") %>
                 <div class="mb-3">
                   <%= f.label :phone %>
                   <%= f.text_field :phone, class: 'form-control phone', disabled: (policy([current_user_role_group, @user]).editable_field?("phone") ? false : true) %>
                 </div>
+                <% end %>
               </div>
             </div>
           <% end %>

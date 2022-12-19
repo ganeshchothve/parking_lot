@@ -1,15 +1,15 @@
 <div class="row">
-  <% if policy([:admin, @project]).editable_field?("hot") %>
+  <% if policy([:admin, project]).editable_field?("hot") %>
     <div class="col-md-12">
       <div class="form-group text-end">
         <div class="form-check form-check-inline">
           <%= f.label :hot, class: "form-check-label d-inline-block ms-2" %>
-          <%= f.check_box :hot, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("hot") }, I18n.t("global.boolean.true"), I18n.t("global.boolean.false") %>
+          <%= f.check_box :hot, {:class => "form-check-input wd-22", :disabled => !policy([:admin, project]).editable_field?("hot") }, I18n.t("global.boolean.true"), I18n.t("global.boolean.false") %>
         </div>
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("name") %>
+  <% if policy([:admin, project]).editable_field?("name") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :name, class: 'label-required' %>
@@ -17,7 +17,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("developer_name") %>
+  <% if policy([:admin, project]).editable_field?("developer_name") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :developer_name, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
@@ -25,7 +25,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("project_type") %>
+  <% if policy([:admin, project]).editable_field?("project_type") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :project_type, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
@@ -33,7 +33,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("category") %>
+  <% if policy([:admin, project]).editable_field?("category") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :category, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
@@ -41,7 +41,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("project_segment") %>
+  <% if policy([:admin, project]).editable_field?("project_segment") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :project_segment, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
@@ -49,7 +49,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("micro_market") %>
+  <% if policy([:admin, project]).editable_field?("micro_market") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :micro_market, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
@@ -57,23 +57,23 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("city") %>
+  <% if policy([:admin, project]).editable_field?("city") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :city, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
-        <%= f.select :city, current_client.regions.pluck(:city), {prompt: I18n.t("global.select")}, class: 'selectize city_select', required: (current_client.launchpad_portal? ? true : false),  disabled: !policy([:admin, @project]).editable_field?("city") %>
+        <%= f.select :city, current_client.regions.pluck(:city), {prompt: I18n.t("global.select")}, class: 'selectize city_select', required: (current_client.launchpad_portal? ? true : false),  disabled: !policy([:admin, project]).editable_field?("city") %>
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("region") %>
+  <% if policy([:admin, project]).editable_field?("region") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :region %>
-        <%= f.select :region, (@project.region.present? ? current_client.regions.where(city: @project.city).pluck(:partner_regions).first : []), {prompt:  I18n.t("global.link_to.select_city_first")}, class: 'selectize regions_select', required: (current_client.launchpad_portal? ? true : false),  disabled: !policy([:admin, @project]).editable_field?("region"), data: { url: get_regions_admin_client_path } %>
+        <%= f.select :region, (@project.region.present? ? current_client.regions.where(city: @project.city).pluck(:partner_regions).first : []), {prompt:  I18n.t("global.link_to.select_city_first")}, class: 'selectize regions_select', required: (current_client.launchpad_portal? ? true : false),  disabled: !policy([:admin, project]).editable_field?("region"), data: { url: get_regions_admin_client_path } %>
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("possession") %>
+  <% if policy([:admin, project]).editable_field?("possession") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :possession, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
@@ -81,7 +81,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("launched_on") %>
+  <% if policy([:admin, project]).editable_field?("launched_on") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :launched_on, class: '' %>
@@ -89,7 +89,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("registration_name") %>
+  <% if policy([:admin, project]).editable_field?("registration_name") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :registration_name, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
@@ -97,7 +97,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("rera_registration_no") %>
+  <% if policy([:admin, project]).editable_field?("rera_registration_no") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :rera_registration_no, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
@@ -105,7 +105,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("gst_number") %>
+  <% if policy([:admin, project]).editable_field?("gst_number") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :gst_number, class: '' %>
@@ -113,7 +113,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("price_starting_from") %>
+  <% if policy([:admin, project]).editable_field?("price_starting_from") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :price_starting_from %>
@@ -121,7 +121,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("price_upto") %>
+  <% if policy([:admin, project]).editable_field?("price_upto") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :price_upto %>
@@ -129,23 +129,23 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("area_unit") %>
+  <% if policy([:admin, project]).editable_field?("area_unit") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :area_unit, class: '' %>
-        <%= f.text_field :area_unit, class: 'form-control', disabled: (policy([:admin, @project]).editable_field?("area_unit") ? false : true) %>
+        <%= f.text_field :area_unit, class: 'form-control', disabled: (policy([:admin, project]).editable_field?("area_unit") ? false : true) %>
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("cancellation_amount") %>
+  <% if policy([:admin, project]).editable_field?("cancellation_amount") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :cancellation_amount, class: '' %>
-        <%= f.text_field :cancellation_amount, class: 'form-control', disabled: (policy([:admin, @project]).editable_field?("cancellation_amount") ? false : true) %>
+        <%= f.text_field :cancellation_amount, class: 'form-control', disabled: (policy([:admin, project]).editable_field?("cancellation_amount") ? false : true) %>
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("cin_number") %>
+  <% if policy([:admin, project]).editable_field?("cin_number") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :cin_number, class: '' %>
@@ -153,19 +153,19 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("latitude") %>
+  <% if policy([:admin, project]).editable_field?("latitude") %>
     <div class="mb-3 col-md-6">
       <%= f.label :latitude, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
       <%= f.text_field :latitude, class:'form-control', required: (current_client.launchpad_portal? ? true : false), disabled: !policy([:admin, project]).editable_field?("latitude")  %>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("longitude") %>
+  <% if policy([:admin, project]).editable_field?("longitude") %>
     <div class="mb-3 col-md-6">
       <%= f.label :longitude, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
       <%= f.text_field :longitude, class:'form-control', required: (current_client.launchpad_portal? ? true : false),  disabled: !policy([:admin, project]).editable_field?("longitude") %>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("foyer_link") %>
+  <% if policy([:admin, project]).editable_field?("foyer_link") %>
   <div class="col-md-6">
     <div class="mb-3">
       <%= f.label :foyer_link %>
@@ -188,7 +188,7 @@
     </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("website_link") %>
+  <% if policy([:admin, project]).editable_field?("website_link") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :website_link, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
@@ -196,7 +196,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("configurations") %>
+  <% if policy([:admin, project]).editable_field?("configurations") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :configurations, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
@@ -204,7 +204,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("project_size") %>
+  <% if policy([:admin, project]).editable_field?("project_size") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :project_size, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
@@ -212,7 +212,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("total_buildings") %>
+  <% if policy([:admin, project]).editable_field?("total_buildings") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :total_buildings, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
@@ -220,7 +220,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("total_units") %>
+  <% if policy([:admin, project]).editable_field?("total_units") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :total_units, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
@@ -228,7 +228,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("amenities") %>
+  <% if policy([:admin, project]).editable_field?("amenities") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :amenities, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
@@ -236,7 +236,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("approved_banks") %>
+  <% if policy([:admin, project]).editable_field?("approved_banks") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :approved_banks, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
@@ -244,7 +244,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("email_domains") %>
+  <% if policy([:admin, project]).editable_field?("email_domains") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :email_domains, class: '' %>
@@ -252,7 +252,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("usp") %>
+  <% if policy([:admin, project]).editable_field?("usp") %>
     <div class="col-md-12">
       <div class="mb-3">
         <%= f.label :usp %>
@@ -260,7 +260,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("broker_usp") %>
+  <% if policy([:admin, project]).editable_field?("broker_usp") %>
     <div class="col-md-12">
       <div class="mb-3">
         <% usp = f.object.broker_usp %>
@@ -271,7 +271,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("sv_incentive") %>
+  <% if policy([:admin, project]).editable_field?("sv_incentive") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :sv_incentive %>
@@ -279,7 +279,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("spot_booking_incentive") %>
+  <% if policy([:admin, project]).editable_field?("spot_booking_incentive") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :spot_booking_incentive %>
@@ -287,7 +287,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("pre_reg_incentive_percentage") %>
+  <% if policy([:admin, project]).editable_field?("pre_reg_incentive_percentage") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :pre_reg_incentive_percentage, class: '' %>
@@ -295,7 +295,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("pre_reg_min_bookings") %>
+  <% if policy([:admin, project]).editable_field?("pre_reg_min_bookings") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :pre_reg_min_bookings, class: '' %>
@@ -303,7 +303,7 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @project]).editable_field?("iris_urls") %>
+  <% if policy([:admin, project]).editable_field?("iris_urls") %>
     <div class="col-md-12">
       <div class="mb-3">
         <%= f.label :iris_url, class: '' %>
@@ -318,7 +318,7 @@
   </div>
   <div class="card-body">
     <div class="row">
-      <% if policy([:admin, @project]).editable_field?("support_name") %>
+      <% if policy([:admin, project]).editable_field?("support_name") %>
         <div class="col-md-12">
           <div class="mb-3">
             <%= f.label :support_name %>
@@ -326,7 +326,7 @@
           </div>
         </div>
       <% end %>
-      <% if policy([:admin, @project]).editable_field?("support_mail") %>
+      <% if policy([:admin, project]).editable_field?("support_mail") %>
         <div class="col-md-12">
           <div class="mb-3">
             <%= f.label :support_mail %>
@@ -334,7 +334,7 @@
           </div>
         </div>
       <% end %>
-      <% if policy([:admin, @project]).editable_field?("support_phone") %>
+      <% if policy([:admin, project]).editable_field?("support_phone") %>
         <div class="col-md-12">
           <div class="mb-3">
             <%= f.label :support_phone %>
@@ -345,7 +345,7 @@
     </div>
   </div>
 </div>
-<% if policy([:admin, @project]).editable_field?("address") %>
+<% if policy([:admin, project]).editable_field?("address") %>
   <div class="card mt-3">
     <div class="card-header">
       <%= I18n.t("mongoid.attributes.project.address") %>

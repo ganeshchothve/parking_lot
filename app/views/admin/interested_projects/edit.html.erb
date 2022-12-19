@@ -9,11 +9,13 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body theme-form">
+          <% if policy([:admin, @interested_project]).editable_field?("event") %>
           <div class="mb-3">
             <%= f.label :status, class: 'control-label' %>
             <% statuses = available_statuses(@interested_project) %>
             <%= f.select :event, options_for_select(statuses.collect{|rec| [rec.to_s.titleize, rec.to_s]}, @interested_project.status), {prompt: t("mongoid.attributes.interested_project/status.#{@interested_project.status}")}, class: 'selectize', required: 'required', disabled: !policy([current_user_role_group, @interested_project]).editable_field?("event") %>
           </div>
+          <% end %>
         </div>
         <div class="modal-footer text-end">
           <%= f.submit I18n.t("global.save"), class: "btn btn-primary" %>
