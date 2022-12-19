@@ -6,7 +6,7 @@ class ClientPolicy < ApplicationPolicy
   end
 
   def permitted_attributes params={}
-    case record.booking_portal_client.industry
+    case record.industry
     when 'real_estate'
       attrs = [
         :basic, :bookings, :contacts, :integrations, :pages, :logos,
