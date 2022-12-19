@@ -456,8 +456,8 @@ module DatabaseSeeds
         })
       end
 
-      if Template::UITemplate.where(name: 'channel_partner/new/header', booking_portal_client_id: client_id).blank?
-        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'channel_partner/new/header', content: '<h1 class="sec-title text-center pt-2 pb-1">Get Started</h1> <p class="sec-desc text-center pb-2">Now is the best time to turn your dream into reality</p>', is_active: true })
+      if Template::UITemplate.where(name: 'channel_partner_new_header', booking_portal_client_id: client_id).blank?
+        Template::UITemplate.create({ booking_portal_client_id: client_id, subject_class: 'View', name: 'channel_partner_new_header', content: '<h1 class="sec-title text-center pt-2 pb-1">Get Started</h1> <p class="sec-desc text-center pb-2">Now is the best time to turn your dream into reality</p>', is_active: true })
       end
 
       Template::UITemplate.where(booking_portal_client_id: client_id).count
