@@ -10,7 +10,7 @@
   <div class="cp-login-otp-wrap mx-3">  
     <div class="row">
       <div class="col-lg-7 pe-0 br-rt-1 ps-0 ps-sm-2">
-        <% header_template = ::Template::UITemplate.where(name: 'channel_partner/new/header', is_active: true, booking_portal_client_id: current_client.id).first %>
+        <% header_template = ::Template::UITemplate.where(name: 'channel_partner_new_header', is_active: true, booking_portal_client_id: current_client.id).first %>
         <% if header_template.present? %>
           <%= get_view_erb(header_template, check_active: true) %>
         <% end %>
