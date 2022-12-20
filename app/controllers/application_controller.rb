@@ -13,14 +13,14 @@ class ApplicationController < ActionController::Base
   acts_as_token_authentication_handler_for User, if: :token_authentication_valid_params?
 
   before_action :set_mailer_host
-  before_action :set_current_client, if: :current_user
+  before_action :set_current_client, if: :current_user, unless: proc { (params[:controller] == 'home' && params[:action].in?(%w(select_client))) || (devise_controller? && params[:action].in?(%w(create destroy))) }
   before_action :set_current_project_id
   before_action :set_locale
   # Run in current user Time Zone
   around_action :user_time_zone, if: :current_user
   before_action :marketplace_current_user_match, if: proc { (marketplace_host? || embedded_marketplace?) && current_user.present? && params[:tenantId].present? && params[:userId].present? }
   before_action :authorize_marketplace_client, if: :current_user, unless: proc { devise_controller? || (params[:controller] == 'admin/clients' && params[:action].in?(%w(kylas_api_key update))) || (params[:controller] == 'home' && params[:action].in?(%w(not_authorized select_client))) }
-  around_action :apply_project_scope, if: :current_user, unless: proc { params[:controller] == 'admin/projects' }
+  around_action :apply_project_scope, if: :current_user, unless: proc { params[:controller] == 'admin/projects' || (params[:controller] == 'home' && params[:action].in?(%w(not_authorized select_client))) || (devise_controller? && params[:action].in?(%w(create destroy))) }
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
