@@ -23,7 +23,7 @@
               </tr>
           </tbody>
         </thead>
-      </table>     
+      </table>
     </div>
     <% end %>
   <% end %>
@@ -45,13 +45,19 @@
         <div class="col-md-12">
           <div class="mb-3">
             <%= adj.label :field, class: 'label-required' %>
-            <%= adj.select :field, Scheme::FIELDS.collect{|sf| [ t("mongoid.attributes.payment_adjustment/field.#{sf}"), sf]}, {prompt: I18n.t("global.select")}, class: 'selectize-tags', disabled: !payment_adjustment %>
+            <%= adj.select :field, Scheme::FIELDS.collect{|sf| [ t("mongoid.attributes.payment_adjustment/field.#{sf}"), sf]}, {prompt: I18n.t("global.select")}, class: 'selectize-tags', required: 'required', disabled: !payment_adjustment %>
           </div>
         </div>
       </div>
+
+      <div class="mb-3 col-12">
+        <%= adj.label :absolute_value_type, class: 'label-required' %>
+        <%= adj.select :absolute_value_type, ["+", "-"], selected: "-", class: "selectize", required: 'required', disabled: !payment_adjustment %>
+      </div>
+
       <div class="mb-3">
         <%= adj.label :absolute_value, class: 'label-required' %>
-        <%= adj.number_field :absolute_value, class: "form-control", disabled: !payment_adjustment %>
+        <%= adj.number_field :absolute_value, value: (adj.object.absolute_value.try(:abs)), min: 1, class: "form-control", required: 'required', disabled: !payment_adjustment %>
         <p class="small text-muted fn-12"><%= I18n.t("controller.project_units.total_adjustment") %></p>
       </div>
     <% end %>
