@@ -3053,6 +3053,8 @@ en:
         success: "Email has been sent again."
         alert: "Email not sent" 
         emails_enabled: "Emails are disabled, please connect with your admin"
+      errors:
+        template_not_found: "Email template is not present"
     erp_models:
       index:
         link_name: "Third Party Integration"
