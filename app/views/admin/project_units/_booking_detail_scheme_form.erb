@@ -51,8 +51,9 @@
       </div>
 
       <div class="mb-3 col-12">
+        <% (absolute_value_type = adj.object.absolute_value.present? ? adj.object.absolute_value.negative? ? "-" : "+" : "-") %>
         <%= adj.label :absolute_value_type, class: 'label-required' %>
-        <%= adj.select :absolute_value_type, ["+", "-"], selected: "-", class: "selectize", required: 'required', disabled: !payment_adjustment %>
+        <%= adj.select :absolute_value_type, ["+", "-"], selected: absolute_value_type, class: "selectize", required: 'required', disabled: !payment_adjustment %>
       </div>
 
       <div class="mb-3">
