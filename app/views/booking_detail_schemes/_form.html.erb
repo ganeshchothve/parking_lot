@@ -23,7 +23,7 @@
             </tr>
         </tbody>
       </thead>
-    </table>     
+    </table>
   <% end %>
 </div>
 <% editable_payment_adjustment = policy([ current_user_role_group, booking_detail_scheme]).editable_field?("payment_adjustments_attributes") %>
@@ -50,8 +50,9 @@
       </div>
     </div>
     <div class="mb-3 col-12">
+      <% (absolute_value_type = adj.object.absolute_value.present? ? adj.object.absolute_value.negative? ? "-" : "+" : "-") %>
       <%= adj.label :absolute_value_type, class: 'label-required' %>
-      <%= adj.select :absolute_value_type, ["+", "-"], selected: "-", class: "selectize", required: 'required', disabled: !editable_payment_adjustment %>
+      <%= adj.select :absolute_value_type, ["+", "-"], selected: absolute_value_type, class: "selectize", required: 'required', disabled: !editable_payment_adjustment %>
     </div>
     <div class="mb-3 col-12">
       <%= adj.label :absolute_value, class: 'label-required' %>
