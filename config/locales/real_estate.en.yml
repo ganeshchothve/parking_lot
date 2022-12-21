@@ -1102,6 +1102,8 @@ en-REAL_ESTATE:
         kylas_product_id: Kylas Products
         new_product_kylas_crm: "How to add a new Product in Kylas CRM?"
         bookings: Bookings
+        kylas_product_value: 'CRM Price'
+        kylas_product_id: 'CRM Reference ID'
       project/project_type:
         residential: "Residential"
         commercial: "Commercial"
@@ -4099,6 +4101,11 @@ en-REAL_ESTATE:
     errors:
       marketplace_error: 'We encountered some issue with your Marketplace setup. Please connect with Kylas Customer Success'
       payment_error: 'No receipt found'
+    embedded_frame:
+      success:
+        default_message: 'You can close this window now'
+      errors:
+        default_header: 'We encountered following problems'
 
   kylas_auth:
     successfully_installed: 'App installed successfully'

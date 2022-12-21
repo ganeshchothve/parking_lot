@@ -58,6 +58,11 @@ class Admin::UsersController < AdminController
   def new
     @user = User.new(booking_portal_client_id: current_client.id)
     @user.role = params.dig(:user, :role).blank? ? 'user' : params.dig(:user, :role)
+    if current_user.role?('cp_owner')
+      @user.channel_partner_id = current_user.channel_partner_id
+    else
+      @user.channel_partner_id = params.dig(:user, :channel_partner_id)
+    end
     render layout: false
   end
 

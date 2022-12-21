@@ -60,7 +60,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def edit?
-    user.role.in?(%w(superadmin admin gre))
+    false && user.role.in?(%w(superadmin admin gre))
   end
 
   def update?

@@ -1,6 +1,10 @@
 class Admin::InterestedProjectPolicy < InterestedProjectPolicy
   def index?
-    user.role.in?(%w(channel_partner cp_owner))# && user.active_channel_partner?
+    if current_client.real_estate?
+      user.role.in?(%w(channel_partner cp_owner))# && user.active_channel_partner?
+    else
+      false
+    end
   end
 
   def create?

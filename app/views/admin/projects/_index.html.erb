@@ -2,6 +2,10 @@
   <thead>
     <tr>
       <th><%= t('mongoid.attributes.project.name') %></th>
+      <% if current_client.is_marketplace? %>
+        <th><%= t('mongoid.attributes.project.kylas_product_value') %></th>
+        <th><%= t('mongoid.attributes.project.kylas_product_id') %></th>
+      <% end %>
       <% if policy([:admin, Developer]).index? %>
         <th><%= t('mongoid.attributes.project.developer_name') %></th>
       <% end %>
@@ -40,6 +44,12 @@
             <% end %>
           <% end %>
         </td>
+
+        <% if current_client.is_marketplace? %>
+          <td><%= project.kylas_product_value&.round(2) %></td>
+          <td><%= project.kylas_product_id %></td>
+        <% end %>
+
         <% if policy([:admin, Developer]).index? %>
           <td><%= project.developer_name %></td>
         <% end %>

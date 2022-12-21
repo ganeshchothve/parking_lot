@@ -43,9 +43,13 @@ module Kylas
           @user.save
           manager_ids = params.dig(:lead, :manager_ids)
           if manager_ids
-            Kylas::CreateLeadsForPartners.new(manager_ids, @user, @project, @lead_data, params).call
-            msg = t("controller.booking_details.#{action_name}.response_msg")
-            format.html { redirect_to show_response_path(response: {success: true, message: msg}) }
+            result = Kylas::CreateLeadsForPartners.new(manager_ids, @user, @project, @lead_data, params).call
+            if result[:success]
+              msg = t("controller.booking_details.#{action_name}.response_msg")
+              format.html { redirect_to show_response_path(response: {success: true, message: msg}) }
+            else
+              format.html { redirect_to show_response_path(response: result)
+            end
           else
             flash.now[:alert] = t('controller.leads.alert.select_manager')
             format.html { render :new_kylas_lead }

@@ -34,7 +34,11 @@ class UserObserver < Mongoid::Observer
     end
     # update all the project ids for the user
     if !user.role.in?(User::ALL_PROJECT_ACCESS)
-      project_ids = Project.where(booking_portal_client_id: user.booking_portal_client.id).pluck(:id)
+      if user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner_id.present?
+        project_ids = user.channel_partner.project_ids
+      else
+        project_ids = Project.where(booking_portal_client_id: user.booking_portal_client.id).pluck(:id)
+      end
       user.assign_attributes(project_ids: project_ids)
     end
   end

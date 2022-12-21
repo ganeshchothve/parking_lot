@@ -9,11 +9,7 @@ class LeadPolicy < ApplicationPolicy
   end
 
   def show?
-    if current_client.real_estate?
-      super
-    else
-      false
-    end
+    super
   end
 
   def permitted_attributes(params = {})

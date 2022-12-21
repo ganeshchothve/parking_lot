@@ -1,6 +1,10 @@
 class Admin::WorkflowPolicy < WorkflowPolicy
   def index?
-    %w[superadmin admin].include?(user.role)
+    if current_client.real_estate?
+      %w[superadmin admin].include?(user.role)
+    else
+      false
+    end
   end
 
   def create?

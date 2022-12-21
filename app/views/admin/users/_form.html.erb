@@ -32,13 +32,13 @@
               <div class="col-md-6">
                 <div class="mb-3">
                   <%= f.label :email %>
-                  <%= f.email_field :email, class: 'form-control', disabled: (policy([current_user_role_group, @user]).editable_field?("email") ? false : true) %>
+                  <%= f.email_field :email, class: 'form-control', required: current_client.required_fields_for_user_login.include?('email'), disabled: (policy([current_user_role_group, @user]).editable_field?("email") ? false : true) %>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
                   <%= f.label :phone %>
-                  <%= f.text_field :phone, class: 'form-control phone', disabled: (policy([current_user_role_group, @user]).editable_field?("phone") ? false : true) %>
+                  <%= f.text_field :phone, class: 'form-control phone', required: current_client.required_fields_for_user_login.include?('phone'), disabled: (policy([current_user_role_group, @user]).editable_field?("phone") ? false : true) %>
                 </div>
               </div>
             </div>
@@ -93,8 +93,8 @@
           <% end %>
 
           <% if policy([current_user_role_group, @user]).editable_field?("channel_partner_id") %>
-            <% if current_user.role?('cp_owner') %>
-              <%= f.hidden_field :channel_partner_id, value: current_user.channel_partner_id %>
+            <% if @user.channel_partner_id.present? %>
+              <%= f.hidden_field :channel_partner_id, value: @user.channel_partner_id %>
             <% else %>
               <div class="mb-3">
                 <%= f.label :channel_partner_id %>
@@ -109,7 +109,7 @@
             </div>
           <% end %>
 
-          <% if policy([current_user_role_group, @user]).editable_field?("project_ids") %>
+          <% if policy([current_user_role_group, @user]).editable_field?("project_ids") && !@user.role.in?(%(channel_partner cp_owner)) %>
             <div class="mb-3">
               <% filtered_projects = filter_projects(@user) %>
               <%= f.label :project_ids, class: "control-label" %>
