@@ -413,6 +413,7 @@ class User
                   booking_portal_client_id: booking_portal_client_id,
                   subject: email_template.parsed_subject(self),
                   body: email_template.parsed_content(self),
+                  email_template_id: email_template.id,
                   recipients: [ self ],
                   triggered_by_id: id,
                   triggered_by_type: self.class.to_s
@@ -766,6 +767,7 @@ class User
         booking_portal_client_id: booking_portal_client_id,
         subject: email_template.parsed_subject(self),
         body: email_template.parsed_content(self),
+        email_template_id: email_template.id,
         cc: booking_portal_client.notification_email.to_s.split(',').map(&:strip),
         recipients: [ self ],
         triggered_by_id: id,
@@ -882,7 +884,7 @@ class User
         auth_conditions = [{ phone: login }, { email: login }]
         if warden_conditions[:project_id].present?
           or_conds = []
-          or_conds << { 
+          or_conds << {
             "$or": [
               { booking_portal_client_id: warden_conditions[:booking_portal_client_id], '$or': auth_conditions, role: {"$nin": ALL_PROJECT_ACCESS}, project_ids: BSON::ObjectId(warden_conditions[:project_id]) },
               { booking_portal_client_id: warden_conditions[:booking_portal_client_id], '$or': auth_conditions, role: {"$in": ALL_PROJECT_ACCESS}},

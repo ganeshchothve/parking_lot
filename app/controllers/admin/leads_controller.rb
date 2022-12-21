@@ -185,6 +185,7 @@ class Admin::LeadsController < AdminController
               email = Email.create!({
                 booking_portal_client_id: current_client.id,
                 body: ERB.new(current_client.email_header).result(current_client.get_binding) + ERB.new(email_template.content).result(binding).html_safe + ERB.new(current_client.email_footer).result(current_client.get_binding),
+                email_template_id: email_template.id,
                 subject: ERB.new(email_template.subject).result(binding).html_safe,
                 to: [lead.email],
                 triggered_by_id: lead.id,

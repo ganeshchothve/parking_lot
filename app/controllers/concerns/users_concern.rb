@@ -64,6 +64,7 @@ module UsersConcern
               booking_portal_client_id: @user.booking_portal_client_id,
               body: ERB.new(@user.booking_portal_client.email_header).result(@user.booking_portal_client.get_binding) + email_template.parsed_content(@user) + ERB.new(@user.booking_portal_client.email_footer).result(@user.booking_portal_client.get_binding),
               subject: email_template.parsed_subject(@user),
+              email_template_id: email_template.id,
               recipients: [ @user ],
               cc: @user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
               triggered_by_id: @user.id,

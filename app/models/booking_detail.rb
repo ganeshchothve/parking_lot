@@ -232,6 +232,7 @@ class BookingDetail
           booking_portal_client_id: self.booking_portal_client_id,
           body: ERB.new(project_unit.booking_portal_client.email_header).result(self.booking_portal_client.get_binding) + email_template.parsed_content(self) + ERB.new(project_unit.booking_portal_client.email_footer).result(self.booking_portal_client.get_binding),
           subject: email_template.parsed_subject(self),
+          email_template_id: email_template.id,
           cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
           recipients: [lead.user],
           cc_recipients: [],

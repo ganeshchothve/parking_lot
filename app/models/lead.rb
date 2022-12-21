@@ -326,6 +326,7 @@ class Lead
           booking_portal_client_id: client.id,
           body: ERB.new(client.email_header).result(client.get_binding) + email_template.parsed_content(self) + ERB.new(client.email_footer).result(client.get_binding),
           subject: email_template.parsed_subject(self),
+          email_template_id: email_template.id,
           to: [ self.email ],
           cc: client.notification_email.to_s.split(',').map(&:strip),
           triggered_by_id: id,
