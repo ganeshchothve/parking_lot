@@ -196,7 +196,7 @@ module BookingDetailStateMachine
         booked_tentative!
       # else
         # auto_released_extended_inform_buyer!
-        # send_email_and_sms_as_booked
+        send_email_and_sms_as_booked if project_unit.present?
       end
     end
     # Updating blocked date of project_unit to today and  auto_release_on will be changed to blocking_days more from current auto_release_on.
@@ -221,7 +221,7 @@ module BookingDetailStateMachine
         _project_unit = project_unit
         _project_unit.auto_release_on = nil
         _project_unit.save
-        # send_email_and_sms_as_confirmed
+        send_email_and_sms_as_confirmed
       end
       # create asset and send to zoho sign
       if (self.aasm.from_state == :booked_tentative && self.user.booking_portal_client.document_sign.present?)
@@ -282,12 +282,15 @@ module BookingDetailStateMachine
     def send_email_and_sms_as_confirmed
       if self.project_unit.booking_portal_client.email_enabled?
         attachments_attributes = []
-        action_mailer_email = ApplicationMailer.test(body: project_unit.booking_portal_client.templates.where(_type: "Template::AllotmentLetterTemplate", project_id: self.project_id, booking_portal_client_id: self.booking_portal_client_id).first.parsed_content(self))
-        pdf = WickedPdf.new.pdf_from_string(action_mailer_email.html_part.body.to_s)
-        File.open("#{Rails.root}/exports/allotment_letter-#{project_unit.name}.pdf", "wb") do |file|
-          file << pdf
+        allotment_letter = project_unit.booking_portal_client.templates.where(_type: "Template::AllotmentLetterTemplate", project_id: self.project_id, booking_portal_client_id: self.booking_portal_client_id).first
+        if allotment_letter.present?
+          action_mailer_email = ApplicationMailer.test(body: project_unit.booking_portal_client.templates.where(_type: "Template::AllotmentLetterTemplate", project_id: self.project_id, booking_portal_client_id: self.booking_portal_client_id).first.parsed_content(self))
+          pdf = WickedPdf.new.pdf_from_string(action_mailer_email.html_part.body.to_s)
+          File.open("#{Rails.root}/exports/allotment_letter-#{project_unit.name}.pdf", "wb") do |file|
+            file << pdf
+          end
+          attachments_attributes << {file: File.open("#{Rails.root}/exports/allotment_letter-#{project_unit.name}.pdf")}
         end
-        attachments_attributes << {file: File.open("#{Rails.root}/exports/allotment_letter-#{project_unit.name}.pdf")}
         email = Email.create!({
             project_id: project_id,
             booking_portal_client_id: project_unit.booking_portal_client_id,
