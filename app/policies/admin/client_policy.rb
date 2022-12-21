@@ -22,7 +22,7 @@ class Admin::ClientPolicy < ClientPolicy
   end
 
   def kylas_api_key?
-    user.role.in?(%w(admin superadmin))
+    user.role.in?(%w(admin superadmin)) && record.is_marketplace?
   end
 
   def switch_client?
@@ -39,15 +39,18 @@ class Admin::ClientPolicy < ClientPolicy
 
   def permitted_attributes(params = {})
     attributes = super
-    case record.booking_portal_client.industry
+    case record.industry
     when 'real_estate'
       if %w[superadmin admin].include?(user.role)
-        attributes += [:twilio_account_sid, :twilio_auth_token, :twilio_virtual_number, :kylas_api_key]
+        attributes += [:twilio_account_sid, :twilio_auth_token, :twilio_virtual_number]
         attributes += [general_user_request_categories: [], partner_regions: [], roles_taking_registrations: [], mask_lead_data_for_roles: [], team_lead_dashboard_access_roles: []]
       end
     end
+    if record.is_marketplace? && user.role.in?(%w(superadmin admin))
+      attributes += [:integrations, :kylas_api_key]
+    end
     if user.role?('superadmin')
-      attributes += [:industry]
+      attributes += [:industry, booking_portal_domains: []]
     end
     attributes.uniq
   end
