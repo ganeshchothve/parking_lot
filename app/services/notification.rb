@@ -10,7 +10,7 @@ module Notification
       fail "#{keys} required to send notification" if keys.present?
 
       template_name = params.delete "template_name"
-      ::Sms.create!(params.merge(sms_template_id: Template::SmsTemplate.find_by(project_id: params['project_id'], name: template_name).id))
+      ::Sms.create!(params.merge(sms_template_id: Template::SmsTemplate.where(project_id: params['project_id'], name: template_name, booking_portal_client_id: params['booking_portal_client_id']).first.try(:id)))
     end
   end
 
@@ -29,7 +29,7 @@ module Notification
       params.delete("triggered_by_id") if params['triggered_by']
       receipt = params[:triggered_by] || ::Receipt.where(id: params[:triggered_by_id]).first
 
-      email = ::Email.new(params.merge(email_template_id: Template::EmailTemplate.find_by(name: template_name, project_id: params['project_id']).id))
+      email = ::Email.new(params.merge(email_template_id: Template::EmailTemplate.where(name: template_name, project_id: params['project_id'], booking_portal_client_id: params['booking_portal_client_id']).first.try(:id)))
       email.set_content
 
       if !Rails.env.test? && (%w[clearance_pending success].include?(receipt.status) || ( receipt.online? && !receipt.clearance_pending? ) )

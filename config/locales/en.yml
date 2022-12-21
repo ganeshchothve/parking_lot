@@ -176,6 +176,7 @@ en:
       integrations: "Integrations"
       external_inventory_view: "External Inventory View Configuration"
       specifications: "Specifications"
+      project_unit: Project Unit
     units:
       sq_ft: "sq.ft"
     fetch_errors:
@@ -311,6 +312,7 @@ en:
       total_count: "Total %{name}"
       details_on_click: "Click to view details"
       add_city_regions: "Add New City & Regions"
+      project_unit: Project Unit
     text:
       dropping: "Dropping..."
     operators:

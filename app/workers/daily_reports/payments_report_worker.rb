@@ -23,7 +23,7 @@ module DailyReports
             booking_portal_client_id: client.id,
             recipient: User.where(role: 'admin').first,
             to: client.notification_numbers.split(',').map(&:strip).uniq.compact,
-            sms_template_id: Template::SmsTemplate.find_by(project_id: project.id, name: "daily_payments_report").id,
+            sms_template_id: Template::SmsTemplate.where(project_id: project.id, name: "daily_payments_report", booking_portal_client_id: client.id).first.try(:id),
             triggered_by_id: Receipt.asc(:created_at).last.id,
             triggered_by_type: 'Receipt'
           )

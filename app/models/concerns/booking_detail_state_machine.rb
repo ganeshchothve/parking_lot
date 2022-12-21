@@ -291,7 +291,7 @@ module BookingDetailStateMachine
         email = Email.create!({
             project_id: project_id,
             booking_portal_client_id: project_unit.booking_portal_client_id,
-            email_template_id: Template::EmailTemplate.find_by(name: "booking_confirmed", project_id: project_id).id,
+            email_template_id: Template::EmailTemplate.where(name: "booking_confirmed", project_id: project_id, booking_portal_client_id: project_unit.booking_portal_client_id).first.try(:id),
             cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
             recipients: [lead.user],
             cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
@@ -306,7 +306,7 @@ module BookingDetailStateMachine
               project_id: project_id,
               booking_portal_client_id: user.booking_portal_client_id,
               recipient_id: lead.user_id,
-              sms_template_id: Template::SmsTemplate.find_by(project_id: project_id, name: "booking_confirmed").id,
+              sms_template_id: Template::SmsTemplate.where(project_id: project_id, name: "booking_confirmed", booking_portal_client_id: user.booking_portal_client_id).first.try(:id),
               triggered_by_id: self.id,
               triggered_by_type: self.class.to_s
             )
@@ -334,7 +334,7 @@ module BookingDetailStateMachine
         email = Email.new(
           project_id: project_id,
           booking_portal_client_id: project_unit.booking_portal_client_id,
-          email_template_id: Template::EmailTemplate.find_by(name: "booking_#{_status}", project_id: project_id).id,
+          email_template_id: Template::EmailTemplate.where(name: "booking_#{_status}", project_id: project_id, booking_portal_client_id: project_unit.booking_portal_client_id).first.try(:id),
           cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
           recipients: [lead.user],
           cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
@@ -349,7 +349,7 @@ module BookingDetailStateMachine
             project_id: project_id,
             booking_portal_client_id: project_unit.booking_portal_client_id,
             recipient_id: lead.user_id,
-            sms_template_id: Template::SmsTemplate.find_by(project_id: project_id, name: "booking_blocked").id,
+            sms_template_id: Template::SmsTemplate.where(project_id: project_id, name: "booking_blocked", booking_portal_client_id: project_unit.booking_portal_client_id).first.try(:id),
             triggered_by_id: self.id,
             triggered_by_type: self.class.to_s
           )

@@ -11,7 +11,7 @@ class UserRequestService
     email = Email.create!(
       project_id: self.project_id,
       booking_portal_client_id: user.booking_portal_client_id,
-      email_template_id: Template::EmailTemplate.find_by(name: "#{user_request.class.model_name.element}_request_pending", project_id: self.project_id).id,
+      email_template_id: Template::EmailTemplate.where(name: "#{user_request.class.model_name.element}_request_pending", project_id: self.project_id, booking_portal_client_id: user.booking_portal_client_id).first.try(:id),
       recipients: [user],
       cc_recipients: (user.manager.present? ? [user.manager] : []),
       cc: user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),

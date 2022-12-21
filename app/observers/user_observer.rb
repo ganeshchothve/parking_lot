@@ -109,7 +109,7 @@ class UserObserver < Mongoid::Observer
       if user.buyer? && user.manager_role?("channel_partner")
         email = Email.create!({
           booking_portal_client_id: user.booking_portal_client_id,
-          email_template_id: Template::EmailTemplate.find_by(name: "user_manager_changed").id,
+          email_template_id: Template::EmailTemplate.where(name: "user_manager_changed", booking_portal_client_id: user.booking_portal_client_id).first.try(:id),
           recipient_ids: [user.id],
           cc: user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
           cc_recipient_ids: [user.manager_id],

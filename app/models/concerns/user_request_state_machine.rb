@@ -41,7 +41,7 @@ module UserRequestStateMachine
       email = Email.new(
         project_id: self.project_id,
         booking_portal_client_id: lead.user.booking_portal_client_id,
-        email_template_id: Template::EmailTemplate.find_by(name: "#{self.class.model_name.element}_request_#{status}", project_id: self.project_id).id,
+        email_template_id: Template::EmailTemplate.where(name: "#{self.class.model_name.element}_request_#{status}", project_id: self.project_id, booking_portal_client_id: lead.user.booking_portal_client_id).first.try(:id),
         recipients: [lead.user],
         cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
         cc: user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),

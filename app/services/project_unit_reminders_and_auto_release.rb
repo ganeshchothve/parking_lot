@@ -11,7 +11,7 @@ module ProjectUnitRemindersAndAutoRelease
             email = Email.create!({
               project_id: project_unit.project_id,
               booking_portal_client_id: project_unit.booking_portal_client_id,
-              email_template_id: Template::EmailTemplate.find_by(name: "daily_reminder_for_booking_payment", project_id: project_unit.project_id).id,
+              email_template_id: Template::EmailTemplate.where(name: "daily_reminder_for_booking_payment", project_id: project_unit.project_id, booking_portal_client_id: project_unit.booking_portal_client_id).first.try(:id),
               recipients: [project_unit.user],
               cc_recipients: (project_unit.user.manager_id.present? ? [project_unit.user.manager] : []),
               cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),

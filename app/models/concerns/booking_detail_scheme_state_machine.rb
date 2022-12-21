@@ -57,7 +57,7 @@ module BookingDetailSchemeStateMachine
           email = Email.create!(
             project_id: project_id,
             booking_portal_client_id: booking_detail.project_unit.booking_portal_client_id,
-            email_template_id: Template::EmailTemplate.find_by(name: 'booking_detail_scheme_approved', project_id: project_id).id,
+            email_template_id: Template::EmailTemplate.where(name: 'booking_detail_scheme_approved', project_id: project_id, booking_portal_client_id: booking_detail.project_unit.booking_portal_client_id).first.try(:id),
             cc: booking_detail.project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
             recipients: [booking_detail_scheme.created_by, booking_detail_scheme.approved_by],
             cc_recipients: (booking_detail_scheme.created_by.manager_id.present? ? [booking_detail_scheme.created_by.manager] : []),
@@ -76,7 +76,7 @@ module BookingDetailSchemeStateMachine
           email = Email.create!(
             project_id: project_id,
             booking_portal_client_id: booking_detail.project_unit.booking_portal_client_id,
-            email_template_id: Template::EmailTemplate.find_by(project_id: project_id, name: 'booking_detail_scheme_draft').id,
+            email_template_id: Template::EmailTemplate.where(project_id: project_id, name: 'booking_detail_scheme_draft', booking_portal_client_id: booking_detail.project_unit.booking_portal_client_id).first.try(:id),
             cc: booking_detail.project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
             recipients: [booking_detail_scheme.created_by],
             cc_recipients: (booking_detail_scheme.created_by.manager_id.present? ? [booking_detail_scheme.created_by.manager] : []),
