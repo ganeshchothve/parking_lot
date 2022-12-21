@@ -37,7 +37,7 @@ class Admin::UsersController < AdminController
 
   def index
     @users = User.build_criteria params
-    if params[:fltrs].present? && params[:fltrs][:_id].present?
+    if params[:fltrs].present? && params[:fltrs][:_id].present? && policy([current_user_role_group, User.where(booking_portal_client_id: current_client.id, id: params.dig(:fltrs, :_id)).first || User.new(booking_portal_client_id: current_client.id)]).show?
       redirect_to admin_user_path(params[:fltrs][:_id])
     else
       @users = @users.paginate(page: params[:page] || 1, per_page: params[:per_page])

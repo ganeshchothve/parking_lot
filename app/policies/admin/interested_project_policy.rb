@@ -24,7 +24,11 @@ class Admin::InterestedProjectPolicy < InterestedProjectPolicy
   end
 
   def report?
-    user.role.in?(%w(cp cp_admin admin superadmin))
+    if current_client.real_estate?
+      user.role.in?(%w(cp cp_admin admin superadmin))
+    else
+      false
+    end
   end
 
   def permitted_attributes(params = {})

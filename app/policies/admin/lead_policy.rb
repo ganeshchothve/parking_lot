@@ -185,19 +185,11 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def lead_activities?
-    unless marketplace_client?
-      true
-    else
-      user.role.in?(%w(admin superadmin))
-    end
+    !marketplace_client?
   end
 
   def remarks_from_selldo?
-    unless marketplace_client?
-      true
-    else
-      user.role.in?(%w(admin superadmin))
-    end
+    !marketplace_client?
   end
 
   def permitted_attributes(params = {})

@@ -1193,7 +1193,7 @@ en:
         gstin_number: "GST Number"
         pan_number: "PAN Number"
         aadhaar: "Aadhaar"
-        name_email_phone: "Partner Companies"
+        name_email_phone: "Partner Company"
         details: "Details"
         team_size: "Team Size"
         rera_applicable: "Is RERA Applicable?"

@@ -243,6 +243,7 @@ class User
 
   # scopes needed by filter
   # scope :filter_by_confirmation, ->(confirmation) { confirmation.eql?('not_confirmed') ? where(confirmed_at: nil) : where(confirmed_at: { "$ne": nil }) }
+  scope :filter_by__id, ->(_id) { where(id: _id) }
   scope :filter_by_confirmation, ->(confirmation) { confirmation == 'true' ? where(confirmed_at: { "$ne": nil }) : where(confirmed_at: nil)}
   scope :filter_by_is_active, ->(is_active) { is_active.eql?("true") ? where(is_active: true)
     : where(is_active: false)}
@@ -950,13 +951,13 @@ class User
         custom_scope = { role: { '$in': %w(channel_partner cp_owner) } }
       elsif user.role.in?(%w(admin))
         custom_scope = { role: { "$ne": 'superadmin' } }
-        custom_scope = { role: { "$ne": 'superadmin', '$in': %w(sales admin sales_admin gre channel_partner cp_owner) } } if user.booking_portal_client.try(:kylas_tenant_id).present?
+        #custom_scope = { role: { "$ne": 'superadmin', '$in': %w(sales admin sales_admin gre channel_partner cp_owner) } } if user.booking_portal_client.try(:kylas_tenant_id).present?
       elsif user.role.in?(%w(sales))
         # custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) }}
         custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) + %w(channel_partner cp_owner) } }
       elsif user.role.in?(%w(superadmin))
         custom_scope = {  }
-        custom_scope = { role: { '$in': %w(sales admin sales_admin gre channel_partner cp_owner) }} if user.booking_portal_client.try(:kylas_tenant_id).present?
+        #custom_scope = { role: { '$in': %w(sales admin sales_admin gre channel_partner cp_owner) }} if user.booking_portal_client.try(:kylas_tenant_id).present?
       elsif user.role?('team_lead')|| user.role?('gre')
         custom_scope = { role: 'sales', project_ids: { "$in": project_ids }}
       end
