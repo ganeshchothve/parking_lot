@@ -88,7 +88,7 @@ class UserPolicy < ApplicationPolicy
   def permitted_attributes(_params = {})
     attributes = []
     if marketplace_client?
-      if record.role.in?(%w(cp_owner channel_partner))
+      if record.role.in?(%w(cp_owner channel_partner)+User::BUYER_ROLES)
         attributes = %i[first_name last_name phone time_zone]
       end
     else
@@ -100,6 +100,8 @@ class UserPolicy < ApplicationPolicy
     if marketplace_client?
       if record.role.in?(%w(cp_owner channel_partner))
         attributes += %i[email] if ((record.new_record? || user.role?('admin')))
+      elsif record.role.in?(User::BUYER_ROLES)
+        attributes += %i[email] if ((record.new_record? || user.role.in?(%(admin sales))))
       end
     else
       attributes += %i[email] if ((record.new_record? || user.role?('admin')))

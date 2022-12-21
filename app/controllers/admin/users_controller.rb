@@ -81,6 +81,7 @@ class Admin::UsersController < AdminController
 
   def update
     respond_to do |format|
+      update_masked_email_and_phone_if_present
       push_fund_account_on_create_or_change(format, @user) do
         @user.assign_attributes(permitted_attributes([current_user_role_group, @user]))
         if @user.save
@@ -206,6 +207,17 @@ class Admin::UsersController < AdminController
       @user.manager_id = current_user.id
       @user.referenced_manager_ids ||= []
       @user.referenced_manager_ids += [current_user.id]
+    end
+  end
+
+  def update_masked_email_and_phone_if_present
+    if @user.maskable_field?(current_user)
+      if params.dig(:user, :phone).blank?
+        params[:user].delete :phone
+      end
+      if params.dig(:user, :email).blank?
+        params[:user].delete :email
+      end
     end
   end
 

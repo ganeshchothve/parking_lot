@@ -23,22 +23,20 @@
               </div>
             </div>
           </div>
-          <% unless @user.buyer? && current_user.in_masked_details_user_group? %>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <%= f.label :email %>
-                  <%= f.email_field :email, class: 'form-control', disabled: !(policy([current_user_role_group, @user]).editable_field?("email")) %>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <%= f.label :phone %>
-                  <%= f.text_field :phone, class: 'form-control phone', disabled: !(policy([current_user_role_group, @user]).editable_field?("phone")) %>
-                </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <%= f.label :email %>
+                <%= f.email_field :email, class: 'form-control', disabled: !(policy([current_user_role_group, @user]).editable_field?("email")), value: '', placeholder: @user.buyer? ? @user.masked_email(current_user) : '' %>
               </div>
             </div>
-          <% end %>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <%= f.label :phone %>
+                <%= f.text_field :phone, class: 'form-control phone', disabled: !(policy([current_user_role_group, @user]).editable_field?("phone")), value: '', placeholder: @user.buyer? ? @user.masked_phone(current_user) : '' %>
+              </div>
+            </div>
+          </div>
           <% if @user.role.blank? %>
             <div class="mb-3">
               <%= f.label :role, class: 'label-required' %>

@@ -40,7 +40,7 @@ module UsersHelper
     if current_user.role?('cp_owner') || @user.role.in?(%w(channel_partner cp_owner))
       %w[channel_partner cp_owner].collect{|role| [User.human_attribute_name("role.#{role}"), role]}
     else
-      %w[admin sales gre sales_admin].collect{|role| [User.human_attribute_name("role.#{role}"), role]}
+      (%w[admin sales gre sales_admin]+User::BUYER_ROLES).collect{|role| [User.human_attribute_name("role.#{role}"), role]}
     end
   end
 
