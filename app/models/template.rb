@@ -15,6 +15,7 @@ class Template
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
   scope :filter_by__type, ->(type) { where(_type: type) }
   scope :filter_by_name, ->(name) { where(name: name) }
+  scope :filter_by_subject_class, ->(subject_class) { where(subject_class: subject_class) }
 
   def parsed_content object
     begin

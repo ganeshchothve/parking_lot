@@ -1730,6 +1730,7 @@ en:
         custom_document: Documents
         document_not_available: Document not available
         print: Print
+        subject_class: Subject Class
       user_request:
         project_unit: "Project Unit"
         project_id: "Project"
@@ -2916,7 +2917,7 @@ en:
         rejected: "Reject"
       alert:
         not_found: "Incentive deduction not found"
-    
+
     team_leads:
       headers:
         sales_team: "Sales Team"
@@ -3051,7 +3052,7 @@ en:
       resend_email:
         link_name: "Resend Email"
         success: "Email has been sent again."
-        alert: "Email not sent" 
+        alert: "Email not sent"
         emails_enabled: "Emails are disabled, please connect with your admin"
       errors:
         template_not_found: "Email template is not present"
