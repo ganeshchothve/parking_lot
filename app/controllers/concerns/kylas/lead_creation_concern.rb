@@ -48,7 +48,7 @@ module Kylas
               msg = t("controller.booking_details.#{action_name}.response_msg")
               format.html { redirect_to show_response_path(response: {success: true, message: msg}) }
             else
-              format.html { redirect_to show_response_path(response: result)
+              format.html { redirect_to show_response_path(response: result) }
             end
           else
             flash.now[:alert] = t('controller.leads.alert.select_manager')
