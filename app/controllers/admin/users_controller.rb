@@ -81,7 +81,7 @@ class Admin::UsersController < AdminController
 
   def update
     respond_to do |format|
-      update_masked_email_and_phone_if_present
+      update_masked_email_and_phone_if_present if @user.buyer?
       push_fund_account_on_create_or_change(format, @user) do
         @user.assign_attributes(permitted_attributes([current_user_role_group, @user]))
         if @user.save
