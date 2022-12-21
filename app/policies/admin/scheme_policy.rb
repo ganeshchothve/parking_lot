@@ -2,7 +2,7 @@ class Admin::SchemePolicy < SchemePolicy
   # def new? def edit? def update? def approve_via_email? from SchemePolicy
 
   def index?
-    out = user.booking_portal_client.enable_actual_inventory?(user) && %w[superadmin admin sales_admin sales crm cp channel_partner].include?(user.role)
+    out = user.booking_portal_client.enable_actual_inventory?(user) && %w[superadmin admin sales_admin sales crm cp cp_owner channel_partner].include?(user.role)
     out && user.active_channel_partner? && !user.booking_portal_client.launchpad_portal
   end
 

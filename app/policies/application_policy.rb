@@ -53,6 +53,10 @@ class ApplicationPolicy
     update?
   end
 
+  def asset_destroy?
+    asset_update?
+  end
+
   def choose_template_for_print?
     user.role.in?(%w(admin sales sales_admin superadmin)) && available_templates(record.class.to_s, record).present?
   end

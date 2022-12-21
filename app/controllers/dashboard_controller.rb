@@ -13,7 +13,7 @@ class DashboardController < ApplicationController
 
   def index
     authorize :dashboard, :index?
-    @customer_search = CustomerSearch.new(booking_portal_client_id: current_client.try(:id)) if current_user.role == 'gre'
+    @customer_search = CustomerSearch.new(booking_portal_client_id: current_client.id) if current_user.role == 'gre'
     @project_units = current_user.project_units
 
     if ['channel_partner', 'cp_owner'].include?(current_user.role)

@@ -11,6 +11,7 @@ class Client
   DOCUMENT_TYPES = %w[document offer login_page_image].freeze
   PUBLIC_DOCUMENT_TYPES = []
   INCENTIVE_CALCULATION = ["manual", "calculated"]
+  ENABLE_PAYMENT = %w[enable_with_kyc enable_without_kyc disable].freeze
 
   field :name, type: String
   field :selldo_client_id, type: String
@@ -25,7 +26,7 @@ class Client
   field :helpdesk_email, type: String
   field :notification_email, type: String
   field :notification_numbers, type: String
-  field :allowed_bookings_per_user, type: Integer, default: 3
+  field :allowed_bookings_per_user, type: Integer, default: 300
   field :sender_email, type: String
   field :general_user_request_categories, type: Array, default: []
   field :email_domains, type: Array, default: []
@@ -53,7 +54,7 @@ class Client
   field :notification_api_key, type: String
   field :notification_vendor, type: String, default: 'firebase'
   field :sms_provider_dlt_entity_id, type: String
-  field :sms_mask, type: String, default: "SellDo"
+  field :sms_mask, type: String
   field :sms_provider, type: String, default: 'sms_just'
   field :mailgun_private_api_key, type: String
   field :mailgun_email_domain, type: String
@@ -66,8 +67,7 @@ class Client
   field :enable_leads, type: Boolean, default: false
   field :enable_site_visit, type: Boolean, default: false
   field :enable_vis, type: Boolean, default: false
-  field :enable_direct_payment, type: Boolean, default: false
-  field :enable_payment_with_kyc, type: Boolean, default: true
+  field :enable_payment, type: String, default: 'disable'
   field :enable_booking_with_kyc, type: Boolean, default: true
   field :incentive_calculation, type: Array, default: ["manual"]
   field :enable_direct_activation_for_cp, type: Boolean, default: false
@@ -75,15 +75,14 @@ class Client
   field :blocking_days, type: Integer, default: 10
   field :holding_minutes, type: Integer, default: 15
   field :payment_gateway, type: String, default: 'Razorpay'
-  field :enable_company_users, type: Boolean, default: false
+  field :enable_company_users, type: Boolean, default: true
   field :faqs, type: String
   field :rera, type: String
   field :tds_process, type: String
   field :ga_code, type: String
   field :gtm_tag, type: String
-  field :enable_communication, type: Hash, default: { 'email': true, 'sms': true, 'whatsapp': false, 'notification': false }
+  field :enable_communication, type: Hash, default: { email: true, sms: false, whatsapp: false, notification: false }
   field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
-  field :enable_referral_bonus, type: Boolean, default: false
   field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner cp_owner]
   field :lead_blocking_days, type: Integer, default: 30
   field :invoice_approval_tat, type: Integer, default: 2
@@ -152,6 +151,7 @@ class Client
   has_many :users, class_name: 'User', inverse_of: 'booking_portal_client'
   has_many :project_units
   has_many :projects
+  has_many :booking_details
   has_one :address, as: :addressable
   has_many :templates
   has_many :sms_templates, class_name: 'Template::SmsTemplate'
@@ -177,6 +177,7 @@ class Client
   validates :enable_actual_inventory, array: { inclusion: {allow_blank: true, in: (User::ADMIN_ROLES + User::BUYER_ROLES) } }
   validates :preferred_login, inclusion: {in: I18n.t("mongoid.attributes.client/available_preferred_logins").keys.map(&:to_s) }
   validates :payment_gateway, inclusion: {in: Client::PAYMENT_GATEWAYS }, allow_blank: true
+  validates :enable_payment, inclusion: { in: Client::ENABLE_PAYMENT }, allow_blank: true
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
   validates :whatsapp_api_key, :whatsapp_api_secret, presence: true, if: :whatsapp_enabled?
   validates :notification_api_key, presence: true, if: :notification_enabled?
@@ -187,6 +188,7 @@ class Client
   validate :check_booking_portal_domains
   validate :check_preferred_login
   validates :sms_provider, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true, if: :sms_enabled?
+  validates :sender_email, presence: true
 
   accepts_nested_attributes_for :address, :external_inventory_view_config, :checklists
   accepts_nested_attributes_for :regions, allow_destroy: true
@@ -199,19 +201,19 @@ class Client
   end
 
   def sms_enabled?
-    self.enable_communication["sms"]
+    self.enable_communication[:sms]
   end
 
   def email_enabled?
-    self.enable_communication["email"]
+    self.enable_communication[:email]
   end
 
   def whatsapp_enabled?
-    self.enable_communication['whatsapp']
+    self.enable_communication[:whatsapp]
   end
 
   def notification_enabled?
-    self.enable_communication['notification']
+    self.enable_communication[:notification]
   end
 
   def enable_actual_inventory?(user)
@@ -289,5 +291,13 @@ class Client
       Kylas::CreateMeetingCustomField.new(User.new(booking_portal_client: self)).call
       Kylas::CreateProjectCustomField.new(User.new(booking_portal_client: self)).call
     end
+  end
+
+  def payment_enabled?
+    self.enable_payment != 'disable'
+  end
+
+  def kyc_required_for_payment?
+    payment_enabled? && self.enable_payment == 'enable_with_kyc' 
   end
 end

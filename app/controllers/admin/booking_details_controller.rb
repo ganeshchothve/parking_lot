@@ -232,23 +232,27 @@ class Admin::BookingDetailsController < AdminController
           response.set_header('location', admin_booking_detail_path(@booking_detail) )
         end
         format.json { render json: {message: I18n.t("controller.booking_details.notice.created")}, status: :ok }
-        format.html { redirect_to admin_booking_detail_path(@booking_detail) }
+        if embedded_marketplace?
+          msg = t("controller.booking_details.#{action_name}.response_msg")
+          format.html { redirect_to show_response_path(response: {success: true, message: msg}) }
+        else
+          format.html { redirect_to admin_booking_detail_path(@booking_detail) }
+        end
       else
-        flash[:alert] = @booking_detail.errors.full_messages
-        # format.html { redirect_to dashboard_path, alert: t('controller.booking_details.booking_unsuccessful') }
-        format.html { redirect_to request.referer, alert: t('controller.booking_details.booking_unsuccessful') }
+        flash.now[:alert] = @booking_detail.errors.full_messages
+        format.html { render :new_booking_without_inventory }
         format.json { render json: { errors: flash[:alert] }, status: :unprocessable_entity }
       end
     end
   end
 
   def edit_booking_without_inventory
-    @booking_detail = BookingDetail.find_by(id: params[:id])
+    @booking_detail = BookingDetail.where(id: params[:id], booking_portal_client_id: current_client.id).first if params[:id].present?
     render layout: false
   end
 
   def update_booking_without_inventory
-    @booking_detail = BookingDetail.find_by(id: params[:id])
+    @booking_detail = BookingDetail.where(id: params[:id], booking_portal_client_id: current_client.id).first if params[:id].present?
     @booking_detail.assign_attributes(permitted_attributes([:admin, @booking_detail]))
     respond_to do |format|
       if @booking_detail.save
@@ -263,7 +267,7 @@ class Admin::BookingDetailsController < AdminController
   end
 
   def move_to_next_state
-    @booking_detail = BookingDetail.find_by(id: params[:id])
+    @booking_detail = BookingDetail.where(id: params[:id], booking_portal_client_id: current_client.id).first if params[:id].present?
     respond_to do |format|
       if @booking_detail.move_to_next_state!(params[:status])
         format.html{ redirect_to request.referrer || dashboard_url, notice: I18n.t("controller.booking_details.notice.moved_to", name: I18n.t("mongoid.attributes.booking_detail/status.#{params[:status]}")) }

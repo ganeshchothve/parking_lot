@@ -4,7 +4,7 @@ module SiteVisitsHelper
   end
 
   def allow_add_notes?(site_visit)
-    policy([:admin, Note.new(notable: site_visit)]).new? && !site_visit.booking_portal_client.launchpad_portal
+    policy([:admin, Note.new(notable: site_visit)]).new?
   end
 
   def allow_state_change?(site_visit)

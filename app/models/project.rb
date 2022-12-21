@@ -83,7 +83,7 @@ class Project
   field :website_link, type: String
   field :notification_email, type: String
   field :notification_numbers, type: String
-  field :allowed_bookings_per_user, type: Integer, default: 3
+  field :allowed_bookings_per_user, type: Integer, default: 300
   field :sender_email, type: String
   field :email_domains, type: Array, default: []
   field :booking_portal_domains, type: Array, default: []
@@ -124,6 +124,8 @@ class Project
   # Kylas fields
   field :kylas_product_id, type: String
   field :kylas_product_value, type: Integer
+  # Kylas Custom Fields options values fields
+  field :kylas_custom_fields_option_id, type: Hash, default: {}
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= client.logo.url %>" />
@@ -299,8 +301,12 @@ class Project
     if !user.role.in?(User::ALL_PROJECT_ACCESS) || params[:current_project_id].present?
       custom_scope.merge!({_id: { "$in": project_ids }})
     end
+    if user.role?(:cp_owner)
+      channel_partner = user.channel_partner
+      custom_scope.merge!({_id: { "$in": channel_partner.project_ids }})
+    end
     custom_scope.merge!({ is_active: true }) if (params[:controller] == 'admin/projects' && params[:action] == 'index') || params[:controller] == 'home'
-    custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.try(:id)})
+    custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
     custom_scope
   end
 

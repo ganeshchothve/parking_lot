@@ -4,11 +4,6 @@ class CustomDeviseMailer < Devise::Mailer
   extend ApplicationHelper
   include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
 
-  # if current_client.present?
-  #   # default from: "#{current_client.name} <#{current_client.sender_email}>"
-  # else
-    default from: "Sell.Do <support@sell.do>"
-  # end
   layout 'devise_mailer'
 end
 
@@ -17,7 +12,7 @@ module Devise::Mailers::Helpers
   def devise_mail record, action, opts = {}, &block
     initialize_from_record(record)
     devise_sms(record, action, opts)
-    make_bootstrap_mail headers_for(action, opts), &block
+    make_bootstrap_mail headers_for(action, opts.merge({from: record.booking_portal_client.sender_email})), &block
   end
 
   def devise_sms record, action, opts = {}

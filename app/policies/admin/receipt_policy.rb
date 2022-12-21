@@ -34,6 +34,10 @@ class Admin::ReceiptPolicy < ReceiptPolicy
     confirmed_and_ready_user? && user.active_channel_partner?
   end
 
+  def asset_update?
+    asset_create?
+  end
+
   def edit?
     return false if record.success? && record.booking_detail_id.present?
 

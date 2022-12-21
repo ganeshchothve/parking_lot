@@ -185,7 +185,7 @@ class Admin::UserPolicy < UserPolicy
       else
         attributes += [:is_active] if record.persisted? && record.id != user.id && user.role.in?(%w(admin))
       end
-      if %w[admin superadmin].include?(user.role)  && record.role?('cp')
+      if %w[admin superadmin].include?(user.role) && record.role?('cp')
         attributes += [:manager_id]
       end
       if %w[admin superadmin cp_admin sales_admin].include?(user.role) && record.buyer?
@@ -201,7 +201,7 @@ class Admin::UserPolicy < UserPolicy
         attributes += [:role] unless (record.role?('cp_owner') && record&.channel_partner&.primary_user_id == record.id) || user.id == record.id
       end
 
-      attributes += [project_ids: []] if %w[admin superadmin].include?(user.role) && !record.role.in?(User::ALL_PROJECT_ACCESS)
+      attributes += [project_ids: []] if %w[admin superadmin cp_owner].include?(user.role) && !record.role.in?(User::ALL_PROJECT_ACCESS)
       if %w[superadmin admin sales_admin].include?(user.role) && !marketplace_client?
         attributes += [:erp_id]
         attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]

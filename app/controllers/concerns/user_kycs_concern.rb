@@ -66,9 +66,10 @@ module UserKycsConcern
   private
 
   def set_lead
-    @lead = Lead.where(booking_portal_client_id: current_client.try(:id), id: params[:lead_id]).first if params[:lead_id].present?
-    @lead = Lead.where(user_id: current_user, project_id: current_project.id).first if @lead.blank? && current_project.present?
-    redirect_to home_path(current_user), alert: t('controller.application.set_current_client') unless @lead
+    @lead = Lead.where(booking_portal_client_id: current_client.id, id: params[:lead_id]).first if params[:lead_id].present?
+    @lead = @user_kyc.lead if @user_kyc.present?
+    @lead = Lead.where(user_id: current_user, project_id: current_project.id, booking_portal_client_id: current_client.id).first if @lead.blank? && current_project.present?
+    redirect_to home_path(current_user), alert: t('controller.leads.alert.not_found') unless @lead
   end
 
   def set_user_kyc

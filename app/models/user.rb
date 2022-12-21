@@ -29,13 +29,13 @@ class User
   DOCUMENT_TYPES = %w[home_loan_application_form photo_identity_proof residence_address_proof residence_ownership_proof income_proof job_continuity_proof bank_statement advance_processing_cheque financial_documents first_page_co_branding last_page_co_branding co_branded_asset]
   TEAM_LEAD_DASHBOARD_ACCESS_USERS = %w[team_lead gre]
   KYLAS_MARKETPALCE_USERS = %w[admin sales gre sales_admin channel_partner cp_owner superadmin].freeze
-  KYLAS_CUSTOM_FIELDS_ENTITIES = %w[lead deals meetings].freeze
+  KYLAS_CUSTOM_FIELDS_ENTITIES = %w[lead deal meeting].freeze
   CLIENT_SCOPED_ROLES = (%w[channel_partner cp_owner] + User::BUYER_ROLES).freeze
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :confirmable, :timeoutable, :password_archivable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: {login: true, booking_portal_client_id: false, project_id: false} #:lockable,:expirable,:session_limitable,:password_expirable
-  attr_accessor :temporary_password, :payment_link, :temp_manager_id, :company_name, :project_id
+  devise :registerable, :database_authenticatable, :recoverable, :rememberable, :trackable, :confirmable, :timeoutable, :password_archivable, :omniauthable, :omniauth_providers => [:selldo], authentication_keys: {login: true, booking_portal_client_id: false, project_id: false}, reset_password_keys: [:login, :booking_portal_client_id, :project_id] #:lockable,:expirable,:session_limitable,:password_expirable
+  attr_accessor :temporary_password, :payment_link, :temp_manager_id, :company_name, :project_id, :sender_email, :booking_portal_domains
 
   ## Database authenticatable
   field :first_name, type: String, default: ''
@@ -368,14 +368,12 @@ class User
       if user.present?
         if self.id == user.id
           save_kylas_user_id(k_user_id, response)
-          true
         else
           false
         end
       else
         if self.kylas_user_id.blank?
           save_kylas_user_id(k_user_id, response)
-          true
         else
           false
         end
@@ -390,7 +388,7 @@ class User
 
     return unless response[:success]
 
-    update_tokens_details!(response) if user.persisted?
+    update_tokens_details!(response) if self.persisted?
     kylas_access_token
   end
 
@@ -840,6 +838,35 @@ class User
       roles
     end
 
+    # This method is used to find user for reset_password using reset_password_keys
+    # Method overriden to compare reset_password_keys with params
+    def find_or_initialize_with_errors(required_attributes, attributes, error=:invalid) #:nodoc:
+      attributes = if attributes.respond_to? :permit!
+        attributes.slice(*required_attributes).permit!.to_h.with_indifferent_access
+      else
+        attributes.with_indifferent_access.slice(*required_attributes)
+      end
+
+      # here overriden code
+      attributes.delete_if { |key, value| value.blank? && authentication_keys[key.to_sym] }
+
+      if attributes.size == required_attributes.size
+        record = find_first_by_auth_conditions(attributes)
+      end
+
+      unless record
+        record = new
+
+        required_attributes.each do |key|
+          value = attributes[key]
+          record.send("#{key}=", value)
+          record.errors.add(key, value.present? ? error : :blank)
+        end
+      end
+
+      record
+    end
+
     def find_first_by_auth_conditions(warden_conditions)
       conditions = warden_conditions.dup
       login = conditions.delete(:login)
@@ -857,7 +884,7 @@ class User
           or_conds = []
           or_conds << { 
             "$or": [
-              { booking_portal_client_id: warden_conditions[:booking_portal_client_id], '$or': auth_conditions, role: {"$nin": ALL_PROJECT_ACCESS}, project_ids: warden_conditions[:project_id] },
+              { booking_portal_client_id: warden_conditions[:booking_portal_client_id], '$or': auth_conditions, role: {"$nin": ALL_PROJECT_ACCESS}, project_ids: BSON::ObjectId(warden_conditions[:project_id]) },
               { booking_portal_client_id: warden_conditions[:booking_portal_client_id], '$or': auth_conditions, role: {"$in": ALL_PROJECT_ACCESS}},
               { booking_portal_client_id: warden_conditions[:booking_portal_client_id], '$or': auth_conditions, role: {"$in": BUYER_ROLES}}
             ]
@@ -1015,8 +1042,13 @@ class User
 
   def save_kylas_user_id(k_user_id, response)
     if self.update(kylas_user_id: k_user_id)
-      update_tokens_details!(response)
-      fetch_and_save_kylas_tenant_id
+      if update_tokens_details!(response)
+        fetch_and_save_kylas_tenant_id
+      else
+        false
+      end
+    else
+      false
     end
   end
 
@@ -1025,9 +1057,14 @@ class User
 
     begin
       response = Kylas::TenantDetails.new(self).call
-      self.booking_portal_client.update(kylas_tenant_id: response.dig(:data, 'id')) if response[:success]
+      if response[:success]
+        self.booking_portal_client.update(kylas_tenant_id: response.dig(:data, 'id'))
+      else
+        false
+      end
     rescue StandardError
       Rails.logger.error 'Kylas::TenantDetails - StandardError'
+      false
     end
   end
 

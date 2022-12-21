@@ -23,7 +23,6 @@ FactoryBot.define do
     enable_direct_payment { true }
 
     cin_number { Faker::Number.number(12) }
-    enable_referral_bonus { true }
     mailgun_private_api_key { 'test' }
     mailgun_email_domain { 'test' }
     sms_provider_username { 'test' }

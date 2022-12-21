@@ -5,6 +5,9 @@
 		<p class="pb-3 px-4"><%= I18n.t("devise.help_text.create_password") %></p>
 		<div class="cp-signup-form-wrap pt-2 pb-3 px-4 cp-form-wrap">
 			<%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), method: :post, html: { novalidate: false, class: 'validate-form', id: 'password_form' }) do |f| %>
+				<%= f.hidden_field :reset_password_token %>
+				<%= f.hidden_field :project_id, value: current_project.try(:id) %>
+				<%= f.hidden_field :booking_portal_client_id, value: current_client.try(:id) %>
 				<div class="mb-3">
           <%= f.input :login, input_html: {autofocus: true, autocomplete: false, class: 'form-control'} %>
 				</div>

@@ -1,0 +1,31 @@
+<div class="filter-inner modal-content ps-2 pe-2 fixed-header-footer">
+  <div class="modal-header filter-header">
+    <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
+    <a href="javascript:;" class="close-filter-btn btn-close"></a>
+  </div>
+  <%= form_tag admin_api_logs_path, method: "get", id: "api_logs_filter_form" do %>
+    <div class="filter-content modal-body ps-0 pe-0">
+      <div class="row">
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.api_log.log_type'), class: "control-label" %>
+          <%= select_tag "fltrs[log_type]", options_for_select(ApiLog::LOG_TYPES, (params[:fltrs].present? ? params.dig(:fltrs, :log_type) : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.api_log.resource_type'), class: "control-label" %>
+          <%= select_tag "fltrs[resource_type]", options_for_select(I18n.t("mongoid.attributes.api_log/resource_type").collect{|k,v| [v,k.to_s]}, params.dig(:fltrs, :resource_type)), {prompt: I18n.t("global.select"), class: "selectize"} %>
+        </div>
+      </div>
+    </div>
+    <div class="filter-footer modal-footer text-end">
+      <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
+      <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.cancel") %></button>
+    </div>
+  <% end %>
+</div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#api_logs_filter_form"));
+  });
+<% end %>

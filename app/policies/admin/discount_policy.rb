@@ -2,7 +2,7 @@ class Admin::DiscountPolicy < DiscountPolicy
   # def new? def edit? def update? from DiscountPolicy
 
   def index?
-    user.booking_portal_client.enable_direct_payment? && %w[superadmin].include?(user.role)
+    user.booking_portal_client.payment_enabled? && %w[superadmin].include?(user.role)
   end
 
   def create?

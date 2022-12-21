@@ -13,14 +13,14 @@ class Admin::IncentiveSchemesController < AdminController
   end
 
   def new
-    @incentive_scheme = IncentiveScheme.new(booking_portal_client_id: current_user.booking_portal_client_id)
+    @incentive_scheme = IncentiveScheme.new(booking_portal_client_id: current_client.id)
     ladder = @incentive_scheme.ladders.build(stage: 1)
     authorize [:admin, @incentive_scheme]
     render layout: false
   end
 
   def create
-    @incentive_scheme = IncentiveScheme.new(booking_portal_client_id: current_user.booking_portal_client_id)
+    @incentive_scheme = IncentiveScheme.new(booking_portal_client_id: current_client.id)
     @incentive_scheme.assign_attributes(permitted_attributes([:admin, @incentive_scheme]))
     respond_to do |format|
       if @incentive_scheme.save

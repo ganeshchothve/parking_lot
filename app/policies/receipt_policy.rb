@@ -39,8 +39,16 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def enable_direct_payment?
-    return true if user.booking_portal_client.enable_direct_payment? && user.booking_portal_client.payment_gateway.present? && (enable_payment_with_kyc? ? record_user_kyc_ready? : true)
-
+    valid = if user.booking_portal_client.payment_enabled? && user.booking_portal_client.payment_gateway.present?
+      if user.booking_portal_client.kyc_required_for_payment?
+        record_user_kyc_ready?
+      else
+        true
+      end
+    else
+      false
+    end
+    return valid if valid
     @condition = 'enable_direct_payment' if @condition.blank?
     false
   end

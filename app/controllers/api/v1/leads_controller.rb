@@ -36,12 +36,15 @@ class Api::V1::LeadsController < ApisController
       end
 
       if @lead.save
-        render json: {user_id: @user.id, lead_id: @lead.id, message: I18n.t("controller.leads.notice.created")}, status: :created
+        @message = I18n.t("controller.leads.notice.created")
+        render json: {user_id: @user.id, lead_id: @lead.id, message: @message}, status: :created
       else
-        render json: {errors: @lead.errors.full_messages.uniq}, status: :unprocessable_entity
+        @errors = @lead.errors.full_messages.uniq
+        render json: {errors: @errors}, status: :unprocessable_entity
       end
     else
-      render json: {errors: [I18n.t("controller.leads.errors.lead_reference_id_already_exists", name: "#{params[:lead][:reference_id]}")]}, status: :unprocessable_entity
+      @errors = [I18n.t("controller.leads.errors.lead_reference_id_already_exists", name: "#{params[:lead][:reference_id]}")]
+      render json: {errors: @errors}, status: :unprocessable_entity
     end
   end
 
@@ -66,12 +69,15 @@ class Api::V1::LeadsController < ApisController
     unless Lead.reference_resource_exists?(@crm.id, params[:lead][:reference_id])
       @lead.assign_attributes(lead_update_params)
       if @lead.save
-        render json: {user_id: @lead.user_id, lead_id: @lead.id, message: I18n.t("controller.leads.notice.updated")}, status: :ok
+        @message = I18n.t("controller.leads.notice.updated")
+        render json: {user_id: @lead.user_id, lead_id: @lead.id, message: @message}, status: :ok
       else
-        render json: {errors: @lead.errors.full_messages.uniq}, status: :unprocessable_entity
+        @errors = @lead.errors.full_messages.uniq
+        render json: {errors: @errors}, status: :unprocessable_entity
       end
     else
-      render json: {errors: [I18n.t("controller.leads.errors.lead_reference_id_already_exists", name: "#{params[:lead][:reference_id]}")]}, status: :unprocessable_entity
+      @errors = [I18n.t("controller.leads.errors.lead_reference_id_already_exists", name: "#{params[:lead][:reference_id]}")]
+      render json: {errors: @errors}, status: :unprocessable_entity
     end
   end
 
@@ -79,8 +85,14 @@ class Api::V1::LeadsController < ApisController
 
   # Checks if the required reference_id's are present. reference_id is the third party CRM resource id.
   def reference_ids_present?
-    render json: { errors: [I18n.t("controller.leads.errors.project_id_required")] }, status: :bad_request and return unless params.dig(:lead, :project_id).present?
-    render json: { errors: [I18n.t("controller.leads.errors.lead_reference_id_required")] }, status: :bad_request and return unless params.dig(:lead, :reference_id).present?
+    unless params.dig(:lead, :project_id).present?
+      @errors = [I18n.t("controller.leads.errors.project_id_required")]
+      render json: { errors: @errors }, status: :bad_request and return
+    end
+    unless params.dig(:lead, :reference_id).present?
+      @errors = [I18n.t("controller.leads.errors.lead_reference_id_required")]
+      render json: { errors: @errors }, status: :bad_request and return
+    end
   end
 
   # Sets or creates the user object if it doesn't exists.
@@ -93,7 +105,8 @@ class Api::V1::LeadsController < ApisController
       if @user.save
         @user.update_external_ids(user_third_party_reference_params, @crm.id) if user_third_party_reference_params
       else
-        render json: {errors: @user.errors.full_messages.uniq}, status: :unprocessable_entity
+        @errors = @user.errors.full_messages.uniq
+        render json: {errors: @errors}, status: :unprocessable_entity
       end
     end
   end
@@ -103,20 +116,26 @@ class Api::V1::LeadsController < ApisController
     query << {email: params.dig(:lead, :email).to_s.downcase} if params.dig(:lead, :email).present?
     query << {phone: params.dig(:lead, :phone)} if params.dig(:lead, :phone).present?
     if query.present?
-      render json: {errors: [I18n.t("controller.leads.errors.email_phone_not_match")]}, status: :bad_request and return if User.or(query).count > 1
+      @errors = [I18n.t("controller.leads.errors.email_phone_not_match")]
+      render json: {errors: @errors}, status: :bad_request and return if User.or(query).count > 1
     else
-      render json: { errors: [I18n.t("controller.leads.errors.email_or_phone_required")] }, status: :bad_request and return
+      @errors = [I18n.t("controller.leads.errors.email_or_phone_required")]
+      render json: { errors: @errors }, status: :bad_request and return
     end
     query
   end
 
   def set_project
     unless project_reference_id = params.dig(:lead, :project_id).presence
-      render json: { errors: [I18n.t("controller.leads.errors.project_id_required")] }, status: :bad_request
+      @errors = [I18n.t("controller.leads.errors.project_id_required")]
+      render json: { errors: @errors }, status: :bad_request
     else
       # set project
       @project = Project.where(booking_portal_client_id: @current_client.try(:id), "third_party_references.crm_id": @crm.id, "third_party_references.reference_id": project_reference_id).first
-      render json: { errors: [I18n.t("controller.projects.errors.project_reference_id_not_found", name: "#{project_reference_id}")] }, status: :not_found and return unless @project
+      unless @project
+        @errors = [I18n.t("controller.projects.errors.project_reference_id_not_found", name: "#{project_reference_id}")]
+        render json: { errors: @errors }, status: :not_found and return
+      end
 
       # modify params
       params[:lead][:project_id] = @project.id.to_s
@@ -140,7 +159,11 @@ class Api::V1::LeadsController < ApisController
 
   def set_lead_and_user
     @lead = Lead.where(booking_portal_client_id: @current_client.try(:id), "third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:id]).first
-    render json: { errors: [I18n.t("controller.projects.errors.lead_reference_id_not_found", name: "#{params[:id]}")] }, status: :not_found unless @lead
+    @resource = @lead if @lead.present?
+    unless @lead.present?
+      @errors = [I18n.t("controller.leads.errors.lead_reference_id_not_found", name: "#{params[:id]}")]
+      render json: { errors: @errors }, status: :not_found unless @lead
+    end
     @user = @lead.user
   end
 
@@ -172,7 +195,8 @@ class Api::V1::LeadsController < ApisController
         # modify params
         params[:lead][:manager_id] = @manager.id.to_s
       else
-        render json: {errors: [I18n.t("controller.projects.errors.manager_reference_id_not_found", name: "#{params[:id]}")]}, status: :not_found and return
+        @errors = [I18n.t("controller.projects.errors.manager_reference_id_not_found", name: "#{manager_reference_id}")]
+        render json: {errors: @errors}, status: :not_found and return
       end
     end
   end
@@ -180,17 +204,18 @@ class Api::V1::LeadsController < ApisController
   def modify_params
     errors = []
     begin
-      params[:lead][:sitevisit_date] = Date.strptime(params[:lead][:sitevisit_date], "%d/%m/%Y") if params[:lead][:sitevisit_date].present?
+      params[:lead][:sitevisit_date] = Date.strptime(params.dig(:lead, :sitevisit_date), "%d/%m/%Y") if params.dig(:lead, :sitevisit_date).present?
     rescue ArgumentError
       errors << I18n.t("controller.site_visits.errors.invalid_date_format")
     end
     begin
-      params[:lead][:last_revisit_date] = Date.strptime(params[:lead][:last_revisit_date], "%d/%m/%Y") if params[:lead][:last_revisit_date].present?
+      params[:lead][:last_revisit_date] = Date.strptime(params.dig(:lead, :last_revisit_date), "%d/%m/%Y") if params.dig(:lead, :last_revisit_date).present?
     rescue ArgumentError
       errors << I18n.t("controller.site_visits.errors.revisit_invalid_date_format")
     end
-    errors << I18n.t("controller.site_visits.errors.revisit_count")if params[:lead][:revisit_count].present? && !params[:lead][:revisit_count].is_a?(Integer)
-    render json: { errors: errors },status: :unprocessable_entity and return if errors.present?
+    errors << I18n.t("controller.site_visits.errors.revisit_count")if params.dig(:lead, :revisit_count).present? && !params.dig(:lead, :revisit_count).is_a?(Integer)
+    @errors = errors
+    render json: { errors: @errors },status: :unprocessable_entity and return if @errors.present?
   end
 
 end
