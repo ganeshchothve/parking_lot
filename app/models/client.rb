@@ -88,7 +88,7 @@ class Client
   field :lead_blocking_days, type: Integer, default: 30
   field :invoice_approval_tat, type: Integer, default: 2
 
-  field :external_api_integration, type: Boolean, default: false
+  field :external_api_integration, type: Boolean, default: true
   field :enable_daily_reports, type: Hash, default: {"payments_report": false}
   field :enable_incentive_module, type: Array, default: []
   field :partner_regions, type: Array, default: []

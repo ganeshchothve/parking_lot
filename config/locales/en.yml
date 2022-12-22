@@ -895,7 +895,6 @@ en:
         holding_minutes: "Unit to be held for (Minutes)"
         enable_company_users: "Allow Company Users & Benefits"
         roles_taking_registrations: "Allowed Roles For Taking New Registrations"
-        external_api_integration: "Enable External CRM Integration"
         enable_incentive_module: "Enable Brokerage Module For These Roles"
         mask_lead_data_for_roles: "Enable Lead Data Masking For These Roles"
         partner_regions: "Define Regions For Channel Partners & Projects"
