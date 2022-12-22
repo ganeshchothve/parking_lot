@@ -101,7 +101,7 @@ class UserPolicy < ApplicationPolicy
       if record.role.in?(%w(cp_owner channel_partner))
         attributes += %i[email] if ((record.new_record? || user.role?('admin')))
       elsif record.role.in?(User::BUYER_ROLES)
-        attributes += %i[email] if ((record.new_record? || user.role.in?(%(admin sales))))
+        attributes += %i[email] if ((record.new_record? || user.role.in?(%w(admin sales))))
       end
     else
       attributes += %i[email] if ((record.new_record? || user.role?('admin')))
