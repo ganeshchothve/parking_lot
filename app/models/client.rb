@@ -83,7 +83,6 @@ class Client
   field :ga_code, type: String
   field :gtm_tag, type: String
   field :enable_communication, type: Hash, default: { email: true, sms: false, whatsapp: false, notification: false }
-  field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
   field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner cp_owner]
   field :lead_blocking_days, type: Integer, default: 30
 

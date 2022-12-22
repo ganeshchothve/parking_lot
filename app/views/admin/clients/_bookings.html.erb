@@ -86,19 +86,6 @@
       <%= f.number_field :allowed_bookings_per_user, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("allowed_bookings_per_user") ? false : true), min: 0 %>
     </div>
   </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :allow_multiple_bookings_per_user_kyc %>
-      <div class="form-check form-check-inline">
-        <%= f.radio_button :allow_multiple_bookings_per_user_kyc, true, class: "form-check-input wd-22" %>
-        <%= f.label :allow_multiple_bookings_per_user_kyc, I18n.t("global.boolean.true"), class: " form-check-label d-inline-block ms-2" %>
-      </div>
-      <div class="form-check form-check-inline">
-        <%= f.radio_button :allow_multiple_bookings_per_user_kyc, false, class: "form-check-input wd-22" %>
-        <%= f.label :allow_multiple_bookings_per_user_kyc, I18n.t("global.boolean.false"), class: " form-check-label d-inline-block ms-2" %>
-      </div>
-    </div>
-  </div>
 </div>
 
 

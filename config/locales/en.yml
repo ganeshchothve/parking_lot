@@ -908,7 +908,6 @@ en:
 
         enable_live_inventory: "Enable Live Inventory"
         enable_booking_with_kyc: "Enabe Booking With KYC"
-        allow_multiple_bookings_per_user_kyc: "Allow Multiple Bookings per User KYC"
         incentive_calculation: "Incentive Calculation"
         general_user_request_categories: "General User Request Categories"
         sms_provider: "Sms Provider"

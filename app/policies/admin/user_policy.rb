@@ -122,7 +122,7 @@ class Admin::UserPolicy < UserPolicy
   def site_visit_project_wise?
     true
   end
-  
+
   def site_visit_partner_wise?
     true
   end
@@ -192,7 +192,7 @@ class Admin::UserPolicy < UserPolicy
         # TODO: Lead conflict module with multi project
         #attributes += [:manager_id]
         #attributes += [:manager_change_reason] if record.persisted?
-        attributes += [:allowed_bookings] if user.booking_portal_client.allow_multiple_bookings_per_user_kyc?
+        attributes += [:allowed_bookings]
       end
 
       attributes += [:premium, :tier_id] if record.role.in?(%w(cp_owner channel_partner)) && user.role?('admin')

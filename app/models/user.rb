@@ -727,13 +727,9 @@ class User
   end
 
   def unused_user_kyc_ids(project_unit_id)
-    if booking_portal_client.allow_multiple_bookings_per_user_kyc?
-      user_kyc_ids = user_kycs.collect(&:id)
-    else
-      user_kyc_ids = user_kycs.collect(&:id)
-      booking_details.ne(id: project_unit_id).each do |x|
-        user_kyc_ids = user_kyc_ids - [x.primary_user_kyc_id] - x.user_kyc_ids
-      end
+    user_kyc_ids = user_kycs.collect(&:id)
+    booking_details.ne(id: project_unit_id).each do |x|
+      user_kyc_ids = user_kyc_ids - [x.primary_user_kyc_id] - x.user_kyc_ids
     end
     user_kyc_ids
   end
