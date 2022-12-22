@@ -207,7 +207,7 @@ class Admin::UserPolicy < UserPolicy
         attributes += [:allowed_bookings] if user.booking_portal_client.allow_multiple_bookings_per_user_kyc?
       end
 
-      attributes += [:premium, :tier_id] if record.role.in?(%w(cp_owner channel_partner)) && user.role?('admin')
+      attributes += [:premium, :tier_id] if record.role.in?(%w(cp_owner channel_partner)) && user.role?('admin') && current_client.real_estate?
 
       if %w[superadmin admin cp_owner].include?(user.role)
         attributes += [:role] unless (record.role?('cp_owner') && record&.channel_partner&.primary_user_id == record.id) || user.id == record.id

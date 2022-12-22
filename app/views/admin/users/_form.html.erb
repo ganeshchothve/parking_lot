@@ -43,20 +43,33 @@
               </div>
             </div>
           <% end %>
-          <% if @user.role.blank? %>
-            <div class="mb-3">
-              <%= f.label :role, class: 'label-required' %>
-              <%= f.select :role, filter_roles(current_client), {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("role") ? false : true) %>
-            </div>
-          <% elsif policy([current_user_role_group, @user]).editable_field?("role") %>
-            <div class="mb-3">
-              <%= f.label :role, class: 'label-required' %>
-              <%= f.select :role, user_edit_role_options(f.object), {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: !policy([current_user_role_group, @user]).editable_field?("role") %>
-            </div>
-          <% else %>
-            <%= f.hidden_field :role %>
-          <% end %>
-
+          <div class="row">
+            <% if @user.role.blank? %>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <%= f.label :role, class: 'label-required' %>
+                  <%= f.select :role, filter_roles(current_client), {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, @user]).editable_field?("role") ? false : true) %>
+                </div>
+              </div>
+            <% elsif policy([current_user_role_group, @user]).editable_field?("role") %>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <%= f.label :role, class: 'label-required' %>
+                  <%= f.select :role, user_edit_role_options(f.object), {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: !policy([current_user_role_group, @user]).editable_field?("role") %>
+                </div>
+              </div>
+            <% else %>
+              <%= f.hidden_field :role %>
+            <% end %>
+            <% if policy([current_user_role_group, @user]).editable_field?("time_zone") %>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <%= f.label :time_zone, class: "control-label" %>
+                  <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.all.sort, {}, class: 'selectize', disabled: (policy([current_user_role_group, @user]).editable_field?("time_zone") ? false : true) %>
+                </div>
+              </div>
+            <% end %>
+          </div>
           <% if policy([current_user_role_group, @user]).editable_field?("fund_accounts_attributes") %>
             <%= f.fields_for :fund_accounts, @user.fund_accounts.first || @user.fund_accounts.build do |fa_form| %>
               <div class='row'>
@@ -122,31 +135,19 @@
               <%= f.text_area :manager_change_reason, class: 'form-control', disabled: (policy([current_user_role_group, @user]).editable_field?("manager_change_reason") ? false : true) %>
             </div>
           <% end %>
-          <div class="row">
-          <% if policy([current_user_role_group, @user]).editable_field?("time_zone") %>
-            <div class="col-md-6">
+          <% if policy([current_user_role_group, @user]).editable_field?("is_active") %>
               <div class="mb-3">
-                <%= f.label :time_zone, class: "control-label" %>
-                <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.all.sort, {}, class: 'selectize', disabled: (policy([current_user_role_group, @user]).editable_field?("time_zone") ? false : true) %>
-              </div>
-            </div>
-          <% end %>
-            <% if policy([current_user_role_group, @user]).editable_field?("is_active") %>
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <%= f.label :is_active %>
-                  <div class="form-check form-check-inline">
-                    <%= f.radio_button :is_active, true, class: "form-check-input wd-22" %>
-                    <%= f.label :is_active, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <%= f.radio_button :is_active, false, class: "form-check-input wd-22" %>
-                    <%= f.label :is_active, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
-                  </div>
+                <%= f.label :is_active %>
+                <div class="form-check form-check-inline">
+                  <%= f.radio_button :is_active, true, class: "form-check-input wd-22" %>
+                  <%= f.label :is_active, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
+                </div>
+                <div class="form-check form-check-inline">
+                  <%= f.radio_button :is_active, false, class: "form-check-input wd-22" %>
+                  <%= f.label :is_active, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
                 </div>
               </div>
-            <% end %>
-          </div>
+          <% end %>
 
            <% if !policy([current_user_role_group, @user]).marketplace_client? %>
             <div class="row">
