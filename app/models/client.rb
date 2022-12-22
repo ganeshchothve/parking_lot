@@ -65,7 +65,7 @@ class Client
   field :twilio_auth_token, type: String
   field :twilio_account_sid, type: String
   field :twilio_virtual_number, type: String
-  field :enable_actual_inventory, type: Array
+  field :enable_actual_inventory, type: Array, default: []
   field :enable_live_inventory, type: Array, default: []
   field :enable_channel_partners, type: Boolean, default: false
   field :enable_leads, type: Boolean, default: false
@@ -185,7 +185,7 @@ class Client
   validates :preferred_login, inclusion: {in: I18n.t("mongoid.attributes.client/available_preferred_logins").keys.map(&:to_s) }
   validates :payment_gateway, inclusion: {in: Client::PAYMENT_GATEWAYS }, allow_blank: true
   validates :enable_payment, inclusion: { in: Client::ENABLE_PAYMENT }, allow_blank: true
-  validates :required_fields_for_user_login, inclusion: {in: Client::REQUIRED_FIELDS_FOR_USER_LOGIN }, allow_blank: true
+  validates :required_fields_for_user_login, array: { inclusion: {in: Client::REQUIRED_FIELDS_FOR_USER_LOGIN } }
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
   validates :whatsapp_api_key, :whatsapp_api_secret, presence: true, if: :whatsapp_enabled?
   validates :notification_api_key, presence: true, if: :notification_enabled?

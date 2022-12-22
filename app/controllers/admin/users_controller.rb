@@ -71,6 +71,9 @@ class Admin::UsersController < AdminController
     create_user
     respond_to do |format|
       if @user.save
+        if @user.role.in?(%w(channel_partner cp_owner)) && current_user.role.in?(%w(cp_owner admin))
+          @user.active!(true)
+        end
         format.html { redirect_to admin_users_path, notice: I18n.t("controller.users.notice.created") }
         format.json { render json: @user, status: :created }
       else
@@ -198,7 +201,6 @@ class Admin::UsersController < AdminController
     # For channel parnter & cp owners
     if @user.role.in?(%w(channel_partner cp_owner))
       if current_user.role.in?(%w(cp_owner admin))
-        @user.user_status_in_company = 'active'
         @user.manager_id = @user.channel_partner&.manager_id if @user.channel_partner&.manager_id.present?
         @user.project_ids = @user.channel_partner&.project_ids if @user.channel_partner&.project_ids.present?
       elsif current_user.role?('cp')
