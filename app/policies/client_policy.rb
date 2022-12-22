@@ -29,11 +29,7 @@ class ClientPolicy < ApplicationPolicy
       enable_incentive_module: [], incentive_calculation: [], incentive_gst_slabs: []
     ]
     if user.role.in?(%w(superadmin))
-      if record.kylas_tenant_id.present?
-        attrs += [:enable_channel_partners, :enable_leads, :enable_site_visit]
-      else
-        attrs += [:enable_vis, :enable_channel_partners, :enable_leads, :enable_site_visit]
-      end
+      attrs += [:enable_channel_partners, :enable_leads, :enable_site_visit]
     end
     attrs.uniq
   end
