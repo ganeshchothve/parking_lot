@@ -35,16 +35,16 @@
                   <% end %>
                 </td>
                 <td>
-                  <% if lead.email.present? %>
+                  <% if lead.user.email.present? %>
                     <p class="email-icon mb-0">
-                      <%= lead.masked_email(current_user) || '' %>
+                      <%= lead.user.masked_email(current_user) || '' %>
                     </p>
                   <% end %>
                 </td>
                 <td>
-                  <% if lead.phone.present? %>
+                  <% if lead.user.phone.present? %>
                     <p class="phone-icon mb-0">
-                      <%= lead.masked_phone(current_user) || '' %>
+                      <%= lead.user.masked_phone(current_user) || '' %>
                     </p>
                   <% end %>
                 </td>
