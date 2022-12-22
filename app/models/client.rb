@@ -140,7 +140,7 @@ class Client
     <% end %>
     <div class="mt-3"></div>
   </div>'
-  field :payment_link_validity_hours, type: Integer, default: 24
+  field :payment_link_validity_hours, type: Integer, default: 720
 
   mount_uploader :logo, PublicAssetUploader
   mount_uploader :mobile_logo, PublicAssetUploader
@@ -290,7 +290,7 @@ class Client
   end
 
   def kyc_required_for_payment?
-    payment_enabled? && self.enable_payment == 'enable_with_kyc' 
+    payment_enabled? && self.enable_payment == 'enable_with_kyc'
   end
 
   def create_custom_field_on_kylas_tenant
