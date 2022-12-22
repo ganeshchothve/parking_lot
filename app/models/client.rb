@@ -93,7 +93,6 @@ class Client
   field :enable_incentive_module, type: Array, default: []
   field :partner_regions, type: Array, default: []
   field :team_lead_dashboard_access_roles, type: Array, default: %w[gre]
-  field :tl_dashboard_refresh_timer, type: Integer, default: 1
   #
   # This setting will decide how same lead can be added through different channel partners,
   # Enabled: If channel_partner tries to add a lead which is already present in the system & tagged to different channel_partner, then system will check if the lead is confirmed or not, if yes, it won't allow the current channel_partner to add it again & trigger an email to admin saying current channel_partner tried to add an existing lead.
@@ -140,7 +139,7 @@ class Client
     <% end %>
     <div class="mt-3"></div>
   </div>'
-  field :payment_link_validity_hours, type: Integer, default: 24
+  field :payment_link_validity_hours, type: Integer, default: 720
 
   mount_uploader :logo, PublicAssetUploader
   mount_uploader :mobile_logo, PublicAssetUploader
@@ -290,7 +289,7 @@ class Client
   end
 
   def kyc_required_for_payment?
-    payment_enabled? && self.enable_payment == 'enable_with_kyc' 
+    payment_enabled? && self.enable_payment == 'enable_with_kyc'
   end
 
   def create_custom_field_on_kylas_tenant

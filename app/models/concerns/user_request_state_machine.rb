@@ -48,7 +48,7 @@ module UserRequestStateMachine
         triggered_by_id: id,
         triggered_by_type: self.class.to_s
       )
-      email.save # Had to save explicitly due to a weird bug in swap which needs debugging.
+      email.sent! if email.save # Had to save explicitly due to a weird bug in swap which needs debugging.
     end
 
     def send_sms

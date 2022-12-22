@@ -904,7 +904,6 @@ en:
         invoice_approval_tat: "Invoice Approval TAT (In Days)"
         incentive_gst_slabs: "Configure Incentive GST Slabs (%)"
         team_lead_dashboard_access_roles: "Team Lead Dashboard Access Roles"
-        tl_dashboard_refresh_timer: "Team Lead Dashboard Refresh Timer (Minutes)"
         enable_lead_conflicts: "Enable Lead Conflicts"
         launchpad_portal: "Launchpad Portal"
         payment_gateway: "Payment Gateway"
@@ -1095,7 +1094,7 @@ en:
         broker_usp: "Broker Unique Selling Points (Fill in upto 3 USPs)"
         check_sv_availability_in_selldo: "Check Site Visit Availability in CRM"
         incentive_gst_slabs: "Configure Incentive GST Slabs (%)"
-        payment_enabled: "Enable Payment"
+        payment_enabled: "Enable Booking Without Payment"
         approved_banks/list:
           hdfc: "HDFC Bank"
           sbi: "State Bank of India"
