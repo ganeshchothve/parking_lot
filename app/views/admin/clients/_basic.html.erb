@@ -56,12 +56,6 @@
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :invoice_approval_tat %>
-      <%= f.number_field :invoice_approval_tat, class: 'form-control', disabled: !(policy([:admin, @client]).editable_field?("invoice_approval_tat")) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
       <%= f.label :incentive_gst_slabs %>
       <%= f.select :incentive_gst_slabs, f.object.incentive_gst_slabs, {},  class: "selectize-tags", multiple: true, required: true, disabled: !policy([current_user_role_group, @client]).editable_field?("incentive_gst_slabs") %>
     </div>

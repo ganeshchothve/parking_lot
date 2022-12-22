@@ -86,7 +86,6 @@ class Client
   field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
   field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner cp_owner]
   field :lead_blocking_days, type: Integer, default: 30
-  field :invoice_approval_tat, type: Integer, default: 2
 
   field :external_api_integration, type: Boolean, default: true
   field :enable_daily_reports, type: Hash, default: {"payments_report": false}

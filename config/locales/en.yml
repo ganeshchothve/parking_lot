@@ -900,7 +900,6 @@ en:
         partner_regions: "Define Regions For Channel Partners & Projects"
         powered_by_link: "Show Powered By Link"
         lead_blocking_days: "Configure Lead Blocking Days"
-        invoice_approval_tat: "Invoice Approval TAT (In Days)"
         incentive_gst_slabs: "Configure Incentive GST Slabs (%)"
         team_lead_dashboard_access_roles: "Team Lead Dashboard Access Roles"
         enable_lead_conflicts: "Enable Lead Conflicts"

@@ -54,7 +54,7 @@ module DatabaseSeeds
                 Following invoices are pending to get approved -
               </p>
               <% url = Rails.application.routes.url_helpers %>
-              <% invoices = Invoice.where(Invoice.user_based_scope(self)).where(status: "pending_approval", raised_date: {"$lt": Date.today-self.booking_portal_client.invoice_approval_tat } ) %>
+              <% invoices = Invoice.where(Invoice.user_based_scope(self)).where(status: "pending_approval") %>
               <table>
                 <% invoices.each do |invoice| %>
                   <tr>
