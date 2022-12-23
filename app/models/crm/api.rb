@@ -68,6 +68,8 @@ class Crm::Api
       if user.present?
         if user.is_a?(User) && user.kylas_refresh_token
           request_header['Authorization'] = "Bearer #{user.fetch_access_token}"
+        elsif user.is_a?(Client) && user.kylas_api_key.present?
+          request_header['api-key'] = user.kylas_api_key
         else
           if base.user.present? && base.user.kylas_refresh_token.present?
             request_header['Authorization'] = "Bearer #{base.user.fetch_access_token}"
