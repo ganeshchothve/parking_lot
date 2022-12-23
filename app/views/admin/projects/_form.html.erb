@@ -20,52 +20,52 @@
           <div class="col-lg-3 filter-left-section">
             <div class="sticky-top ps-3 pt-3">
               <ul>
-                <% if policy([:admin, @project]).editable_field?("basic")%>
+                <% if policy([:admin, project]).editable_field?("basic")%>
                   <li class="nav-item">
                     <a class="nav-link active" rel="nav-project-basic"><%= I18n.t("global.link_to.basic_details") %></a>
                   </li>
                 <% end %>
-                <% if policy([:admin, @project]).editable_field?("specifications_attributes")%>
+                <% if policy([:admin, project]).editable_field?("specifications_attributes")%>
                   <li class="nav-item">
                     <a class="nav-link active" rel="nav-project-specifications"><%= I18n.t("global.link_to.specs") %></a>
                   </li>
                 <% end %>
-                <% if policy([:admin, @project]).editable_field?("offers_attributes")%>
+                <% if policy([:admin, project]).editable_field?("offers_attributes")%>
                   <li class="nav-item">
                     <a class="nav-link active" rel="nav-project-offers"><%= I18n.t("global.link_to.offers") %></a>
                   </li>
                 <% end %>
-                <% if policy([:admin, @project]).editable_field?("timeline_updates_attributes")%>
+                <% if policy([:admin, project]).editable_field?("timeline_updates_attributes")%>
                   <li class="nav-item">
                     <a class="nav-link active" rel="nav-project-timeline"><%= I18n.t("global.link_to.timeline") %></a>
                   </li>
                 <% end %>
-                <% if policy([:admin, @project]).editable_field?("nearby_locations_attributes")%>
+                <% if policy([:admin, project]).editable_field?("nearby_locations_attributes")%>
                   <li class="nav-item">
                     <a class="nav-link active" rel="nav-project-location"><%= I18n.t("global.link_to.location") %></a>
                   </li>
                 <% end %>
-                <% if policy([:admin, @project]).editable_field?("pages")%>
+                <% if policy([:admin, project]).editable_field?("pages")%>
                   <li class="nav-item">
                     <a class="nav-link active" rel="nav-project-pages"><%= I18n.t("global.link_to.content_pages") %></a>
                   </li>
                 <% end %>
-                <% if policy([:admin, @project]).editable_field?("logos")%>
+                <% if policy([:admin, project]).editable_field?("logos")%>
                   <li class="nav-item">
                     <a class="nav-link active" rel="nav-project-logos"><%= I18n.t("global.link_to.images_docs") %></a>
                   </li>
                 <% end %>
-                <% if policy([:admin, @project]).editable_field?("integrations")%>
+                <% if policy([:admin, project]).editable_field?("integrations")%>
                   <li class="nav-item">
                     <a class="nav-link active" rel="nav-project-integrations"><%= I18n.t("global.link_to.integrations") %></a>
                   </li>
                 <% end %>
-                <% if policy([:admin, @project]).editable_field?("bookings")%>
+                <% if policy([:admin, project]).editable_field?("bookings")%>
                   <li class="nav-item">
                     <a class="nav-link active" rel="nav-project-bookings"><%= I18n.t("global.link_to.bookings") %></a>
                   </li>
                 <% end %>
-                <% if policy([:admin, @project]).editable_field?("contacts")%>
+                <% if policy([:admin, project]).editable_field?("contacts")%>
                   <li class="nav-item">
                     <a class="nav-link active" rel="nav-project-contacts"><%= I18n.t("global.link_to.notifications") %></a>
                   </li>
@@ -91,70 +91,70 @@
           <div class="col-lg-9 filter-right-section">
             <div class="mt-3"></div>
             <div class="tab-content theme-form">
-              <% if policy([:admin, @project]).editable_field?("basic")%>
+              <% if policy([:admin, project]).editable_field?("basic")%>
                 <div class="" id="nav-project-basic">
                   <h2 class="tab-title"><%= I18n.t("global.link_to.basic_details") %></h2>
                   <%= render 'admin/projects/basic', f: f, project: project %>
                 </div>
                 <hr>
               <% end %>
-              <% if policy([:admin, @project]).editable_field?("specifications_attributes")%>
+              <% if policy([:admin, project]).editable_field?("specifications_attributes")%>
                 <div class="" id="nav-project-specifications">
                   <h2 class="tab-title"><%= I18n.t("global.link_to.specs") %></h2>
                   <%= render 'admin/projects/specifications', f: f, project: project %>
                 </div>
                 <hr>
               <% end %>
-              <% if policy([:admin, @project]).editable_field?("offers_attributes")%>
+              <% if policy([:admin, project]).editable_field?("offers_attributes")%>
                 <div class="" id="nav-project-offers">
                   <h2 class="tab-title"><%= I18n.t("global.link_to.offers") %></h2>
                   <%= render 'admin/projects/offers', f: f, project: project %>
                 </div>
                 <hr>
               <% end %>
-              <% if policy([:admin, @project]).editable_field?("timeline_updates_attributes")%>
+              <% if policy([:admin, project]).editable_field?("timeline_updates_attributes")%>
                 <div class="" id="nav-project-timeline">
                   <h2 class="tab-title"><%= I18n.t("global.link_to.timeline") %></h2>
                   <%= render 'admin/projects/timeline-updates', f: f, project: project %>
                 </div>
                 <hr>
               <% end %>
-              <% if policy([:admin, @project]).editable_field?("nearby_locations_attributes")%>
+              <% if policy([:admin, project]).editable_field?("nearby_locations_attributes")%>
                 <div class="" id="nav-project-location">
                   <h2 class="tab-title"><%= I18n.t("global.link_to.location") %></h2>
                   <%= render 'admin/projects/location', f: f, project: project %>
                 </div>
                 <hr>
               <% end %>
-              <% if policy([:admin, @project]).editable_field?("pages")%>
+              <% if policy([:admin, project]).editable_field?("pages")%>
                 <div class="" id="nav-project-pages">
                   <h2 class="tab-title"><%= I18n.t("global.link_to.content_pages") %></h2>
                   <%= render 'admin/projects/pages', f: f, project: project %>
                 </div>
                 <hr>
               <% end %>
-              <% if policy([:admin, @project]).editable_field?("logos")%>
+              <% if policy([:admin, project]).editable_field?("logos")%>
                 <div class="" id="nav-project-logos">
                   <h2 class="tab-title"><%= I18n.t("global.link_to.images_docs") %></h2>
                   <%= render 'admin/projects/logos', f: f, project: project %>
                 </div>
                 <hr>
               <% end %>
-              <% if policy([:admin, @project]).editable_field?("integrations")%>
+              <% if policy([:admin, project]).editable_field?("integrations")%>
                 <div class="" id="nav-project-integrations">
                   <h2 class="tab-title"><%= I18n.t("global.link_to.integrations") %></h2>
                   <%= render 'admin/projects/integrations', f: f, project: project %>
                 </div>
                 <hr>
               <% end %>
-              <% if policy([:admin, @project]).editable_field?("bookings")%>
+              <% if policy([:admin, project]).editable_field?("bookings")%>
                 <div class="" id="nav-project-bookings">
                   <h2 class="tab-title"><%= I18n.t("global.link_to.bookings") %></h2>
                   <%= render 'admin/projects/bookings', f: f, project: project %>
                 </div>
                 <hr>
               <% end %>
-              <% if policy([:admin, @project]).editable_field?("contacts")%>
+              <% if policy([:admin, project]).editable_field?("contacts")%>
                 <div class="" id="nav-project-contacts">
                   <h2 class="tab-title"><%= I18n.t("global.link_to.notifications") %></h2>
                   <%= render 'admin/projects/contacts', f: f, project: project %>

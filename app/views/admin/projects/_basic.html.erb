@@ -71,7 +71,7 @@
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :region %>
-        <%= f.select :region, (@project.region.present? ? current_client.regions.where(city: @project.city).pluck(:partner_regions).first : []), {prompt:  I18n.t("global.link_to.select_city_first")}, class: 'selectize regions_select', required: (current_client.launchpad_portal? ? true : false),  disabled: !policy([:admin, project]).editable_field?("region"), data: { url: get_regions_admin_client_path } %>
+        <%= f.select :region, (project.region.present? ? current_client.regions.where(city: project.city).pluck(:partner_regions).first : []), {prompt:  I18n.t("global.link_to.select_city_first")}, class: 'selectize regions_select', required: (current_client.launchpad_portal? ? true : false),  disabled: !policy([:admin, project]).editable_field?("region"), data: { url: get_regions_admin_client_path } %>
       </div>
     </div>
   <% end %>
@@ -314,14 +314,14 @@
     </div>
   <% end %>
 </div>
-<% if policy([:admin, @project]).editable_field?("support_contact_details") %>
+<% if policy([:admin, project]).editable_field?("support_contact_details") %>
   <div class="card mt-3">
     <div class="card-header">
       <%= I18n.t("global.link_to.contact_details") %>
     </div>
     <div class="card-body">
       <div class="row">
-        <% if policy([:admin, @project]).editable_field?("support_name") %>
+        <% if policy([:admin, project]).editable_field?("support_name") %>
           <div class="col-md-12">
             <div class="mb-3">
               <%= f.label :support_name %>
@@ -329,7 +329,7 @@
             </div>
           </div>
         <% end %>
-        <% if policy([:admin, @project]).editable_field?("support_mail") %>
+        <% if policy([:admin, project]).editable_field?("support_mail") %>
           <div class="col-md-12">
             <div class="mb-3">
               <%= f.label :support_mail %>
@@ -337,7 +337,7 @@
             </div>
           </div>
         <% end %>
-        <% if policy([:admin, @project]).editable_field?("support_phone") %>
+        <% if policy([:admin, project]).editable_field?("support_phone") %>
           <div class="col-md-12">
             <div class="mb-3">
               <%= f.label :support_phone %>
@@ -349,7 +349,7 @@
     </div>
   </div>
 <% end %>
-<% if policy([:admin, @project]).editable_field?("address") %>
+<% if policy([:admin, project]).editable_field?("address") %>
   <div class="card mt-3">
     <div class="card-header">
       <%= I18n.t("mongoid.attributes.project.address") %>

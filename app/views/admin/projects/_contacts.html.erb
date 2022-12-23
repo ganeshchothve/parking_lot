@@ -3,7 +3,7 @@
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :helpdesk_email, class: '' %>
-        <%= f.text_field :helpdesk_email, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("helpdesk_email") %>
+        <%= f.text_field :helpdesk_email, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("helpdesk_email") %>
         <%= f.label :helpdesk_email_sort, class: 'txt-light-blue font-normal' %>
       </div>
     </div>
@@ -12,7 +12,7 @@
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :helpdesk_number, class: '' %>
-        <%= f.phone_field :helpdesk_number, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("helpdesk_number") %>
+        <%= f.phone_field :helpdesk_number, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("helpdesk_number") %>
         <%= f.label :helpdesk_number_sort, class: 'txt-light-blue font-normal' %>
       </div>
     </div>
@@ -23,7 +23,7 @@
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :support_email, class: '' %>
-        <%= f.email_field :support_email, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("support_email") %>
+        <%= f.email_field :support_email, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("support_email") %>
       </div>
     </div>
   <% end %>
@@ -31,7 +31,7 @@
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :support_number, class: '' %>
-        <%= f.phone_field :support_number, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("support_number") %>
+        <%= f.phone_field :support_number, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("support_number") %>
       </div>
     </div>
   <% end %>
@@ -41,7 +41,7 @@
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :channel_partner_support_email, class: '' %>
-        <%= f.phone_field :channel_partner_support_email, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("channel_partner_support_email") %>
+        <%= f.phone_field :channel_partner_support_email, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("channel_partner_support_email") %>
         <%= f.label :channel_partner_support_email_sort, class: 'txt-light-blue font-normal' %>
       </div>
     </div>
@@ -49,8 +49,8 @@
   <% if policy([:admin, project]).editable_field?("channel_partner_support_number")%>
     <div class="col-md-6">
       <div class="mb-3">
-        <%= f.label :channel_partner_support_number, class: '' %>      
-        <%= f.phone_field :channel_partner_support_number, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("channel_partner_support_number") %>
+        <%= f.label :channel_partner_support_number, class: '' %>
+        <%= f.phone_field :channel_partner_support_number, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("channel_partner_support_number") %>
         <%= f.label :channel_partner_support_number_sort, class: 'txt-light-blue font-normal' %>
       </div>
     </div>
@@ -61,7 +61,7 @@
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :notification_email, class: '' %>
-        <%= f.text_field :notification_email, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("notification_email") %>
+        <%= f.text_field :notification_email, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("notification_email") %>
         <%= f.label :notification_email_sort, class: 'txt-light-blue font-normal' %>
       </div>
     </div>
@@ -70,7 +70,7 @@
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :notification_numbers, class: '' %>
-        <%= f.text_field :notification_numbers, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("notification_numbers") %>
+        <%= f.text_field :notification_numbers, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("notification_numbers") %>
         <%= f.label :notification_numbers_sort, class: 'txt-light-blue font-normal' %>
       </div>
     </div>
@@ -81,7 +81,7 @@
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :sender_email, class: '' %>
-        <%= f.email_field :sender_email, class: 'form-control', disabled: !policy([:admin, @project]).editable_field?("sender_email") %>
+        <%= f.email_field :sender_email, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("sender_email") %>
       </div>
     </div>
   <% end %>
