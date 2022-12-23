@@ -22,9 +22,11 @@
   </div>
 </div>
 <!-- TODO project specific URL and domain specific URL -->
-<% project_id = params[:project_id].presence || current_project.presence.try(:id) || Project.first&.id %>
-<% if Project.count == 1 && project_id.present? %>
+<% project_id = params[:project_id].presence || current_project.presence.try(:id) %>
+<% if project_id.present? %>
   <%= f.input :project_id, as: :hidden, input_html: { name: 'project_id', value: project_id } %>
+<% elsif Project.count == 1 && Project.first&.id.present? %>
+  <%= f.input :project_id, as: :hidden, input_html: { name: 'project_id', value: Project.first.id } %>
 <% else %>
   <div class='row'>
     <div class="col-md-12">
