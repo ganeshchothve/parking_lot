@@ -70,33 +70,33 @@
               </div>
             <% end %>
           </div>
-          <% if policy([current_user_role_group, @user]).editable_field?("fund_accounts_attributes") %>
-            <%= f.fields_for :fund_accounts, @user.fund_accounts.first || @user.fund_accounts.build do |fa_form| %>
-              <div class='row'>
+          <div class='row'>
+            <% if policy([current_user_role_group, @user]).editable_field?("fund_accounts_attributes") %>
+              <%= f.fields_for :fund_accounts, @user.fund_accounts.first || @user.fund_accounts.build do |fa_form| %>
                 <div class="col-md-6">
                   <div class="mb-3">
                     <%= fa_form.label :address, class: "control-label" %>
                     <%= fa_form.text_field :address, class: 'form-control', disabled: !policy(fa_form.object).editable_field?("address") %>
                   </div>
                 </div>
-                <% if policy(fa_form.object).editable_field?("is_active") %>
-                  <div class='col-md-6'>
-                    <div class="mb-3">
-                      <%= fa_form.label :is_active %>
-                      <div class="form-check form-check-inline">
-                        <%= fa_form.radio_button :is_active, true, class: "form-check-input wd-22" %>
-                        <%= fa_form.label :is_active, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
-                      </div>
-                      <div class="form-check form-check-inline">
-                        <%= fa_form.radio_button :is_active, false, class: "form-check-input wd-22" %>
-                        <%= fa_form.label :is_active, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
-                      </div>
-                    </div>
+              <% end %>
+            <% end %>
+            <% if policy(fa_form.object).editable_field?("is_active") %>
+              <div class='col-md-6'>
+                <div class="mb-3">
+                  <%= fa_form.label :is_active %>
+                  <div class="form-check form-check-inline">
+                    <%= fa_form.radio_button :is_active, true, class: "form-check-input wd-22" %>
+                    <%= fa_form.label :is_active, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
                   </div>
-                <% end %>
+                  <div class="form-check form-check-inline">
+                    <%= fa_form.radio_button :is_active, false, class: "form-check-input wd-22" %>
+                    <%= fa_form.label :is_active, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
+                  </div>
+                </div>
               </div>
             <% end %>
-          <% end %>
+          </div>
 
           <% if policy([current_user_role_group, @user]).editable_field?("allowed_bookings") && @user.buyer? %>
             <div class="mb-3">
