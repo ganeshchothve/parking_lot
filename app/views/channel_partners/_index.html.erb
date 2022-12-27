@@ -10,13 +10,11 @@
               <th><%= t('mongoid.attributes.channel_partner.phone') %></th>
               <th><%= t('mongoid.attributes.channel_partner.primary_user_id') %></th>
               <th><%= t('mongoid.attributes.channel_partner.users_count') %></th>
-              <th><%= t('mongoid.attributes.channel_partner.rera_id') %></th>
+              <% if current_client.real_estate? %>
+                <th><%= t('mongoid.attributes.channel_partner.rera_id') %></th>
+              <% end %>
               <th><%= t('mongoid.attributes.channel_partner.status') %></th>
-<<<<<<< HEAD
-              <th><%= t('global.action', count: 2) %></th>
-=======
               <th><%= t('global.action.one') %></th>
->>>>>>> d78642eaf07a2cf27840d3bb4a9bcfd9f7a757c1
             </tr>
           </thead>
           <tbody>
@@ -33,11 +31,11 @@
                     <%= channel_partner.primary_user&.phone || '' %>
                   <% end %>
                 </td>
-                <td><%= channel_partner.primary_user_id.present? ? link_to(channel_partner.primary_user.name, admin_user_path(channel_partner.primary_user_id), class: "theme-txt-color col-title") : '-' %></td>
+                <td><%= channel_partner.primary_user_id.present? ? link_to_if(policy([:admin, channel_partner.primary_user]).show?, channel_partner.primary_user.name, admin_user_path(channel_partner.primary_user_id), class: "theme-txt-color col-title") : '-' %></td>
                 <td>
                   <% if channel_partner.manager_id.present? %>
                     <p class="fn-14 mb-0 theme-txt-color">
-                      <%= t('mongoid.attributes.channel_partner.manager_id') %> : <span class="font-medium theme-txt-color"><%= link_to(channel_partner.manager_name, admin_user_path(channel_partner.manager), class: "theme-txt-color col-title") %></span>
+                      <%= t('mongoid.attributes.channel_partner.manager_id') %> : <span class="font-medium theme-txt-color"><%= link_to_if(policy([:admin, channel_partner.manager]).show?, channel_partner.manager_name, admin_user_path(channel_partner.manager), class: "theme-txt-color col-title") %></span>
                     </p>
                   <% end %>
                   <% if channel_partner.users.present? %>
@@ -46,7 +44,9 @@
                     </p>
                   <% end %>
                 </td>
-                <td><%= channel_partner.rera_id.present? ? channel_partner.rera_id : '-'  %></td>
+                <% if current_client.real_estate? %>
+                  <td><%= channel_partner.rera_id.present? ? channel_partner.rera_id : '-'  %></td>
+                <% end %>
                 <td><i class='fa fa-circle status_<%= channel_partner.status %> me-2 fa-xs'></i><%= ChannelPartner.human_attribute_name("status.#{channel_partner.status}") %></td>
                 <td>
                     <div class="dropdown d-inline-block">
@@ -55,17 +55,20 @@
                         <i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
                       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                         <% if Admin::ChannelPartnerPolicy.new(current_user, channel_partner).edit? %>
-                        <%= link_to t('helpers.edit.link_name', model: ChannelPartner.model_name.human), edit_channel_partner_path(channel_partner), class: 'dropdown-item modal-remote-form-link' %>
+                          <%= link_to t('helpers.edit.link_name', model: ChannelPartner.model_name.human), edit_channel_partner_path(channel_partner), class: 'dropdown-item modal-remote-form-link' %>
                         <% end %>
                         <%# if policy([:admin, Crm::Base.new()]).choose_crm? && Crm::Api.where(resource_class: 'ChannelPartner').present? %>
-                        <%#= link_to t('controller.crms.choose_crm.link_name'), choose_crm_admin_crm_base_index_path(resource_id: channel_partner.id, resource_class: channel_partner.class), class: "dropdown-item " %>
+                          <%#= link_to t('controller.crms.choose_crm.link_name'), choose_crm_admin_crm_base_index_path(resource_id: channel_partner.id, resource_class: channel_partner.class), class: "dropdown-item " %>
                         <%# end %>
 
-                        <% if Admin::ChannelPartnerPolicy.new(current_user, channel_partner).show? %>
-                        <%= link_to t('helpers.show.link_name', model: ChannelPartner.model_name.human), channel_partner, class: 'dropdown-item' %>
+                        <% if policy([:admin, User.new(role: 'channel_partner', channel_partner_id: channel_partner.id)]).new? %>
+                          <%= link_to t('controller.users.new.link_name', role: User.human_attribute_name("role.channel_partner")), new_admin_user_path(user: {role: 'channel_partner', channel_partner_id: channel_partner.id}), class: 'modal-remote-form-link dropdown-item' %>
                         <% end %>
-                        <% if policy([ current_user_role_group, Asset.new(assetable: channel_partner)]).index? %>
-                        <%= link_to t('controller.assets.index.link_name'), assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'dropdown-item modal-remote-form-link' %>
+                        <% if Admin::ChannelPartnerPolicy.new(current_user, channel_partner).show? %>
+                          <%= link_to t('helpers.show.link_name', model: ChannelPartner.model_name.human), channel_partner, class: 'dropdown-item' %>
+                        <% end %>
+                        <% if policy([ current_user_role_group, Asset.new(assetable: channel_partner)]).create? %>
+                          <%= link_to t('controller.assets.index.link_name'), assetables_path(assetable_type: channel_partner.class.model_name.i18n_key.to_s, assetable_id: channel_partner.id), class: 'dropdown-item modal-remote-form-link' %>
                         <% end %>
                         <% if policy([current_user_role_group, channel_partner]).choose_template_for_print? %>
                           <%= link_to t('controller.templates.choose_template_for_print.link_name'), choose_template_for_print_admin_custom_templates_path(subject_class: channel_partner.class.model_name.i18n_key.to_s, subject_class_id: channel_partner.id.to_s), class: 'dropdown-item modal-remote-form-link' %>

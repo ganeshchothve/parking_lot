@@ -81,6 +81,15 @@ module ProjectUnitsConcern
 
   def modify_params
     if params[:booking_detail_scheme]
+
+      if params.dig(:booking_detail_scheme, :payment_adjustments_attributes).present?
+        params[:booking_detail_scheme][:payment_adjustments_attributes].each do |key, value|
+          if value[:absolute_value].present? && value[:absolute_value_type].present?
+            value[:absolute_value] = "#{value[:absolute_value_type]}#{value[:absolute_value]}"
+          end
+        end
+      end
+
       @booking_detail_scheme.assign_attributes(permitted_attributes([ current_user_role_group, @booking_detail_scheme]))
       @booking_detail_scheme.payment_adjustments <<  @booking_detail_scheme.derived_from_scheme.payment_adjustments.clone.map{|ad| ad.set(editable: false)}
     else

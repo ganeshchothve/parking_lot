@@ -6,7 +6,7 @@ module CpLeadActivityRegister
   def self.create_cp_lead_object(lead, channel_partner_user, lead_details = {})
     lead = set_lead_data(lead, lead_details)
     if lead.new_record? || lead.cp_lead_activities.where(user_id: channel_partner_user.id).blank?
-      new_cp_lead_activity = CpLeadActivity.new(registered_at: Date.current, count_status: "fresh_lead", lead_status: lead.lead_status, expiry_date: Date.current + 45, lead_id: lead.id, user_id: channel_partner_user.id, channel_partner_id: channel_partner_user.channel_partner_id, sitevisit_status: lead.sitevisit_status, sitevisit_date: lead.sitevisit_date, booking_portal_client: lead.booking_portal_client)
+      new_cp_lead_activity = CpLeadActivity.new(registered_at: Date.current, count_status: "fresh_lead", lead_status: lead.lead_status, expiry_date: Date.current + 45, lead: lead, user_id: channel_partner_user.id, channel_partner_id: channel_partner_user.channel_partner_id, sitevisit_status: lead.sitevisit_status, sitevisit_date: lead.sitevisit_date, booking_portal_client: lead.booking_portal_client)
     end
     new_cp_lead_activity
   end

@@ -54,7 +54,7 @@ class BookingDetailPolicy < ApplicationPolicy
   end
 
   def enable_booking_with_kyc?
-    record.project&.enable_booking_with_kyc
+    record.project&.booking_with_kyc_enabled?
   end
 
   def eligible_user?

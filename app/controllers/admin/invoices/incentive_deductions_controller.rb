@@ -16,12 +16,12 @@ class Admin::Invoices::IncentiveDeductionsController < AdminController
   end
 
   def new
-    @incentive_deduction = @invoice.build_incentive_deduction(creator: current_user)
+    @incentive_deduction = @invoice.build_incentive_deduction(creator: current_user, booking_portal_client_id: current_client.id)
     render layout: false
   end
 
   def create
-    @incentive_deduction = @invoice.build_incentive_deduction(creator: current_user)
+    @incentive_deduction = @invoice.build_incentive_deduction(creator: current_user, booking_portal_client_id: current_client.id)
     @incentive_deduction.assign_attributes(permitted_attributes([current_user_role_group, @incentive_deduction]))
     respond_to do |format|
       if @incentive_deduction.save

@@ -19,17 +19,25 @@ class CustomPolicy < Struct.new(:user, :enable_users)
   end
 
   def add_booking?
-    user.booking_portal_client.enable_actual_inventory?(user)
+    if current_client.real_estate?
+      user.booking_portal_client.enable_actual_inventory?(user)
+    else
+      false
+    end
   end
 
   def inventory?(project = nil)
-    if project.present?
-      return false unless project.enable_inventory?
-    end
-    if user.role?(:channel_partner)
-      user.role.in?(user.booking_portal_client.enable_actual_inventory) || (user.role.in?(user.booking_portal_client.enable_live_inventory) && user.enable_live_inventory)
+    if current_client.real_estate?
+      if project.present?
+        return false unless project.enable_inventory?
+      end
+      if user.role?(:channel_partner)
+        user.role.in?(user.booking_portal_client.enable_actual_inventory) || (user.role.in?(user.booking_portal_client.enable_live_inventory) && user.enable_live_inventory)
+      else
+        ['superadmin', 'admin', 'sales_admin', 'sales', 'cp', 'cp_admin'].include?(user.role) && (user.role.in?(user.booking_portal_client.enable_actual_inventory) || user.role.in?(user.booking_portal_client.enable_live_inventory))
+      end
     else
-      ['superadmin', 'admin', 'sales_admin', 'sales', 'cp', 'cp_admin'].include?(user.role) && (user.role.in?(user.booking_portal_client.enable_actual_inventory) || user.role.in?(user.booking_portal_client.enable_live_inventory))
+      false
     end
   end
 
@@ -55,14 +63,6 @@ class CustomPolicy < Struct.new(:user, :enable_users)
 
   def phases?
     "#{user.buyer? ? 'Buyer' : 'Admin'}::PhasePolicy".constantize.new(user, Phase).index?
-  end
-
-  def sync_logs?
-    "#{user.buyer? ? 'Buyer' : 'Admin'}::SyncLogPolicy".constantize.new(user, SyncLog).index?
-  end
-
-  def erp_models?
-    %w[superadmin].include?(user.role)
   end
 
   def schemes?
@@ -143,14 +143,6 @@ class CustomPolicy < Struct.new(:user, :enable_users)
 
   def invoices?
     Admin::InvoicePolicy.new(user, Invoice).index?
-  end
-
-  def meetings?
-    "#{user.buyer? ? 'Buyer' : 'Admin'}::MeetingPolicy".constantize.new(user, Meeting).index?
-  end
-
-  def user_requests?
-    "#{user.buyer? ? 'Buyer' : 'Admin'}::UserRequestPolicy".constantize.new(user, UserRequest).index?
   end
 
   def banner_assets?

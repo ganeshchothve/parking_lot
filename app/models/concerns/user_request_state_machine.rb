@@ -41,14 +41,14 @@ module UserRequestStateMachine
       email = Email.new(
         project_id: self.project_id,
         booking_portal_client_id: lead.user.booking_portal_client_id,
-        email_template_id: Template::EmailTemplate.find_by(name: "#{self.class.model_name.element}_request_#{status}", project_id: self.project_id).id,
+        email_template_id: Template::EmailTemplate.where(name: "#{self.class.model_name.element}_request_#{status}", project_id: self.project_id, booking_portal_client_id: lead.user.booking_portal_client_id).first.try(:id),
         recipients: [lead.user],
         cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
         cc: user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
         triggered_by_id: id,
         triggered_by_type: self.class.to_s
       )
-      email.save # Had to save explicitly due to a weird bug in swap which needs debugging.
+      email.sent! if email.save # Had to save explicitly due to a weird bug in swap which needs debugging.
     end
 
     def send_sms

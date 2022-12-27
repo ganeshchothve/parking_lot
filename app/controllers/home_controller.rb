@@ -57,6 +57,10 @@ class HomeController < ApplicationController
     end
   end
 
+  def show_response
+    @response = params[:response]
+  end
+
   private
 
   def store_cookies_for_registration

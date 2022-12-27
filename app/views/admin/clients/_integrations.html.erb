@@ -1,226 +1,272 @@
 <div class="row">
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :booking_portal_domains %>
-      <%= f.select :booking_portal_domains, @client.booking_portal_domains, {}, class: 'selectize-tags domain', multiple: true, disabled: (policy([:admin, @client]).editable_field?("booking_portal_domains") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :general_user_request_categories %>
-      <%= f.select :general_user_request_categories, @client.general_user_request_categories, {}, class: 'selectize-tags', multiple: true, disabled: !policy([:admin, @client]).editable_field?("general_user_request_categories") %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :selldo_client_id %>
-      <%= f.text_field :selldo_client_id, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("selldo_client_id") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :selldo_form_id %>
-      <%= f.text_field :selldo_form_id, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("selldo_form_id") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :selldo_gre_form_id %>
-      <%= f.text_field :selldo_gre_form_id, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("selldo_gre_form_id") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :selldo_channel_partner_form_id %>
-      <%= f.text_field :selldo_channel_partner_form_id, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("selldo_channel_partner_form_id") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :selldo_api_key %>
-      <%= f.text_field :selldo_api_key, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("selldo_api_key") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :selldo_api_secret %>
-      <%= f.text_field :selldo_api_secret, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("selldo_api_secret") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :selldo_default_srd %>
-      <%= f.text_field :selldo_default_srd, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("selldo_default_srd") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :selldo_cp_srd %>
-      <%= f.text_field :selldo_cp_srd, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("selldo_cp_srd") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :sms_provider %>
-      <%= f.select :sms_provider, options_for_select(Sms::SMS_GATEWAYS.map {|x| [I18n.t("mongoid.attributes.sms/gateway.#{x}"), x]}, f.object.sms_provider), {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy([:admin, @client]).editable_field?("sms_provider") %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :sms_mask %>
-      <%= f.text_field :sms_mask, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("sms_mask") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :sms_provider_telemarketer_id %>
-      <%= f.text_field :sms_provider_telemarketer_id, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("sms_provider_telemarketer_id") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :sms_provider_dlt_entity_id %>
-      <%= f.text_field :sms_provider_dlt_entity_id, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("sms_provider_dlt_entity_id") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :sms_provider_username %>
-      <%= f.text_field :sms_provider_username, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("sms_provider_username") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :sms_provider_password %>
-      <%= f.text_field :sms_provider_password, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("sms_provider_password") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :whatsapp_api_key %>
-      <%= f.text_field :whatsapp_api_key, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("whatsapp_api_key") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :whatsapp_api_secret %>
-      <%= f.text_field :whatsapp_api_secret, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("whatsapp_api_secret") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :notification_api_key %>
-      <%= f.text_field :notification_api_key, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("notification_api_key") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :mailgun_private_api_key %>
-      <%= f.text_field :mailgun_private_api_key, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("mailgun_private_api_key") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :mailgun_email_domain %>
-      <%= f.text_field :mailgun_email_domain, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("mailgun_email_domain") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :twilio_virtual_number %>
-      <%= f.text_field :twilio_virtual_number, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("twilio_virtual_number") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :twilio_account_sid %>
-      <%= f.text_field :twilio_account_sid, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("twilio_account_sid") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :twilio_auth_token %>
-      <%= f.text_field :twilio_auth_token, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("twilio_auth_token") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <% if policy([:admin, @client]).editable_field?("external_api_integration") %>
-    <div class="mb-3">
-      <%= f.label :external_api_integration %>
-      <div class="form-check form-check-inline">
-        <%= f.radio_button :external_api_integration, true, class: "form-check-input wd-22" %>
-        <%= f.label :external_api_integration, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
-      </div>
-      <div class="form-check form-check-inline">
-        <%= f.radio_button :external_api_integration, false, class: "form-check-input wd-22" %>
-        <%= f.label :external_api_integration, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
+  <% if policy([:admin, @client]).editable_field?('booking_portal_domains') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :booking_portal_domains %>
+        <%= f.select :booking_portal_domains, @client.booking_portal_domains, {}, class: 'selectize-tags domain', multiple: true, disabled: (policy([:admin, @client]).editable_field?("booking_portal_domains") ? false : true) %>
       </div>
     </div>
-    <% end %>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :ga_code %>
-      <%= f.text_field :ga_code, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("ga_code") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :gtm_tag %>
-      <%= f.text_area :gtm_tag, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("gtm_tag") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :mixpanel_token %>
-      <%= f.text_field :mixpanel_token, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("mixpanel_token") ? false : true) %>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :kylas_api_key %>
-      <%= f.text_field :kylas_api_key, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("kylas_api_key") ? false : true) %>
-    </div>
-  </div>
-</div>
-<div class="mb-3">
-  <%= f.label :enable_communication %>
-  <%= f.fields_for :enable_communication do |ec_form| %>
-    <% f.object.enable_communication.each do |k, v| %>
-      <div class="form-check form-check-inline">
-        <%= ec_form.check_box k, {class: "form-check-input wd-22", checked: v}, true %>
-        <%= ec_form.label :k, I18n.t("global.enable") + I18n.t("mongoid.attributes.client/enable_communication.#{k}"), class: "form-check-label  d-inline-block ms-2" %>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('general_user_request_categories') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :general_user_request_categories %>
+        <%= f.select :general_user_request_categories, @client.general_user_request_categories, {}, class: 'selectize-tags', multiple: true, disabled: !policy([:admin, @client]).editable_field?("general_user_request_categories") %>
       </div>
-    <% end %>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('selldo_client_id') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :selldo_client_id %>
+        <%= f.text_field :selldo_client_id, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("selldo_client_id") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('selldo_form_id') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :selldo_form_id %>
+        <%= f.text_field :selldo_form_id, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("selldo_form_id") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('selldo_gre_form_id') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :selldo_gre_form_id %>
+        <%= f.text_field :selldo_gre_form_id, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("selldo_gre_form_id") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('selldo_channel_partner_form_id') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :selldo_channel_partner_form_id %>
+        <%= f.text_field :selldo_channel_partner_form_id, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("selldo_channel_partner_form_id") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('selldo_api_key') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :selldo_api_key %>
+        <%= f.text_field :selldo_api_key, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("selldo_api_key") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('selldo_api_secret') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :selldo_api_secret %>
+        <%= f.text_field :selldo_api_secret, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("selldo_api_secret") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('selldo_default_srd') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :selldo_default_srd %>
+        <%= f.text_field :selldo_default_srd, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("selldo_default_srd") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('selldo_cp_srd') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :selldo_cp_srd %>
+        <%= f.text_field :selldo_cp_srd, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("selldo_cp_srd") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('sms_provider') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :sms_provider %>
+        <%= f.select :sms_provider, options_for_select(Sms::SMS_GATEWAYS.map {|x| [I18n.t("mongoid.attributes.sms/gateway.#{x}"), x]}, f.object.sms_provider), {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy([:admin, @client]).editable_field?("sms_provider") %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('sms_mask') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :sms_mask %>
+        <%= f.text_field :sms_mask, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("sms_mask") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('sms_provider_telemarketer_id') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :sms_provider_telemarketer_id %>
+        <%= f.text_field :sms_provider_telemarketer_id, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("sms_provider_telemarketer_id") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('sms_provider_dlt_entity_id') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :sms_provider_dlt_entity_id %>
+        <%= f.text_field :sms_provider_dlt_entity_id, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("sms_provider_dlt_entity_id") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('sms_provider_username') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :sms_provider_username %>
+        <%= f.text_field :sms_provider_username, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("sms_provider_username") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('sms_provider_password') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :sms_provider_password %>
+        <%= f.text_field :sms_provider_password, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("sms_provider_password") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('whatsapp_api_key') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :whatsapp_api_key %>
+        <%= f.text_field :whatsapp_api_key, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("whatsapp_api_key") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('whatsapp_api_secret') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :whatsapp_api_secret %>
+        <%= f.text_field :whatsapp_api_secret, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("whatsapp_api_secret") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('notification_api_key') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :notification_api_key %>
+        <%= f.text_field :notification_api_key, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("notification_api_key") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('mailgun_private_api_key') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :mailgun_private_api_key %>
+        <%= f.text_field :mailgun_private_api_key, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("mailgun_private_api_key") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('mailgun_email_domain') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :mailgun_email_domain %>
+        <%= f.text_field :mailgun_email_domain, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("mailgun_email_domain") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('twilio_virtual_number') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :twilio_virtual_number %>
+        <%= f.text_field :twilio_virtual_number, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("twilio_virtual_number") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('twilio_account_sid') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :twilio_account_sid %>
+        <%= f.text_field :twilio_account_sid, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("twilio_account_sid") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('twilio_auth_token') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :twilio_auth_token %>
+        <%= f.text_field :twilio_auth_token, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("twilio_auth_token") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('ga_code') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :ga_code %>
+        <%= f.text_field :ga_code, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("ga_code") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('gtm_tag') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :gtm_tag %>
+        <%= f.text_area :gtm_tag, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("gtm_tag") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('mixpanel_token') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :mixpanel_token %>
+        <%= f.text_field :mixpanel_token, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("mixpanel_token") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('kylas_api_key') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :kylas_api_key %>
+        <%= f.text_field :kylas_api_key, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("kylas_api_key") ? false : true) %>
+      </div>
+    </div>
   <% end %>
 </div>
-<div class="mt-3"></div>
-<% f.object.build_external_inventory_view_config if f.object.external_inventory_view_config.blank? %>
-<%= f.fields_for :external_inventory_view_config do |eivc_form| %>
-  <div class="card">
-    <div class="card-header">
-      <%= I18n.t("global.tabs.external_inventory_view") %>
-    </div>
-    <div class="card-body">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="mb-3">
-            <%= eivc_form.label :provider, I18n.t("mongoid.attributes.client.provider") %>
-            <%= eivc_form.select :provider, I18n.t("mongoid.models.external_inventory_view_config.available_providers").collect{|k,v| [v,k.to_s]}, {}, class: 'selectize', disabled: (policy(eivc_form.object).editable_field?("provider") ? false : true) %>
-          </div>
+<% if policy([:admin, @client]).editable_field?('enable_communication') %>
+  <div class="mb-3">
+    <%= f.label :enable_communication %>
+    <%= f.fields_for :enable_communication do |ec_form| %>
+      <% f.object.enable_communication.each do |k, v| %>
+        <div class="form-check form-check-inline">
+          <%= ec_form.check_box k, {class: "form-check-input wd-22", checked: v}, true %>
+          <%= ec_form.label :k, I18n.t("global.enable") + I18n.t("mongoid.attributes.client/enable_communication.#{k}"), class: "form-check-label  d-inline-block ms-2" %>
         </div>
-        <div class="col-md-6">
-          <div class="mb-3">
-            <%= eivc_form.label :url, I18n.t("mongoid.attributes.client.url") %>
-            <%= eivc_form.url_field :url, class: 'form-control', disabled: (policy(eivc_form.object).editable_field?("url") ? false : true) %>
-          </div>
-        </div>
-      </div>
-      <div class="mb-3">
-        <%= eivc_form.label :status, I18n.t("mongoid.attributes.client.status") %>
-        <%= eivc_form.select :status, I18n.t("mongoid.models.external_inventory_view_config.available_statuses").collect{|k,v| [v,k.to_s]}, {}, class: 'selectize', disabled: (policy(eivc_form.object).editable_field?("status") ? false : true) %>
-      </div>
-    </div>
+      <% end %>
+    <% end %>
   </div>
+  <div class="mt-3"></div>
 <% end %>
-<div class="mt-3"></div>
+
+<% if policy([:admin, @client]).editable_field?('external_inventory_view_config_attributes') %>
+  <% f.object.build_external_inventory_view_config if f.object.external_inventory_view_config.blank? %>
+  <%= f.fields_for :external_inventory_view_config do |eivc_form| %>
+    <div class="card">
+      <div class="card-header">
+        <%= I18n.t("global.tabs.external_inventory_view") %>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <%= eivc_form.label :provider, I18n.t("mongoid.attributes.client.provider") %>
+              <%= eivc_form.select :provider, I18n.t("mongoid.models.external_inventory_view_config.available_providers").collect{|k,v| [v,k.to_s]}, {}, class: 'selectize', disabled: (policy(eivc_form.object).editable_field?("provider") ? false : true) %>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <%= eivc_form.label :url, I18n.t("mongoid.attributes.client.url") %>
+              <%= eivc_form.url_field :url, class: 'form-control', disabled: (policy(eivc_form.object).editable_field?("url") ? false : true) %>
+            </div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <%= eivc_form.label :status, I18n.t("mongoid.attributes.client.status") %>
+          <%= eivc_form.select :status, I18n.t("mongoid.models.external_inventory_view_config.available_statuses").collect{|k,v| [v,k.to_s]}, {}, class: 'selectize', disabled: (policy(eivc_form.object).editable_field?("status") ? false : true) %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  <div class="mt-3"></div>
+<% end %>

@@ -1,52 +1,42 @@
-<<<<<<< HEAD
 <% if !embedded_marketplace? %>
-      <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
-        <div class="modal-dialog modal-lg" role="document">
-          <div class="modal-content">
-            <%= form_for(@booking_detail, url: create_booking_without_inventory_admin_booking_details_path, remote: true ,local: true, html: {class: 'validate-form modal-remote-form', id: 'booking_detail_form_without_inv'}, data: { 'resource-type': BookingDetail.model_name.human, type: :json }) do |f| %>
+  <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <%= form_for(@booking_detail, url: create_booking_without_inventory_admin_booking_details_path, remote: true ,local: true, html: {class: 'validate-form modal-remote-form', id: 'booking_detail_form_without_inv'}, data: { 'resource-type': BookingDetail.model_name.human, type: :json }) do |f| %>
+          <%= f.hidden_field :lead_id, value: @booking_detail.lead_id %>
+          <div class="modal-header">
+            <h3 class="title"><%= t('controller.booking_details.new.header', customer: f.object.lead.try(:name), project: (f.object.lead.try(:project_name) || f.object.project.name)) %></h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <%= render 'form_booking_without_inventory', f: f %>
+          </div>
+          <div class="filter-footer modal-footer text-end pe-0">
+            <%= f.submit I18n.t("global.submit"), data: { :confirm => I18n.t("controller.booking_details.text.confirm")}, class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="row justify-content-center">
+    <div class="col-md-11">
+      <div class="h-100">
+        <div class = 'fn-18 theme-txt-color mb-2'>
+          <div class="card-body">
+            <%= form_for(@booking_detail, url: create_booking_without_inventory_admin_booking_details_path, local: true, html: {class: 'validate-form', id: 'booking_detail_form_without_inv'}, data: { 'resource-type': BookingDetail.model_name.human}) do |f| %>
               <%= f.hidden_field :lead_id, value: @booking_detail.lead_id %>
-              <div class="modal-header">
-                <h3 class="title"><%= t('controller.booking_details.new.header', customer: f.object.lead.try(:name), project: (f.object.lead.try(:project_name) || f.object.project.name)) %></h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <%= render 'form_booking_without_inventory', f: f %>
-              </div>
-              <div class="filter-footer modal-footer text-end pe-0">
-                <%= f.submit I18n.t("global.submit"), data: { :confirm => I18n.t("controller.booking_details.text.confirm")}, class: "btn btn-primary" %>
+              <%= render 'form_booking_without_inventory', f: f %>
+              <div class="booking-flow-footer position-fixed w-100 bottom-0 start-0 p-2 py-3 bg-white border-top text-end">
+                <a href="" class="btn btn-primary no-fill font-medium ms-2"><%= t('global.cancel') %></a>
+                <%= f.submit t("global.submit"), data: { :confirm => I18n.t("controller.booking_details.text.confirm")}, class: 'btn btn-primary font-medium border-primary ms-2 w-auto d-inline-block text-white' %>
               </div>
             <% end %>
           </div>
-=======
-<%= form_for(@booking_detail, url: create_booking_without_inventory_admin_booking_details_path  ,local: true, html: {class: 'validate-form theme-form', id: 'booking_detail_form_without_inv'}) do |f| %>
-<%= f.hidden_field :lead_id, value: @booking_detail.lead_id %>
-  <% if !embedded_marketplace? %>
-    <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content theme-form">
-          <%= render 'form_booking_without_inventory', f: f, edit_access: false %>
->>>>>>> d78642eaf07a2cf27840d3bb4a9bcfd9f7a757c1
         </div>
       </div>
-    <% else %>
-      <div class="row justify-content-center">
-        <div class="col-md-11">
-          <div class="h-100">
-            <div class = 'fn-18 theme-txt-color mb-2'>
-              <div class="card-body">
-                <%= form_for(@booking_detail, url: create_booking_without_inventory_admin_booking_details_path, local: true, html: {class: 'validate-form', id: 'booking_detail_form_without_inv'}, data: { 'resource-type': BookingDetail.model_name.human}) do |f| %>
-                  <%= f.hidden_field :lead_id, value: @booking_detail.lead_id %>
-                  <%= render 'form_booking_without_inventory', f: f %>
-                  <div class="booking-flow-footer position-fixed w-100 bottom-0 start-0 p-2 py-3 bg-white border-top text-end">
-                    <a href="" class="btn btn-primary no-fill font-medium ms-2"><%= t('global.cancel') %></a>
-                    <%= f.submit t("global.submit"), data: { :confirm => I18n.t("controller.booking_details.text.confirm")}, class: 'btn btn-primary font-medium border-primary ms-2 w-auto d-inline-block text-white' %>
-                  </div>
-                <% end %>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    </div>
+  </div>
 <% end %>
 <%= javascript_tag do %>
 $(document).ready(function(){

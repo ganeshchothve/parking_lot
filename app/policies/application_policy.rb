@@ -116,14 +116,16 @@ class ApplicationPolicy
   end
 
   class Scope
-    attr_reader :user, :scope
+    attr_reader :user, :scope, :current_client
 
     def initialize(user_context, scope)
       if user_context.is_a?(User)
         user = user_context
         @user = user
+        @current_client = @user.booking_portal_client
       else
         @user = user_context.user
+        @current_client = @user.booking_portal_client
       end
       @scope = scope
     end

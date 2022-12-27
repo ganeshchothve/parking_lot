@@ -1,6 +1,10 @@
 class MeetingPolicy < ApplicationPolicy
   def index?
-    user.active_channel_partner? && !%w(account_manager account_manager_head billing_team dev_sourcing_manager).include?(user.role)
+    if current_client.real_estate?
+      user.active_channel_partner? && !%w(account_manager account_manager_head billing_team dev_sourcing_manager).include?(user.role)
+    else
+      false
+    end
   end
 
   def permitted_attributes(_params = {})

@@ -2,10 +2,20 @@
   <thead>
     <tr>
       <th><%= t('mongoid.attributes.project.name') %></th>
-      <th><%= t('mongoid.attributes.project.developer_name') %></th>
-      <th><%= t('mongoid.attributes.project.micro_market') %></th>
-      <th><%= t('mongoid.attributes.project.launched_on') %></th>
-      <th><%= t('mongoid.attributes.project.bookings') %></th>
+      <% if current_client.is_marketplace? %>
+        <th><%= t('mongoid.attributes.project.kylas_product_value') %></th>
+        <th><%= t('mongoid.attributes.project.kylas_product_id') %></th>
+      <% end %>
+      <% if policy([:admin, Developer]).index? %>
+        <th><%= t('mongoid.attributes.project.developer_name') %></th>
+      <% end %>
+      <% if current_client.real_estate? %>
+        <th><%= t('mongoid.attributes.project.micro_market') %></th>
+        <th><%= t('mongoid.attributes.project.launched_on') %></th>
+      <% end %>
+      <% if policy([:admin, BookingDetail]).index? %>
+        <th><%= t('mongoid.attributes.project.bookings') %></th>
+      <% end %>
       <% if current_client.enable_site_visit? %><th><%= I18n.t("mongoid.models.site_visit.other") %></th><% end %>
       <% if policy([current_user_role_group, Lead]).index? %><th><%= I18n.t("mongoid.models.lead.other") %></th><% end %>
       <th class="btn-action"><%= t('global.action', count:1) %></th>
@@ -28,15 +38,32 @@
             <% heart_class = project.id.in?(interested_project_ids) ? 'fill-danger' : 'fill-theme' %>
             <span><%= link_to_if !project.id.in?(interested_project_ids), "<i class='fa fa-heart #{heart_class} d-none d-sm-inline-block me-1'></i>".html_safe, admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-inline-block me-2' %></span>
           <% end %>
+          <% if !policy([:admin, Lead.new(project_id: project.id)]).new? && policy([current_user_role_group, InterestedProject.new(project_id: project.id)]).create? %>
+            <% if !project.id.in?(interested_project_ids) %>
+              <%= link_to t('controller.projects.show.show_interest_text'), admin_user_interested_projects_path(current_user, interested_project: {project_id: project.id, event: 'subscribe'}), method: :post, class: 'add-wishlist d-none d-sm-block' %>
+            <% end %>
+          <% end %>
         </td>
-        <td><%= project.developer_name %></td>
-        <td><%= project.micro_market %>,
-          <%= project.city %></td>
-        <td><%= I18n.l(project.launched_on.strftime('%d %b, %Y')) rescue "-" %></td>
-        <td>
-          <% bookings_count = BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: project.id).count %>
-          <%= link_to_if policy([current_user_role_group, BookingDetail]).index?, bookings_count, admin_booking_details_path(fltrs: {project_id: project.id})  %>
-        </td>
+
+        <% if current_client.is_marketplace? %>
+          <td><%= project.kylas_product_value&.round(2) %></td>
+          <td><%= project.kylas_product_id %></td>
+        <% end %>
+
+        <% if policy([:admin, Developer]).index? %>
+          <td><%= project.developer_name %></td>
+        <% end %>
+        <% if current_client.real_estate? %>
+          <td><%= project.micro_market %>,
+            <%= project.city %></td>
+          <td><%= I18n.l(project.launched_on) rescue "-" %></td>
+        <% end %>
+        <% if policy([:admin, BookingDetail]).index? %>
+          <td>
+            <% bookings_count = BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(project_id: project.id).count %>
+            <%= link_to_if policy([current_user_role_group, BookingDetail]).index?, bookings_count, admin_booking_details_path(fltrs: {project_id: project.id})  %>
+          </td>
+        <% end %>
         <% if current_client.enable_site_visit? %>
           <td><% sv_count = SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).where(project_id: project.id).count %>
           <%= link_to_if policy([current_user_role_group, SiteVisit]).index?, sv_count, admin_site_visits_path(fltrs: {project_id: project.id}) %>

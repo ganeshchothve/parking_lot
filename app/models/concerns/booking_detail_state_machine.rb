@@ -196,7 +196,7 @@ module BookingDetailStateMachine
         booked_tentative!
       # else
         # auto_released_extended_inform_buyer!
-        # send_email_and_sms_as_booked
+        send_email_and_sms_as_booked if project_unit.present?
       end
     end
     # Updating blocked date of project_unit to today and  auto_release_on will be changed to blocking_days more from current auto_release_on.
@@ -221,7 +221,7 @@ module BookingDetailStateMachine
         _project_unit = project_unit
         _project_unit.auto_release_on = nil
         _project_unit.save
-        # send_email_and_sms_as_confirmed
+        send_email_and_sms_as_confirmed
       end
       # create asset and send to zoho sign
       if (self.aasm.from_state == :booked_tentative && self.user.booking_portal_client.document_sign.present?)
@@ -282,31 +282,39 @@ module BookingDetailStateMachine
     def send_email_and_sms_as_confirmed
       if self.project_unit.booking_portal_client.email_enabled?
         attachments_attributes = []
-        action_mailer_email = ApplicationMailer.test(body: project_unit.booking_portal_client.templates.where(_type: "Template::AllotmentLetterTemplate", project_id: self.project_id, booking_portal_client_id: self.booking_portal_client_id).first.parsed_content(self))
-        pdf = WickedPdf.new.pdf_from_string(action_mailer_email.html_part.body.to_s)
-        File.open("#{Rails.root}/exports/allotment_letter-#{project_unit.name}.pdf", "wb") do |file|
-          file << pdf
+        allotment_letter = project_unit.booking_portal_client.templates.where(_type: "Template::AllotmentLetterTemplate", project_id: self.project_id, booking_portal_client_id: self.booking_portal_client_id).first
+        if allotment_letter.present?
+          action_mailer_email = ApplicationMailer.test(body: project_unit.booking_portal_client.templates.where(_type: "Template::AllotmentLetterTemplate", project_id: self.project_id, booking_portal_client_id: self.booking_portal_client_id).first.parsed_content(self))
+          pdf = WickedPdf.new.pdf_from_string(action_mailer_email.html_part.body.to_s)
+          File.open("#{Rails.root}/exports/allotment_letter-#{project_unit.name}.pdf", "wb") do |file|
+            file << pdf
+          end
+          attachments_attributes << {file: File.open("#{Rails.root}/exports/allotment_letter-#{project_unit.name}.pdf")}
         end
-        attachments_attributes << {file: File.open("#{Rails.root}/exports/allotment_letter-#{project_unit.name}.pdf")}
-        email = Email.create!({
-            project_id: project_id,
-            booking_portal_client_id: project_unit.booking_portal_client_id,
-            email_template_id: Template::EmailTemplate.find_by(name: "booking_confirmed", project_id: project_id).id,
-            cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
-            recipients: [lead.user],
-            cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
-            triggered_by_id: self.id,
-            triggered_by_type: self.class.to_s,
-            attachments_attributes: attachments_attributes
-          })
-        email.sent!
+        email_template = Template::EmailTemplate.where(name: "booking_confirmed", project_id: project_id, booking_portal_client_id: project_unit.booking_portal_client_id).first
+        if email_template.present?
+          email = Email.create!({
+              project_id: project_id,
+              booking_portal_client_id: project_unit.booking_portal_client_id,
+              subject: email_template.parsed_subject(self),
+              body: email_template.parsed_content(self),
+              email_template_id: email_template.id,
+              cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
+              recipients: [lead.user],
+              cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
+              triggered_by_id: self.id,
+              triggered_by_type: self.class.to_s,
+              attachments_attributes: attachments_attributes
+            })
+          email.sent!
+        end
       end
       if self.project_unit.booking_portal_client.sms_enabled?
         Sms.create!(
               project_id: project_id,
               booking_portal_client_id: user.booking_portal_client_id,
               recipient_id: lead.user_id,
-              sms_template_id: Template::SmsTemplate.find_by(project_id: project_id, name: "booking_confirmed").id,
+              sms_template_id: Template::SmsTemplate.where(project_id: project_id, name: "booking_confirmed", booking_portal_client_id: user.booking_portal_client_id).first.try(:id),
               triggered_by_id: self.id,
               triggered_by_type: self.class.to_s
             )
@@ -331,25 +339,30 @@ module BookingDetailStateMachine
       if project_unit.booking_portal_client.email_enabled?
         attachments_attributes = []
         _status = status.sub('booked_', '')
-        email = Email.new(
-          project_id: project_id,
-          booking_portal_client_id: project_unit.booking_portal_client_id,
-          email_template_id: Template::EmailTemplate.find_by(name: "booking_#{_status}", project_id: project_id).id,
-          cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
-          recipients: [lead.user],
-          cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
-          triggered_by_id: self.id,
-          triggered_by_type: self.class.to_s,
-          attachments_attributes: attachments_attributes
-        )
-        email.sent! if email.save
+        email_template = Template::EmailTemplate.where(name: "booking_#{_status}", project_id: project_id, booking_portal_client_id: project_unit.booking_portal_client_id).first
+        if email_template.present?
+          email = Email.create!(
+            project_id: project_id,
+            booking_portal_client_id: project_unit.booking_portal_client_id,
+            subject: email_template.parsed_subject(self),
+            body: email_template.parsed_content(self),
+            email_template_id: email_template.id,
+            cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
+            recipients: [lead.user],
+            cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
+            triggered_by_id: self.id,
+            triggered_by_type: self.class.to_s,
+            attachments_attributes: attachments_attributes
+          )
+          email.sent!
+        end
       end
       if project_unit.booking_portal_client.sms_enabled?
         Sms.create(
             project_id: project_id,
             booking_portal_client_id: project_unit.booking_portal_client_id,
             recipient_id: lead.user_id,
-            sms_template_id: Template::SmsTemplate.find_by(project_id: project_id, name: "booking_blocked").id,
+            sms_template_id: Template::SmsTemplate.where(project_id: project_id, name: "booking_blocked", booking_portal_client_id: project_unit.booking_portal_client_id).first.try(:id),
             triggered_by_id: self.id,
             triggered_by_type: self.class.to_s
           )

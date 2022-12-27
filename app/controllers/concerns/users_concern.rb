@@ -58,21 +58,26 @@ module UsersConcern
       format.html do
         if @user.save
           SelldoLeadUpdater.perform_async(@user.leads.first&.id, {stage: 'confirmed'}) if @user.buyer?
-          email_template = ::Template::EmailTemplate.where(booking_portal_client_id: current_client.try(:id), name: "account_confirmation").first
-          email = Email.create!({
-            booking_portal_client_id: @user.booking_portal_client_id,
-            body: ERB.new(@user.booking_portal_client.email_header).result(@user.booking_portal_client.get_binding) + email_template.parsed_content(@user) + ERB.new(@user.booking_portal_client.email_footer).result(@user.booking_portal_client.get_binding),
-            subject: email_template.parsed_subject(@user),
-            recipients: [ @user ],
-            cc: @user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
-            triggered_by_id: @user.id,
-            triggered_by_type: @user.class.to_s
-          })
-          email.sent!
-          if @user.buyer? && policy([:admin, @user]).block_lead?
-            redirect_to admin_users_path("remote-state": block_lead_admin_user_path(@user , notice: t('controller.users.account_confirmed_and_block_lead')))
+          email_template = ::Template::EmailTemplate.where(booking_portal_client_id: current_client.id, name: "account_confirmation").first
+          if email_template
+            email = Email.create!({
+              booking_portal_client_id: @user.booking_portal_client_id,
+              body: ERB.new(@user.booking_portal_client.email_header).result(@user.booking_portal_client.get_binding) + email_template.parsed_content(@user) + ERB.new(@user.booking_portal_client.email_footer).result(@user.booking_portal_client.get_binding),
+              subject: email_template.parsed_subject(@user),
+              email_template_id: email_template.id,
+              recipients: [ @user ],
+              cc: @user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
+              triggered_by_id: @user.id,
+              triggered_by_type: @user.class.to_s
+            })
+            email.sent!
+            if @user.buyer? && policy([:admin, @user]).block_lead?
+              redirect_to admin_users_path("remote-state": block_lead_admin_user_path(@user , notice: t('controller.users.account_confirmed_and_block_lead')))
+            else
+              redirect_to request.referrer || dashboard_url, notice: t('controller.users.account_confirmed')
+            end
           else
-            redirect_to request.referrer || dashboard_url, notice: t('controller.users.account_confirmed')
+            redirect_to request.referrer, alert: t('controller.emails.errors.template_not_found')
           end
         else
           redirect_to request.referrer || dashboard_url, alert: @user.errors.full_messages

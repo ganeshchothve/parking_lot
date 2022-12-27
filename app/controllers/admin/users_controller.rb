@@ -37,7 +37,7 @@ class Admin::UsersController < AdminController
 
   def index
     @users = User.build_criteria params
-    if params[:fltrs].present? && params[:fltrs][:_id].present?
+    if params[:fltrs].present? && params[:fltrs][:_id].present? && policy([current_user_role_group, User.where(booking_portal_client_id: current_client.id, id: params.dig(:fltrs, :_id)).first || User.new(booking_portal_client_id: current_client.id)]).show?
       redirect_to admin_user_path(params[:fltrs][:_id])
     else
       @users = @users.paginate(page: params[:page] || 1, per_page: params[:per_page])
@@ -58,6 +58,11 @@ class Admin::UsersController < AdminController
   def new
     @user = User.new(booking_portal_client_id: current_client.id)
     @user.role = params.dig(:user, :role).blank? ? 'user' : params.dig(:user, :role)
+    if current_user.role?('cp_owner')
+      @user.channel_partner_id = current_user.channel_partner_id
+    else
+      @user.channel_partner_id = params.dig(:user, :channel_partner_id)
+    end
     render layout: false
   end
 
@@ -66,6 +71,9 @@ class Admin::UsersController < AdminController
     create_user
     respond_to do |format|
       if @user.save
+        if @user.role.in?(%w(channel_partner cp_owner)) && current_user.role.in?(%w(cp_owner admin))
+          @user.active!(true)
+        end
         format.html { redirect_to admin_users_path, notice: I18n.t("controller.users.notice.created") }
         format.json { render json: @user, status: :created }
       else
@@ -81,6 +89,7 @@ class Admin::UsersController < AdminController
 
   def update
     respond_to do |format|
+      update_masked_email_and_phone_if_present if @user.buyer?
       push_fund_account_on_create_or_change(format, @user) do
         @user.assign_attributes(permitted_attributes([current_user_role_group, @user]))
         if @user.save
@@ -193,7 +202,6 @@ class Admin::UsersController < AdminController
     # For channel parnter & cp owners
     if @user.role.in?(%w(channel_partner cp_owner))
       if current_user.role.in?(%w(cp_owner admin))
-        @user.user_status_in_company = 'active'
         @user.manager_id = @user.channel_partner&.manager_id if @user.channel_partner&.manager_id.present?
         @user.project_ids = @user.channel_partner&.project_ids if @user.channel_partner&.project_ids.present?
       elsif current_user.role?('cp')
@@ -206,6 +214,17 @@ class Admin::UsersController < AdminController
       @user.manager_id = current_user.id
       @user.referenced_manager_ids ||= []
       @user.referenced_manager_ids += [current_user.id]
+    end
+  end
+
+  def update_masked_email_and_phone_if_present
+    if @user.maskable_field?(current_user)
+      if params.dig(:user, :phone).blank?
+        params[:user].delete :phone
+      end
+      if params.dig(:user, :email).blank?
+        params[:user].delete :email
+      end
     end
   end
 

@@ -5,88 +5,125 @@
         <div class="col-md-3">
           <div class="mb-3">
             <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.lead_id') %></label>
-            <p class="fn-14 theme-txt-color mb-0"><%= lead.lead_id || '-' %></p>
+            <p class="fn-14 theme-txt-color mb-0"><%= (current_client.is_marketplace? ? lead.kylas_deal_id : lead.lead_id) || '-' %></p>
           </div>
         </div>
         <div class="col-md-3">
           <div class="mb-3">
-            <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.stage') %></label>
-            <p class="fn-14 theme-txt-color mb-0"><%= (I18n.t("mongoid.attributes.lead/stage.#{lead.lead_stage}") if lead.lead_stage != nil) || '-' %></p>
+            <label class="txt-light-blue fn-12"><%= I18n.t("mongoid.models.project.one") %></label>
+            <p class="fn-14 theme-txt-color mb-0"><%= (lead.project.try(:name) || '-') %></p>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="mb-3">
-            <label class="txt-light-blue fn-12"><%= t("mongoid.attributes.lead.queue_number") %></label>
-            <p class="fn-14 theme-txt-color mb-0">
-              <%= lead.queue_number.presence || '-' %>
-            </p>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="mb-3">
-            <label class="txt-light-blue fn-12"><%= t("mongoid.attributes.lead.customer_status") %></label>
-            <p class="fn-14 theme-txt-color mb-0">
-              <%= (I18n.t("mongoid.attributes.lead/customer_status.#{lead.customer_status}") if lead.customer_status != nil) || '-' %>
-            </p>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="mb-3">
-            <label class="txt-light-blue fn-12"><%= t("mongoid.attributes.lead.portal_stage") %></label>
-            <p class="fn-14 theme-txt-color mb-0">
-              <%= lead.portal_stage&.stage || '-' %>
-            </p>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="mb-3">
-            <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.registered_at') %></label>
-            <p class="fn-14 theme-txt-color mb-0"><%= lead.registered_at.present? ? (lead.registered_at.strftime("%d/%m/%Y") rescue '-') : (lead.created_at.strftime("%d/%m/%Y") rescue '-') %></p>
-          </div>
-        </div>
-        <% if current_client.enable_actual_inventory?(current_user) %>
+        <% if current_client.real_estate? %>
           <div class="col-md-3">
             <div class="mb-3">
-              <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.total_unattached_balance') %></label>
-              <small class="txt-light-blue fn-12"><%= I18n.t('controller.leads.total_unattached_balance.hint') %></small>
-              <p class="fn-14 theme-txt-color mb-0"><%= lead.total_unattached_balance.present? ? number_to_indian_currency(lead.total_unattached_balance.round) : '-' %></p>
+              <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.stage') %></label>
+  <p class="fn-14 theme-txt-color mb-0"><%= (I18n.t("mongoid.attributes.lead/stage.#{lead.lead_stage}") if lead.lead_stage != nil) || '-' %></p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="txt-light-blue fn-12"><%= t("mongoid.attributes.lead.queue_number") %></label>
+              <p class="fn-14 theme-txt-color mb-0">
+                <%= lead.queue_number.presence || '-' %>
+              </p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="txt-light-blue fn-12"><%= t("mongoid.attributes.lead.customer_status") %></label>
+              <p class="fn-14 theme-txt-color mb-0">
+                <%= (I18n.t("mongoid.attributes.lead/customer_status.#{lead.customer_status}") if lead.customer_status != nil) || '-' %>
+              </p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="txt-light-blue fn-12"><%= t("mongoid.attributes.lead.portal_stage") %></label>
+              <p class="fn-14 theme-txt-color mb-0">
+                <%= lead.portal_stage&.stage || '-' %>
+              </p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.registered_at') %></label>
+              <p class="fn-14 theme-txt-color mb-0"><%= lead.registered_at.present? ? (lead.registered_at.strftime("%d/%m/%Y") rescue '-') : (lead.created_at.strftime("%d/%m/%Y") rescue '-') %></p>
+            </div>
+          </div>
+          <% if current_client.enable_actual_inventory?(current_user) %>
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.total_unattached_balance') %></label>
+                <small class="txt-light-blue fn-12"><%= I18n.t('controller.leads.total_unattached_balance.hint') %></small>
+                <p class="fn-14 theme-txt-color mb-0"><%= lead.total_unattached_balance.present? ? number_to_indian_currency(lead.total_unattached_balance.round) : '-' %></p>
+              </div>
+            </div>
+          <% end %>
+          <% if lead.first_booking_detail.present? %>
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.blocking_amount_paid') %></label>
+                <p class="fn-14 theme-txt-color mb-0"><%= t("global.boolean.#{lead.is_blocking_amount_paid? }") %></p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.payment_done') %></label>
+                <p class="fn-14 theme-txt-color mb-0"><%= t("global.boolean.#{lead.is_booking_price_paid? }") %></p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.registration_done') %></label>
+                <p class="fn-14 theme-txt-color mb-0"><%= t("global.boolean.#{lead.is_registration_done? }") %></p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.total_amount_paid') %></label>
+                <small class="txt-light-blue fn-12"><%= t('controller.leads.total_amount_paid.hint')%></small>
+                <p class="fn-14 theme-txt-color mb-0"><%= lead.total_amount_paid.present? ? number_to_indian_currency(lead.total_amount_paid.round) : '-' %></p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.total_balance_pending') %></label>
+                <small class="txt-light-blue fn-12"><%= t('controller.leads.total_balance_pending.hint')%></small>
+                <p class="fn-14 theme-txt-color mb-0"><%= lead.total_balance_pending.present? ? number_to_indian_currency(lead.total_balance_pending.round) : '-' %></p>
+              </div>
+            </div>
+          <% end %>
+          <% if lead.source.present? %>
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.source') %></label>
+                 <p class="fn-14 theme-txt-color mb-0">
+                  <%= lead.source || "-" %>
+                  </p>
+              </div>
+            </div>
+          <% end %>
+          <% if lead.sub_source.present? %>
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.sub_source') %></label>
+                 <p class="fn-14 theme-txt-color mb-0">
+                  <%= lead.sub_source || "-" %>
+                  </p>
+              </div>
+            </div>
+          <% end %>
+          <div class="col-md-3">
+            <div class="mb-3">
+              <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.channel_partner.rera_id') %></label>
+                <p class="fn-14 theme-txt-color mb-0">
+                  <%= lead.rera_id || "-" %>
+                </p>
             </div>
           </div>
         <% end %>
-        <% if lead.first_booking_detail.present? %>
-          <div class="col-md-3">
-            <div class="mb-3">
-              <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.blocking_amount_paid') %></label>
-              <p class="fn-14 theme-txt-color mb-0"><%= t("global.boolean.#{lead.is_blocking_amount_paid? }") %></p>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="mb-3">
-              <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.payment_done') %></label>
-              <p class="fn-14 theme-txt-color mb-0"><%= t("global.boolean.#{lead.is_booking_price_paid? }") %></p>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="mb-3">
-              <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.registration_done') %></label>
-              <p class="fn-14 theme-txt-color mb-0"><%= t("global.boolean.#{lead.is_registration_done? }") %></p>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="mb-3">
-              <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.total_amount_paid') %></label>
-              <small class="txt-light-blue fn-12"><%= t('controller.leads.total_amount_paid.hint')%></small>
-              <p class="fn-14 theme-txt-color mb-0"><%= lead.total_amount_paid.present? ? number_to_indian_currency(lead.total_amount_paid.round) : '-' %></p>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="mb-3">
-              <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.total_balance_pending') %></label>
-              <small class="txt-light-blue fn-12"><%= t('controller.leads.total_balance_pending.hint')%></small>
-              <p class="fn-14 theme-txt-color mb-0"><%= lead.total_balance_pending.present? ? number_to_indian_currency(lead.total_balance_pending.round) : '-' %></p>
-            </div>
-          </div>
-        <% end %>
+
         <% if !current_user.role?("channel_partner") %>
           <div class="col-md-3">
             <div class="mb-3">
@@ -98,38 +135,6 @@
             </div>
           </div>
         <% end %>
-
-
-        <% if lead.source.present? %>
-          <div class="col-md-3">
-            <div class="mb-3">
-              <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.source') %></label>
-                <p class="fn-14 theme-txt-color mb-0">
-                <%= lead.source || "-" %>
-                </p>
-            </div>
-          </div>
-        <% end %>
-
-        <% if lead.sub_source.present? %>
-          <div class="col-md-3">
-            <div class="mb-3">
-              <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.sub_source') %></label>
-                <p class="fn-14 theme-txt-color mb-0">
-                <%= lead.sub_source || "-" %>
-                </p>
-            </div>
-          </div>
-        <% end %>
-
-        <div class="col-md-3">
-          <div class="mb-3">
-            <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.channel_partner.rera_id') %></label>
-              <p class="fn-14 theme-txt-color mb-0">
-                <%= lead.rera_id || "-" %>
-              </p>
-          </div>
-        </div>
       </div>
     </div>
   </div>

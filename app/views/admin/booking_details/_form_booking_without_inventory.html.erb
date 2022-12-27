@@ -1,37 +1,10 @@
 <% channel_partners = [] %>
-<<<<<<< HEAD
 <%= f.hidden_field :site_visit_id, value: f.object.site_visit.try(:id) %>
 <%= f.hidden_field :project_id, value: ( f.object.lead.try(:project_id) || f.object.project_id ) %>
 <% if !f.object.lead.present? && f.object.project.present? %>
   <div class="mb-3">
     <%= f.label :lead_id, class: 'label-required control-label' %>
     <%= f.select :lead_id, options_for_select(filter_lead_options(current_client)), {prompt: I18n.t("global.select")},  required: 'required', class: "selectize-remote", data: { url: admin_leads_path(fltrs: {project_id: f.object.project.id, ds: true}) } %>
-=======
-<div class="modal-header">
-  <h3 class="title"><%= t('controller.booking_details.new.header', customer: f.object.lead.try(:name), project: (f.object.lead.try(:project_name) || f.object.project.name)) %></h3>
-  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-<div class="modal-body theme-form">
-  <!-- <div class="mb-3"> -->
-    <%#= f.label :project_id, class: 'label-required control-label' %>
-    <%#= f.select :project_id, Project.all.collect{|p| [p.name, p.id]}, {}, prompt: :translate, class: 'form-control selectize' %>
-  <!-- </div> -->
-  <%= f.hidden_field :site_visit_id, value: f.object.site_visit.try(:id) %>
-  <%= f.hidden_field :project_id, value: ( f.object.lead.try(:project_id) || f.object.project_id ) %>
-  <% if !f.object.lead.present? && f.object.project.present? %>
-    <div class="mb-3">
-      <%= f.label :lead_id, class: 'label-required control-label' %>
-      <%= f.select :lead_id, options_for_select(filter_lead_options(current_client)), {prompt: I18n.t("global.select")},  required: 'required', class: "selectize-remote", data: { url: admin_leads_path(fltrs: {project_id: f.object.project.id, ds: true}) } %>
-    </div>
-  <% end %>
-  <div class="mb-3 position-relative offline">
-    <%= f.label :project_tower_name, class: 'label-required' %>
-    <%= f.text_field :project_tower_name, class: 'form-control', required: 'required', disabled: !(policy([:admin, @booking_detail]).editable_field?("project_tower_name")) %>
-  </div>
-  <div class="mb-3 position-relative offline">
-    <%= f.label :project_unit_name, class: 'label-required' %>
-    <%= f.text_field :booking_project_unit_name, class: 'form-control', required: 'required', disabled: !(policy([:admin, @booking_detail]).editable_field?("booking_project_unit_name")) %>
->>>>>>> d78642eaf07a2cf27840d3bb4a9bcfd9f7a757c1
   </div>
 <% end %>
 <div class="mb-3 position-relative offline">

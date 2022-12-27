@@ -99,6 +99,7 @@ en:
     errors:
       invalid_date_format: "%{name} date format is invalid. Correct date format is - dd/mm/yyyy"
       boolean: "%{name} should be a boolean value - true or false"
+      something_went_wrong: "Something went wrong"
     filter: "Filter"
     filters: "Filters"
     project: "Project"
@@ -175,6 +176,7 @@ en:
       integrations: "Integrations"
       external_inventory_view: "External Inventory View Configuration"
       specifications: "Specifications"
+      project_unit: Project Unit
     units:
       sq_ft: "sq.ft"
     fetch_errors:
@@ -311,6 +313,7 @@ en:
       total_count: "Total %{name}"
       details_on_click: "Click to view details"
       add_city_regions: "Add New City & Regions"
+      project_unit: Project Unit
     text:
       dropping: "Dropping..."
     operators:
@@ -893,24 +896,19 @@ en:
         holding_minutes: "Unit to be held for (Minutes)"
         enable_company_users: "Allow Company Users & Benefits"
         roles_taking_registrations: "Allowed Roles For Taking New Registrations"
-        external_api_integration: "Enable External CRM Integration"
         enable_incentive_module: "Enable Brokerage Module For These Roles"
         mask_lead_data_for_roles: "Enable Lead Data Masking For These Roles"
         partner_regions: "Define Regions For Channel Partners & Projects"
         powered_by_link: "Show Powered By Link"
         lead_blocking_days: "Configure Lead Blocking Days"
-        invoice_approval_tat: "Invoice Approval TAT (In Days)"
         incentive_gst_slabs: "Configure Incentive GST Slabs (%)"
         team_lead_dashboard_access_roles: "Team Lead Dashboard Access Roles"
-        tl_dashboard_refresh_timer: "Team Lead Dashboard Refresh Timer (Minutes)"
-        enable_direct_payment: "Enable Direct Payment"
         enable_lead_conflicts: "Enable Lead Conflicts"
         launchpad_portal: "Launchpad Portal"
         payment_gateway: "Payment Gateway"
-        enable_payment_with_kyc: "Enable Payment With KYC"
+
         enable_live_inventory: "Enable Live Inventory"
-        enable_booking_with_kyc: "Enabe Booking With KYC"
-        allow_multiple_bookings_per_user_kyc: "Allow Multiple Bookings per User KYC"
+        enable_booking_with_kyc: "Enable Booking With KYC"
         incentive_calculation: "Incentive Calculation"
         general_user_request_categories: "General User Request Categories"
         sms_provider: "Sms Provider"
@@ -945,6 +943,7 @@ en:
         cp_lead_custom_field: "Channel Partner"
         cp_meeting_custom_field: "Channel Partner"
         project_meeting_custom_field: "Project"
+        industry: 'Industry'
       client/available_preferred_logins:
         phone: "Phone Based"
         email: "Email Based"
@@ -963,6 +962,21 @@ en:
         sms: "sms"
         whatsapp: "Whatsapp"
         notification: "Notification"
+      client/enable_payment:
+        enable_with_kyc: 'Enable With KYC'
+        enable_without_kyc: 'Enable Without KYC'
+        disable: 'Disable Payment'
+      client/lead_conflicts:
+        client_level: Client Level
+        project_level: Project Level
+        no_conflict: No Conflict
+      client/industries:
+        real_estate: 'Real Estate'
+        generic: 'Generic'
+      client/enable_booking_with_kyc:
+        before_booking: Before Booking
+        during_booking: During Booking
+        disable: Disable KYC
       developer:
         name: "Developer Name"
         selldo_id: "CRM Developer ID"
@@ -1086,7 +1100,7 @@ en:
         broker_usp: "Broker Unique Selling Points (Fill in upto 3 USPs)"
         check_sv_availability_in_selldo: "Check Site Visit Availability in CRM"
         incentive_gst_slabs: "Configure Incentive GST Slabs (%)"
-        payment_enabled: "Enable Payment"
+        payment_enabled: "Enable Booking Without Payment"
         approved_banks/list:
           hdfc: "HDFC Bank"
           sbi: "State Bank of India"
@@ -1095,6 +1109,8 @@ en:
         kylas_product_id: Kylas Products
         new_product_kylas_crm: "How to add a new Product in Kylas CRM?"
         bookings: Bookings
+        kylas_product_value: 'CRM Price'
+        kylas_product_id: 'CRM Reference ID'
       project/project_type:
         residential: "Residential"
         commercial: "Commercial"
@@ -1184,7 +1200,7 @@ en:
         gstin_number: "GST Number"
         pan_number: "PAN Number"
         aadhaar: "Aadhaar"
-        name_email_phone: "Partner Companies"
+        name_email_phone: "Partner Company"
         details: "Details"
         team_size: "Team Size"
         rera_applicable: "Is RERA Applicable?"
@@ -1723,6 +1739,7 @@ en:
         custom_document: Documents
         document_not_available: Document not available
         print: Print
+        subject_class: Subject Class
       user_request:
         project_unit: "Project Unit"
         project_id: "Project"
@@ -2168,6 +2185,9 @@ en:
         kylas_contact: Kylas Contacts
         manager_ids: Channel Partners
         crm_reference_id: CRM Reference ID
+        errors:
+          lead_registered_with_client: "Lead is already registered with Client"
+          lead_registered_with_project: "Lead is already registered with Project"
       lead/stage:
         incoming: "Incoming"
         booked: "Booked"
@@ -2750,6 +2770,12 @@ en:
         link_name: "Brokerage Invoices"
       choose_template_for_print:
         link_name: Print Documents
+      create_kylas_lead:
+        response_msg: 'Deals have successfully been created'
+      set_project:
+        response_msg: 'Project Not Found'
+      create_booking_without_inventory:
+        response_msg: 'Thank you for taking Booking'
       send_booking_detail_form_notification: "Booking detail form will be sent to customer shortly."
       set_booking_detail_missing: "Booking detail not found"
       set_project_unit_missing: "Project unit not found"
@@ -2900,7 +2926,7 @@ en:
         rejected: "Reject"
       alert:
         not_found: "Incentive deduction not found"
-    
+
     team_leads:
       headers:
         sales_team: "Sales Team"
@@ -3032,6 +3058,13 @@ en:
         link_name: "Details"
       links:
         monthly_count: "Monthly Count"
+      resend_email:
+        link_name: "Resend Email"
+        success: "Email has been sent again."
+        alert: "Email not sent"
+        emails_enabled: "Emails are disabled, please connect with your admin"
+      errors:
+        template_not_found: "Email template is not present"
     erp_models:
       index:
         link_name: "Third Party Integration"
@@ -3585,6 +3618,7 @@ en:
         sales_user_not_found: "Sales user not found"
         unqualified: "Lead cannot be unqualified"
         company_not_found: "Requested partner company not found"
+        select_manager: "Please select atleast one partner"
       message:
         mail_sent: "Mail successfully sent to the selected leads"
         no_leads_added: "You have not added any lead yet.\nStart exploring the projects and add your leads."
@@ -4080,6 +4114,11 @@ en:
     errors:
       marketplace_error: 'We encountered some issue with your Marketplace setup. Please connect with Kylas Customer Success'
       payment_error: 'No receipt found'
+    embedded_frame:
+      success:
+        default_message: 'You can close this window now'
+      errors:
+        default_header: 'We encountered following problems'
 
   kylas_auth:
     successfully_installed: 'App installed successfully'

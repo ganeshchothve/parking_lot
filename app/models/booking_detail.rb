@@ -200,18 +200,20 @@ class BookingDetail
   # @return [Email Object]
   #
   def auto_released_extended_inform_buyer!
-    template = Template::EmailTemplate.find_by(project_id: project_id, name: "auto_release_on_extended")
-    email = Email.create!({
-      project_id: project_id,
-      booking_portal_client_id: project_unit.booking_portal_client_id,
-      email_template_id: template.id,
-      cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
-      recipients: [ lead.user ],
-      cc_recipients: ( lead.manager_id.present? ? [lead.manager] : [] ),
-      triggered_by_id: self.id,
-      triggered_by_type: self.class.to_s
-    })
-    email.sent!
+    template = Template::EmailTemplate.where(project_id: project_id, name: "auto_release_on_extended", booking_portal_client_id: project_unit.booking_portal_client_id).first
+    if template.present? && template.is_active?
+      email = Email.create!({
+        project_id: project_id,
+        booking_portal_client_id: project_unit.booking_portal_client_id,
+        email_template_id: template.id,
+        cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
+        recipients: [ lead.user ],
+        cc_recipients: ( lead.manager_id.present? ? [lead.manager] : [] ),
+        triggered_by_id: self.id,
+        triggered_by_type: self.class.to_s
+      })
+      email.sent!
+    end
   end
 
   def send_cost_sheet_and_payment_schedule(lead)
@@ -230,6 +232,7 @@ class BookingDetail
           booking_portal_client_id: self.booking_portal_client_id,
           body: ERB.new(project_unit.booking_portal_client.email_header).result(self.booking_portal_client.get_binding) + email_template.parsed_content(self) + ERB.new(project_unit.booking_portal_client.email_footer).result(self.booking_portal_client.get_binding),
           subject: email_template.parsed_subject(self),
+          email_template_id: email_template.id,
           cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
           recipients: [lead.user],
           cc_recipients: [],
@@ -283,7 +286,7 @@ class BookingDetail
 
   # validates kyc presence if booking is not allowed without kyc
   def kyc_mandate
-    if project_unit.present? && project.enable_booking_with_kyc && !primary_user_kyc_id.present?
+    if project_unit.present? && project.booking_with_kyc_enabled? && !primary_user_kyc_id.present?
       self.errors.add(:base, "KYC is mandatory for booking.")
     end
   end
@@ -377,7 +380,7 @@ class BookingDetail
       email = Email.create!({
         project_id: project_id,
         booking_portal_client_id: project_unit.booking_portal_client_id,
-        email_template_id: Template::EmailTemplate.find_by(project_id: project_id, name: "booking_confirmed").id,
+        email_template_id: Template::EmailTemplate.where(project_id: project_id, name: "booking_confirmed", booking_portal_client_id: project_unit.booking_portal_client_id).first.try(:id),
         recipients: [lead.user],
         cc: project_unit.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
         cc_recipients: [],
@@ -388,7 +391,7 @@ class BookingDetail
       email.sent!
     end
     if project_unit.booking_portal_client.sms_enabled?
-      template = Template::SmsTemplate.find_by(project_id: project_id, name: "booking_confirmed")
+      template = Template::SmsTemplate.where(project_id: project_id, name: "booking_confirmed", booking_portal_client_id: project_unit.booking_portal_client_id).first
       sms = Sms.create!(
         project_id: project_id,
         booking_portal_client_id: project_unit.booking_portal_client_id,

@@ -198,75 +198,16 @@
       <div class="col-lg-12 mt-4 mb-4">
         <div class="app-features">
           <div class="row px-3 py-3">
-            <div class="col-lg-12">
-              <h2 class="pb-4"><%= I18n.t("global.link_to.love_our_brand", name: I18n.t("global.brand", client_name: current_client.name)) %></h2>
-            </div>
-            <div class="col-lg-4 app-features-list">
-              <span>
-                  <img src="<%= asset_path 'cp-ex-feat-01.svg' %>" width="45">
-                </span>
-                <p><%= I18n.t("global.link_to.early_access").html_safe %> <br></p>
-            </div>
-            <div class="col-lg-4 app-features-list">
-              <span>
-                  <img src="<%= asset_path 'cp-ex-feat-06.svg' %>" width="45">
-                </span>
-                <p><%= I18n.t("global.link_to.timely_payments").html_safe %></p>
-            </div>
-            <div class="col-lg-4 app-features-list">
-              <span>
-                  <img src="<%= asset_path 'cp-ex-feat-05.svg' %>" width="45">
-                </span>
-                <p><%= I18n.t("global.link_to.marketing_support").html_safe %></p>
-            </div>
-            <div class="col-lg-4 app-features-list">
-              <span>
-                  <img src="<%= asset_path 'cp-ex-feat-11.svg' %>" width="45">
-                </span>
-                <p><%= I18n.t("global.link_to.performance_based").html_safe %></p>
-            </div>
-            <div class="col-lg-4 app-features-list">
-              <span>
-                  <img src="<%= asset_path 'cp-ex-feat-02.svg' %>" width="45">
-                </span>
-                <p><%= I18n.t("global.link_to.extensive_nurturing").html_safe %></p>
-            </div>
-            <div class="col-lg-4 app-features-list">
-              <span>
-                  <img src="<%= asset_path 'cp-ex-feat-04.svg' %>" width="45">
-                </span>
-                <p><%= I18n.t("global.link_to.crm_training").html_safe %></p>
-            </div>
-            <div class="col-lg-4 app-features-list">
-              <span>
-                  <img src="<%= asset_path 'cp-ex-feat-07.svg' %>" width="45">
-                </span>
-                <p><%= I18n.t("global.link_to.fully_automated").html_safe %></p>
-            </div>
-            <div class="col-lg-4 app-features-list">
-              <span>
-                  <img src="<%= asset_path 'cp-ex-feat-08.svg' %>" width="45">
-                </span>
-                <p><%= I18n.t("global.link_to.online_inventory_selection").html_safe %></p>
-            </div>
-            <div class="col-lg-4 app-features-list">
-                <span>
-                  <img src="<%= asset_path 'cp-ex-feat-09.svg' %>" width="45">
-                </span>
-                <p><%= I18n.t("global.link_to.complete_transparency").html_safe %></p>
-            </div>
-            <div class="col-lg-4 app-features-list">
-              <span>
-                  <img src="<%= asset_path 'cp-ex-feat-10.svg' %>" width="45">
-                </span>
-                <p><%= I18n.t("global.link_to.unique_online").html_safe %></p>
-            </div>
+            <% dashboard_template = ::Template::UITemplate.where(name: 'channel_partner_register_dashboard', booking_portal_client_id: current_client.id, is_active: true).first %>
+            <% if dashboard_template.present? %>
+              <%= get_view_erb(dashboard_template) %>
+            <% end %>
           </div>
         </div>
       </div>
     </div>
     <!-- Newly Launched ---------->
-    <%= render 'dashboard/index/partials/collaterals' %>
+    <%#= render 'dashboard/index/partials/collaterals' %>
   </div>
 </section>
       </div>
@@ -282,21 +223,21 @@
               <hr>
               <ul class="upcoming-events-list list-unstyled cmn-list">
                 <% meetings.each do |meeting| %>
-                <li class="px-3">
-                  <div class="list-wrap row">
-                    <div class="col-lg-2 col-2">
-                      <i class="fa fa-calendar-alt fill-primary"></i>
+                  <li class="px-3">
+                    <div class="list-wrap row">
+                      <div class="col-lg-2 col-2">
+                        <i class="fa fa-calendar-alt fill-primary"></i>
+                      </div>
+                      <div class="col-lg-10 col-10">
+                        <%= link_to admin_meeting_path(meeting), class: 'modal-remote-form-link' do %>
+                          <p class="list-txt event-title mb-0"><%= meeting.topic %></p>
+                          <p class="list-txt event-time mb-0">
+                            <%= "#{meeting.scheduled_on&.strftime('%e %b %Y')}#{meeting.scheduled_on&.to_time&.strftime(', %I:%M%p %Z')}".html_safe %>
+                        <% end %>
+                        </p>
+                      </div>
                     </div>
-                    <div class="col-lg-10 col-10">
-                      <%= link_to admin_meeting_path(meeting), class: 'modal-remote-form-link' do %>
-                        <p class="list-txt event-title mb-0"><%= meeting.topic %></p>
-                        <p class="list-txt event-time mb-0">
-                          <%= "#{meeting.scheduled_on&.strftime('%e %b %Y')}#{meeting.scheduled_on&.to_time&.strftime(', %I:%M%p %Z')}".html_safe %>
-                      <% end %>
-                      </p>
-                    </div>
-                  </div>
-                </li>
+                  </li>
                 <% end %>
               </ul>
             </div>
@@ -378,6 +319,7 @@
        </div>
     </div>
 </section>
+
 <%= javascript_tag do %>
   $.ajax({
     url: '/dashboard/project_wise_leads',

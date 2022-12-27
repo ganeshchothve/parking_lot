@@ -9,62 +9,75 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body theme-form overflow-auto">
+          <% if policy([:admin, meeting]).editable_field?("topic") %>
           <div class="mb-3">
             <%= f.input :topic, required: true, disabled: !policy([current_user_role_group, meeting]).editable_field?("topic") %>
           </div>
+          <% end %>
+          <% if policy([:admin, meeting]).editable_field?("agenda") %>
           <div class="mb-3">
             <%= f.input :agenda, required: true, disabled: !policy([current_user_role_group, meeting]).editable_field?("agenda"), as: :text %>
           </div>
-
+          <% end %>
           <div class="row">
+            <% if policy([:admin, meeting]).editable_field?("meeting_type") %>
             <div class="col-md-6">
               <div class="mb-3">
               <%= f.label :meeting_type, class: 'label-required' %>
                 <%= f.select :meeting_type, I18n.t("mongoid.attributes.meeting/meeting_types").collect{ |k,v| [v, k.to_s]}, {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, meeting]).editable_field?("meeting_type") ? false : true) %>
               </div>
             </div>
+            <% end %>
+            <% if policy([:admin, meeting]).editable_field?("provider") %>
             <div class="col-md-6">
               <div class="mb-3">
                 <%= f.label :provider %>
                 <%= f.select :provider, I18n.t("mongoid.attributes.meeting/providers").collect{ |k,v| [v, k.to_s]}, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: (policy([current_user_role_group, meeting]).editable_field?("provider") ? false : true) %>
               </div>
             </div>
+            <% end %>
           </div>
-
+          <% if policy([:admin, meeting]).editable_field?("provider_url") %>
           <div class="mb-3">
             <%= f.input :provider_url, disabled: !policy([current_user_role_group, meeting]).editable_field?("provider_url") %>
           </div>
-
+          <% end %>
+          <% if policy([:admin, meeting]).editable_field?("project_id") %>
           <div class="mb-3">
             <%= f.label :project_id %>
             <%= f.select :project_id, Project.where(booking_portal_client_id: current_client.try(:id), id: f.object.project_id).collect{|x| [x.ds_name, x.id]}, {prompt: I18n.t("global.select")}, class: "selectize-remote", data: {url: admin_projects_path}, disabled: (policy([current_user_role_group, meeting]).editable_field?("project_id") ? false : true) %>
           </div>
-
+          <% end %>
+          <% if policy([:admin, meeting]).editable_field?("campaign_id") %>
           <div class="mb-3">
             <%= f.label :campaign_id %>
             <%= f.select :campaign_id, Campaign.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, {prompt: I18n.t("global.select")}, class: "selectize", disabled: (policy([current_user_role_group, meeting]).editable_field?("campaign_id") ? false : true) %>
           </div>
-
+          <% end %>
           <div class="row">
+            <% if policy([:admin, meeting]).editable_field?("scheduled_on") %>
             <div class="col-md-6">
               <div class="mb-3">
                 <%= f.label :scheduled_on, class: 'label-required' %>
                 <%= f.text_field :scheduled_on, class: 'datetimepicker', required: true, disabled: !policy([:admin, meeting]).editable_field?("scheduled_on"), value: f.object.scheduled_on.present? ? f.object.scheduled_on.strftime("%d/%m/%Y %I:%M %p") : nil, data: { format: 'DD/MM/YYYY LT', 'side-by-side': true, current: true, 'default-date': (f.object.scheduled_on.present? ? f.object.scheduled_on.strftime("%d/%m/%Y %I:%M %p") : Time.now.strftime("%d/%m/%Y %I:%M %p") ) } %>
               </div>
             </div>
+            <% end %>
+            <% if policy([:admin, meeting]).editable_field?("duration") %>
             <div class="col-md-6">
               <div class="mb-3">
                 <%= f.label :duration, class: 'label-required' %>
                 <%= f.number_field :duration, required: true, disabled: !policy([current_user_role_group, meeting]).editable_field?("duration"), class: 'form-control' %>
               </div>
             </div>
+            <% end %>
           </div>
-
+          <% if policy([:admin, meeting]).editable_field?("roles") %>
           <div class="mb-3">
             <%= f.label :roles, class: 'label-required' %>
             <%= f.select :roles, User.available_roles(current_client).collect{ |r| [User.human_attribute_name("role.#{r}"), r] }, {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, meeting]).editable_field?("roles") ? false : true), multiple: true %>
           </div>
-
+          <% end %>
           <% if policy([current_user_role_group, @meeting]).editable_field?("event") %>
             <% statuses = available_meeting_statuses(@meeting) %>
             <% if statuses.present? %>
@@ -74,12 +87,12 @@
               </div>
             <% end %>
           <% end %>
-
+          <% if policy([:admin, meeting]).editable_field?("broadcast") %>
           <div class="mb-3">
             <%= f.input :broadcast, disabled: !policy([current_user_role_group, meeting]).editable_field?("broadcast"), as: :boolean, input_html: {class: 'w-auto'} %>
           </div>
+          <% end %>
         </div>
-
         <div class="modal-footer text-end">
           <%= f.submit I18n.t("global.save"), class: "btn btn-primary" %>
         </div>

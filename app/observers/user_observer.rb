@@ -2,7 +2,7 @@ class UserObserver < Mongoid::Observer
   include ApplicationHelper
 
   def before_validation user
-    user.allowed_bookings ||= user.booking_portal_client.allowed_bookings_per_user
+    user.allowed_bookings ||= user.booking_portal_client.allowed_bookings_per_user if user.buyer?
     # user.booking_portal_client_id ||= user.booking_portal_client.id
     user.phone = Phonelib.parse(user.phone).to_s if user.phone.present?
 
@@ -21,7 +21,6 @@ class UserObserver < Mongoid::Observer
 
   def before_create user
     user.generate_referral_code
-    user.generate_cp_code
     if user.role?("user") && user.email.present?
       email = user.email
       if user.booking_portal_client.email_domains.include?(email.split("@")[1]) && user.booking_portal_client.enable_company_users?
@@ -35,13 +34,17 @@ class UserObserver < Mongoid::Observer
     end
     # update all the project ids for the user
     if !user.role.in?(User::ALL_PROJECT_ACCESS)
-      project_ids = Project.where(booking_portal_client_id: user.booking_portal_client.id).pluck(:id)
+      if user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner_id.present?
+        project_ids = user.channel_partner.project_ids
+      else
+        project_ids = Project.where(booking_portal_client_id: user.booking_portal_client.id).pluck(:id)
+      end
       user.assign_attributes(project_ids: project_ids)
     end
   end
 
   def after_create user
-    if user.booking_portal_client.external_api_integration?
+    if user.booking_portal_client.present? && user.booking_portal_client.external_api_integration?
       if user.role.in?(%w(cp_owner channel_partner))
         if Rails.env.staging? || Rails.env.production?
           # Kept create user api call inline to avoid firing update calls before create which will fail to find user to update
@@ -63,6 +66,7 @@ class UserObserver < Mongoid::Observer
   end
 
   def before_save user
+    user.generate_cp_code
     if user.confirmed_at_changed? && user.confirmed?
       # Send confirmed portal stage for channel partner users into selldo
       if user.channel_partner?
@@ -101,7 +105,7 @@ class UserObserver < Mongoid::Observer
         GenerateCoBrandingTemplatesWorker.new.perform(user.id)
       end
     end
-    Kylas::UpdatePicklistValues.new(user, user.changes).call if user.booking_portal_client.is_marketplace?
+    Kylas::UpdatePicklistValues.new(user, user.changes).call if user.booking_portal_client.present? && user.booking_portal_client.is_marketplace?
   end
 
   def after_update user
@@ -109,7 +113,7 @@ class UserObserver < Mongoid::Observer
       if user.buyer? && user.manager_role?("channel_partner")
         email = Email.create!({
           booking_portal_client_id: user.booking_portal_client_id,
-          email_template_id: Template::EmailTemplate.find_by(name: "user_manager_changed").id,
+          email_template_id: Template::EmailTemplate.where(name: "user_manager_changed", booking_portal_client_id: user.booking_portal_client_id).first.try(:id),
           recipient_ids: [user.id],
           cc: user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
           cc_recipient_ids: [user.manager_id],

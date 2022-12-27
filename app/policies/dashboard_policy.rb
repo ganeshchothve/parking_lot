@@ -51,7 +51,11 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
   end
 
   def sales_board?
-    user.role.in?(%w(team_lead)) && user.booking_portal_client.enable_site_visit?
+    if current_client.real_estate?
+      user.role.in?(%w(team_lead)) && user.booking_portal_client.enable_site_visit?
+    else
+      false
+    end
   end
 
   def team_lead_dashboard?
@@ -68,5 +72,9 @@ class DashboardPolicy < Struct.new(:user, :dashboard)
 
   def payout_dashboard?
     user.role.in?(%w[channel_partner cp_owner])
+  end
+
+  def show_upi_message?
+    user.fund_accounts.count.zero? && !user.booking_portal_client.is_marketplace?
   end
 end

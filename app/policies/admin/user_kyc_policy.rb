@@ -1,18 +1,30 @@
 class Admin::UserKycPolicy < UserKycPolicy
   def index?(for_user = nil)
-    true if for_user.present? && for_user.buyer? || for_user.blank?
+    if current_client.real_estate?
+      true if for_user.present? && for_user.buyer? || for_user.blank?
+    else
+      false
+    end
   end
 
   def show?
-    %w[superadmin admin sales_admin channel_partner].include?(user.role)
+    if current_client.real_estate?
+      %w[superadmin admin sales_admin channel_partner].include?(user.role)
+    else
+      false
+    end
   end
 
   def new?
-    valid = record.lead&.project&.is_active?# && !marketplace_client?
-    # if is_assigned_lead?
-    #   valid = is_lead_accepted? && valid
-    # end
-    valid
+    if current_client.real_estate?
+      valid = record.lead&.project&.is_active?# && !marketplace_client?
+      # if is_assigned_lead?
+      #   valid = is_lead_accepted? && valid
+      # end
+      valid
+    else
+      false
+    end
   end
 
   def create?

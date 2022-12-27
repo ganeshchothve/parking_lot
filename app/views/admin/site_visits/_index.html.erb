@@ -8,17 +8,15 @@
               <th><%= t('mongoid.attributes.site_visit.name') %></th>
               <th><%= t('mongoid.attributes.site_visit.email') %></th>
               <th><%= t('mongoid.attributes.site_visit.phone') %></th>
-              <th><%= t('mongoid.attributes.site_visit.manager_id') %></th>
+              <% if policy([ current_user_role_group, SiteVisit.new]).show_channel_partner? %>
+                <th><%= t('mongoid.attributes.site_visit.manager_id') %></th>
+              <% end %>
               <th><%= t('mongoid.attributes.site_visit.status') %></th>
               <th><%= t('mongoid.attributes.site_visit.scheduled_on') %></th>
               <th><%= t('mongoid.attributes.site_visit.project') %></th>
               <th><%= t('mongoid.attributes.site_visit.approval_status') %></th>
               <th><%= t('mongoid.attributes.site_visit.cp_manager') %></th>
-<<<<<<< HEAD
-              <th class="btn-action"><%= t('global.action', count: 2) %></th>
-=======
               <th class="btn-action"><%= t('global.action.one') %></th>
->>>>>>> d78642eaf07a2cf27840d3bb4a9bcfd9f7a757c1
             </tr>
           </thead>
           <tbody>
@@ -41,13 +39,13 @@
                 <%= site_visit.lead.masked_phone(current_user) || '-' %>
                 <% end %>
               </td>
-              <td>
-                <% if site_visit.lead.manager_id? && !current_user.role?('channel_partner') %>
-                <p class="fn-14 mt-1 mb-0">
-                  <%= "#{link_to_if (policy([:admin, User]).index? && current_user.role.in?(User::ALL_PROJECT_ACCESS)), site_visit.lead.manager_name, [current_user_role_group, site_visit.lead.manager], class: 'theme-txt-color'}".html_safe %>
-                </p>
-                <% end %>
-              </td>
+              <% if site_visit.lead.manager_id? && policy([ current_user_role_group, site_visit]).show_channel_partner? %>
+                <td>
+                  <p class="fn-14 mt-1 mb-0">
+                    <%= "#{link_to_if (policy([:admin, User]).index? && current_user.role.in?(User::ALL_PROJECT_ACCESS)), site_visit.lead.manager_name, [current_user_role_group, site_visit.lead.manager], class: 'theme-txt-color'}".html_safe %>
+                  </p>
+                </td>
+              <% end %>
               <td>
                 <p class="font-medium fn-12 mb-0 d-inline-block me-2"><i
                     class="fa fa-circle info me-2 fa-sm"></i><%= t("mongoid.attributes.site_visit/status.#{site_visit.status}") || '-' %>

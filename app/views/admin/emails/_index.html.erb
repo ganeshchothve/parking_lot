@@ -38,6 +38,9 @@
             <i class="fa fa-ellipsis-v fill-theme" aria-hidden="true"></i></a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
             <%= link_to t("controller.emails.show.link_name", model: Email.model_name.human), [ current_user_role_group, email], class: 'dropdown-item', target: :_blank %>
+            <% if policy([current_user_role_group, email]).resend_email? %>
+              <%= link_to t("controller.emails.resend_email.link_name"), resend_email_admin_email_path(id: email.id), class: "dropdown-item", method: :post %>
+            <% end %>
           </div>
         </div>
       </td>

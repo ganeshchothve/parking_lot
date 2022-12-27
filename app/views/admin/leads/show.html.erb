@@ -2,48 +2,46 @@
   <div class="pb-5">
     <div class="row">
       <div class="col-lg-12 px-3 bg-white py-4">
-        <div class="col-12 mb-3">
-          <div class="d-flex justify-content-between">
-            <div>
-              <h6 class="card-title d-inline fn-24 font-medium theme-txt-color me-1">
-                <%= @lead.name || '-' %></h6>
-              <a href="javascript:;" class="email-icon small d-inline-block mt-1 fn-16" data-bs-toggle="popover"
-                title=<%= I18n.t("global.email_id") %> data-bs-trigger="focus" data-bs-placement="bottom"
-                data-bs-content="<%= @lead.masked_email(current_user) || '-' %>">
-                <i class="fa fa-envelope fill-theme me-2 ms-2 fn-18"></i>
-              </a>
-              <a href="javascript:;" class="phone-icon small d-inline-block mt-1 fn-16" data-bs-container="body"
-                data-bs-placement="bottom" data-bs-trigger="focus" data-bs-toggle="popover" title=<%= I18n.t("global.phone_no") %>
-                data-bs-content="<%= @lead.masked_phone(current_user) || '-' %>">
-                <i class="fa fa-phone-alt fill-theme me-2 fn-18"></i>
-              </a>
-            </div>
-            <div class="dropdown d-inline-block">
-              <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
-                <i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
-              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                <%= render "#{current_user_role_group}/leads/links", lead: @lead %>
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="col-12 float-start mt-3 pb-0">
           <div class="card">
             <div class="card-header theme-light-bg py-3">
-              <p class="fn-12 theme-txt-color mb-0 "><%= I18n.t("mongoid.models.project.one") %></p>
-              <h6 class="fn-20 theme-txt-color mb-0"><%= (@lead.project.try(:name) || '-') %></h6>
+              <div class="col-12">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h6 class="card-title d-inline fn-24 font-medium theme-txt-color me-1">
+                      <%= @lead.name || '-' %></h6>
+                    <a href="javascript:;" class="email-icon small d-inline-block mt-1 fn-16" data-bs-toggle="popover"
+                      title=<%= I18n.t("global.email_id") %> data-bs-trigger="focus" data-bs-placement="bottom"
+                      data-bs-content="<%= @lead.masked_email(current_user) || '-' %>">
+                      <i class="fa fa-envelope fill-theme me-2 ms-2 fn-18"></i>
+                    </a>
+                    <a href="javascript:;" class="phone-icon small d-inline-block mt-1 fn-16" data-bs-container="body"
+                      data-bs-placement="bottom" data-bs-trigger="focus" data-bs-toggle="popover" title=<%= I18n.t("global.phone_no") %>
+                      data-bs-content="<%= @lead.masked_phone(current_user) || '-' %>">
+                      <i class="fa fa-phone-alt fill-theme me-2 fn-18"></i>
+                    </a>
+                  </div>
+                  <div class="dropdown d-inline-block">
+                    <a href="javascript:void(0);" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
+                      aria-expanded="false">
+                      <i class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                      <%= render "#{current_user_role_group}/leads/links", lead: @lead %>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="card-body p-0 rounded-0 border-0">
               <div class="accordion theme-accordation" id="accordionExample">
                 <div class="accordion-item rounded-0 border-bottom border-top-0  border-end-0 border-start-0">
                   <h2 class="accordion-header d-flex justify-content-between" id="headingOverview">
-                    <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseOverview" aria-expanded="false" aria-controls="collapseOverview">
+                    <button class="accordion-button shadow-none" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapseOverview" aria-expanded="true" aria-controls="collapseOverview">
                       <%= I18n.t("global.tabs.overview") %>
                     </button>
                   </h2>
-                  <div id="collapseOverview" class="accordion-collapse collapse" aria-labelledby="headingOverview"
+                  <div id="collapseOverview" class="accordion-collapse collapse show" aria-labelledby="headingOverview"
                     data-bs-parent="#accordionExample">
                     <div class="accordion-body pt-0 ps-4">
                       <%= render 'overview', lead: @lead, cp_lead_activity: nil %>

@@ -80,7 +80,11 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def print?
-    record.buyer?
+    if current_client.real_estate?
+      record.buyer?
+    else
+      false
+    end
   end
 
   def portal_stage_chart?
@@ -92,11 +96,19 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def block_lead?
-    record.confirmed? && record.buyer? && record.manager_id.blank? && !record.temporarily_blocked? && %w(sales sales_admin admin).include?(user.role) && !record.iris_confirmation? && record.booking_portal_client.lead_blocking_days.present?
+    if current_client.real_estate?
+      record.confirmed? && record.buyer? && record.manager_id.blank? && !record.temporarily_blocked? && %w(sales sales_admin admin).include?(user.role) && !record.iris_confirmation? && record.booking_portal_client.lead_blocking_days.present?
+    else
+      false
+    end
   end
 
   def unblock_lead?
-    record.buyer? && record.temporarily_blocked? && %w(sales sales_admin admin).include?(user.role)
+    if current_client.real_estate?
+      record.buyer? && record.temporarily_blocked? && %w(sales sales_admin admin).include?(user.role)
+    else
+      false
+    end
   end
 
   def send_payment_link?
@@ -122,7 +134,7 @@ class Admin::UserPolicy < UserPolicy
   def site_visit_project_wise?
     true
   end
-  
+
   def site_visit_partner_wise?
     true
   end
@@ -192,29 +204,31 @@ class Admin::UserPolicy < UserPolicy
         # TODO: Lead conflict module with multi project
         #attributes += [:manager_id]
         #attributes += [:manager_change_reason] if record.persisted?
-        attributes += [:allowed_bookings] if user.booking_portal_client.allow_multiple_bookings_per_user_kyc?
+        attributes += [:allowed_bookings]
       end
 
-      attributes += [:premium, :tier_id] if record.role.in?(%w(cp_owner channel_partner)) && user.role?('admin')
+      attributes += [:premium, :tier_id] if record.role.in?(%w(cp_owner channel_partner)) && user.role?('admin') && current_client.real_estate?
 
       if %w[superadmin admin cp_owner].include?(user.role)
         attributes += [:role] unless (record.role?('cp_owner') && record&.channel_partner&.primary_user_id == record.id) || user.id == record.id
       end
 
-      attributes += [project_ids: []] if %w[admin superadmin].include?(user.role) && !record.role.in?(User::ALL_PROJECT_ACCESS)
+      attributes += [project_ids: []] if %w[admin superadmin cp_owner].include?(user.role) && !record.role.in?(User::ALL_PROJECT_ACCESS)
       if %w[superadmin admin sales_admin].include?(user.role) && !marketplace_client?
         attributes += [:erp_id]
         attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
       end
       # To give selected channel partner access of live inventory.
-      attributes += [:enable_live_inventory] if user.role?(:superadmin) && record.role?(:channel_partner)
+      attributes += [:enable_live_inventory] if user.role?(:superadmin) && record.role?(:channel_partner) && current_client.real_estate?
     end # user.present?
 
     if record.role.in?(%w(cp_owner channel_partner))
       attributes += [:upi_id]
       attributes += [:referral_code] if record.new_record?
       attributes += [:channel_partner_id] if user.present? && user.role.in?(%w(cp_owner admin))
-      attributes += [fund_accounts_attributes: FundAccountPolicy.new(user, FundAccount.new).permitted_attributes] if record.persisted? && record.user_status_in_company.in?(%w(active))
+      if current_client.real_estate?
+        attributes += [fund_accounts_attributes: FundAccountPolicy.new(user, FundAccount.new).permitted_attributes] if record.persisted? && record.user_status_in_company.in?(%w(active))
+      end
       attributes += [:rejection_reason]
     end
     attributes += [:user_status_in_company_event] if user.present? && user.role?('cp_owner') && record.user_status_in_company == 'pending_approval' && record.temp_channel_partner_id == user.channel_partner_id

@@ -25,7 +25,7 @@ class LocalDevise::SessionsController < Devise::SessionsController
     else
       self.resource = warden.authenticate!(auth_options)
     end
-    if self.resource.is_active?
+    if self.resource.active_for_authentication?
       set_flash_message!(:notice, :signed_in)
     else
       set_flash_message!(:alert, :sign_in_disabled)

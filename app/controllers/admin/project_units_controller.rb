@@ -47,7 +47,7 @@ class Admin::ProjectUnitsController < AdminController
     parameters = permitted_attributes([:admin, @project_unit])
     respond_to do |format|
       if @project_unit.update(parameters)
-        format.html { redirect_to admin_project_units_path, notice: I18n.t("controller.project_units.notice.updated") }
+        format.html { redirect_to admin_project_units_path(fltrs: {project_id: @project_unit.project.id.to_s}), notice: I18n.t("controller.project_units.notice.updated") }
       else
         format.html { render :edit }
         format.json { render json: { errors: @project_unit.errors.full_messages }, status: :unprocessable_entity }
