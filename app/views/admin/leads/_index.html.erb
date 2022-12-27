@@ -63,7 +63,7 @@
                   </td>
                 <% end %>
                 <% if is_marketplace? %>
-                  <td><%= lead.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)) rescue 'Error' %></td>
+                  <td><%= lead.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)) rescue '' %></td>
                 <% end %>
 
                 <% if current_client.real_estate? %>
