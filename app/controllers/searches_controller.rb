@@ -7,7 +7,7 @@ class SearchesController < ApplicationController
   before_action :set_form_data, only: [:show, :edit]
   before_action :authorize_resource, except: [:checkout, :hold]
   around_action :apply_policy_scope, only: [:index, :export]
-  before_action :set_project_unit, only: [:checkout ]
+  before_action :set_project_unit, only: [:checkout, :hold]
   before_action :set_booking_detail, only: [:hold, :checkout]
   before_action :check_project_unit_hold_status, only: :checkout
 
@@ -188,6 +188,9 @@ class SearchesController < ApplicationController
   end
 
   def set_project_unit
+    if @search.project_unit.blank? && params.dig(:booking_detail, :project_unit_id).present?
+      @search.set(project_unit_id: params.dig(:booking_detail, :project_unit_id))
+    end
     @project_unit = @search.project_unit
     if @project_unit.blank?
       @search.set(step: 'towers')

@@ -12,6 +12,7 @@ class Client
   PUBLIC_DOCUMENT_TYPES = []
   INCENTIVE_CALCULATION = ["manual", "calculated"]
   ENABLE_PAYMENT = %w[enable_with_kyc enable_without_kyc disable].freeze
+  ENABLE_BOOKING_WITH_KYC = ['before_booking', 'during_booking', 'disable'].freeze
   LEAD_CONFLICT= %w[client_level project_level no_conflict]
   INDUSTRIES = %w(real_estate generic)
   REQUIRED_FIELDS_FOR_USER_LOGIN = %w(email phone)
@@ -73,7 +74,7 @@ class Client
   field :enable_site_visit, type: Boolean, default: false
   field :enable_vis, type: Boolean, default: false
   field :enable_payment, type: String, default: 'disable'
-  field :enable_booking_with_kyc, type: Boolean, default: true
+  field :enable_booking_with_kyc, type: String, default: 'before_booking'
   field :incentive_calculation, type: Array, default: ["manual"]
   field :enable_direct_activation_for_cp, type: Boolean, default: false
   field :blocking_amount, type: Integer, default: 30000
@@ -185,6 +186,7 @@ class Client
   validates :payment_gateway, inclusion: {in: Client::PAYMENT_GATEWAYS }, allow_blank: true
   validates :enable_payment, inclusion: { in: Client::ENABLE_PAYMENT }, allow_blank: true
   validates :required_fields_for_user_login, array: { inclusion: {in: Client::REQUIRED_FIELDS_FOR_USER_LOGIN } }
+  validates :enable_booking_with_kyc, inclusion: { in: ENABLE_BOOKING_WITH_KYC }, allow_blank: true
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
   validates :whatsapp_api_key, :whatsapp_api_secret, presence: true, if: :whatsapp_enabled?
   validates :notification_api_key, presence: true, if: :notification_enabled?
@@ -307,6 +309,10 @@ class Client
 
   def kyc_required_for_payment?
     payment_enabled? && self.enable_payment == 'enable_with_kyc'
+  end
+
+  def booking_with_kyc_enabled?
+    enable_booking_with_kyc != 'disable'
   end
 
   def create_custom_field_on_kylas_tenant

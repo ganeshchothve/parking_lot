@@ -907,7 +907,7 @@ en:
         payment_gateway: "Payment Gateway"
 
         enable_live_inventory: "Enable Live Inventory"
-        enable_booking_with_kyc: "Enabe Booking With KYC"
+        enable_booking_with_kyc: "Enable Booking With KYC"
         incentive_calculation: "Incentive Calculation"
         general_user_request_categories: "General User Request Categories"
         sms_provider: "Sms Provider"
@@ -972,6 +972,10 @@ en:
       client/industries:
         real_estate: 'Real Estate'
         generic: 'Generic'
+      client/enable_booking_with_kyc:
+        before_booking: Before Booking
+        during_booking: During Booking
+        disable: Disable KYC
       developer:
         name: "Developer Name"
         selldo_id: "CRM Developer ID"

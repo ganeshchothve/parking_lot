@@ -73,6 +73,10 @@ class Admin::ProjectPolicy < ProjectPolicy
     marketplace_client? && user.role.in?(%w(superadmin admin))
   end
 
+  def booking_with_kyc_enabled?
+    record.booking_with_kyc_enabled?
+  end
+
   def permitted_attributes(params = {})
     case record.booking_portal_client.industry
     when 'real_estate'
