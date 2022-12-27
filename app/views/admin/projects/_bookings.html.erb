@@ -23,11 +23,11 @@
       </div>
     </div>
   </div>
-  <div class="col-md-6">
-    <div class="form-group mb-3">
-      <div class="form-check form-check-inline">
-        <%= f.check_box :enable_booking_with_kyc, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("enable_booking_with_kyc") }, I18n.t("global.boolean.true"), I18n.t("global.boolean.false") %>
-        <%= f.label :enable_booking_with_kyc, class: "form-check-label d-inline-block ms-2 enable-booking-with-kyc" %>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :enable_booking_with_kyc %>
+        <%= f.select :enable_booking_with_kyc, Client::ENABLE_BOOKING_WITH_KYC.collect{|x| [t("mongoid.attributes.client/enable_booking_with_kyc.#{x}"), x] }, {}, class: 'selectize', required: true, disabled: !(policy([:admin, @project]).editable_field?("enable_booking_with_kyc")) %>
       </div>
     </div>
   </div>

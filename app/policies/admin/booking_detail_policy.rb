@@ -57,7 +57,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def edit?
-    record.project&.is_active? && enable_actual_inventory?(user) && (!record.try(:project).try(:enable_booking_with_kyc?) || record.try(:user).try(:user_kycs).present?)
+    record.project&.is_active? && enable_actual_inventory?(user) && (!record.try(:project).try(:booking_with_kyc_enabled?) || record.try(:user).try(:user_kycs).present?)
   end
 
   def update?
@@ -110,7 +110,8 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     # if is_assigned_lead?
     #   valid = is_lead_accepted? && valid
     # end
-    valid = valid && project_access_allowed?(current_project_id)
+    valid &&= !record.lead&.kyc_required_before_booking?
+    valid &&= project_access_allowed?(current_project_id)
     valid
   end
 

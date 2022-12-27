@@ -175,13 +175,22 @@
       <% end %>
     </div>
     <div class="d-inline-block">
-      <% if @search.next_step.present? %>
+      <% project = @search.lead.try(:project) %>
+      <% if @search.next_step.present? && policy([:admin, project]).booking_with_kyc_enabled? %>
         <%= form_for [:lead, @search] do |f| %>
           <%= f.hidden_field :step, value: @search.next_step %>
           <%= f.hidden_field :project_unit_id, id: 'project_unit_id' %>
           <%= f.submit I18n.t("global.next"), class: "next-btn btn btn-primary font-medium border-primary ms-2", disabled: 'disabled' %>
         <% end %>
-      <% end %>
+        <% else %>
+          <%= form_for(:booking_detail, url: hold_lead_search_path(@search), html: {method: "post", class: 'validate-form theme-form row', id: 'hold_booking_detail_from_tower'}) do |f| %>
+            <%= f.hidden_field :lead_id, value: @lead.id %>
+            <%= f.hidden_field :project_unit_id, id: 'project_unit_id' %>
+            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 text-right no-pd">
+              <%= f.submit I18n.t("global.next"), class: "btn next-btn bg-primary white fn-12 d-inline-block w-auto" %>
+            </div>
+          <% end %>
+        <% end %>
     </div>
   </div>
 </div>

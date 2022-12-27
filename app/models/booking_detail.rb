@@ -286,7 +286,7 @@ class BookingDetail
 
   # validates kyc presence if booking is not allowed without kyc
   def kyc_mandate
-    if project_unit.present? && project.enable_booking_with_kyc && !primary_user_kyc_id.present?
+    if project_unit.present? && project.booking_with_kyc_enabled? && !primary_user_kyc_id.present?
       self.errors.add(:base, "KYC is mandatory for booking.")
     end
   end

@@ -369,6 +369,14 @@ class Lead
     self.site_visits.where(booking_portal_client_id: self.booking_portal_client_id, status: "conducted").present?
   end
 
+  def kyc_required_before_booking?
+    !kyc_ready? && project.booking_with_kyc_required_before_booking?
+  end
+
+  def kyc_required_during_booking?
+    !kyc_ready? && project.booking_with_kyc_required_during_booking?
+  end
+
   def check_for_lead_conflict
     if self.manager.present?
       lead_conflict_on = self.booking_portal_client.enable_lead_conflicts

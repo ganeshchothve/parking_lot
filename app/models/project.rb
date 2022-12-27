@@ -18,6 +18,7 @@ class Project
   DEFAULT_AMENITIES = %w( swimming_pool table_tennis_court movie_theatre gym auditorium playschool sewage_treatment_plant internal_roads )
   DEFAULT_CONFIGURATIONS = %w( 1RK 1BHK 2BHK 2.5BHK 3BHK 3.5BHK 4BHK 5BHK 6BHK )
   ALLOWED_BANKS = %w( sbi hdfc bob bajaj_finance )
+  ENABLE_BOOKING_WITH_KYC = ['before_booking', 'during_booking', 'disable'].freeze
 
   # filters
   field :name, type: String
@@ -116,7 +117,7 @@ class Project
   field :price_upto, type: Integer
   field :broker_usp, type: Array, default: []
   field :enable_inventory, type: Boolean, default: false
-  field :enable_booking_with_kyc, type: Boolean, default: true
+  field :enable_booking_with_kyc, type: String, default: 'before_booking'
   field :check_sv_availability_in_selldo, type: Boolean, default: false
   field :incentive_calculation, type: Array, default: ["manual"]
   field :disable_project, type: Hash, default: {walk_ins: false, bookings: false, invoicing: false}
@@ -128,29 +129,29 @@ class Project
   field :kylas_custom_fields_option_id, type: Hash, default: {}
 
   field :email_header, type: String, default: '<div class="container">
-    <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= client.logo.url %>" />
+    <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= booking_portal_client.logo.url %>" />
     <div class="mt-3"></div>'
   field :email_footer, type: String, default: '<div class="mt-3"></div>
     <div class="card mb-3">
       <div class="card-body">
         Thanks,<br/>
-        <%= current_project.name %>
+        <%= self.name %>
       </div>
     </div>
     <div style="font-size: 12px;">
-      If you have any queries you can reach us at <%= current_project.support_number %> or write to us at <%= current_project.support_email %>. Please click <a href="<%= client.website_link %>">here</a> to visit our website.
+      If you have any queries you can reach us at <%= self.support_number %> or write to us at <%= self.support_email %>. Please click <a href="<%= booking_portal_client.website_link %>">here</a> to visit our website.
     </div>
     <hr/>
     <div class="text-muted text-center" style="font-size: 12px;">
-      © <%= Date.today.year %> <%= current_project.name %>. All Rights Reserved. | MAHARERA ID: <%= current_project.rera_registration_no %>
+      © <%= Date.today.year %> <%= self.name %>. All Rights Reserved. | MAHARERA ID: <%= self.rera_registration_no %>
     </div>
-    <% if client.address.present? %>
+    <% if booking_portal_client.address.present? %>
       <div class="text-muted text-center" style="font-size: 12px;">
-        <%= client.address.to_sentence %>
+        <%= booking_portal_client.address.to_sentence %>
       </div>
     <% end %>
     <div class="mt-3"></div>
-  </div>'  
+  </div>'
 
   mount_uploader :logo, DocUploader
   mount_uploader :mobile_logo, DocUploader
@@ -195,6 +196,7 @@ class Project
   validates :gst_number, uniqueness: { allow_blank: true }
   validates :city, inclusion: { in: proc  { |project| project.booking_portal_client.regions.distinct(:city) } }, allow_blank: true
   validates :region, inclusion: { in: proc { |project| project.booking_portal_client.regions.distinct(:partner_regions).flatten || [] } }, allow_blank: true
+  validates :enable_booking_with_kyc, inclusion: { in: ENABLE_BOOKING_WITH_KYC }, allow_blank: true
 
   accepts_nested_attributes_for :specifications, :offers, :timeline_updates, :address, :nearby_locations, allow_destroy: true
 
@@ -308,6 +310,18 @@ class Project
     custom_scope.merge!({ is_active: true }) if (params[:controller] == 'admin/projects' && params[:action] == 'index') || params[:controller] == 'home'
     custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
     custom_scope
+  end
+
+  def booking_with_kyc_enabled?
+    enable_booking_with_kyc != 'disable'
+  end
+
+  def booking_with_kyc_required_before_booking?
+    enable_booking_with_kyc == 'before_booking'
+  end
+
+  def booking_with_kyc_required_during_booking?
+    enable_booking_with_kyc == 'during_booking'
   end
 
 end

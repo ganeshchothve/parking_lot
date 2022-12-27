@@ -60,6 +60,10 @@ class Admin::ProjectPolicy < ProjectPolicy
     marketplace_client? && user.role.in?(%w(superadmin admin))
   end
 
+  def booking_with_kyc_enabled?
+    record.booking_with_kyc_enabled?
+  end
+
   def permitted_attributes(params = {})
     attributes = [:developer_name, :micro_market, :city, :possession, :latitude, :longitude, :foyer_link, :kylas_product_id, :launched_on, :our_expected_possession, :total_buildings, :total_units, :description, :advantages, :video_link, :registration_name, :rera_registration_no, :gst_number, :cin_number, :website_link, :creator_id, :support_name, :support_mail, :support_phone, :price_starting_from, :price_upto, :project_size, :total_buildings, :logo, :mobile_cover_photo, :cover_photo, :mobile_logo, :embed_map_tag, project_type: [], category: [], project_segment: [], approved_banks: [], configurations: [], amenities: [], usp: [], broker_usp: [], specifications_attributes: SpecificationPolicy.new(user, Specification.new).permitted_attributes, offers_attributes: OfferPolicy.new(user, Offer.new).permitted_attributes, timeline_updates_attributes: TimelineUpdatePolicy.new(user, TimelineUpdate.new).permitted_attributes, address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes, nearby_locations_attributes: NearbyLocationPolicy.new(user, NearbyLocation.new).permitted_attributes]
 
