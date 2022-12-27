@@ -48,7 +48,11 @@ class Admin::LeadPolicy < LeadPolicy
         valid
       end
     end
-    valid
+    if current_client.real_estate?
+      valid
+    else
+      false
+    end
   end
 
   def check_and_register?
@@ -56,7 +60,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def edit?
-    user.role.in?(%w(superadmin admin gre))
+    false && user.role.in?(%w(superadmin admin gre))
   end
 
   def update?
@@ -100,21 +104,29 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def show_selldo_links?
-    ENV_CONFIG['selldo'].try(:[], 'base_url').present? && record.lead_id? && record.project.selldo_default_search_list_id?
-  end
-
-  def send_payment_link?
-    valid = if user.booking_portal_client.payment_enabled?
-      if user.booking_portal_client.kyc_required_for_payment?
-        record.kyc_ready?
-      else
-        true
-      end
+    if current_client.real_estate?
+      ENV_CONFIG['selldo'].try(:[], 'base_url').present? && record.lead_id? && record.project.selldo_default_search_list_id?
     else
       false
     end
-    valid = valid && record.user.confirmed? && user.role.in?(User::ADMIN_ROLES)
-    valid && record.project.try(:booking_portal_domains).present?
+  end
+
+  def send_payment_link?
+    if current_client.real_estate?
+      valid = if user.booking_portal_client.payment_enabled?
+        if user.booking_portal_client.kyc_required_for_payment?
+          record.kyc_ready?
+        else
+          true
+        end
+      else
+        false
+      end
+      valid = valid && record.user.confirmed? && user.role.in?(User::ADMIN_ROLES)
+      valid && record.project.try(:booking_portal_domains).present?
+    else
+      false
+    end
   end
 
   def search_by?
@@ -126,13 +138,17 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def move_to_next_state?
-    if user.role?('sales')
-      record.may_dropoff? && (record.closing_manager_id == user.id)
+    if current_client.real_estate?
+      if user.role?('sales')
+        record.may_dropoff? && (record.closing_manager_id == user.id)
+      else
+        (user.role.in?(%w(gre team_lead)) && (record.is_a?(Lead) || record.role?('sales'))) ||
+        user.role?('sales') && (
+          (!record.is_a?(Lead) && record.role?('sales') && (record.may_break? || record.may_available?))
+        )
+      end
     else
-      (user.role.in?(%w(gre team_lead)) && (record.is_a?(Lead) || record.role?('sales'))) ||
-      user.role?('sales') && (
-        (!record.is_a?(Lead) && record.role?('sales') && (record.may_break? || record.may_available?))
-      )
+      false
     end
   end
 
@@ -169,19 +185,11 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def lead_activities?
-    unless marketplace_client?
-      true
-    else
-      user.role.in?(%w(admin superadmin))
-    end
+    !marketplace_client?
   end
 
   def remarks_from_selldo?
-    unless marketplace_client?
-      true
-    else
-      user.role.in?(%w(admin superadmin))
-    end
+    !marketplace_client?
   end
 
   def permitted_attributes(params = {})

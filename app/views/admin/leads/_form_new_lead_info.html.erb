@@ -7,38 +7,42 @@
 
   <%= f.hidden_field :kylas_deal_id, value: @lead.kylas_deal_id %>
   <%= f.hidden_field :sync_to_kylas, value: true %>
+  <% if policy([:admin, @lead]).editable_field?("kylas_product_id") %>
   <div class="mb-3">
       <%= f.label :kylas_product, class: 'label-required' %>
       <%= f.select :kylas_product_id, grouped_options_for_select(kylas_products), { include_blank: 'Select Kylas Product'}, autocomplete: 'off', class: 'selectize', required: true, autofocus: true, disabled: !(policy([current_user_role_group, @lead]).editable_field?("project_id")) %>
   </div>
-
+  <% end %>
+  <% if policy([:admin, @lead]).editable_field?("first_name") %>
   <div class="mb-3">
     <%= f.label :first_name, class: 'label-required' %>
     <%= f.text_field :first_name, class: 'form-control', id: 'new_lead_first_name', autofocus: true, required: true, disabled: !(policy([current_user_role_group, @lead]).editable_field?("first_name")) %>
   </div>
-
+  <% end %>
+  <% if policy([:admin, @lead]).editable_field?("last_name") %>
   <div class="mb-3">
     <%= f.label :last_name, class: 'label-required' %>
     <%= f.text_field :last_name, class: 'form-control', id: 'new_lead_last_name', autofocus: true, required: true, disabled: !(policy([current_user_role_group, @lead]).editable_field?("last_name")) %>
   </div>
-
+  <% end %>
+  <% if policy([:admin, @lead]).editable_field?("email") %>
   <div class="mb-3">
     <%= f.label :email %>
     <%= f.email_field :email, class: 'form-control', id: 'new_lead_email', disabled: !policy([current_user_role_group, @lead]).editable_field?("email") %>
   </div>
-
+  <% end %>
+  <% if policy([:admin, @lead]).editable_field?("phone") %>
   <div class="mb-3">
     <%= f.label :phone, class: 'form-label' %>
     <%= f.text_field :phone, class: 'form-control phone', id: 'new_lead_phone', disabled: !policy([current_user_role_group, @lead]).editable_field?("phone") %>
   </div>
-
-<% if (policy([current_user_role_group, @lead]).editable_field?("manager_id")) %>
+  <% end %>
+  <% if (policy([current_user_role_group, @lead]).editable_field?("manager_id")) %>
   <div class="mb-3">
     <%= f.label :manager_id %>
     <%= f.select :manager_id, options_from_collection_for_select(@cp_users.present? ? @cp_users : [], "id" , "name" , ((@cp_users.first.id.to_s rescue nil))), {prompt: true }, class: 'selectize-remote', autofocus: true, data: { url: admin_users_path, params: { fltrs: { role: ['channel_partner', 'cp_owner' ], user_status_in_company: 'active' } } }%>
   </div>
-<% end %>
-
+  <% end %>
   <div>
     <%= f.submit "Save", class: 'btn btn-primary float-end w-auto border-primary' %>
   </div>

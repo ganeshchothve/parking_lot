@@ -9,40 +9,41 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body theme-form">
-          <div class="mb-3">
-            <%= f.label :category, class: 'label-required' %>
+          <% if policy([:admin, @announcement]).editable_field?("category") %>
+            <div class="mb-3">
+              <%= f.label :category, class: 'label-required' %>
               <%= f.select :category, Announcement::CATEGORIES.map{|x| [t("mongoid.attributes.announcement.category.#{x}"), x] }, {prompt: I18n.t("global.select")}, class: 'selectize', required: true, disabled: (policy([current_user_role_group, announcement]).editable_field?("category") ? false : true) %>
-          </div>
-          <div class="mb-3">
-            <%= f.input :title, required: true, disabled: !policy([current_user_role_group, announcement]).editable_field?("title") %>
-          </div>
-          <div class="mb-3">
-            <%= f.input :content, required: true, disabled: !policy([current_user_role_group, announcement]).editable_field?("content"), as: :text %>
-          </div>
-          <div class="mb-3">
-            <%= f.input :date, required: true, disabled: !policy([current_user_role_group, announcement]).editable_field?("date")%>
-          </div>
-          <div class="mb-3">
-            <%= f.label t('mongoid.attributes.announcement.published') %>
-            <div class="form-check form-check-inline">
-              <%= f.radio_button :is_active, true, class: "form-check-input wd-22" %>
-              <%= f.label :is_active, I18n.t("global.boolean.true"), class: " form-check-label d-inline-block ms-2" %>
             </div>
-            <div class="form-check form-check-inline">
-              <%= f.radio_button :is_active, false, class: "form-check-input wd-22" %>
-              <%= f.label :is_active, I18n.t("global.boolean.false"), class: " form-check-label d-inline-block ms-2" %>
+          <% end %>
+          <% if policy([:admin, @announcement]).editable_field?("title") %>
+            <div class="mb-3">
+              <%= f.input :title, required: true, disabled: !policy([current_user_role_group, announcement]).editable_field?("title") %>
             </div>
-          </div>
-          <!-- <div class="mb-3">
-            <%#= f.label :roles, class: 'label-required' %>
-            <%#= f.select :roles, User.available_roles(current_client).collect{ |r| [User.human_attribute_name("role.#{r}"), r] }, {prompt: I18n.t("global.select")}, class: 'selectize', required: 'required', disabled: (policy([current_user_role_group, meeting]).editable_field?("roles") ? false : true), multiple: true %>
-          </div> -->
-
-          <!-- <div class="mb-3">
-            <%#= f.input :broadcast, disabled: !policy([current_user_role_group, meeting]).editable_field?("broadcast"), as: :boolean, input_html: {class: 'w-auto'} %>
-          </div> -->
+          <% end %>
+          <% if policy([:admin, @announcement]).editable_field?("content") %>
+            <div class="mb-3">
+              <%= f.input :content, required: true, disabled: !policy([current_user_role_group, announcement]).editable_field?("content"), as: :text %>
+            </div>
+          <% end %>
+          <% if policy([:admin, @announcement]).editable_field?("date") %>
+            <div class="mb-3">
+              <%= f.input :date, required: true, disabled: !policy([current_user_role_group, announcement]).editable_field?("date")%>
+            </div>
+          <% end %>
+          <% if policy([:admin, @announcement]).editable_field?("is_active") %>
+            <div class="mb-3">
+              <%= f.label t('mongoid.attributes.announcement.published') %>
+              <div class="form-check form-check-inline">
+                <%= f.radio_button :is_active, true, class: "form-check-input wd-22" %>
+                <%= f.label :is_active, I18n.t("global.boolean.true"), class: " form-check-label d-inline-block ms-2" %>
+              </div>
+              <div class="form-check form-check-inline">
+                <%= f.radio_button :is_active, false, class: "form-check-input wd-22" %>
+                <%= f.label :is_active, I18n.t("global.boolean.false"), class: " form-check-label d-inline-block ms-2" %>
+              </div>
+            </div>
+          <% end %>
         </div>
-
         <div class="modal-footer text-end">
           <%= f.submit I18n.t("global.save"), class: "btn btn-primary" %>
         </div>

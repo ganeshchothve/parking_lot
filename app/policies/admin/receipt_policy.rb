@@ -2,8 +2,12 @@ class Admin::ReceiptPolicy < ReceiptPolicy
   # def edit_token_number? from ReceiptPolicy
 
   def index?
-    out = !user.buyer? && (enable_actual_inventory?(user) || enable_direct_payment?)
-    out = out && user.active_channel_partner? && !user.booking_portal_client.launchpad_portal && (user.booking_portal_client.enable_leads? || user.booking_portal_client.enable_site_visit?)
+    if current_client.real_estate?
+      out = !user.buyer? && (enable_actual_inventory?(user) || enable_direct_payment?)
+      out = out && user.active_channel_partner? && !user.booking_portal_client.launchpad_portal && (user.booking_portal_client.enable_leads? || user.booking_portal_client.enable_site_visit?)
+    else
+      false
+    end
   end
 
   def export?

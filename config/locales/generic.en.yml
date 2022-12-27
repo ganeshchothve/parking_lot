@@ -1,4 +1,4 @@
-en:
+en-GENERIC:
   currency:
     indian: "₹"
     default: "&#8377;"
@@ -87,11 +87,11 @@ en:
       :false: "No"
     agreement_value: "AV"
     walkin:
-      one: "Walk-in"
-      other: "Walk-ins"
+      one: "Meeting"
+      other: "Meetings"
     third_party_inventory: "3rd Party Inventory"
     variable_incentive_schemes: "Variable Incentive Scheme"
-    lead: "Lead"
+    lead: "Deal"
     discount:
       one: "Token Discount"
       other: "Token Discounts"
@@ -102,7 +102,7 @@ en:
       something_went_wrong: "Something went wrong"
     filter: "Filter"
     filters: "Filters"
-    project: "Project"
+    project: "Product/ Service"
     booking_count: "Booking Count"
     no_users: "No Users Found"
     no_record: "No Records Found"
@@ -138,9 +138,9 @@ en:
     tabs:
       amount: "Amount"
       overview: "Overview"
-      site_visits: "Walk-ins"
+      site_visits: "Meetings"
       remarks_from_selldo: "Remarks From SellDo"
-      lead_activities: "Lead Activities"
+      lead_activities: "Deal Activities"
       bookings: "Bookings"
       basic_details: "Basic Details"
       booking_details: "Booking Details"
@@ -148,10 +148,10 @@ en:
       time_slot: "Time Slot"
       note_summary: "Note Summary"
       crm: "CRM"
-      lead: "Lead"
+      lead: "Deal"
       users: "Users"
       notes: "Notes"
-      interested_projects: "Interested Projects"
+      interested_projects: "Interested Product/ Services"
       my_referrals: "My Referrals"
       utm_params: "UTM Params"
       residence/permanent_address: "Residence / Permanent Address"
@@ -176,7 +176,6 @@ en:
       integrations: "Integrations"
       external_inventory_view: "External Inventory View Configuration"
       specifications: "Specifications"
-      project_unit: Project Unit
     units:
       sq_ft: "sq.ft"
     fetch_errors:
@@ -212,20 +211,20 @@ en:
       configurations: "Configurations"
       collaterals: "Collaterals"
       amenities: "Amenities"
-      project_timeline: "Project Timeline"
+      project_timeline: "Product/ Service Timeline"
       rate_of_interest: "Rate of Interest"
       loan_tenure: "Loan Tenure"
       total_interest_payable: "Total Interest Payable"
       total_amount_payable: "Total Amount Payable"
       select_category: "Select Category"
       select_type: "Select Type"
-      select_project: "Select Project"
+      select_project: "Select Product/ Service"
       uniques_selling_points: "Uniques Selling Points"
       view_all: "View All"
       advertise_kit: "Advertise Kit"
       contact_details: "Support Contact Details"
       customers_offers: "Customers offers"
-      send_projects_link: "Send Projects Link"
+      send_projects_link: "Send Product/ Services Link"
       add_comments: "Add Comments"
       sign_in_count: "Sign in Count"
       recommended: "Recommended"
@@ -233,9 +232,9 @@ en:
       saved: "Saved"
       launchbook: "Launchbook"
       embassy_developers: "Embassy Developers"
-      completed_projects: "Completed Projects"
-      ongoing_projects: "Ongoing Projects"
-      benefits: "Benefits of investing in this project"
+      completed_projects: "Completed Product/ Services"
+      ongoing_projects: "Ongoing Product/ Services"
+      benefits: "Benefits of investing in this product/ service"
       good_location: "Good Location"
       amenitites_state: "State of the art Amenities"
       reputed_developer: "Reputed Developer"
@@ -253,7 +252,7 @@ en:
       early_access: "Early access to <br> New Launches"
       timely_payments: "Timely payments to <br> streamline cash flows"
       marketing_support: "Marketing Support <br> & assets"
-      performance_based: "Performance-based <br> Channel Partner ratings"
+      performance_based: "Performance-based <br> Partner ratings"
       extensive_nurturing: "Extensive nurturing <br> Calling during launches"
       crm_training: "CRM training <br> Support"
       fully_automated: "Fully automated <br> EOI Process"
@@ -269,8 +268,8 @@ en:
       vis_report: "Variable Incentive Scheme Report"
       current_ladder: "Current Ladder"
       total_incentives_generated: "Total Incentives Generated"
-      projects_available: "Projects available"
-      upcoming_events: "Upcoming Evetns"
+      projects_available: "Available Product/ Services"
+      upcoming_events: "Upcoming Events"
       drop: "Drop"
       busy_not_available: "Busy | Not Available"
       break: "Break"
@@ -282,7 +281,7 @@ en:
       city_wise:
         booking_reports: "City Wise Booking Reports"
       add_upi: "Please add your UPI Address for quick payment. Please click on the link"
-      active_walkins: "Active Walk-ins"
+      active_walkins: "Active Meetings"
       active_bookings: "Active Bookings"
       active_partners: "Active Partners"
       cancel: "Cancel"
@@ -312,7 +311,6 @@ en:
       total_count: "Total %{name}"
       details_on_click: "Click to view details"
       add_city_regions: "Add New City & Regions"
-      project_unit: Project Unit
     text:
       dropping: "Dropping..."
     operators:
@@ -333,7 +331,7 @@ en:
       link_name: "%{model} Details"
     edit:
       link_name: "Edit %{model}"
-      direct_activation_for_cp_label: "Skip Admin approval for channel partner registration"
+      direct_activation_for_cp_label: "Skip Admin approval for partner registration"
     new:
       link_name: "Add %{model}"
     destroy:
@@ -432,8 +430,8 @@ en:
         one: "Partner Company"
         other: "Partner Companies"
       interested_project:
-        one: "Interested Project"
-        other: "Interested Projects"
+        one: "Interested Product/ Service"
+        other: "Interested Product/ Services"
 
       data_attribute:
         one: "Date"
@@ -457,8 +455,8 @@ en:
         one: "Apartment"
         other: "Apartments"
       project:
-        one: "Project"
-        other: "Projects"
+        one: "Product/ Service"
+        other: "Products & Services"
       token_type:
         one: "Token Type"
         other: "Token Types"
@@ -512,20 +510,20 @@ en:
         one: "General"
         other: "General"
       site_visit:
-        one: "Walk-in"
-        other: "Walk-ins"
+        one: "Meeting"
+        other: "Meetings"
       user_kyc:
         one: "KYC"
         other: "KYCs"
       user:
-        one: "User Account"
-        other: "Users Accounts"
+        one: "User"
+        other: "Users"
       fund_account:
         one: "Fund Account"
         other: "Fund Accounts"
       lead:
-        one: "Lead"
-        other: "Leads"
+        one: "Deal"
+        other: "Deals"
       invoice:
         zero: "Invoice"
         one: "Invoice"
@@ -562,18 +560,18 @@ en:
       api_log/resource_type:
         BookingDetail: Booking
         Campaign: Campaign
-        ChannelPartner: Channel Partner
+        ChannelPartner: Partner
         Client: Client
         FundAccount: Fund Account
         Invoice: Invoice
-        Lead: Lead
+        Lead: Deal
         Meeting: Event
         Note: Note
-        ProjectTower: Project Tower
-        ProjectUnit: Project Unit
-        Project: Project
+        ProjectTower: Product/ Service Tower
+        ProjectUnit: Product/ Service Unit
+        Project: Product/ Service
         Receipt: Payment
-        SiteVisit: Walk-in
+        SiteVisit: Meeting
         UserKyc: User KYC
         User: User
       announcement:
@@ -610,9 +608,9 @@ en:
         description: "Description"
         start_token_number: "Start Token Number"
         end_token_number: "End Token Number"
-        project_id: "Project"
+        project_id: "Product/ Service"
         token_type_id: "Token Type"
-        project: "Project"
+        project: "Product/ Service"
         token_type: "Token Type"
         field: "Field"
         absolute_value: "Absolute Value"
@@ -623,7 +621,7 @@ en:
         embedded_video: "Embedded Video"
       unit_configuration:
         name: "Name"
-        project_id: "Project"
+        project_id: "Product/ Service"
         saleable: "Saleable"
         carpet: "Carpet"
         base_rate: "Base Rate"
@@ -634,7 +632,7 @@ en:
         floor_plan_html: "<ul><li>Floor Plans images</li></ul>"
         image_html: "<ul><li>Other Unit images</li></ul>"
       interested_project:
-        project_id: "Project"
+        project_id: "Product/ Service"
         user_id: "User"
         status: "Status"
       interested_project/status:
@@ -660,11 +658,11 @@ en:
             post: "Sync"
           resource_classes:
             User: "Customer Account"
-            ChannelPartner: "Channel Partner"
+            ChannelPartner: "Partner"
             Receipt: "Payment"
             UserKyc: "User KYC"
             BookingDetail: "Booking Detail"
-            Lead: 'Lead'
+            Lead: 'Deal'
             SiteVisit: 'Walkin'
             FundAccount: 'Account'
             Note: 'Note'
@@ -682,7 +680,7 @@ en:
 
       bulk_upload_report:
         uploaded_by_id: "Uploaded By"
-        project_id: "Project"
+        project_id: "Product/ Service"
         total_rows: "Total rows"
         success_count: "Successfully Uploaded"
         failure_count: "Failed to Upload"
@@ -755,8 +753,8 @@ en:
         name: "Name"
         rejection_reason: "Rejection Reason"
         status: "Status"
-        project_tower: "Project Tower"
-        project_id: "Project"
+        project_tower: "Product/ Service Tower"
+        project_id: "Product/ Service"
         user: "User"
         bathrooms: "Bathrooms"
         bedrooms: "Bedrooms"
@@ -791,16 +789,16 @@ en:
         effective_rate: "Effective Rate"
         base_rate: "Base Rate"
         floor_rise: "Floor Rise"
-        booking_project_unit_name: "Booking Project Unit Name"
-        project_tower_name: "Project Tower Name"
-        project_unit_name: "Project Unit Name"
-        project_unit_configuration: "Project Unit Configuration"
+        booking_project_unit_name: "Product/ Service"
+        project_tower_name: "Product/ Service Tower Name"
+        project_unit_name: "Product/ Service"
+        project_unit_configuration: "Product/ Service Unit Configuration"
         site_visit_id: "Site Visit"
-        project_id: "Project"
-        lead_id: "Lead"
+        project_id: "Product/ Service"
+        lead_id: "Deal"
         other_costs: "Other costs"
         source: "Source"
-        manager_id: "Channel Partner"
+        manager_id: "Partner"
         template_docs: Documents
         print_document: Print Document
       booking_detail/selldo_status:
@@ -849,12 +847,12 @@ en:
         allowed_bookings_per_user: "Bookings allowed per user"
         selldo_client_id: "SellDo Client ID"
         selldo_form_id: "SellDo Form ID"
-        selldo_channel_partner_form_id: "SellDo Form ID - For Channel Partners"
-        selldo_gre_form_id: "SellDo Form ID - Used by Non Channel Partners"
+        selldo_channel_partner_form_id: "SellDo Form ID - For Partners"
+        selldo_gre_form_id: "SellDo Form ID - Used by Non Partners"
         selldo_api_key: "SellDo API Key (Use generic Api Client)"
         selldo_api_secret: "SellDo API Secret"
         selldo_default_srd: "SellDo Default SRD"
-        selldo_cp_srd: "SellDo Channel Partner SRD"
+        selldo_cp_srd: "SellDo Partner SRD"
         notification_email: "Notification Email"
         notification_email_sort: "(all emails are sent here)"
         notification_numbers: "Notification Numbers"
@@ -867,8 +865,8 @@ en:
         address: "Address"
         cin_number: "CIN Number"
         website_link: "Website Link (Used in email communication)"
-        cp_disclaimer: "Channel Partner Disclaimer"
-        cp_disclaimer_sort: "(to be shown to Channel Partners during registration)"
+        cp_disclaimer: "Partner Disclaimer"
+        cp_disclaimer_sort: "(to be shown to Partners during registration)"
         disclaimer: "Disclaimer"
         support_number: "Support Phone"
         support_email: "Support Email"
@@ -876,8 +874,8 @@ en:
         helpdesk_email: "Helpdesk Email (For after booking CRM Help)"
         ga_code: "Google Analytics Code (UA-XXXXXXXXX-Y)"
         gtm_tag: "GTM Tag (Please add a the entire JS code)"
-        channel_partner_support_number: "Support Number (For Channel Partners)"
-        channel_partner_support_email: "Support Email (For Channel Partner)"
+        channel_partner_support_number: "Support Number (For Partners)"
+        channel_partner_support_email: "Support Email (For Partner)"
         erp: "ERP"
         cancellation_amount: "Cancellation Amount (displayed to Customers)"
         area_unit: "Unit of Area (used to display inventory)"
@@ -887,27 +885,31 @@ en:
         sms_provider_password: "SMS Provider Password"
         sms_mask: "SMS Mask"
         enable_actual_inventory: "Enable Inventory for these user roles"
-        enable_channel_partners: "Enable Channel Partners?"
-        enable_leads: "Enable Lead?"
-        enable_site_visit: "Enable Walk-in?"
+        enable_channel_partners: "Enable Partners?"
+        enable_leads: "Enable Deal?"
+        enable_site_visit: "Enable Meeting?"
         blocking_amount: "Min. Amount for Blocking an Unit"
         blocking_days: "Unit to be blocked for (Days)"
         holding_minutes: "Unit to be held for (Minutes)"
         enable_company_users: "Allow Company Users & Benefits"
         roles_taking_registrations: "Allowed Roles For Taking New Registrations"
+        external_api_integration: "Enable External CRM Integration"
         enable_incentive_module: "Enable Brokerage Module For These Roles"
-        mask_lead_data_for_roles: "Enable Lead Data Masking For These Roles"
-        partner_regions: "Define Regions For Channel Partners & Projects"
+        mask_lead_data_for_roles: "Enable Deal Data Masking For These Roles"
+        partner_regions: "Define Regions For Partners and Products & Services"
         powered_by_link: "Show Powered By Link"
-        lead_blocking_days: "Configure Lead Blocking Days"
+        lead_blocking_days: "Configure Deal Blocking Days"
+        invoice_approval_tat: "Invoice Approval TAT (In Days)"
         incentive_gst_slabs: "Configure Incentive GST Slabs (%)"
-        team_lead_dashboard_access_roles: "Team Lead Dashboard Access Roles"
-        enable_lead_conflicts: "Enable Lead Conflicts"
+        team_lead_dashboard_access_roles: "Team Deal Dashboard Access Roles"
+        tl_dashboard_refresh_timer: "Team Deal Dashboard Refresh Timer (Minutes)"
+        enable_lead_conflicts: "Enable Deal Conflicts"
         launchpad_portal: "Launchpad Portal"
         payment_gateway: "Payment Gateway"
 
         enable_live_inventory: "Enable Live Inventory"
         enable_booking_with_kyc: "Enabe Booking With KYC"
+        allow_multiple_bookings_per_user_kyc: "Allow Multiple Bookings per User KYC"
         incentive_calculation: "Incentive Calculation"
         general_user_request_categories: "General User Request Categories"
         sms_provider: "Sms Provider"
@@ -938,10 +940,10 @@ en:
         partner_regions: "Partner Regions"
         enable_vis: "Enable vis"
         kylas_api_key: Kylas API Key
-        cp_deal_custom_field: "Channel Partner"
-        cp_lead_custom_field: "Channel Partner"
-        cp_meeting_custom_field: "Channel Partner"
-        project_meeting_custom_field: "Project"
+        cp_deal_custom_field: "Partner"
+        cp_lead_custom_field: "Partner"
+        cp_meeting_custom_field: "Partner"
+        project_meeting_custom_field: "Product/ Service"
         industry: 'Industry'
       client/available_preferred_logins:
         phone: "Phone Based"
@@ -965,10 +967,6 @@ en:
         enable_with_kyc: 'Enable With KYC'
         enable_without_kyc: 'Enable Without KYC'
         disable: 'Disable Payment'
-      client/lead_conflicts:
-        client_level: Client Level
-        project_level: Project Level
-        no_conflict: No Conflict
       client/industries:
         real_estate: 'Real Estate'
         generic: 'Generic'
@@ -976,10 +974,10 @@ en:
         name: "Developer Name"
         selldo_id: "CRM Developer ID"
       project:
-        name: "Project Name"
+        name: "Product/ Service Name"
         region: "Region"
         category: "Category"
-        project_type: "Project Type"
+        project_type: "Product/ Service Type"
         project_segment: "Segment"
         configurations: "Configurations"
         micro_market: "Location"
@@ -1012,8 +1010,8 @@ en:
         incentive_percentage_slabs: "Incentive Percentage Slabs"
         gst_slab_applicable: "GST Slab Applicable"
         enable_slot_generation: "Enable Slot Generation"
-        disable_project: "Enable / Disable Project Functionalities"
-        disable_walkins: "Disable Walk-ins"
+        disable_project: "Enable / Disable Product or Service Functionalities"
+        disable_walkins: "Disable Meetings"
         disable_bookings: "Disable Bookings"
         disable_invoicing: "Disable Invoicing"
         is_active: "Active?"
@@ -1026,13 +1024,13 @@ en:
         allowed_bookings_per_user: "Bookings allowed per user"
         selldo_client_id: "SellDo Client ID"
         selldo_form_id: "SellDo Form ID"
-        selldo_channel_partner_form_id: "SellDo Form ID - For Channel Partners"
-        selldo_gre_form_id: "SellDo Form ID - Used by Non Channel Partners"
+        selldo_channel_partner_form_id: "SellDo Form ID - For Partners"
+        selldo_gre_form_id: "SellDo Form ID - Used by Non Partners"
         selldo_api_key: "SellDo API Key (Use generic Api Client)"
         selldo_default_srd: "SellDo Default SRD"
-        selldo_cp_srd: "SellDo Channel Partner SRD"
-        selldo_id: "CRM Project ID"
-        selldo_default_search_list_id: "CRM All Leads Search List ID"
+        selldo_cp_srd: "SellDo Partner SRD"
+        selldo_id: "CRM Product/ Service ID"
+        selldo_default_search_list_id: "CRM All Deals Search List ID"
         notification_email: "Notification Email"
         notification_email_sort: "(all emails are sent here)"
         notification_numbers: "Notification Numbers"
@@ -1044,7 +1042,7 @@ en:
         cin_number: "CIN Number"
         gst_number: "GST Number"
         website_link: "Website Link (Used in email communication)"
-        cp_disclaimer: "Channel Partner Disclaimer (to be shown to Channel Partners during registration)"
+        cp_disclaimer: "Partner Disclaimer (to be shown to Partners during registration)"
         disclaimer: "Disclaimer"
         support_number: "Support Phone"
         support_email: "Support Email"
@@ -1055,26 +1053,26 @@ en:
         ga_code: "Google Analytics Code (UA-XXXXXXXXX-Y)"
         gtm_tag: "GTM Tag (Please add a the entire JS code)"
         channel_partner_support_number: "Support Number"
-        channel_partner_support_number_sort: "(For Channel Partners)"
+        channel_partner_support_number_sort: "(For Partners)"
         channel_partner_support_email: "Support Email"
-        channel_partner_support_email_sort: "(For Channel Partner)"
+        channel_partner_support_email_sort: "(For Partner)"
         erp: "ERP"
         cancellation_amount: "Cancellation Amount (displayed to Customers)"
         area_unit: "Unit of Area (used to display inventory)"
         enable_actual_inventory: "Enable Inventory for these user roles"
-        enable_channel_partners: "Enable Channel Partners"
+        enable_channel_partners: "Enable Partners"
         blocking_amount: "Min. Amount for Blocking an Unit"
         blocking_days: "Unit to be blocked for (Days)"
         holding_minutes: "Unit to be held for (Minutes)"
         rera_registration_no: "RERA Registration Number"
         configurations: "Configuration Types"
-        types: "Project Type"
+        types: "Product/ Service Type"
         project_size: "Total Land Area (in Acres)"
         total_buildings: "Number Of Ongoing Towers"
-        amenities: "Project Amenities"
-        specifications: "Project Specifications"
+        amenities: "Product/ Service Amenities"
+        specifications: "Product/ Service Specifications"
         offers: "Customer Offers"
-        timeline_updates: "Project Timelines"
+        timeline_updates: "Product/ Service Timelines"
         assets: "Collaterals"
         address: "Address"
         offer_category: "Category"
@@ -1095,7 +1093,7 @@ en:
         broker_usp: "Broker Unique Selling Points (Fill in upto 3 USPs)"
         check_sv_availability_in_selldo: "Check Site Visit Availability in CRM"
         incentive_gst_slabs: "Configure Incentive GST Slabs (%)"
-        payment_enabled: "Enable Booking Without Payment"
+        payment_enabled: "Enable Payment"
         approved_banks/list:
           hdfc: "HDFC Bank"
           sbi: "State Bank of India"
@@ -1222,7 +1220,7 @@ en:
         created_on: "Created On"
         add_company: "Add Partner Company"
         upload_documents: "Upload Documents"
-        project_ids: Projects
+        project_ids: Products & Services
         document_type: Document Type
       channel_partner/file_types:
         rera_certificate: "RERA Certificate"
@@ -1268,7 +1266,7 @@ en:
       channel_partner/services:
         work_on_mandates: "Work on Mandates"
         sales_training: "Sales Training & Branded Collaterals"
-        lead_generation_help: "Lead Generation Help"
+        lead_generation_help: "Deal Generation Help"
         crm: "CRM"
       channel_partner/experience:
         zero_to_one: "0-1 yrs"
@@ -1291,7 +1289,7 @@ en:
         subject: "Subject"
         body: "Body"
         status: "Status"
-        project_id: "Project"
+        project_id: "Product/ Service"
       email/status:
         draft: "Draft"
         scheduled: "Scheduled"
@@ -1316,7 +1314,7 @@ en:
         UserKyc: "KYC"
         Receipt: "Payments"
         BookingDetail: "Booking"
-        ChannelPartner: "Channel Partner"
+        ChannelPartner: "Partner"
       erp_model/request_type:
         json: "JSON"
       erp_model/http_verb:
@@ -1348,7 +1346,7 @@ en:
       portal_stage_priority/portal_stages:
         registered: "Registered"
         confirmed: "Confirmed"
-        project_info: "Project Info"
+        project_info: "Product/ Service Info"
         kyc_done: "KYC Done"
         unit_browsing: "Unit Browsing"
         unit_selected: "Unit Selected"
@@ -1376,15 +1374,15 @@ en:
         user_kyc_ids: "Co-Applicants (KYCs associated with this Apartment)"
         primary_user_kyc_id: "Primary User KYC"
         name: "Name"
-        project_id: "Project"
-        project_tower_name: "Project Tower"
-        project_tower_id: "Project Tower"
-        project_name: "Project"
+        project_id: "Product/ Service"
+        project_tower_name: "Product/ Service Tower"
+        project_tower_id: "Product/ Service Tower"
+        project_name: "Product/ Service"
         blocked_on: "Blocked On"
         unit_facing_direction: "Facing"
         agreement_price: "Agreement Value"
         all_inclusive_price: "All Inclusive Price"
-        project_tower: "Project Tower"
+        project_tower: "Product/ Service Tower"
         floor: "Floor"
         floors: "Floors"
         apartment: "Apartment"
@@ -1461,7 +1459,7 @@ en:
         upid_id: "UPI ID"
         deals: "Deals"
         name_email_phone: "Name/Email/Phone"
-        project_id: "Project"
+        project_id: "Product/ Service"
         project_unit_id: "Apartment"
         processed_on: "Date of Clearance"
         payment_mode: "Mode of Payment"
@@ -1531,8 +1529,8 @@ en:
 
       scheme:
         name: "Name"
-        project_id: "Project"
-        project_tower_id: "Project Tower"
+        project_id: "Product/ Service"
+        project_tower_id: "Product/ Service Tower"
         project_unit_id: "Apartment"
         user_id: "User"
         user_role: "User Role"
@@ -1542,7 +1540,7 @@ en:
         approved_at: "Approved At"
         approved_by: "Approved By"
         created_by: "Created By"
-        default_for_users: "Default for Channel Partners"
+        default_for_users: "Default for Partners"
         can_be_applied_by: "Can be applied by"
         customer_role: "Customer Role"
         payment_schedule_template_id: "Payment Schedule Template"
@@ -1554,9 +1552,9 @@ en:
 
       incentive_scheme:
         name: "Name"
-        project_id: "Project"
-        project_tower_id: "Project Tower"
-        tier_id: "Channel Partner Tier"
+        project_id: "Product/ Service"
+        project_tower_id: "Product/ Service Tower"
+        tier_id: "Partner Tier"
         status: "Status"
         description: "Description"
         date_range: "Date Filter"
@@ -1571,9 +1569,9 @@ en:
         starts_on: "Starts On"
         ends_on: "Ends On"
       incentive_scheme/categories:
-        walk_in: "Walk-in"
+        walk_in: "Meeting"
         spot_booking: "Spot Booking"
-        lead: "Lead"
+        lead: "Deal"
         referral: "Referral"
         brokerage: "Booking Brokerage"
       incentive_scheme/status:
@@ -1585,13 +1583,13 @@ en:
         sub_brokerage: "Sub Brokerage"
       incentive_scheme/payment_to:
         company: "Partner Company"
-        channel_partner: "Channel Partner"
+        channel_partner: "Partner"
       incentive_scheme/strategies:
         number_of_items: "No of Items"
         sum_of_units: "Sum of Units"
       incentive_scheme/resource_class:
-        SiteVisit: "Walk-in"
-        Lead: "Lead"
+        SiteVisit: "Meeting"
+        Lead: "Deal"
         BookingDetail: "Booking"
         User: "User (Referral)"
       variable_incentive_scheme:
@@ -1605,8 +1603,8 @@ en:
         max_expense_percentage: "Expense Max %"
         start_date: "Start Date"
         end_date: "End Date"
-        project_ids: "Projects"
-        user_id: "Channel Partner"
+        project_ids: "Products & Services"
+        user_id: "Partner"
         approved_by: "Approved By"
         created_by: "Created by"
         total_bookings: "Total Bookings"
@@ -1633,7 +1631,7 @@ en:
         approved_amount: "Approved Amount"
         comments: "Comments"
         rejection_reason: "Rejection Reason"
-        project_id: "Project"
+        project_id: "Product/ Service"
         booking_detail_id: "Booking Detail"
         incentive_scheme_id: "Brokerage Scheme"
         ladder_stage: "Ladder Stage"
@@ -1645,7 +1643,7 @@ en:
         agreement_amount: "Consideration Value For Brokerage"
         incentive_resource: "Resource"
         category: "Type"
-        manager_id: "Channel Partner"
+        manager_id: "Partner"
         account_manager_id: "Account Manager"
         actual_invoice_amount: "Actual Invoice Amount"
         tentative_invoice_amount: "Tentative Invoice Amount"
@@ -1671,7 +1669,7 @@ en:
       invoice/categories:
         walk_in: "Walk In"
         spot_booking: "Spot Booking"
-        lead: "Lead"
+        lead: "Deal"
         referral: "Referral"
         brokerage: "Brokerage"
       invoice/sort_options:
@@ -1728,16 +1726,15 @@ en:
         type: "Type"
         dlt_tag_id: "DLT Tag ID"
         dlt_temp_id: "DLT Template ID"
-        project_id: "Project"
-        project_ids: 'Projects'
+        project_id: "Product/ Service"
+        project_ids: 'Products & Services'
         print_document: Print Document
         custom_document: Documents
         document_not_available: Document not available
         print: Print
-        subject_class: Subject Class
       user_request:
-        project_unit: "Project Unit"
-        project_id: "Project"
+        project_unit: "Product/ Service Unit"
+        project_id: "Product/ Service"
         category: "Category."
         request_type: "Request type"
         _type: "Request type"
@@ -1751,9 +1748,9 @@ en:
         due_date: "Due Date"
         details: "Details"
         status: "Status"
-        project_id: "Project"
+        project_id: "Product/ Service"
         project_unit_id: "Related Apartment"
-        alternate_project_unit_id: "Alternate Project Unit"
+        alternate_project_unit_id: "Alternate Product/ Service Unit"
         receipt_id: "Related Payment"
         created_at: "Created at"
         resolved_at: "Processed on"
@@ -1765,26 +1762,26 @@ en:
         created_by: "Created By"
         request: "Request"
       template/subject_classes:
-        SiteVisit: Walk-in
+        SiteVisit: Meeting
         VariableIncentiveScheme: Variable Incentive Scheme
         Workflow: Workflow
-        ProjectUnit: Project Unit
+        ProjectUnit: Product/ Service Unit
         IncentiveScheme: Incentive Scheme
         User: User
-        ProjectTower: Project Tower
-        Project: Project
+        ProjectTower: Product/ Service Tower
+        Project: Product/ Service
         BookingDetail: Booking
-        Lead: Lead
+        Lead: Deal
         Scheme: Scheme
         Receipt: Payment
-        ChannelPartner: Channel Partner
+        ChannelPartner: Partner
         UserKyc: User KYC
         Invoice: Invoice
         Client: Client
         UserRequest::Cancellation: Cancellation Request
         UserRequest::Swap: Swap Request
       user_request/swap:
-        project_unit_id: "Project Unit"
+        project_unit_id: "Product/ Service Unit"
       user_request/status:
         pending: "Pending"
         processing: "Processing"
@@ -1814,15 +1811,15 @@ en:
         email: Email
         phone: Phone
         cp_manager: 'Relationship Manager'
-        project: "Project"
-        lead: "Lead"
+        project: "Product/ Service"
+        lead: "Deal"
         creator: "Created By"
         scheduled_on: "Scheduled on"
         status: "Status"
         conducted_on: "Conducted on"
         site_visit_type: "Type"
         approval_status: "Approval Status"
-        manager_id: "Channel Partner"
+        manager_id: "Partner"
         rejection_reason: "Rejection Reason"
         is_revisit: "Revisit"
       site_visit/status:
@@ -1865,7 +1862,7 @@ en:
         existing_customer: "Are you an existing customer with us?"
         comments: "Please mention any specific notes for our team"
         user_id: "Customer"
-        lead_id: "Lead"
+        lead_id: "Deal"
         creator: "Created By"
         project_units: "Apartments"
         son_daughter_of: "Son / Daughter Of"
@@ -1888,7 +1885,7 @@ en:
         loan_required: "Do you require a Loan"
         bank_name: "Bank Name"
         existing_customer_name: "Customer Name"
-        existing_customer_project: "Project you have already bought"
+        existing_customer_project: "Product/ Service you have already bought"
         customer_company_name: "Company Name"
         configurations: "Preferences"
         number_of_units: "Number of Units"
@@ -1933,10 +1930,10 @@ en:
         end_date: "Campaign End Date"
         campaign_type: "Type"
         status: "Status"
-        estimated_cost_per_lead: "Estimated Cost per Lead (Rs.)"
+        estimated_cost_per_lead: "Estimated Cost per Deal (Rs.)"
         sources: "Target Ad Platforms"
-        projects: "Related Projects"
-        project_ids: "Related Projects"
+        projects: "Related Products & Services"
+        project_ids: "Related Products & Services"
         target_areas: "Target Areas (Micro-markets)"
         focus: "Campaign Focus"
         campaign_budgets: "Media Plan"
@@ -1955,7 +1952,7 @@ en:
         cancelled: "Cancelled"
         Completed: "Completed"
       campaign/focuses:
-        project_based: "Project based"
+        project_based: "Product/ Service based"
         area_based: "Area based"
       campaign/campaign_types:
         pool_funded: "Pool funded"
@@ -1976,8 +1973,8 @@ en:
         agenda: "Agenda"
         participant_ids: "Event Attendees"
         participants: "Event Attendees"
-        project: "Project"
-        project_id: "Project"
+        project: "Product/ Service"
+        project_id: "Product/ Service"
         creator: "Host"
         creator_id: "Host"
         meeting_date: "Event Date"
@@ -2019,11 +2016,11 @@ en:
       user:
         first_name: "First Name"
         last_name: "Last Name"
-        temporarily_blocked: "Qualify lead"
-        iris_confirmation: "Lead Tagging"
+        temporarily_blocked: "Qualify Deal"
+        iris_confirmation: "Deal Tagging"
         aadhaar: "Aadhaar"
         confirmation: "Confirmation"
-        channel_partner: "Channel Partner"
+        channel_partner: "Partner"
         created_at: "Registered At"
         confirmed_at: "Confirmed"
         confirmed_by: "Confirmed By"
@@ -2035,14 +2032,14 @@ en:
         kyc_ready: "Is the Customer KYC Ready?"
         login_otp: "Login OTP"
         location: "Location"
-        lead_id: "CRM Lead ID"
+        lead_id: "CRM Deal ID"
         manager_name: "Manager Name"
         manager_role: "Sales Manager / Added by Role"
-        manager_id: "Channel Partner"
-        project_ids: "Projects"
+        manager_id: "Partner"
+        project_ids: "Products & Services"
         manager_change_reason: "Reason for changing Partner"
         name: "Name"
-        name_email_phone: "Name/Email/Phone"
+        name_email_phone: "Customer - Name/Email/Phone"
         pan_number: "PAN Number"
         phone: "Phone"
         phone_number: "Phone Number"
@@ -2058,7 +2055,7 @@ en:
         referred_by_id: "Referred by"
         referral_code: "Referral Code"
         status: "Status"
-        selldo_lead_id: "Sell Do Lead ID"
+        selldo_lead_id: "Sell Do Deal ID"
         total_amount_paid: "Total Paid (Inclusive of GST)"
         total_balance_pending: "Total Balance Pending"
         total_unattached_balance: "Total Un-attached Balance"
@@ -2079,7 +2076,7 @@ en:
         user_status_in_company_event: 'Status'
         change_in_manger:
           dear_team: "Dear Team"
-          text: "Channel Partner has been changed on customer %{name1}. New assigned channel partner is %{name2}."
+          text: "Partner has been changed on customer %{name1}. New assigned partner is %{name2}."
         reminder:
           pay: "A gentle reminder to pay your balance amount of %{name}"
         utm:
@@ -2121,9 +2118,9 @@ en:
           one: "Customer Account"
           other: "Customer Accounts"
         gre: "GRE or Pre-sales"
-        cp_admin: "Channel Partner Head"
+        cp_admin: "Partner Head"
         cp: "Relationship Manager"
-        channel_partner: "Channel Partner"
+        channel_partner: "Partner"
         cp_owner: "Company Owner"
         team_lead: "Team Lead"
         billing_team: "Billing Team"
@@ -2151,20 +2148,20 @@ en:
         first_name: "First Name"
         last_name: "Last Name"
         email: "Email"
-        project_id: "Project"
-        manager_id: "Channel Partner"
+        project_id: "Product/ Service"
+        manager_id: "Partner"
         id: "Customer"
-        name_email_phone: "Name/Email/Phone (Project Name)"
+        name_email_phone: "Deal - Name/Email/Phone (Product/ Service Name)"
         total_amount_paid: "Total Amount Paid (Inclusive of GST)"
         registered_at: "Registered At"
         payment_done: "9.90% Received"
         blocking_amount_paid: "Booking Amount Paid"
         registration_done: "Registration Done"
         stage: "Status (From Developer CRM)"
-        lead_id: "Lead Id"
-        lead_validity_period: "Lead Validity Period"
-        selldo_lead_registration_date: "Sell Do Lead Registration Date"
-        selldo_lead_stage: "SellDo Lead Stage"
+        lead_id: "Deal"
+        lead_validity_period: "Deal Validity Period"
+        selldo_lead_registration_date: "Sell Do Deal Registration Date"
+        selldo_lead_stage: "SellDo Deal Stage"
         queue_number: "Queue No."
         customer_status: "Queue Status"
         search_by_name: "Name/ Email/ Phone"
@@ -2178,11 +2175,8 @@ en:
         total_unattached_balance: "Total Unattached Balance"
         kylas_product: Kylas Product
         kylas_contact: Kylas Contacts
-        manager_ids: Channel Partners
+        manager_ids: Partners
         crm_reference_id: CRM Reference ID
-        errors:
-          lead_registered_with_client: "Lead is already registered with Client"
-          lead_registered_with_project: "Lead is already registered with Project"
       lead/stage:
         incoming: "Incoming"
         booked: "Booked"
@@ -2198,20 +2192,20 @@ en:
         registered: "Registered"
 
       cp_lead_activity:
-        lead_id: "Lead Id"
-        selldo_lead_id: "SellDo Lead Id"
-        project_id: "Project"
-        channel_partner: "Channel Partner"
+        lead_id: "Deal Id"
+        selldo_lead_id: "SellDo Deal Id"
+        project_id: "Product/ Service"
+        channel_partner: "Partner"
         count_status: "Count Status"
-        lead_status: "Lead Status"
-        expiry_remaining_days: "Lead Validity Period"
+        lead_status: "Deal Status"
+        expiry_remaining_days: "Deal Validity Period"
         registered_at: "Registered At"
         can_extend_validity: "Can Extend Validity?"
-        expiry_date: "Lead Expiry Date"
-        sitevisit_date: "Walk-in Date"
-        sitevisit_status: "Walk-in Status"
+        expiry_date: "Deal Expiry Date"
+        sitevisit_date: "Meeting Date"
+        sitevisit_status: "Meeting Status"
       cp_lead_activity/count_status:
-        fresh_lead: "Fresh Lead"
+        fresh_lead: "Fresh Deal"
         active_in_same_cp: "Active In Same Cp"
         no_count: "No Count"
         accompanied_credit: "Accompanied Credit"
@@ -2260,7 +2254,7 @@ en:
       project/file_types:
         document: "Document"
         offer: "Ongoing Offers"
-        brochure: "Project Brochure"
+        brochure: "Product/ Service Brochure"
         sales_presentation: "Sales Presentation"
         unit_selection_filter_image: "Image on Apartment Search Page"
         amenities: "Amenities"
@@ -2269,18 +2263,18 @@ en:
         developer_logo: "Developer Logo"
         advertise: "Advertise Kit"
       project/help_text:
-        document_html: "Project documents"
-        offer_html: "Project ongoing offers"
-        brochure_html: "Project Brochure preferably in PDF"
+        document_html: "Product/ Service documents"
+        offer_html: "Product/ Service ongoing offers"
+        brochure_html: "Product/ Service Brochure preferably in PDF"
         sales_presentation_html: "Sales Presentation"
         unit_selection_filter_image_html: "Web compatible image - to be displayed on apartment search page"
-        amenities_html: "Project amenities"
+        amenities_html: "Product/ Service amenities"
         certificate_html: "Certificate"
         images_html: "Images"
-        developer_logo_html: "Project Developer Logo"
+        developer_logo_html: "Product/ Service Developer Logo"
         advertise_html: "Advertise Kit"
       cp_lead_activity/file_types:
-        sitevisit_form: "Walk-in Form"
+        sitevisit_form: "Meeting Form"
       cp_lead_activity/help_text:
         sitevisit_form_html: ""
       workflow:
@@ -2297,14 +2291,14 @@ en:
       bulk_upload_report/file_types:
         receipts_status_update: "Receipt Status Bulk Update"
         user_requests_status_update: "User Request Status Bulk Update"
-        project_units_update: "Project Units Bulk Update"
+        project_units_update: "Product/ Service Units Bulk Update"
         inventory_upload: "Inventory Import"
-        leads: "Leads Import"
+        leads: "Deals Import"
         receipts: "Payments Import"
-        channel_partners: "Channel Partners Import"
-        channel_partner_manager_change: "Channel Partner Manager Change"
+        channel_partners: "Partners Import"
+        channel_partner_manager_change: "Partner Manager Change"
         time_slots_update: "Time Slots Bulk Update"
-        channel_partner_user: 'Channel Partner Users Import'
+        channel_partner_user: 'Partner Users Import'
 
       bulk_upload_report/help_text:
         receipts_status_update_html: "<ul><li>Upload file formats: CSV (.csv)</li><li>Download sample file <a href='%{url}' target='_blank'>here</a></li></ul>"
@@ -2350,8 +2344,8 @@ en:
         name: "Name"
         formula: "Formula"
         absolute_value: "Absolute Value"
-        project: "Project"
-        project_id: "Project"
+        project: "Product/ Service"
+        project_id: "Product/ Service"
 
       specification:
         category: "Category"
@@ -2387,7 +2381,7 @@ en:
         end_value: "End Value"
 
       customer_search:
-        lead_id: "CRM Lead ID"
+        lead_id: "CRM Deal ID"
         token_number: "Token Number"
         id: "Name / Email / Phone"
 
@@ -2491,7 +2485,7 @@ en:
         partial_brokerage: "Partial Brokerage"
         hot_selling: "Hot Selling"
       select_project:
-        link_name: "Switch Project"
+        link_name: "Switch Product/ Service"
       select_client:
         link_name: 'Switch Client'
       text_msg:
@@ -2502,14 +2496,14 @@ en:
           others:
             no_info_new_launches: "No information about new launches"
             no_tie_ups: "No tie-ups with TOP developers"
-            no_promotion_material: "No Promotion Material of projects"
-            low_qality_leads: "Low Quality Leads"
+            no_promotion_material: "No Promotion Material of products/ services"
+            low_qality_leads: "Low Quality Deals"
           with_us:
             full_brokerage: "FULL Brokerage on time"
             get_info_new_launches: "Get ALL information about new launches"
             work_with_top_devs: "Work with TOP Developers"
-            best_leads: "Best quality Leads at Lowest Prices"
-            all_promotion_material: "All Promotion Materials for every project"
+            best_leads: "Best quality Deals at Lowest Prices"
+            all_promotion_material: "All Promotion Materials for every product and service"
             pune_market_opportunity: "Pune's residential market opportunity"
             register_now: "Register Now"
             lined_up_launches: "Lined Up Launches"
@@ -2518,15 +2512,15 @@ en:
         what_for_you:
           title: "What’s in it for You!"
           pune_projects:
-            title: "Projects in Pune"
-            projects_in_pune_regions: "15 projects in Pune West and East (Mandates)"
+            title: "Products & Services in Pune"
+            projects_in_pune_regions: "15 products/ Services in Pune West and East (Mandates)"
             units: "units"
             inventory: "INR. 2,000 CR inventory"
             townships: "2 Large Townships (Magarpatta)"
           inventory:
             title: "Inventory of ALL sizes"
             early_access: "Exclusive early access to inventory"
-            lead_lock_in: "Exclusive lead lock-in"
+            lead_lock_in: "Exclusive Deal lock-in"
             blocked: "Blocked for 45 days after visit"
           rewards:
             title: "Quarterly & Annual Rewards"
@@ -2538,27 +2532,27 @@ en:
             title: "Special Incentives"
             spot_booking: "Spot booking Incentive- INR 5,000"
             site_visit_incentive: "Site visit Incentive- INR 500 on First visit"
-            other_projects: "Rs. 300 for visits to other projects"
-            offer: "Get 3 Bookings in a project – get 30% of your brokerage paid before registration"
+            other_projects: "Rs. 300 for visits to other products/ services"
+            offer: "Get 3 Bookings in a product/ service – get 30% of your brokerage paid before registration"
         exclusive_features:
           title: "Exclusive Features to Grow Your Business 5X"
         channel_partner_summit:
-          title: "Channel Partner Summit"
+          title: "Partner Summit"
         why_partner:
           title: "Why partner with %{name}"
 
 
     cp_lead_activities:
       index:
-        link_name: "Lead Activities"
+        link_name: "Deal Activities"
       show:
-        link_name: "Show Lead Activities"
+        link_name: "Show Deal Activities"
       notice:
-        created: "Lead Activity created successfully."
-        updated: "Lead Activity updated successfully."
-        deleted: "Lead Activity deleted successfully."
+        created: "Deal Activity created successfully."
+        updated: "Deal Activity updated successfully."
+        deleted: "Deal Activity deleted successfully."
       errors:
-        cannot_be_updated: "Lead validity can not be updated. Lead is active for %{name}"
+        cannot_be_updated: "Deal validity can not be updated. Deal is active for %{name}"
     push_notifications:
       index:
         link_name: "Notifications"
@@ -2627,7 +2621,7 @@ en:
         campaign_start_date: "Campaign Start Date"
         campaign_end_date: "Campaign End Date"
         frequently_asked_questions: "Frequently asked Questions"
-        get_the_leads: "How will I get the leads?"
+        get_the_leads: "How will I get the Deals?"
         third_body: "This is the third item's accordion body. "
         hidden_by_default: "It is hidden by default."
     crms:
@@ -2768,13 +2762,13 @@ en:
       create_kylas_lead:
         response_msg: 'Deals have successfully been created'
       set_project:
-        response_msg: 'Project Not Found'
+        response_msg: 'No Product or Service Found'
       create_booking_without_inventory:
         response_msg: 'Thank you for taking Booking'
       send_booking_detail_form_notification: "Booking detail form will be sent to customer shortly."
       set_booking_detail_missing: "Booking detail not found"
-      set_project_unit_missing: "Project unit not found"
-      set_project_missing: "Project not found"
+      set_project_unit_missing: "Product/ Service unit not found"
+      set_project_missing: "Didn't find any Product or Service"
       booking_successful: "You have completed the booking successfully."
       booking_unsuccessful: "Your booking was unsuccessful. Please contact administrator to book."
       set_receipt_missing: "Make new payment"
@@ -2816,18 +2810,18 @@ en:
         towers_not_present: "Towers not present for this user"
         already_exists: "Booking with reference_id %{name} already exists"
         reference_id_required: "Reference id is required to create Booking"
-        project_unit_id_required: "Project unit id is required to create Booking"
-        lead_id_required: "Lead reloaid is required to create Booking"
+        project_unit_id_required: "Product/ Service unit id is required to create Booking"
+        lead_id_required: "Deal reloaid is required to create Booking"
         primary_user_kyc_id_required: "Primary user kyc reference id is required to create Booking"
         receipt_reference_id_required: "Receipt reference id is required for all receipts"
         user_kyc_reference_id_required: "User KYC reference id is required for all user KYCs"
-        project_does_not_match: "Project for project unit - %{name1} and lead - %{name2} does not match"
-        booking_scheme_not_found: "Booking scheme is not found for this project unit. Please contact administrator"
+        project_does_not_match: "Product/ Service - %{name1} and deal - %{name2} does not match"
+        booking_scheme_not_found: "Booking scheme is not found for this product/ service. Please contact administrator"
         booking_detail_reference_id_not_found: "Booking Detail with reference_id %{name} not found"
         primary_user_kyc_already_present: "Primary User KYC is already present for booking detail"
         task_attributes: "tasks_attributes should be a key, value pair"
         not_available_for_cancellation: "Booking Detail %{name} is not available for cancellation."
-        unable_to_proceed: " Lead user should be confirmed, Lead should have kyc if kyc setting is on"
+        unable_to_proceed: " Deal user should be confirmed, Deal should have kyc if kyc setting is on"
       text:
         flat_no: "Flat No."
         agreement_price: "Agreement Value"
@@ -2921,7 +2915,7 @@ en:
         rejected: "Reject"
       alert:
         not_found: "Incentive deduction not found"
-
+    
     team_leads:
       headers:
         sales_team: "Sales Team"
@@ -2940,7 +2934,7 @@ en:
         help_text: This is an email from which all the emails will be sent to your users
     channel_partners:
       add:
-        link_name: "Add Channel Partner"
+        link_name: "Add Partner"
       new:
         link_name: "Add New ChannelPartner"
       index:
@@ -2955,22 +2949,22 @@ en:
         not_allowed_message: "Company with these details already exists. Please contact your company admin (%{owner_name}) to create your account."
         already_present_and_active_msg: "A user with these details is already present & active under a company"
       notice:
-        created: "Channel Partner successfully created."
-        updated: "Channel Partner successfully updated."
-        registered: "Channel Partner successfully registered."
+        created: "Partner successfully created."
+        updated: "Partner successfully updated."
+        registered: "Partner successfully registered."
       alert:
-        not_found: "Channel Partner not found"
+        not_found: "Partner not found"
       errors:
-        already_exists: "Channel Partner with reference_id %{name} already exists"
-        reference_id_required: "Channel Partner reference_id is required"
-        not_registered: "Channel Partner is not registered."
-        link_expired: "This link is expired. Please ask the channel partner to send request again"
+        already_exists: "Partner with reference_id %{name} already exists"
+        reference_id_required: "Partner reference_id is required"
+        not_registered: "Partner is not registered."
+        link_expired: "This link is expired. Please ask the partner to send request again"
         code_missing: "Registration code is missing"
       register_request_sent: "Registration request sent to Company owner"
       tabs:
-        new: "New Channel Partner"
+        new: "New Partner"
       text:
-        adding_existing_lead: "Above channel partner tried to add already existing lead. Details of the lead are as follows:"
+        adding_existing_lead: "Above partner tried to add already existing deal. Details of the deal are as follows:"
         company_registration: "Company Registration"
         reason: "Reason"
         application_rejected_by: "Your application has been rejected by <strong>%{name}</strong>"
@@ -2978,7 +2972,7 @@ en:
         register_company: "Register a New Company"
         reg_req_sent: "Your registration request has been sent to respective company owner"
         approve_ac: "Please get your account approved by contacting the owner"
-        cancel_reg_req: "If you want to cancel above registration request in company, please contact your channel partner representative in %{name} "
+        cancel_reg_req: "If you want to cancel above registration request in company, please contact your partner representative in %{name} "
       new_company:
         link_name: Add Partner Company
 
@@ -2987,9 +2981,9 @@ en:
         link_name: "Dashboard"
         leaderboard: "CP Leaderboard"
         billing_team_link_name: "Billing Dashboard"
-        cp_admin_link_name: "Channel Partner Head Dashboard"
+        cp_admin_link_name: "Partner Head Dashboard"
         cp_owner_link_name: "Company Owner Dashboard"
-        team_lead: "Team Lead Dashboard"
+        team_lead: "Team Deal Dashboard"
       receipt_frequency: "Payment Frequency"
       leaderboard:
         early_booking_incentive: "Early Booking Incentive"
@@ -3031,17 +3025,17 @@ en:
       payment_failed: "Payment Failed"
       payment_unsuccessful: "Your payment of was unsuccessful. Please check the credentials and try again."
       headers:
-        site_visit_active_partners: "Walk-in Active Partners"
+        site_visit_active_partners: "Meeting Active Partners"
         booking_active_partners: "Booking Active Partners"
         raised_invoices: "Raised Invoices"
         approved_invoices: "Approved Invoices"
       link_to:
         project_wise:
-          incentive_deduction: "Project Wise Incentive Deduction Summary"
+          incentive_deduction: "Product/ Service Wise Incentive Deduction Summary"
           overview: "Overview"
-          booking_count: "Project Wise Booking Count"
-          actual_revenue_report: "Project Wise Actual Revenue Reports"
-          tentative_revenue_reports: "Project Wise Tentative Revenue Reports"
+          booking_count: "Product/ Service Wise Booking Count"
+          actual_revenue_report: "Product/ Service Wise Actual Revenue Reports"
+          tentative_revenue_reports: "Product/ Service Wise Tentative Revenue Reports"
           applying_filters:
             step1: "Applying filters will only show 15 records irrespective of the total records count. Acitve Filter Export will contain all the filtered records. The"
             step2: "count will depend on the filtered results."
@@ -3056,10 +3050,8 @@ en:
       resend_email:
         link_name: "Resend Email"
         success: "Email has been sent again."
-        alert: "Email not sent"
+        alert: "Email not sent" 
         emails_enabled: "Emails are disabled, please connect with your admin"
-      errors:
-        template_not_found: "Email template is not present"
     erp_models:
       index:
         link_name: "Third Party Integration"
@@ -3083,11 +3075,11 @@ en:
 
     projects:
       index:
-        link_name: "Projects"
+        link_name: "Products & Services"
       sync_on_selldo:
         link_name: "Sync on CRM"
       show:
-        show_interest_text: "Subscribe to Project for Adding Walk-Ins"
+        show_interest_text: "Subscribe to Product/ Service for Adding Walk-Ins"
         booking_count: "Bookings"
         brokerage: "Brokerage"
         terms_and_conditions: "Terms & Conditions"
@@ -3101,14 +3093,14 @@ en:
       add_timeline_update:
         link_name: "Add Timeline Update"
       region_projects:
-        link_name: "Projects In My Region"
+        link_name: "Products & Services In My Region"
       benefits_for_you:
         link_name: "Benefits for You"
       notice:
-        subscribed: "Project successfully subscribed."
-        updated: "Interested Project successfully updated."
-        created: "Project created successfully."
-        synced_on_selldo: "Project synced on CRM successfully"
+        subscribed: "Product/ Service successfully subscribed."
+        updated: "Interested Product/ Service successfully updated."
+        created: "Product/ Service created successfully."
+        synced_on_selldo: "Product/ Service synced on CRM successfully"
       view:
         all: "All"
         newly_launched: "Newly Launched"
@@ -3116,19 +3108,19 @@ en:
         hot: "Hot"
         cost_sheet: "View Cost Sheet"
       alert:
-        not_found: "Project not found"
+        not_found: "Product/ Service not found"
       errors:
-        not_selected: "Projects not selected"
-        select_projects: "Please select some projects"
-        failed_to_sync: "Project was unable to sync due to some errors. Please check notes for details"
-        project_reference_id_not_found: "Project with Reference Id %{name} not found."
-      filter_project: "Filter Project"
+        not_selected: "No Product or Service selected"
+        select_projects: "Please select some product or service"
+        failed_to_sync: "Product/ Service was unable to sync due to some errors. Please check notes for details"
+        project_reference_id_not_found: "Product/ Service with Reference Id %{name} not found."
+      filter_project: "Filter Product/ Service"
       incentives:
         site_visit: "Site Visit Incentive"
         spot_booking: "Spot Booking Incentive"
         pre_registration_incentive: "Pre-registration Incentive"
       links:
-        project_details: "Project Details"
+        project_details: "Product/ Service Details"
       text:
         emis_per_month: "EMI's starting at <strong>₹ 25,000</strong> /month"
         search_token: "Search Token"
@@ -3153,7 +3145,7 @@ en:
         link_name: "Create Booking"
       choose_tower: "Choose Tower"
       all_towers: "All Towers"
-      filter_project: "Filter Project"
+      filter_project: "Filter Product/ Service"
       exports:
         link_name: "%{type} Exports"
       quotation:
@@ -3164,10 +3156,10 @@ en:
       unit_released: "The unit has been successfully released."
       total_adjustment: "*Total Adjustment will be calculated as Rs. (saleable) * (scheme mentioned here)"
       notice:
-        created: "Project Unit created successfully."
-        updated: "Project Unit updated successfully."
+        created: "Product/ Service Unit created successfully."
+        updated: "Product/ Service Unit updated successfully."
       errors:
-        project_units_reference_id_not_found: "Project Unit with Reference Id %{name} not found or is already booked."
+        project_units_reference_id_not_found: "Product/ Service Unit with Reference Id %{name} not found or is already booked."
       text:
         kyc_primary_applicant: "KYC (Primary Applicant)"
         general_info: "General Info"
@@ -3182,7 +3174,7 @@ en:
         history: "History"
         kyc_completed: "KYC Completed"
         site_visit_conducted: "Site Visit Conducted"
-        lead_created: "Lead created on Launchpad"
+        lead_created: "Deal created on Launchpad"
       unit_no: "Unit No. :"
     phases:
       index:
@@ -3265,25 +3257,25 @@ en:
         receipt_reference_id_in_success: "Receipt with Reference Id %{name} is already in success"
         receipt_reference_id_already_exists: "Receipt with Reference Id %{name} already exists."
         reference_id_required: "Reference id is required to create Receipt"
-        project_unit_id_required: "Project unit id is required to create Receipt"
-        lead_id_required: "Lead id is required to create Receipt"
+        project_unit_id_required: "Product/ Service unit id is required to create Receipt"
+        lead_id_required: "Deal id is required to create Receipt"
         user_kyc_reference_id_required: "User KYC reference id is required to create user KYC for receipt"
         user_kyc_present: "User KYC is already present on Receipt."
         not_available_for_cancellation: "Receipt %{name} not available for cancellation."
     site_visits:
       index:
-        link_name: "Walk-ins"
+        link_name: "Meetings"
       new:
-        link_name: "Schedule Walk-in"
+        link_name: "Schedule Meeting"
       edit:
         link_name: "Reschedule"
       show:
-        link_name: "Walk-in Details"
+        link_name: "Meeting Details"
       sync_with_selldo:
         link_name: "Sync with CRM"
       reject:
-        link_name: "Reject Walk-in"
-        default_note: "Our developer partner indicated that the customer hasn’t visited the project site and no customer with this name was found in their systems. They have asked us to reject this visit. If you do not agree and in case you know the customer has visited; kindly update the walk-in as conducted. Based on your feedback, we will take this up with our developer partner. If you want to reschedule this visit, you can schedule a new walk-in."
+        link_name: "Reject Meeting"
+        default_note: "Our developer partner indicated that the customer hasn’t visited the product site and no customer with this name was found in their systems. They have asked us to reject this visit. If you do not agree and in case you know the customer has visited; kindly update the walk-in as conducted. Based on your feedback, we will take this up with our developer partner. If you want to reschedule this visit, you can schedule a new walk-in."
       exports:
         link_name: "%{name} Exports"
       events:
@@ -3295,11 +3287,11 @@ en:
           reject: "Reject"
       status_message:
         status:
-          conducted: "Walk-in Conducted Successfully"
-          paid: "Walk-in Incentive is Paid"
+          conducted: "Meeting Conducted Successfully"
+          paid: "Meeting Incentive is Paid"
         approval_status:
-          approved: "Walk-in Successfully Approved"
-          rejected: "Walk-in Rejected"
+          approved: "Meeting Successfully Approved"
+          rejected: "Meeting Rejected"
       filters:
         scheduled_this_week: "This Week"
         scheduled_last_week: "Last Week"
@@ -3332,10 +3324,10 @@ en:
       booking_cancelled: Booking Cancelled
       select_project:
         step: 1
-        link_name: 'Select Project'
+        link_name: 'Select Product/ Service'
       filter:
         step: 2
-        link_name: 'Filter Project'
+        link_name: 'Filter Product/ Service'
         header: "Select Tower"
         hint: "Choose towers that suit your requirements"
         error: "We couldn't find any towers for your selection, would you like to change your search?"
@@ -3371,14 +3363,14 @@ en:
         link_name: "Choose Apartment & Add Booking"
         booking_hint: "You are taking a booking for %{name}"
         hint: "Property you are looking for"
-      project_unit_missing: "Project Unit Selection step is missing"
+      project_unit_missing: "Product/ Service Unit Selection step is missing"
       check_project_unit_hold_status: "We've released the unit which was held for %{holding_minutes} minutes. Please re-select the unit and try booking again."
       checkout:
         non_hold_booking: "Booking is not held."
         pending_payments: "We already have collected a payment for this unit from the same customer."
       hold:
         booking_detail_error: "We cannot process your request at this time. Please retry"
-        scheme_for_channel_partner_not_found: "No Scheme found for channel partner"
+        scheme_for_channel_partner_not_found: "No Scheme found for partner"
         success: "Your Booking is hold. Please select Scheme and go for Payment."
       gateway_payment:
         receipt_missing: "Requested receipt not in pending."
@@ -3478,12 +3470,12 @@ en:
     users:
       set_user_missing: "User not found"
       block_lead:
-        header: "Qualify Lead"
-        link_name: "Qualify Lead"
+        header: "Qualify Deal"
+        link_name: "Qualify Deal"
       unblock_lead:
-        link_name: "Unqualify Lead"
+        link_name: "Unqualify Deal"
       account_confirmed: "Account Confirmed"
-      account_confirmed_and_block_lead: "Account confirmed but not qualified. You can qualify the lead here."
+      account_confirmed_and_block_lead: "Account confirmed but not qualified. You can qualify the deal here."
       change_password:
         link_name: "Change Password"
       cannot_confirm_user: "Cannot confirm user"
@@ -3499,7 +3491,7 @@ en:
         link_name: "Edit %{role}"
         header: "Edit %{role}"
       index:
-        link_name: "Users Accounts"
+        link_name: "Users"
       new:
         link_name: "Add %{role}"
         header: "Add %{role}"
@@ -3517,7 +3509,7 @@ en:
         link_name: "%{role} Details"
         header: "Overview"
       leads:
-        link_name: "Show Leads"
+        link_name: "Show Deals"
       send_payment_link: Send Payment link
       move_to_next_state:
         sales:
@@ -3544,7 +3536,7 @@ en:
         cannot_confirm: "Cannot confirm with this link. Please contact administrator"
         resend_password_sent: "Password instructions send successfully."
         profile_updated: "User profile updated successfully."
-        reactivated_account: "User Account reactivated successfully."
+        reactivated_account: "User reactivated successfully."
         confirmation_sent: "Confirmation instructions sent successfully."
         reset_password_sent: "Reset password instructions sent successfully."
         confirmed_via_otp: "User confirmed using OTP by this channel_partner"
@@ -3572,69 +3564,69 @@ en:
         link_name: Approve / Reject
 
     interested_projects:
-      set_interested_project_missing: "Interested Project not found"
+      set_interested_project_missing: "Interested Product/ Service not found"
       edit:
-        link_name: "Edit Interested Project"
+        link_name: "Edit Interested Product/ Service"
 
     leads:
       index:
-        link_name: "Leads"
+        link_name: "Deals"
       show:
-        link_name: "Show Lead Details"
+        link_name: "Show Deal Details"
         header: "Overview"
       edit:
-        link_name: "Edit Lead"
-        header: "Edit Lead"
+        link_name: "Edit Deal"
+        header: "Edit Deal"
       exports:
         link_name: "%{name} Exports"
       move_to_next_state:
         queued: "%{name} moved to sales queue successfully"
         dropoff: "%{name} dropped off successfully"
-      accepted_by_sales: "Lead %{status}"
+      accepted_by_sales: "Deal %{status}"
       create_from_existing_lead:
         link_name: "Add From Existing Customer"
       add_to_another_project:
-        link_name: "Add To Other Project"
+        link_name: "Add To Other Product/ Service"
       create_new_lead:
         link_name: "Add New %{model}"
       drop_customer:
         link_name: "Drop Customer"
       payment_link:
         link_name: "Send Payment link"
-      reassign_sales: "Reassign Lead"
+      reassign_sales: "Reassign Deal"
       send_payment_link:
-        project_no_access: Project access not given to customers
+        project_no_access: Product/ Service access not given to customers
       notice:
-        updated: "Lead successfully updated."
+        updated: "Deal successfully updated."
         assigned_to: "%{name1} assigned to sales %{name2}"
         not_assigned_to: "%{name1} not assigned to sales %{name2}"
       alert:
-        not_found: "Lead Not found"
+        not_found: "Deal Not found"
         sales_user_not_found: "Sales user not found"
-        unqualified: "Lead cannot be unqualified"
+        unqualified: "Deal cannot be unqualified"
         company_not_found: "Requested partner company not found"
         select_manager: "Please select atleast one partner"
       message:
-        mail_sent: "Mail successfully sent to the selected leads"
-        no_leads_added: "You have not added any lead yet.\nStart exploring the projects and add your leads."
+        mail_sent: "Mail successfully sent to the selected deals"
+        no_leads_added: "You have not added any deal yet.\nStart exploring the products/ services and add your deals."
       notice:
-        created: "Lead created successfully."
-        updated: "Lead updated successfully."
-        unqualified: "Lead unqualified successfully."
+        created: "Deal created successfully."
+        updated: "Deal updated successfully."
+        unqualified: "Deal unqualified successfully."
       errors:
-        select_leads: "Please select some leads"
-        already_exists: "Lead already exists."
+        select_leads: "Please select some deals"
+        already_exists: "Deal already exists."
         failed_to_assign: "Not able to assign %{name} to sales"
-        lead_reference_id_not_found: "Lead with Reference Id %{name} not found"
-        lead_reference_id_already_exists: "Lead with Reference Id %{name} already exists"
-        project_id_required: "project_id is required to create Lead"
-        lead_reference_id_required: "Lead reference_id is required"
+        lead_reference_id_not_found: "Deal with Reference Id %{name} not found"
+        lead_reference_id_already_exists: "Deal with Reference Id %{name} already exists"
+        project_id_required: "Product/ Service is required to create Deal"
+        lead_reference_id_required: "Deal reference_id is required"
         email_phone_not_match: "User email & phone doesn't match"
         email_or_phone_required: "User email or phone is required"
         manager_reference_id_not_found: "Manager with Reference Id %{name} not found"
-        lead_not_present_for_booking: "Lead not present for booking. Please contact administrator"
-        user_account_not_present_for_lead: "User Account not present for lead. Please contact administrator"
-        project_not_present_for_lead: "Project not present for lead. Please contact administrator"
+        lead_not_present_for_booking: "Deal not present for booking. Please contact administrator"
+        user_account_not_present_for_lead: "User not present for deal. Please contact administrator"
+        project_not_present_for_lead: "Product/ Service not present for deal. Please contact administrator"
       total_amount_paid:
         hint: "(you might have some payments pending clearance)"
       total_balance_pending:
@@ -3658,7 +3650,7 @@ en:
       errors:
         reference_id_already_exists: "User KYC with Reference Id %{name} already exists."
         reference_id_required: "User KYC Reference Id is required"
-        lead_id_required: "Lead Id is required to create KYC"
+        lead_id_required: "Deal Id is required to create KYC"
     user_requests:
       index:
         link_name: "Help Center"
@@ -3710,7 +3702,7 @@ en:
       text:
         requested_for: "Requested for %{name}"
         reason: "Reason"
-        alternate_project_unit: "Alternate Project Unit"
+        alternate_project_unit: "Alternate Product/ Service Unit"
         cancellation_request_text: "Your unit will be released once the cancellation request is processed. For booking the same unit again, you will have to go through the selection process again which will also be subject to availability."
         i_agree: "I agree"
         i_agree_on_behalf_of: "I Agree on behalf of %{name}"
@@ -3837,17 +3829,17 @@ en:
       link_name: "%{type} Exports"
     cp_admin:
       channel_partner_performace:
-        heading: "Channel Partner Performance (Project Wise)"
+        heading: "Partner Performance (Product/ Service Wise)"
       partner_wise_performace:
-        heading: "Channel Partner Performance (User Wise)"
+        heading: "Partner Performance (User Wise)"
       site_visit_partner_wise:
-        heading: "Walk-ins (User Wise)"
+        heading: "Meetings (User Wise)"
       incentive_scheme_performance:
         heading: "Brokerage Scheme Performance"
       cp_performance:
-        heading: "Channel Partner Manager Performance"
+        heading: "Partner Manager Performance"
       site_visit_project_wise:
-        heading: "Walk-ins (Project wise)"
+        heading: "Meetings (Product/ Service wise)"
       cp_status:
         active_html: "Active<br> Companies"
         inactive_html: "Signed Up<br> Companies"
@@ -3858,19 +3850,19 @@ en:
       projects:
         sub_heading: "Best homes to meet your expectations"
       refer_a_channel_partner:
-        heading: "Refer a Channel Partner"
+        heading: "Refer a Partner"
         sub_heading: "Earn additional benefits by referring your friends at %{project_name}."
       incentive_plan:
         heading: "Brokerage Plans"
       incentive_plan_started:
         heading: "Brokerage Plans Started"
         max_ladder_html: "<strong>Max.</strong> Ladder Reached"
-      details: "Channel Partner Details"
+      details: "Partner Details"
 
       titles:
         lead_details: "Customer Account Details"
         booking_details: "Bookings"
-        total_leads: "Total Leads"
+        total_leads: "Total Deals"
         received: "Added"
         available_inventory: "Available Inventory"
         download_brochure: "Download Brochure"
@@ -3890,10 +3882,10 @@ en:
       data:
         booked_leads:
           label: "Booked"
-          sub_label: "Leads"
+          sub_label: "Deals"
         not_booked_leads:
           label: "Not Booked"
-          sub_label: "Leads"
+          sub_label: "Deals"
         total_bookings:
           label: "Total Bookings"
           sub_label: ""
@@ -3927,24 +3919,24 @@ en:
   selldo:
     links:
       header: "Take Action in CRM"
-      add_note: "View Lead & Add Notes"
+      add_note: "View Deal & Add Notes"
       schedule_site_visit: "Schedule Site Visit"
       schedule_followup: "Schedule Followup"
 
   templates:
     users/_welcome: "Customer Dashboard"
-    index/inactive_channel_partner: "Channel Partner Dashboard before Approval"
-    index/_channel_partner: "Channel Partner Dashboard"
+    index/inactive_channel_partner: "Partner Dashboard before Approval"
+    index/_channel_partner: "Partner Dashboard"
     dashboard/index/_admin: "Admin Dashboard"
     sales_dashboard: "Sales Dashboard"
     devise/sessions/new: "Landing Page"
     home/register: "Customer Registration Page"
-    channel_partner/new: "Channel Partner Registration"
+    channel_partner/new: "Partner Registration"
     layouts/_navbar_footer: "Footer Rera Line"
     searches/checkout: "Holding minutes Text on Checkout page"
     booking_details/_details: "Bottom Text in Booking detail overview section"
     assets/_videos: "Videos in Collaterals Section on Dashboard"
-    project_units/_section: "Projects Section on Dashboard"
+    project_units/_section: "Products & Services Section on Dashboard"
     quotation_pdf: "Quotation PDF"
     terms_and_conditions: "Terms and Conditions"
     privacy_policy: "Privacy Policy"
@@ -4010,7 +4002,7 @@ en:
       confirm_account: "Confirm Account"
       register_as:
         customer: "Register as Customer"
-        channel_partner: "Register as Channel Partner"
+        channel_partner: "Register as Partner"
       sms_unreceived: "Didn’t Receive SMS?"
     help_text:
       sign_in:
@@ -4028,7 +4020,7 @@ en:
         link: "Click the link in your email to verify your account. If you can't find the email check your spam folder or "
 
     text_msg:
-      thanks_channel_partner: "Thank you for registering as a Channel Partner at %{name}. Please confirm your account by clicking the link below. You can start entering your leads as soon as your account is confirmed."
+      thanks_channel_partner: "Thank you for registering as a Partner at %{name}. Please confirm your account by clicking the link below. You can start entering your deals as soon as your account is confirmed."
       interested:
         confirm_account: "Thank you for registering at %{name}. Please confirm your account by clicking the link below and book your Home in 4 easy steps!"
       registerd:
@@ -4066,7 +4058,7 @@ en:
         unsubscribed: "Event Unsubscribed"
     project_units:
       errors:
-        not_on_hold: "Project unit not on hold"
+        not_on_hold: "Product/ Service unit not on hold"
     razorpay:
       errors:
         transfer: "Transfer not initiated"

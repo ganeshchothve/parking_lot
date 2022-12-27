@@ -1,6 +1,10 @@
 class Admin::UnitConfigurationPolicy < UnitConfigurationPolicy
   def index?
-    Admin::ProjectPolicy.new(user, Project.new).index? && record&.project&.enable_inventory? && !user.booking_portal_client.launchpad_portal
+    if current_client.real_estate?
+      Admin::ProjectPolicy.new(user, Project.new).index? && record&.project&.enable_inventory? && !user.booking_portal_client.launchpad_portal
+    else
+      false
+    end
   end
 
   def edit?

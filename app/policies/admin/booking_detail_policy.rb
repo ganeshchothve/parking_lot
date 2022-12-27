@@ -1,10 +1,14 @@
 class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def index?
-    out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner dev_sourcing_manager].include?(user.role) && enable_actual_inventory?(user)
-    out = false if user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
-    out = true if %w[account_manager account_manager_head billing_team cp_admin].include?(user.role)
-    out
+    if current_client.real_estate?
+      out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner dev_sourcing_manager].include?(user.role) && enable_actual_inventory?(user)
+      out = false if user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
+      out = true if %w[account_manager account_manager_head billing_team cp_admin].include?(user.role)
+      out
+    else
+      false
+    end
   end
 
   def new?(current_project_id = nil)
@@ -106,19 +110,27 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def show_booking_link?(current_project_id = nil)
-    valid = record.lead&.project&.bookings_enabled? && _role_based_check && only_for_confirmed_user! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && record.try(:user).try(:buyer?) && enable_inventory? && enable_actual_inventory?
-    # if is_assigned_lead?
-    #   valid = is_lead_accepted? && valid
-    # end
-    valid = valid && project_access_allowed?(current_project_id)
-    valid
+    if current_client.real_estate?
+      valid = record.lead&.project&.bookings_enabled? && _role_based_check && only_for_confirmed_user! && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && record.try(:user).try(:buyer?) && enable_inventory? && enable_actual_inventory?
+      # if is_assigned_lead?
+      #   valid = is_lead_accepted? && valid
+      # end
+      valid = valid && project_access_allowed?(current_project_id)
+      valid
+    else
+      false
+    end
   end
 
   def show_add_booking_link?(current_project_id = nil)
-    out = !enable_inventory? && record.try(:user).try(:buyer?) && record.lead&.project&.bookings_enabled? && enable_actual_inventory?
-    out = false if user.role.in?(%w(cp_owner channel_partner)) && !(user.active_channel_partner? && interested_project_present?)
-    out = out && project_access_allowed?(current_project_id)
-    out
+    if current_client.real_estate?
+      out = !enable_inventory? && record.try(:user).try(:buyer?) && record.lead&.project&.bookings_enabled? && enable_actual_inventory?
+      out = false if user.role.in?(%w(cp_owner channel_partner)) && !(user.active_channel_partner? && interested_project_present?)
+      out = out && project_access_allowed?(current_project_id)
+      out
+    else
+      false
+    end
   end
 
   def enable_inventory?

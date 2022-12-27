@@ -1,6 +1,10 @@
 class Admin::InterestedProjectPolicy < InterestedProjectPolicy
   def index?
-    user.role.in?(%w(channel_partner cp_owner))# && user.active_channel_partner?
+    if current_client.real_estate?
+      user.role.in?(%w(channel_partner cp_owner))# && user.active_channel_partner?
+    else
+      false
+    end
   end
 
   def create?
@@ -20,7 +24,11 @@ class Admin::InterestedProjectPolicy < InterestedProjectPolicy
   end
 
   def report?
-    user.role.in?(%w(cp cp_admin admin superadmin))
+    if current_client.real_estate?
+      user.role.in?(%w(cp cp_admin admin superadmin))
+    else
+      false
+    end
   end
 
   def permitted_attributes(params = {})

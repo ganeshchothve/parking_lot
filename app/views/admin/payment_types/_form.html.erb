@@ -9,19 +9,27 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body theme-form">
+          <% if policy([:admin, payment_type]).editable_field?("name") %>
           <div class="mb-3">
             <%= f.input :name, required: true, disabled: !policy([current_user_role_group, payment_type]).editable_field?("name") %>
           </div>
+          <% end %>
+          <% if policy([:admin, payment_type]).editable_field?("formula") %>
           <div class="mb-3">
             <%= f.input :formula, disabled: !policy([current_user_role_group, payment_type]).editable_field?("formula") %>
           </div>
+          <% end %>
+          <% if policy([:admin, payment_type]).editable_field?("absolute_value") %>
           <div class="mb-3">
             <%= f.input :absolute_value, disabled: !policy([current_user_role_group, payment_type]).editable_field?("absolute_value") %>
           </div>
+          <% end %>
+          <% if policy([:admin, @phase]).editable_field?("project_id") %>
           <div class="mb-3">
             <%= f.label :project_id %>
             <%= f.select :project_id, Project.all.collect{|x| [x.ds_name, x.id]}, {prompt: I18n.t("global.select")}, class: "selectize-remote", data: {url: admin_projects_path}, disabled: (policy([current_user_role_group, payment_type]).editable_field?("project_id") ? false : true) %>
           </div>
+          <% end %>
         <div class="modal-footer text-end">
           <%= f.submit I18n.t("global.save"), class: "btn btn-primary" %>
         </div>

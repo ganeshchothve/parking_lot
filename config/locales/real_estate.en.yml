@@ -1,4 +1,4 @@
-en:
+en-REAL_ESTATE:
   currency:
     indian: "₹"
     default: "&#8377;"
@@ -176,7 +176,6 @@ en:
       integrations: "Integrations"
       external_inventory_view: "External Inventory View Configuration"
       specifications: "Specifications"
-      project_unit: Project Unit
     units:
       sq_ft: "sq.ft"
     fetch_errors:
@@ -312,7 +311,6 @@ en:
       total_count: "Total %{name}"
       details_on_click: "Click to view details"
       add_city_regions: "Add New City & Regions"
-      project_unit: Project Unit
     text:
       dropping: "Dropping..."
     operators:
@@ -895,19 +893,23 @@ en:
         holding_minutes: "Unit to be held for (Minutes)"
         enable_company_users: "Allow Company Users & Benefits"
         roles_taking_registrations: "Allowed Roles For Taking New Registrations"
+        external_api_integration: "Enable External CRM Integration"
         enable_incentive_module: "Enable Brokerage Module For These Roles"
         mask_lead_data_for_roles: "Enable Lead Data Masking For These Roles"
         partner_regions: "Define Regions For Channel Partners & Projects"
         powered_by_link: "Show Powered By Link"
         lead_blocking_days: "Configure Lead Blocking Days"
+        invoice_approval_tat: "Invoice Approval TAT (In Days)"
         incentive_gst_slabs: "Configure Incentive GST Slabs (%)"
         team_lead_dashboard_access_roles: "Team Lead Dashboard Access Roles"
+        tl_dashboard_refresh_timer: "Team Lead Dashboard Refresh Timer (Minutes)"
         enable_lead_conflicts: "Enable Lead Conflicts"
         launchpad_portal: "Launchpad Portal"
         payment_gateway: "Payment Gateway"
 
         enable_live_inventory: "Enable Live Inventory"
         enable_booking_with_kyc: "Enabe Booking With KYC"
+        allow_multiple_bookings_per_user_kyc: "Allow Multiple Bookings per User KYC"
         incentive_calculation: "Incentive Calculation"
         general_user_request_categories: "General User Request Categories"
         sms_provider: "Sms Provider"
@@ -965,10 +967,6 @@ en:
         enable_with_kyc: 'Enable With KYC'
         enable_without_kyc: 'Enable Without KYC'
         disable: 'Disable Payment'
-      client/lead_conflicts:
-        client_level: Client Level
-        project_level: Project Level
-        no_conflict: No Conflict
       client/industries:
         real_estate: 'Real Estate'
         generic: 'Generic'
@@ -1095,7 +1093,7 @@ en:
         broker_usp: "Broker Unique Selling Points (Fill in upto 3 USPs)"
         check_sv_availability_in_selldo: "Check Site Visit Availability in CRM"
         incentive_gst_slabs: "Configure Incentive GST Slabs (%)"
-        payment_enabled: "Enable Booking Without Payment"
+        payment_enabled: "Enable Payment"
         approved_banks/list:
           hdfc: "HDFC Bank"
           sbi: "State Bank of India"
@@ -1734,7 +1732,6 @@ en:
         custom_document: Documents
         document_not_available: Document not available
         print: Print
-        subject_class: Subject Class
       user_request:
         project_unit: "Project Unit"
         project_id: "Project"
@@ -2180,9 +2177,6 @@ en:
         kylas_contact: Kylas Contacts
         manager_ids: Channel Partners
         crm_reference_id: CRM Reference ID
-        errors:
-          lead_registered_with_client: "Lead is already registered with Client"
-          lead_registered_with_project: "Lead is already registered with Project"
       lead/stage:
         incoming: "Incoming"
         booked: "Booked"
@@ -2921,7 +2915,7 @@ en:
         rejected: "Reject"
       alert:
         not_found: "Incentive deduction not found"
-
+    
     team_leads:
       headers:
         sales_team: "Sales Team"
@@ -3056,10 +3050,8 @@ en:
       resend_email:
         link_name: "Resend Email"
         success: "Email has been sent again."
-        alert: "Email not sent"
+        alert: "Email not sent" 
         emails_enabled: "Emails are disabled, please connect with your admin"
-      errors:
-        template_not_found: "Email template is not present"
     erp_models:
       index:
         link_name: "Third Party Integration"

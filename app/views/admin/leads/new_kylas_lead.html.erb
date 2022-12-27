@@ -8,7 +8,7 @@
     <div class="h-100">
       <div class = 'fn-18 theme-txt-color mb-2'>
         <div class="card-body">
-          <%= form_for(@lead, url: create_kylas_lead_admin_leads_path, local: true, html: {class: 'validate-form mr-3 ml-3', id: 'kylas_lead_form'}) do |f| %>
+          <%= form_for(@lead, url: create_kylas_lead_admin_leads_path, local: true, html: {class: 'validate-form mr-3 ml-3', id: 'new_lead_form_for_partners'}) do |f| %>
           <%= hidden_field_tag :entityId, params[:entityId] %>
           <div class="mb-3">
               <%= f.label :kylas_product, class: 'label-required' %>
@@ -61,6 +61,6 @@
 
 <%= javascript_tag do %>
 $(document).ready(function(){
-  FormInitializer.init($("#kylas_lead_form"));
+  FormInitializer.init($("#new_lead_form_for_partners"));
 });
 <% end %>
