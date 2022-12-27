@@ -1,7 +1,11 @@
 class Admin::IncentiveSchemePolicy < IncentiveSchemePolicy
 
   def index?
-    %w[superadmin admin cp_admin].include?(user.role) && enable_incentive_module?(user) && user.booking_portal_client.enable_channel_partners?
+    if current_client.real_estate?
+      %w[superadmin admin cp_admin].include?(user.role) && enable_incentive_module?(user) && user.booking_portal_client.enable_channel_partners?
+    else
+      false
+    end
   end
 
   def create?

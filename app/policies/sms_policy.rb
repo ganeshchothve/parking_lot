@@ -14,7 +14,7 @@ class SmsPolicy < ApplicationPolicy
         scope.all
       # elsif %w[cp_admin cp channel_partner].include?(user.role)
       #   scope.in(recipient_id: Scope.find_child_ids(user))
-      elsif %w[cp_admin cp channel_partner billing_team sales_admin sales cp_owner].include?(user.role)
+      elsif current_client.real_estate? && %w[cp_admin cp channel_partner billing_team sales_admin sales cp_owner].include?(user.role)
         if user.active_channel_partner?
           scope.in(recipient_ids: user.id)
         else

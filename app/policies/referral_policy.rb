@@ -2,7 +2,11 @@
 class ReferralPolicy < ApplicationPolicy
 
   def index?
-    user.role.in?(%w(cp_owner channel_partner))
+    if current_client.real_estate?
+      user.role.in?(%w(cp_owner channel_partner))
+    else
+      false
+    end
   end
 
   def create?

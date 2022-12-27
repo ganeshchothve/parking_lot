@@ -14,12 +14,12 @@
         <% if (incentive_deduction = @invoice.incentive_deduction.presence) %>
           <%= render 'admin/invoices/incentive_deduction', incentive_deduction: incentive_deduction %>
         <% end %>
-
-        <div class="mb-3">
-          <%= f.label :number, class: '' %>
-          <%= f.text_field :number, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("number") %>
-        </div>
-
+        <% if policy([:admin, @invoice]).editable_field?("number") %>
+          <div class="mb-3">
+            <%= f.label :number, class: '' %>
+            <%= f.text_field :number, autofocus: true, class: "form-control", disabled: !policy([:admin, @invoice]).editable_field?("number") %>
+          </div>
+        <% end %>
         <% if policy([:admin, @invoice]).editable_field?("agreement_amount") %>
           <div class="mb-3">
             <%= f.label :agreement_amount, class: '' %>
@@ -34,14 +34,16 @@
             <p class='amount'><%= f.object.amount %></p>
           <% end %>
         </div>
-        <div class="mb-3">
-          <div class="alert alert-warning" role="alert">
-            <%= I18n.t("controller.invoices.text.change_gst_slab") %>
+        <% if policy([:admin, @invoice]).editable_field?("gst_slab") %>
+          <div class="mb-3">
+            <div class="alert alert-warning" role="alert">
+              <%= I18n.t("controller.invoices.text.change_gst_slab") %>
+            </div>
+            <%= f.label :gst_slab %>
+            <% gst_slabs = @resource.try(:project)&.incentive_gst_slabs || @resource.booking_portal_client.try(:gst_slabs) || [] %>
+            <%= f.select :gst_slab, options_for_select(gst_slabs.collect{|gst| ["#{gst} %", gst]} || [], @invoice.gst_slab), {prompt: I18n.t("global.select")}, class: "selectize", disabled: !policy([:admin, @invoice]).editable_field?("gst_slab") %>
           </div>
-          <%= f.label :gst_slab %>
-          <% gst_slabs = @resource.try(:project)&.incentive_gst_slabs || @resource.booking_portal_client.try(:gst_slabs) || [] %>
-          <%= f.select :gst_slab, options_for_select(gst_slabs.collect{|gst| ["#{gst} %", gst]} || [], @invoice.gst_slab), {prompt: I18n.t("global.select")}, class: "selectize", disabled: !policy([:admin, @invoice]).editable_field?("gst_slab") %>
-        </div>
+        <% end %>
         <div class="mb-3">
           <%= f.label :gst_amount, class: '' %>
           <% if policy([:admin, @invoice]).editable_field?("gst_amount") %>
@@ -73,11 +75,13 @@
             <% end %>
           </div>
         <% end %>
-        <div class="mb-3">
-          <%= f.label :status, class: 'control-label label-required' %>
-          <% events = available_events(@invoice) %>
-          <%= f.select :event, options_for_select(events.collect{|event| [t("controller.invoices.events.#{event.to_s}"), event.to_s]}, @invoice.status), {prompt: t("mongoid.attributes.invoice/status.#{@invoice.status}")}, class: 'selectize', required: 'required', disabled: !policy([:admin, @invoice]).editable_field?("event") %>
-        </div>
+        <% if policy([:admin, @invoice]).editable_field?("event") %>
+          <div class="mb-3">
+            <%= f.label :status, class: 'control-label label-required' %>
+            <% events = available_events(@invoice) %>
+            <%= f.select :event, options_for_select(events.collect{|event| [t("controller.invoices.events.#{event.to_s}"), event.to_s]}, @invoice.status), {prompt: t("mongoid.attributes.invoice/status.#{@invoice.status}")}, class: 'selectize', required: 'required', disabled: !policy([:admin, @invoice]).editable_field?("event") %>
+          </div>
+        <% end %>
         <div class="mb-3">
           <% if policy([:admin, @invoice]).editable_field?("rejection_reason") %>
             <%= f.label :rejection_reason, class: '' %>
@@ -97,7 +101,6 @@
             <% end%>
           </div>
         <% end %>
-
         <div class='mb-5'></div>
         <% editable_cheque_detail = policy([:admin, @invoice]).editable_field?('cheque_detail_attributes') %>
         <% if editable_cheque_detail %>
@@ -106,11 +109,9 @@
           <% end %>
         <% end %>
       </div>
-
       <div class="modal-footer text-end">
         <%= f.submit I18n.t("global.save"), class: "btn btn-primary" %>
       </div>
-
     </div>
   </div>
 </div>

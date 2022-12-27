@@ -20,6 +20,8 @@ class Project
   ALLOWED_BANKS = %w( sbi hdfc bob bajaj_finance )
   ENABLE_BOOKING_WITH_KYC = ['before_booking', 'during_booking', 'disable'].freeze
 
+  attr_accessor :basic, :bookings, :pages, :logos, :integrations, :contacts, :support_contact_details
+
   # filters
   field :name, type: String
   field :developer_name, type: String

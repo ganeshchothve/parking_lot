@@ -40,12 +40,12 @@ class ChannelPartnersController < ApplicationController
 
   def new_company
     @user = User.new(role: "channel_partner")
-    @channel_partner = ChannelPartner.new
+    @channel_partner = ChannelPartner.new(booking_portal_client_id: current_client.id)
     render layout: false
   end
 
   def create_company
-    @user = User.new
+    @user = User.new(role: 'channel_partner')
     @user.assign_attributes(user_params)
     @user.assign_attributes(booking_portal_client_id: current_client.id)
 

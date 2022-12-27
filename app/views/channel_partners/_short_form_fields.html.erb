@@ -9,10 +9,10 @@
 
 <div class="row">
   <div class="col-md-6">
-    <%= form.input :phone, required: true, as: :tel, input_html: { class: 'phone' } %>
+    <%= form.input :phone, required: current_client.required_fields_for_user_login.include?('phone'), as: :tel, input_html: { class: 'phone' } %>
   </div>
   <div class="col-md-6">
-    <%= form.input :email, input_html: { class: 'email'} %>
+    <%= form.input :email, required: current_client.required_fields_for_user_login.include?('email'), input_html: { class: 'email'} %>
   </div>
 </div>
 <div class="row">

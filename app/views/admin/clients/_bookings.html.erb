@@ -1,98 +1,119 @@
 <div class="row ">
-
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :area_unit %>
-      <%= f.text_field :area_unit, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("area_unit") ? false : true) %>
+  <% if policy([:admin, @client]).editable_field?("area_unit") %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :area_unit %>
+        <%= f.text_field :area_unit, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("area_unit") ? false : true) %>
+      </div>
     </div>
-  </div>
+  <% end %>
 
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :cancellation_amount %>
-      <%= f.text_field :cancellation_amount, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("cancellation_amount") ? false : true) %>
+  <% if policy([:admin, @client]).editable_field?('cancellation_amount') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :cancellation_amount %>
+        <%= f.text_field :cancellation_amount, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("cancellation_amount") ? false : true) %>
+      </div>
     </div>
-  </div>
+  <% end %>
 </div>
 
 <div class="row">
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :enable_payment %>
-      <%= f.select :enable_payment, Client::ENABLE_PAYMENT.collect{|x| [t("mongoid.attributes.client/enable_payment.#{x}"), x] }, {}, class: 'selectize', disabled: !(policy([:admin, @client]).editable_field?("enable_payment")) %>
+  <% if policy([:admin, @client]).editable_field?('enable_payment') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :enable_payment %>
+        <%= f.select :enable_payment, Client::ENABLE_PAYMENT.collect{|x| [t("mongoid.attributes.client/enable_payment.#{x}"), x] }, {}, class: 'selectize', disabled: !(policy([:admin, @client]).editable_field?("enable_payment")) %>
+      </div>
     </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :payment_gateway %>
-      <%= f.select :payment_gateway, Client::PAYMENT_GATEWAYS.collect{|x| [ Client.human_attribute_name("payment_gateway.#{x}"), x] }, {}, class: 'selectize', disabled: (policy([:admin, @client]).editable_field?("payment_gateway") ? false : true) %>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('payment_gateway') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :payment_gateway %>
+        <%= f.select :payment_gateway, Client::PAYMENT_GATEWAYS.collect{|x| [ Client.human_attribute_name("payment_gateway.#{x}"), x] }, {}, class: 'selectize', disabled: (policy([:admin, @client]).editable_field?("payment_gateway") ? false : true) %>
+      </div>
     </div>
-  </div>
+  <% end %>
 </div>
 
 <div class="row">
-  <div class="col-md-12">
-    <div class="mb-3">
-      <%= f.label :enable_actual_inventory %>
-      <%= f.select :enable_actual_inventory, User.available_roles(@client).collect{|x| [ User.human_attribute_name("role.#{x}"), x]}, {}, class: 'selectize', multiple: true, disabled: !policy(f.object).editable_field?("enable_actual_inventory") %>
-      <!-- TODO: throwing error on resolving conflict  -->
+  <% if policy([:admin, @client]).editable_field?('enable_actual_inventory') %>
+    <div class="col-md-12">
+      <div class="mb-3">
+        <%= f.label :enable_actual_inventory %>
+        <%= f.select :enable_actual_inventory, User.available_roles(@client).collect{|x| [ User.human_attribute_name("role.#{x}"), x]}, {}, class: 'selectize', multiple: true, disabled: !policy(f.object).editable_field?("enable_actual_inventory") %>
+        <!-- TODO: throwing error on resolving conflict  -->
+      </div>
     </div>
-  </div>
+  <% end %>
 </div>
 
 <div class="row">
-  <div class="col-md-12">
-    <div class="mb-3">
-      <%= f.label :enable_live_inventory %>
-      <%= f.select :enable_live_inventory, User.available_roles(@client).collect{|x| [ User.human_attribute_name("role.#{x}"), x]}, {}, class: 'selectize', multiple: true, disabled: !policy(f.object).editable_field?("enable_live_inventory") %>
+  <% if policy([:admin, @client]).editable_field?('enable_live_inventory') %>
+    <div class="col-md-12">
+      <div class="mb-3">
+        <%= f.label :enable_live_inventory %>
+        <%= f.select :enable_live_inventory, User.available_roles(@client).collect{|x| [ User.human_attribute_name("role.#{x}"), x]}, {}, class: 'selectize', multiple: true, disabled: !policy(f.object).editable_field?("enable_live_inventory") %>
+      </div>
     </div>
-  </div>
+  <% end %>
 </div>
 
 <div class="row">
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :blocking_days %>
-      <%= f.number_field :blocking_days, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("blocking_days") ? false : true), min: 0, max: 30 %>
+  <% if policy([:admin, @client]).editable_field?('blocking_days') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :blocking_days %>
+        <%= f.number_field :blocking_days, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("blocking_days") ? false : true), min: 0, max: 30 %>
+      </div>
     </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :holding_minutes %>
-      <%= f.text_field :holding_minutes, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("holding_minutes") ? false : true), min: 0, max: 30 %>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('holding_minutes') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :holding_minutes %>
+        <%= f.text_field :holding_minutes, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("holding_minutes") ? false : true), min: 0, max: 30 %>
+      </div>
     </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :enable_booking_with_kyc %>
-      <%= f.select :enable_booking_with_kyc, Client::ENABLE_BOOKING_WITH_KYC.collect{|x| [t("mongoid.attributes.client/enable_booking_with_kyc.#{x}"), x] }, {}, class: 'selectize', required: true, disabled: !(policy([:admin, @client]).editable_field?("enable_booking_with_kyc")) %>
-    </div>
-  </div>
+  <% end %>
 </div>
 
 <div class="row">
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :allowed_bookings_per_user %>
-      <%= f.number_field :allowed_bookings_per_user, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("allowed_bookings_per_user") ? false : true), min: 0 %>
+  <% if policy([:admin, @client]).editable_field?('enable_booking_with_kyc') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :enable_booking_with_kyc %>
+        <%= f.select :enable_booking_with_kyc, Client::ENABLE_BOOKING_WITH_KYC.collect{|x| [t("mongoid.attributes.client/enable_booking_with_kyc.#{x}"), x] }, {}, class: 'selectize', required: true, disabled: !(policy([:admin, @client]).editable_field?("enable_booking_with_kyc")) %>
+      </div>
     </div>
-  </div>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('allowed_bookings_per_user') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :allowed_bookings_per_user %>
+        <%= f.number_field :allowed_bookings_per_user, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("allowed_bookings_per_user") ? false : true), min: 0 %>
+      </div>
+    </div>
+  <% end %>
 </div>
 
 
 <div class="row">
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :blocking_amount %>
-      <%= f.number_field :blocking_amount, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("blocking_amount") ? false : true), min: 0 %>
+  <% if policy([:admin, @client]).editable_field?('blocking_amount') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :blocking_amount %>
+        <%= f.number_field :blocking_amount, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("blocking_amount") ? false : true), min: 0 %>
+      </div>
     </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :incentive_calculation %>
-      <%= f.select :incentive_calculation, Client::INCENTIVE_CALCULATION.collect{|x| [x,x]}, {}, class: 'selectize', multiple: true, disabled: (policy([:admin, @client]).editable_field?("incentive_calculation") ? false : true) %>
+  <% end %>
+  <% if policy([:admin, @client]).editable_field?('incentive_calculation') %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :incentive_calculation %>
+        <%= f.select :incentive_calculation, Client::INCENTIVE_CALCULATION.collect{|x| [x,x]}, {}, class: 'selectize', multiple: true, disabled: (policy([:admin, @client]).editable_field?("incentive_calculation") ? false : true) %>
+      </div>
     </div>
-  </div>
+  <% end %>
 </div>
