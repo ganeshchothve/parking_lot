@@ -282,6 +282,15 @@ class Client
     end
   end
 
+  def create_custom_field_on_kylas_tenant
+    if self.enable_channel_partners? && self.kylas_custom_fields.blank?
+      Kylas::CreateDealCustomField.new(User.new(booking_portal_client: self)).call
+      Kylas::CreateLeadCustomField.new(User.new(booking_portal_client: self)).call
+      Kylas::CreateMeetingCustomField.new(User.new(booking_portal_client: self)).call
+      Kylas::CreateProjectCustomField.new(User.new(booking_portal_client: self)).call
+    end
+  end
+
   def payment_enabled?
     self.enable_payment != 'disable'
   end
