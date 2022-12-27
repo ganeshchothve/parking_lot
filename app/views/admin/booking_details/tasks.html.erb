@@ -10,10 +10,14 @@
         <div class="row">
           <%= f.fields_for :tasks, @booking_detail.tasks.order('order ASC') do |task| %>
             <%= task.hidden_field :completed_by_id , id: "#{task.object.key}_by"%>
-              <div class="radioStyle col-lg-12 mx-4 my-2">
-                <%= task.check_box :completed, autofocus: true, disabled: !policy([current_user_role_group, task.object]).editable_field?('completed'), id: "#{task.object.key}", class: 'check-input' %>
-                <%= task.label :completed, "<span class='pre'>#{task.object.name}</span>".html_safe, for: "#{task.object.key}" %>
-                <div id = <%= "#{task.object.key}_div" %> >
+              <div class="radioStyle col-lg-12 my-2 row">
+              <div class="col-1 px-0">
+                <%= task.check_box :completed, autofocus: true, disabled: !policy([current_user_role_group, task.object]).editable_field?('completed'), id: "#{task.object.key}", class: 'check-input align-middle mt-1' %>
+              </div>
+              <div class="col-11 px-0">
+                <%= task.label :completed, "<p class='pre display-block mb-0 fn-16'>#{task.object.name}</p>".html_safe, for: "#{task.object.key}" %>
+              </div>
+                <div class="col-12 ps-4" id = <%= "#{task.object.key}_div" %> >
                   <% if task.object.completed %>
                     <small class = 'description' >
                       <%= task.object.completed_by.try(:name) %> completed at <%= I18n.l(task.object.completed_at.localtime, format: :long) %>

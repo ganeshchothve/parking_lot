@@ -8,7 +8,7 @@
             </h3>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body theme-form">
+        <div class="modal-body theme-form overflow-auto">
           <% if policy([:admin, meeting]).editable_field?("topic") %>
           <div class="mb-3">
             <%= f.input :topic, required: true, disabled: !policy([current_user_role_group, meeting]).editable_field?("topic") %>

@@ -22,9 +22,6 @@
           <%= f.select :user_kyc_ids, @lead.user_kycs.collect{|x| [x.name, x.id]}, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true %>
         </div>
       </div>
-      <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 text-right no-pd">
-        <%= f.submit I18n.t("global.next"), class: "btn next-btn bg-primary white fn-12 d-inline-block w-auto" %>
-      </div>
     <% end %>
     </div>
   </div>
@@ -37,7 +34,7 @@
         <%= ff.submit I18n.t("global.previous"), class: "btn btn-primary no-fill font-medium ms-2" %>
       <% end %>
     <% end %>
-    <a href="" class="btn btn-primary font-medium border-primary ms-2">Next</a>
+      <%= submit_tag I18n.t("global.next"), class: 'btn btn-primary font-medium border-primary ms-2', form: 'hold_booking_detail_form' %>
   </div>
 <!-- GENERICTODO: Fire aparment selected (CART) event in GA -->
 <%= javascript_tag do %>

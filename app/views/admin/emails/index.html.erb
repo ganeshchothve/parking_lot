@@ -1,5 +1,5 @@
 <section class="mb-5 mt-3">
-  <div class="px-4">
+  <div class="">
     <div class="row">
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
         <div class="table-btn-set float-end pb-3 text-end">
@@ -14,7 +14,7 @@
             </a>
           </div>
           <% if policy([:admin, Email]).monthly_count? %>
-          <%= link_to I18n.t("controller.emails.links.monthly_count"), monthly_count_admin_emails_path, class: 'border rounded px-3 py-2 theme-txt-color ms-2 d-inline-block' %>
+          <%= link_to I18n.t("controller.emails.links.monthly_count"), monthly_count_admin_emails_path, class: ' theme-btn btn btn-primary white ms-1 d-inline-block' %>
           <% end %>
         </div>
       </div>

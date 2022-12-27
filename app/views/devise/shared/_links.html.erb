@@ -26,7 +26,7 @@
   <% end -%>
   <%- if controller_name != 'sessions' %>
     <div class="signup-btn-set mt-3">
-      <div class="p-style opacity-5 d-inline-block"><%= t("sessions.new.link.pre_text") %></div><%= link_to t("sessions.new.link.name"), new_session_path(resource_name), data:{event_category: 'Section', event_action: 'Click', event_name: 'Log In'}, class: "p-style opacity-5 fn-500 d-inline-block ms-2 primary" %><br/>
+      <div class="p-style opacity-5 d-inline-block"><%= t("sessions.new.link.pre_text") %></div><%= link_to t("sessions.new.link.name"), new_session_path(resource_name), data:{event_category: 'Section', event_action: 'Click', event_name: 'Log In'}, class: "p-style opacity-5 fn-500 d-inline-block ms-2 primary border-bottom" %><br/>
     </div>
   <% end -%>
 

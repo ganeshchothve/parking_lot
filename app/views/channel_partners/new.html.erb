@@ -15,13 +15,13 @@
           <%= get_view_erb(header_template, check_active: true) %>
         <% end %>
         <div class="cp-signup-form-wrap pb-3 cp-form-wrap px-2 px-sm-3">
-          <%= simple_form_for(@user, url: register_channel_partners_path, local: true, html: { id: 'channel_partner_form', class: 'validate-form', multipart: true, novalidate: false }) do |form| %> 
+          <%= simple_form_for(@user, url: register_channel_partners_path, local: true, html: { id: 'channel_partner_form', class: 'validate-form theme-form', multipart: true, novalidate: false }) do |form| %> 
             <% if params[:action] == 'find_or_create_cp_user' && @user.errors.present? %>
                 <p class='alert alert-danger'><%= @user.errors[:base].to_sentence %></p>
             <% end %>
             <%= render "channel_partners/short_form_fields", {form: form} %>
             <div class="signin-btn pl-0 pr-0 pb-4">
-              <%= form.submit I18n.t("devise.keys.register"), class: "green-btn sign-in-btn", data: { disable_with: I18n.t("global.please_wait"), event_category: 'Footer', event_action: 'Click', event_name: 'Submit' } %>
+              <%= form.submit I18n.t("devise.keys.register"), class: "btn btn-primary btn-blue font-medium d-block sign-in-btn", data: { disable_with: I18n.t("global.please_wait"), event_category: 'Footer', event_action: 'Click', event_name: 'Submit' } %>
             </div>
             <hr/>
             <%= render "devise/shared/links" %>
