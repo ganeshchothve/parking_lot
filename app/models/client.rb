@@ -12,6 +12,10 @@ class Client
   PUBLIC_DOCUMENT_TYPES = []
   INCENTIVE_CALCULATION = ["manual", "calculated"]
   ENABLE_PAYMENT = %w[enable_with_kyc enable_without_kyc disable].freeze
+  INDUSTRIES = %w(real_estate generic)
+  REQUIRED_FIELDS_FOR_USER_LOGIN = %w(email phone)
+
+  attr_accessor :basic, :bookings, :contacts, :integrations, :pages, :logos
 
   field :name, type: String
   field :selldo_client_id, type: String
@@ -61,7 +65,7 @@ class Client
   field :twilio_auth_token, type: String
   field :twilio_account_sid, type: String
   field :twilio_virtual_number, type: String
-  field :enable_actual_inventory, type: Array, default: ['admin', 'sales']
+  field :enable_actual_inventory, type: Array, default: []
   field :enable_live_inventory, type: Array, default: []
   field :enable_channel_partners, type: Boolean, default: false
   field :enable_leads, type: Boolean, default: false
@@ -86,6 +90,8 @@ class Client
   field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner cp_owner]
   field :lead_blocking_days, type: Integer, default: 30
   field :invoice_approval_tat, type: Integer, default: 2
+  #TODO: Bring this field to UI
+  field :required_fields_for_user_login, type: Array, default: ['email', 'phone']
 
   field :external_api_integration, type: Boolean, default: false
   field :enable_daily_reports, type: Hash, default: {"payments_report": false}
@@ -114,6 +120,7 @@ class Client
   field :can_create_webhook, type: Boolean, default: true # flag to check whether user webhook can be created in Kylas or not
   field :kylas_custom_fields, type: Hash, default: {}
   field :kylas_currency_id, type: Integer # kylas currency id is present on kylas products and is tenant dependent
+  field :industry, type: String, default: 'generic'
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= self.logo.url %>" />
@@ -178,6 +185,7 @@ class Client
   validates :preferred_login, inclusion: {in: I18n.t("mongoid.attributes.client/available_preferred_logins").keys.map(&:to_s) }
   validates :payment_gateway, inclusion: {in: Client::PAYMENT_GATEWAYS }, allow_blank: true
   validates :enable_payment, inclusion: { in: Client::ENABLE_PAYMENT }, allow_blank: true
+  validates :required_fields_for_user_login, array: { inclusion: {in: Client::REQUIRED_FIELDS_FOR_USER_LOGIN } }
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
   validates :whatsapp_api_key, :whatsapp_api_secret, presence: true, if: :whatsapp_enabled?
   validates :notification_api_key, presence: true, if: :notification_enabled?
@@ -189,6 +197,7 @@ class Client
   validate :check_preferred_login
   validates :sms_provider, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true, if: :sms_enabled?
   validates :sender_email, presence: true
+  validates :industry, inclusion: {in: Client::INDUSTRIES}
 
   accepts_nested_attributes_for :address, :external_inventory_view_config, :checklists
   accepts_nested_attributes_for :regions, allow_destroy: true
@@ -299,5 +308,9 @@ class Client
 
   def kyc_required_for_payment?
     payment_enabled? && self.enable_payment == 'enable_with_kyc' 
+  end
+
+  def real_estate?
+    industry == 'real_estate'
   end
 end

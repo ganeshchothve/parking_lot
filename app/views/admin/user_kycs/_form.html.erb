@@ -10,48 +10,62 @@
         </div>
         <div class="modal-body theme-form">
           <div class="row">
+            <% if policy([:admin, @user_kyc]).editable_field?("salutation") %>  
             <%= f.input :salutation, collection: UserKyc::SALUTATIONS.collect{|k,v| [I18n.t("mongoid.attributes.user_kyc/salutations.#{k}"), k.to_s]}, prompt: :translate, required: true, wrapper_html: { class: 'col-md-2' } %>
-
+            <% end %>
+            <% if policy([:admin, @user_kyc]).editable_field?("first_name") %>
             <%= f.input :first_name, required: true, wrapper_html: { class: 'col-md-5' } %>
-
+            <% end %>
+            <% if policy([:admin, @user_kyc]).editable_field?("last_name") %>
             <%= f.input :last_name, required: true, wrapper_html: { class: 'col-md-5'} %>
+            <% end %>
           </div>
 
           <div class="row">
+            <% if policy([:admin, @user_kyc]).editable_field?("phone") %>  
             <%= f.input :phone, required: true, wrapper_html: { class: 'col-md-6' }, inner_html: { class: 'phone' } %>
+            <% end %>
+            <% if policy([:admin, @user_kyc]).editable_field?("email") %>  
             <%= f.input :email, as: :email, required: true, wrapper_html: { class: 'col-md-6' } %>
+            <% end %>
           </div>
 
           <div class="row">
+            <% if policy([:admin, @user_kyc]).editable_field?("pan_number") %>  
             <%= f.input :pan_number, required: true, wrapper_html: { class: 'col-md-6' } %>
+            <% end %>
+            <% if policy([:admin, @user_kyc]).editable_field?("aadhaar") %>  
             <%= f.input :aadhaar, wrapper_html: { class: 'col-md-6' } %>
+            <% end %>  
           </div>
 
           <div class="row">
+            <% if policy([:admin, @user_kyc]).editable_field?("configurations") %>  
             <div class="col-md-6">
               <%= f.label :configurations, class: 'control-label' %>
               <%= f.select :configurations, UserKyc.available_configurations(@user_kyc.lead_id.to_s).collect{|x| [x[:text], x[:id]] }, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true, disabled: !policy(@user_kyc).editable_field?("configurations") %>
-
             </div>
+            <% end %>
+            <% if policy([:admin, @user_kyc]).editable_field?("budget") %>  
             <div class="col-md-6">
-              <div class="row">
-                <%= f.input :budget, wrapper_html: { class: "" } %>
-              </div>
+              <%= f.input :budget, wrapper_html: { class: "" } %>
             </div>
+            <% end %>
           </div>
 
           <div class="row">
+            <% if policy([:admin, @user_kyc]).editable_field?("preferred_floors") %>  
             <div class="col-md-6">
               <%= f.label :preferred_floors, class: 'control-label' %>
               <%= f.select :preferred_floors, UserKyc.available_preferred_floors.collect{|x| [x[:text], x[:id]]}, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true, disabled: !policy(@user_kyc).editable_field?("preferred_floors") %>
             </div>
+            <% end %>
+            <% if policy([:admin, @user_kyc]).editable_field?("number_of_units") %>  
             <div class="col-md-6">
               <%= f.input :number_of_units %>
             </div>
+            <% end %>
           </div>
-
-          <!-- TO DO - Add addresses input fields - Multiproject phase 2 -->
-
           <% if params[:project_unit_id].present? %>
             <%
               @user_kyc.project_unit_ids += [params[:project_unit_id]]
@@ -60,32 +74,38 @@
           <% end %>
 
           <% if @lead.project_unit_ids.present? && (@user_kyc.persisted? || !current_user.buyer?) %>
+            <% if policy([:admin, @user_kyc]).editable_field?("project_unit_ids") %>
             <div class="mb-3 position-relative">
               <%= f.label :project_unit_ids %>
               <%= f.select :project_unit_ids, @lead.project_units.collect{|x| [x.name, x.id]}, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true %>
             </div>
+            <% end %>
           <% end %>
 
           <div class="row">
+            <% if policy([:admin, @user_kyc]).editable_field?("anniversary") %>
             <div class="col-md-6">
               <%= f.label :anniversary, class: 'control-label' %>
               <% anniversary = (f.object.anniversary.present? ? f.object.anniversary.strftime("%d/%m/%Y") : "") %>
               <%= f.text_field :anniversary, class: 'form-control datepicker', type:'text', data: {"default-date": anniversary}, value: anniversary %>
             </div>
+            <% end %>
+            <% if policy([:admin, @user_kyc]).editable_field?("dob") %>
             <div class="col-md-6">
               <%= f.label :dob %>
               <% date = (f.object.dob.present? ? f.object.dob.strftime("%d/%m/%Y") : "") %>
               <%= f.text_field :dob, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date %>
             </div>
+            <% end %>
           </div>
-
+          <% if policy([:admin, @user_kyc]).editable_field?("occupation") %>
           <div class="row mt-3">
             <div class="col-md-6">
               <%= f.label :occupation, class: 'control-label' %>
               <%= f.select :occupation, UserKyc::OCCUPATIONS.collect{|x| [ t("mongoid.attributes.user_kyc/occupation.#{x}"), x.to_s]}, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy(@user_kyc).editable_field?("occupation") %>
             </div>
           </div>
-
+          <% end %>
           <div class="row">
             <div class="col-md-12">
               <div class="card mt-3">
@@ -101,7 +121,6 @@
               </div>
             </div>
           </div>
-
           <div class="row">
             <div class="col-md-12">
               <div class="card mt-3">

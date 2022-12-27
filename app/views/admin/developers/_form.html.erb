@@ -16,14 +16,18 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <div class="mb-3">
-            <%= f.label :name, class: 'label-required' %>
-            <%= f.text_field :name, class: 'form-control', autofocus: true, required: 'required', disabled: !policy([:admin, developer]).editable_field?("name") %>
-          </div>
-          <div class="mb-3">
-            <%= f.label :selldo_id, class: 'label-required' %>
-            <%= f.text_field :selldo_id, class: 'form-control', autofocus: true, required: 'required', disabled: !policy([:admin, developer]).editable_field?("selldo_id") %>
-          </div>
+          <% if policy([:admin, developer]).editable_field?("name") %>
+            <div class="mb-3">
+              <%= f.label :name, class: 'label-required' %>
+              <%= f.text_field :name, class: 'form-control', autofocus: true, required: 'required', disabled: !policy([:admin, developer]).editable_field?("name") %>
+            </div>
+          <% end %>
+            <% if policy([:admin, developer]).editable_field?("selldo_id") %>
+            <div class="mb-3">
+              <%= f.label :selldo_id, class: 'label-required' %>
+              <%= f.text_field :selldo_id, class: 'form-control', autofocus: true, required: 'required', disabled: !policy([:admin, developer]).editable_field?("selldo_id") %>
+            </div>
+          <% end %>
         </div>
         <div class="modal-footer text-end">
           <%= f.submit I18n.t("global.save"), class: 'btn btn-primary' %>

@@ -3,11 +3,36 @@
         <% if @response[:success] == "true" %>
             <h3 class='text-center'>Thank You!</h3>
             <div class="alert alert-success">
-                <h4><%= @response.dig(:message) %></h4>
+                <h4><%= @response.dig(:message) || t('app.embedded_frame.success.default_message') %></h4>
             </div>
         <% else %>
             <div class="alert alert-danger">
+              <% if @response.dig(:response, :code).present? %>
+
                 <h4><%= @response.dig(:response, :code) %> - <%= @response.dig(:response, :message) %></h4>
+
+              <% elsif @response[:errors].present? %>
+
+                <%  if @response[:errors].is_a?(Array) %>
+                  <ul class='theme-txt-color ps-3' style='text-align:left;'>
+                    <% @response[:errors].each do |err| %>
+                      <li><%= err %></li>
+                    <% end %>
+                  </ul>
+                <% elsif @response[:errors].is_a?(Hash) && @response.dig(:errors, :body).present? %>
+
+                  <p><%= @response.dig(:errors, :header) || t('app.embedded_frame.errors.default_header') %></p>
+                  <% @response.dig(:errors, :body).each do |err_hash| %>
+                    <div><strong><%= err_hash[:title] %></strong></div>
+                    <ul class='theme-txt-color ps-3' style='text-align:left;'>
+                      <% err_hash[:messages].each do |err| %>
+                        <li><%= err %></li>
+                      <% end %>
+                    </ul>
+                  <% end %>
+
+                <% end %>
+              <% end %>
             </div>
         <% end %>
     </div>

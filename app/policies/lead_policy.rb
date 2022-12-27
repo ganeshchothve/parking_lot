@@ -8,6 +8,10 @@ class LeadPolicy < ApplicationPolicy
     false
   end
 
+  def show?
+    super
+  end
+
   def permitted_attributes(params = {})
   end
 end

@@ -2,7 +2,7 @@ class UserObserver < Mongoid::Observer
   include ApplicationHelper
 
   def before_validation user
-    user.allowed_bookings ||= user.booking_portal_client.allowed_bookings_per_user
+    user.allowed_bookings ||= user.booking_portal_client.allowed_bookings_per_user if user.buyer?
     # user.booking_portal_client_id ||= user.booking_portal_client.id
     user.phone = Phonelib.parse(user.phone).to_s if user.phone.present?
 
@@ -34,13 +34,17 @@ class UserObserver < Mongoid::Observer
     end
     # update all the project ids for the user
     if !user.role.in?(User::ALL_PROJECT_ACCESS)
-      project_ids = Project.where(booking_portal_client_id: user.booking_portal_client.id).pluck(:id)
+      if user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner_id.present?
+        project_ids = user.channel_partner.project_ids
+      else
+        project_ids = Project.where(booking_portal_client_id: user.booking_portal_client.id).pluck(:id)
+      end
       user.assign_attributes(project_ids: project_ids)
     end
   end
 
   def after_create user
-    if user.booking_portal_client.external_api_integration?
+    if user.booking_portal_client.present? && user.booking_portal_client.external_api_integration?
       if user.role.in?(%w(cp_owner channel_partner))
         if Rails.env.staging? || Rails.env.production?
           # Kept create user api call inline to avoid firing update calls before create which will fail to find user to update
@@ -101,7 +105,7 @@ class UserObserver < Mongoid::Observer
         GenerateCoBrandingTemplatesWorker.new.perform(user.id)
       end
     end
-    Kylas::UpdatePicklistValues.new(user, user.changes).call if user.booking_portal_client.is_marketplace?
+    Kylas::UpdatePicklistValues.new(user, user.changes).call if user.booking_portal_client.present? && user.booking_portal_client.is_marketplace?
   end
 
   def after_update user

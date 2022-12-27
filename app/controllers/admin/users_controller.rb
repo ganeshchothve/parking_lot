@@ -37,7 +37,7 @@ class Admin::UsersController < AdminController
 
   def index
     @users = User.build_criteria params
-    if params[:fltrs].present? && params[:fltrs][:_id].present?
+    if params[:fltrs].present? && params[:fltrs][:_id].present? && policy([current_user_role_group, User.where(booking_portal_client_id: current_client.id, id: params.dig(:fltrs, :_id)).first || User.new(booking_portal_client_id: current_client.id)]).show?
       redirect_to admin_user_path(params[:fltrs][:_id])
     else
       @users = @users.paginate(page: params[:page] || 1, per_page: params[:per_page])
@@ -58,6 +58,11 @@ class Admin::UsersController < AdminController
   def new
     @user = User.new(booking_portal_client_id: current_client.id)
     @user.role = params.dig(:user, :role).blank? ? 'user' : params.dig(:user, :role)
+    if current_user.role?('cp_owner')
+      @user.channel_partner_id = current_user.channel_partner_id
+    else
+      @user.channel_partner_id = params.dig(:user, :channel_partner_id)
+    end
     render layout: false
   end
 
@@ -66,6 +71,9 @@ class Admin::UsersController < AdminController
     create_user
     respond_to do |format|
       if @user.save
+        if @user.role.in?(%w(channel_partner cp_owner)) && current_user.role.in?(%w(cp_owner admin))
+          @user.active!(true)
+        end
         format.html { redirect_to admin_users_path, notice: I18n.t("controller.users.notice.created") }
         format.json { render json: @user, status: :created }
       else
@@ -193,7 +201,6 @@ class Admin::UsersController < AdminController
     # For channel parnter & cp owners
     if @user.role.in?(%w(channel_partner cp_owner))
       if current_user.role.in?(%w(cp_owner admin))
-        @user.user_status_in_company = 'active'
         @user.manager_id = @user.channel_partner&.manager_id if @user.channel_partner&.manager_id.present?
         @user.project_ids = @user.channel_partner&.project_ids if @user.channel_partner&.project_ids.present?
       elsif current_user.role?('cp')

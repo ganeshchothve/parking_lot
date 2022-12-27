@@ -1,96 +1,116 @@
 <div class="row ">
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :area_unit, class: '' %>
-      <%= f.text_field :area_unit, class: 'form-control', disabled: (policy([:admin, @project]).editable_field?("area_unit") ? false : true) %>
-    </div>
-  </div>
-
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :cancellation_amount, class: '' %>
-      <%= f.text_field :cancellation_amount, class: 'form-control', disabled: (policy([:admin, @project]).editable_field?("cancellation_amount") ? false : true) %>
-    </div>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-6">
-    <div class="form-group mb-3">
-      <div class="form-check form-check-inline">
-        <%= f.check_box :enable_inventory, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("enable_inventory") }, I18n.t("global.boolean.true"), I18n.t("global.boolean.false") %>
-        <%= f.label :enable_inventory, class: "form-check-label d-inline-block ms-2 enable-inventory-check" %>
+  <% if policy([:admin, project]).editable_field?("area_unit")%>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :area_unit, class: '' %>
+        <%= f.text_field :area_unit, class: 'form-control', disabled: (policy([:admin, project]).editable_field?("area_unit") ? false : true) %>
       </div>
     </div>
-  </div>
-  <div class="col-md-6">
-    <div class="form-group mb-3">
-      <div class="form-check form-check-inline">
-        <%= f.check_box :enable_booking_with_kyc, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("enable_booking_with_kyc") }, I18n.t("global.boolean.true"), I18n.t("global.boolean.false") %>
-        <%= f.label :enable_booking_with_kyc, class: "form-check-label d-inline-block ms-2 enable-booking-with-kyc" %>
+  <% end %>
+  <% if policy([:admin, project]).editable_field?("cancellation_amount")%>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :cancellation_amount, class: '' %>
+        <%= f.text_field :cancellation_amount, class: 'form-control', disabled: (policy([:admin, project]).editable_field?("cancellation_amount") ? false : true) %>
       </div>
     </div>
-  </div>
+  <% end %>
+</div>
+<div class="row">
+  <% if policy([:admin, project]).editable_field?("enable_inventory")%>
+    <div class="col-md-6">
+      <div class="form-group mb-3">
+        <div class="form-check form-check-inline">
+          <%= f.check_box :enable_inventory, {:class => "form-check-input wd-22", :disabled => !policy([:admin, project]).editable_field?("enable_inventory") }, I18n.t("global.boolean.true"), I18n.t("global.boolean.false") %>
+          <%= f.label :enable_inventory, class: "form-check-label d-inline-block ms-2 enable-inventory-check" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, project]).editable_field?("enable_booking_with_kyc")%>
+    <div class="col-md-6">
+      <div class="form-group mb-3">
+        <div class="form-check form-check-inline">
+          <%= f.check_box :enable_booking_with_kyc, {:class => "form-check-input wd-22", :disabled => !policy([:admin, project]).editable_field?("enable_booking_with_kyc") }, I18n.t("global.boolean.true"), I18n.t("global.boolean.false") %>
+          <%= f.label :enable_booking_with_kyc, class: "form-check-label d-inline-block ms-2 enable-booking-with-kyc" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
 </div>
 <div class="row inventory-role-fields <%= f.object.enable_inventory  ?   '' :  'd-none'  %>">
-  <div class="col-md-12">
-    <div class="mb-3">
-      <%= f.label :enable_actual_inventory %>
-      <%= f.select :enable_actual_inventory, User.available_roles(@project.booking_portal_client).collect{|x| [ User.human_attribute_name("role.#{x}"), x]}, {}, class: 'selectize', multiple: true, disabled: !policy([:admin, f.object]).editable_field?("enable_actual_inventory") %>
+  <% if policy([:admin, project]).editable_field?("enable_actual_inventory")%>
+    <div class="col-md-12">
+      <div class="mb-3">
+        <%= f.label :enable_actual_inventory %>
+        <%= f.select :enable_actual_inventory, User.available_roles(project.booking_portal_client).collect{|x| [ User.human_attribute_name("role.#{x}"), x]}, {}, class: 'selectize', multiple: true, disabled: !policy([:admin, f.object]).editable_field?("enable_actual_inventory") %>
+      </div>
     </div>
-  </div>
+  <% end %>
 </div>
 <div class="row inventory-role-fields <%= f.object.enable_inventory  ?   '' :  'd-none'  %>">
-  <div class="col-md-12">
-    <div class="mb-3">
-      <%= f.label :enable_live_inventory %>
-      <%= f.select :enable_live_inventory, User.available_roles(@project.booking_portal_client).collect{|x| [ User.human_attribute_name("role.#{x}"), x]}, {}, class: 'selectize', multiple: true, disabled: !policy([:admin, f.object]).editable_field?("enable_live_inventory") %>
+  <% if policy([:admin, project]).editable_field?("enable_live_inventory")%>
+    <div class="col-md-12">
+      <div class="mb-3">
+        <%= f.label :enable_live_inventory %>
+        <%= f.select :enable_live_inventory, User.available_roles(project.booking_portal_client).collect{|x| [ User.human_attribute_name("role.#{x}"), x]}, {}, class: 'selectize', multiple: true, disabled: !policy([:admin, f.object]).editable_field?("enable_live_inventory") %>
+      </div>
     </div>
-  </div>
+  <% end %>
 </div>
 <div class="row">
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :blocking_days, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
-      <%= f.number_field :blocking_days, class: 'form-control', required: (current_client.launchpad_portal? ? true : false), disabled: (policy([:admin, @project]).editable_field?("blocking_days") ? false : true), min: 0, max: 30 %>
+  <% if policy([:admin, project]).editable_field?("blocking_days") %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :blocking_days, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+        <%= f.number_field :blocking_days, class: 'form-control', required: (current_client.launchpad_portal? ? true : false), disabled: (policy([:admin, project]).editable_field?("blocking_days") ? false : true), min: 0, max: 30 %>
+      </div>
     </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :holding_minutes, class: 'label-required' %>
-      <%= f.text_field :holding_minutes, class: 'form-control', required: true, disabled: (policy([:admin, @project]).editable_field?("holding_minutes") ? false : true), min: 0, max: 30 %>
+  <% end %>
+  <% if policy([:admin, project]).editable_field?("holding_minutes") %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :holding_minutes, class: 'label-required' %>
+        <%= f.text_field :holding_minutes, class: 'form-control', required: true, disabled: (policy([:admin, project]).editable_field?("holding_minutes") ? false : true), min: 0, max: 30 %>
+      </div>
     </div>
-  </div>
+  <% end %>
 </div>
-
 <div class="row">
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :allowed_bookings_per_user, class: 'label-required' %>
-      <%= f.number_field :allowed_bookings_per_user, class: 'form-control', required: true, disabled: (policy([:admin, @project]).editable_field?("allowed_bookings_per_user") ? false : true), min: 0 %>
+  <% if policy([:admin, project]).editable_field?("allowed_bookings_per_user") %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :allowed_bookings_per_user, class: 'label-required' %>
+        <%= f.number_field :allowed_bookings_per_user, class: 'form-control', required: true, disabled: (policy([:admin, project]).editable_field?("allowed_bookings_per_user") ? false : true), min: 0 %>
+      </div>
     </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :blocking_amount, class: 'label-required' %>
-      <%= f.number_field :blocking_amount, class: 'form-control', required: true, disabled: (policy([:admin, @project]).editable_field?("blocking_amount") ? false : true), min: 0 %>
+  <% end %>
+  <% if policy([:admin, project]).editable_field?("blocking_amount") %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :blocking_amount, class: 'label-required' %>
+        <%= f.number_field :blocking_amount, class: 'form-control', required: true, disabled: (policy([:admin, project]).editable_field?("blocking_amount") ? false : true), min: 0 %>
+      </div>
     </div>
-  </div>
+  <% end %>
 </div>
-
 <div class="row">
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :incentive_calculation, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
-      <%= f.select :incentive_calculation, I18n.t("mongoid.attributes.client/incentive_calculation").collect {|k,v| [v,k.to_s]}, {}, class: 'selectize', multiple: true, required: (current_client.launchpad_portal? ? true : false), disabled: !policy([:admin, project]).editable_field?("incentive_calculation") %>
+  <% if policy([:admin, project]).editable_field?("incentive_calculation") %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :incentive_calculation, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+        <%= f.select :incentive_calculation, I18n.t("mongoid.attributes.client/incentive_calculation").collect {|k,v| [v,k.to_s]}, {}, class: 'selectize', multiple: true, required: (current_client.launchpad_portal? ? true : false), disabled: !policy([:admin, project]).editable_field?("incentive_calculation") %>
+      </div>
     </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :booking_sources, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
-      <%= f.select :booking_sources, f.object.booking_sources, {},  class: "selectize-tags", multiple: true, required: (current_client.launchpad_portal? ? true : false), disabled: (policy([current_user_role_group, project]).editable_field?("booking_sources") ? false : true) %>
+  <% end %>
+  <% if policy([:admin, project]).editable_field?("booking_sources") %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :booking_sources, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+        <%= f.select :booking_sources, f.object.booking_sources, {},  class: "selectize-tags", multiple: true, required: (current_client.launchpad_portal? ? true : false), disabled: (policy([current_user_role_group, project]).editable_field?("booking_sources") ? false : true) %>
+      </div>
     </div>
-  </div>
+  <% end %>
 </div>
 <div class='row'>
   <div class="col-md-6">
@@ -108,54 +128,64 @@
       </div>
     <% end %>
   </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :incentive_percentage_slabs, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
-      <%= f.select :incentive_percentage_slabs, f.object.incentive_percentage_slabs, {},  class: "selectize-tags", multiple: true, required: (current_client.launchpad_portal? ? true : false), disabled: (policy([current_user_role_group, project]).editable_field?("incentive_percentage_slabs") ? false : true) %>
-    </div>
-  </div>
-</div>
-<div class='row'>
-  <div class="col-md-6">
-    <div class="form-group mb-3">
-      <div class="form-check form-check-inline">
-        <%= f.check_box :gst_slab_applicable, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("gst_slab_applicable") }, I18n.t("global.boolean.true"), I18n.t("global.boolean.false") %>
-        <%= f.label :gst_slab_applicable, class: "form-check-label d-inline-block ms-2 gst-slab-applicable-check" %>
-      </div>
-  </div>
-  </div>
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :incentive_gst_slabs, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
-      <%= f.select :incentive_gst_slabs, f.object.incentive_gst_slabs, {},  class: "selectize-tags", multiple: true, required: (current_client.launchpad_portal? ? true : false), disabled: (policy([current_user_role_group, project]).editable_field?("incentive_gst_slabs") ? false : true) %>
-    </div>
-  </div>
-</div>
-<div class='row'>
-  <div class="col-md-6">
-    <div class="form-group">
-      <div class="form-check form-check-inline">
-        <%= f.check_box :enable_slot_generation, {:class => "form-check-input wd-22", :disabled => !policy([:admin, @project]).editable_field?("enable_slot_generation") }, I18n.t("global.boolean.true"), I18n.t("global.boolean.false") %>
-        <%= f.label :enable_slot_generation, class: "form-check-label d-inline-block ms-2" %>
+  <% if policy([:admin, project]).editable_field?("incentive_percentage_slabs") %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :incentive_percentage_slabs, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+        <%= f.select :incentive_percentage_slabs, f.object.incentive_percentage_slabs, {},  class: "selectize-tags", multiple: true, required: (current_client.launchpad_portal? ? true : false), disabled: (policy([current_user_role_group, project]).editable_field?("incentive_percentage_slabs") ? false : true) %>
       </div>
     </div>
-  </div>
+  <% end %>
 </div>
-<div class='row mt-2'>
-  <div class="col-md-12">
-    <div class="mb-3">
-      <%= f.label :disable_project %>
-      <%= f.fields_for :disable_project do |dp_form| %>
-        <% f.object.disable_project.with_indifferent_access.each do |k, v| %>
-          <div class="form-check form-check-inline">
-            <%= dp_form.check_box k, {class: "form-check-input wd-22", checked: v}, true %>
-            <%= dp_form.label :k, "Disable #{k.to_s.titleize}", class: "form-check-label d-inline-block ms-2" %>
-          </div>
+<div class='row'>
+  <% if policy([:admin, project]).editable_field?("gst_slab_applicable") %>
+    <div class="col-md-6">
+      <div class="form-group mb-3">
+        <div class="form-check form-check-inline">
+          <%= f.check_box :gst_slab_applicable, {:class => "form-check-input wd-22", :disabled => !policy([:admin, project]).editable_field?("gst_slab_applicable") }, I18n.t("global.boolean.true"), I18n.t("global.boolean.false") %>
+          <%= f.label :gst_slab_applicable, class: "form-check-label d-inline-block ms-2 gst-slab-applicable-check" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  <% if policy([:admin, project]).editable_field?("incentive_gst_slabs") %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :incentive_gst_slabs, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+        <%= f.select :incentive_gst_slabs, f.object.incentive_gst_slabs, {},  class: "selectize-tags", multiple: true, required: (current_client.launchpad_portal? ? true : false), disabled: (policy([current_user_role_group, project]).editable_field?("incentive_gst_slabs") ? false : true) %>
+      </div>
+    </div>
+  <% end %>
+</div>
+<div class='row'>
+  <% if policy([:admin, project]).editable_field?("enable_slot_generation") %>
+    <div class="col-md-6">
+      <div class="form-group">
+        <div class="form-check form-check-inline">
+          <%= f.check_box :enable_slot_generation, {:class => "form-check-input wd-22", :disabled => !policy([:admin, project]).editable_field?("enable_slot_generation") }, I18n.t("global.boolean.true"), I18n.t("global.boolean.false") %>
+          <%= f.label :enable_slot_generation, class: "form-check-label d-inline-block ms-2" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+<% if policy([:admin, project]).editable_field?("disable_project") %>
+  <div class='row mt-2'>
+    <div class="col-md-12">
+      <div class="mb-3">
+        <%= f.label :disable_project %>
+        <%= f.fields_for :disable_project do |dp_form| %>
+          <% f.object.disable_project.with_indifferent_access.each do |k, v| %>
+            <div class="form-check form-check-inline">
+              <%= dp_form.check_box k, {class: "form-check-input wd-22", checked: v}, true %>
+              <%= dp_form.label :k, "Disable #{k.to_s.titleize}", class: "form-check-label d-inline-block ms-2" %>
+            </div>
+          <% end %>
         <% end %>
-      <% end %>
+      </div>
     </div>
   </div>
-</div>
+<% end %>
 
 <%= javascript_tag do %>
   $(document).ready(function(){
