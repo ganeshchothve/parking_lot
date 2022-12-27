@@ -316,11 +316,11 @@ class Project
     enable_booking_with_kyc != 'disable'
   end
 
-  def booking_with_kyc_required_before_booking?
+  def kyc_required_before_booking?
     enable_booking_with_kyc == 'before_booking'
   end
 
-  def booking_with_kyc_required_during_booking?
+  def kyc_required_during_booking?
     enable_booking_with_kyc == 'during_booking'
   end
 

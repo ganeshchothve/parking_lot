@@ -370,11 +370,11 @@ class Lead
   end
 
   def kyc_required_before_booking?
-    !kyc_ready? && project.booking_with_kyc_required_before_booking?
+    !kyc_ready? && project.kyc_required_before_booking?
   end
 
   def kyc_required_during_booking?
-    !kyc_ready? && project.booking_with_kyc_required_during_booking?
+    !kyc_ready? && project.kyc_required_during_booking?
   end
 
   def check_for_lead_conflict
