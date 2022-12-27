@@ -16,7 +16,7 @@ class ReferralObserver < Mongoid::Observer
       booking_portal_client_id: referral.booking_portal_client.id,
       recipient: referral.referred_by,
       to: [referral.phone],
-      sms_template_id: Template::SmsTemplate.find_by(name: "referral_invitation").id,
+      sms_template_id: Template::SmsTemplate.where(name: "referral_invitation", booking_portal_client_id: referral.booking_portal_client.id).first.try(:id),
       triggered_by_id: referral.id,
       triggered_by_type: referral.class.to_s
     })

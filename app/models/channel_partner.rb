@@ -106,7 +106,7 @@ class ChannelPartner
   #validate :docs_required_for_approval, on: :submit_for_approval
 
   validates :rera_id, uniqueness: true, length: { minimum: 6 }, format: { with: /\A[0-9a-zA-Z\/]*\z/i, message: 'allows only aplabets, numbers & forward slash(/)' }, allow_blank: true
-  validates :rera_id, presence: true, if: proc { |channel_partner| channel_partner.booking_portal_client.try(:kylas_tenant_id).blank? }
+  validates :rera_id, presence: true, if: proc { |channel_partner| channel_partner.booking_portal_client.try(:kylas_tenant_id).blank? } && :rera_applicable?
   validates :gstin_number, presence: true, if: :gst_applicable?
   validates :team_size, :numericality => { :greater_than => 0 }, allow_blank: true
   validates :status_change_reason, presence: true, if: proc { |cp| cp.status == 'rejected' }

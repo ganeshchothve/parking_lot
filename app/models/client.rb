@@ -12,6 +12,8 @@ class Client
   PUBLIC_DOCUMENT_TYPES = []
   INCENTIVE_CALCULATION = ["manual", "calculated"]
   ENABLE_PAYMENT = %w[enable_with_kyc enable_without_kyc disable].freeze
+  ENABLE_BOOKING_WITH_KYC = ['before_booking', 'during_booking', 'disable'].freeze
+  LEAD_CONFLICT= %w[client_level project_level no_conflict]
   INDUSTRIES = %w(real_estate generic)
   REQUIRED_FIELDS_FOR_USER_LOGIN = %w(email phone)
 
@@ -72,7 +74,7 @@ class Client
   field :enable_site_visit, type: Boolean, default: false
   field :enable_vis, type: Boolean, default: false
   field :enable_payment, type: String, default: 'disable'
-  field :enable_booking_with_kyc, type: Boolean, default: true
+  field :enable_booking_with_kyc, type: String, default: 'before_booking'
   field :incentive_calculation, type: Array, default: ["manual"]
   field :enable_direct_activation_for_cp, type: Boolean, default: false
   field :blocking_amount, type: Integer, default: 30000
@@ -86,24 +88,22 @@ class Client
   field :ga_code, type: String
   field :gtm_tag, type: String
   field :enable_communication, type: Hash, default: { email: true, sms: false, whatsapp: false, notification: false }
-  field :allow_multiple_bookings_per_user_kyc, type: Boolean, default: true
   field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner cp_owner]
   field :lead_blocking_days, type: Integer, default: 30
   field :invoice_approval_tat, type: Integer, default: 2
   #TODO: Bring this field to UI
   field :required_fields_for_user_login, type: Array, default: ['email', 'phone']
 
-  field :external_api_integration, type: Boolean, default: false
+  field :external_api_integration, type: Boolean, default: true
   field :enable_daily_reports, type: Hash, default: {"payments_report": false}
   field :enable_incentive_module, type: Array, default: []
   field :partner_regions, type: Array, default: []
   field :team_lead_dashboard_access_roles, type: Array, default: %w[gre]
-  field :tl_dashboard_refresh_timer, type: Integer, default: 1
   #
   # This setting will decide how same lead can be added through different channel partners,
   # Enabled: If channel_partner tries to add a lead which is already present in the system & tagged to different channel_partner, then system will check if the lead is confirmed or not, if yes, it won't allow the current channel_partner to add it again & trigger an email to admin saying current channel_partner tried to add an existing lead.
   # Disabled: If channel_partner tries to add an already present lead under diff. channel_partner, then system will not allow current channel_partner to add that lead again regardless of its confirmation status & trigger a notification email to admin informing that current channel_partner tried to add existing lead.
-  field :enable_lead_conflicts, type: Boolean, default: false
+  field :enable_lead_conflicts, type: String, default: ''
   # required for sell.do links of sitevisit, followup & add task on user to work.
   field :selldo_default_search_list_id, type: String
   field :powered_by_link, type: String
@@ -146,7 +146,7 @@ class Client
     <% end %>
     <div class="mt-3"></div>
   </div>'
-  field :payment_link_validity_hours, type: Integer, default: 24
+  field :payment_link_validity_hours, type: Integer, default: 720
 
   mount_uploader :logo, PublicAssetUploader
   mount_uploader :mobile_logo, PublicAssetUploader
@@ -186,6 +186,7 @@ class Client
   validates :payment_gateway, inclusion: {in: Client::PAYMENT_GATEWAYS }, allow_blank: true
   validates :enable_payment, inclusion: { in: Client::ENABLE_PAYMENT }, allow_blank: true
   validates :required_fields_for_user_login, array: { inclusion: {in: Client::REQUIRED_FIELDS_FOR_USER_LOGIN } }
+  validates :enable_booking_with_kyc, inclusion: { in: ENABLE_BOOKING_WITH_KYC }, allow_blank: true
   validates :ga_code, format: {with: /\Aua-\d{4,9}-\d{1,4}\z/i, message: 'is not valid'}, allow_blank: true
   validates :whatsapp_api_key, :whatsapp_api_secret, presence: true, if: :whatsapp_enabled?
   validates :notification_api_key, presence: true, if: :notification_enabled?
@@ -307,7 +308,20 @@ class Client
   end
 
   def kyc_required_for_payment?
-    payment_enabled? && self.enable_payment == 'enable_with_kyc' 
+    payment_enabled? && self.enable_payment == 'enable_with_kyc'
+  end
+
+  def booking_with_kyc_enabled?
+    enable_booking_with_kyc != 'disable'
+  end
+
+  def create_custom_field_on_kylas_tenant
+    if self.enable_channel_partners? && self.kylas_custom_fields.blank?
+      Kylas::CreateDealCustomField.new(User.new(booking_portal_client: self)).call
+      Kylas::CreateLeadCustomField.new(User.new(booking_portal_client: self)).call
+      Kylas::CreateMeetingCustomField.new(User.new(booking_portal_client: self)).call
+      Kylas::CreateProjectCustomField.new(User.new(booking_portal_client: self)).call
+    end
   end
 
   def real_estate?

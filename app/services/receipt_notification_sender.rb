@@ -7,7 +7,7 @@ module ReceiptNotificationSender
       email = Email.create!({
         project_id: self.project_id,
         booking_portal_client_id: user.booking_portal_client_id,
-        email_template_id:Template::EmailTemplate.find_by(project_id: self.project_id, name: "receipt_success").id,
+        email_template_id:Template::EmailTemplate.where(project_id: self.project_id, name: "receipt_success", booking_portal_client_id: user.booking_portal_client_id).first.try(:id),
         recipients: [user],
         cc_recipients: (user.manager_id.present? ? [user.manager] : []),
         triggered_by_id: self.id,
@@ -22,7 +22,7 @@ module ReceiptNotificationSender
       email = Email.create!({
         project_id: self.project_id,
         booking_portal_client_id: project_unit.booking_portal_client_id,
-        email_template_id:Template::EmailTemplate.find_by(name: "receipt_failed", project_id: self.project_id).id,
+        email_template_id:Template::EmailTemplate.where(name: "receipt_failed", project_id: self.project_id, booking_portal_client_id: project_unit.booking_portal_client_id).first.try(:id),
         recipients: [user],
         cc_recipients: (user.manager_id.present? ? [user.manager] : []),
         triggered_by_id: self.id,
@@ -37,7 +37,7 @@ module ReceiptNotificationSender
       email = Email.create!({
         project_id: self.project_id,
         booking_portal_client_id: project_unit.booking_portal_client_id,
-        email_template_id:Template::EmailTemplate.find_by(name: "receipt_clearance_pending", project_id: self.project_id).id,
+        email_template_id:Template::EmailTemplate.where(name: "receipt_clearance_pending", project_id: self.project_id, booking_portal_client_id: project_unit.booking_portal_client_id).first.try(:id),
         recipients: [user],
         cc_recipients: (user.manager_id.present? ? [user.manager] : []),
         triggered_by_id: self.id,
@@ -53,7 +53,7 @@ module ReceiptNotificationSender
         project_id: self.project_id,
         booking_portal_client_id: user.booking_portal_client_id,
         recipient_id: self.user_id,
-        sms_template_id: Template::SmsTemplate.find_by(project_id: self.project_id, name: "receipt_#{self.status}").id,
+        sms_template_id: Template::SmsTemplate.where(project_id: self.project_id, name: "receipt_#{self.status}", booking_portal_client_id: project_unit.booking_portal_client_id).first.try(:id),
         triggered_by_id: self.id,
         triggered_by_type: self.class.to_s
       )
@@ -67,7 +67,7 @@ module ReceiptNotificationSender
         email = Email.create!({
           project_id: self.project_id,
           booking_portal_client_id: user.booking_portal_client_id,
-          email_template_id:Template::EmailTemplate.find_by(name: "receipt_pending", project_id: self.project_id).id,
+          email_template_id:Template::EmailTemplate.where(name: "receipt_pending", project_id: self.project_id, booking_portal_client_id: user.booking_portal_client_id).try(:first).try(:id),
           recipients: [user],
           cc_recipients: (user.manager_id.present? ? [user.manager] : []),
           triggered_by_id: self.id,
@@ -80,7 +80,7 @@ module ReceiptNotificationSender
           project_id: self.project_id,
           booking_portal_client_id: user.booking_portal_client_id,
           recipient_id: self.user_id,
-          sms_template_id: Template::SmsTemplate.find_by(name: "receipt_pending", project_id: self.project_id).id,
+          sms_template_id: Template::SmsTemplate.where(name: "receipt_pending", project_id: self.project_id, booking_portal_client_id: user.booking_portal_client_id).try(:first).try(:id),
           triggered_by_id: self.id,
           triggered_by_type: self.class.to_s
         )

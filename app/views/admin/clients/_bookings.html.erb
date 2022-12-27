@@ -78,45 +78,21 @@
     </div>
   <% end %>
 </div>
+
 <div class="row">
   <% if policy([:admin, @client]).editable_field?('enable_booking_with_kyc') %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :enable_booking_with_kyc %>
-        <div class="form-check form-check-inline">
-          <%= f.radio_button :enable_booking_with_kyc, true, class: "form-check-input wd-22" %>
-          <%= f.label :enable_booking_with_kyc, I18n.t("global.boolean.true"), class: " form-check-label d-inline-block ms-2" %>
-        </div>
-        <div class="form-check form-check-inline">
-          <%= f.radio_button :enable_booking_with_kyc, false, class: "form-check-input wd-22" %>
-          <%= f.label :enable_booking_with_kyc, I18n.t("global.boolean.false"), class: " form-check-label d-inline-block ms-2" %>
-        </div>
+        <%= f.select :enable_booking_with_kyc, Client::ENABLE_BOOKING_WITH_KYC.collect{|x| [t("mongoid.attributes.client/enable_booking_with_kyc.#{x}"), x] }, {}, class: 'selectize', required: true, disabled: !(policy([:admin, @client]).editable_field?("enable_booking_with_kyc")) %>
       </div>
     </div>
   <% end %>
-</div>
-
-<div class="row">
   <% if policy([:admin, @client]).editable_field?('allowed_bookings_per_user') %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :allowed_bookings_per_user %>
         <%= f.number_field :allowed_bookings_per_user, class: 'form-control', disabled: (policy([:admin, @client]).editable_field?("allowed_bookings_per_user") ? false : true), min: 0 %>
-      </div>
-    </div>
-  <% end %>
-  <% if policy([:admin, @client]).editable_field?('allow_multiple_bookings_per_user_kyc') %>
-    <div class="col-md-6">
-      <div class="mb-3">
-        <%= f.label :allow_multiple_bookings_per_user_kyc %>
-        <div class="form-check form-check-inline">
-          <%= f.radio_button :allow_multiple_bookings_per_user_kyc, true, class: "form-check-input wd-22" %>
-          <%= f.label :allow_multiple_bookings_per_user_kyc, I18n.t("global.boolean.true"), class: " form-check-label d-inline-block ms-2" %>
-        </div>
-        <div class="form-check form-check-inline">
-          <%= f.radio_button :allow_multiple_bookings_per_user_kyc, false, class: "form-check-input wd-22" %>
-          <%= f.label :allow_multiple_bookings_per_user_kyc, I18n.t("global.boolean.false"), class: " form-check-label d-inline-block ms-2" %>
-        </div>
       </div>
     </div>
   <% end %>

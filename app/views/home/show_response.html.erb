@@ -9,7 +9,7 @@
             <div class="alert alert-danger">
               <% if @response.dig(:response, :code).present? %>
 
-                <h4><%= @response.dig(:response, :code) %> - <%= @response.dig(:response, :message) %></h4>
+                <h4><%= @response.dig(:response, :code) %> - <%= @response.dig(:response, :message) || @response.dig(:message) %></h4>
 
               <% elsif @response[:errors].present? %>
 

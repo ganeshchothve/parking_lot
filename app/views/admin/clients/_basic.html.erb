@@ -72,14 +72,6 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @client]).editable_field?("invoice_approval_tat") %>
-    <div class="col-md-6">
-      <div class="mb-3">
-        <%= f.label :invoice_approval_tat %>
-        <%= f.number_field :invoice_approval_tat, class: 'form-control', disabled: !(policy([:admin, @client]).editable_field?("invoice_approval_tat")) %>
-      </div>
-    </div>
-  <% end %>
   <% if policy([:admin, @client]).editable_field?("incentive_gst_slabs") %>
     <div class="col-md-6">
       <div class="mb-3">
@@ -88,28 +80,11 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @client]).editable_field?("tl_dashboard_refresh_timer") %>
-    <div class="col-md-6">
-      <div class="mb-3">
-        <%= f.label :tl_dashboard_refresh_timer %>
-        <%= f.number_field :tl_dashboard_refresh_timer, class: 'form-control', disabled:!policy([:admin, @client]).editable_field?("tl_dashboard_refresh_timer"), min: 1, max: 30, placeholder: 'Minimum 1 minute' %>
-      </div>
-    </div>
-  <% end %>
-</div>
-<div class="row">
   <% if policy([:admin, @client]).editable_field?("enable_lead_conflicts") %>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :enable_lead_conflicts %>
-        <div class="form-check form-check-inline">
-          <%= f.radio_button :enable_lead_conflicts, true, class: "form-check-input wd-22" %>
-          <%= f.label :enable_lead_conflicts, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
-        </div>
-        <div class="form-check form-check-inline">
-          <%= f.radio_button :enable_lead_conflicts, false, class: "form-check-input wd-22" %>
-          <%= f.label :enable_lead_conflicts, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
-        </div>
+        <%= f.select :enable_lead_conflicts, Client::LEAD_CONFLICT.collect{|x| [t("mongoid.attributes.client/lead_conflict.#{x}"), x] }, {}, class: 'selectize', disabled: !(policy([:admin, @client]).editable_field?("enable_lead_conflicts")) %>
       </div>
     </div>
   <% end %>

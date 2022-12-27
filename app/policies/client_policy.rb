@@ -20,9 +20,8 @@ class ClientPolicy < ApplicationPolicy
         :mailgun_private_api_key, :mailgun_email_domain, :sms_mask, :enable_payment,
         :blocking_amount, :blocking_amount_editable, :enable_booking_with_kyc,
         :blocking_days, :holding_minutes, :payment_gateway, :email_header, :email_footer,
-        :faqs, :rera, :tds_process, :logo, :mobile_logo, :background_image,
-        :allow_multiple_bookings_per_user_kyc, :enable_lead_conflicts, :lead_blocking_days,
-        :enable_direct_activation_for_cp, :external_api_integration, :invoice_approval_tat, :powered_by_link, :tl_dashboard_refresh_timer, :payment_link_validity_hours,
+        :faqs, :rera, :tds_process, :logo, :mobile_logo, :background_image, :enable_lead_conflicts, :lead_blocking_days,
+        :enable_direct_activation_for_cp, :external_api_integration, :powered_by_link,
         enable_communication: [:email, :sms, :whatsapp, :notification],
         external_inventory_view_config_attributes: ExternalInventoryViewConfigPolicy.new(user, ExternalInventoryViewConfig.new).permitted_attributes,
         address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes,
@@ -39,11 +38,7 @@ class ClientPolicy < ApplicationPolicy
       ]
     end
     if user.role.in?(%w(superadmin))
-      if record.kylas_tenant_id.present?
-        attrs += [:enable_channel_partners, :enable_leads, :enable_site_visit]
-      else
-        attrs += [:enable_vis, :enable_channel_partners, :enable_leads, :enable_site_visit]
-      end
+      attrs += [:enable_channel_partners, :enable_leads, :enable_site_visit]
     end
     attrs.uniq
   end

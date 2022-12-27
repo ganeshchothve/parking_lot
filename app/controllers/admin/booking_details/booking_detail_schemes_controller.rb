@@ -122,6 +122,10 @@ class Admin::BookingDetails::BookingDetailSchemesController < AdminController
         if value[:name].blank? || (value[:formula].blank? && value[:absolute_value].blank?)
           params[:booking_detail_scheme][:payment_adjustments_attributes].delete key
         end
+
+        if value[:absolute_value].present? && value[:absolute_value_type].present?
+          value[:absolute_value] = "#{value[:absolute_value_type]}#{value[:absolute_value]}"
+        end
       end
     end
 

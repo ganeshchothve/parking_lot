@@ -18,7 +18,7 @@
   <% end %>
 </div>
 <div class="row">
-  <% if policy([:admin, lead]).editable_field?("email") %>  
+  <% if policy([:admin, lead]).editable_field?("email") %>
   <div class="col-md-6">
     <%= f.input :email, disabled: !policy([:admin, lead]).editable_field?("email"), input_html: { class: 'email', name: 'email' } %>
   </div>
@@ -29,14 +29,17 @@
   </div>
   <% end %>
 </div>
-<% project_id = params[:project_id].presence || current_project.presence.try(:id) || Project.first&.id %>
-<% if Project.count == 1 && project_id.present? %>
+<!-- TODO project specific URL and domain specific URL -->
+<% project_id = params[:project_id].presence || current_project.presence.try(:id) %>
+<% if project_id.present? %>
   <%= f.input :project_id, as: :hidden, input_html: { name: 'project_id', value: project_id } %>
+<% elsif Project.where(booking_portal_client_id: current_client.id).count == 1 && Project.where(booking_portal_client_id: current_client.id).first&.id.present? %>
+  <%= f.input :project_id, as: :hidden, input_html: { name: 'project_id', value: Project.where(booking_portal_client_id: current_client.id).first.id } %>
 <% else %>
   <% if policy([:admin, lead]).editable_field?("project_id") %>
   <div class='row'>
     <div class="col-md-12">
-      <%= f.input :project_id, collection: [], required: false, disabled: !policy([:admin, lead]).editable_field?("project_id"), as: :select, prompt: :translate, input_html: { class: 'selectize-remote', name: 'project_id', data: {url: admin_projects_path} } %>
+      <%= f.input :project_id, collection: [], required: true, disabled: !policy([:admin, lead]).editable_field?("project_id"), as: :select, prompt: :translate, input_html: { class: 'selectize-remote', name: 'project_id', data: {url: admin_projects_path} } %>
     </div>
   </div>
   <% end %>

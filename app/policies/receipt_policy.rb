@@ -91,6 +91,6 @@ class ReceiptPolicy < ApplicationPolicy
   end
 
   def enable_booking_with_kyc?
-    record.project.present? ? record.project.enable_booking_with_kyc : false
+    (record.project&.booking_with_kyc_enabled?)
   end
 end

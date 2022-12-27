@@ -191,21 +191,6 @@
       </div>
     </div>
   <% end %>
-  <% if policy([:admin, @client]).editable_field?("external_api_integration") %>
-    <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :external_api_integration %>
-      <div class="form-check form-check-inline">
-        <%= f.radio_button :external_api_integration, true, class: "form-check-input wd-22" %>
-        <%= f.label :external_api_integration, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
-      </div>
-      <div class="form-check form-check-inline">
-        <%= f.radio_button :external_api_integration, false, class: "form-check-input wd-22" %>
-        <%= f.label :external_api_integration, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
-      </div>
-    </div>
-    </div>
-  <% end %>
   <% if policy([:admin, @client]).editable_field?('ga_code') %>
     <div class="col-md-6">
       <div class="mb-3">
