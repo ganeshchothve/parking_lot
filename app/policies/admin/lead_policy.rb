@@ -192,11 +192,11 @@ class Admin::LeadPolicy < LeadPolicy
     !marketplace_client?
   end
 
-  def booking_with_kyc_required_before_booking?
+  def kyc_required_before_booking?
     record.kyc_required_before_booking?
   end
 
-  def booking_with_kyc_required_during_booking?
+  def kyc_required_during_booking?
     record.kyc_required_during_booking?
   end
 
