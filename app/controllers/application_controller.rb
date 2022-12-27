@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
   include ApplicationHelper
 
   before_action :store_user_location!, if: :storable_location?
-  before_action :set_locale
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_cache_headers, :set_request_store, :set_cookies
   before_action :load_hold_unit
@@ -14,13 +13,14 @@ class ApplicationController < ActionController::Base
   acts_as_token_authentication_handler_for User, if: :token_authentication_valid_params?
 
   before_action :set_mailer_host
-  before_action :set_current_client, if: :current_user
+  before_action :set_current_client, if: :current_user, unless: proc { (params[:controller] == 'home' && params[:action].in?(%w(select_client))) || (devise_controller? && params[:action].in?(%w(create destroy))) }
   before_action :set_current_project_id
+  before_action :set_locale
   # Run in current user Time Zone
   around_action :user_time_zone, if: :current_user
   before_action :marketplace_current_user_match, if: proc { (marketplace_host? || embedded_marketplace?) && current_user.present? && params[:tenantId].present? && params[:userId].present? }
   before_action :authorize_marketplace_client, if: :current_user, unless: proc { devise_controller? || (params[:controller] == 'admin/clients' && params[:action].in?(%w(kylas_api_key update))) || (params[:controller] == 'home' && params[:action].in?(%w(not_authorized select_client))) }
-  around_action :apply_project_scope, if: :current_user, unless: proc { params[:controller] == 'admin/projects' }
+  around_action :apply_project_scope, if: :current_user, unless: proc { params[:controller] == 'admin/projects' || (params[:controller] == 'home' && params[:action].in?(%w(not_authorized select_client))) || (devise_controller? && params[:action].in?(%w(create destroy))) }
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
@@ -285,7 +285,13 @@ class ApplicationController < ActionController::Base
   # end
 
   def set_locale
-    I18n.locale = params[:locale] || I18n.default_locale
+    industry = current_client.industry if current_client
+    _locale = if industry && !industry.to_s.empty?
+                "#{ I18n.default_locale }-#{ industry.to_s.upcase }"
+              else
+                I18n.default_locale
+              end
+    I18n.locale = _locale
   end
 
   def default_url_options

@@ -326,6 +326,7 @@ class Lead
           booking_portal_client_id: client.id,
           body: ERB.new(client.email_header).result(client.get_binding) + email_template.parsed_content(self) + ERB.new(client.email_footer).result(client.get_binding),
           subject: email_template.parsed_subject(self),
+          email_template_id: email_template.id,
           to: [ self.email ],
           cc: client.notification_email.to_s.split(',').map(&:strip),
           triggered_by_id: id,
@@ -366,6 +367,14 @@ class Lead
 
   def is_revisit?
     self.site_visits.where(booking_portal_client_id: self.booking_portal_client_id, status: "conducted").present?
+  end
+
+  def kyc_required_before_booking?
+    !kyc_ready? && project.booking_with_kyc_required_before_booking?
+  end
+
+  def kyc_required_during_booking?
+    !kyc_ready? && project.booking_with_kyc_required_during_booking?
   end
 
   def check_for_lead_conflict

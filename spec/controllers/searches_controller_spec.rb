@@ -96,7 +96,6 @@ RSpec.describe SearchesController, type: :controller do
           context 'When buyer(user) KYC booking excced' do
             it 'throws error to add kyc' do
               allow_any_instance_of(User).to receive(:allowed_bookings).and_return(2)
-              allow_any_instance_of(Client).to receive(:allow_multiple_bookings_per_user_kyc?).and_return(false)
               project_unit = create(:available_project_unit)
               booking_detail = create(:booking_detail, project_unit_id: project_unit.id, user_id: @user.id, status: 'blocked', primary_user_kyc_id: @kyc.id)
               post :hold, params: { id: @search.id, booking_detail: { primary_user_kyc_id: @kyc.id } }
@@ -223,7 +222,6 @@ RSpec.describe SearchesController, type: :controller do
           context 'When buyer(user) KYC booking excced' do
             it 'throws error to add kyc' do
               allow_any_instance_of(User).to receive(:allowed_bookings).and_return(2)
-              allow_any_instance_of(Client).to receive(:allow_multiple_bookings_per_user_kyc?).and_return(false)
               project_unit = create(:available_project_unit)
               booking_detail = create(:booking_detail, project_unit_id: project_unit.id, user_id: @user.id, status: 'blocked', primary_user_kyc_id: @kyc.id)
               post :hold, params: { id: @search.id, booking_detail: { primary_user_kyc_id: @kyc.id } }

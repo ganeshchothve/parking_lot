@@ -6,31 +6,43 @@
       </div>
     </div>
   <% end %>
+  <% if policy([:admin, lead]).editable_field?("first_name") %>
   <div class="col-md-6">
     <%= f.input :first_name, required: true, autofocus: true, disabled: !policy([:admin, lead]).editable_field?("first_name"), input_html: { name: 'first_name' } %>
   </div>
+  <% end %>
+  <% if policy([:admin, lead]).editable_field?("last_name") %>
   <div class="col-md-6">
     <%= f.input :last_name, required: true, autofocus: true, disabled: !policy([:admin, lead]).editable_field?("last_name"), input_html: { name: 'last_name' } %>
   </div>
+  <% end %>
 </div>
 <div class="row">
+  <% if policy([:admin, lead]).editable_field?("email") %>
   <div class="col-md-6">
     <%= f.input :email, disabled: !policy([:admin, lead]).editable_field?("email"), input_html: { class: 'email', name: 'email' } %>
   </div>
+  <% end %>
+  <% if policy([:admin, lead]).editable_field?("phone") %>
   <div class="col-md-6">
     <%= f.input :phone, required: true, disabled: !policy([:admin, lead]).editable_field?("phone"), as: :tel, input_html: { class: 'phone', name: 'phone' } %>
   </div>
+  <% end %>
 </div>
 <!-- TODO project specific URL and domain specific URL -->
-<% project_id = params[:project_id].presence || current_project.presence.try(:id) || Project.first&.id %>
-<% if Project.count == 1 && project_id.present? %>
+<% project_id = params[:project_id].presence || current_project.presence.try(:id) %>
+<% if project_id.present? %>
   <%= f.input :project_id, as: :hidden, input_html: { name: 'project_id', value: project_id } %>
+<% elsif Project.where(booking_portal_client_id: current_client.id).count == 1 && Project.where(booking_portal_client_id: current_client.id).first&.id.present? %>
+  <%= f.input :project_id, as: :hidden, input_html: { name: 'project_id', value: Project.where(booking_portal_client_id: current_client.id).first.id } %>
 <% else %>
+  <% if policy([:admin, lead]).editable_field?("project_id") %>
   <div class='row'>
     <div class="col-md-12">
       <%= f.input :project_id, collection: [], required: true, disabled: !policy([:admin, lead]).editable_field?("project_id"), as: :select, prompt: :translate, input_html: { class: 'selectize-remote', name: 'project_id', data: {url: admin_projects_path} } %>
     </div>
   </div>
+  <% end %>
 <% end %>
 <% if f.object.site_visits.present? && f.object.site_visits.any?(&:new_record) %>
   <%= render 'admin/leads/site_visit_form', f: f %>

@@ -243,6 +243,7 @@ class User
 
   # scopes needed by filter
   # scope :filter_by_confirmation, ->(confirmation) { confirmation.eql?('not_confirmed') ? where(confirmed_at: nil) : where(confirmed_at: { "$ne": nil }) }
+  scope :filter_by__id, ->(_id) { where(id: _id) }
   scope :filter_by_confirmation, ->(confirmation) { confirmation == 'true' ? where(confirmed_at: { "$ne": nil }) : where(confirmed_at: nil)}
   scope :filter_by_is_active, ->(is_active) { is_active.eql?("true") ? where(is_active: true)
     : where(is_active: false)}
@@ -413,6 +414,7 @@ class User
                   booking_portal_client_id: booking_portal_client_id,
                   subject: email_template.parsed_subject(self),
                   body: email_template.parsed_content(self),
+                  email_template_id: email_template.id,
                   recipients: [ self ],
                   triggered_by_id: id,
                   triggered_by_type: self.class.to_s
@@ -726,13 +728,9 @@ class User
   end
 
   def unused_user_kyc_ids(project_unit_id)
-    if booking_portal_client.allow_multiple_bookings_per_user_kyc?
-      user_kyc_ids = user_kycs.collect(&:id)
-    else
-      user_kyc_ids = user_kycs.collect(&:id)
-      booking_details.ne(id: project_unit_id).each do |x|
-        user_kyc_ids = user_kyc_ids - [x.primary_user_kyc_id] - x.user_kyc_ids
-      end
+    user_kyc_ids = user_kycs.collect(&:id)
+    booking_details.ne(id: project_unit_id).each do |x|
+      user_kyc_ids = user_kyc_ids - [x.primary_user_kyc_id] - x.user_kyc_ids
     end
     user_kyc_ids
   end
@@ -766,6 +764,7 @@ class User
         booking_portal_client_id: booking_portal_client_id,
         subject: email_template.parsed_subject(self),
         body: email_template.parsed_content(self),
+        email_template_id: email_template.id,
         cc: booking_portal_client.notification_email.to_s.split(',').map(&:strip),
         recipients: [ self ],
         triggered_by_id: id,
@@ -882,7 +881,7 @@ class User
         auth_conditions = [{ phone: login }, { email: login }]
         if warden_conditions[:project_id].present?
           or_conds = []
-          or_conds << { 
+          or_conds << {
             "$or": [
               { booking_portal_client_id: warden_conditions[:booking_portal_client_id], '$or': auth_conditions, role: {"$nin": ALL_PROJECT_ACCESS}, project_ids: BSON::ObjectId(warden_conditions[:project_id]) },
               { booking_portal_client_id: warden_conditions[:booking_portal_client_id], '$or': auth_conditions, role: {"$in": ALL_PROJECT_ACCESS}},
@@ -950,13 +949,13 @@ class User
         custom_scope = { role: { '$in': %w(channel_partner cp_owner) } }
       elsif user.role.in?(%w(admin))
         custom_scope = { role: { "$ne": 'superadmin' } }
-        custom_scope = { role: { "$ne": 'superadmin', '$in': %w(sales admin sales_admin gre channel_partner cp_owner) + User::BUYER_ROLES } } if user.booking_portal_client.try(:kylas_tenant_id).present?
+        #custom_scope = { role: { "$ne": 'superadmin', '$in': %w(sales admin sales_admin gre channel_partner cp_owner) } } if user.booking_portal_client.try(:kylas_tenant_id).present?
       elsif user.role.in?(%w(sales))
         # custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) }}
         custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) + %w(channel_partner cp_owner) } }
       elsif user.role.in?(%w(superadmin))
         custom_scope = {  }
-        custom_scope = { role: { '$in': %w(sales admin sales_admin gre channel_partner cp_owner) }} if user.booking_portal_client.try(:kylas_tenant_id).present?
+        #custom_scope = { role: { '$in': %w(sales admin sales_admin gre channel_partner cp_owner) }} if user.booking_portal_client.try(:kylas_tenant_id).present?
       elsif user.role?('team_lead')|| user.role?('gre')
         custom_scope = { role: 'sales', project_ids: { "$in": project_ids }}
       end

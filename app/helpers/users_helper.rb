@@ -100,4 +100,28 @@ module UsersHelper
       Project.where(booking_portal_client_id: user.booking_portal_client.id).in(id: user.project_ids)
     end
   end
+
+  def email_required?(user)
+    user.booking_portal_client.required_fields_for_user_login.include?('email') && !user.maskable_field?(current_user)
+  end
+
+  def phone_required?(user)
+    user.booking_portal_client.required_fields_for_user_login.include?('phone') && !user.maskable_field?(current_user)
+  end
+
+  def email_value(user)
+    user.buyer? && user.maskable_field?(current_user)  ? '' : user.email
+  end
+
+  def phone_value(user)
+    user.buyer? && user.maskable_field?(current_user)  ? '' : user.phone
+  end
+
+  def email_placeholder(user)
+    user.buyer? && user.maskable_field?(current_user) ? user.masked_email(current_user) : ''
+  end
+
+  def phone_placeholder(user)
+    user.buyer? && user.maskable_field?(current_user) ? user.masked_phone(current_user) : ''
+  end
 end

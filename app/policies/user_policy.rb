@@ -5,6 +5,14 @@ class UserPolicy < ApplicationPolicy
     false
   end
 
+  def show?
+    if current_client.real_estate?
+      super
+    else
+      false
+    end
+  end
+
   def create?
     new?
   end

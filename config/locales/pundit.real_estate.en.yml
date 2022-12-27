@@ -1,0 +1,197 @@
+en-REAL_ESTATE:
+  pundit:
+    default: 'You cannot perform this action.'
+    project_unit_policy:
+      make_available?: "Project unit was not on hold."
+      update_project_unit?: "The user is not confirmed or kyc documents are not uploaded."
+      payment?: "The user is not confirmed or kyc documents are not uploaded."
+      process_payment?: "The user is not confirmed or kyc documents are not uploaded."
+      checkout?: "Something went wrong, please try again."
+      send_under_negotiation?: "Something went wrong, please try again."
+      hold?:
+        user_confirmation: "The user is not confirmed or kyc documents are not uploaded."
+        allowed_bookings: "You have booked the permitted number of apartments."
+
+    admin:
+      lead_policy:
+        new?:
+          project_not_subscribed: 'This project is not subscribed'
+          project_not_active: 'This project is inactive'
+        check_and_register?:
+          project_not_subscribed: 'This project is not subscribed'
+          project_not_active: 'This project is inactive'
+          walkin_disabled: 'Walkins for this project is not considered now'
+
+      project_policy:
+        collaterals?:
+          project_not_subscribed: 'This project is not subscribed'
+          project_not_active: 'This project is inactive'
+
+      booking_detail_policy:
+        new?:
+          kyc_required: 'Please add KYC'
+          allowed_bookings: 'You have booked the permitted number of apartments.'
+          project_not_subscribed: 'This project is not subscribed'
+          project_access_not_given: 'Access to this project is not given'
+          user_not_included: 'You are not allowed to take bookings'
+          inventory_access_not_given: 'You do not have access to this project inventory'
+          booking_disabled_on_project: 'Bookings on this project is disabled'
+          project_not_active: 'This project is inactive'
+        hold?:
+          enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator.'
+          only_for_kyc_added_users: 'Please add KYC before booking Unit.'
+          only_for_confirmed_user: 'You have to confirm your email address before continuing.'
+          already_held: 'This unit is already held by other user.'
+          not_available_for_user_group: 'This unit is not for current user group.'
+          blocking_amount_receipt: 'For Channal Partner. Need atleast one unattach booking amount receipt.'
+          booking_limit_exceed: 'You have booked the permitted number of apartments.'
+          user_kyc_allowed_bookings: 'Multiple KYC booking is not allowed.'
+          not_authorise_to_book_for_this_user: 'You do not have access to book for this buyer.'
+          hold_single_unit: 'User already has a unit on hold.'
+          booking_done: 'User has successfully blocked the unit'
+          record_not_held: 'Unit is not held anymore'
+        checkout?:
+          booking_done: 'User has successfully blocked the unit'
+          record_not_held: 'Unit is not held anymore'
+
+      project_unit_policy:
+        index?: "Only administrator has rights to view this page."
+        show?: "Only administrator has rights to view this page."
+        edit?: "Only administrator has rights to view this page."
+        export?: "Only administrator has rights to view this page."
+        mis_report?: "Only administrator has rights to view this page."
+        update_scheme?: "Only administrator has rights to view this page."
+        hold?:
+          user_confirmation: "The user is not confirmed or kyc documents are not uploaded."
+          already_held: "This unit is already held by other user."
+          user_kyc_allowed_bookings: "You can book only one unit on one KYC."
+          allowed_bookings: "You have booked the permitted number of apartments."
+          blocking_amount_receipt: "You have to make payment before blocking the apartment"
+
+      receipt_policy:
+        create?:
+          no_user_present: 'Receipt is not yet assign with any user.'
+          user_not_confimred: 'Associated User is not yet confirmed.'
+          not_kyc_present: "Associated User's KYC is missing."
+          online_account_not_present: 'Online payments are currently disabled.'
+          wrong_user: 'You are not authorized to add a payment for this user.'
+          not_allowed: 'You are not allowed to add a payment in this booking stage.'
+          enable_direct_payment: 'Direct payment is not available right now.'
+          only_superadmin: 'Receipt details are extra.'
+        new?:
+          no_user_present: 'Receipt is not yet assign with any user.'
+          user_not_confimred: 'Associated User is not yet confirmed.'
+          not_kyc_present: "Associated User's KYC is missing."
+          online_account_not_present: 'Online payments are currently disabled.'
+          wrong_user: 'You are not authorized to add a payment for this user.'
+          not_allowed: 'You are not allowed to add a payment in this booking stage.'
+          enable_direct_payment: 'Direct payment is not available right now.'
+        asset_create?:
+          no_user_present: 'Receipt is not yet assign with any user.'
+          user_not_confimred: 'Associated User is not yet confirmed.'
+          not_kyc_present: "Associated User's KYC is missing."
+          online_account_not_present: 'Online payments are currently disabled.'
+
+      booking_detail_scheme_policy:
+        new?:
+          only_admin: 'Only administrator can create new scheme for booking.'
+          scheme_is_not_approved: 'Selected Scheme is not approved.'
+          only_under_hold: 'Respective unit is not under negotiation or hold.'
+          do_not_have_access: 'You do not have access.'
+          cross_project_tower: 'Project Tower is different.'
+          enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
+          booking_detail_scheme_present: 'There can be only one active scheme for one booking'
+        create?:
+          only_admin: 'Only administrator can create new scheme for booking.'
+          scheme_is_not_approved: 'Selected Scheme is not approved.'
+          only_under_hold: 'Respective unit is not under negotiation or hold.'
+          do_not_have_access: 'You do not have access.'
+          cross_project_tower: 'Project Tower is different.'
+          enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
+        edit?:
+          only_admin: 'Only administrator can create new scheme for booking.'
+          scheme_is_not_approved: 'Selected Scheme is not approved.'
+          only_under_hold: 'Respective unit is not under negotiation or hold.'
+          do_not_have_access: 'You do not have access.'
+          cross_project_tower: 'Project Tower is different.'
+          enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
+          booking_detail_is_not_ready: 'Booking is not ready for scheme changes.'
+        update?:
+          only_admin: 'Only administrator can create new scheme for booking.'
+          scheme_is_not_approved: 'Selected Scheme is not approved.'
+          only_under_hold: 'Respective unit is not under negotiation or hold.'
+          do_not_have_access: 'You do not have access.'
+          cross_project_tower: 'Project Tower is different.'
+          enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
+          booking_detail_is_not_ready: 'Booking is not ready for scheme changes.'
+
+      user_policy:
+        confirm_user?:
+          cannot_confirm_user: 'You are not allowed to confirm another user.'
+
+    buyer:
+
+      booking_detail_policy:
+        hold?:
+          enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator.'
+          only_for_kyc_added_users: 'Please add KYC before booking Unit.'
+          only_for_confirmed_user: 'You have to confirm your email address before continuing.'
+          already_held: 'This unit is already held by other user.'
+          not_available_for_user_group: 'This unit is not for current user group.'
+          blocking_amount_receipt: 'For Channel Partner. Need at least one unattached booking amount receipt.'
+          booking_limit_exceed: 'You have booked the permitted number of apartments.'
+          user_kyc_allowed_bookings: 'Multiple KYC booking is not allowed.'
+          not_authorise_to_book_for_this_user: 'You do not have access to book for this buyer.'
+          hold_single_unit: 'User already has a unit on hold.'
+          booking_done: 'User has successfully blocked the unit'
+          record_not_held: 'Unit is not held anymore'
+        checkout?:
+          booking_done: 'User has successfully blocked the unit'
+          record_not_held: 'Unit is not held anymore'
+      project_unit_policy:
+        index?: "Only buyer has rights to view this page."
+        show?: "Only buyer has rights to view this page."
+        edit?: "Only buyer has rights to view this page."
+        hold?:
+          user_confirmation: "The user is not confirmed or kyc documents are not uploaded."
+          already_held: "This unit is already held by other user."
+          user_kyc_allowed_bookings: "You can book only one unit on one KYC."
+          allowed_bookings: "You have booked the permitted number of apartments."
+
+      receipt_policy:
+        new?:
+          not_kyc_present: "Associated User's KYC is missing."
+          online_account_not_present: 'Online payments are currently disabled.'
+          wrong_user: 'You are not authorized to add a payment for this user.'
+          not_allowed: 'You are not allowed to add a payment in this booking stage.'
+          enable_direct_payment: 'Direct payment is not available right now.'
+          user_not_confimred: 'You are not yet confirmed.'
+        create?:
+          not_kyc_present: "Associated User's KYC is missing."
+          online_account_not_present: 'Online payments are currently disabled.'
+          wrong_user: 'You are not authorized to add a payment for this user.'
+          not_allowed: 'You are not allowed to add a payment in this booking stage.'
+          enable_direct_payment: 'Direct payment is not available right now.'
+          only_online_payment: 'Only Online payment is permitted.'
+          user_not_confimred: 'You are not yet confirmed.'
+      booking_detail_scheme_policy:
+        new?:
+          only_buyer: 'Only buyer can select Scheme'
+          enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
+          scheme_is_not_approved: 'Scheme in disabled. Please select other active Scheme.'
+          only_under_hold: 'available for in booking process. Please follow booking process.'
+        edit:
+          only_buyer: 'Only buyer can select Scheme'
+          enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
+          scheme_is_not_approved: 'Scheme in disabled. Please select other active Scheme.'
+          only_under_hold: 'available for in booking process. Please follow booking process.'
+        create?:
+          only_buyer: 'Only buyer can select Scheme'
+          enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
+          scheme_is_not_approved: 'Scheme in disabled. Please select other active Scheme.'
+          only_under_hold: 'available for in booking process. Please follow booking process.'
+        update?:
+          only_buyer: 'Only buyer can select Scheme'
+          enable_actual_inventory: 'You can not select Inventory. Please contact to Administrator'
+          scheme_is_not_approved: 'Scheme in disabled. Please select other active Scheme.'
+          only_under_hold: 'available for in booking process. Please follow booking process.'

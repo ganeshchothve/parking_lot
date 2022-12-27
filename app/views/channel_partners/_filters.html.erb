@@ -16,14 +16,6 @@
           <%= select_tag "fltrs[_id]", params.dig(:fltrs,:_id), {class: "selectize-remote", data: {url: channel_partners_path, params: { fltrs: {booking_portal_client_id: client_id } } }} %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-          <%= label_tag "fltrs", t('mongoid.attributes.channel_partner.rera_id'), class: "control-label" %>
-          <%= text_field_tag "fltrs[rera_id]", params.dig(:fltrs,:rera_id), class: "form-control" %>
-        </div>
-        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-          <%= label_tag "fltrs", t('mongoid.attributes.channel_partner.internal_category'), class: "control-label" %>
-          <%= select_tag "fltrs[internal_category]", options_for_select( ChannelPartner::INTERNAL_CATEGORY.collect{|x| [ t("mongoid.attributes.channel_partner/internal_categories.#{x}"), x]}, params.dig(:fltrs,:internal_category)), {prompt: I18n.t("global.select"), class: "selectize"} %>
-        </div>
-        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.channel_partner.status'), class: "control-label" %>
           <%= select_tag "fltrs[status]", options_for_select( ChannelPartner::STATUS.collect{|x| [ t("mongoid.attributes.channel_partner/status.#{x}"), x]}, params.dig(:fltrs,:status)), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
@@ -37,7 +29,17 @@
           <%= select_tag "fltrs[manager_id]", options_for_select( User.where(booking_portal_client_id: current_client.try(:id), is_active: true, confirmed_at: {'$ne': nil}, role: "cp").collect{|x| [ x.ds_name, x.id.to_s]}, params.dig(:fltrs,:manager_id)), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
 
-        <%= render 'admin/regions/filters' %>
+        <% if current_client.real_estate? %>
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+            <%= label_tag "fltrs", t('mongoid.attributes.channel_partner.rera_id'), class: "control-label" %>
+            <%= text_field_tag "fltrs[rera_id]", params.dig(:fltrs,:rera_id), class: "form-control" %>
+          </div>
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+            <%= label_tag "fltrs", t('mongoid.attributes.channel_partner.internal_category'), class: "control-label" %>
+            <%= select_tag "fltrs[internal_category]", options_for_select( ChannelPartner::INTERNAL_CATEGORY.collect{|x| [ t("mongoid.attributes.channel_partner/internal_categories.#{x}"), x]}, params.dig(:fltrs,:internal_category)), {prompt: I18n.t("global.select"), class: "selectize"} %>
+          </div>
+          <%= render 'admin/regions/filters' %>
+        <% end %>
       </div>
     </div>
     <div class="filter-footer modal-footer text-end">
