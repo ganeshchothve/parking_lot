@@ -176,6 +176,7 @@ en-GENERIC:
       integrations: "Integrations"
       external_inventory_view: "External Inventory View Configuration"
       specifications: "Specifications"
+      project_unit: Project Unit
     units:
       sq_ft: "sq.ft"
     fetch_errors:
@@ -311,6 +312,7 @@ en-GENERIC:
       total_count: "Total %{name}"
       details_on_click: "Click to view details"
       add_city_regions: "Add New City & Regions"
+      project_unit: Project Unit
     text:
       dropping: "Dropping..."
     operators:
@@ -893,23 +895,19 @@ en-GENERIC:
         holding_minutes: "Unit to be held for (Minutes)"
         enable_company_users: "Allow Company Users & Benefits"
         roles_taking_registrations: "Allowed Roles For Taking New Registrations"
-        external_api_integration: "Enable External CRM Integration"
         enable_incentive_module: "Enable Brokerage Module For These Roles"
         mask_lead_data_for_roles: "Enable Deal Data Masking For These Roles"
         partner_regions: "Define Regions For Partners and Products & Services"
         powered_by_link: "Show Powered By Link"
         lead_blocking_days: "Configure Deal Blocking Days"
-        invoice_approval_tat: "Invoice Approval TAT (In Days)"
         incentive_gst_slabs: "Configure Incentive GST Slabs (%)"
         team_lead_dashboard_access_roles: "Team Deal Dashboard Access Roles"
-        tl_dashboard_refresh_timer: "Team Deal Dashboard Refresh Timer (Minutes)"
         enable_lead_conflicts: "Enable Deal Conflicts"
         launchpad_portal: "Launchpad Portal"
         payment_gateway: "Payment Gateway"
 
         enable_live_inventory: "Enable Live Inventory"
-        enable_booking_with_kyc: "Enabe Booking With KYC"
-        allow_multiple_bookings_per_user_kyc: "Allow Multiple Bookings per User KYC"
+        enable_booking_with_kyc: "Enable Booking With KYC"
         incentive_calculation: "Incentive Calculation"
         general_user_request_categories: "General User Request Categories"
         sms_provider: "Sms Provider"
@@ -967,9 +965,17 @@ en-GENERIC:
         enable_with_kyc: 'Enable With KYC'
         enable_without_kyc: 'Enable Without KYC'
         disable: 'Disable Payment'
+      client/lead_conflicts:
+        client_level: Client Level
+        project_level: Project Level
+        no_conflict: No Conflict
       client/industries:
         real_estate: 'Real Estate'
         generic: 'Generic'
+      client/enable_booking_with_kyc:
+        before_booking: Before Booking
+        during_booking: During Booking
+        disable: Disable KYC
       developer:
         name: "Developer Name"
         selldo_id: "CRM Developer ID"
@@ -1093,7 +1099,7 @@ en-GENERIC:
         broker_usp: "Broker Unique Selling Points (Fill in upto 3 USPs)"
         check_sv_availability_in_selldo: "Check Site Visit Availability in CRM"
         incentive_gst_slabs: "Configure Incentive GST Slabs (%)"
-        payment_enabled: "Enable Payment"
+        payment_enabled: "Enable Booking Without Payment"
         approved_banks/list:
           hdfc: "HDFC Bank"
           sbi: "State Bank of India"
@@ -1732,6 +1738,7 @@ en-GENERIC:
         custom_document: Documents
         document_not_available: Document not available
         print: Print
+        subject_class: Subject Class
       user_request:
         project_unit: "Product/ Service Unit"
         project_id: "Product/ Service"
@@ -2177,6 +2184,9 @@ en-GENERIC:
         kylas_contact: Kylas Contacts
         manager_ids: Partners
         crm_reference_id: CRM Reference ID
+        errors:
+          lead_registered_with_client: "Lead is already registered with Client"
+          lead_registered_with_project: "Lead is already registered with Project"
       lead/stage:
         incoming: "Incoming"
         booked: "Booked"
@@ -3050,8 +3060,10 @@ en-GENERIC:
       resend_email:
         link_name: "Resend Email"
         success: "Email has been sent again."
-        alert: "Email not sent" 
+        alert: "Email not sent"
         emails_enabled: "Emails are disabled, please connect with your admin"
+      errors:
+        template_not_found: "Email template is not present"
     erp_models:
       index:
         link_name: "Third Party Integration"
