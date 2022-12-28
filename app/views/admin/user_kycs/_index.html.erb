@@ -28,10 +28,10 @@
           </td>
         <% end %>
         <td  data-title= <%= "#{t('mongoid.attributes.user_kyc.email')}" %> >
-          <%= user_kyc.email %>
+          <%= user_kyc.masked_email(current_user) %>
         </td>
         <td  data-title= <%= "#{t('mongoid.attributes.user_kyc.phone')}" %> >
-          <%= user_kyc.phone %>
+          <%= user_kyc.masked_phone(current_user) %>
         </td>
         <td data-title=<%= t('mongoid.attributes.user_kyc.dob') %> ><%= user_kyc.dob.strftime("%d %b %Y") rescue "" %></td>
         <td data-title=<%= t('mongoid.attributes.user_kyc.pan_number') %> ><%= user_kyc.pan_number %></td>

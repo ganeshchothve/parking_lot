@@ -30,13 +30,13 @@
           <div class="row">
             <div class="col-md-6">
               <div class="mb-3">
-                <%= f.label :email %>
+                <%= f.label :email, class: email_required?(@user) ? 'label-required' : '' %>
                 <%= f.email_field :email, class: 'form-control', required: email_required?(@user), disabled: !(policy([current_user_role_group, @user]).editable_field?("email")), value: email_value(@user), placeholder: email_placeholder(@user) %>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
-                <%= f.label :phone %>
+                <%= f.label :phone, class: phone_required?(@user) ? 'label-required' : '' %>
                 <%= f.text_field :phone, class: 'form-control phone', required: phone_required?(@user), disabled: !(policy([current_user_role_group, @user]).editable_field?("phone")), value: phone_value(@user), placeholder: phone_placeholder(@user) %>
               </div>
             </div>
