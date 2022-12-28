@@ -14,15 +14,9 @@ class HomeController < ApplicationController
   end
 
   def privacy_policy
-    @channel_partner = ChannelPartner.new
   end
 
   def terms_and_conditions
-    @channel_partner = ChannelPartner.new
-  end
-
-  def cp_enquiryform
-    @channel_partner = ChannelPartner.new
   end
 
   def select_client
@@ -55,10 +49,6 @@ class HomeController < ApplicationController
       @lead = Lead.new
       render layout: "devise"
     end
-  end
-
-  def show_response
-    @response = params[:response]
   end
 
   private
