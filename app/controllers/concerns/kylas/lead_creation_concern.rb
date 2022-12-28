@@ -196,8 +196,6 @@ module Kylas
       end
     end
 
-    private
-
     def redirect_to_checkout
       lead_ids = Lead.where(booking_portal_client_id: current_client.try(:id), kylas_deal_id: params[:entityId]).pluck(:id)
       hold_booking = BookingDetail.in(lead_id: lead_ids).hold.first
