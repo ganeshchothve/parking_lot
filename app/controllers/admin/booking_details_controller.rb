@@ -234,7 +234,7 @@ class Admin::BookingDetailsController < AdminController
         format.json { render json: {message: I18n.t("controller.booking_details.notice.created")}, status: :ok }
         if embedded_marketplace?
           msg = t("controller.booking_details.#{action_name}.response_msg")
-          format.html { redirect_to show_response_path(response: {success: true, message: msg}) }
+          format.html { render 'home/show_response', locals: {result: {success: true, message: msg}} }
         else
           format.html { redirect_to admin_booking_detail_path(@booking_detail) }
         end

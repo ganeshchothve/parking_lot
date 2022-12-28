@@ -46,9 +46,9 @@ module Kylas
             result = Kylas::CreateLeadsForPartners.new(manager_ids, @user, @project, @lead_data, params).call
             if result[:success]
               msg = t("controller.booking_details.#{action_name}.response_msg")
-              format.html { redirect_to show_response_path(response: {success: true, message: msg}) }
+              format.html { render 'home/show_response', locals: {result: {success: true, message: msg}} }
             else
-              format.html { redirect_to show_response_path(response: result) }
+              format.html { render 'home/show_response', locals: {result: result} }
             end
           else
             flash.now[:alert] = t('controller.leads.alert.select_manager')
@@ -56,7 +56,7 @@ module Kylas
           end
         else
           msg = t('controller.leads.errors.email_or_phone_required')
-          format.html { redirect_to show_response_path({success: false, response: {message: msg}}) }
+          format.html { render 'home/show_response', locals: {result: {success: false, message: msg}} }
         end
       end
     end
@@ -90,7 +90,7 @@ module Kylas
           @cp_users = User.in(role: ['channel_partner', 'cp_owner']).where(booking_portal_client_id: current_user.booking_portal_client_id, user_status_in_company: 'active', 'kylas_custom_fields_option_id.deal': @kylas_cp_id)
         end
       else
-        redirect_to show_response_path(response: fetch_deal_details) and return
+        render 'home/show_response', locals: {result: fetch_deal_details} and return
       end
     end
 
@@ -103,7 +103,7 @@ module Kylas
         kylas_product_ids = current_user.booking_portal_client.projects.pluck(:kylas_product_id).compact.map(&:to_i)
         @lead_associated_products = @lead_associated_products.select{|kp| kylas_product_ids.include?(kp[1]) } rescue []
       else
-        redirect_to show_response_path(response: fetch_lead_details) and return
+        render 'home/show_response', locals: {result: fetch_lead_details} and return
       end
     end
 
@@ -121,7 +121,7 @@ module Kylas
         sync_product_to_kylas(current_user, kylas_product_id, kylas_deal_id, @deal_data) if @deal_data.present?
       else
         msg = t("controller.booking_details.set_project.response_msg")
-        redirect_to show_response_path(response: {success: false, message: msg}) and return
+        render 'home/show_response', locals: {result: {success: false, message: msg}} and return
       end
     end
 
@@ -192,7 +192,7 @@ module Kylas
           Kylas::UpdateDeal.new(current_user, lead, update_deal_payload).call if lead.present?
         end
       else
-        redirect_to show_response_path(response: products_response) and return
+        render 'home/show_response', locals: {result: products_response} and return
       end
     end
 
