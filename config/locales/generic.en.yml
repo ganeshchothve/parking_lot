@@ -905,7 +905,6 @@ en-GENERIC:
         enable_lead_conflicts: "Enable Deal Conflicts"
         launchpad_portal: "Launchpad Portal"
         payment_gateway: "Payment Gateway"
-
         enable_live_inventory: "Enable Live Inventory"
         enable_booking_with_kyc: "Enable Booking With KYC"
         incentive_calculation: "Incentive Calculation"

@@ -53,6 +53,7 @@ module UserKycsConcern
   #
   def update
     respond_to do |format|
+      update_masked_email_and_phone_if_present
       if @user_kyc.update(permitted_attributes([current_user_role_group, @user_kyc]))
         format.html { redirect_to home_path(current_user), notice: I18n.t("controller.user_kycs.notice.updated") }
         format.json { render json: @user_kyc }
@@ -82,4 +83,12 @@ module UserKycsConcern
       yield
     end
   end
+
+  def update_masked_email_and_phone_if_present
+    if @user_kyc.maskable_field?(current_user)
+      params[:user_kyc].delete :phone if params.dig(:user_kyc, :phone).blank?
+      params[:user_kyc].delete :email if params.dig(:user_kyc, :email).blank?
+    end
+  end
+
 end

@@ -26,7 +26,7 @@ module DetailsMaskable
   end
 
   def maskable_field?(current_user = nil)
-    current_user && current_user.in_masked_details_user_group?# && (self.is_a?(UserKyc) || (self.buyer? && current_user != self))
+    current_user && current_user.in_masked_details_user_group? && (self.is_a?(UserKyc) || (self.buyer? && current_user != self))
   end
 
 end
