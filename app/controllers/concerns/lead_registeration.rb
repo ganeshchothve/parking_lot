@@ -42,7 +42,7 @@ module LeadRegisteration
   def add_existing_lead_to_project_flow(format)
     @new_lead = @user.leads.new(email: @lead.email, phone: @lead.phone, first_name: @lead.first_name, last_name: @lead.last_name, project_id: @project.id, manager_id: params[:manager_id], booking_portal_client_id: current_client.id)
     @new_lead.push_to_crm = params[:push_to_crm] unless params[:push_to_crm].nil?
-
+    @new_lead.owner_id = current_user.id if current_user.try(:kylas_user_id).present? && current_user.booking_portal_client.try(:is_marketplace?)
     save_lead(format, @new_lead, true)
   end
 
@@ -53,6 +53,7 @@ module LeadRegisteration
     end
 
     @lead = @user.leads.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], project_id: @project.id, manager_id: params[:manager_id], booking_portal_client_id: current_user.booking_portal_client.id)
+    @lead.owner_id = current_user.id if current_user.try(:kylas_user_id).present? && current_user.booking_portal_client.try(:is_marketplace?)
     @lead.push_to_crm = params[:push_to_crm] unless params[:push_to_crm].nil?
 
     save_lead(format, @lead)

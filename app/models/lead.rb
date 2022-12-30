@@ -71,6 +71,7 @@ class Lead
   belongs_to :closing_manager, class_name: 'User', optional: true
   belongs_to :created_by, class_name: 'User', optional: true
   belongs_to :project
+  belongs_to :owner, class_name: 'User', optional: true
   has_many :receipts
   has_many :searches
   has_many :site_visits
@@ -102,6 +103,7 @@ class Lead
   validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile mobile fixed_line premium_rate] }, allow_blank: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } , allow_blank: true
   validates :site_visits, copy_errors_from_child: true, if: :site_visits?
+  validates :owner_id, presence: true, if: proc { |lead| lead.booking_portal_client.try(:is_marketplace?) }
   validate :check_for_lead_conflict
 
   # delegate :first_name, :last_name, :name, :email, :phone, to: :user, prefix: false, allow_nil: true
