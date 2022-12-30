@@ -273,7 +273,7 @@ class Client
   end
 
   def check_booking_portal_domains
-    self.errors.add(:booking_portal_domains, "can't contain marketplace domains") if self.booking_portal_domains.find {|bpd| bpd.in?([ENV_CONFIG[:marketplace_host], ENV_CONFIG[:embedded_marketplace_host]])}
+    self.errors.add(:booking_portal_domains, "can't contain marketplace domains") if self.booking_portal_domains.find {|bpd| bpd.in?(ENV_CONFIG[:internal_host_names])}
   end
 
   def booking_portal_client
@@ -322,6 +322,10 @@ class Client
       Kylas::CreateMeetingCustomField.new(User.new(booking_portal_client: self)).call
       Kylas::CreateProjectCustomField.new(User.new(booking_portal_client: self)).call
     end
+  end
+
+  def industry?(client_industry)
+    self.industry == client_industry
   end
 
   def real_estate?

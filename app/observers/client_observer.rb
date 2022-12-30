@@ -34,17 +34,17 @@ class ClientObserver < Mongoid::Observer
           client.set(sync_user: false)
           SyncKylasUsersWorker.perform_async(client.id.to_s)
           client.set(is_able_sync_products_and_users: false)
+        end
 
+        if client.can_create_webhook?
           # Configure Kylas respective Crm Base and Apis for newer clients
           DatabaseSeeds::CrmBase::Kylas.seed(client.id.to_s)
           crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:kylas, :base_url), booking_portal_client_id: client.id).first
           DatabaseSeeds::CrmApis.seed(crm_base.id.to_s) if crm_base.present?
 
           # create a user webhook in Kylas when flag(can_create_webhook) on client is set to true
-          if client.can_create_webhook?
-            Kylas::CreateWebhook.new(client, {run_in_background: true}).call
-            client.set(can_create_webhook: false)
-          end
+          Kylas::CreateWebhook.new(client, {run_in_background: true}).call
+          client.set(can_create_webhook: false)
         end
       end
     end

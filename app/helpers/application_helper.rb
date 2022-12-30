@@ -122,7 +122,7 @@ module ApplicationHelper
   end
 
   def marketplace_host?
-    request.host == ENV_CONFIG[:marketplace_host].to_s
+    request.subdomains.include?('base') && marketplace_apps_subdomains_match?
   end
 
   def marketplace_layout?
@@ -131,7 +131,25 @@ module ApplicationHelper
 
   # Kylas i-Frame URL
   def embedded_marketplace?
-    request.host == ENV_CONFIG[:embedded_marketplace_host].to_s
+    request.subdomains.include?('embed') && marketplace_apps_subdomains_match?
+  end
+
+  def marketplace_apps_subdomains_match?
+    request.subdomains.include?(ENV_CONFIG[:cp_app_subdomain]) || request.subdomains.include?(ENV_CONFIG[:re_app_subdomain])
+  end
+
+  def cp_marketplace_app?
+    request.subdomains.include?(ENV_CONFIG[:cp_app_subdomain]) && (
+      request.subdomains.include?('base') ||
+      request.subdomains.include?('embed')
+    )
+  end
+
+  def re_marketplace_app?
+    request.subdomains.include?(ENV_CONFIG[:re_app_subdomain]) && (
+      request.subdomains.include?('base') ||
+      request.subdomains.include?('embed')
+    )
   end
 
   def available_templates(subject_class, subject_class_resource)

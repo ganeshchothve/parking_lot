@@ -4123,3 +4123,5 @@ en:
     successfully_installed: 'App installed successfully'
     facing_problem: 'We are facing some problem with your installation. Please connect with Kylas Customer Success'
     something_went_wrong: 'We encountered some issue with your Marketplace setup. Please connect with Kylas Customer Success'
+    code_or_refresh_token_blank: 'Authorization code is missing'
+    app_credentials_blank: 'App credentials were not found'
