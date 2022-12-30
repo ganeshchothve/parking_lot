@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12">
-        <% if result[:success] == "true" %>
+        <% if result[:success] %>
             <h3 class='text-center'>Thank You!</h3>
             <div class="alert alert-success">
                 <h4><%= result.dig(:message) || t('app.embedded_frame.success.default_message') %></h4>

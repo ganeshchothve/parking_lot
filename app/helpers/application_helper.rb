@@ -135,26 +135,27 @@ module ApplicationHelper
   end
 
   def marketplace_apps_subdomains_match?
-    request.subdomains.include?(ENV_CONFIG[:cp_app_subdomain]) || request.subdomains.include?(ENV_CONFIG[:re_app_subdomain])
+    [
+      ENV_CONFIG[:cp_app_subdomain],
+      ENV_CONFIG[:re_app_subdomain]
+    ].any? { |subdomain| request.subdomains.include?(subdomain) }
   end
 
   def cp_marketplace_app?
-    request.subdomains.include?(ENV_CONFIG[:cp_app_subdomain]) && (
-      request.subdomains.include?('base') ||
-      request.subdomains.include?('embed')
-    )
+    request.subdomains.include?(ENV_CONFIG[:cp_app_subdomain]) && marketplace_subdomains_match?
   end
 
   def re_marketplace_app?
-    request.subdomains.include?(ENV_CONFIG[:re_app_subdomain]) && (
-      request.subdomains.include?('base') ||
-      request.subdomains.include?('embed')
-    )
+    request.subdomains.include?(ENV_CONFIG[:re_app_subdomain]) && marketplace_subdomains_match?
+  end
+
+  def marketplace_subdomains_match?
+    %w(base embed).any? { |subdomain| request.subdomains.include?(subdomain) }
   end
 
   def available_templates(subject_class, subject_class_resource)
     project_ids = case subject_class
-    
+
     when "Project"
       subject_class_resource.id
     when "VariableIncentiveScheme"
