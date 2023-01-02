@@ -3,6 +3,7 @@ class LeadObserver < Mongoid::Observer
     lead.email = lead.email&.downcase
     lead.phone = Phonelib.parse(lead.phone).to_s if lead.phone.present?
     lead.channel_partner_id = lead.manager&.channel_partner_id if lead.channel_partner_id.blank? && lead.manager.present?
+    lead.owner_id = Crm::Base.where(domain: ENV_CONFIG.dig(:kylas, :base_url), booking_portal_client_id: lead.booking_portal_client.id).first.try(:user_id) if lead.owner_id.blank? && lead.booking_portal_client.try(:is_marketplace?)
   end
 
   def after_create lead

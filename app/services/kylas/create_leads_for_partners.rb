@@ -7,11 +7,12 @@ module Kylas
 
     attr_accessor :manager_ids, :user, :project, :lead_data, :params
 
-    def initialize(manager_ids, user, project, lead_data, params)
+    def initialize(manager_ids, user, project, lead_data, owner_id, params)
       @manager_ids = manager_ids
       @user = user
       @project = project
       @lead_data = lead_data
+      @owner_id = owner_id
       @params = params
     end
 
@@ -33,7 +34,8 @@ module Kylas
             project: project,
             manager_id: manager.id,
             user: user,
-            kylas_lead_id: params[:entityId]
+            kylas_lead_id: params[:entityId],
+            owner_id: @owner_id
           )
           if lead.save
             Kylas::SyncLeadToKylasWorker.new.perform(lead.id.to_s)
