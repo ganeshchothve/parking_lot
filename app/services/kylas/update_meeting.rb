@@ -31,9 +31,9 @@ module Kylas
     end
 
     def update_participants kylas_base
-      admin = kylas_base.user
+      admin = entity.try(:owner) || kylas_base.user
       if admin.present?
-        payload = 
+        payload =
         [
           {
             "id": admin.kylas_user_id.to_i,
