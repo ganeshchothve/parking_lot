@@ -9,7 +9,15 @@ class KylasAuthController < ApplicationController
     authorization_code = params[:code]
 
     if authorization_code.present?
-      response = Kylas::ExchangeCode.new(authorization_code).call
+      app_credentials = if cp_marketplace_app?
+                          ENV_CONFIG.dig(:kylas, :cp_app)
+                        elsif re_marketplace_app?
+                          ENV_CONFIG.dig(:kylas, :re_app)
+                        else
+                          {}
+                        end
+      response = Kylas::ExchangeCode.new(authorization_code, app_credentials).call
+
       if response[:success]
         if current_user.update_users_and_tenants_details(response)
           session.delete(:previous_url) if auth_request?(session[:previous_url])

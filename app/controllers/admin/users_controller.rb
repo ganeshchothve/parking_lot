@@ -151,6 +151,11 @@ class Admin::UsersController < AdminController
     @client = Client.new
     @client.assign_attributes(client_params)
     @client.assign_attributes(booking_portal_domains: ["#{@client.id}.#{ENV_CONFIG[:client_default_domain]}"]) if params.dig(:user, :booking_portal_domains).reject(&:blank?).blank?
+    if cp_marketplace_app?
+      @client.assign_attributes(industry: 'generic')
+    elsif re_marketplace_app?
+      @client.assign_attributes(industry: 'real_estate')
+    end
     @user = User.new(role: 'admin')
     @user.assign_attributes(user_params)
     @user.assign_attributes(booking_portal_client: @client, tenant_owner: true)

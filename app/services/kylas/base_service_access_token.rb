@@ -5,14 +5,16 @@ require 'rest-client'
 module Kylas
   # Base service for request Access Token
   class BaseServiceAccessToken
-    attr_reader :code_or_refresh_token
+    attr_reader :code_or_refresh_token, :app_credentials
 
-    def initialize(code_or_refresh_token)
+    def initialize(code_or_refresh_token, app_credentials)
       @code_or_refresh_token = code_or_refresh_token
+      @app_credentials = app_credentials
     end
 
     def call
       return { success: false, error_message: I18n.t('kylas_auth.code_or_refresh_token_blank') } if code_or_refresh_token.blank?
+      return { success: false, error_message: I18n.t('kylas_auth.app_credentials_blank') } if app_credentials.blank?
 
       begin
         response = RestClient.post(
@@ -51,7 +53,7 @@ module Kylas
     private
 
     def encoded_credentials
-      cred = "#{ENV_CONFIG[:kylas][:client_id]}:#{ENV_CONFIG[:kylas][:client_secret]}"
+      cred = "#{app_credentials[:client_id]}:#{app_credentials[:client_secret]}"
       Base64::encode64(cred).gsub("\n", '')
     end
   end

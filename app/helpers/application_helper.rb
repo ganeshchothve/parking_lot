@@ -122,7 +122,7 @@ module ApplicationHelper
   end
 
   def marketplace_host?
-    request.host == ENV_CONFIG[:marketplace_host].to_s
+    request.subdomains.include?('base') && marketplace_apps_subdomains_match?
   end
 
   def marketplace_layout?
@@ -131,12 +131,31 @@ module ApplicationHelper
 
   # Kylas i-Frame URL
   def embedded_marketplace?
-    request.host == ENV_CONFIG[:embedded_marketplace_host].to_s
+    request.subdomains.include?('embed') && marketplace_apps_subdomains_match?
+  end
+
+  def marketplace_apps_subdomains_match?
+    [
+      ENV_CONFIG[:cp_app_subdomain],
+      ENV_CONFIG[:re_app_subdomain]
+    ].any? { |subdomain| request.subdomains.include?(subdomain) }
+  end
+
+  def cp_marketplace_app?
+    request.subdomains.include?(ENV_CONFIG[:cp_app_subdomain]) && marketplace_subdomains_match?
+  end
+
+  def re_marketplace_app?
+    request.subdomains.include?(ENV_CONFIG[:re_app_subdomain]) && marketplace_subdomains_match?
+  end
+
+  def marketplace_subdomains_match?
+    %w(base embed).any? { |subdomain| request.subdomains.include?(subdomain) }
   end
 
   def available_templates(subject_class, subject_class_resource)
     project_ids = case subject_class
-    
+
     when "Project"
       subject_class_resource.id
     when "VariableIncentiveScheme"
