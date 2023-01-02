@@ -103,7 +103,7 @@ class Lead
   validates :phone, phone: { possible: true, types: %i[voip personal_number fixed_or_mobile mobile fixed_line premium_rate] }, allow_blank: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } , allow_blank: true
   validates :site_visits, copy_errors_from_child: true, if: :site_visits?
-  validates :owner_id, presence: true, if: proc { |lead| lead.booking_portal_client.try(:is_marketplace?) }
+  validates :owner_id, presence: true, if: proc { |lead| lead.booking_portal_client.is_marketplace? }
   validate :check_for_lead_conflict
 
   # delegate :first_name, :last_name, :name, :email, :phone, to: :user, prefix: false, allow_nil: true
