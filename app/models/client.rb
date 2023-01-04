@@ -88,7 +88,7 @@ class Client
   field :ga_code, type: String
   field :gtm_tag, type: String
   field :enable_communication, type: Hash, default: { email: true, sms: false, whatsapp: false, notification: false }
-  field :roles_taking_registrations, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner cp_owner]
+  field :allowed_roles_to_create_lead, type: Array, default: %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner cp_owner]
   field :lead_blocking_days, type: Integer, default: 30
   field :invoice_approval_tat, type: Integer, default: 2
   #TODO: Bring this field to UI
@@ -247,6 +247,14 @@ class Client
     if user.present?
       out = enable_incentive_module.include?(user.role)
       out && (user.active_channel_partner? || user.role?('billing_team'))
+    else
+      false
+    end
+  end
+
+  def enable_lead_registration?(user)
+    if user.present?
+      allowed_roles_to_create_lead.include?(user.role)
     else
       false
     end

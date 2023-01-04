@@ -21,6 +21,7 @@ en-GENERIC:
           project_not_subscribed: 'This product/service is not subscribed'
           project_not_active: 'This product/service is inactive'
           walkin_disabled: 'Meetings for this product/service is not considered now'
+          lead_registration_disabled: 'Lead registration is disabled'
 
       project_policy:
         collaterals?:

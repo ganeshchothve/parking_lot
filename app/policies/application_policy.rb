@@ -181,5 +181,12 @@ class ApplicationPolicy
     false
   end
 
+  def enable_lead_registration?(_user=nil)
+    _user ||= user
+    return true if user.booking_portal_client.enable_lead_registration?(_user)
+    @condition = 'lead_registration_disabled'
+    false
+  end
+
 
 end
