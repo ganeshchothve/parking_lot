@@ -1,17 +1,17 @@
 module Kylas
     class UpdateProjectCustomField < BaseService
-  
+
       attr_reader :user, :project, :custom_field_id, :options
-  
+
       def initialize(user, project, custom_field_id, options = {})
         @user = user
         @custom_field_id = custom_field_id
         @project = project
         @options = options
       end
-  
+
       def call
-        return unless user.present? && project.present? && custom_field_id.present?
+        return unless user.present? && project.present? && custom_field_id.present? && project.kylas_custom_fields_option_id.dig('meeting').blank?
         begin
           url = URI("#{base_url}/meetings/fields/#{custom_field_id}")
           https = Net::HTTP.new(url.host, url.port)
@@ -19,7 +19,7 @@ module Kylas
           request = Net::HTTP::Put.new(url, request_headers)
           request.body = JSON.dump(project_cf_params)
           response = https.request(request)
-  
+
           case response
           when Net::HTTPOK, Net::HTTPSuccess
             parsed_response = JSON.parse(response.body)
@@ -48,10 +48,10 @@ module Kylas
           { success: false, error: e.message }
         end
       end
-  
+
       private
       def project_cf_params
-        { 
+        {
             displayName: I18n.t('mongoid.attributes.client.project_meeting_custom_field'),
             description: nil,
             pickLists: project_cf_details,
@@ -63,12 +63,12 @@ module Kylas
             required: false,
         }
       end
-  
+
       def project_cf_details
         response = Kylas::FetchMeetingCustomFieldDetails.new(user, custom_field_id).call
         if response[:success]
           data = response[:data].with_indifferent_access
-          picklist_values = [] 
+          picklist_values = []
           picklist_values = data.dig(:field, :picklist, :picklistValues).collect{|p| {id: p[:id], displayName: p[:displayName]}  } rescue []
           picklist_values += [{id: nil, displayName: project.name}] if picklist_values.present?
           picklist_values
@@ -76,11 +76,11 @@ module Kylas
           []
         end
       end
-  
+
       def dump_custom_field_option_values(response)
         begin
           data = response.with_indifferent_access
-          pick_list_response = {} 
+          pick_list_response = {}
           pick_list_response = data.dig(:picklist, :picklistValues).find{|p| p[:displayName] == project.name } rescue {}
           project.set("kylas_custom_fields_option_id.meeting": pick_list_response[:id]) if pick_list_response.present?
         rescue => exception

@@ -11,7 +11,7 @@ module Kylas
     end
 
     def call
-      return unless user.present? && cp_user.present? && custom_field_id.present?
+      return unless user.present? && cp_user.present? && custom_field_id.present? && cp_user.kylas_custom_fields_option_id.dig('deal').blank?
       begin
         url = URI("#{base_url}/deals/fields/#{custom_field_id}")
         https = Net::HTTP.new(url.host, url.port)
@@ -51,7 +51,7 @@ module Kylas
 
     private
     def custom_field_params
-      { 
+      {
           displayName: I18n.t('mongoid.attributes.client.cp_deal_custom_field'),
           description: nil,
           pickLists: deal_custom_field_details,
@@ -69,7 +69,7 @@ module Kylas
       if response[:success]
         data = response[:data].with_indifferent_access
         picklist_values = []
-        picklist_values = data[:field][:picklist][:values].collect{|cf | {id: cf[:id], displayName: cf[:displayName]}  } rescue []
+        picklist_values = data[:field][:picklist][:values].collect{ |cf| { id: cf[:id], displayName: cf[:displayName] } } rescue []
         picklist_values += [{id: nil, displayName: cp_user.name}] if picklist_values.present?
         picklist_values
       else
@@ -89,5 +89,5 @@ module Kylas
     end
 
   end
-  
+
 end

@@ -273,7 +273,7 @@ class Client
   end
 
   def check_booking_portal_domains
-    self.errors.add(:booking_portal_domains, "can't contain marketplace domains") if self.booking_portal_domains.find {|bpd| bpd.in?([ENV_CONFIG[:marketplace_host], ENV_CONFIG[:embedded_marketplace_host]])}
+    self.errors.add(:booking_portal_domains, "can't contain marketplace domains") if self.booking_portal_domains.find {|bpd| bpd.in?(ENV_CONFIG[:internal_host_names])}
   end
 
   def booking_portal_client
@@ -294,15 +294,6 @@ class Client
     end
   end
 
-  def create_custom_field_on_kylas_tenant
-    if self.enable_channel_partners? && self.kylas_custom_fields.blank?
-      Kylas::CreateDealCustomField.new(User.new(booking_portal_client: self)).call
-      Kylas::CreateLeadCustomField.new(User.new(booking_portal_client: self)).call
-      Kylas::CreateMeetingCustomField.new(User.new(booking_portal_client: self)).call
-      Kylas::CreateProjectCustomField.new(User.new(booking_portal_client: self)).call
-    end
-  end
-
   def payment_enabled?
     self.enable_payment != 'disable'
   end
@@ -316,12 +307,16 @@ class Client
   end
 
   def create_custom_field_on_kylas_tenant
-    if self.enable_channel_partners? && self.kylas_custom_fields.blank?
-      Kylas::CreateDealCustomField.new(User.new(booking_portal_client: self)).call
-      Kylas::CreateLeadCustomField.new(User.new(booking_portal_client: self)).call
-      Kylas::CreateMeetingCustomField.new(User.new(booking_portal_client: self)).call
-      Kylas::CreateProjectCustomField.new(User.new(booking_portal_client: self)).call
+    Kylas::CreateProjectCustomField.new(User.new(booking_portal_client: self)).call if self.kylas_custom_fields.dig('meeting_project').blank?
+    if self.enable_channel_partners?
+      Kylas::CreateDealCustomField.new(User.new(booking_portal_client: self)).call if self.kylas_custom_fields.dig('deal').blank?
+      Kylas::CreateLeadCustomField.new(User.new(booking_portal_client: self)).call if self.kylas_custom_fields.dig('lead').blank?
+      Kylas::CreateMeetingCustomField.new(User.new(booking_portal_client: self)).call if self.kylas_custom_fields.dig('meeting').blank?
     end
+  end
+
+  def industry?(client_industry)
+    self.industry == client_industry
   end
 
   def real_estate?

@@ -1,9 +1,14 @@
+# App URLs/Hosts configuration
 host:
-marketplace_host:
-embedded_marketplace_host:
 session_tld_length:
-iris_marketplace_host:
 client_default_domain:
+internal_host_names:
+cp_app_subdomain:
+re_app_subdomain:
+
+
+# App credentials
+#
 # for public assets such as app/assets
 asset_sync:
   FOG_DIRECTORY:
@@ -46,13 +51,13 @@ razorpay:
   key:
   secret:
 pusher:
-  pusher_api_app_id: "568634"
-  pusher_api_key: "5dc34608bfcefde0e495"
-  pusher_api_secret: "2796b4e60ccae832e378"
-  pusher_api_cluster: "ap2"
+  pusher_api_app_id:
+  pusher_api_key:
+  pusher_api_secret:
+  pusher_api_cluster:
 selldo:
   # Used for sell.do link's on user for sitevisit, followups in selldo
-  base_url: 'https://v2.sell.do'
+  base_url:
   user_email:
   user_token:
   # Used for pushing srd & data to sell.do
@@ -64,11 +69,18 @@ document_sign:
     client_id:
     secret_id:
 kylas:
-  client_id:
-  client_secret:
-  redirect_url:
   base_url:
   version:
+  cp_app:
+    client_id:
+    client_secret:
+    redirect_url:
+    base_url:
+  re_app:
+    client_id:
+    client_secret:
+    redirect_url:
+    base_url:
 sfdc:
   client_id:
   client_secret:
@@ -86,6 +98,6 @@ onesignal:
 mailgun:
   mailgun_private_api_key:
   mailgun_email_domain:
-asset_manager_host: 'http://localhost:8000'
+asset_manager_host:
 
 default_cp_manager_id:

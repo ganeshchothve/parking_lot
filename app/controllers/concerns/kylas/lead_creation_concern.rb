@@ -43,7 +43,7 @@ module Kylas
           @user.save
           manager_ids = params.dig(:lead, :manager_ids)
           if manager_ids
-            result = Kylas::CreateLeadsForPartners.new(manager_ids, @user, @project, @lead_data, params).call
+            result = Kylas::CreateLeadsForPartners.new(manager_ids, @user, @project, @lead_data, @owner_id, params).call
             if result[:success]
               msg = t("controller.booking_details.#{action_name}.response_msg")
               format.html { render 'home/show_response', locals: {result: {success: true, message: msg}} }
@@ -99,6 +99,7 @@ module Kylas
       fetch_lead_details = Kylas::FetchLeadDetails.new(entity_id, current_user).call
       if fetch_lead_details[:success]
         @lead_data = fetch_lead_details[:data].with_indifferent_access
+        @owner_id = current_client.users.where(kylas_user_id: @lead_data[:ownerId]).first.id.to_s rescue nil
         @lead_associated_products = @lead_data[:products].collect{|pd| [pd[:name], pd[:id]]} rescue []
         kylas_product_ids = current_user.booking_portal_client.projects.pluck(:kylas_product_id).compact.map(&:to_i)
         @lead_associated_products = @lead_associated_products.select{|kp| kylas_product_ids.include?(kp[1]) } rescue []

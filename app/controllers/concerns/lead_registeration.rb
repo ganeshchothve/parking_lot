@@ -42,7 +42,6 @@ module LeadRegisteration
   def add_existing_lead_to_project_flow(format)
     @new_lead = @user.leads.new(email: @lead.email, phone: @lead.phone, first_name: @lead.first_name, last_name: @lead.last_name, project_id: @project.id, manager_id: params[:manager_id], booking_portal_client_id: current_client.id)
     @new_lead.push_to_crm = params[:push_to_crm] unless params[:push_to_crm].nil?
-
     save_lead(format, @new_lead, true)
   end
 
@@ -64,6 +63,7 @@ module LeadRegisteration
         if existing || (@user.save && (selldo_config_base(@user.booking_portal_client).blank? || @project.save))
           lead.assign_attributes(selldo_lead_registration_date: params.dig(:lead_details, :lead_created_at))
           lead.assign_attributes(permitted_attributes([:admin, lead])) if params[:lead].present?
+          lead.owner_id = current_user.id if user_signed_in? && current_user.try(:kylas_user_id).present? && current_user.booking_portal_client.try(:is_marketplace?)
 
           check_if_lead_added_by_channel_partner(lead) do |cp_lead_activity|
             if cp_lead_activity.valid?
