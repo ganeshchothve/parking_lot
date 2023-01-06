@@ -11,10 +11,12 @@ module Kylas
 
     def call
       return if user.blank?
-  
+
       if (user.role.in?(%w(cp_owner channel_partner)) && user.user_status_in_company == 'active' && (changes.keys & %w(first_name last_name)).presence)
         client = user.booking_portal_client
-        admin_user = client.users.admin.ne(kylas_access_token: nil).first
+
+        kylas_base = Crm::Base.where(domain: ENV_CONFIG.dig(:kylas, :base_url), booking_portal_client_id: client.id).first
+        admin_user = kylas_base.user
 
         deal_custom_field_id = client.kylas_custom_fields.dig(:deal, :id)
         lead_custom_field_id = client.kylas_custom_fields.dig(:lead, :id)

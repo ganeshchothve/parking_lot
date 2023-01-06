@@ -7,7 +7,7 @@ module CommonUploader
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
-    "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+    "uploads/#{model.booking_portal_client_id}/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
 
   # Override the filename of the uploaded files:
