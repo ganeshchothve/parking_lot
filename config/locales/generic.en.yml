@@ -3090,7 +3090,7 @@ en-GENERIC:
       sync_on_selldo:
         link_name: "Sync on CRM"
       show:
-        show_interest_text: "Subscribe to Product/ Service for Adding Walk-Ins"
+        show_interest_text: "Subscribe to Product/ Service for Adding Deals"
         booking_count: "Bookings"
         brokerage: "Brokerage"
         terms_and_conditions: "Terms & Conditions"
