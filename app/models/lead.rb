@@ -396,7 +396,7 @@ class Lead
         end
       elsif lead_conflict_on == 'project_level'
         # same lead cannot be added by partner in that project
-        lead = Lead.where(project_id: self.project.id, user_id: self.user.id, booking_portal_client: self.booking_portal_client.id).first
+        lead = Lead.where(project_id: self.project.id, user_id: self.user.id, booking_portal_client: self.booking_portal_client.id).ne(id: self.id).first
         self.errors.add(:base, I18n.t('mongoid.attributes.lead.errors.lead_registered_with_project')) if lead.present?
       end
     end
