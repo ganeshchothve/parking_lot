@@ -388,6 +388,10 @@ class Lead
         if lead.present?
           unless (lead.distinct(:manager_id).count <= 1 && lead.first.try(:manager_id) == self.manager_id)
             self.errors.add(:base, I18n.t('mongoid.attributes.lead.errors.lead_registered_with_client'))
+          else
+            if lead.where(project_id: self.project_id).ne(id: self.id).present?
+              self.errors.add(:base, I18n.t('mongoid.attributes.lead.errors.lead_registered_with_project'))
+            end
           end
         end
       elsif lead_conflict_on == 'project_level'

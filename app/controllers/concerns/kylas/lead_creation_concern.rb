@@ -146,15 +146,15 @@ module Kylas
 
 
     def create_or_set_lead(format)
-      @lead = Lead.where(booking_portal_client_id: current_client.try(:id), kylas_deal_id: params.dig(:lead, :kylas_deal_id), user_id: @user.id, project_id: @project.id).first
+      @lead = Lead.where(booking_portal_client_id: current_client.try(:id), kylas_deal_id: params.dig(:lead, :kylas_deal_id), user_id: @user.id, project_id: @project.id, manager_id: params.dig(:lead, :manager_id)).first
       if @lead.blank?
         @lead = @user.leads.build(lead_params)
         @lead.booking_portal_client = current_user.booking_portal_client
         @lead.project = @project
         @lead.created_by = current_user
         @lead.kylas_pipeline_id = (@deal_data.dig(:pipeline, :id).to_s rescue nil)
+        @lead.manager_id = params.dig(:lead, :manager_id)
       end
-      @lead.assign_attributes(manager_id: params.dig(:lead, :manager_id)) if (@lead.manager_id.to_s != params.dig(:lead, :manager_id))
       if @lead.valid?
         options = {current_user: current_user, kylas_deal_id: params.dig(:lead, :kylas_deal_id), deal_data: @deal_data}
         associate_contact_with_deal(format, options) if params.dig(:lead, :sync_to_kylas).present?
