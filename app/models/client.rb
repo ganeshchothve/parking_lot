@@ -322,4 +322,18 @@ class Client
   def real_estate?
     industry == 'real_estate'
   end
+
+  def generic?
+    industry == 'generic'
+  end
+
+  def app_credentials
+    if real_estate?
+      ENV_CONFIG.dig(:kylas, :re_app)
+    elsif generic?
+      ENV_CONFIG.dig(:kylas, :cp_app)
+    else
+      {}
+    end
+  end
 end
