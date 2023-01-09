@@ -165,10 +165,10 @@ module Kylas
             format.html { redirect_to new_booking_without_inventory_admin_booking_details_path(lead_id: @lead.id), notice: 'Lead was successfully created' }
           end
         else
-          format.html { redirect_to request.referer, alert: (@lead.errors.full_messages.uniq.presence || t('global.errors.something_went_wrong')), status: :unprocessable_entity }
+          format.html { render 'home/show_response', locals: {result: {errors: (@lead.errors.full_messages.uniq.presence || [t('global.errors.something_went_wrong')])}} } and return
         end
       else
-        format.html { redirect_to request.referer, alert: (@lead.errors.full_messages.uniq.presence || t('global.errors.something_went_wrong')), status: :unprocessable_entity }
+        format.html {render 'home/show_response', locals: {result: {errors: (@lead.errors.full_messages.uniq.presence || [t('global.errors.something_went_wrong')])}}} and return
       end
     end
 
