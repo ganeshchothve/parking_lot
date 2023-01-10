@@ -98,16 +98,6 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
 
         if record.present?
           attributes += [:internal_category] if (%w[superadmin admin cp_admin].include?(user.role) || (['cp'].include?(user.role) && record.manager_id == user.id))
-          if(
-              (%w[superadmin admin cp_admin sales_admin].include?(user.role) && record.status != 'inactive') || 
-              (['cp'].include?(user.role) && record.status != 'active' && record.manager_id == user.id)
-            )
-            attributes += [:event, :status_change_reason]
-          end
-
-          if (['channel_partner', 'cp_owner'].include?(user.role) && record.id == user.channel_partner_id && ['inactive', 'rejected'].include?(record.status))
-            attributes += [:event]
-          end
         end
         # attributes += [bank_detail_attributes: BankDetailPolicy.new(user, BankDetail.new).permitted_attributes]
         attributes += [:erp_id] if %w[admin sales_admin].include?(user.role)
@@ -115,6 +105,25 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
       end
     when 'generic'
       attributes = ['first_name', 'last_name', 'email', 'phone', 'company_name', project_ids: [], address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes]
+    end
+
+    if user.present?
+      if user.role.in?(%w(cp_owner channel_partner)) && record.new_record?
+        attributes += [:primary_user_id]
+      end
+
+      if record.present?
+        if(
+            (%w[superadmin admin cp_admin sales_admin].include?(user.role) && record.status != 'inactive') ||
+            (['cp'].include?(user.role) && record.status != 'active' && record.manager_id == user.id)
+          )
+          attributes += [:event, :status_change_reason]
+        end
+
+        if (['channel_partner', 'cp_owner'].include?(user.role) && record.id == user.channel_partner_id && ['inactive', 'rejected'].include?(record.status))
+          attributes += [:event]
+        end
+      end
     end
     attributes.uniq
   end
