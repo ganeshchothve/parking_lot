@@ -29,7 +29,7 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
 
   def update?
     valid = create_company?
-    #valid = valid && ['inactive', 'rejected'].include?(record.status) if user.role.in?(%w(cp_owner channel_partner))
+    valid = valid || ['inactive', 'rejected'].include?(record.status) if user.role.in?(%w(cp_owner channel_partner))
     valid
   end
 
@@ -38,11 +38,7 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   end
 
   def asset_create?
-    if current_client.real_estate?
-      user.active_channel_partner?
-    else
-      false
-    end
+    user.role.in?(%w(cp_owner channel_partner admin superadmin cp_admin))
   end
 
   def asset_form?
