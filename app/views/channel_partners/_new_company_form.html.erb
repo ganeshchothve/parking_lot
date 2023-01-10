@@ -7,12 +7,12 @@
   <div class="col-md-6">
     <%= form.input :company_name, required: true, disabled: !policy([:admin, form.object]).editable_field?("company_name") %>
   </div>
-  <% policy([:admin, form.object]).editable_field?("pan_number") %>
+  <% if policy([:admin, form.object]).editable_field?("pan_number") %>
     <div class="col-md-6">
       <%= form.input :pan_number, disabled: !policy([:admin, form.object]).editable_field?("pan_number") %>
     </div>
   <% end %>
-  <% policy([:admin, form.object]).editable_field?("rera_id") %>
+  <% if policy([:admin, form.object]).editable_field?("rera_id") %>
     <div class="col-md-12">
       <%= form.input :rera_id, disabled: !policy([:admin, form.object]).editable_field?("rera_id") %>
     </div>
