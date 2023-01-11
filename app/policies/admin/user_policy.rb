@@ -7,37 +7,34 @@ class Admin::UserPolicy < UserPolicy
 
   def new?(for_edit = false)
     return false unless user
-    if user.booking_portal_client.roles_taking_registrations.include?(user.role)
-      if user.role?('superadmin')
-        (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner)) && !marketplace_client?) || for_edit
-      elsif user.role?('admin')
-        !record.role?('superadmin') &&
-        (
-          (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner)) && !marketplace_client?) ||
-          (marketplace_client? && record.role?('channel_partner') && user.booking_portal_client.enable_channel_partners?) ||
-          for_edit
-        )
-      elsif user.role?('channel_partner')
-        false
-      elsif user.role?('cp_owner')
-        record.role.in?(%w(cp_owner channel_partner)) && user.user_status_in_company.in?(%w(active))
-      elsif user.role?('sales_admin')
-        record.role?('sales') && !marketplace_client?
-      elsif user.role?('cp_admin') && !marketplace_client?
-        record.role?('cp') ||
-        (
-          record.role.in?(%w(cp_owner channel_partner)) &&
-          user.booking_portal_client.enable_channel_partners? &&
-          for_edit
-        )
-      elsif user.role?('cp') && !marketplace_client?
-        (record.role.in?(%w(cp_owner channel_partner)) && user.booking_portal_client.enable_channel_partners? && for_edit)
-      elsif user.role?('billing_team')
-        false
-      elsif !user.buyer?
-        false
-      end
-    else
+    if user.role?('superadmin')
+      # (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner)) && !marketplace_client?) || for_edit
+      false
+    elsif user.role?('admin')
+      !record.role?('superadmin') &&
+      (
+        (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner)) && !marketplace_client?) ||
+        (marketplace_client? && record.role?('channel_partner') && user.booking_portal_client.enable_channel_partners?) ||
+        for_edit
+      )
+    elsif user.role?('channel_partner')
+      false
+    elsif user.role?('cp_owner')
+      record.role.in?(%w(cp_owner channel_partner)) && user.user_status_in_company.in?(%w(active))
+    elsif user.role?('sales_admin')
+      record.role?('sales') && !marketplace_client?
+    elsif user.role?('cp_admin') && !marketplace_client?
+      record.role?('cp') ||
+      (
+        record.role.in?(%w(cp_owner channel_partner)) &&
+        user.booking_portal_client.enable_channel_partners? &&
+        for_edit
+      )
+    elsif user.role?('cp') && !marketplace_client?
+      (record.role.in?(%w(cp_owner channel_partner)) && user.booking_portal_client.enable_channel_partners? && for_edit)
+    elsif user.role?('billing_team')
+      false
+    elsif !user.buyer?
       false
     end
   end

@@ -894,7 +894,7 @@ en-REAL_ESTATE:
         blocking_days: "Unit to be blocked for (Days)"
         holding_minutes: "Unit to be held for (Minutes)"
         enable_company_users: "Allow Company Users & Benefits"
-        roles_taking_registrations: "Allowed Roles For Taking New Registrations"
+        allowed_roles_to_create_lead: "Allowed Roles For Lead Registration"
         enable_incentive_module: "Enable Brokerage Module For These Roles"
         mask_lead_data_for_roles: "Enable Lead Data Masking For These Roles"
         partner_regions: "Define Regions For Channel Partners & Projects"
@@ -2924,7 +2924,7 @@ en-REAL_ESTATE:
         rejected: "Reject"
       alert:
         not_found: "Incentive deduction not found"
-    
+
     team_leads:
       headers:
         sales_team: "Sales Team"
