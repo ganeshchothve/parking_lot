@@ -22,7 +22,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
       @condition = 'allowed_bookings'
     end
     if user.role.in?(%w(cp_owner channel_partner))
-      unless !interested_project_present?
+      if !interested_project_present?
         valid = false
         @condition = 'project_not_subscribed'
       end
