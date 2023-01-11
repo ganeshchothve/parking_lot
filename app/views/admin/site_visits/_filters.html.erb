@@ -57,14 +57,14 @@
           <%= label_tag "fltrs", t('mongoid.attributes.site_visit.conducted_on') %>
           <%= text_field_tag "fltrs[conducted_on]", (params.dig(:fltrs, :conducted_on).present? ? params[:fltrs][:conducted_on] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
         </div>
-        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-          <%= label_tag "fltrs", t('mongoid.attributes.site_visit.is_revisit') %>
-          <%= select_tag "fltrs[is_revisit]", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:fltrs].present? ? params[:fltrs][:is_revisit] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
-        </div>
-        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
-          <%= label_tag "fltrs", t('mongoid.attributes.booking_detail.invoice_generated'), class: "control-label" %>
-          <%= select_tag "fltrs[incentive_generated]", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], params.dig(:fltrs, :incentive_generated)), {prompt: I18n.t("global.select"), class: "selectize"} %>
-        </div>
+        <!-- <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%#= label_tag "fltrs", t('mongoid.attributes.site_visit.is_revisit') %>
+          <%#= select_tag "fltrs[is_revisit]", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:fltrs].present? ? params[:fltrs][:is_revisit] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
+        </div> -->
+        <!-- <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%#= label_tag "fltrs", t('mongoid.attributes.booking_detail.invoice_generated'), class: "control-label" %>
+          <%#= select_tag "fltrs[incentive_generated]", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], params.dig(:fltrs, :incentive_generated)), {prompt: I18n.t("global.select"), class: "selectize"} %>
+        </div> -->
       </div>
     </div>
     <div class="filter-footer modal-footer text-end">

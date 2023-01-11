@@ -5,6 +5,6 @@ class Admin::Crm::BasePolicy < Crm::BasePolicy
   end
 
   def choose_crm?
-    %w[superadmin admin sales sales_admin].include?(user.role) && user.booking_portal_client.external_api_integration?
+    %w[superadmin admin].include?(user.role) && user.booking_portal_client.external_api_integration?
   end
 end
