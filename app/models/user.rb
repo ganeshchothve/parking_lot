@@ -384,8 +384,9 @@ class User
 
   def fetch_access_token
     return kylas_access_token if access_token_valid?
+    app_credentials = booking_portal_client.app_credentials
 
-    response = Kylas::GetAccessToken.new(kylas_refresh_token).call
+    response = Kylas::GetAccessToken.new(kylas_refresh_token, app_credentials).call
 
     return unless response[:success]
 
