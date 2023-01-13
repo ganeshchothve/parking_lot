@@ -894,7 +894,7 @@ en-GENERIC:
         blocking_days: "Unit to be blocked for (Days)"
         holding_minutes: "Unit to be held for (Minutes)"
         enable_company_users: "Allow Company Users & Benefits"
-        allowed_roles_to_create_lead: "Allowed Roles For Lead Registration"
+        allowed_roles_to_create_lead: "Allowed Roles For Adding Deals"
         enable_incentive_module: "Enable Brokerage Module For These Roles"
         mask_lead_data_for_roles: "Enable Deal Data Masking For These Roles"
         partner_regions: "Define Regions For Partners and Products & Services"
