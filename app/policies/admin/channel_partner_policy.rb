@@ -38,7 +38,7 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   end
 
   def asset_create?
-    user.role.in?(%w(cp_owner channel_partner admin superadmin cp_admin))
+    user.role.in?(%w(cp_owner channel_partner admin superadmin cp_admin)) && user.active_channel_partner?
   end
 
   def asset_form?
@@ -104,11 +104,12 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
     end
 
     if user.present?
-      if user.role.in?(%w(cp_owner channel_partner)) && record.new_record?
-        attributes += [:primary_user_id]
-      end
-
       if record.present?
+
+        if user.role.in?(%w(cp_owner channel_partner)) && record.new_record?
+          attributes += [:primary_user_id]
+        end
+
         if(
             (%w[superadmin admin cp_admin sales_admin].include?(user.role) && record.status != 'inactive') ||
             (['cp'].include?(user.role) && record.status != 'active' && record.manager_id == user.id)

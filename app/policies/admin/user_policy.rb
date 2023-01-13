@@ -9,7 +9,7 @@ class Admin::UserPolicy < UserPolicy
     return false unless user
     if user.role?('superadmin')
       # (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner)) && !marketplace_client?) || for_edit
-      false
+      false || for_edit
     elsif user.role?('admin')
       !record.role?('superadmin') &&
       (
