@@ -107,11 +107,11 @@
 </div>
 
 <div class="row">
-  <% if policy([:admin, @client]).editable_field?("roles_taking_registrations") %>
+  <% if policy([:admin, @client]).editable_field?("allowed_roles_to_create_lead") %>
     <div class="col-md-12">
       <div class="mb-3">
-        <%= f.label :roles_taking_registrations %>
-        <%= f.select :roles_taking_registrations, filter_admin_role_options, {}, class: 'selectize', multiple: true, disabled: !(policy([current_user_role_group, f.object]).editable_field?("roles_taking_registrations")) %>
+        <%= f.label :allowed_roles_to_create_lead %>
+        <%= f.select :allowed_roles_to_create_lead, filter_admin_role_options, {}, class: 'selectize', multiple: true, disabled: !(policy([current_user_role_group, f.object]).editable_field?("allowed_roles_to_create_lead")) %>
       </div>
     </div>
   <% end %>

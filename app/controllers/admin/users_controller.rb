@@ -155,6 +155,7 @@ class Admin::UsersController < AdminController
       @client.assign_attributes(industry: 'generic')
     elsif re_marketplace_app?
       @client.assign_attributes(industry: 'real_estate')
+      @client.assign_attributes(allowed_roles_to_create_lead: %w[admin crm sales_admin sales cp_admin cp channel_partner cp_owner])
     end
     @user = User.new(role: 'admin')
     @user.assign_attributes(user_params)

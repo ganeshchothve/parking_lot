@@ -28,12 +28,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def new?(current_project_id = nil)
-    valid = current_client.enable_leads?
-    if marketplace_client?
-      valid = valid && user.role.in?(%w(channel_partner cp_owner))
-    else
-      valid = valid && user.role.in?(%w(superadmin admin gre crm account_manager account_manager_head) + User::CHANNEL_PARTNER_USERS + User::SALES_USER)
-    end
+    valid = current_client.enable_leads? && enable_lead_registration?(user)
     valid = false if user.present? && user.role.in?(%w(channel_partner cp_owner)) && !(user.active_channel_partner? && interested_project_present?)
     valid = valid && project_access_allowed?(current_project_id)
     @condition = 'project_not_subscribed' unless valid
@@ -48,11 +43,7 @@ class Admin::LeadPolicy < LeadPolicy
         valid
       end
     end
-    if current_client.real_estate?
-      valid
-    else
-      false
-    end
+    valid
   end
 
   def check_and_register?
@@ -203,7 +194,7 @@ class Admin::LeadPolicy < LeadPolicy
   def permitted_attributes(params = {})
     attributes = super || []
     attributes += [:first_name, :last_name, :email, :phone, :project_id, site_visits_attributes: Pundit.policy(user, [:admin, SiteVisit.new]).permitted_attributes] if record.new_record?
-    if user.present? && user.role.in?(%w(superadmin admin gre sales sales_admin))
+    if user.present? && enable_lead_registration?(user)
       attributes += [:manager_id] if user.booking_portal_client.try(:enable_channel_partners?)
       attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
     end

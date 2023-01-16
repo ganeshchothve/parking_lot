@@ -1,27 +1,29 @@
-<table class='table table-responsive table-color'>
-  <thead>
+<div class='table-responsive'>
+  <table class='table table-responsive table-color'>
     <thead>
-      <tr>
-        <% if current_client.enable_leads? %>
-          <th><%= Lead.model_name.human %></th>
-        <% else %>
-          <th><%= SiteVisit.model_name.human %></th>
-        <% end %>
-        <th><%= t('mongoid.attributes.receipt.project_id') %></th>
-        <th><%= t('mongoid.attributes.receipt.receipt_id') %></th>
-        <th><%= t('mongoid.attributes.receipt.token_number')%></th>
-        <th><%= t('mongoid.attributes.receipt.status') %></th>
-        <th><%= t('mongoid.attributes.receipt.total_amount') %></th>
-        <th class="btn-action">Action</th>
-      </tr>
+      <thead>
+        <tr>
+          <% if current_client.enable_leads? %>
+            <th><%= Lead.model_name.human %></th>
+          <% else %>
+            <th><%= SiteVisit.model_name.human %></th>
+          <% end %>
+          <th><%= t('mongoid.attributes.receipt.project_id') %></th>
+          <th><%= t('mongoid.attributes.receipt.receipt_id') %></th>
+          <th><%= t('mongoid.attributes.receipt.token_number')%></th>
+          <th><%= t('mongoid.attributes.receipt.status') %></th>
+          <th><%= t('mongoid.attributes.receipt.total_amount') %></th>
+          <th class="btn-action">Action</th>
+        </tr>
+      </thead>
     </thead>
-  </thead>
-  <tbody>
-    <% receipts.each do |receipt| %>
-      <%= render 'receipts/details', receipt: receipt %>
-    <% end %>
-  </tbody>
-</table>
+    <tbody>
+      <% receipts.each do |receipt| %>
+        <%= render 'receipts/details', receipt: receipt %>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 <div class="col-lg-12 py-3 white mb-2 px-2">
   <div class="row">
     <div class="col-lg-6">

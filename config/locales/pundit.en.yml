@@ -21,6 +21,7 @@ en:
           project_not_subscribed: 'This project is not subscribed'
           project_not_active: 'This project is inactive'
           walkin_disabled: 'Walkins for this project is not considered now'
+          lead_registration_disabled: 'Lead registration is disabled'
 
       project_policy:
         collaterals?:
