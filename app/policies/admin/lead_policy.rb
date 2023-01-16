@@ -71,11 +71,12 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def asset_create?
-    valid = %w[admin sales sales_admin crm].include?(user.role)
+    #valid = %w[admin sales sales_admin crm].include?(user.role)
     # if user.role?(:sales) && is_assigned_lead?
     #   valid = is_lead_accepted? && valid
     # end
-    valid
+    #valid
+    false
   end
 
   def is_lead_accepted?

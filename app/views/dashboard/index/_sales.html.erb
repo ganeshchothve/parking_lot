@@ -11,7 +11,7 @@
 <% if current_project.present? %>
   <div class="px-4">
     <div class="first-sec welcome-box my-3">
-    <% template = ::Template::UITemplate.where(Template.user_based_scope(current_user)).where(name: 'sales_dashboard', project_id: current_project.id).first %>
+    <% template = ::Template::UITemplate.where(::Template.user_based_scope(current_user)).where(name: 'sales_dashboard', project_id: current_project.id).first %>
     <% if template.present? %>
       <%= get_view_erb(template, check_active: true) %>
     <% end %>
