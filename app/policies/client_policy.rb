@@ -10,19 +10,16 @@ class ClientPolicy < ApplicationPolicy
     when 'real_estate'
       attrs = [
         :basic, :bookings, :contacts, :integrations, :pages, :logos,
-        :sms_provider_dlt_entity_id, :notification_api_key, :sms_provider_telemarketer_id, :name, :selldo_client_id, :selldo_form_id,
+        :name, :selldo_client_id, :selldo_form_id,
         :allowed_bookings_per_user, :selldo_gre_form_id, :selldo_channel_partner_form_id, :selldo_api_key,
         :selldo_api_secret, :selldo_default_srd, :selldo_cp_srd, :helpdesk_number, :helpdesk_email, :ga_code, :gtm_tag,
         :notification_email, :notification_numbers, :sender_email, :registration_name, :cin_number, :website_link,
         :cp_disclaimer, :disclaimer, :support_number, :support_email, :channel_partner_support_number,
-        :channel_partner_support_email, :cancellation_amount, :area_unit, :preferred_login, :mixpanel_token,
-        :sms_provider, :sms_provider_username, :sms_provider_password, :whatsapp_api_key, :whatsapp_api_secret,
-        :mailgun_private_api_key, :mailgun_email_domain, :sms_mask, :enable_payment,
+        :channel_partner_support_email, :cancellation_amount, :area_unit, :mixpanel_token, :enable_payment,
         :blocking_amount, :blocking_amount_editable, :enable_booking_with_kyc,
         :blocking_days, :holding_minutes, :payment_gateway, :email_header, :email_footer,
         :faqs, :rera, :tds_process, :logo, :mobile_logo, :background_image, :enable_lead_conflicts, :lead_blocking_days,
         :enable_direct_activation_for_cp, :external_api_integration, :powered_by_link,
-        enable_communication: [:email, :sms, :whatsapp, :notification],
         external_inventory_view_config_attributes: ExternalInventoryViewConfigPolicy.new(user, ExternalInventoryViewConfig.new).permitted_attributes,
         address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes,
         checklists_attributes: ChecklistPolicy.new(user, Checklist.new).permitted_attributes,
@@ -40,6 +37,9 @@ class ClientPolicy < ApplicationPolicy
     if user.role.in?(%w(superadmin))
       attrs += [:enable_channel_partners, :enable_leads, :enable_site_visit]
     end
+    attrs += [:sms_provider_dlt_entity_id, :notification_api_key, :sms_provider_telemarketer_id, :sms_provider, :sms_provider_username, :sms_provider_password, :whatsapp_api_key, :whatsapp_api_secret,
+      :mailgun_private_api_key, :mailgun_email_domain, :sms_mask, :preferred_login]
+    attrs += [enable_communication: [:email, :sms, :whatsapp, :notification]]
     attrs.uniq
   end
 end

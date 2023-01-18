@@ -19,8 +19,9 @@ module Kylas
       respond_to do |format|
         if @user.valid?
           if @user.save
-            Kylas::UpdateContact.new(current_user, @user, {check_uniqueness: true}).call if params.dig(:lead, :kylas_contact_id).present? && (params.dig(:lead, :phone_update).present? || params.dig(:lead, :email_update).present?)
-            Kylas::CreateContact.new(current_user, @user, {check_uniqueness: true, run_in_background: false}) if params.dig(:lead, :sync_to_kylas).present?
+            @owner = current_client.users.where(kylas_user_id: @deal_owner_id).first || current_user
+            Kylas::UpdateContact.new(@owner, @user, {check_uniqueness: true}).call if params.dig(:lead, :kylas_contact_id).present? && (params.dig(:lead, :phone_update).present? || params.dig(:lead, :email_update).present?)
+            Kylas::CreateContact.new(@owner, @user, {check_uniqueness: true, run_in_background: false}) if params.dig(:lead, :sync_to_kylas).present?
             @user.confirm
             create_or_set_lead(format)
           else
@@ -76,6 +77,7 @@ module Kylas
       fetch_deal_details = Kylas::FetchDealDetails.new(entity_id, current_user).call
       if fetch_deal_details[:success]
         @deal_data = fetch_deal_details[:data].with_indifferent_access
+        @deal_owner_id = (@deal_data.dig(:ownedBy, :id) || current_user.kylas_user_id).to_s
         @deal_associated_products = @deal_data[:products].collect{|pd| [pd[:name], pd[:id]]} rescue []
         kylas_product_ids = current_user.booking_portal_client.projects.where(is_active: true).pluck(:kylas_product_id).compact.map(&:to_i)
         @deal_associated_products = @deal_associated_products.select{|kp| kylas_product_ids.include?(kp[1]) } rescue []
@@ -154,6 +156,7 @@ module Kylas
         @lead.created_by = current_user
         @lead.kylas_pipeline_id = (@deal_data.dig(:pipeline, :id).to_s rescue nil)
         @lead.manager_id = params.dig(:lead, :manager_id)
+        @lead.owner = @owner
       end
       if @lead.valid?
         options = {current_user: current_user, kylas_deal_id: params.dig(:lead, :kylas_deal_id), deal_data: @deal_data}

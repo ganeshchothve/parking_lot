@@ -12,9 +12,10 @@ module Kylas
       if lead.present?
         user = lead.user
         if user.present? && user.booking_portal_client.is_marketplace?
-          Kylas::CreateContact.new(user, user, {check_uniqueness: true, run_in_background: false}).call
+          owner = lead.owner
+          Kylas::CreateContact.new(owner, user, {check_uniqueness: true, run_in_background: false}).call
           if lead.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)).blank?
-            Kylas::CreateDeal.new(user, lead, {run_in_background: false}).call
+            Kylas::CreateDeal.new(owner, lead, {run_in_background: false}).call
           end
           lead.reload
           if site_visit.present?
