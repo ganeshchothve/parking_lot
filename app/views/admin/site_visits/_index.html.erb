@@ -21,6 +21,7 @@
           </thead>
           <tbody>
             <% site_visits.reject(&:new_record?).each_with_index do |site_visit, index| %>
+
             <tr>
               <td>
                 <% if policy([ current_user_role_group, site_visit]).show? %>
@@ -39,10 +40,10 @@
                 <%= site_visit.lead.masked_phone(current_user) || '-' %>
                 <% end %>
               </td>
-              <% if site_visit.lead.manager_id? && policy([ current_user_role_group, site_visit]).show_channel_partner? %>
+              <% if policy([ current_user_role_group, site_visit]).show_channel_partner? %>
                 <td>
                   <p class="fn-14 mt-1 mb-0">
-                    <%= "#{link_to_if (policy([:admin, User]).index? && current_user.role.in?(User::ALL_PROJECT_ACCESS)), site_visit.lead.manager_name, [current_user_role_group, site_visit.lead.manager], class: 'theme-txt-color'}".html_safe %>
+                    <%= link_to_if (policy([:admin, User]).index? && site_visit.lead.manager_name.present? && current_user.role.in?(User::ALL_PROJECT_ACCESS)), (site_visit.lead.manager_name || "-"), [current_user_role_group, site_visit.lead.manager], class: 'theme-txt-color' %>
                   </p>
                 </td>
               <% end %>
