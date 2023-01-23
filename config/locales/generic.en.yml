@@ -189,6 +189,7 @@ en-GENERIC:
       active_filter_exports: "Active Filter Exports"
       click_to_zoom: "Click to Zoom"
       add_new: "Add New"
+      add_new_with_plus: "+ Add New"
       need_help: "Need Help?"
       not_summary: "Note Summary"
       call: "Call"
