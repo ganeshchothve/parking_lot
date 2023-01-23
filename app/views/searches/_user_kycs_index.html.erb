@@ -19,11 +19,11 @@
         </li>
         <li>
           <span><%= "#{labels['phone']}" %></span>
-          <p><%= user_kyc.phone %></p>
+          <p><%= user_kyc.masked_phone(current_user) %></p>
         </li>
         <li>
           <span><%= "#{labels['email']}" %></span>
-          <p><%= user_kyc.email %></p>
+          <p><%= user_kyc.masked_email(current_user) %></p>
         </li>
         <li>
           <span><%= labels['dob_short'] %></span>
