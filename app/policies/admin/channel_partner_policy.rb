@@ -23,8 +23,7 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
   end
 
   def create?
-    #TODO: Check where this is used & change accordingly
-    false && user.booking_portal_client.enable_channel_partners?
+    current_client.enable_channel_partners? && %w[channel_partner cp_owner].include?(user.role)
   end
 
   def update?
@@ -35,10 +34,6 @@ class Admin::ChannelPartnerPolicy < ChannelPartnerPolicy
 
   def edit?
     update?
-  end
-
-  def asset_create?
-    user.role.in?(%w(cp_owner channel_partner admin superadmin cp_admin)) && user.active_channel_partner?
   end
 
   def asset_form?

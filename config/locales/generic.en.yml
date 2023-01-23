@@ -6,6 +6,8 @@ en-GENERIC:
     formats:
       default: "%d/%m/%Y"
   time:
+    pm: PM
+    am: AM
     formats:
       default: "%d/%m/%Y %I:%M %p"
       date: "%d/%m/%Y"

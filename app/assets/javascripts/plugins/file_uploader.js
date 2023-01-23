@@ -67,6 +67,7 @@
           data.submit();
         } else { // display pop up
           // TODO move this to a bootstrap alert
+          $.unblockUI();
           Amura.global_error_handler(errors)
         }
       },
