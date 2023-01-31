@@ -6,7 +6,7 @@
       <div class="mt-3"></div>
       <div class="card">
         <div class="card-body payment-gateway-message">
-          <div class="title"><%= I18n.t("mongoid.attributes.client/payment_gateways.redirecting_to", name: I18n.t("client.payment_gateways.#{current_client.payment_gateway}")) %></div>
+          <div class="title"><%= I18n.t("mongoid.attributes.client/payment_gateways.redirecting_to", name: I18n.t("mongoid.attributes.client/payment_gateways.#{current_client.payment_gateway}")) %></div>
           <div class="mt-3"></div>
           <a href="javascript:;" id="rzp-button" class="float-left btn btn-primary">Pay Online</a>
           <% if @project_unit.present? && @project_unit.status == "hold" %>
