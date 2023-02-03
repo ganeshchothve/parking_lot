@@ -1,0 +1,31 @@
+<div class="filter-inner modal-content ps-2 pe-2 fixed-header-footer">
+  <div class="modal-header filter-header">
+    <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
+    <a href="javascript:;" class="close-filter-btn btn-close"></a>
+  </div>
+  <%= form_tag admin_bulk_jobs_path, method: "get", id: "bulk_jobs_filter_form" do %>
+    <div class="filter-content modal-body ps-0 pe-0">
+      <div class="row">
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.bulk_job.entity_type'), class: "control-label" %>
+          <%= select_tag "fltrs[entity_type]", options_for_select(BulkJob::ENTITY_TYPES.collect{|x| [(c.constantize.model_name.human rescue x), x]}), {prompt: I18n.t("global.select"), class: "selectize"} %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.bulk_job.status'), class: "control-label" %>
+          <%= select_tag "fltrs[status]", options_for_select(BulkJob::STATUSES.collect{|x| [t("mongoid.attributes.bulk_job/status.#{x}"), x.to_s]}), {prompt: I18n.t("global.select"), class: "selectize"} %>
+        </div>
+      </div>
+    </div>
+    <div class="filter-footer modal-footer text-end">
+      <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
+      <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.cancel") %></button>
+    </div>
+  <% end %>
+</div>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#bulk_jobs_filter_form"));
+  });
+<% end %>

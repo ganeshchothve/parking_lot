@@ -17,6 +17,7 @@ en-GENERIC:
   global:
     only_admins:
       this_page: "Only admins can view this page."
+    create: Create
     please_wait: "Please wait..."
     congratulations: "Congratulations"
     coming_soon: "Coming Soon"
@@ -549,8 +550,29 @@ en-GENERIC:
       banner_asset:
         one: "Banner Asset"
         other: "Banner Assets"
+      bulk_job:
+        one: "Bulk Job"
+        other: "Bulk Jobs"
 
     attributes:
+      bulk_job:
+        bulk_job_id: Bulk Job ID
+        entity_type: Entity Type
+        execute_worker: Execute Worker
+        entities_filter_payload: Entity Filter Payload
+        status: Status
+        total_records: Total Records
+        executed_records: Executed Records
+        failed_response: Failed Response
+        success_file: Success File
+        failure_file: Failed File
+      bulk_job/status:
+        pending: Pending
+        in_progress: In Progress
+        completed: Completed
+        failed: Failed
+        queued: Queued
+        partially_completed: Partially Completed
       api_log:
         request: "Request"
         request_url: "Request Url"
@@ -2395,6 +2417,9 @@ en-GENERIC:
         id: "Name / Email / Phone"
 
   controller:
+    bulk_jobs:
+      index:
+        link_name: Bulk Jobs
     notice:
       failed_to_redirect_to_payment_gateway: "We couldn't redirect you to the payment gateway, please try again"
       logged_in: "You have already been logged in"
@@ -3638,6 +3663,7 @@ en-GENERIC:
         lead_not_present_for_booking: "Deal not present for booking. Please contact administrator"
         user_account_not_present_for_lead: "User not present for deal. Please contact administrator"
         project_not_present_for_lead: "Product/ Service not present for deal. Please contact administrator"
+        project_not_present: "Products / services not present"
       total_amount_paid:
         hint: "(you might have some payments pending clearance)"
       total_balance_pending:
@@ -3645,6 +3671,8 @@ en-GENERIC:
       total_unattached_balance:
         hint: "(subject to clearance)"
         text: "Total Unattached Balance"
+      bulk_job_create:
+        response_msg_html: "Deals will be created in background. For tracking progress please check <a href= %{job_link} target='_blank'>Job ID %{job_id}</a>"
 
     user_kycs:
       index:

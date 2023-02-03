@@ -1,0 +1,39 @@
+<div class="row justify-content-center new-lead-form">
+  <div class="col-md-11">
+    <div class="h-100">
+      <div class = 'fn-18 theme-txt-color mb-2'>
+        <div class="card-body">
+          <%= form_tag bulk_job_create_admin_leads_path, method: :post, id: 'bulk_lead_create' do %>
+          <%= hidden_field_tag :bulk_job_params, JSON.dump(params.permit(:filters).to_h) %>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= label_tag :kylas_product, t('mongoid.attributes.lead.kylas_product'), class: 'label-required' %>
+                  <%= select_tag :kylas_product_id, options_for_select(@kylas_products), required: 'required', class: 'selectize', prompt: I18n.t("global.select") %>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= label_tag :manager_ids, t('mongoid.attributes.lead.manager_ids'), class: 'label-required' %>
+                  <%= select_tag "manager_ids[]", options_from_collection_for_select([], "id", "ds_name"), required: 'required',multiple: true, class: "selectize-remote", data: {url: admin_users_path, params: {fltrs: { role: ['channel_partner', 'cp_owner'], booking_portal_client_id: current_client.id, user_status_in_company: 'active' }}} %>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer text-end">
+              <%= submit_tag I18n.t("global.create"), class: 'btn btn-primary' %>
+            </div>
+
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%= javascript_tag do %>
+  $(document).ready(function() {
+    FormInitializer.init($("#bulk_lead_create"));
+  });
+<% end %>

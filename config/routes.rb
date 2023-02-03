@@ -145,7 +145,7 @@ Rails.application.routes.draw do
       get :new_booking_without_inventory, on: :collection
       get :edit_booking_without_inventory, on: :member
       post :create_booking_without_inventory, on: :collection
-      patch :update_booking_without_inventory, on: :member 
+      patch :update_booking_without_inventory, on: :member
       get :new_booking_on_project, on: :collection
       post :process_booking_on_project, on: :collection
       resources :booking_detail_schemes, except: [:destroy], controller: 'booking_details/booking_detail_schemes'
@@ -285,6 +285,8 @@ Rails.application.routes.draw do
         post :create_kylas_associated_lead
         get :new_kylas_lead
         post :create_kylas_lead
+        post :bulk_job_new
+        post :bulk_job_create
       end
       member do
         get 'sync_notes'
@@ -407,6 +409,9 @@ Rails.application.routes.draw do
 
     resources :referrals, only: [:index, :create, :new] do
       post :generate_code, on: :collection
+    end
+
+    resources :bulk_jobs, only: [:index] do
     end
   end
 

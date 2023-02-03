@@ -33,11 +33,11 @@ module Kylas
         Rails.logger.error 'UpdateLead - 401'
         { success: false, error: 'Unauthorized' }
       else
-        { success: false }
+        { success: false, error: 'Something went wrong!' }
       end
     end
 
-    def update_lead_in_kylas 
+    def update_lead_in_kylas
       begin
         url = URI(base_url+"/leads/#{entity_id}")
 
@@ -67,11 +67,11 @@ module Kylas
         firstName: lead['first_name'],
         lastName: lead['last_name'],
         products: {
-          operation: 'ADD', 
+          operation: 'ADD',
           values: [
             {
               id: lead['kylas_product_id'],
-              name: product.name, 
+              name: product.name,
               quantity: 1
             }
           ]

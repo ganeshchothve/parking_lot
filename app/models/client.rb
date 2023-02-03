@@ -344,4 +344,12 @@ class Client
       {}
     end
   end
+
+  def marketplace_app_host
+    if real_estate?
+      ENV_CONFIG.dig(:kylas,:re_app,:base_url)
+    else
+      ENV_CONFIG.dig(:kylas,:cp_app,:base_url)
+    end
+  end
 end

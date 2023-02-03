@@ -1,0 +1,52 @@
+<table class='table table-responsive table-color'>
+  <thead>
+    <thead>
+      <tr>
+        <th><%= t('mongoid.attributes.bulk_job.bulk_job_id') %></th>
+        <th><%= t('mongoid.attributes.bulk_job.entity_type') %></th>
+        <th><%= t('mongoid.attributes.bulk_job.status') %></th>
+        <th><%= t('mongoid.attributes.bulk_job.total_records') %></th>
+        <th><%= t('mongoid.attributes.bulk_job.executed_records') %></th>
+        <% if current_user.role?(:superadmin) %>
+          <th><%= t('mongoid.attributes.bulk_job.failed_response') %></th>
+        <% end %>
+        <th><%= t('mongoid.attributes.bulk_job.success_file') %></th>
+        <th><%= t('mongoid.attributes.bulk_job.failure_file') %></th>
+      </tr>
+    </thead>
+  </thead>
+  <tbody>
+    <% bulk_jobs.each do |bulk_job| %>
+      <tr>
+        <td><%= bulk_job.bulk_job_id %></td>
+        <td><%= bulk_job.entity_type.constantize.model_name.human rescue bulk_job.entity_type %></td>
+        <td><%= t("mongoid.attributes.bulk_job/status.#{bulk_job.status}") %></td>
+        <td><%= bulk_job.total_records %></td>
+        <td><%= bulk_job.executed_records %></td>
+        <% if current_user.role?(:superadmin) %>
+          <td><%= bulk_job.failed_response %></td>
+        <% end %>
+        <% if bulk_job.success_file.present? %>
+          <td><%= link_to "Success File", bulk_job.success_file.url, target: '_blank' %></td>
+        <% else %>
+          <td> - </td>
+        <% end %>
+        <% if bulk_job.failure_file.present? %>
+          <td><%= link_to "Errors File", bulk_job.failure_file.url, target: '_blank' %></td>
+        <% else %>
+          <td> - </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<div class="col-lg-12 py-3 bg-white mb-2 px-2">
+  <div class="row">
+    <div class="col-lg-6">
+      <p class="table-entry mb-0 ps-2 pt-2"><%= page_entries_info bulk_jobs %></p>
+    </div>
+    <div class="col-lg-6 table-pagination">
+      <%= will_paginate bulk_jobs, list_classes: %w(pagination justify-content-end) %>
+    </div>
+  </div>
+</div>
