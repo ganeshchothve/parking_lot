@@ -13,10 +13,19 @@ module Kylas
 
     def trigger_workflow_events_in_kylas(entity)
       wf = Workflow.where(stage: entity.status, booking_portal_client_id: entity.booking_portal_client.id, is_active: true).first
-      deal_pipeline = wf.pipelines.where(entity_type: "deals").first if wf.present?
-      kylas_deal_response = Kylas::UpdateDeal.new(entity.creator, entity, {pipeline: deal_pipeline.as_json, run_in_background: true}).call if deal_pipeline.present?
-      if wf.present?
 
+      if wf.present? && entity.lead.kylas_pipeline_id.blank?
+        deal_pipeline = wf.pipelines.where(entity_type: "deals").first
+        if deal_pipeline.present?
+          response = Kylas::UpdateDeal.new(entity.creator, entity, {pipeline: deal_pipeline.as_json}).call
+          api_log = response[:api_log]
+          if api_log.present? && api_log.status == 'Success'
+            entity.lead.update(kylas_pipeline_id: deal_pipeline.pipeline_id)
+          end
+        end
+      end
+
+      if wf.present?
         # call serice to update the product on that deal
         if wf.create_product?
           Kylas::CreateProductInKylas.new(entity.creator, entity, wf, {run_in_background: false}).call
@@ -37,7 +46,7 @@ module Kylas
                 update_deal_params[:product] << iris_project_on_deal if iris_project_on_deal.present?
                 entity.reload
                 update_deal_params[:product] << update_product_payload(entity.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)), entity, wf) if entity.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)).present?
-                update_deal_params.merge!({run_in_background: true})
+                #update_deal_params.merge!({run_in_background: true})
                 kylas_deal_response = Kylas::UpdateDeal.new(entity.creator, entity, update_deal_params).call
               end
             end
@@ -59,7 +68,7 @@ module Kylas
 
           #create the request payload
           update_stage_params = update_pipeline_stage_params(workflow_pipeline, kylas_entity, entity)
-          
+
           #service to update the entity pipeline stage
           Kylas::UpdateEntityPipelineStage.new(
             entity.creator, entity.lead.kylas_deal_id, "deals", workflow_pipeline.pipeline_stage_id, update_stage_params
