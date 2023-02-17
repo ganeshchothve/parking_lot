@@ -31,17 +31,20 @@ class Crm::Api::Post < Crm::Api
     when Net::HTTPSuccess
       res = process_response(response, record)
       update_api_log(api_log, _request_payload, _url, res, "Success", record)
-      return {notice: "Object successfully pushed on CRM.", api_log: api_log}
+      result = {notice: "Object successfully pushed on CRM."}
     else
       update_api_log(api_log, _request_payload, _url, (JSON.parse(response.body) rescue {}), "Error", record, response.message)
       Rails.logger.error "-------- #{response.message} --------"
-      return {alert: response.message}
+      result = {alert: response.message}
     end
+
+    result[:api_log] = api_log
+    result
 
   rescue StandardError => e
     update_api_log(api_log, _request_payload, _url, (JSON.parse(response.try(:body)) rescue {}), "Error", record, e.message)
     Rails.logger.error "-------- #{e.message} --------"
-    return {alert: e.message}
+    return {alert: e.message, api_log: api_log}
   end
 
   def process_response response, record
