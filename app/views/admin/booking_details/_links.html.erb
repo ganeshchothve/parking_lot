@@ -38,6 +38,12 @@
   <%= link_to t('controller.templates.choose_template_for_print.link_name'), choose_template_for_print_admin_custom_templates_path(subject_class: booking_detail.class.model_name.i18n_key.to_s, subject_class_id: booking_detail.id.to_s), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
 
+<% unless params[:controller] == 'admin/booking_details' && action_name == 'show' %>
+  <%= link_to t('controller.booking_details.cost_sheet.link_name'), doc_admin_booking_detail_path(id: booking_detail.id, type: 'cost_sheet'), class: "dropdown-item modal-remote-form-link" %>
+
+  <%= link_to t('controller.booking_details.payment_schedule.link_name'), doc_admin_booking_detail_path(id: booking_detail.id, type: 'payment_schedule'), class: "dropdown-item modal-remote-form-link" %>
+<% end %>
+
 <% if policy([current_user_role_group, Asset.new(assetable: booking_detail) ]).update? %>
   <%= link_to t('controller.assets.index.link_name'), assetables_path(assetable_type: booking_detail.class.model_name.i18n_key.to_s, assetable_id: booking_detail.id), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
