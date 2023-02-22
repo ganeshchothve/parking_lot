@@ -15,7 +15,7 @@
         </div>
         <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
           <div class="box-card relative bg-white rounded">
-            <div id="project-tower-carousel" class="carousel slide w-100" data-ride="carousel" data-bs-interval="false" data-bs-touch="true">
+            <div id="project-tower-carousel" class="carousel slide w-100" data-ride="carousel">
               <div class="carousel-indicators">
               <% @project_towers.each_with_index do |project_tower, index| %>
                 <button type="button" data-bs-target="#project-tower-carousel" data-bs-slide-to="<%= index %>" class="<%= index==0 ? 'active': '' %>" aria-current="true" aria-label="Slide <%= index %>"></button>

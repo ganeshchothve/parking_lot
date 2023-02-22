@@ -153,7 +153,11 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     Admin::WorkflowPolicy.new(user, Workflow).index?
   end
 
+  def bulk_jobs?
+    Admin::BulkJobPolicy.new(user, BulkJob).index?
+  end
+
   def self.custom_methods
-    %w[schemes incentive_schemes emails smses referrals accounts checklists bulk_upload_reports crms api_logs push_notifications user_kycs sales_board variable_incentive_schemes discounts payment_types invoices meetings user_requests banner_assets workflows].sort
+    %w[schemes incentive_schemes emails smses referrals accounts checklists bulk_upload_reports crms api_logs push_notifications user_kycs sales_board variable_incentive_schemes discounts payment_types invoices meetings user_requests banner_assets workflows bulk_jobs].sort
   end
 end

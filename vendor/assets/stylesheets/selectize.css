@@ -138,7 +138,7 @@
   padding: 8px 8px;
   display: inline-block;
   width: 100%;
-  overflow: hidden;
+  overflow: auto;
   position: relative;
   z-index: 1;
   -webkit-box-sizing: border-box;
@@ -149,6 +149,7 @@
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
+  max-height: 100px;
 }
 .selectize-control.multi .selectize-input.has-items {
   padding: 6px 8px 3px;

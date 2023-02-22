@@ -4,11 +4,15 @@ module Kylas
 
     included do
       before_action :fetch_deal_details, only: [:new_kylas_associated_lead, :create_kylas_associated_lead]
-      before_action :fetch_kylas_products, only: [:new_kylas_associated_lead, :create_kylas_associated_lead, :new_kylas_lead]
-      before_action :set_project, only: [:create_kylas_associated_lead, :create_kylas_lead]
+      before_action :fetch_kylas_products, only: [:new_kylas_associated_lead, :create_kylas_associated_lead, :new_kylas_lead, :bulk_job_new]
+      before_action :set_project, only: [:create_kylas_associated_lead, :create_kylas_lead, :bulk_job_create]
       before_action :set_user, only: [:create_kylas_associated_lead, :create_kylas_lead]
       before_action :fetch_lead_details, only: [:new_kylas_lead, :create_kylas_lead]
       before_action :redirect_to_checkout, only: [:new_kylas_associated_lead]
+      before_action :set_bulk_job, only: [:bulk_job_create]
+
+      # we need to do this for bulk_job_new action, as we had to keep this action as POST even when its purpose is to load a form because Kylas fires a POST request to send the filters payload in a bulk action like this one
+      protect_from_forgery unless: -> { params[:action] == 'bulk_job_new' }
     end
 
     def new_kylas_associated_lead
@@ -57,6 +61,33 @@ module Kylas
           end
         else
           msg = t('controller.leads.errors.email_or_phone_required')
+          format.html { render 'home/show_response', locals: {result: {success: false, message: msg}} }
+        end
+      end
+    end
+
+    def bulk_job_new
+      respond_to do |format|
+        if @kylas_products.present?
+          format.html { render 'bulk_job' }
+        else
+          msg = t('controller.leads.errors.project_not_present')
+          format.html { render 'home/show_response', locals: {result: {success: false, message: msg}} }
+        end
+      end
+    end
+
+    # POST /leads/bulk_create
+    # use BulkJobWorker to create leads in background
+    def bulk_job_create
+      respond_to do |format|
+        if @bulk_job.save
+          Kylas::BulkJobWorker.perform_async(@bulk_job.id.to_s)
+          link = admin_bulk_jobs_url(host: current_client.marketplace_app_host, protocol: (Rails.env.development? ? 'http' : 'https'), fltrs: {bulk_job_id: @bulk_job.bulk_job_id})
+          msg = t('controller.leads.bulk_job_create.response_msg_html', job_link: link, job_id: @bulk_job.bulk_job_id)
+          format.html { render 'home/show_response', locals: {result: {success: true, message: msg}} }
+        else
+          msg = @bulk_job.errors.full_messages.to_sentence
           format.html { render 'home/show_response', locals: {result: {success: false, message: msg}} }
         end
       end
@@ -117,7 +148,7 @@ module Kylas
     end
 
     def set_project
-      kylas_product_id = params.dig(:lead, :kylas_product_id)
+      kylas_product_id = params.dig(:lead, :kylas_product_id) || params.dig(:kylas_product_id)
       kylas_deal_id = params.dig(:lead, :kylas_deal_id)
       @project = Project.where(booking_portal_client_id: current_client.id, kylas_product_id: kylas_product_id).first
       if @project.present?
@@ -208,6 +239,18 @@ module Kylas
           format.html { redirect_to checkout_lead_search_path(hold_booking.search) }
         end
       end
+    end
+
+    def set_bulk_job
+      @bulk_job = ::BulkJob.new(booking_portal_client_id: current_client.try(:id), creator: current_user)
+      bulk_job_params = JSON.load(params[:bulk_job_params])
+      @bulk_job.entities_filter_payload = JSON.parse(bulk_job_params["filters"])
+      @bulk_job.payload = bulk_job_params.except("filters")
+      @bulk_job.entity_type = "Lead"
+      @bulk_job.payload[:kylas_product_id] = params.dig(:kylas_product_id)
+      @bulk_job.payload[:project_id] = @project.id.to_s
+      @bulk_job.payload[:manager_ids] = params.dig(:manager_ids)
+      @bulk_job.execute_worker = "LeadCreationWorker"
     end
 
   end
