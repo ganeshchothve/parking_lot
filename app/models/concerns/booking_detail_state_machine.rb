@@ -151,7 +151,7 @@ module BookingDetailStateMachine
       _project_unit.assign_attributes(status: 'blocked', held_on: nil, blocked_on: Date.today, auto_release_on: ( Date.today + _project_unit.blocking_days.days) )
       _project_unit.save
       self.set(booked_on: _project_unit.blocked_on)
-      trigger_workflow
+      trigger_workflow if aasm.to_state == :under_negotiation
       if under_negotiation? && booking_detail_scheme.approved?
         scheme_approved!
       else
@@ -162,14 +162,14 @@ module BookingDetailStateMachine
     end
 
     def after_scheme_approved_event
-      trigger_workflow
+      trigger_workflow if aasm.to_state == :scheme_approved
       if scheme_approved? && get_paid_amount >= project_unit.blocking_amount
         blocked!
       end
     end
 
     def after_scheme_rejected_event
-      trigger_workflow
+      trigger_workflow if aasm.to_state == :scheme_rejected
       receipts.each do |receipt|
         receipt.booking_detail_id = nil
         receipt.save
@@ -190,7 +190,7 @@ module BookingDetailStateMachine
       _project_unit.save
       self.set(booked_on: _project_unit.blocked_on)
 
-      trigger_workflow
+      trigger_workflow if aasm.to_state == :blocked
 
       if blocked? && get_paid_amount > project_unit.blocking_amount
         booked_tentative!
@@ -227,7 +227,7 @@ module BookingDetailStateMachine
       if (self.aasm.from_state == :booked_tentative && self.user.booking_portal_client.document_sign.present?)
         # self.send_booking_form_to_sign
       end
-      trigger_workflow
+      trigger_workflow if aasm.to_state == :booked_confirmed
     end
 
     #
@@ -237,7 +237,7 @@ module BookingDetailStateMachine
     # @return [<type>] <description>
     #
     def after_hold_event
-      trigger_workflow
+      trigger_workflow if aasm.to_state == :hold
       under_negotiation! if hold? && (get_paid_amount > 0)
     end
 
@@ -403,14 +403,7 @@ module BookingDetailStateMachine
       project_unit.make_available
       project_unit.save(validate: false)
       SelldoLeadUpdater.perform_async(lead_id.to_s, {stage: 'cancelled'})
-      if self.booking_portal_client.kylas_tenant_id.present?
-        #trigger all workflow events in Kylas
-        if Rails.env.production?
-          Kylas::TriggerWorkflowEventsWorker.perform_async(self.id.to_s, self.class.to_s)
-        else
-          Kylas::TriggerWorkflowEventsWorker.new.perform(self.id.to_s, self.class.to_s)
-        end
-      end
+      trigger_workflow
     end
 
     def update_selldo!
@@ -441,10 +434,13 @@ module BookingDetailStateMachine
     def trigger_workflow
       # trigger all workflow events in Kylas
       if self.booking_portal_client.kylas_tenant_id.present?
-        if Rails.env.production?
-          Kylas::TriggerWorkflowEventsWorker.perform_async(self.id.to_s, self.class.to_s)
-        else
-          Kylas::TriggerWorkflowEventsWorker.new.perform(self.id.to_s, self.class.to_s)
+        workflow = Workflow.where(stage: status, booking_portal_client_id: booking_portal_client_id, is_active: true).first
+        if workflow.present?
+          if Rails.env.production?
+            Kylas::TriggerWorkflowEventsWorker.perform_async(id.to_s, workflow.id.to_s, "BookingDetail")
+          else
+            Kylas::TriggerWorkflowEventsWorker.new.perform(id.to_s, workflow.id.to_s, "BookingDetail")
+          end
         end
       end
     end

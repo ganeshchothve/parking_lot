@@ -6,13 +6,15 @@ module Kylas
   class TriggerWorkflowEventsWorker
     include Sidekiq::Worker
 
-    def perform(entity_id, entity_class)
-      entity = entity_class.constantize.where(id: entity_id).first
-      trigger_workflow_events_in_kylas(entity) if entity.present?
+    def perform(entity_id, workflow_id, entity_class)
+      if entity_id.present? && workflow_id.present? && entity_class.present?
+        entity = entity_class.constantize.where(id: entity_id).first
+        trigger_workflow_events_in_kylas(entity, workflow_id) if workflow_id.present? && entity.present?
+      end
     end
 
-    def trigger_workflow_events_in_kylas(entity)
-      wf = Workflow.where(stage: entity.status, booking_portal_client_id: entity.booking_portal_client.id, is_active: true).first
+    def trigger_workflow_events_in_kylas(entity, workflow_id)
+      wf = Workflow.where(id: workflow_id, booking_portal_client_id: entity.booking_portal_client.id, is_active: true).first
 
       if wf.present? && entity.lead.kylas_pipeline_id.blank?
         deal_pipeline = wf.pipelines.where(entity_type: "deals").first
@@ -28,7 +30,7 @@ module Kylas
       if wf.present?
         # call serice to update the product on that deal
         if wf.create_product?
-          Kylas::CreateProductInKylas.new(entity.creator, entity, wf, {run_in_background: false}).call
+          Kylas::CreateProductInKylas.new(entity.creator, entity, wf, {run_in_background: false}).call unless wf.update_product_on_deal?
 
           # call serice to update the product on that deal
           if wf.update_product_on_deal?
@@ -42,6 +44,7 @@ module Kylas
               iris_project_on_deal[:price][:value] = 0 if iris_project_on_deal.present? && iris_project_on_deal.dig(:price, :value).present?
               #check whether the product is present on the deal or not
               if !(booking_product_in_kylas.present?)
+                Kylas::CreateProductInKylas.new(entity.creator, entity, wf, {run_in_background: false}).call
                 update_deal_params = {product: []}
                 update_deal_params[:product] << iris_project_on_deal if iris_project_on_deal.present?
                 entity.reload

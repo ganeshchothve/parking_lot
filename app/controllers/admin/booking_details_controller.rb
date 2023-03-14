@@ -32,7 +32,7 @@ class Admin::BookingDetailsController < AdminController
     # authorize [:admin, @booking_detail]
     render layout: false
   end
-  
+
   def new_booking_on_project
     @booking_detail = BookingDetail.new
     render layout: false
@@ -223,10 +223,13 @@ class Admin::BookingDetailsController < AdminController
       if @booking_detail.save
         if @booking_detail.booking_portal_client.is_marketplace?
           #trigger all workflow events in Kylas
-          if Rails.env.production?
-            Kylas::TriggerWorkflowEventsWorker.perform_async(@booking_detail.id.to_s, @booking_detail.class.to_s)
-          else
-            Kylas::TriggerWorkflowEventsWorker.new.perform(@booking_detail.id.to_s, @booking_detail.class.to_s)
+          workflow = Workflow.where(stage: @booking_detail.status, booking_portal_client_id: current_client.id, is_active: true).first
+          if workflow.present?
+            if Rails.env.production?
+              Kylas::TriggerWorkflowEventsWorker.perform_async(@booking_detail.id.to_s, workflow.id.to_s, "BookingDetail")
+            else
+              Kylas::TriggerWorkflowEventsWorker.new.perform(@booking_detail.id.to_s, workflow.id.to_s, "BookingDetail")
+            end
           end
         else
           response.set_header('location', admin_booking_detail_path(@booking_detail) )
