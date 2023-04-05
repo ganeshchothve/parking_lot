@@ -66,7 +66,7 @@ module LeadRegisteration
           lead.owner_id = current_user.id if user_signed_in? && current_user.try(:kylas_user_id).present? && current_user.booking_portal_client.try(:is_marketplace?)
 
           check_if_lead_added_by_channel_partner(lead) do |cp_lead_activity|
-            if cp_lead_activity.valid?
+            if cp_lead_activity.blank? || cp_lead_activity.valid?
               if lead.save
                 # Update selldo lead stage & push Site visits
                 site_visit = lead.site_visits.first
