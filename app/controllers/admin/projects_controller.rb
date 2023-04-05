@@ -30,7 +30,7 @@ class Admin::ProjectsController < AdminController
   # PATCH /admin/projects/:id
   #
   def new
-    @project = Project.new
+    @project = Project.new(booking_portal_client: current_client)
     render layout: false
   end
 
@@ -49,14 +49,9 @@ class Admin::ProjectsController < AdminController
   # PATCH /admin/projects/:id
   #
   def create
-    @project = Project.new
+    @project = Project.new(booking_portal_client: current_client)
     @project.assign_attributes(permitted_attributes([current_user_role_group, @project]))
     @project.creator = current_user
-    if current_user.role?(:superadmin)
-      @project.booking_portal_client_id = current_user.selected_client_id
-    else
-      @project.booking_portal_client_id = current_user.booking_portal_client_id
-    end
     respond_to do |format|
       if @project.save
         format.html { redirect_to admin_projects_path, notice: I18n.t("controller.projects.notice.created") }
@@ -148,10 +143,8 @@ class Admin::ProjectsController < AdminController
       else
         authorize [:admin, Project]
       end
-    elsif params[:action] == 'new'
+    elsif %w[new create].include?(params[:action])
       authorize [:admin, Project.new]
-    elsif params[:action] == 'create'
-      authorize [:admin, Project.new(permitted_attributes([:admin, Project.new]))]
     else
       authorize [:admin, @project]
     end
