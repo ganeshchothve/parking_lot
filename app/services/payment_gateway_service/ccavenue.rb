@@ -2,6 +2,7 @@ module PaymentGatewayService
   class CCAvenue < Default
     def build_parameters(search_id)
       search = Search.where(id: search_id).first
+      account = get_account(search) if search.present? && search.project_unit.present?
       payload = ""
       payload += "merchant_id=#{payment_profile[:merchant_id]}&"
       payload += "amount=" + @receipt.total_amount.to_s + "&"
@@ -10,7 +11,7 @@ module PaymentGatewayService
       payload += "language=EN&"
       payload += "redirect_url=#{redirect_url(search_id)}&"
       payload += "cancel_url=#{cancel_url(search_id)}&"
-      payload += "sub_account_id=#{ENV_CONFIG['ccavenue']['sub_account_id']}&" if search.present? && search.project_unit.present? && ENV_CONFIG['ccavenue']['sub_account_eligible_project_towers'].include?(search.project_unit.project_tower_id.to_s)
+      payload += "sub_account_id=#{account.sub_account_number}&" if account.present? && account.sub_account_number.present? && ENV_CONFIG['ccavenue']['sub_account_eligible_project_towers'].include?(search.project_unit.project_tower_id.to_s)
       crypto = PaymentGatewayService::CCAvenueCrypto.new
       encrypted_data = crypto.encrypt(payload, payment_profile[:working_key])
       return encrypted_data
@@ -84,6 +85,15 @@ module PaymentGatewayService
 
     def protocol
       Rails.application.config.action_mailer.default_url_options[:protocol]
+    end
+
+    def get_account(project_unit)
+      account = if phase = project_unit.try(:phase).presence
+                phase.account
+              else
+                Phase.where(project_id: project_unit.try(:project_id)).first.try(:account)
+              end
+      account.presence || Account::CcAvenuePayment.where(by_default: true).first
     end
   end
 

@@ -28,6 +28,6 @@ class Admin::AccountPolicy < AccountPolicy
   end
 
   def permitted_attributes
-    attributes = %i[account_number by_default name]
+    attributes = %i[account_number sub_account_number by_default name]
   end
 end
