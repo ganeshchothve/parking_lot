@@ -66,4 +66,8 @@ module SearchConcern
     end
     # GENERIC TODO: If no results found we should display alternate towers
   end
+
+  def search_for_filter
+    @projects = current_client.projects
+  end
 end

@@ -3,10 +3,12 @@
     <thead>
       <thead>
         <tr>
-          <% if current_client.enable_leads? %>
-            <th><%= Lead.model_name.human %></th>
-          <% else %>
-            <th><%= SiteVisit.model_name.human %></th>
+          <% unless current_user.buyer? %>
+            <% if current_client.enable_leads? %>
+              <th><%= Lead.model_name.human %></th>
+            <% else %>
+              <th><%= SiteVisit.model_name.human %></th>
+            <% end %>
           <% end %>
           <th><%= t('mongoid.attributes.receipt.project_id') %></th>
           <th><%= t('mongoid.attributes.receipt.receipt_id') %></th>

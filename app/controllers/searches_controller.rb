@@ -3,9 +3,10 @@ class SearchesController < ApplicationController
   include ReceiptsConcern
   before_action :authenticate_user!
   before_action :set_search, except: [:index, :export, :new, :create, :tower, :three_d]
-  before_action :set_lead, except: [:export]
+  before_action :set_lead, except: [:export], unless: proc { current_user.buyer? }
+  before_action :find_or_create_lead, only: [:create, :new], if: proc { current_user.buyer? }
   before_action :set_form_data, only: [:show, :edit]
-  before_action :authorize_resource, except: [:checkout, :hold]
+  before_action :authorize_resource, except: [:checkout, :hold, :new]
   around_action :apply_policy_scope, only: [:index, :export]
   before_action :set_project_unit, only: [:checkout, :hold]
   before_action :set_booking_detail, only: [:hold, :checkout]
@@ -18,9 +19,13 @@ class SearchesController < ApplicationController
   end
 
   def show
-    if @search.project_unit.present? && @search.project_unit.status == 'hold'
-      if redirect_to_checkout?
-        redirect_to checkout_lead_search_path(@search)
+    if @search.next_step == 'filter'
+      render 'new'
+    else
+      if @search.project_unit.present? && @search.project_unit.status == 'hold'
+        if redirect_to_checkout?
+          redirect_to checkout_lead_search_path(@search)
+        end
       end
     end
     # GENERICTODO: Handle current user to be from a user based route path
@@ -34,13 +39,20 @@ class SearchesController < ApplicationController
   end
 
   def new
-    @search = @lead.searches.new(booking_portal_client_id: current_user.booking_portal_client.id)
-    set_form_data
-    authorize @search
+    if current_user.buyer? && params[:step] == 'project'
+      @search = Search.new(user_id: current_user.id, booking_portal_client_id: current_user.booking_portal_client.id)
+      set_form_data
+      authorize @search
+      render 'searches/_step_project'
+    else
+      @search = @lead.searches.new(user_id: current_user.id, booking_portal_client_id: current_user.booking_portal_client.id)
+      set_form_data
+      authorize @search
+    end
   end
 
   def create
-    @search = @lead.searches.new(booking_portal_client_id: current_user.booking_portal_client.id)
+    @search = @lead.searches.new(booking_portal_client_id: current_user.booking_portal_client.id, user_id: @lead.user_id)
     set_form_data
     @search.assign_attributes(permitted_attributes(@search))
 
@@ -215,7 +227,7 @@ class SearchesController < ApplicationController
     if params[:action] == "index" || params[:action] == 'export' || params[:action] == 'tower'
       authorize Search
     elsif params[:action] == "new" || params[:action] == "create" || params[:action] == 'three_d'
-      authorize Search.new(lead_id: @lead.id, booking_portal_client: current_user.booking_portal_client)
+      authorize Search.new(lead_id: @lead.id, booking_portal_client: current_user.booking_portal_client, user_id: @lead.user_id)
     else
       authorize @search
     end
@@ -239,6 +251,7 @@ class SearchesController < ApplicationController
   end
 
   def set_form_data
+    @lead = @search.lead
     @data = ProjectUnit.collection.aggregate([{
       '$match' => {'status' => 'available'} },{
       "$group": {
@@ -286,6 +299,7 @@ class SearchesController < ApplicationController
   end
 
   def set_booking_detail
+    @lead = @lead || @search.lead
     @booking_detail = BookingDetail.where(booking_portal_client_id: current_client.try(:id)).where(status: {"$in": BookingDetail::BOOKING_STAGES}, project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead).first
     if unattached_blocking_receipt = @search.lead.unattached_blocking_receipt(@search.project_unit.blocking_amount)
       coupon = unattached_blocking_receipt.coupon
@@ -324,6 +338,17 @@ class SearchesController < ApplicationController
   def redirect_to_checkout?
     booking_detail  = @lead.booking_details.where(booking_portal_client_id: current_client.try(:id)).where(search_id: @search.id).first
     booking_detail.present? && (Search::RESTRICTED_STEP.include?(params[:step]) && params[:action] == "show")
+  end
+
+  def find_or_create_lead
+    project = current_project || Project.where(booking_portal_client_id: current_client.id, id: params.dig(:search, :project_id)).first
+    if project
+      @lead = Lead.find_or_initialize_by(booking_portal_client_id: current_client.id, user_id: current_user.id, project_id: project.id)
+      if @lead.new_record?
+        @lead.assign_attributes(first_name: current_user.first_name, last_name: current_user.last_name)
+        @lead.save
+      end
+    end
   end
 
 end

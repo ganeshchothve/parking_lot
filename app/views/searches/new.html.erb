@@ -63,7 +63,11 @@
     </div>
   </div>
   <div class="booking-flow-footer position-fixed w-100 bottom-0 start-0 p-2 py-3 bg-white border-top text-end">
-    <%= link_to t('global.cancel'), admin_leads_path, class: "btn btn-primary no-fill font-medium ms-2" %>
+    <% if current_user.buyer? %>
+      <%= link_to t('global.previous'), new_search_path(step: 'project'), class: "btn btn-primary no-fill font-medium ms-2" %>
+    <% else %>
+      <%= link_to t('global.cancel'), dashboard_path, class: "btn btn-primary no-fill font-medium ms-2" %>
+    <% end %>
     <%= submit_tag I18n.t("global.next"), class: "btn btn-primary font-medium border-primary ms-2", form: 'search_form' %>
   </div>
 </div>

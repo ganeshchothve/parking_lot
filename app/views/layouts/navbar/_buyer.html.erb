@@ -6,8 +6,12 @@
 
     <% if policy([:buyer, BookingDetail.new(user: current_user, lead: current_lead, project_unit: ProjectUnit.new(status: 'available', user: current_user, lead: current_lead))]).hold? %>
       <li class="nav-item">
-        <%= active_link_to t('controller.searches.apartments.link_name'), new_search_path, active: :inclusive, class: "nav-link" %>
-      </li>
+        <% if current_lead.present? %>
+          <%= active_link_to t('controller.searches.apartments.link_name'), new_search_path(lead_id: current_lead.id, step: 'filter'), active: :inclusive, class: "nav-link" %>
+        <% else %>
+          <%= active_link_to t('controller.searches.apartments.link_name'), new_search_path(step: 'project'), active: :inclusive, class: "nav-link" %>
+        <% end %>
+              </li>
     <% end %>
 
     <% if false #policy([:buyer, Receipt.new(user: current_user)]).new? %>

@@ -10,7 +10,7 @@
       </div>
       <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 no-pd">
         <div class="table-btn-set float-end pb-3">
-          <% if Buyer::UserKycPolicy.new(current_user, UserKyc.new(user: @lead.user, lead: @lead)).new? %>
+          <% if Buyer::UserKycPolicy.new(current_user, UserKyc.new(user: current_user, lead: current_lead)).new? %>
             <%= link_to t('controller.user_requests.new.link_name'), new_buyer_user_kyc_path, class: 'btn modal-remote-form-link db-small-btn bg-primary btn white fn-400', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
           <% end %>
         </div>

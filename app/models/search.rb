@@ -4,7 +4,7 @@ class Search
   include ArrayBlankRejectable
   include ApplicationHelper
 
-  RESTRICTED_STEP = %w[filter towers project_unit]
+  RESTRICTED_STEP = %w[project filter towers project_unit]
 
   field :bedrooms, type: Float
   field :carpet, type: String
@@ -65,7 +65,7 @@ class Search
 
   # GENERIC_TODO : remove a step from here to modify the flow
   def allowed_steps
-    ["filter", "towers", "project_unit"]
+    ["project", "filter", "towers", "project_unit"]
   end
 
   def next_step

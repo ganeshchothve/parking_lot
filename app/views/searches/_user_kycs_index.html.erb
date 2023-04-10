@@ -57,7 +57,7 @@
     <% end %>
     <div class="text-center float-start w-100 my-3">
       <% if current_user.buyer? %>
-      <%= link_to I18n.t("global.link_to.add_new_with_plus"), new_buyer_user_kyc_path, class: 'next-btn text-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+      <%= link_to I18n.t("global.link_to.add_new_with_plus"), new_buyer_user_kyc_path(lead_id: @lead.id), class: 'next-btn text-primary modal-remote-form-link', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
       <% else %>
       <%= link_to I18n.t("global.link_to.add_new_with_plus"), new_admin_lead_user_kyc_path(@lead), class: 'text-primary modal-remote-form-link font-medium', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
       <% end %>
