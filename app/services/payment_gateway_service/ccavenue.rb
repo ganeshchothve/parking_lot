@@ -1,6 +1,7 @@
 module PaymentGatewayService
   class CCAvenue < Default
     def build_parameters(search_id)
+      search = Search.where(id: search_id).first
       payload = ""
       payload += "merchant_id=#{payment_profile[:merchant_id]}&"
       payload += "amount=" + @receipt.total_amount.to_s + "&"
@@ -9,6 +10,7 @@ module PaymentGatewayService
       payload += "language=EN&"
       payload += "redirect_url=#{redirect_url(search_id)}&"
       payload += "cancel_url=#{cancel_url(search_id)}&"
+      payload += "sub_account_id=#{ENV_CONFIG['ccavenue']['sub_account_id']}&" if search.present? && search.project_unit.present? && ENV_CONFIG['ccavenue']['sub_account_eligible_project_towers'].include?(search.project_unit.project_tower_id.to_s)
       crypto = PaymentGatewayService::CCAvenueCrypto.new
       encrypted_data = crypto.encrypt(payload, payment_profile[:working_key])
       return encrypted_data
