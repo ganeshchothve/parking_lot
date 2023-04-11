@@ -11,7 +11,7 @@
 <% end %>
 
 <% if policy([:buyer, Receipt.new(user: current_user)]).new? %>
-  <% if current_project.present? %>
+  <% if current_lead.present? %>
     <%= active_link_to t('controller.receipts.new.link_name'), new_buyer_receipt_path, active: :inclusive, class: 'nav-link pl-0 pr-0 modal-remote-form-link' %>
   <% else %>
     <%= active_link_to t('controller.receipts.new.link_name'), select_projects_path, active: :inclusive, class: 'nav-link pl-0 pr-0' %>
