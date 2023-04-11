@@ -10,7 +10,7 @@
   <% end %>
 <% end %>
 
-<% if policy([:buyer, Receipt.new(user: current_user)]).new? %>
+<% if policy([:buyer, Receipt.new(user: current_user, lead_id: current_lead || current_user.leads.first.try(:id))]).new? %>
   <% if current_lead.present? %>
     <%= active_link_to t('controller.receipts.new.link_name'), new_buyer_receipt_path, active: :inclusive, class: 'nav-link pl-0 pr-0 modal-remote-form-link' %>
   <% else %>

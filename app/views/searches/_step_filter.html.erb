@@ -90,7 +90,7 @@
   <div class="booking-flow-footer position-fixed w-100 bottom-0 start-0 p-2 py-3 bg-white border-top text-end">
     <p class="fn-16 theme-txt-color mt-1 position-absolute"><%= t('controller.searches.new.booking_hint', name: @lead.name) %></p>
     <div class="d-inline-block">
-      <%= link_to I18n.t("global.previous"), current_user.buyer? ? (current_lead.present? ? step_lead_search_path(@search, step: 'filter') : current_lead.present? ? step_lead_search_path(@search, step: 'project') ): new_admin_lead_search_path(@search.lead.id), class: "previous-btn btn btn-primary no-fill font-medium ms-2" %>
+      <%= link_to I18n.t("global.previous"), (current_user.buyer? ? (current_lead.present? ? step_lead_search_path(@search, step: 'filter') : step_lead_search_path(@search, step: 'project')) : (new_admin_lead_search_path(@search.lead.id))), class: "previous-btn btn btn-primary no-fill font-medium ms-2" %>
     </div>
     <div class="d-inline-block">
     <% if @search.next_step.present? %>
