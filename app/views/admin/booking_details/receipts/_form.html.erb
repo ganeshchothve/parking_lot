@@ -2,6 +2,7 @@
   i_agree_required = current_client.disclaimer.present? && @receipt.new_record?
 %>
 
+<%= f.hidden_field :lead_id, value: @receipt.lead_id %>
 <div class="float-start col-12 py-3 text-warning">
   <%= t('controller.booking_details.receipts.form.disclaimer', field: t('mongoid.attributes.receipt.receipt_id') )%>
 </div>

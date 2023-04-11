@@ -11,12 +11,16 @@
         <% else %>
           <%= active_link_to t('controller.searches.apartments.link_name'), new_search_path(step: 'project'), active: :inclusive, class: "nav-link" %>
         <% end %>
-              </li>
+      </li>
     <% end %>
 
-    <% if false #policy([:buyer, Receipt.new(user: current_user)]).new? %>
+    <% if policy([:buyer, Receipt.new(user: current_user)]).new? %>
       <li class="nav-item">
-        <%= active_link_to t('controller.receipts.new.link_name'), new_buyer_receipt_path, active: :inclusive, class: 'nav-link modal-remote-form-link' %>
+        <% if current_project.present? %>
+          <%= active_link_to t('controller.receipts.new.link_name'), new_buyer_receipt_path, active: :inclusive, class: 'nav-link modal-remote-form-link' %>
+        <% else %>
+          <%= active_link_to t('controller.receipts.new.link_name'), select_projects_path, active: :inclusive, class: 'nav-link' %>
+        <% end %>
       </li>
     <% end %>
 

@@ -6,15 +6,12 @@
       <%= form_tag(select_project_path, id: 'select_project_form') do %>
         <div class='mb-3'>
           <% if current_user.buyer? %>
-            <%= select_tag 'selected_lead_id', options_from_collection_for_select(@leads, "id", "project_name", current_user.selected_lead_id), prompt: "Select Project to Log in", autofocus: true, class: "selectize" %>
-          <% elsif !current_user.role.in?(User::ALL_PROJECT_ACCESS + %w(channel_partner)) %>
-            <%= select_tag 'selected_project_id', options_from_collection_for_select(Project.where(booking_portal_client_id: current_client.try(:id), id: current_user.selected_project_id), "id", "ds_name", current_user.selected_project_id), prompt: "Select Project to Log in", autofocus: true, class: "selectize-remote", data: {url: admin_projects_path(select_project: true)} %>
+            <%= select_tag 'project_id', options_from_collection_for_select(@projects, "id", "name"), prompt: "Select Project", autofocus: true, class: "selectize" %>
           <% end %>
         </div>
 
         <div class="mb-3 pt-3 pb-3">
           <button class="btn btn-primary" type="submit"><%= I18n.t("global.submit") %></button>
-          <%= link_to t('sign_out', scope: "devise"), destroy_session_path(current_user), class: "btn btn-secondary", method: :delete %>
         </div>
       <% end %>
     </div>
