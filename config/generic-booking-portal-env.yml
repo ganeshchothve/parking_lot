@@ -57,7 +57,7 @@ pusher:
   pusher_api_cluster:
 selldo:
   # Used for sell.do link's on user for sitevisit, followups in selldo
-  base_url:
+  base_url: 'https:v3c.sell.do'
   user_email:
   user_token:
   # Used for pushing srd & data to sell.do

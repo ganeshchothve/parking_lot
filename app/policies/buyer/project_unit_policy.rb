@@ -29,11 +29,11 @@ class Buyer::ProjectUnitPolicy < ProjectUnitPolicy
       @condition = "allowed_bookings"
       return
     end
-    valid = (valid && record.user.unused_user_kyc_ids(record.id).present?)
-    if !valid
-      @condition = "user_kyc_allowed_bookings"
-      return
-    end
+    # valid = (valid && record.user.unused_user_kyc_ids(record.id).present?)
+    # if !valid
+    #   @condition = "user_kyc_allowed_bookings"
+    #   return
+    # end
     _role_based_check(valid)
   end
 
