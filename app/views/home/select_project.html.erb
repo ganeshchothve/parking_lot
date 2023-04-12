@@ -7,7 +7,7 @@
         <div class='mb-3'>
           <% if current_user.buyer? %>
             <%= hidden_field_tag 'redirect_to', params[:redirect_to] %>
-            <%= select_tag 'project_id', options_from_collection_for_select(@projects, "id", "name"), prompt: "Select Project", autofocus: true, class: "selectize" %>
+            <%= select_tag 'project_id', options_from_collection_for_select(@projects, "id", "name"), prompt: "Select Project", required: true, class: "selectize" %>
           <% end %>
         </div>
 
