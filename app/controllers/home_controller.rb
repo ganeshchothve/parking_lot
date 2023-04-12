@@ -26,9 +26,20 @@ class HomeController < ApplicationController
         @lead.assign_attributes(first_name: current_user.first_name, last_name: current_user.last_name)
         @lead.save
       end
-      redirect_to buyer_receipts_path('remote-state': new_buyer_receipt_path(lead_id: @lead.id))
+      redirect_to resource_wise_redirection(params[:redirect_to])
     else
       @projects = current_client.projects
+    end
+  end
+
+  def resource_wise_redirection(redirect_to = 'receipt')
+    case redirect_to
+    when 'receipt'
+      buyer_receipts_path('remote-state': new_buyer_receipt_path(lead_id: @lead.id))
+    when 'kyc'
+      buyer_user_kycs_path('remote-state': new_buyer_user_kyc_path(lead_id: @lead.id))
+    else
+      buyer_receipts_path('remote-state': new_buyer_receipt_path(lead_id: @lead.id))
     end
   end
 

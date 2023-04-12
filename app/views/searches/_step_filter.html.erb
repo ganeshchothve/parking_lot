@@ -1,4 +1,4 @@
-<div class="row vh-100">
+<div class="row <%= @towers.count < 3 ? 'vh-100' : '' %>">
   <div class="col-lg-3 booking-flow-step px-0 mh-100">
     <p class="fn-16 mb-0">
       <i class="fa fa-check-circle me-2 fill-success"></i>

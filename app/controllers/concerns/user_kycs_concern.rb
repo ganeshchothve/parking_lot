@@ -43,6 +43,7 @@ module UserKycsConcern
   # This is the edit action for admin, users to edit the details of existing user kyc record.
   #
   def edit
+    @lead = @user_kyc.lead
     render layout: false
   end
 

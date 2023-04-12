@@ -1,4 +1,11 @@
-<div class="row vh-100">
+<%
+  max_floor = @all_units.collect{|x| x[:_id]}.max || 0
+  max_per_floor = @all_units.collect{|x| x[:floor_order].max}.max || 0
+  width = ((100.to_f - (4 * max_per_floor)) / max_per_floor).round(2)
+  height = (280.to_f / max_floor).round(2)
+  height = 16 if height < 16
+%>
+<div class="row <%= max_floor < 15 ? 'vh-100' : '' %>">
   <div class="col-lg-3 booking-flow-step px-0 mh-100">
     <p class="fn-16 mb-0">
       <i class="fa fa-check-circle me-2 fill-success"></i>
@@ -28,16 +35,9 @@
   </div>
   <div class="col-lg-9 px-4 mh-100">
     <div class="row">
-      <div class="card-body bg-white">
+      <div class="card-body bg-white pb-5">
         <div class="row">
         <div class="col-lg-4 col-xs-12 col-sm-12 col-md-12 pb-3 px-0">
-          <% max_floor = @all_units.collect{|x| x[:_id]}.max || 0 %>
-          <% max_per_floor = @all_units.collect{|x| x[:floor_order].max}.max || 0 %>
-          <% width = ((100.to_f - (4 * max_per_floor)) / max_per_floor).round(2) %>
-          <%
-              height = (280.to_f / max_floor).round(2)
-              height = 16 if height < 16
-            %>
           <div class="left-info pl-5 pr-5 pt-0 pb-0 book-apartment">
             <ul class="book-box-info">
               <li><span class="book-box available-aprt"></span><span><%= I18n.t("global.link_to.available") %></span></li>
