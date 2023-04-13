@@ -85,8 +85,7 @@ class Buyer::ReceiptsController < BuyerController
   end
 
   def set_receipt
-    lead = current_lead || Lead.where(booking_portal_client_id: current_client.id, id: params[:lead_id]).first
-    @receipt = lead.receipts.where(booking_portal_client_id: current_client.try(:id), _id: params[:id]).first
+    @receipt = Receipt.where(booking_portal_client_id: current_client.id, _id: params[:id]).first
     redirect_to home_path(current_user), alert: I18n.t("controller.receipts.alert.not_found"), status: 404 if @receipt.blank?
   end
 

@@ -5,7 +5,7 @@ module ReceiptsHelper
 
   def cancellation_link(receipt)
     if current_user.buyer?
-      [:new, :buyer, :user_request, { request_type: UserRequest::Cancellation.model_name.element, requestable_id: receipt.id, requestable_type: 'Receipt'}]
+      [:new, :buyer, :user_request, { request_type: UserRequest::Cancellation.model_name.element, requestable_id: receipt.id, requestable_type: 'Receipt', lead_id: receipt.lead_id }]
     else
       [:new, :admin, receipt.lead, :user_request, { request_type: UserRequest::Cancellation.model_name.element, requestable_id: receipt.id, requestable_type: 'Receipt'}]
     end
