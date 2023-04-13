@@ -39,7 +39,7 @@ class HomeController < ApplicationController
     when 'kyc'
       buyer_user_kycs_path('remote-state': new_buyer_user_kyc_path(lead_id: @lead.id))
     else
-      buyer_receipts_path('remote-state': new_buyer_receipt_path(lead_id: @lead.id))
+      home_path(current_user)
     end
   end
 
