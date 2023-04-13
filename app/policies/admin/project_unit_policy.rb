@@ -22,7 +22,7 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   end
 
   def edit?
-    %w[admin superadmin sales_admin].include?(user.role)
+    %w[admin superadmin sales_admin crm].include?(user.role)
   end
 
   def update?
@@ -62,7 +62,7 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   end
 
   def permitted_attributes(_params = {})
-    attributes = %w[crm admin superadmin sales_admin].include?(user.role) ? %i[auto_release_on booking_price blocking_amount] : []
+    attributes = %w[crm admin superadmin sales_admin crm].include?(user.role) ? %i[auto_release_on booking_price blocking_amount] : []
     attributes += (make_available? ? [:status] : [])
     attributes += [:phase_id] if user.role?('superadmin')
 

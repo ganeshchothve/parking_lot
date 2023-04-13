@@ -9,7 +9,7 @@ class Admin::BookingDetailSchemePolicy < BookingDetailSchemePolicy
   def create?
     if only_for_admin! && enable_actual_inventory? && is_cross_tower_scheme?  &&  is_derived_from_scheme_approved? && can_add_new_bd_scheme?
       case user.role
-      when 'admin', 'sales', 'sales_admin', 'crm', 'superadmin'
+      when 'admin', 'sales', 'superadmin', 'sales_admin'
         true
       when 'channel_partner'
         is_this_user_added_by_channel_partner?
@@ -23,7 +23,7 @@ class Admin::BookingDetailSchemePolicy < BookingDetailSchemePolicy
   def edit?
     if record.project&.is_active? && only_for_admin! && enable_actual_inventory? && is_booking_detail_ready_for_change? && is_derived_from_scheme_approved? && check_booking_detail_state?
       case user.role
-      when 'admin', 'sales', 'sales_admin', 'crm', 'superadmin'
+      when 'admin', 'sales', 'superadmin', 'sales_admin'
         true
       when 'channel_partner', 'cp_owner'
         if is_this_user_added_by_channel_partner?

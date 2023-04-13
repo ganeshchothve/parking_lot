@@ -31,11 +31,12 @@ module ReceiptsConcern
     authorize([current_user_role_group, @receipt])
     lead = @receipt.lead
     user = lead.user
-    if user.booking_portal_client.email_enabled?
+    template_id = Template::EmailTemplate.where(project_id: @receipt.project_id, name: "receipt_#{@receipt.status}", booking_portal_client_id: current_client.try(:id)).first.try(:id)
+    if user.booking_portal_client.email_enabled? && template_id.present?
       email = Email.create!(
         project_id: @receipt.project_id,
         booking_portal_client_id: user.booking_portal_client_id,
-        email_template_id: Template::EmailTemplate.where(project_id: @receipt.project_id, name: "receipt_#{@receipt.status}", booking_portal_client_id: current_client.try(:id)).first.try(:id),
+        email_template_id: template_id,
         recipients: [user],
         cc: user.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
         cc_recipients: (lead.manager_id.present? ? [lead.manager] : []),
