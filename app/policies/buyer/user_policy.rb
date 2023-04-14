@@ -13,6 +13,14 @@ class Buyer::UserPolicy < UserPolicy
     record.id == user.id
   end
 
+  def select_project
+    user.buyer?
+  end
+
+  def select_projects
+    user.buyer?
+  end
+
   def show_lead_tagging?
     false
   end

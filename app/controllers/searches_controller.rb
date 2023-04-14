@@ -43,7 +43,7 @@ class SearchesController < ApplicationController
       @search = Search.new(user_id: current_user.id, booking_portal_client_id: current_user.booking_portal_client.id)
       set_form_data
       authorize @search
-      render 'searches/_step_project'
+      render 'searches/step_project'
     else
       @search = @lead.searches.new(user_id: current_user.id, booking_portal_client_id: current_user.booking_portal_client.id)
       set_form_data
@@ -299,7 +299,7 @@ class SearchesController < ApplicationController
   end
 
   def set_booking_detail
-    @lead = @lead || @search.lead
+    @lead ||= @search.lead
     @booking_detail = BookingDetail.where(booking_portal_client_id: current_client.try(:id)).where(status: {"$in": BookingDetail::BOOKING_STAGES}, project_unit_id: @search.project_unit_id, project_id: @search.project_unit.project_id, user_id: @lead.user_id, lead: @lead).first
     if unattached_blocking_receipt = @search.lead.unattached_blocking_receipt(@search.project_unit.blocking_amount)
       coupon = unattached_blocking_receipt.coupon

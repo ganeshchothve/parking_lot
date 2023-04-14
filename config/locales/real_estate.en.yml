@@ -1822,7 +1822,6 @@ en-REAL_ESTATE:
       user_request/requestable_type:
         receipt: "Receipt"
         booking_detail: "Booking"
-        BookingDetail: "Booking"
         department: "Department"
         priority: "Priority"
         due_date: "Due Date"

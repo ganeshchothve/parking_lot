@@ -13,7 +13,7 @@
           <% if Buyer::UserKycPolicy.new(current_user, UserKyc.new(user: current_user, lead: current_lead)).new? %>
             <%= link_to t('controller.user_requests.new.link_name'), new_buyer_user_kyc_path, class: 'btn modal-remote-form-link db-small-btn bg-primary btn white fn-400', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
           <% else %>
-            <%= link_to t('controller.user_requests.new.link_name'), select_projects_path(redirect_to: 'kyc'), class: 'btn db-small-btn bg-primary btn white fn-400', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
+            <%= link_to t('controller.user_requests.new.link_name'), select_projects_buyer_users_path(redirect_to: 'kyc'), class: 'btn db-small-btn bg-primary btn white fn-400', data:{event_category: 'Section', event_action: 'Click', event_name: 'Add User KYC Co Applicant'} %>
           <% end %>
         </div>
 

@@ -1,0 +1,25 @@
+<div class="mt-5 pt-5"></div>
+<section class="cp-login-otp-sec col-lg-4 mg-auto" id="otp_user_section">
+  <div class="cp-login-otp-wrap">
+    <h2 class="px-4 pt-3 pb-3"><%= I18n.t("global.link_to.select_project") %></h2>
+    <div class="cp-signup-form-wrap px-4 cp-form-wrap">
+      <%= form_tag(select_project_buyer_users_path, id: 'select_project_form') do %>
+        <div class='mb-3'>
+          <% if current_user.buyer? %>
+            <%= hidden_field_tag 'redirect_to', params[:redirect_to] %>
+            <%= select_tag 'project_id', options_from_collection_for_select(@projects, "id", "name"), prompt: "Select Project", required: true, class: "selectize" %>
+          <% end %>
+        </div>
+
+        <div class="mb-3 pt-3 pb-3">
+          <button class="btn btn-primary" type="submit"><%= I18n.t("global.submit") %></button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#select_project_form"));
+  });
+<% end %>

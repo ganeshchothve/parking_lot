@@ -491,8 +491,7 @@ Rails.application.routes.draw do
     end
     resources :searches, except: [:destroy], controller: 'searches'
   end
-  get 'buyer/select_projects', to: 'home#select_project', as: :select_projects
-  post 'select_project', to: 'home#select_project', as: :select_project
+
   namespace :buyer do
     resources :meetings, only: [:index, :update, :show]
     resources :schemes, only: [:index]
@@ -515,6 +514,10 @@ Rails.application.routes.draw do
       member do
         get :iris_confirm
         get :update_password
+      end
+      collection do
+        get 'select_projects'
+        post 'select_project'
       end
     end
 

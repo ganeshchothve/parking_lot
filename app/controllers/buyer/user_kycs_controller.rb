@@ -33,16 +33,6 @@ class Buyer::UserKycsController < BuyerController
 
   private
 
-  def set_lead
-    if current_lead.present?
-      @lead = current_lead
-    elsif params[:lead_id].present? || params.dig(:user_kyc, :lead_id).present?
-      @lead = Lead.where(booking_portal_client_id: current_client.try(:id)).where(id: params[:lead_id] || params[:user_kyc][:lead_id]).first
-    elsif @search.present? && @search.lead_id.present?
-      @lead = @search.lead
-    end
-  end
-
   def authorize_resource
     if params[:action] == 'index'
       authorize [:buyer, UserKyc]
