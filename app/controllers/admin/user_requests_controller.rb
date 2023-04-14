@@ -91,7 +91,7 @@ class Admin::UserRequestsController < AdminController
   private
 
   def set_lead
-    @lead = (params[:lead_id].present? ? Lead.find(params[:lead_id]) : nil)
+    @lead = (params[:lead_id].present? ? Lead.where(booking_portal_client_id: current_client.id, _id: params[:lead_id]).first : nil)
   end
 
   def set_user

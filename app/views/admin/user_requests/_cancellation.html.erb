@@ -1,5 +1,6 @@
 <% if policy([current_user_role_group, (@user_request)]).editable_field?("requestable_id") %>
   <%= f.hidden_field :requestable_type, value: @user_request.requestable_type %>
+  <%= f.hidden_field :lead_id %>
   <% if @user_request.requestable_type == 'BookingDetail' %>
     <div class="mb-3">
       <%= f.label :project_unit, class: 'label-required' %>

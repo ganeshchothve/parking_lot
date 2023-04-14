@@ -1,11 +1,13 @@
 <tr>
-  <td data-title=<%= Lead.model_name.human %> >
-    <% if policy([current_user_role_group, receipt.lead]).show? %>
-      <%= link_to receipt.lead.name, [current_user_role_group, receipt.lead], class: "theme-txt-color" %>
-    <% else %>
-      <%= receipt.lead.name %>
-    <% end %>
-  </td>
+  <% unless current_user.buyer? %>
+    <td data-title=<%= Lead.model_name.human %> >
+      <% if policy([current_user_role_group, receipt.lead]).show? %>
+        <%= link_to receipt.lead.name, [current_user_role_group, receipt.lead], class: "theme-txt-color" %>
+      <% else %>
+        <%= receipt.lead.name %>
+      <% end %>
+    </td>
+  <% end %>
   <td data-title=<%= t('mongoid.attributes.receipt.project_id') %> >
   <%= receipt.project_name %>
   </td>

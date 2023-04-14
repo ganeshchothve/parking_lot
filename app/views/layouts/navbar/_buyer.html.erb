@@ -1,37 +1,32 @@
-    <% if policy(:dashboard).index? %>
-      <li class="nav-item">
-        <%= active_link_to t('controller.dashboard.index.link_name'), dashboard_path, active: :exclusive, class: "nav-link" %>
-      </li>
-    <% end %>
+<% if policy(:dashboard).index? %>
+  <%= active_link_to t('controller.dashboard.index.link_name'), dashboard_path, active: :exclusive, class: "nav-link pl-0 pr-0" %>
+<% end %>
 
-    <% if policy([:buyer, BookingDetail.new(user: current_user, lead: current_lead, project_unit: ProjectUnit.new(status: 'available', user: current_user, lead: current_lead))]).hold? %>
-      <li class="nav-item">
-        <%= active_link_to t('controller.searches.apartments.link_name'), new_search_path, active: :inclusive, class: "nav-link" %>
-      </li>
-    <% end %>
+<% if policy([:buyer, BookingDetail.new(user: current_user, lead: current_lead, project_unit: ProjectUnit.new(status: 'available', user: current_user, lead: current_lead))]).hold? %>
+  <% if current_lead.present? %>
+    <%= active_link_to t('controller.searches.apartments.link_name'), new_search_path(lead_id: current_lead.id, step: 'filter'), active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <% else %>
+    <%= active_link_to t('controller.searches.apartments.link_name'), new_search_path(step: 'project'), active: :inclusive, class: "nav-link pl-0 pr-0" %>
+  <% end %>
+<% end %>
 
-    <% if false #policy([:buyer, Receipt.new(user: current_user)]).new? %>
-      <li class="nav-item">
-        <%= active_link_to t('controller.receipts.new.link_name'), new_buyer_receipt_path, active: :inclusive, class: 'nav-link modal-remote-form-link' %>
-      </li>
-    <% end %>
+<% if policy([:buyer, Receipt.new(user: current_user, lead_id: current_lead || current_user.leads.first.try(:id))]).new? %>
+  <% if current_lead.present? %>
+    <%= active_link_to t('controller.receipts.new.link_name'), new_buyer_receipt_path, active: :inclusive, class: 'nav-link pl-0 pr-0 modal-remote-form-link' %>
+  <% else %>
+    <%= active_link_to t('controller.receipts.new.link_name'), select_projects_buyer_users_path(redirect_to: 'receipt'), active: :inclusive, class: 'nav-link pl-0 pr-0' %>
+  <% end %>
+<% end %>
 
-    <% if policy([:buyer, BookingDetail]).index? %>
-      <li class="nav-item">
-        <%= active_link_to t('controller.booking_details.index.link_name'), buyer_booking_details_path, active: :inclusive, class: "nav-link" %>
-      </li>
-    <% end %>
+<% if policy([:buyer, BookingDetail]).index? %>
+  <%= active_link_to t('controller.booking_details.index.link_name'), buyer_booking_details_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+<% end %>
 
-    <% if policy([:buyer, Receipt]).index? %>
-      <li class="nav-item">
-        <%= active_link_to t('controller.receipts.index.link_name'), buyer_receipts_path, active: :inclusive, class: "nav-link" %>
-      </li>
-    <% end %>
+<% if policy([:buyer, Receipt]).index? %>
+  <%= active_link_to t('controller.receipts.index.link_name'), buyer_receipts_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+<% end %>
 
-    <% if false #policy([:buyer, UserRequest]).index? %>
-      <li class="nav-item">
-        <%= active_link_to t('controller.user_requests.index.link_name'), [:buyer, UserRequest, request_type: :all], active: :inclusive, class: "nav-link pl-0 pr-0" %>
-      </li>
-    <% end %>
-
-    <%= render 'layouts/navbar/custom_links' %>
+<% if false #policy([:buyer, UserRequest]).index? %>
+  <%= active_link_to t('controller.user_requests.index.link_name'), [:buyer, UserRequest, request_type: :all], active: :inclusive, class: "nav-link pl-0 pr-0" %>
+<% end %>
+<%= render 'layouts/navbar/custom_links' %>

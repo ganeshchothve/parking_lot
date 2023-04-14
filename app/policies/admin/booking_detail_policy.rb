@@ -2,7 +2,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
 
   def index?
     if current_client.real_estate?
-      out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner dev_sourcing_manager].include?(user.role) && enable_actual_inventory?(user)
+      out = %w[admin superadmin sales sales_admin cp cp_admin gre channel_partner cp_owner dev_sourcing_manager crm].include?(user.role) && enable_actual_inventory?(user)
       out = false if user.role.in?(%w(cp_owner channel_partner)) && !interested_project_present?
       out = true if %w[account_manager account_manager_head billing_team cp_admin].include?(user.role)
       out
@@ -87,7 +87,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def hold?
-    record.project&.is_active? && _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && eligible_user? && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed? && buyer_kyc_booking_limit_exceed?
+    record.project&.is_active? && _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && eligible_user? && only_single_unit_can_hold! && available_for_user_group? && need_unattached_booking_receipts_for_channel_partner && is_buyer_booking_limit_exceed?
   end
 
   def send_payment_link?
@@ -209,6 +209,10 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     %w[admin account_manager account_manager_head billing_team cp_admin cp_owner channel_partner].include?(user.role)
   end
 
+  def asset_update?
+    asset_create?
+  end
+
   def enable_channel_partners?
     record.booking_portal_client.try(:enable_channel_partners?)
   end
@@ -249,7 +253,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   private
 
   def eligible_users_for_tasks?
-    enable_actual_inventory?(user)
+    enable_actual_inventory?(user) && !user.role.in?(['gre','crm', 'sales_admin'])
     #return true if %w[admin channel_partner sales_admin sales].include?(user.role)
   end
 

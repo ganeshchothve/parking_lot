@@ -42,13 +42,13 @@
         </td>
         <td data-title= <%= t('mongoid.attributes.user_request.request_details') %> >
           <% if user_request.lead_id.present? %>
-            <% if Admin::LeadPolicy.new(current_user, user_request.lead).show? %>
+            <% if policy([current_user_role_group, user_request.lead]).show? %>
               <%= link_to user_request.lead.name, [current_user_role_group, user_request.lead], class: "theme-txt-color" %>
             <% else %>
               <%= user_request.lead.name %>
             <% end %>
           <% else %>
-            <% if Admin::UserPolicy.new(current_user, user_request.user).show? %>
+            <% if policy([current_user_role_group, user_request.user]).show? %>
               <%= link_to user_request.user.name, [current_user_role_group, user_request.user], class: "theme-txt-color" %>
             <% else %>
               <%= user_request.user.name %>

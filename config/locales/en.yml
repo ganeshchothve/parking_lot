@@ -1819,7 +1819,7 @@ en:
         failed: "Failed"
       user_request/requestable_type:
         receipt: "Receipt"
-        BookingDetail: "Booking"
+        booking_detail: "Booking"
         department: "Department"
         priority: "Priority"
         due_date: "Due Date"

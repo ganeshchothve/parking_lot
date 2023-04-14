@@ -49,7 +49,6 @@ class Buyer::ReceiptsController < BuyerController
     @receipt.assign_attributes(permitted_attributes([:buyer, @receipt]))
     @receipt.booking_portal_client_id = @lead.booking_portal_client_id
     @receipt.account = selected_account(current_client.payment_gateway.underscore, @receipt)
-
     authorize([:buyer, @receipt])
     respond_to do |format|
       if @receipt.save
@@ -81,13 +80,12 @@ class Buyer::ReceiptsController < BuyerController
   private
 
   def set_lead
-    @lead = Lead.where(booking_portal_client_id: current_client.try(:id), user_id: current_user.id, project_id: params[:current_project_id]).first
+    @lead = current_lead || Lead.where(booking_portal_client_id: current_client.id, id: params.dig(:receipt, :lead_id) || params[:lead_id]).first
     redirect_to home_path(current_user), alert: I18n.t("controller.leads.alert.not_found"), status: 404 if @lead.blank?
   end
 
   def set_receipt
-    lead = Lead.where(booking_portal_client_id: current_client.try(:id), user_id: current_user.id, project_id: params[:current_project_id]).first
-    @receipt = lead.receipts.where(booking_portal_client_id: current_client.try(:id), _id: params[:id]).first
+    @receipt = Receipt.where(booking_portal_client_id: current_client.id, _id: params[:id]).first
     redirect_to home_path(current_user), alert: I18n.t("controller.receipts.alert.not_found"), status: 404 if @receipt.blank?
   end
 

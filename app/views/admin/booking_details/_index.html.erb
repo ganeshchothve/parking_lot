@@ -5,7 +5,9 @@
         <table class="table table-responsive table-color align-middle">
           <thead>
             <tr>
-              <th>Name</th>
+              <% unless current_user.buyer? %>
+                <th>Name</th>
+              <% end %>
               <th>Booking Details</th>
               <th>Status</th>
               <th>Approval Status</th>
@@ -17,7 +19,9 @@
           <tbody>
             <% booking_details.each do |booking_detail| %>
               <tr>
-                <td><%= link_to booking_detail.lead.name, admin_booking_detail_path(booking_detail) %></td>
+                <% unless current_user.buyer? %>
+                  <td><%= link_to booking_detail.lead.name, admin_booking_detail_path(booking_detail) %></td>
+                <% end %>
                 <td><%= booking_detail.project.name ? booking_detail.project.name : '-' %> | <%= booking_detail.project_tower_name ? booking_detail.project_tower_name : '-' %> | <%= booking_detail.name ? booking_detail.name : '-' %></td>
                 <td>
                   <span class="font-small fn-14 mb-0 theme-txt-color mb-0"><i

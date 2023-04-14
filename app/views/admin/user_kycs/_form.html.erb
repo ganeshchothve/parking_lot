@@ -52,6 +52,7 @@
               <div class="" id="nav-kyc-basic">
                 <h2 class="tab-title"><%= I18n.t("global.link_to.basic_details") %></h2>
                 <div class="row">
+                  <%= f.hidden_field :lead_id %>
                   <% if policy([:admin, @user_kyc]).editable_field?("salutation") %>  
                     <%= f.input :salutation, collection: UserKyc::SALUTATIONS.collect{|k,v| [I18n.t("mongoid.attributes.user_kyc/salutations.#{k}"), k.to_s]}, prompt: :translate, required: true, wrapper_html: { class: 'col-md-2' } %>
                   <% end %>

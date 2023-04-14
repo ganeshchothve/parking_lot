@@ -5,6 +5,7 @@ class Account
   field :account_number, type: String # required true
   field :name, type: String
   field :by_default, type: Boolean, default: false
+  field :sub_account_number, type: String
 
   validates_uniqueness_of :account_number, :name
 

@@ -43,6 +43,7 @@ module UserKycsConcern
   # This is the edit action for admin, users to edit the details of existing user kyc record.
   #
   def edit
+    @lead = @user_kyc.lead
     render layout: false
   end
 
@@ -65,9 +66,9 @@ module UserKycsConcern
   private
 
   def set_lead
-    @lead = Lead.where(booking_portal_client_id: current_client.id, id: params[:lead_id]).first if params[:lead_id].present?
+    @lead = current_lead
     @lead = @user_kyc.lead if @user_kyc.present?
-    @lead = Lead.where(user_id: current_user, project_id: current_project.id, booking_portal_client_id: current_client.id).first if @lead.blank? && current_project.present?
+    @lead = Lead.where(booking_portal_client_id: current_client.id, id: params[:lead_id] || params.dig(:user_kyc, :lead_id)).first if @lead.blank? && (params[:lead_id].present? || params.dig(:user_kyc, :lead_id).present?)
     redirect_to home_path(current_user), alert: t('controller.leads.alert.not_found') unless @lead
   end
 

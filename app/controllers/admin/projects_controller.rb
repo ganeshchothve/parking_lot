@@ -144,7 +144,7 @@ class Admin::ProjectsController < AdminController
         authorize [:admin, Project]
       end
     elsif %w[new create].include?(params[:action])
-      authorize [:admin, Project.new]
+      authorize [:admin, Project.new(booking_portal_client_id: current_client.id)]
     else
       authorize [:admin, @project]
     end

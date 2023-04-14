@@ -21,7 +21,7 @@ class User
   BUYER_ROLES = %w[user employee_user management_user]
   ADMIN_ROLES = %w[superadmin admin crm sales_admin sales cp_admin cp channel_partner gre billing_team team_lead account_manager_head account_manager cp_owner dev_sourcing_manager]
   CHANNEL_PARTNER_USERS = %w[cp cp_admin channel_partner cp_owner]
-  ALL_PROJECT_ACCESS = %w[superadmin admin cp cp_admin billing_team]
+  ALL_PROJECT_ACCESS = %w[superadmin admin cp cp_admin billing_team] + User::BUYER_ROLES
   # SELECTED_PROJECT_ACCESS = %w[sales sales_admin gre crm team_lead dev_sourcing_manager account_manager account_manager_head]
   SALES_USER = %w[sales sales_admin]
   COMPANY_USERS = %w[employee_user management_user]
@@ -893,7 +893,7 @@ class User
           user_criteria = any_of(or_conds)
         elsif warden_conditions[:booking_portal_client_id].present?
           or_conds = []
-          or_conds << { role: {"$nin": BUYER_ROLES}, booking_portal_client_id: warden_conditions[:booking_portal_client_id], '$or': auth_conditions }
+          or_conds << { booking_portal_client_id: warden_conditions[:booking_portal_client_id], '$or': auth_conditions }
           or_conds << { role: 'superadmin', '$or': auth_conditions, client_ids: warden_conditions[:booking_portal_client_id] }
           user_criteria = any_of(or_conds)
         else
@@ -941,7 +941,7 @@ class User
       elsif user.role?('crm')
         custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) + %w(channel_partner) } }
       elsif user.role?('sales_admin')
-        custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) + %w(channel_partner cp_owner sales) } }
+        custom_scope = { role: { "$in": User.buyer_roles(user.booking_portal_client) + %w(sales channel_partner cp_owner) } }
       elsif user.role?('cp_admin')
          custom_scope = { role: { '$in': %w(cp channel_partner cp_owner) } }
       elsif user.role?('cp')
@@ -957,8 +957,11 @@ class User
       elsif user.role.in?(%w(superadmin))
         custom_scope = {  }
         #custom_scope = { role: { '$in': %w(sales admin sales_admin gre channel_partner cp_owner) }} if user.booking_portal_client.try(:kylas_tenant_id).present?
-      elsif user.role?('team_lead')|| user.role?('gre')
+      elsif user.role?('team_lead')
         custom_scope = { role: 'sales', project_ids: { "$in": project_ids }}
+      elsif user.role?('gre')
+        user_ids = Lead.where(project_id: { "$in": project_ids }).distinct(:user_id)
+        custom_scope = { id: { "$in": user_ids}}
       end
       custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
       custom_scope

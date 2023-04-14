@@ -515,6 +515,10 @@ Rails.application.routes.draw do
         get :iris_confirm
         get :update_password
       end
+      collection do
+        get 'select_projects'
+        post 'select_project'
+      end
     end
 
     resources :receipts, only: [:index, :show, :new, :create] do

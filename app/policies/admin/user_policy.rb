@@ -7,22 +7,33 @@ class Admin::UserPolicy < UserPolicy
 
   def new?(for_edit = false)
     return false unless user
+    client = user.booking_portal_client
     if user.role?('superadmin')
       # (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner)) && !marketplace_client?) || for_edit
-      false || for_edit
+      if marketplace_client?
+        false || for_edit
+      else
+        true
+      end
     elsif user.role?('admin')
-      !record.role?('superadmin') &&
-      (
-        (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner)) && !marketplace_client?) ||
-        (marketplace_client? && record.role?('channel_partner') && user.booking_portal_client.enable_channel_partners?) ||
-        for_edit
-      )
+      if marketplace_client?
+        !record.role?('superadmin') &&
+        (
+          (!record.buyer? && !record.role.in?(%w(cp_owner channel_partner)) && !marketplace_client?) ||
+          (marketplace_client? && record.role?('channel_partner') && user.booking_portal_client.enable_channel_partners?) ||
+          for_edit
+        )
+      else
+        !record.role?('superadmin') 
+      end
     elsif user.role?('channel_partner')
       false
     elsif user.role?('cp_owner')
       record.role.in?(%w(cp_owner channel_partner)) && user.user_status_in_company.in?(%w(active))
     elsif user.role?('sales_admin')
-      record.role?('sales') && !marketplace_client?
+      !marketplace_client? && record.role?("sales")
+    elsif user.role.in?(%w(gre crm sales)) && !marketplace_client?
+      for_edit
     elsif user.role?('cp_admin') && !marketplace_client?
       record.role?('cp') ||
       (
@@ -40,7 +51,13 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def show_add_users_dropdown?
-    marketplace_client? && user.role.in?(%w(admin channel_partner cp_owner)) && user.booking_portal_client.enable_channel_partners?
+    out = false
+    if marketplace_client?
+      out = user.role.in?(%w(admin channel_partner cp_owner gre)) && user.booking_portal_client.enable_channel_partners?
+    else
+      out = !user.role.in?(%w(gre crm sales)) 
+    end
+    out
   end
 
   def edit?
@@ -48,7 +65,7 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def confirm_user?
-    if %w[admin superadmin].include?(user.role) && !record.confirmed?
+    if %w[admin superadmin crm sales gre].include?(user.role) && !record.confirmed?
       if marketplace_client?
         record.kylas_user_id.blank? || record.is_active_in_kylas?
       else
@@ -175,7 +192,7 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def show_index?
-    user.role.in?(%w(channel_partner cp_owner) + User::ALL_PROJECT_ACCESS)
+    user.role.in?(%w(channel_partner cp_owner gre crm sales_admin sales) + User::ALL_PROJECT_ACCESS)
   end
 
   def note_create?

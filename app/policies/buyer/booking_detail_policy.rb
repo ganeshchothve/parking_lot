@@ -17,7 +17,7 @@ class Buyer::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def hold?
-    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && eligible_user? && only_single_unit_can_hold! && available_for_user_group? && is_buyer_booking_limit_exceed? && buyer_kyc_booking_limit_exceed?
+    _role_based_check && enable_actual_inventory? && only_for_confirmed_user! && eligible_user? && only_single_unit_can_hold! && available_for_user_group? && is_buyer_booking_limit_exceed?
   end
 
   def doc?

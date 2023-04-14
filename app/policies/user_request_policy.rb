@@ -4,7 +4,7 @@ class UserRequestPolicy < ApplicationPolicy
   def index?
     if current_client.real_estate?
       out = user.booking_portal_client.enable_actual_inventory?(user) || enable_incentive_module?(user)
-      out = false if user.role.in?(%w[sales])
+      # out = false if user.role.in?(%w[sales])
       out && user.active_channel_partner?
     else
       false
@@ -32,7 +32,7 @@ class UserRequestPolicy < ApplicationPolicy
   def new_permission_by_requestable_type
     case record.requestable_type
     when 'BookingDetail'
-      record&.lead&.project && enable_actual_inventory?(user) && BookingDetail::BOOKING_STAGES.include?(record.requestable.status)
+      record&.lead&.project && enable_actual_inventory?(user) && BookingDetail::BOOKING_STAGES.include?(record.requestable.status) && !user.role.in?(['gre', 'crm', 'sales_admin'])
     when 'Receipt'
       record.lead.project&.is_active? && enable_actual_inventory?(user) && record.requestable.success? && record.requestable.booking_detail_id.blank?
     else

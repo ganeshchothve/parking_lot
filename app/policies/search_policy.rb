@@ -19,10 +19,15 @@ class SearchPolicy < ApplicationPolicy
 
   def new?
     valid = true
-    valid = valid && (record.lead.try(:user_id) == user.id) if user.buyer?
-    valid = valid && record.lead.referenced_manager_ids.include?(user.id) if user.role == "channel_partner"
-    valid = valid && true if ['cp', 'sales', 'sales_admin', 'admin'].include?(user.role)
-    valid = valid && record.lead&.project&.is_active? && record.lead&.project&.bookings_enabled?
+    if user.buyer?
+      valid = valid && (record.user_id == user.id)
+    else
+      valid = valid && (record.lead.try(:user_id) == user.id) if user.buyer?
+      valid = valid && record.lead.referenced_manager_ids.include?(user.id) if user.role == "channel_partner"
+      valid = valid && true if ['cp', 'sales', 'sales_admin', 'admin'].include?(user.role)
+      valid = valid && record.lead&.project&.is_active? && record.lead&.project&.bookings_enabled?
+    end
+
     valid
   end
 
