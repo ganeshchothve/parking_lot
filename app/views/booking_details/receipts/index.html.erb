@@ -1,30 +1,28 @@
 <section class="mb-5 mt-3">
   <div class="">
     <div class="row">
-      <div class="col-lg-5 col-xs-12 col-md-6 col-sm-12 no-pd">
-        <div class="table-title">
-          <h1 class="title icon-rupee-black icon-set">
-            <%= Receipt.model_name.human(count: @receipts.total_entries) %>
-          </h1>
-        </div>
-      </div>
-      <div class="col-lg-7 col-xs-12 col-md-6 col-sm-12 no-pd">
-        <div class="table-btn-set float-right pb-3">
-          <% if current_client.cancellation_amount.to_i > 0 %>
-            <div class="btn db-small-btn light-blue width-300 disclaimer bg-white">
-              <%= t('controller.booking_details.receipts.form.refund_disclaimer') %>
+      <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="table-btn-set float-end pb-3 text-end mt-2">
+        <!-- <div class="filter-search">
+          <input type="text" name="" placeholder="Search payments">
+        </div> -->
+        <!-- <div class="filter-popup">
+          <a class="db-filter-btn fn-500" href="javascript:;">
+            <i class="fa fa-filter fill-theme"></i>
+          </a>
+        </div> -->
+          <% if false# policy([:admin, Receipt]).export? %>
+            <a class="select-btn btn no-fill primary fn-400 dropdown-toggle" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= t('controller.receipts.exports.link_name', name: nil)%>
+            </a>
+            <div class="dropdown-menu">
+              <%= link_to  I18n.t("global.link_to.all_exports"), export_admin_receipts_path, class: 'dropdown-item' %>
+              <%= link_to  I18n.t("global.link_to.active_filter_exports"), export_admin_receipts_path(fltrs: params["fltrs"].as_json), class: 'dropdown-item' %>
             </div>
           <% end %>
-
-          <button disabled="disabled" class="db-small-btn light-blue bg-white fn-400"><%= t('global.total')%> : <%= @receipts.total_entries %></button>
-          <% if policy([current_user_role_group, Receipt.new(user: @lead.user, booking_detail: @booking_detail)]).new? %>
-            <%= link_to t('controller.booking_details.receipts.new.link_name'), [:new, current_user_role_group, @lead, @booking_detail, :receipt], class: 'nowrap btn db-small-btn light-blue bg-white fn-400 modal-remote-form-link width-200' %>
-          <% end %>
         </div>
       </div>
-
       <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
-        <div class="box-card relative">
+        <div class="relative bg-white">
           <%= render 'receipts/index', {receipts: @receipts} %>
         </div>
       </div>

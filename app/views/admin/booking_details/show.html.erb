@@ -101,6 +101,10 @@
                             <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('phase') %></p>
                             <p class="fn-14"><%= project_unit.phase.try(:name) || '-' %></p>
                           </div>
+                          <div class="col-3">
+                            <p class="fn-12 font-medium mb-0"><%= BookingDetail.human_attribute_name('closing_manager') %></p>
+                            <p class="fn-14"><%= @booking_detail.try(:creator).try(:role).in?(User::BUYER_ROLES) ? "-" : @booking_detail.try(:creator).try(:name) %></p>
+                          </div>
                         </div>
                       </div>
                     </div>

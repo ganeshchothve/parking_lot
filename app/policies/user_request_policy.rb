@@ -4,7 +4,7 @@ class UserRequestPolicy < ApplicationPolicy
   def index?
     if current_client.real_estate?
       out = user.booking_portal_client.enable_actual_inventory?(user) || enable_incentive_module?(user)
-      out = false if user.role.in?(%w[sales])
+      # out = false if user.role.in?(%w[sales])
       out && user.active_channel_partner?
     else
       false

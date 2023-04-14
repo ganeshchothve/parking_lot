@@ -84,7 +84,7 @@
         <p><%= number_to_indian_currency(booking_detail.pending_balance({strict: true})) %></p>
       </li>
     </ul>
-    <div class="alert alert-primary col-md-12 col-lg-12 col-xs-12 col-sm-12">
+    <div class="mt-5 alert alert-primary col-md-12 col-lg-12 col-xs-12 col-sm-12">
       <% template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'booking_details/_details').first %>
       <% if template.present? %>
         <% @bd = booking_detail %>

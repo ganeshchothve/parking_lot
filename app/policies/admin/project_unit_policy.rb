@@ -2,7 +2,7 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   # def new? def print? def create? def update? def block? def update_co_applicants? def update_project_unit? def payment? def process_payment? def checkout? def send_under_negotiation? from ProjectUnitPolicy
   def index?
     if current_client.real_estate?
-      out = user.booking_portal_client.enable_actual_inventory?(user) && !user.buyer? && record&.project&.enable_inventory?
+      out = user.booking_portal_client.enable_actual_inventory?(user) && !user.buyer? #&& record&.project&.enable_inventory?
       out && user.active_channel_partner? && !user.booking_portal_client.launchpad_portal
     else
       false
@@ -22,7 +22,7 @@ class Admin::ProjectUnitPolicy < ProjectUnitPolicy
   end
 
   def edit?
-    %w[admin superadmin sales_admin crm].include?(user.role)
+    %w[admin superadmin crm].include?(user.role)
   end
 
   def update?

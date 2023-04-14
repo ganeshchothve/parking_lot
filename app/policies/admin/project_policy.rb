@@ -6,7 +6,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def update?
-    %w[superadmin admin sales_admin].include?(user.role)
+    %w[superadmin admin].include?(user.role)
   end
 
   def asset_create?
@@ -42,7 +42,7 @@ class Admin::ProjectPolicy < ProjectPolicy
   end
 
   def new?
-    user.role.in?(%w(superadmin sales_admin)) && !marketplace_client?
+    user.role.in?(%w(superadmin)) && !marketplace_client?
   end
 
   def create?

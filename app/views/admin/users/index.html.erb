@@ -30,7 +30,7 @@
             </a>
           </div>
           <!-- In case of marketplace client, show add user dropdown to only admin role for allowing him to add cp users -->
-          <% unless marketplace? && !policy([:admin, User.new]).show_add_users_dropdown?  %>
+          <% if policy([:admin, User.new]).show_add_users_dropdown?  %>
             <div class="new-menu display-initial d-inline" >
               <button class="select-btn btn btn-primary fn-400 dropdown-toggle" href="javascript:;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= t('controller.users.new.link_name', role: 'User') %></button>
               <div class="dropdown-menu">

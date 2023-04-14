@@ -31,7 +31,9 @@ class Admin::UserPolicy < UserPolicy
     elsif user.role?('cp_owner')
       record.role.in?(%w(cp_owner channel_partner)) && user.user_status_in_company.in?(%w(active))
     elsif user.role?('sales_admin')
-      record.role?('sales') && !marketplace_client?
+      !marketplace_client? && record.role?("sales")
+    elsif user.role.in?(%w(gre crm sales)) && !marketplace_client?
+      for_edit
     elsif user.role?('cp_admin') && !marketplace_client?
       record.role?('cp') ||
       (
@@ -49,7 +51,13 @@ class Admin::UserPolicy < UserPolicy
   end
 
   def show_add_users_dropdown?
-    marketplace_client? && user.role.in?(%w(admin channel_partner cp_owner)) && user.booking_portal_client.enable_channel_partners?
+    out = false
+    if marketplace_client?
+      out = user.role.in?(%w(admin channel_partner cp_owner gre)) && user.booking_portal_client.enable_channel_partners?
+    else
+      out = !user.role.in?(%w(gre crm sales)) 
+    end
+    out
   end
 
   def edit?

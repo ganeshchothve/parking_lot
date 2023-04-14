@@ -6,7 +6,7 @@ class Admin::UserRequestPolicy < UserRequestPolicy
   end
 
   def edit?
-    %w[admin crm sales cp superadmin sales_admin].include?(user.role) && user.booking_portal_client.enable_actual_inventory?(user)
+    %w[admin crm sales cp superadmin sales_admin].include?(user.role) && user.booking_portal_client.enable_actual_inventory?(user) && !%w(rejected resolved).include?(record.status)
   end
 
   def update?

@@ -3,17 +3,17 @@
     <div class="box-card">
       <div class="box-header bg-gradient br-rd-tr-4 row">
         <div class="col-11 no-pd">
-          <h2><%= t("mongoid.models.user_request/#{params[:request_type]}", count: 1) %> <%= I18n.t("mongoid.attributes.user_request.request") %></h2>
+          <h2><%= t("mongoid.models.user_request/#{params[:request_type]}", count: 1) %> <%= I18n.t("mongoid.attributes.user_request/requestable_type.receipt") %></h2>
         </div>
         <div class="col-1">
           <table class="float-right">
             <tr><td>
-              <div class="dropdown show text-center float-right">
+              <!-- <div class="dropdown show text-center float-right">
                 <a class="btn dropdown-toggle table-dropdown-btn" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <%= render 'links', user_request: @user_request, links_name: 'Action' %>
+                    <%#= render 'links', user_request: @user_request, links_name: 'Action' %>
                   </div>
-              </div>
+              </div> -->
             </td></tr>
           </table>
         </div>
@@ -23,7 +23,7 @@
           <ul class="booking-apart-info clear">
             <% if @user_request.requestable_id.present? %>
               <li>
-                <span> <%= I18n.t("controller.user_requests.text.requested_for", name: I18n.t("mongoid.attributes.user_request/requestable_type.#{@user_request.requestable_type}")) %></span>
+                <span> <%= I18n.t("controller.user_requests.text.requested_for", name: I18n.t("mongoid.attributes.user_request/requestable_type.#{@user_request.requestable_type.tableize.singularize }")) %></span>
                 <p><%= @user_request.requestable.name %></p>
               </li>
 

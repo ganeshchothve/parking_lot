@@ -11,7 +11,7 @@
 
 <% if links.present? %>
   <div class="dropdown">
-    <%= active_link_to t('global.custom'), "javascript:;", active: [CustomPolicy.custom_methods.map{|x| 'admin/'+x}, ['index']], class: "nav-link dropdown-toggle", data: {toggle: 'dropdown'},  id: "dropdownMenuLeft3", "data-bs-toggle": "dropdown", "data-bs-target":"#dashboardMore", "aria-expanded": "false" %>
+    <%= active_link_to t('global.custom'), "javascript:;", active: :inclusive, class: "nav-link dropdown-toggle", data: {toggle: 'dropdown'},  id: "dropdownMenuLeft3", "data-bs-toggle": "dropdown", "data-bs-target":"#dashboardMore", "aria-expanded": "false" %>
     <div id="dashboardMore" class="dropdown-menu" aria-labelledby="dropdownMenuLeft3">
       <% links.each do |link| %>
         <%= active_link_to link[:name], link[:link], link[:options].merge(class: 'dropdown-item') %>
