@@ -1,11 +1,13 @@
 <div class="row">
   <% if policy([:admin, lead]).editable_field?("push_to_crm") %>
-    <div class="col-md-12">
+    <!-- <div class="col-md-12">
       <div class="mb-3">
-        <%= f.input :push_to_crm, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, label_html: {class: 'form-check-label d-inline-block ms-2'}, input_html: {class: 'wd-22', disabled: !policy([:admin, lead]).editable_field?("push_to_crm"), name: 'push_to_crm' } %>
+        <%#= f.input :push_to_crm, item_wrapper_class: 'form-check form-check-inline', as: :radio_buttons, prompt: :translate, required: true, label_html: {class: 'form-check-label d-inline-block ms-2'}, input_html: {class: 'wd-22', disabled: !policy([:admin, lead]).editable_field?("push_to_crm"), name: 'push_to_crm' } %>
       </div>
-    </div>
+    </div> -->
+    <%= f.input :push_to_crm, :as => :hidden, :input_html => {name: 'push_to_crm', :value => true } %>
   <% end %>
+
   <% if policy([:admin, lead]).editable_field?("first_name") %>
   <div class="col-md-6">
     <%= f.input :first_name, required: true, autofocus: true, disabled: !policy([:admin, lead]).editable_field?("first_name"), input_html: { name: 'first_name' } %>

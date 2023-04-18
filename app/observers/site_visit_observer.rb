@@ -91,9 +91,8 @@ class SiteVisitObserver < Mongoid::Observer
     end
 
     site_visit.move_invoices_to_draft
-
     # if site visit status is changed to conducted, the site visit is pushed to sell do
-    if site_visit.status_changed? && site_visit.status == 'conducted'
+    if site_visit.status_changed? && %w(scheduled conducted).include?(site_visit.status)
       crm_base = Crm::Base.where(booking_portal_client_id: site_visit.booking_portal_client_id, domain: ENV_CONFIG.dig(:selldo, :base_url)).first
       if crm_base.present?
         api, api_log = site_visit.reload.push_in_crm(crm_base)

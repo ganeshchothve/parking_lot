@@ -13,6 +13,7 @@
               <th>Approval Status</th>
               <th>Booked On</th>
               <th>Agreement Date</th>
+              <th><%= BookingDetail.human_attribute_name('closing_manager') %></th>
               <th class="btn-action">Action</th>
             </tr>
           </thead>
@@ -40,6 +41,9 @@
                 </td>
                 <td>
                   <%= booking_detail.agreement_date ? I18n.l(booking_detail.agreement_date) : '-' %>
+                </td>
+                <td>
+                  <%= booking_detail.try(:creator).try(:role).in?(User::BUYER_ROLES) ? "-" : booking_detail.try(:creator).try(:name) %>
                 </td>
                 <td>
                   <div class="dropdown">

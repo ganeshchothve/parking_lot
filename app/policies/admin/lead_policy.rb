@@ -207,6 +207,9 @@ class Admin::LeadPolicy < LeadPolicy
       attributes += [:manager_id] if user.booking_portal_client.try(:enable_channel_partners?)
       attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
     end
+    unless marketplace_client?
+      attributes += [:push_to_crm]
+    end
     attributes.uniq
   end
 

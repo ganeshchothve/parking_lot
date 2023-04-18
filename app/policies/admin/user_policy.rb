@@ -31,7 +31,7 @@ class Admin::UserPolicy < UserPolicy
     elsif user.role?('cp_owner')
       record.role.in?(%w(cp_owner channel_partner)) && user.user_status_in_company.in?(%w(active))
     elsif user.role?('sales_admin')
-      !marketplace_client? && record.role?("sales")
+      !marketplace_client? && (record.role?('sales') || record.role.in?(User::BUYER_ROLES))
     elsif user.role.in?(%w(gre crm sales)) && !marketplace_client?
       for_edit
     elsif user.role?('cp_admin') && !marketplace_client?

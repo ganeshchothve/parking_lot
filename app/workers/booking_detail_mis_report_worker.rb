@@ -66,7 +66,10 @@ class BookingDetailMisReportWorker
       "Manager Id",
       "Manager Name",
       "Manager Email",
-      "Manager Phone"
+      "Manager Phone",
+      "Closing Manager Name",
+      "Closing Manager Email",
+      "Closing Manager Phone"
     ]
   end
 
@@ -110,7 +113,10 @@ class BookingDetailMisReportWorker
       booking_detail.manager_id.to_s,
       booking_detail.manager.try(:name),
       booking_detail.manager.try(:email),
-      booking_detail.manager.try(:phone)
+      booking_detail.manager.try(:phone),
+      booking_detail.try(:creator).try(:role).in?(User::BUYER_ROLES) ? "-" : booking_detail.try(:creator).try(:name),
+      booking_detail.try(:creator).try(:role).in?(User::BUYER_ROLES) ? "-" : booking_detail.try(:creator).try(:email),
+      booking_detail.try(:creator).try(:role).in?(User::BUYER_ROLES) ? "-" : booking_detail.try(:creator).try(:phone)
     ]
   end
 end
