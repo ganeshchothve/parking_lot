@@ -1,4 +1,5 @@
 class ApisController < ActionController::API
+  include ActionController::MimeResponds
   before_action :authenticate_request
   around_action :log_standard_errors
   before_action :set_current_user
