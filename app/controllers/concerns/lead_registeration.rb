@@ -62,6 +62,7 @@ module LeadRegisteration
       if lead.valid?
         if existing || (@user.save && (selldo_config_base(@user.booking_portal_client).blank? || @project.save))
           lead.assign_attributes(selldo_lead_registration_date: params.dig(:lead_details, :lead_created_at))
+          lead.assign_attributes(lead_stage: params.dig(:lead_details, :stage))
           lead.assign_attributes(permitted_attributes([:admin, lead])) if params[:lead].present?
           lead.owner_id = current_user.id if user_signed_in? && current_user.try(:kylas_user_id).present? && current_user.booking_portal_client.try(:is_marketplace?)
 
