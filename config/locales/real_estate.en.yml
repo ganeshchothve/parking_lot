@@ -1813,6 +1813,8 @@ en-REAL_ESTATE:
         UserRequest::Swap: Swap Request
       user_request/swap:
         project_unit_id: "Project Unit"
+      user_request/cancellation:
+        requestable_type: "Project Unit"
       user_request/status:
         pending: "Pending"
         processing: "Processing"
@@ -3635,10 +3637,6 @@ en-REAL_ESTATE:
       reassign_sales: "Reassign Lead"
       send_payment_link:
         project_no_access: Project access not given to customers
-      notice:
-        updated: "Lead successfully updated."
-        assigned_to: "%{name1} assigned to sales %{name2}"
-        not_assigned_to: "%{name1} not assigned to sales %{name2}"
       alert:
         not_found: "Lead Not found"
         sales_user_not_found: "Sales user not found"
@@ -3652,6 +3650,8 @@ en-REAL_ESTATE:
         created: "Lead created successfully."
         updated: "Lead updated successfully."
         unqualified: "Lead unqualified successfully."
+        assigned_to: "%{name1} assigned to sales %{name2}"
+        not_assigned_to: "%{name1} not assigned to sales %{name2}"
       errors:
         select_leads: "Please select some leads"
         already_exists: "Lead already exists."

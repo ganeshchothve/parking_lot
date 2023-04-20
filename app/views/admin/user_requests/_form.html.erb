@@ -1,4 +1,4 @@
-<%= simple_form_for @user_request, url: url, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['user_requests'], "data-type": "json"}, data: hash do |f| %>
+<%= form_for @user_request, url: url, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['user_requests'], "data-type": "json"}, data: hash do |f| %>
   <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">

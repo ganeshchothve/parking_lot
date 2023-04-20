@@ -3633,10 +3633,6 @@ en:
       reassign_sales: "Reassign Lead"
       send_payment_link:
         project_no_access: Project access not given to customers
-      notice:
-        updated: "Lead successfully updated."
-        assigned_to: "%{name1} assigned to sales %{name2}"
-        not_assigned_to: "%{name1} not assigned to sales %{name2}"
       alert:
         not_found: "Lead Not found"
         sales_user_not_found: "Sales user not found"
@@ -3650,6 +3646,8 @@ en:
         created: "Lead created successfully."
         updated: "Lead updated successfully."
         unqualified: "Lead unqualified successfully."
+        assigned_to: "%{name1} assigned to sales %{name2}"
+        not_assigned_to: "%{name1} not assigned to sales %{name2}"
       errors:
         select_leads: "Please select some leads"
         already_exists: "Lead already exists."
