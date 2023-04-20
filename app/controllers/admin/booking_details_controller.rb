@@ -200,6 +200,7 @@ class Admin::BookingDetailsController < AdminController
                                     lead_id: @lead.id,
                                     project_id: @lead.project_id,
                                     site_visit_id: params[:site_visit_id],
+                                    user_id: @lead.user_id,
                                     booking_portal_client_id: current_client.id
                                     )
     authorize([:admin, @booking_detail], :new?)
