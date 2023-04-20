@@ -1,5 +1,12 @@
 class UserRequest::Cancellation < UserRequest
-  
+
+  field :beneficiary_name, type: String
+  field :beneficiary_bank, type: String
+  field :beneficiary_branch, type: String
+  field :beneficiary_account_no, type: String
+  field :ifsc_code, type: String
+
+  validates :beneficiary_name, :beneficiary_bank, :beneficiary_branch, :beneficiary_account_no, :ifsc_code, presence: true
   validates :requestable_id, :requestable_type, presence: true, if: proc { |user_request| user_request.user_id.present? && user_request.user.buyer? }
   validates :status, inclusion: { in: STATUS }
   validates :reason_for_failure, presence: true, if: proc { |record| record.rejected? }
