@@ -9,7 +9,7 @@ class Admin::UserRequest::CancellationPolicy < Admin::UserRequestPolicy
     attributes = super
     attributes += [:requestable_id, :requestable_type] if record.new_record? && record.status == 'pending' && %w[admin crm sales superadmin cp sales_admin channel_partner cp_owner].include?(user.role)
     if record.status == "pending"
-      attributes += [:beneficiary_name, :beneficiary_bank, :beneficiary_branch, :beneficiary_account_no, :ifsc_code]
+      attributes += [bank_detail_attributes: BankDetailPolicy.new(user, BankDetail.new).permitted_attributes]
     end
     attributes
   end

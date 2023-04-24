@@ -1,6 +1,6 @@
 class AdminController < ApplicationController
   before_action :authenticate_user!
-  before_action :only_administrator_users!
+  before_action :only_administrator_users!, except: [:choose_template_for_print, :print_template]
 
   private
 

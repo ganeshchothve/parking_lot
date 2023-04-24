@@ -1,16 +1,10 @@
 class UserRequest::Cancellation < UserRequest
 
-  field :beneficiary_name, type: String
-  field :beneficiary_bank, type: String
-  field :beneficiary_branch, type: String
-  field :beneficiary_account_no, type: String
-  field :ifsc_code, type: String
-
-  validates :beneficiary_name, :beneficiary_bank, :beneficiary_branch, :beneficiary_account_no, :ifsc_code, presence: true
   validates :requestable_id, :requestable_type, presence: true, if: proc { |user_request| user_request.user_id.present? && user_request.user.buyer? }
   validates :status, inclusion: { in: STATUS }
   validates :reason_for_failure, presence: true, if: proc { |record| record.rejected? }
   validates_uniqueness_of :requestable_id, scope: [:requestable_type, :status], if: proc{|record| record.pending? }, allow_blank: true
+  validates :bank_detail, presence: true
 
   enable_audit(
     indexed_fields: %i[booking_detail_id receipt_id],

@@ -27,12 +27,14 @@ class UserRequest
   belongs_to :created_by, class_name: 'User'
   has_many :assets, as: :assetable
   has_many :notes, as: :notable
+  has_one :bank_detail, as: :bankable, validate: true
 
   validates :user_id, presence: true
   validates :lead_id, :project_id, presence: true, if: proc { |user_request| user_request.user_id.present? && user_request.user.buyer? }
   validates :resolved_by, presence: true, if: proc { |user_request| user_request.status == 'resolved' }
 
   accepts_nested_attributes_for :notes
+  accepts_nested_attributes_for :bank_detail
   scope :filter_by_project_id, ->(project_id){ where(project_id: project_id) }
   scope :filter_by_user_id, ->(user_id){ where(user_id: user_id)}
   scope :filter_by_lead_id, ->(lead_id){ where(lead_id: lead_id)}

@@ -26,23 +26,7 @@
     <div><%= @user_request.requestable.try(:name) %></div>
   </div>
 <% end %>
-<div class="mb-3 form-group">
-  <%= f.label :beneficiary_name, class: 'label-required' %>
-  <%= f.text_field :beneficiary_name, class: 'form-control', required: 'required', disabled: !policy([current_user_role_group, (@user_request)]).editable_field?("beneficiary_name") %>
-</div>
-<div class="mb-3 form-group">
-  <%= f.label :beneficiary_bank, class: 'label-required' %>
-  <%= f.text_field :beneficiary_bank, class: 'form-control', required: 'required', disabled: !policy([current_user_role_group, (@user_request)]).editable_field?("beneficiary_bank") %>
-</div>
-<div class="mb-3 form-group">
-  <%= f.label :beneficiary_branch, class: 'label-required' %>
-  <%= f.text_field :beneficiary_branch, class: 'form-control', required: 'required', disabled: !policy([current_user_role_group, (@user_request)]).editable_field?("beneficiary_branch") %>
-</div>
-<div class="mb-3 form-group">
-  <%= f.label :beneficiary_account_no, class: 'label-required' %>
-  <%= f.text_field :beneficiary_account_no, class: 'form-control', required: 'required', disabled: !policy([current_user_role_group, (@user_request)]).editable_field?("beneficiary_account_no") %>
-</div>
-<div class="mb-3 form-group">
-  <%= f.label :ifsc_code, class: 'label-required' %>
-  <%= f.text_field :ifsc_code, class: 'form-control', required: 'required', disabled: !policy([current_user_role_group, (@user_request)]).editable_field?("ifsc_code") %>
-</div>
+<% f.object.build_bank_detail if f.object.bank_detail.blank? %>
+<%= f.fields_for :bank_detail do |bank_detail_form| %>
+  <%= render "bank_detail_fields", f: bank_detail_form %>
+<% end %>
