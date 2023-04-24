@@ -1,29 +1,29 @@
 <%= f.hidden_field :booking_portal_client_id, value: @current_client.id %>
 <div class="row">
   <div class="col-md-6 mb-3">
-    <%= f.label :account_holder_name, class: "label-required" %>
+    <%= f.label :account_holder_name, I18n.t("mongoid.attributes.user_request/bank_detail.account_holder_name"), class: "label-required" %>
     <%= f.text_field :account_holder_name, required: true %>
   </div>
   <div class="col-md-6 mb-3">
-    <%= f.label :name, class: "label-required" %>
+    <%= f.label :name, I18n.t("mongoid.attributes.user_request/bank_detail.name"), class: "label-required" %>
     <%= f.text_field :name, required: true  %>
   </div>
 </div>
 
 <div class="row">
   <div class="col-md-6 mb-3">
-    <%= f.label :branch, class: "label-required" %>
+    <%= f.label :branch, I18n.t("mongoid.attributes.user_request/bank_detail.branch"), class: "label-required" %>
     <%= f.text_field :branch, required: true %>
   </div>
   <div class="col-md-6 mb-3">
-    <%= f.label :account_number, class: "label-required" %>
+    <%= f.label :account_number, I18n.t("mongoid.attributes.user_request/bank_detail.account_number"), class: "label-required" %>
     <%= f.text_field :account_number, required: true %>
   </div>
 </div>
 
 <div class="row">
   <div class="col-md-6 mb-3">
-    <%= f.label :ifsc_code, class: "label-required" %>
+    <%= f.label :ifsc_code, I18n.t("mongoid.attributes.user_request/bank_detail.ifsc_code"), class: "label-required" %>
     <%= f.text_field :ifsc_code, required: true %>
   </div>
 </div>
