@@ -2,7 +2,7 @@ class Admin::UserRequest::CancellationPolicy < Admin::UserRequestPolicy
   # def index? def new? def create? def edit? def update? def permitted_attributes from Admin::UserRequestPolicy
 
   def choose_template_for_print?
-    user.role.in?(%w(admin sales sales_admin superadmin gre crm) + User::BUYER_ROLES) && available_templates(record.class.to_s, record).present? && record.status.in?(%w(pending resolved))
+    user.role.in?(%w(admin sales sales_admin superadmin gre crm)) && available_templates(record.class.to_s, record).present? && record.status.in?(%w(pending resolved))
   end
 
   def permitted_attributes(params = {})

@@ -1837,6 +1837,12 @@ en-GENERIC:
         cancellation: "Cancellation"
         swap: "Swap"
         general: "General"
+      user_request/bank_detail:
+        name: "Beneficiary Bank"
+        account_holder_name: "Beneficiary Name"
+        account_number: "Beneficiary Account No."
+        ifsc_code: "IFSC Code."
+        branch: "Beneficiary Branch"
       site_visit:
         name: Name
         email: Email

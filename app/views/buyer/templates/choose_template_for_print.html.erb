@@ -1,0 +1,37 @@
+<% templates = available_templates(@subject_class, @subject_class_resource) %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <%= ::Template.human_attribute_name('print_document') %>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+        <%= form_tag print_template_buyer_client_templates_path, method: "get" , id: "custom_choose_template_form" do %>
+          <div class="modal-body">
+            <% if templates.present? %>
+              <%= label_tag :template_id, ::Template.human_attribute_name('custom_document') , class: "control-label float-left label-required" %>
+              <%= select_tag :template_id, options_for_select(templates), {prompt: "Select", class: "selectize", required: true} %>
+
+              <%= hidden_field_tag :subject_class, params[:subject_class] %>
+              <%= hidden_field_tag :subject_class_id, params[:subject_class_id] %>
+
+            <% else %>
+              <%= ::Template.human_attribute_name('no_template_available') %>
+            <% end %>
+          </div>
+
+          <div class="filter-footer modal-footer text-end">
+            <%= submit_tag :Print, class: "btn btn-primary", formtarget: "_blank" %>
+          </div>
+        <% end %>
+    </div>
+  </div>
+</div>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($('#custom_choose_template_form'));
+  });
+<% end %>

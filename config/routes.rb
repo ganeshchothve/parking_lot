@@ -493,6 +493,19 @@ Rails.application.routes.draw do
   end
 
   namespace :buyer do
+
+    scope "*subject_class/:subject_class_id" do
+      resources :templates, only: [], controller: :templates, as: :custom_templates do
+        get :choose_template_for_print, on: :collection
+      end
+    end
+
+    resource :client, only: [] do
+      resources :templates, only: [] do
+        get :print_template, on: :collection
+      end
+    end
+
     resources :meetings, only: [:index, :update, :show]
     resources :schemes, only: [:index]
 

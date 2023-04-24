@@ -7,5 +7,5 @@
 <% end %>
 
 <% if policy([:buyer, user_request]).choose_template_for_print? %>
-  <%= link_to t('controller.templates.choose_template_for_print.link_name'), choose_template_for_print_admin_custom_templates_path(subject_class: user_request.class.model_name.i18n_key.to_s, subject_class_id: user_request.id.to_s), class: 'dropdown-item modal-remote-form-link' %>
+  <%= link_to t('controller.templates.choose_template_for_print.link_name'), choose_template_for_print_buyer_custom_templates_path(subject_class: user_request.class.model_name.i18n_key.to_s, subject_class_id: user_request.id.to_s), class: 'dropdown-item modal-remote-form-link' %>
 <% end %>
