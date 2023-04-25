@@ -1,0 +1,2 @@
+module Buyer::TemplatesHelper
+end

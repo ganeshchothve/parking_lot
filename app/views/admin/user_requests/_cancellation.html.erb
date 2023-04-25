@@ -10,6 +10,7 @@
       <% else %>
         <%= f.select :requestable_id, options_from_collection_for_select(BookingDetail.where(booking_portal_client_id: current_client.try(:id), _id: f.object.requestable_id), :_id, :name), {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy([current_user_role_group, (@user_request)]).editable_field?("requestable_id"), required: :required, data: { url: admin_booking_details_path, params: {fltrs: { status: BookingDetail::BOOKING_STAGES, lead_id: @user_request.lead_id } } } %>
       <% end %>
+      
     </div>
   <% elsif @user_request.requestable_type == 'Receipt' %>
       <%= f.label :receipt, class: 'label-required' %>
@@ -24,4 +25,8 @@
     <%= f.label :project_unit_id, class: 'label-required' %>
     <div><%= @user_request.requestable.try(:name) %></div>
   </div>
+<% end %>
+<% f.object.build_bank_detail if f.object.bank_detail.blank? %>
+<%= f.fields_for :bank_detail do |bank_detail_form| %>
+  <%= render "bank_detail_fields", f: bank_detail_form %>
 <% end %>

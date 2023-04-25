@@ -3,7 +3,7 @@ class Buyer::BookingDetailsController < BuyerController
   around_action :apply_policy_scope, only: [:index]
   before_action :set_booking_detail, except: [:index]
   before_action :set_project_unit, except: [:index]
-  before_action :set_receipt, except: [:index]
+  before_action :set_receipt, except: [:index, :generate_booking_detail_form]
   before_action :authorize_resource, except: [:index]
 
   def index

@@ -17,7 +17,7 @@
             </div>
             <div class="col-lg-9 col-sm-12 col-md-8 col-xs-12 sales-team-list-wrapper">
               <div class="sales-team-inner" id='sales-users-list'>
-                <%= render 'dashboard/index/partials/list_sales_users', users: User.where(User.user_based_scope(current_user, params)).asc(:sales_status) %>
+                <%= render 'dashboard/index/partials/list_sales_users', users: team_lead_dashboard_sales_users(params) %>
               </div>
             </div>
           </div>

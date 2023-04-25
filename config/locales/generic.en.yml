@@ -1837,6 +1837,12 @@ en-GENERIC:
         cancellation: "Cancellation"
         swap: "Swap"
         general: "General"
+      user_request/bank_detail:
+        name: "Beneficiary Bank"
+        account_holder_name: "Beneficiary Name"
+        account_number: "Beneficiary Account No."
+        ifsc_code: "IFSC Code."
+        branch: "Beneficiary Branch"
       site_visit:
         name: Name
         email: Email
@@ -3635,10 +3641,6 @@ en-GENERIC:
       reassign_sales: "Reassign Deal"
       send_payment_link:
         project_no_access: Product/ Service access not given to customers
-      notice:
-        updated: "Deal successfully updated."
-        assigned_to: "%{name1} assigned to sales %{name2}"
-        not_assigned_to: "%{name1} not assigned to sales %{name2}"
       alert:
         not_found: "Deal Not found"
         sales_user_not_found: "Sales user not found"
@@ -3652,6 +3654,8 @@ en-GENERIC:
         created: "Deal created successfully."
         updated: "Deal updated successfully."
         unqualified: "Deal unqualified successfully."
+        assigned_to: "%{name1} assigned to sales %{name2}"
+        not_assigned_to: "%{name1} not assigned to sales %{name2}"
       errors:
         select_leads: "Please select some deals"
         already_exists: "Deal already exists."

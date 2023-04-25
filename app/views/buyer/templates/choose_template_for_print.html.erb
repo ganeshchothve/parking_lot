@@ -8,7 +8,7 @@
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-        <%= form_tag print_template_admin_client_templates_path, method: "get" , id: "custom_choose_template_form" do %>
+        <%= form_tag print_template_buyer_client_templates_path, method: "get" , id: "custom_choose_template_form" do %>
           <div class="modal-body">
             <% if templates.present? %>
               <%= label_tag :template_id, ::Template.human_attribute_name('custom_document') , class: "control-label float-left label-required" %>

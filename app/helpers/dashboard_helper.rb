@@ -29,4 +29,8 @@ module DashboardHelper
       .with_index { |x, i| i.zero? ? "<strong>#{number_to_percentage((_x = x.to_f * 100), precision: (_x == _x.to_i ? 0 : 2))}</strong>" : t("formula.#{x}") }.join(' of ').html_safe
     result.presence || formula
   end
+
+  def team_lead_dashboard_sales_users params
+    User.where(User.user_based_scope(current_user, params)).where(role: "sales").asc(:sales_status)
+  end
 end
