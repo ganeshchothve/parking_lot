@@ -85,13 +85,13 @@
 
                 <div class="row">
                   <% if policy([:admin, @user_kyc]).editable_field?("configurations") %>
-                    <div class="col-md-6">
+                    <div class="col-md-6 mb-3">
                       <%= f.label :configurations, class: 'control-label' %>
                       <%= f.select :configurations, UserKyc.available_configurations(@user_kyc.lead_id.to_s).collect{|x| [x[:text], x[:id]] }, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true, disabled: !policy(@user_kyc).editable_field?("configurations") %>
                     </div>
                   <% end %>
                   <% if policy([:admin, @user_kyc]).editable_field?("budget") %>
-                    <div class="col-md-6">
+                    <div class="col-md-6 mb-3">
                       <%= f.input :budget, wrapper_html: { class: "" } %>
                     </div>
                   <% end %>

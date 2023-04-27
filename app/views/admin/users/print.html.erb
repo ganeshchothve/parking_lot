@@ -1,19 +1,19 @@
 <div class="container text-right">
-  <button onclick="window.print();" class="db-small-btn light-blue bg-white fn-400 btn d-print-none">
+  <button onclick="window.print();" class="btn btn-primary fn-400 btn d-print-none print-btn">
     <%= t('controller.users.print.link_name')%>
   </button>
 </div>
 <div class="container">
   <div class="pt-3"></div>
   <div class="box-card">
-    <div class="box-content br-rd-bl-4 bg-white">
-      <div class="row pd-box">
-        <div class="col-md-6">
+    <div class="box-content br-rd-bl-4 bg-white pb-0">
+      <div class="row pd-box px-0">
+        <div class="col-md-12">
           <div class="logo-wrapper">
             <%= image_tag current_client.logo.url if current_client.logo.present? %>
           </div>
         </div>
-        <div class="col-md-6 text-right">
+        <div class="col-md-12 text-right">
           <div class="mt-2 mb-1 small text-muted">
             <%= User.human_attribute_name('lead_id') %>
           </div>
@@ -24,41 +24,41 @@
   </div>
   <div class="mt-3"></div>
   <div class="box-card">
-    <div class="box-header bg-gradient br-rd-tr-4">
+    <div class="box-header bg-gradient br-rd-tr-4 px-0 h-auto">
       <h2><%= t('helpers.show.link_name', model: User.human_attribute_name(@user.role)) %></h2>
     </div>
     <div class="box-content br-rd-bl-4 bg-white">
-      <div class="mb-3 pd-box">
+      <div class="mb-3 pd-box px-0">
         <h5><%= @user.name %></h5>
       </div>
-      <div class="row pd-box">
-        <div class="col-md-4">
+      <div class="row pd-box px-0">
+        <div class="col-md-6">
           <div class="mb-3">
             <label class="small text-muted"><%= User.human_attribute_name('email') %></label>
             <div><%= @user.email %></div>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
           <div class="mb-3">
             <label class="small text-muted"><%= User.human_attribute_name('phone') %></label>
             <div><%= @user.phone %></div>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
           <div class="mb-3">
             <label class="small text-muted"><%= t("mongoid.attributes.user.confirmed_at") %></label>
             <div><%= @user.confirmed? ? "Yes (at #{l(@user.confirmed_at)})" : "No" %></div>
           </div>
         </div>
       </div>
-      <div class="row pd-box">
-        <div class="col-md-4">
+      <div class="row pd-box px-0">
+        <div class="col-md-6">
           <div class="mb-3">
             <label class="small text-muted"><%= t("mongoid.attributes.user.manager_role") %></label>
             <div><%= User.human_attribute_name("role.#{@user.manager_role || 'direct'}") %></div>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
           <div class="mb-3">
             <label class="small text-muted"><%= User.human_attribute_name('manager_id') %></label>
             <div><%= @user.manager_name || '' %></div>
@@ -71,11 +71,11 @@
   <% user_kycs = @user.user_kycs.all %>
   <% if user_kycs.present? %>
     <div class="box-card h-100">
-      <div class="box-header bg-gradient br-rd-tr-4">
+      <div class="box-header bg-gradient br-rd-tr-4 p-0 h-auto">
         <h2><%= UserKyc.model_name.human(count: user_kycs.count ) %></h2>
       </div>
       <div class="box-content br-rd-bl-4 bg-white">
-        <div class="pd-box">
+        <div class="pd-box px-0">
           <% user_kycs.each do |user_kyc| %>
             <%= render 'admin/user_kycs/show', user_kyc: user_kyc %>
           <hr/>
@@ -87,11 +87,11 @@
   <% end %>
   <div class="mt-3"></div>
   <div class="box-card">
-    <div class="box-header bg-gradient br-rd-tr-4">
+    <div class="box-header bg-gradient br-rd-tr-4 p-0">
       <h2><%= Note.model_name.human(count: @user.notes.count) %></h2>
     </div>
     <div class="box-content br-rd-bl-4 bg-white">
-      <div class="pd-box">
+      <div class="pd-box px-0">
         <% @user.notes.limit(3).each do |note| %>
           <%= render 'notes/show', note: note %>
         <% end %>
@@ -100,11 +100,11 @@
   </div>
   <div class="mt-3"></div>
   <div class="box-card">
-    <div class="box-header bg-gradient br-rd-tr-4">
+    <div class="box-header bg-gradient br-rd-tr-4 p-0">
       <h2><%= t("mongoid.attributes.client.disclaimer") %></h2>
     </div>
     <div class="box-content br-rd-bl-4 bg-white">
-      <div class="pd-box">
+      <div class="pd-box px-0">
         <%= current_client.disclaimer.html_safe %>
         <hr/>
       </div>
@@ -126,3 +126,11 @@
 <%= javascript_tag do %>
   window.print();
 <% end %>
+<style>
+  .box-content .col-md-6,
+  .box-content .col-md-4{
+      width:50%;
+      float:left;
+    }
+  }
+</style>

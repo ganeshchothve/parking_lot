@@ -1,95 +1,100 @@
-<div class="mt-4">
-  <h2 class="fn-16"><%= t('controller.project_units.title') %></h2>
-  <hr class="my-2 mb-3">
-  <p class="fn-16"><%= t('controller.project_units.unit_no') %> <%= booking_detail.name %></p>
-  <ul class="booking-apart-info list-info-with-label">
-    <% project_unit = booking_detail.project_unit %>
-    <li>
-      <span class=""><%= t('mongoid.attributes.booking_detail.name') %></span>
-      <p><%= booking_detail.name %></p>
-    </li>
-    <li>
-      <span class=""><%= Lead.model_name.human %></span>
-      <p>
-        <%= link_to_if booking_detail.lead, (booking_detail.lead.try(:name) || ''), [current_user_role_group, booking_detail.lead] %>
-      </p>
-    </li>
-    <li>
-      <span class=""><%= ProjectTower.model_name.human %></span>
-      <p><%= project_unit.project_tower.name %></p>
-    </li>
-    <% unless action_name == 'quotation' %>
-    <li>
-      <span class=""><%= BookingDetail.human_attribute_name('status') %></span>
-      <p><%= BookingDetail.human_attribute_name("status.#{booking_detail.status}") %></p>
-    </li>
-    <% end %>
-    <li>
-      <span class='text-wrap '><%= BookingDetail.human_attribute_name('bedrooms')%>/
-        <%= BookingDetail.human_attribute_name('bathrooms')%></span>
-      <p><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></p>
-    </li>
-    <li>
-      <span class=""><%= BookingDetail.human_attribute_name('carpet')%></span>
-      <p><%= project_unit.carpet %> <%= booking_detail&.booking_portal_client&.area_unit %></p>
-    </li>
-    <% if current_user.role?('superadmin') %>
-    <li>
-      <span
-        class=""><%= BookingDetail.human_attribute_name('effective_rate') %></span>
-      <p><%= number_to_indian_currency(booking_detail.effective_rate) %></p>
-    </li>
-    <li>
-      <span class=""><%= BookingDetail.human_attribute_name('saleable') %></span>
-      <p><%= booking_detail.saleable %> <%= booking_detail&.booking_portal_client&.area_unit %></p>
-    </li>
-    <li>
-      <span class=""><%= BookingDetail.human_attribute_name('base_rate') %>/
-        <%= BookingDetail.human_attribute_name('floor_rise') %></span>
-      <p><%= number_to_indian_currency(booking_detail.base_rate)%> /
-        <%= number_to_indian_currency(booking_detail.floor_rise) %></p>
-    </li>
-    <% end %>
+<div class="card box-card">
+      <div class="card-header box-header bg-gradient br-rd-tr-4 h-auto">
+        <h2 class="icon-set icon-scheme-white d-inline"><%= t('controller.project_units.title') %></h2>
+      </div>
+      <div class="card-body box-content br-rd-bl-4 pt-0 px-4 pb-0">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+        <p class="fn-16 mb-0 mt-3"><%= t('controller.project_units.unit_no') %> <%= booking_detail.name %></p>
+          <ul class="booking-apart-info clear mt-0">
+          <% project_unit = booking_detail.project_unit %>
+              <li>
+                <span class=""><%= t('mongoid.attributes.booking_detail.name') %></span>
+                <p><%= booking_detail.name %></p>
+              </li>
+              <li>
+                <span class=""><%= Lead.model_name.human %></span>
+                <p>
+                  <%= link_to_if booking_detail.lead, (booking_detail.lead.try(:name) || ''), [current_user_role_group, booking_detail.lead] %>
+                </p>
+              </li>
+              <li>
+                <span class=""><%= ProjectTower.model_name.human %></span>
+                <p><%= project_unit.project_tower.name %></p>
+              </li>
+              <% unless action_name == 'quotation' %>
+              <li>
+                <span class=""><%= BookingDetail.human_attribute_name('status') %></span>
+                <p><%= BookingDetail.human_attribute_name("status.#{booking_detail.status}") %></p>
+              </li>
+              <% end %>
+              <li>
+                <span class='text-wrap '><%= BookingDetail.human_attribute_name('bedrooms')%>/
+                  <%= BookingDetail.human_attribute_name('bathrooms')%></span>
+                <p><%= project_unit.bedrooms %> / <%= project_unit.bathrooms %></p>
+              </li>
+              <li>
+                <span class=""><%= BookingDetail.human_attribute_name('carpet')%></span>
+                <p><%= project_unit.carpet %> <%= booking_detail&.booking_portal_client&.area_unit %></p>
+              </li>
+              <% if current_user.role?('superadmin') %>
+              <li>
+                <span
+                  class=""><%= BookingDetail.human_attribute_name('effective_rate') %></span>
+                <p><%= number_to_indian_currency(booking_detail.effective_rate) %></p>
+              </li>
+              <li>
+                <span class=""><%= BookingDetail.human_attribute_name('saleable') %></span>
+                <p><%= booking_detail.saleable %> <%= booking_detail&.booking_portal_client&.area_unit %></p>
+              </li>
+              <li>
+                <span class=""><%= BookingDetail.human_attribute_name('base_rate') %>/
+                  <%= BookingDetail.human_attribute_name('floor_rise') %></span>
+                <p><%= number_to_indian_currency(booking_detail.base_rate)%> /
+                  <%= number_to_indian_currency(booking_detail.floor_rise) %></p>
+              </li>
+              <% end %>
 
-    <li>
-      <span
-        class=""><%= BookingDetail.human_attribute_name('agreement_price') %></span>
-      <p><%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %></p>
-    </li>
-    <li>
-      <span
-        class=""><%= BookingDetail.human_attribute_name('all_inclusive_price') %></span>
-      <p><%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %></p>
-    </li>
-    <li>
-      <span class=""><%= BookingDetail.human_attribute_name('phase') %></span>
-      <p><%= project_unit.phase.try(:name) || '-' %></p>
-    </li>
-  </ul>
-  <% if %w[ hold swapped cancelled ].exclude?(booking_detail.status)  %>
-    <ul class="booking-apart-info clear list-info-with-label">
-      <li>
-        <span class=""><%= BookingDetail.human_attribute_name('booked_on') %></span>
-        <p><%= booking_detail.booked_on.try(:strftime, '%d/%m/%Y') %></p>
-      </li>
-      <li>
-        <span
-          class=""><%= BookingDetail.human_attribute_name('total_amount_paid')%></span>
-        <p><%= number_to_indian_currency(booking_detail.total_amount_paid) %></p>
-        <div class="small">* Considers processed <%= Receipt.model_name.human %> only</div>
-      </li>
-      <li>
-        <span
-          class=""><%= BookingDetail.human_attribute_name('pending_balance')%></span>
-        <p><%= number_to_indian_currency(booking_detail.pending_balance({strict: true})) %></p>
-      </li>
-    </ul>
-    <div class="mt-5 alert alert-primary col-md-12 col-lg-12 col-xs-12 col-sm-12">
-      <% template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'booking_details/_details').first %>
-      <% if template.present? %>
-        <% @bd = booking_detail %>
-        <%= get_view_erb(template) %>
-      <% end %>
+              <li>
+                <span
+                  class=""><%= BookingDetail.human_attribute_name('agreement_price') %></span>
+                <p><%= number_to_indian_currency(booking_detail.calculate_agreement_price.round) %></p>
+              </li>
+              <li>
+                <span
+                  class=""><%= BookingDetail.human_attribute_name('all_inclusive_price') %></span>
+                <p><%= number_to_indian_currency(booking_detail.calculate_all_inclusive_price.round) %></p>
+              </li>
+              <li>
+                <span class=""><%= BookingDetail.human_attribute_name('phase') %></span>
+                <p><%= project_unit.phase.try(:name) || '-' %></p>
+              </li>
+            </ul>
+            <% if %w[ hold swapped cancelled ].exclude?(booking_detail.status)  %>
+              <ul class="booking-apart-info clear list-info-with-label">
+                <li>
+                  <span class=""><%= BookingDetail.human_attribute_name('booked_on') %></span>
+                  <p><%= booking_detail.booked_on.try(:strftime, '%d/%m/%Y') %></p>
+                </li>
+                <li>
+                  <span
+                    class=""><%= BookingDetail.human_attribute_name('total_amount_paid')%></span>
+                  <p><%= number_to_indian_currency(booking_detail.total_amount_paid) %></p>
+                  <div class="small">* Considers processed <%= Receipt.model_name.human %> only</div>
+                </li>
+                <li>
+                  <span
+                    class=""><%= BookingDetail.human_attribute_name('pending_balance')%></span>
+                  <p><%= number_to_indian_currency(booking_detail.pending_balance({strict: true})) %></p>
+                </li>
+              </ul>
+              <div class="mt-5 alert alert-primary col-md-12 col-lg-12 col-xs-12 col-sm-12 float-start">
+                <% template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'booking_details/_details').first %>
+                <% if template.present? %>
+                  <% @bd = booking_detail %>
+                  <%= get_view_erb(template) %>
+                <% end %>
+              </div>
+            <% end %>
+        </div>
+      </div>
     </div>
-  <% end %>
-</div>
