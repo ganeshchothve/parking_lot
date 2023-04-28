@@ -1,0 +1,58 @@
+<div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 br-l-1 no-pd after-show d-none pt-5" id="unit-description">
+  <div class="row">
+    <div class="col-lg-4">
+      <h2 class="fn-14 mb-0 d-inline-block"><%= t('controller.searches.apartments.header') %></h2>
+    </div>
+    <div class="col-lg-8 text-end">
+      <%#= link_to I18n.t("controller.searches.cost_sheet_and_payment_schedule.link_name"), "javascript:;", class: 'fn-14 print_cs_ps text-primary mb-3 d-block', target: "_blank" %>
+    </div>
+  </div>
+  <div class="card selected-aprt-card">
+    <div class="card-body p-2 px-3">
+      <div class="row">
+        <div class="col-lg-7">
+          <div data-placeholder="name" class="fn-20 theme-txt-color mb-3"></div>
+          <!--<div class="alert-box pb-3 mt-2">-->
+            <!-- whenever give animation on bell only add class (bell-anime) -->
+            <!-- <span class="info bell-anime" data-placeholder="gamification"></span>
+          </div>-->
+          <ul class="apartments-info-list list-unstyled row text-start mb-0">
+            <li class="col-lg-6">
+              <span class="desc d-block fn-16 font-medium theme-txt-light"><%= I18n.t("mongoid.attributes.project_unit.floor") %></span>
+              <span class="title d-block fn-16 mb-3" data-placeholder="floor"></span>
+            </li>
+            <li class="col-lg-6">
+              <span class="desc d-block fn-16 font-medium theme-txt-light"><%= I18n.t("mongoid.attributes.project_unit.apartment") %></span>
+              <span class="title d-block fn-16 mb-3" data-placeholder="floor_order"></span>
+            </li>
+            <li class="col-lg-6">
+              <span class="desc d-block fn-16 font-medium theme-txt-light"><%= I18n.t("mongoid.attributes.project_unit.carpet_sq") %></span>
+              <span class="title d-block fn-16 mb-3" data-placeholder="carpet"></span>
+            </li>
+            <li class="col-lg-6">
+              <span class="desc d-block fn-16 font-medium theme-txt-light"><%= I18n.t("mongoid.attributes.project_unit.facing") %></span>
+              <span class="title d-block fn-16 mb-3" data-placeholder="facing"></span>
+            </li>
+            <li class="col-lg-6">
+              <span class="desc d-block fn-16 font-medium theme-txt-light"><%= I18n.t("mongoid.attributes.project_unit.agreement_price") %></span>
+              <span class="title d-block fn-16" data-placeholder="agreement_price"></span>
+            </li>
+            <li class="col-lg-6">
+              <span class="desc d-block fn-16 font-medium theme-txt-light"><%= I18n.t("mongoid.attributes.project_unit.all_inclusive_price") %></span>
+              <span class="title d-block fn-16" data-placeholder="all_inclusive_price"></span>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-5">
+          <img class="img-fluid" style="width: 100%; display: block;" data-placeholder="unit_image" />
+          <div class="float-right">
+            <a data-bs-toggle="modal" data-bs-target="#floorPlanImage" href="javascript:;" class="unit_image_container"
+              style="display:none;">
+              <%= I18n.t("global.link_to.click_to_zoom") %>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -13,7 +13,7 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 no-pd">
+        <div class="col-lg-9 col-xs-12 col-md-9 col-sm-12 no-pd">
           <div class="box-card relative bg-white rounded">
             <div id="project-tower-carousel" class="carousel slide w-100" data-ride="carousel">
               <div class="carousel-indicators">
@@ -111,12 +111,30 @@
             </div>
           </div>
         </div>
+        <div class="col-lg-3 col-xs-12 col-md-3 col-sm-12 no-pd">
+          <%= render "unit_data"%>
+        </div>
       </div>
     </div>
   </section>
 <% end %>
 <%= javascript_tag do %>
-$(document).ready(function(){
-setTimeout(function(){ location.reload(); }, 60000);
-});
+  $(document).ready(function(){
+    setTimeout(function(){ location.reload(); }, 60000);
+    var units = <%= raw @units.to_json(methods: [:calculate_agreement_price, :calculate_all_inclusive_price, :calculated_costs, :calculated_data, :calculated_costs]) %>;
+    var assets = <%= raw Asset.where(booking_portal_client_id: current_client.try(:id)).in(assetable_id: @units.pluck(:unit_configuration_id)).to_json %>
+    $(document).on('click', '[data-jquery-selector="unit-card"]', function(){
+      var unit_id = $(this).data("unit-id");
+      $('[data-jquery-selector="unit-card"]').removeClass("selected-aprt");
+      $(this).addClass("selected-aprt");
+      $("#project_unit_id").val(unit_id);
+      $('.next-btn').removeAttr('disabled')
+      var unit = _.find(units, function(u){ return u._id == unit_id });
+      var unit_assets = _.filter(assets, function(a){return a.assetable_id == unit.unit_configuration_id});
+      showUnitData(unit, unit_assets);
+      let currentUserRoleGroup = <%= raw current_user_role_group.to_json %>
+      $(".print_cs_ps").attr("href", "/<%= current_user_role_group %>/project_units/"+ unit_id + "/quotation");
+    });
+  });
 <% end %>
+
