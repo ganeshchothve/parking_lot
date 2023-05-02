@@ -345,7 +345,7 @@ class SearchesController < ApplicationController
     if project
       @lead = Lead.find_or_initialize_by(booking_portal_client_id: current_client.id, user_id: current_user.id, project_id: project.id)
       if @lead.new_record?
-        @lead.assign_attributes(first_name: current_user.first_name, last_name: current_user.last_name)
+        @lead.assign_attributes(first_name: current_user.first_name, last_name: current_user.last_name, email: current_user.email, phone: current_user.phone)
         @lead.save
       end
     end

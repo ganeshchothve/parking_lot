@@ -62,7 +62,7 @@ class Buyer::UsersController < BuyerController
     if params[:project_id].present? && current_user.buyer?
       @lead = Lead.find_or_initialize_by(booking_portal_client_id: current_client, project_id: params[:project_id], user_id: current_user.id)
       if @lead.new_record?
-        @lead.assign_attributes(first_name: current_user.first_name, last_name: current_user.last_name)
+        @lead.assign_attributes(first_name: current_user.first_name, last_name: current_user.last_name, email: current_user.email, phone: current_user.phone)
         @lead.save
       end
       redirect_to resource_wise_redirection(params[:redirect_to])

@@ -1,5 +1,8 @@
-<% random_id = "crs_#{SecureRandom.hex(2)}" %>
-
+<% 
+  random_id = "crs_#{SecureRandom.hex(2)}" 
+  required = defined?(field_required) && field_required ? field_required : false
+  klass_label_required = defined?(field_required) && field_required ? "label-required" : ""
+%>
 <% if defined?(add_type) && add_type.present? %>
   <%= f.hidden_field :address_type, value: add_type %>
 <% end %>
@@ -7,30 +10,14 @@
 <div class="row">
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :address1 %>
-      <%= f.text_field :address1, class: 'form-control' %>
+      <%= f.label :address1, class: klass_label_required %>
+      <%= f.text_field :address1, class: 'form-control', required: required %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :address2 %>
-      <%= f.text_field :address2, class: 'form-control' %>
-    </div>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :country %>
-      <%= f.text_field :country, collection: [], prompt: :translate, input_html: { class: 'crs-country', data: { 'region-id' => random_id, 'default-value' => f.object.present? ? f.object.country : ""} }, class: 'form-control' %>
-    </div>
-  </div>
-
-  <div class="col-md-6">
-    <div class="mb-3">
-      <%= f.label :state %>
-      <%= f.text_field :state, collection: [], prompt: :translate, input_html: { id: random_id, data: { 'default-value': f.object.present? ? f.object.state : "" } }, as: :select, class: 'form-control' %>
+      <%= f.label :address2, class: klass_label_required %>
+      <%= f.text_field :address2, class: 'form-control', required: required %>
     </div>
   </div>
 </div>
@@ -38,14 +25,30 @@
 <div class="row">
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :city %>
-      <%= f.select :city, options_for_select((f.object.try(:country) == 'India' ? Address::CITY : [f.object.try(:city)]), f.object.try(:city) ? f.object.city : ''), {}, class: :selectize, data: {create: true} %>
+      <%= f.label :country, class: klass_label_required %>
+      <%= f.text_field :country, collection: [], prompt: :translate, input_html: { class: 'crs-country', data: { 'region-id' => random_id, 'default-value' => f.object.present? ? f.object.country : ""} }, class: 'form-control', required: required %>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :state, class: klass_label_required %>
+      <%= f.text_field :state, collection: [], prompt: :translate, input_html: { id: random_id, data: { 'default-value': f.object.present? ? f.object.state : "" } }, as: :select, class: 'form-control', required: required %>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="mb-3">
+      <%= f.label :city, class: klass_label_required %>
+      <%= f.select :city, options_for_select((f.object.try(:country) == 'India' ? Address::CITY : [f.object.try(:city)]), f.object.try(:city) ? f.object.city : ''), {}, class: :selectize, data: {create: true}, required: required %>
     </div>
   </div>
   <div class="col-md-6">
     <div class="mb-3">
-      <%= f.label :zip %>
-      <%= f.text_field :zip, class: 'form-control' %>
+      <%= f.label :zip, class: klass_label_required %>
+      <%= f.text_field :zip, class: 'form-control', required: required %>
     </div>
   </div>
 </div>
@@ -66,4 +69,3 @@
     });
   });
 <% end %>
-
