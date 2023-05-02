@@ -79,7 +79,7 @@
                     <%= f.input :pan_number, required: true, wrapper_html: { class: 'col-md-6' } %>
                   <% end %>
                   <% if policy([:admin, @user_kyc]).editable_field?("aadhaar") %>
-                    <%= f.input :aadhaar, wrapper_html: { class: 'col-md-6' } %>
+                    <%= f.input :aadhaar, required: true, wrapper_html: { class: 'col-md-6' } %>
                   <% end %>
                 </div>
 
@@ -136,9 +136,9 @@
               <% end %>
               <% if policy([:admin, @user_kyc]).editable_field?("dob") %>
                 <div class="col-md-6">
-                  <%= f.label :dob %>
+                  <%= f.label :dob, class: "label-required" %>
                   <% date = (f.object.dob.present? ? f.object.dob.strftime("%d/%m/%Y") : "") %>
-                  <%= f.text_field :dob, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date %>
+                  <%= f.text_field :dob, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date, required: true %>
                 </div>
               <% end %>
             </div>
@@ -158,7 +158,7 @@
                 <div class="col-md-12">
                   <% permanent_address = f.object.addresses.where(address_type: 'permanent').first || f.object.addresses.build(address_type: 'permanent') %>
                   <%= f.fields_for :addresses, permanent_address do |permanent_address_form| %>
-                    <%= render "addresses/form_fields", f: permanent_address_form, add_type: 'permanent' %>
+                    <%= render "addresses/form_fields", f: permanent_address_form, add_type: 'permanent', field_required: true %>
                   <% end %>
                 </div>
               </div>
@@ -223,8 +223,8 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="mb-3">
-                      <%= f.label :designation %>
-                      <%= f.text_field :designation, class: 'form-control' %>
+                      <%= f.label :designation, class: "label-required" %>
+                      <%= f.text_field :designation, required: true, class: 'form-control' %>
                     </div>
                   </div>
                   <div class="col-md-6">

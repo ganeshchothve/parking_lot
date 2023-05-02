@@ -46,7 +46,9 @@ label.label-required:after {
   color: $form-feedback-invalid-color;
   font-weight: normal;
 }
-
+label abbr {
+  color: $form-feedback-invalid-color;
+}
 [data-toggle="tab"].tab-error:after{
   content: "\f071";
   font: normal normal normal 14px/1 FontAwesome;
