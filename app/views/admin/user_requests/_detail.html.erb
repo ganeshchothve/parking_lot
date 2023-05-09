@@ -1,7 +1,7 @@
 <section class="bookings my-4 mb-4">
-  <div class="container">
-    <div class="box-card">
-      <div class="box-header bg-gradient br-rd-tr-4 row">
+  <div class="">
+    <div class="box-card card mb-4">
+      <div class="card-header box-header bg-gradient br-rd-tr-4 h-auto">
         <div class="col-11 no-pd">
           <h2><%= t("mongoid.models.user_request/#{params[:request_type]}", count: 1) %> <%= I18n.t("mongoid.attributes.user_request/requestable_type.#{@user_request.requestable_type.tableize.singularize }") %></h2>
         </div>
@@ -18,7 +18,7 @@
           </table>
         </div>
       </div>
-      <div class="box-content br-rd-bl-4 bg-white row">
+      <div class="card-body box-content br-rd-bl-4 pt-0 px-4 pb-3">
         <div class="col-md-12 col-lg-12 col-sm-12">
           <ul class="booking-apart-info clear">
             <% if @user_request.requestable_id.present? %>
