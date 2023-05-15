@@ -1,7 +1,7 @@
 module ProjectDashboardConcern
   extend ActiveSupport::Concern
 
-  def conversion_report
+  def project_wise_conversion_report
     options = set_matcher
     @conversion_report_data = DashboardDataProvider.conversion_report_data(current_user, options)
   end

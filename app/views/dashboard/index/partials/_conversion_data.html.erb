@@ -16,7 +16,7 @@
         </div>
       </div>
       <div class="col-lg-12 p-0">
-        <div id="conversion_report"></div>
+        <div id="project_wise_conversion_report"></div>
       </div>
     </div>
   </div>
@@ -26,7 +26,7 @@
     <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
     <a href="javascript:;" class="close-filter-btn btn-close"></a>
   </div>
-  <%= form_tag conversion_report_path, method: "get", remote: true, id: "conversion_report_filter", class: 'filter-form-modal' do %>
+  <%= form_tag project_wise_conversion_report_path, method: "get", remote: true, id: "project_wise_conversion_report_filter", class: 'filter-form-modal' do %>
     <div class="filter-content modal-body ps-0 pe-0 theme-form">
       <div class="row">
         <div class="mb-3 col-12">
@@ -47,10 +47,10 @@
 </div>
 <%= javascript_tag do %>
   $(document).ready(function(){
-    FormInitializer.init($("#conversion_report_filter"));
+    FormInitializer.init($("#project_wise_conversion_report_filter"));
   });
   $.ajax({
-    url: "<%= conversion_report_path %>",
+    url: "<%= project_wise_conversion_report_path %>",
     type: "get",
   });
 <% end %>
