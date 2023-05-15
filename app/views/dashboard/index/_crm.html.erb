@@ -66,6 +66,16 @@
           </div>
         </div>
       </div>
+      <div class="col-lg-<%= current_user.role.in?(%w(admin superadmin)) ? '2' : '4' %> col-xs-6 col-md-4 col-sm-4 mb-3">
+        <div class="box-card shadow rounded">
+          <div class="box-header bg-theme br-rd-tr-4 rounded-top position-relative">
+            <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle"><%= Receipt.model_name.human(count: 3) %></h4>
+          </div>
+          <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
+            <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.total_receipts_count %></span>
+          </div>
+        </div>
+      </div>
     <% end %>
   </div>
 </div>
