@@ -72,7 +72,7 @@
             <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle"><%= Receipt.model_name.human(count: 3) %></h4>
           </div>
           <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
-            <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.total_receipts_count %></span>
+            <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.total_receipts_count(current_user) %></span>
           </div>
         </div>
       </div>

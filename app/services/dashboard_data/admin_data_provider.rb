@@ -41,8 +41,8 @@ module DashboardData
         Scheme.approved.where(booking_portal_client: user.booking_portal_client).count
       end
 
-      def total_receipts_count
-        Receipt.in(status: ['success', 'pending', 'clearance_pending']).count
+      def total_receipts_count(user)
+        Receipt.where(booking_portal_client: user.booking_portal_client).in(status: ['success', 'pending', 'clearance_pending']).count
       end
 
       def receipt_block(user, params)
