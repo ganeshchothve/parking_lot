@@ -41,7 +41,7 @@ module DashboardData
         Scheme.approved.where(booking_portal_client: user.booking_portal_client).count
       end
 
-      def total_receipts_count
+      def total_receipts_count(user)
         Receipt.where(booking_portal_client: user.booking_portal_client).in(status: ['success', 'pending', 'clearance_pending']).count
       end
 
