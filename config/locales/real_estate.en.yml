@@ -1548,6 +1548,7 @@ en-REAL_ESTATE:
         status: "Status"
         payment_mode: "Payment Mode"
         total_amount: "Total Amount"
+        count: "Count"
 
       search:
         configuration: "Configuration"
