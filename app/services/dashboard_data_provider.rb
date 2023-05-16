@@ -101,7 +101,7 @@ module DashboardDataProvider
     booking_data
   end
 
-  def self.conversion_report_data(current_user, options)
+  def self.project_wise_conversion_report_data(current_user, options)
     matcher = options[:matcher].present? ? options[:matcher] : {}
     project_ids = matcher[:project_id][:$in]
 

@@ -3,7 +3,7 @@ module ProjectDashboardConcern
 
   def project_wise_conversion_report
     options = set_matcher
-    @conversion_report_data = DashboardDataProvider.conversion_report_data(current_user, options)
+    @conversion_report_data = DashboardDataProvider.project_wise_conversion_report_data(current_user, options)
   end
 
   def set_matcher
