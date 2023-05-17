@@ -289,7 +289,7 @@ module DashboardDataProvider
 
   def self.receipts_dashboard(user, options={})
     options ||= {}
-    matcher = options[:matcher]
+    matcher = options[:matcher] || {}
     group_by = options[:group_by]
     grouping = {
       payment_mode: "$payment_mode",
