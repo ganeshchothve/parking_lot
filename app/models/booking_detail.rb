@@ -148,6 +148,7 @@ class BookingDetail
   scope :filter_by_agreement_date, ->(date) { start_date, end_date = date.split(' - '); where(agreement_date: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day)
   }
   scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
+  scope :filter_by_registration_done, ->(registration_done) { where(registration_done: registration_done)}
   scope :incentive_eligible, ->(category) do
     case category
     when 'spot_booking'

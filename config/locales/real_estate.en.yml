@@ -828,7 +828,7 @@ en-REAL_ESTATE:
         manager_id: "Channel Partner"
         template_docs: Documents
         print_document: Print Document
-        conversion_ratio: Conversion Ratio
+        conversion_ratio: Conversion % EOI to Booking
       booking_detail/selldo_status:
         booked_tentative: "tentative"
         booked_confirmed: "confirmed"
@@ -2842,6 +2842,7 @@ en-REAL_ESTATE:
         approved: "Approved"
         invoice_raised: "Invoice Raised"
         bookings_not_eligible: "Bookings not eligible for brokerage"
+        registration_done: "Registration Done Bookings"
 
       events:
         approval_status:

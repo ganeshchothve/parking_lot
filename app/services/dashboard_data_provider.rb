@@ -118,8 +118,8 @@ module DashboardDataProvider
     project_ids.each do |project_id|
       bookings_count = bookings[project_id].try(:count) || 0
       token_payment_count = token_payments[project_id].try(:count) || 0
-      token_payments_to_bookings_ratio = ( token_payment_count / bookings_count * 100 ).round rescue '0'
-      conversion_data << {project_id: project_id, leads: leads[project_id].try(:count) || 0, site_visits: site_visits[project_id].try(:count) || 0, revisits: revisits[project_id].try(:count) || 0, token_payments: token_payment_count, bookings: bookings_count, registered_bookings: registered_bookings[project_id].try(:count) || 0, conversion_ratio: token_payments_to_bookings_ratio}
+      token_payments_to_bookings_ratio = ( (token_payment_count / bookings_count.to_f) * 100 ).round rescue '0'
+      conversion_data << {project_id: project_id, leads: leads[project_id].try(:count) || 0, site_visits: site_visits[project_id].try(:count) || 0, revisits: revisits[project_id].try(:count) || 0, token_payments: token_payment_count, bookings: bookings_count, registered_bookings: registered_bookings[project_id].try(:count) || 0, conversion_ratio: ( '<b>' + token_payments_to_bookings_ratio.to_s + ' %</b>').html_safe }
     end
     conversion_data
   end

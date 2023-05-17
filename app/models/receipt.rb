@@ -86,6 +86,7 @@ class Receipt
     _booking_detail_id = _booking_detail_id == '' ? { '$in' => ['', nil] } : _booking_detail_id
     where(booking_detail_id: _booking_detail_id)
   end
+  scope :filter_by_booking_detail_id_presence, ->(flag) { flag.to_s == 'true' ? where(booking_detail_id: { '$nin': [ '', nil ] } ) : where(booking_detail_id: { '$in': [ '', nil ] } ) }
   scope :filter_by_manager_id, ->(manager_id){ where(manager_id: manager_id) }
   scope :filter_by_cp_manager_id, ->(cp_manager_id){ where(cp_manager_id: cp_manager_id) }
 
