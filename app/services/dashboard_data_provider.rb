@@ -69,9 +69,8 @@ module DashboardDataProvider
     data.dig(0, "max") || 0
   end
 
-  def self.booking_details_data(current_user, options)
-    matcher = {}
-    matcher = options[:matcher] if options[:matcher].present?
+  def self.project_wise_booking_details_data(current_user, matcher = {})
+    matcher = matcher.with_indifferent_access
     project_ids = matcher[:project_id][:$in].map(&:to_s)
     booking_stages = ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]
     data = BookingDetail.collection.aggregate([
@@ -99,6 +98,30 @@ module DashboardDataProvider
       end
     end
     booking_data
+  end
+
+  def self.project_wise_conversion_report_data(current_user, matcher = {})
+    matcher = matcher.with_indifferent_access
+    project_ids = matcher[:project_id][:$in]
+
+    leads = Lead.where(matcher).group_by{|p| p.project_id}
+    all_site_visits = SiteVisit.where(matcher)
+    site_visits = all_site_visits.group_by{|p| p.project_id}
+    revisits = all_site_visits.where(is_revisit: true).group_by{|p| p.project_id}
+
+    all_bookings = BookingDetail.where(matcher)
+    bookings = all_bookings.group_by{|p| p.project_id}
+    registered_bookings = all_bookings.where(registration_done: true).group_by{|p| p.project_id}
+    token_payments = Receipt.where(matcher).where(payment_type: 'token').ne(booking_detail_id: nil).group_by{|p| p.project_id}
+
+    conversion_data = []
+    project_ids.each do |project_id|
+      bookings_count = bookings[project_id].try(:count) || 0
+      token_payment_count = token_payments[project_id].try(:count) || 0
+      token_payments_to_bookings_ratio = ( token_payment_count / bookings_count * 100 ).round rescue '0'
+      conversion_data << {project_id: project_id, leads: leads[project_id].try(:count) || 0, site_visits: site_visits[project_id].try(:count) || 0, revisits: revisits[project_id].try(:count) || 0, token_payments: token_payment_count, bookings: bookings_count, registered_bookings: registered_bookings[project_id].try(:count) || 0, conversion_ratio: token_payments_to_bookings_ratio}
+    end
+    conversion_data
   end
 
   def self.cp_performance_walkins(user, options={})

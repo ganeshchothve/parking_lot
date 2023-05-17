@@ -1511,6 +1511,7 @@ en:
         token_type: "Token Type"
         sort_by: "Sort By"
         booking_detail_id: "Booking Detail"
+        eoi: "EOI"
       receipt/status:
         pending: "Pending"
         clearance_pending: "Clearance Pending"
@@ -1857,6 +1858,7 @@ en:
         manager_id: "Channel Partner"
         rejection_reason: "Rejection Reason"
         is_revisit: "Revisit"
+        revisits: "Revisits"
       site_visit/status:
         scheduled: "Scheduled"
         pending: "Pending"
@@ -3075,6 +3077,7 @@ en:
           incentive_deduction: "Project Wise Incentive Deduction Summary"
           overview: "Overview"
           booking_count: "Project Wise Booking Count"
+          conversion_report: "Project Wise Conversion Report"
           actual_revenue_report: "Project Wise Actual Revenue Reports"
           tentative_revenue_reports: "Project Wise Tentative Revenue Reports"
           applying_filters:

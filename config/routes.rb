@@ -469,7 +469,8 @@ Rails.application.routes.draw do
     get :project_wise_actual_revenue, to: "dashboard#project_wise_actual_revenue"
     #get :download_brochure, to: 'dashboard#download_brochure'
     get :sales_board, to: 'dashboard#sales_board'
-    get :booking_details_counts, to: 'dashboard#booking_details_counts'
+    get :project_wise_booking_details_counts, to: 'dashboard#project_wise_booking_details_counts'
+    get :project_wise_conversion_report, to: 'dashboard#project_wise_conversion_report'
     get :team_lead_dashboard, to: 'dashboard#team_lead_dashboard'
     # get :dashboard_landing_page, to: 'dashboard#dashboard_landing_page'
     get :payout_dashboard, to: 'dashboard#payout_dashboard'
