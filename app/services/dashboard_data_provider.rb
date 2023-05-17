@@ -69,9 +69,8 @@ module DashboardDataProvider
     data.dig(0, "max") || 0
   end
 
-  def self.booking_details_data(current_user, options)
-    matcher = {}
-    matcher = options[:matcher] if options[:matcher].present?
+  def self.project_wise_booking_details_data(current_user, matcher = {})
+    matcher = matcher.with_indifferent_access
     project_ids = matcher[:project_id][:$in].map(&:to_s)
     booking_stages = ["blocked", "under_negotiation", "booked_tentative", "booked_confirmed", "cancelled"]
     data = BookingDetail.collection.aggregate([
@@ -101,8 +100,8 @@ module DashboardDataProvider
     booking_data
   end
 
-  def self.project_wise_conversion_report_data(current_user, options)
-    matcher = options[:matcher].present? ? options[:matcher] : {}
+  def self.project_wise_conversion_report_data(current_user, matcher = {})
+    matcher = matcher.with_indifferent_access
     project_ids = matcher[:project_id][:$in]
 
     leads = Lead.where(matcher).group_by{|p| p.project_id}
