@@ -12,7 +12,7 @@ module ProjectDashboardConcern
   private
 
   def set_matcher
-    options = {}
+    options = { booking_portal_client_id: current_client.id }
     if params[:dates].present?
       @dates = params[:dates].split(' - ')
       start_date, end_date = @dates
@@ -26,7 +26,6 @@ module ProjectDashboardConcern
     else
       options[:project_id] = {"$in": Project.where(Project.user_based_scope(current_user)).pluck(:_id).uniq }
     end
-    options[:booking_portal_client_id] = current_client.id
     options
   end
 
