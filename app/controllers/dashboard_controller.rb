@@ -2,7 +2,6 @@ class DashboardController < ApplicationController
   include SourcingManagerDashboardConcern
   include BillingTeamDashboardConcern
   include ChannelPartnerDashboardConcern
-  include BookingDetailDashboardConcern
   include RevenueReportDashboardConcern
   include ChannelPartnerLeaderboardConcern
   include ProjectDashboardConcern

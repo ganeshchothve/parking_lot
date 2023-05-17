@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="col-lg-12 p-0">
-        <div id="booking_details_counts"></div>
+        <div id="project_wise_booking_details_counts"></div>
       </div>
     </div>
   </div>
@@ -27,7 +27,7 @@
     <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
     <a href="javascript:;" class="close-filter-btn btn-close"></a>
   </div>
-  <%= form_tag booking_details_counts_path, method: "get", remote: true, id: "booking_details_counts_filter", class: 'filter-form-modal' do %>
+  <%= form_tag project_wise_booking_details_counts_path, method: "get", remote: true, id: "project_wise_booking_details_counts_filter", class: 'filter-form-modal' do %>
     <div class="filter-content modal-body ps-0 pe-0 theme-form">
       <div class="row">
         <div class="mb-3 col-12">
@@ -55,10 +55,10 @@
 </div>
 <%= javascript_tag do %>
   $(document).ready(function(){
-    FormInitializer.init($("#booking_details_counts_filter"));
+    FormInitializer.init($("#project_wise_booking_details_counts_filter"));
   });
   $.ajax({
-    url: "<%= booking_details_counts_path %>",
+    url: "<%= project_wise_booking_details_counts_path %>",
     type: "get",
   });
 <% end %>
