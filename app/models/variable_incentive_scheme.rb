@@ -34,7 +34,7 @@ class VariableIncentiveScheme
   scope :filter_by_search, ->(search) { where(name: ::Regexp.new(::Regexp.escape(search), 'i')) }
   scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_project_id, ->(project_id) { where(project_ids: {"$in": [project_id]}) }
-  scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }
+  scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in" => project_ids}) : all }
   scope :filter_by_date_range, ->(date) {start_date, end_date = date.split(' - '); where(start_date: {'$lte': end_date}, end_date: {'$gte': start_date})}
 
   def project_names

@@ -74,7 +74,7 @@ class Invoice
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
   scope :filter_by_customer_id, ->(customer_id) { where(customer_id: customer_id) }
   scope :filter_by_lead_id, ->(lead_id) { where(lead_id: lead_id) }
-  scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }
+  scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in" => project_ids}) : all }
   scope :filter_by_manager_id, ->(manager_id) { where(manager_id: manager_id) }
   scope :filter_by_channel_partner_id, ->(channel_partner_id) { where(channel_partner_id: channel_partner_id) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }

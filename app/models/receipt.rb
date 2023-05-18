@@ -70,7 +70,7 @@ class Receipt
 
   scope :filter_by_status, ->(_status) { where(status: { '$in' => _status }) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
-  scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }
+  scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in" => project_ids}) : all }
   scope :filter_by_lead_id, ->(lead_id){ where(lead_id: lead_id)}
   scope :filter_by_receipt_id, ->(_receipt_id) { where(receipt_id: /#{_receipt_id}/i) }
   scope :filter_by_token_number, ->(_token_number) { where(token_number: _token_number) }
