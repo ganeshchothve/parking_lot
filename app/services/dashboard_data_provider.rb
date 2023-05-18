@@ -112,7 +112,7 @@ module DashboardDataProvider
     all_bookings = BookingDetail.where(matcher)
     bookings = all_bookings.group_by{|p| p.project_id}
     registered_bookings = all_bookings.where(registration_done: true).group_by{|p| p.project_id}
-    token_payments = Receipt.where(matcher).where(payment_type: 'token').ne(booking_detail_id: nil).group_by{|p| p.project_id}
+    token_payments = Receipt.where(matcher).where(payment_type: 'token').group_by{|p| p.project_id}
 
     conversion_data = []
     project_ids.each do |project_id|
