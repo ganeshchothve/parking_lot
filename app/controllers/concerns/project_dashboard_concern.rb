@@ -26,7 +26,6 @@ module ProjectDashboardConcern
     else
       options[:project_id] = {"$in": Project.where(Project.user_based_scope(current_user)).pluck(:_id).uniq }
     end
-    @_project_ids = options[:project_id][:$in]
     options
   end
 

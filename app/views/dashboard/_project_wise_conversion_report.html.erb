@@ -4,8 +4,8 @@
     start_date, end_date = @dates
     fltr_params[:created_at] = "#{start_date} - #{end_date}"
   end
-  if @_project_ids.present?
-    fltr_params[:project_ids] = @_project_ids
+  if params[:project_ids].present?
+    fltr_params[:project_ids] = params[:project_ids]
   end
 %>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 mb-5">
