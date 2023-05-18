@@ -1534,6 +1534,7 @@ en:
       receipt/payment_types:
         agreement: "Agreement"
         stamp_duty: " Stamp Duty"
+        token: "Token"
       receipt/sort_options:
         created_at.asc: "Created - Oldest First"
         created_at.desc: "Created - Newest First"
