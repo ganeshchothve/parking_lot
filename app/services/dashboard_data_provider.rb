@@ -287,10 +287,11 @@ module DashboardDataProvider
     ]
   end
 
-  def self.receipts_dashboard(user, options={})
-    options ||= {}
-    matcher = options[:matcher] || {}
+  def self.receipt_details_data(user, options={})
+    options = options.with_indifferent_access
     group_by = options[:group_by]
+    matcher = options[:matcher] || {}
+    matcher = matcher.with_indifferent_access
     grouping = {
       payment_mode: "$payment_mode",
       status: "$status"

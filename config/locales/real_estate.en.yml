@@ -1515,6 +1515,7 @@ en-REAL_ESTATE:
         sort_by: "Sort By"
         booking_detail_id: "Booking Detail"
         eoi: "EOI"
+        count: "Count"
       receipt/status:
         pending: "Pending"
         clearance_pending: "Clearance Pending"
@@ -3091,6 +3092,8 @@ en-REAL_ESTATE:
           applying_filters:
             step1: "Applying filters will only show 15 records irrespective of the total records count. Acitve Filter Export will contain all the filtered records. The"
             step2: "count will depend on the filtered results."
+        receipts:
+          details_report: "Payments"
 
     emails:
       index:

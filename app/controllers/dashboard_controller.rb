@@ -5,6 +5,7 @@ class DashboardController < ApplicationController
   include RevenueReportDashboardConcern
   include ChannelPartnerLeaderboardConcern
   include ProjectDashboardConcern
+  include ReceiptDashboardConcern
 
   before_action :authenticate_user!, only: [:index, :documents, :dashboard_landing_page, :channel_partners_leaderboard, :channel_partners_leaderboard_without_layout]
   #before_action :set_lead, only: :index, if: proc { current_user.buyer? }

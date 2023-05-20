@@ -1,0 +1,47 @@
+<section class="user-db-sec-6 device-pd">
+  <div class="box-card">
+    <a data-bs-toggle="collapse" href="#receipt_report" role="button" aria-expanded="false" aria-controls="receipt_report" class='font-weight-bold text-decoration-none'>
+      <div class="card-header">
+        <%= I18n.t("controller.dashboard.link_to.receipts.details_report") %>
+      </div>
+    </a>
+    <div class="card-body collapse show" id='receipt_report'>
+      <div class="table-btn-set float-end">
+        <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
+          <i class="fa fa-filter fill-theme"></i>
+        </button>
+      </div>
+
+      <div class="filter-box modal-content px-3 fixed-header-footer">
+        <div class="filter-header modal-header">
+          <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
+          <a href="javascript:;" class="close-filter-btn btn-close"></a>
+        </div>
+        <%= form_tag receipts_details_report_path, method: "get", remote: true, id: "receipts_details_report_filter", class: 'filter-form-modal' do %>
+          <div class="filter-content modal-body ps-0 pe-0 theme-form">
+            <div class="row">
+              <div class="mb-3 col-12">
+                <%= select_tag "receipt_fltrs[group_by]", options_for_select(DashboardDataProvider.receipts_available_group_by.collect{|x| [x[:text], x[:id]]}, (params[:receipt_fltrs].present? && params[:receipt_fltrs][:group_by].present? ? params[:receipt_fltrs][:group_by] : [])), {class: "selectize", prompt: "Select", multiple: true} %>
+              </div>
+            </div>
+          </div>
+          <div class="filter-footer modal-footer text-end">
+            <%= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
+            <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.cancel") %></button>
+          </div>
+        <% end %>
+      </div>
+      <div class="row" id = "receipts_details_report"></div>
+    </div>
+  </div>
+</section>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    FormInitializer.init($("#receipts_details_report_filter"));
+    $.ajax({
+      url: "<%= receipts_details_report_path %>",
+      type: "get",
+    });
+  });
+<% end %>

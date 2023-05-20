@@ -1,50 +1,52 @@
 <%
-  fltr_params = { booking_portal_client_id: current_client.id }
+  fltr_params = { booking_portal_client_id: current_client.id, project_ids: params[:project_ids] }
   if @dates.present?
     start_date, end_date = @dates
     fltr_params[:created_at] = "#{start_date} - #{end_date}"
   end
-  if params[:project_ids].present?
-    fltr_params[:project_ids] = params[:project_ids]
-  end
 %>
-<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 mb-5">
-  <table class="table table-responsive table-color">
-    <thead>
-      <tr>
-        <th><%= Project.model_name.human %></th>
-        <th><%= Lead.model_name.human(count: 2) %></th>
-        <th><%= SiteVisit.model_name.human(count: 2) %></th>
-        <th><%= I18n.t("mongoid.attributes.site_visit.revisits") %></th>
-        <th><%= I18n.t("mongoid.attributes.receipt.eoi") %></th>
-        <th><%= BookingDetail.model_name.human(count: 2) %></th>
-        <th><%= I18n.t("controller.booking_details.link_to.registration_done") %></th>
-        <th><%= I18n.t("mongoid.attributes.booking_detail.conversion_ratio") %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @conversion_report_data.each do |cr| %>
+
+<% if @conversion_report_data.present? %>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
         <tr>
-          <td data-title='<%= Project.model_name.human %>'><%= Project.where(booking_portal_client_id: current_client.try(:id), _id: cr[:project_id]).first.try(:name).try(:titleize) || "-" %></td>
-          <td data-title='<%= Lead.model_name.human(count: 2) %>'><%= link_to cr[:leads], admin_leads_path({ fltrs: { project_id: cr[:project_id] }.merge(fltr_params) }) %></td>
-          <td data-title='<%= SiteVisit.model_name.human(count: 2) %>'><%= link_to cr[:site_visits], admin_site_visits_path({ fltrs: { project_id: cr[:project_id] }.merge(fltr_params) }) %></td>
-          <td data-title='<%= I18n.t("mongoid.attributes.site_visit.revisits") %>'><%= link_to cr[:revisits], admin_site_visits_path({ fltrs: { project_id: cr[:project_id], is_revisit: true }.merge(fltr_params) }) %></td>
-          <td data-title='<%= I18n.t("mongoid.attributes.Receipt.eoi") %>'><%= link_to cr[:token_payments], admin_receipts_path({ fltrs: { project_id: cr[:project_id], payment_type: 'token' }.merge(fltr_params) }) %></td>
-          <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><%= link_to cr[:bookings], admin_booking_details_path({ fltrs: { project_id: cr[:project_id] }.merge(fltr_params) }) %></td>
-          <td data-title='<%= I18n.t("controller.booking_details.link_to.registration_done") %>'><%= link_to cr[:registered_bookings], admin_booking_details_path({ fltrs: { project_id: cr[:project_id], registration_done: true }.merge(fltr_params) }) %></td>
-          <td data-title='<%= I18n.t("mongoid.attributes.booking_detail.conversion_ratio") %>'><%= cr[:conversion_ratio] %></td>
+          <th><%= Project.model_name.human %></th>
+          <th><%= Lead.model_name.human(count: 2) %></th>
+          <th><%= SiteVisit.model_name.human(count: 2) %></th>
+          <th><%= I18n.t("mongoid.attributes.site_visit.revisits") %></th>
+          <th><%= I18n.t("mongoid.attributes.receipt.eoi") %></th>
+          <th><%= BookingDetail.model_name.human(count: 2) %></th>
+          <th><%= I18n.t("controller.booking_details.link_to.registration_done") %></th>
+          <th><%= I18n.t("mongoid.attributes.booking_detail.conversion_ratio") %></th>
         </tr>
-      <% end %>
-      <tr>
-        <th data-title="<%= t('global.total') %>"><strong><%= t('global.total') %></strong></th>
-        <td data-title='<%= Lead.model_name.human(count: 2) %>'><strong><%= link_to @conversion_report_data.map{|cr| cr[:leads] }.sum, admin_leads_path({ fltrs: fltr_params }) %></strong></td>
-        <td data-title='<%= SiteVisit.model_name.human(count: 2) %>'><strong><%= link_to @conversion_report_data.map{|cr| cr[:site_visits] }.sum, admin_site_visits_path({ fltrs: fltr_params }) %></strong></td>
-        <td data-title='<%= I18n.t("mongoid.attributes.site_visit.revisits") %>'><strong><%= link_to @conversion_report_data.map{|cr| cr[:revisits] }.sum, admin_site_visits_path({ fltrs: { is_revisit: true }.merge(fltr_params) }) %></strong></td>
-        <td data-title='<%= I18n.t("mongoid.attributes.Receipt.eoi") %>'><strong><%= link_to @conversion_report_data.map{|cr| cr[:token_payments] }.sum, admin_receipts_path({ fltrs: { payment_type: 'token' }.merge(fltr_params) }) %></strong></td>
-        <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><strong><%= link_to @conversion_report_data.map{|cr| cr[:bookings] }.sum, admin_booking_details_path({ fltrs: fltr_params }) %></strong></td>
-        <td data-title='<%= I18n.t("controller.booking_details.link_to.registration_done") %>'><strong><%= link_to @conversion_report_data.map{|cr| cr[:registered_bookings] }.sum, admin_booking_details_path({ fltrs: { registration_done: true }.merge(fltr_params) }) %></strong></td>
-        <td data-title='<%= I18n.t("mongoid.attributes.booking_detail.conversion_ratio") %>'><strong>-</strong></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+      </thead>
+      <tbody>
+        <% @conversion_report_data.each do |cr| %>
+          <tr>
+            <td data-title='<%= Project.model_name.human %>'><%= Project.where(booking_portal_client_id: current_client.try(:id), _id: cr[:project_id]).first.try(:name).try(:titleize) || "-" %></td>
+            <td data-title='<%= Lead.model_name.human(count: 2) %>'><%= link_to cr[:leads], admin_leads_path({ fltrs: { project_id: cr[:project_id] }.merge(fltr_params) }), target: "_blank" %></td>
+            <td data-title='<%= SiteVisit.model_name.human(count: 2) %>'><%= link_to cr[:site_visits], admin_site_visits_path({ fltrs: { project_id: cr[:project_id] }.merge(fltr_params) }), target: "_blank" %></td>
+            <td data-title='<%= I18n.t("mongoid.attributes.site_visit.revisits") %>'><%= link_to cr[:revisits], admin_site_visits_path({ fltrs: { project_id: cr[:project_id], is_revisit: true }.merge(fltr_params) }), target: "_blank" %></td>
+            <td data-title='<%= I18n.t("mongoid.attributes.Receipt.eoi") %>'><%= link_to cr[:token_payments], admin_receipts_path({ fltrs: { project_id: cr[:project_id], payment_type: 'token' }.merge(fltr_params) }), target: "_blank" %></td>
+            <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><%= link_to cr[:bookings], admin_booking_details_path({ fltrs: { project_id: cr[:project_id] }.merge(fltr_params) }), target: "_blank" %></td>
+            <td data-title='<%= I18n.t("controller.booking_details.link_to.registration_done") %>'><%= link_to cr[:registered_bookings], admin_booking_details_path({ fltrs: { project_id: cr[:project_id], registration_done: true }.merge(fltr_params) }), target: "_blank" %></td>
+            <td data-title='<%= I18n.t("mongoid.attributes.booking_detail.conversion_ratio") %>'><%= cr[:conversion_ratio] %></td>
+          </tr>
+        <% end %>
+        <tr>
+          <th data-title="<%= t('global.total') %>"><strong><%= t('global.total') %></strong></th>
+          <td data-title='<%= Lead.model_name.human(count: 2) %>'><strong><%= link_to @conversion_report_data.map{|cr| cr[:leads] }.sum, admin_leads_path({ fltrs: fltr_params }), target: "_blank" %></strong></td>
+          <td data-title='<%= SiteVisit.model_name.human(count: 2) %>'><strong><%= link_to @conversion_report_data.map{|cr| cr[:site_visits] }.sum, admin_site_visits_path({ fltrs: fltr_params }), target: "_blank" %></strong></td>
+          <td data-title='<%= I18n.t("mongoid.attributes.site_visit.revisits") %>'><strong><%= link_to @conversion_report_data.map{|cr| cr[:revisits] }.sum, admin_site_visits_path({ fltrs: { is_revisit: true }.merge(fltr_params) }), target: "_blank" %></strong></td>
+          <td data-title='<%= I18n.t("mongoid.attributes.Receipt.eoi") %>'><strong><%= link_to @conversion_report_data.map{|cr| cr[:token_payments] }.sum, admin_receipts_path({ fltrs: { payment_type: 'token' }.merge(fltr_params) }), target: "_blank" %></strong></td>
+          <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><strong><%= link_to @conversion_report_data.map{|cr| cr[:bookings] }.sum, admin_booking_details_path({ fltrs: fltr_params }), target: "_blank" %></strong></td>
+          <td data-title='<%= I18n.t("controller.booking_details.link_to.registration_done") %>'><strong><%= link_to @conversion_report_data.map{|cr| cr[:registered_bookings] }.sum, admin_booking_details_path({ fltrs: { registration_done: true }.merge(fltr_params) }), target: "_blank" %></strong></td>
+          <td data-title='<%= I18n.t("mongoid.attributes.booking_detail.conversion_ratio") %>'><strong>-</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  No records found yet.
+<% end %>
