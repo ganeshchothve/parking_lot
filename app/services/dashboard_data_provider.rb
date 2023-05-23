@@ -661,9 +661,7 @@ module DashboardDataProvider
       { '$project': { project_name: 1, stage: 1 } }
     ]).to_a
     out = []
-    stages = []
     data.each do |d|
-      stages << d[:stage].compact
       stage_count = d[:stage].compact.inject({}) do |ihsh, ix|
         ihsh[ix] ||= 0
         ihsh[ix] += 1
@@ -671,7 +669,8 @@ module DashboardDataProvider
       end
       out << {project_id: d["_id"], project_name: d["project_name"], stage_count: stage_count || {}}.with_indifferent_access
     end
-    return [ out, stages.flatten.uniq ]
+    stages = Lead.distinct(:lead_stage).compact
+    return [ out, stages ]
   end
 
   def self.project_wise_booking_data(current_user, options={})
