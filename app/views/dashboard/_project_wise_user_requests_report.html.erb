@@ -5,7 +5,7 @@
         <tr>
           <th class="text-left"><b><%= Project.model_name.human %></b></th>
           <th class="text-left"><b><%= I18n.t("global.type") %></b></th>
-          <% UserRequest::STATUS.each do |status| %>
+          <% %w[pending resolved rejected].each do |status| %>
             <th class="text-left"><b><%= I18n.t("mongoid.attributes.user_request/status.#{status}") %></b></th>
           <% end %>
           <th data-title="<%= t('global.total') %>"><strong><%= t('global.total') %></strong></th>
@@ -16,7 +16,7 @@
           <tr>
             <td data-title='<%= Project.model_name.human %>'><%= Project.where(booking_portal_client_id: current_client.try(:id), _id: data[:project_id]).first.try(:name).try(:titleize) || "-" %></td>
             <td data-title='<%= I18n.t("global.type") %>'><%= data[:_type].split("::").last.titleize %></td>
-            <% UserRequest::STATUS.each do |status| %>
+            <% %w[pending resolved rejected].each do |status| %>
               <td data-title='<%= I18n.t("mongoid.attributes.user_request/status.#{status}") %>'>
                 <%= link_to (data.dig(:status, status) rescue '0'), [current_user_role_group, UserRequest, {request_type: 'user_request', fltrs: { status: status, _type: data[:_type], project_id: data[:project_id] } }], target: "_blank" %>
               </td>
@@ -29,13 +29,13 @@
         <tr>
           <th data-title="<%= t('global.total') %>"><strong><%= t('global.total') %></strong></th>
           <td></td>
-          <% UserRequest::STATUS.each do |status| %>
+          <% %w[pending resolved rejected].each do |status| %>
             <td data-title='<%= I18n.t("mongoid.attributes.user_request/status.#{status}") %>'>
               <%= link_to (@user_requests_data.map{|d| d[:status][status]}.sum rescue '0'), [current_user_role_group, UserRequest, {request_type: 'user_request', fltrs: { status: status } }], target: "_blank" %>
             </td>
           <% end %>
           <td data-title='<%= t('global.total') %>'><b>
-            <%= link_to (@user_requests_data.map{|d| d[:status].values.sum}.sum rescue '0'), [current_user_role_group, UserRequest, {request_type: 'user_request', fltrs: { _type: { "$in" => @user_requests_data.map{|d| d[:_type] } }, project_ids: @user_requests_data.map{|d| d[:project_id] } } } ], target: "_blank" %>
+            <%= link_to (@user_requests_data.map{|d| [d.dig(:status, :pending), d.dig(:status, :resolved), d.dig(:status, :rejected)].sum}.sum rescue '0'), [current_user_role_group, UserRequest, {request_type: 'user_request', fltrs: { project_ids: @user_requests_data.map{|d| d[:project_id] }, status: { "$in" => %w[pending resolved rejected] } } } ], target: "_blank" %>
           </b></td> 
         </tr>
       </tbody>

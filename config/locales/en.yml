@@ -1817,7 +1817,6 @@ en:
         processing: "Processing"
         resolved: "Resolved"
         rejected: "Rejected"
-        failed: "Failed"
       user_request/requestable_type:
         receipt: "Receipt"
         booking_detail: "Booking"

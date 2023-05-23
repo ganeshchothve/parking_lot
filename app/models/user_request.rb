@@ -8,7 +8,7 @@ class UserRequest
   extend ApplicationHelper
   extend DocumentsConcern
 
-  STATUS = %w[pending processing resolved rejected failed]
+  STATUS = %w[pending processing resolved rejected]
   # Add different types of documents which are uploaded on user_request
   DOCUMENT_TYPES = []
 

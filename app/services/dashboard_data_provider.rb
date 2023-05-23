@@ -367,7 +367,7 @@ module DashboardDataProvider
     ]).to_a
     out = []
     data.each do |d|
-      out << {project_id: d["_id"]["project_id"], _type: d["_id"]["_type"], status: { pending: d["statuses"].count("pending") || 0, processing: d["statuses"].count("processing") || 0, resolved: d["statuses"].count("resolved") || 0, rejected: d["statuses"].count("rejected") || 0, failed: d["statuses"].count("failed") || 0,  } }.with_indifferent_access
+      out << {project_id: d["_id"]["project_id"], _type: d["_id"]["_type"], status: { pending: d["statuses"].count("pending") || 0, resolved: d["statuses"].count("resolved") || 0, rejected: d["statuses"].count("rejected") || 0 } }.with_indifferent_access
     end
     out
   end
