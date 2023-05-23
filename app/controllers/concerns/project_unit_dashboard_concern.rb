@@ -17,6 +17,11 @@ module ProjectUnitDashboardConcern
     if params.dig(:unit_fltrs, :group_by).present?
       options[:group_by] = params.dig(:unit_fltrs, :group_by)
     end
+    if params[:project_ids].present?
+      options[:project_id] = {"$in": params[:project_ids].map{|id| BSON::ObjectId(id) }}
+    else
+      options[:project_id] = {"$in": Project.where(Project.user_based_scope(current_user)).pluck(:_id).uniq }
+    end
     options
   end
 
