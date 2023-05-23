@@ -2218,12 +2218,14 @@ en:
         errors:
           lead_registered_with_client: "Lead is already registered with Client"
           lead_registered_with_project: "Lead is already registered with Project"
-      lead/stage:
-        incoming: "Incoming"
-        booked: "Booked"
-        opportunity: "Opportunity"
-        prospect: "Prospect"
-        unqualified: "Unqualified"
+        lead/stage:
+          incoming: "Incoming"
+          booked: "Booked"
+          opportunity: "Opportunity"
+          prospect: "Prospect"
+          unqualified: "Unqualified"
+          lost: "Lost"
+          sv_done: "SV Done"
       lead/customer_status:
         booking_done: "Booking Done"
         dropoff: "Dropoff"
@@ -3081,6 +3083,7 @@ en:
           conversion_report: "Project Wise Conversion Report"
           actual_revenue_report: "Project Wise Actual Revenue Reports"
           tentative_revenue_reports: "Project Wise Tentative Revenue Reports"
+          stage_wise_lead_count: "Stage wise Lead Count"
           applying_filters:
             step1: "Applying filters will only show 15 records irrespective of the total records count. Acitve Filter Export will contain all the filtered records. The"
             step2: "count will depend on the filtered results."

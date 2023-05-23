@@ -16,6 +16,7 @@ class Lead
 
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   DOCUMENT_TYPES = []
+  LEAD_STAGES = ["incoming", "prospect", "lost", "unqualified", "opportunity", "booked", "sv_done"]
 
   attr_accessor :payment_link, :kylas_contact_id, :kylas_product_id, :sync_to_kylas, :manager_ids, :phone_update, :email_update
 

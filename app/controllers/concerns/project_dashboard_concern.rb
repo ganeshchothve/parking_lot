@@ -9,6 +9,10 @@ module ProjectDashboardConcern
     @conversion_report_data = DashboardDataProvider.project_wise_conversion_report_data(current_user, set_matcher)
   end
 
+  def project_wise_leads_stage_report
+    @stage_wise_leads = DashboardDataProvider.project_wise_lead_stage_leads_count(current_user, set_matcher)
+  end
+
   private
 
   def set_matcher

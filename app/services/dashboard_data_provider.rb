@@ -551,11 +551,11 @@ module DashboardDataProvider
   #
   # { stage1: {project_name1: 2, project_name2: 4}, stage2: {project_name1: 4, project_name2: 2}}
   #
-  def self.lead_stage_project_wise_leads_count(current_user, options={})
-    matcher = { manager_id: current_user.id }
-    matcher = matcher.merge!(options[:matcher]) if options[:matcher].present?
+  def self.lead_stage_project_wise_leads_count(current_user, matcher={})
+    matcher = matcher.merge(Lead.user_based_scope(current_user))
+    matcher = matcher.with_indifferent_access
     data = Lead.collection.aggregate([
-      {'$match': matcher.merge(Lead.user_based_scope(current_user))},
+      {'$match': matcher},
       {
         '$lookup': {
           from: "projects",
@@ -598,6 +598,53 @@ module DashboardDataProvider
       hsh
     end
     o_data
+  end
+
+  def self.project_wise_lead_stage_leads_count(current_user, matcher={})
+    matcher = matcher.merge(Lead.user_based_scope(current_user))
+    matcher = matcher.with_indifferent_access
+    data = Lead.collection.aggregate([
+      { '$match': matcher },
+      { '$project': { project_id: '$project_id', lead_stage: '$lead_stage', '_id': 0 } },
+      { '$group':
+        {
+          _id: '$project_id',
+          stage: { '$push': '$lead_stage'}
+        }
+      },
+      {
+        '$lookup': {
+          from: "projects",
+          let: { project_id: "$_id" },
+          pipeline: [
+            { '$match': { '$expr': { '$eq': [ "$_id",  "$$project_id" ] } } },
+            { '$project': { project_name: '$name' } }
+          ],
+          as: "projects"
+        }
+      },
+      {
+        '$replaceRoot': {
+          newRoot: {
+            '$mergeObjects': [
+              { '$arrayElemAt': [ "$projects", 0 ] },
+              "$$ROOT"
+            ]
+          }
+        }
+      },
+      { '$project': { project_name: 1, stage: 1 } }
+    ]).to_a
+    out = []
+    data.each do |d|
+      stage_count = d[:stage].compact.inject({}) do |ihsh, ix|
+        ihsh[ix] ||= 0
+        ihsh[ix] += 1
+        ihsh
+      end
+      out << {project_id: d["_id"], project_name: d["project_name"], stage_count: stage_count || {}}.with_indifferent_access
+    end
+    out
   end
 
   def self.project_wise_booking_data(current_user, options={})
