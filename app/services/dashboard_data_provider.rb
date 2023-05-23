@@ -626,7 +626,6 @@ module DashboardDataProvider
   end
 
   def self.project_wise_lead_stage_leads_count(current_user, matcher={})
-    matcher = matcher.merge(Lead.user_based_scope(current_user))
     matcher = matcher.with_indifferent_access
     data = Lead.collection.aggregate([
       { '$match': Lead.user_based_scope(current_user)},
