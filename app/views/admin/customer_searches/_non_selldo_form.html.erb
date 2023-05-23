@@ -10,13 +10,6 @@
           <%= hidden_field_tag :customer_search_id, @customer_search.id.to_s %>
           <%= render 'admin/leads/non_selldo_form_fields', f: f, lead: @lead %>
 
-          <% if current_client.enable_channel_partners? %>
-            <div class='row'>
-              <div class="col-md-12">
-                <%= f.input :manager_id, collection: User.in(role: ['channel_partner', 'cp_owner']).where(booking_portal_client_id: current_user.booking_portal_client_id).collect{|user| [user.ds_name, user.id]}, selected: @lead.manager_id, disabled: !policy([:admin, @lead]).editable_field?("manager_id"), prompt: :translate, input_html: { class: 'selectize', name: 'manager_id' } %>
-              </div>
-            </div>
-          <% end %>
           <div class = 'row'>
             <div class = 'col-md-12 border-top pt-3'>
               <%= submit_tag I18n.t("global.save"), class: 'btn btn-primary float-end w-auto border-primary' %>
