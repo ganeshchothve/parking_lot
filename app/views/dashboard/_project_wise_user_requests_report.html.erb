@@ -1,0 +1,30 @@
+<% if @user_requests_data.present? %>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="text-left"><b><%= Project.model_name.human %></b></th>
+          <th class="text-left"><b><%= I18n.t("global.type") %></b></th>
+          <% UserRequest::STATUS.each do |status| %>
+            <th class="text-left"><b><%= I18n.t("mongoid.attributes.user_request/status.#{status}") %></b></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% @user_requests_data.each do |data| %>
+          <tr>
+            <td data-title='<%= Project.model_name.human %>'><%= Project.where(booking_portal_client_id: current_client.try(:id), _id: data[:project_id]).first.try(:name).try(:titleize) || "-" %></td>
+            <td data-title='<%= I18n.t("global.type") %>'><%= data[:_type].split("::").last.titleize %></td>
+            <% UserRequest::STATUS.each do |status| %>
+              <td data-title='<%= I18n.t("mongoid.attributes.user_request/status.#{status}") %>'>
+                <%= link_to (data.dig(:status, status) rescue '0'), [current_user_role_group, UserRequest, {request_type: 'user_request', fltrs: { status: status, _type: data[:_type], project_id: data[:project_id] } }], target: "_blank" %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  No records found yet.
+<% end %>

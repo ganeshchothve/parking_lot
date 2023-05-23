@@ -320,9 +320,6 @@
     </div>
 </section>
 
-<%= javascript_tag do %>
-  $.ajax({
-    url: '/dashboard/project_wise_leads',
-    type: 'get'
-  });
-<% end %>
+<div class="row mb-3 px-5">
+  <%= render 'dashboard/index/partials/project_wise_leads_stage_data' %>
+</div>

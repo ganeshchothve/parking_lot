@@ -12,8 +12,8 @@
       <thead>
         <tr>
           <th><%= Project.model_name.human %></th>
-          <% Lead::LEAD_STAGES.each do |stage| %>
-            <th><%= I18n.t("mongoid.attributes.lead/stage.#{stage}") %></th>
+          <% @lead_stages.each do |stage| %>
+            <th><%= stage.capitalize %></th>
           <% end %>
         </tr>
       </thead>
@@ -21,15 +21,15 @@
         <% @stage_wise_leads.each do |cr| %>
           <tr>
             <td data-title='<%= Project.model_name.human %>'><%= Project.where(booking_portal_client_id: current_client.try(:id), _id: cr[:project_id]).first.try(:name).try(:titleize) || "-" %></td>
-            <% Lead::LEAD_STAGES.each do |stage| %>
-              <td data-title='<%= I18n.t("mongoid.attributes.lead/stage.#{stage}") %>'><%= link_to (cr.dig(:stage_count, stage) || 0), admin_leads_path({ fltrs: { project_id: cr[:project_id], lead_stage: stage }.merge(fltr_params) }), target: "_blank" %></td>
+            <% @lead_stages.each do |stage| %>
+              <td data-title='<%= stage.capitalize %>'><%= link_to (cr.dig(:stage_count, stage) || 0), admin_leads_path({ fltrs: { project_id: cr[:project_id], lead_stage: stage }.merge(fltr_params) }), target: "_blank" %></td>
             <% end %>
           </tr>
         <% end %>
         <tr>
           <th data-title="<%= t('global.total') %>"><strong><%= t('global.total') %></strong></th>
-          <% Lead::LEAD_STAGES.each do |stage| %>
-            <td data-title='<%= I18n.t("mongoid.attributes.lead/stage.#{stage}") %>'><%= link_to @stage_wise_leads.map{|cr| cr.dig(:stage_count, stage) || 0 }.sum, admin_leads_path({ fltrs: { lead_stage: stage }.merge(fltr_params) }), target: "_blank" %></td>
+          <% @lead_stages.each do |stage| %>
+            <td data-title='<%= stage.capitalize %>'><%= link_to @stage_wise_leads.map{|cr| cr.dig(:stage_count, stage) || 0 }.sum, admin_leads_path({ fltrs: { lead_stage: stage }.merge(fltr_params) }), target: "_blank" %></td>
           <% end %>
         </tr>
       </tbody>

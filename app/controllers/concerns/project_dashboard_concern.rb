@@ -10,7 +10,11 @@ module ProjectDashboardConcern
   end
 
   def project_wise_leads_stage_report
-    @stage_wise_leads = DashboardDataProvider.project_wise_lead_stage_leads_count(current_user, set_matcher)
+    @stage_wise_leads, @lead_stages = DashboardDataProvider.project_wise_lead_stage_leads_count(current_user, set_matcher)
+  end
+
+  def project_wise_user_requests_report
+    @user_requests_data = DashboardDataProvider.project_wise_user_requests_report_data(current_user, user_requests_report_data_matcher)
   end
 
   private
@@ -29,6 +33,15 @@ module ProjectDashboardConcern
       options[:project_id] = {"$in": params[:project_ids].map{|id| BSON::ObjectId(id) }}
     else
       options[:project_id] = {"$in": Project.where(Project.user_based_scope(current_user)).pluck(:_id).uniq }
+    end
+    options
+  end
+
+  def user_requests_report_data_matcher
+    options = {matcher: {}}
+    options[:matcher] = { booking_portal_client_id: current_client.id }
+    if params[:user_request_fltrs].present?
+      options[:group_by] = params[:user_request_fltrs]
     end
     options
   end

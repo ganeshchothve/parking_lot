@@ -350,6 +350,28 @@ module DashboardDataProvider
     out
   end
 
+  def self.project_wise_user_requests_report_data(user, options={})
+    matcher = options[:matcher] || {}
+    matcher = matcher.with_indifferent_access
+    data = UserRequest.collection.aggregate([
+      { "$match": matcher },
+      {
+        "$group": {
+          "_id":{
+            "project_id": "$project_id",
+            "_type": "$_type"
+          },
+          "statuses": { "$push": "$status" }
+        }
+      }
+    ]).to_a
+    out = []
+    data.each do |d|
+      out << {project_id: d["_id"]["project_id"], _type: d["_id"]["_type"], status: { pending: d["statuses"].count("pending") || 0, processing: d["statuses"].count("processing") || 0, resolved: d["statuses"].count("resolved") || 0, rejected: d["statuses"].count("rejected") || 0, failed: d["statuses"].count("failed") || 0,  } }.with_indifferent_access
+    end
+    out
+  end
+
   def self.user_requests_dashboard(user, options={})
     data = UserRequest.collection.aggregate([{
       "$group": {
@@ -607,6 +629,7 @@ module DashboardDataProvider
     matcher = matcher.merge(Lead.user_based_scope(current_user))
     matcher = matcher.with_indifferent_access
     data = Lead.collection.aggregate([
+      { '$match': Lead.user_based_scope(current_user)},
       { '$match': matcher },
       { '$project': { project_id: '$project_id', lead_stage: '$lead_stage', '_id': 0 } },
       { '$group':
@@ -639,7 +662,9 @@ module DashboardDataProvider
       { '$project': { project_name: 1, stage: 1 } }
     ]).to_a
     out = []
+    stages = []
     data.each do |d|
+      stages << d[:stage].compact
       stage_count = d[:stage].compact.inject({}) do |ihsh, ix|
         ihsh[ix] ||= 0
         ihsh[ix] += 1
@@ -647,7 +672,7 @@ module DashboardDataProvider
       end
       out << {project_id: d["_id"], project_name: d["project_name"], stage_count: stage_count || {}}.with_indifferent_access
     end
-    out
+    return [ out, stages.flatten.uniq ]
   end
 
   def self.project_wise_booking_data(current_user, options={})

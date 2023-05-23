@@ -475,6 +475,7 @@ Rails.application.routes.draw do
     get :project_units_inventory_report, to: 'dashboard#project_units_inventory_report'
     get :project_units_collection_report, to: 'dashboard#project_units_collection_report'
     get :receipts_details_report, to: 'dashboard#receipts_details_report'
+    get :project_wise_user_requests_report, to: 'dashboard#project_wise_user_requests_report'
     get :team_lead_dashboard, to: 'dashboard#team_lead_dashboard'
     # get :dashboard_landing_page, to: 'dashboard#dashboard_landing_page'
     get :payout_dashboard, to: 'dashboard#payout_dashboard'

@@ -2224,7 +2224,7 @@ en:
           prospect: "Prospect"
           unqualified: "Unqualified"
           lost: "Lost"
-          sv_done: "SV Done"
+
       lead/customer_status:
         booking_done: "Booking Done"
         dropoff: "Dropoff"
@@ -3091,6 +3091,8 @@ en:
         project_unit:
           inventory_snapshot: "Inventory Snapshot"
           collection_report: "Collection Report"
+        user_requests:
+          details_report: "User Requests"
 
     emails:
       index:

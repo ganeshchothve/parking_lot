@@ -22,7 +22,7 @@
             <% if params[:receipt_fltrs].blank? || params.dig(:receipt_fltrs, :group_by).include?('payment_mode') %>
               <td data-title='<%= I18n.t("mongoid.attributes.receipt.payment_mode") %>'><%= t("mongoid.attributes.receipt/payment_mode.#{data[:payment_mode]}") %></td>
             <% end %>
-            <td data-title='<%= I18n.t("mongoid.attributes.receipt.count") %>'><%= link_to data[:count], [current_user_role_group, Receipt, { fltrs: { status: data[:status], payment_mode: data[:payment_mode] } }], target: "_blank", title: "View #{data[:count]} #{ t("mongoid.attributes.receipt/status.#{data[:status]}") } #{t("receipts.payment_mode.#{data[:payment_mode]}")} receipts." %></td>
+            <td data-title='<%= I18n.t("mongoid.attributes.receipt.count") %>'><%= link_to data[:count], [current_user_role_group, Receipt, { fltrs: { status: data[:status], payment_mode: data[:payment_mode] } }], target: "_blank", title: "View #{data[:count]} #{t("mongoid.attributes.receipt/payment_mode.#{data[:payment_mode]}")} receipts." %></td>
             <td data-title='<%= I18n.t("mongoid.attributes.receipt.total_amount") %>'><%= data[:total_amount] %></td>
           </tr>
         <% end %>
