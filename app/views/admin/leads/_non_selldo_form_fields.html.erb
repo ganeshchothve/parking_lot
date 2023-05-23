@@ -12,11 +12,21 @@
   <div class="col-md-6">
     <%= f.input :first_name, required: true, autofocus: true, disabled: !policy([:admin, lead]).editable_field?("first_name"), input_html: { name: 'first_name' } %>
   </div>
+  <% else %>
+     <div class="col-md-6">
+      <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.first_name') %></label>
+      <p class="fn-14 theme-txt-color mb-0"><%= lead.first_name %></p>
+     </div>
   <% end %>
   <% if policy([:admin, lead]).editable_field?("last_name") %>
   <div class="col-md-6">
     <%= f.input :last_name, required: true, autofocus: true, disabled: !policy([:admin, lead]).editable_field?("last_name"), input_html: { name: 'last_name' } %>
   </div>
+  <% else %>
+     <div class="col-md-6">
+      <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.last_name') %></label>
+      <p class="fn-14 theme-txt-color mb-0"><%= lead.last_name %></p>
+     </div>
   <% end %>
 </div>
 <div class="row">
@@ -24,11 +34,21 @@
   <div class="col-md-6">
     <%= f.input :email, disabled: !policy([:admin, lead]).editable_field?("email"), input_html: { class: 'email', name: 'email' } %>
   </div>
+  <% else %>
+     <div class="col-md-6">
+      <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.email') %></label>
+      <p class="fn-14 theme-txt-color mb-0"><%= lead.masked_email(current_user) %></p>
+     </div>
   <% end %>
   <% if policy([:admin, lead]).editable_field?("phone") %>
   <div class="col-md-6">
     <%= f.input :phone, required: true, disabled: !policy([:admin, lead]).editable_field?("phone"), as: :tel, input_html: { class: 'phone', name: 'phone' } %>
   </div>
+  <% else %>
+     <div class="col-md-6">
+      <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.phone') %></label>
+      <p class="fn-14 theme-txt-color mb-0"><%= lead.masked_phone(current_user) %></p>
+     </div>
   <% end %>
 </div>
 <!-- TODO project specific URL and domain specific URL -->
@@ -46,13 +66,13 @@
   </div>
   <% end %>
 <% end %>
-<% if policy([:admin, lead]).editable_field?("manager_id") %>
+<% if current_client.enable_channel_partners? && policy([:admin, lead]).editable_field?("manager_id") %>
   <% if current_user.role?(:channel_partner) %>
     <%= f.input :manager_id, as: :hidden, input_html: { name: 'manager_id', value: current_user.id } %>
   <% else %>
     <div class='row'>
       <div class="col-md-12">
-        <%= f.input :manager_id, collection: [], required: true, disabled: !policy([:admin, lead]).editable_field?("manager_id"), as: :select, prompt: :translate, input_html: { class: 'selectize-remote', name: 'manager_id', data: { url: admin_users_path(fltrs: { role: ['channel_partner', 'cp_owner'], is_active: true, booking_portal_client_id: current_client.id, user_status_in_company: 'active' }) } } %>
+        <%= f.input :manager_id, collection: User.in(role: ['channel_partner', 'cp_owner']).where(booking_portal_client_id: current_user.booking_portal_client_id).collect{|user| [user.ds_name, user.id]}, selected: @lead.manager_id, disabled: !policy([:admin, @lead]).editable_field?("manager_id"), prompt: :translate, input_html: { class: 'selectize', name: 'manager_id' } %>
       </div>
     </div>
   <% end %>
