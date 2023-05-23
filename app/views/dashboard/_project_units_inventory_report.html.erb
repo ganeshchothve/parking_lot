@@ -1,0 +1,48 @@
+<% if @inventory_data.present? %>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <% if params[:unit_fltrs].blank? || params.dig(:unit_fltrs, :group_by).include?('project_tower_id') %>
+            <th class="text-left"><b><%= I18n.t("mongoid.attributes.project_unit/headers.tower") %></b></th>
+          <% end %>
+          <% if params[:unit_fltrs].blank? || params.dig(:unit_fltrs, :group_by).include?('bedrooms') %>
+            <th class="text-left"><b><%= I18n.t("mongoid.attributes.project_unit/headers.bedrooms") %></b></th>
+          <% end %>
+          <% if params[:unit_fltrs].blank? || params.dig(:unit_fltrs, :group_by).include?('status') %>
+            <th class="text-left"><b><%= I18n.t("mongoid.attributes.project_unit/headers.status") %></b></th>
+          <% end %>
+          <th class="text-left"><b><%= I18n.t("mongoid.attributes.project_unit/headers.count") %></b></th>
+          <th class="text-left"><b><%= I18n.t("mongoid.attributes.project_unit/headers.total_agreement_price") %></b></th>
+          <th class="text-left"><b><%= I18n.t("mongoid.attributes.project_unit/headers.total_inclusive_price") %></b></th>
+          <th class="text-left"><b><%= I18n.t("global.actions") %></b></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @inventory_data.each do |data| %>
+          <tr>
+            <% if params[:unit_fltrs].blank? || params.dig(:unit_fltrs, :group_by).include?('project_tower_id') %>
+              <td data-title='<%= I18n.t("mongoid.attributes.project_unit/headers.tower") %>'><%= data[:project_tower_name] %></td>
+            <% end %>
+            <% if params[:unit_fltrs].blank? || params.dig(:unit_fltrs, :group_by).include?('bedrooms') %>
+              <td data-title='<%= I18n.t("mongoid.attributes.project_unit/headers.bedrooms") %>'><%= data[:bedrooms] %></td>
+            <% end %>
+            <% if params[:unit_fltrs].blank? || params.dig(:unit_fltrs, :group_by).include?('status') %>
+              <td data-title='<%= I18n.t("mongoid.attributes.project_unit/headers.status") %>'><%= t("mongoid.attributes.project_unit/status.#{data[:status]}") %></td>
+            <% end %>
+            <td data-title='<%= I18n.t("mongoid.attributes.project_unit/headers.count") %>'><%= data[:count] %></td>
+            <td data-title='<%= I18n.t("mongoid.attributes.project_unit/headers.total_agreement_price") %>'><%= data[:total_agreement_price] %></td>
+            <td data-title='<%= I18n.t("mongoid.attributes.project_unit/headers.total_inclusive_price") %>'><%= data[:total_all_inclusive_price] %></td>
+            <td data-title='<%= I18n.t("global.actions") %>'>
+              <% if policy([:admin, ProjectUnit]).index? %>
+                <%= link_to "View", admin_project_units_path(fltrs: {status: data[:status], project_tower_id: data[:project_tower_id], bedrooms: data[:bedrooms]}), target: "_blank" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  No records found yet.
+<% end %>

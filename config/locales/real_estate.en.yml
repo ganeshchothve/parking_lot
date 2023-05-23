@@ -3098,6 +3098,8 @@ en-REAL_ESTATE:
             step2: "count will depend on the filtered results."
         receipts:
           details_report: "Payments"
+        project_unit:
+          inventory_snapshot: "Inventory Snapshot"
 
     emails:
       index:

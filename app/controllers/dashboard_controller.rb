@@ -5,6 +5,7 @@ class DashboardController < ApplicationController
   include RevenueReportDashboardConcern
   include ChannelPartnerLeaderboardConcern
   include ProjectDashboardConcern
+  include ProjectUnitDashboardConcern
   include ReceiptDashboardConcern
 
   before_action :authenticate_user!, only: [:index, :documents, :dashboard_landing_page, :channel_partners_leaderboard, :channel_partners_leaderboard_without_layout]

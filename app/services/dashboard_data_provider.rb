@@ -377,8 +377,11 @@ module DashboardDataProvider
     ]
   end
 
-  def self.project_units_dashboard(user, options={})
+  def self.project_units_inventory_report_data(user, options={})
     options ||= {}
+    options = options.with_indifferent_access
+    matcher = options[:matcher]
+    matcher = matcher.with_indifferent_access
     grouping = {
       status: "$status",
       bedrooms: "$bedrooms",
