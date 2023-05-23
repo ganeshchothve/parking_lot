@@ -80,14 +80,25 @@
   </div>
 </div>
 
-<div class="row mb-3">
-  <%= render 'dashboard/index/partials/project_wise_booking_detail_data' %>
-</div>
-<div class="row mb-3">
-  <%= render 'dashboard/index/partials/project_wise_conversion_data' %>
-</div>
-<div class="row mb-3">
-  <%= render "dashboard/index/partials/receipts_details_data" %>
+<div class="row mb-3 px-5">
+  <div class="row mb-3 px-5">
+    <%= render 'dashboard/index/partials/project_wise_booking_detail_data' %>
+  </div>
+  <div class="row mb-3 px-5">
+    <%= render 'dashboard/index/partials/project_wise_conversion_data' %>
+  </div>
+  <div class="row mb-3 px-5">
+    <%= render "dashboard/index/partials/receipts_details_data" %>
+  </div>
+  <div class="row mb-3 px-5">
+    <%= render 'dashboard/index/partials/project_wise_leads_stage_data' %>
+  </div>
+  <div class="row mb-3 px-5">
+    <%= render "dashboard/index/partials/project_units_inventory_data" %>
+  </div>
+  <div class="row mb-3 px-5">
+    <%= render "dashboard/index/partials/project_units_collection_data" %>
+  </div>
 </div>
 <div class="row mb-3">
   <%= render 'dashboard/index/partials/project_wise_leads_stage_data' %>
@@ -224,20 +235,6 @@
             <p> Loading .. </p>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="row mt-4">
-    <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 pb-2">
-      <div class="table-title pt-1">
-        <h1 class="title icon-set icon-building-black">
-           Inventory Snapshot
-        </h1>
-      </div>
-    </div>
-    <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12">
-      <div class="box-card relative table-responsive" id = "dashboard_inventory_snapshot">
-        <p class="text-center"> Loading .. </p>
       </div>
     </div>
   </div>

@@ -5,6 +5,10 @@ module ProjectUnitDashboardConcern
     @inventory_data = DashboardDataProvider.project_units_inventory_report_data(current_user, project_units_inventory_matcher)
   end
 
+  def project_units_collection_report
+    @collection_data = DashboardDataProvider.project_unit_collection_report_data(current_user)
+  end
+
   private
 
   def project_units_inventory_matcher

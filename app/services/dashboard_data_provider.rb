@@ -717,7 +717,7 @@ module DashboardDataProvider
   # 5. Total blocked unit ids in the system
   # 6. Push configuration wise data (sold and unsold unit count) calculated in first group query
 
-  def self.inventory_snapshot current_user
+  def self.project_unit_collection_report_data current_user
     grouping = {
       project_tower_name: "$project_tower_name",
       unit_configuration_name: "$unit_configuration_name"

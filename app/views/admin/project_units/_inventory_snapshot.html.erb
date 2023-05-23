@@ -3,9 +3,9 @@
       <tr class="bg-primary white">
         <th><%= I18n.t("mongoid.attributes.project_unit.tower_name") %></th>
         <th><%= I18n.t("mongoid.attributes.project_unit.total_units") %></th>
-        <th><%= I18n.t("mongoid.attributes.project_unit.sold_unslold") %></th>
+        <th><%= I18n.t("mongoid.attributes.project_unit.sold_unsold") %></th>
         <% ProjectUnit.distinct(:unit_configuration_name).sort.each do |uc| %>
-          <th class="text-center"><%= uc %><br>(<%= I18n.t("mongoid.attributes.project_unit.sold_unslold") %>)</th>
+          <th class="text-center"><%= uc %><br>(<%= I18n.t("mongoid.attributes.project_unit.sold_unsold") %>)</th>
         <% end %>
         <th>A.V (Sold)</th>
         <th>Collection</th>
@@ -31,7 +31,7 @@
         <td data-title='<%= I18n.t("mongoid.attributes.project_unit.total_units") %>'><strong><%= _all_towers[:total] %></strong></td>
         <td data-title='<%= I18n.t("mongoid.attributes.project_unit.sold_unsold") %>'><strong><%= "#{_all_towers[:sold]}/#{_all_towers[:unsold]}" %></strong></td>
         <% _all_towers[:configuration_wise].each do |k, v| %>
-          <td class='text-center' data-title='<%= "#{k} (<%= I18n.t("mongoid.attributes.project_unit.sold_unsold") %>)" %>'><strong><%= "#{v[:sold]}/#{v[:unsold]}" %></strong></td>
+          <td class='text-center' data-title='<%= "#{k} #{I18n.t("mongoid.attributes.project_unit.sold_unsold")}" %>'><strong><%= "#{v[:sold]}/#{v[:unsold]}" %></strong></td>
         <% end %>
         <td data-title='<%= I18n.t("mongoid.attributes.project_unit.av_sold") %>'><strong><%= number_to_indian_currency(_all_towers[:av_sold]||0) %></strong></td>
         <td class="non-action-td" data-title='Collection'><strong><%= number_to_indian_currency(_all_towers[:collection]||0) %></strong></td>
