@@ -407,7 +407,7 @@ class Lead
 
     def user_based_scope(user, params = {})
       custom_scope = {}
-      project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids)
+      project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids.map{|id| BSON::ObjectId(id) })
       case user.role.to_sym
       when :channel_partner
         custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id }
