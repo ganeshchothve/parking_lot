@@ -120,10 +120,10 @@ class Lead
   scope :filter_by_cp_manager_id, ->(cp_manager_id) {where(cp_manager_id: cp_manager_id) }
   scope :filter_by_channel_partner_id, ->(channel_partner_id) {where(channel_partner_id: channel_partner_id)}
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
-  # scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
+  scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where({ '$and' => ["$or": [{first_name: regex}, {last_name: regex}, {email: regex}, {phone: regex}] ] }) }
   scope :filter_by_lead_stage, ->(lead_stage) { where(lead_stage: lead_stage) }
   scope :filter_by_customer_status, ->(*customer_status){ where(customer_status: { '$in': customer_status }) }
-  scope :filter_by_queue_number, ->(queue_number){ where(queue_number: queue_number) }
+  scope :filter_by_queue_number, ->(queue_number){ regex = ::Regexp.new(::Regexp.escape(queue_number), 'i'); where({'$where' => "this.queue_number.toString().match(#{regex.inspect}) != null"}) }
   scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
   scope :incentive_eligible, ->(category) do
     if category == 'lead'
