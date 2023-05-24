@@ -57,3 +57,7 @@
   float: left;
   margin: 0 0 20px 1%;
 }
+
+input[disabled] {
+  background-color: #efefef;
+}

@@ -8,48 +8,20 @@
     <%= f.input :push_to_crm, :as => :hidden, :input_html => {name: 'push_to_crm', :value => true } %>
   <% end %>
 
-  <% if policy([:admin, lead]).editable_field?("first_name") %>
   <div class="col-md-6">
     <%= f.input :first_name, required: true, autofocus: true, disabled: !policy([:admin, lead]).editable_field?("first_name"), input_html: { name: 'first_name' } %>
   </div>
-  <% else %>
-     <div class="col-md-6">
-      <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.first_name') %></label>
-      <p class="fn-14 theme-txt-color mb-0"><%= lead.first_name %></p>
-     </div>
-  <% end %>
-  <% if policy([:admin, lead]).editable_field?("last_name") %>
   <div class="col-md-6">
     <%= f.input :last_name, required: true, autofocus: true, disabled: !policy([:admin, lead]).editable_field?("last_name"), input_html: { name: 'last_name' } %>
   </div>
-  <% else %>
-     <div class="col-md-6">
-      <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.last_name') %></label>
-      <p class="fn-14 theme-txt-color mb-0"><%= lead.last_name %></p>
-     </div>
-  <% end %>
 </div>
 <div class="row">
-  <% if policy([:admin, lead]).editable_field?("email") %>
   <div class="col-md-6">
     <%= f.input :email, disabled: !policy([:admin, lead]).editable_field?("email"), input_html: { class: 'email', name: 'email' } %>
   </div>
-  <% else %>
-     <div class="col-md-6">
-      <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.email') %></label>
-      <p class="fn-14 theme-txt-color mb-0"><%= lead.masked_email(current_user) %></p>
-     </div>
-  <% end %>
-  <% if policy([:admin, lead]).editable_field?("phone") %>
   <div class="col-md-6">
     <%= f.input :phone, required: true, disabled: !policy([:admin, lead]).editable_field?("phone"), as: :tel, input_html: { class: 'phone', name: 'phone' } %>
   </div>
-  <% else %>
-     <div class="col-md-6">
-      <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.phone') %></label>
-      <p class="fn-14 theme-txt-color mb-0"><%= lead.masked_phone(current_user) %></p>
-     </div>
-  <% end %>
 </div>
 <!-- TODO project specific URL and domain specific URL -->
 <% project_id = params[:project_id].presence || current_project.presence.try(:id) %>
