@@ -766,15 +766,20 @@ module DashboardDataProvider
   # 5. Total blocked unit ids in the system
   # 6. Push configuration wise data (sold and unsold unit count) calculated in first group query
 
-  def self.project_unit_collection_report_data current_user
+  def self.project_unit_collection_report_data(current_user, options={})
+    options = options.with_indifferent_access
+    matcher = options[:matcher] || {}
+    matcher = matcher.with_indifferent_access
     grouping = {
       project_tower_name: "$project_tower_name",
-      unit_configuration_name: "$unit_configuration_name"
+      unit_configuration_name: "$unit_configuration_name",
+      project_id: "$project_id"
     }
     data = ProjectUnit.collection.aggregate([
       { '$match': ProjectUnit.user_based_scope(current_user) },
+      { "$match": matcher },
       {
-          "$group":
+        "$group":
           {
             "_id": grouping,
             blocked:{ "$sum": { "$cond": [ {"$eq": ['$status', {"$literal": 'blocked'}]}, 1, 0 ] } },
@@ -786,7 +791,7 @@ module DashboardDataProvider
         },{
           "$group":
           {
-            "_id": "$_id.project_tower_name",
+            "_id": { project_tower_name: "$_id.project_tower_name", project_id: "$_id.project_id" },
             total_blocked: { "$sum": "$blocked" },
             total_available: { "$sum": "$available" },
             total: { "$sum": "$total"},
@@ -794,7 +799,35 @@ module DashboardDataProvider
             total_blocked_project_units: { "$push": "$blocked_project_units" },
             configuration_wise: { "$push": { unit_configuration_name: "$_id.unit_configuration_name", available: "$available", blocked: "$blocked" }}
           }
-        }]).to_a
+        },
+        {
+          '$lookup': {
+            from: "projects",
+            let: { project_id: "$_id.project_id" },
+            pipeline: [
+              { '$match': { '$expr': { '$eq': [ "$_id",  "$$project_id" ] } } },
+              { '$project': { project_name: '$name' } }
+            ],
+            as: "project"
+          }
+        },
+        {
+        "$project": {
+          total_blocked: "$total_blocked",
+          total_available: "$total_available",
+          total: "$total",
+          total_agreement_price: "$total_agreement_price",
+          total_blocked_project_units: "$total_blocked_project_units",
+          configuration_wise: "$configuration_wise",
+          project_name: {"$arrayElemAt": ["$project.project_name", 0]},
+        }
+      },
+      {
+        "$sort": {
+          "project_name": 1
+        }
+      }
+      ]).to_a
     out = {}
     out["All Towers"] = {total: 0, sold: 0, unsold: 0, av_sold: 0, collection: 0}
     out["All Towers"][:configuration_wise] = new_unit_configuration_hash(current_user)

@@ -1,11 +1,11 @@
 <section class="user-db-sec-6 device-pd">
   <div class="box-card">
-    <a data-bs-toggle="collapse" href="#project_units_collection_report" role="button" aria-expanded="false" aria-controls="project_units_collection_report" class='font-weight-bold text-decoration-none'>
+    <a data-bs-toggle="collapse" href="#project_units_collection_report_data" role="button" aria-expanded="false" aria-controls="project_units_collection_report_data" class='font-weight-bold text-decoration-none'>
       <div class="card-header text-center text-white bg-theme">
         <%= I18n.t("controller.dashboard.link_to.project_unit.collection_report") %>
       </div>
     </a>
-    <div class="card-body collapse p-0" id='project_units_collection_report'>
+    <div class="card-body collapse p-0" id='project_units_collection_report_data'>
       <div class="table-btn-set float-end">
         <button class="db-filter-btn fn-500 filter-popup border-0" type="button">
           <i class="fa fa-filter fill-theme"></i>
@@ -21,7 +21,8 @@
           <div class="filter-content modal-body ps-0 pe-0 theme-form">
             <div class="row">
               <div class="mb-3 col-12">
-                <%= select_tag "receipt_fltrs[group_by]", options_for_select(DashboardDataProvider.receipts_available_group_by.collect{|x| [x[:text], x[:id]]}, (params[:receipt_fltrs].present? && params[:receipt_fltrs][:group_by].present? ? params[:receipt_fltrs][:group_by] : [])), {class: "selectize", prompt: "Select", multiple: true} %>
+                <%= label_tag :project_ids, I18n.t("mongoid.models.project.other"), class: "control-label float-left" %>
+                <%= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: I18n.t("global.select"), class: "selectize", multiple: true} %>
               </div>
             </div>
           </div>
