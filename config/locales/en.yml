@@ -2837,6 +2837,7 @@ en:
         approved: "Approved"
         invoice_raised: "Invoice Raised"
         bookings_not_eligible: "Bookings not eligible for brokerage"
+        registration_done: "Registration Done Bookings"
 
       events:
         approval_status:
