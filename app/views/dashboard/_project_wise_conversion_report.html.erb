@@ -42,7 +42,7 @@
           <td data-title='<%= I18n.t("mongoid.attributes.Receipt.eoi") %>'><strong><%= link_to @conversion_report_data.map{|cr| cr[:token_payments] }.sum, admin_receipts_path({ fltrs: { payment_type: 'token' }.merge(fltr_params) }), target: "_blank" %></strong></td>
           <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><strong><%= link_to @conversion_report_data.map{|cr| cr[:bookings] }.sum, admin_booking_details_path({ fltrs: fltr_params }), target: "_blank" %></strong></td>
           <td data-title='<%= I18n.t("controller.booking_details.link_to.registration_done") %>'><strong><%= link_to @conversion_report_data.map{|cr| cr[:registered_bookings] }.sum, admin_booking_details_path({ fltrs: { registration_done: true }.merge(fltr_params) }), target: "_blank" %></strong></td>
-          <td data-title='<%= I18n.t("mongoid.attributes.booking_detail.conversion_ratio") %>'><strong>-</strong></td>
+          <td data-title='<%= I18n.t("mongoid.attributes.booking_detail.conversion_ratio") %>'><strong><%= ( '<b>' + @avg_token_payments_to_bookings_ratio.to_s + ' %</b>').html_safe %></strong></td>
         </tr>
       </tbody>
     </table>
