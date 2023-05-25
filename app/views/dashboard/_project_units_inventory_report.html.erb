@@ -3,7 +3,8 @@
     <table class="table">
       <thead>
         <tr>
-          <% if params[:unit_fltrs].blank? || params.dig(:unit_fltrs, :group_by).include?('project_tower_id') %>
+        <th><%= Project.model_name.human %></th>
+        <% if params[:unit_fltrs].blank? || params.dig(:unit_fltrs, :group_by).include?('project_tower_id') %>
             <th class="text-left"><b><%= I18n.t("mongoid.attributes.project_unit/headers.tower") %></b></th>
           <% end %>
           <% if params[:unit_fltrs].blank? || params.dig(:unit_fltrs, :group_by).include?('bedrooms') %>
@@ -21,6 +22,7 @@
       <tbody>
         <% @inventory_data.each do |data| %>
           <tr>
+            <td data-title='<%= Project.model_name.human %>'><%= data[:project_name] %></td>
             <% if params[:unit_fltrs].blank? || params.dig(:unit_fltrs, :group_by).include?('project_tower_id') %>
               <td data-title='<%= I18n.t("mongoid.attributes.project_unit/headers.tower") %>'><%= data[:project_tower_name] %></td>
             <% end %>
@@ -35,7 +37,7 @@
             <td data-title='<%= I18n.t("mongoid.attributes.project_unit/headers.total_inclusive_price") %>'><%= data[:total_all_inclusive_price] %></td>
             <td data-title='<%= I18n.t("global.actions") %>'>
               <% if policy([:admin, ProjectUnit]).index? %>
-                <%= link_to "View", admin_project_units_path(fltrs: {status: data[:status], project_tower_id: data[:project_tower_id], bedrooms: data[:bedrooms]}), target: "_blank" %>
+                <%= link_to "View", admin_project_units_path(fltrs: {status: data[:status], project_tower_id: data[:project_tower_id], bedrooms: data[:bedrooms], project_id: data[:project_id]}), target: "_blank" %>
               <% end %>
             </td>
           </tr>

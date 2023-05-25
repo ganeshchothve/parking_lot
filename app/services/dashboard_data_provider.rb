@@ -406,50 +406,72 @@ module DashboardDataProvider
   def self.project_units_inventory_report_data(user, options={})
     options ||= {}
     options = options.with_indifferent_access
-    matcher = options[:matcher]
+    matcher = options[:matcher] || {}
     matcher = matcher.with_indifferent_access
     grouping = {
       status: "$status",
       bedrooms: "$bedrooms",
-      project_tower_id: "$project_tower_id"
+      project_tower_id: "$project_tower_id",
+      project_id: "$project_id"
     }
     if options[:group_by].present?
-      grouping = {}
+      grouping = {project_id: "$project_id"}
       grouping[:status] = "$status" if options[:group_by].include?("status")
       grouping[:bedrooms] = "$bedrooms" if options[:group_by].include?("bedrooms")
       grouping[:project_tower_id] = "$project_tower_id" if options[:group_by].include?("project_tower_id")
     end
     data = ProjectUnit.collection.aggregate([
-    {"$match": matcher.merge(ProjectUnit.user_based_scope(user))},
-    {
-      "$group": {
-        "_id": grouping,
-        agreement_price: {"$sum": "$agreement_price"},
-        all_inclusive_price: {"$sum": "$all_inclusive_price"},
-        project_tower_name: {
-          "$addToSet": "$project_tower_name"
-        },
-        count: {
-          "$sum": 1
+      { "$match": ProjectUnit.user_based_scope(user)},
+      { "$match": matcher },
+      {
+        "$group": {
+          "_id": grouping,
+          agreement_price: {"$sum": "$agreement_price"},
+          all_inclusive_price: {"$sum": "$all_inclusive_price"},
+          project_tower_name: {
+            "$addToSet": "$project_tower_name"
+          },
+          count: {
+            "$sum": 1
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id.bedrooms": 1
+        }
+      },
+      {
+        '$lookup': {
+          from: "projects",
+          let: { project_id: "$_id.project_id" },
+          pipeline: [
+            { '$match': { '$expr': { '$eq': [ "$_id",  "$$project_id" ] } } },
+            { '$project': { project_name: '$name' } }
+          ],
+          as: "project"
+        }
+      },
+        {
+        "$project": {
+          total_agreement_price: "$agreement_price",
+          total_all_inclusive_price: "$all_inclusive_price",
+          bedrooms: "$bedrooms",
+          project_tower_name: {"$arrayElemAt": ["$project_tower_name", 0]},
+          project_name: {"$arrayElemAt": ["$project.project_name", 0]},
+          status: "$status",
+          count: "$count"
+        }
+      },
+      {
+        "$sort": {
+          "project_name": 1
         }
       }
-    },{
-      "$sort": {
-        "_id.bedrooms": 1
-      }
-    },{
-      "$project": {
-        total_agreement_price: "$agreement_price",
-        total_all_inclusive_price: "$all_inclusive_price",
-        bedrooms: "$bedrooms",
-        project_tower_name: {"$arrayElemAt": ["$project_tower_name", 0]},
-        status: "$status",
-        count: "$count"
-      }
-    }]).to_a
+    ]).to_a
     out = []
     data.each do |d|
-      out << {bedrooms: d["_id"]["bedrooms"], project_tower_id: d["_id"]["project_tower_id"], project_tower_name: d["project_tower_name"], status: d["_id"]["status"], count: d["count"], total_all_inclusive_price: d["total_all_inclusive_price"], total_agreement_price: d["total_agreement_price"]}.with_indifferent_access
+      out << {bedrooms: d["_id"]["bedrooms"], project_tower_id: d["_id"]["project_tower_id"], project_tower_name: d["project_tower_name"], status: d["_id"]["status"], count: d["count"], total_all_inclusive_price: d["total_all_inclusive_price"], total_agreement_price: d["total_agreement_price"], project_id: d["_id"]["project_id"], project_name: d["project_name"]}.with_indifferent_access
     end
     out
   end
