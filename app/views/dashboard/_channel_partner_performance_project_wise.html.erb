@@ -57,7 +57,7 @@
             <td data-title='<%= I18n.t("controller.booking_details.link_to.confirmed_bookings") %>'><%= link_to @confirmed_booked_bookings[p.id].try(:count) || 0, admin_booking_details_path(fltrs: {project_id: p.id, status: 'booked_confirmed'}.merge(booking_details_matcher)), target: "_blank" %></td>
             <td data-title='<%= InterestedProject.model_name.human(count: 2) %>'>
               <%= link_to (@subscribed_count_project_wise[p.id] || 0), admin_users_path(fltrs: {interested_project: p.id}.merge(ip_matcher)), target: "_blank" %></td>
-            <% sum_of_av = (@bookings[p.id].try(:count).try(:pluck, :agreement_price)&.map(&:to_f)&.sum || 0) %>
+            <% sum_of_av = (@bookings[p.id].try(:pluck, :agreement_price)&.map(&:to_f)&.sum || 0) %>
             <td class='non-action-td' data-title='<%= t('mongoid.attributes.booking_detail.agreement_price') %>'><%= number_to_indian_currency(sum_of_av) %>(<%= number_to_inr(sum_of_av, {precision: 2, significant: false}) %>)</td>
           </tr>
         <% end %>
