@@ -48,8 +48,9 @@ Selectize.define('infinite_scroll', function(options) {
       self.lastValue = value;
       self.onSearchChange(query);
       self.refreshOptions();
-      // Do not clear selected options upon searching in a multi remote select
-      //self.clearOptions();
+      if($(e.target).closest('.clear-options').length >= 1)
+        self.clearOptions();
+
       self.trigger('type', value);
     }
   };
