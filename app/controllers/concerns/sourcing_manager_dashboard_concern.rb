@@ -167,7 +167,7 @@ module SourcingManagerDashboardConcern
     @projects = Project.where(_id: matcher[:project_id])
     matcher[:channel_partner_id] = params[:channel_partner_id] if params[:channel_partner_id].present?
     matcher[:manager_id] = params[:manager_id].present? ? params[:manager_id] : { "$ne": nil }
-    matcher
+    matcher.with_indifferent_access
   end
 
   def interested_project_matcher
@@ -191,6 +191,6 @@ module SourcingManagerDashboardConcern
       channel_partner = ChannelPartner.where(booking_portal_client_id: current_client.try(:id), id: params[:channel_partner_id]).first
       ip_matcher[:user_id] = {'$in': channel_partner.users.distinct(:id)} if channel_partner.present?
     end
-    ip_matcher
+    ip_matcher.with_indifferent_access
   end
 end
