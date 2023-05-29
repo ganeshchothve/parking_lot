@@ -10,7 +10,7 @@
         <div class="box-card relative">
           <div class="row">
             <div class="col-lg-3 col-sm-12 col-md-4 col-xs-12 user-list-wrapper">
-              <div class="search-user mb-2">
+              <div class="search-user clear-options mb-2">
                 <%= select_tag :search_user, "", prompt: I18n.t("controller.team_leads.text.search_user"), class: 'selectize-remote', autofocus: true, remote: true, data: { url: search_by_admin_leads_path, params: { fltrs: { customer_status: 'queued', sort: 'queue_number.asc' }, element: '#queued-users-list', template: 'dashboard/index/partials/list_queued_users' }, preload: true } %>
               </div>
               <div id='queued-users-list'></div>

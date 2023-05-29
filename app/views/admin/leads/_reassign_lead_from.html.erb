@@ -5,7 +5,7 @@
 <div class="modal-body">
   <div class="mb-3">
     <%= f.label :closing_manager_id, class: 'control-label' %>
-    <%= f.select :closing_manager_id, User.sales.available.collect{|user| [(user.ds_name), user.id]}, {prompt: I18n.t("global.select")}, class: 'selectize', required: true %>
+    <%= f.select :closing_manager_id, User.where(booking_portal_client_id: current_client.id).sales.available.collect{|user| [(user.ds_name), user.id]}, {prompt: I18n.t("global.select")}, class: 'selectize', required: true %>
   </div>
 </div>
 <div class="modal-footer text-end">
