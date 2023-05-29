@@ -30,11 +30,13 @@
               <!-- <div class = "mb-3 col-12">
                 <%#= label_tag "channel_partner_id", ChannelPartner.model_name.human, required: true, class: "control-label float-left" %>
                 <%#= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}), prompt: I18n.t("global.select"), class: "selectize" %>
-              </div>
-              <div class = "mb-3 col-12">
-                <%#= label_tag "manager_id", I18n.t("mongoid.attributes.user.manager_id"), class: "control-label float-left" %>
-                <%#= select_tag "manager_id", options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.email, u.id]}), prompt: I18n.t("global.select"), class: "selectize" %>
               </div> -->
+              <% unless current_user.role?(:channel_partner) %>
+                <div class = "mb-3 col-12">
+                  <%= label_tag "manager_id", I18n.t("mongoid.attributes.user.manager_id"), class: "control-label float-left" %>
+                  <%= select_tag "manager_id", options_for_select(User.where(User.role_based_channel_partners_scope(current_user)).map{|u| [u.name, u.id]}), prompt: I18n.t("global.select"), class: "selectize" %>
+                </div>
+              <% end %>
               <div class="mb-3 col-12">
                 <%= label_tag :project_ids, I18n.t("mongoid.models.project.other"), class: "control-label float-left" %>
                 <%= select_tag :project_ids, options_for_select(Project.filter_by_is_active(true).where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: I18n.t("global.select"), class: "selectize", multiple: true} %>

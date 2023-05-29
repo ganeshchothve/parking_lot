@@ -2,9 +2,9 @@
   matcher = {
     booking_portal_client_id: current_client.id,
     channel_partner_id: params[:channel_partner_id],
-    manager_id: params[:manager_id],
-    manager_id_presence: true
+    manager_id: params[:manager_id]
   }
+  matcher[:manager_id_presence] = true unless params[:manager_id].present?
   leads_matcher = matcher.merge({created_at: @dates})
   site_visits_matcher = matcher.merge({scheduled_on: @dates})
   booking_details_matcher = matcher.merge({booked_on: @dates})
@@ -36,7 +36,9 @@
           <th><%= BookingDetail.model_name.human(count: 2) %></th>
           <th><%= I18n.t("controller.booking_details.link_to.registration_done") %></th>
           <th><%= I18n.t("controller.booking_details.link_to.confirmed_bookings") %></th>
-          <th><%= t("mongoid.attributes.interested_project/status.subscribed") %></th>
+          <% unless current_user.role.in?(%w(channel_partner)) %>
+            <th><%= t("mongoid.attributes.interested_project/status.subscribed") %></th>
+          <% end %>
           <th><%= I18n.t("global.total") %><br> <%= t('mongoid.attributes.booking_detail.agreement_price') %></th>
         </tr>
       </thead>
@@ -55,8 +57,10 @@
             <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><%= link_to @bookings[p.id].try(:count) || 0, admin_booking_details_path(fltrs: {project_id: p.id}.merge(booking_details_matcher)), target: "_blank" %></td>
             <td data-title='<%= I18n.t("controller.booking_details.link_to.registration_done") %>'><%= link_to @registration_done_bookings[p.id].try(:count) || 0, admin_booking_details_path(fltrs: {project_id: p.id, registration_done: true}.merge(booking_details_matcher)), target: "_blank" %></td>
             <td data-title='<%= I18n.t("controller.booking_details.link_to.confirmed_bookings") %>'><%= link_to @confirmed_booked_bookings[p.id].try(:count) || 0, admin_booking_details_path(fltrs: {project_id: p.id, status: 'booked_confirmed'}.merge(booking_details_matcher)), target: "_blank" %></td>
-            <td data-title='<%= InterestedProject.model_name.human(count: 2) %>'>
-              <%= link_to (@subscribed_count_project_wise[p.id] || 0), admin_users_path(fltrs: {interested_project: p.id}.merge(ip_matcher)), target: "_blank" %></td>
+            <% unless current_user.role.in?(%w(channel_partner)) %>
+              <td data-title='<%= InterestedProject.model_name.human(count: 2) %>'>
+                <%= link_to (@subscribed_count_project_wise[p.id] || 0), admin_users_path(fltrs: {interested_project: p.id}.merge(ip_matcher)), target: "_blank" %></td>
+            <% end %>
             <% sum_of_av = (@bookings[p.id].try(:pluck, :agreement_price)&.map(&:to_f)&.sum || 0) %>
             <td class='non-action-td' data-title='<%= t('mongoid.attributes.booking_detail.agreement_price') %>'><%= number_to_indian_currency(sum_of_av) %>(<%= number_to_inr(sum_of_av, {precision: 2, significant: false}) %>)</td>
           </tr>
@@ -74,7 +78,9 @@
           <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><%= link_to @bookings.values&.flatten&.count || 0, admin_booking_details_path(fltrs: {project_ids: @projects.pluck(:_id)}.merge(booking_details_matcher)), target: "_blank" %></td>
           <td data-title='<%= I18n.t("controller.booking_details.link_to.registration_done") %>'><%= link_to @registration_done_bookings.values&.flatten&.count || 0, admin_booking_details_path(fltrs: {project_ids: @projects.pluck(:_id), registration_done: true}.merge(booking_details_matcher)), target: "_blank" %></td>
           <td data-title='<%= I18n.t("controller.booking_details.link_to.confirmed_bookings") %>'><%= link_to @confirmed_booked_bookings.values&.flatten&.count || 0, admin_booking_details_path(fltrs: {project_ids: @projects.pluck(:_id), status: 'booked_confirmed'}.merge(booking_details_matcher)), target: "_blank" %></td>
-          <td data-title='<%= InterestedProject.model_name.human(count: 2) %>'>-</td>
+          <% unless current_user.role.in?(%w(channel_partner)) %>
+            <td data-title='<%= InterestedProject.model_name.human(count: 2) %>'>-</td>
+          <% end %>
           <% sum_of_av = (@bookings.values&.flatten&.pluck(:agreement_price)&.map(&:to_f)&.sum || 0) %>
           <td class='non-action-td' data-title='<%= t('mongoid.attributes.booking_detail.agreement_price') %>'><%= number_to_indian_currency(sum_of_av) %>(<%= number_to_inr(sum_of_av, {precision: 2, significant: false}) %>)</td>
         </tr>
