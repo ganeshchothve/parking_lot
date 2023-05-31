@@ -1,24 +1,18 @@
 <%
-  matcher = {
-    booking_portal_client_id: current_client.id,
-    channel_partner_id: params[:channel_partner_id],
-    manager_id: params[:manager_id]
-  }
-  matcher[:manager_id_presence] = true unless params[:manager_id].present?
-  leads_matcher = matcher.merge({created_at: @dates})
-  site_visits_matcher = matcher.merge({scheduled_on: @dates})
-  booking_details_matcher = matcher.merge({booked_on: @dates})
+  leads_matcher = @leads_matcher.merge({created_at: @dates})
+  svs_matcher = @svs_matcher.merge({scheduled_on: @dates})
+  bds_matcher = @bds_matcher.merge({booked_on: @dates})
 
-  ip_matcher = {
-    booking_portal_client_id: current_client.id,
-    status: 'approved',
-  }
-  ip_matcher[:created_at] = params[:dates].split(' - ') if params[:dates].present?
-  if params[:channel_partner_id].present?
-    channel_partner = ChannelPartner.where(booking_portal_client_id: current_client.id, id: params[:channel_partner_id]).first
-    ip_matcher[:user_id] = {'$in': channel_partner.users.distinct(:id)} if channel_partner.present?
-  end
+  leads_matcher = leads_matcher.merge({manager_id_presence: true, manager_id: nil}) if @leads_matcher[:manager_id].is_a?(Hash) ? @leads_matcher[:manager_id].try(:with_indifferent_access).in?([{"$ne" => nil}]) : @leads_matcher[:manager_id].in?([nil, ''])
+
+  svs_matcher = svs_matcher.merge({manager_id_presence: true, manager_id: nil}) if @svs_matcher[:manager_id].is_a?(Hash) ? @svs_matcher[:manager_id].try(:with_indifferent_access).in?([{"$ne" => nil}]) : @svs_matcher[:manager_id].in?([nil, ''])
+
+  bds_matcher = bds_matcher.merge({manager_id_presence: true, manager_id: nil}) if @bds_matcher[:manager_id].is_a?(Hash) ? @bds_matcher[:manager_id].try(:with_indifferent_access).in?([{"$ne" => nil}]) : @bds_matcher[:manager_id].in?([nil, ''])
+
+  ip_matcher = @ip_matcher
+  ip_matcher[:created_at] = params[:dates] if params[:dates].present?
 %>
+
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 mb-5">
   <div class="box-card relative table-responsive">
     <table class="table my-customer-table responsive-tbl caption-top rounded mt-3 mb-0">
@@ -47,19 +41,19 @@
           <tr>
             <td data-title='<%= Project.model_name.human %>'><%= p.name.titleize %></td>
             <% if policy([:admin, Lead]).index? %>
-              <td data-title='<%= Lead.model_name.human(count: 2) %>'><%= link_to @leads[p.id].try(:count) || 0, admin_leads_path(fltrs: {project_id: p.id}.merge(leads_matcher)), target: "_blank" %></td>
+              <td data-title='<%= Lead.model_name.human(count: 2) %>'><%= link_to @leads[p.id].try(:count) || 0, admin_leads_path(fltrs: leads_matcher.merge({project_id: p.id})), target: "_blank" %></td>
             <% end %>
-            <td data-title='<%= I18n.t('mongoid.attributes.site_visit/status.scheduled') + " " + SiteVisit.model_name.human(count: 2) %>'><%= link_to @scheduled_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: {status: 'scheduled', project_id: p.id}.merge(site_visits_matcher)), target: "_blank" %></td>
-            <td data-title='<%= I18n.t('mongoid.attributes.site_visit/status.conducted') + " " + SiteVisit.model_name.human(count: 2) %>'><%= link_to @conducted_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: {status: 'conducted', project_id: p.id}.merge(site_visits_matcher)), target: "_blank" %></td>
-            <td data-title='<%= I18n.t('mongoid.attributes.site_visit/status.pending') + " " + SiteVisit.model_name.human(count: 2) %>'><%= link_to @pending_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: {approval_status: 'pending', project_id: p.id}.merge(site_visits_matcher)), target: "_blank" %></td>
-            <td data-title='<%= I18n.t('mongoid.attributes.site_visit/approval_status.appproved') + " " + SiteVisit.model_name.human(count: 2) %>'><%= link_to @approved_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: {approval_status: 'approved', project_id: p.id}.merge(site_visits_matcher)), target: "_blank" %></td>
-            <td data-title='<%= I18n.t('mongoid.attributes.site_visit/approval_status.rejected') + " " + SiteVisit.model_name.human(count: 2) %>'><%= link_to @rejected_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: {approval_status: 'rejected', project_id: p.id}.merge(site_visits_matcher)), target: "_blank" %></td>
-            <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><%= link_to @bookings[p.id].try(:count) || 0, admin_booking_details_path(fltrs: {project_id: p.id}.merge(booking_details_matcher)), target: "_blank" %></td>
-            <td data-title='<%= I18n.t("controller.booking_details.link_to.registration_done") %>'><%= link_to @registration_done_bookings[p.id].try(:count) || 0, admin_booking_details_path(fltrs: {project_id: p.id, registration_done: true}.merge(booking_details_matcher)), target: "_blank" %></td>
-            <td data-title='<%= I18n.t("controller.booking_details.link_to.confirmed_bookings") %>'><%= link_to @confirmed_booked_bookings[p.id].try(:count) || 0, admin_booking_details_path(fltrs: {project_id: p.id, status: 'booked_confirmed'}.merge(booking_details_matcher)), target: "_blank" %></td>
+            <td data-title='<%= I18n.t('mongoid.attributes.site_visit/status.scheduled') + " " + SiteVisit.model_name.human(count: 2) %>'><%= link_to @scheduled_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: (svs_matcher).merge({status: 'scheduled', project_id: p.id})), target: "_blank" %></td>
+            <td data-title='<%= I18n.t('mongoid.attributes.site_visit/status.conducted') + " " + SiteVisit.model_name.human(count: 2) %>'><%= link_to @conducted_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: (svs_matcher).merge({status: 'conducted', project_id: p.id})), target: "_blank" %></td>
+            <td data-title='<%= I18n.t('mongoid.attributes.site_visit/status.pending') + " " + SiteVisit.model_name.human(count: 2) %>'><%= link_to @pending_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: (svs_matcher).merge({approval_status: 'pending', project_id: p.id})), target: "_blank" %></td>
+            <td data-title='<%= I18n.t('mongoid.attributes.site_visit/approval_status.appproved') + " " + SiteVisit.model_name.human(count: 2) %>'><%= link_to @approved_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: (svs_matcher).merge({approval_status: 'approved', project_id: p.id})), target: "_blank" %></td>
+            <td data-title='<%= I18n.t('mongoid.attributes.site_visit/approval_status.rejected') + " " + SiteVisit.model_name.human(count: 2) %>'><%= link_to @rejected_site_visits[p.id].try(:count) || 0, admin_site_visits_path(fltrs: (svs_matcher).merge({approval_status: 'rejected', project_id: p.id})), target: "_blank" %></td>
+            <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><%= link_to @bookings[p.id].try(:count) || 0, admin_booking_details_path(fltrs: (bds_matcher).merge({project_id: p.id})), target: "_blank" %></td>
+            <td data-title='<%= I18n.t("controller.booking_details.link_to.registration_done") %>'><%= link_to @registration_done_bookings[p.id].try(:count) || 0, admin_booking_details_path(fltrs: bds_matcher.merge({project_id: p.id, registration_done: true})), target: "_blank" %></td>
+            <td data-title='<%= I18n.t("controller.booking_details.link_to.confirmed_bookings") %>'><%= link_to @confirmed_booked_bookings[p.id].try(:count) || 0, admin_booking_details_path(fltrs: bds_matcher.merge({project_id: p.id, status: 'booked_confirmed'})), target: "_blank" %></td>
             <% unless current_user.role.in?(%w(channel_partner)) %>
               <td data-title='<%= InterestedProject.model_name.human(count: 2) %>'>
-                <%= link_to (@subscribed_count_project_wise[p.id] || 0), admin_users_path(fltrs: {interested_project: p.id}.merge(ip_matcher)), target: "_blank" %></td>
+                <%= link_to (@subscribed_count_project_wise[p.id] || 0), admin_users_path(fltrs: (ip_matcher).merge({interested_project: p.id})), target: "_blank" %></td>
             <% end %>
             <% sum_of_av = (@bookings[p.id].try(:pluck, :agreement_price)&.map(&:to_f)&.sum || 0) %>
             <td class='non-action-td' data-title='<%= t('mongoid.attributes.booking_detail.agreement_price') %>'><%= number_to_indian_currency(sum_of_av) %>(<%= number_to_inr(sum_of_av, {precision: 2, significant: false}) %>)</td>
@@ -68,16 +62,16 @@
         <tr >
           <th data-title="<%= t('global.total') %>"><%= t('global.total') %></th>
           <% if policy([:admin, Lead]).index? %>
-            <td data-title='<%= Lead.model_name.human(count: 2) %>'><%= link_to @leads.values&.flatten&.count ? @leads.values&.flatten&.count : 0, admin_leads_path(fltrs: {project_ids: @projects.pluck(:_id)}.merge(leads_matcher)), target: "_blank" %></td>
+            <td data-title='<%= Lead.model_name.human(count: 2) %>'><%= link_to @leads.values&.flatten&.count ? @leads.values&.flatten&.count : 0, admin_leads_path(fltrs: (leads_matcher).merge({project_ids: @projects.pluck(:_id), project_id: nil})), target: "_blank" %></td>
           <% end %>
-          <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @scheduled_site_visits.values&.flatten&.count || 0, admin_site_visits_path(fltrs: {status: 'scheduled', project_ids: @projects.pluck(:_id)}.merge(site_visits_matcher)), target: "_blank" %></td>
-          <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @conducted_site_visits.values&.flatten&.count || 0, admin_site_visits_path(fltrs: {status: 'conducted', project_ids: @projects.pluck(:_id)}.merge(site_visits_matcher)), target: "_blank" %></td>
-          <td data-title='Pending <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @pending_site_visits.values&.flatten&.count || 0, admin_site_visits_path(fltrs: {approval_status: 'pending', project_ids: @projects.pluck(:_id)}.merge(site_visits_matcher)), target: "_blank" %></td>
-          <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @approved_site_visits.values&.flatten&.count || 0, admin_site_visits_path(fltrs: {approval_status: 'approved', project_ids: @projects.pluck(:_id)}.merge(site_visits_matcher)), target: "_blank" %></td>
-          <td data-title='Rejected <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @rejected_site_visits.values&.flatten&.count || 0, admin_site_visits_path(fltrs: {approval_status: 'rejected', project_ids: @projects.pluck(:_id)}.merge(site_visits_matcher)), target: "_blank" %></td>
-          <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><%= link_to @bookings.values&.flatten&.count || 0, admin_booking_details_path(fltrs: {project_ids: @projects.pluck(:_id)}.merge(booking_details_matcher)), target: "_blank" %></td>
-          <td data-title='<%= I18n.t("controller.booking_details.link_to.registration_done") %>'><%= link_to @registration_done_bookings.values&.flatten&.count || 0, admin_booking_details_path(fltrs: {project_ids: @projects.pluck(:_id), registration_done: true}.merge(booking_details_matcher)), target: "_blank" %></td>
-          <td data-title='<%= I18n.t("controller.booking_details.link_to.confirmed_bookings") %>'><%= link_to @confirmed_booked_bookings.values&.flatten&.count || 0, admin_booking_details_path(fltrs: {project_ids: @projects.pluck(:_id), status: 'booked_confirmed'}.merge(booking_details_matcher)), target: "_blank" %></td>
+          <td data-title='Scheduled <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @scheduled_site_visits.values&.flatten&.count || 0, admin_site_visits_path(fltrs: svs_matcher.merge({status: 'scheduled', project_ids: @projects.pluck(:_id), project_id: nil})), target: "_blank" %></td>
+          <td data-title='Conducted <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @conducted_site_visits.values&.flatten&.count || 0, admin_site_visits_path(fltrs: svs_matcher.merge({status: 'conducted', project_ids: @projects.pluck(:_id), project_id: nil})), target: "_blank" %></td>
+          <td data-title='Pending <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @pending_site_visits.values&.flatten&.count || 0, admin_site_visits_path(fltrs: svs_matcher.merge({approval_status: 'pending', project_ids: @projects.pluck(:_id), project_id: nil})), target: "_blank" %></td>
+          <td data-title='Approved <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @approved_site_visits.values&.flatten&.count || 0, admin_site_visits_path(fltrs: svs_matcher.merge({approval_status: 'approved', project_ids: @projects.pluck(:_id), project_id: nil})), target: "_blank" %></td>
+          <td data-title='Rejected <%= SiteVisit.model_name.human(count: 2) %>'><%= link_to @rejected_site_visits.values&.flatten&.count || 0, admin_site_visits_path(fltrs: svs_matcher.merge({approval_status: 'rejected', project_ids: @projects.pluck(:_id), project_id: nil})), target: "_blank" %></td>
+          <td data-title='<%= BookingDetail.model_name.human(count: 2) %>'><%= link_to @bookings.values&.flatten&.count || 0, admin_booking_details_path(fltrs: bds_matcher.merge({project_ids: @projects.pluck(:_id), project_id: nil})), target: "_blank" %></td>
+          <td data-title='<%= I18n.t("controller.booking_details.link_to.registration_done") %>'><%= link_to @registration_done_bookings.values&.flatten&.count || 0, admin_booking_details_path(fltrs: bds_matcher.merge({project_ids: @projects.pluck(:_id), project_id: nil, registration_done: true})), target: "_blank" %></td>
+          <td data-title='<%= I18n.t("controller.booking_details.link_to.confirmed_bookings") %>'><%= link_to @confirmed_booked_bookings.values&.flatten&.count || 0, admin_booking_details_path(fltrs: bds_matcher.merge({project_ids: @projects.pluck(:_id), project_id: nil, status: 'booked_confirmed'})), target: "_blank" %></td>
           <% unless current_user.role.in?(%w(channel_partner)) %>
             <td data-title='<%= InterestedProject.model_name.human(count: 2) %>'>-</td>
           <% end %>

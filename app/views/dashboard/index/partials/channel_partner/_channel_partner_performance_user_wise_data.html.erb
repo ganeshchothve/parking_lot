@@ -36,14 +36,15 @@
                 <%= label_tag "channel_partner_id", ChannelPartner.model_name.human, class: "control-label float-left" %>
                 <%= select_tag "channel_partner_id", options_for_select(ChannelPartner.active.where(ChannelPartner.user_based_scope(current_user)).map{|cp| [cp.company_name, cp.id]}, cp_id), prompt: I18n.t("global.select"), class: "selectize" %>
               </div>
+              <!--
               <div class="mb-3 col-12">
-                <%= label_tag "fltrs", I18n.t("global.link_to.active_walkins"), class: "control-label float-left" %>
-                <%= select_tag "active_walkins", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_walkins].present? ? params[:active_walkins] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
+                <%#= label_tag "fltrs", I18n.t("global.link_to.active_walkins"), class: "control-label float-left" %>
+                <%#= select_tag "active_walkins", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_walkins].present? ? params[:active_walkins] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
               </div>
               <div class="mb-3 col-12">
-                <%= label_tag "fltrs", I18n.t("global.link_to.active_bookings"), class: "control-label float-left" %>
-                <%= select_tag "active_bookings", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_bookings].present? ? params[:active_bookings] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
-              </div>
+                <%#= label_tag "fltrs", I18n.t("global.link_to.active_bookings"), class: "control-label float-left" %>
+                <%#= select_tag "active_bookings", options_for_select([[t('global.boolean.true'), true], [t('global.boolean.false'), false]], (params[:active_bookings].present? ? params[:active_bookings] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
+              </div> -->
             </div>
           </div>
           <div class="filter-footer modal-footer text-end">

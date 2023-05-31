@@ -121,22 +121,7 @@ module SourcingManagerDashboardConcern
   end
 
   def channel_partner_performance_project_wise
-    @dates = params[:dates]
-    @dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if @dates.blank?
-    start_date, end_date = @dates.split(' - ')
-
-    daterange_filter =  {
-      "$gte": Date.parse(start_date).beginning_of_day,
-      "$lte": Date.parse(end_date).end_of_day
-    }
-
-    leads_matcher = filter_matcher.merge({created_at: daterange_filter})
-    booking_details_matcher = filter_matcher.merge({booked_on: daterange_filter})
-    site_visits_matcher = filter_matcher.merge({scheduled_on: daterange_filter})
-
-    @leads = Lead.where(Lead.user_based_scope(current_user, params)).where(leads_matcher)
-    @site_visits = SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).where(site_visits_matcher)
-    @bookings = BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(booking_details_matcher)
+    filter_matcher
 
     @subscribed_count_project_wise = DashboardDataProvider.subscribed_count_project_wise(current_user, interested_project_matcher)
     @leads = @leads.group_by{|p| p.project_id}
@@ -152,26 +137,12 @@ module SourcingManagerDashboardConcern
   end
 
   def channel_partner_performance_user_wise
-    @dates = params[:dates]
-    @dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if @dates.blank?
-    start_date, end_date = @dates.split(' - ')
-    daterange_filter =  {
-      "$gte": Date.parse(start_date).beginning_of_day,
-      "$lte": Date.parse(end_date).end_of_day
-    }
-
-    leads_matcher = filter_matcher.merge({created_at: daterange_filter})
-    booking_details_matcher = filter_matcher.merge({booked_on: daterange_filter})
-    site_visits_matcher = filter_matcher.merge({scheduled_on: daterange_filter})
-
-    @leads = Lead.where(Lead.user_based_scope(current_user, params)).where(leads_matcher)
-    @site_visits = SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).where(site_visits_matcher)
-    @bookings = BookingDetail.where(BookingDetail.user_based_scope(current_user, params)).where(booking_details_matcher)
+    filter_matcher
 
     @site_visits_manager_ids = @site_visits.distinct(:manager_id).compact
     @booking_detail_manager_ids = @bookings.distinct(:manager_id).compact
     client_id = current_client.try(:id)
-    @manager_ids_criteria = partner_wise_filters(@site_visits_manager_ids, @booking_detail_manager_ids, client_id, params)
+    @manager_ids = User.where(User.user_based_scope(current_user, params)).filter_by_role(%w(cp_owner channel_partner)).distinct(:id)
 
     @leads = @leads.group_by{|p| p.manager_id}
     @all_site_visits = @site_visits.ne(manager_id: nil).group_by{|p| p.manager_id}
@@ -182,79 +153,75 @@ module SourcingManagerDashboardConcern
     @rejected_site_visits = @site_visits.filter_by_approval_status('rejected').group_by{|p| p.manager_id}
     @bookings = @bookings.group_by{|p| p.manager_id}
     user = params[:channel_partner_id].present? ? ChannelPartner.where(booking_portal_client_id: current_client.try(:id), id: params[:channel_partner_id]).first&.users&.cp_owner&.first : current_user
-    respond_to do |format|
-      format.js
-      format.xls { send_data ExcelGenerator::PartnerWisePerformance.partner_wise_performance_csv(user, @leads, @bookings, @all_site_visits, @site_visits, @pending_site_visits, @approved_site_visits, @rejected_site_visits, @scheduled_site_visits, @conducted_site_visits, @manager_ids_criteria).string , filename: "partner_wise_performance-#{Date.today}.xls", type: "application/xls" }
-    end
+    # respond_to do |format|
+    #   format.js
+    #   format.xls { send_data ExcelGenerator::PartnerWisePerformance.partner_wise_performance_csv(user, @leads, @bookings, @all_site_visits, @site_visits, @pending_site_visits, @approved_site_visits, @rejected_site_visits, @scheduled_site_visits, @conducted_site_visits, @manager_ids).string , filename: "partner_wise_performance-#{Date.today}.xls", type: "application/xls" }
+    # end
   end
 
   private
 
+  def filter_dates
+    start_date, end_date = @dates.split(' - ')
+    daterange_filter =  {
+      "$gte": Date.parse(start_date).beginning_of_day,
+      "$lte": Date.parse(end_date).end_of_day
+    }
+  end
+
   def filter_matcher
+    @dates = params[:dates]
+    @dates = (Date.today - 6.months).strftime("%d/%m/%Y") + " - " + Date.today.strftime("%d/%m/%Y") if @dates.blank?
+
     active_project_ids = Project.filter_by_is_active(true).pluck(:_id)
     matcher = {
       booking_portal_client_id: current_client.id,
       project_id: { "$in": active_project_ids }
     }
     matcher[:project_id] = {"$in": params[:project_ids].map{|id| BSON::ObjectId(id) }} if params[:project_ids].present?
-    @projects = Project.where(_id: matcher[:project_id])
     matcher[:channel_partner_id] = params[:channel_partner_id] if params[:channel_partner_id].present?
-    matcher[:manager_id] = params[:manager_id].present? ? params[:manager_id] : { "$ne": nil }
-    matcher.with_indifferent_access
+
+    leads_user_based_scope = Lead.user_based_scope(current_user, params)
+    svs_user_based_scope = SiteVisit.user_based_scope(current_user, params)
+    bds_user_based_scope = BookingDetail.user_based_scope(current_user, params)
+
+    @leads_matcher = leads_user_based_scope.merge(matcher).merge({created_at: filter_dates})
+    @svs_matcher = svs_user_based_scope.merge(matcher).merge({scheduled_on: filter_dates})
+    @bds_matcher = bds_user_based_scope.merge(matcher).merge({booked_on: filter_dates})
+
+    @leads_matcher[:manager_id] = params[:manager_id].presence || leads_user_based_scope[:manager_id] || { "$ne": nil }
+    @svs_matcher[:manager_id] = params[:manager_id].presence || svs_user_based_scope[:manager_id] || { "$ne": nil }
+    @bds_matcher[:manager_id] = params[:manager_id].presence || bds_user_based_scope[:manager_id] || { "$ne": nil }
+
+    @projects = Project.where(_id: matcher[:project_id])
+    @leads = Lead.where(Lead.user_based_scope(current_user, params).merge(@leads_matcher))
+    @site_visits = SiteVisit.where(SiteVisit.user_based_scope(current_user, params).merge(@svs_matcher))
+    @bookings = BookingDetail.where(BookingDetail.user_based_scope(current_user, params).merge(@bds_matcher))
   end
 
   def interested_project_matcher
     active_project_ids = Project.filter_by_is_active(true).pluck(:_id)
 
-    ip_matcher = {
+    @ip_matcher = {
       status: 'approved',
       booking_portal_client_id: current_client.id,
       project_id: { "$in": active_project_ids }
     }
-    ip_matcher[:project_id] = {"$in": params[:project_ids].map{|id| BSON::ObjectId(id) }} if params[:project_ids].present?
+    @ip_matcher[:project_id] = {"$in": params[:project_ids].map{|id| BSON::ObjectId(id) }} if params[:project_ids].present?
 
     if params[:dates].present?
       start_date, end_date = params[:dates].split(' - ')
-      ip_matcher[:created_at] = {
+      @ip_matcher[:created_at] = {
         "$gte": Date.parse(start_date).beginning_of_day,
         "$lte": Date.parse(end_date).end_of_day
       }
     end
-    if params[:channel_partner_id].present?
-      channel_partner = ChannelPartner.where(booking_portal_client_id: current_client.try(:id), id: params[:channel_partner_id]).first
-      ip_matcher[:user_id] = {'$in': channel_partner.users.distinct(:id)} if channel_partner.present?
+    channel_partner_id = params[:channel_partner_id] || current_user.try(:channel_partner_id)
+    if channel_partner_id.present?
+      channel_partner = ChannelPartner.where(booking_portal_client_id: current_client.try(:id), id: channel_partner_id).first
+      @ip_matcher[:user_id] = {'$in': channel_partner.users.distinct(:id)} if channel_partner.present?
     end
-    ip_matcher.with_indifferent_access
+    @ip_matcher.with_indifferent_access
   end
 
-  def partner_wise_filters (site_visit_manager_ids, booking_detail_manager_ids, client_id, params = {})
-
-    manager_ids_with_sv_and_booking = site_visit_manager_ids & booking_detail_manager_ids
-    manager_ids_with_sv_or_booking = site_visit_manager_ids || booking_detail_manager_ids
-    manager_ids_with_sv_and_no_booking = site_visit_manager_ids - booking_detail_manager_ids
-    manager_ids_with_booking_and_no_sv = booking_detail_manager_ids - site_visit_manager_ids
-
-    user_ids = if params[:active_walkins] == 'true' && params[:active_bookings] == 'true'
-      manager_ids_with_sv_and_booking
-    elsif params[:active_walkins] == 'true' && params[:active_bookings] == 'false'
-      manager_ids_with_sv_and_no_booking
-    elsif params[:active_walkins] == 'false' && params[:active_bookings] == 'true'
-      manager_ids_with_booking_and_no_sv
-    elsif params[:active_walkins] == 'false' && params[:active_bookings] == 'false'
-      User.where(booking_portal_client_id: client_id).nin(id: manager_ids_with_sv_or_booking).distinct(:id)
-    elsif params[:active_walkins] == 'true' && params[:active_bookings] == ''
-      User.where(booking_portal_client_id: client_id).in(id: site_visit_manager_ids).distinct(:id)
-    elsif params[:active_walkins] == 'false' && params[:active_bookings] == ''
-      User.where(booking_portal_client_id: client_id).nin(id: site_visit_manager_ids).distinct(:id)
-    elsif params[:active_walkins] == '' && params[:active_bookings] == 'true'
-      User.where(booking_portal_client_id: client_id).in(id: booking_detail_manager_ids).distinct(:id)
-    elsif params[:active_walkins] == '' && params[:active_bookings] == 'false'
-      User.where(booking_portal_client_id: client_id).nin(id: booking_detail_manager_ids).distinct(:id)
-    else
-      User.where(booking_portal_client_id: client_id).filter_by_role(%w(cp_owner channel_partner)).distinct(:id)
-    end
-
-    manager_ids = {id: user_ids}
-    manager_ids
-  end
 end
