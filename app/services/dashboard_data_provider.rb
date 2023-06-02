@@ -775,15 +775,31 @@ module DashboardDataProvider
       unit_configuration_name: "$unit_configuration_name",
       project_id: "$project_id"
     }
+    # uncancelled bookings project unit ids for total agreement price
+    project_unit_ids = BookingDetail.in(status: ['blocked', 'booked_tentative', 'booked_confirmed', 'scheme_approved', 'scheme_rejected', 'under_negotiation']).distinct(:project_unit_id)
     data = ProjectUnit.collection.aggregate([
       { '$match': ProjectUnit.user_based_scope(current_user) },
       { "$match": matcher },
+      { "$addFields":
+        {
+          booking_may_happen: { "$cond": [ {"$in": ["$_id", project_unit_ids]}, 1, 0 ]}
+        }
+      },
       {
         "$group":
           {
             "_id": grouping,
             blocked:{ "$sum": { "$cond": [ {"$eq": ['$status', {"$literal": 'blocked'}]}, 1, 0 ] } },
-            agreement_price: { "$sum": { "$cond": [ {"$eq": ['$status', {"$literal": 'blocked'}]}, "$agreement_price", 0 ] } },
+            agreement_price: { "$sum": { "$cond": [
+                {
+                  "$and":
+                  [
+                    {"$eq": ['$status', {"$literal": 'blocked'}]},
+                    {"$eq": ['$booking_may_happen', 1]}
+                  ]
+                },
+                "$agreement_price", 0
+                ] } },
             available: { "$sum": { "$cond": [ {"$in": ['$status', ['available', "management_blocking", "employee"]]}, 1, 0 ] } },
             blocked_project_units:{ "$push": { "$cond": [ {"$eq": ['$status', {"$literal": 'blocked'}]}, "$_id", nil] } },
             total: { "$sum": 1 }
@@ -841,7 +857,7 @@ module DashboardDataProvider
       out[_data["_id"]][:configuration_wise] = _unit_configuration_hash
       _blocked_units = _data["total_blocked_project_units"].flatten.compact.map{|id| id.to_s}
       _booking_detail_ids = BookingDetail.where(BookingDetail.user_based_scope(current_user)).where(status: {"$in": BookingDetail::BOOKING_STAGES}, project_unit_id: {"$in": _blocked_units}).pluck(:id)
-      out[_data["_id"]][:collection] = Receipt.where(Receipt.user_based_scope(current_user)).in(booking_detail_id: _booking_detail_ids).in(status:["success","clearance_pending"]).sum(:total_amount)
+      out[_data["_id"]][:collection] = Receipt.where(Receipt.user_based_scope(current_user)).in(booking_detail_id: _booking_detail_ids).in(status:["success"]).sum(:total_amount)
       out["All Towers"] = calculate_all_towers(out["All Towers"], out[_data["_id"]], current_user)
     end
     out

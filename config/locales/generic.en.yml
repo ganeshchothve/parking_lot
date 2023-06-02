@@ -3073,15 +3073,24 @@ en-GENERIC:
         approved_invoices: "Approved Invoices"
       link_to:
         project_wise:
-          incentive_deduction: "Product/ Service Wise Incentive Deduction Summary"
+          incentive_deduction: "Project Wise Incentive Deduction Summary"
           overview: "Overview"
-          booking_count: "Product/ Service Wise Booking Count"
-          actual_revenue_report: "Product/ Service Wise Actual Revenue Reports"
-          tentative_revenue_reports: "Product/ Service Wise Tentative Revenue Reports"
+          booking_count: "Project Wise Booking Count"
+          conversion_report: "Project Wise Conversion Report"
+          leads_stage_leads: "Stage Wise Lead Count"
+          actual_revenue_report: "Project Wise Actual Revenue Reports"
+          tentative_revenue_reports: "Project Wise Tentative Revenue Reports"
+          stage_wise_lead_count: "Stage wise Lead Count"
           applying_filters:
             step1: "Applying filters will only show 15 records irrespective of the total records count. Acitve Filter Export will contain all the filtered records. The"
             step2: "count will depend on the filtered results."
-
+        receipts:
+          details_report: "Payments"
+        project_unit:
+          inventory_snapshot: "Inventory Snapshot"
+          collection_report: "Collection Report"
+        user_requests:
+          details_report: "User Requests"
     emails:
       index:
         link_name: "Emails"
