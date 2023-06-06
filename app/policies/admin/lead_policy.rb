@@ -202,7 +202,7 @@ class Admin::LeadPolicy < LeadPolicy
 
   def permitted_attributes(params = {})
     attributes = super || []
-    attributes += [:first_name, :last_name, :email, :phone, :project_id, site_visits_attributes: Pundit.policy(user, [:admin, SiteVisit.new]).permitted_attributes] if record.new_record?
+    attributes += [:first_name, :last_name, :email, :phone, :project_id, :booking_portal_client_id, site_visits_attributes: Pundit.policy(user, [:admin, SiteVisit.new]).permitted_attributes] if record.new_record?
     if user.present? && enable_lead_registration?(user)
       attributes += [:manager_id] if user.booking_portal_client.try(:enable_channel_partners?)
       attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]

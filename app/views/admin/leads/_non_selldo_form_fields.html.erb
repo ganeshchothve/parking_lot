@@ -27,26 +27,34 @@
 <% project_id = params[:project_id].presence || current_project.presence.try(:id) %>
 <% if project_id.present? %>
   <%= f.input :project_id, as: :hidden, input_html: { name: 'project_id', value: project_id } %>
-<% elsif Project.where(booking_portal_client_id: current_client.id).count == 1 && Project.where(booking_portal_client_id: current_client.id).first&.id.present? %>
+<% elsif current_client.present? && Project.where(booking_portal_client_id: current_client.id).count == 1 && Project.where(booking_portal_client_id: current_client.id).first&.id.present? %>
   <%= f.input :project_id, as: :hidden, input_html: { name: 'project_id', value: Project.where(booking_portal_client_id: current_client.id).first.id } %>
 <% else %>
   <% if policy([:admin, lead]).editable_field?("project_id") %>
-  <div class='row'>
-    <div class="col-md-12">
-      <%= f.input :project_id, collection: [], required: true, disabled: !policy([:admin, lead]).editable_field?("project_id"), as: :select, prompt: :translate, input_html: { class: 'selectize-remote', name: 'project_id', data: {url: admin_projects_path} } %>
-    </div>
-  </div>
-  <% end %>
-<% end %>
-<% if current_client.enable_channel_partners? && policy([:admin, lead]).editable_field?("manager_id") %>
-  <% if current_user.role?(:channel_partner) %>
-    <%= f.input :manager_id, as: :hidden, input_html: { name: 'manager_id', value: current_user.id } %>
-  <% else %>
+    <% if user_signed_in? %>
+      <% _url = admin_projects_path %>
+    <% else %>
+      <% _url = register_customer_projects_dropdown_path(fltrs: {booking_portal_client_id: current_client.try(:id), is_active: true}) %>
+    <% end %>
     <div class='row'>
       <div class="col-md-12">
-        <%= f.input :manager_id, collection: User.in(role: ['channel_partner', 'cp_owner']).where(booking_portal_client_id: current_user.booking_portal_client_id).collect{|user| [user.ds_name, user.id]}, selected: @lead.manager_id, disabled: !policy([:admin, @lead]).editable_field?("manager_id"), prompt: :translate, input_html: { class: 'selectize', name: 'manager_id' } %>
+        <%= f.input :project_id, collection: [], required: true, disabled: !policy([:admin, lead]).editable_field?("project_id"), as: :select, prompt: :translate, input_html: { class: 'selectize-remote', name: 'project_id', data: {url: _url} } %>
       </div>
     </div>
+  <% end %>
+<% end %>
+<% if current_client.present? %>
+  <%= f.input :booking_portal_client_id, as: :hidden, input_html: { name: 'booking_portal_client_id', value: current_client.id } %>
+  <% if current_user.present? && current_client.enable_channel_partners? && policy([:admin, lead]).editable_field?("manager_id") %>
+    <% if current_user.role?(:channel_partner) %>
+      <%= f.input :manager_id, as: :hidden, input_html: { name: 'manager_id', value: current_user.id } %>
+    <% else %>
+      <div class='row'>
+        <div class="col-md-12">
+          <%= f.input :manager_id, collection: User.in(role: ['channel_partner', 'cp_owner']).where(booking_portal_client_id: current_user.booking_portal_client_id).collect{|user| [user.ds_name, user.id]}, selected: @lead.manager_id, disabled: !policy([:admin, @lead]).editable_field?("manager_id"), prompt: :translate, input_html: { class: 'selectize', name: 'manager_id' } %>
+        </div>
+      </div>
+    <% end %>
   <% end %>
 <% end %>
 <% if f.object.site_visits.present? && f.object.site_visits.any?(&:new_record) %>

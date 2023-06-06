@@ -967,6 +967,7 @@ en-GENERIC:
         cp_meeting_custom_field: "Partner"
         project_meeting_custom_field: "Product/ Service"
         industry: 'Industry'
+        enable_customer_registration: "Enable Customer Registration on Login Page"
       client/available_preferred_logins:
         phone: "Phone Based"
         email: "Email Based"

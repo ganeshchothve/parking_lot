@@ -24,6 +24,11 @@
               <% end %>
             </div>
           <% end %>
+          <% if current_client.present? && current_client.enable_customer_registration? %>
+            <div class="d-inline-block">
+              <%= link_to I18n.t("devise.keys.register_as.customer"), register_path, class: "btn btn-primary btn-as-customer-partner show-xs p-style ms-3 px-3" %>
+            </div>
+          <% end %>
           <% if devise_controller? && params[:action].in?(%w(new create)) %>
             <% if current_client.present? %>
               <!-- <div class="d-inline-block"> -->
