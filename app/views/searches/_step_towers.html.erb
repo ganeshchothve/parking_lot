@@ -126,7 +126,7 @@
           <%= f.submit I18n.t("global.next"), class: "next-btn btn btn-primary font-medium border-primary ms-2", disabled: 'disabled' %>
         <% end %>
       <% else %>
-        <%= form_for(:booking_detail, url: hold_lead_search_path(@search), html: {method: "post", class: 'validate-form theme-form row', id: 'hold_booking_detail_from_tower'}) do |f| %>
+        <%= form_for(:booking_detail, url: hold_lead_search_path(@search), html: {method: "post", class: 'validate-form theme-form', id: 'hold_booking_detail_from_tower'}) do |f| %>
           <%= f.hidden_field :lead_id, value: @lead.id %>
           <%= f.hidden_field :project_unit_id, id: 'project_unit_id' %>
           <%= f.submit I18n.t("global.next"), class: "next-btn btn btn-primary font-medium border-primary ms-2" %>
