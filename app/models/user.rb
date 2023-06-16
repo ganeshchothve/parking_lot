@@ -928,7 +928,7 @@ class User
 
     def user_based_scope(user, _params = {})
       custom_scope = {}
-      project_ids = (_params[:current_project_id].present? ? [_params[:current_project_id]] : user.project_ids.map{|id| BSON::ObjectId(id) })
+      project_ids = (_params[:current_project_id].present? ? [BSON::ObjectId(_params[:current_project_id])] : user.project_ids.map{|id| BSON::ObjectId(id) })
       if user.role?('channel_partner')
         custom_scope = { role: {"$in": User.buyer_roles(user.booking_portal_client)} }
         custom_scope[:'$or'] = [{manager_id: user.id}, {manager_id: nil, referenced_manager_ids: user.id, iris_confirmation: false}]
