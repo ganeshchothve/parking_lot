@@ -1952,10 +1952,12 @@ table .dropdown-menu.show{
 
 }
 .auth{
+		background-image: asset-url('login.png');
     background-repeat: no-repeat;
-    background-position: right;
+    background-position: center;
     background-color: $white-color;
-    background-size: contain;
+    background-size: 100% 100%;
+		height: calc(100vh - 110px);
     @media screen and (max-width: 1400px) and (min-width: 992px){
         background-size: 50% 80%;
     }
