@@ -140,7 +140,15 @@ class Admin::UsersController < AdminController
     @user = if params[:crm_client_id].present? && params[:id].present?
               find_user_with_reference_id(params[:crm_client_id], params[:id])
             elsif params[:id].present?
-              User.where(booking_portal_client_id: current_client.try(:id), id: params[:id]).first || User.where(booking_portal_client_id: current_client.try(:id), lead_id: params[:id]).first || User.where(selected_client_id: current_client.try(:id), id: params[:id]).first
+              matcher = { id: params[:id] }
+              matcher[:booking_portal_client_id] = current_client.id if current_client.present?
+              user = User.where(matcher).first
+              unless user
+                matcher = { lead_id: params[:id] }
+                matcher[:booking_portal_client_id] = current_client.id if current_client.present?
+                user = User.where(matcher).first
+              end
+              user
             else
               current_user
             end
