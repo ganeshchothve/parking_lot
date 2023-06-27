@@ -1953,17 +1953,11 @@ table .dropdown-menu.show{
 }
 .auth{
     background-repeat: no-repeat;
-    background-position: right;
+    background-position: center;
     background-color: $white-color;
-    background-size: contain;
-    @media screen and (max-width: 1400px) and (min-width: 992px){
-        background-size: 50% 80%;
-    }
-    @media screen and (max-width: 992px){
-        .container{
-            background-color: rgba(255,255,255,0.8);
-        }
-    }
+    background-size: 100% 100%;
+		height: calc(100vh - 110px);
+		overflow: scroll;
 	.login-form-wrapper{
 
 		h1{
