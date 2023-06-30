@@ -968,6 +968,7 @@ en-REAL_ESTATE:
         cp_meeting_custom_field: "Channel Partner"
         project_meeting_custom_field: "Project"
         industry: 'Industry'
+        enable_customer_registration: "Enable Customer Registration on Login Page"
       client/available_preferred_logins:
         phone: "Phone Based"
         email: "Email Based"

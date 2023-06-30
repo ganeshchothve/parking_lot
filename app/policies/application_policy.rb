@@ -71,7 +71,7 @@ class ApplicationPolicy
   end
 
   def project_access_allowed?(current_project_id=nil)
-    if !user.role.in?(User::ALL_PROJECT_ACCESS) && current_project_id.present?
+    if user.present? && !user.role.in?(User::ALL_PROJECT_ACCESS) && current_project_id.present?
       valid = user.project_ids.map(&:to_s).include?(current_project_id.to_s)
     else
       valid = true
@@ -183,7 +183,7 @@ class ApplicationPolicy
 
   def enable_lead_registration?(_user=nil)
     _user ||= user
-    return true if user.booking_portal_client.enable_lead_registration?(_user)
+    return true if (user.blank? || user.booking_portal_client.enable_lead_registration?(_user))
     @condition = 'lead_registration_disabled'
     false
   end

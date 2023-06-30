@@ -57,12 +57,17 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
   end
 
   def permitted_attributes params={}
-    attributes = super || []
-    attributes += [:manager_id] if record.new_record? && user.role.in?(%w(cp_owner channel_partner))
-    attributes += [:event] if record.scheduled? && user.role.in?(%w(cp_owner channel_partner))
-    attributes += [:event] if record.may_paid? && user.role.in?(%w(superadmin admin cp_admin))
-    attributes += [:approval_event] if record.approval_status.in?(%w(pending rejected)) && user.role.in?(%w(dev_sourcing_manager))
-    attributes += [:rejection_reason] if user.role?(:dev_sourcing_manager)
-    attributes
+    attrs = super || []
+    if user.present?
+      if record.new_record?
+        attrs += [:manager_id] if user.role.in?(%w(cp_owner channel_partner))
+      else
+        attrs += [:event] if record.scheduled? && user.role.in?(%w(cp_owner channel_partner))
+        attrs += [:event] if record.may_paid? && user.role.in?(%w(superadmin admin cp_admin))
+        attrs += [:approval_event] if record.approval_status.in?(%w(pending rejected)) && user.role.in?(%w(dev_sourcing_manager))
+        attrs += [:rejection_reason] if user.role?(:dev_sourcing_manager)
+      end
+    end
+    attrs
   end
 end

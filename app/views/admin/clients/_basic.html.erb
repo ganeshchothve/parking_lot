@@ -104,6 +104,23 @@
       </div>
     </div>
   <% end %>
+
+  <% if policy([:admin, @client]).editable_field?("enable_customer_registration") %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :enable_customer_registration %>
+        <div class="form-check form-check-inline">
+          <%= f.radio_button :enable_customer_registration, true, class: "form-check-input wd-22" %>
+          <%= f.label :enable_customer_registration, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
+        </div>
+        <div class="form-check form-check-inline">
+          <%= f.radio_button :enable_customer_registration, false, class: "form-check-input wd-22" %>
+          <%= f.label :enable_customer_registration, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
 </div>
 
 <div class="row">

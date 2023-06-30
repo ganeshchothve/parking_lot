@@ -37,9 +37,9 @@ module PriceCalculator
   def calculate_agreement_price
     agreement_price = base_price + total_agreement_costs
     if booking_detail_scheme
-      agreement_price += (booking_detail_scheme.payment_adjustments.where(field: "agreement_price").collect{|adj| adj.value(self)}.sum).round
+      agreement_price += (booking_detail_scheme.payment_adjustments.where(field: "agreement_price").collect{|adj| adj.value(self)}.sum)
     end
-    agreement_price
+    agreement_price.round
   end
 
   def calculate_all_inclusive_price
@@ -47,10 +47,10 @@ module PriceCalculator
     if booking_detail_scheme
       all_incl_price += (booking_detail_scheme.payment_adjustments.where(field: "all_inclusive_price").collect{|adj| adj.value(self)}.sum).round
     end
-    return all_incl_price if self.is_a? ProjectUnit
+    return all_incl_price.round if self.is_a? ProjectUnit
     all_incl_price += token_discount if token_discount.present?
     all_incl_price += variable_discount if variable_discount.present?
-    all_incl_price
+    all_incl_price.round
   end
 
   def base_price

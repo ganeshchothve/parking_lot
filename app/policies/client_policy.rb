@@ -18,7 +18,7 @@ class ClientPolicy < ApplicationPolicy
         :channel_partner_support_email, :cancellation_amount, :area_unit, :mixpanel_token, :enable_payment,
         :blocking_amount, :blocking_amount_editable, :enable_booking_with_kyc,
         :blocking_days, :holding_minutes, :payment_gateway, :email_header, :email_footer,
-        :faqs, :rera, :tds_process, :logo, :mobile_logo, :background_image, :enable_lead_conflicts, :lead_blocking_days,
+        :faqs, :rera, :tds_process, :logo, :mobile_logo, :background_image, :enable_lead_conflicts, :enable_customer_registration, :lead_blocking_days,
         :enable_direct_activation_for_cp, :external_api_integration, :powered_by_link,
         external_inventory_view_config_attributes: ExternalInventoryViewConfigPolicy.new(user, ExternalInventoryViewConfig.new).permitted_attributes,
         address_attributes: AddressPolicy.new(user, Address.new).permitted_attributes,

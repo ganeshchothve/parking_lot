@@ -202,7 +202,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   end
 
   def asset_create?
-    %w[admin sales_admin sales account_manager account_manager_head billing_team cp_admin cp_owner channel_partner].include?(user.role)
+    %w[admin sales_admin sales account_manager account_manager_head billing_team cp_admin cp_owner channel_partner crm].include?(user.role)
   end
 
   def asset_destroy?
@@ -256,7 +256,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
   private
 
   def eligible_users_for_tasks?
-    enable_actual_inventory?(user) && !user.role.in?(['gre','crm', 'sales_admin'])
+    enable_actual_inventory?(user) && !user.role.in?(['gre', 'sales_admin'])
     #return true if %w[admin channel_partner sales_admin sales].include?(user.role)
   end
 

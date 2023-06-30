@@ -51,7 +51,7 @@ module LeadRegisteration
       @user.skip_confirmation! # TODO: Remove this when customer login needs to be given
     end
 
-    @lead = @user.leads.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], project_id: @project.id, manager_id: params[:manager_id], booking_portal_client_id: current_user.booking_portal_client.id)
+    @lead = @user.leads.new(email: params['email'], phone: params['phone'], first_name: params['first_name'], last_name: params['last_name'], project_id: @project.id, manager_id: params[:manager_id], booking_portal_client_id: current_user.try(:booking_portal_client_id) || params['booking_portal_client_id'])
     @lead.push_to_crm = params[:push_to_crm] unless params[:push_to_crm].nil?
 
     save_lead(format, @lead)

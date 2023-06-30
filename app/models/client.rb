@@ -122,6 +122,9 @@ class Client
   field :kylas_currency_id, type: Integer # kylas currency id is present on kylas products and is tenant dependent
   field :industry, type: String, default: 'generic'
 
+  # Enable customer registration through login page
+  field :enable_customer_registration, type: Boolean, default: true
+
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= self.logo.url %>" />
     <div class="mt-3"></div>'
