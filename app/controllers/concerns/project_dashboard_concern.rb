@@ -6,7 +6,7 @@ module ProjectDashboardConcern
   end
 
   def project_wise_conversion_report
-    @conversion_report_data = DashboardDataProvider.project_wise_conversion_report_data(current_user, set_matcher)
+    @conversion_report_data, @avg_token_payments_to_bookings_ratio = DashboardDataProvider.project_wise_conversion_report_data(current_user, set_matcher)
   end
 
   def project_wise_leads_stage_report

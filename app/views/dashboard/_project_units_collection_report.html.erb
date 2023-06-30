@@ -3,10 +3,11 @@
     <table class="table">
       <thead>
         <tr>
+          <th><%= Project.model_name.human %></th>
           <th><%= I18n.t("mongoid.attributes.project_unit.tower_name") %></th>
           <th><%= I18n.t("mongoid.attributes.project_unit.total_units") %></th>
           <th><%= I18n.t("mongoid.attributes.project_unit.sold_unsold") %></th>
-          <% ProjectUnit.distinct(:unit_configuration_name).sort.each do |uc| %>
+          <% ProjectUnit.where(ProjectUnit.user_based_scope(current_user)).distinct(:unit_configuration_name).sort.each do |uc| %>
             <th class="text-center"><%= uc %><br>(<%= I18n.t("mongoid.attributes.project_unit.sold_unsold") %>)</th>
           <% end %>
           <th>A.V (Sold)</th>
@@ -18,7 +19,8 @@
         <% @collection_data.except!("All Towers") %>
         <% @collection_data.each do |key, value| %>
           <tr>
-            <td data-title='<%= I18n.t("mongoid.attributes.project_unit.tower_name") %>'><strong><%= key %></strong></td>
+            <td data-title='<%= Project.model_name.human %>'><%= Project.where(booking_portal_client_id: current_client.id, _id: key[:project_id]).first.try(:name).try(:titleize) || "-" %></td>
+            <td data-title='<%= I18n.t("mongoid.attributes.project_unit.tower_name") %>'><strong><%= key[:project_tower_name] %></strong></td>
             <td data-title='<%= I18n.t("mongoid.attributes.project_unit.total_units") %>'><%= value[:total] %></td>
             <td data-title='<%= I18n.t("mongoid.attributes.project_unit.sold_unsold") %>'><%= "#{value[:sold]}/#{value[:unsold]}" %></td>
             <% value[:configuration_wise].each do |k, v| %>
@@ -29,6 +31,7 @@
           </tr>
         <% end %>
         <tr>
+          <th data-title="<%= t('global.total') %>"><strong><%= t('global.total') %></strong></th>
           <td data-title='<%= I18n.t("mongoid.attributes.project_unit.tower_name") %>'><strong><%= I18n.t("controller.project_units.all_towers") %></strong></td>
           <td data-title='<%= I18n.t("mongoid.attributes.project_unit.total_units") %>'><strong><%= _all_towers[:total] %></strong></td>
           <td data-title='<%= I18n.t("mongoid.attributes.project_unit.sold_unsold") %>'><strong><%= "#{_all_towers[:sold]}/#{_all_towers[:unsold]}" %></strong></td>

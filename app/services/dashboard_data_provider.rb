@@ -115,13 +115,17 @@ module DashboardDataProvider
     token_payments = Receipt.where(matcher).where(payment_type: 'token').group_by{|p| p.project_id}
 
     conversion_data = []
+    total_bookings_count, total_token_payment_count = 0, 0
     project_ids.each do |project_id|
       bookings_count = bookings[project_id].try(:count) || 0
       token_payment_count = token_payments[project_id].try(:count) || 0
+      total_bookings_count += bookings_count
+      total_token_payment_count += token_payment_count
       token_payments_to_bookings_ratio = ( (token_payment_count / bookings_count.to_f) * 100 ).round rescue '0'
       conversion_data << {project_id: project_id, leads: leads[project_id].try(:count) || 0, site_visits: site_visits[project_id].try(:count) || 0, revisits: revisits[project_id].try(:count) || 0, token_payments: token_payment_count, bookings: bookings_count, registered_bookings: registered_bookings[project_id].try(:count) || 0, conversion_ratio: ( '<b>' + token_payments_to_bookings_ratio.to_s + ' %</b>').html_safe }
     end
-    conversion_data
+    avg_token_payments_to_bookings_ratio = ( (total_token_payment_count / total_bookings_count.to_f) * 100 ).round rescue '0'
+    return [conversion_data, avg_token_payments_to_bookings_ratio]
   end
 
   def self.cp_performance_walkins(user, options={})
@@ -402,50 +406,72 @@ module DashboardDataProvider
   def self.project_units_inventory_report_data(user, options={})
     options ||= {}
     options = options.with_indifferent_access
-    matcher = options[:matcher]
+    matcher = options[:matcher] || {}
     matcher = matcher.with_indifferent_access
     grouping = {
       status: "$status",
       bedrooms: "$bedrooms",
-      project_tower_id: "$project_tower_id"
+      project_tower_id: "$project_tower_id",
+      project_id: "$project_id"
     }
     if options[:group_by].present?
-      grouping = {}
+      grouping = {project_id: "$project_id"}
       grouping[:status] = "$status" if options[:group_by].include?("status")
       grouping[:bedrooms] = "$bedrooms" if options[:group_by].include?("bedrooms")
       grouping[:project_tower_id] = "$project_tower_id" if options[:group_by].include?("project_tower_id")
     end
     data = ProjectUnit.collection.aggregate([
-    {"$match": matcher.merge(ProjectUnit.user_based_scope(user))},
-    {
-      "$group": {
-        "_id": grouping,
-        agreement_price: {"$sum": "$agreement_price"},
-        all_inclusive_price: {"$sum": "$all_inclusive_price"},
-        project_tower_name: {
-          "$addToSet": "$project_tower_name"
-        },
-        count: {
-          "$sum": 1
+      { "$match": ProjectUnit.user_based_scope(user)},
+      { "$match": matcher },
+      {
+        "$group": {
+          "_id": grouping,
+          agreement_price: {"$sum": "$agreement_price"},
+          all_inclusive_price: {"$sum": "$all_inclusive_price"},
+          project_tower_name: {
+            "$addToSet": "$project_tower_name"
+          },
+          count: {
+            "$sum": 1
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id.bedrooms": 1
+        }
+      },
+      {
+        '$lookup': {
+          from: "projects",
+          let: { project_id: "$_id.project_id" },
+          pipeline: [
+            { '$match': { '$expr': { '$eq': [ "$_id",  "$$project_id" ] } } },
+            { '$project': { project_name: '$name' } }
+          ],
+          as: "project"
+        }
+      },
+        {
+        "$project": {
+          total_agreement_price: "$agreement_price",
+          total_all_inclusive_price: "$all_inclusive_price",
+          bedrooms: "$bedrooms",
+          project_tower_name: {"$arrayElemAt": ["$project_tower_name", 0]},
+          project_name: {"$arrayElemAt": ["$project.project_name", 0]},
+          status: "$status",
+          count: "$count"
+        }
+      },
+      {
+        "$sort": {
+          "project_name": 1
         }
       }
-    },{
-      "$sort": {
-        "_id.bedrooms": 1
-      }
-    },{
-      "$project": {
-        total_agreement_price: "$agreement_price",
-        total_all_inclusive_price: "$all_inclusive_price",
-        bedrooms: "$bedrooms",
-        project_tower_name: {"$arrayElemAt": ["$project_tower_name", 0]},
-        status: "$status",
-        count: "$count"
-      }
-    }]).to_a
+    ]).to_a
     out = []
     data.each do |d|
-      out << {bedrooms: d["_id"]["bedrooms"], project_tower_id: d["_id"]["project_tower_id"], project_tower_name: d["project_tower_name"], status: d["_id"]["status"], count: d["count"], total_all_inclusive_price: d["total_all_inclusive_price"], total_agreement_price: d["total_agreement_price"]}.with_indifferent_access
+      out << {bedrooms: d["_id"]["bedrooms"], project_tower_id: d["_id"]["project_tower_id"], project_tower_name: d["project_tower_name"], status: d["_id"]["status"], count: d["count"], total_all_inclusive_price: d["total_all_inclusive_price"], total_agreement_price: d["total_agreement_price"], project_id: d["_id"]["project_id"], project_name: d["project_name"]}.with_indifferent_access
     end
     out
   end
@@ -742,19 +768,40 @@ module DashboardDataProvider
   # 5. Total blocked unit ids in the system
   # 6. Push configuration wise data (sold and unsold unit count) calculated in first group query
 
-  def self.project_unit_collection_report_data current_user
+  def self.project_unit_collection_report_data(current_user, options={})
+    options = options.with_indifferent_access
+    matcher = options[:matcher] || {}
+    matcher = matcher.with_indifferent_access
     grouping = {
       project_tower_name: "$project_tower_name",
-      unit_configuration_name: "$unit_configuration_name"
+      unit_configuration_name: "$unit_configuration_name",
+      project_id: "$project_id"
     }
+    # uncancelled bookings project unit ids for total agreement price
+    project_unit_ids = BookingDetail.in(status: ['blocked', 'booked_tentative', 'booked_confirmed', 'scheme_approved', 'scheme_rejected', 'under_negotiation']).distinct(:project_unit_id)
     data = ProjectUnit.collection.aggregate([
       { '$match': ProjectUnit.user_based_scope(current_user) },
+      { "$match": matcher },
+      { "$addFields":
+        {
+          booking_may_happen: { "$cond": [ {"$in": ["$_id", project_unit_ids]}, 1, 0 ]}
+        }
+      },
       {
-          "$group":
+        "$group":
           {
             "_id": grouping,
             blocked:{ "$sum": { "$cond": [ {"$eq": ['$status', {"$literal": 'blocked'}]}, 1, 0 ] } },
-            agreement_price: { "$sum": { "$cond": [ {"$eq": ['$status', {"$literal": 'blocked'}]}, "$agreement_price", 0 ] } },
+            agreement_price: { "$sum": { "$cond": [
+                {
+                  "$and":
+                  [
+                    {"$eq": ['$status', {"$literal": 'blocked'}]},
+                    {"$eq": ['$booking_may_happen', 1]}
+                  ]
+                },
+                "$agreement_price", 0
+                ] } },
             available: { "$sum": { "$cond": [ {"$in": ['$status', ['available', "management_blocking", "employee"]]}, 1, 0 ] } },
             blocked_project_units:{ "$push": { "$cond": [ {"$eq": ['$status', {"$literal": 'blocked'}]}, "$_id", nil] } },
             total: { "$sum": 1 }
@@ -762,7 +809,7 @@ module DashboardDataProvider
         },{
           "$group":
           {
-            "_id": "$_id.project_tower_name",
+            "_id": { project_tower_name: "$_id.project_tower_name", project_id: "$_id.project_id" },
             total_blocked: { "$sum": "$blocked" },
             total_available: { "$sum": "$available" },
             total: { "$sum": "$total"},
@@ -770,7 +817,35 @@ module DashboardDataProvider
             total_blocked_project_units: { "$push": "$blocked_project_units" },
             configuration_wise: { "$push": { unit_configuration_name: "$_id.unit_configuration_name", available: "$available", blocked: "$blocked" }}
           }
-        }]).to_a
+        },
+        {
+          '$lookup': {
+            from: "projects",
+            let: { project_id: "$_id.project_id" },
+            pipeline: [
+              { '$match': { '$expr': { '$eq': [ "$_id",  "$$project_id" ] } } },
+              { '$project': { project_name: '$name' } }
+            ],
+            as: "project"
+          }
+        },
+        {
+        "$project": {
+          total_blocked: "$total_blocked",
+          total_available: "$total_available",
+          total: "$total",
+          total_agreement_price: "$total_agreement_price",
+          total_blocked_project_units: "$total_blocked_project_units",
+          configuration_wise: "$configuration_wise",
+          project_name: {"$arrayElemAt": ["$project.project_name", 0]},
+        }
+      },
+      {
+        "$sort": {
+          "project_name": 1
+        }
+      }
+      ]).to_a
     out = {}
     out["All Towers"] = {total: 0, sold: 0, unsold: 0, av_sold: 0, collection: 0}
     out["All Towers"][:configuration_wise] = new_unit_configuration_hash(current_user)
@@ -784,7 +859,7 @@ module DashboardDataProvider
       out[_data["_id"]][:configuration_wise] = _unit_configuration_hash
       _blocked_units = _data["total_blocked_project_units"].flatten.compact.map{|id| id.to_s}
       _booking_detail_ids = BookingDetail.where(BookingDetail.user_based_scope(current_user)).where(status: {"$in": BookingDetail::BOOKING_STAGES}, project_unit_id: {"$in": _blocked_units}).pluck(:id)
-      out[_data["_id"]][:collection] = Receipt.where(Receipt.user_based_scope(current_user)).in(booking_detail_id: _booking_detail_ids).in(status:["success","clearance_pending"]).sum(:total_amount)
+      out[_data["_id"]][:collection] = Receipt.where(Receipt.user_based_scope(current_user)).in(booking_detail_id: _booking_detail_ids).in(status:["success"]).sum(:total_amount)
       out["All Towers"] = calculate_all_towers(out["All Towers"], out[_data["_id"]], current_user)
     end
     out

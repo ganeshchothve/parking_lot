@@ -118,6 +118,7 @@ class Lead
   scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in" => project_ids}) : all }
   scope :filter_by_user_id, ->(user_id) { where(user_id: user_id) }
   scope :filter_by_manager_id, ->(manager_id) {where(manager_id: manager_id) }
+  scope :filter_by_manager_id_presence, ->(flag) {where(manager_id: { "$nin": [nil, ''] }) }
   scope :filter_by_cp_manager_id, ->(cp_manager_id) {where(cp_manager_id: cp_manager_id) }
   scope :filter_by_channel_partner_id, ->(channel_partner_id) {where(channel_partner_id: channel_partner_id)}
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }

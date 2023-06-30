@@ -320,6 +320,16 @@
     </div>
 </section>
 
-<div class="row mb-3 px-5">
-  <%= render 'dashboard/index/partials/project_wise_leads_stage_data' %>
+<div class="row mb-3">
+  <div class="row mb-3">
+    <%= render 'dashboard/index/partials/project_wise_leads_stage_data' %>
+  </div>
+  <% unless current_user.role?(:channel_partner) %>
+    <div class="row mb-3">
+      <%= render 'dashboard/index/partials/channel_partner/channel_partner_performance_user_wise_data' %>
+    </div>
+  <% end %>
+  <div class="row mb-3">
+    <%= render 'dashboard/index/partials/channel_partner/channel_partner_performance_project_wise_data' %>
+  </div>
 </div>
