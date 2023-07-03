@@ -5,6 +5,8 @@
 @import "font-awesome";
 @import "building";
 
+$gradient-bg-cyan: linear-gradient(90deg, #0748CB 0%, #00B9DC 100%);
+
 html, body{
 	padding: 0;
 	margin: 0;
@@ -153,6 +155,7 @@ figure.wave {
   border: 0;
   transition: all .6s ease-in-out;
   margin: 1rem;
+  background-image: $gradient-bg-cyan;
   @media screen and (max-width: 992px){
     display: none;
   }
