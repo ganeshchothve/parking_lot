@@ -1444,6 +1444,7 @@ en-GENERIC:
         formula: "Formula"
         order: "Order"
         auto_release_on: "Auto Release On"
+        unit_facing_link: "Unit Facing Link"
         tower_name:
           rhea_miranda: "Rhea Miranda"
       project_unit/status:

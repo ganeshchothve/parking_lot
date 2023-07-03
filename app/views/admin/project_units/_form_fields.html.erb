@@ -36,9 +36,15 @@
     </div>
   <% end %>
   <% if policy([current_user_role_group, @project_unit]).editable_field?("comments") %>
-  <div class="mb-3">
-    <%= f.label :comments %>
-    <%= f.text_area :comments, class: 'form-control', autofocus: true %>
-  </div>
-<% end %>
+    <div class="mb-3">
+      <%= f.label :comments %>
+      <%= f.text_area :comments, class: 'form-control', autofocus: true %>
+    </div>
+  <% end %>
+  <% if policy([current_user_role_group, @project_unit]).editable_field?("unit_facing_link") %>
+    <div class="mb-3">
+      <%= f.label :unit_facing_link %>
+      <%= f.url_field :unit_facing_link, class: 'form-control', autofocus: true %>
+    </div>
+  <% end %>
 </div>

@@ -22,6 +22,9 @@ var showUnitData = function(unit, assets){
   $("#unit-description").find('[data-placeholder="saleable"]').html(unit.saleable);
   $("#unit-description").find('[data-placeholder="carpet"]').html(unit.carpet);
   $("#unit-description").find('[data-placeholder="facing"]').html(unit.unit_facing_direction);
+
+  $("#unit-description").find('[data-placeholder="unit_facing_link"]').html(unit.unit_facing_link ? ('<a href= ' + unit.unit_facing_link + ' target="_blank " >' + '<%= I18n.t("mongoid.attributes.project_unit.unit_facing_link") %>' + ' <%= image_tag("external_link.png", width: 15) %> ' + ' </a>') : '');
+
   if(unit.calculated_data){
     _.each(unit.calculated_data, function(v, k){
       $("#unit-description").find('[data-placeholder="data:' + k + '"]').html(v);

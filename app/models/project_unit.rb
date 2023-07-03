@@ -50,6 +50,7 @@ class ProjectUnit
   field :blocking_amount, type: Integer, default: 30_000
   field :new_blocking_amount, type: Integer
   field :comments,type: String
+  field :unit_facing_link, type: String
 
   attr_accessor :processing_user_request, :processing_swap_request
 
