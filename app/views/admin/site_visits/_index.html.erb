@@ -43,7 +43,7 @@
               <% if policy([ current_user_role_group, site_visit]).show_channel_partner? %>
                 <td>
                   <p class="fn-14 mt-1 mb-0">
-                    <%= link_to_if (policy([:admin, User]).index? && site_visit.lead.manager_name.present? && current_user.role.in?(User::ALL_PROJECT_ACCESS)), (site_visit.lead.manager_name || "-"), [current_user_role_group, site_visit.lead.manager], class: 'theme-txt-color' %>
+                    <%= link_to_if (policy([:admin, User]).index? && site_visit.manager_name.present? && current_user.role.in?(User::ALL_PROJECT_ACCESS)), (site_visit.manager_name || "-"), [current_user_role_group, site_visit.manager], class: 'theme-txt-color' %>
                   </p>
                 </td>
               <% end %>

@@ -409,9 +409,11 @@ class Lead
       project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids)
       case user.role.to_sym
       when :channel_partner
-        custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id }
+        lead_ids = CpLeadActivity.where(manager_id: user.id, channel_partner_id: user.channel_partner_id).distinct(:lead_id)
+        custom_scope = { id: { '$in': lead_ids } }
       when :cp_owner
-        custom_scope = { channel_partner_id: user.channel_partner_id }
+        lead_ids = CpLeadActivity.where(channel_partner_id: user.channel_partner_id).distinct(:lead_id)
+        custom_scope = { id: { '$in': lead_ids } }
       when :cp
         #channel_partner_ids = User.where(role: 'channel_partner', manager_id: user.id).distinct(:id)
         #lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)

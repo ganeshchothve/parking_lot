@@ -289,7 +289,10 @@ class ApplicationController < ActionController::Base
   end
 
   def default_url_options
-    { locale: I18n.locale }
+    options = { locale: I18n.locale }
+    options[:tenantId] = params[:tenantId] if params[:tenantId].present?
+    options[:userId] = params[:userId] if params[:userId].present?
+    options
   end
 
   def set_mailer_host
