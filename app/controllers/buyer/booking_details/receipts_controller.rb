@@ -18,14 +18,18 @@ class Buyer::BookingDetails::ReceiptsController < BuyerController
   #
   # GET "/admin/users/:user_id/booking_details/:booking_detail_id/receipts/new"
   def new
-    @receipt = Receipt.new({
-      booking_portal_client_id: current_client.try(:id),
-      project: current_user.selected_project,
-      lead: @lead.id,
-      creator: current_user, user: current_user, booking_detail: @booking_detail,
-      total_amount: ( @booking_detail.hold? ? @booking_detail.get_booking_price : @booking_detail.pending_balance
-      )
-    })
+    @amount_hash = {}
+    PaymentType.where(booking_portal_client_id: current_client.try(:id)).in(name: Receipt::PAYMENT_TYPES).where(project_id: @project_unit.project_id).map { |x| @amount_hash[x.name.to_sym] = x.value(@project_unit).round }
+    @receipt = Receipt.new(
+                      creator: current_user,
+                      user: @lead.user,
+                      lead: @lead,
+                      project: @lead.project,
+                      booking_detail: @booking_detail,
+                      total_amount: (@booking_detail.hold? ? @project_unit.blocking_amount : @booking_detail.pending_balance),
+                      booking_portal_client_id: @lead.booking_portal_client_id
+                      )
+    authorize([current_user_role_group, @receipt])
     render layout: false
   end
 

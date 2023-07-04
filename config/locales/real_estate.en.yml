@@ -3426,6 +3426,10 @@ en-REAL_ESTATE:
       sold_out_filtered: "Sold Out and Filtered"
       text:
         starting_at: "Starting At"
+      notice:
+        send_payment_link: 'Payment link sent to user'
+        booking_done: 'User has successfully blocked the unit'
+
     smses:
       index:
         link_name: "SMSs"
