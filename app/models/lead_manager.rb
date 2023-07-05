@@ -1,4 +1,4 @@
-class CpLeadActivity
+class LeadManager
   include Mongoid::Document
   include Mongoid::Timestamps
   extend FilterByCriteria
@@ -56,7 +56,7 @@ class CpLeadActivity
   end
 
   def can_extend_validity?
-    self.lead.active_cp_lead_activities.blank? #&& self.count_status != 'no_count'
+    self.lead.active_lead_managers.blank? #&& self.count_status != 'no_count'
   end
 
   def push_source_to_selldo

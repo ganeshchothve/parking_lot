@@ -88,7 +88,7 @@ Rails.application.routes.draw do
     resources :meetings, except: [:destroy]
     resources :announcements
     resources :api_logs, only: [:index]
-    resources :cp_lead_activities do
+    resources :lead_managers do
       member do
         get 'extend_validity'
         patch 'update_extension'

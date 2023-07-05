@@ -1,5 +1,5 @@
 class LeadRegistrationService
-  attr_accessor :client, :params, :user, :errors, :project, :buyer, :buyer_created, :lead, :lead_created, :site_visit, :cp_lead, :cp_user, :selldo_crm_base
+  attr_accessor :client, :params, :user, :errors, :project, :buyer, :buyer_created, :lead, :lead_created, :site_visit, :lead_manager, :cp_user, :selldo_crm_base
 
   def initialize(client, project, user, params={})
     @client = client
@@ -15,7 +15,7 @@ class LeadRegistrationService
   end
 
   def execute
-    # 1. Find or Create CP lead activity
+    # 1. Find or Create Lead Manager
     # 2. Find or Create user
     # 3. Find or Create Lead
     # 4. Create SV
@@ -31,17 +31,17 @@ class LeadRegistrationService
                 end
 
       if @cp_user
-        # Check if cp lead activity is already present
-        fetch_cp_lead
-        if cp_lead.blank?
-          # Create CP lead activity for the CP
-          @cp_lead = CpLeadActivity.new(booking_portal_client_id: client.id, project_id: project.id, user_id: cp_user.id, email: params[:email], phone: get_phone_from_params, first_name: params[:first_name], last_name: params[:last_name])
-          if @cp_lead.save
+        # Check if lead manager is already present
+        fetch_lead_manager
+        if lead_manager.blank?
+          # Create Lead Manager for the CP
+          @lead_manager = LeadManager.new(booking_portal_client_id: client.id, project_id: project.id, user_id: cp_user.id, email: params[:email], phone: get_phone_from_params, first_name: params[:first_name], last_name: params[:last_name])
+          if @lead_manager.save
             # Register lead with user account & sitevisit with Channel partner
             create_lead_and_site_visit
             push_into_crm if errors.blank? && lead.present?
           else
-            @errors += @cp_lead.errors.full_messages
+            @errors += @lead_manager.errors.full_messages
             rollback
           end
         else
@@ -62,30 +62,30 @@ class LeadRegistrationService
       end
     end
 
-    return [errors, cp_lead, buyer, lead, site_visit]
+    return [errors, lead_manager, buyer, lead, site_visit]
   end
 
-  def fetch_cp_lead
+  def fetch_lead_manager
     # TODO: Do the following checks here:
     # 1. Handle lead conflict behavior
-    # 2. Exclude expired Cp lead activity while fetching
+    # 2. Exclude expired Lead managers while fetching
 
     # CASE: If existing lead is copied to another project
     if params[:lead_id].present?
-      existing_cp_lead = CpLeadActivity.where(booking_portal_client_id: client.id, user_id: cp_user.id, lead_id: params[:lead_id]).first
-      if existing_cp_lead.present?
-        @cp_lead = CpLeadActivity.where(booking_portal_client_id: client.id, user_id: cp_user.id, project_id: project.id, lead_id: existing_cp_lead.lead_id).first
-        params.merge!(email: existing_cp_lead.email, phone: existing_cp_lead.phone, first_name: existing_cp_lead.first_name, last_name: existing_cp_lead.last_name)
+      existing_lead_manager = LeadManager.where(booking_portal_client_id: client.id, user_id: cp_user.id, lead_id: params[:lead_id]).first
+      if existing_lead_manager.present?
+        @lead_manager = LeadManager.where(booking_portal_client_id: client.id, user_id: cp_user.id, project_id: project.id, lead_id: existing_lead_manager.lead_id).first
+        params.merge!(email: existing_lead_manager.email, phone: existing_lead_manager.phone, first_name: existing_lead_manager.first_name, last_name: existing_lead_manager.last_name)
       end
     else params[:email] || params[:phone]
-      @cp_lead = CpLeadActivity.where(booking_portal_client_id: client.id, user_id: cp_user.id, project_id: project.id).or(get_query).first
+      @lead_manager = LeadManager.where(booking_portal_client_id: client.id, user_id: cp_user.id, project_id: project.id).or(get_query).first
     end
   end
 
   def fetch_lead
     # TODO: Do the following checks here:
     # 1. Handle lead conflict behavior
-    # 2. Exclude expired Cp lead activity while fetching
+    # 2. Exclude expired Lead managers while fetching
 
     # CASE: If existing lead is copied to another project
     if params[:lead_id].present?
@@ -108,12 +108,12 @@ class LeadRegistrationService
       if errors.blank? && lead.present?
         # Create a new SV for buyer
         create_site_visit
-        if errors.blank? && cp_lead.present?
-          # Link cp lead activity with respective lead & sitevisit
+        if errors.blank? && lead_manager.present?
+          # Link lead manager with respective lead & sitevisit
           attrs = {lead_id: lead.id}
           attrs[:site_visit_id] = site_visit.id if site_visit.present?
-          unless cp_lead.update(attrs)
-            @errors += cp_lead.errors.full_messages
+          unless lead_manager.update(attrs)
+            @errors += lead_manager.errors.full_messages
             rollback
           end
         end
@@ -165,9 +165,9 @@ class LeadRegistrationService
   def create_site_visit
     attrs = {booking_portal_client_id: client.id, user_id: buyer.id}
     attrs[:manager_id] = cp_user.id if cp_user.present?
-    if params.dig(:lead, :site_visits_attributes, '0').present?
-      attrs[:scheduled_on] = params.dig(:lead, :site_visits_attributes, '0', :scheduled_on) if params.dig(:lead, :site_visits_attributes, '0', :scheduled_on).present?
-      attrs[:creator_id] = params.dig(:lead, :site_visits_attributes, '0', :creator_id) if params.dig(:lead, :site_visits_attributes, '0', :creator_id).present?
+    if site_visit_params.present?
+      attrs[:scheduled_on] = site_visit_params[:scheduled_on] if site_visit_params[:scheduled_on].present?
+      attrs[:creator_id] = site_visit_params[:creator_id] if site_visit_params[:creator_id].present?
       @site_visit = lead.site_visits.new(attrs)
       if @site_visit.save
       else
@@ -175,6 +175,10 @@ class LeadRegistrationService
         rollback
       end
     end
+  end
+
+  def site_visit_params
+    params.dig(:lead, :site_visits_attributes, '0')
   end
 
   def get_query
@@ -223,7 +227,7 @@ class LeadRegistrationService
   end
 
   def rollback
-    cp_lead.destroy if cp_lead.present? && cp_lead.persisted?
+    lead_manager.destroy if lead_manager.present? && lead_manager.persisted?
     site_visit.destroy if site_visit.present? && site_visit.persisted?
     lead.destroy if lead.present? && lead_created && lead.persisted?
     buyer.destroy if buyer.present? && buyer_created && buyer.persisted?

@@ -3,11 +3,11 @@
   <h3 class="title"><%= I18n.t("global.filter") %></h3>
       <a href="javascript:;" class="close-filter-btn btn-close"></a>
   </div>
-  <%= form_tag admin_cp_lead_activities_path, method: "get", id: "cp_lead_activity_search_form" do %>
+  <%= form_tag admin_lead_managers_path, method: "get", id: "lead_manager_search_form" do %>
     <div class="filter-content modal-body ps-0 pe-0">
       <div class="row">
         <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
-          <%= label_tag "fltrs", t('mongoid.attributes.cp_lead_activity.lead_id')%>
+          <%= label_tag "fltrs", t('mongoid.attributes.lead_manager.lead_id')%>
           <%= select_tag "fltrs[lead_id]", options_from_collection_for_select(params[:fltrs].present? ? Lead.where(booking_portal_client_id: current_client.try(:id), _id: params[:fltrs][:lead_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: {url: admin_leads_path}} %>
         </div>
         <% unless current_user.role?('channel_partner') %>
@@ -17,15 +17,15 @@
           </div>
         <% end %>
         <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
-          <%= label_tag "fltrs", t('mongoid.attributes.cp_lead_activity.count_status') %>
-          <%= select_tag "fltrs[count_status]", options_for_select(CpLeadActivity::COUNT_STATUS.collect{|x| [I18n.t("mongoid.attributes.cp_lead_activity/count_status.#{x}"), x]}, (params[:fltrs].present? ? params[:fltrs][:count_status] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
+          <%= label_tag "fltrs", t('mongoid.attributes.lead_manager.count_status') %>
+          <%= select_tag "fltrs[count_status]", options_for_select(LeadManager::COUNT_STATUS.collect{|x| [I18n.t("mongoid.attributes.lead_manager/count_status.#{x}"), x]}, (params[:fltrs].present? ? params[:fltrs][:count_status] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
-          <%= label_tag "fltrs", t('mongoid.attributes.cp_lead_activity.lead_status') %>
-          <%= select_tag "fltrs[lead_status]", options_for_select(CpLeadActivity::LEAD_STATUS.collect{|x| [I18n.t("mongoid.attributes.cp_lead_activity/lead_status.#{x}"), x]}, (params[:fltrs].present? ? params[:fltrs][:lead_status] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
+          <%= label_tag "fltrs", t('mongoid.attributes.lead_manager.lead_status') %>
+          <%= select_tag "fltrs[lead_status]", options_for_select(LeadManager::LEAD_STATUS.collect{|x| [I18n.t("mongoid.attributes.lead_manager/lead_status.#{x}"), x]}, (params[:fltrs].present? ? params[:fltrs][:lead_status] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
-          <%= label_tag "fltrs", t('mongoid.attributes.cp_lead_activity.expiry_date') %>
+          <%= label_tag "fltrs", t('mongoid.attributes.lead_manager.expiry_date') %>
           <%= text_field_tag "fltrs[expiry_date]", (params.dig(:fltrs, :expiry_date).present? ? params[:fltrs][:expiry_date] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
         </div>
         <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
@@ -33,7 +33,7 @@
           <%= select_tag "fltrs[project_id]", options_for_select(Project.all.collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}, (params[:fltrs].present? ? params[:fltrs][:project_id] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>
         <div class="mb-3 col-lg-6 col-xs-12 col-md-6 col-sm-12">
-          <%= label_tag "fltrs", t('mongoid.attributes.cp_lead_activity.registered_at') %>
+          <%= label_tag "fltrs", t('mongoid.attributes.lead_manager.registered_at') %>
           <%= text_field_tag "fltrs[registered_at]", (params.dig(:fltrs, :registered_at).present? ? params[:fltrs][:registered_at] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
         </div>
       </div>
@@ -46,6 +46,6 @@
 </div>
 <%= javascript_tag do %>
   $(document).ready(function(){
-    FormInitializer.init($("#cp_lead_activity_search_form"));
+    FormInitializer.init($("#lead_manager_search_form"));
   });
 <% end %>

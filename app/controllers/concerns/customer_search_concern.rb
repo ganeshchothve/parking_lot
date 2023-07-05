@@ -47,8 +47,8 @@ module CustomerSearchConcern
     end
     if params[:manager_id].present?
       cp_user = User.where(booking_portal_client_id: current_client.try(:id), id: params[:manager_id]).first
-      cp_lead_activity = CpLeadActivityRegister.create_cp_lead_object(@lead, cp_user) if cp_user.present?
-      cp_lead_activity.save if cp_lead_activity.present?
+      lead_manager = LeadManagerRegister.create_cp_lead_object(@lead, cp_user) if cp_user.present?
+      lead_manager.save if lead_manager.present?
     end
     @customer_search.assign_attributes(step: 'sitevisit') if @customer_search.customer.present?
   end

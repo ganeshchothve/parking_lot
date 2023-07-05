@@ -62,8 +62,8 @@
   <%= active_link_to t('controller.site_visits.index.link_name'), admin_site_visits_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
 <% end %>
 
-<% if false # policy([:admin, CpLeadActivity]).index? %>
-  <%= active_link_to t('controller.cp_lead_activities.index.link_name'), admin_cp_lead_activities_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
+<% if false # policy([:admin, LeadManager]).index? %>
+  <%= active_link_to t('controller.lead_managers.index.link_name'), admin_lead_managers_path, active: :inclusive, class: "nav-link pl-0 pr-0" %>
 <% end %>
 
 <% if policy([:admin, BookingDetail]).index? %>

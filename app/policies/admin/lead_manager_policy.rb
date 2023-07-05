@@ -1,4 +1,4 @@
-class Admin::CpLeadActivityPolicy < CpLeadActivityPolicy
+class Admin::LeadManagerPolicy < LeadManagerPolicy
   def index?
     true
   end

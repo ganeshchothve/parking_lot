@@ -197,7 +197,7 @@ class User
   has_many :assets, as: :assetable
   has_and_belongs_to_many :received_emails, class_name: 'Email', inverse_of: :recipients
   has_and_belongs_to_many :cced_emails, class_name: 'Email', inverse_of: :cc_recipients
-  has_many :cp_lead_activities
+  has_many :lead_managers
   has_and_belongs_to_many :meetings
   has_many :interested_projects  # Channel partners can subscribe to new projects through this
   has_many :fund_accounts

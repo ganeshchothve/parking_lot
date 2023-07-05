@@ -86,7 +86,7 @@ class Lead
   has_many :emails, as: :triggered_by, class_name: 'Email'
   has_many :whatsapps, as: :triggered_by, class_name: 'Whatsapp'
   has_many :project_units
-  has_many :cp_lead_activities
+  has_many :lead_managers
   has_many :invoices, as: :invoiceable
   #has_and_belongs_to_many :received_emails, class_name: 'Email', inverse_of: :recipients
   #has_and_belongs_to_many :cced_emails, class_name: 'Email', inverse_of: :cc_recipients
@@ -217,7 +217,7 @@ class Lead
   end
 
   def manager_name
-    self.cp_lead_activities.where(user_id: self.manager_id).first&.manager_name
+    self.lead_managers.where(user_id: self.manager_id).first&.manager_name
   end
 
   def phone_or_email_required
@@ -297,12 +297,12 @@ class Lead
     return ds_name
   end
 
-  def active_cp_lead_activities
-    self.cp_lead_activities.where(expiry_date: { '$gte': Date.current })
+  def active_lead_managers
+    self.lead_managers.where(expiry_date: { '$gte': Date.current })
   end
 
   def lead_validity_period
-    activity = self.active_cp_lead_activities.first
+    activity = self.active_lead_managers.first
     activity.present? ? "#{(activity.expiry_date - Date.current).to_i} Days" : '0 Days'
   end
 
@@ -409,20 +409,20 @@ class Lead
       project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids)
       case user.role.to_sym
       when :channel_partner
-        lead_ids = CpLeadActivity.where(manager_id: user.id, channel_partner_id: user.channel_partner_id).distinct(:lead_id)
+        lead_ids = LeadManager.where(manager_id: user.id, channel_partner_id: user.channel_partner_id).distinct(:lead_id)
         custom_scope = { id: { '$in': lead_ids } }
       when :cp_owner
-        lead_ids = CpLeadActivity.where(channel_partner_id: user.channel_partner_id).distinct(:lead_id)
+        lead_ids = LeadManager.where(channel_partner_id: user.channel_partner_id).distinct(:lead_id)
         custom_scope = { id: { '$in': lead_ids } }
       when :cp
         #channel_partner_ids = User.where(role: 'channel_partner', manager_id: user.id).distinct(:id)
-        #lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
+        #lead_ids = LeadManager.in(user_id: channel_partner_ids).distinct(:lead_id)
         #custom_scope = {_id: { '$in': lead_ids } }
         custom_scope = {}
       when :cp_admin
         #channel_partner_manager_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
         #channel_partner_ids = User.in(manager_id: channel_partner_manager_ids).distinct(:id)
-        #lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
+        #lead_ids = LeadManager.in(user_id: channel_partner_ids).distinct(:lead_id)
         #custom_scope = {_id: { '$in': lead_ids } }
         custom_scope = {}
       when :admin

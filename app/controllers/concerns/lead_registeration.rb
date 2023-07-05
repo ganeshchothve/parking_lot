@@ -24,7 +24,7 @@ module LeadRegisteration
             #  add_new_lead_flow(format)
             #end
 
-            errors, cp_lead_activity, buyer, lead, site_visit = LeadRegistrationService.new(current_client, @project, current_user, params.permit!.to_h).execute
+            errors, lead_manager, buyer, lead, site_visit = LeadRegistrationService.new(current_client, @project, current_user, params.permit!.to_h).execute
 
             if errors.present?
               format.json { render json: {errors: errors}, status: :unprocessable_entity }
@@ -90,8 +90,8 @@ module LeadRegisteration
   #        lead.assign_attributes(permitted_attributes([:admin, lead])) if params[:lead].present?
   #        lead.owner_id = current_user.id if user_signed_in? && current_user.try(:kylas_user_id).present? && current_user.booking_portal_client.try(:is_marketplace?)
 
-  #        check_if_lead_added_by_channel_partner(lead) do |cp_lead_activity|
-  #          if cp_lead_activity.blank? || cp_lead_activity.valid?
+  #        check_if_lead_added_by_channel_partner(lead) do |lead_manager|
+  #          if lead_manager.blank? || lead_manager.valid?
   #            if lead.save
   #              # Update selldo lead stage & push Site visits
   #              site_visit = lead.site_visits.first
@@ -99,8 +99,8 @@ module LeadRegisteration
   #                update_selldo_lead_stage(lead)
   #                sv_selldo_api, sv_api_log = site_visit.push_in_crm(selldo_api.base) if site_visit.present?
   #              end
-  #              if cp_lead_activity.present?
-  #                if cp_lead_activity.save
+  #              if lead_manager.present?
+  #                if lead_manager.save
   #                  Kylas::SyncLeadToKylasWorker.perform_async(lead.id.to_s, site_visit.try(:id).try(:to_s))
   #                  update_customer_search_to_sitevisit(lead) if @customer_search.present?
 
@@ -118,7 +118,7 @@ module LeadRegisteration
   #              format.json { render json: {errors: lead.errors.full_messages.uniq}, status: :unprocessable_entity }
   #            end
   #          else
-  #            format.json { render json: {errors: cp_lead_activity.errors.full_messages.uniq}, status: :unprocessable_entity }
+  #            format.json { render json: {errors: lead_manager.errors.full_messages.uniq}, status: :unprocessable_entity }
   #          end
   #        end
   #      else
@@ -132,13 +132,13 @@ module LeadRegisteration
 
   #def check_if_lead_added_by_channel_partner(lead)
   #  if current_user&.role&.in?(%w(channel_partner cp_owner))
-  #    cp_lead_activity = CpLeadActivityRegister.create_cp_lead_object(lead, current_user, (params[:lead_details] || {}))
+  #    lead_manager = LeadManagerRegister.create_cp_lead_object(lead, current_user, (params[:lead_details] || {}))
   #  elsif params[:manager_id].present?
   #    cp_user = User.all.in(role: %w(channel_partner cp_owner)).where(booking_portal_client_id: current_client.try(:id), id: params[:manager_id]).first
-  #    cp_lead_activity = CpLeadActivityRegister.create_cp_lead_object(lead, cp_user, (params[:lead_details] || {})) if cp_user
+  #    lead_manager = LeadManagerRegister.create_cp_lead_object(lead, cp_user, (params[:lead_details] || {})) if cp_user
   #  end
 
-  #  yield(cp_lead_activity)
+  #  yield(lead_manager)
   #end
 
   #def push_lead_to_selldo(format, lead)

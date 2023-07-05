@@ -133,8 +133,8 @@ class CustomPolicy < Struct.new(:user, :enable_users)
     Admin::DiscountPolicy.new(user, Discount).index?
   end
 
-  # def cp_lead_activities?
-  #   "#{user.buyer? ? '' : 'Admin::'}CpLeadActivityPolicy".constantize.new(user, CpLeadActivity).index?
+  # def lead_managers?
+  #   "#{user.buyer? ? '' : 'Admin::'}LeadManagerPolicy".constantize.new(user, LeadManager).index?
   # end
 
   def payment_types?

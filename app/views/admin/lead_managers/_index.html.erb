@@ -4,32 +4,32 @@
       <tr class="bg-primary white">
         <th><%= t('mongoid.attributes.user.name_email_phone') %></th>
         <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>
-          <th><%= t('mongoid.attributes.cp_lead_activity.selldo_lead_id') %></th>
+          <th><%= t('mongoid.attributes.lead_manager.selldo_lead_id') %></th>
         <% end %>
-        <th><%= t('mongoid.attributes.cp_lead_activity.project_id') %></th>
+        <th><%= t('mongoid.attributes.lead_manager.project_id') %></th>
         <% if !current_user.role?('channel_partner') %>
-          <th><%= t('mongoid.attributes.cp_lead_activity.channel_partner') %></th>
+          <th><%= t('mongoid.attributes.lead_manager.channel_partner') %></th>
         <% end %>
-        <th><%= t('mongoid.attributes.cp_lead_activity.count_status') %></th>
-        <th><%= t('mongoid.attributes.cp_lead_activity.lead_status') %></th>
-        <th><%= t('mongoid.attributes.cp_lead_activity.registered_at') %></th>
-        <th><%= t('mongoid.attributes.cp_lead_activity.expiry_date') %></th>
-        <th><%= t('mongoid.attributes.cp_lead_activity.expiry_remaining_days') %></th>
-        <th><%= t('mongoid.attributes.cp_lead_activity.can_extend_validity') %></th>
+        <th><%= t('mongoid.attributes.lead_manager.count_status') %></th>
+        <th><%= t('mongoid.attributes.lead_manager.lead_status') %></th>
+        <th><%= t('mongoid.attributes.lead_manager.registered_at') %></th>
+        <th><%= t('mongoid.attributes.lead_manager.expiry_date') %></th>
+        <th><%= t('mongoid.attributes.lead_manager.expiry_remaining_days') %></th>
+        <th><%= t('mongoid.attributes.lead_manager.can_extend_validity') %></th>
         <th  class="btn-action"><%= t('global.action', count: 3) %></th>
       </tr>
     </thead>
   </thead>
   <tbody>
-    <% cp_lead_activities.each do |cp_lead_activity| %>
+    <% lead_managers.each do |lead_manager| %>
     <tr>
       <%
-        lead = cp_lead_activity.lead
+        lead = lead_manager.lead
       %>
       <tr>
         <td data-title="Name">
           <span>
-            <%= link_to lead.name, admin_cp_lead_activity_path(cp_lead_activity), target: '_blank' %>
+            <%= link_to lead.name, admin_lead_manager_path(lead_manager), target: '_blank' %>
           </span>
           <% if lead.email.present? %>
             <span class="email-icon small">
@@ -47,19 +47,19 @@
         <% end %>
         <td><%= lead.project.try(:name) %></td>
         <% if !current_user.role?('channel_partner') %>
-          <td><%= cp_lead_activity.manager_name %></td>
+          <td><%= lead_manager.manager_name %></td>
         <% end %>
-      <td><%= cp_lead_activity.count_status.try(:titleize) %></td>
-      <td><%= cp_lead_activity.lead_status.try(:titleize) %></td>
-      <td><%= cp_lead_activity.registered_at.try(:strftime, "%d/%m/%Y") %></td>
-      <td><%= cp_lead_activity.expiry_date.try(:strftime, "%d/%m/%Y") %></td>
-      <td><%= cp_lead_activity.lead_validity_period %></td>
-      <td class="text-center"><%= cp_lead_activity.can_extend_validity? ? 'Yes' : 'No' %></td>
+      <td><%= lead_manager.count_status.try(:titleize) %></td>
+      <td><%= lead_manager.lead_status.try(:titleize) %></td>
+      <td><%= lead_manager.registered_at.try(:strftime, "%d/%m/%Y") %></td>
+      <td><%= lead_manager.expiry_date.try(:strftime, "%d/%m/%Y") %></td>
+      <td><%= lead_manager.lead_validity_period %></td>
+      <td class="text-center"><%= lead_manager.can_extend_validity? ? 'Yes' : 'No' %></td>
       <td>
         <div class="dropdown show text-right">
             <a class="btn dropdown-toggle table-dropdown-btn black-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-              <%= render "#{current_user_role_group}/cp_lead_activities/links", cp_lead_activity: cp_lead_activity %>
+              <%= render "#{current_user_role_group}/lead_managers/links", lead_manager: lead_manager %>
             </div>
           </div>
       </td>
@@ -68,5 +68,5 @@
   </tbody>
 </table>
 <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pb-2">
-  <%= will_paginate cp_lead_activities, list_classes: %w(pagination justify-content-center) %>
+  <%= will_paginate lead_managers, list_classes: %w(pagination justify-content-center) %>
 </div>

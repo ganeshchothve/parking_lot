@@ -83,7 +83,7 @@ function register_user_with_portal(d, e){
       setTimeout(function(){
         if(typeof App !== "undefined" && App.current_user){
           if (App.current_user.role == 'channel_partner') {
-            window.location = '<%= url.admin_cp_lead_activities_path %>';
+            window.location = '<%= url.admin_lead_managers_path %>';
           } else {
             window.location = '<%= url.admin_leads_path %>';
           }
@@ -121,7 +121,7 @@ function register_user_with_portal(d, e){
         if(_.isEmpty(one.responseJSON.url)){
           if(typeof App !== "undefined" && App.current_user){
             if (App.current_user.role == 'channel_partner') {
-              window.location = '<%= url.admin_cp_lead_activities_path %>';
+              window.location = '<%= url.admin_lead_managers_path %>';
             } else {
               window.location = '<%= url.admin_leads_path %>';
             }

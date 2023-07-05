@@ -279,7 +279,7 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
         false
       end
     elsif (user.role.in?(%w(cp_owner channel_partner)) && record.status == 'hold')
-      return true if record.lead.cp_lead_activities.where(user_id: user.id).present? && user.active_channel_partner?
+      return true if record.lead.lead_managers.where(user_id: user.id).present? && user.active_channel_partner?
       @condition = 'not_authorise_to_book_for_this_user'
       false
     else

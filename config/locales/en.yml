@@ -141,7 +141,7 @@ en:
       overview: "Overview"
       site_visits: "Walk-ins"
       remarks_from_selldo: "Remarks From SellDo"
-      lead_activities: "Lead Activities"
+      lead_managers: "Lead Managers"
       bookings: "Bookings"
       basic_details: "Basic Details"
       booking_details: "Booking Details"
@@ -2230,7 +2230,7 @@ en:
         queued: "Queued"
         registered: "Registered"
 
-      cp_lead_activity:
+      lead_manager:
         lead_id: "Lead Id"
         selldo_lead_id: "SellDo Lead Id"
         project_id: "Project"
@@ -2243,17 +2243,17 @@ en:
         expiry_date: "Lead Expiry Date"
         sitevisit_date: "Walk-in Date"
         sitevisit_status: "Walk-in Status"
-      cp_lead_activity/count_status:
+      lead_manager/count_status:
         fresh_lead: "Fresh Lead"
         active_in_same_cp: "Active In Same Cp"
         no_count: "No Count"
         accompanied_credit: "Accompanied Credit"
         accompanied_count_to_cp: "Accompanied Count To Cp"
         count_given: "Count Given"
-      cp_lead_activity/lead_status:
+      lead_manager/lead_status:
         already_exists: "Already Exists"
         registered: "Registered"
-      cp_lead_activity/site_visit_status:
+      lead_manager/site_visit_status:
         scheduled: "Scheduled"
         conducted: "Conducted"
       user/file_types:
@@ -2312,9 +2312,9 @@ en:
         images_html: "Images"
         developer_logo_html: "Project Developer Logo"
         advertise_html: "Advertise Kit"
-      cp_lead_activity/file_types:
+      lead_manager/file_types:
         sitevisit_form: "Walk-in Form"
-      cp_lead_activity/help_text:
+      lead_manager/help_text:
         sitevisit_form_html: ""
       workflow:
         stage: Event
@@ -2584,15 +2584,15 @@ en:
           title: "Why partner with %{name}"
 
 
-    cp_lead_activities:
+    lead_managers:
       index:
-        link_name: "Lead Activities"
+        link_name: "Lead Managers"
       show:
-        link_name: "Show Lead Activities"
+        link_name: "Show Lead Managers"
       notice:
-        created: "Lead Activity created successfully."
-        updated: "Lead Activity updated successfully."
-        deleted: "Lead Activity deleted successfully."
+        created: "Lead Manager created successfully."
+        updated: "Lead Manager updated successfully."
+        deleted: "Lead Manager deleted successfully."
       errors:
         cannot_be_updated: "Lead validity can not be updated. Lead is active for %{name}"
     push_notifications:
