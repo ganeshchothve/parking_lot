@@ -15,36 +15,54 @@
           <%= "#{sales.first_name[0]}#{sales.last_name[0]}" %>
         </div>
         <div class="sales-name mx-3" title="<%= sales.name.try(:titleize) %>">
-          <%= link_to sales.name.try(:titleize), admin_user_path(sales), class: ' theme-txt-color' %></div>
+          <%= link_to sales.name.try(:titleize), admin_user_path(sales), class: ' theme-txt-color' %>
+        </div>
+        <i class="fa fa-circle fill-<%= sales.sales_status %> fn-14 position-absolute top-0 end-0 mt-2 me-2"></i>
       </div>
-      <i class="fa fa-circle fill-<%= sales.sales_status %> fn-14 position-absolute top-0 end-0 mt-2 me-2"></i>
-    </div>
-    <div class="sales-info card-body">
-      <div class="row">
-        <div class="user-queue-no col-lg-12">
-          <p class="fn-14 txt-light-blue mb-0"><span><%= I18n.t("controller.team_leads.text.with") %></span> 
-          <% if customer %>
-            <span class="badge rounded-pill bg-danger ms-2 align-top"><%= customer.try(:queue_number) || '-' %>
-              <span class="visually-hidden"><%= I18n.t("controller.team_leads.text.queue_no") %></span>
-              </span>
-          <% end %>
-          </p>
-          
-          <% if customer %>
-          <span class="theme-txt-color fn-16 d-block text-truncate"><%= customer.name %></span>
-          <% status_log = customer.state_transitions.where(status: 'engaged', sitevisit_id: customer.current_site_visit_id).first %>
-          <% unless action_name == 'sales_board' %>
-          <span
-            class="theme-txt-color fn-16 mb-2 d-block"><%= distance_of_time_in_words_to_now(status_log.enter_time, scope: 'datetime.distance_in_words.short') %></span>
-          <span class="theme-txt-color fn-16 d-block text-truncate"><b>
-            <%= link_to t('controller.leads.reassign_sales'), reassign_lead_admin_lead_path(customer), class: 'modal-remote-form-link text-red' %></b>
-          </span>
-          <% end %>
-          <% else %>
-          <span class="theme-txt-color fn-16 mb-2 d-block">-</span>
-          <% end %>
+      <div class="sales-info card-body">
+        <div class="row">
+          <div class="user-queue-no col-lg-12">
+            <p class="fn-14 txt-light-blue mb-0"><span><%= I18n.t("controller.team_leads.text.with") %></span>
+              <% if customer.present? %>
+                <span class="badge rounded-pill bg-danger ms-2 align-top"><%= customer.try(:queue_number) || '-' %>
+                  <span class="visually-hidden"><%= I18n.t("controller.team_leads.text.queue_no") %></span>
+                </span>
+              <% end %>
+            </p>
+            <% if customer.present? %>
+              <span class="theme-txt-color fn-16 d-block text-truncate"><%= customer.name %></span>
+              <% status_log = customer.state_transitions.where(status: 'engaged', sitevisit_id: customer.current_site_visit_id).first %>
+              <% unless action_name == 'sales_board' %>
+                <span class="theme-txt-color fn-16 mb-2 d-block">
+                  <%= distance_of_time_in_words_to_now(status_log.enter_time, scope: 'datetime.distance_in_words.short') %>
+                </span>
+                <div class="sales_lead_tag">
+                  <span class="theme-txt-color d-block text-truncate float-start">
+                  <b><%= link_to t('controller.leads.reassign_sales'), reassign_lead_admin_lead_path(customer), class: 'modal-remote-form-link text-red' %></b>
+                  </span>
+                  <% if !Rails.env.production? && customer.may_dropoff? %>
+                    <span class="theme-txt-color d-block text-truncate float-end">
+                      <b><%= link_to I18n.t("global.drop_customer"), move_to_next_state_admin_lead_path(customer, status: 'dropoff', format: :json), method: 'patch', remote: true, data: { confirm: I18n.t("controller.assets.confirm.sure"), disable_with: I18n.t("global.text.dropping") }, class: 'dropoff move-to-next-state' %></b>
+                    </span>
+                  <% end %>
+                </div>
+              <% end %>
+            <% else %>
+              <span class="theme-txt-color fn-16 mb-2 d-block">-</span>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>    
   </div>
 </div>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $('a.dropoff').on('ajax:success', function(event) {
+      setTimeout(function() {
+        window.location.reload();
+      }, 3000);
+    });
+  });
+<% end %>

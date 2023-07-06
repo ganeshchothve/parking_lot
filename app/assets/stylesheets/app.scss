@@ -861,6 +861,14 @@ h6{
           font-weight: 500;
         }
       }
+      .sales_lead_tag {
+        span{
+          font-size: 16px;
+          @media screen and (max-width: 1800px){
+            font-size: 12px;
+          }
+        }
+      }
     }
     &.curnt-status:before{
       content: '';
