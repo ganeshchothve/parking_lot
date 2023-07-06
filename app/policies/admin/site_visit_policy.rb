@@ -52,8 +52,12 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
     user.role.in?(%w(dev_sourcing_manager) + User::CHANNEL_PARTNER_USERS)
   end
 
-  def show_channel_partner?
+  def show_channel_partner_column?
     !user.role.in?(%w(channel_partner))
+  end
+
+  def show_channel_partner_user?
+    record.manager.present? && record.manager.channel_partner? && record.manager_name.present?# && user.role.in?(User::ALL_PROJECT_ACCESS)
   end
 
   def permitted_attributes params={}

@@ -8,7 +8,7 @@
               <th><%= t('mongoid.attributes.site_visit.name') %></th>
               <th><%= t('mongoid.attributes.site_visit.email') %></th>
               <th><%= t('mongoid.attributes.site_visit.phone') %></th>
-              <% if policy([ current_user_role_group, SiteVisit.new]).show_channel_partner? %>
+              <% if policy([ current_user_role_group, SiteVisit.new]).show_channel_partner_column? %>
                 <th><%= t('mongoid.attributes.site_visit.manager_id') %></th>
               <% end %>
               <th><%= t('mongoid.attributes.site_visit.status') %></th>
@@ -40,10 +40,10 @@
                 <%= site_visit.lead.masked_phone(current_user) || '-' %>
                 <% end %>
               </td>
-              <% if policy([ current_user_role_group, site_visit]).show_channel_partner? %>
+              <% if policy([current_user_role_group, site_visit]).show_channel_partner_column? %>
                 <td>
                   <p class="fn-14 mt-1 mb-0">
-                    <%= link_to_if (policy([:admin, User]).index? && site_visit.manager_name.present? && current_user.role.in?(User::ALL_PROJECT_ACCESS)), (site_visit.manager_name || "-"), [current_user_role_group, site_visit.manager], class: 'theme-txt-color' %>
+                    <%= link_to_if (policy([:admin, User]).index? && policy([current_user_role_group, site_visit]).show_channel_partner_user?), (policy([current_user_role_group, site_visit]).show_channel_partner_user? ? site_visit.manager_name : "-"), [current_user_role_group, site_visit.manager], class: 'theme-txt-color' %>
                   </p>
                 </td>
               <% end %>

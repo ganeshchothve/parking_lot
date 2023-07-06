@@ -176,7 +176,7 @@ class Admin::LeadPolicy < LeadPolicy
     new_kylas_lead?
   end
 
-  def lead_activities?
+  def lead_managers?
     !marketplace_client?
   end
 
@@ -198,6 +198,14 @@ class Admin::LeadPolicy < LeadPolicy
 
   def bulk_job_create?
     bulk_job_new?
+  end
+
+  def show_channel_partner_column?
+    !user.role.in?(%w(channel_partner))
+  end
+
+  def show_channel_partner_user?
+    record.manager.present? && record.manager.channel_partner? && record.manager_name.present?
   end
 
   def permitted_attributes(params = {})

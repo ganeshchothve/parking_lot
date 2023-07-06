@@ -571,6 +571,10 @@ class User
     BUYER_ROLES.include?(role)
   end
 
+  def channel_partner?
+    ['channel_partner', 'cp_owner'].include?(role)
+  end
+
   def role?(role)
     (self.role.to_s == role.to_s)
   end

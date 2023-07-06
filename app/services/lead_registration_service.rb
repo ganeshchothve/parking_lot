@@ -1,5 +1,5 @@
 class LeadRegistrationService
-  attr_accessor :client, :params, :user, :errors, :project, :buyer, :buyer_created, :lead, :lead_created, :site_visit, :lead_manager, :cp_user, :selldo_crm_base
+  attr_accessor :client, :params, :user, :errors, :project, :buyer, :buyer_created, :lead, :lead_created, :site_visit, :lead_manager, :cp_user, :selldo_crm_base, :manager
 
   def initialize(client, project, user, params={})
     @client = client
@@ -12,6 +12,14 @@ class LeadRegistrationService
     @errors << 'Client is required' if @client.blank?
     @errors << 'Project is required' if @project.blank?
     @errors << 'Params are missing' if @params.blank?
+
+    # Find CP user
+    @cp_user = if user && user.role.in?(%w(channel_partner cp_owner))
+                 user
+               else params[:manager_id].present?
+                 User.in(role: %w(channel_partner cp_owner)).where(booking_portal_client_id: client.id, id: params[:manager_id]).first
+               end
+    @manager = @cp_user || @user
   end
 
   def execute
@@ -21,41 +29,21 @@ class LeadRegistrationService
     # 4. Create SV
 
     if errors.blank?
-      # CASE: if lead is added by CP user OR a CP is selected on lead
-      #
-      # Find CP user
-      @cp_user = if user && user.role.in?(%w(channel_partner cp_owner))
-                  user
-                else params[:manager_id].present?
-                  User.in(role: %w(channel_partner cp_owner)).where(booking_portal_client_id: client.id, id: params[:manager_id]).first
-                end
+      # Check if lead manager is already present
+      fetch_lead_manager
 
-      if @cp_user
-        # Check if lead manager is already present
-        fetch_lead_manager
+      if errors.blank?
         if lead_manager.blank?
-          # Create Lead Manager for the CP
-          @lead_manager = LeadManager.new(booking_portal_client_id: client.id, project_id: project.id, user_id: cp_user.id, email: params[:email], phone: get_phone_from_params, first_name: params[:first_name], last_name: params[:last_name])
+          # Create Lead Manager
+          @lead_manager = LeadManager.new(booking_portal_client_id: client.id, project_id: project.id, manager_id: manager.id, email: params[:email], phone: get_phone_from_params, first_name: params[:first_name], last_name: params[:last_name])
           if @lead_manager.save
-            # Register lead with user account & sitevisit with Channel partner
+            # Register lead with user account & sitevisit
             create_lead_and_site_visit
             push_into_crm if errors.blank? && lead.present?
           else
             @errors += @lead_manager.errors.full_messages
             rollback
           end
-        else
-          @errors << I18n.t("controller.leads.errors.already_exists")
-        end
-      else
-        # CASE: if lead is added by a non-CP user OR a CP is NOT selected on lead
-        #
-        # Check if lead is already present
-        fetch_lead
-        if lead.blank?
-          # Register lead with user account & sitevisit without channel partner
-          create_lead_and_site_visit
-          push_into_crm if errors.blank? && lead.present?
         else
           @errors << I18n.t("controller.leads.errors.already_exists")
         end
@@ -72,30 +60,16 @@ class LeadRegistrationService
 
     # CASE: If existing lead is copied to another project
     if params[:lead_id].present?
-      existing_lead_manager = LeadManager.where(booking_portal_client_id: client.id, user_id: cp_user.id, lead_id: params[:lead_id]).first
+      existing_lead_manager = LeadManager.where(booking_portal_client_id: client.id, lead_id: params[:lead_id]).first
       if existing_lead_manager.present?
-        @lead_manager = LeadManager.where(booking_portal_client_id: client.id, user_id: cp_user.id, project_id: project.id, lead_id: existing_lead_manager.lead_id).first
+        @lead_manager = LeadManager.where(booking_portal_client_id: client.id, project_id: project.id, lead_id: existing_lead_manager.lead_id).first
         params.merge!(email: existing_lead_manager.email, phone: existing_lead_manager.phone, first_name: existing_lead_manager.first_name, last_name: existing_lead_manager.last_name)
+      else
+        # If existing lead is not found through lead_id in params
+        @errors << 'Existing lead not found'
       end
     else params[:email] || params[:phone]
-      @lead_manager = LeadManager.where(booking_portal_client_id: client.id, user_id: cp_user.id, project_id: project.id).or(get_query).first
-    end
-  end
-
-  def fetch_lead
-    # TODO: Do the following checks here:
-    # 1. Handle lead conflict behavior
-    # 2. Exclude expired Lead managers while fetching
-
-    # CASE: If existing lead is copied to another project
-    if params[:lead_id].present?
-      existing_lead = Lead.where(booking_portal_client_id: client.id, lead_id: params[:lead_id]).first
-      if existing_lead.present?
-        @lead = Lead.where(booking_portal_client_id: client.id, project_id: project.id, id: existing_lead.id).first
-        params.merge!(email: existing_lead.email, phone: existing_lead.phone, first_name: existing_lead.first_name, last_name: existing_lead.last_name)
-      end
-    else params[:email] || params[:phone]
-      @lead = Lead.where(booking_portal_client_id: client.id, project_id: project.id).or(get_query).first
+      @lead_manager = LeadManager.where(booking_portal_client_id: client.id, project_id: project.id).or(get_query).first
     end
   end
 
@@ -110,7 +84,7 @@ class LeadRegistrationService
         create_site_visit
         if errors.blank? && lead_manager.present?
           # Link lead manager with respective lead & sitevisit
-          attrs = {lead_id: lead.id}
+          attrs = {lead_id: lead.id, user_id: lead.user_id}
           attrs[:site_visit_id] = site_visit.id if site_visit.present?
           unless lead_manager.update(attrs)
             @errors += lead_manager.errors.full_messages
@@ -164,7 +138,7 @@ class LeadRegistrationService
 
   def create_site_visit
     attrs = {booking_portal_client_id: client.id, user_id: buyer.id}
-    attrs[:manager_id] = cp_user.id if cp_user.present?
+    attrs[:manager_id] = manager.id if manager.present?
     if site_visit_params.present?
       attrs[:scheduled_on] = site_visit_params[:scheduled_on] if site_visit_params[:scheduled_on].present?
       attrs[:creator_id] = site_visit_params[:creator_id] if site_visit_params[:creator_id].present?

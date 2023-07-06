@@ -5,6 +5,7 @@ class ClientObserver < Mongoid::Observer
     client.enable_communication[:sms] = (client.enable_communication[:sms].to_s == "true") || (client.enable_communication[:sms].to_s == "1")
     client.enable_communication[:whatsapp] = (client.enable_communication[:whatsapp].to_s == "true") || (client.enable_communication[:whatsapp].to_s == "1")
     client.enable_communication[:notification] = (client.enable_communication[:notification].to_s == "true") || (client.enable_communication[:notification].to_s == "1")
+    client.allow_lead_duplication = (client.allow_lead_duplication.to_s == "true") || (client.allow_lead_duplication.to_s == "1")
   end
 
   def after_create client

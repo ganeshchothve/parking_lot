@@ -9,7 +9,7 @@
               <th><%= t('mongoid.attributes.lead.email') %></th>
               <th><%= t('mongoid.attributes.lead.phone') %></th>
               <th><%= t('mongoid.attributes.lead.project_id') %></th>
-              <% if current_user.role.in?(%w(admin superadmin cp_owner)) %>
+              <% if policy([:admin, Lead.new]).show_channel_partner_column? %>
                 <th><%= t('mongoid.attributes.lead.manager_id') %></th>
               <% end %>
               <% if is_marketplace? %>
@@ -53,13 +53,11 @@
                 <td>
                   <p class="mb-0 theme-txt-color"><%= lead.project_name %></p>
                 </td>
-                <% if current_user.role.in?(%w(admin superadmin cp_owner)) %>
+                <% if policy([:admin, lead]).show_channel_partner_column? %>
                   <td>
-                    <% if lead.manager_id? %>
-                      <p class="fn-14 mt-1 mb-0">
-                        <%= link_to lead.manager.name, [current_user_role_group, lead.manager], class: 'theme-txt-color' %>
-                      </p>
-                    <% end %>
+                    <p class="fn-14 mt-1 mb-0">
+                    <%= link_to_if (policy([:admin, User]).index? && policy([current_user_role_group, lead]).show_channel_partner_user?), (policy([current_user_role_group, lead]).show_channel_partner_user? ? lead.manager_name : "-"), [current_user_role_group, lead.manager], class: 'theme-txt-color' %>
+                    </p>
                   </td>
                 <% end %>
                 <% if is_marketplace? %>

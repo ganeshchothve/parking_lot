@@ -88,12 +88,12 @@
                     </div>
                   </div>
                 <% end %>
-                <% if policy([:admin, @lead]).lead_activities? %>
+                <% if policy([:admin, @lead]).lead_managers? %>
                   <div class="accordion-item border-end-0 border-start-0">
                     <h2 class="accordion-header d-flex justify-content-between" id="headingLead">
                       <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseLead" aria-expanded="false" aria-controls="headingLead">
-                        <%= I18n.t("global.tabs.lead_activities") %>
+                        <%= I18n.t("global.tabs.lead_managers") %>
                       </button>
                     </h2>
                     <div id="collapseLead" class="accordion-collapse collapse" aria-labelledby="headingLead"

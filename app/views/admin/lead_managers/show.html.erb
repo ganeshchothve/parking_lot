@@ -32,7 +32,7 @@
       <div class="separate-line container"></div>
       <%
         matcher = {}
-        matcher = { user_id: current_user.id } if current_user.role?(:channel_partner)
+        matcher = { manager_id: current_user.id }
       %>
       <%= render 'admin/leads/lead_managers', lead_managers: @lead_manager.lead.lead_managers.where(matcher).paginate(page: 1) %>
     </div>
