@@ -3,7 +3,7 @@ module OmniAuth
     class Selldo < OmniAuth::Strategies::OAuth2
       option :name, :selldo
       option :client_options, {
-        :site => ESTATE_SELL_DO_APP_URL,
+        :site => ENV_CONFIG.dig(:oauth, :selldo, :url),
         :authorize_url => "oauth/authorize",
       }
 

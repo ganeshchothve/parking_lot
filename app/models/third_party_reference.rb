@@ -20,6 +20,7 @@ class ThirdPartyReference
     when 'Lead', 'User'
       if self.crm.try(:domain) == ENV_CONFIG.dig(:selldo, :base_url) && self._parent.lead_id.blank?
         self._parent.set(lead_id: self.reference_id)
+        self._parent.user.set(lead_id: self.reference_id) if self._parent.is_a?(Lead) && self._parent.user.present? && self._parent.user.lead_id.blank?
       end
     when 'SiteVisit'
       if self.crm.try(:domain) == ENV_CONFIG.dig(:selldo, :base_url) && self._parent.selldo_id.blank?

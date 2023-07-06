@@ -1,20 +1,20 @@
-<%# <% if current_client.enable_actual_inventory?(current_user) && ENV_CONFIG[:pusher]['pusher_api_key'].present? %>
-  <!-- <div id="gamification-container" class="card py-2 bg-gradient text-white d-print-none">
+<% if current_client.present? && current_client.enable_actual_inventory?(current_user) && ENV_CONFIG.dig(:pusher, :pusher_api_key).present? %>
+  <div id="gamification-container" class="card py-2 text-white d-print-none">
     <div id="gamification-carousel" class="carousel" data-ride="carousel">
       <div class="carousel-inner">
-        <%# Gamification::Base.new.dashboard_data(current_user).each_with_index do |text, index| %>
-          <div class="carousel-item <%#= index.zero? ? 'active' : ''%>">
-            <span><%#= text %></span>
+        <% Gamification::Base.new.dashboard_data(current_user).each_with_index do |text, index| %>
+          <div class="carousel-item <%= index.zero? ? 'active' : ''%>">
+            <span><%= text %></span>
           </div>
-        <%# end %>
+        <% end %>
       </div>
     </div>
-  </div> -->
-  <%#= javascript_tag do %>
-    <%# $(document).ready(function(){
+  </div>
+  <%= javascript_tag do %>
+    $(document).ready(function(){
       $('#gamification-carousel').carousel({
         interval: 7000
       });
     });
-  <%# end %>
-<%# end %>
+  <% end %>
+<% end %>

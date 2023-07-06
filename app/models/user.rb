@@ -898,7 +898,7 @@ class User
         elsif warden_conditions[:booking_portal_client_id].present?
           or_conds = []
           or_conds << { booking_portal_client_id: warden_conditions[:booking_portal_client_id], '$or': auth_conditions }
-          or_conds << { role: 'superadmin', '$or': auth_conditions, client_ids: warden_conditions[:booking_portal_client_id] }
+          or_conds << { role: 'superadmin', '$or': auth_conditions, client_ids: BSON::ObjectId(warden_conditions[:booking_portal_client_id]) }
           user_criteria = any_of(or_conds)
         else
           user_criteria = any_of(auth_conditions).nin(role: User::CLIENT_SCOPED_ROLES)

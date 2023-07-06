@@ -1442,6 +1442,7 @@ en:
         formula: "Formula"
         order: "Order"
         auto_release_on: "Auto Release On"
+        unit_facing_link: "Unit Facing Link"
         tower_name:
           rhea_miranda: "Rhea Miranda"
       project_unit/status:
@@ -3421,6 +3422,10 @@ en:
       sold_out_filtered: "Sold Out and Filtered"
       text:
         starting_at: "Starting At"
+      notice:
+        send_payment_link: 'Payment link sent to user'
+        booking_done: 'User has successfully blocked the unit'
+
     smses:
       index:
         link_name: "SMSs"
