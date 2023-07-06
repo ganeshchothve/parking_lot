@@ -254,6 +254,14 @@
       </div>
     </div>
   <% end %>
+  <% if policy([:admin, project]).editable_field?("lead_blocking_days") %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :lead_blocking_days, class: (current_client.launchpad_portal? ? 'label-required' : '') %>
+        <%= f.number_field :lead_blocking_days, class: 'form-control', required: (current_client.launchpad_portal? ? true : false), disabled: (policy([:admin, project]).editable_field?("lead_blocking_days") ? false : true), min: 0, max: 30 %>
+      </div>
+    </div>
+  <% end %>
   <% if policy([:admin, project]).editable_field?("usp") %>
     <div class="col-md-12">
       <div class="mb-3">

@@ -104,7 +104,6 @@ class Lead
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } , allow_blank: true
   validates :site_visits, copy_errors_from_child: true, if: :site_visits?
   validates :owner_id, presence: true, if: proc { |lead| lead.booking_portal_client.is_marketplace? }
-  validate :check_for_lead_conflict
 
   # delegate :first_name, :last_name, :name, :email, :phone, to: :user, prefix: false, allow_nil: true
   delegate :name, to: :project, prefix: true, allow_nil: true
@@ -217,7 +216,7 @@ class Lead
   end
 
   def manager_name
-    self.lead_managers.where(user_id: self.manager_id).first&.manager_name
+    self.lead_managers.where(manager_id: self.manager_id).first&.manager_name
   end
 
   def phone_or_email_required
@@ -298,12 +297,11 @@ class Lead
   end
 
   def active_lead_managers
-    self.lead_managers.where(expiry_date: { '$gte': Date.current })
+    self.lead_managers.active
   end
 
   def lead_validity_period
-    activity = self.active_lead_managers.first
-    activity.present? ? "#{(activity.expiry_date - Date.current).to_i} Days" : '0 Days'
+    active_lead_managers.first.try(:lead_validity_period) || '0 Days'
   end
 
   def send_payment_link(booking_detail_id = nil, host = nil)
@@ -377,29 +375,6 @@ class Lead
 
   def kyc_required_during_booking?
     !kyc_ready? && project.kyc_required_during_booking?
-  end
-
-  def check_for_lead_conflict
-    if self.manager.present?
-      lead_conflict_on = self.booking_portal_client.enable_lead_conflicts
-      if lead_conflict_on == 'client_level'
-        # same lead cannot be added by another partner in any project
-        lead = Lead.where(user_id: self.user.id, booking_portal_client_id: self.booking_portal_client.id)
-        if lead.present?
-          unless (lead.distinct(:manager_id).count <= 1 && lead.first.try(:manager_id) == self.manager_id)
-            self.errors.add(:base, I18n.t('mongoid.attributes.lead.errors.lead_registered_with_client'))
-          else
-            if lead.where(project_id: self.project_id).ne(id: self.id).present?
-              self.errors.add(:base, I18n.t('mongoid.attributes.lead.errors.lead_registered_with_project'))
-            end
-          end
-        end
-      elsif lead_conflict_on == 'project_level'
-        # same lead cannot be added by partner in that project
-        lead = Lead.where(project_id: self.project.id, user_id: self.user.id, booking_portal_client: self.booking_portal_client.id).ne(id: self.id).first
-        self.errors.add(:base, I18n.t('mongoid.attributes.lead.errors.lead_registered_with_project')) if lead.present?
-      end
-    end
   end
 
   class << self

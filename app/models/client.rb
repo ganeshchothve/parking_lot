@@ -6,15 +6,15 @@ class Client
   include CrmIntegration
   extend DocumentsConcern
 
-  PAYMENT_GATEWAYS = %w(Razorpay CCAvenue)
+  PAYMENT_GATEWAYS               = %w(Razorpay CCAvenue)
   # Add different types of documents which are uploaded on client
-  DOCUMENT_TYPES = %w[document offer login_page_image].freeze
-  PUBLIC_DOCUMENT_TYPES = []
-  INCENTIVE_CALCULATION = ["manual", "calculated"]
-  ENABLE_PAYMENT = %w[enable_with_kyc enable_without_kyc disable].freeze
-  ENABLE_BOOKING_WITH_KYC = ['before_booking', 'during_booking', 'disable'].freeze
-  LEAD_CONFLICT= %w[client_level project_level no_conflict]
-  INDUSTRIES = %w(real_estate generic)
+  DOCUMENT_TYPES                 = %w[document offer login_page_image].freeze
+  PUBLIC_DOCUMENT_TYPES          = []
+  INCENTIVE_CALCULATION          = ["manual", "calculated"]
+  ENABLE_PAYMENT                 = %w[enable_with_kyc enable_without_kyc disable].freeze
+  ENABLE_BOOKING_WITH_KYC        = ['before_booking', 'during_booking', 'disable'].freeze
+  LEAD_CONFLICT                  = %w[no_conflict client_level project_level site_visit_conducted]
+  INDUSTRIES                     = %w(real_estate generic)
   REQUIRED_FIELDS_FOR_USER_LOGIN = %w(email phone)
 
   attr_accessor :basic, :bookings, :contacts, :integrations, :pages, :logos

@@ -79,6 +79,10 @@ class SiteVisit
   validates :notes, copy_errors_from_child: true
   validates :assets, copy_errors_from_child: true
 
+  def lead_manager
+    LeadManager.where(booking_portal_client_id: booking_portal_client_id, manager_id: manager_id, site_visit_id: id).first
+  end
+
   def tentative_incentive_eligible?(category=nil)
     if category.present?
       if category == 'walk_in'
@@ -182,6 +186,6 @@ class SiteVisit
   end
 
   def existing_scheduled_sv
-    self.errors.add :base, 'One Scheduled Site Visit Already Exists' if SiteVisit.where(booking_portal_client_id: self.booking_portal_client_id, lead_id: lead_id, status: 'scheduled').present?
+    self.errors.add :base, 'One Scheduled Site Visit Already Exists' if SiteVisit.where(booking_portal_client_id: self.booking_portal_client_id, lead_id: lead_id, status: 'scheduled', manager_id: self.manager_id).present?
   end
 end

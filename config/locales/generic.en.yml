@@ -962,7 +962,7 @@ en-GENERIC:
         lead_blocking_days: "Configure Deal Blocking Days"
         incentive_gst_slabs: "Configure Incentive GST Slabs (%)"
         team_lead_dashboard_access_roles: "Team Deal Dashboard Access Roles"
-        enable_lead_conflicts: "Enable Deal Conflicts"
+        enable_lead_conflicts: "Resolve Lead Conflicts on"
         launchpad_portal: "Launchpad Portal"
         payment_gateway: "Payment Gateway"
         enable_live_inventory: "Enable Live Inventory"
@@ -1029,6 +1029,7 @@ en-GENERIC:
         client_level: Client Level
         project_level: Project Level
         no_conflict: No Conflict
+        site_visit_conducted: Meeting Conducted
       client/industries:
         real_estate: 'Real Estate'
         generic: 'Generic'
@@ -1103,6 +1104,7 @@ en-GENERIC:
         notification_numbers_sort: "(Key SMS Reports are sent here)"
         sender_email: "Sender Email Address"
         email_domains: "Email Domains (to detect employee users)"
+        lead_blocking_days: "Configure Deal Blocking Days"
         booking_portal_domains: "Booking Portal Domains (where the portal is hosted)"
         registration_name: "Registration Name (Used in Payments)"
         cin_number: "CIN Number"

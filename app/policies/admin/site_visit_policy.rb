@@ -34,7 +34,7 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
   def change_state?
     record.project.is_active? &&
     (
-      (user.role.in?(%w(cp_owner channel_partner dev_sourcing_manager)) && record.scheduled? && record.may_conduct?) ||
+      (user.role.in?(%w(dev_sourcing_manager gre)) && record.scheduled? && record.may_conduct?) ||
       (user.role.in?(%w(superadmin admin cp_admin)) && record.may_paid?) ||
       (user.role.in?(%w(dev_sourcing_manager)) && record.approval_status.in?(%w(pending rejected)))
     )

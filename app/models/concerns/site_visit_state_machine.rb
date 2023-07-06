@@ -12,7 +12,7 @@ module SiteVisitStateMachine
       state :scheduled, initial: true
       state :pending, :missed, :conducted, :paid
 
-      event :conduct, after: %i[send_notification] do
+      event :conduct, after: %i[send_notification activate_lead_manager] do
         transitions from: :scheduled, to: :conducted, if: :can_conduct?
         transitions from: :pending, to: :conducted, if: :can_conduct?
       end
@@ -35,6 +35,11 @@ module SiteVisitStateMachine
       # TODO: Send Broadcast message via notification, in-app, Email, etc
       recipient = self.manager || self.lead.manager
       send_push_notification(template_name, recipient) if recipient.present?
+    end
+
+    def activate_lead_manager
+      lm = self.lead_manager
+      lm.activate! if lm.present? && lm.may_activate?
     end
 
     # State machine for approval status maintained on a separate field

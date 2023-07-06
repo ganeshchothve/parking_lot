@@ -1,13 +1,15 @@
 class LeadManager
   include Mongoid::Document
   include Mongoid::Timestamps
+  include LeadManagerStateMachine
   extend FilterByCriteria
   extend DocumentsConcern
 
   COUNT_STATUS = %w(fresh_lead active_in_same_cp no_count accompanied_credit accompanied_count_to_cp count_given)
   LEAD_STATUS = %w(already_exists registered)
-  DOCUMENT_TYPES = %w[sitevisit_form]
   SITEVISIT_STATUS = %w[scheduled conducted]
+
+  DOCUMENT_TYPES = %w[sitevisit_form]
 
   #field :registered_at, type: Date
   #field :count_status, type: String
@@ -54,7 +56,7 @@ class LeadManager
   end
 
   def lead_validity_period
-    (self.expiry_date > Date.current) ? "#{(self.expiry_date - Date.current).to_i} Days" : '0 Days'
+    (self.expiry_date.present? && self.expiry_date > Date.current) ? "#{(self.expiry_date - Date.current).to_i} Days" : '0 Days'
   end
 
   def can_extend_validity?

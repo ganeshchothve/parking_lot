@@ -47,33 +47,35 @@
                 <% if !current_user.role.in?(%w(cp_owner channel_partner)) %>
                 <div class="d-flex justify-content-between p-2 pt-1 pb-1">
                     <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.channel_partner') %></p>
-                    <p class="fn-14 mb-0"><%= lead_manager.manager_name %></p>
+                    <p class="fn-14 mb-0"><%= lead_manager.manager.present? && lead_manager.manager.channel_partner? ? lead_manager.manager_name : '-' %></p>
                 </div>
                 <% end %>
-                <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.registered_at') %></p>
-                    <p class="fn-14 mb-0"><%= lead_manager.registered_at.try(:strftime, "%d/%m/%Y") %></p>
-                </div>
+                <% if lead_manager.active? %>
+                  <div class="d-flex justify-content-between p-2 pt-1 pb-1">
+                      <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.expiry_date') %></p>
+                      <p class="fn-14 mb-0"><%= lead_manager.expiry_date.try(:strftime, "%d/%m/%Y") %></p>
+                  </div>
+                  <div class="d-flex justify-content-between p-2 pt-1 pb-1">
+                      <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.expiry_remaining_days') %></p>
+                      <p class="fn-14 mb-0"><%= lead_manager.lead_validity_period %></p>
+                  </div>
+                <% end %>
                 <!--
                 <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.count_status') %></p>
-                    <p class="fn-14 mb-0"><%= lead_manager.count_status.try(:titleize) %></p>
+                    <p class="fn-14 txt-drk-b-lt mb-0"><%#= t('mongoid.attributes.lead_manager.registered_at') %></p>
+                    <p class="fn-14 mb-0"><%#= lead_manager.registered_at.try(:strftime, "%d/%m/%Y") %></p>
                 </div>
                 <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.lead_status') %></p>
-                    <p class="fn-14 mb-0"><%= lead_manager.lead_status.try(:titleize) %></p>
+                    <p class="fn-14 txt-drk-b-lt mb-0"><%#= t('mongoid.attributes.lead_manager.count_status') %></p>
+                    <p class="fn-14 mb-0"><%#= lead_manager.count_status.try(:titleize) %></p>
                 </div>
                 <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.expiry_date') %></p>
-                    <p class="fn-14 mb-0"><%= lead_manager.expiry_date.try(:strftime, "%d/%m/%Y") %></p>
+                    <p class="fn-14 txt-drk-b-lt mb-0"><%#= t('mongoid.attributes.lead_manager.lead_status') %></p>
+                    <p class="fn-14 mb-0"><%#= lead_manager.lead_status.try(:titleize) %></p>
                 </div>
                 <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.expiry_remaining_days') %></p>
-                    <p class="fn-14 mb-0"><%= lead_manager.lead_validity_period %></p>
-                </div>
-                <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.can_extend_validity') %></p>
-                    <p class="fn-14 mb-0"><%= lead_manager.can_extend_validity? ? 'Yes' : 'No' %></p>
+                    <p class="fn-14 txt-drk-b-lt mb-0"><%#= t('mongoid.attributes.lead_manager.can_extend_validity') %></p>
+                    <p class="fn-14 mb-0"><%#= lead_manager.can_extend_validity? ? 'Yes' : 'No' %></p>
                 </div>
                 -->
             </div>

@@ -129,7 +129,7 @@
             <div class="mb-3">
               <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.manager_id') %></label>
                 <p class="fn-14 theme-txt-color mb-0">
-                <% manager_user = lead.manager_id.present? ? User.find(lead.manager_id) : nil %>
+                <% manager_user = lead.manager_id.present? && lead.manager.channel_partner? ? lead.manager : nil %>
                 <%= manager_user.present? ? link_to(manager_user.name, admin_user_path(manager_user)) : '-' %>
                 </p>
             </div>

@@ -1,4 +1,4 @@
-class Admin::CpLeadActivitiesController < AdminController
+class Admin::LeadManagersController < AdminController
   before_action :authenticate_user!
   before_action :set_lead_manager, except: %i[index]
   before_action :authorize_resource

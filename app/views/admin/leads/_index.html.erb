@@ -35,6 +35,9 @@
                   <% else %>
                     <%= lead.name %>
                   <% end %>
+                  <% if lead.active_lead_managers.present? %>
+                    <i class="fa fa-circle red" aria-hidden="true"></i>
+                  <% end %>
                 </td>
                 <td>
                   <% if lead.email.present? %>
