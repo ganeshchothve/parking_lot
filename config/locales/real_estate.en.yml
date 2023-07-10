@@ -1905,6 +1905,8 @@ en-REAL_ESTATE:
         pending: "Pending"
         missed: "Missed"
         conducted: "Conducted"
+        cancelled: 'Cancelled'
+        inactive: 'Inactive'
         paid: "Paid"
       site_visit/approval_status:
         pending: "Pending Approval"

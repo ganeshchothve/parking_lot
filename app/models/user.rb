@@ -965,7 +965,7 @@ class User
         custom_scope = { role: 'sales', project_ids: { "$in": project_ids }}
       elsif user.role?('gre')
         user_ids = Lead.where(project_id: { "$in": project_ids }).distinct(:user_id)
-        custom_scope[:'$or'] = [{ id: { "$in": user_ids}}, { role: 'sales', project_ids: { "$in": project_ids }}]
+        custom_scope[:'$or'] = [{ id: { "$in": user_ids}}, { role: 'sales', project_ids: { "$in": project_ids }}, {role: { '$in': %w(channel_partner cp_owner) }}]
       end
       custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
       custom_scope

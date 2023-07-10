@@ -46,7 +46,7 @@ class SiteVisitObserver < Mongoid::Observer
 
     # Set revisit
     if site_visit.is_revisit.nil?
-      if site_visit.lead.site_visits.conducted.count.zero?
+      if site_visit.lead.site_visits.where(manager_id: site_visit.manager_id).conducted.count.zero?
         site_visit.is_revisit = false
       else
         site_visit.is_revisit = true

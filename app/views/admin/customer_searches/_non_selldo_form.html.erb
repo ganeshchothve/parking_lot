@@ -1,21 +1,21 @@
 <!-- TODO project specific URL and domain specific URL -->
-        <% unless @lead = @customer_search.customer.presence %>
-          <% @lead = Lead.new(project_id: current_user.selected_project_id) %>
-          <% @customer_search.customer = @lead %>
-          <% url = check_and_register_path %>
-        <% else %>
-          <% url = admin_customer_search_path(@customer_search) %>
-        <% end %>
-        <%= simple_form_for @lead, url: url, remote: true, local: true, html: { class: "validate-form new_lead theme-form", "data-resource-type": global_labels['lead'], "data-type": "json" } do |f| %>
-          <%= hidden_field_tag :customer_search_id, @customer_search.id.to_s %>
-          <%= render 'admin/leads/non_selldo_form_fields', f: f, lead: @lead %>
+<% unless @lead = @customer_search.customer.presence %>
+  <% @lead = Lead.new() %>
+  <% @customer_search.customer = @lead %>
+  <% url = check_and_register_path %>
+<% else %>
+  <% url = admin_customer_search_path(@customer_search) %>
+<% end %>
+<%= simple_form_for @lead, url: url, remote: true, local: true, html: { class: "validate-form new_lead theme-form", "data-resource-type": global_labels['lead'], "data-type": "json" } do |f| %>
+  <%= hidden_field_tag :customer_search_id, @customer_search.id.to_s %>
+  <%= render 'admin/leads/non_selldo_form_fields', f: f, lead: @lead %>
 
-          <div class = 'row'>
-            <div class = 'col-md-12 border-top pt-3'>
-              <%= submit_tag I18n.t("global.save"), class: 'btn btn-primary float-end w-auto border-primary' %>
-            </div>
-          </div>
-        <% end %>
+  <div class = 'row'>
+    <div class = 'col-md-12 border-top pt-3'>
+      <%= submit_tag I18n.t("global.save"), class: 'btn btn-primary float-end w-auto border-primary' %>
+    </div>
+  </div>
+<% end %>
 <%= javascript_tag do %>
   $(document).ready(function(){
     $(document).on("ajax:success", '.new_lead', function(evt, data, status, xhr){
