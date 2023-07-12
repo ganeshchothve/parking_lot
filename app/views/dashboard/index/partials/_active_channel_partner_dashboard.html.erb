@@ -1,11 +1,14 @@
 <section class="mt-3" id="channel-partner-dashboard">
+  <div class="row px-3 py-3">
+    <% template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'index/_channel_partner').first %>
+    <% if template.present? %>
+      <%= get_view_erb(template, check_active: true) %>
+    <% end %>
+  </div>
   <div class="px-4">
     <div class="row">
       <div class="col-lg-9">
         <div class="row mb-3">
-          <div class="col-lg-12">
-            <h2 class="sec-title"><%= I18n.t("global.welcome") + channel_partner.name %>,</h2>
-          </div>
           <!--
           <div class="col-lg-6 text-end">
             <select class="h3 mb-0 font-weight-medium f-20 form-control d-sm-inline-block">
