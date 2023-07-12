@@ -15,10 +15,12 @@
       <div class="cp-login-otp-wrap mx-3">
         <div class="row">
           <div class="col-lg-7 pe-0 br-rt-1 ps-0 ps-sm-2">
-            <% header_template = ::Template::UITemplate.where(name: 'channel_partner_new_header', is_active: true, booking_portal_client_id: current_client.id).first %>
-            <% if header_template.present? %>
-              <%= get_view_erb(header_template, check_active: true) %>
-            <% end %>
+            <div class="row px-3 py-3">
+              <% template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'channel_partner/new').first %>
+              <% if template.present? %>
+                <%= get_view_erb(template, check_active: true) %>
+              <% end %>
+            </div>
             <div class="cp-signup-form-wrap pb-3 cp-form-wrap px-2 px-sm-3">
               <%= simple_form_for(@user, url: register_channel_partners_path, local: true, html: { id: 'channel_partner_form', class: 'validate-form theme-form', multipart: true, novalidate: false }) do |form| %> 
                 <% if params[:action] == 'find_or_create_cp_user' && @user.errors.present? %>

@@ -1,3 +1,9 @@
+<div class="row px-3 py-3">
+  <% template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'index/inactive_channel_partner').first %>
+  <% if template.present? %>
+    <%= get_view_erb(template, check_active: true) %>
+  <% end %>
+</div>
 <% if channel_partner.present? %>
   <% unless current_user.active_channel_partner? %>
     <% if channel_partner.pending? %>
