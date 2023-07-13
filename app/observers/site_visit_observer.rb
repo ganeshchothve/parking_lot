@@ -52,6 +52,9 @@ class SiteVisitObserver < Mongoid::Observer
         site_visit.is_revisit = true
       end
     end
+
+    # Set unique meeting code
+    site_visit.code = (SecureRandom.random_number * 10000000).to_i.to_s if site_visit.code.blank?
   end
 
   def before_save site_visit

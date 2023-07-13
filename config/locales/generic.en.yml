@@ -1898,6 +1898,7 @@ en-GENERIC:
         manager_id: "Partner"
         rejection_reason: "Rejection Reason"
         is_revisit: "Revisit"
+        code: 'Unique Visit Code'
       site_visit/status:
         scheduled: "Scheduled"
         pending: "Pending"
