@@ -5,10 +5,13 @@ class CustomerSearch
   ALLOWED_STEPS = %w[search customer kyc sitevisit queued not_queued]
 
   field :step, type: String, default: 'search'
+
+  belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :customer, class_name: 'Lead', optional: true
   belongs_to :user_kyc, optional: true
-  belongs_to :booking_portal_client, class_name: 'Client'
-  validates_presence_of :customer_id, on: :customer
+  belongs_to :site_visit, optional: true
+
+  validates_presence_of :customer_id, on: :customer, message: 'not found'
   validate :customer_validity, on: :kyc
   validate :customer_kyc_validity, on: :sitevisit
 

@@ -14,7 +14,7 @@ class Admin::CustomerSearchesController < AdminController
     @customer_search = CustomerSearch.new(booking_portal_client: current_user.booking_portal_client)
     search_for_customer
     respond_to do |format|
-      if @customer_search.save
+      if (params[:new] == 'true' && @customer_search.save) || @customer_search.save(context: :customer)
         if params[:new] == 'true' || @customer_search.valid?(:customer)
           format.html { redirect_to admin_customer_search_path(@customer_search) }
         else
@@ -22,6 +22,7 @@ class Admin::CustomerSearchesController < AdminController
         end
         format.json { render json: {model: @customer_search, location: admin_customer_search_path(@customer_search)} }
       else
+        flash.now[:alert] = @customer_search.errors.full_messages
         format.html { render :new }
         format.json { render json: {errors: @customer_search.errors.full_messages} }
       end

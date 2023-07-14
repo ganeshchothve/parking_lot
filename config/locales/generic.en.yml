@@ -3402,6 +3402,7 @@ en-GENERIC:
         last_visit_date: "Last site visit date"
         last_visit_status: "Last site visit status"
         mark_conducted: "Mark site visit conducted"
+        scheduled_with_code: "Found site visit scheduled on - %{name} with %{code}"
 
       headings:
         customer_site_visit: "Customer Site Visit"

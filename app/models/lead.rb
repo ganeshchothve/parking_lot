@@ -366,7 +366,7 @@ class Lead
   end
 
   def is_revisit?
-    self.site_visits.where(booking_portal_client_id: self.booking_portal_client_id, status: "conducted").present?
+    self.site_visits.ne(id: current_site_visit_id).where(booking_portal_client_id: self.booking_portal_client_id, status: "conducted").present?
   end
 
   def kyc_required_before_booking?

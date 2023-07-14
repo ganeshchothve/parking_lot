@@ -31,6 +31,12 @@ module CustomerSearchConcern
     elsif params[:token_number].present?
       receipt = Receipt.where(Receipt.user_based_scope(current_user, params)).filter_by_token_number(params[:token_number]).first
       customer = receipt.lead if receipt.present?
+    elsif params[:code].present?
+      site_visit = SiteVisit.where(SiteVisit.user_based_scope(current_user, params)).filter_by_code(params[:code]).scheduled.lte(scheduled_on: Date.current.end_of_day).first
+      if site_visit.present?
+        customer = site_visit.lead
+        @customer_search.assign_attributes(site_visit_id: site_visit.id)
+      end
     elsif params[:_id].present?
       customer = Lead.where(Lead.user_based_scope(current_user, params)).filter_by__id(params[:_id]).first
     end
@@ -61,7 +67,8 @@ module CustomerSearchConcern
   def conduct_sitevisit
     _lead = @customer_search.customer
 
-    if params[:sitevisit_id].present?
+    if _sitevisit = @customer_search.site_visit.presence
+    elsif params[:sitevisit_id].present?
       _sitevisit = _lead.site_visits.where(booking_portal_client_id: current_client.try(:id), id: params[:sitevisit_id]).in(status: ['scheduled', 'pending']).first
     elsif params[:sitevisit_datetime].present?# && params[:cp_code].present?
       _sitevisit = _lead.site_visits.build(scheduled_on: params[:sitevisit_datetime], status: "scheduled", creator: current_user, project: _lead.project, user: _lead.user)#, cp_code: params[:cp_code])

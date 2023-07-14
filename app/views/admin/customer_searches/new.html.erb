@@ -20,13 +20,17 @@
                 <% end %>
                 <%= form_for @customer_search, url: admin_customer_searches_url, html: {class: 'validate-form theme-form', id: "search_form"} do |f| %>
                   <div class='row'>
-                    <div class='col-sm-6 mb-3'>
+                    <div class='col-sm-4 mb-3'>
                       <%= label_tag "lead_id", I18n.t("mongoid.attributes.customer_search.lead_id"), class: "control-label" %>
                       <%= number_field_tag "lead_id", (params.present? ? params[:lead_id] : ""), class: "form-control" %>
                     </div>
-                    <div class='col-sm-6 mb-3'>
+                    <div class='col-sm-4 mb-3'>
                       <%= label_tag "token_number", I18n.t("mongoid.attributes.customer_search.token_number"), class: "control-label" %>
                       <%= text_field_tag "token_number", (params[:fltrs].present? ? params[:fltrs][:token_number] : ""), class: "form-control" %>
+                    </div>
+                    <div class='col-sm-4 mb-3'>
+                      <%= label_tag "code", I18n.t("mongoid.attributes.site_visit.code"), class: "control-label" %>
+                      <%= text_field_tag "code", (params[:code].present? ? params[:code] : ""), class: "form-control" %>
                     </div>
                     <div class='col-sm-12 mb-3'>
                       <%= label_tag "_id", I18n.t("mongoid.attributes.customer_search.id"), class: "control-label" %>
