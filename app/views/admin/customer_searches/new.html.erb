@@ -34,7 +34,7 @@
                     </div>
                     <div class='col-sm-12 mb-3'>
                       <%= label_tag "_id", I18n.t("mongoid.attributes.customer_search.id"), class: "control-label" %>
-                      <%= select_tag "_id", options_from_collection_for_select(params[:_id].present? ? Lead.where(booking_portal_client_id: current_client.try(:id), _id: params[:_id]) : [], "id", "ds_name"), {class: "selectize-remote", data: { url: admin_leads_path } } %>
+                      <%= select_tag "_id", options_from_collection_for_select(params[:_id].present? ? Lead.where(booking_portal_client_id: current_client.try(:id), _id: params[:_id]) : [], "id", proc { |lead| lead.ds_name(current_user) }), {class: "selectize-remote", data: { url: admin_leads_path } } %>
                     </div>
                   </div>
                   <div class="pt-2 border-top d-flex justify-content-between col-12">
@@ -52,11 +52,11 @@
 </div>
 <%= javascript_tag do %>
 $(document).ready(function(){
-FormInitializer.init($("#search_form"));
-setTimeout(removeAlert, 30000);
-});
+  FormInitializer.init($("#search_form"));
+    setTimeout(removeAlert, 30000);
+  });
 
-function removeAlert(){
-$(".alert").addClass("d-none")
-}
+  function removeAlert(){
+    $(".alert").addClass("d-none")
+  }
 <% end %>

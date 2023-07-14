@@ -49,14 +49,10 @@ module CustomerSearchConcern
   def update_customer
     search_for_customer if @customer_search.customer.blank?
     @lead = @customer_search.customer
-    if params[:lead].present?
-      @lead.update(permitted_attributes([:admin, @lead]))
-    end
-    #if params[:manager_id].present?
-    #  cp_user = User.where(booking_portal_client_id: current_client.try(:id), id: params[:manager_id]).first
-    #  lead_manager = LeadManagerRegister.create_cp_lead_object(@lead, cp_user) if cp_user.present?
-    #  lead_manager.save if lead_manager.present?
-    #end
+
+    attrs = params.permit(policy([:admin, @lead]).permitted_attributes)
+    @lead.update(attrs) if attrs.present?
+
     @customer_search.assign_attributes(step: 'sitevisit') if @customer_search.customer.present?
   end
 
@@ -72,7 +68,6 @@ module CustomerSearchConcern
       _sitevisit = _lead.site_visits.where(booking_portal_client_id: current_client.try(:id), id: params[:sitevisit_id]).in(status: ['scheduled', 'pending']).first
     elsif params[:sitevisit_datetime].present?# && params[:cp_code].present?
       _sitevisit = _lead.site_visits.build(scheduled_on: params[:sitevisit_datetime], status: "scheduled", creator: current_user, project: _lead.project, user: _lead.user)#, cp_code: params[:cp_code])
-      #_sitevisit.is_revisit = _lead.is_revisit?
     end
 
     if _sitevisit
@@ -96,10 +91,5 @@ module CustomerSearchConcern
         end
       end
     end
-
-    #if _sitevisit.try(:cp_code).present?# && !_lead.permanently_blocked? && !_lead.temporarily_blocked
-    #  channel_partner = ChannelPartner.where(cp_portal_id: _sitevisit.cp_code).first
-    #  _lead.temporarily_block_manager(channel_partner.associated_user_id) if channel_partner.present?
-    #end
   end
 end
