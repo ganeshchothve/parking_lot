@@ -50,6 +50,7 @@ class Admin::SiteVisitsController < AdminController
                             user: @lead.user,
                             lead: @lead,
                             creator: current_user,
+                            manager: current_user,
                             project: @lead.project,
                             booking_portal_client_id: current_user.booking_portal_client.id
                             )

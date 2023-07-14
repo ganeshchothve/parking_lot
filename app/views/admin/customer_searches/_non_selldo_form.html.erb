@@ -1,6 +1,7 @@
 <!-- TODO project specific URL and domain specific URL -->
 <% unless @lead = @customer_search.customer.presence %>
   <% @lead = Lead.new() %>
+  <% @lead.site_visits.build %>
   <% @customer_search.customer = @lead %>
   <% url = check_and_register_path %>
 <% else %>

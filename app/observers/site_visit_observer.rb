@@ -32,12 +32,18 @@ class SiteVisitObserver < Mongoid::Observer
     # Set project & user
     site_visit.project_id = site_visit.lead&.project_id if site_visit.project_id.blank?
     site_visit.user_id = site_visit.lead&.user_id if site_visit.user_id.blank?
+    site_visit.booking_portal_client_id = site_visit.lead.booking_portal_client_id if site_visit.booking_portal_client_id.blank?
     # Set manager if present on lead
-    site_visit.manager_id = site_visit.lead&.manager_id if site_visit.manager_id.blank?
+    #site_visit.manager_id = site_visit.lead&.manager_id if site_visit.manager_id.blank?
     site_visit.channel_partner_id = site_visit.manager&.channel_partner_id if site_visit.channel_partner_id.blank? && site_visit.manager.present?
     site_visit.cp_manager_id = site_visit.manager&.manager_id if site_visit.cp_manager_id.blank? && site_visit.manager
     site_visit.cp_admin_id = site_visit.cp_manager&.manager_id if site_visit.cp_admin_id.blank? && site_visit.cp_manager
-    site_visit.booking_portal_client_id = site_visit.lead.booking_portal_client_id
+
+    # Link site_visit to lead manager if found
+    if site_visit.scheduled? && site_visit.manager_id.present? && site_visit.lead_manager.blank?
+      lm = site_visit.lead.lead_managers.draft.where(manager_id: site_visit.manager_id).first
+      lm.set(site_visit_id: site_visit.id)
+    end
 
     # Set created_by
     if site_visit.created_by.blank?
