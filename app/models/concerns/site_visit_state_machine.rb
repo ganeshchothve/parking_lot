@@ -124,8 +124,8 @@ module SiteVisitStateMachine
           booking_portal_client_id: self.booking_portal_client_id,
           email_template_id: email_template.id,
           #cc: self.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
-          recipients: [site_visit.manager],
-          to: [site_visit.lead.email],
+          recipients: [self.manager],
+          to: [self.lead.email],
           triggered_by_id: self.id,
           triggered_by_type: self.class.to_s
         })
@@ -134,7 +134,7 @@ module SiteVisitStateMachine
       sms_template = ::Template::SmsTemplate.where(booking_portal_client_id: self.booking_portal_client_id, name: template_name, project_id: self.project_id).first
       sms = Sms.create!(
         booking_portal_client_id: self.booking_portal_client_id,
-        to: [site_visit.lead.phone],
+        to: [self.lead.phone],
         sms_template_id: sms_template.id,
         triggered_by_id: self.id,
         triggered_by_type: self.class.to_s

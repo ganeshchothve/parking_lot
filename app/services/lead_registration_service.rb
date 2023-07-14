@@ -282,7 +282,7 @@ class LeadRegistrationService
   def push_into_crm
     if lead.push_to_crm? && selldo_crm_base.present?
       push_lead_to_selldo
-      site_visit.push_in_crm(selldo_crm_base) if site_visit.present?
+      site_visit.reload.push_in_crm(selldo_crm_base) if lead.reload.lead_id.present? && site_visit.present?
     end
 
     Kylas::SyncLeadToKylasWorker.perform_async(lead.id.to_s, site_visit.try(:id).try(:to_s)) if client.is_marketplace?
@@ -300,8 +300,8 @@ class LeadRegistrationService
 
       if api_log.present?
         if api_log.status == 'Success' && (resp = api_log.response.try(:first).presence)
-          attrs[:lead_details] = (resp['selldo_lead_details'] || {}).with_indifferent_access
-          lead.update(selldo_lead_registration_date: attrs.dig(:lead_details, :lead_created_at), lead_stage: attrs.dig(:lead_details, :stage))
+          resp = (resp['selldo_lead_details'] || {}).with_indifferent_access
+          lead.update(selldo_lead_registration_date: resp[:lead_created_at], lead_stage: resp[:stage])
           #
           # Update custom lead stage in selldo
           #
