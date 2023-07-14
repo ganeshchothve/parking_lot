@@ -34,7 +34,7 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
   def change_state?
     record.project.is_active? &&
     (
-      (user.role.in?(%w(dev_sourcing_manager gre)) && record.scheduled? && record.may_conduct?) ||
+      (user.role.in?(%w(dev_sourcing_manager gre sales_admin admin)) && record.scheduled? && record.may_conduct?) ||
       (user.role.in?(%w(superadmin admin cp_admin)) && record.may_paid?) ||
       (user.role.in?(%w(dev_sourcing_manager)) && record.approval_status.in?(%w(pending rejected)))
     )
@@ -66,7 +66,7 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
       if record.new_record?
         attrs += [:manager_id] if user.role.in?(%w(cp_owner channel_partner))
       else
-        attrs += [:event] if record.scheduled? && user.role.in?(%w(cp_owner channel_partner))
+        attrs += [:event] if record.scheduled? && user.role.in?(%w(cp_owner channel_partner admin sales_admin))
         attrs += [:event] if record.may_paid? && user.role.in?(%w(superadmin admin cp_admin))
         attrs += [:approval_event] if record.approval_status.in?(%w(pending rejected)) && user.role.in?(%w(dev_sourcing_manager))
         attrs += [:rejection_reason] if user.role?(:dev_sourcing_manager)

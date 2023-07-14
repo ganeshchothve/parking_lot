@@ -115,8 +115,11 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
       # if is_assigned_lead?
       #   valid = is_lead_accepted? && valid
       # end
+
+      valid &&= record.site_visit.conducted? if record.site_visit.present?
       valid &&= !record.lead&.kyc_required_before_booking?
-      valid = valid && project_access_allowed?(current_project_id)
+      valid &&= project_access_allowed?(current_project_id)
+
       valid
     else
       false
@@ -127,7 +130,10 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     if current_client.real_estate?
       out = !enable_inventory? && record.try(:user).try(:buyer?) && record.lead&.project&.bookings_enabled? && enable_actual_inventory?
       out = false if user.role.in?(%w(cp_owner channel_partner)) && !(user.active_channel_partner? && interested_project_present?)
-      out = out && project_access_allowed?(current_project_id)
+
+      out &&= record.site_visit.conducted? if record.site_visit.present?
+      out &&= project_access_allowed?(current_project_id)
+
       out
     else
       false

@@ -41,9 +41,11 @@ module SiteVisitStateMachine
     def activate_lead_manager
       lm = self.lead_manager
       # TODO: Do not activate this lm if already active lm is present
-      lm.activate! if lm.present? && lm.may_activate?
-      if lm.active?
-        self.lead.site_visits.scheduled.each(&:cancel!)
+      if lm.present?
+        lm.activate! if lm.may_activate?
+        if lm.active?
+          self.lead.site_visits.scheduled.each(&:cancel!)
+        end
       end
     end
 
