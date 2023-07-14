@@ -42,7 +42,7 @@ class SiteVisitObserver < Mongoid::Observer
     # Link site_visit to lead manager if found
     if site_visit.scheduled? && site_visit.manager_id.present? && site_visit.lead_manager.blank?
       lm = site_visit.lead.lead_managers.draft.where(manager_id: site_visit.manager_id).first
-      lm.set(site_visit_id: site_visit.id)
+      lm.set(site_visit_id: site_visit.id) if lm
     end
 
     # Set created_by
@@ -82,6 +82,8 @@ class SiteVisitObserver < Mongoid::Observer
   def after_create site_visit
     site_visit.third_party_references.each(&:update_references)
 
+    site_visit.send_notification
+
     if site_visit.booking_portal_client.external_api_integration?
       if Rails.env.staging? || Rails.env.production?
         SiteVisitObserverWorker.perform_async(site_visit.id.to_s, 'create', site_visit.changes)
@@ -112,6 +114,10 @@ class SiteVisitObserver < Mongoid::Observer
 
     if (site_visit.scheduled_on_changed? || site_visit.status_changed?) && site_visit.booking_portal_client.is_marketplace? && site_visit.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)).present?
       Kylas::UpdateMeeting.new(site_visit.user, site_visit, {run_in_background: true}).call
+    end
+
+    if site_visit.scheduled_on_changed? && site_visit.scheduled_on_was.present? && site_visit.scheduled_on.present?
+      send_email_sms("site_visit_rescheduled")
     end
   end
 end

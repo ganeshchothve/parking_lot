@@ -17,11 +17,11 @@ module SiteVisitStateMachine
         transitions from: :pending, to: :conducted, if: :can_conduct?
       end
 
-      event :cancel, after: %i[cancel_lead_manager] do
+      event :cancel, after: %i[cancel_lead_manager send_notification] do
         transitions from: :scheduled, to: :cancelled
       end
 
-      event :inactive, after: %i[] do
+      event :inactive, after: %i[send_notification] do
         transitions from: :scheduled, to: :inactive
       end
 
@@ -59,6 +59,7 @@ module SiteVisitStateMachine
       # TODO: Send Broadcast message via notification, in-app, Email, etc
       recipient = self.manager || self.lead.manager
       send_push_notification(template_name, recipient) if recipient.present?
+      send_email_sms("site_visit_#{self.status}")
     end
 
     # State machine for approval status maintained on a separate field
@@ -113,6 +114,31 @@ module SiteVisitStateMachine
         )
         push_notification.save
       end
+    end
+
+    def send_email_sms template_name
+      email_template = Template::EmailTemplate.where(name: template_name, project_id: self.project_id, booking_portal_client_id: self.booking_portal_client_id).first
+      if email_template.present?
+        email = Email.create!({
+          project_id: self.project_id,
+          booking_portal_client_id: self.booking_portal_client_id,
+          email_template_id: email_template.id,
+          #cc: self.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
+          recipients: [site_visit.manager],
+          to: [site_visit.lead.email],
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s
+        })
+        email.sent!
+      end
+      sms_template = ::Template::SmsTemplate.where(booking_portal_client_id: self.booking_portal_client_id, name: template_name, project_id: self.project_id).first
+      sms = Sms.create!(
+        booking_portal_client_id: self.booking_portal_client_id,
+        to: [site_visit.lead.phone],
+        sms_template_id: sms_template.id,
+        triggered_by_id: self.id,
+        triggered_by_type: self.class.to_s
+      ) if sms_template
     end
 
   end
