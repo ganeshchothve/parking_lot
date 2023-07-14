@@ -185,7 +185,7 @@ class SiteVisit
   private
 
   def validate_scheduled_on_datetime
-    self.errors.add :base, 'Scheduled On should not be past date more than 4 days' if (self.scheduled_on_changed? && self.scheduled_on <  (Time.current.beginning_of_day - 4.days))
+    self.errors.add :scheduled_on, 'cannot be in the past' if self.scheduled_on_changed? && self.scheduled_on <  Time.current.beginning_of_day
   end
 
   def existing_scheduled_sv

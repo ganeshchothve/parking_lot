@@ -304,6 +304,10 @@ class Lead
     active_lead_managers.first.try(:lead_validity_period) || '0 Days'
   end
 
+  def active_booking_details
+    booking_details.nin(status: %w(swapped cancelled))
+  end
+
   def send_payment_link(booking_detail_id = nil, host = nil)
     url = Rails.application.routes.url_helpers
     client = user.booking_portal_client

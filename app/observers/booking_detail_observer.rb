@@ -16,7 +16,7 @@ class BookingDetailObserver < Mongoid::Observer
     booking_detail.manager_id = booking_detail.lead&.manager_id if booking_detail.lead.manager && (booking_detail.manager_id.blank? || booking_detail.manager_id_changed?)
     booking_detail.channel_partner_id = booking_detail.manager&.channel_partner_id if booking_detail.manager && (booking_detail.channel_partner_id.blank? ||  booking_detail.manager_id_changed?)
     booking_detail.cp_manager_id = booking_detail.channel_partner&.manager_id if booking_detail.channel_partner && (booking_detail.cp_manager_id.blank? || booking_detail.manager_id_changed?)
-    booking_detail.cp_admin_id = booking_detail.cp_manager&.manager_id if booking_detail.cp_manager && (booking_detail.cp_admin_id.blank? || booking_detail.manager_id_changed?) 
+    booking_detail.cp_admin_id = booking_detail.cp_manager&.manager_id if booking_detail.cp_manager && (booking_detail.cp_admin_id.blank? || booking_detail.manager_id_changed?)
   end
 
   def before_create booking_detail
@@ -40,6 +40,13 @@ class BookingDetailObserver < Mongoid::Observer
     #    # api.execute(booking_detail)
     #  end
     #end
+
+    # Tag manager on lead after booking
+    lead = booking_detail.lead
+    if lead.manager_id.present?
+      alm = lead.active_lead_managers.where(manager_id: lead.manager_id).first
+      alm.tag! if alm
+    end
   end
 
   def before_save booking_detail

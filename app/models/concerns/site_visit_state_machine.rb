@@ -17,7 +17,7 @@ module SiteVisitStateMachine
         transitions from: :pending, to: :conducted, if: :can_conduct?
       end
 
-      event :cancel, after: %i[] do
+      event :cancel, after: %i[cancel_lead_manager] do
         transitions from: :scheduled, to: :cancelled
       end
 
@@ -45,6 +45,11 @@ module SiteVisitStateMachine
       if lm.active?
         self.lead.site_visits.scheduled.each(&:cancel!)
       end
+    end
+
+    def cancel_lead_manager
+      lm = self.lead_manager
+      lm.cancel! if lm.present? && lm.may_cancel?
     end
 
     def send_notification

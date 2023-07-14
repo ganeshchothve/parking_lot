@@ -8,7 +8,11 @@ class ProjectUnitUnholdWorker
       lead = hold_bookings.first.try(:lead)
       hold_bookings.destroy_all
       project_unit.make_available(lead)
-      project_unit.save ? true : { errors: project_unit.errors.full_messages.uniq.join('\n') }
+      if project_unit.save
+        lead.lead_managers.tagged.each(&:cancel!) if lead.active_booking_details.blank?
+      else
+        { errors: project_unit.errors.full_messages.uniq.join('\n') }
+      end
    else
      { errors: I18n.t("worker.project_units.errors.not_on_hold") }
     end

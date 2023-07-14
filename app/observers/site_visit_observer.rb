@@ -83,6 +83,8 @@ class SiteVisitObserver < Mongoid::Observer
         SiteVisitObserverWorker.new.perform(site_visit.id.to_s, 'create', site_visit.changes)
       end
     end
+
+    SiteVisitDeactivateWorker.perform_in(48.hours, site_visit.id, site_visit.booking_portal_client_id)
   end
 
   def after_save site_visit
