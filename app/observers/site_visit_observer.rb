@@ -33,6 +33,7 @@ class SiteVisitObserver < Mongoid::Observer
     site_visit.project_id = site_visit.lead&.project_id if site_visit.project_id.blank?
     site_visit.user_id = site_visit.lead&.user_id if site_visit.user_id.blank?
     site_visit.booking_portal_client_id = site_visit.lead.booking_portal_client_id if site_visit.booking_portal_client_id.blank?
+    #
     # Set manager if present on lead
     #site_visit.manager_id = site_visit.lead&.manager_id if site_visit.manager_id.blank?
     site_visit.channel_partner_id = site_visit.manager&.channel_partner_id if site_visit.channel_partner_id.blank? && site_visit.manager.present?
@@ -42,7 +43,7 @@ class SiteVisitObserver < Mongoid::Observer
     # Link site_visit to lead manager if found
     if site_visit.scheduled? && site_visit.manager_id.present? && site_visit.lead_manager.blank?
       lm = site_visit.lead.lead_managers.draft.where(manager_id: site_visit.manager_id).first
-      lm.set(site_visit_id: site_visit.id) if lm
+      lm.set(site_visit_id: site_visit.id) if lm && lm.site_visit_id.blank?
     end
 
     # Set created_by
@@ -50,17 +51,19 @@ class SiteVisitObserver < Mongoid::Observer
       site_visit.created_by = site_visit.creator&.role
     end
 
+    # Set unique meeting code
+    site_visit.code = (SecureRandom.random_number * 10000000).to_i.to_s if site_visit.code.blank?
+  end
+
+  def before_create site_visit
     # Set revisit
     if site_visit.is_revisit.nil?
-      if site_visit.lead.site_visits.where(manager_id: site_visit.manager_id).conducted.count.zero?
+      if site_visit.lead.site_visits.conducted.count.zero?
         site_visit.is_revisit = false
       else
         site_visit.is_revisit = true
       end
     end
-
-    # Set unique meeting code
-    site_visit.code = (SecureRandom.random_number * 10000000).to_i.to_s if site_visit.code.blank?
   end
 
   def before_save site_visit
@@ -110,7 +113,7 @@ class SiteVisitObserver < Mongoid::Observer
     end
 
     if site_visit.scheduled_on_changed? && site_visit.scheduled_on_was.present? && site_visit.scheduled_on.present?
-      send_email_sms("site_visit_rescheduled")
+      site_visit.send_email_sms("site_visit_rescheduled")
     end
   end
 end

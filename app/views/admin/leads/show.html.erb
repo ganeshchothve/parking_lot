@@ -61,7 +61,7 @@
                       <div class="accordion-body pt-0 ps-4">
                         <div class="row ps-3">
                           <div class="col-12">
-                            <%= render 'site_visits_section', site_visits: @lead.site_visits %>
+                            <%= render 'site_visits_section', site_visits: @lead.site_visits.where(SiteVisit.user_based_scope(current_user, params)).paginate(page: 1) %>
                           </div>
                         </div>
                       </div>

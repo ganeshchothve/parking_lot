@@ -1,3 +1,6 @@
+#
+# Single point of entry for registering leads into IRIS with & without lead conflict cases.
+#
 class LeadRegistrationService
   attr_accessor :client, :params, :user, :errors, :project, :buyer, :buyer_created, :lead, :lead_created, :site_visit, :lead_manager, :cp_user, :selldo_crm_base, :manager
 
@@ -8,7 +11,9 @@ class LeadRegistrationService
   # project - Project in which lead / walkin will get created
   # creator - User who is registering the lead / walkin
   # params  - Hash containing lead details
-  #         - Must include { first_name, last_name, phone, email }
+  #         - Must include { first_name, last_name, phone, email } optional { selldo_lead_id site_visit_params }
+  #         - OR
+  #         - Must include { lead_id } optional { selldo_lead_id site_visit_params }
   #
   def initialize(client, project, creator, params={})
     @client = client
@@ -52,6 +57,10 @@ class LeadRegistrationService
             # Create Lead Manager
             #
             @lead_manager = LeadManager.new(booking_portal_client_id: client.id, project_id: project.id, manager_id: manager.id, email: params[:email], phone: get_phone_from_params, first_name: params[:first_name], last_name: params[:last_name])
+
+            # Create inactive lead manager for re-visits scheduled by internal roles on active leads tagged with channel partners
+            @lead_manager.status = 'inactive' if @inactive_manager
+
             if @lead_manager.save
               #
               # Register lead with user account & sitevisit
@@ -62,6 +71,7 @@ class LeadRegistrationService
               @errors += @lead_manager.errors.full_messages
               rollback
             end
+
           else
             @errors << I18n.t("controller.leads.errors.already_exists")
           end
@@ -151,20 +161,37 @@ class LeadRegistrationService
       # Exclude expired Lead managers while fetching
       #
       lm = LeadManager.where(booking_portal_client_id: client.id, project_id: project.id).or(get_query)
-      @lead_manager = lm.in(status: %w(active tagged)).first
+      tagged_lm = lm.tagged.first
+      active_lm = lm.active.first
 
-      if @lead_manager.blank?
-        #
-        # CASE 1: If Lead is added by internal role then it gets tagged right away, so it cannot be added again by any other user.
-        # CASE 2: If Lead is first added by cp user, lead manager gets created in draft.
-        #         2a. Don't allow internal roles to add it again.
-        #         2b. It can be added by other cp users till one of the lead manager gets active status
-        #
-        if manager.channel_partner?
-          @lead_manager = lm.draft.where(manager_id: manager.id).first
+      if tagged_lm.blank?
+        if active_lm.blank?
+          #
+          # CASE 1: If Lead is added by internal role then it gets tagged right away, so it cannot be added again by any other user.
+          # CASE 2: If Lead is first added by cp user, lead manager gets created in draft.
+          #         2a. Don't allow internal roles to add it again.
+          #         2b. It can be added by other cp users till one of the lead manager gets active status
+          #
+          if manager.channel_partner?
+            @lead_manager = lm.draft.where(manager_id: manager.id).first
+          else
+            @lead_manager = lm.draft.first
+          end
+
+        elsif !manager.channel_partner?
+          #
+          # Allow scheduling re-visits on active leads by admin/sales/internal roles
+          # Do not allow it to Channel partners
+          #
+          # Create inactive Lead manager for such re-visits
+          @inactive_manager = true
+          #
         else
-          @lead_manager = lm.draft.first
+          @lead_manager = active_lm
         end
+
+      else
+        @lead_manager = tagged_lm
       end
     end
   end

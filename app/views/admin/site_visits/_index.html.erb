@@ -30,6 +30,8 @@
                 <%= site_visit.lead.name %>
                 <% end %>
                 <br>
+                <span class='font-medium fn-12 fa-sm'><%= t("mongoid.attributes.site_visit/is_revisit.#{site_visit.is_revisit}") %></span>
+                <br>
                 <span class='font-medium fn-12 fa-sm'><%= t('mongoid.attributes.site_visit.code') %>: <%= site_visit.code %></span>
               </td>
               <td>

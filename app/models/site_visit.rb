@@ -47,6 +47,7 @@ class SiteVisit
 
   delegate :name, to: :project, prefix: true, allow_nil: true
   delegate :name, :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
+  delegate :active_lead_managers, to: :lead, prefix: false, allow_nil: true
 
   scope :filter_by_id, ->(_id) { where(_id: _id) }
   scope :filter_by_status, ->(_status) { where(status: (_status.is_a?(String) ? _status : { '$in' => _status })) }

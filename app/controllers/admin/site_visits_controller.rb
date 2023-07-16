@@ -2,7 +2,7 @@ class Admin::SiteVisitsController < AdminController
 
   before_action :set_lead, except: %w[index show sync_with_selldo edit update change_state reject export]
   before_action :set_site_visit, only: %w[edit update show sync_with_selldo change_state reject]
-  before_action :set_crm_base, only: %w[create sync_with_selldo]
+  before_action :set_crm_base, only: %w[sync_with_selldo]
   before_action :authorize_resource, except: %w[new create]
 
   #
@@ -46,22 +46,15 @@ class Admin::SiteVisitsController < AdminController
   #
   # POST /admin/leads/:lead_id/site_visits
   def create
-    @site_visit = SiteVisit.new(
-                            user: @lead.user,
-                            lead: @lead,
-                            creator: current_user,
-                            manager: current_user,
-                            project: @lead.project,
-                            booking_portal_client_id: current_user.booking_portal_client.id
-                            )
-    authorize([:admin, @site_visit])
-    @site_visit.assign_attributes(permitted_attributes([:admin, @site_visit]))
+    attrs = {lead_id: params[:lead_id], lead: {site_visits_attributes: {}}}
 
-    selldo_api, api_log = @site_visit.push_in_crm(@crm_base) if @crm_base.present?
+    attrs[:lead][:site_visits_attributes]['0'] = permitted_attributes([:admin, SiteVisit.new(user: @lead.user, lead: @lead, project: @project, booking_portal_client_id: current_client.id)]).to_h
+
+    errors, @lead_manager, @user, @lead, @site_visit = LeadRegistrationService.new(current_client, @lead.project, current_user, attrs).execute
 
     respond_to do |format|
-      if selldo_api.blank? || (api_log.present? && api_log.status == 'Success')
-        if @site_visit.save
+      if errors.blank?
+        if @site_visit.valid?
           Kylas::SyncSiteVisitWorker.perform_async(@site_visit.id.to_s)
           flash[:notice] = I18n.t("controller.site_visits.notice.created")
           url = admin_lead_path(@lead)
@@ -73,10 +66,8 @@ class Admin::SiteVisitsController < AdminController
           format.html { render 'new' }
         end
       else
-        flash[:alert] = @site_visit.errors.full_messages
-        errors = @site_visit.errors.full_messages
-        errors = [I18n.t("controller.site_visits.errors.could_not_register")] if errors.blank?
-        format.json { render json: { errors: errors }, status: :unprocessable_entity }
+        flash[:alert] = errors
+        format.json { render json: { errors: flash[:alert] }, status: :unprocessable_entity }
         format.html { render 'new' }
       end
     end

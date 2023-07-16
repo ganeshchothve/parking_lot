@@ -1922,6 +1922,9 @@ en-REAL_ESTATE:
       site_visit/site_visit_type:
         token_slot: "Token Slot"
         visit: "Visit"
+      site_visit/is_revisit:
+        'true': Revisit
+        'false': First Visit
       user_kyc:
         name: "Name"
         email: "Email"
