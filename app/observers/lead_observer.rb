@@ -18,8 +18,11 @@ class LeadObserver < Mongoid::Observer
   end
 
   def after_save lead
-    if lead.lead_id_changed? && lead.lead_id.present? && crm = Crm::Base.where(booking_portal_client_id: lead.booking_portal_client_id, domain: ENV_CONFIG.dig(:selldo, :base_url)).first
-      lead.update_external_ids({ reference_id: lead.lead_id }, crm.id)
+    if lead.lead_id_changed? && lead.lead_id.present?
+      lead.user.set(lead_id: lead.lead_id) if lead.user.lead_id.blank?
+      if crm = Crm::Base.where(booking_portal_client_id: lead.booking_portal_client_id, domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+        lead.update_external_ids({ reference_id: lead.lead_id }, crm.id)
+      end
     end
     lead.calculate_incentive if lead.project.incentive_calculation_type?("calculated") && lead.project&.invoicing_enabled?
     lead.move_invoices_to_draft

@@ -36,7 +36,7 @@
             <p class="fn-14 theme-txt-color mb-0"><%= site_visit.code || '-' %></p>
           </div>
         </div>
-        <% if !current_user.role?("channel_partner") %>
+        <% if !current_user.role?("channel_partner") && policy([current_user_role_group, site_visit]).show_channel_partner_user? %>
           <div class="col-md-3">
             <div class="mb-3">
               <label class="txt-light-blue fn-12"><%= t('mongoid.attributes.lead.manager_id') %></label>
