@@ -39,43 +39,49 @@ class LeadRegistrationService
     # 3. Find or Create Lead
     # 4. Create SV
 
-    if errors.blank?
-      #
-      # Check if lead manager is already present
-      #
-      fetch_lead_manager
-
+    begin
       if errors.blank?
-        if lead_manager.blank?
-          #
-          # Create Lead Manager
-          #
-          @lead_manager = LeadManager.new(booking_portal_client_id: client.id, project_id: project.id, manager_id: manager.id, email: params[:email], phone: get_phone_from_params, first_name: params[:first_name], last_name: params[:last_name])
-          if @lead_manager.save
+        #
+        # Check if lead manager is already present
+        #
+        fetch_lead_manager
+
+        if errors.blank?
+          if lead_manager.blank?
             #
-            # Register lead with user account & sitevisit
+            # Create Lead Manager
             #
-            create_lead_and_site_visit
-            push_into_crm if errors.blank? && lead.present?
+            @lead_manager = LeadManager.new(booking_portal_client_id: client.id, project_id: project.id, manager_id: manager.id, email: params[:email], phone: get_phone_from_params, first_name: params[:first_name], last_name: params[:last_name])
+            if @lead_manager.save
+              #
+              # Register lead with user account & sitevisit
+              #
+              create_lead_and_site_visit
+              push_into_crm if errors.blank? && lead.present?
+            else
+              @errors += @lead_manager.errors.full_messages
+              rollback
+            end
           else
-            @errors += @lead_manager.errors.full_messages
-            rollback
+            @errors << I18n.t("controller.leads.errors.already_exists")
           end
-        else
-          @errors << I18n.t("controller.leads.errors.already_exists")
         end
       end
-    end
 
-    if errors.blank?
-      #
-      # Tag manager on lead directly, in case of,
-      # 1. Current manager is an internal role
-      # 2. Lead conflict set to other than 'Site visit conducted'
-      #
-      if %w(client_level project_level no_conflict).include?(client.enable_lead_conflicts) || !manager.channel_partner?
-        @lead_manager.tag!
+      if errors.blank?
+        #
+        # Tag manager on lead directly, in case of,
+        # 1. Current manager is an internal role
+        # 2. Lead conflict set to other than 'Site visit conducted'
+        #
+        if %w(client_level project_level no_conflict).include?(client.enable_lead_conflicts) || !manager.channel_partner?
+          @lead_manager.tag!
+        end
       end
+
+    rescue StandardError => e
+      @errors << e.message
+      rollback
     end
 
     return [errors, lead_manager, buyer, lead, site_visit]
@@ -223,7 +229,7 @@ class LeadRegistrationService
       #
       # Create new lead
       #
-      @lead = buyer.leads.new(email: params[:email], phone: get_phone_from_params, first_name: params[:first_name], last_name: params[:last_name], project_id: project.id, booking_portal_client_id: client.id)
+      @lead = buyer.leads.new(email: params[:email], phone: get_phone_from_params, first_name: params[:first_name], last_name: params[:last_name], project_id: project.id, booking_portal_client_id: client.id, third_party_references_attributes: params[:third_party_references_attributes])
       #
       # If Sell.do Lead create APIs are configured, then push it into sell.do if push_to_crm is set
       #
@@ -249,9 +255,10 @@ class LeadRegistrationService
     attrs[:manager_id] = manager.id if manager.present?
 
     if site_visit_params.present?
-      attrs[:scheduled_on] = site_visit_params[:scheduled_on] if site_visit_params[:scheduled_on].present?
-      attrs[:creator_id] = site_visit_params[:creator_id] if site_visit_params[:creator_id].present?
-      @site_visit = lead.site_visits.new(attrs)
+      sv_attrs = ActionController::Parameters.new(site_visit_params.as_json).permit(Pundit.policy(user, [:admin, SiteVisit.new]).permitted_attributes)
+      sv_attrs.merge!(attrs)
+
+      @site_visit = lead.site_visits.new(sv_attrs)
 
       if @site_visit.save
       else
@@ -269,6 +276,14 @@ class LeadRegistrationService
     query = []
     query << {email: params[:email].downcase} if params[:email].present?
     query << {phone: get_phone_from_params} if params[:phone].present?
+
+    selldo_lead_id = if tprs = params[:third_party_references_attributes].presence
+                       tprs.find { |x| x[:crm_id].to_s == @selldo_crm_base.id.to_s }.try(:[], :reference_id)
+                     else
+                       params[:selldo_lead_id].presence
+                     end
+    query << {lead_id: selldo_lead_id} if selldo_lead_id.present?
+
     query
   end
 

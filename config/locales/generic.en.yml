@@ -2488,7 +2488,7 @@ en-GENERIC:
       message:
         incorrect_key: "Incorrect key."
         register: "Kindly register with our application."
-        paramerters_missing: "Required parameters missing."
+        parameters_missing: "Required parameters missing."
     discounts:
       index:
         link_name: "Token Discounts"
