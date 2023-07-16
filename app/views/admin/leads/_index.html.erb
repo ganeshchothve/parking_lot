@@ -60,6 +60,17 @@
                   <td>
                     <p class="fn-14 mt-1 mb-0">
                     <%= link_to_if (policy([:admin, User]).index? && policy([current_user_role_group, lead]).show_channel_partner_user?), (policy([current_user_role_group, lead]).show_channel_partner_user? ? lead.manager_name : "-"), [current_user_role_group, lead.manager], class: 'theme-txt-color' %>
+                    <br>
+                    <% if lead.active_lead_managers.present? %>
+                      <span class="d-flex justify-content-between pt-1">
+                        <small class="txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.expiry_remaining_days') %></small>
+                        <small class="mb-0"><%= lead.lead_validity_period %></small>
+                      </span>
+                      <span class="d-flex justify-content-between">
+                        <small class="txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.expiry_date') %></small>
+                        <small class="mb-0"><%= lead.active_lead_managers.first.expiry_date.try(:strftime, "%d/%m/%Y") %></small>
+                      </ssmallan>
+                    <% end %>
                     </p>
                   </td>
                 <% end %>

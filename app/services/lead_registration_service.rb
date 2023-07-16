@@ -80,7 +80,8 @@ class LeadRegistrationService
       end
 
     rescue StandardError => e
-      @errors << e.message
+      @errors << I18n.t("controller.site_visits.errors.went_wrong")
+      Rails.logger.error "[LeadRegistrationService][ERR] ERROR: #{e.message}\nTRACE: #{e.backtrace}"
       rollback
     end
 
@@ -229,7 +230,7 @@ class LeadRegistrationService
       #
       # Create new lead
       #
-      @lead = buyer.leads.new(email: params[:email], phone: get_phone_from_params, first_name: params[:first_name], last_name: params[:last_name], project_id: project.id, booking_portal_client_id: client.id, third_party_references_attributes: params[:third_party_references_attributes])
+      @lead = buyer.leads.new(email: params[:email], phone: get_phone_from_params, first_name: params[:first_name], last_name: params[:last_name], project_id: project.id, booking_portal_client_id: client.id, third_party_references_attributes: (params[:third_party_references_attributes] || []))
       #
       # If Sell.do Lead create APIs are configured, then push it into sell.do if push_to_crm is set
       #

@@ -87,7 +87,7 @@ class LeadManager
       cp_ids = User.all.cp.where(manager_id: user.id).distinct(:id)
       custom_scope = { manager_id: { '$in': User.where(role: 'channel_partner', manager_id: {'$in': cp_ids}).distinct(:id) } }
     end
-    custom_scope.merge!({booking_portal_client_id: user.booking_portal_client_id})
+    custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
     custom_scope
   end
 

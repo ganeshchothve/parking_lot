@@ -1,5 +1,6 @@
 <%= f.fields_for :site_visits do |sv_form| %>
   <% date = (sv_form.object.scheduled_on.present? ? sv_form.object.scheduled_on : DateTime.current) %>
+
   <% if policy([:admin, sv_form.object]).editable_field?("scheduled_on") %>
     <h3><%= I18n.t("controller.site_visits.text.schedule") %></h3>
     <hr/>
@@ -7,7 +8,7 @@
       <div class='col-md-12'>
         <%= sv_form.label :scheduled_on %>
         <% min_date = Date.today %>
-        <div class="datetimepicker site_visit_scheduled_on_calendar" data-default-date="<%= date.strftime("%d/%m/%Y %H:%M") %>" data-inline=true data-side-by-side=true data-use-current=true data-min-date="<%= min_date.strftime("%d/%m/%Y ") %>" data-max-date="<%= (Date.today + 20.days).strftime("%d/%m/%Y") %>" data-stepping='30' data-format='DD/MM/YYYY LT'></div>
+        <div class="datetimepicker site_visit_scheduled_on_calendar" data-default-date="<%= date.strftime("%d/%m/%Y %H:%M") %>" data-inline=true data-side-by-side=true data-use-current=true data-min-date="<%= min_date.strftime("%d/%m/%Y") %>" data-max-date="<%= (Date.today + 20.days).strftime("%d/%m/%Y") %>" data-stepping='30' data-format='DD/MM/YYYY LT'></div>
       </div>
     </div>
   <% end %>
@@ -19,7 +20,7 @@
 <%= javascript_tag do %>
   $(document).ready(function(){
     $('.site_visit_scheduled_on_calendar').on('dp.change', function(e){
-      $(e.currentTarget).siblings('.site_visit_scheduled_on').val(e.date.format())
+      $(e.currentTarget).closest('form#add-new-lead-form').find('.site_visit_scheduled_on').val(e.date.format())
     });
   });
 <% end %>
