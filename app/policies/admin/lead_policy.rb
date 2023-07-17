@@ -201,7 +201,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def show_channel_partner_column?
-    !user.role.in?(%w(channel_partner))
+    true #!user.role.in?(%w(channel_partner))
   end
 
   def show_channel_partner_user?
@@ -215,9 +215,9 @@ class Admin::LeadPolicy < LeadPolicy
     if record.new_record?
       attributes += [:email, :phone, :project_id, :booking_portal_client_id]
       attributes += [site_visits_attributes: Pundit.policy(user, [:admin, SiteVisit.new]).permitted_attributes]
-      unless marketplace_client?
-        attributes += [:push_to_crm]
-      end
+      #unless marketplace_client?
+      #  attributes += [:push_to_crm]
+      #end
     end
 
     if user.present? && enable_lead_registration?(user)
