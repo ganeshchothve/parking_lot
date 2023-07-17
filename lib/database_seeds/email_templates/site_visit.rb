@@ -9,7 +9,7 @@ module DatabaseSeeds
             <p>
               Your site visit for <%= project.name %> is scheduled at <%= I18n.l(self.scheduled_on) %>
               <br>
-              Please show this <%= I18n.t("mongoid.attributes.site_visit.code %> at the project site.
+              Please show this <%= I18n.t("mongoid.attributes.site_visit.code") %>: <%= self.code %> at the project site.
             </p>
           </div>
         </div>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "site_visit_scheduled").blank?
@@ -49,7 +49,7 @@ module DatabaseSeeds
             <p>
               Your site visit for <%= project.name %> is rescheduled at <%= I18n.l(self.scheduled_on) %>
               <br>
-              Please show this <%= I18n.t("mongoid.attributes.site_visit.code %> at the project site.
+              Please show this <%= I18n.t("mongoid.attributes.site_visit.code") %>: <%= self.code %> at the project site.
             </p>
           </div>
         </div>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "site_visit_rescheduled").blank?

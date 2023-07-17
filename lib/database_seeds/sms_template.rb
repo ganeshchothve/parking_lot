@@ -93,7 +93,7 @@ module DatabaseSeeds
 
       Template::SmsTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "Lead", name: 'queue_number_notice', content: 'Your queue_number is <%= self.queue_number %>') if ::Template::SmsTemplate.where(name: "queue_number_notice", project_id: project_id, booking_portal_client_id: client_id).blank?
 
-      Template::SmsTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "SiteVisit", name: 'site_visit_scheduled', content: 'Your site visit is scheduled on <%= I18n.l(scheduled_on) %> for <%= project.name %>') if ::Template::SmsTemplate.where(name: "site_visit_scheduled", project_id: project_id, booking_portal_client_id: client_id).blank?
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "SiteVisit", name: 'site_visit_scheduled', content: 'Your site visit is scheduled on <%= I18n.l(scheduled_on) %> for <%= project.name %>. Please show this <%= I18n.t("mongoid.attributes.site_visit.code") %>: <%= self.code %> at the project site.') if ::Template::SmsTemplate.where(name: "site_visit_scheduled", project_id: project_id, booking_portal_client_id: client_id).blank?
 
       Template::SmsTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "SiteVisit", name: 'site_visit_conducted', content: 'Your site visit for <%= project.name %> was successfully conducted') if ::Template::SmsTemplate.where(name: "site_visit_conducted", project_id: project_id, booking_portal_client_id: client_id).blank?
 
@@ -101,7 +101,7 @@ module DatabaseSeeds
 
       Template::SmsTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "SiteVisit", name: 'site_visit_inactive', content: 'Your site visit scheduled on <%= I18n.l(scheduled_on) %> for <%= project.name %> has been marked inactive. Please schedule a new visit') if ::Template::SmsTemplate.where(name: "site_visit_inactive", project_id: project_id, booking_portal_client_id: client_id).blank?
 
-      Template::SmsTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "SiteVisit", name: 'site_visit_rescheduled', content: 'Your site visit is rescheduled on <%= I18n.l(scheduled_on) %> for <%= project.name %>') if ::Template::SmsTemplate.where(name: "site_visit_rescheduled", project_id: project_id, booking_portal_client_id: client_id).blank?
+      Template::SmsTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "SiteVisit", name: 'site_visit_rescheduled', content: 'Your site visit is rescheduled on <%= I18n.l(scheduled_on) %> for <%= project.name %>. Please show this <%= I18n.t("mongoid.attributes.site_visit.code") %>: <%= self.code %> at the project site.') if ::Template::SmsTemplate.where(name: "site_visit_rescheduled", project_id: project_id, booking_portal_client_id: client_id).blank?
 
       return Template::SmsTemplate.where(booking_portal_client_id: client_id, project_id: project_id).count
     end
