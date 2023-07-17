@@ -3400,6 +3400,7 @@ en-REAL_ESTATE:
         invalid_date_format: "Sitevisit date format is invalid. Correct date format is - dd/mm/yyyy"
         revisit_invalid_date_format: "Last revisit date format is invalid. Correct date format is - dd/mm/yyyy"
         revisit_count: "Revisit count should be a number"
+        site_visit_reference_id_already_exists: "Site Visit with Reference Id %{name} already exists"
       text:
         schedule: "Schedule a Site Visit"
         scheduled_at: "Schedule a sitevisit at - %{name}"

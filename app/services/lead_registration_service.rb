@@ -279,18 +279,31 @@ class LeadRegistrationService
   end
 
   def create_site_visit
-    attrs = {booking_portal_client_id: client.id, user_id: buyer.id}
-    attrs[:manager_id] = manager.id if manager.present?
-
     if site_visit_params.present?
-      sv_attrs = ActionController::Parameters.new(site_visit_params.as_json).permit(Pundit.policy(user, [:admin, SiteVisit.new]).permitted_attributes)
-      sv_attrs.merge!(attrs)
 
-      @site_visit = lead.site_visits.new(sv_attrs)
+      if tpr = site_visit_params.dig(:third_party_references_attributes).try(:first).presence
+        if tpr[:crm_id].present? && tpr[:reference_id].present?
+          existing_site_visit = SiteVisit.where(booking_portal_client_id: client.id, lead_id: lead.id).reference_resource_exists?(tpr[:crm_id], tpr[:reference_id])
+        end
+      end
 
-      if @site_visit.save
+      if existing_site_visit.blank?
+        sv_attrs = ActionController::Parameters.new(site_visit_params.as_json).permit(Pundit.policy(user, [:admin, SiteVisit.new]).permitted_attributes)
+
+        attrs = {booking_portal_client_id: client.id, user_id: buyer.id}
+        attrs[:manager_id] = manager.id if manager.present?
+
+        sv_attrs.merge!(attrs)
+
+        @site_visit = lead.site_visits.new(sv_attrs)
+
+        unless @site_visit.save
+          @errors += @site_visit.errors.full_messages
+          rollback
+        end
+
       else
-        @errors += @site_visit.errors.full_messages
+        @errors << I18n.t("controller.site_visits.errors.site_visit_reference_id_already_exists", name: tpr[:reference_id])
         rollback
       end
     end

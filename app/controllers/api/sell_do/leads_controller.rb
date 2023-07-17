@@ -78,10 +78,10 @@ class Api::SellDo::LeadsController < Api::SellDoController
 
   def register_lead
     if attrs = format_params
-      errors, @lead_manager, @user, @lead, @site_visit = ::LeadRegistrationService.new(@current_client, @project, @current_user, attrs).execute
+      @errors, @lead_manager, @user, @lead, @site_visit = ::LeadRegistrationService.new(@current_client, @project, @current_user, attrs).execute
 
-      if errors.present?
-        render json: {errors: errors} and return
+      if @errors.present?
+        render json: {errors: @errors} and return
       end
     else
       render json: {errors: I18n.t("controller.apis.message.parameters_missing")} and return
