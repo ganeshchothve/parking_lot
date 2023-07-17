@@ -15,6 +15,7 @@ class SiteVisit
 
   REJECTION_REASONS = ["budget_not_match", "location_not_match", "possession_not_match", "didnt_visit", "different_cp"]
   DOCUMENT_TYPES = []
+  TIME_TILL_INACTIVE = 48.hours
 
   field :scheduled_on, type: DateTime
   field :conducted_on, type: DateTime
@@ -66,6 +67,7 @@ class SiteVisit
   scope :filter_by_is_revisit, ->(is_revisit) { where(is_revisit: is_revisit.to_s == 'true') }
   scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
   scope :filter_by_code, ->(code) { where(code: code) }
+  scope :gre_filter, -> { all.in(status: %w[scheduled pending]).gte(scheduled_on: DateTime.current - TIME_TILL_INACTIVE) }
 
   scope :incentive_eligible, ->(category) do
     if category == 'walk_in'

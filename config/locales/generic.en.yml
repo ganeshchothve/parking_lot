@@ -2321,10 +2321,10 @@ en-GENERIC:
         job_continuity_proof_html: "<ul><li>Appointment letter at employment and validation letter from HR</li></ul>"
         bank_statement_html: "<ul><li>Past 6 months’ document</li></ul>"
         advance_processing_cheque_html: "<ul><li>Upload cheque’s photo for sanction</li></ul>"
-        financial_documents_html: "<ul>"
-        <li><strong>For Salaried Individual</strong>: "3-month salary slip, Form 16 and bank statement</li>"
-        <li><strong>For Self-Employed Individual</strong>: "IT returns for the last 2 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li>"
-        <li><strong>For Self-Employed Non- Professionals</strong>: "IT returns for the last 3 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li></ul>"
+        financial_documents_html: "<ul>
+        <li><strong>For Salaried Individual</strong>: 3-month salary slip, Form 16 and bank statement</li>
+        <li><strong>For Self-Employed Individual</strong>: IT returns for the last 2 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li>
+        <li><strong>For Self-Employed Non- Professionals</strong>: IT returns for the last 3 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li></ul>"
 
       client/file_types:
         document: "Document"
@@ -3406,7 +3406,7 @@ en-GENERIC:
         last_visit_status: "Last site visit status"
         mark_conducted: "Mark site visit conducted"
         scheduled_with_code: "Found site visit scheduled on - %{name} with %{code}"
-
+        future_scheduled_on_notice_html: '<strong>Note: </strong>Visits scheduled on past or future dates will be rescheduled to now and marked conducted.'
       headings:
         customer_site_visit: "Customer Site Visit"
         customer_details: "Customer Details"

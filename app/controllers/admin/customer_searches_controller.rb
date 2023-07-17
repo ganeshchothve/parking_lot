@@ -43,6 +43,7 @@ class Admin::CustomerSearchesController < AdminController
         format.json { render json: {errors: "Customer is already in #{customer.customer_status} state"}, status: :unprocessable_entity }
       else
         update_step
+        customer.reload
 
         if @errors.blank?
 

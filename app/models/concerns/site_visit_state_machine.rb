@@ -21,7 +21,7 @@ module SiteVisitStateMachine
         transitions from: :scheduled, to: :cancelled
       end
 
-      event :inactive, after: %i[send_notification] do
+      event :inactive, after: %i[cancel_lead_manager send_notification] do
         transitions from: :scheduled, to: :inactive
       end
 
