@@ -13,7 +13,7 @@
 
             <p class="theme-txt-color"><%= I18n.t("controller.site_visits.text.scheduled_with_code", name: site_visit.scheduled_on.in_time_zone("Mumbai").strftime("%d/%m/%Y - %l:%M %P"), code: "#{t('mongoid.attributes.site_visit.code')} #{site_visit.code}") %></p>
 
-            <% scheduled_other_than_today = site_visit.scheduled_on.to_date != DateTime.current %>
+            <% scheduled_other_than_today = site_visit.scheduled_on.to_date != Date.current %>
 
           <% elsif sitevisits = @customer_search.customer.site_visits.gre_filter.presence %>
 
@@ -22,7 +22,7 @@
               <%= select_tag :sitevisit_id, options_for_select(sitevisits.collect{|rec| ["#{rec.scheduled_on.in_time_zone("Mumbai").strftime("%d/%m/%Y - %l:%M %P")} - #{rec&.manager&.name ||'no channel partner'}", rec.id]}), {prompt: I18n.t("global.select"), class: "selectize"} %>
             </div>
 
-            <% scheduled_other_than_today = sitevisits.pluck(:scheduled_on).any? { |scheduled| scheduled.to_date != DateTime.current } %>
+            <% scheduled_other_than_today = sitevisits.pluck(:scheduled_on).any? { |scheduled| scheduled.to_date != Date.current } %>
 
           <% else %>
 
