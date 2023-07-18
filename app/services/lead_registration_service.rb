@@ -38,11 +38,45 @@ class LeadRegistrationService
     @manager = @cp_user || @user
   end
 
+  #
+  # Overview about Lead Manager & its role in system:
+  #
+  # This service uses Lead Manager, an object which is used to resolve conflicts between different users adding same leads in the system (referred to as manager in this service) & tags the rightful owner/manager to the lead according to the conflict resolution logic chosen by(setting selected on) the client.
+  #
+  # For more on different settings of conflict resolution supported,
+  # please check the comments & implementation of below defined method fetch_lead_manager
+  #
+  # Lead Manager is created,
+  # - For every new SV scheduled by Current User
+  # - AND
+  # - For every Current User registering the Lead in the system with [Lead - Manager] mapping
+  #
+  # Lead is created only once. Its not created every time the Lead Manager is created.
+  # It has One Lead to Many Lead Managers mapping.
+  #
+  # But, for each Site Visit, a Lead Manager is created. It has One SV to One Lead Manager mapping.
+  #
+  # ================================================================================================================
+  #
+  # Service description:
+  #
+  # Execution of this service will perform the following,
+  #
+  # - Raise errors in case of existing Lead Manager or SV is found.
+  # - In case of existing User/Lead found, use that to create a new Lead Manager for current user
+  # - In case of any error raised, it will rollback only the NEW objects created for Lead Manager, User, Lead & SV.
+  # - Any existing User/Lead found will stay as is.
+  #
+  # ================================================================================================================
+  #
+  # High level steps to carry out:
+  #
+  # 1. Find or Create Lead Manager
+  # 2. Find or Create User
+  # 3. Find or Create Lead
+  # 4. Find or Create SV
+  #
   def execute
-    # 1. Find or Create Lead Manager
-    # 2. Find or Create user
-    # 3. Find or Create Lead
-    # 4. Create SV
 
     begin
       if errors.blank?
@@ -52,26 +86,33 @@ class LeadRegistrationService
         fetch_lead_manager
 
         if errors.blank?
-          if lead_manager.blank?
+          #
+          # Create a new Lead manager only if not found through fetch_lead_manager method OR SV needs to be tagged on existing Lead Manager
+          #
+          if lead_manager.blank? || @use_existing_lead_manager
             #
             # Create Lead Manager
             #
-            @lead_manager = LeadManager.new(booking_portal_client_id: client.id, project_id: project.id, manager_id: manager.id, email: params[:email], phone: get_phone_from_params, first_name: params[:first_name], last_name: params[:last_name])
-
+            @lead_manager ||= LeadManager.new(booking_portal_client_id: client.id, project_id: project.id, manager_id: manager.id, email: params[:email], phone: get_phone_from_params, first_name: params[:first_name], last_name: params[:last_name])
+            #
             # Create inactive lead manager for re-visits scheduled by internal roles on active leads tagged with channel partners
+            #
             @lead_manager.status = 'inactive' if @inactive_manager
 
             if @lead_manager.save
               #
-              # Register lead with user account & sitevisit
+              # Continue with registering lead with user account & sitevisit, only upon successful creation of Lead Manager,
               #
               create_lead_and_site_visit
+              #
+              # Push it into configured CRMs according to the available integrations.
+              #
               push_into_crm if errors.blank? && lead.present?
+
             else
               @errors += @lead_manager.errors.full_messages
               rollback
             end
-
           else
             @errors << I18n.t("controller.leads.errors.already_exists")
           end
@@ -90,6 +131,9 @@ class LeadRegistrationService
       end
 
     rescue StandardError => e
+      #
+      # Rollback & log in case of any unexpected error occurs.
+      #
       @errors << I18n.t("controller.site_visits.errors.went_wrong")
       Rails.logger.error "[LeadRegistrationService][ERR] ERROR: #{e.message}\nTRACE: #{e.backtrace}"
       rollback
@@ -136,12 +180,19 @@ class LeadRegistrationService
       # Do not apply the same rule for internal roles. For eg: Same lead can be added in another project by some other sales
       #
       lm = LeadManager.where(booking_portal_client_id: client.id).or(get_query)
+
       if lm.present?
+        #
+        # If current manager is a cp, then check if this lead is added by current cp earlier in any other project.
+        # If not, don't allow him to add this lead.
+        #
         if manager.channel_partner? && lm.distinct(:manager_id).exclude?(manager.id)
+
           @lead_manager = lm.first
+
         else
           #
-          # Find existing lead in same project
+          # Find existing lead in same project. If found, don't allow to register lead again.
           #
           if lm.where(project_id: project.id).present?
             @lead_manager = lm.first
@@ -151,7 +202,7 @@ class LeadRegistrationService
 
     when 'project_level'
       #
-      # Find existing lead in same project.
+      # Find existing lead in same project. If found, don't allow to register lead again.
       # Same lead can be added in another project by a different partner manager
       #
       @lead_manager = LeadManager.where(booking_portal_client_id: client.id, project_id: project.id).or(get_query).first
@@ -167,14 +218,35 @@ class LeadRegistrationService
       if tagged_lm.blank?
         if active_lm.blank?
           #
-          # CASE 1: If Lead is added by internal role then it gets tagged right away, so it cannot be added again by any other user.
-          # CASE 2: If Lead is first added by cp user, lead manager gets created in draft.
-          #         2a. Don't allow internal roles to add it again.
-          #         2b. It can be added by other cp users till one of the lead manager gets active status
+          # CASES
+          # 1: If Lead is added by internal role then it gets tagged right away, so it cannot be added again by any other user.
+          # 2: If Lead is first added by cp user, lead manager gets created in draft. After that,
+          #     a. Don't allow internal roles to add it again.
+          #     b. It can be added by other cp users till one of the lead manager gets active status
           #
           if manager.channel_partner?
-            @lead_manager = lm.draft.where(manager_id: manager.id).first
+            #
+            # CASE 2.a
+            #
+            #
+            # First check if draft lead manager is present without site_visit_id (created only when lead is added without a sitevisit)
+            #
+            @lead_manager = lm.draft.where(manager_id: manager.id, site_visit_id: nil).first
+            #
+            # If site visit is being created for a lead for first time with current manager, then tag it to already created lead manager for that lead
+            # OR
+            # Treat it as creating a new lead manager with conflict conditions.
+            #
+            if site_visit_params.present? && @lead_manager
+              @use_existing_lead_manager = true
+            else
+              @lead_manager = lm.draft.where(manager_id: manager.id).first
+            end
+
           else
+            #
+            # CASE 2.b
+            #
             @lead_manager = lm.draft.first
           end
 
@@ -184,8 +256,9 @@ class LeadRegistrationService
           # Do not allow it to Channel partners
           #
           # Create inactive Lead manager for such re-visits
-          @inactive_manager = true
           #
+          @inactive_manager = true
+
         else
           @lead_manager = active_lm
         end
@@ -193,7 +266,8 @@ class LeadRegistrationService
       else
         @lead_manager = tagged_lm
       end
-    end
+
+    end # END case-when
   end
 
   def create_lead_and_site_visit
