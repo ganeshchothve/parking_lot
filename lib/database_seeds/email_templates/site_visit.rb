@@ -14,7 +14,7 @@ module DatabaseSeeds
           </div>
         </div>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "site_visit_scheduled").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "SiteVisit", name: "site_visit_conducted", subject: "Site Visit Scheduled", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "SiteVisit", name: "site_visit_conducted", subject: "Site Visit Conducted", content: '<div class="card w-100">
           <div class="card-body">
             <p>Dear <%= self.lead.name %>,</p>
             <p>
@@ -23,7 +23,7 @@ module DatabaseSeeds
           </div>
         </div>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "site_visit_conducted").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "SiteVisit", name: "site_visit_cancelled", subject: "Site Visit Scheduled", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "SiteVisit", name: "site_visit_cancelled", subject: "Site Visit Cancelled", content: '<div class="card w-100">
           <div class="card-body">
             <p>Dear <%= self.lead.name %>,</p>
             <p>
@@ -32,7 +32,7 @@ module DatabaseSeeds
           </div>
         </div>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "site_visit_cancelled").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "SiteVisit", name: "site_visit_inactive", subject: "Site Visit Scheduled", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "SiteVisit", name: "site_visit_inactive", subject: "Site Visit marked Inactive", content: '<div class="card w-100">
           <div class="card-body">
             <p>Dear <%= self.lead.name %>,</p>
             <p>
@@ -43,7 +43,7 @@ module DatabaseSeeds
           </div>
         </div>') if ::Template::EmailTemplate.where(booking_portal_client_id: client_id, project_id: project_id, name: "site_visit_inactive").blank?
 
-        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "SiteVisit", name: "site_visit_rescheduled", subject: "Site Visit Scheduled", content: '<div class="card w-100">
+        Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "SiteVisit", name: "site_visit_rescheduled", subject: "Site Visit Rescheduled", content: '<div class="card w-100">
           <div class="card-body">
             <p>Dear <%= self.lead.name %>,</p>
             <p>
