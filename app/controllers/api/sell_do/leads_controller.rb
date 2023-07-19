@@ -1,10 +1,8 @@
 # consumes workflow api for leads from sell.do
 class Api::SellDo::LeadsController < Api::SellDoController
   before_action :set_crm, :set_project
-  before_action :create_or_set_user
-  before_action :create_or_set_lead
-  before_action :create_or_set_site_visit, only: [:site_visit_created, :site_visit_updated]
   around_action :user_time_zone, only: [:site_visit_created, :site_visit_updated]
+  before_action :register_lead, only: [:lead_created, :lead_updated, :site_visit_created, :site_visit_updated]
 
   def lead_created
     respond_to do |format|
@@ -65,7 +63,7 @@ class Api::SellDo::LeadsController < Api::SellDoController
   private
 
   def user_time_zone
-    Time.use_zone(@lead.user.time_zone) { yield }
+    Time.use_zone(@current_user.time_zone) { yield }
   end
 
   def set_project
@@ -78,104 +76,59 @@ class Api::SellDo::LeadsController < Api::SellDoController
     render json: { errors: [I18n.t("controller.crms.errors.not_available")] } and return unless @crm
   end
 
-  def create_or_set_user
-    if (email = params.dig(:lead, :email).presence) || (phone = params.dig(:lead, :phone).presence)
-      query = []
-      query << { phone: phone } if phone.present?
-      query << { email: email } if email.present?
-      @user = User.or(query).first
-      if @user.blank?
-        phone = Phonelib.parse(params[:lead][:phone]).to_s
-        @user = User.new(booking_portal_client_id: @project.booking_portal_client_id, email: params[:lead][:email], phone: phone, first_name: params[:lead][:first_name], last_name: params[:lead][:last_name], is_active: false)
-        @user.first_name = "Customer" if @user.first_name.blank?
-        @user.last_name = '' if @user.last_name.nil?
-        @user.skip_confirmation! # TODO: Remove this when customer login needs to be given
-        unless @user.save
-          respond_to do |format|
-            format.json { render json: {errors: @user.errors.full_messages}, status: 200 }
-          end
-        end
+  def register_lead
+    if attrs = format_params
+      @errors, @lead_manager, @user, @lead, @site_visit = ::LeadRegistrationService.new(@current_client, @project, @current_user, attrs).execute
+
+      if @errors.present?
+        render json: {errors: @errors} and return
       end
     else
-      respond_to do |format|
-        format.json { render json: {} and return }
+      render json: {errors: I18n.t("controller.apis.message.parameters_missing")} and return
+    end
+  end
+
+  def format_params
+    if params[:lead].present?
+      attrs = {
+        first_name: params.dig(:lead, :first_name),
+        last_name: params.dig(:lead, :last_name),
+        email: params.dig(:lead, :email),
+        phone: params.dig(:lead, :phone),
+        project_id: @project.id,
+        lead_stage: params.dig(:payload, :stage),
+        source: params.dig(:payload, :campaign_info, :source),
+        sub_source: params.dig(:payload, :campaign_info, :sub_source),
+        booking_portal_client_id: @current_client.id,
+        third_party_references_attributes: [{
+          crm_id: @crm.id,
+          reference_id: params[:lead_id]
+        }]
+      }
+
+      if params[:event].in?(%w(sitevisit_scheduled sitevisit_conducted sitevisit_rescheduled))
+        attrs[:lead] = {
+          site_visits_attributes: {
+            "0" => {
+              scheduled_status: params[:action_name] == 'site_visit_created' ? 'proposed' : 'confirmed',
+              scheduled_on: (DateTime.parse(params.dig(:payload, :scheduled_on)) rescue nil),
+              creator_id: @crm.user_id,
+              created_by: "crm-#{@crm.id}",
+              third_party_references_attributes: [{
+                crm_id: @crm.id,
+                reference_id: params.dig('payload', '_id')
+              }]
+            }
+          }
+        }
       end
     end
-  end
-
-  def create_or_set_lead
-    @lead = @user.leads.where(booking_portal_client_id: @current_client.try(:id), "third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params[:lead_id].to_s).first
-    if @lead.present?
-      update_source_and_sub_source_on_lead
-      update_rera_number_on_lead
-    end
-
-    unless @lead
-      @lead = @user.leads.new(lead_create_attributes)
-      @lead.booking_portal_client_id = @current_client.try(:id)
-      render json: { errors: @lead.errors.full_messages.uniq } and return unless @lead.save
-    end
-  end
-
-  def update_source_and_sub_source_on_lead
-    @lead.set(source: params.dig(:payload, :campaign_info, :source)) if params.dig(:payload, :campaign_info, :source).present? && (@lead.source != params.dig(:payload, :campaign_info, :source))
-
-    @lead.set(sub_source: params.dig(:payload, :campaign_info, :sub_source)) if params.dig(:payload, :campaign_info, :sub_source).present? && (@lead.sub_source != params.dig(:payload, :campaign_info, :sub_source))
-  end
-
-  def update_rera_number_on_lead
-    @lead.set(rera_id: params.dig(:payload, :custom_rera_number)) if params.dig(:payload, :custom_rera_number).present? && @lead.rera_id != params.dig(:payload, :custom_rera_number)
-  end
-
-  def create_or_set_site_visit
-    if params.dig("payload", "_id").present?
-      @site_visit = @lead.site_visits.where(booking_portal_client_id: @current_client.try(:id), "third_party_references.crm_id": @crm.id, "third_party_references.reference_id": params.dig("payload", "_id")).first
-      unless @site_visit.present?
-        @site_visit = SiteVisit.new(site_visit_attributes)
-        @site_visit.booking_portal_client_id = @current_client.try(:id)
-        render json: { errors: @site_visit.errors.full_messages.uniq } and return unless @site_visit.save
-      end
-    else
-      render json: { errors: [I18n.t("controller.site_visits.errors.id_missing_in_params")] } and return
-    end
-  end
-
-  def lead_create_attributes
-    {
-      email: @user.email,
-      phone: @user.phone,
-      first_name: @user.first_name,
-      last_name: @user.last_name,
-      project_id: @project.id,
-      lead_stage: params.dig(:payload, :stage),
-      source: params.dig(:payload, :campaign_info, :source),
-      sub_source: params.dig(:payload, :campaign_info, :sub_source),
-      rera_id: params.dig(:payload, :custom_rera_number),
-      third_party_references_attributes: [{
-        crm_id: @crm.id,
-        reference_id: params[:lead_id]
-      }]
-    }
+    attrs
   end
 
   def lead_update_attributes
     {
       lead_stage: params.dig(:payload, :stage)
-    }
-  end
-
-  def site_visit_attributes
-    {
-      lead_id: @lead.id,
-      project_id: @lead.project_id,
-      user_id: @lead.user_id,
-      creator: @crm.user,
-      created_by: "crm-#{@crm.id}",
-      scheduled_on: (DateTime.parse(params.dig(:payload, :scheduled_on)) rescue nil),
-      third_party_references_attributes: [{
-        crm_id: @crm.id,
-        reference_id: params.dig('payload', '_id')
-      }]
     }
   end
 

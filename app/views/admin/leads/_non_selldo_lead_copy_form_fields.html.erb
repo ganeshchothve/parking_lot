@@ -22,12 +22,12 @@
 <% end %>
 
 <% if policy([:admin, lead]).editable_field?("manager_id") %>
-  <% if current_user.role?(:channel_partner) %>
+  <% if current_user.role.in?(%w(channel_partner cp_owner)) %>
     <%= f.input :manager_id, as: :hidden, input_html: { value: current_user.id } %>
   <% else %>
     <div class='row'>
       <div class="col-md-12">
-        <%= f.input :manager_id, collection: [], required: true, disabled: !policy([:admin, lead]).editable_field?("manager_id"), as: :select, prompt: :translate, input_html: { class: 'selectize-remote', name: 'manager_id', data: { url: admin_users_path(fltrs: { role: ['channel_partner', 'cp_owner'], is_active: true, booking_portal_client_id: current_client.id, user_status_in_company: 'active' }) } } %>
+        <%= f.input :manager_id, collection: [], disabled: !policy([:admin, lead]).editable_field?("manager_id"), as: :select, prompt: :translate, input_html: { class: 'selectize-remote', name: 'manager_id', data: { url: admin_users_path(fltrs: { role: ['channel_partner', 'cp_owner'], is_active: true, booking_portal_client_id: current_client.id, user_status_in_company: 'active' }) } } %>
       </div>
     </div>
   <% end %>

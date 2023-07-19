@@ -1,8 +1,8 @@
 
 <div class="row">
-<% cp_lead_activities.each do |cp_lead_activity| %>
+<% lead_managers.each do |lead_manager| %>
 <%
-    lead = cp_lead_activity.lead
+    lead = lead_manager.lead
 %>
 
     <div class="col-lg-4">
@@ -10,13 +10,13 @@
             <div class="card-header bg-white">
                 <div class="d-flex justify-content-between px-1 pt-2 pb-1">
                     <p class="fn-14 font-medium txt-drk-b-lt mb-0">
-                        <%= link_to lead.name, admin_cp_lead_activity_path(cp_lead_activity),class: 'theme-txt-color mb-0', target: '_blank' %></p>
+                        <%= link_to lead.name, admin_lead_manager_path(lead_manager),class: 'theme-txt-color mb-0', target: '_blank' %></p>
                     <div class="dropdown show text-right p-0">
                         <a class="btn table-dropdown-btn p-0" href="#" role="button" id="dropdownMenuLink"
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
                                 class="fa fa-ellipsis-v txt-light-blue" aria-hidden="true"></i></a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                            <%= render "#{current_user_role_group}/cp_lead_activities/links", cp_lead_activity: cp_lead_activity %>
+                            <%= render "#{current_user_role_group}/lead_managers/links", lead_manager: lead_manager %>
                         </div>
                     </div>
                 </div>
@@ -36,44 +36,46 @@
                 </div>
                 <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>
                 <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.cp_lead_activity.selldo_lead_id') %></p>
+                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.selldo_lead_id') %></p>
                     <p class="fn-14 mb-0"><%= lead.lead_id %></p>
                 </div>
                 <% end %>
                 <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.cp_lead_activity.project_id') %></p>
+                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.project_id') %></p>
                     <p class="fn-14 mb-0"><%= lead.project.try(:name) %></p>
                 </div>
                 <% if !current_user.role.in?(%w(cp_owner channel_partner)) %>
                 <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.cp_lead_activity.channel_partner') %></p>
-                    <p class="fn-14 mb-0"><%= cp_lead_activity.manager_name %></p>
+                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.channel_partner') %></p>
+                    <p class="fn-14 mb-0"><%= lead_manager.manager.present? && lead_manager.manager.channel_partner? ? lead_manager.manager_name : '-' %></p>
                 </div>
                 <% end %>
-                <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.cp_lead_activity.registered_at') %></p>
-                    <p class="fn-14 mb-0"><%= cp_lead_activity.registered_at.try(:strftime, "%d/%m/%Y") %></p>
-                </div>
+                <% if lead_manager.active? %>
+                  <div class="d-flex justify-content-between p-2 pt-1 pb-1">
+                      <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.expiry_date') %></p>
+                      <p class="fn-14 mb-0"><%= lead_manager.expiry_date.try(:strftime, "%d/%m/%Y") %></p>
+                  </div>
+                  <div class="d-flex justify-content-between p-2 pt-1 pb-1">
+                      <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.expiry_remaining_days') %></p>
+                      <p class="fn-14 mb-0"><%= lead_manager.lead_validity_period %></p>
+                  </div>
+                <% end %>
                 <!--
                 <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.cp_lead_activity.count_status') %></p>
-                    <p class="fn-14 mb-0"><%= cp_lead_activity.count_status.try(:titleize) %></p>
+                    <p class="fn-14 txt-drk-b-lt mb-0"><%#= t('mongoid.attributes.lead_manager.registered_at') %></p>
+                    <p class="fn-14 mb-0"><%#= lead_manager.registered_at.try(:strftime, "%d/%m/%Y") %></p>
                 </div>
                 <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.cp_lead_activity.lead_status') %></p>
-                    <p class="fn-14 mb-0"><%= cp_lead_activity.lead_status.try(:titleize) %></p>
+                    <p class="fn-14 txt-drk-b-lt mb-0"><%#= t('mongoid.attributes.lead_manager.count_status') %></p>
+                    <p class="fn-14 mb-0"><%#= lead_manager.count_status.try(:titleize) %></p>
                 </div>
                 <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.cp_lead_activity.expiry_date') %></p>
-                    <p class="fn-14 mb-0"><%= cp_lead_activity.expiry_date.try(:strftime, "%d/%m/%Y") %></p>
+                    <p class="fn-14 txt-drk-b-lt mb-0"><%#= t('mongoid.attributes.lead_manager.lead_status') %></p>
+                    <p class="fn-14 mb-0"><%#= lead_manager.lead_status.try(:titleize) %></p>
                 </div>
                 <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.cp_lead_activity.expiry_remaining_days') %></p>
-                    <p class="fn-14 mb-0"><%= cp_lead_activity.lead_validity_period %></p>
-                </div>
-                <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.cp_lead_activity.can_extend_validity') %></p>
-                    <p class="fn-14 mb-0"><%= cp_lead_activity.can_extend_validity? ? 'Yes' : 'No' %></p>
+                    <p class="fn-14 txt-drk-b-lt mb-0"><%#= t('mongoid.attributes.lead_manager.can_extend_validity') %></p>
+                    <p class="fn-14 mb-0"><%#= lead_manager.can_extend_validity? ? 'Yes' : 'No' %></p>
                 </div>
                 -->
             </div>
@@ -83,5 +85,5 @@
 <% end %>
 </div>
 <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 pb-2">
-    <%= will_paginate cp_lead_activities, list_classes: %w(pagination justify-content-center) %>
+    <%= will_paginate lead_managers, list_classes: %w(pagination justify-content-center) %>
 </div>

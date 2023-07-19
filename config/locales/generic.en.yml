@@ -1,4 +1,39 @@
 en-GENERIC:
+  errors:
+    # The default format to use in full error messages.
+    format: "%{attribute} %{message}"
+    # The values :model, :attribute and :value are always available for interpolation
+    # The value :count is available when applicable. Can be used for pluralization.
+    messages:
+      model_invalid: "Validation failed: %{errors}"
+      inclusion: "is not included in the list"
+      exclusion: "is reserved"
+      invalid: "is invalid"
+      confirmation: "doesn't match %{attribute}"
+      accepted: "must be accepted"
+      empty: "can't be empty"
+      blank: "can't be blank"
+      present: "must be blank"
+      too_long:
+        one: "is too long (maximum is 1 character)"
+        other: "is too long (maximum is %{count} characters)"
+      too_short:
+        one: "is too short (minimum is 1 character)"
+        other: "is too short (minimum is %{count} characters)"
+      wrong_length:
+        one: "is the wrong length (should be 1 character)"
+        other: "is the wrong length (should be %{count} characters)"
+      not_a_number: "is not a number"
+      not_an_integer: "must be an integer"
+      greater_than: "must be greater than %{count}"
+      greater_than_or_equal_to: "must be greater than or equal to %{count}"
+      equal_to: "must be equal to %{count}"
+      less_than: "must be less than %{count}"
+      less_than_or_equal_to: "must be less than or equal to %{count}"
+      other_than: "must be other than %{count}"
+      odd: "must be odd"
+      even: "must be even"
+
   currency:
     indian: "₹"
     default: "&#8377;"
@@ -143,7 +178,7 @@ en-GENERIC:
       overview: "Overview"
       site_visits: "Meetings"
       remarks_from_selldo: "Remarks From SellDo"
-      lead_activities: "Deal Activities"
+      lead_managers: "Deal Managers"
       bookings: "Bookings"
       basic_details: "Basic Details"
       booking_details: "Booking Details"
@@ -927,7 +962,7 @@ en-GENERIC:
         lead_blocking_days: "Configure Deal Blocking Days"
         incentive_gst_slabs: "Configure Incentive GST Slabs (%)"
         team_lead_dashboard_access_roles: "Team Deal Dashboard Access Roles"
-        enable_lead_conflicts: "Enable Deal Conflicts"
+        enable_lead_conflicts: "Resolve Lead Conflicts on"
         launchpad_portal: "Launchpad Portal"
         payment_gateway: "Payment Gateway"
         enable_live_inventory: "Enable Live Inventory"
@@ -994,6 +1029,7 @@ en-GENERIC:
         client_level: Client Level
         project_level: Project Level
         no_conflict: No Conflict
+        site_visit_conducted: Meeting Conducted
       client/industries:
         real_estate: 'Real Estate'
         generic: 'Generic'
@@ -1068,6 +1104,7 @@ en-GENERIC:
         notification_numbers_sort: "(Key SMS Reports are sent here)"
         sender_email: "Sender Email Address"
         email_domains: "Email Domains (to detect employee users)"
+        lead_blocking_days: "Configure Deal Blocking Days"
         booking_portal_domains: "Booking Portal Domains (where the portal is hosted)"
         registration_name: "Registration Name (Used in Payments)"
         cin_number: "CIN Number"
@@ -1861,11 +1898,14 @@ en-GENERIC:
         manager_id: "Partner"
         rejection_reason: "Rejection Reason"
         is_revisit: "Revisit"
+        code: 'Unique Visit Code'
       site_visit/status:
         scheduled: "Scheduled"
         pending: "Pending"
         missed: "Missed"
         conducted: "Conducted"
+        cancelled: 'Cancelled'
+        inactive: 'Inactive'
         paid: "Paid"
       site_visit/approval_status:
         pending: "Pending Approval"
@@ -1880,6 +1920,9 @@ en-GENERIC:
       site_visit/site_visit_type:
         token_slot: "Token Slot"
         visit: "Visit"
+      site_visit/is_revisit:
+        'true': Revisit
+        'false': First Visit
       user_kyc:
         name: "Name"
         email: "Email"
@@ -2233,7 +2276,7 @@ en-GENERIC:
         queued: "Queued"
         registered: "Registered"
 
-      cp_lead_activity:
+      lead_manager:
         lead_id: "Deal Id"
         selldo_lead_id: "SellDo Deal Id"
         project_id: "Product/ Service"
@@ -2246,17 +2289,17 @@ en-GENERIC:
         expiry_date: "Deal Expiry Date"
         sitevisit_date: "Meeting Date"
         sitevisit_status: "Meeting Status"
-      cp_lead_activity/count_status:
+      lead_manager/count_status:
         fresh_lead: "Fresh Deal"
         active_in_same_cp: "Active In Same Cp"
         no_count: "No Count"
         accompanied_credit: "Accompanied Credit"
         accompanied_count_to_cp: "Accompanied Count To Cp"
         count_given: "Count Given"
-      cp_lead_activity/lead_status:
+      lead_manager/lead_status:
         already_exists: "Already Exists"
         registered: "Registered"
-      cp_lead_activity/site_visit_status:
+      lead_manager/site_visit_status:
         scheduled: "Scheduled"
         conducted: "Conducted"
       user/file_types:
@@ -2278,10 +2321,10 @@ en-GENERIC:
         job_continuity_proof_html: "<ul><li>Appointment letter at employment and validation letter from HR</li></ul>"
         bank_statement_html: "<ul><li>Past 6 months’ document</li></ul>"
         advance_processing_cheque_html: "<ul><li>Upload cheque’s photo for sanction</li></ul>"
-        financial_documents_html: "<ul>"
-        <li><strong>For Salaried Individual</strong>: "3-month salary slip, Form 16 and bank statement</li>"
-        <li><strong>For Self-Employed Individual</strong>: "IT returns for the last 2 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li>"
-        <li><strong>For Self-Employed Non- Professionals</strong>: "IT returns for the last 3 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li></ul>"
+        financial_documents_html: "<ul>
+        <li><strong>For Salaried Individual</strong>: 3-month salary slip, Form 16 and bank statement</li>
+        <li><strong>For Self-Employed Individual</strong>: IT returns for the last 2 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li>
+        <li><strong>For Self-Employed Non- Professionals</strong>: IT returns for the last 3 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li></ul>"
 
       client/file_types:
         document: "Document"
@@ -2315,9 +2358,9 @@ en-GENERIC:
         images_html: "Images"
         developer_logo_html: "Product/ Service Developer Logo"
         advertise_html: "Advertise Kit"
-      cp_lead_activity/file_types:
+      lead_manager/file_types:
         sitevisit_form: "Meeting Form"
-      cp_lead_activity/help_text:
+      lead_manager/help_text:
         sitevisit_form_html: ""
       workflow:
         stage: Event
@@ -2448,7 +2491,7 @@ en-GENERIC:
       message:
         incorrect_key: "Incorrect key."
         register: "Kindly register with our application."
-        paramerters_missing: "Required parameters missing."
+        parameters_missing: "Required parameters missing."
     discounts:
       index:
         link_name: "Token Discounts"
@@ -2587,15 +2630,15 @@ en-GENERIC:
           title: "Why partner with %{name}"
 
 
-    cp_lead_activities:
+    lead_managers:
       index:
-        link_name: "Deal Activities"
+        link_name: "Deal Managers"
       show:
-        link_name: "Show Deal Activities"
+        link_name: "Show Deal Managers"
       notice:
-        created: "Deal Activity created successfully."
-        updated: "Deal Activity updated successfully."
-        deleted: "Deal Activity deleted successfully."
+        created: "Deal Manager created successfully."
+        updated: "Deal Manager updated successfully."
+        deleted: "Deal Manager deleted successfully."
       errors:
         cannot_be_updated: "Deal validity can not be updated. Deal is active for %{name}"
     push_notifications:
@@ -3355,6 +3398,7 @@ en-GENERIC:
         invalid_date_format: "Sitevisit date format is invalid. Correct date format is - dd/mm/yyyy"
         revisit_invalid_date_format: "Last revisit date format is invalid. Correct date format is - dd/mm/yyyy"
         revisit_count: "Revisit count should be a number"
+        site_visit_reference_id_already_exists: "Site Visit with Reference Id %{name} already exists"
       text:
         schedule: "Schedule a Site Visit"
         scheduled_at: "Schedule a sitevisit at - %{name}"
@@ -3362,7 +3406,8 @@ en-GENERIC:
         last_visit_date: "Last site visit date"
         last_visit_status: "Last site visit status"
         mark_conducted: "Mark site visit conducted"
-
+        scheduled_with_code: "Found site visit scheduled on - %{name} with %{code}"
+        future_scheduled_on_notice_html: '<strong>Note: </strong>Visits scheduled on past or future dates will be rescheduled to now and marked conducted.'
       headings:
         customer_site_visit: "Customer Site Visit"
         customer_details: "Customer Details"

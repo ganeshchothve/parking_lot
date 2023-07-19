@@ -5,6 +5,10 @@ class ApisController < ActionController::API
   before_action :set_current_user
   before_action :set_current_client
 
+  def pundit_user
+    @current_user
+  end
+
   private
 
   def authenticate_request

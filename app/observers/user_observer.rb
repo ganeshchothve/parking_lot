@@ -8,6 +8,9 @@ class UserObserver < Mongoid::Observer
 
     user.assign_attributes(manager_change_reason: 'Blocking the lead', unblock_at: Date.today + user.booking_portal_client.lead_blocking_days) if user.temporarily_blocked == true && user.unblock_at == nil && user.booking_portal_client.lead_blocking_days.present?
 
+    # convert all project ids into bson ids
+    user.project_ids = user.project_ids.collect {|id| BSON::ObjectId(id)} if user.project_ids.any? {|id| id.is_a?(String)}
+
     _event = user.event.to_s
     user.event = nil
     if _event.present?

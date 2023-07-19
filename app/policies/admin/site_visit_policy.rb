@@ -18,8 +18,9 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
 
   def new?(current_project_id = nil)
     valid = current_client.enable_site_visit?
-    valid = valid && SiteVisit.where(booking_portal_client_id: record.booking_portal_client_id, lead_id: record.lead_id, status: 'scheduled').blank? && edit? && record.project.walk_ins_enabled?
-    valid = valid && project_access_allowed?(current_project_id)
+    valid &&= SiteVisit.where(booking_portal_client_id: record.booking_portal_client_id, lead_id: record.lead_id, status: 'scheduled').blank? && edit? && record.project.walk_ins_enabled?
+    valid &&= record.active_lead_managers.blank? if user.role.in?(%w(cp_owner channel_partner))
+    valid &&= project_access_allowed?(current_project_id)
     valid
   end
 
@@ -34,7 +35,7 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
   def change_state?
     record.project.is_active? &&
     (
-      (user.role.in?(%w(cp_owner channel_partner dev_sourcing_manager)) && record.scheduled? && record.may_conduct?) ||
+      (user.role.in?(%w(dev_sourcing_manager gre sales_admin admin)) && record.scheduled? && record.may_conduct?) ||
       (user.role.in?(%w(superadmin admin cp_admin)) && record.may_paid?) ||
       (user.role.in?(%w(dev_sourcing_manager)) && record.approval_status.in?(%w(pending rejected)))
     )
@@ -52,8 +53,12 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
     user.role.in?(%w(dev_sourcing_manager) + User::CHANNEL_PARTNER_USERS)
   end
 
-  def show_channel_partner?
+  def show_channel_partner_column?
     !user.role.in?(%w(channel_partner))
+  end
+
+  def show_channel_partner_user?
+    record.manager.present? && record.manager.channel_partner? && record.manager_name.present?# && user.role.in?(User::ALL_PROJECT_ACCESS)
   end
 
   def permitted_attributes params={}
@@ -62,7 +67,7 @@ class Admin::SiteVisitPolicy < SiteVisitPolicy
       if record.new_record?
         attrs += [:manager_id] if user.role.in?(%w(cp_owner channel_partner))
       else
-        attrs += [:event] if record.scheduled? && user.role.in?(%w(cp_owner channel_partner))
+        attrs += [:event] if record.scheduled? && user.role.in?(%w(cp_owner channel_partner admin sales_admin))
         attrs += [:event] if record.may_paid? && user.role.in?(%w(superadmin admin cp_admin))
         attrs += [:approval_event] if record.approval_status.in?(%w(pending rejected)) && user.role.in?(%w(dev_sourcing_manager))
         attrs += [:rejection_reason] if user.role?(:dev_sourcing_manager)

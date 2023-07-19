@@ -29,24 +29,25 @@
                 <div class='row'>
                   <div class='col-md-12'>
                     <%= f.label :scheduled_on %>
-                    <% date = (f.object.scheduled_on.present? ? f.object.scheduled_on : Date.today) %>
                     <%
                         site_visit_scheduled_on = f.object.scheduled_on
                         current_date = DateTime.current
                     %>
+                    <% date = (site_visit_scheduled_on.present? ? site_visit_scheduled_on : current_date) %>
+
                     <% if @site_visit.persisted? && site_visit_scheduled_on.present? %>
                         <% if site_visit_scheduled_on >= current_date %>
                             <% min_date = current_date %>
                         <% elsif site_visit_scheduled_on < current_date %>
-                            <% min_date = [site_visit_scheduled_on, (DateTime.current - 4.days) ].max %>
+                            <% min_date = [site_visit_scheduled_on, (current_date - 4.days) ].max %>
                         <% end %>
                     <% elsif @site_visit.new_record? %>
-                        <% min_date = Date.today - 4.days %>
+                        <% min_date = Date.today %>
                     <% end %>
                     <%
                         default_date = (date < min_date ? min_date : date)
                     %>
-                    <div class="datetimepicker" id="site_visit_scheduled_on_calendar" data-default-date="<%= default_date.try(:strftime, "%d/%m/%Y") %>" data-inline=true data-side-by-side=true data-use-current=true data-min-date="<%= min_date.try(:strftime, "%d/%m/%Y") %>" data-max-date="<%= (Date.today + 20.days).strftime("%d/%m/%Y") %>" data-stepping='30' data-format='DD/MM/YYYY LT'></div>
+                    <div class="datetimepicker" id="site_visit_scheduled_on_calendar" data-default-date="<%= default_date.try(:strftime, "%d/%m/%Y %H:%M") %>" data-inline=true data-side-by-side=true data-use-current=true data-min-date="<%= min_date.try(:strftime, "%d/%m/%Y") %>" data-max-date="<%= (Date.today + 20.days).strftime("%d/%m/%Y") %>" data-stepping='30' data-format='DD/MM/YYYY LT'></div>
 
                     <%= f.hidden_field :scheduled_on, class: 'form-control', value: date %>
                     <% if f.object.reject %>
@@ -55,6 +56,8 @@
                     <% end %>
                   </div>
                 </div>
+                <%= f.hidden_field :creator_id, value: current_user.id %>
+                <%= f.hidden_field :manager_id, value: current_user.id %>
             </div>
         </div>
         <div class="modal-footer text-end">

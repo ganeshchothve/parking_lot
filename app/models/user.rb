@@ -197,7 +197,7 @@ class User
   has_many :assets, as: :assetable
   has_and_belongs_to_many :received_emails, class_name: 'Email', inverse_of: :recipients
   has_and_belongs_to_many :cced_emails, class_name: 'Email', inverse_of: :cc_recipients
-  has_many :cp_lead_activities
+  has_many :lead_managers
   has_and_belongs_to_many :meetings
   has_many :interested_projects  # Channel partners can subscribe to new projects through this
   has_many :fund_accounts
@@ -569,6 +569,10 @@ class User
 
   def buyer?
     BUYER_ROLES.include?(role)
+  end
+
+  def channel_partner?
+    ['channel_partner', 'cp_owner'].include?(role)
   end
 
   def role?(role)
@@ -961,7 +965,7 @@ class User
         custom_scope = { role: 'sales', project_ids: { "$in": project_ids }}
       elsif user.role?('gre')
         user_ids = Lead.where(project_id: { "$in": project_ids }).distinct(:user_id)
-        custom_scope[:'$or'] = [{ id: { "$in": user_ids}}, { role: 'sales', project_ids: { "$in": project_ids }}]
+        custom_scope[:'$or'] = [{ id: { "$in": user_ids}}, { role: 'sales', project_ids: { "$in": project_ids }}, {role: { '$in': %w(channel_partner cp_owner) }}]
       end
       custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
       custom_scope

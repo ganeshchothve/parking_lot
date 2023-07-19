@@ -88,6 +88,21 @@
       </div>
     </div>
   <% end %>
+  <% if policy([:admin, @client]).editable_field?("allow_lead_duplication") %>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :allow_lead_duplication %>
+        <div class="form-check form-check-inline">
+          <%= f.radio_button :allow_lead_duplication, true, class: "form-check-input wd-22" %>
+          <%= f.label :allow_lead_duplication, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
+        </div>
+        <div class="form-check form-check-inline">
+          <%= f.radio_button :allow_lead_duplication, false, class: "form-check-input wd-22" %>
+          <%= f.label :allow_lead_duplication, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
 
   <% if policy([:admin, @client]).editable_field?("enable_direct_activation_for_cp") %>
     <div class="col-md-6">

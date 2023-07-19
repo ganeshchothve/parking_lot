@@ -6,15 +6,15 @@ class Client
   include CrmIntegration
   extend DocumentsConcern
 
-  PAYMENT_GATEWAYS = %w(Razorpay CCAvenue)
+  PAYMENT_GATEWAYS               = %w(Razorpay CCAvenue)
   # Add different types of documents which are uploaded on client
-  DOCUMENT_TYPES = %w[document offer login_page_image].freeze
-  PUBLIC_DOCUMENT_TYPES = []
-  INCENTIVE_CALCULATION = ["manual", "calculated"]
-  ENABLE_PAYMENT = %w[enable_with_kyc enable_without_kyc disable].freeze
-  ENABLE_BOOKING_WITH_KYC = ['before_booking', 'during_booking', 'disable'].freeze
-  LEAD_CONFLICT= %w[client_level project_level no_conflict]
-  INDUSTRIES = %w(real_estate generic)
+  DOCUMENT_TYPES                 = %w[document offer login_page_image].freeze
+  PUBLIC_DOCUMENT_TYPES          = []
+  INCENTIVE_CALCULATION          = ["manual", "calculated"]
+  ENABLE_PAYMENT                 = %w[enable_with_kyc enable_without_kyc disable].freeze
+  ENABLE_BOOKING_WITH_KYC        = ['before_booking', 'during_booking', 'disable'].freeze
+  LEAD_CONFLICT                  = %w[no_conflict client_level project_level site_visit_conducted]
+  INDUSTRIES                     = %w(real_estate generic)
   REQUIRED_FIELDS_FOR_USER_LOGIN = %w(email phone)
 
   attr_accessor :basic, :bookings, :contacts, :integrations, :pages, :logos
@@ -103,7 +103,8 @@ class Client
   # This setting will decide how same lead can be added through different channel partners,
   # Enabled: If channel_partner tries to add a lead which is already present in the system & tagged to different channel_partner, then system will check if the lead is confirmed or not, if yes, it won't allow the current channel_partner to add it again & trigger an email to admin saying current channel_partner tried to add an existing lead.
   # Disabled: If channel_partner tries to add an already present lead under diff. channel_partner, then system will not allow current channel_partner to add that lead again regardless of its confirmation status & trigger a notification email to admin informing that current channel_partner tried to add existing lead.
-  field :enable_lead_conflicts, type: String, default: ''
+  field :enable_lead_conflicts, type: String, default: 'project_level'
+  field :allow_lead_duplication, type: Boolean, default: false
   # required for sell.do links of sitevisit, followup & add task on user to work.
   field :selldo_default_search_list_id, type: String
   field :powered_by_link, type: String
@@ -202,6 +203,7 @@ class Client
   validates :sms_provider, :sms_provider_username, :sms_provider_password, :sms_mask, presence: true, if: :sms_enabled?
   validates :sender_email, presence: true
   validates :industry, inclusion: {in: Client::INDUSTRIES}
+  validate :check_lead_duplication
 
   accepts_nested_attributes_for :address, :external_inventory_view_config, :checklists
   accepts_nested_attributes_for :regions, allow_destroy: true
@@ -302,6 +304,12 @@ class Client
   def check_preferred_login
     if !sms_enabled? && preferred_login == 'phone'
       self.errors.add(:preferred_login, "SMS setting must be enabled to select phone as preferred login")
+    end
+  end
+
+  def check_lead_duplication
+    if allow_lead_duplication?
+      self.errors.add(:allow_lead_duplication, 'cannot be turned on with lead conflicts enabled') unless enable_lead_conflicts == 'no_conflict'
     end
   end
 

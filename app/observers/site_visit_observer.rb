@@ -32,18 +32,30 @@ class SiteVisitObserver < Mongoid::Observer
     # Set project & user
     site_visit.project_id = site_visit.lead&.project_id if site_visit.project_id.blank?
     site_visit.user_id = site_visit.lead&.user_id if site_visit.user_id.blank?
+    site_visit.booking_portal_client_id = site_visit.lead.booking_portal_client_id if site_visit.booking_portal_client_id.blank?
+    #
     # Set manager if present on lead
-    site_visit.manager_id = site_visit.lead&.manager_id if site_visit.manager_id.blank?
+    #site_visit.manager_id = site_visit.lead&.manager_id if site_visit.manager_id.blank?
     site_visit.channel_partner_id = site_visit.manager&.channel_partner_id if site_visit.channel_partner_id.blank? && site_visit.manager.present?
     site_visit.cp_manager_id = site_visit.manager&.manager_id if site_visit.cp_manager_id.blank? && site_visit.manager
     site_visit.cp_admin_id = site_visit.cp_manager&.manager_id if site_visit.cp_admin_id.blank? && site_visit.cp_manager
-    site_visit.booking_portal_client_id = site_visit.lead.booking_portal_client_id
+
+    # Link site_visit to lead manager if found
+    if site_visit.scheduled? && site_visit.manager_id.present? && site_visit.lead_manager.blank?
+      lm = site_visit.lead.lead_managers.draft.where(manager_id: site_visit.manager_id).first
+      lm.set(site_visit_id: site_visit.id) if lm && lm.site_visit_id.blank?
+    end
 
     # Set created_by
     if site_visit.created_by.blank?
       site_visit.created_by = site_visit.creator&.role
     end
 
+    # Set unique meeting code
+    site_visit.code = (SecureRandom.random_number * 10000000).to_i.to_s if site_visit.code.blank?
+  end
+
+  def before_create site_visit
     # Set revisit
     if site_visit.is_revisit.nil?
       if site_visit.lead.site_visits.conducted.count.zero?
@@ -73,6 +85,8 @@ class SiteVisitObserver < Mongoid::Observer
   def after_create site_visit
     site_visit.third_party_references.each(&:update_references)
 
+    site_visit.send_notification
+
     if site_visit.booking_portal_client.external_api_integration?
       if Rails.env.staging? || Rails.env.production?
         SiteVisitObserverWorker.perform_async(site_visit.id.to_s, 'create', site_visit.changes)
@@ -80,6 +94,8 @@ class SiteVisitObserver < Mongoid::Observer
         SiteVisitObserverWorker.new.perform(site_visit.id.to_s, 'create', site_visit.changes)
       end
     end
+
+    SiteVisitDeactivateWorker.perform_in(site_visit.scheduled_on + SiteVisit::TIME_TILL_INACTIVE, site_visit.id, site_visit.booking_portal_client_id)
   end
 
   def after_save site_visit
@@ -91,16 +107,13 @@ class SiteVisitObserver < Mongoid::Observer
     end
 
     site_visit.move_invoices_to_draft
-    # if site visit status is changed to conducted, the site visit is pushed to sell do
-    if site_visit.status_changed? && %w(scheduled conducted).include?(site_visit.status)
-      crm_base = Crm::Base.where(booking_portal_client_id: site_visit.booking_portal_client_id, domain: ENV_CONFIG.dig(:selldo, :base_url)).first
-      if crm_base.present?
-        api, api_log = site_visit.reload.push_in_crm(crm_base)
-      end
-    end
 
     if (site_visit.scheduled_on_changed? || site_visit.status_changed?) && site_visit.booking_portal_client.is_marketplace? && site_visit.crm_reference_id(ENV_CONFIG.dig(:kylas, :base_url)).present?
       Kylas::UpdateMeeting.new(site_visit.user, site_visit, {run_in_background: true}).call
+    end
+
+    if site_visit.scheduled_on_changed? && site_visit.scheduled_on_was.present? && site_visit.scheduled_on.present?
+      site_visit.send_email_sms("site_visit_rescheduled")
     end
   end
 end

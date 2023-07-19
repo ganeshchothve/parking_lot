@@ -8,6 +8,8 @@ class EmailObserver < Mongoid::Observer
     email.cc ||= []
     email.to += email.recipients.distinct(:email).compact.reject{|x| x.blank?}
     email.cc += email.cc_recipients.distinct(:email).compact.reject{|x| x.blank?}
+    email.to.compact!
+    email.cc.compact!
     email.set_content
   end
 end

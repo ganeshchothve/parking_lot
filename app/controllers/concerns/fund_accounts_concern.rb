@@ -8,7 +8,7 @@ module FundAccountsConcern
       # Create/Update fund account if found in params
       if user.fund_accounts.blank?
         if params.dig(:user, :fund_accounts, :address).present?
-          fund_account = user.fund_accounts.build
+          fund_account = user.fund_accounts.build(booking_portal_client_id: current_client.id)
           fund_account.assign_attributes(params.dig(:user, :fund_accounts).permit(FundAccountPolicy.new(current_user, fund_account).permitted_attributes))
         end
       else

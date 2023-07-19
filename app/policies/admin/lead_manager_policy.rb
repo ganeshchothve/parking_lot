@@ -1,4 +1,4 @@
-class Admin::CpLeadActivityPolicy < CpLeadActivityPolicy
+class Admin::LeadManagerPolicy < LeadManagerPolicy
   def index?
     true
   end
@@ -12,7 +12,7 @@ class Admin::CpLeadActivityPolicy < CpLeadActivityPolicy
   end
 
   def extend_validity?
-    %w(admin cp_admin).include?(user.role) && record.can_extend_validity? && record.count_status != 'no_count'
+    %w(admin cp_admin).include?(user.role) && record.can_extend_validity?# && record.count_status != 'no_count'
   end
 
   def update_extension?
@@ -20,7 +20,7 @@ class Admin::CpLeadActivityPolicy < CpLeadActivityPolicy
   end
 
   def accompanied_credit?
-    extend_validity? && record.count_status == 'accompanied_credit'
+    extend_validity?# && record.count_status == 'accompanied_credit'
   end
 
   def update_accompanied_credit?

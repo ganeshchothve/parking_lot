@@ -10,11 +10,19 @@ module SiteVisitStateMachine
     # SiteVisit status state machine
     aasm :status, column: :status, whiny_transitions: false do
       state :scheduled, initial: true
-      state :pending, :missed, :conducted, :paid
+      state :pending, :missed, :conducted, :paid, :inactive, :cancelled
 
-      event :conduct, after: %i[send_notification] do
-        transitions from: :scheduled, to: :conducted, if: :can_conduct?
-        transitions from: :pending, to: :conducted, if: :can_conduct?
+      event :conduct, before: :change_scheduled_on_to_now_if_required, after: %i[send_notification activate_lead_manager ] do
+        transitions from: :scheduled, to: :conducted #, if: :can_conduct?
+        transitions from: :pending, to: :conducted #, if: :can_conduct?
+      end
+
+      event :cancel, after: %i[cancel_lead_manager send_notification] do
+        transitions from: :scheduled, to: :cancelled
+      end
+
+      event :inactive, after: %i[cancel_lead_manager send_notification] do
+        transitions from: :scheduled, to: :inactive
       end
 
       event :paid, after: %i[send_notification] do
@@ -30,11 +38,35 @@ module SiteVisitStateMachine
       scheduled_on < Time.now
     end
 
+    def activate_lead_manager
+      lm = self.lead_manager
+      # TODO: Do not activate this lm if already active lm is present
+      if lm.present?
+        lm.activate! if lm.may_activate?
+        if lm.active?
+          self.lead.site_visits.scheduled.each(&:cancel!)
+        end
+      end
+    end
+
+    def cancel_lead_manager
+      lm = self.lead_manager
+      lm.cancel! if lm.present? && lm.may_cancel?
+    end
+
+    def change_scheduled_on_to_now_if_required
+      #
+      # Change scheduled on to 2 minutes ago if the visit is scheduled in future & being conducted now
+      #
+      self.scheduled_on = (Time.now - 2.minutes) if scheduled_on > Time.now
+    end
+
     def send_notification
       template_name = "site_visit_status_#{self.status}_notification"
       # TODO: Send Broadcast message via notification, in-app, Email, etc
       recipient = self.manager || self.lead.manager
       send_push_notification(template_name, recipient) if recipient.present?
+      send_email_sms("site_visit_#{self.status}")
     end
 
     # State machine for approval status maintained on a separate field
@@ -89,6 +121,31 @@ module SiteVisitStateMachine
         )
         push_notification.save
       end
+    end
+
+    def send_email_sms template_name
+      email_template = Template::EmailTemplate.where(name: template_name, project_id: self.project_id, booking_portal_client_id: self.booking_portal_client_id).first
+      if email_template.present?
+        email = Email.create!({
+          project_id: self.project_id,
+          booking_portal_client_id: self.booking_portal_client_id,
+          email_template_id: email_template.id,
+          #cc: self.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
+          recipients: [self.manager],
+          to: [self.lead.email],
+          triggered_by_id: self.id,
+          triggered_by_type: self.class.to_s
+        })
+        email.sent!
+      end
+      sms_template = ::Template::SmsTemplate.where(booking_portal_client_id: self.booking_portal_client_id, name: template_name, project_id: self.project_id).first
+      sms = Sms.create!(
+        booking_portal_client_id: self.booking_portal_client_id,
+        to: [self.lead.phone],
+        sms_template_id: sms_template.id,
+        triggered_by_id: self.id,
+        triggered_by_type: self.class.to_s
+      ) if sms_template
     end
 
   end

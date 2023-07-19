@@ -92,7 +92,7 @@ class Admin::ProjectPolicy < ProjectPolicy
           :support_number, :support_email, :channel_partner_support_number, :channel_partner_support_email,
           :cancellation_amount, :blocking_amount, :region, :sv_incentive, :spot_booking_incentive,
           :pre_reg_incentive_percentage, :pre_reg_min_bookings, :iris_url, :payment_enabled,
-          :blocking_days, :enable_slot_generation,
+          :blocking_days, :enable_slot_generation, :lead_blocking_days,
           :holding_minutes, :terms_and_conditions, :email_header, :email_footer, :hot, :enable_inventory,
           :enable_booking_with_kyc, :gst_slab_applicable, :check_sv_availability_in_selldo,
           :consideration_value_help_text, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes,
