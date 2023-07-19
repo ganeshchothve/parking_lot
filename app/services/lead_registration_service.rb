@@ -212,6 +212,7 @@ class LeadRegistrationService
       # Exclude expired Lead managers while fetching
       #
       lm = LeadManager.where(booking_portal_client_id: client.id, project_id: project.id).or(get_query)
+
       tagged_lm = lm.tagged.first
       active_lm = lm.active.first
 
@@ -250,7 +251,7 @@ class LeadRegistrationService
             @lead_manager = lm.draft.first
           end
 
-        elsif !manager.channel_partner?
+        elsif site_visit_params.present? && !manager.channel_partner?
           #
           # Allow scheduling re-visits on active leads by admin/sales/internal roles
           # Do not allow it to Channel partners
@@ -262,6 +263,14 @@ class LeadRegistrationService
         else
           @lead_manager = active_lm
         end
+
+      elsif site_visit_params.present? && !manager.channel_partner? && !tagged_lm.manager.channel_partner?
+        #
+        # Allow all internal roles to schedule & conduct sitevisits for leads tagged to any of the internal roles
+        #
+        # Create inactive Lead manager for such visits / re-visits
+        #
+        @inactive_manager = true
 
       else
         @lead_manager = tagged_lm
