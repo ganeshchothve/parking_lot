@@ -12,9 +12,9 @@ module SiteVisitStateMachine
       state :scheduled, initial: true
       state :pending, :missed, :conducted, :paid, :inactive, :cancelled
 
-      event :conduct, after: %i[send_notification activate_lead_manager] do
-        transitions from: :scheduled, to: :conducted, if: :can_conduct?
-        transitions from: :pending, to: :conducted, if: :can_conduct?
+      event :conduct, before: :change_scheduled_on_to_now_if_required, after: %i[send_notification activate_lead_manager ] do
+        transitions from: :scheduled, to: :conducted #, if: :can_conduct?
+        transitions from: :pending, to: :conducted #, if: :can_conduct?
       end
 
       event :cancel, after: %i[cancel_lead_manager send_notification] do
@@ -52,6 +52,10 @@ module SiteVisitStateMachine
     def cancel_lead_manager
       lm = self.lead_manager
       lm.cancel! if lm.present? && lm.may_cancel?
+    end
+
+    def change_scheduled_on_to_now_if_required
+      self.scheduled_on = (Time.now - 1.hour) if scheduled_on > Time.now
     end
 
     def send_notification
