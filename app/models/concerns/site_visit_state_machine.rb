@@ -55,7 +55,10 @@ module SiteVisitStateMachine
     end
 
     def change_scheduled_on_to_now_if_required
-      self.scheduled_on = (Time.now - 1.hour) if scheduled_on > Time.now
+      #
+      # Change scheduled on to 2 minutes ago if the visit is scheduled in future & being conducted now
+      #
+      self.scheduled_on = (Time.now - 2.minutes) if scheduled_on > Time.now
     end
 
     def send_notification
