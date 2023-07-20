@@ -473,15 +473,27 @@ module DatabaseSeeds
       end
 
       if Template::UITemplate.where(name: 'sales_dashboard', project_id: project_id, booking_portal_client_id: client_id).blank?
-        Template::UITemplate.create({ booking_portal_client_id: client_id, project_id: project_id, subject_class: 'View', name: 'sales_dashboard', content: '<section class=" mt-4">
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-12 mt-5">
-                  <h2 class="sec-title after-line">Project Highlights</h2>
-              </div>
-            </div>
-          </div>
-        </section>' })
+        Template::UITemplate.create({ booking_portal_client_id: client_id, project_id: project_id, subject_class: 'View', name: 'sales_dashboard', content: '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bg-primary">
+        <div class="box-content">
+          <h1 class="wc-title white text-center">Welcome <%= current_user.name %> </h1>
+          <p class="white text-center fn-300 fn-18">Welcome to the Online Booking Portal</p>
+          <p class="white text-center fn-300 fn-18">Please follow the steps below to complete the Project Walkthrough with your Customer.</p>
+          <ul class="step-booking">
+            <li>
+              <span><%= image_tag "file-invoice.svg", alt: "Building", style: "width:40px;" %></span>
+              <%= link_to "Project Walkthrough", src="https://www.youtube.com/watch?v=jylM5f3OXnk", target: "_blank" %>
+            </li>
+            <li>
+              <span><%= image_tag "file-invoice.svg", alt: "Building", style: "width:40px;" %></span>
+              <%= link_to "Location AV", src="https://www.youtube.com/watch?v=jgW6-b_vHJI", target: "_blank" %>
+            </li>
+            <li>
+              <span><%= image_tag "file-invoice.svg", alt: "Building", style: "width:40px;" %></span>
+              <%= link_to "Layout Plan", src="https://www.youtube.com/watch?v=bwSNBGpPaAo", target: "_blank" %>
+            </li>
+          </ul>
+        </div>
+        </div>' })
       end
     end
   end

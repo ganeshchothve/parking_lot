@@ -88,7 +88,7 @@ Rails.application.routes.draw do
     resources :meetings, except: [:destroy]
     resources :announcements
     resources :api_logs, only: [:index]
-    resources :cp_lead_activities do
+    resources :lead_managers do
       member do
         get 'extend_validity'
         patch 'update_extension'
@@ -416,6 +416,7 @@ Rails.application.routes.draw do
   # home & globally accessible
   match 'payment/:receipt_id/process_payment/:ignore', to: 'payment#process_payment', via: [:get, :post]
   get :register, to: 'home#register', as: :register
+  get :register_customer_projects_dropdown, to: 'home#register_customer_projects_dropdown', as: :register_customer_projects_dropdown
   post :check_and_register, to: 'home#check_and_register', as: :check_and_register
   get :terms_and_conditions, as: :terms_and_conditions, to: 'home#terms_and_conditions'
   get :privacy_policy, as: :privacy_policy, to: 'home#privacy_policy'

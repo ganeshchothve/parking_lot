@@ -15,6 +15,19 @@ class SiteVisit
 
   REJECTION_REASONS = ["budget_not_match", "location_not_match", "possession_not_match", "didnt_visit", "different_cp"]
   DOCUMENT_TYPES = []
+  TIME_TILL_INACTIVE = 48.hours
+
+  field :scheduled_on, type: DateTime
+  field :conducted_on, type: DateTime
+  field :site_visit_type, type: String, default: 'visit'
+  field :selldo_id, type: String
+  field :is_revisit, type: Boolean
+  field :cp_code, type: String
+  field :sales_id, type: BSON::ObjectId
+  field :created_by, type: String
+  field :conducted_by, type: String
+  field :rejection_reason, type: String
+  field :code, type: String
 
   belongs_to :booking_portal_client, class_name: 'Client'
   belongs_to :project
@@ -33,18 +46,9 @@ class SiteVisit
   accepts_nested_attributes_for :notes, reject_if: :all_blank
   accepts_nested_attributes_for :assets, reject_if: :all_blank
 
-  field :scheduled_on, type: DateTime
-  field :conducted_on, type: DateTime
-  field :site_visit_type, type: String, default: 'visit'
-  field :selldo_id, type: String
-  field :is_revisit, type: Boolean
-  field :cp_code, type: String
-  field :sales_id, type: BSON::ObjectId
-  field :created_by, type: String
-  field :conducted_by, type: String
-  field :rejection_reason, type: String
-
   delegate :name, to: :project, prefix: true, allow_nil: true
+  delegate :name, :role, :role?, :email, to: :manager, prefix: true, allow_nil: true
+  delegate :active_lead_managers, to: :lead, prefix: false, allow_nil: true
 
   scope :filter_by_id, ->(_id) { where(_id: _id) }
   scope :filter_by_status, ->(_status) { where(status: (_status.is_a?(String) ? _status : { '$in' => _status })) }
@@ -63,6 +67,9 @@ class SiteVisit
   scope :filter_by_channel_partner_id, ->(channel_partner_id) {where(channel_partner_id: channel_partner_id)}
   scope :filter_by_is_revisit, ->(is_revisit) { where(is_revisit: is_revisit.to_s == 'true') }
   scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
+  scope :filter_by_code, ->(code) { where(code: code) }
+  scope :gre_filter, -> { all.in(status: %w[scheduled pending]).gte(scheduled_on: DateTime.current - TIME_TILL_INACTIVE) }
+
   scope :incentive_eligible, ->(category) do
     if category == 'walk_in'
       where(approval_status: {'$nin': %w(rejected)}, is_revisit: false)
@@ -71,13 +78,17 @@ class SiteVisit
     end
   end
 
-  validates :scheduled_on, :status, :site_visit_type, :created_by, presence: true
+  validates :scheduled_on, :status, :site_visit_type, :created_by, :code, presence: true
   validates :conducted_on, :conducted_by, presence: true, if: Proc.new { |sv| sv.status == 'conducted' }
   validate :existing_scheduled_sv, on: :create
   validate :validate_scheduled_on_datetime
   validates :time_slot, presence: true, if: Proc.new { |sv| sv.site_visit_type == 'token_slot' }
   validates :notes, copy_errors_from_child: true
   validates :assets, copy_errors_from_child: true
+
+  def lead_manager
+    LeadManager.where(booking_portal_client_id: booking_portal_client_id, manager_id: manager_id, site_visit_id: id).first
+  end
 
   def tentative_incentive_eligible?(category=nil)
     if category.present?
@@ -178,10 +189,10 @@ class SiteVisit
   private
 
   def validate_scheduled_on_datetime
-    self.errors.add :base, 'Scheduled On should not be past date more than 4 days' if (self.scheduled_on_changed? && self.scheduled_on <  (Time.current.beginning_of_day - 4.days))
+    self.errors.add :scheduled_on, 'cannot be in the past' if self.scheduled_on_changed? && self.scheduled_on <  Time.current.beginning_of_day
   end
 
   def existing_scheduled_sv
-    self.errors.add :base, 'One Scheduled Site Visit Already Exists' if SiteVisit.where(booking_portal_client_id: self.booking_portal_client_id, lead_id: lead_id, status: 'scheduled').present?
+    self.errors.add :base, 'One Scheduled Site Visit Already Exists' if SiteVisit.where(booking_portal_client_id: self.booking_portal_client_id, lead_id: lead_id, status: 'scheduled', manager_id: self.manager_id).present?
   end
 end

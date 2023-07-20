@@ -176,7 +176,7 @@ class Admin::LeadPolicy < LeadPolicy
     new_kylas_lead?
   end
 
-  def lead_activities?
+  def lead_managers?
     !marketplace_client?
   end
 
@@ -200,16 +200,31 @@ class Admin::LeadPolicy < LeadPolicy
     bulk_job_new?
   end
 
+  def show_channel_partner_column?
+    true #!user.role.in?(%w(channel_partner))
+  end
+
+  def show_channel_partner_user?
+    record.manager.present? && record.manager.channel_partner? && record.manager_name.present?
+  end
+
   def permitted_attributes(params = {})
     attributes = super || []
-    attributes += [:first_name, :last_name, :email, :phone, :project_id, site_visits_attributes: Pundit.policy(user, [:admin, SiteVisit.new]).permitted_attributes] if record.new_record?
+    attributes += [:first_name, :last_name]
+
+    if record.new_record?
+      attributes += [:email, :phone, :project_id, :booking_portal_client_id]
+      attributes += [site_visits_attributes: Pundit.policy(user, [:admin, SiteVisit.new]).permitted_attributes]
+      #unless marketplace_client?
+      #  attributes += [:push_to_crm]
+      #end
+    end
+
     if user.present? && enable_lead_registration?(user)
-      attributes += [:manager_id] if user.booking_portal_client.try(:enable_channel_partners?)
+      attributes += [:manager_id] if user.booking_portal_client.try(:enable_channel_partners?) && record.new_record?
       attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
     end
-    unless marketplace_client?
-      attributes += [:push_to_crm]
-    end
+
     attributes.uniq
   end
 

@@ -4,38 +4,46 @@
 <% else %>
 <% end %>
 -->
-<div class="mt-5 pt-5"></div>
-<div class="container">
-<div class="cp-login-otp-sec col-lg-10 mx-auto my-5" id="otp_user_section">
-  <div class="cp-login-otp-wrap mx-3">  
-    <div class="row">
-      <div class="col-lg-7 pe-0 br-rt-1 ps-0 ps-sm-2">
-        <% header_template = ::Template::UITemplate.where(name: 'channel_partner_new_header', is_active: true, booking_portal_client_id: current_client.id).first %>
-        <% if header_template.present? %>
-          <%= get_view_erb(header_template, check_active: true) %>
-        <% end %>
-        <div class="cp-signup-form-wrap pb-3 cp-form-wrap px-2 px-sm-3">
-          <%= simple_form_for(@user, url: register_channel_partners_path, local: true, html: { id: 'channel_partner_form', class: 'validate-form theme-form', multipart: true, novalidate: false }) do |form| %> 
-            <% if params[:action] == 'find_or_create_cp_user' && @user.errors.present? %>
-                <p class='alert alert-danger'><%= @user.errors[:base].to_sentence %></p>
-            <% end %>
-            <%= render "channel_partners/short_form_fields", {form: form} %>
-            <div class="signin-btn pl-0 pr-0 pb-4">
-              <%= form.submit I18n.t("devise.keys.register"), class: "btn btn-primary btn-blue font-medium d-block sign-in-btn", data: { disable_with: I18n.t("global.please_wait"), event_category: 'Footer', event_action: 'Click', event_name: 'Submit' } %>
+
+<% if current_client.present? && (asset_url = client_asset_image_url('login_page_image')) %>
+  <% background_style = "background-image: url(#{asset_url})" if asset_url.present? %>
+<% end %>
+
+<section class="auth login-page mb-5" style="<%= (current_client.present? && asset_url.present?) ? background_style : '' %>">
+  <div class="container pt-5">
+    <div class="cp-login-otp-sec col-lg-10 mx-auto my-5" id="otp_user_section">
+      <div class="cp-login-otp-wrap mx-3">
+        <div class="row">
+          <div class="col-lg-7 pe-0 br-rt-1 ps-0 ps-sm-2">
+            <div class="row px-3 py-3">
+              <% template = ::Template::UITemplate.where(booking_portal_client_id: current_client.try(:id), name: 'channel_partner/new').first %>
+              <% if template.present? %>
+                <%= get_view_erb(template, check_active: true) %>
+              <% end %>
             </div>
-            <hr/>
-            <%= render "devise/shared/links" %>
-          <% end %>
+            <div class="cp-signup-form-wrap pb-3 cp-form-wrap px-2 px-sm-3">
+              <%= simple_form_for(@user, url: register_channel_partners_path, local: true, html: { id: 'channel_partner_form', class: 'validate-form theme-form', multipart: true, novalidate: false }) do |form| %> 
+                <% if params[:action] == 'find_or_create_cp_user' && @user.errors.present? %>
+                    <p class='alert alert-danger'><%= @user.errors[:base].to_sentence %></p>
+                <% end %>
+                <%= render "channel_partners/short_form_fields", {form: form} %>
+                <div class="signin-btn pl-0 pr-0 pb-4">
+                  <%= form.submit I18n.t("devise.keys.register"), class: "btn btn-primary btn-blue font-medium d-block sign-in-btn", data: { disable_with: I18n.t("global.please_wait"), event_category: 'Footer', event_action: 'Click', event_name: 'Submit' } %>
+                </div>
+                <hr/>
+                <%= render "devise/shared/links" %>
+              <% end %>
+            </div>
+          </div>
+            <% template = ::Template::UITemplate.where(name: 'channel_partner_register', booking_portal_client_id: current_client.try(:id)).first %>
+            <% if template.present? %>
+              <%= get_view_erb(template) %>
+            <% end %>
+          </div>
         </div>
-      </div>
-        <% template = ::Template::UITemplate.where(name: 'channel_partner_register', booking_portal_client_id: current_client.try(:id)).first %>
-        <% if template.present? %>
-          <%= get_view_erb(template) %>
-        <% end %>
-      </div>
     </div>
-</div>
-</div>
+  </div>
+</section>
 <%= javascript_tag do %>
   $(document).ready(function(){
     FormInitializer.init($("#channel_partner_form"));

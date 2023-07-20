@@ -87,7 +87,7 @@ class Lead
   has_many :emails, as: :triggered_by, class_name: 'Email'
   has_many :whatsapps, as: :triggered_by, class_name: 'Whatsapp'
   has_many :project_units
-  has_many :cp_lead_activities
+  has_many :lead_managers
   has_many :invoices, as: :invoiceable
   #has_and_belongs_to_many :received_emails, class_name: 'Email', inverse_of: :recipients
   #has_and_belongs_to_many :cced_emails, class_name: 'Email', inverse_of: :cc_recipients
@@ -105,7 +105,6 @@ class Lead
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } , allow_blank: true
   validates :site_visits, copy_errors_from_child: true, if: :site_visits?
   validates :owner_id, presence: true, if: proc { |lead| lead.booking_portal_client.is_marketplace? }
-  validate :check_for_lead_conflict
 
   # delegate :first_name, :last_name, :name, :email, :phone, to: :user, prefix: false, allow_nil: true
   delegate :name, to: :project, prefix: true, allow_nil: true
@@ -219,7 +218,7 @@ class Lead
   end
 
   def manager_name
-    self.cp_lead_activities.where(user_id: self.manager_id).first&.manager_name
+    self.lead_managers.where(manager_id: self.manager_id).first&.manager_name
   end
 
   def phone_or_email_required
@@ -299,13 +298,16 @@ class Lead
     return ds_name
   end
 
-  def active_cp_lead_activities
-    self.cp_lead_activities.where(expiry_date: { '$gte': Date.current })
+  def active_lead_managers
+    self.lead_managers.active
   end
 
   def lead_validity_period
-    activity = self.active_cp_lead_activities.first
-    activity.present? ? "#{(activity.expiry_date - Date.current).to_i} Days" : '0 Days'
+    active_lead_managers.first.try(:lead_validity_period) || '0 Days'
+  end
+
+  def active_booking_details
+    booking_details.nin(status: %w(swapped cancelled))
   end
 
   def send_payment_link(booking_detail_id = nil, host = nil)
@@ -370,7 +372,7 @@ class Lead
   end
 
   def is_revisit?
-    self.site_visits.where(booking_portal_client_id: self.booking_portal_client_id, status: "conducted").present?
+    self.site_visits.ne(id: current_site_visit_id).where(booking_portal_client_id: self.booking_portal_client_id, status: "conducted").present?
   end
 
   def kyc_required_before_booking?
@@ -381,29 +383,6 @@ class Lead
     !kyc_ready? && project.kyc_required_during_booking?
   end
 
-  def check_for_lead_conflict
-    if self.manager.present?
-      lead_conflict_on = self.booking_portal_client.enable_lead_conflicts
-      if lead_conflict_on == 'client_level'
-        # same lead cannot be added by another partner in any project
-        lead = Lead.where(user_id: self.user.id, booking_portal_client_id: self.booking_portal_client.id)
-        if lead.present?
-          unless (lead.distinct(:manager_id).count <= 1 && lead.first.try(:manager_id) == self.manager_id)
-            self.errors.add(:base, I18n.t('mongoid.attributes.lead.errors.lead_registered_with_client'))
-          else
-            if lead.where(project_id: self.project_id).ne(id: self.id).present?
-              self.errors.add(:base, I18n.t('mongoid.attributes.lead.errors.lead_registered_with_project'))
-            end
-          end
-        end
-      elsif lead_conflict_on == 'project_level'
-        # same lead cannot be added by partner in that project
-        lead = Lead.where(project_id: self.project.id, user_id: self.user.id, booking_portal_client: self.booking_portal_client.id).ne(id: self.id).first
-        self.errors.add(:base, I18n.t('mongoid.attributes.lead.errors.lead_registered_with_project')) if lead.present?
-      end
-    end
-  end
-
   class << self
 
     def user_based_scope(user, params = {})
@@ -411,18 +390,20 @@ class Lead
       project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids.map{|id| BSON::ObjectId(id) })
       case user.role.to_sym
       when :channel_partner
-        custom_scope = { manager_id: user.id, channel_partner_id: user.channel_partner_id }
+        lead_ids = LeadManager.where(manager_id: user.id, channel_partner_id: user.channel_partner_id).distinct(:lead_id)
+        custom_scope = { id: { '$in': lead_ids } }
       when :cp_owner
-        custom_scope = { channel_partner_id: user.channel_partner_id }
+        lead_ids = LeadManager.where(channel_partner_id: user.channel_partner_id).distinct(:lead_id)
+        custom_scope = { id: { '$in': lead_ids } }
       when :cp
         #channel_partner_ids = User.where(role: 'channel_partner', manager_id: user.id).distinct(:id)
-        #lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
+        #lead_ids = LeadManager.in(user_id: channel_partner_ids).distinct(:lead_id)
         #custom_scope = {_id: { '$in': lead_ids } }
         custom_scope = {}
       when :cp_admin
         #channel_partner_manager_ids = User.where(role: 'cp', manager_id: user.id).distinct(:id)
         #channel_partner_ids = User.in(manager_id: channel_partner_manager_ids).distinct(:id)
-        #lead_ids = CpLeadActivity.in(user_id: channel_partner_ids).distinct(:lead_id)
+        #lead_ids = LeadManager.in(user_id: channel_partner_ids).distinct(:lead_id)
         #custom_scope = {_id: { '$in': lead_ids } }
         custom_scope = {}
       when :admin

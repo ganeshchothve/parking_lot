@@ -197,7 +197,7 @@ class User
   has_many :assets, as: :assetable
   has_and_belongs_to_many :received_emails, class_name: 'Email', inverse_of: :recipients
   has_and_belongs_to_many :cced_emails, class_name: 'Email', inverse_of: :cc_recipients
-  has_many :cp_lead_activities
+  has_many :lead_managers
   has_and_belongs_to_many :meetings
   has_many :interested_projects  # Channel partners can subscribe to new projects through this
   has_many :fund_accounts
@@ -571,6 +571,10 @@ class User
     BUYER_ROLES.include?(role)
   end
 
+  def channel_partner?
+    ['channel_partner', 'cp_owner'].include?(role)
+  end
+
   def role?(role)
     (self.role.to_s == role.to_s)
   end
@@ -654,8 +658,8 @@ class User
     port = Rails.application.config.action_mailer.default_url_options[:port].to_i
     host = (port == 443 ? 'https://' : 'http://') + host
     host += (port == 443 || port == 80 || port == 0 ? '' : ":#{port}")
-    if self.confirmed? && self.buyer?
-      url.iris_confirm_buyer_user_url(self, manager_id: temp_manager_id, user_email: email, user_token: authentication_token, host: host)
+    if self.confirmed? && self.buyer? && self.unconfirmed_email.blank?
+      url.iris_confirm_buyer_user_url(self, manager_id: temp_manager_id, user_login: email, user_token: authentication_token, host: host)
     else
       url.user_confirmation_url(confirmation_token: confirmation_token, manager_id: temp_manager_id, host: host)
     end
@@ -894,7 +898,7 @@ class User
         elsif warden_conditions[:booking_portal_client_id].present?
           or_conds = []
           or_conds << { booking_portal_client_id: warden_conditions[:booking_portal_client_id], '$or': auth_conditions }
-          or_conds << { role: 'superadmin', '$or': auth_conditions, client_ids: warden_conditions[:booking_portal_client_id] }
+          or_conds << { role: 'superadmin', '$or': auth_conditions, client_ids: BSON::ObjectId(warden_conditions[:booking_portal_client_id]) }
           user_criteria = any_of(or_conds)
         else
           user_criteria = any_of(auth_conditions).nin(role: User::CLIENT_SCOPED_ROLES)
@@ -928,7 +932,7 @@ class User
 
     def user_based_scope(user, _params = {})
       custom_scope = {}
-      project_ids = (_params[:current_project_id].present? ? [_params[:current_project_id]] : user.project_ids)
+      project_ids = (_params[:current_project_id].present? ? [BSON::ObjectId(_params[:current_project_id])] : user.project_ids.map{|id| BSON::ObjectId(id) })
       if user.role?('channel_partner')
         custom_scope = { role: {"$in": User.buyer_roles(user.booking_portal_client)} }
         custom_scope[:'$or'] = [{manager_id: user.id}, {manager_id: nil, referenced_manager_ids: user.id, iris_confirmation: false}]
@@ -961,7 +965,7 @@ class User
         custom_scope = { role: 'sales', project_ids: { "$in": project_ids }}
       elsif user.role?('gre')
         user_ids = Lead.where(project_id: { "$in": project_ids }).distinct(:user_id)
-        custom_scope[:'$or'] = [{ id: { "$in": user_ids}}, { role: 'sales', project_ids: { "$in": project_ids }}]
+        custom_scope[:'$or'] = [{ id: { "$in": user_ids}}, { role: 'sales', project_ids: { "$in": project_ids }}, {role: { '$in': %w(channel_partner cp_owner) }}]
       end
       custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
       custom_scope

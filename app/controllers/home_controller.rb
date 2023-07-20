@@ -51,6 +51,14 @@ class HomeController < ApplicationController
     end
   end
 
+  def register_customer_projects_dropdown
+    @projects = current_client.present? ? current_client.projects.build_criteria(params) : Project.all.build_criteria(params)
+    projects = @projects.collect{|x| {_id: x._id, name: x.ds_name}}
+    respond_to do |format|
+      format.json {render json: projects}
+    end
+  end
+
   private
 
   def store_cookies_for_registration

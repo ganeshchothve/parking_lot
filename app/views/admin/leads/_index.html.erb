@@ -9,7 +9,7 @@
               <th><%= t('mongoid.attributes.lead.email') %></th>
               <th><%= t('mongoid.attributes.lead.phone') %></th>
               <th><%= t('mongoid.attributes.lead.project_id') %></th>
-              <% if current_user.role.in?(%w(admin superadmin cp_owner)) %>
+              <% if policy([:admin, Lead.new]).show_channel_partner_column? %>
                 <th><%= t('mongoid.attributes.lead.manager_id') %></th>
               <% end %>
               <% if is_marketplace? %>
@@ -35,6 +35,9 @@
                   <% else %>
                     <%= lead.name %>
                   <% end %>
+                  <% if lead.active_lead_managers.present? %>
+                    <i class="fa fa-circle red" aria-hidden="true"></i>
+                  <% end %>
                 </td>
                 <td>
                   <% if lead.email.present? %>
@@ -53,13 +56,22 @@
                 <td>
                   <p class="mb-0 theme-txt-color"><%= lead.project_name %></p>
                 </td>
-                <% if current_user.role.in?(%w(admin superadmin cp_owner)) %>
+                <% if policy([:admin, lead]).show_channel_partner_column? %>
                   <td>
-                    <% if lead.manager_id? %>
-                      <p class="fn-14 mt-1 mb-0">
-                        <%= link_to lead.manager.name, [current_user_role_group, lead.manager], class: 'theme-txt-color' %>
-                      </p>
+                    <p class="fn-14 mt-1 mb-0">
+                    <%= link_to_if (policy([:admin, User]).index? && policy([current_user_role_group, lead]).show_channel_partner_user?), (policy([current_user_role_group, lead]).show_channel_partner_user? ? lead.manager_name : "-"), [current_user_role_group, lead.manager], class: 'theme-txt-color' %>
+                    <br>
+                    <% if lead.active_lead_managers.present? %>
+                      <span class="d-flex justify-content-between pt-1">
+                        <small class="txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.expiry_remaining_days') %></small>
+                        <small class="mb-0"><%= lead.lead_validity_period %></small>
+                      </span>
+                      <span class="d-flex justify-content-between">
+                        <small class="txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.expiry_date') %></small>
+                        <small class="mb-0"><%= lead.active_lead_managers.first.expiry_date.try(:strftime, "%d/%m/%Y") %></small>
+                      </span>
                     <% end %>
+                    </p>
                   </td>
                 <% end %>
                 <% if is_marketplace? %>

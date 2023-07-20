@@ -332,6 +332,8 @@ class SearchesController < ApplicationController
     if @project_unit.held_on.present? && (@project_unit.held_on + @project_unit.holding_minutes.minutes) < Time.now
       ProjectUnitUnholdWorker.new.perform(@project_unit.id)
       redirect_to [:admin, @lead], alert: t('controller.searches.check_project_unit_hold_status', holding_minutes: @project_unit.holding_minutes)
+    elsif @booking_detail.present? && @booking_detail.status.in?(BookingDetail::BOOKING_STAGES)
+      redirect_to admin_leads_path, notice: t('controller.searches.notice.booking_done')
     end
   end
 

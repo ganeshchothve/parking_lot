@@ -24,6 +24,10 @@
           <%= select_tag "fltrs[approval_status]", options_for_select(I18n.t("mongoid.attributes.site_visit/approval_status").collect {|k,v| [v, k.to_s]}, (params[:fltrs].present? ? params[:fltrs][:approval_status] : "")), { prompt: I18n.t("global.select"), class: "selectize" } %>
         </div>
         <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+          <%= label_tag "fltrs", t('mongoid.attributes.site_visit.code'), class: "control-label" %>
+          <%= text_field_tag "fltrs[code]", (params.dig(:fltrs, :code).present? ? params[:fltrs][:code] : ""), class: "form-control" %>
+        </div>
+        <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
           <%= label_tag "fltrs", t('mongoid.attributes.site_visit.site_visit_type'), class: "control-label" %>
           <%= select_tag "fltrs[site_visit_type]", options_for_select(SiteVisit.nin(site_visit_type: [nil, '']).distinct(:site_visit_type).map{|k| I18n.t("mongoid.attributes.site_visit/site_visit_type.#{k}")}, params.dig(:fltrs, :site_visit_type)), {prompt: I18n.t("global.select"), class: "selectize"} %>
         </div>

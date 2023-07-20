@@ -82,7 +82,7 @@ class Admin::LeadsController < AdminController
         end
         if host.present?
           @lead.send_payment_link(params[:booking_detail_id], host)
-          redirect_to request.referer, notice: t('controller.users.send_payment_link')
+          redirect_to request.referer, notice: t('controller.searches.notice.send_payment_link')
         else
           redirect_to request.referer, alert: I18n.t("controller.leads.send_payment_link.project_no_access")
         end

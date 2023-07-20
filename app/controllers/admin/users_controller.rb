@@ -152,9 +152,9 @@ class Admin::UsersController < AdminController
     @client.assign_attributes(client_params)
     @client.assign_attributes(booking_portal_domains: ["#{@client.id}.#{ENV_CONFIG[:client_default_domain]}"]) if params.dig(:user, :booking_portal_domains).reject(&:blank?).blank?
     if cp_marketplace_app?
-      @client.assign_attributes(industry: 'generic')
+      @client.assign_attributes(industry: 'generic', enable_lead_conflicts: 'no_conflict', allow_lead_duplication: true)
     elsif re_marketplace_app?
-      @client.assign_attributes(industry: 'real_estate')
+      @client.assign_attributes(industry: 'real_estate', enable_lead_conflicts: 'project_level', allow_lead_duplication: false)
       @client.assign_attributes(allowed_roles_to_create_lead: %w[admin crm sales_admin sales cp_admin cp channel_partner cp_owner])
     end
     @user = User.new(role: 'admin')

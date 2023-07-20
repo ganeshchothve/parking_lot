@@ -12,8 +12,10 @@ module DatabaseSeeds
       DatabaseSeeds::EmailTemplates::Lead.seed(project_id, client_id)
       DatabaseSeeds::EmailTemplates::Reminder.project_based_email_templates_seed(project_id, client_id)
       DatabaseSeeds::EmailTemplates::Invoice.seed(project_id, client_id)
+      DatabaseSeeds::EmailTemplates::SiteVisit.seed(project_id, client_id)
+
       Template::EmailTemplate.create!(booking_portal_client_id: client_id, project_id: project_id, subject_class: "UserKyc", name: "user_kyc_added", subject: "User kyc added <%= self.name %>", content: 'test') if ::Template::EmailTemplate.where(name: "user_kyc_added", project_id: project_id, booking_portal_client_id: client_id).blank?
-      Template::EmailTemplate.create(booking_portal_client_id: client_id.to_s, project_id: project.id, subject_class: "Invoice", name: "send_invoice_to_poc", subject: 'Invoice raised for booking - <%= self.booking_detail.id %> ', content: '<div class="card w-100">')  
+      Template::EmailTemplate.create(booking_portal_client_id: client_id.to_s, project_id: project.id, subject_class: "Invoice", name: "send_invoice_to_poc", subject: 'Invoice raised for booking - <%= self.booking_detail.id %> ', content: '<div class="card w-100">')
 
     end
 

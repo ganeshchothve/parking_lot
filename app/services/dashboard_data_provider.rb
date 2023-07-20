@@ -486,10 +486,12 @@ module DashboardDataProvider
   end
 
   def self.minimum_agreement_price(user, project = nil)
-    if project.present?
-      project.project_units.where(ProjectUnit.user_based_scope(user)).gt(all_inclusive_price: 0).distinct(:all_inclusive_price).min
-    else
-      ProjectUnit.where(ProjectUnit.user_based_scope(user)).gt(all_inclusive_price: 0).distinct(:all_inclusive_price).min
+    if user.present?
+      if project.present?
+        project.project_units.where(ProjectUnit.user_based_scope(user)).gt(all_inclusive_price: 0).distinct(:all_inclusive_price).min
+      else
+        ProjectUnit.where(ProjectUnit.user_based_scope(user)).gt(all_inclusive_price: 0).distinct(:all_inclusive_price).min
+      end
     end
   end
 

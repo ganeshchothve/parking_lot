@@ -190,11 +190,12 @@ class SelldoLeadUpdater
 
   def reassign_lead(lead, payload)
     selldo_base_url = ENV_CONFIG['selldo']['base_url'].chomp('/')
-    if selldo_base_url.present? && lead.project.selldo_api_key.present? && lead.project.selldo_client_id?
+    # accessed selldo_api_key & selldo_client_id from client, for put request
+    if selldo_base_url.present? && lead.booking_portal_client.selldo_api_key.present? && lead.booking_portal_client.selldo_client_id.present?
       if lead.lead_id.present? && payload['sales_id'].present?
         params = {
-          api_key: lead.project.selldo_api_key,
-          client_id: lead.project.selldo_client_id,
+          api_key: lead.booking_portal_client.selldo_api_key,
+          client_id: lead.booking_portal_client.selldo_client_id,
           lead: {
             sales_id: payload['sales_id']
           }

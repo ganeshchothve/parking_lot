@@ -30,6 +30,9 @@
     <% end %>
   <% end %>
 <% end %>
+<% if policy([:admin, booking_detail]).tasks? %>
+  <%= link_to t('controller.booking_details.tasks.link_name'), tasks_admin_booking_detail_path(booking_detail), class: "dropdown-item modal-remote-form-link" %>
+<% end %>
 <%= render 'admin/invoices/invoiceable_links', resource: booking_detail %>
 
 <%= javascript_tag do %>

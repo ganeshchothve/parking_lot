@@ -10,11 +10,11 @@
               <div class="dropdown text-center float-right">
                 <a class="btn dropdown-toggle table-dropdown-btn white-clr" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></a>
                 <div class="dropdown-menu dropdown-menu-right">
-                  <%= render "#{current_user_role_group}/cp_lead_activities/links", cp_lead_activity: @cp_lead_activity %>
+                  <%= render "#{current_user_role_group}/lead_managers/links", lead_manager: @lead_manager %>
                 </div>
               </div>
             </div>
-            <%= render 'admin/leads/overview', lead: @cp_lead_activity.lead, cp_lead_activity: @cp_lead_activity %>
+            <%= render 'admin/leads/overview', lead: @lead_manager.lead, lead_manager: @lead_manager %>
           </div>
         </div>
       </section>
@@ -22,19 +22,19 @@
       <!-- notes -->
       <div class="separate-line container"></div>
       <div class='lead_notes_section'>
-        <%= render 'admin/leads/notes', lead: @cp_lead_activity.lead, notes: @notes %>
+        <%= render 'admin/leads/notes', lead: @lead_manager.lead, notes: @notes %>
       </div>
 
       <!-- Note Summary -->
       <div class="separate-line container"></div>
-      <%= render 'notes/section', notable: @cp_lead_activity.lead %>
+      <%= render 'notes/section', notable: @lead_manager.lead %>
 
       <div class="separate-line container"></div>
       <%
         matcher = {}
-        matcher = { user_id: current_user.id } if current_user.role?(:channel_partner)
+        matcher = { manager_id: current_user.id }
       %>
-      <%= render 'admin/leads/cp_lead_activities', cp_lead_activities: @cp_lead_activity.lead.cp_lead_activities.where(matcher).paginate(page: 1) %>
+      <%= render 'admin/leads/lead_managers', lead_managers: @lead_manager.lead.lead_managers.where(matcher).paginate(page: 1) %>
     </div>
   </div>
 </div>

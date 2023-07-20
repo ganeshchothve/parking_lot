@@ -48,7 +48,9 @@
       <main class="page-wrapper">
         <%= yield %>
       </main>
-      <%= render "layouts/gamification" %>
+      <div style="margin-bottom: 6rem">
+        <%= render "layouts/gamification" %>
+      </div>
       <%= render "layouts/navbar_footer_afterlogin"%>
     <% end %>
 

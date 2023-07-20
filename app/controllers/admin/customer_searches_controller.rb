@@ -14,7 +14,7 @@ class Admin::CustomerSearchesController < AdminController
     @customer_search = CustomerSearch.new(booking_portal_client: current_user.booking_portal_client)
     search_for_customer
     respond_to do |format|
-      if @customer_search.save
+      if (params[:new] == 'true' && @customer_search.save) || @customer_search.save(context: :customer)
         if params[:new] == 'true' || @customer_search.valid?(:customer)
           format.html { redirect_to admin_customer_search_path(@customer_search) }
         else
@@ -22,6 +22,7 @@ class Admin::CustomerSearchesController < AdminController
         end
         format.json { render json: {model: @customer_search, location: admin_customer_search_path(@customer_search)} }
       else
+        flash.now[:alert] = @customer_search.errors.full_messages
         format.html { render :new }
         format.json { render json: {errors: @customer_search.errors.full_messages} }
       end
@@ -35,38 +36,49 @@ class Admin::CustomerSearchesController < AdminController
   def update
     respond_to do |format|
       customer = @customer_search.customer
-      if !customer.customer_status.to_s.in?(%w(registered dropoff payment_done booking_done))
+
+      if customer.customer_status.to_s.in?(%w(queued av_done engaged))
+
         format.html { redirect_to admin_customer_search_path(@customer_search), alert: "Customer is already in #{customer.customer_status} state" }
         format.json { render json: {errors: "Customer is already in #{customer.customer_status} state"}, status: :unprocessable_entity }
       else
         update_step
-        if @customer_search.save(context: @customer_search.step.to_sym)
-          if @customer_search.step == 'queued'
-            if customer.is_revisit?
-              queue_number_notice = "Re-Visit Queue number for #{customer.try(:name)} is #{customer.queue_number}"
+        customer.reload
+
+        if @errors.blank?
+
+          if @customer_search.save(context: @customer_search.step.to_sym)
+
+            if @customer_search.step == 'queued'
+
+              if customer.is_revisit?
+                queue_number_notice = "Re-Visit Queue number for #{customer.try(:name)} is #{customer.queue_number}"
+              else
+                queue_number_notice = "Queue number for #{customer.try(:name)} is #{customer.queue_number}"
+              end
+
+              send_notification
+
+              format.html { redirect_to new_admin_customer_search_path(queue_number_notice: queue_number_notice) }
+              format.json { render json: {model: @customer_search, location: admin_customer_search_path(@customer_search)} }
+
+            elsif @customer_search.step == 'not_queued'
+              format.html { redirect_to new_admin_customer_search_path(queue_number_notice: I18n.t("controller.customer_searches.notice.cannot_be_queued", name: customer.try(:name))) }
+              format.json { render json: {model: @customer_search, location: admin_customer_search_path(@customer_search)} }
+
             else
-              queue_number_notice = "Queue number for #{customer.try(:name)} is #{customer.queue_number}"
+              format.html { redirect_to admin_customer_search_path(@customer_search) }
+              format.json { render json: {model: @customer_search, location: admin_customer_search_path(@customer_search)} }
             end
-            sitevisit = customer.site_visits.last
-            if sitevisit.status != "conducted"
-              sitevisit.status = "conducted"
-              sitevisit.conducted_on = params[:sitevisit_datetime] || Time.current
-              sitevisit.conducted_by = current_user.role
-              sitevisit.save
-            end 
-            send_notification
-            format.html { redirect_to new_admin_customer_search_path(queue_number_notice: queue_number_notice) }
-            format.json { render json: {model: @customer_search, location: admin_customer_search_path(@customer_search)} }
-          elsif @customer_search.step == 'not_queued'
-            format.html { redirect_to new_admin_customer_search_path(queue_number_notice: I18n.t("controller.customer_searches.notice.cannot_be_queued", name: customer.try(:name))) }
-            format.json { render json: {model: @customer_search, location: admin_customer_search_path(@customer_search)} }
+
           else
-            format.html { redirect_to admin_customer_search_path(@customer_search) }
-            format.json { render json: {model: @customer_search, location: admin_customer_search_path(@customer_search)} }
+            format.html { redirect_to admin_customer_search_path(@customer_search), alert: @customer_search.errors.full_messages }
+            format.json { render json: {errors: @customer_search.errors.full_messages} }
           end
+
         else
-          format.html { redirect_to admin_customer_search_path(@customer_search), alert: @customer_search.errors.full_messages }
-          format.json { render json: {errors: @customer_search.errors.full_messages} }
+          format.html { redirect_to admin_customer_search_path(@customer_search), alert: @errors }
+          format.json { render json: {errors: @errors} }
         end
       end
     end

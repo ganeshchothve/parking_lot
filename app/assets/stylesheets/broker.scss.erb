@@ -26,6 +26,8 @@ $theme-color-red: #D62927;
 $theme-blue: #2E6BE6;
 $theme-blue-border: #0176FF;
 $theme-txt-light:#687790;
+$gradient-bg-cyan: linear-gradient(90deg, #0748CB 0%, #00B9DC 100%);
+
 .hidden {
 	display: none;
 }
@@ -326,6 +328,7 @@ a{
 	border: 0;
 	transition: all .6s ease-in-out;
 	margin: 1rem;
+	background-image: $gradient-bg-cyan;
 	@media screen and (max-width: 992px){
 	  display: none;
 	}
@@ -4639,7 +4642,7 @@ body.fixed-subheader .prjt-menu{
 			}
 		}
 	}
-	.reg-chnl-prtnr-btn{
+	.reg-chnl-prtnr-btn, .btn-as-customer-partner{
 		width: auto;
 		height: 36px;
 		border-radius: 4px;
@@ -5720,6 +5723,14 @@ table .dropdown-menu.show{
         }
         span {
           font-weight: 400;
+        }
+      }
+      .sales_lead_tag {
+        span{
+          font-size: 16px;
+          @media screen and (max-width: 1800px){
+            font-size: 12px;
+          }
         }
       }
     }

@@ -44,7 +44,7 @@
                   <div id="collapseOverview" class="accordion-collapse collapse show" aria-labelledby="headingOverview"
                     data-bs-parent="#accordionExample">
                     <div class="accordion-body pt-0 ps-4">
-                      <%= render 'overview', lead: @lead, cp_lead_activity: nil %>
+                      <%= render 'overview', lead: @lead, lead_manager: nil %>
                     </div>
                   </div>
                 </div>
@@ -61,7 +61,7 @@
                       <div class="accordion-body pt-0 ps-4">
                         <div class="row ps-3">
                           <div class="col-12">
-                            <%= render 'site_visits_section', site_visits: @lead.site_visits %>
+                            <%= render 'site_visits_section', site_visits: @lead.site_visits.where(SiteVisit.user_based_scope(current_user, params)).paginate(page: 1) %>
                           </div>
                         </div>
                       </div>
@@ -88,12 +88,12 @@
                     </div>
                   </div>
                 <% end %>
-                <% if policy([:admin, @lead]).lead_activities? %>
+                <% if policy([:admin, @lead]).lead_managers? %>
                   <div class="accordion-item border-end-0 border-start-0">
                     <h2 class="accordion-header d-flex justify-content-between" id="headingLead">
                       <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseLead" aria-expanded="false" aria-controls="headingLead">
-                        <%= I18n.t("global.tabs.lead_activities") %>
+                        <%= I18n.t("global.tabs.lead_managers") %>
                       </button>
                     </h2>
                     <div id="collapseLead" class="accordion-collapse collapse" aria-labelledby="headingLead"
@@ -101,7 +101,7 @@
                       <div class="accordion-body pt-0 ps-4">
                         <div class="row ps-3">
                           <div class="col-12">
-                            <%= render 'cp_lead_activities', cp_lead_activities: @lead.cp_lead_activities.where(CpLeadActivity.user_based_scope(current_user, params)).paginate(page: 1) %>
+                            <%= render 'lead_managers', lead_managers: @lead.lead_managers.where(LeadManager.user_based_scope(current_user, params)).paginate(page: 1) %>
                           </div>
                         </div>
                       </div>

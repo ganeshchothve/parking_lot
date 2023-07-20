@@ -123,6 +123,7 @@ class Project
   field :check_sv_availability_in_selldo, type: Boolean, default: false
   field :incentive_calculation, type: Array, default: ["manual"]
   field :disable_project, type: Hash, default: {walk_ins: false, bookings: false, invoicing: false}
+  field :lead_blocking_days, type: Integer, default: 30
 
   # Kylas fields
   field :kylas_product_id, type: String
@@ -219,6 +220,7 @@ class Project
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
   scope :filter_by_disable_project_walk_ins, ->(disabled_walkin) { where('disable_project.walk_ins': (disabled_walkin == 'true')) }
   scope :filter_by_disable_project_bookings, ->(disabled_bookings) { where('disable_project.bookings': (disabled_bookings == 'true')) }
+  scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
 
   #def unit_configurations
   #  UnitConfiguration.where(data_attributes: {"$elemMatch" => {"n" => "project_id", "v" => self.selldo_id}})

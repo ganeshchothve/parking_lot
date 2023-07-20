@@ -141,7 +141,7 @@ en:
       overview: "Overview"
       site_visits: "Walk-ins"
       remarks_from_selldo: "Remarks From SellDo"
-      lead_activities: "Lead Activities"
+      lead_managers: "Lead Managers"
       bookings: "Bookings"
       basic_details: "Basic Details"
       booking_details: "Booking Details"
@@ -925,7 +925,7 @@ en:
         lead_blocking_days: "Configure Lead Blocking Days"
         incentive_gst_slabs: "Configure Incentive GST Slabs (%)"
         team_lead_dashboard_access_roles: "Team Lead Dashboard Access Roles"
-        enable_lead_conflicts: "Enable Lead Conflicts"
+        enable_lead_conflicts: "Resolve Lead Conflicts on"
         launchpad_portal: "Launchpad Portal"
         payment_gateway: "Payment Gateway"
         enable_live_inventory: "Enable Live Inventory"
@@ -965,6 +965,7 @@ en:
         cp_meeting_custom_field: "Channel Partner"
         project_meeting_custom_field: "Project"
         industry: 'Industry'
+        enable_customer_registration: "Enable Customer Registration on Login Page"
       client/available_preferred_logins:
         phone: "Phone Based"
         email: "Email Based"
@@ -991,6 +992,7 @@ en:
         client_level: Client Level
         project_level: Project Level
         no_conflict: No Conflict
+        site_visit_conducted: Site Visit Conducted
       client/industries:
         real_estate: 'Real Estate'
         generic: 'Generic'
@@ -1065,6 +1067,7 @@ en:
         notification_numbers_sort: "(Key SMS Reports are sent here)"
         sender_email: "Sender Email Address"
         email_domains: "Email Domains (to detect employee users)"
+        lead_blocking_days: "Configure Lead Blocking Days"
         booking_portal_domains: "Booking Portal Domains (where the portal is hosted)"
         registration_name: "Registration Name (Used in Payments)"
         cin_number: "CIN Number"
@@ -1441,7 +1444,9 @@ en:
         formula: "Formula"
         order: "Order"
         auto_release_on: "Auto Release On"
-
+        unit_facing_link: "Unit Facing Link"
+        tower_name:
+          rhea_miranda: "Rhea Miranda"
       project_unit/status:
         hold: "Hold"
         available: "Available"
@@ -1858,11 +1863,14 @@ en:
         rejection_reason: "Rejection Reason"
         is_revisit: "Revisit"
         revisits: "Revisits"
+        code: 'Unique Visit Code'
       site_visit/status:
         scheduled: "Scheduled"
         pending: "Pending"
         missed: "Missed"
         conducted: "Conducted"
+        cancelled: 'Cancelled'
+        inactive: 'Inactive'
         paid: "Paid"
       site_visit/approval_status:
         pending: "Pending Approval"
@@ -1877,6 +1885,9 @@ en:
       site_visit/site_visit_type:
         token_slot: "Token Slot"
         visit: "Visit"
+      site_visit/is_revisit:
+        'true': Revisit
+        'false': First Visit
       user_kyc:
         name: "Name"
         email: "Email"
@@ -2232,7 +2243,7 @@ en:
         queued: "Queued"
         registered: "Registered"
 
-      cp_lead_activity:
+      lead_manager:
         lead_id: "Lead Id"
         selldo_lead_id: "SellDo Lead Id"
         project_id: "Project"
@@ -2245,17 +2256,17 @@ en:
         expiry_date: "Lead Expiry Date"
         sitevisit_date: "Walk-in Date"
         sitevisit_status: "Walk-in Status"
-      cp_lead_activity/count_status:
+      lead_manager/count_status:
         fresh_lead: "Fresh Lead"
         active_in_same_cp: "Active In Same Cp"
         no_count: "No Count"
         accompanied_credit: "Accompanied Credit"
         accompanied_count_to_cp: "Accompanied Count To Cp"
         count_given: "Count Given"
-      cp_lead_activity/lead_status:
+      lead_manager/lead_status:
         already_exists: "Already Exists"
         registered: "Registered"
-      cp_lead_activity/site_visit_status:
+      lead_manager/site_visit_status:
         scheduled: "Scheduled"
         conducted: "Conducted"
       user/file_types:
@@ -2277,10 +2288,10 @@ en:
         job_continuity_proof_html: "<ul><li>Appointment letter at employment and validation letter from HR</li></ul>"
         bank_statement_html: "<ul><li>Past 6 months’ document</li></ul>"
         advance_processing_cheque_html: "<ul><li>Upload cheque’s photo for sanction</li></ul>"
-        financial_documents_html: "<ul>"
-        <li><strong>For Salaried Individual</strong>: "3-month salary slip, Form 16 and bank statement</li>"
-        <li><strong>For Self-Employed Individual</strong>: "IT returns for the last 2 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li>"
-        <li><strong>For Self-Employed Non- Professionals</strong>: "IT returns for the last 3 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li></ul>"
+        financial_documents_html: "<ul>
+        <li><strong>For Salaried Individual</strong>: 3-month salary slip, Form 16 and bank statement</li>
+        <li><strong>For Self-Employed Individual</strong>: IT returns for the last 2 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li>
+        <li><strong>For Self-Employed Non- Professionals</strong>: IT returns for the last 3 years along with computation of income tax for the past 2 years certified by a Chartered accountant</li></ul>"
 
       client/file_types:
         document: "Document"
@@ -2314,9 +2325,9 @@ en:
         images_html: "Images"
         developer_logo_html: "Project Developer Logo"
         advertise_html: "Advertise Kit"
-      cp_lead_activity/file_types:
+      lead_manager/file_types:
         sitevisit_form: "Walk-in Form"
-      cp_lead_activity/help_text:
+      lead_manager/help_text:
         sitevisit_form_html: ""
       workflow:
         stage: Event
@@ -2447,7 +2458,7 @@ en:
       message:
         incorrect_key: "Incorrect key."
         register: "Kindly register with our application."
-        paramerters_missing: "Required parameters missing."
+        parameters_missing: "Required parameters missing."
     discounts:
       index:
         link_name: "Token Discounts"
@@ -2586,15 +2597,15 @@ en:
           title: "Why partner with %{name}"
 
 
-    cp_lead_activities:
+    lead_managers:
       index:
-        link_name: "Lead Activities"
+        link_name: "Lead Managers"
       show:
-        link_name: "Show Lead Activities"
+        link_name: "Show Lead Managers"
       notice:
-        created: "Lead Activity created successfully."
-        updated: "Lead Activity updated successfully."
-        deleted: "Lead Activity deleted successfully."
+        created: "Lead Manager created successfully."
+        updated: "Lead Manager updated successfully."
+        deleted: "Lead Manager deleted successfully."
       errors:
         cannot_be_updated: "Lead validity can not be updated. Lead is active for %{name}"
     push_notifications:
@@ -3364,6 +3375,7 @@ en:
         invalid_date_format: "Sitevisit date format is invalid. Correct date format is - dd/mm/yyyy"
         revisit_invalid_date_format: "Last revisit date format is invalid. Correct date format is - dd/mm/yyyy"
         revisit_count: "Revisit count should be a number"
+        site_visit_reference_id_already_exists: "Site Visit with Reference Id %{name} already exists"
       text:
         schedule: "Schedule a Site Visit"
         scheduled_at: "Schedule a sitevisit at - %{name}"
@@ -3371,7 +3383,8 @@ en:
         last_visit_date: "Last site visit date"
         last_visit_status: "Last site visit status"
         mark_conducted: "Mark site visit conducted"
-
+        scheduled_with_code: "Found site visit scheduled on - %{name} with %{code}"
+        future_scheduled_on_notice_html: '<strong>Note: </strong>Visits scheduled on past or future dates will be rescheduled to now and marked conducted.'
       headings:
         customer_site_visit: "Customer Site Visit"
         customer_details: "Customer Details"
@@ -3433,6 +3446,10 @@ en:
       sold_out_filtered: "Sold Out and Filtered"
       text:
         starting_at: "Starting At"
+      notice:
+        send_payment_link: 'Payment link sent to user'
+        booking_done: 'User has successfully blocked the unit'
+
     smses:
       index:
         link_name: "SMSs"

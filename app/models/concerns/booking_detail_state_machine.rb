@@ -87,7 +87,7 @@ module BookingDetailStateMachine
         transitions from: :swap_requested, to: :swapping
       end
 
-      event :swapped, after: %i[trigger_workflow] do
+      event :swapped, after: %i[trigger_workflow cancel_lead_manager_tagging] do
         transitions from: :swapped, to: :swapped
         transitions from: :swapping, to: :swapped, after: :update_user_request_to_resolved
       end
@@ -116,13 +116,17 @@ module BookingDetailStateMachine
         transitions from: :cancellation_requested, to: :cancelling
       end
 
-      event :cancel, after: %i[release_project_unit! trigger_workflow] do
+      event :cancel, after: %i[release_project_unit! trigger_workflow cancel_lead_manager_tagging] do
         transitions from: :booked_tentative, to: :cancelled
         transitions from: :blocked, to: :cancelled
         transitions from: :cancelled, to: :cancelled
         transitions from: :scheme_rejected, to: :cancelled
         transitions from: :cancelling, to: :cancelled, after: :update_user_request_to_resolved, success: :sync_booking
       end
+    end
+
+    def cancel_lead_manager_tagging
+      lead.lead_managers.tagged.each(&:cancel!) if lead.active_booking_details.blank?
     end
 
     def update_user_request_to_rejected
