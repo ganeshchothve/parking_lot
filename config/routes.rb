@@ -473,6 +473,7 @@ Rails.application.routes.draw do
     get :project_wise_leads_stage_report, to: 'dashboard#project_wise_leads_stage_report'
     get :project_units_inventory_report, to: 'dashboard#project_units_inventory_report'
     get :project_units_collection_report, to: 'dashboard#project_units_collection_report'
+    get :project_units_typology_report, to: 'dashboard#project_units_typology_report'
     get :receipts_details_report, to: 'dashboard#receipts_details_report'
     get :project_wise_user_requests_report, to: 'dashboard#project_wise_user_requests_report'
     get :channel_partner_performance_project_wise, to: 'dashboard#channel_partner_performance_project_wise'

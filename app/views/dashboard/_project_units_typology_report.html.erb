@@ -1,0 +1,89 @@
+<%
+  @typology_and_inventory_summary_data = DashboardDataProvider.typology_and_inventory_summary(params.dig(:fltrs, :typology_and_inventory_summary_created_at))
+  actual_total = @typology_and_inventory_summary_data.map{|d| d['actual_total'] }.compact.sum
+  mrp_total = @typology_and_inventory_summary_data.map{|d| d['mrp_total'] }.compact.sum
+  booking_total = @typology_and_inventory_summary_data.map{|d| d['booking_total'] }.compact.sum
+  fill_mrp_total = ((mrp_total/actual_total.to_f) * 100).round(2)
+  fill_booking_total = ((booking_total/actual_total.to_f) * 100).round(2)
+  fill_mrp_total = (fill_mrp_total.to_f.nan? ? 0 : fill_mrp_total)
+  fill_booking_total = (fill_booking_total.to_f.nan? ? 0 : fill_booking_total)
+%>
+
+<%
+  fltr_params = { booking_portal_client_id: current_client.id }
+  if @dates.present?
+    start_date, end_date = @dates
+    fltr_params[:created_at] = "#{start_date} - #{end_date}"
+  end
+  if params[:project_ids].present?
+    fltr_params[:project_ids] = params[:project_ids]
+  end
+%>
+
+<% if @typology_and_inventory_summary_data.present? %>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="text-left"><b><%= t('mongoid.attributes.typology_and_inventory_summary_reports.booking') %></b></th>
+          <th colspan="<%= I18n.t("mongoid.attributes.project_unit.floor_bands").keys.count + 1%>" class="text-center"><b><%= t('mongoid.attributes.typology_and_inventory_summary_reports.actual_inventory') %></b></th>
+          <th colspan="<%= I18n.t("mongoid.attributes.project_unit.floor_bands").keys.count + 1%>" class="text-center"><b><%= t('mongoid.attributes.typology_and_inventory_summary_reports.booking_filled') %></b></th>
+          <th colspan="12" class="text-center"><b><%= t('mongoid.attributes.typology_and_inventory_summary_reports.fill_rate') %></b></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="text-left"><b><%= t('mongoid.attributes.typology_and_inventory_summary_reports.typology') %></b></td>
+          <% 3.times do %>
+            <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |key| %>
+              <td class="text-left"><b><%= t("mongoid.attributes.project_unit.floor_bands.#{key}") %></b></td>
+            <% end %>
+            <td class="text-left"><b><%= t('global.total') %></b></td>
+          <% end %>
+        </tr>
+        <% @typology_and_inventory_summary_data.each do |d|
+          total_percentage = ((d['booking_total']/d['actual_total'].to_f) * 100).round rescue 0
+        %>
+          <tr>
+            <td class="text-left"><%= t("mongoid.attributes.user_kyc/configurations.#{d['actual_id']}") %></td>
+            <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
+              <td><%= d["actual_#{floor_band}"] || 0 %></td>
+            <% end %>
+            <td><%= d['actual_total'] || 0 %></td>
+            <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
+              <td><%= d["booking_#{floor_band}"] || 0 %></td>
+            <% end %>
+            <td><%= d['booking_total'] || 0 %></td>
+            <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
+              <td><%= DashboardDataProvider.calculate_booking_percentage(d,floor_band) %> % </td>
+            <% end %>
+            <td><b><%= (total_percentage = (total_percentage.to_f.nan? ? 0.0 : total_percentage)) %> % <b></td>
+          </tr>
+        <% end %>
+        <tr>
+          <td class="text-left"><b><%= t('global.total') %></b></td>
+          <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
+            <td><b><%= (@typology_and_inventory_summary_data.map{|d| d["actual_#{floor_band}"] }.compact.sum rescue 0)%></b></td>
+          <% end %>
+          <td><b><%= actual_total %></b></td>
+          <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
+            <td><b><%= (@typology_and_inventory_summary_data.map{|d| d["booking_#{floor_band}"] }.compact.sum rescue 0) %></b></td>
+          <% end %>
+          <td><b><%= booking_total %></b></td>
+          <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
+            <td><b><%= DashboardDataProvider.calculate_fill_booking(@typology_and_inventory_summary_data, floor_band) %> % </b></td>
+          <% end %>
+          <td><b><%= DashboardDataProvider.calculate_fill_booking_total(@typology_and_inventory_summary_data) %> % </b></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  No records found yet.
+<% end %>
+
+<% if current_client.payment_enabled? %>
+  <%= render "dashboard/index/partials/mrp_report_with_mrp_filled_and_fill_rate", typology_and_inventory_summary_data: @typology_and_inventory_summary_data, actual_total: actual_total, mrp_total: mrp_total, fill_mrp_total: fill_mrp_total%>
+<% else %>
+  <%= render "dashboard/index/partials/mrp_report_without_mrp_filled_and_fill_rate", typology_and_inventory_summary_data: @typology_and_inventory_summary_data, actual_total: actual_total%>
+<% end %>

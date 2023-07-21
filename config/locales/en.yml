@@ -1447,6 +1447,10 @@ en:
         unit_facing_link: "Unit Facing Link"
         tower_name:
           rhea_miranda: "Rhea Miranda"
+        floor_bands:
+          '1': 'Lower Band'
+          '2': 'Middle Band'
+          '3': 'Upper Band'
       project_unit/status:
         hold: "Hold"
         available: "Available"
@@ -3102,6 +3106,7 @@ en:
         project_unit:
           inventory_snapshot: "Inventory Snapshot"
           collection_report: "Collection Report"
+          typology_report: "Typology and Inventory Summary"
         user_requests:
           details_report: "User Requests"
 
