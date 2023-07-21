@@ -51,6 +51,10 @@
             <%= select_tag "fltrs[payment_mode]", options_for_select(I18n.t("mongoid.attributes.receipt/payment_mode").collect{|k,v| [v, k.to_s] }, (params[:fltrs].present? ? params[:fltrs][:payment_mode] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
           </div>
           <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
+            <%= label_tag "fltrs", t('mongoid.attributes.receipt.payment_type'), class: "control-label" %>
+            <%= select_tag "fltrs[payment_type]", options_for_select(Receipt::PAYMENT_TYPES.map{|k| [I18n.t("mongoid.attributes.receipt/payment_types.#{k}"), k] }, (params[:fltrs].present? ? params[:fltrs][:payment_type] : "")), {prompt: I18n.t("global.select"), class: "selectize"} %>
+          </div>
+          <div class="mb-3 col-lg-12 col-xs-12 col-md-12 col-sm-12">
             <%= label_tag "fltrs", t('mongoid.attributes.receipt.issued_date'), class: "control-label" %>
             <%= text_field_tag "fltrs[issued_date]", (params[:fltrs].present? ? params[:fltrs][:issued_date] : ""), class: "form-control daterangefilter", data: {locale: {format: "DD/MM/YYYY"}, opens: "left", drops: "up"}, placeholder: 'dd/mm/yyyy - dd/mm/yyyy' %>
           </div>

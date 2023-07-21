@@ -57,7 +57,7 @@ class IncentiveScheme
   scope :filter_by_search, ->(search) { where(name: ::Regexp.new(::Regexp.escape(search), 'i')) }
   scope :filter_by_status, ->(status) { where(status: status) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
-  scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }
+  scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in" => project_ids}) : all }
   scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_tower_id: project_tower_id) }
   scope :filter_by_tier_id, ->(tier_id) { where(tier_id: tier_id) }
   scope :filter_by_ladder_strategy, ->(ladder_strategy) { where(ladder_strategy: ladder_strategy) }

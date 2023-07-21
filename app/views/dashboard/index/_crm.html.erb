@@ -2,7 +2,7 @@
 <div class="mb-4 admin-dashboard">
   <div class="row">
     <% if current_client.enable_site_visit? %>
-      <div class="col-lg-<%= current_user.role.in?(%w(admin superadmin)) ? '2' : '4' %> col-xs-6 col-md-4 col-sm-4 mb-3">
+      <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
         <div class="box-card shadow rounded">
           <div class="box-header bg-theme br-rd-tr-4 rounded-top px-2  position-relative">
             <h4 class="white pre text-center fn-18 mb-0  position-absolute top-50 start-50 translate-middle wd-100"><%= SiteVisit.model_name.human(count: 3) %></h4>
@@ -13,7 +13,7 @@
         </div>
       </div>
     <% end %>
-    <div class="col-lg-<%= current_user.role.in?(%w(admin superadmin)) ? '2' : '4' %> col-xs-6 col-md-4 col-sm-4 mb-3">
+    <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
       <div class="box-card shadow rounded">
         <div class="box-header bg-theme br-rd-tr-4 rounded-top position-relative">
           <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle"><%= BookingDetail.model_name.human(count: 3) %></h4>
@@ -24,7 +24,7 @@
       </div>
     </div>
     <% if current_client.enable_channel_partners? %>
-      <div class="col-lg-<%= current_user.role.in?(%w(admin superadmin)) ? '2' : '4' %> col-xs-6 col-md-4 col-sm-4 mb-3">
+      <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
         <div class="box-card shadow rounded">
           <div class="box-header bg-theme br-rd-tr-4 rounded-top  position-relative">
             <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle wd-100"><%= t('mongoid.attributes.user/role.channel_partner').try(:pluralize) %></h4>
@@ -35,8 +35,8 @@
         </div>
       </div>
     <% end %>
-    <% if current_user.role.in?(%w(admin superadmin)) %>
-      <div class="col-lg-<%= current_user.role.in?(%w(admin superadmin)) ? '2' : '4' %> col-xs-6 col-md-4 col-sm-4 mb-3">
+    <% if current_user.role.in?(%w(admin superadmin crm sales_admin)) %>
+      <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
         <div class="box-card shadow rounded">
           <div class="box-header bg-theme br-rd-tr-4 rounded-top position-relative">
             <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle"><%= ProjectUnit.model_name.human(count: 3) %></h4>
@@ -46,7 +46,7 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-<%= current_user.role.in?(%w(admin superadmin)) ? '2' : '4' %> col-xs-6 col-md-4 col-sm-4 mb-3">
+      <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
         <div class="box-card shadow rounded">
           <div class="box-header bg-theme br-rd-tr-4 rounded-top position-relative">
             <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle wd-100"><%= UserRequest.model_name.human(count: 3) %></h4>
@@ -56,7 +56,7 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-<%= current_user.role.in?(%w(admin superadmin)) ? '2' : '4' %> col-xs-6 col-md-4 col-sm-4 mb-3">
+      <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
         <div class="box-card shadow rounded">
           <div class="box-header bg-theme br-rd-tr-4 rounded-top position-relative">
             <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle"><%= Scheme.model_name.human(count: 3) %></h4>
@@ -66,10 +66,44 @@
           </div>
         </div>
       </div>
+      <div class="col-lg-2 col-xs-6 col-md-4 col-sm-4 mb-3">
+        <div class="box-card shadow rounded">
+          <div class="box-header bg-theme br-rd-tr-4 rounded-top position-relative">
+            <h4 class="white pre text-center fn-18 mb-0 position-absolute top-50 start-50 translate-middle"><%= Receipt.model_name.human(count: 3) %></h4>
+          </div>
+          <div class="box-content br-rd-bl-4 bg-white py-3 text-center rounded-bottom">
+            <span class = 'fn-18 font-medium'><%= DashboardData::AdminDataProvider.total_receipts_count(current_user) %></span>
+          </div>
+        </div>
+      </div>
     <% end %>
   </div>
 </div>
-<%= render 'dashboard/index/partials/booking_detail_data' %>
+
+<div class="row mb-3">
+  <div class="row mb-3">
+    <%= render 'dashboard/index/partials/project_wise_booking_detail_data' %>
+  </div>
+  <div class="row mb-3">
+    <%= render 'dashboard/index/partials/project_wise_conversion_data' %>
+  </div>
+  <div class="row mb-3">
+    <%= render "dashboard/index/partials/receipts_details_data" %>
+  </div>
+  <div class="row mb-3">
+    <%= render 'dashboard/index/partials/project_wise_leads_stage_data' %>
+  </div>
+  <div class="row mb-3">
+    <%= render "dashboard/index/partials/project_units_inventory_data" %>
+  </div>
+  <div class="row mb-3">
+    <%= render "dashboard/index/partials/project_units_collection_data" %>
+  </div>
+  <div class="row mb-3">
+    <%= render "dashboard/index/partials/user_requests_report_data" %>
+  </div>
+</div>
+
 <!-- <div class="container mb-5 pb-5 admin-dashboard-charts">
   <div class="row mb-3">
     <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 mb-3">
@@ -198,20 +232,6 @@
             <p> Loading .. </p>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="row mt-4">
-    <div class="col-lg-6 col-xs-12 col-md-6 col-sm-12 pb-2">
-      <div class="table-title pt-1">
-        <h1 class="title icon-set icon-building-black">
-           Inventory Snapshot
-        </h1>
-      </div>
-    </div>
-    <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12">
-      <div class="box-card relative table-responsive" id = "dashboard_inventory_snapshot">
-        <p class="text-center"> Loading .. </p>
       </div>
     </div>
   </div>

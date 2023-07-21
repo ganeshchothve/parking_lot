@@ -68,14 +68,15 @@ class Receipt
   has_one :user_kyc
   has_one :coupon
 
-  scope :filter_by_status, ->(_status) { where(status: { '$in' => _status }) }
+  scope :filter_by_status, ->(status) { all.in(status: (status.is_a?(Array) ? status : [status])) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
-  scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }
+  scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in" => project_ids}) : all }
   scope :filter_by_lead_id, ->(lead_id){ where(lead_id: lead_id)}
   scope :filter_by_receipt_id, ->(_receipt_id) { where(receipt_id: /#{_receipt_id}/i) }
   scope :filter_by_token_number, ->(_token_number) { where(token_number: _token_number) }
   scope :filter_by_user_id, ->(_user_id) { where(user_id: _user_id) }
   scope :filter_by_payment_mode, ->(_payment_mode) { where(payment_mode: _payment_mode) }
+  scope :filter_by_payment_type, ->(_payment_type) { where(payment_type: _payment_type) }
   scope :filter_by_issued_date, ->(date) { start_date, end_date = date.split(' - '); where(issued_date: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
   scope :filter_by_processed_on, ->(date) { start_date, end_date = date.split(' - '); where(processed_on: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
@@ -85,8 +86,10 @@ class Receipt
     _booking_detail_id = _booking_detail_id == '' ? { '$in' => ['', nil] } : _booking_detail_id
     where(booking_detail_id: _booking_detail_id)
   end
+  scope :filter_by_booking_detail_id_presence, ->(flag) { flag.to_s == 'true' ? where(booking_detail_id: { '$nin': [ '', nil ] } ) : where(booking_detail_id: { '$in': [ '', nil ] } ) }
   scope :filter_by_manager_id, ->(manager_id){ where(manager_id: manager_id) }
   scope :filter_by_cp_manager_id, ->(cp_manager_id){ where(cp_manager_id: cp_manager_id) }
+  scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
 
   scope :filter_by_reference_id, ->(reference_id) {
     if reference_id.present?

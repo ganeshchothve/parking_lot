@@ -41,6 +41,10 @@ module DashboardData
         Scheme.approved.where(booking_portal_client: user.booking_portal_client).count
       end
 
+      def total_receipts_count(user)
+        Receipt.where(Receipt.user_based_scope(user)).in(status: ['success', 'pending', 'clearance_pending']).count
+      end
+
       def receipt_block(user, params)
         matcher = {}
         if params && params[:dates].present?

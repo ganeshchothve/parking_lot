@@ -111,10 +111,6 @@ class Admin::ProjectUnitsController < AdminController
     @dataset = get_dataset(@data)
   end
 
-  def inventory_snapshot
-    @out = DashboardDataProvider.inventory_snapshot(current_user)
-  end
-
   def send_cost_sheet_and_payment_schedule
     if @lead
       render json: {notice: t('controller.project_units.send_cost_sheet_and_payment_schedule.success')}, status: :created

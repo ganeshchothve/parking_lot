@@ -863,6 +863,7 @@ en-REAL_ESTATE:
         manager_id: "Channel Partner"
         template_docs: Documents
         print_document: Print Document
+        conversion_ratio: Conversion % EOI to Booking
       booking_detail/selldo_status:
         booked_tentative: "tentative"
         booked_confirmed: "confirmed"
@@ -1552,6 +1553,8 @@ en-REAL_ESTATE:
         token_type: "Token Type"
         sort_by: "Sort By"
         booking_detail_id: "Booking Detail"
+        eoi: "EOI"
+        count: "Count"
       receipt/status:
         pending: "Pending"
         clearance_pending: "Clearance Pending"
@@ -1574,6 +1577,7 @@ en-REAL_ESTATE:
       receipt/payment_types:
         agreement: "Agreement"
         stamp_duty: " Stamp Duty"
+        token: "Token"
       receipt/sort_options:
         created_at.asc: "Created - Oldest First"
         created_at.desc: "Created - Newest First"
@@ -1585,6 +1589,7 @@ en-REAL_ESTATE:
         status: "Status"
         payment_mode: "Payment Mode"
         total_amount: "Total Amount"
+        count: "Count"
 
       search:
         configuration: "Configuration"
@@ -1859,7 +1864,6 @@ en-REAL_ESTATE:
         processing: "Processing"
         resolved: "Resolved"
         rejected: "Rejected"
-        failed: "Failed"
       user_request/requestable_type:
         receipt: "Receipt"
         booking_detail: "Booking"
@@ -1900,6 +1904,7 @@ en-REAL_ESTATE:
         manager_id: "Channel Partner"
         rejection_reason: "Rejection Reason"
         is_revisit: "Revisit"
+        revisits: "Revisits"
         code: 'Unique Visit Code'
       site_visit/status:
         scheduled: "Scheduled"
@@ -2270,6 +2275,8 @@ en-REAL_ESTATE:
         opportunity: "Opportunity"
         prospect: "Prospect"
         unqualified: "Unqualified"
+        lost: "Lost"
+
       lead/customer_status:
         booking_done: "Booking Done"
         dropoff: "Dropoff"
@@ -2883,6 +2890,7 @@ en-REAL_ESTATE:
         approved: "Approved"
         invoice_raised: "Invoice Raised"
         bookings_not_eligible: "Bookings not eligible for brokerage"
+        registration_done: "Registration Done Bookings"
 
       events:
         approval_status:
@@ -3124,11 +3132,21 @@ en-REAL_ESTATE:
           incentive_deduction: "Project Wise Incentive Deduction Summary"
           overview: "Overview"
           booking_count: "Project Wise Booking Count"
+          conversion_report: "Project Wise Conversion Report"
+          leads_stage_leads: "Stage Wise Lead Count"
           actual_revenue_report: "Project Wise Actual Revenue Reports"
           tentative_revenue_reports: "Project Wise Tentative Revenue Reports"
+          stage_wise_lead_count: "Stage wise Lead Count"
           applying_filters:
             step1: "Applying filters will only show 15 records irrespective of the total records count. Acitve Filter Export will contain all the filtered records. The"
             step2: "count will depend on the filtered results."
+        receipts:
+          details_report: "Payments"
+        project_unit:
+          inventory_snapshot: "Inventory Snapshot"
+          collection_report: "Collection Report"
+        user_requests:
+          details_report: "User Requests"
 
     emails:
       index:

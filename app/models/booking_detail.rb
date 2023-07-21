@@ -41,6 +41,7 @@ class BookingDetail
   field :all_inclusive_price, type: Integer
   field :booked_on, type: Date
   field :agreement_date, type: Date
+  field :registration_done, type: Boolean, default: false
   field :tentative_agreement_date, type: Date
   field :ladder_stage, type: Array
   field :source, type: String
@@ -127,11 +128,12 @@ class BookingDetail
   end
   scope :filter_by_statuses, ->(statuses) { where(status: {"$in": statuses}) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
-  scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }
+  scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in" => project_ids}) : all }
   scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_unit_id: { "$in": ProjectUnit.where(project_tower_id: project_tower_id).pluck(:_id) })}
   scope :filter_by_user_id, ->(user_id) { where(user_id: user_id)  }
   scope :filter_by_lead_id, ->(lead_id){ where(lead_id: lead_id)}
   scope :filter_by_manager_id, ->(manager_id){ where(manager_id: manager_id) }
+  scope :filter_by_manager_id_presence, ->(flag) {where(manager_id: { "$nin": [nil, ''] }) }
   scope :filter_by_cp_manager_id, ->(cp_manager_id){ where(cp_manager_id: cp_manager_id) }
   scope :filter_by_channel_partner_id, ->(channel_partner_id) {where(channel_partner_id: channel_partner_id)}
   scope :filter_by_incentive_scheme_id, ->(incentive_scheme_id){ where(incentive_scheme_id: incentive_scheme_id) }
@@ -147,6 +149,7 @@ class BookingDetail
   scope :filter_by_agreement_date, ->(date) { start_date, end_date = date.split(' - '); where(agreement_date: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day)
   }
   scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
+  scope :filter_by_registration_done, ->(registration_done) { where(registration_done: registration_done)}
   scope :incentive_eligible, ->(category) do
     case category
     when 'spot_booking'

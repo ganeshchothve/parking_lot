@@ -1,0 +1,40 @@
+<%
+  fltr_params = { booking_portal_client_id: current_client.id, project_ids: params[:project_ids] }
+  if @dates.present?
+    start_date, end_date = @dates
+    fltr_params[:created_at] = "#{start_date} - #{end_date}"
+  end
+%>
+
+<% if @stage_wise_leads.present? %>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th><%= Project.model_name.human %></th>
+          <% @lead_stages.each do |stage| %>
+            <th><%= stage.capitalize %></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% @stage_wise_leads.each do |cr| %>
+          <tr>
+            <td data-title='<%= Project.model_name.human %>'><%= Project.where(booking_portal_client_id: current_client.try(:id), _id: cr[:project_id]).first.try(:name).try(:titleize) || "-" %></td>
+            <% @lead_stages.each do |stage| %>
+              <td data-title='<%= stage.capitalize %>'><%= link_to (cr.dig(:stage_count, stage) || 0), admin_leads_path({ fltrs: { project_id: cr[:project_id], lead_stage: stage }.merge(fltr_params) }), target: "_blank" %></td>
+            <% end %>
+          </tr>
+        <% end %>
+        <tr>
+          <th data-title="<%= t('global.total') %>"><strong><%= t('global.total') %></strong></th>
+          <% @lead_stages.each do |stage| %>
+            <td data-title='<%= stage.capitalize %>'><%= link_to @stage_wise_leads.map{|cr| cr.dig(:stage_count, stage) || 0 }.sum, admin_leads_path({ fltrs: { lead_stage: stage }.merge(fltr_params) }), target: "_blank" %></td>
+          <% end %>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  No records found yet.
+<% end %>

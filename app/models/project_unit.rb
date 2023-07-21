@@ -93,6 +93,7 @@ class ProjectUnit
   validates :erp_id, uniqueness: { scope: [:project_id] }
 
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
+  scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in" => project_ids}) : all }
   # return empty criteria if project ids not available
   scope :filter_by_project_tower_id, ->(project_tower_id) { where(project_tower_id: project_tower_id) }
   scope :filter_by_status, ->(status) { status.is_a?(Array) ? where(status: {"$in" => status}) : where(status: status.as_json)}
@@ -107,6 +108,7 @@ class ProjectUnit
   scope :filter_by_bathrooms, ->(bathrooms) { where(bathrooms: bathrooms.to_f)}
   scope :filter_by__id, ->(_id) { where(_id: _id)}
   scope :filter_by_search, ->(search) { where(name: ::Regexp.new(::Regexp.escape(search), 'i') )}
+  scope :filter_by_booking_portal_client_id, ->(booking_portal_client_id) { where(booking_portal_client_id: booking_portal_client_id) }
 
 
   delegate :name, to: :phase, prefix: true, allow_nil: true

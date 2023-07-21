@@ -297,7 +297,7 @@ class Project
 
   def self.user_based_scope(user, params = {})
     custom_scope = {}
-    project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids)
+    project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids.map{|id| BSON::ObjectId(id) })
     if user.role.in?(%w(superadmin))
       custom_scope = {  }
     elsif user.role.in?(%w(admin))
@@ -309,7 +309,7 @@ class Project
     end
     if user.role?(:cp_owner)
       channel_partner = user.channel_partner
-      custom_scope.merge!({_id: { "$in": channel_partner.project_ids }})
+      custom_scope.merge!({_id: { "$in": channel_partner.project_ids.map{|id| BSON::ObjectId(id) } }})
     end
     custom_scope.merge!({ is_active: true }) if (params[:controller] == 'admin/projects' && params[:action] == 'index') || params[:controller] == 'home'
     custom_scope.merge!({booking_portal_client_id: user.booking_portal_client.id})
