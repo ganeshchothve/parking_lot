@@ -40,7 +40,7 @@ class UserObserver < Mongoid::Observer
       if user.role.in?(%w(cp_owner channel_partner)) && user.channel_partner_id.present?
         project_ids = user.channel_partner.project_ids
       else
-        project_ids = Project.where(booking_portal_client_id: user.booking_portal_client.id).pluck(:id)
+        project_ids = Project.where(booking_portal_client_id: user.booking_portal_client.id, is_active: true).pluck(:id)
       end
       user.assign_attributes(project_ids: project_ids)
     end

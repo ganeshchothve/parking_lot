@@ -13,7 +13,7 @@
         </div>
         <div class="mb-3">
           <%= f.label :project_id, class: 'label-required' %>
-          <%= f.select :project_id, options_for_select(Project.all.collect{|p| [p.name, p.id ]}, (f.object.new_record? ? Project.first.id : f.object.project_id)) , {prompt: I18n.t("global.select")}, class: 'selectize project_select', required: 'required', disabled: !policy([:admin, @scheme]).editable_field?("project_id") %>
+          <%= f.select :project_id, options_for_select(Project.all.where(booking_portal_client_id: current_client.id, is_active: true).collect{|p| [p.name, p.id ]}, (f.object.new_record? ? Project.first.id : f.object.project_id)) , {prompt: I18n.t("global.select")}, class: 'selectize project_select', required: 'required', disabled: !policy([:admin, @scheme]).editable_field?("project_id") %>
         </div>
         <div class="mb-3">
           <%= f.label :project_tower_id, class: 'label-required' %>
