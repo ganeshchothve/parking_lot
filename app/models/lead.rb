@@ -16,6 +16,7 @@ class Lead
 
   THIRD_PARTY_REFERENCE_IDS = %w(reference_id)
   DOCUMENT_TYPES = []
+  LEAD_STAGES = ["incoming", "prospect", "lost", "unqualified", "opportunity", "booked"]
 
   attr_accessor :payment_link, :kylas_contact_id, :kylas_product_id, :sync_to_kylas, :manager_ids, :phone_update, :email_update
 
@@ -113,9 +114,10 @@ class Lead
   scope :filter_by__id, ->(_id) { where(_id: _id) }
   scope :filter_by_lead_id, ->(lead_id) { where(lead_id: lead_id) }
   scope :filter_by_project_id, ->(project_id) { where(project_id: project_id) }
-  scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in": project_ids}) : all }
+  scope :filter_by_project_ids, ->(project_ids){ project_ids.present? ? where(project_id: {"$in" => project_ids}) : all }
   scope :filter_by_user_id, ->(user_id) { where(user_id: user_id) }
   scope :filter_by_manager_id, ->(manager_id) {where(manager_id: manager_id) }
+  scope :filter_by_manager_id_presence, ->(flag) {where(manager_id: { "$nin": [nil, ''] }) }
   scope :filter_by_cp_manager_id, ->(cp_manager_id) {where(cp_manager_id: cp_manager_id) }
   scope :filter_by_channel_partner_id, ->(channel_partner_id) {where(channel_partner_id: channel_partner_id)}
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: (Date.parse(start_date).beginning_of_day)..(Date.parse(end_date).end_of_day)) }
@@ -385,7 +387,7 @@ class Lead
 
     def user_based_scope(user, params = {})
       custom_scope = {}
-      project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids)
+      project_ids = (params[:current_project_id].present? ? [params[:current_project_id]] : user.project_ids.map{|id| BSON::ObjectId(id) })
       case user.role.to_sym
       when :channel_partner
         lead_ids = LeadManager.where(manager_id: user.id, channel_partner_id: user.channel_partner_id).distinct(:lead_id)

@@ -250,6 +250,9 @@ class Admin::BookingDetailPolicy < BookingDetailPolicy
     if eligible_users_for_tasks?
       attributes += [tasks_attributes: Admin::TaskPolicy.new(user, Task.new).permitted_attributes]
     end
+
+    attributes += [:registration_done] if user.role.in?(%w(admin superadmin sales sales_admin crm)) && record.status.in?(%w(blocked booked_tentative booked_confirmed scheme_approved))
+
     unless %w(channel_partner cp_owner).include?(user.role)
       attributes += [:other_costs]
     end

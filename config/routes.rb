@@ -358,8 +358,6 @@ Rails.application.routes.draw do
         get '/new/:role', action: 'new', as: :new_by_role
         get :export
         get :portal_stage_chart
-        get :channel_partner_performance
-        get :partner_wise_performance
         get :search_by
         get :site_visit_project_wise
         get :site_visit_partner_wise
@@ -470,7 +468,15 @@ Rails.application.routes.draw do
     get :project_wise_actual_revenue, to: "dashboard#project_wise_actual_revenue"
     #get :download_brochure, to: 'dashboard#download_brochure'
     get :sales_board, to: 'dashboard#sales_board'
-    get :booking_details_counts, to: 'dashboard#booking_details_counts'
+    get :project_wise_booking_details_counts, to: 'dashboard#project_wise_booking_details_counts'
+    get :project_wise_conversion_report, to: 'dashboard#project_wise_conversion_report'
+    get :project_wise_leads_stage_report, to: 'dashboard#project_wise_leads_stage_report'
+    get :project_units_inventory_report, to: 'dashboard#project_units_inventory_report'
+    get :project_units_collection_report, to: 'dashboard#project_units_collection_report'
+    get :receipts_details_report, to: 'dashboard#receipts_details_report'
+    get :project_wise_user_requests_report, to: 'dashboard#project_wise_user_requests_report'
+    get :channel_partner_performance_project_wise, to: 'dashboard#channel_partner_performance_project_wise'
+    get :channel_partner_performance_user_wise, to: 'dashboard#channel_partner_performance_user_wise'
     get :team_lead_dashboard, to: 'dashboard#team_lead_dashboard'
     # get :dashboard_landing_page, to: 'dashboard#dashboard_landing_page'
     get :payout_dashboard, to: 'dashboard#payout_dashboard'
