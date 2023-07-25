@@ -46,6 +46,7 @@ en-GENERIC:
     formats:
       default: "%d/%m/%Y %I:%M %p"
       date: "%d/%m/%Y"
+      long: "%d/%m/%Y %I:%M %p"
   date_time:
     formats:
       default: "%d/%m/%Y %I:%M %p"
@@ -3126,8 +3127,6 @@ en-GENERIC:
         ladder: "Ladder"
       invoice_ageing_report: "Invoice Ageing Report"
       registration_count: "Registration Count"
-      payment_failed: "Payment Failed"
-      payment_unsuccessful: "Your payment of was unsuccessful. Please check the credentials and try again."
       headers:
         site_visit_active_partners: "Meeting Active Partners"
         booking_active_partners: "Booking Active Partners"
@@ -3354,6 +3353,8 @@ en-GENERIC:
         thanks_for_payment: "Thank you for your payment of %{name}."
         email_will_be_sent: "You will receive an email from us with detailed information on next steps."
         unit_in_blocked_state: "This unit will remain blocked for you for the next %{name} days. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click"
+        payment_failed: "Payment Failed"
+        payment_unsuccessful: "Your payment was unsuccessful. Please check the credentials and try again."
     referrals:
       index:
         link_name: "Referrals"
