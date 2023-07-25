@@ -4,7 +4,7 @@ class Admin::LeadManagerPolicy < LeadManagerPolicy
   end
 
   def update?
-    %w(superadmin).include?(user.role)
+    false #%w(superadmin).include?(user.role)
   end
 
   def edit?
@@ -12,7 +12,7 @@ class Admin::LeadManagerPolicy < LeadManagerPolicy
   end
 
   def extend_validity?
-    %w(admin cp_admin).include?(user.role) && record.can_extend_validity?# && record.count_status != 'no_count'
+    %w(superadmin admin cp cp_admin sales_admin).include?(user.role) && record.active?
   end
 
   def update_extension?
@@ -20,15 +20,15 @@ class Admin::LeadManagerPolicy < LeadManagerPolicy
   end
 
   def accompanied_credit?
-    extend_validity?# && record.count_status == 'accompanied_credit'
+    false#extend_validity?# && record.count_status == 'accompanied_credit'
   end
 
   def update_accompanied_credit?
-    accompanied_credit?
+    false#accompanied_credit?
   end
 
   def show?
-    true
+    false
   end
 
   def asset_create?

@@ -554,6 +554,9 @@ en:
       bulk_job:
         one: "Bulk Job"
         other: "Bulk Jobs"
+      lead_manager:
+        one: 'Lead Manager'
+        other: 'Lead Managers'
 
     attributes:
       bulk_job:
@@ -2083,7 +2086,7 @@ en:
         lead_id: "CRM Lead ID"
         manager_name: "Manager Name"
         manager_role: "Sales Manager / Added by Role"
-        manager_id: "Channel Partner"
+        manager_id: "Manager"
         project_ids: "Projects"
         manager_change_reason: "Reason for changing Partner"
         name: "Name"
@@ -2257,6 +2260,14 @@ en:
         expiry_date: "Lead Expiry Date"
         sitevisit_date: "Walk-in Date"
         sitevisit_status: "Walk-in Status"
+        status: 'Status'
+      lead_manager/status:
+        draft: Draft
+        active: Active
+        tagged: Tagged
+        expired: Expired
+        cancelled: Cancelled
+        inactive: Inactive
       lead_manager/count_status:
         fresh_lead: "Fresh Lead"
         active_in_same_cp: "Active In Same Cp"
@@ -2602,7 +2613,11 @@ en:
       index:
         link_name: "Lead Managers"
       show:
-        link_name: "Show Lead Managers"
+        link_name: "Show Details"
+      edit:
+        link_name: 'Edit'
+      extend_validity:
+        link_name: 'Extend Validity'
       notice:
         created: "Lead Manager created successfully."
         updated: "Lead Manager updated successfully."

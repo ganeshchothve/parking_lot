@@ -10,30 +10,32 @@
         </div>
         <div class="modal-body theme-form">
           <div class="row">
+            <!--
             <div class="col-md-6">
               <div class="mb-3">
-                <%= f.label :sitevisit_status, class: 'control-label' %>
-                <%= f.select :sitevisit_status, LeadManager::SITEVISIT_STATUS.collect{|x| [I18n.t("mongoid.attributes.lead_manager/site_visit_status.#{x}"), x] }, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy(@lead_manager).editable_field?("sitevisit_status") %>
+                <%#= f.label :sitevisit_status, class: 'control-label' %>
+                <%#= f.select :sitevisit_status, LeadManager::SITEVISIT_STATUS.collect{|x| [I18n.t("mongoid.attributes.lead_manager/site_visit_status.#{x}"), x] }, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy(@lead_manager).editable_field?("sitevisit_status") %>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3 position-relative">
-                <%= f.label :sitevisit_date %>
-                <% date = (f.object.sitevisit_date.present? ? Date.parse(f.object.sitevisit_date).strftime("%d/%m/%Y") : "") %>
-                <%= f.text_field :sitevisit_date, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date, disabled: !policy(@lead_manager).editable_field?("sitevisit_date") %>
+                <%#= f.label :sitevisit_date %>
+                <%# date = (f.object.sitevisit_date.present? ? Date.parse(f.object.sitevisit_date).strftime("%d/%m/%Y") : "") %>
+                <%#= f.text_field :sitevisit_date, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date, disabled: !policy(@lead_manager).editable_field?("sitevisit_date") %>
               </div>
             </div>
+            <div class="col-md-6">
+              <%#= f.label :count_status, class: 'control-label' %>
+              <%#= f.select :count_status, LeadManager::COUNT_STATUS.collect{|x| [I18n.t("mongoid.attributes.lead_manager/count_status.#{x}"), x] }, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy(@lead_manager).editable_field?("count_status") %>
+            </div>
+            -->
           </div>
           <div class="row">
-            <div class="col-md-6">
-              <%= f.label :count_status, class: 'control-label' %>
-              <%= f.select :count_status, LeadManager::COUNT_STATUS.collect{|x| [I18n.t("mongoid.attributes.lead_manager/count_status.#{x}"), x] }, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy(@lead_manager).editable_field?("count_status") %>
-            </div>
             <div class="col-md-6">
               <div class="mb-3 position-relative">
                 <%= f.label :expiry_date %>
                 <% date = (f.object.expiry_date.present? ? f.object.expiry_date.strftime("%d/%m/%Y") : "") %>
-                <%= f.text_field :expiry_date, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date, disabled: !policy(@lead_manager).editable_field?("expiry_date") %>
+                <%= f.text_field :expiry_date, class: 'form-control datepicker', type:'text', data: {"default-date": date, 'min-date': date}, value: date, disabled: !policy(@lead_manager).editable_field?("expiry_date") %>
               </div>
             </div>
           </div>

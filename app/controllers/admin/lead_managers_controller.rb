@@ -46,9 +46,9 @@ class Admin::LeadManagersController < AdminController
 
   def update_extension
     respond_to do |format|
-      if validity_check?
-        extension_date = get_extension_date
-        params[:lead_manager][:expiry_date] = extension_date
+      if true#validity_check?
+        #extension_date = get_extension_date
+        #params[:lead_manager][:expiry_date] = extension_date
         @lead_manager.assign_attributes(permitted_attributes([current_user_role_group, @lead_manager]))
         if @lead_manager.save
           format.html { redirect_to request.referrer || admin_lead_managers_path, notice: I18n.t("controller.lead_managers.notice.updated") }

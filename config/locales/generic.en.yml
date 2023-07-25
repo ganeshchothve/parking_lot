@@ -591,6 +591,9 @@ en-GENERIC:
       bulk_job:
         one: "Bulk Job"
         other: "Bulk Jobs"
+      lead_manager:
+        one: 'Deal Manager'
+        other: 'Deal Managers'
 
     attributes:
       bulk_job:
@@ -2290,6 +2293,14 @@ en-GENERIC:
         expiry_date: "Deal Expiry Date"
         sitevisit_date: "Meeting Date"
         sitevisit_status: "Meeting Status"
+        status: 'Status'
+      lead_manager/status:
+        draft: Draft
+        active: Active
+        tagged: Tagged
+        expired: Expired
+        cancelled: Cancelled
+        inactive: Inactive
       lead_manager/count_status:
         fresh_lead: "Fresh Deal"
         active_in_same_cp: "Active In Same Cp"
@@ -2635,7 +2646,11 @@ en-GENERIC:
       index:
         link_name: "Deal Managers"
       show:
-        link_name: "Show Deal Managers"
+        link_name: "Show Details"
+      edit:
+        link_name: 'Edit'
+      extend_validity:
+        link_name: 'Extend Validity'
       notice:
         created: "Deal Manager created successfully."
         updated: "Deal Manager updated successfully."
