@@ -86,7 +86,7 @@ class Admin::ProjectPolicy < ProjectPolicy
       if user.role.in?(%w(superadmin admin))
         attributes += [
           :selldo_client_id, :selldo_id, :selldo_default_search_list_id, :selldo_form_id, :selldo_gre_form_id,
-          :selldo_channel_partner_form_id, :selldo_api_key, :selldo_default_srd, :selldo_cp_srd,
+          :selldo_channel_partner_form_id, :selldo_api_key, :selldo_full_access_api_key, :selldo_default_srd, :selldo_cp_srd,
           :allowed_bookings_per_user, :helpdesk_number, :helpdesk_email, :ga_code, :gtm_tag,
           :notification_email, :notification_numbers, :sender_email, :area_unit, :is_active,
           :support_number, :support_email, :channel_partner_support_number, :channel_partner_support_email,

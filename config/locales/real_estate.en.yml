@@ -1095,6 +1095,7 @@ en-REAL_ESTATE:
         selldo_channel_partner_form_id: "SellDo Form ID - For Channel Partners"
         selldo_gre_form_id: "SellDo Form ID - Used by Non Channel Partners"
         selldo_api_key: "SellDo API Key (Use generic Api Client)"
+        selldo_full_access_api_key: 'SellDo Full Access API Key'
         selldo_default_srd: "SellDo Default SRD"
         selldo_cp_srd: "SellDo Channel Partner SRD"
         selldo_id: "CRM Project ID"

@@ -63,6 +63,14 @@
       </div>
     </div>
   <% end %>
+  <% if policy([:admin, project]).editable_field?("selldo_full_access_api_key")%>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= f.label :selldo_full_access_api_key %>
+        <%= f.text_field :selldo_full_access_api_key, class: 'form-control', disabled: !policy([:admin, project]).editable_field?("selldo_full_access_api_key") %>
+      </div>
+    </div>
+  <% end %>
   <% if policy([:admin, project]).editable_field?("selldo_default_srd")%>
     <div class="col-md-6">
       <div class="mb-3">
