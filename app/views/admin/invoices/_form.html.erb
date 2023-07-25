@@ -41,7 +41,7 @@
             </div>
             <%= f.label :gst_slab %>
             <% gst_slabs = @resource.try(:project)&.incentive_gst_slabs || @resource.booking_portal_client.try(:gst_slabs) || [] %>
-            <%= f.select :gst_slab, options_for_select(gst_slabs.collect{|gst| ["#{gst} %", gst]} || [], @invoice.gst_slab), {prompt: I18n.t("global.select")}, class: "selectize", disabled: !policy([:admin, @invoice]).editable_field?("gst_slab") %>
+            <%= f.select :gst_slab, options_for_select(gst_slabs.collect{|gst| ["#{gst.to_f} %", gst.to_f]} || [], @invoice.gst_slab), {prompt: I18n.t("global.select")}, class: "selectize", disabled: !policy([:admin, @invoice]).editable_field?("gst_slab") %>
           </div>
         <% end %>
         <div class="mb-3">
