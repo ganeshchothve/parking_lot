@@ -68,6 +68,16 @@
   <%= link_to t('controller.receipts.index.link_name'), admin_lead_booking_detail_receipts_path(booking_detail.lead, booking_detail), class: 'dropdown-item' %>
 <% end %>
 
+<% if allow_booking_approval_state_change?(booking_detail) %>
+  <% booking_detail.aasm(:approval_status).events(permitted: true).each do |event| %>
+    <% if event.name.to_s == 'reject' %>
+      <%= link_to t("controller.booking_details.events.approval_status.#{event.name}"), reject_admin_booking_detail_path(booking_detail), class: 'dropdown-item modal-remote-form-link' %>
+    <% else %>
+      <%= link_to t("controller.booking_details.events.approval_status.#{event.name}"), move_to_next_approval_state_admin_booking_detail_path(booking_detail, {booking_detail: {approval_event: event.name}}), method: :patch, class: 'dropdown-item' %>
+    <% end %>
+  <% end %>
+<% end %>
+
 <%= render 'admin/invoices/invoiceable_links', resource: booking_detail %>
 
 <% booking_requests = [UserRequest::Cancellation, UserRequest::Swap] %>
