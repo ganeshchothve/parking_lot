@@ -1177,6 +1177,8 @@ en-GENERIC:
         bookings: Bookings
         kylas_product_value: 'CRM Price'
         kylas_product_id: 'CRM Reference ID'
+        ask_lead_dropoff_reason: 'Do You Want To Ask For Deal Dropoff Reason?'
+        lead_dropoff_reasons_list: 'List Down Deal Dropoff Reasons (Leave it empty to make it a free form text field)'
       project/project_type:
         residential: "Residential"
         commercial: "Commercial"
@@ -2268,6 +2270,7 @@ en-GENERIC:
         errors:
           lead_registered_with_client: "Lead is already registered with Client"
           lead_registered_with_project: "Lead is already registered with Project"
+        drop_reason: 'Why The Deal Has Dropped?'
       lead/stage:
         incoming: "Incoming"
         booked: "Booked"
@@ -3707,6 +3710,8 @@ en-GENERIC:
       move_to_next_state:
         queued: "%{name} moved to sales queue successfully"
         dropoff: "%{name} dropped off successfully"
+      drop_off:
+        link_name: 'Deal Drop off Reason'
       accepted_by_sales: "Deal %{status}"
       create_from_existing_lead:
         link_name: "Add From Existing Customer"

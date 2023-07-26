@@ -1,0 +1,39 @@
+<%= form_for [:drop_off, :admin, @lead], remote: true, local: true, html: { class: "modal-remote-form validate-form", data: { "resource-type" => t('global.lead'), type: "json"}, id: 'lead_drop_off_form' } do |f| %>
+<div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
+    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="title">
+                <%= t("controller.leads.drop_off.link_name") %>
+            </h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <%= f.hidden_field :event, value: 'dropoff' %>
+
+          <div class='row'>
+            <div class='col-12'>
+              <div class="mb-3">
+                  <%= f.label :drop_reason, class: 'label-required mb-1' %>
+                  <% if @lead.project.lead_dropoff_reasons_list.empty? %>
+                    <%= f.text_area :drop_reason, autofocus: true, class: "wd-100", rows: 5, required: 'required', disabled: !policy([current_user_role_group, @lead]).editable_field?("drop_reason") %>
+                  <% else %>
+                    <%= f.select :drop_reason, @lead.project.lead_dropoff_reasons_list, {prompt: I18n.t("global.select")}, class: "selectize", required: true, disabled: !policy([current_user_role_group, @lead]).editable_field?("drop_reason")%>
+                  <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer text-end">
+            <%= f.submit "Drop", class: "btn btn-primary" %>
+        </div>
+    </div>
+</div>
+<% end %>
+<%= javascript_tag do %>
+$(document).ready(function(){
+  FormInitializer.init($("#lead_drop_off_form"));
+});
+<% end %>

@@ -126,6 +126,9 @@ class Project
   field :disable_project, type: Hash, default: {walk_ins: false, bookings: false, invoicing: false}
   field :lead_blocking_days, type: Integer, default: 30
 
+  field :ask_lead_dropoff_reason, type: Boolean, default: false
+  field :lead_dropoff_reasons_list, type: Array, default: ['Amenities', 'Layout Issue', 'Follow Up Exhausted', 'Budget', 'Location', 'Early Possession', 'Late Possession', 'Value for Price', 'Higher Configuration', 'Lower Configuration', 'Purchased Elsewhere', 'Commercial']
+
   # Kylas fields
   field :kylas_product_id, type: String
   field :kylas_product_value, type: Integer

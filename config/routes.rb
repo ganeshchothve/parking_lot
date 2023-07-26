@@ -296,6 +296,8 @@ Rails.application.routes.draw do
         patch :reassign_sales
         patch :accept_lead
         patch :move_to_next_state
+        get :drop_off
+        patch :drop_off
       end
       resources :site_visits, only: [:new, :create, :index, :update]
       resources :receipts, only: [:index, :new, :create, :edit, :update ] do

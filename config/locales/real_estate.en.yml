@@ -1178,6 +1178,8 @@ en-REAL_ESTATE:
         bookings: Bookings
         kylas_product_value: 'CRM Price'
         kylas_product_id: 'CRM Reference ID'
+        ask_lead_dropoff_reason: 'Do You Want To Ask For Lead Dropoff Reason?'
+        lead_dropoff_reasons_list: 'List Down Lead Dropoff Reasons (Leave it empty to make it a free form text field)'
       project/project_type:
         residential: "Residential"
         commercial: "Commercial"
@@ -2272,6 +2274,7 @@ en-REAL_ESTATE:
         kylas_contact: Kylas Contacts
         manager_ids: Channel Partners
         crm_reference_id: CRM Reference ID
+        drop_reason: 'Why The Lead Has Dropped?'
         errors:
           lead_registered_with_client: "Lead is already registered with Client"
           lead_registered_with_project: "Lead is already registered with Project"
@@ -3718,6 +3721,8 @@ en-REAL_ESTATE:
       move_to_next_state:
         queued: "%{name} moved to sales queue successfully"
         dropoff: "%{name} dropped off successfully"
+      drop_off:
+        link_name: 'Lead Drop off Reason'
       accepted_by_sales: "Lead %{status}"
       create_from_existing_lead:
         link_name: "Add From Existing Customer"

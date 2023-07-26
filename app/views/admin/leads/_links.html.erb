@@ -31,7 +31,11 @@
   <%# if lead.may_queued? %>
     <%#= link_to 'Move to Sales Queue', move_to_next_state_admin_lead_path(lead, status: 'queued', format: :json), method: 'patch', remote: true, data: { disable_with: 'Queueing...' }, class: "dropdown-item queued move-to-next-state" %>
   <% if lead.may_dropoff? %>
-    <%= link_to I18n.t("global.drop_customer"), move_to_next_state_admin_lead_path(lead, status: 'dropoff', format: :json), method: 'patch', remote: true, data: { confirm: I18n.t("controller.assets.confirm.sure"), disable_with: I18n.t("global.text.dropping") }, class: 'dropdown-item dropoff move-to-next-state' %>
+    <% if policy([:admin, lead]).drop_off? %>
+      <%= link_to I18n.t("global.drop_customer"), drop_off_admin_lead_path(lead), class: 'dropdown-item modal-remote-form-link' %>
+    <% else %>
+      <%= link_to I18n.t("global.drop_customer"), move_to_next_state_admin_lead_path(lead, status: 'dropoff', format: :json), method: 'patch', remote: true, data: { confirm: I18n.t("controller.assets.confirm.sure"), disable_with: I18n.t("global.text.dropping") }, class: 'dropdown-item dropoff move-to-next-state' %>
+    <% end %>
   <% end %>
 <% end %>
 
