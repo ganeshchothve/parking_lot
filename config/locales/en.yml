@@ -2944,6 +2944,8 @@ en:
       generate_invoice:
         link_name: "Print Invoice"
       asset_create:
+        link_name: "Upload Invoice Copy"
+      asset_show:
         link_name: "Uploaded Invoice Copy"
       download:
         link_name: "Download"
