@@ -1226,9 +1226,13 @@ module DashboardDataProvider
     (fill_mrp_total.to_f.nan? ? 0.0 : fill_mrp_total)
   end
 
-  def self.bookings_with_completed_tasks_list
-    data = BookingDetail.collection.aggregate([{
-      '$match' => {'status' => 'booked_confirmed'} },{
+  def self.bookings_with_completed_tasks_list(options = {})
+    options = options.deep_symbolize_keys
+    matcher = options[:matcher] || {}
+    matcher.merge!({status: 'booked_confirmed'})
+    data = BookingDetail.collection.aggregate([
+      { '$match': matcher },
+      {
       "$group": {
         "_id": {
           "task_list_completed": "$task_list_completed"

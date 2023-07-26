@@ -3180,6 +3180,8 @@ en-GENERIC:
         user_requests:
           details_report: "User Requests"
         typology_and_inventory_summary_reports: 'Typology and Inventory Summary'
+        booking_details:
+          confirmed_bookings: "Confirmed Bookings"
 
     emails:
       index:

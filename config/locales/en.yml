@@ -3146,6 +3146,8 @@ en:
           typology_report: "Typology and Inventory Summary"
         user_requests:
           details_report: "User Requests"
+        booking_details:
+          confirmed_bookings: "Confirmed Bookings"
 
     emails:
       index:
