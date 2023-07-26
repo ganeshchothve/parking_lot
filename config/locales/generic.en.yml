@@ -1722,6 +1722,7 @@ en-GENERIC:
         actual_invoice_amount: "Actual Invoice Amount"
         tentative_invoice_amount: "Tentative Invoice Amount"
         brokerage_type: "Brokerage Type"
+        taxable_amount: 'Net Taxable Amount'
       invoice/status:
         draft: "Draft"
         raised: "Raised"

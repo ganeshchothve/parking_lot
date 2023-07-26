@@ -176,12 +176,6 @@
                   <div><%= number_to_indian_currency(@invoice.amount) %></div>
                 </div>
               </div>
-              <div class="col-md-4">
-                <div class="mb-3">
-                  <label class="small text-muted"><%= invoice_labels[:gst_amount] %></label>
-                  <div><%= number_to_indian_currency(@invoice.gst_amount) %></div>
-                </div>
-              </div>
               <% if @invoice.payment_adjustment.present? %>
                 <div class="col-md-4">
                   <div class="mb-3">
@@ -198,14 +192,26 @@
                   </div>
                 </div>
               <% end %>
-              <% if @invoice.status.in?(%w(approved tax_invoice_raised paid)) && @invoice.net_amount.present? %>
+              <% if @invoice.project.gst_slab_applicable? %>
                 <div class="col-md-4">
                   <div class="mb-3">
-                    <label class="small text-muted"><%= invoice_labels[:net_amount] %></label>
-                    <div><%= number_to_indian_currency(@invoice.net_amount) %></div>
+                    <label class="small text-muted"><%= invoice_labels[:taxable_amount] %></label>
+                    <div><%= number_to_indian_currency(@invoice.calculate_taxable_amount) %></div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <label class="small text-muted"><%= invoice_labels[:gst_amount] %></label>
+                    <div><%= number_to_indian_currency(@invoice.gst_amount) %></div>
                   </div>
                 </div>
               <% end %>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label class="small text-muted"><%= invoice_labels[:net_amount] %></label>
+                  <div><%= number_to_indian_currency(@invoice.net_amount) %></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
