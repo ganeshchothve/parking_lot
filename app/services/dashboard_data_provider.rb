@@ -1099,10 +1099,10 @@ module DashboardDataProvider
       {
         '$lookup': {
           "from": "user_kycs",
-          "let": { "user_kyc_id": "$user_kyc_id" },
+          "let": { "receipt_id": "$_id" },
           "pipeline": [
-            { '$match': { '$expr': { '$eq': [ "$_id",  "$$user_kyc_id" ] } } },
-            { '$project': { "configuration": '$configuration', "preferred_floor": { '$arrayElemAt': ['$preferred_floors', 0] } } }
+            { '$match': { '$expr': { '$eq': [ "$receipt_id",  "$$receipt_id" ] } } },
+            { '$project': { "configuration": { '$arrayElemAt': ['$configurations', 0] }, "preferred_floor_band": { '$arrayElemAt': ['$preferred_floor_band', 0] } } }
           ],
           "as": "user_kycs"
         }
@@ -1119,7 +1119,7 @@ module DashboardDataProvider
       },
       {
         "$group": {
-          "_id": { "unit_configuration_name": "$configuration", "configuration": "$preferred_floor" },
+          "_id": { "unit_configuration_name": "$configuration", "configuration": "$preferred_floor_band" },
             "booking_count": { "$sum": 1 }
         }
       },
@@ -1224,6 +1224,29 @@ module DashboardDataProvider
     actual_floor_band_total = (typology_and_inventory_summary_data.map{|d| d["actual_#{floor_band}"] }.compact.sum rescue 0)
     fill_mrp_total = ((mrp_floor_band_total/actual_floor_band_total.to_f) * 100).round(2)
     (fill_mrp_total.to_f.nan? ? 0.0 : fill_mrp_total)
+  end
+
+  def self.bookings_with_completed_tasks_list
+    data = BookingDetail.collection.aggregate([{
+      '$match' => {'status' => 'booked_confirmed'} },{
+      "$group": {
+        "_id": {
+          "task_list_completed": "$task_list_completed"
+        },
+        count: {
+          "$sum": 1
+        }
+      }
+    },{
+      "$sort": {
+        "_id.task_list_completed": 1
+      }
+    }]).to_a
+    out = []
+    data.each do |d|
+      out << { task_list_completed: d["_id"]["task_list_completed"], count: d["count"] }.with_indifferent_access
+    end
+    out
   end
 
   protected

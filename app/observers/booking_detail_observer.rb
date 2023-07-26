@@ -81,6 +81,9 @@ class BookingDetailObserver < Mongoid::Observer
     if booking_detail.status_changed? && booking_detail.status == 'cancelled'
       booking_detail.move_invoices_to_rejected
     end
+    if booking_detail.tasks.select { |t| t.completed_changed? }.any?
+      booking_detail.set(task_list_completed: booking_detail.tasks_completed?)
+    end
 
     booking_detail.move_invoices_to_draft
   end

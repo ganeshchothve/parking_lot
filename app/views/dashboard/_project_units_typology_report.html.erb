@@ -1,5 +1,4 @@
 <%
-  @typology_and_inventory_summary_data = DashboardDataProvider.typology_and_inventory_summary(params.dig(:fltrs, :typology_and_inventory_summary_created_at))
   actual_total = @typology_and_inventory_summary_data.map{|d| d['actual_total'] }.compact.sum
   mrp_total = @typology_and_inventory_summary_data.map{|d| d['mrp_total'] }.compact.sum
   booking_total = @typology_and_inventory_summary_data.map{|d| d['booking_total'] }.compact.sum
@@ -25,7 +24,7 @@
     <table class="table">
       <thead>
         <tr>
-          <th class="text-left"><b><%= t('mongoid.attributes.typology_and_inventory_summary_reports.booking') %></b></th>
+          <th class="text-left"><b><%= t('mongoid.attributes.typology_and_inventory_summary_reports.bookings') %></b></th>
           <th colspan="<%= I18n.t("mongoid.attributes.project_unit.floor_bands").keys.count + 1%>" class="text-center"><b><%= t('mongoid.attributes.typology_and_inventory_summary_reports.actual_inventory') %></b></th>
           <th colspan="<%= I18n.t("mongoid.attributes.project_unit.floor_bands").keys.count + 1%>" class="text-center"><b><%= t('mongoid.attributes.typology_and_inventory_summary_reports.booking_filled') %></b></th>
           <th colspan="12" class="text-center"><b><%= t('mongoid.attributes.typology_and_inventory_summary_reports.fill_rate') %></b></th>
@@ -42,8 +41,7 @@
           <% end %>
         </tr>
         <% @typology_and_inventory_summary_data.each do |d|
-          total_percentage = ((d['booking_total']/d['actual_total'].to_f) * 100).round rescue 0
-        %>
+          total_percentage = ((d['booking_total']/d['actual_total'].to_f) * 100).round rescue 0 %>
           <tr>
             <td class="text-left"><%= t("mongoid.attributes.user_kyc/configurations.#{d['actual_id']}") %></td>
             <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>

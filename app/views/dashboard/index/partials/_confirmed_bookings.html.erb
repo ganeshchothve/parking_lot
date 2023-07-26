@@ -1,0 +1,37 @@
+<% if current_client.enable_actual_inventory?(current_user) %>
+  <% confirmed_bookings = DashboardDataProvider.bookings_with_completed_tasks_list
+  %>
+  <div class="card border-0">
+    <a data-bs-toggle="collapse" href="#dashboard_confirmed_bookings" role="button" aria-expanded="false" aria-controls="dashboard_confirmed_bookings" class='font-weight-bold text-decoration-none'>
+      <div class="card-header bg-theme text-center text-white">
+        Confirmed and confirmed Bookings
+      </div>
+    </a>
+    <div class="card-body collapse" id='dashboard_confirmed_bookings'>
+      <% if confirmed_bookings.present? %>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Checklist Completion</th>
+                <th class="text-right">Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% confirmed_bookings.each do |b| %>
+              <tr>
+                <td><%= t("dashboard.bookings.confirmed_bookings.tasklist_completed." + "#{b[:task_list_completed]}") %></td>
+                <td class="text-right">
+                  <%= link_to b[:count], admin_booking_details_path({ fltrs: { status: @bookings, confirmed_and_task_list_completed: "#{b[:task_list_completed]}" }, current: 'all'}) %>
+                </td>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        No confirmed bookings yet.
+      <% end %>
+    </div>
+  </div>
+<% end %>

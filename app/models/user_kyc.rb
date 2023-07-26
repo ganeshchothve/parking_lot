@@ -31,6 +31,7 @@ class UserKyc
   field :configurations, type: Array, default: []
   field :number_of_units, type: Integer
   field :preferred_floors, type: Array, default: []
+  field :preferred_floor_band, type: Array, default: []
   field :budget, type: Integer
   field :comments, type: String
   field :occupation, type: String

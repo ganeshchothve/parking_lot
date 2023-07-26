@@ -48,6 +48,7 @@ class BookingDetail
   field :rejection_reason, type: String
   field :token_discount, type: Float
   field :variable_discount, type: Float
+  field :task_list_completed, default: false
 
   #kylas specific field
   field :kylas_product_id, type: Integer
@@ -499,6 +500,10 @@ class BookingDetail
         )
       end
     end
+  end
+
+  def tasks_completed?
+    project_unit.booking_portal_client.checklists.distinct(:key) == tasks.where(completed: true).distinct(:key)
   end
 
   class << self

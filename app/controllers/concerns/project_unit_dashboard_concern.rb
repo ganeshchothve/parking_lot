@@ -10,7 +10,7 @@ module ProjectUnitDashboardConcern
   end
 
   def project_units_typology_report
-    DashboardDataProvider.typology_and_inventory_summary(project_units_matcher)
+    @typology_and_inventory_summary_data = DashboardDataProvider.typology_and_inventory_summary(project_units_matcher)
   end
 
   private
