@@ -65,8 +65,11 @@ module SiteVisitStateMachine
       template_name = "site_visit_status_#{self.status}_notification"
       # TODO: Send Broadcast message via notification, in-app, Email, etc
       recipient = self.manager || self.lead.manager
+
       send_push_notification(template_name, recipient) if recipient.present?
-      send_email_sms("site_visit_#{self.status}")
+
+      send_email_sms("site_visit_#{self.status}_to_customer", self.lead)
+      send_email_sms("site_visit_#{self.status}_to_channel_partner", self.manager) if self.manager && self.manager.channel_partner?
     end
 
     # State machine for approval status maintained on a separate field
@@ -123,16 +126,14 @@ module SiteVisitStateMachine
       end
     end
 
-    def send_email_sms template_name
+    def send_email_sms template_name, recipient
       email_template = Template::EmailTemplate.where(name: template_name, project_id: self.project_id, booking_portal_client_id: self.booking_portal_client_id).first
-      if email_template.present?
+      if email_template.present? && recipient.email.present?
         email = Email.create!({
           project_id: self.project_id,
           booking_portal_client_id: self.booking_portal_client_id,
           email_template_id: email_template.id,
-          #cc: self.booking_portal_client.notification_email.to_s.split(',').map(&:strip),
-          recipients: [self.manager],
-          to: [self.lead.email],
+          to: [recipient.email],
           triggered_by_id: self.id,
           triggered_by_type: self.class.to_s
         })
@@ -141,11 +142,11 @@ module SiteVisitStateMachine
       sms_template = ::Template::SmsTemplate.where(booking_portal_client_id: self.booking_portal_client_id, name: template_name, project_id: self.project_id).first
       sms = Sms.create!(
         booking_portal_client_id: self.booking_portal_client_id,
-        to: [self.lead.phone],
+        to: [recipient.phone],
         sms_template_id: sms_template.id,
         triggered_by_id: self.id,
         triggered_by_type: self.class.to_s
-      ) if sms_template
+      ) if sms_template && recipient.phone.present?
     end
 
   end
