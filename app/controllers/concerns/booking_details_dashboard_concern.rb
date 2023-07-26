@@ -2,12 +2,16 @@ module BookingDetailsDashboardConcern
   extend ActiveSupport::Concern
 
   def confirmed_bookings_dashboard_report
-    @confirmed_bookings = DashboardDataProvider.bookings_with_completed_tasks_list(booking_details_matcher)
+    @confirmed_bookings = DashboardDataProvider.bookings_with_completed_tasks_list(booking_details_aggregation_matcher)
+  end
+
+  def booking_progress_dashboard_report
+    @bookings_progress_data = BookingProgressReport.data(booking_details_queries_matcher)
   end
 
   private
 
-  def booking_details_matcher
+  def booking_details_aggregation_matcher
     options = {matcher: {}}
     options[:matcher] = { booking_portal_client_id: current_client.id }
     if params[:dates].present?
@@ -24,6 +28,10 @@ module BookingDetailsDashboardConcern
       options[:matcher][:project_id] = {"$in": Project.where(Project.user_based_scope(current_user)).pluck(:_id).uniq }
     end
     options
+  end
+
+  def booking_details_queries_matcher
+    matcher = { booking_portal_client_id: current_client.id, dates: params[:dates], project_ids: params[:project_ids] }
   end
 
 end

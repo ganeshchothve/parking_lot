@@ -1253,6 +1253,31 @@ module DashboardDataProvider
     out
   end
 
+  def self.todays_booking_count(status = nil, matcher = {})
+    _matcher = {booking_portal_client_id: matcher[:booking_portal_client_id]}
+    _matcher[:status] = status.present? ? { "$in": [status] } : { "$in": BookingDetail::BOOKING_STAGES }
+    _matcher[:created_at] = {
+      "$gte": Date.today.beginning_of_day,
+      "$lte": Date.today.end_of_day
+    }
+    _matcher[:project_id] = {"$in": matcher[:project_ids].map{|id| BSON::ObjectId(id) }} if matcher[:project_ids].present?
+    BookingDetail.where(_matcher).count
+  end
+
+  def self.total_booking_count(status = nil, matcher = {})
+    _matcher = {booking_portal_client_id: matcher[:booking_portal_client_id]}
+    _matcher[:status] = status.present? ? { "$in": [status] } : { "$in": BookingDetail::BOOKING_STAGES }
+    if matcher[:created_at].present?
+      start_date, end_date = matcher[:created_at].split(' - ')
+      _matcher[:created_at] = {
+        "$gte": Date.parse(start_date).beginning_of_day,
+        "$lte": Date.parse(end_date).end_of_day
+      }
+    end
+    _matcher[:project_id] = {"$in": _matcher[:project_ids].map{|id| BSON::ObjectId(id) }} if _matcher[:project_ids].present?
+    BookingDetail.where(_matcher).count
+  end
+
   protected
 
   def self.calculate_all_towers all_towers_out, current_tower_data, current_user

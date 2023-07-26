@@ -3192,6 +3192,7 @@ en-REAL_ESTATE:
         typology_and_inventory_summary_reports: 'Typology and Inventory Summary'
         booking_details:
           confirmed_bookings: "Confirmed Bookings"
+          booking_progress: "Bookings Progress Report"
 
     emails:
       index:

@@ -3148,6 +3148,7 @@ en:
           details_report: "User Requests"
         booking_details:
           confirmed_bookings: "Confirmed Bookings"
+          booking_progress: "Bookings Progress Report"
 
     emails:
       index:

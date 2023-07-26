@@ -478,6 +478,8 @@ Rails.application.routes.draw do
     get :project_wise_user_requests_report, to: 'dashboard#project_wise_user_requests_report'
     get :channel_partner_performance_project_wise, to: 'dashboard#channel_partner_performance_project_wise'
     get :channel_partner_performance_user_wise, to: 'dashboard#channel_partner_performance_user_wise'
+    get :confirmed_bookings_dashboard_report, to: 'dashboard#confirmed_bookings_dashboard_report'
+    get :booking_progress_dashboard_report, to: 'dashboard#booking_progress_dashboard_report'
     get :team_lead_dashboard, to: 'dashboard#team_lead_dashboard'
     # get :dashboard_landing_page, to: 'dashboard#dashboard_landing_page'
     get :payout_dashboard, to: 'dashboard#payout_dashboard'

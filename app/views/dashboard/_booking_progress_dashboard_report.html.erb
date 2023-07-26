@@ -1,0 +1,68 @@
+<%
+  matcher = { booking_portal_client_id: current_client.try(:id) }
+  matcher[:project_ids] = params[:project_ids] if params[:project_ids].present?
+  created_today_exclude_matcher = matcher.dup
+  matcher[:created_at] = params[:dates] if params[:dates].present?
+%>
+<% if @bookings_progress_data.present? %>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="text-left"></th>
+          <th class="text-left"><b><%= t('mongoid.attributes.booking_progress_report.mrp') %></b></th>
+          <th class="text-left"><b><%= t('mongoid.attributes.booking_progress_report.blocked') %></b></th>
+          <th class="text-left"><b><%= t('mongoid.attributes.booking_progress_report.under_negotiation') %></b></th>
+          <th class="text-left"><b><%= t('mongoid.attributes.booking_progress_report.tentative_booked') %></b></th>
+          <th class="text-left"><b><%= t('mongoid.attributes.booking_progress_report.confirmed_booked') %></b></th>
+          <!-- <th class="text-left"><b><%#= t('mongoid.attributes.booking_progress_report.ba_1') %></b></th> -->
+          <!-- <th class="text-left"><b><%#= t('mongoid.attributes.booking_progress_report.ba_2') %></b></th> -->
+        </tr>
+      </thead>
+      <tbody>
+        <% @bookings_progress_data.each_with_index do |data, i| %>
+          <tr>
+            <td class="text-left"> <%= i == 0 ? "Today's Report" : "Overall Report" %></td>
+              <% if i == 0 %>
+                <td class="text-left">
+                  <%= link_to data['mrp_count'], admin_receipts_path({ fltrs: ({ status: ["success", "clearance_pending"], payment_type: 'token', token_generated: "yes", created_at: "#{Date.today.strftime("%d/%m/%Y")} - #{Date.today.strftime("%d/%m/%Y")}" }).merge(created_today_exclude_matcher), current: 'all'}), target: '_blank' %>
+                </td>
+                <td>
+                  <%= link_to DashboardDataProvider.todays_booking_count('blocked'), admin_booking_details_path({ fltrs: ({ status: 'blocked', created_at: "#{Date.today.strftime("%d/%m/%Y")} - #{Date.today.strftime("%d/%m/%Y")}" }).merge(created_today_exclude_matcher), current: 'all'}), target: '_blank' %>
+                </td>
+                <td>
+                  <%= link_to DashboardDataProvider.todays_booking_count('under_negotiation'), admin_booking_details_path({ fltrs: ({ status: 'under_negotiation', created_at: "#{Date.today.strftime("%d/%m/%Y")} - #{Date.today.strftime("%d/%m/%Y")}" }).merge(created_today_exclude_matcher), current: 'all'}), target: '_blank' %>
+                </td>
+                <td>
+                  <%= link_to DashboardDataProvider.todays_booking_count('booked_tentative'), admin_booking_details_path({ fltrs: ({ status: 'booked_tentative', created_at: "#{Date.today.strftime("%d/%m/%Y")} - #{Date.today.strftime("%d/%m/%Y")}" }).merge(created_today_exclude_matcher), current: 'all'}), target: '_blank' %>
+                </td>
+                <td>
+                  <%= link_to DashboardDataProvider.todays_booking_count('booked_confirmed'), admin_booking_details_path({ fltrs: ({ status: 'booked_confirmed', created_at: "#{Date.today.strftime("%d/%m/%Y")} - #{Date.today.strftime("%d/%m/%Y")}" }).merge(created_today_exclude_matcher), current: 'all'}), target: '_blank' %>
+                </td>
+              <% else %>
+                <td>
+                  <%= link_to data['mrp_count'], admin_receipts_path({ fltrs: ({ status: ["success", "clearance_pending"], token_generated: "yes", payment_type: 'token' }).merge(matcher), current: 'all'}), target: '_blank' %>
+                </td>
+                <td>
+                  <%= link_to DashboardDataProvider.total_booking_count('blocked', matcher), admin_booking_details_path({ fltrs: ({ status: 'blocked' }).merge(matcher), current: 'all'}), target: '_blank' %>
+                </td>
+                <td>
+                  <%= link_to DashboardDataProvider.total_booking_count('under_negotiation', matcher), admin_booking_details_path({ fltrs: ({ status: 'under_negotiation' }).merge(matcher), current: 'all'}), target: '_blank' %>
+                </td>
+                <td>
+                  <%= link_to DashboardDataProvider.total_booking_count('booked_tentative', matcher), admin_booking_details_path({ fltrs: ({ status: 'booked_tentative' }).merge(matcher), current: 'all'}), target: '_blank' %>
+                </td>
+                <td>
+                  <%= link_to DashboardDataProvider.total_booking_count('booked_confirmed', matcher), admin_booking_details_path({ fltrs: ({ status: 'booked_confirmed' }).merge(matcher), current: 'all'}), target: '_blank' %>
+                </td>
+              <% end %>
+            <!-- <td class="text-left"><%#= data['ba_1'] %></td> -->
+            <!-- <td class="text-left"><%#= data['ba_2'] %></td> -->
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  No records found yet.
+<% end %>
