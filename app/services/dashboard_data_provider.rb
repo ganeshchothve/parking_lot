@@ -1226,9 +1226,8 @@ module DashboardDataProvider
     (fill_mrp_total.to_f.nan? ? 0.0 : fill_mrp_total)
   end
 
-  def self.bookings_with_completed_tasks_list(options = {})
-    options = options.deep_symbolize_keys
-    matcher = options[:matcher] || {}
+  def self.bookings_with_completed_tasks_list(matcher = {})
+    matcher = matcher.deep_symbolize_keys
     matcher.merge!({status: 'booked_confirmed'})
     data = BookingDetail.collection.aggregate([
       { '$match': matcher },

@@ -36,18 +36,19 @@ module BookingProgressReport
     ]).as_json
   end
 
-  def self.mrp_count_data(today = false, matcher = {})
+  def self.mrp_count_data(today = false, _matcher = {})
+    matcher = _matcher.dup
     created_at = matcher[:dates]
     if today
       current_time = Time.zone.now
-      matcher = matcher.merge!({ "$and": [{'created_at': { '$gte': current_time.beginning_of_day, '$lte':  current_time.end_of_day } }, { "status": { '$in': ['clearance_pending', 'success'] } }] })
+      matcher = matcher.merge({ "$and": [{'created_at': { '$gte': current_time.beginning_of_day, '$lte':  current_time.end_of_day } }, { "status": { '$in': ['clearance_pending', 'success'] } }] })
       Receipt.nin(token_number: [nil, '']).where(matcher).count
     else
       if created_at.present?
         start_date, end_date = created_at.split(' - ')
-        matcher = matcher.merge!({ "$and": [{'created_at': { '$gte': (Date.parse(start_date).beginning_of_day), '$lte': (Date.parse(end_date).end_of_day) } }, { "status": { '$in': ['clearance_pending', 'success'] } }] })
+        matcher = matcher.merge({ "$and": [{'created_at': { '$gte': (Date.parse(start_date).beginning_of_day), '$lte': (Date.parse(end_date).end_of_day) } }, { "status": { '$in': ['clearance_pending', 'success'] } }] })
       else
-        matcher = matcher.merge!({ "status": { '$in': ['clearance_pending', 'success'] } })
+        matcher = matcher.merge({ "status": { '$in': ['clearance_pending', 'success'] } })
       end
       Receipt.nin(token_number: [nil, '']).where(matcher).count
     end
