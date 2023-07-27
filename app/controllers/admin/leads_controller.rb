@@ -171,6 +171,22 @@ class Admin::LeadsController < AdminController
     end
   end
 
+  def drop_off
+    unless request.get?
+      respond_to do |format|
+        if @lead.update(permitted_attributes([:admin, @lead]))
+          format.html{ redirect_to request.referrer || dashboard_url, notice: I18n.t("controller.leads.move_to_next_state.#{@lead.status}", name: @lead.name.titleize) }
+          format.json { render json: { message: I18n.t("controller.leads.move_to_next_state.#{@lead.status}", name: @lead.name.titleize) }, status: :ok }
+        else
+          format.html{ redirect_to request.referrer || dashboard_url, alert: @lead.errors.full_messages.uniq }
+          format.json { render json: { errors: @lead.errors.full_messages.uniq }, status: :unprocessable_entity }
+        end
+      end
+    else
+      render layout: false
+    end
+  end
+
   def search_inventory
     @leads = Lead.where(booking_portal_client_id: current_client.try(:id)).in(id: params[:leads][:ids]&.reject(&:blank?))
     @project_ids = params.dig(:leads, :tp_project_ids).split(',')

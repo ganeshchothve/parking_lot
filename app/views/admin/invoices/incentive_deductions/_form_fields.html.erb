@@ -10,11 +10,13 @@
   <%= f.label :comments, class: 'label-required' %>
   <%= f.text_area :comments, autofocus: true, class: "form-control", required: 'required', disabled: !policy([:admin, incentive_deduction]).editable_field?("comments") || action_name == 'show' %>
 </div>
-<div class="mb-3">
-  <%= f.label :status, class: 'control-label label-required' %>
-  <% events = available_events(incentive_deduction) %>
-  <%= f.select :event, options_for_select(events.collect{|x| [t("mongoid.attributes.incentive_deduction/status.#{x}"), x]}, incentive_deduction.status), {prompt: t("mongoid.attributes.incentive_deduction/status.#{incentive_deduction.status}")}, class: 'selectize', required: 'required', disabled: !policy([:admin, incentive_deduction]).editable_field?("event") || action_name == 'show' %>
-</div>
+<% if policy([:admin, incentive_deduction]).editable_field?("event") || action_name == 'show' %>
+  <div class="mb-3">
+    <%= f.label :status, class: 'control-label label-required' %>
+    <% events = available_events(incentive_deduction) %>
+    <%= f.select :event, options_for_select(events.collect{|x| [t("mongoid.attributes.incentive_deduction/status.#{x}"), x]}, incentive_deduction.status), {prompt: t("mongoid.attributes.incentive_deduction/status.#{incentive_deduction.status}")}, class: 'selectize', required: 'required', disabled: action_name == 'show' %>
+  </div>
+<% end %>
 <% if action_name == 'show' %>
   <div class='mb-3'>
     <%= f.label :creator, class: 'control-label' %>

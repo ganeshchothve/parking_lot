@@ -39,6 +39,14 @@
           </div>
           <div class="col-md-3">
             <div class="mb-3">
+              <label class="txt-light-blue fn-12"><%= t("mongoid.attributes.lead.drop_reason") %></label>
+              <p class="fn-14 theme-txt-color mb-0">
+                <%= lead.drop_reason.presence || '-' %>
+              </p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="mb-3">
               <label class="txt-light-blue fn-12"><%= t("mongoid.attributes.lead.portal_stage") %></label>
               <p class="fn-14 theme-txt-color mb-0">
                 <%= lead.portal_stage&.stage || '-' %>
