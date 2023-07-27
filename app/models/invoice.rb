@@ -123,14 +123,6 @@ class Invoice
     end
   end
 
-  def calculate_gst_amount
-    if self.project&.gst_slab_applicable?
-      (amount * ((gst_slab || 0)/100)).round(2)
-    else
-      0
-    end
-  end
-
   def get_payout_status
     if (category == "brokerage" && raised?) || (["spot_booking", "walk_in"].include?(category) && ["approved","raised","draft"].include?(status))
       "Invoiced"
@@ -145,10 +137,28 @@ class Invoice
     end
   end
 
-  def calculate_net_amount
-    _amount = amount + calculate_gst_amount
+  def amount_adjustment
+    _amount = 0
     _amount += payment_adjustment.try(:absolute_value).to_i if payment_adjustment.try(:absolute_value).present?
     _amount -= incentive_deduction.try(:amount).to_i if incentive_deduction.try(:approved?)
+    _amount.round(2)
+  end
+
+  def calculate_taxable_amount
+    _amount = amount + amount_adjustment
+    _amount.round(2)
+  end
+
+  def calculate_gst_amount
+    if self.project&.gst_slab_applicable?
+      (calculate_taxable_amount * ((gst_slab || 0)/100)).round(2)
+    else
+      0
+    end
+  end
+
+  def calculate_net_amount
+    _amount = calculate_taxable_amount + calculate_gst_amount
     _amount.round(2)
   end
 

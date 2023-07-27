@@ -10,7 +10,7 @@
             <div class="card-header bg-white">
                 <div class="d-flex justify-content-between px-1 pt-2 pb-1">
                     <p class="fn-14 font-medium txt-drk-b-lt mb-0">
-                        <%= link_to lead.name, admin_lead_manager_path(lead_manager),class: 'theme-txt-color mb-0', target: '_blank' %></p>
+                      <%= link_to_if policy([:admin, lead_manager.manager]).show?, lead_manager.manager_name, admin_lead_manager_path(lead_manager), class: 'theme-txt-color mb-0', target: '_blank' %></p>
                     <div class="dropdown show text-right p-0">
                         <a class="btn table-dropdown-btn p-0" href="#" role="button" id="dropdownMenuLink"
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
@@ -22,44 +22,20 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="d-flex justify-content-between p-2 pt-0 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.user.email') %></p>
-                    <p class="fn-14 mb-0"><% if lead.email.present? %>
-                        <%= lead.masked_email(current_user) || "" %>
-                        <% end %></p>
-                </div>
+              <% unless current_user.role.in?(%w(channel_partner cp_owner)) %>
                 <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.user.phone') %></p>
-                    <p class="fn-14 mb-0"><% if lead.phone.present? %>
-                        <%= lead.masked_phone(current_user) || "" %>
-                        <% end %></p>
+                  <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.status') %></p>
+                  <p class="fn-14 mb-0"><%= t("mongoid.attributes.lead_manager/status.#{lead_manager.status}") %></p>
                 </div>
-                <% if current_client.selldo_client_id.present? && current_client.selldo_gre_form_id.present? && current_client.selldo_channel_partner_form_id.present? %>
-                <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.selldo_lead_id') %></p>
-                    <p class="fn-14 mb-0"><%= lead.lead_id %></p>
-                </div>
-                <% end %>
-                <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.project_id') %></p>
-                    <p class="fn-14 mb-0"><%= lead.project.try(:name) %></p>
-                </div>
-                <% if !current_user.role.in?(%w(cp_owner channel_partner)) %>
-                <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                    <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.channel_partner') %></p>
-                    <p class="fn-14 mb-0"><%= lead_manager.manager.present? && lead_manager.manager.channel_partner? ? lead_manager.manager_name : '-' %></p>
-                </div>
-                <% end %>
-                <% if lead_manager.active? %>
-                  <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                      <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.expiry_date') %></p>
-                      <p class="fn-14 mb-0"><%= lead_manager.expiry_date.try(:strftime, "%d/%m/%Y") %></p>
-                  </div>
-                  <div class="d-flex justify-content-between p-2 pt-1 pb-1">
-                      <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.expiry_remaining_days') %></p>
-                      <p class="fn-14 mb-0"><%= lead_manager.lead_validity_period %></p>
-                  </div>
-                <% end %>
+              <% end %>
+              <div class="d-flex justify-content-between p-2 pt-1 pb-1">
+                <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.expiry_date') %></p>
+                <p class="fn-14 mb-0"><%= lead_manager.active? ? lead_manager.expiry_date.try(:strftime, "%d/%m/%Y") : '-' %></p>
+              </div>
+              <div class="d-flex justify-content-between p-2 pt-1 pb-1">
+                <p class="fn-14 txt-drk-b-lt mb-0"><%= t('mongoid.attributes.lead_manager.expiry_remaining_days') %></p>
+                <p class="fn-14 mb-0"><%= lead_manager.active? ? lead_manager.lead_validity_period : '-' %></p>
+              </div>
                 <!--
                 <div class="d-flex justify-content-between p-2 pt-1 pb-1">
                     <p class="fn-14 txt-drk-b-lt mb-0"><%#= t('mongoid.attributes.lead_manager.registered_at') %></p>

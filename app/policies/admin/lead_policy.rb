@@ -208,6 +208,10 @@ class Admin::LeadPolicy < LeadPolicy
     record.manager.present? && record.manager.channel_partner? && record.manager_name.present?
   end
 
+  def drop_off?
+    record.project.ask_lead_dropoff_reason? && record.may_dropoff? && ((user.role?('sales') && record.closing_manager_id == user.id) || user.role.in?(%w(gre team_lead)))
+  end
+
   def permitted_attributes(params = {})
     attributes = super || []
     attributes += [:first_name, :last_name]
@@ -223,6 +227,10 @@ class Admin::LeadPolicy < LeadPolicy
     if user.present? && enable_lead_registration?(user)
       attributes += [:manager_id] if user.booking_portal_client.try(:enable_channel_partners?) && record.new_record?
       attributes += [third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes]
+    end
+
+    if record.may_dropoff? && ((user.role?('sales') && record.closing_manager_id == user.id) || user.role.in?(%w(gre team_lead)))
+      attributes += [:event, :drop_reason]
     end
 
     attributes.uniq

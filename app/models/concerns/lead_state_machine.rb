@@ -5,6 +5,7 @@ module LeadStateMachine
     attr_accessor :event
 
     field :customer_status, type: String, default: 'registered'
+    field :drop_reason, type: String
 
     aasm :customer, column: :customer_status, whiny_transitions: false do
       state :registered, initial: true
@@ -138,6 +139,14 @@ module LeadStateMachine
         self.errors.add(:base, 'Invalid transition')
       end
       self.errors.empty?
+    end
+
+    before_validation do |lead|
+      _event = lead.event.to_s
+      lead.event = nil
+      if _event.present? && (lead.aasm(:customer).current_state.to_s != _event.to_s)
+        lead.move_to_next_state!(_event.to_s)
+      end
     end
   end
 end

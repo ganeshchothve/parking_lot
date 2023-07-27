@@ -1,6 +1,6 @@
 <%= nested_form_for([:admin, @incentive_scheme], local: true, remote: true, html: {class: 'modal-remote-form validate-form', "data-resource-type": global_labels['incentive_schemes'], "data-type": "json", id: 'incentive_scheme_form'}) do |f| %>
 <div class="modal fade right fixed-header-footer" role="dialog" id="modal-remote-form-inner">
-  <div class="modal-dialog modal-xl" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
 
       <div class="modal-header">
@@ -64,11 +64,11 @@
         <div class="mb-3">
           <%= f.label :auto_apply, class: 'label-required mb-2' %>
           <div class="form-check form-check-inline">
-            <%= f.radio_button :auto_apply, true, required: 'required', class: "form-check-input wd-22" %>
+            <%= f.radio_button :auto_apply, true, required: 'required', class: "form-check-input wd-22", disabled: !policy([current_user_role_group, @incentive_scheme]).editable_field?("auto_apply") %>
             <%= f.label :auto_apply, I18n.t("global.boolean.true"), class: "form-check-label d-inline-block ms-2" %>
           </div>
           <div class="form-check form-check-inline mb-3">
-            <%= f.radio_button :auto_apply, false, required: 'required', class: "form-check-input wd-22" %>
+            <%= f.radio_button :auto_apply, false, required: 'required', class: "form-check-input wd-22", disabled: !policy([current_user_role_group, @incentive_scheme]).editable_field?("auto_apply") %>
             <%= f.label :auto_apply, I18n.t("global.boolean.false"), class: "form-check-label d-inline-block ms-2" %>
           </div>
           <div class="mb-3">

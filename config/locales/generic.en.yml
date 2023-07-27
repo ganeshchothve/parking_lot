@@ -46,6 +46,7 @@ en-GENERIC:
     formats:
       default: "%d/%m/%Y %I:%M %p"
       date: "%d/%m/%Y"
+      long: "%d/%m/%Y %I:%M %p"
   date_time:
     formats:
       default: "%d/%m/%Y %I:%M %p"
@@ -591,6 +592,9 @@ en-GENERIC:
       bulk_job:
         one: "Bulk Job"
         other: "Bulk Jobs"
+      lead_manager:
+        one: 'Deal Manager'
+        other: 'Deal Managers'
 
     attributes:
       bulk_job:
@@ -1095,6 +1099,7 @@ en-GENERIC:
         selldo_channel_partner_form_id: "SellDo Form ID - For Partners"
         selldo_gre_form_id: "SellDo Form ID - Used by Non Partners"
         selldo_api_key: "SellDo API Key (Use generic Api Client)"
+        selldo_full_access_api_key: 'SellDo Full Access API Key'
         selldo_default_srd: "SellDo Default SRD"
         selldo_cp_srd: "SellDo Partner SRD"
         selldo_id: "CRM Product/ Service ID"
@@ -1173,6 +1178,8 @@ en-GENERIC:
         bookings: Bookings
         kylas_product_value: 'CRM Price'
         kylas_product_id: 'CRM Reference ID'
+        ask_lead_dropoff_reason: 'Do You Want To Ask For Deal Dropoff Reason?'
+        lead_dropoff_reasons_list: 'List Down Deal Dropoff Reasons (Leave it empty to make it a free form text field)'
       project/project_type:
         residential: "Residential"
         commercial: "Commercial"
@@ -1720,6 +1727,7 @@ en-GENERIC:
         actual_invoice_amount: "Actual Invoice Amount"
         tentative_invoice_amount: "Tentative Invoice Amount"
         brokerage_type: "Brokerage Type"
+        taxable_amount: 'Net Taxable Amount'
       invoice/status:
         draft: "Draft"
         raised: "Raised"
@@ -2290,6 +2298,7 @@ en-GENERIC:
         errors:
           lead_registered_with_client: "Lead is already registered with Client"
           lead_registered_with_project: "Lead is already registered with Project"
+        drop_reason: 'Why The Deal Has Dropped?'
       lead/stage:
         incoming: "Incoming"
         booked: "Booked"
@@ -2317,6 +2326,14 @@ en-GENERIC:
         expiry_date: "Deal Expiry Date"
         sitevisit_date: "Meeting Date"
         sitevisit_status: "Meeting Status"
+        status: 'Status'
+      lead_manager/status:
+        draft: Draft
+        active: Active
+        tagged: Tagged
+        expired: Expired
+        cancelled: Cancelled
+        inactive: Inactive
       lead_manager/count_status:
         fresh_lead: "Fresh Deal"
         active_in_same_cp: "Active In Same Cp"
@@ -2674,7 +2691,11 @@ en-GENERIC:
       index:
         link_name: "Deal Managers"
       show:
-        link_name: "Show Deal Managers"
+        link_name: "Show Details"
+      edit:
+        link_name: 'Edit'
+      extend_validity:
+        link_name: 'Extend Validity'
       notice:
         created: "Deal Manager created successfully."
         updated: "Deal Manager updated successfully."
@@ -2998,6 +3019,8 @@ en-GENERIC:
       generate_invoice:
         link_name: "Print Invoice"
       asset_create:
+        link_name: "Upload Invoice Copy"
+      asset_show:
         link_name: "Uploaded Invoice Copy"
       download:
         link_name: "Download"
@@ -3150,8 +3173,6 @@ en-GENERIC:
         ladder: "Ladder"
       invoice_ageing_report: "Invoice Ageing Report"
       registration_count: "Registration Count"
-      payment_failed: "Payment Failed"
-      payment_unsuccessful: "Your payment of was unsuccessful. Please check the credentials and try again."
       headers:
         site_visit_active_partners: "Meeting Active Partners"
         booking_active_partners: "Booking Active Partners"
@@ -3384,6 +3405,8 @@ en-GENERIC:
         thanks_for_payment: "Thank you for your payment of %{name}."
         email_will_be_sent: "You will receive an email from us with detailed information on next steps."
         unit_in_blocked_state: "This unit will remain blocked for you for the next %{name} days. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click"
+        payment_failed: "Payment Failed"
+        payment_unsuccessful: "Your payment was unsuccessful. Please check the credentials and try again."
     referrals:
       index:
         link_name: "Referrals"
@@ -3733,6 +3756,8 @@ en-GENERIC:
       move_to_next_state:
         queued: "%{name} moved to sales queue successfully"
         dropoff: "%{name} dropped off successfully"
+      drop_off:
+        link_name: 'Deal Drop off Reason'
       accepted_by_sales: "Deal %{status}"
       create_from_existing_lead:
         link_name: "Add From Existing Customer"

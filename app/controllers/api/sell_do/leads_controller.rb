@@ -110,7 +110,6 @@ class Api::SellDo::LeadsController < Api::SellDoController
         attrs[:lead] = {
           site_visits_attributes: {
             "0" => {
-              scheduled_status: params[:action_name] == 'site_visit_created' ? 'proposed' : 'confirmed',
               scheduled_on: (DateTime.parse(params.dig(:payload, :scheduled_on)) rescue nil),
               creator_id: @crm.user_id,
               created_by: "crm-#{@crm.id}",

@@ -158,7 +158,7 @@
 <div class='row'>
   <% if policy([:admin, project]).editable_field?("enable_slot_generation") %>
     <div class="col-md-6">
-      <div class="form-group">
+      <div class="form-group mb-3">
         <div class="form-check form-check-inline">
           <%= f.check_box :enable_slot_generation, {:class => "form-check-input wd-22", :disabled => !policy([:admin, project]).editable_field?("enable_slot_generation") }, I18n.t("global.boolean.true"), I18n.t("global.boolean.false") %>
           <%= f.label :enable_slot_generation, class: "form-check-label d-inline-block ms-2" %>
@@ -166,7 +166,27 @@
       </div>
     </div>
   <% end %>
+  <% if policy([:admin, project]).editable_field?("ask_lead_dropoff_reason") %>
+    <div class="col-md-6">
+      <div class="form-group mb-3">
+        <div class="form-check form-check-inline">
+          <%= f.check_box :ask_lead_dropoff_reason, {:class => "form-check-input wd-22", :disabled => !policy([:admin, project]).editable_field?("ask_lead_dropoff_reason") }, I18n.t("global.boolean.true"), I18n.t("global.boolean.false") %>
+          <%= f.label :ask_lead_dropoff_reason, class: "form-check-label d-inline-block ms-2 gst-slab-applicable-check" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
 </div>
+<% if policy([:admin, project]).editable_field?("lead_dropoff_reasons_list") %>
+  <div class="row dropoff-reasons <%= f.object.ask_lead_dropoff_reason? ? '' : 'd-none' %>">
+    <div class="col-md-12">
+      <div class="mb-3">
+        <%= f.label :lead_dropoff_reasons_list %>
+        <%= f.select :lead_dropoff_reasons_list, f.object.lead_dropoff_reasons_list, {},  class: "selectize-tags", multiple: true, disabled: !policy([current_user_role_group, project]).editable_field?("lead_dropoff_reasons_list") %>
+      </div>
+    </div>
+  </div>
+<% end %>
 <% if policy([:admin, project]).editable_field?("disable_project") %>
   <div class='row mt-2'>
     <div class="col-md-12">
@@ -192,6 +212,13 @@
         $('.inventory-role-fields').removeClass('d-none');
       }else{
         $('.inventory-role-fields').addClass('d-none');
+      }
+    });
+    $('#project_ask_lead_dropoff_reason').change(function(){
+      if($(this).is(":checked")){
+        $('.dropoff-reasons').removeClass('d-none');
+      }else{
+        $('.dropoff-reasons').addClass('d-none');
       }
     });
   });

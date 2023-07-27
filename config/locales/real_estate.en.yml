@@ -46,6 +46,7 @@ en-REAL_ESTATE:
     formats:
       default: "%d/%m/%Y %I:%M %p"
       date: "%d/%m/%Y"
+      long: "%d/%m/%Y %I:%M %p"
   date_time:
     formats:
       default: "%d/%m/%Y %I:%M %p"
@@ -591,6 +592,9 @@ en-REAL_ESTATE:
       bulk_job:
         one: "Bulk Job"
         other: "Bulk Jobs"
+      lead_manager:
+        one: 'Lead Manager'
+        other: 'Lead Managers'
 
     attributes:
       bulk_job:
@@ -1096,6 +1100,7 @@ en-REAL_ESTATE:
         selldo_channel_partner_form_id: "SellDo Form ID - For Channel Partners"
         selldo_gre_form_id: "SellDo Form ID - Used by Non Channel Partners"
         selldo_api_key: "SellDo API Key (Use generic Api Client)"
+        selldo_full_access_api_key: 'SellDo Full Access API Key'
         selldo_default_srd: "SellDo Default SRD"
         selldo_cp_srd: "SellDo Channel Partner SRD"
         selldo_id: "CRM Project ID"
@@ -1174,6 +1179,8 @@ en-REAL_ESTATE:
         bookings: Bookings
         kylas_product_value: 'CRM Price'
         kylas_product_id: 'CRM Reference ID'
+        ask_lead_dropoff_reason: 'Do You Want To Ask For Lead Dropoff Reason?'
+        lead_dropoff_reasons_list: 'List Down Lead Dropoff Reasons (Leave it empty to make it a free form text field)'
       project/project_type:
         residential: "Residential"
         commercial: "Commercial"
@@ -1725,6 +1732,7 @@ en-REAL_ESTATE:
         actual_invoice_amount: "Actual Invoice Amount"
         tentative_invoice_amount: "Tentative Invoice Amount"
         brokerage_type: "Brokerage Type"
+        taxable_amount: 'Net Taxable Amount'
       invoice/status:
         draft: "Draft"
         raised: "Raised"
@@ -2152,7 +2160,7 @@ en-REAL_ESTATE:
         lead_id: "CRM Lead ID"
         manager_name: "Manager Name"
         manager_role: "Sales Manager / Added by Role"
-        manager_id: "Channel Partner"
+        manager_id: "Manager"
         project_ids: "Projects"
         manager_change_reason: "Reason for changing Partner"
         name: "Name"
@@ -2294,6 +2302,7 @@ en-REAL_ESTATE:
         kylas_contact: Kylas Contacts
         manager_ids: Channel Partners
         crm_reference_id: CRM Reference ID
+        drop_reason: 'Why The Lead Has Dropped?'
         errors:
           lead_registered_with_client: "Lead is already registered with Client"
           lead_registered_with_project: "Lead is already registered with Project"
@@ -2326,6 +2335,14 @@ en-REAL_ESTATE:
         expiry_date: "Lead Expiry Date"
         sitevisit_date: "Walk-in Date"
         sitevisit_status: "Walk-in Status"
+        status: 'Status'
+      lead_manager/status:
+        draft: Draft
+        active: Active
+        tagged: Tagged
+        expired: Expired
+        cancelled: Cancelled
+        inactive: Inactive
       lead_manager/count_status:
         fresh_lead: "Fresh Lead"
         active_in_same_cp: "Active In Same Cp"
@@ -2683,7 +2700,11 @@ en-REAL_ESTATE:
       index:
         link_name: "Lead Managers"
       show:
-        link_name: "Show Lead Managers"
+        link_name: "Show Details"
+      edit:
+        link_name: 'Edit'
+      extend_validity:
+        link_name: 'Extend Validity'
       notice:
         created: "Lead Manager created successfully."
         updated: "Lead Manager updated successfully."
@@ -3008,6 +3029,8 @@ en-REAL_ESTATE:
       generate_invoice:
         link_name: "Print Invoice"
       asset_create:
+        link_name: "Upload Invoice Copy"
+      asset_show:
         link_name: "Uploaded Invoice Copy"
       download:
         link_name: "Download"
@@ -3160,8 +3183,6 @@ en-REAL_ESTATE:
         ladder: "Ladder"
       invoice_ageing_report: "Invoice Ageing Report"
       registration_count: "Registration Count"
-      payment_failed: "Payment Failed"
-      payment_unsuccessful: "Your payment of was unsuccessful. Please check the credentials and try again."
       headers:
         site_visit_active_partners: "Walk-in Active Partners"
         booking_active_partners: "Booking Active Partners"
@@ -3394,6 +3415,8 @@ en-REAL_ESTATE:
         thanks_for_payment: "Thank you for your payment of %{name}."
         email_will_be_sent: "You will receive an email from us with detailed information on next steps."
         unit_in_blocked_state: "This unit will remain blocked for you for the next %{name} days. Please complete your payment of remaining amount within this duration to confirm your unit. To make additional payment please click"
+        payment_failed: "Payment Failed"
+        payment_unsuccessful: "Your payment was unsuccessful. Please check the credentials and try again."
     referrals:
       index:
         link_name: "Referrals"
@@ -3743,6 +3766,8 @@ en-REAL_ESTATE:
       move_to_next_state:
         queued: "%{name} moved to sales queue successfully"
         dropoff: "%{name} dropped off successfully"
+      drop_off:
+        link_name: 'Lead Drop off Reason'
       accepted_by_sales: "Lead %{status}"
       create_from_existing_lead:
         link_name: "Add From Existing Customer"

@@ -3,15 +3,15 @@
 <% end %>
 
 <% if policy([:admin, lead_manager]).asset_create? %>
-  <%= link_to current_user.role?(:channel_partner) ? 'Upload Site Visit Form' : 'Site Visit Forms' , admin_lead_manager_path(lead_manager,'remote-state': assetables_path(assetable_type: lead_manager.class.model_name.i18n_key.to_s, assetable_id: lead_manager.id) ), class: "dropdown-item" %>
+  <%= link_to current_user.role?(:channel_partner) ? 'Upload Site Visit Form' : 'Site Visit Forms' , admin_lead_path(lead_manager.lead, 'remote-state': assetables_path(assetable_type: lead_manager.class.model_name.i18n_key.to_s, assetable_id: lead_manager.id) ), class: "dropdown-item" %>
 <% end %>
 
 <% if policy([:admin, lead_manager]).edit? %>
-  <%= link_to t('controller.lead_managers.edit'), edit_admin_lead_manager_path(lead_manager), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to t('controller.lead_managers.edit.link_name'), edit_admin_lead_manager_path(lead_manager), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
 <% if policy([:admin, lead_manager]).extend_validity? %>
-  <%= link_to t('controller.lead_managers.extend_validity'), extend_validity_admin_lead_manager_path(lead_manager), class: "dropdown-item modal-remote-form-link" %>
+  <%= link_to t('controller.lead_managers.extend_validity.link_name'), extend_validity_admin_lead_manager_path(lead_manager), class: "dropdown-item modal-remote-form-link" %>
 <% end %>
 
 <% if policy([:admin, lead_manager]).accompanied_credit? %>

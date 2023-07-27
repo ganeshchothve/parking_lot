@@ -56,6 +56,7 @@
 <% end %>
 
 <!-- Upload documents for channel partner -->
-<%# if policy([:admin, invoice]).index? %>
-  <%#= link_to current_user.role?('channel_partner')  ? "Upload Invoice copy" : t('controller.invoices.asset_create.link_name'), assetables_path(assetable_type: invoice.class.model_name.i18n_key.to_s, assetable_id: invoice.id, asset_header: t('controller.invoices.asset_create.link_name')), class: "dropdown-item modal-remote-form-link" %>
-<%# end %>
+<% if policy([:admin, invoice]).index? %>
+  <% link_name = policy([:admin, invoice]).asset_create? ? t('controller.invoices.asset_create.link_name') : t('controller.invoices.asset_show.link_name') %>
+  <%= link_to link_name, assetables_path(assetable_type: invoice.class.model_name.i18n_key.to_s, assetable_id: invoice.id, asset_header: link_name), class: "dropdown-item modal-remote-form-link" %>
+<% end %>
