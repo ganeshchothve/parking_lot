@@ -1483,8 +1483,6 @@ en-REAL_ESTATE:
         order: "Order"
         auto_release_on: "Auto Release On"
         unit_facing_link: "Unit Facing Link"
-        tower_name:
-          rhea_miranda: "Rhea Miranda"
         floor_bands:
           '1': 'Lower Band'
           '2': 'Middle Band'
@@ -2509,10 +2507,10 @@ en-REAL_ESTATE:
         id: "Name / Email / Phone"
 
       typology_and_inventory_summary_reports:
-        mrp: "EBW"
+        mrp: "Tokens"
         actual_inventory: "Actual Inventory"
-        mrp_filled: "EBW Filled"
-        booking_filled: 'Booking Filled'
+        mrp_filled: "Tokens With KYC Filled"
+        booking_filled: 'Bookings'
         fill_rate: "Fill Rate"
         typology: "Typology"
         blue: "Blue"
