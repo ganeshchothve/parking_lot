@@ -87,7 +87,7 @@
                   <% if policy([:admin, @user_kyc]).editable_field?("configurations") %>
                     <div class="col-md-6 mb-3">
                       <%= f.label :configurations, class: 'control-label' %>
-                      <%= f.select :configurations, UserKyc.available_configurations(@user_kyc.lead_id.to_s).collect{|x| [x[:text], x[:id]] }, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true, disabled: !policy(@user_kyc).editable_field?("configurations") %>
+                      <%= f.select :configurations, UserKyc.available_configurations(@user_kyc.lead_id.to_s).collect{|x| [x[:text], x[:id]] }, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true, required: current_client.enable_floor_band, disabled: !policy(@user_kyc).editable_field?("configurations") %>
                     </div>
                   <% end %>
                   <% if policy([:admin, @user_kyc]).editable_field?("budget") %>
@@ -109,7 +109,7 @@
                   <% if policy([:admin, @user_kyc]).editable_field?("preferred_floor_band") %>
                     <div class="col-md-6 mb-3">
                       <%= f.label :preferred_floor_band, class: 'label-required' %>
-                      <%= f.select :preferred_floor_band, preferred_floors_options(f.object), {prompt: true}, class: 'selectize', multiple: true, disabled: (policy(@user_kyc).editable_field?("preferred_floor_band") ? false : true), required: 'required' %>
+                      <%= f.select :preferred_floor_band, preferred_floors_options(f.object), {prompt: true}, class: 'selectize', multiple: true, required: 'required', disabled: (policy(@user_kyc).editable_field?("preferred_floor_band") ? false : true) %>
                     </div>
                   <% end %>
                 </div>
