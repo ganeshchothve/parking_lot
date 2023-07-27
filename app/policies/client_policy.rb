@@ -35,7 +35,7 @@ class ClientPolicy < ApplicationPolicy
       ]
     end
     if user.role.in?(%w(superadmin))
-      attrs += [:enable_channel_partners, :enable_leads, :enable_site_visit, :allow_lead_duplication, :enable_lead_conflicts]
+      attrs += [:enable_channel_partners, :enable_leads, :enable_site_visit, :allow_lead_duplication, :enable_lead_conflicts, :enable_floor_band]
     end
     attrs += [:sms_provider_dlt_entity_id, :notification_api_key, :sms_provider_telemarketer_id, :sms_provider, :sms_provider_username, :sms_provider_password, :whatsapp_api_key, :whatsapp_api_secret,
       :mailgun_private_api_key, :mailgun_email_domain, :sms_mask, :preferred_login]

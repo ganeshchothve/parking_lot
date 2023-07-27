@@ -1003,6 +1003,7 @@ en-GENERIC:
         project_meeting_custom_field: "Product/ Service"
         industry: 'Industry'
         enable_customer_registration: "Enable Customer Registration on Login Page"
+        enable_floor_band: "Enable Floor Band for Client"
       client/available_preferred_logins:
         phone: "Phone Based"
         email: "Email Based"

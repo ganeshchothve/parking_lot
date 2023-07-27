@@ -103,11 +103,17 @@
                       <%= f.label :preferred_floors, class: 'control-label' %>
                       <%= f.select :preferred_floors, UserKyc.available_preferred_floors.collect{|x| [x[:text], x[:id]]}, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true, disabled: !policy(@user_kyc).editable_field?("preferred_floors") %>
                     </div>
+                  <% end %>
+                </div>
+                <div class="row">
+                  <% if policy([:admin, @user_kyc]).editable_field?("preferred_floor_band") %>
                     <div class="col-md-6 mb-3">
                       <%= f.label :preferred_floor_band, class: 'label-required' %>
                       <%= f.select :preferred_floor_band, preferred_floors_options(f.object), {prompt: true}, class: 'selectize', multiple: true, disabled: (policy(@user_kyc).editable_field?("preferred_floor_band") ? false : true), required: 'required' %>
                     </div>
                   <% end %>
+                </div>
+                <div class="row">
                   <% if policy([:admin, @user_kyc]).editable_field?("number_of_units") %>
                     <div class="col-md-6 mb-3">
                       <%= f.input :number_of_units %>
