@@ -95,6 +95,7 @@ class SiteVisitObserver < Mongoid::Observer
       end
     end
 
+    # TODO: Reschedule this job on site visit reschedule
     SiteVisitDeactivateWorker.perform_in(site_visit.scheduled_on + SiteVisit::TIME_TILL_INACTIVE, site_visit.id, site_visit.booking_portal_client_id)
   end
 
@@ -113,7 +114,16 @@ class SiteVisitObserver < Mongoid::Observer
     end
 
     if site_visit.scheduled_on_changed? && site_visit.scheduled_on_was.present? && site_visit.scheduled_on.present?
-      site_visit.send_email_sms("site_visit_rescheduled")
+      site_visit.send_email_sms("site_visit_rescheduled_to_customer", site_visit.lead)
+      site_visit.send_email_sms("site_visit_rescheduled_to_channel_partner", site_visit.manager) if site_visit.manager && site_visit.manager.channel_partner?
+    end
+
+    # if site visit status is changed to conducted, the site visit status is pushed to sell do
+    if site_visit.status_changed? && site_visit.status == 'conducted'
+      crm_base = Crm::Base.where(domain: ENV_CONFIG.dig(:selldo, :base_url)).first
+      if crm_base.present?
+        api, api_log = site_visit.push_in_crm(crm_base)
+      end
     end
   end
 end

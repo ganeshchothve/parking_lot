@@ -12,7 +12,7 @@ module SiteVisitStateMachine
       state :scheduled, initial: true
       state :pending, :missed, :conducted, :paid, :inactive, :cancelled
 
-      event :conduct, before: :change_scheduled_on_to_now_if_required, after: %i[send_notification activate_lead_manager ] do
+      event :conduct, before: :change_scheduled_on_to_now_if_required, after: %i[send_notification activate_lead_manager] do
         transitions from: :scheduled, to: :conducted #, if: :can_conduct?
         transitions from: :pending, to: :conducted #, if: :can_conduct?
       end
