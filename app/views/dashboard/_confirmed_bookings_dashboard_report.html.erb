@@ -19,7 +19,7 @@
         <tr>
           <td><%= t("dashboard.bookings.confirmed_bookings.tasklist_completed." + "#{b[:task_list_completed]}") %></td>
           <td class="text-right">
-            <%= link_to b[:count], admin_booking_details_path({ fltrs: { status: @bookings, confirmed_and_task_list_completed: "#{b[:task_list_completed]}" }, current: 'all'}) %>
+            <%= link_to b[:count], admin_booking_details_path({ fltrs: { confirmed_task_list_completed: "#{b[:task_list_completed]}" } }), target: '_blank' %>
           </td>
         </tr>
         <% end %>

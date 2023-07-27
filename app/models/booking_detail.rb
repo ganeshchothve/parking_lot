@@ -144,6 +144,7 @@ class BookingDetail
   scope :filter_by_tasks_completed_tracked_by, ->(tracked_by) { where("#{tracked_by}_tasks_completed": true) }
   scope :filter_by_tasks_pending_tracked_by, ->(tracked_by) { where("#{tracked_by}_tasks_completed": false) }
   scope :filter_by_search, ->(search) { regex = ::Regexp.new(::Regexp.escape(search), 'i'); where(name: regex ) }
+  scope :filter_by_confirmed_task_list_completed,->(task_list_completed) { where(task_list_completed: (task_list_completed.to_s == 'true'), status: "booked_confirmed") }
   scope :filter_by_created_at, ->(date) { start_date, end_date = date.split(' - '); where(created_at: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day) }
   scope :filter_by_booked_on, ->(date) { start_date, end_date = date.split(' - '); where(booked_on: Date.parse(start_date).beginning_of_day..Date.parse(end_date).end_of_day)
   }
