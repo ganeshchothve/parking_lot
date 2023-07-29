@@ -3207,6 +3207,7 @@ en-REAL_ESTATE:
           inventory_snapshot: "Inventory Snapshot"
           collection_report: "Collection Report"
           typology_report: "Typology and Inventory Summary"
+          token_report: "Configuration Wise Token Report"
         user_requests:
           details_report: "User Requests"
         typology_and_inventory_summary_reports: 'Typology and Inventory Summary'

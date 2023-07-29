@@ -13,6 +13,12 @@ module ProjectUnitDashboardConcern
     @typology_and_inventory_summary_data = DashboardDataProvider.typology_and_inventory_summary(project_units_matcher)
   end
 
+  def configuration_wise_token_report
+    options = project_units_matcher
+    options[:is_token_report] = true
+    @typology_and_inventory_summary_data = DashboardDataProvider.typology_and_inventory_summary(options)
+  end
+
   private
 
   def project_units_matcher

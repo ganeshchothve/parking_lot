@@ -1037,7 +1037,7 @@ module DashboardDataProvider
     matcher = options[:matcher].with_indifferent_access rescue {}
     created_at = matcher[:dates]
     actual_inventory = self.typology_and_inventory_actual_data(created_at)
-    mrp_data = self.typology_and_inventory_mrp_data(created_at)
+    mrp_data = self.typology_and_inventory_mrp_data(created_at, options[:is_token_report])
     booking_data = self.typology_and_inventory_booking_data(created_at)
     actual_inventory.map do |data|
       mrp = mrp_data.select{ |d| d['mrp_id'] == data['actual_id']}
@@ -1088,8 +1088,9 @@ module DashboardDataProvider
     data
   end
 
-  def self.typology_and_inventory_mrp_data(created_at = nil)
+  def self.typology_and_inventory_mrp_data(created_at = nil, is_token_report = nil)
     matcher = { "$and": [{ "status": { "$in":  %w[success clearance_pending] } }, { "token_number": { "$nin": [nil, ''] } }] }
+    matcher[:booking_detail_id] = nil if is_token_report.present?
     if created_at.present?
       start_date, end_date = created_at.split(' - ')
       matcher = matcher.merge({ "created_at": { "$gte": (Date.parse(start_date).beginning_of_day), "$lte": (Date.parse(end_date).end_of_day)} })

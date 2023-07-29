@@ -3164,6 +3164,7 @@ en:
           inventory_snapshot: "Inventory Snapshot"
           collection_report: "Collection Report"
           typology_report: "Typology and Inventory Summary"
+          token_report: "Configuration Wise Token Report"
         user_requests:
           details_report: "User Requests"
         booking_details:
