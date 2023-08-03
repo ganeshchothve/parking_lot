@@ -99,15 +99,20 @@ class Admin::LeadsController < AdminController
   end
 
   def assign_sales
-    if @lead.may_assign_sales?(params[:sales_id])
-      if @lead.assign_manager(params[:sales_id])
-        @lead.current_site_visit&.set(sales_id: params[:sales_id])
-        flash.now[:notice] = I18n.t("controller.leads.notice.assigned_to", name1: @lead.name, name2: @sales.name)
+    respond_to do |format|
+      if @lead.may_assign_sales?(params[:sales_id])
+        if @lead.assign_manager(params[:sales_id])
+          @lead.current_site_visit&.set(sales_id: params[:sales_id])
+          flash.now[:notice] = I18n.t("controller.leads.notice.assigned_to", name1: @lead.name, name2: @sales.name)
+          format.json { render json: { message: I18n.t("controller.leads.notice.assigned_to", name1: @lead.name, name2: @sales.name) }, status: :ok }
+        else
+          flash.now[:alert] = I18n.t("controller.leads.errors.failed_to_assign", name: "#{@lead.name}")
+          format.json { render json: { message: I18n.t("controller.leads.errors.failed_to_assign", name: "#{@lead.name}") }, status: :unprocessable_entity }
+        end
       else
         flash.now[:alert] = I18n.t("controller.leads.errors.failed_to_assign", name: "#{@lead.name}")
+        format.json { render json: { message: I18n.t("controller.leads.errors.failed_to_assign", name: "#{@lead.name}") }, status: :unprocessable_entity }
       end
-    else
-      flash.now[:alert] = I18n.t("controller.leads.errors.failed_to_assign", name: "#{@lead.name}")
     end
   end
 

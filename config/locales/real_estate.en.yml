@@ -3732,6 +3732,9 @@ en-REAL_ESTATE:
         link_name: "Add New %{model}"
       drop_customer:
         link_name: "Drop Customer"
+      engage_customer:
+        link_name: 'Engage with Customer'
+        loading: 'Engaging..'
       payment_link:
         link_name: "Send Payment link"
       reassign_sales: "Reassign Lead"
