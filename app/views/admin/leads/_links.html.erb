@@ -39,6 +39,10 @@
   <% end %>
 <% end %>
 
+<% if lead.may_assign_sales?(current_user.id) %>
+  <%= link_to I18n.t("controller.leads.engage_customer.link_name"), assign_sales_admin_lead_path(lead, sales_id: current_user.id, format: :json), method: 'patch', remote: true, data: { confirm: I18n.t("controller.assets.confirm.sure"), disable_with: I18n.t("controller.leads.engage_customer.loading") }, class: 'dropdown-item engage move-to-next-state' %>
+<% end %>
+
 <% if policy([:admin, Crm::Base.new(booking_portal_client_id: current_client.id)]).choose_crm? && Crm::Api.where(booking_portal_client_id: current_client.id, resource_class: 'Lead').present? %>
   <%= link_to t('controller.crms.choose_crm.link_name'), choose_crm_admin_crm_base_index_path(resource_id: lead.id, resource_class: lead.class), class: "dropdown-item " %>
 <% end %>
@@ -86,7 +90,7 @@
 
 <%= javascript_tag do %>
   $(document).ready(function(){
-    $('a.queued, a.dropoff').on('ajax:success', function(event) {
+    $('a.queued, a.dropoff, a.engage').on('ajax:success', function(event) {
       setTimeout(function() {
         window.location.reload();
       }, 3000);

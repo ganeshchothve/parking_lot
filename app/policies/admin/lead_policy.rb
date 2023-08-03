@@ -126,7 +126,7 @@ class Admin::LeadPolicy < LeadPolicy
   end
 
   def assign_sales?
-    user.role.in?(%w(gre team_lead))
+    user.role.in?(%w(gre team_lead sales))
   end
 
   def move_to_next_state?
