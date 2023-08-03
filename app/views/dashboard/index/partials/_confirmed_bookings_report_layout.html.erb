@@ -16,7 +16,7 @@
 
       <div class="filter-box modal-content px-3 fixed-header-footer">
         <div class="filter-header modal-header">
-          <h5 class="modal-title title"><%= I18n.t("global.filter") %></h5>
+          <h5 class="modal-title title"><%#= I18n.t("global.filter") %></h5>
           <a href="javascript:;" class="close-filter-btn btn-close"></a>
         </div>
         <%#= form_tag confirmed_bookings_dashboard_report_path, method: "get", remote: true, id: "confirmed_bookings_dashboard_report_filter", class: 'filter-form-modal' do %>
@@ -34,7 +34,7 @@
           </div>
           <div class="filter-footer modal-footer text-end">
             <%#= submit_tag I18n.t("global.apply"), class: "f-save-btn btn btn-primary fn-500 float-end" %>
-            <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%= I18n.t("global.cancel") %></button>
+            <button type="button" class="f-cancel-btn btn btn-secondary fn-500 float-end"><%#= I18n.t("global.cancel") %></button>
           </div>
         <%# end %>
       </div> -->
@@ -45,7 +45,7 @@
 
 <%= javascript_tag do %>
   $(document).ready(function(){
-    FormInitializer.init($("#confirmed_bookings_dashboard_report_filter"));
+    //FormInitializer.init($("#confirmed_bookings_dashboard_report_filter"));
     $.ajax({
       url: "<%= confirmed_bookings_dashboard_report_path %>",
       type: "get",

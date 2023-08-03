@@ -27,7 +27,7 @@
               </div>
               <div class="mb-3 col-12">
                 <%= label_tag :project_ids, I18n.t("mongoid.models.project.other"), class: "control-label float-left" %>
-                <%= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: I18n.t("global.select"), class: "selectize", multiple: true} %>
+                <%= select_tag :project_ids, options_for_select(Project.where(Project.user_based_scope(current_user)).filter_by_is_active(true).collect{|x| [x.name, x.id]}.sort{|x, y| x[0] <=> y[0]}), {prompt: I18n.t("global.select"), class: "selectize", multiple: true} %>
               </div>
             </div>
           </div>

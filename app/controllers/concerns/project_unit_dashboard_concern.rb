@@ -38,7 +38,7 @@ module ProjectUnitDashboardConcern
     if params[:project_ids].present?
       options[:matcher][:project_id] = {"$in": params[:project_ids].map{|id| BSON::ObjectId(id) }}
     else
-      options[:matcher][:project_id] = {"$in": Project.where(Project.user_based_scope(current_user)).pluck(:_id).uniq }
+      options[:matcher][:project_id] = {"$in": Project.where(Project.user_based_scope(current_user)).filter_by_is_active(true).pluck(:_id).uniq }
     end
     options
   end

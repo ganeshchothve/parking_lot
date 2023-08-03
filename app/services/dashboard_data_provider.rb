@@ -1229,7 +1229,7 @@ module DashboardDataProvider
 
   def self.bookings_with_completed_tasks_list(matcher = {})
     matcher = matcher.deep_symbolize_keys
-    matcher.merge!({status: 'booked_confirmed'})
+    matcher.merge!({status: 'booked_confirmed', task_list_completed: {'$ne': nil}})
     data = BookingDetail.collection.aggregate([
       { '$match': matcher },
       {

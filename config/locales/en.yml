@@ -2494,6 +2494,13 @@ en:
         yellow: "Yellow"
         bookings: "Bookings"
 
+      booking_progress_report:
+        mrp: 'Tokens'
+        blocked: 'Blocked'
+        under_negotiation: 'Under Negotiation'
+        booked_tentative: 'Tentative Booked'
+        booked_confirmed: 'Confirmed Booked'
+
   controller:
     bulk_jobs:
       index:

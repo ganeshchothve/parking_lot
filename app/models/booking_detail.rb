@@ -504,7 +504,7 @@ class BookingDetail
   end
 
   def tasks_completed?
-    project_unit.booking_portal_client.checklists.distinct(:key) == tasks.where(completed: true).distinct(:key)
+    booking_portal_client&.checklists&.distinct(:key) == tasks.where(completed: true).distinct(:key)
   end
 
   class << self
