@@ -1,0 +1,56 @@
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <% colspan_size = (I18n.t("mongoid.attributes.project_unit.floor_bands").keys.count + 1) %>
+        <th class="text-left"><b><%= t('mongoid.attributes.typology_and_inventory_summary_reports.mrp') %></b></th>
+        <th colspan="<%=colspan_size%>" class="text-center"><b><%= t('mongoid.attributes.typology_and_inventory_summary_reports.actual_inventory') %></b></th>
+        <th colspan="<%=colspan_size%>" class="text-center"><b><%= t('mongoid.attributes.typology_and_inventory_summary_reports.mrp_filled') %></b></th>
+        <th colspan="<%=colspan_size%>" class="text-center"><b><%= t('mongoid.attributes.typology_and_inventory_summary_reports.fill_rate') %></b></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b><%= t('mongoid.attributes.typology_and_inventory_summary_reports.typology') %></b></td>
+        <% 3.times do %>
+          <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |key| %>
+            <td><b><%= t("mongoid.attributes.project_unit.floor_bands.#{key}") %></b></td>
+          <% end %>
+          <td><b><%= t('global.total') %></b></td>
+        <% end %>
+      </tr>
+      <% typology_and_inventory_summary_data.each do |d| %>
+        <tr>
+          <td class="text-left"><%= t("mongoid.attributes.user_kyc/configurations.#{d['actual_id']}") %></td>
+          <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
+            <td><%= d["actual_#{floor_band}"] || 0%></td>
+          <% end %>
+          <td><%= d['actual_total'] || 0 %></td>
+          <%I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
+            <td><%= d["mrp_#{floor_band}"] || 0%></td>
+          <% end %>
+          <td><%= d['mrp_total'] || 0 %></td>
+          <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
+            <td><%= DashboardDataProvider.calculate_percentage(d,floor_band) %> % </td>
+          <% end %>
+          <td><b><%= DashboardDataProvider.calculate_total_percentage(d) %> % <b></td>
+        </tr>
+      <% end %>
+      <tr>
+        <td class="text-left"><b><%= t('global.total') %></b></td>
+        <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
+          <td><b><%= typology_and_inventory_summary_data.map{|d| d["actual_#{floor_band}"] }.compact.sum %></b></td>
+        <% end %>
+        <td><b><%= actual_total %></b></td>
+        <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
+          <td><b><%= typology_and_inventory_summary_data.map{|d| d["mrp_#{floor_band}"] }.compact.sum %></b></td> 
+        <% end %>
+        <td><b><%= mrp_total %></b></td>
+        <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
+          <td><b><%= DashboardDataProvider.calculate_fill_mrp(typology_and_inventory_summary_data, floor_band) %> %</b></td>
+        <% end %>
+        <td><b><%= fill_mrp_total %> % </b></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

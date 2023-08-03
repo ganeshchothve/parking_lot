@@ -1,0 +1,78 @@
+<%
+  mrp_total = @typology_and_inventory_summary_data.map{|d| d['mrp_total'] }.compact.sum
+  booking_total = @typology_and_inventory_summary_data.map{|d| d['booking_total'] }.compact.sum
+  colspan_size = (I18n.t("mongoid.attributes.project_unit.floor_bands").keys.count + 1)
+%>
+<%
+  fltr_params = { booking_portal_client_id: current_client.id }
+  if @dates.present?
+    start_date, end_date = @dates
+    fltr_params[:created_at] = "#{start_date} - #{end_date}"
+  end
+  if params[:project_ids].present?
+    fltr_params[:project_ids] = params[:project_ids]
+  end
+%>
+
+<% if @typology_and_inventory_summary_data.present? %>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="text-left"><b><%= t('mongoid.attributes.typology_and_inventory_summary_reports.bookings') %></b></th>
+          <th colspan="<%= colspan_size %>" class="text-center"><b><%= t('mongoid.attributes.typology_and_inventory_summary_reports.booking_filled') %></b></th>
+          <th colspan="<%=colspan_size%>" class="text-center"><b><%= t('mongoid.attributes.typology_and_inventory_summary_reports.mrp_filled') %></b></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="text-left"><b><%= t('mongoid.attributes.typology_and_inventory_summary_reports.typology') %></b></td>
+          <% n = current_client.payment_enabled? ? 2 : 1 %>
+          <% n.times do %>
+            <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |key| %>
+              <td class="text-left"><b><%= t("mongoid.attributes.project_unit.floor_bands.#{key}") %></b></td>
+            <% end %>
+            <td class="text-left"><b><%= t('global.total') %></b></td>
+          <% end %>
+        </tr>
+
+        <% @typology_and_inventory_summary_data.each do |d| %>
+          <tr>
+            <td class="text-left"><%= t("mongoid.attributes.user_kyc/configurations.#{d['actual_id']}") %></td>
+            <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
+              <td><%= d["booking_#{floor_band}"] || 0 %></td>
+            <% end %>
+            <td><%= d['booking_total'] || 0 %></td>
+
+            <!-- mrp data -->
+            <% if current_client.payment_enabled? %>
+              <%I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
+                <td><%= d["mrp_#{floor_band}"] || 0%></td>
+              <% end %>
+              <td><%= d['mrp_total'] || 0 %></td>              
+            <% end %>
+          </tr>
+        <% end %>
+
+        <tr>
+          <td class="text-left"><b><%= t('global.total') %></b></td>
+          <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
+            <td><b><%= (@typology_and_inventory_summary_data.map{|d| d["booking_#{floor_band}"] }.compact.sum rescue 0) %></b></td>
+          <% end %>
+          <td><b><%= booking_total %></b></td>
+
+          <!-- mrp data -->
+          <% if current_client.payment_enabled? %>
+            <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
+              <td><b><%= @typology_and_inventory_summary_data.map{|d| d["mrp_#{floor_band}"] }.compact.sum %></b></td> 
+            <% end %>
+            <td><b><%= mrp_total %></b></td>            
+          <% end %>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  No records found yet.
+<% end %>

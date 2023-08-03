@@ -81,6 +81,14 @@
 </div>
 
 <div class="row mb-3">
+  <% if current_client.enable_actual_inventory?(current_user) %>
+    <div class="row mb-3">
+      <%= render "dashboard/index/partials/confirmed_bookings_report_layout.html.erb" %>
+    </div>
+  <% end %>
+  <div class="row mb-3">
+    <%= render "dashboard/index/partials/booking_progress_report_layout.html.erb" %>
+  </div>
   <div class="row mb-3">
     <%= render 'dashboard/index/partials/project_wise_booking_detail_data' %>
   </div>
@@ -102,6 +110,14 @@
   <div class="row mb-3">
     <%= render "dashboard/index/partials/user_requests_report_data" %>
   </div>
+  <% if current_client.enable_floor_band? %>
+    <div class="row mb-3">
+      <%= render "dashboard/index/partials/typology_and_inventory_summary_layout" %>
+    </div>
+    <div class="row mb-3">
+      <%= render "dashboard/index/partials/configuration_wise_token_report_layout" %>
+    </div>
+  <% end %>
 </div>
 
 <!-- <div class="container mb-5 pb-5 admin-dashboard-charts">
