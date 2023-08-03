@@ -38,7 +38,7 @@
 
         <% @typology_and_inventory_summary_data.each do |d| %>
           <tr>
-            <td class="text-left"><%= t("mongoid.attributes.user_kyc/configurations.#{d['actual_id']}") %></td>
+            <td class="text-left"><%= d['actual_id'] %></td>
             <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
               <td><%= d["booking_#{floor_band}"] || 0 %></td>
             <% end %>
@@ -49,7 +49,7 @@
               <%I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
                 <td><%= d["mrp_#{floor_band}"] || 0%></td>
               <% end %>
-              <td><%= d['mrp_total'] || 0 %></td>              
+              <td><%= d['mrp_total'] || 0 %></td>
             <% end %>
           </tr>
         <% end %>
@@ -66,7 +66,7 @@
             <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
               <td><b><%= @typology_and_inventory_summary_data.map{|d| d["mrp_#{floor_band}"] }.compact.sum %></b></td> 
             <% end %>
-            <td><b><%= mrp_total %></b></td>            
+            <td><b><%= mrp_total %></b></td>
           <% end %>
         </tr>
 

@@ -2011,26 +2011,8 @@ en-GENERIC:
         first_name: 'Please fill the name as per the PAN card'
         preferred_floors: 'Select bands in the order of priority'
         loan_required: 'Our representatives will get in touch to facilitate your home loan requirements'
-        parking_required: 'Parking is charged additionally at Rs.3.9 lakhs approx.'
-        configuration_html: 'Limited 1 BHK A inventory available in 8-14 floor band<br> Limited 2 BHK A inventory available in 15-22 floor band'
         pan_card_html: '<ul class="m-0"><li>Upload your Pan card</li></ul>'
         aadhaar_card_html: '<ul class="m-0"><li>For Aadhaar please upload front and back | For Passport, please upload first page and last page</li></ul>'
-      user_kyc/configurations:
-        1_bhk_p: '1 BHK Prime'
-        2_bhk_p: '2 BHK Prime'
-        2_bhk_s: '2 BHK Spacia'
-        2_bhk_s_plus: '2 BHK Spacia+'
-        3_bhk_g: '3 BHK Grande'
-        3_bhk_g_plus: '3 BHK Grande+'
-        studio: 'Studio'
-      user_kyc/unit_configuration_name:
-        1_bhk_p: '1 BHK Prime'
-        2_bhk_p: '2 BHK Prime'
-        2_bhk_s: '2 BHK Spacia'
-        2_bhk_s_plus: '2 BHK Spacia+'
-        3_bhk_g: '3 BHK Grande'
-        3_bhk_g_plus: '3 BHK Grande+'
-        studio: 'Studio'
       campaign:
         name: "Campaign Name"
         description: "About this Campaign"

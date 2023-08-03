@@ -43,7 +43,7 @@
         <% @typology_and_inventory_summary_data.each do |d|
           total_percentage = ((d['booking_total']/d['actual_total'].to_f) * 100).round rescue 0 %>
           <tr>
-            <td class="text-left"><%= t("mongoid.attributes.user_kyc/configurations.#{d['actual_id']}") %></td>
+            <td class="text-left"><%= d['actual_id'] %></td>
             <% I18n.t("mongoid.attributes.project_unit.floor_bands").keys.each do |floor_band| %>
               <td><%= d["actual_#{floor_band}"] || 0 %></td>
             <% end %>
