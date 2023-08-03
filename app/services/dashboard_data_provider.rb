@@ -1033,6 +1033,250 @@ module DashboardDataProvider
     data.map {|x| [x["_id"]["project_id"], x["count"]]}.to_h
   end
 
+  def self.typology_and_inventory_summary(options = {})
+    matcher = options[:matcher].with_indifferent_access rescue {}
+    created_at = matcher[:dates]
+    actual_inventory = self.typology_and_inventory_actual_data(created_at)
+    mrp_data = self.typology_and_inventory_mrp_data(created_at, options[:is_token_report])
+    booking_data = self.typology_and_inventory_booking_data(created_at)
+    actual_inventory.map do |data|
+      mrp = mrp_data.select{ |d| d['mrp_id'] == data['actual_id']}
+      booking = booking_data.select{ |d| d['booking_id'] == data['actual_id']}
+      data.merge!(mrp[0].with_indifferent_access) if mrp.present?
+      data.merge!(booking[0].with_indifferent_access) if booking.present?
+    end
+    actual_inventory
+  end
+
+  def self.calculate_booking_percentage(data,floor_band)
+    percentage = (((data["booking_#{floor_band}"]/data["actual_#{floor_band}"].to_f) * 100).round rescue 0)
+    (percentage.to_f.nan? ? 0.0 : percentage)
+  end
+
+  def self.calculate_fill_booking(typology_and_inventory_summary_data, floor_band)
+    booking_floor_band_total = (typology_and_inventory_summary_data.map{|d| d["booking_#{floor_band}"] }.compact.sum rescue 0)
+    actual_floor_band_total = (typology_and_inventory_summary_data.map{|d| d["actual_#{floor_band}"] }.compact.sum rescue 0)
+    fill_mrp_total = ((booking_floor_band_total/actual_floor_band_total.to_f) * 100).round(2)
+    (fill_mrp_total.to_f.nan? ? 0.0 : fill_mrp_total)
+  end
+
+  def self.calculate_fill_booking_total(typology_and_inventory_summary_data)
+    booking_floor_band_total = (typology_and_inventory_summary_data.map{|d| d["booking_total"] }.compact.sum rescue 0)
+    actual_floor_band_total = (typology_and_inventory_summary_data.map{|d| d["actual_total"] }.compact.sum rescue 0)
+    fill_mrp_total = ((booking_floor_band_total/actual_floor_band_total.to_f) * 100).round(2)
+    (fill_mrp_total.to_f.nan? ? 0.0 : fill_mrp_total)
+  end
+
+  def self.typology_and_inventory_actual_data(created_at = nil)
+    data = ProjectUnit.collection.aggregate([
+      {
+        "$unwind": "$data"
+      },
+      {
+        "$match": { "data.key": "floor_band" }
+      },
+      {
+        "$group": {
+          "_id": { "unit_configuration_name": "$unit_configuration_name", "configuration": "$data.absolute_value" },
+            "booking_count": { "$sum": 1 }
+        }
+      },
+       { '$sort': { '_id.unit_configuration_name': 1}}
+    ]).as_json
+    processed_data = floor_band_process_data(data, "booking_count")
+    data = process_data(processed_data, "actual")
+    data
+  end
+
+  def self.typology_and_inventory_mrp_data(created_at = nil, is_token_report = nil)
+    matcher = { "$and": [{ "status": { "$in":  %w[success clearance_pending] } }, { "token_number": { "$nin": [nil, ''] } }] }
+    matcher[:booking_detail_id] = nil if is_token_report.present?
+    if created_at.present?
+      start_date, end_date = created_at.split(' - ')
+      matcher = matcher.merge({ "created_at": { "$gte": (Date.parse(start_date).beginning_of_day), "$lte": (Date.parse(end_date).end_of_day)} })
+    end
+    data = Receipt.collection.aggregate([
+      { "$match": matcher },
+      {
+        '$lookup': {
+          "from": "user_kycs",
+          "let": { "receipt_id": "$_id" },
+          "pipeline": [
+            { '$match': { '$expr': { '$eq': [ "$receipt_id",  "$$receipt_id" ] } } },
+            { '$project': { "configuration": { '$arrayElemAt': ['$configurations', 0] }, "preferred_floor_band": { '$arrayElemAt': ['$preferred_floor_band', 0] } } }
+          ],
+          "as": "user_kycs"
+        }
+      },
+      {
+        '$replaceRoot': {
+          "newRoot": {
+            '$mergeObjects': [
+              { '$arrayElemAt': [ "$user_kycs", 0 ] },
+              "$$ROOT"
+            ]
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": { "unit_configuration_name": "$configuration", "configuration": "$preferred_floor_band" },
+            "booking_count": { "$sum": 1 }
+        }
+      },
+       { '$sort': { '_id.unit_configuration_name': 1}}
+    ]).as_json
+    processed_data = floor_band_process_data(data, "booking_count")
+    data = process_data(processed_data, "mrp")
+    data
+  end
+
+  def self.floor_band_process_data(data_to_process, count)
+    processed_data = {}
+    data_to_process.each do |data|
+      if data['_id'].present? && data['_id']['unit_configuration_name'].present?
+        if processed_data[data['_id']['unit_configuration_name']].present?
+          processed_data[data['_id']['unit_configuration_name']].merge!({ "#{data['_id']['configuration'].to_f.to_i}": data[count] }.with_indifferent_access)
+        else
+          processed_data[data['_id']['unit_configuration_name']] = { "#{data['_id']['configuration'].to_f.to_i}": data[count] }.with_indifferent_access
+        end
+      end
+    end
+    processed_data
+  end
+
+  def self.process_data(hash = {}, prefix = "")
+    hash.each do |key,value|
+     I18n.t("mongoid.attributes.project_unit.floor_bands").keys.sort.map(&:to_s).each do |floor_band|
+       value.merge!("#{floor_band}" => 0) unless value.has_key?(floor_band)
+     end
+     value = value.sort.to_h
+     value.merge!("total" => value.values.sum)
+     value.merge!("id" => key)
+     hash[key] = value
+   end if hash.present?
+   converted_array = hash.values
+   converted_array.each{|a| a.transform_keys!{|key| "#{prefix}_#{key}" }}
+   converted_array
+ end
+
+  def self.typology_and_inventory_booking_data(created_at = nil)
+    matcher = {status: { "$in": BookingDetail::BOOKING_STAGES } }
+    if created_at.present?
+      start_date, end_date = created_at.split(' - ')
+      matcher = matcher.merge({ "created_at": { "$gte": (Date.parse(start_date).beginning_of_day), "$lte": (Date.parse(end_date).end_of_day)} })
+    end
+    data = BookingDetail.collection.aggregate([
+      {
+       "$match": matcher
+      },
+      {
+        "$unwind": "$data"
+      },
+      {
+        "$match": { "data.key": "floor_band" }
+      },
+      {
+        "$lookup": {
+          "from": "project_units",
+          "let": { "project_unit_id": "$project_unit_id" },
+          "pipeline": [
+            { '$match': { '$expr': { '$eq': [ "$_id",  "$$project_unit_id" ] } } },
+            { '$project': { "configuration": "$unit_configuration_name" } }
+          ],
+          "as": "project_units"
+        }
+      },
+      {
+        "$replaceRoot": {
+          "newRoot": {
+            '$mergeObjects': [
+              { '$arrayElemAt': [ "$project_units", 0 ] },
+              "$$ROOT"
+            ]
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": { "unit_configuration_name": "$configuration", "configuration": "$data.absolute_value" },
+            "booking_count": { "$sum": 1 }
+        }
+      },
+       { '$sort': { '_id.unit_configuration_name': 1}}
+    ]).as_json
+    processed_data = floor_band_process_data(data, "booking_count")
+    data = process_data(processed_data, "booking")
+    data
+  end
+
+  def self.calculate_percentage(data,floor_band)
+    percentage = (((data["mrp_#{floor_band}"]/data["actual_#{floor_band}"].to_f) * 100).round rescue 0)
+    (percentage.to_f.nan? ? 0.0 : percentage)
+  end
+
+  def self.calculate_total_percentage(data)
+    percentage = (((data["mrp_total"]/data["actual_total"].to_f) * 100).round rescue 0)
+    (percentage.to_f.nan? ? 0.0 : percentage)
+  end
+
+  def self.calculate_fill_mrp(typology_and_inventory_summary_data, floor_band)
+    mrp_floor_band_total = (typology_and_inventory_summary_data.map{|d| d["mrp_#{floor_band}"] }.compact.sum rescue 0)
+    actual_floor_band_total = (typology_and_inventory_summary_data.map{|d| d["actual_#{floor_band}"] }.compact.sum rescue 0)
+    fill_mrp_total = ((mrp_floor_band_total/actual_floor_band_total.to_f) * 100).round(2)
+    (fill_mrp_total.to_f.nan? ? 0.0 : fill_mrp_total)
+  end
+
+  def self.bookings_with_completed_tasks_list(matcher = {})
+    matcher = matcher.deep_symbolize_keys
+    matcher.merge!({status: 'booked_confirmed', task_list_completed: {'$ne': nil}})
+    data = BookingDetail.collection.aggregate([
+      { '$match': matcher },
+      {
+      "$group": {
+        "_id": {
+          "task_list_completed": "$task_list_completed"
+        },
+        count: {
+          "$sum": 1
+        }
+      }
+    },{
+      "$sort": {
+        "_id.task_list_completed": 1
+      }
+    }]).to_a
+    out = []
+    data.each do |d|
+      out << { task_list_completed: d["_id"]["task_list_completed"], count: d["count"] }.with_indifferent_access
+    end
+    out
+  end
+
+  def self.todays_booking_count(status = nil, matcher = {})
+    _matcher = {booking_portal_client_id: matcher[:booking_portal_client_id]}
+    _matcher[:status] = status.present? ? { "$in": [status] } : { "$in": BookingDetail::BOOKING_STAGES }
+    _matcher[:created_at] = {
+      "$gte": Date.today.beginning_of_day,
+      "$lte": Date.today.end_of_day
+    }
+    _matcher[:project_id] = {"$in": matcher[:project_ids].map{|id| BSON::ObjectId(id) }} if matcher[:project_ids].present?
+    BookingDetail.where(_matcher).count
+  end
+
+  def self.total_booking_count(status = nil, matcher = {})
+    _matcher = {booking_portal_client_id: matcher[:booking_portal_client_id]}
+    _matcher[:status] = status.present? ? { "$in": [status] } : { "$in": BookingDetail::BOOKING_STAGES }
+    if matcher[:created_at].present?
+      start_date, end_date = matcher[:created_at].split(' - ')
+      _matcher[:created_at] = {
+        "$gte": Date.parse(start_date).beginning_of_day,
+        "$lte": Date.parse(end_date).end_of_day
+      }
+    end
+    _matcher[:project_id] = {"$in": _matcher[:project_ids].map{|id| BSON::ObjectId(id) }} if _matcher[:project_ids].present?
+    BookingDetail.where(_matcher).count
+  end
 
   protected
 

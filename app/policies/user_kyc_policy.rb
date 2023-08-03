@@ -11,6 +11,7 @@ class UserKycPolicy < ApplicationPolicy
 
   def permitted_attributes(_params = {})
     attributes = [:salutation, :first_name, :last_name, :email, :phone, :dob, :pan_number, :aadhaar, :oci, :gstn, :anniversary, :nri, :poa, :customer_company_name, :existing_customer, :comments, :existing_customer_name, :existing_customer_project, :poa_details, :is_company, :education_qualification, :designation, :company_name, :poa_details_phone_no, :number_of_units, :occupation, :min_budget, :max_budget, addresses_attributes: AddressPolicy.new(user, Address.new).permitted_attributes, bank_detail_attributes: BankDetailPolicy.new(user, BankDetail.new).permitted_attributes, configurations: [], preferred_floors: [], project_unit_ids: []]
+    attributes += [preferred_floor_band: []] if record.present? && record.booking_portal_client.enable_floor_band?
     attributes
   end
 end

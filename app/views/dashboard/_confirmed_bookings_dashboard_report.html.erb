@@ -1,0 +1,33 @@
+<%
+  fltr_params = { booking_portal_client_id: current_client.id, project_ids: params[:project_ids] }
+  if @dates.present?
+    start_date, end_date = @dates
+    fltr_params[:created_at] = "#{start_date} - #{end_date}"
+  end
+%>
+<% if @confirmed_bookings.present?  %>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Checklist Completion</th>
+          <th class="text-right">Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @confirmed_bookings.each do |b| %>
+        <tr>
+          <td><%= t("dashboard.bookings.confirmed_bookings.tasklist_completed." + "#{b[:task_list_completed]}") %></td>
+          <td class="text-right">
+            <%= link_to b[:count], admin_booking_details_path({ fltrs: { confirmed_task_list_completed: "#{b[:task_list_completed]}" } }), target: '_blank' %>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <div class='table-responsive p-4 text-center'>
+    No confirmed bookings yet.
+  </div>
+<% end %>

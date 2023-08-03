@@ -125,6 +125,8 @@ class Client
 
   # Enable customer registration through login page
   field :enable_customer_registration, type: Boolean, default: true
+  # Enable floor band for client
+  field :enable_floor_band, type: Boolean, default: false
 
   field :email_header, type: String, default: '<div class="container">
     <img class="mx-auto mt-3 mb-3" maxheight="65" src="<%= self.logo.url %>" />

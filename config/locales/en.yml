@@ -970,6 +970,7 @@ en:
         project_meeting_custom_field: "Project"
         industry: 'Industry'
         enable_customer_registration: "Enable Customer Registration on Login Page"
+        enable_floor_band: "Enable Floor Band for Client"
       client/available_preferred_logins:
         phone: "Phone Based"
         email: "Email Based"
@@ -1452,8 +1453,10 @@ en:
         order: "Order"
         auto_release_on: "Auto Release On"
         unit_facing_link: "Unit Facing Link"
-        tower_name:
-          rhea_miranda: "Rhea Miranda"
+        floor_bands:
+          '1': 'Lower Band'
+          '2': 'Middle Band'
+          '3': 'Upper Band'
       project_unit/status:
         hold: "Hold"
         available: "Available"
@@ -1948,6 +1951,7 @@ en:
         loan_amount: "Loan Amount"
         loan_sanction_days: "Loan Sanction Days"
         preferred_floors: "Preferred Floors"
+        preferred_floor_band: "Preferred Floor Band"
         min_budget: "Min. Budget (Rs.)"
         max_budget: "Max. Budget (Rs.)"
         budget: "Budget (Rs.)"
@@ -1969,6 +1973,12 @@ en:
         Dr: "Dr."
         Maharaj: "Maharaj"
         Prof: "Prof."
+      user_kyc/help_text:
+        first_name: 'Please fill the name as per the PAN card'
+        preferred_floors: 'Select bands in the order of priority'
+        loan_required: 'Our representatives will get in touch to facilitate your home loan requirements'
+        pan_card_html: '<ul class="m-0"><li>Upload your Pan card</li></ul>'
+        aadhaar_card_html: '<ul class="m-0"><li>For Aadhaar please upload front and back | For Passport, please upload first page and last page</li></ul>'
       campaign:
         name: "Campaign Name"
         description: "About this Campaign"
@@ -2453,6 +2463,25 @@ en:
         lead_id: "CRM Lead ID"
         token_number: "Token Number"
         id: "Name / Email / Phone"
+
+      typology_and_inventory_summary_reports:
+        mrp: "Tokens"
+        actual_inventory: "Actual Inventory"
+        mrp_filled: "Tokens With KYC Filled"
+        booking_filled: 'Bookings'
+        fill_rate: "Fill Rate"
+        typology: "Typology"
+        blue: "Blue"
+        green: "Green"
+        yellow: "Yellow"
+        bookings: "Bookings"
+
+      booking_progress_report:
+        mrp: 'Tokens'
+        blocked: 'Blocked'
+        under_negotiation: 'Under Negotiation'
+        booked_tentative: 'Tentative Booked'
+        booked_confirmed: 'Confirmed Booked'
 
   controller:
     bulk_jobs:
@@ -3123,8 +3152,13 @@ en:
         project_unit:
           inventory_snapshot: "Inventory Snapshot"
           collection_report: "Collection Report"
+          typology_report: "Typology and Inventory Summary"
+          token_report: "Configuration Wise Token Report"
         user_requests:
           details_report: "User Requests"
+        booking_details:
+          confirmed_bookings: "Confirmed Bookings"
+          booking_progress: "Bookings Progress Report"
 
     emails:
       index:
@@ -4006,6 +4040,17 @@ en:
         available_inventory: "Available Inventory"
         download_brochure: "Download Brochure"
         visit_website: "Visit Website"
+    bookings:
+      confirmed_bookings:
+        tasklist_completed:
+          "true": 'Completed'
+          "false": 'Open'
+      sync_status:
+        "Not synced": "not_synced"
+        "Synced": "successful"
+        "Failed": "failed"
+      sales: "Pending with Sales"
+      crm: "Pending with CRM"
 
   mobile:
     channel_partner:
