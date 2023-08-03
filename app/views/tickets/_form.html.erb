@@ -1,0 +1,26 @@
+<h1 class="text-center mt-3">Register Spot for Your Car</h1>
+
+<div class="container">
+  <%= form_for @ticket do |f| %>
+    <div class="card mt-3">
+      <div class="card-header">
+        Car Details
+      </div>
+      <div class="card-body">
+        <% f.object.build_car if f.object.car.blank? %>
+        <%= f.fields_for :car do |car_form| %>
+          <%= render "cars/form_fields", f: car_form, car: @ticket.car || @ticker.build_car %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="row col-md-6 mb-3">
+      <%= f.label :parking_site_id, 'Choose Parking Site:' %>
+      <%= f.select :parking_site_id, options_for_select(ParkingSite.all.map { |ps| [ps.name, ps.id] }), {}, class: 'form-select' %>
+    </div>
+
+    <div class="row col-md-6 mb-3">
+      <%= f.submit 'Register Spot', class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,55 @@
+Design a parking lot
+ which can hold n cars of different color and different registration numbers.
+ 
+Every car has been issued a ticket for a spot and the spot has been assigned based on the nearest to the entry point.
+
+The system should also return some queries such as:
+ * Registration numbers of all cars of a particular Color. 
+ * Ticket number in which a car with a given registration number is placed. 
+ * Ticket numbers of all tickets where a car of a particular color is placed. 
+ 
+ # This should be a simple command line utility with minimum these capabilities. They can develop a simple UI instead of CLI based. - create a parking lot - park cars in it - run the above specified queries 
+
+
+Scenarios.
+
+  let parking_site : Abhyuday, total_spots : 8, spot_statuses : available
+
+  1) new ticket - Spot is alloted to car.
+    - Atleast one spot with status 'available' should be present.
+    - the first one ( considering nearest to entry point ) will be alloted to car.
+    - Car with same color and registration number should not present in parking_site
+    - spot status will be moved to blocked
+    - Ticket will be created & notified with spot and car details
+  
+  2) Spot is emptied by car.
+    - if car leaves the parking_site. We will make spot available again.
+  
+
+Code Scenes
+  new ticket - register spot for new car
+    - render a form
+    - car details - color, registration number
+  
+  create ticket - allot_spot
+    - if car with this color and registration number not present in parking_site and there is an available spot,
+      - then will issue a ticket to this customer for the spot
+      - also move spot status to blocked
+    - else
+      - render some text with error message
+      - error message would be one of the -
+      { 
+        car with this color present in parking lot.
+        car with this registration number present in parking lot.
+        All spots are blocked. No spot is available, right now.
+      }
+
+
+ParkingSite.create!(name: 'East-Abhyudaya', total_spots: 8)
+
+
+i=1
+8.times do
+  Spot.create!(spot_number: i, status: 'available', parking_site_id: ParkingSite.first.id)
+  i += 1
+end

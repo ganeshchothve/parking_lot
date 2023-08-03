@@ -1,0 +1,9 @@
+<div class="row col-md-6 mb-3">
+  <%= f.label :color %>
+  <%= f.select :color, options_for_select(Car::COLORS), {}, class: 'form-select' %>
+</div>
+<div class="row col-md-6 mb-3">
+  <%= f.label :reg_no %>
+  <%= f.text_field :reg_no, class: 'form-control' %>
+</div>
+      

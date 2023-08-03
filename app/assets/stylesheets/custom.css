@@ -1,0 +1,17 @@
+/* app/assets/stylesheets/custom.css */
+/* Add your custom styles here */
+
+/* Center the form */
+.container {
+  max-width: 500px;
+  margin: auto;
+  padding-top: 20px;
+}
+
+/* Add some space between form elements */
+form label,
+form input,
+form select,
+form button {
+  margin-bottom: 10px;
+}

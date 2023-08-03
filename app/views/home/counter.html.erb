@@ -1,0 +1,54 @@
+
+<h1 class="text-center mt-3">Counter</h1>
+
+<div class="container">
+  <%= link_to "Buy parking", new_ticket_path, class: "btn btn-primary" %>
+</div>
+
+<div class = "container">
+  <% ParkingSite.all.each do |parking_site| %>
+    <h6>Parking Lot: <%= parking_site.name %></h6>
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>Spot Number</th>
+            <th>Spot Status</th>
+            <th>Car Color</th>
+            <th>Car Registration No</th>
+            <!-- <th>Release Spot/Expire Ticket</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          <% parking_site.spots.each do |spot| %>
+            <tr>
+              <td><%= spot.spot_number %></td>
+              <td><%= spot.status %></td>
+              <td>
+                <% if spot.ticket && spot.ticket.car %>
+                  <%= spot.ticket.car.color %>
+                <% else %>
+                  <%= "" %>
+                <% end %>
+              </td>
+              <td>
+                <% if spot.ticket && spot.ticket.car %>
+                  <%= spot.ticket.car.reg_no %>
+                <% else %>
+                  <%= "" %>
+                <% end %>
+              </td>
+              <!-- <td>
+                <%# if spot.status == 'blocked' && spot.ticket %>
+                  <%#= link_to ticket_path(spot.ticket.id), method: :put, class: "btn btn-danger", data: { confirm: "Are you sure you want to empty this spot?" } do %>
+                  Release Spot
+                  <%# end %>
+                <%# end %>
+              </td> -->
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>
