@@ -18,7 +18,7 @@ module PaymentGatewayService
     end
 
     def gateway_url(search_id)
-      return "/dashboard/user/searches/#{search_id}/gateway-payment/#{@receipt.receipt_id}"
+      return "/dashboard/lead/searches/#{search_id}/gateway-payment/#{@receipt.receipt_id}"
     end
 
     def response_handler! params
