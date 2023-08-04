@@ -28,16 +28,16 @@
                   <%= link_to data['mrp_count'], admin_receipts_path({ fltrs: ({ status: ["success", "clearance_pending"], payment_type: 'token', token_generated: "yes", created_at: "#{Date.today.strftime("%d/%m/%Y")} - #{Date.today.strftime("%d/%m/%Y")}" }).merge(created_today_exclude_matcher), current: 'all'}), target: '_blank' %>
                 </td>
                 <td>
-                  <%= link_to DashboardDataProvider.todays_booking_count('blocked'), admin_booking_details_path({ fltrs: ({ status: 'blocked', created_at: "#{Date.today.strftime("%d/%m/%Y")} - #{Date.today.strftime("%d/%m/%Y")}" }).merge(created_today_exclude_matcher), current: 'all'}), target: '_blank' %>
+                  <%= link_to DashboardDataProvider.todays_booking_count('blocked', created_today_exclude_matcher), admin_booking_details_path({ fltrs: ({ status: 'blocked', created_at: "#{Date.today.strftime("%d/%m/%Y")} - #{Date.today.strftime("%d/%m/%Y")}" }).merge(created_today_exclude_matcher), current: 'all'}), target: '_blank' %>
                 </td>
                 <td>
-                  <%= link_to DashboardDataProvider.todays_booking_count('under_negotiation'), admin_booking_details_path({ fltrs: ({ status: 'under_negotiation', created_at: "#{Date.today.strftime("%d/%m/%Y")} - #{Date.today.strftime("%d/%m/%Y")}" }).merge(created_today_exclude_matcher), current: 'all'}), target: '_blank' %>
+                  <%= link_to DashboardDataProvider.todays_booking_count('under_negotiation', created_today_exclude_matcher), admin_booking_details_path({ fltrs: ({ status: 'under_negotiation', created_at: "#{Date.today.strftime("%d/%m/%Y")} - #{Date.today.strftime("%d/%m/%Y")}" }).merge(created_today_exclude_matcher), current: 'all'}), target: '_blank' %>
                 </td>
                 <td>
-                  <%= link_to DashboardDataProvider.todays_booking_count('booked_tentative'), admin_booking_details_path({ fltrs: ({ status: 'booked_tentative', created_at: "#{Date.today.strftime("%d/%m/%Y")} - #{Date.today.strftime("%d/%m/%Y")}" }).merge(created_today_exclude_matcher), current: 'all'}), target: '_blank' %>
+                  <%= link_to DashboardDataProvider.todays_booking_count('booked_tentative', created_today_exclude_matcher), admin_booking_details_path({ fltrs: ({ status: 'booked_tentative', created_at: "#{Date.today.strftime("%d/%m/%Y")} - #{Date.today.strftime("%d/%m/%Y")}" }).merge(created_today_exclude_matcher), current: 'all'}), target: '_blank' %>
                 </td>
                 <td>
-                  <%= link_to DashboardDataProvider.todays_booking_count('booked_confirmed'), admin_booking_details_path({ fltrs: ({ status: 'booked_confirmed', created_at: "#{Date.today.strftime("%d/%m/%Y")} - #{Date.today.strftime("%d/%m/%Y")}" }).merge(created_today_exclude_matcher), current: 'all'}), target: '_blank' %>
+                  <%= link_to DashboardDataProvider.todays_booking_count('booked_confirmed', created_today_exclude_matcher), admin_booking_details_path({ fltrs: ({ status: 'booked_confirmed', created_at: "#{Date.today.strftime("%d/%m/%Y")} - #{Date.today.strftime("%d/%m/%Y")}" }).merge(created_today_exclude_matcher), current: 'all'}), target: '_blank' %>
                 </td>
               <% else %>
                 <td>
