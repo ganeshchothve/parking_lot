@@ -103,6 +103,7 @@ module BookingDetailStateMachine
         transitions from: :blocked, to: :cancellation_requested
         transitions from: :booked_tentative, to: :cancellation_requested
         transitions from: :booked_confirmed, to: :cancellation_requested
+        transitions from: :under_negotiation, to: :cancellation_requested
         transitions from: :scheme_approved, to: :cancellation_requested
       end
 
