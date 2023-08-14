@@ -2902,6 +2902,7 @@ en-REAL_ESTATE:
       links:
         print_booking_form: "Print Booking Form"
         edit_booking_detail: "Edit Booking Detail"
+        send_to_customer: "Send To Customer"
       invoices:
         link_name: "Brokerage Invoices"
       choose_template_for_print:
