@@ -54,7 +54,7 @@
                 <div class="row">
                   <%= f.hidden_field :lead_id %>
                   <% if policy([:admin, @user_kyc]).editable_field?("salutation") %>  
-                    <%= f.input :salutation, collection: UserKyc::SALUTATIONS.collect{|k,v| [I18n.t("mongoid.attributes.user_kyc/salutations.#{k}"), k.to_s]}, prompt: :translate, required: true, wrapper_html: { class: 'col-md-2' } %>
+                    <%= f.input :salutation, collection: UserKyc::SALUTATIONS.collect{|k,v| [I18n.t("mongoid.attributes.user_kyc/salutations.#{k}"), k.to_s]}, prompt: :translate, required: @user_kyc_mandatory_fields.include?('salutation'), wrapper_html: { class: 'col-md-2' } %>
                   <% end %>
 
                   <% if policy([:admin, @user_kyc]).editable_field?("first_name") %>
@@ -76,10 +76,10 @@
 
                 <div class="row">
                   <% if policy([:admin, @user_kyc]).editable_field?("pan_number") %>
-                    <%= f.input :pan_number, required: true, wrapper_html: { class: 'col-md-6' } %>
+                    <%= f.input :pan_number, required: @user_kyc_mandatory_fields.include?('pan_number'), wrapper_html: { class: 'col-md-6' } %>
                   <% end %>
                   <% if policy([:admin, @user_kyc]).editable_field?("aadhaar") %>
-                    <%= f.input :aadhaar, required: true, wrapper_html: { class: 'col-md-6' } %>
+                    <%= f.input :aadhaar, required: @user_kyc_mandatory_fields.include?('aadhaar'), wrapper_html: { class: 'col-md-6' } %>
                   <% end %>
                 </div>
 
@@ -87,12 +87,12 @@
                   <% if policy([:admin, @user_kyc]).editable_field?("configurations") %>
                     <div class="col-md-6 mb-3">
                       <%= f.label :configurations, class: 'control-label' %>
-                      <%= f.select :configurations, UserKyc.available_configurations(@user_kyc.lead_id.to_s).collect{|x| [x[:text], x[:id]] }, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true, required: current_client.enable_floor_band, disabled: !policy(@user_kyc).editable_field?("configurations") %>
+                      <%= f.select :configurations, UserKyc.available_configurations(@user_kyc.lead_id.to_s).collect{|x| [x[:text], x[:id]] }, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true, required: @user_kyc_mandatory_fields.include?('configurations'), disabled: !policy(@user_kyc).editable_field?("configurations") %>
                     </div>
                   <% end %>
                   <% if policy([:admin, @user_kyc]).editable_field?("budget") %>
                     <div class="col-md-6 mb-3">
-                      <%= f.input :budget, wrapper_html: { class: "" } %>
+                      <%= f.input :budget, required: @user_kyc_mandatory_fields.include?('budget'), wrapper_html: { class: "" } %>
                     </div>
                   <% end %>
                 </div>
@@ -101,7 +101,7 @@
                   <% if policy([:admin, @user_kyc]).editable_field?("preferred_floors") %>
                     <div class="col-md-6 mb-3">
                       <%= f.label :preferred_floors, class: 'control-label' %>
-                      <%= f.select :preferred_floors, UserKyc.available_preferred_floors.collect{|x| [x[:text], x[:id]]}, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true, disabled: !policy(@user_kyc).editable_field?("preferred_floors") %>
+                      <%= f.select :preferred_floors, UserKyc.available_preferred_floors.collect{|x| [x[:text], x[:id]]}, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true, required: @user_kyc_mandatory_fields.include?('preferred_floors'), disabled: !policy(@user_kyc).editable_field?("preferred_floors") %>
                     </div>
                   <% end %>
                 </div>
@@ -109,14 +109,14 @@
                   <% if policy([:admin, @user_kyc]).editable_field?("preferred_floor_band") %>
                     <div class="col-md-6 mb-3">
                       <%= f.label :preferred_floor_band, class: 'label-required' %>
-                      <%= f.select :preferred_floor_band, preferred_floors_options(f.object), {prompt: true}, class: 'selectize', multiple: true, required: 'required', disabled: (policy(@user_kyc).editable_field?("preferred_floor_band") ? false : true) %>
+                      <%= f.select :preferred_floor_band, preferred_floors_options(f.object), {prompt: true}, class: 'selectize', multiple: true, required: @user_kyc_mandatory_fields.include?('preferred_floor_band'), disabled: (policy(@user_kyc).editable_field?("preferred_floor_band") ? false : true) %>
                     </div>
                   <% end %>
                 </div>
                 <div class="row">
                   <% if policy([:admin, @user_kyc]).editable_field?("number_of_units") %>
                     <div class="col-md-6 mb-3">
-                      <%= f.input :number_of_units %>
+                      <%= f.input :number_of_units, required: @user_kyc_mandatory_fields.include?('number_of_units') %>
                     </div>
                   <% end %>
                 </div>
@@ -131,7 +131,7 @@
               <% if policy([:admin, @user_kyc]).editable_field?("project_unit_ids") %>
                 <div class="mb-3 position-relative">
                   <%= f.label :project_unit_ids %>
-                  <%= f.select :project_unit_ids, @lead.project_units.collect{|x| [x.name, x.id]}, {prompt: I18n.t("global.select")}, class: 'selectize', multiple: true %>
+                  <%= f.select :project_unit_ids, @lead.project_units.collect{|x| [x.name, x.id]}, {prompt: I18n.t("global.select")}, class: 'selectize', required: @user_kyc_mandatory_fields.include?('project_unit_ids'), multiple: true %>
                 </div>
               <% end %>
             <% end %>
@@ -141,14 +141,14 @@
                 <div class="col-md-6">
                   <%= f.label :anniversary, class: 'control-label' %>
                   <% anniversary = (f.object.anniversary.present? ? f.object.anniversary.strftime("%d/%m/%Y") : "") %>
-                  <%= f.text_field :anniversary, class: 'form-control datepicker', type:'text', data: {"default-date": anniversary}, value: anniversary %>
+                  <%= f.text_field :anniversary, class: 'form-control datepicker', type:'text', data: {"default-date": anniversary}, required: @user_kyc_mandatory_fields.include?('anniversary'), value: anniversary %>
                 </div>
               <% end %>
               <% if policy([:admin, @user_kyc]).editable_field?("dob") %>
                 <div class="col-md-6">
                   <%= f.label :dob, class: "label-required" %>
                   <% date = (f.object.dob.present? ? f.object.dob.strftime("%d/%m/%Y") : "") %>
-                  <%= f.text_field :dob, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date, required: true %>
+                  <%= f.text_field :dob, class: 'form-control datepicker', type:'text', data: {"default-date": date}, value: date, required: @user_kyc_mandatory_fields.include?('dob') %>
                 </div>
               <% end %>
             </div>
@@ -156,7 +156,7 @@
               <div class="row mt-3">
                 <div class="col-md-6">
                   <%= f.label :occupation, class: 'control-label' %>
-                  <%= f.select :occupation, UserKyc::OCCUPATIONS.collect{|x| [ t("mongoid.attributes.user_kyc/occupation.#{x}"), x.to_s]}, {prompt: I18n.t("global.select")}, class: 'selectize', disabled: !policy(@user_kyc).editable_field?("occupation") %>
+                  <%= f.select :occupation, UserKyc::OCCUPATIONS.collect{|x| [ t("mongoid.attributes.user_kyc/occupation.#{x}"), x.to_s]}, {prompt: I18n.t("global.select")}, class: 'selectize', required: @user_kyc_mandatory_fields.include?('occupation'), disabled: !policy(@user_kyc).editable_field?("occupation") %>
                 </div>
               </div>
             <% end %>

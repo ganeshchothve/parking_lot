@@ -57,6 +57,16 @@
   <% end %>
 </div>
 <div class="row">
+  <% if policy([current_user_role_group, project]).editable_field?("user_kyc_mandatory_fields")%>
+    <div class="col-md-12">
+      <div class="mb-3">
+        <%= f.label :user_kyc_mandatory_fields %>
+        <%= f.select :user_kyc_mandatory_fields, Project::KYC_MANDATORY_FIELDS.collect{|x| [ I18n.t("mongoid.attributes.user_kyc.#{x}"), x]}, {}, class: 'selectize', multiple: true, disabled: !policy([:admin, f.object]).editable_field?("user_kyc_mandatory_fields") %>
+      </div>
+    </div>
+  <% end %>
+</div>
+<div class="row">
   <% if policy([:admin, project]).editable_field?("blocking_days") %>
     <div class="col-md-6">
       <div class="mb-3">

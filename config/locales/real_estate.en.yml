@@ -1181,6 +1181,7 @@ en-REAL_ESTATE:
         kylas_product_id: 'CRM Reference ID'
         ask_lead_dropoff_reason: 'Do You Want To Ask For Lead Dropoff Reason?'
         lead_dropoff_reasons_list: 'List Down Lead Dropoff Reasons (Leave it empty to make it a free form text field)'
+        user_kyc_mandatory_fields: "Kyc Mandatory Fields"
       project/project_type:
         residential: "Residential"
         commercial: "Commercial"

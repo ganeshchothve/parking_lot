@@ -16,6 +16,7 @@ module UserKycsConcern
   #
   def new
     @user_kyc = UserKyc.new(creator: current_user, user: @lead.user, lead: @lead, first_name: @lead.first_name, last_name: @lead.last_name, email: @lead.email, phone: @lead.phone, booking_portal_client_id: @lead.booking_portal_client.id)
+    @user_kyc_mandatory_fields = @lead.project.user_kyc_mandatory_fields
     render layout: false
   end
 
@@ -44,6 +45,7 @@ module UserKycsConcern
   #
   def edit
     @lead = @user_kyc.lead
+    @user_kyc_mandatory_fields = @lead.project.user_kyc_mandatory_fields
     render layout: false
   end
 

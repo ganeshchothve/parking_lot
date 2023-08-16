@@ -96,7 +96,7 @@ class Admin::ProjectPolicy < ProjectPolicy
           :holding_minutes, :terms_and_conditions, :email_header, :email_footer, :hot, :enable_inventory,
           :enable_booking_with_kyc, :gst_slab_applicable, :check_sv_availability_in_selldo,
           :consideration_value_help_text, third_party_references_attributes: ThirdPartyReferencePolicy.new(user, ThirdPartyReference.new).permitted_attributes,
-          email_domains: [], booking_portal_domains: [], enable_actual_inventory: [], enable_live_inventory: [], incentive_percentage_slabs: [], incentive_gst_slabs: [], booking_sources: [], incentive_calculation: [], disable_project: [:walk_ins, :bookings, :invoicing], booking_custom_template_ids: [], lead_dropoff_reasons_list: []
+          email_domains: [], booking_portal_domains: [], enable_actual_inventory: [], enable_live_inventory: [], incentive_percentage_slabs: [], incentive_gst_slabs: [], booking_sources: [], incentive_calculation: [], disable_project: [:walk_ins, :bookings, :invoicing], booking_custom_template_ids: [], lead_dropoff_reasons_list: [], user_kyc_mandatory_fields: []
         ]
         attributes += [:name] unless marketplace_client?
       end

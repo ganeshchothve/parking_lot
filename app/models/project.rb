@@ -19,6 +19,8 @@ class Project
   DEFAULT_CONFIGURATIONS = %w( 1RK 1BHK 2BHK 2.5BHK 3BHK 3.5BHK 4BHK 5BHK 6BHK )
   ALLOWED_BANKS = %w( sbi hdfc bob bajaj_finance )
   ENABLE_BOOKING_WITH_KYC = ['before_booking', 'during_booking', 'disable'].freeze
+  # user kyc mandatory dropdown fields for a project
+  KYC_MANDATORY_FIELDS = %w(salutation dob pan_number aadhaar anniversary education_qualification designation customer_company_name configurations number_of_units preferred_floors preferred_floor_band budget comments occupation)
 
   attr_accessor :basic, :bookings, :pages, :logos, :integrations, :contacts, :support_contact_details
 
@@ -129,6 +131,8 @@ class Project
   field :ask_lead_dropoff_reason, type: Boolean, default: false
   field :lead_dropoff_reasons_list, type: Array, default: ['Amenities', 'Layout Issue', 'Follow Up Exhausted', 'Budget', 'Location', 'Early Possession', 'Late Possession', 'Value for Price', 'Higher Configuration', 'Lower Configuration', 'Purchased Elsewhere', 'Commercial']
 
+  # user kyc mandatory fields
+  field :user_kyc_mandatory_fields, type: Array, default: []
   # Kylas fields
   field :kylas_product_id, type: String
   field :kylas_product_value, type: Integer
